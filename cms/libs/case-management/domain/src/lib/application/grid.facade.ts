@@ -21,7 +21,7 @@ export class GridFacade {
     this.hideLoader();
   }
 
-  constructor(private readonly GridDataService: GridDataService,
+  constructor(private readonly gridDataService: GridDataService,
     private readonly loaderService: LoaderService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loggingService: LoggingService) { }
@@ -36,10 +36,10 @@ export class GridFacade {
     this.loaderService.hide();
   }
   loadGridState(userId:any,gridStateKey:string,moduleCode:string) {
-    return this.GridDataService.loadGridState(userId,gridStateKey,moduleCode);
+    return this.gridDataService.loadGridState(userId,gridStateKey,moduleCode);
   }
   createGridState(gridState: GridState) {
-    return this.GridDataService.createGridState(gridState);
+    return this.gridDataService.createGridState(gridState);
   }
 
 }
