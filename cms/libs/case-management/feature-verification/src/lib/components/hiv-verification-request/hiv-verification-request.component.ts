@@ -33,6 +33,35 @@ export class HivVerificationRequestComponent implements OnInit {
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public uploadFileRestrictions: UploadFileRistrictionOptions =
   new UploadFileRistrictionOptions();
+  showDocInputLoader = false;
+  popupClass1 = 'more-action-dropdown app-dropdown-action-list ';
+  public data = [
+    {
+      buttonType:"btn-h-primary",
+      text: "View in New Tab",
+      icon: "open_in_new",
+      click: (): void => {
+      },
+    },
+ 
+    
+    {
+      buttonType:"btn-h-danger",
+      text: "Remove Attachment",
+      icon: "delete",
+      click: (): void => {
+      },
+    },
+  ];
+
+
+  public clientDocList = [
+    { 
+      clientDocumentsId: 'Lorem ipsum', 
+       clientDocumentsName: 'Lorem ipsum dolor sit amet Lorem ipsum ',
+       documentType:'Lorem ipsum Lorem ipsum'
+      },
+    ]
 
   constructor( private verificationFacade: VerificationFacade,
     private readonly cdr: ChangeDetectorRef,

@@ -64,7 +64,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
   public actions = [
     {
       buttonType:"btn-h-primary",
-      text: "Edit Provider",
+      text: "Edit",
       icon: "edit",
       click: (clientProviderId : string): void => {     
         if(!this.editbuttonEmitted)
@@ -77,7 +77,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
    
     {
       buttonType:"btn-h-danger",
-      text: "Remove Provider",
+      text: "Remove",
       icon: "delete",
       click: (clientProviderId : string): void => {    
         if(!this.deletebuttonEmitted)
@@ -89,7 +89,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Deactivate Provider',
+      text: 'Deactivate',
       icon: 'block',
       buttonName: 'deactivate',
       click: (clientProviderId: string): void => {
@@ -101,7 +101,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Reactivate Provider',
+      text: 'Reactivate',
       icon: 'done',
       buttonName: 'reactivate',
       click: (clientProviderId: string): void => {

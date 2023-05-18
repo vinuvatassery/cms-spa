@@ -32,7 +32,7 @@
       <button 
         kendoButton
         [primary]="true"
-        (click)="onCloseSendIdClicked()"
+        (click)="sendNewIdCard()"
         aria-label="send id"
         [disabled]="!(mailingAddress$ | async)"
       >
