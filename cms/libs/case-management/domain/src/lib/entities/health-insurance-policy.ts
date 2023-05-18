@@ -71,7 +71,6 @@ export class HealthInsurancePolicy {
         medicareCardFilePath: string = "";
         othersCoveredOnPlan: Array<Dependent> = [];
         isCerReview: boolean = false;
-        cerReviewType: string = ""; 
         //removedOthersCoveredOnPlan: Array<othersCoveredOnPlan> = [];
 }
 
