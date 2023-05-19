@@ -42,14 +42,14 @@ export class DependentDataService {
   updateFamilyChangedStatus(previousEligibilityId: string, friendFamilyChangedFlag: string) {
     return this.http.patch(
       `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
-      `/eligibility-periods/${previousEligibilityId}/familyChanged-status?friendFamilyChangedFlag=${friendFamilyChangedFlag}`
+      `/eligibility-periods/${previousEligibilityId}/has-family-change?friendFamilyChangedFlag=${friendFamilyChangedFlag}`
       , null);
   }
 
   updateAdditionalFamilyStatus(previousEligibilityId: string, hasAdditionalFamilyFlag: string) {
     return this.http.patch(
       `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
-      `/eligibility-periods/${previousEligibilityId}/additionalFamily-status?hasAdditionalFamilyFlag=${hasAdditionalFamilyFlag}`
+      `/eligibility-periods/${previousEligibilityId}/has-addional-family?hasAdditionalFamilyFlag=${hasAdditionalFamilyFlag}`
       , null);
   }
 
