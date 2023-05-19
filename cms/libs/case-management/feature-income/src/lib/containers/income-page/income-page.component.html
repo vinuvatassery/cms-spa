@@ -73,7 +73,7 @@
 
             </form>
           </div>
-          <div *ngIf="!hasNoIncome && !isCerForm">
+          <div *ngIf="!hasNoIncome">
             <case-management-income-list [isCerForm]="isCerForm" [hasNoIncome]="hasNoIncome" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
           </div>
 
