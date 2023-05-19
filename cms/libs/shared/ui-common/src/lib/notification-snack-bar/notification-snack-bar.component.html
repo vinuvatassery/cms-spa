@@ -1,4 +1,15 @@
 <ng-template #notificationAlertTemplate>
-  <span class="k-notification-title" aria-live="polite" role="status">{{ snackbarMessage.title }}</span>
-  <span class="k-notification-sub-title" ria-live="assertive">{{ snackbarMessage.subtitle }}</span>
-</ng-template>
+
+<div class="snack-barwrapper">
+  
+<span class="k-notification-title" aria-live="polite" role="status">{{ snackbarMessage.title }}</span>
+  
+<span class="k-notification-sub-title" ria-live="assertive">{{ snackbarMessage.subtitle }}</span>
+  <button kendoButton fillMode="clear" class="snakbar-close-btn" themeColor="light" (click)="removePreviousMessage()">
+    <span class="material-icons">
+      close
+    </span>
+  </button>
+  </div>
+  </ng-template>
+  

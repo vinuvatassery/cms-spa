@@ -22,6 +22,10 @@ export class DeleteAddressConfirmationComponent {
       this.contactFacade.deleteClientAddress(this.clientId, this.clientAddress.clientAddressId).subscribe({
         next: (response: any) => {
           if(response){
+            this.contactFacade.showHideSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              'Address deleted'
+            );
             this.contactFacade.hideLoader();
             this.closeDeleteModal();
           }
