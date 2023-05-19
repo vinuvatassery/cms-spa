@@ -9,7 +9,7 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 })
 export class FinancialVendorPageComponent {
   isVendorDetailFormShow = false;
-  isOpenDeleteTODOItem = false;
+
   data = [
     {
       text: 'Manufacture',
@@ -42,12 +42,12 @@ export class FinancialVendorPageComponent {
   vendorTypeCode = '';
 
   clickOpenVendorDetails(dataItem : any) {
-    // this.isVendorDetailFormShow = true;
-    this.isOpenDeleteTODOItem = true;
+    this.isVendorDetailFormShow = true;
+  
   }
   clickCloseVendorDetails() {
-    // this.isVendorDetailFormShow = false;
-    this.isOpenDeleteTODOItem = false;
-
+    this.isVendorDetailFormShow = false;
   }
+
+
 }

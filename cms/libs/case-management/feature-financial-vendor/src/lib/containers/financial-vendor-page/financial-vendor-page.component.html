@@ -72,8 +72,8 @@
     </div>
     <!-- Right Reminders-->
     <div class="app-l-client-right todo-list">
-      <!-- <productivity-tools-reminder-list class="reminder-list-case-wrap"></productivity-tools-reminder-list> -->
-      <cms-financial-reminder class="reminder-list-case-wrap"></cms-financial-reminder>
+      <productivity-tools-reminder-list class="reminder-list-case-wrap"></productivity-tools-reminder-list>
+      <!-- <cms-financial-reminder class="reminder-list-case-wrap"></cms-financial-reminder> -->
     </div>
   </section>
 </div>
@@ -83,46 +83,3 @@
   <cms-contacts></cms-contacts>
 </kendo-dialog>
 
-<kendo-dialog *ngIf="isOpenDeleteTODOItem" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Delete TO DO item? </kendo-dialog-titlebar>
-  <section class="k-dialog-body mb-2">
-    <p>
-      This feature is part of a future scope of work for the ORCares project.
-    </p>
-  </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"> Cancel
-        </button>
-        <button kendoButton class="k-error-button" aria-label="cancel case">
-          Delete
-        </button>
-
-      </div>
-    </div>
-  </kendo-dialog-actions>
-</kendo-dialog>
-
-
-<kendo-dialog *ngIf="isOpenDeleteTODOItem" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Edit TO DO Item </kendo-dialog-titlebar>
-  <section class="k-dialog-body mb-2">
-    <p>
-      This feature is part of a future scope of work for the ORCares project.
-    </p>
-  </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-start d-flex">
-        <button kendoButton class="k-danger-link" aria-label="Remove"> Remove </button>
-
-      </div>
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"> Cancel
-        </button>
-        <button kendoButton [primary]="true" aria-label="update or add phone detail"> Update </button>
-      </div>
-    </div>
-  </kendo-dialog-actions>
-</kendo-dialog>
