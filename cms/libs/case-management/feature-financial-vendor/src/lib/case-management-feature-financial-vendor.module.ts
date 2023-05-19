@@ -13,6 +13,7 @@ import { CaseManagementDomainModule } from '@cms/case-management/domain';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { VendorsListComponent } from './components/vendors-list/vendors-list.component';
+import { VendorDetailsComponent } from './components/vendor-details/vendor-details.component';
 import { FinancialReminderComponent } from './components/financial-reminder/financial-reminder.component';
 
 @NgModule({
@@ -34,6 +35,7 @@ import { FinancialReminderComponent } from './components/financial-reminder/fina
     VendorProfileHeaderComponent,
     VendorsListComponent,
     FinancialReminderComponent,
+    VendorDetailsComponent,
   ],
   exports: [
     FinancialVendorPageComponent,
@@ -45,6 +47,7 @@ import { FinancialReminderComponent } from './components/financial-reminder/fina
     VendorProfileHeaderComponent,
     VendorsListComponent,
     FinancialReminderComponent,
+    VendorDetailsComponent
   ],
 })
 export class CaseManagementFeatureFinancialVendorModule {}

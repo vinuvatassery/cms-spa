@@ -72,14 +72,13 @@
     </div>
     <!-- Right Reminders-->
     <div class="app-l-client-right todo-list">
-      <productivity-tools-reminder-list class="reminder-list-case-wrap"></productivity-tools-reminder-list>
-      <!-- <cms-financial-reminder class="reminder-list-case-wrap"></cms-financial-reminder> -->
+      <productivity-tools-reminder-list class="reminder-list-case-wrap"></productivity-tools-reminder-list> 
     </div>
   </section>
 </div>
 
 <kendo-dialog kendoRippleContainer *ngIf="isVendorDetailFormShow" (close)="clickCloseVendorDetails()"
   class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Medical Provider" kendoTooltip>
-  <cms-contacts></cms-contacts>
+  <cms-vendor-details></cms-vendor-details>
 </kendo-dialog>
 
