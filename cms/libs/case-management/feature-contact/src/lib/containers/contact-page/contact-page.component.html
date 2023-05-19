@@ -463,6 +463,7 @@
           [typeCode]="'HOME_ADDRESS_PROOF'"
           [isDisabled]="isNoProofOfHomeChecked"
           [file]="homeAddressProofFile"
+          [isFileViewable]="true"
           (handleFileSelectEvent)="handleFileSelected($event)"
           (handleFileRemoveEvent)="handleFileRemoved($event)"
           (handleTypeCodeEvent)="handleTypeCodeEvent($event)">

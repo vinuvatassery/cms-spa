@@ -90,8 +90,9 @@
           <common-document-upload
           [typeCode]="'PROOF_OF_INCOME'"
           [file]="uploadedIncomeFile"
-          (handleFileSelectEvent)="handleFileSelected($event,'docproof')"
-          (handleFileRemoveEvent)="handleFileRemoved($event,'docproof')"
+          [isFileViewable]="true"
+          (handleFileSelectEvent)="handleFileSelected($event)"
+          (handleFileRemoveEvent)="handleFileRemoved($event)"
           (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
           </common-document-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>

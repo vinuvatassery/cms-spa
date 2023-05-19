@@ -1,9 +1,7 @@
 import { Component, ChangeDetectorRef, Output, EventEmitter, Input, OnInit, } from '@angular/core';
 import { Lov, LovFacade } from '@cms/system-config/domain';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType,ConfigurationProvider } from '@cms/shared/util-core';
-import { IncomeFacade, StatusFlag, IncomeTypeCode,ClientDocumentFacade } from '@cms/case-management/domain';
+import {  ConfigurationProvider ,DocumentFacade} from '@cms/shared/util-core';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 @Component({
@@ -21,6 +19,7 @@ export class DocumentUploadComponent  implements OnInit{
   @Input() subTypeCodeLabel!: string;
   @Input() currentTypeCode!: string;
   @Input() formSubmitted!: boolean;
+  @Input() isFileViewable!: boolean;  
   subTypeCodes: Lov[] = [];
   selectedTypeCode! : any;
   selectedsubTypeCode = "";
@@ -36,11 +35,8 @@ export class DocumentUploadComponent  implements OnInit{
    /** Constructor **/
    constructor(
     private lov: LovFacade,
-    private readonly loaderService: LoaderService,
-    private loggingService: LoggingService,
-    private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly configurationProvider: ConfigurationProvider,
-    public readonly clientDocumentFacade: ClientDocumentFacade,
+    public readonly documentFacade: DocumentFacade,
     private readonly cdr: ChangeDetectorRef
   ) {
     this.selectedTypeCode = this.currentTypeCode;
@@ -75,11 +71,11 @@ export class DocumentUploadComponent  implements OnInit{
       });
     }
   }
-  handleFileSelected(e: SelectEvent, fileType: string) {
+  handleFileSelected(e: SelectEvent) {
     this.handleFileSelectEvent.emit(e);
     this.handleTypeCodeEvent.emit(this.typeCode??this.selectedTypeCode);
   }
-  handleFileRemoved(e: SelectEvent, fileType: string) {
+  handleFileRemoved(e: SelectEvent) {
     this.handleFileRemoveEvent.emit(e);
   }
 

@@ -37,20 +37,20 @@
               [disabled]="isDisabled"
               [restrictions]="fileUploadRestrictions"
               [multiple]="false"
-              (select)="handleFileSelected($event,'docproof')"
-              (remove)="handleFileRemoved($event,'docproof')"
+              (select)="handleFileSelected($event)"
+              (remove)="handleFileRemoved($event)"
               [(ngModel)]="file"
               [ngModelOptions]="{standalone: true}"
               id="homeAddressProofUploaded"
               #homeAddressProofUploaded>
               <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-                <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
+                <span (click)="documentFacade.viewOrDownloadFile(isFileViewable,files[0]?.documentId,files[0]?.name)">
                 <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>
-                  <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
+                  <button aria-label="doc name" *ngIf="files[0]?.documentId" kendoButton look="flat" class="card-link-button"  >
                     <a>{{ files[0].name }} </a>
                   </button>
                   <br>
-                  <span>{{   files[0].size  | fileSize  }}</span>
+                  <span>{{   files[0]?.size  | fileSize  }}</span>
                 </span>
               </ng-template>
   </kendo-fileselect>

@@ -20,7 +20,11 @@
                     [loading]="isGridLoaderShow"
                     (dataStateChange)="dataStateChange($event)">
           <kendo-grid-column field="documentName" title="File Name" [width]="200"></kendo-grid-column>
-          <kendo-grid-column field="documentSizeInMB" title="File Size" [width]="100"></kendo-grid-column>
+          <kendo-grid-column field="documentSize" title="File Size" [width]="100">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              {{ dataItem.documentSize | fileSize}}
+            </ng-template>
+          </kendo-grid-column>
           <kendo-grid-column field="attachmentType" title="Attachment Type" [width]="100"></kendo-grid-column>
           <kendo-grid-column field="creationDate" title="Uploaded On" [width]="100" [format]="{ date: 'MM-dd-yyyy' }" filter="date">
             <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">

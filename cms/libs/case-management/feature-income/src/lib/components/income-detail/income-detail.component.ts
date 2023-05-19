@@ -290,7 +290,7 @@ export class IncomeDetailComponent implements OnInit {
     this.closePopup.emit(this.isIncomeDetailsPopupOpen);
   }
 
-  handleFileSelected(event: any,fileType : string) {
+  handleFileSelected(event: any) {
     this.proofOfIncomeFiles = null;
     this.proofOfIncomeValidatorSize=false;
     this.proofOfIncomeFiles = event.files[0].rawFile;
@@ -301,7 +301,7 @@ export class IncomeDetailComponent implements OnInit {
    }
   }
 
-  handleFileRemoved(event: any, fileType: string) {
+  handleFileRemoved(event: any) {
     this.proofOfIncomeFiles = null;
     this.documentTypeCode='';
   }

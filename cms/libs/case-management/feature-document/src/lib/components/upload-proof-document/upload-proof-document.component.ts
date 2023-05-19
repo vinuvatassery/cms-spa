@@ -175,7 +175,7 @@ export class UploadProofDocumentComponent implements OnInit {
     this.closeModal.emit(true);
   }
 
-  SubmitForm() {
+  submitForm() {
     this.validateForm();
     if (this.uploadform.valid && this.isFileUploaded && !this.uploadedFileExceedsFileSizeLimit) {  
       if (this.isFileUploaded && !this.uploadedFileExceedsFileSizeLimit) {       

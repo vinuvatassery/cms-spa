@@ -1,5 +1,5 @@
 
-<form class="form-group" (ngSubmit)="SubmitForm()" [formGroup]="uploadform">
+<form class="form-group" (ngSubmit)="submitForm()" [formGroup]="uploadform">
     <section class="k-dialog-body">
 
       <div class="flex-row">
@@ -16,6 +16,7 @@
         <div class="flex-col mt-1">
           <common-document-upload
           [file]="copyOfUploadedFiles"
+          [isFileViewable]="true"
           [typeCodeLabel]="'Attachment Type'"
           [subTypeCodeLabel]="'Attachment Sub Type'"
           [currentTypeCode]="selectedTypeCode"
