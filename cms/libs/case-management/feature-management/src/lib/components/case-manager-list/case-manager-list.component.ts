@@ -76,7 +76,7 @@ export class CaseManagerListComponent implements OnChanges {
   public newAppActions = [
     {
       buttonType: 'btn-h-danger',
-      text: 'Un Assign Case Manager',
+      text: 'Unassign Case Manager',
       icon: 'delete',
       buttonName: 'unAssignMngr',
       click: (
@@ -126,7 +126,7 @@ export class CaseManagerListComponent implements OnChanges {
   public tabActions = [
     {
       buttonType: 'btn-h-danger',
-      text: 'Un Assign Case Manager',
+      text: 'Unassign Case Manager',
       icon: 'delete',
       buttonName: 'unAssignMngr',
       click: (
@@ -146,7 +146,7 @@ export class CaseManagerListComponent implements OnChanges {
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Re Assign Case Manager',
+      text: 'Re-assign Case Manager',
       icon: 'delete',
       buttonName: 'reAssignMngr',
       click: (

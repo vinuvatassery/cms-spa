@@ -14,7 +14,7 @@
       [sort]="state.sort"
       (dataStateChange)="dataStateChange($event)">
 
-        <kendo-grid-column field="caseManagerName" title="Case Manager Name" [width]="150">
+        <kendo-grid-column field="caseManagerName" title="Name" [width]="150">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button look="flat" class="card-link-button" (mouseover)="onManagerHover(dataItem)" kendoButton
               kendoPopoverAnchor [popover]="onUserProfileDetailsHovered"
@@ -59,6 +59,7 @@
             <kendo-dropdownbutton [data]="newAppActions" icon="more-vertical" title="More option" *ngIf="!managementTab"
               class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }" aria-label="more actions">
+              <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem
                 let-clientCaseId="clientCaseId">
                 <button 
@@ -75,6 +76,7 @@
             <kendo-dropdownbutton [data]="tabActions" icon="more-vertical" title="More option" *ngIf="managementTab"
             class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button"
             [popupSettings]="{ popupClass: popupClassAction, animate: true }" aria-label="more actions">
+            <span hidden> More Option</span>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem
               let-clientCaseId="clientCaseId">
               <button [hidden]="(manager.activeFlag === 'Y' && dataItem.buttonName==='reAssignMngr') || (manager.activeFlag === 'N' && dataItem.buttonName==='unAssignMngr')"
@@ -153,7 +155,7 @@
   class="app-c-modal app-c-modal-md app-c-modal-np">
   <kendo-dialog-titlebar>{{ isEditSearchCaseManagerProvider ? 'Edit Case Manager' : 'Add Case Manager' }}
   </kendo-dialog-titlebar>
-  <case-management-case-manager-search [caseManagerSearchList$]="getManagerUsers$"
+  <case-management-case-manager-search [caseManagerSearchList$]="getManagerUsers$" [managementTab]="managementTab"
     [existingCaseManagerData]="existingCaseManagerData" [selectedCustomCaseManagerName]="selectedCustomCaseManagerName"
     [selectedCaseManagerId]="selectedCaseManagerId" [isEditSearchCaseManagerValue]="isEditSearchCaseManagerProvider"
     (deleteCaseManagerEvent)="handleManagerRemove($event)"

@@ -199,6 +199,10 @@ export class ClientReadOnlyViewComponent implements OnInit{
         this.clientFacade.update(this.applicantInfo, this.clientId).subscribe({
           next: (response: any) => {
             this.loaderService.hide();
+            this.clientFacade.showHideSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              'Applicant Info updated'
+            );
             this.onCloseEditClientInformationClicked();
             this.onUpdateApplicantInfo.emit();
           },

@@ -1,21 +1,62 @@
 <div class="block-section " *ngIf="((tabId$ | async)===clientProfileTabs.HEALTH_INSURANCE_STATUS) || tabId === clientProfileTabs.HEALTH_INSURANCE_STATUS">
-  <case-management-medical-insurance-status-list></case-management-medical-insurance-status-list>
+  <case-management-medical-insurance-status-list
+  [healthInsuranceForm]="healthInsuranceForm"
+  [caseEligibilityId]="clientCaseEligibilityId"
+  [clientId]="clientId"
+  [insuranceStatus]="this.tabId"
+  (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)"
+  (deleteInsurancePlan)="deleteInsurancePolicy($event)"
+  (copyInsurancePlan) = "copyInsurancePolicy($event)"
+  [closeDeleteModal]="closeDeleteModal"
+  (loadHistoricalPlan)="loadHistoricalData($event)"></case-management-medical-insurance-status-list>
 </div>
 
 <div class="block-section " *ngIf="((tabId$ | async)===clientProfileTabs.HEALTH_INSURANCE_COPAY) || tabId === clientProfileTabs.HEALTH_INSURANCE_COPAY">
-  <case-management-co-pays-and-deductibles-list></case-management-co-pays-and-deductibles-list>
+  <case-management-co-pays-and-deductibles-list
+  [caseEligibilityId]="clientCaseEligibilityId"
+  [clientId]="clientId"
+  [tabStatus]="this.tabId"
+  (loadCoPayEvent)="loadCopayEventHandle($event)" 
+  ></case-management-co-pays-and-deductibles-list>
 </div>
 
 
 <div class="block-section " *ngIf="((tabId$ | async)=== clientProfileTabs.DENTAL_INSURANCE_COPAY) || tabId === clientProfileTabs.DENTAL_INSURANCE_COPAY">
-  <case-management-co-pays-and-deductibles-list></case-management-co-pays-and-deductibles-list>
+  <case-management-co-pays-and-deductibles-list
+  [caseEligibilityId]="clientCaseEligibilityId"
+  [clientId]="clientId"
+  [tabStatus]="this.tabId"
+  (loadCoPayEvent)="loadCopayEventHandle($event)"></case-management-co-pays-and-deductibles-list>
 </div>
 
 
 <div class="block-section " *ngIf="((tabId$ | async)=== clientProfileTabs.DENTAL_INSURANCE_STATUS) || tabId === clientProfileTabs.DENTAL_INSURANCE_STATUS">
-  <case-management-medical-insurance-status-list></case-management-medical-insurance-status-list>
+  <case-management-medical-insurance-status-list
+  [healthInsuranceForm]="healthInsuranceForm"
+  [caseEligibilityId]="clientCaseEligibilityId"
+  [clientId]="clientId"
+  [insuranceStatus]="this.tabId"
+  (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)"
+  (deleteInsurancePlan)="deleteInsurancePolicy($event)"
+  (copyInsurancePlan) = "copyInsurancePolicy($event)"
+  [closeDeleteModal]="closeDeleteModal"
+  (loadHistoricalPlan)="loadHistoricalData($event)"></case-management-medical-insurance-status-list>
 </div>
 
 <div class="block-section" *ngIf="((tabId$ | async)===clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS) || tabId === clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS">
-  <case-management-medical-payment-list></case-management-medical-payment-list>
+  <case-management-medical-payment-list
+  [caseEligibilityId]="clientCaseEligibilityId"
+  [clientId]="clientId"
+  [tabStatus]="this.tabId" 
+  (loadPremiumPaymentEvent)="loadPremiumPaymentEventHandle($event)"
+  ></case-management-medical-payment-list>
+</div>
+
+<div class="block-section" *ngIf="((tabId$ | async)===clientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS) || tabId === clientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS">
+  <case-management-medical-payment-list
+  [caseEligibilityId]="clientCaseEligibilityId"
+  [clientId]="clientId"
+  [tabStatus]="this.tabId" 
+  (loadPremiumPaymentEvent)="loadPremiumPaymentEventHandle($event)"
+  ></case-management-medical-payment-list>
 </div>

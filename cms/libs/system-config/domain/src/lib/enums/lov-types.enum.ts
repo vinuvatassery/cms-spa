@@ -37,5 +37,9 @@ export enum LovType {
     EligibilityStatus ='ELIGIBILITY_STATUS',
     LabResultType ='LAB_RESULT_TYPE_CODE',
     CaseReasonCode = 'CASE_REASON_CODE',
-    EligibilityStatusCp ='ELIGIBILITY_STATUS_CP'
+    DentalInsuranceType ='DENTAL_INSURANCE_TYPE',
+    EligibilityStatusCp ='ELIGIBILITY_STATUS_CP',
+    CoPaymentType ='CO_PAYMENT_TYPE',
+    PremiumPaymentType ="PREMIUM_PAYMENT_TYPE",
+    PremiumPaymentReversal="PREMIUM_PAYMENT_REVERSAL"
   }

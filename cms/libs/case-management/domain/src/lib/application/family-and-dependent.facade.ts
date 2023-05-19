@@ -30,6 +30,7 @@ export class FamilyAndDependentFacade {
   private dependentSearchSubject = new Subject<any>();
   private ddlRelationshipsSubject = new Subject<any>();
   private dependentsSubject = new Subject<any>();
+  private previousRelationsSubject = new Subject<any>();
   private clientDependentsSubject = new Subject<any>();
   private productsSubject = new Subject<any>();
   private existdependentStatusSubject =   new Subject<any>();
@@ -47,6 +48,7 @@ export class FamilyAndDependentFacade {
   dependentSearch$ = this.dependentSearchSubject.asObservable();
   ddlRelationships$ = this.ddlRelationshipsSubject.asObservable();
   dependents$ = this.dependentsSubject.asObservable();
+  previousRelations$ = this.previousRelationsSubject.asObservable();
   clientDependents$ = this.clientDependentsSubject.asObservable();
   existdependentStatus$ = this.existdependentStatusSubject.asObservable();
   dependentStatusGet$ = this.dependentStatusGetSubject.asObservable();
@@ -96,12 +98,12 @@ export class FamilyAndDependentFacade {
     this.loaderService.hide();
   }
 
-  deleteDependent(eligibilityId: string, dependentId: string): void {
+  deleteDependent(eligibilityId: string, dependentId: string, isCER: boolean = false, status?: String): void {
     this.showLoader();
-    this.dependentDataService.deleteDependent(eligibilityId, dependentId).subscribe({
+    this.dependentDataService.deleteDependent(eligibilityId, dependentId, isCER, status).subscribe({
       next: (deleteResponse) => {
         if (deleteResponse ?? false) {
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Dependent Removed Successfully')
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Relationship Removed Successfully')
         }
         this.dependentdeleteSubject.next(deleteResponse);
         this.hideLoader();
@@ -117,7 +119,7 @@ export class FamilyAndDependentFacade {
     this.dependentDataService.addNewDependent(eligibilityId, dependent).subscribe({
       next: (addNewdependentsResponse) => {
         if (addNewdependentsResponse) {
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'New Dependent Added Successfully')
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'New Relationship Added Successfully')
         }
 
         this.dependentAddNewSubject.next(addNewdependentsResponse);
@@ -134,7 +136,7 @@ export class FamilyAndDependentFacade {
     this.dependentDataService.updateNewDependent(eligibilityId, dependent).subscribe({
       next: (updateNewdependentsResponse) => {
         if (updateNewdependentsResponse) {
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Dependent data Updated')
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Relationship data Updated')
         }
 
         this.dependentUpdateNewSubject.next(updateNewdependentsResponse);
@@ -202,9 +204,37 @@ export class FamilyAndDependentFacade {
     });
   }
 
+  loadPreviousRelations(previousEligibilityId: string, clientId: number): void {
+    this.showLoader();
+    this.dependentDataService.loadPreviousRelations(previousEligibilityId, clientId).subscribe({
+      next: (relationResponse: any) => {
+        if (relationResponse) {
+          let dataView: any = {
+            data : relationResponse
+          };
+          this.previousRelationsSubject.next(dataView);
+        }
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+  }
+
   updateDependentStatus(clientCaseEligibilityId : string ,hasDependents : string) {
     this.showLoader();
-    return this.dependentDataService.updateDependentStatus(clientCaseEligibilityId , hasDependents)
+    return this.dependentDataService.updateDependentStatus(clientCaseEligibilityId , hasDependents);
+  }
+
+  updateFamilyChangedStatus(previousEligibilityId : string ,friendFamilyChangedFlag : string) {
+    this.showLoader();
+    return this.dependentDataService.updateFamilyChangedStatus(previousEligibilityId , friendFamilyChangedFlag);
+  }
+
+  updateAdditionalFamilyStatus(previousEligibilityId : string ,hasAdditionalFamilyFlag : string) {
+    this.showLoader();
+    return this.dependentDataService.updateAdditionalFamilyStatus(previousEligibilityId , hasAdditionalFamilyFlag);
   }
 
   loadDependentsStatus(clientCaseEligibilityId : string) : void {
@@ -260,7 +290,7 @@ export class FamilyAndDependentFacade {
     this.dependentDataService.addExistingDependent(eligibilityId, data).subscribe({
       next: (dependentStatusResponse) => {
         if (dependentStatusResponse) {
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Dependent added successfully')
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Relationship added successfully')
         }
 
         this.existdependentStatusSubject.next(dependentStatusResponse);

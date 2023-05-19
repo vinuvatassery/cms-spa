@@ -1,10 +1,17 @@
 <section class="k-dialog-body">
-  <p class="text-muted mb-2">
+  <p class="text-muted mb-2" *ngIf="dialogTitle === 'View' || dialogTitle === 'Add' || dialogTitle === 'Edit'">
     {{
     isEditViewPopup
     ? 'Click "Edit" to make changes to the insurance '
     : 'All fields are required unless otherwise stated.'
     }}
+  </p>
+  <p class="text-muted mb-2" *ngIf="isCopyPopup">
+    Review and update the fields below if needed. The prior insurance will end the day before this insurance begins.
+  </p>
+  <p class="text-muted mb-2" *ngIf="isReviewPopup">
+    Review and update the fields below if needed, specify whether this should update the existing insurance status
+    or create new one, then click "Save".
   </p>
   <div [formGroup]="healthInsuranceForm">
 
@@ -172,7 +179,8 @@
           <case-management-medical-premium-detail-insurance-carrier-name [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable"
             (insuranceCarrierNameChange)="insuranceCarrierNameChange($event)"
-            (insuranceCarrierNameData)="insuranceCarrierNameData($event)"></case-management-medical-premium-detail-insurance-carrier-name>
+            (insuranceCarrierNameData)="insuranceCarrierNameData($event)"
+            [insuranceStatus]="insuranceStatus"></case-management-medical-premium-detail-insurance-carrier-name>
         </div>
 
         <div class="flex-col mat-form-sm-b-space ">
@@ -187,7 +195,7 @@
             [defaultValue]="metalLevelDefaultValue"></case-management-medical-premium-detail-metal-level>
         </div>
         <div
-          *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && healthInsuranceForm.controls['insuranceCarrierName'].value">
+          *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.DentalInsurance  && healthInsuranceForm.controls['insuranceCarrierName'].value">
           <case-management-medical-carrier-contact-info [carrierContactInfo]="carrierContactInfo"></case-management-medical-carrier-contact-info>
         </div>
         <div class="flex-col mt-3" *ngIf="ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan">
@@ -200,7 +208,7 @@
             [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-aptc>
         </div>
         <div class="flex-col mt-3"
-          *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare">
+          *ngIf="ddlInsuranceType === InsurancePlanTypes.DentalInsurance || ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare">
           <case-management-medical-premium-detail-careassist-pay [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable" [sameAsInsuranceIdFlag]="sameAsInsuranceIdFlag"
             [ddlInsuranceType]="ddlInsuranceType"
@@ -210,7 +218,7 @@
       </div>
 
 
-      <div class="flex-col mb-2 mt-2  file-uploads" *ngIf="(ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare)
+      <div class="flex-col mb-2 mt-2  file-uploads" *ngIf="(ddlInsuranceType === InsurancePlanTypes.DentalInsurance || ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare)
           && healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
         <h5 class="text-capital">Proof of premium amount</h5>
         <kendo-upload aria-label="proof of premium" name="proofOfPremium" [disabled]="isViewContentEditable"
@@ -270,7 +278,7 @@
     </div>
     <div *ngIf="isOpenDdl">
       <div class="flex-col mb-2 mt-2 file-uploads"
-        *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || (medicareInsuranceInfoCheck && ddlInsuranceType === InsurancePlanTypes.Medicare)">
+        *ngIf="ddlInsuranceType === InsurancePlanTypes.DentalInsurance || ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || (medicareInsuranceInfoCheck && ddlInsuranceType === InsurancePlanTypes.Medicare)">
         <h5 class="text-capital">Copy of Insurance Card</h5>
         <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
           [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"

@@ -1,46 +1,145 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter,OnDestroy } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { State } from '@progress/kendo-data-query';
+
+/** External **/
+import { Subscription } from 'rxjs';
+
 /** Facades **/
-import { HealthInsurancePolicyFacade, CaseFacade } from '@cms/case-management/domain';
+import { HealthInsurancePolicyFacade, CaseFacade, ClientProfileTabs } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { LovFacade } from '@cms/system-config/domain';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
+
 @Component({
   selector: 'case-management-medical-payment-list',
   templateUrl: './medical-payment-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class MedicalPaymentListComponent implements OnInit {
+
   /** Public **/
-  medicalPremiumPayments$ = this.insurancePolicyFacade.medicalPremiumPayments$;
+  medicalPremiumPayments$ = this.insurancePolicyFacade.premiumPayments$;
+  triggeredPremiumPaymentSave$ = this.insurancePolicyFacade.triggeredPremiumPaymentSave$
   gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  public pageSize = 10;
-  public skip = 5;
-  public pageSizes = [
-    {text: '5', value: 5}, 
-    {text: '10', value: 10},
-    {text: '20', value: 20},
-    {text: 'All', value: 100}
-  ];
-  public formUiStyle : UIFormStyle = new UIFormStyle(); 
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   isPremiumPaymentDetailsOpened = false;
-  isReadOnly$=this.caseFacade.isCaseReadOnly$;
-  /** Constructor **/
-  constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade,private caseFacade: CaseFacade) {}
+  @Output() loadPremiumPaymentEvent = new EventEmitter<any>();
+  @Output() loadTwelveMonthRecord = new EventEmitter<boolean>();
+  public state!: State;
+  public pageSizes = this.insurancePolicyFacade.gridPageSizes;
+  public gridSkipCount = this.insurancePolicyFacade.skipCount;
+  @Input() caseEligibilityId: any;
+  @Input() clientId: any;
+  @Input() tabStatus: any;
+  isReadOnly$ = this.caseFacade.isCaseReadOnly$;
+  showTwelveMonthRecordFlag:boolean = false;
+  carrierContactInfo!: any;
+  /** Private **/
+  private triggeredPremiumPaymentSubscription!: Subscription;
 
+  /** Constructor **/
+
+  constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade, private readonly formBuilder: FormBuilder,
+    private caseFacade: CaseFacade,
+    private lovFacade: LovFacade,) {
+  }
   /** Lifecycle hooks **/
+
   ngOnInit(): void {
-    this.loadMedicalPremiumPayments();
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value
+    };
+    this.loadPremiumPaymentData();
+    this.registerTriggeredPremiumPaymentSubscription();
+    
   }
 
+  ngOnDestroy(): void {
+    this.triggeredPremiumPaymentSubscription.unsubscribe();
+  }
   /** Private methods **/
+
   private loadMedicalPremiumPayments() {
     this.insurancePolicyFacade.loadMedicalPremiumPayments();
   }
-  closePremiumPaymentDetailsOpened(){
-    this.isPremiumPaymentDetailsOpened = false;
+
+  handleShowHistoricalClick(){  
+    this.loadPremiumPaymentData();
   }
 
- openPremiumPaymentDetailsOpened(){
+  closePremiumPaymentDetailsOpened() {
+    this.isPremiumPaymentDetailsOpened = false;
+  }
+  openPremiumPaymentDetailsOpened() {
+    this.getPaymentRequestLov();
     this.isPremiumPaymentDetailsOpened = true;
+  }
+  pageSelectionChange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadPremiumPaymentData();
+  }
+  public dataStateChange(stateData: any): void {
+    this.state = stateData;
+    this.loadPremiumPaymentData();
+  }
+
+  private loadPremiumPaymentData(): void {
+    this.loadPremiumPaymentList(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0
+    );
+
+  }
+
+  private registerTriggeredPremiumPaymentSubscription(){
+    this.triggeredPremiumPaymentSubscription = this.triggeredPremiumPaymentSave$.subscribe(data=>{
+      if(data){
+        this.closePremiumPaymentDetailsOpened();
+        this.loadPremiumPaymentData();
+      }
+    })
+  }
+
+  loadPremiumPaymentList(
+    skipCountValue: number,
+    maxResultCountValue: number
+  ) {
+
+    const gridDataRefinerValue = {
+      skipCount: skipCountValue,
+      maxResultCount: maxResultCountValue,
+      type: 'MEDICAL_PREMIUM',
+      dentalPlanFlag: (this.tabStatus == ClientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS ) ? ClientProfileTabs.HEALTH_INSURANCE_STATUS : ClientProfileTabs.DENTAL_INSURANCE_STATUS,
+      twelveMonthsRecords: this.showTwelveMonthRecordFlag
+    };
+
+    this.loadPremiumPaymentEvent.next(gridDataRefinerValue);
+  }
+  getPaymentRequestLov() {
+    this.lovFacade.getPremiumPaymentTypeLov();
+    this.lovFacade.getPremiumPaymentReversalLov();
+  }
+
+  getCarrierContactInfo(carrierId:string){
+    this.carrierContactInfo='';
+    this.insurancePolicyFacade.getCarrierContactInfo(carrierId).subscribe({
+      next: (data) => {
+        this.carrierContactInfo=data;
+      },
+      error: (err) => {
+        if (err) {
+          this.insurancePolicyFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            err
+          );
+        }
+      },
+    });
   }
 }

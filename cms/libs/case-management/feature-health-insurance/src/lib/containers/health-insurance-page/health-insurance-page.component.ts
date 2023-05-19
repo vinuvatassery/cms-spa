@@ -31,8 +31,9 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   closeDeleteModal: boolean = false;
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
   medicalHealthPlans$ = this.insurancePolicyFacade.medicalHealthPlans$;
-  isInsuranceAvailable:boolean=false;
+  isInsuranceAvailable: boolean = false;
   isCerForm = false;
+  prevClientCaseEligibilityId!: string;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!: Subscription;
@@ -130,7 +131,8 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       policyHolderLastName: [''],
       proofOfPremium: [''],
       copyOfInsuranceCard: [''],
-      copyOfSummary: ['']
+      copyOfSummary: [''],
+      cerReviewType:['']
     });
 
   }
@@ -150,6 +152,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       ),
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
+       this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Health Insurance status updated');
         this.workflowFacade.navigate(navigationType);
         this.HideLoader();
       } else {
@@ -157,25 +160,24 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       }
     });
   }
-  private saveAndContinue(){    
-    if(this.insuranceFlagForm.controls['currentInsuranceFlag'].value ==StatusFlag.No){
+  private saveAndContinue() {
+    if (this.insuranceFlagForm.controls['currentInsuranceFlag'].value == StatusFlag.No) {
       this.insurancePolicyFacade.showInsuranceRequiredSubject.next(false);
     }
-    else{
-      if(!this.isInsuranceAvailable)
-      {this.insurancePolicyFacade.showInsuranceRequiredSubject.next(true);}
+    else {
+      if (!this.isInsuranceAvailable) { this.insurancePolicyFacade.showInsuranceRequiredSubject.next(true); }
     }
-    if (this.checkValidations() && 
-    ((this.insuranceFlagForm.controls['currentInsuranceFlag'].value ==StatusFlag.Yes && this.isInsuranceAvailable)||
-    this.insuranceFlagForm.controls['currentInsuranceFlag'].value ==StatusFlag.No )) {
-     this.save();
-     return of(true);
+    if (this.checkValidations() &&
+      ((this.insuranceFlagForm.controls['currentInsuranceFlag'].value == StatusFlag.Yes && this.isInsuranceAvailable) ||
+        this.insuranceFlagForm.controls['currentInsuranceFlag'].value == StatusFlag.No)) {
+      this.save();
+      return of(true);
     }
-    else{
+    else {
       return of(false);
     }
   }
-  private save() {    
+  private save() {
     if (this.insuranceFlagForm.valid) {
       this.ShowLoader();
       let caseEligibilityFlagsData = this.insuranceFlagForm.value;
@@ -186,7 +188,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     }
     return of(false)
   }
-  validateForm(){
+  validateForm() {
     this.insuranceFlagForm.markAllAsTouched();
     this.insuranceFlagForm.controls['currentInsuranceFlag'].setValidators([
       Validators.required,
@@ -270,7 +272,10 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
           this.clientId = JSON.parse(session.sessionData).clientId;
-
+          this.prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;
+          if (this.prevClientCaseEligibilityId) {
+            this.isCerForm = true;
+          }
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
             pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
@@ -327,6 +332,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     this.adjustInsurancePlansAttributes(currentInsuranceValue == StatusFlag.Yes ? StatusFlag.Yes : StatusFlag.No);
     this.saveHealthInsuranceFlag().subscribe({
       next: (response: any) => {
+        this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Health Insurance flags updated');
         if (currentInsuranceValue == StatusFlag.Yes) {
           this.showTable = true;
           const gridDataRefinerValue = {
@@ -359,6 +365,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   }
 
   loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
+    let typeParam = { type: 'INSURANCE', insuranceStatusType: 'ALL' }
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
       maxResultCount: gridDataRefinerValue.pagesize,
@@ -368,6 +375,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     this.insurancePolicyFacade.loadMedicalHealthPlans(
       this.clientId,
       this.clientCaseEligibilityId,
+      typeParam,
       gridDataRefiner.skipcount,
       gridDataRefiner.maxResultCount,
       gridDataRefiner.sortColumn,
@@ -401,8 +409,34 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
 
   }
 
+  removeInsurancePolicy(value: any) {
+    if (value?.currentInsurancePolicyId != undefined) {
+      this.ShowLoader();
+      this.closeDeleteModal = false;
+      this.insurancePolicyFacade.deleteInsurancePolicy(value?.currentInsurancePolicyId ,value?.endDate, this.isCerForm).subscribe({
+        next: () => {
+          this.closeDeleteModal = true;
+          const gridDataRefinerValue = {
+            skipCount: this.insurancePolicyFacade.skipCount,
+            pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            sortColumn: 'creationTime',
+            sortType: 'asc',
+          };
+          this.loadHealthInsuranceHandle(gridDataRefinerValue);
+          this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, "Insurance policy removed successfully");
+          this.HideLoader();
+          this.ref.detectChanges();
+        },
+        error: (error: any) => {
+          this.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)
+        }
+      })
+    }
+
+  }
+
   private addSaveForLaterSubscription(): void {
-    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {    
+    this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
       if (this.checkValidations()) {
         this.save().subscribe((response: any) => {
           if (response) {
@@ -426,15 +460,15 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     });
   }
 
-  private addHealthInsuranceStatusSubscription():void{
-    this.healthInsuranceStatusSubscription = this.medicalHealthPlans$.subscribe((res)=>{
-      if(res?.data?.length>0){
+  private addHealthInsuranceStatusSubscription(): void {
+    this.healthInsuranceStatusSubscription = this.medicalHealthPlans$.subscribe((res) => {
+      if (res?.data?.length > 0) {
         this.isInsuranceAvailable = true;
-        if(this.insuranceFlagForm.controls['currentInsuranceFlag'].value =='Y' ){
+        if (this.insuranceFlagForm.controls['currentInsuranceFlag'].value == 'Y') {
           this.insurancePolicyFacade.showInsuranceRequiredSubject.next(false);
         }
       }
-      else{
+      else {
         this.isInsuranceAvailable = false;
       }
     });

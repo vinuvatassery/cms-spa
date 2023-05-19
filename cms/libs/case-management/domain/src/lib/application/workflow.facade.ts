@@ -101,7 +101,7 @@ export class WorkflowFacade {
     private readonly notificationSnackbarService: NotificationSnackbarService,
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider
-  ) {}
+  ) { }
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -192,8 +192,8 @@ export class WorkflowFacade {
     }
 
     this.workflowService.createNewSession(this.sessionData).subscribe({
-      next: (sessionResp: any) => {        
-        if (sessionResp && sessionResp?.workflowSessionId) {          
+      next: (sessionResp: any) => {
+        if (sessionResp && sessionResp?.workflowSessionId) {
           this.router.navigate(['case-management/' + navigationPath], {
             queryParams: {
               sid: sessionResp?.workflowSessionId,
@@ -202,9 +202,8 @@ export class WorkflowFacade {
             },
           });
         }
-        if(!sessionResp?.sessionData?.prevClientCaseEligibilityId)
-        {
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, successMessage);
+        if (!sessionResp?.sessionData?.prevClientCaseEligibilityId) {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, successMessage);
         }
         this.hideLoader();
       },
@@ -446,6 +445,23 @@ export class WorkflowFacade {
     }
   }
 
+  addDynamicDataPoints(checklist: CompletionChecklist[]) {
+    if (checklist) {
+      const processId = this.actRoute.snapshot.queryParams['pid'];
+      const completionChecklist: CompletionChecklist[] | undefined = this.completionChecklist?.find((cs: WorkflowProcessCompletionStatus) => cs.processId === processId)?.completionChecklist;
+      if (completionChecklist) {
+        checklist.forEach((chk: any) => {
+          const isNotExist = completionChecklist.findIndex((i: any) => i.datapointName === chk.dataPointName) === -1;
+          if (isNotExist) {
+            completionChecklist.push(chk);
+          }
+
+          this.addChkListItem(completionChecklist, chk.dataPointName);
+        });
+      }
+    }
+  }
+
   resetWorkflowNavigation() {
     const newRoute = this.deepCopy(this.currentSession?.workFlowProgress)[0];
     this.saveNonSequenceNavigation(
@@ -651,7 +667,7 @@ export class WorkflowFacade {
     this.showLoader();
     this.workflowService.loadWorkflowSessionData(sessionId).subscribe({
       next: (sessionResponse) => {
-        if (sessionResponse) {          
+        if (sessionResponse) {
           const sessionData = {
             clientId: JSON.parse(sessionResponse?.sessionData).ClientId,
             ClientCaseId: JSON.parse(sessionResponse?.sessionData).ClientCaseId,
@@ -660,7 +676,7 @@ export class WorkflowFacade {
             entityID: JSON.parse(sessionResponse?.sessionData).EntityID,
             EntityTypeCode: JSON.parse(sessionResponse?.sessionData)
               .EntityTypeCode,
-            prevClientCaseEligibilityId :  JSON.parse(sessionResponse?.sessionData)?.PrevClientCaseEligibilityId
+            prevClientCaseEligibilityId: JSON.parse(sessionResponse?.sessionData)?.PrevClientCaseEligibilityId
           };
           const workflowResponseData = {
             sessionData: JSON.stringify(sessionData),
