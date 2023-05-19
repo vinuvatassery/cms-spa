@@ -183,8 +183,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
       ),  
     ).subscribe(([navigationType, isSaved ]) => {         
       if (isSaved ) {    
-        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Providers Status Updated')  
-        this.checkBoxSubscription.unsubscribe();      
+        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Providers Status Updated')        
         this.workFlowFacade.navigate(navigationType);
         this.healthProvider.hideLoader(); 
       } else {
