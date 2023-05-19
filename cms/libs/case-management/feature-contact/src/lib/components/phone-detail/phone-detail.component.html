@@ -11,9 +11,9 @@
     </p>
     <div class="flex-row">
       <div class="flex-col">
-        <kendo-floatinglabel text="Choose Phone Type">
+        <kendo-floatinglabel text="{{ isEditValue ? 'Phone Type' : 'Choose Phone Type' }}">
           <kendo-dropdownlist formControlName="deviceTypeCode" (selectionChange)="deviceTypeSelectionChange($event)"
-            aria-label="Choose Phone Type" [fillMode]="formUiStyle.dropDownFillMode"
+            [fillMode]="formUiStyle.dropDownFillMode"
             [data]="lovClientPhoneDeviceType$ | async" textField="lovDesc" valueField="lovCode" [valuePrimitive]="true">
           </kendo-dropdownlist>
           <kendo-formerror *ngIf="clientPhoneForm?.hasError('required','deviceTypeCode') && isFormSubmitted">Phone type
