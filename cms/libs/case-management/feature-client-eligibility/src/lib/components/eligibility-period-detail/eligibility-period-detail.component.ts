@@ -132,13 +132,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     this.setUpdateEligibilityValidations();
     if (this.eligibilityPeriodForm.valid) {
       let editEligibilityData = this.currentEligibility;
-      if(this.isStatusPeriodEdit){
-        editEligibilityData.ClientCaseEligibilityGroupId = this.currentEligibility.ClientCaseEligibilityGroupId;
-        editEligibilityData.groupCode = this.eligibilityPeriodForm.controls['group'].value;
-        editEligibilityData.groupCodeId = this.groupList.filter((group:any)=>group.groupCode == editEligibilityData.groupCode)[0].groupCodeId;
-        editEligibilityData.reasonCode = this.eligibilityPeriodForm.controls['reasonCode'].value;
-        editEligibilityData.otherReasonDesc = this.eligibilityPeriodForm.controls['otherReasonDesc'].value
-      }
+     
       editEligibilityData.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusStartDate'].value, this.dateFormat));
       editEligibilityData.eligibilityEndDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusEndDate'].value, this.dateFormat));
       this.loaderService.show();

@@ -67,7 +67,7 @@
       *ngIf="!eligibilityPeriodForm.controls['statusEndDate'].valid && !statusEndDateIsGreaterThanStartDate && !eligibilityPeriodForm.controls['statusEndDate'].disabled">End Date must be after Start Date.
     </kendo-formerror>
     </div>
-    <div class="flex-col" *ngIf="!isEdit">
+    <div class="flex-col" *ngIf="!isEdit && !isStatusPeriodEdit">
       <kendo-floatinglabel text="Group">
         <kendo-dropdownlist
         [fillMode]="formUiStyle.dropDownFillMode"
