@@ -190,19 +190,79 @@ export class ClientDataService {
         {
           id: 1,
           specialHandling: 'Case Worker Note',
-          answer: 'Immediately transfer to Wesley Marascas',
+          answer: '',
         },
         {
           id: 2,
           specialHandling:
-            'Blind or serious difficulty seeing, even when wearing glasses?',
-          answer: 'Don’t want to answer',
+            'Needs materials in alternate format (Braille, large print, audio recordings, etc.)?',
+            key:'materialInAlternateFormatCode',
+            ohterFormatKey:'materialInAlternateFormatOther',
+            descKey :"materialInAlternateFormatDesc",
+          answer: '',
         },
         {
           id: 3,
           specialHandling:
-            'Any limiting physical, mental, or emotional conditions?',
-          answer: 'Yes, since age 43',
+            'Needs interpreter?',
+            key:'interpreterCode',
+            ohterKey:'interpreterType',
+          answer: '',
+        },
+        {
+          id: 4,
+          specialHandling:
+            'Deaf or serious difficulty hearing?',
+            key:'deafOrHearingCode',
+            ohterKey:'startAgeDeafOrHearing',
+          answer: '',
+        },
+        {
+          id: 5,
+          specialHandling:
+            'Blind or serious difficulty seeing, even when wearing glasses?',
+            key:'blindSeeingCode',
+            ohterKey:'startAgeBlindSeeing',
+          answer: '',
+        },
+        {
+          id: 6,
+          specialHandling:
+            'Any limiting physical, mental or emotional conditions?',
+            key:'limitingConditionCode',
+            ohterKey:'',
+          answer: '',
+        },
+        {
+          id: 7,
+          specialHandling:
+            'Serious difficulty walking or climbing stairs?',
+            key:'walkingClimbingDifficultyCode',
+            ohterKey:'startAgeWalkingClimbingDifficulty',
+          answer: '',
+        },{
+          id: 8,
+          specialHandling:
+            'Difficulty dressing or bathing?',
+            key:'dressingBathingDifficultyCode',
+            ohterKey:'startAgeDressingBathingDifficulty',
+          answer: '',
+        },
+        {
+          id: 9,
+          specialHandling:
+            'Serious difficulty concentrating, remembering, or making decisions due to a physical, mental, or emotional conditions?',
+          answer: '',
+          key:'concentratingDifficultyCode',
+          ohterKey:'startAgeConcentratingDifficulty',
+        },
+        {
+          id: 10,
+          specialHandling:
+            'Serious difficulty doing errands alone due to physical, mental, or emotional conditions?',
+          answer: '',
+          key:'errandsDifficultyCode',
+          ohterKey:'startAgeErrandsDifficulty',
         },
       ]);
     }

@@ -14,15 +14,17 @@
     </div>
     <div class="flex-col">
       <div class="app-c-table">
-        <kendo-grid [data]="specialHandlings$ | async">
+        <kendo-grid [data]="questions">
           <kendo-grid-column
             field="specialHandling"
             title="Special Handling"
             [width]="300"
           >
+          
             <ng-template kendoGridCellTemplate let-dataItem>
               <span class="bold-text">{{ dataItem.specialHandling }}</span>
             </ng-template>
+
           </kendo-grid-column>
           <kendo-grid-column field="answer" title="Answer" [width]="300">
           </kendo-grid-column>
