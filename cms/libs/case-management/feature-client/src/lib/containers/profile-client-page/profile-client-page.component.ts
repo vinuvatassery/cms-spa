@@ -3,8 +3,7 @@ import { OnInit, Component, ChangeDetectionStrategy,ChangeDetectorRef} from '@an
 import { ActivatedRoute } from '@angular/router';
 import { CaseFacade, ClientProfile,ClientFacade, StatusPeriodFacade } from '@cms/case-management/domain';
 import { first, Subject } from 'rxjs';
-import { LoaderService } from '@cms/shared/util-core';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { SnackBarNotificationType,LoaderService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-profile-client-page',
