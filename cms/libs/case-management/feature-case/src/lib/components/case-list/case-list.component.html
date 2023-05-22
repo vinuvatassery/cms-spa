@@ -33,7 +33,7 @@
   <kendo-grid
   (columnReorder)="onColumnReorder($event)"
   (columnVisibilityChange)="columnChange($event)"
-  [filter]="gridFilter"
+  [filter]="state.filter"
   [pageSize]="state.take"
   [pageable]="true"
   [sortable]="true"

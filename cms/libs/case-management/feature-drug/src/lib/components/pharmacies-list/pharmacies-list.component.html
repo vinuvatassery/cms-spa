@@ -168,7 +168,7 @@
 <kendo-dialog *ngIf="isOpenReactivatePharmaciesClicked" (close)="handleCloseReactivatePharmaciesClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar> Reactivate Pharmacy </kendo-dialog-titlebar>
-  <case-management-reactivate-pharmacies   [clientPharmacyDetails]="selectClientPharmacyDetails"
+  <case-management-reactivate-pharmacies   [clientPharmacyDetails]="selectClientPharmacyDetails" [isShowHistoricalData]="isShowHistoricalData"
    (closeReactivatePharmacies)="handleCloseReactivatePharmaciesClicked()">
   </case-management-reactivate-pharmacies>
 </kendo-dialog>

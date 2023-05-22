@@ -82,8 +82,8 @@ export class ClientEligibilityComponent implements OnInit {
 
   }
   ngOnDestroy(): void {
-    this.reviewQuestionAnswerSubscription.unsubscribe();
-    this.reviewQuestionResponseSubscription.unsubscribe();
+    this.reviewQuestionAnswerSubscription?.unsubscribe();
+    this.reviewQuestionResponseSubscription?.unsubscribe();
   }
 
   loadReviewQuestionAnswers() {
