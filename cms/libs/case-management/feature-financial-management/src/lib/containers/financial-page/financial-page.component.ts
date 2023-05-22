@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {  ActivatedRoute, Router } from '@angular/router';
+import { FinancialManagementFacade } from '@cms/case-management/domain';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-page',
@@ -7,14 +9,22 @@ import {  ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./financial-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FinancialPageComponent {
+export class FinancialPageComponent implements OnInit{
+
+ 
   // new profile button
   // financial-navigation component
   //  router outlet
   //  reminder component(reuse)
   isInnerLeftMenuOpen = false;
-  constructor(route: Router, activeRoute : ActivatedRoute) {
+  constructor(route: Router, activeRoute : ActivatedRoute,
+    private financialManagementFacade: FinancialManagementFacade    ) {
     route.navigate(['vendors'], {relativeTo: activeRoute})
+  }   
+
+   /** Lifecycle hooks **/
+   ngOnInit() {    
+    this.financialManagementFacade.enableVendorSearch();
   }
 
   openInnerLeftMenu(){

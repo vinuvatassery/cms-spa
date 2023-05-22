@@ -106,21 +106,6 @@
       "@cms/dashboard/feature-home": [
         "libs/dashboard/feature-home/src/index.ts"
       ],
-      "@cms/financial-management/domain": [
-        "libs/financial-management/domain/src/index.ts"
-      ],
-      "@cms/financial-management/feature-expense": [
-        "libs/financial-management/feature-expense/src/index.ts"
-      ],
-      "@cms/financial-management/feature-home": [
-        "libs/financial-management/feature-home/src/index.ts"
-      ],
-      "@cms/financial-management/feature-income": [
-        "libs/financial-management/feature-income/src/index.ts"
-      ],
-      "@cms/financial-management/feature-vendor": [
-        "libs/financial-management/feature-vendor/src/index.ts"
-      ],
       "@cms/productivity-tools/domain": [
         "libs/productivity-tools/domain/src/index.ts"
       ],

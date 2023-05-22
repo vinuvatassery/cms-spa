@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 /** Facades **/
-import { SearchFacade, CaseStatusCode, CaseFacade } from '@cms/case-management/domain';
+import { SearchFacade, CaseStatusCode, CaseFacade, FinancialManagementFacade } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  Subject } from 'rxjs';
@@ -19,12 +19,14 @@ export class SearchPageComponent implements OnInit {
   mobileHeaderSearchOpen = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   filterManager: Subject<string> = new Subject<string>();
+  vendorSearchBars$ = this.financialManagementFacade.vendorSearchBars$
 
   /** Constructor **/
   constructor(private readonly searchFacade: SearchFacade,private router: Router,
     private caseFacade: CaseFacade,
     private loggingService: LoggingService,
-    private loaderService: LoaderService) {
+    private loaderService: LoaderService,
+    private readonly financialManagementFacade: FinancialManagementFacade) {
      
   }
 

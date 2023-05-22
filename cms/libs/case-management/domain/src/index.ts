@@ -168,6 +168,7 @@ export * from './lib/application/insurance-plan.facade';
 export * from './lib/application/health-insurance-policy.facade';
 export * from './lib/application/review-question-answer.facade';
 export * from './lib/application/review-question-response.facade';
+export * from './lib/application/financial-management.facade';
 
 
 
