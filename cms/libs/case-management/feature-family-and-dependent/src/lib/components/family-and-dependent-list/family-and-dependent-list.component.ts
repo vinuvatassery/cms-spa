@@ -40,6 +40,7 @@ CAClient = DependentTypeCode.CAClient;
   @Input() sort : any;
   @Input() timeFormat : any;
   @Input()  existdependentStatus$ : any;
+  @Input() isCerForm: boolean = false;
   @Output() addUpdateDependentEvent = new EventEmitter<any>();
   @Output() GetNewDependentHandleEvent = new EventEmitter<any>();
   @Output() GetExistclientDependentEvent = new EventEmitter<any>();
