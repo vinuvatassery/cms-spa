@@ -60,18 +60,18 @@ export class SpecialHandlingComponent implements OnInit {
             if(this.answersKeys && this.answersKeys.length > 0){
                this.questions.forEach(question =>{
                 question.answer = this.answersKeys.find(answer =>answer.key == question.key)?.value;
-                if(question.answer == "YES" && question.ohterKey != 'interpreterType' && question.ohterFormatKey != 'materialInAlternateFormatOther' && question.descKey != 'materialInAlternateFormatDesc' && question.key != 'limitingConditionCode'){
-                  question.answer = question.answer+' ' +', since age'+ ' ' +this.answersKeys.find(answer =>answer.key == question.ohterKey)?.value; 
+                if(question.answer == "YES" && question.ohterKey != 'interpreterType' && question.otherFormatKey != 'materialInAlternateFormatOther' && question.descKey != 'materialInAlternateFormatDesc' && question.key != 'limitingConditionCode'){
+                  question.answer = question.answer+' ' +', Since age'+ ' ' +this.answersKeys.find(answer =>answer.key == question.ohterKey)?.value; 
                 } else if(question.id == 1  ){
-                  question.answer =this.clientNotes.length > 0 ? this.clientNotes.map(function (e) { return e?.note;}).join(', ') : 'No notes'
+                  question.answer =this.clientNotes.length > 0 ? this.clientNotes.map(function (e) { return e?.note;}).join(', ') : 'No Notes'
                 } else if(question.answer == "YES" && question.ohterKey == 'interpreterType'){
                   question.answer ='YES' + ' ,' + this.answersKeys.find(answer =>answer.key == question.ohterKey)?.value;
                 }
-                else if(question.answer == "YES"  &&  question.descKey == 'materialInAlternateFormatDesc' && !this.answersKeys.find(answer =>answer.key == question.ohterFormatKey)?.value){
+                else if(question.answer == "YES"  &&  question.descKey == 'materialInAlternateFormatDesc' && !this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value){
                   question.answer = 'YES' + ' ,' + this.answersKeys.find(answer =>answer.key == question.descKey)?.value;
                 }
-                else if(question.answer == "YES"  &&  question.ohterFormatKey == 'materialInAlternateFormatOther' ){
-                  question.answer ='YES' + ' ,' + this.answersKeys.find(answer =>answer.key == question.descKey)?.value +' ,'+ this.answersKeys.find(answer =>answer.key == question.ohterFormatKey)?.value;
+                else if(question.answer == "YES"  &&  question.otherFormatKey == 'materialInAlternateFormatOther' ){
+                  question.answer ='YES' + ' ,' + this.answersKeys.find(answer =>answer.key == question.descKey)?.value +' ,'+ this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value;
                 }
               });
               this.cdRef.detectChanges();
@@ -99,6 +99,5 @@ export class SpecialHandlingComponent implements OnInit {
   }
   onSpecialHandlingPopupClose(event:any){
       this.onEditSpecialHandlingClosed();
-    
   }
 }
