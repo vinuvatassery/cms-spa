@@ -40,6 +40,8 @@
               [columnDroplist$]="columnDroplist$"
               [selectedTab]="selectedTab"
               [searchLoaderVisibility$]="searchLoaderVisibility$"
+              [parentModule]="moduleCode.CLIENTS"
+              [module]="moduleCode.MY_CLIENTS"
               (loadCasesListEvent)="loadCasesListEventHandler($event)"
             ></case-management-case-list>
           </ng-template>
@@ -55,6 +57,8 @@
               [columnDroplist$]="columnDroplist$"
               [selectedTab]="selectedTab"
               [searchLoaderVisibility$]="searchLoaderVisibility$"
+              [parentModule]="moduleCode.CLIENTS"
+              [module]="moduleCode.RECENT_CLIENTS"
               (loadCasesListEvent)="loadCasesListEventHandler($event)"
             ></case-management-case-list>
           </ng-template>
@@ -70,6 +74,8 @@
               [columnDroplist$]="columnDroplist$"
               [selectedTab]="selectedTab"
               [searchLoaderVisibility$]="searchLoaderVisibility$"
+              [module]="moduleCode.ALL_CLIENTS"
+              [parentModule]="moduleCode.CLIENTS"
               (loadCasesListEvent)="loadCasesListEventHandler($event)"
             ></case-management-case-list>
           </ng-template>
