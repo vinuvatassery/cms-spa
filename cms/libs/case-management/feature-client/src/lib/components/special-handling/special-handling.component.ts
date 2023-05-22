@@ -58,20 +58,21 @@ export class SpecialHandlingComponent implements OnInit {
             this.answersKeys = Object.entries(response?.client).map(([key, value]) => ({key, value}));
             
             if(this.answersKeys && this.answersKeys.length > 0){
+              debugger;
                this.questions.forEach(question =>{
                 question.answer = this.answersKeys.find(answer =>answer.key == question.key)?.value;
-                if(question.answer == "YES" && question.ohterKey != 'interpreterType' && question.otherFormatKey != 'materialInAlternateFormatOther' && question.descKey != 'materialInAlternateFormatDesc' && question.key != 'limitingConditionCode'){
-                  question.answer = question.answer+' ' +', Since age'+ ' ' +this.answersKeys.find(answer =>answer.key == question.ohterKey)?.value; 
+                if(question.answer == "Yes" && question.otherKey != 'interpreterType' && question.otherFormatKey != 'materialInAlternateFormatOther' && question.descKey != 'materialInAlternateFormatCodeOtherDesccription' && question.key != 'limitingConditionDescription'){
+                  question.answer = question.answer+' ' +', Since age'+ ' ' +this.answersKeys.find(answer =>answer.key == question.otherKey)?.value; 
                 } else if(question.id == 1  ){
                   question.answer =this.clientNotes.length > 0 ? this.clientNotes.map(function (e) { return e?.note;}).join(', ') : 'No Notes'
-                } else if(question.answer == "YES" && question.ohterKey == 'interpreterType'){
-                  question.answer ='YES' + ' ,' + this.answersKeys.find(answer =>answer.key == question.ohterKey)?.value;
+                } else if(question.answer == "Yes" && question.otherKey == 'interpreterType'){
+                  question.answer ='Yes' + ' ,' + this.answersKeys.find(answer =>answer.key == question.otherKey)?.value;
                 }
-                else if(question.answer == "YES"  &&  question.descKey == 'materialInAlternateFormatDesc' && !this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value){
-                  question.answer = 'YES' + ' ,' + this.answersKeys.find(answer =>answer.key == question.descKey)?.value;
+                else if(question.answer == "Yes"  &&  question.descKey == 'materialInAlternateFormatCodeOtherDesccription' && !this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value){
+                  question.answer = 'Yes' + ' ,' + this.answersKeys.find(answer =>answer.key == question.descKey)?.value;
                 }
-                else if(question.answer == "YES"  &&  question.otherFormatKey == 'materialInAlternateFormatOther' ){
-                  question.answer ='YES' + ' ,' + this.answersKeys.find(answer =>answer.key == question.descKey)?.value +' ,'+ this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value;
+                else if(question.answer == "Yes"  &&  question.otherFormatKey == 'materialInAlternateFormatOther' ){
+                  question.answer ='Yes' + ' ,' + this.answersKeys.find(answer =>answer.key == question.descKey)?.value +' ,'+ this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value;
                 }
               });
               this.cdRef.detectChanges();
