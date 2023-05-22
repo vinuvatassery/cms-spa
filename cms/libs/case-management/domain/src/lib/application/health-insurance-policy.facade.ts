@@ -153,11 +153,31 @@ export class HealthInsurancePolicyFacade {
   deleteInsurancePolicyByEligibilityId(clientCaseEligibilityId:any){
     return this.healthInsurancePolicyService.deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId);
   }
-  deleteInsurancePolicy(insurancePolicyId: any) {
-    return this.healthInsurancePolicyService.deleteInsurancePolicy(insurancePolicyId);
+  deleteInsurancePolicy(insurancePolicyId: any, endDate? : Date , isCerForm = false) {
+    return this.healthInsurancePolicyService.deleteInsurancePolicy(insurancePolicyId , endDate , isCerForm);
   }
+
   copyInsurancePolicy(insurancePolicyId: any) {
     return this.healthInsurancePolicyService.copyInsurancePolicy(insurancePolicyId);
+  }
+
+  copyHealthInsurancePolicy(insurancePolicyId: any, healthInsurancePolicy: any = {}) {
+    const formData = new FormData();
+    if (!!healthInsurancePolicy?.copyOfInsuranceCardFile) {
+      formData.append('CopyOfInsuranceCardFile', healthInsurancePolicy?.copyOfInsuranceCardFile ?? '');
+    }
+    if (!!healthInsurancePolicy?.copyOfSummaryFile) {
+      formData.append('CopyOfSummaryFile', healthInsurancePolicy?.copyOfSummaryFile ?? '');
+    }
+    if (!!healthInsurancePolicy?.proofOfPremiumFile) {
+      formData.append('ProofOfPremiumFile', healthInsurancePolicy?.proofOfPremiumFile ?? '');
+    }
+    if (!!healthInsurancePolicy?.medicareCardFile) {
+      formData.append('MedicareCardFile', healthInsurancePolicy?.medicareCardFile ?? '');
+    }
+    this.formDataAppendObject(formData, healthInsurancePolicy);
+
+    return this.healthInsurancePolicyService.copyHealthInsurancePolicy(insurancePolicyId, formData);
   }
   saveInsuranceFlags(insuranceFlags: any): Observable<any> {
     return this.healthInsurancePolicyService.updateInsuranceFlags(insuranceFlags);

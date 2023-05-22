@@ -38,13 +38,13 @@
         </kendo-grid-column>
         <kendo-grid-column *ngIf="!managementTab" field="providerPriority" title="Provider Type" [width]="50"
           [sortable]="false" [columnMenu]="false"></kendo-grid-column>
-        <kendo-grid-column field="primaryPhone" title="Provider Phone" [width]="70" [sortable]="false"
+        <kendo-grid-column field="primaryPhone" title="Phone" [width]="70" [sortable]="false"
           [columnMenu]="false">
         </kendo-grid-column>
         <kendo-grid-column *ngIf="managementTab" field="emailAddress" title="Email" [width]="70" [sortable]="false"
           [columnMenu]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="address1" title="Provider Address" [width]="180" [sortable]="false"
+        <kendo-grid-column field="address1" title="Address" [width]="180" [sortable]="false"
           [columnMenu]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.address1}} {{dataItem.address2}} {{dataItem.city+' '+dataItem.stateCode+' '+dataItem.zip}}

@@ -60,6 +60,7 @@
         font-family: $font-family;
         padding-left: $size-l;
         word-break: break-word;
+        margin-left: 10px;
       }
     }
     .k-i-close {
@@ -196,5 +197,18 @@
     left: auto;
     right: auto;
     margin: 0;
+  }
+}
+.snack-barwrapper{
+  display: grid;
+  grid-template-columns: 40px auto auto;
+  align-items: center;
+  grid-gap: 10px;
+  .snakbar-close-btn{
+  width: 30px;
+  height: 30px;
+  position:absolute;
+  top: 9px;
+  right: 9px;
   }
 }

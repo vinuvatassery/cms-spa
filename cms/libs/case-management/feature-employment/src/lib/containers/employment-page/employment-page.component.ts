@@ -163,6 +163,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
       )
       .subscribe(([navigationType, isSaved]) => {
         if (isSaved) {
+          this.employmentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Employment status updated')
           this.checkBoxSubscription.unsubscribe();
           this.workflowFacade.navigate(navigationType);
           this.employmentFacade.hideLoader();
@@ -252,6 +253,8 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
         emp.forEach((e: any) => {
           e.endDate = e.endDate ? new Date(e.endDate) : e.endDate;
         });
+        
+        this.cdr.detectChanges();
       }
 
       this.prvEmployers = emp;

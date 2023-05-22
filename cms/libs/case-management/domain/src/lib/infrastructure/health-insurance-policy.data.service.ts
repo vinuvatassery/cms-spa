@@ -49,12 +49,26 @@ export class HealthInsurancePolicyDataService {
   deleteInsurancePolicyByEligibiltyId(clientCaseEligibilityId:any){
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/${clientCaseEligibilityId}/policies`);
   }
-  deleteInsurancePolicy(insurancePolicyId:any){
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy?clientInsurancePolicyId=${insurancePolicyId}`);
+  deleteInsurancePolicy(insurancePolicyId:any , endDate? : Date , isCerForm = false){
+    const options = {
+      body: {
+        endDate: endDate,
+        isCerForm : isCerForm
+      }
+    }
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy?clientInsurancePolicyId=${insurancePolicyId}`,options);
   }
+  
   copyInsurancePolicy(insurancePolicyId:any){
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policies/${insurancePolicyId}`,{}
+    `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policies/${insurancePolicyId}`,{}
+    );
+  }
+
+  copyHealthInsurancePolicy(insurancePolicyId:any, insurancePolicy: any = {}){
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policies/${insurancePolicyId}`
+      ,insurancePolicy
     );
   }
   updateInsuranceFlags(insuranceFlagsData: any) {
@@ -280,12 +294,12 @@ export class HealthInsurancePolicyDataService {
 
   loadPaymentRequest(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {
      return this.http.get(    
-    `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payment-requests?statusType=${gridDataRefinerValue.type}&clientId=${clientId}&skipCount=
+    `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments?statusType=${gridDataRefinerValue.type}&clientId=${clientId}&skipCount=
     ${gridDataRefinerValue.skipCount}&maxResultCount=${gridDataRefinerValue.maxResultCount}&dentalPlanFlag=${gridDataRefinerValue.dentalPlanFlag}&showTwelveMonthRecord=${gridDataRefinerValue.twelveMonthsRecords}`);
     }
   savePaymentRequest(paymentRequest:any){
     return this.http.post<PaymentRequest>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payment-request`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments`,
       paymentRequest
     );
   }

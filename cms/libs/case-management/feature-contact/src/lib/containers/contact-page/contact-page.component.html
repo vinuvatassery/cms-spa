@@ -24,6 +24,7 @@
                 class="form-control" 
                 value="Y"
                 formControlName="mailingAddressChangedFlag"
+                (change)="adjustCerChangeFlagValues('mailingAddress_mailingAddressChangedFlag', 'Y')"
               />
               <kendo-label
                 class="k-radio-label"
@@ -39,6 +40,7 @@
                 id="mailingaddresschangedNo"
                 value="N" 
                 formControlName="mailingAddressChangedFlag"
+                (change)="adjustCerChangeFlagValues('mailingAddress_mailingAddressChangedFlag', 'N')"
               />
               <kendo-label
                 class="k-radio-label"
@@ -202,6 +204,7 @@
                   class="form-control" 
                   value="Y"
                   formControlName="homeAddressChangedFlag"
+                  (change)="adjustCerChangeFlagValues('homeAddress_homeAddressChangedFlag', 'Y')"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -217,6 +220,7 @@
                   id="homeaddresschangedNo"
                   value="N" 
                   formControlName="homeAddressChangedFlag"
+                  (change)="adjustCerChangeFlagValues('homeAddress_homeAddressChangedFlag', 'N')"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -562,6 +566,7 @@
                   class="form-control" 
                   value="Y"
                   formControlName="phoneNumberChangedFlag"
+                  (change)="adjustCerChangeFlagValues('homePhone_phoneNumberChangedFlag', 'Y')"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -577,6 +582,7 @@
                   id="phonenumberchangedNo"
                   value="N" 
                   formControlName="phoneNumberChangedFlag"
+                  (change)="adjustCerChangeFlagValues('homePhone_phoneNumberChangedFlag', 'N')"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -942,6 +948,7 @@
                     class="form-control" 
                     value="Y"
                     formControlName="emailAddressChangedFlag"
+                    (change)="adjustCerChangeFlagValues('email_emailAddressChangedFlag', 'Y')"
                   />
                   <kendo-label
                     class="k-radio-label"
@@ -957,6 +964,7 @@
                     id="emailaddresschangedNo"
                     value="N" 
                     formControlName="emailAddressChangedFlag" 
+                    (change)="adjustCerChangeFlagValues('email_emailAddressChangedFlag', 'N')"
                   />
                   <kendo-label
                     class="k-radio-label"
@@ -1063,7 +1071,7 @@
                 >
                 </kendo-dropdownlist>
               </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Preferred Contact Method:</b> {{oldPreferredContact | phone}} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('email.preferredContactMethod',oldPreferredContact??'')">Use Old  </button></p> 
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Preferred Contact Method:</b> {{ oldPreferredContact }} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('email.preferredContactMethod',oldPreferredContact??'')">Use Old  </button></p> 
 
               <kendo-formerror>Preferred contact is required</kendo-formerror>
             </kendo-formfield>
@@ -1078,7 +1086,7 @@
           <div class="flex-col">
           <kendo-formfield>
             <fieldset class="k-form-fieldset">
-              <legend class="k-form-legend"><h5>Has their friend or family contact changed?</h5></legend>
+              <legend class="k-form-legend"><h5>Has their alternate contact changed?</h5></legend>
             <div class="component-list-h comp-list-horizontal">
               <span class="app-radiobtnwidtext-wrapper">
                 <input type="radio" kendoRadioButton   aria-labelledby="friendorfamilycontactchangedYes"
@@ -1086,6 +1094,7 @@
                   class="form-control" 
                   value="Y"
                   formControlName="friendFamilyChangedFlag"
+                  (change)="adjustCerChangeFlagValues('familyAndFriendsContact_friendFamilyChangedFlag', 'Y')"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -1101,6 +1110,7 @@
                   id="friendorfamilycontactchangedNo"
                   value="N" 
                   formControlName="friendFamilyChangedFlag"
+                  (change)="adjustCerChangeFlagValues('familyAndFriendsContact_friendFamilyChangedFlag', 'N')"
                 />
                 <kendo-label
                   class="k-radio-label"
