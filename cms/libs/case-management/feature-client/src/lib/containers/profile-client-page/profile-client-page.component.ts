@@ -1,9 +1,10 @@
 /** Angular **/
 import { OnInit, Component, ChangeDetectionStrategy,ChangeDetectorRef} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CaseFacade, ClientProfile,ClientFacade } from '@cms/case-management/domain';
+import { CaseFacade, ClientProfile,ClientFacade, StatusPeriodFacade } from '@cms/case-management/domain';
 import { first, Subject } from 'rxjs';
 import { LoaderService } from '@cms/shared/util-core';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-profile-client-page',
@@ -23,17 +24,18 @@ export class ProfileClientPageComponent implements OnInit {
   private clientSubject = new Subject<any>();
   clientProfile$ = this.caseFacade.clientProfile$;
   loadedClient$ = this.clientSubject.asObservable();
+  ramSellInfo!: any;
   constructor(
     private readonly caseFacade: CaseFacade,
     private route: ActivatedRoute,
     private clientFacade: ClientFacade,
     private loaderService: LoaderService,
     private cdRef: ChangeDetectorRef,
-  
+    private statusPeriodFacade: StatusPeriodFacade
   ) { }
   
   ngOnInit(): void {
-    this. loadQueryParams() ;
+    this.loadQueryParams() ;
   }
 
 
@@ -94,6 +96,7 @@ export class ProfileClientPageComponent implements OnInit {
             clientTransgenderDesc: clientData?.clientTransgenderDesc,
             clientSexualIdentities: clientData?.clientSexualIdentities,
             otherSexualDesc: clientData?.otherSexualDesc,
+            sexAtBirth: clientData?.sexAtBirth,
             spokenLanguage: clientData?.spokenLanguage,
             writtenLanguage: clientData?.writtenLanguage,
             englishProficiency: clientData?.englishProficiency,
@@ -104,7 +107,7 @@ export class ProfileClientPageComponent implements OnInit {
             lastModifierName: clientData?.lastModifierName,
             lastModifierId: clientData?.lastModifierId
           }
-
+          this.loadRamSellInfo(client.clientId);
           this.clientSubject.next(client);
 
         }
@@ -158,4 +161,17 @@ export class ProfileClientPageComponent implements OnInit {
           this.loaderService.hide();
         },
       });}
+  loadRamSellInfo(clientId: any) {
+    this.statusPeriodFacade.showLoader();
+    this.statusPeriodFacade.loadRamSellInfo(clientId).subscribe({
+      next: (data) => {
+        this.ramSellInfo = data;
+        this.statusPeriodFacade.hideLoader();
+      },
+      error: (err) => {
+        this.statusPeriodFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
 }

@@ -302,8 +302,8 @@ export class FamilyAndDependentFacade {
     });
   }
 
-  loadClientDependents(clientId: number) {
-    this.dependentDataService.loadClientDependents(clientId).subscribe({
+  loadClientDependents(clientId: number,caseEligibilityId:any) {
+    this.dependentDataService.loadClientDependents(clientId,caseEligibilityId).subscribe({
       next: (dependentsResponse : any) => {
         this.clientDependentsSubject.next(dependentsResponse);
       },

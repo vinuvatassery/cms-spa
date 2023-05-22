@@ -11,7 +11,7 @@
       [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
       [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
 
-      <kendo-grid-column *ngIf="isCerForm" field="ReviewInsurance" title="Review Insurance" [width]="90" [sortable]="false">
+      <kendo-grid-column *ngIf="isCerForm" field="ReviewInsurance" title="Review Insurance" [width]="100" [sortable]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button  
             *ngIf="dataItem.cerReviewStatusCode === 'PENDING' || dataItem.cerReviewStatusCode === 'START_REVIEW'" 
@@ -89,7 +89,8 @@
               <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
-                  aria-hidden="false" (click)="handleOptionClick(dataItem,buttondataItem.type)">
+                  aria-hidden="false" (click)="handleOptionClick(dataItem,buttondataItem.type)"
+                  [hidden]="dataItem.healthInsuranceTypeCode ==='VETERANS_ADMINISTRATION' && buttondataItem.btnName ==='copy'">
                   <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                   <label> {{ buttondataItem.btnName === 'delete' && isCerForm === true ? 'Remove Insurance' : buttondataItem.text }} </label>
                 </button>

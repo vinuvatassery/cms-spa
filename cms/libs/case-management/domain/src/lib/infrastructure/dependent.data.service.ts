@@ -160,9 +160,9 @@ export class DependentDataService {
     );
   }
 
-  loadClientDependents(clientId: any) {
+  loadClientDependents(clientId: any,caseEligibilityId:any) {
     return this.http.get<Array<Dependent>>(
-      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/clients/${clientId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/clients/${clientId}/relationships/?eligibilityId=${caseEligibilityId}`
     );
   }
 
