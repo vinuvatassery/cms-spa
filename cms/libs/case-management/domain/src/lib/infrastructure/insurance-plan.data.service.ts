@@ -9,8 +9,8 @@ export class InsurancePlanDataService{
      
     }
     
-      loadInsurancePlanByProviderId(insurancePlanId:string){
+      loadInsurancePlanByProviderId(insurancePlanId:string,insuranceType:any){
         return this.http.get<InsurancePlan>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/insurance-plans/${insurancePlanId}`);
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/insurance-plans/${insurancePlanId}?type=${insuranceType}`);
       }
 }
