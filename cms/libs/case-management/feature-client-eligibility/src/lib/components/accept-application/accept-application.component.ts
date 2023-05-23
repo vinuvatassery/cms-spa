@@ -88,7 +88,7 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
 
   private loadLovs()
   {
-    this.lovFacade.getCaseStatusLovs();   
+    this.lovFacade.getCaseStatusLovs();
     this.caseFacade.loadGroupCode();
     this.loginUserFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
   }
@@ -199,7 +199,7 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
       {
         const startdate = new Date(this.eligibilityForm.controls['eligibilityStartDate'].value);
         let today = this.getDay(startdate, 'en-US', this.dayOptions);
-        let enddate = startdate.setMonth(startdate.getMonth() + 3);
+        let enddate = startdate.setMonth(startdate.getMonth() + 6);
         let endDateValue = new Date(enddate);
         if (today == "1")
         {
