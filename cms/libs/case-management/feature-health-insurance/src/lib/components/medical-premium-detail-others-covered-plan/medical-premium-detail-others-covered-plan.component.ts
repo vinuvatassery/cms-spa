@@ -13,6 +13,7 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
   @Input() healthInsuranceForm: FormGroup;
   @Input() isViewContentEditable!: boolean;
   @Input() clientId: any;
+  @Input() caseEligibilityId: any;
 
   private familyAndDependentSubscription !: Subscription;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -34,7 +35,7 @@ export class MedicalPremiumDetailOthersCoveredPlanComponent implements OnInit {
     this.otherCoveredPlanLoader = true;
     this.lovFacade.getRelationShipsLovs();
       this.loadRelationshipLov();
-      this.familyAndDependentFacade.loadClientDependents(this.clientId);
+      this.familyAndDependentFacade.loadClientDependents(this.clientId,this.caseEligibilityId);
       this.loadClientDependents();
   }
   ngOnDestroy(): void {
