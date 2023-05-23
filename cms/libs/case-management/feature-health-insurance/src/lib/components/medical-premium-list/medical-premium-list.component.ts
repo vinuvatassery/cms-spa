@@ -102,6 +102,7 @@ export class MedicalPremiumListComponent implements OnInit {
         text: "Copy Insurance",
         icon: "content_copy",
         type: "Copy",
+        btnName: "copy",
         click: (): void => {
           this.handleHealthInsuranceOpenClicked('copy');
         },

@@ -1181,9 +1181,17 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     }
   }
   insuranceCarrierNameChange(value: string) {
+    let insuranceType = null;
+    if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) {
+      insuranceType =InsuranceStatusType.dentalInsurance;  
+    }
+    else{  
+      insuranceType = InsuranceStatusType.healthInsurance;
+    }
+
     this.insurancePlanFacade.planLoaderSubject.next(true);
     this.insurancePlans = [];
-    this.insurancePlanFacade.loadInsurancePlanByProviderId(value).subscribe({
+    this.insurancePlanFacade.loadInsurancePlanByProviderId(value,insuranceType).subscribe({
       next: (data: any) => {
         this.insurancePlanFacade.planNameChangeSubject.next(data);
       },

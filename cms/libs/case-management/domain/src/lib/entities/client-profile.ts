@@ -24,6 +24,7 @@ export class ClientProfile {
      pronouns  : string |null=null;
      genderDescription  : string  |null=null; 
      gender  : string  |null=null;
+     sexAtBirth : string  |null=null;
      ssn  : string  |null=null;
      clientTransgenderCode  : string  |null=null;
      clientTransgenderDesc  : string  |null=null;

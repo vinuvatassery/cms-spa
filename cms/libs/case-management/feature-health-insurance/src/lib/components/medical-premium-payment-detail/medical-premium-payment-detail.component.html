@@ -91,7 +91,7 @@
         <div class="flex-col">
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel text="Service Start Date">
+                    <kendo-floatinglabel text="Coverage Start Date">
                         <kendo-datepicker formControlName="serviceStartDate"
                             [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                             aria-label="Coverage Start Date" formatPlaceholder="formatPattern" placeholder=""
@@ -99,12 +99,12 @@
                         </kendo-datepicker>
                     </kendo-floatinglabel>
                         <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid && !premiumPaymentForm.controls['serviceStartDate'].disabled && startDateIsFutureDate"> Future Date not allowed.</kendo-formerror>
-                        <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid && !premiumPaymentForm.controls['serviceStartDate'].disabled && !startDateIsFutureDate"> Service Start Date is
+                        <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid && !premiumPaymentForm.controls['serviceStartDate'].disabled && !startDateIsFutureDate"> Coverage Start Date is
                             required.</kendo-formerror>
 
                 </div>
                 <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel text="Service End Date">
+                    <kendo-floatinglabel text="Coverage End Date">
                         <kendo-datepicker formControlName="serviceEndDate"
                             [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                             aria-label="Coverage End Date" formatPlaceholder="formatPattern" placeholder=""
@@ -113,7 +113,7 @@
                     </kendo-floatinglabel>
                       <kendo-formerror
                         *ngIf="!premiumPaymentForm.controls['serviceEndDate'].valid && statusEndDateIsGreaterThanStartDate && !premiumPaymentForm.controls['serviceEndDate'].disabled">
-                        Service End Date is required.
+                        Coverage End Date is required.
                       </kendo-formerror>
                       <kendo-formerror
                         *ngIf="!premiumPaymentForm.controls['serviceEndDate'].valid && !statusEndDateIsGreaterThanStartDate && !premiumPaymentForm.controls['serviceEndDate'].disabled">Service End Date must be after Start Date.

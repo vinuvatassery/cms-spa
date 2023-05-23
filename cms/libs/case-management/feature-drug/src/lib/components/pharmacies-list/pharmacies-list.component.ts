@@ -150,7 +150,12 @@ export class PharmaciesListComponent implements OnInit{
       type: 'Reactivate',
       click: (clientPharmacy: any): void => {
         if (clientPharmacy.vendorId) {
-          this.drugPharmacyFacade.addClientPharmacy(this.clientId,clientPharmacy?.vendorId,this.isShowHistoricalData);
+         let pharmacy ={
+          ClientId:this.clientId,
+          IsActive:true,
+          vendorId:clientPharmacy.vendorId
+        }
+        this.OpenReactivatePharmaciesClicked(pharmacy);
         }
       },
     },
