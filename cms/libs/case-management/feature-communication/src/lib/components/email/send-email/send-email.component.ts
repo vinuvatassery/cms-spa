@@ -126,7 +126,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   private loadEmailTemplates() {
     this.loaderService.show();
     this.cerAuthorizationEmailTypeCode = 'CER_AUTHORIZATION_EMAIL';
-    this.communicationFacade.loadEmailTemplates(this.cerAuthorizationEmailTypeCode ?? '')
+    const channelTypeCode = 'EMAIL';
+    this.communicationFacade.loadEmailTemplates(this.cerAuthorizationEmailTypeCode ?? '', channelTypeCode??'')
     .subscribe({
       next: (data: any) =>{
         if (data) {

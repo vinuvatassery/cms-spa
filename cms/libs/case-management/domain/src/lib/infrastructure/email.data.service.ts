@@ -79,9 +79,9 @@ export class EmailDataService {
     ]);
   }
 
-  loadEmailTemplates(typeCode: string) {
+  loadEmailTemplates(typeCode: string, channelTypeCode: string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/forms`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/forms?channelTypeCode=${channelTypeCode}`
     );
   }
 

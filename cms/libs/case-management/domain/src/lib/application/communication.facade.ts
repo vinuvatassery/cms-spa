@@ -82,9 +82,9 @@ export class CommunicationFacade {
     });
   }
 
-  loadEmailTemplates(typeCode: string) {
+  loadEmailTemplates(typeCode: string, channelTypeCode: string) {
     return this.emailDataService.loadEmailTemplates(
-      typeCode
+      typeCode, channelTypeCode
     );
   }
 
