@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {  ActivatedRoute, Router } from '@angular/router';
-import { FinancialManagementFacade } from '@cms/case-management/domain';
+import { CaseFacade, FinancialManagementFacade, SearchHeaderType } from '@cms/case-management/domain';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -18,13 +18,13 @@ export class FinancialPageComponent implements OnInit{
   //  reminder component(reuse)
   isInnerLeftMenuOpen = false;
   constructor(route: Router, activeRoute : ActivatedRoute,
-    private financialManagementFacade: FinancialManagementFacade    ) {
+    private caseFacade: CaseFacade    ) {
     route.navigate(['vendors'], {relativeTo: activeRoute})
   }   
 
    /** Lifecycle hooks **/
    ngOnInit() {    
-    this.financialManagementFacade.enableVendorSearch();
+    this.caseFacade.enableSearchHeader(SearchHeaderType.VendorSearch);
   }
 
   openInnerLeftMenu(){

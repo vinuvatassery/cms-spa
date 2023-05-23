@@ -102,6 +102,7 @@ export * from './lib/enums/client-note-type-code.enum';
 export * from './lib/enums/eligibility-status.enum';
 export * from './lib/enums/insurance-status-type.enum';
 export * from './lib/enums/payment-request-type.enum';
+export * from './lib/enums/search-header-type.enum';
 
 
 /** Data services **/
@@ -169,6 +170,7 @@ export * from './lib/application/health-insurance-policy.facade';
 export * from './lib/application/review-question-answer.facade';
 export * from './lib/application/review-question-response.facade';
 export * from './lib/application/financial-management.facade';
+
 
 
 

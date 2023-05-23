@@ -19,14 +19,14 @@ export class SearchPageComponent implements OnInit {
   mobileHeaderSearchOpen = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   filterManager: Subject<string> = new Subject<string>();
-  vendorSearchBars$ = this.financialManagementFacade.vendorSearchBars$
+  searchBars$ = this.caseFacade.searchBars$
 
   /** Constructor **/
   constructor(private readonly searchFacade: SearchFacade,private router: Router,
     private caseFacade: CaseFacade,
     private loggingService: LoggingService,
-    private loaderService: LoaderService,
-    private readonly financialManagementFacade: FinancialManagementFacade) {
+    private loaderService: LoaderService
+   ) {
      
   }
 
