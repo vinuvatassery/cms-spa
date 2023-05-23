@@ -3,6 +3,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { TemplateManagementFacade } from '@cms/system-config/domain';
 import { map } from "rxjs/operators";
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 @Component({
   selector: 'system-config-forms-and-documents',
@@ -25,7 +26,7 @@ export class FormsAndDocumentsComponent {
   }
 
   ngOnInit() {
-    this.templateManagementFacade.getDirectoryContent('Folder','').subscribe((documentlist: any) => {
+    this.templateManagementFacade.getDirectoryContent('Form','').subscribe((documentlist: any) => {
       this.isShowLoader = false;
       this.loaderService.hide();
       if (!!documentlist && this.foldersTree.length == 0) {
@@ -47,12 +48,12 @@ export class FormsAndDocumentsComponent {
   }
 
   fetchSubfolders = (node: any) =>
-    this.templateManagementFacade.getDirectoryContent('Folder',node.documentTemplateId).pipe(map((response: any[]) => {
+    this.templateManagementFacade.getDirectoryContent('Form',node.documentTemplateId).pipe(map((response: any[]) => {
       return node.files = this.folderstreeformatting(response);
     }));
 
     hasFiles = function (data: any) {
-      return (data.typeCode.toUpperCase() === 'Folder'.toUpperCase() && data.templateSize === 0) ? true : false;
+      return (data.typeCode.toUpperCase() === 'Form'.toUpperCase() && data.templateSize === 0) ? true : false;
     }
   /** Public methods **/
   showSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -92,7 +93,7 @@ export class FormsAndDocumentsComponent {
   folderstreeformatting(folderdata:any)
   {
   folderdata.forEach((element: any) => {
-    element.isFolder = (element.typeCode.toUpperCase() === 'Folder'.toUpperCase() && element.templateSize === 0);
+    element.isFolder = (element.typeCode.toUpperCase() === 'Form'.toUpperCase() && element.templateSize === 0);
     element.templateSize=(element.templateSize/(1024 * 1024));
   });
 
