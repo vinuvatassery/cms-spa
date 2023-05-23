@@ -1,4 +1,49 @@
+<div class="app-l-inner-rapper pt-0 pb-0 pl-0" kendoRippleContainer kendoTooltip>
 
+  <kendo-popover #userCard width="330" position="left">
+    <ng-template kendoPopoverBodyTemplate>
+      <common-user-profile-card [reassign]=true></common-user-profile-card>
+    </ng-template>
+  </kendo-popover>
+
+  <!-- Main Title Section -->
+  <section class="app-l-mainTittle">
+    <div class="d-flex">
+    <h2 class="title-md">
+      <span class="normal-text pl-1"> A Very Nice Provider</span>
+      <span class="title-star-icon icon-filled" aria-label="user details" aria-hidden="true">
+        <span kendoPopoverAnchor showOn="hover" class="material-icons" aria-label="user information star"
+          aria-hidden="true">star</span>
+      </span>
+      
+    </h2>
+    <div class="title-client-info-block ml-2">
+      <span class="title-client-info">TIN XXX-XX-XXXX </span>
+      <span class="title-client-info">Pmt. via Check </span>
+      <span class="title-client-info">5 Unreconciled Claim(s) </span>
+    </div>
+    </div>
+  </section>
+
+
+
+  <!-- Banners -->
+
+</div>
+
+
+<section>
+  <div class="info-banners canyon-banner" hidden>
+    <span class="material-icons" aria-label="to do item" aria-hidden="true">notifications</span>
+    <span>To Do Item</span>
+  </div>
+  <div class="info-banners red-banner hover-link">
+    <span class="material-icons" aria-label="to do" aria-hidden="true">playlist_add_check</span>
+    <span class="text-bold">Renew Eligibility </span>
+    <span class="text-normal">(Due today)</span>
+  </div>
+</section>
+<!-- 
 <div>
     <button aria-label="" kendoButton look="flat" class="card-link-button"
     (click)="onBackClicked()">
@@ -9,7 +54,7 @@
 <div class="app-l-inner-rapper pt-0 pb-0" kendoRippleContainer kendoTooltip>
 
    
-    <!-- Main Title Section -->
+ 
     <section class="app-l-mainTittle" >
       <h2 class="title-md">
       
@@ -48,4 +93,15 @@
   
    
    
+  </div> -->
+<div class="client-tab-bar-wrappers">
+
+  <div class="custom-client-tab-main-wrapper">
+    <button kendoButton>Provider Info</button>
+    <button kendoButton>Invoice</button>
+    <button kendoButton>Clients</button>
+    <button kendoButton>Contacts</button>
   </div>
+  <div class="custom-client-tab-inner-wrapper">
+  </div>
+</div>

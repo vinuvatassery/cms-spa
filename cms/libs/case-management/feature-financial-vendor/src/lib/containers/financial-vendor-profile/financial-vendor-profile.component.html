@@ -1,4 +1,25 @@
-<p>financial-vandor-profile works!</p>
-
-
+<common-bread-crumb></common-bread-crumb>
 <cms-vendor-profile-header></cms-vendor-profile-header>
+
+<div class="tab-over-icon-btn">
+    <button kendoButton class="k-icon-button small-i-btn" title="New To-Do Item" aria-label="New To-Do Item">
+      <span class="material-icons" role="button" aria-label="New To-Do Item" aria-hidden="true"
+        >playlist_add</span>
+    </button>
+    <button kendoButton class="k-icon-button small-i-btn" title="New Reminder" aria-label="New Reminder">
+      <span class="material-icons" role="button" aria-label="New Reminder" aria-hidden="true"
+         >add_alarm</span>
+    </button>
+    <kendo-dropdownbutton [data]="sendActions" class="TableActionPopup app-dropdown-action k-border-s-dropdown"
+      buttonClass="k-flat-button" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+      Send
+      <span class="material-icons" aria-label="expand" aria-hidden="true" role="menuitem">arrow_right</span>
+      <ng-template class="app-dropdown-action-list" kendoSplitButtonItemTemplate let-dataItem>
+        <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+        aria-hidden="false" (click)="dataItem.click">
+          <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+          <label> {{ dataItem.text }} </label>
+        </button>
+      </ng-template>
+    </kendo-dropdownbutton>
+  </div>
