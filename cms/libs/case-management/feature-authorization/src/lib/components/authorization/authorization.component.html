@@ -23,13 +23,15 @@
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Date Applicant Signed">
           <kendo-datepicker
+          [incompleteDateValidation]="true"
           [fillMode]="formUiStyle.dateInputFillMode"
-            format="MM-dd-yyyy"
-            [(ngModel)]="currentDate"
-            formatPlaceholder="formatPattern"
-            (valueChange)="onChange($event)"
+          format="MM-dd-yyyy"
+          [(ngModel)]="currentDate"
+          formatPlaceholder="formatPattern"
+          (valueChange)="onChange($event)"
           >
           </kendo-datepicker>
+          <kendo-formerror *ngIf="incompleteDateValidation == true">Invalid date format</kendo-formerror>
           <kendo-formerror *ngIf="cerDateValidator && currentDate != null">Date Applicant Signed cannot be greater than Current Date.</kendo-formerror>
           <!-- <kendo-formerror>Date Applicant Signed is
             required.</kendo-formerror> -->
@@ -57,7 +59,7 @@
         >
           Send Letter
         </button>
-        <button *ngIf="isGoPaperlessOpted" [disabled]="dateSignature != null" 
+        <button [disabled]="dateSignature != null" 
           kendoButton
           [primary]="true"
           class="ml-2"
@@ -119,8 +121,7 @@
           </ng-template>
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
-        <kendo-formerror *ngIf="showCopyOfSignedApplicationRequiredValidation"> Copy Of Signed Application is required
-        </kendo-formerror>
+        <!-- <kendo-formerror *ngIf="showCopyOfSignedApplicationRequiredValidation"> Copy Of Signed Application is required</kendo-formerror> -->
         <kendo-formerror *ngIf="copyOfSignedApplicationSizeValidation">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
       </div>
 
@@ -195,6 +196,7 @@
 <case-management-send-email
   *ngIf="isSendNewEmailPopupOpened"
   [data]="screenName"
+  [toEmail]="toEmail"
   (closeSendEmailEvent)="handleCloseSendNewEmailClicked($event)"
   kendoTooltip
 ></case-management-send-email>

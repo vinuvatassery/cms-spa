@@ -28,6 +28,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   /** Input properties **/
   @Input() data!: any;
   @Input() ddlEmails$!: Observable<any>;
+  @Input() toEmail!: [];
+  
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
@@ -58,6 +60,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   isCerForm = false;
   prevClientCaseEligibilityId!: string;
   cerAuthorizationEmailTypeCode!: string;
+  selectedToEmail!: any;
+  showToEmailLoader: boolean = true;
   /** Private properties **/
   private currentSessionSubscription !: Subscription;
 
@@ -73,7 +77,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.updateOpenSendEmailFlag();
-    this.loadDdlEmails();
     this.loadEmailTemplates();
   }
 
@@ -120,20 +123,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loadDdlLetterTemplates() {
-    this.communicationFacade.loadDdlLetterTemplates();
-    this.ddlLetterTemplates$.subscribe({
-      next: (ddlTemplates) => {
-        this.ddlTemplates = ddlTemplates.filter((templates: any) => {
-          return templates.screenName === this.data;
-        });
-      },
-      error: (err) => {
-        console.log('err', err);
-      },
-    });
-  }
-
   private loadEmailTemplates() {
     this.loaderService.show();
     this.cerAuthorizationEmailTypeCode = 'CER_AUTHORIZATION_EMAIL';
@@ -148,13 +137,14 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     error: (err: any) => {
       this.loaderService.hide();
       this.loggingService.logException(err);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
   }
 
-  private loadDdlEmails() {
-    this.communicationFacade.loadDdlEmails();
-  }
+  // private loadDdlEmails() {
+  //   this.communicationFacade.loadDdlEmails();
+  // }
 
   /** Internal event methods **/
   onCloseSaveForLaterClicked() {
@@ -207,6 +197,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.selectedTemplate = event;
     this.emailContentValue = event.templateContent;
     this.handleEmailEditor(event);
+    this.showToEmailLoader = false;
     this.ref.detectChanges();
   }
 
@@ -217,11 +208,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowPreviewEmailPopupClicked = false;
   }
 
-  showEmailPreviewContent(event: any){
-    this.previewEmailContent = event;
-    this.showEmailPreview = true;
-  }
-
   private generateText(emailData: any){
     this.loaderService.show();
     this.loadCurrentSession();
@@ -230,6 +216,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', emailData ?? '')
         .subscribe({
           next: (data: any) =>{
+            this.loaderService.hide();
           if (data) {
             this.currentEmailData = data;
             this.emailContentValue = this.currentEmailData;
@@ -240,8 +227,13 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         error: (err: any) => {
           this.loaderService.hide();
           this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
         },
       });
+  }
+
+  onEmailChange(event: any){
+    this.selectedToEmail = event.email;
   }
 }
 

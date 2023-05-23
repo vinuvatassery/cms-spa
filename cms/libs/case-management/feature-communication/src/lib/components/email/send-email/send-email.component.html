@@ -24,12 +24,13 @@
       <div *ngIf="isOpenDdlEmailDetails">
         <div class="flex-col">
           <kendo-floatinglabel text="To" class="inline-search-loader">
-          <span *ngIf="this.isShowToEmailLoader$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+          <span *ngIf="showToEmailLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
             <kendo-multiselect
             [fillMode]="formUiStyle.dropDownFillMode"
-            [data]="ddlEmails$ | async"
+            [data]="toEmail"
             textField="email"
-            valueField="email"
+            valueField="clientEmailId"
+            (valueChange)="onEmailChange($event)"
             aria-label="to address"
             ></kendo-multiselect>
           </kendo-floatinglabel>

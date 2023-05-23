@@ -42,7 +42,9 @@ export class AuthorizationComponent   {
   prevClientCaseEligibilityId!: string;
   contactInfo!: ContactInfo;
   isGoPaperlessOpted: boolean = false;
+  toEmail: any = [];
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  incompleteDateValidation!: any;
     /** Private properties **/
     private currentSessionSubscription !: Subscription;
 
@@ -100,6 +102,13 @@ export class AuthorizationComponent   {
               if(data?.clientCaseEligibility?.paperlessFlag === StatusFlag.Yes)
               {
                 this.isGoPaperlessOpted = true;
+                if(data?.email?.email !== null){
+                  var emailObject = {
+                    clientEmailId : data?.email?.clientEmailId, 
+                    email : data?.email?.email,
+                  }
+                  this.toEmail.push(emailObject);
+                }
                 this.ref.detectChanges();
               }
             }

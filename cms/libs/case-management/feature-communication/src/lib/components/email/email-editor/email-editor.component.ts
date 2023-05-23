@@ -17,7 +17,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { EditorComponent } from '@progress/kendo-angular-editor';
 
 /** External Libraries **/
-import { LoaderService, LoggingService } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType} from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-email-editor',
@@ -46,11 +46,26 @@ export class EmailEditorComponent implements OnInit {
   clientVariables!: any;
   previewValue!: any;
   showpreviewEmail: boolean = false;
+  showAttachmentUpload: boolean = false;
+  public editorUploadOptions = [
+    {
+      text: "Attach from System",
+      click: (): void => {
+        this.showAttachmentUpload = true;
+      },
+    },
+    {
+      text: "Attach from Client's Attachments",
+      click: (): void => {
+      },
+    },
+  ];
 
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
-    private readonly loggingService: LoggingService,) {}
+    private readonly loggingService: LoggingService,
+    private readonly notificationSnackbarService : NotificationSnackbarService) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -67,6 +82,15 @@ export class EmailEditorComponent implements OnInit {
   }
 
   /** Private methods **/
+
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
+    }
+    this.notificationSnackbarService.manageSnackBar(type, subtitle)
+  }
+
   private dataEventSubscribed() {
     this.dataEvent.subscribe({
       next: (event: any) => {
@@ -76,14 +100,17 @@ export class EmailEditorComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        console.error('err', err);
+        this.loaderService.hide();
+        this.loggingService.logException(err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
       },
     });
   }
 
   private loadClientVariables() {
     this.loaderService.show();
-    this.communicationFacade.loadCERAuthorizationEmailEditVariables()
+    const lovTypes = ['CER_AUTHORIZATION_CLIENT_VARIABLES','CER_AUTHORIZATION_MY_VARIABLES','CER_AUTHORIZATION_OTHER_VARIABLES'].toString();
+    this.communicationFacade.loadCERAuthorizationEmailEditVariables(lovTypes)
     .subscribe({
       next: (variables: any) =>{
         if (variables) {
@@ -94,6 +121,7 @@ export class EmailEditorComponent implements OnInit {
     error: (err: any) => {
       this.loaderService.hide();
       this.loggingService.logException(err);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
     },
   });
   }

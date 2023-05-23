@@ -88,8 +88,8 @@ export class CommunicationFacade {
     );
   }
 
-  loadCERAuthorizationEmailEditVariables() {
-    return this.emailDataService.loadCERAuthorizationEmailVariables();
+  loadCERAuthorizationEmailEditVariables(lovTypes: string) {
+    return this.emailDataService.loadCERAuthorizationEmailVariables(lovTypes);
   }
 
   generateTextTemplate(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any) {
