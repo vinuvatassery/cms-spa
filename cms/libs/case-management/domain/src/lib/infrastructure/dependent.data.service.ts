@@ -49,7 +49,7 @@ export class DependentDataService {
   updateAdditionalFamilyStatus(previousEligibilityId: string, hasAdditionalFamilyFlag: string) {
     return this.http.patch(
       `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
-      `/eligibility-periods/${previousEligibilityId}/has-addional-family?hasAdditionalFamilyFlag=${hasAdditionalFamilyFlag}`
+      `/eligibility-periods/${previousEligibilityId}/has-additional-family?hasAdditionalFamilyFlag=${hasAdditionalFamilyFlag}`
       , null);
   }
 
