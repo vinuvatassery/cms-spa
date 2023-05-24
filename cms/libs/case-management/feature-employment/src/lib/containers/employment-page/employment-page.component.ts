@@ -252,6 +252,7 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
       const isPrvEmployersNull = !this.prvEmployers;
       if (emp) {
         emp.forEach((e: any) => {
+          e.dateOfHire =  e.dateOfHire ? new Date(e.dateOfHire) : e.dateOfHire;
           e.endDate = e.endDate ? new Date(e.endDate) : e.endDate;
         });
         
