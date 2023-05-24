@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {  ActivatedRoute, Router } from '@angular/router';
-import { CaseFacade, FinancialManagementFacade, SearchHeaderType } from '@cms/case-management/domain';
-import { Subject } from 'rxjs';
+import { CaseFacade,  SearchHeaderType } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-financial-page',
