@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 @Component({
@@ -10,13 +10,21 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 export class VendorsListComponent {
   public formUiStyle : UIFormStyle = new UIFormStyle();
 @Input() vendorTypeCode! : string
-constructor(private route: Router,private activeRoute : ActivatedRoute) {
+
+vndorId! : string
+
+constructor(private route: Router) {
  
 }
 
   onVendorClicked()
   {
-    this.route.navigate(['profile'], {relativeTo: this.activeRoute})
+    const query = {
+      queryParams: {
+        v_id: '5FC56173-D137-4203-891E-D856958D8AB4'      
+      },
+    };
+    this.route.navigate(['/financial-management/vendors/profile'], query )
   }
 
 }

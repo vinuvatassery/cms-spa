@@ -16,7 +16,12 @@ constructor(private route: Router,private activeRoute : ActivatedRoute) {
 
 onProviderClicked()
   {
-    this.route.navigate(['provider-profile'], {relativeTo: this.activeRoute})
+    const query = {
+      queryParams: {
+        prv_id: '5FC56173-D137-4203-891E-D856958D8AB4'      
+      },
+    };
+    this.route.navigate(['/financial-management/vendors/profile'], query )
   }
 
 }

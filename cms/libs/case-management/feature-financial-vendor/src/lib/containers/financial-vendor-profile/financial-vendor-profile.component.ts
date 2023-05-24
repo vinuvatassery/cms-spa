@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 
 @Component({
   selector: 'cms-financial-vendor-profile',
@@ -6,37 +8,29 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./financial-vendor-profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FinancialVendorProfileComponent {
+export class FinancialVendorProfileComponent implements OnInit{
+
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
+
+  vendorId! : string
+  providerId! : string
+
   addressGridView = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  public actions = [
-    {
-      buttonType: "btn-h-primary",
-      text: "Edit Address",
-      icon: "edit",
-      click: (address:any): void => {
-        
-        
-      },
-    },
-    {
-      buttonType: "btn-h-primary",
-      text: "Deactivate Address",
-      icon: "block",
-      click: (address:any): void => {
-        
-      },
-    },
-    {
-      buttonType: "btn-h-danger",
-      text: "Delete Address",
-      icon: "delete",
-      click: (address:any): void => {
-        
-      },
-    },
-   
-    
  
-  ];
+
+  constructor(private activeRoute : ActivatedRoute){}
+
+  ngOnInit(): void {
+    this. loadQueryParams()   
+  }
+     /** Private properties **/
+     loadQueryParams()
+     {
+       this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
+       this.providerId = this.activeRoute.snapshot.queryParams['prv_id'];  
+         
+     }
+  
 }
