@@ -65,6 +65,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   public homeAddressProofFile: any = undefined;
   showAddressProofSizeValidation = false;
   isCerForm = false;
+  documentTypeCode!: string;
   prevClientCaseEligibilityId!: string;
   oldContactInfo!: ContactInfo;
   oldMailingAddress?: ClientAddress;
@@ -1006,7 +1007,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         clientCaseId: this.workflowFacade.clientCaseId,
         documentName: this.uploadedHomeAddressProof.name,
         document: this.uploadedHomeAddressProof,
-        documentSize: this.uploadedHomeAddressProof.size
+        documentSize: this.uploadedHomeAddressProof.size,
+        documentTypeCode: this.documentTypeCode,
       };
     }
 
@@ -1706,7 +1708,13 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.closeValidationPopup(type);
     }
   }
+  handleTypeCodeEvent(e:any)
+  {
+    this.documentTypeCode=e;
+  }
+  
   handleFileSelected(e: SelectEvent) {
+    
     this.homeAddressProofFile = undefined;
     this.uploadedHomeAddressProof = undefined;
     this.uploadedHomeAddressProof = e.files[0].rawFile;

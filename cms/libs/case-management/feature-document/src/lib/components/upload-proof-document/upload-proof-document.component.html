@@ -1,48 +1,70 @@
-<section class="k-dialog-body">
 
-    <div class="flex-row">
+<form class="form-group" (ngSubmit)="submitForm()" [formGroup]="uploadform">
+    <section class="k-dialog-body">
+
+      <div class="flex-row">
         <div class="flex-col mb-2">
-            <p>Specify the attachment type, select the attachment, and add a note. All fields are required.</p>
+          <p *ngIf="!isEdit">Specify the attachment type, select the attachment, and add a note. All fields are required.</p>
+          <p *ngIf="isEdit">Make changes as needed then click "Update".</p>
         </div>
-        <div class="flex-col">
-            <kendo-floatinglabel text="Attachment Type">
-                <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="listItems">
-                </kendo-dropdownlist>
-            </kendo-floatinglabel>
+        <div class="flex-col" *ngIf="isEdit">
+          <legend class="k-form-legend">  <h5>Attachment Name:</h5> {{this.documentName}} </legend>
+        </div>
+
+        <input type="hidden" formControlName="concurrencyStamp">
+        <input type="hidden" formControlName="clientId">
+        <div class="flex-col mt-1">
+          <common-document-upload
+          [file]="copyOfUploadedFiles"
+          [isFileViewable]="true"
+          [typeCodeLabel]="'Attachment Type'"
+          [subTypeCodeLabel]="'Attachment Sub Type'"
+          [currentTypeCode]="selectedTypeCode"
+          [formSubmitted]="isSubmitted"
+          (handleFileSelectEvent)="handleFileSelected($event)"
+          (handleFileRemoveEvent)="handleFileRemoved($event)"
+          (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
+          </common-document-upload>
+          <kendo-formhint>Max file size 25MB</kendo-formhint>
+          <kendo-formerror *ngIf="uploadedFileExceedsFileSizeLimit">
+            File size is limited to 25 MB. Please select a
+            smaller
+            file.
+          </kendo-formerror>
+          <kendo-formerror *ngIf="!isFileUploaded && !uploadedFileExceedsFileSizeLimit">
+            document is required.
+          </kendo-formerror>
         </div>
         <div class="flex-col mt-2">
-            <kendo-upload></kendo-upload>
-            <kendo-formhint>Max file size 25MB</kendo-formhint>
+          <kendo-floatinglabel text="Attachment Note" class="pb-0">
+            <kendo-textarea [fillMode]="formUiStyle.inputFillMode" name="Attachment Note"
+                            aria-label="Attachment Note" [rows]="2" [cols]="40" formControlName="clientDocumentDescription"
+                            [maxlength]="tareaNotesMaxLength"
+                            [value]="tareaUploadNote"
+                            (valueChange)="OnNoteValueChange($event)">
+              <kendo-textarea-suffix class="justify-content-end">
+                <span class="counter">{{ tareaUploadNotesCounter }}</span>
+              </kendo-textarea-suffix>
+            </kendo-textarea>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="uploadform?.hasError('required','clientDocumentDescription') && isSubmitted">
+            Attachment note is required
+          </kendo-formerror>
         </div>
-        <div class="flex-col mt-2">
-            <kendo-floatinglabel text="Attachment Note" class="pb-0">
-                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" name="Attachment Note" aria-label="Attachment Note" [rows]="2"
-                    [cols]="40">
-                    <kendo-textarea-suffix class="justify-content-end">
-                        <kendo-formhint class="justify-content-end">0/750</kendo-formhint>
 
-                    </kendo-textarea-suffix>
-                </kendo-textarea>
-            </kendo-floatinglabel>
-        </div>
-
-    </div>
-</section>
-<kendo-dialog-actions>
-    <div class="justify-content-between">
-        <div>
-
-            <button kendoButton class="k-danger-link" aria-label="remove pharmacy">
-                Remove
-            </button>
-        </div>
+      </div>
+    </section>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
         <div class="justify-content-end">
-            <button kendoButton [primary]="true" look="outline" aria-label="cancel adding pharmacy">
-                Cancel
-            </button>
-            <button kendoButton [primary]="true" aria-label="add or update pharmacy">
-                Upload
-            </button>
+          <button kendoButton [primary]="true" look="outline" aria-label="cancel adding attachment"
+                  (click)="onAttachmentPopupClosed()">
+            Cancel
+          </button>
+          <button kendoButton [primary]="true" aria-label="add or update attachment" [disabled]="btnDisabled">
+            {{!isEdit ? 'UPLOAD' : 'UPDATE'}}
+          </button>
         </div>
-    </div>
-</kendo-dialog-actions>
+      </div>
+    </kendo-dialog-actions>
+  </form>

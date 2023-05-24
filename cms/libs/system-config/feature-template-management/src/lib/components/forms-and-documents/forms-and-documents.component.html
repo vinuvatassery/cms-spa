@@ -3,37 +3,39 @@
     class="header-buttons" aria-label="attachments" title="Forms and Attachments"></button>
 </span>
 <kendo-dialog kendoRippleContainer *ngIf="isOpenAttachment" (close)="onCloseAttachmentClicked()"
-  class="app-c-modal app-c-modal-lg" appendTo="body">
+  class="app-c-modal app-c-modal-xls app-c-modal-np app-c-modal-top" appendTo="body">
   <kendo-dialog-titlebar>
     <span class="title-icons k-icon k-i-attachment mr-1" aria-label="forms and attachments" aria-hidden="true"></span>
     Forms and Attachments
   </kendo-dialog-titlebar>
-  <section>
-    <kendo-expansionpanel class="app-c-expansion-panel" *ngFor="let folder of foldersList">
-      <ng-template kendoExpansionPanelTitleDirective>
-        <div class="header-content">
-          <span class="material-icons" aria-label="files" aria-hidden="true">folder</span>
-          <span>{{folder[0].folderName}}</span>
-        </div>
-      </ng-template>
-      <div class="app-c-attachments">
-        <ul aria-label="uploaded attachments">
-          <li aria-label="uploaded attachments list" *ngFor="let item of folder">
-            <span class="attachments-buttons-wrap">
-              <button kendoButton look="flat" aria-label="download attachment"
-                (click)="onDownloadViewTemplateClick('download',item.documentTemplateId, item.name)">
+
+  <section class="k-dialog-body mb-2 pd-2">
+    <kendo-treeview [nodes]="foldersTree" textField="name" TreeViewSize="large" kendoTreeViewExpandable
+      [hasChildren]="hasFiles" [children]="fetchSubfolders" childrenField="items">
+      <ng-template kendoTreeViewNodeTemplate let-dataItem>
+        <div class="attachments-lists-wrap" [ngClass]="dataItem.isFolder===false ? 'file_list' : 'directory_list'">
+          <span class="material-icons" *ngIf="dataItem.isFolder===true">folder</span>
+          <div class="file-section-inner">
+
+
+            <span class="attachments-buttons-wrap" *ngIf="dataItem.isFolder===false">
+              <button kendoButton look="flat" aria-label="download attachment" *ngIf="dataItem.isFolder===false"
+                (click)="onDownloadViewFileClick('download',dataItem.documentTemplateId,dataItem.description)">
                 <span class="material-icons" aria-label="download" aria-hidden="true">file_download</span>
               </button>
-              <button kendoButton look="flat" aria-label="open in new tab"
-                (click)="onDownloadViewTemplateClick('view',item.documentTemplateId, item.name)">
+              <button kendoButton look="flat" aria-label="open in new tab" *ngIf="dataItem.isFolder===false"
+                (click)="onDownloadViewFileClick('view',dataItem.documentTemplateId,dataItem.description)">
                 <span class="material-icons" aria-label="open in new tab" aria-hidden="true">open_in_new</span>
               </button>
-              <span>{{item.name}}</span>
             </span>
-            <span class="attachments-date">Last Updated {{item.lastModificationTime | date: 'MM/dd/YYYY'}}</span>
-          </li>
-        </ul>
-      </div>
-    </kendo-expansionpanel>
+            <label>{{dataItem.description}} <label
+                *ngIf="dataItem.isFolder===false">({{dataItem.templateSize| number: '1.0-0'}} MB)</label></label>
+          </div>
+          <span class="attachments-date" *ngIf="dataItem.isFolder===false">Last Updated
+            {{dataItem.lastModificationTime
+            | date: 'MM/dd/YYYY'}}</span>
+        </div>
+      </ng-template>
+    </kendo-treeview>
   </section>
 </kendo-dialog>

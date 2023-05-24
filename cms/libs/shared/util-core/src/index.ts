@@ -9,3 +9,4 @@ export * from './lib/enums/snack-bar-notification-type.enum';
 /** service **/
 export * from './lib/application/services/app-loader.service';
 export * from './lib/application/services/notification-snackbar-service';
+export * from './lib/application/document-facade';
