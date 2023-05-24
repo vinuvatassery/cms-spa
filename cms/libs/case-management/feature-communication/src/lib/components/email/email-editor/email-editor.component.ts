@@ -45,7 +45,7 @@ export class EmailEditorComponent implements OnInit {
   public formUiStyle : UIFormStyle = new UIFormStyle();
   clientVariables!: any;
   previewValue!: any;
-  showpreviewEmail: boolean = false;
+  showPreviewEmail: boolean = false;
   showAttachmentUpload: boolean = false;
   public editorUploadOptions = [
     {
@@ -161,6 +161,7 @@ export class EmailEditorComponent implements OnInit {
 
   emailEditorValueEvent(emailData:any){
     this.emailEditorvalue = emailData.templateContent;
+    this.showAttachmentUpload = false;
   }
 
   public BindVariableToEditor(editor: EditorComponent, item: any) {

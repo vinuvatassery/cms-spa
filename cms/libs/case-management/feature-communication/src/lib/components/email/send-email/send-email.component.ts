@@ -143,10 +143,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   });
   }
 
-  // private loadDdlEmails() {
-  //   this.communicationFacade.loadDdlEmails();
-  // }
-
   /** Internal event methods **/
   onCloseSaveForLaterClicked() {
     this.isShowSaveForLaterPopupClicked = false;
@@ -161,6 +157,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   onSaveForLaterClicked() { 
     this.isShowSaveForLaterPopupClicked = true;
+    this.emailEditorValueEvent.emit(this.currentEmailData);
+    this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
+    this.saveContact(this.selectedTemplate);
   }
 
   onPreviewEmailClicked() { 
@@ -209,6 +208,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowPreviewEmailPopupClicked = false;
   }
 
+  onEmailChange(event: any){
+    this.selectedToEmail = event.email;
+  }
+
   private generateText(emailData: any){
     this.loaderService.show();
     this.loadCurrentSession();
@@ -233,8 +236,24 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       });
   }
 
-  onEmailChange(event: any){
-    this.selectedToEmail = event.email;
+  private saveContact(draftTemplate: any) {
+    this.loaderService.show();
+    const isSaveFoLater = true;
+    this.communicationFacade.SaveForLaterEmailTemplate(draftTemplate, isSaveFoLater)
+        .subscribe({
+          next: (data: any) =>{
+            this.loaderService.hide();
+          if (data) {
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Template Saved As Draft')
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+        },
+      });
   }
 }
 

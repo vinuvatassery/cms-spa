@@ -156,8 +156,11 @@
           <span>{{ dataItem.text }}</span>
         </ng-template>
       </kendo-toolbar-dropdownbutton>
-     
+      <kendo-upload *ngIf="showAttachmentUpload" >
+      </kendo-upload>
     </kendo-toolbar>
+    <kendo-upload *ngIf="showAttachmentUpload" >
+    </kendo-upload>
   </kendo-editor>
   
   <!-- Attachment Panel -->
