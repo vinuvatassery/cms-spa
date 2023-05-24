@@ -61,7 +61,6 @@ export class LanguageListComponent implements OnInit {
 
  /** Lifecycle hooks **/
  ngOnInit(): void {
-   console.log(  this.clientProfileLanguages$,"aaaaaaaaaaaaa");
    this.loadColumnFilters();
    this.loadClientProfileLanguages();
  }
