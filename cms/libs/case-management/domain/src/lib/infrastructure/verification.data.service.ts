@@ -17,5 +17,10 @@ export class VerificationDataService {
       getHivVerification(clientId: any) {
         return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification?clientId=${clientId}`);
       }
-
+      removeHivVerificationAttachment(hivVerificationId:any, clientId:any){
+        return this.http.put(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification/${hivVerificationId}/clients/${clientId}/remove`,
+          {hivVerificationId:hivVerificationId}
+        );
+      }
 }

@@ -12,6 +12,7 @@ export class VerificationFacade {
 
   /** Private properties **/
   hivVerificationSaveSubject = new Subject<boolean>();
+  private removeHivVerificationAttachmentSubject = new Subject<any>();
 
   /** Public properties **/
   hivVerificationSave$ = this.hivVerificationSaveSubject.asObservable();
@@ -41,6 +42,7 @@ export class VerificationFacade {
 
   /** Public properties **/
   providerValue$ = this.providerChange.asObservable();
+  removeHivVerification$ = this.removeHivVerificationAttachmentSubject.asObservable();
 
   providerValueChange(provider: string) {
     this.providerChange.next(provider);
@@ -50,5 +52,21 @@ export class VerificationFacade {
   }
   getHivVerification(clientId:any){
     return this.verificationDataService.getHivVerification(clientId);
+  }
+  removeHivVerificationAttachment(hivVerificationId:any, clientId:any){
+    this.showLoader();
+    this.verificationDataService.removeHivVerificationAttachment(hivVerificationId,clientId).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.removeHivVerificationAttachmentSubject.next(response);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "HIV Verification attachment removed");
+        }
+        this.hideLoader()
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
   }
 }

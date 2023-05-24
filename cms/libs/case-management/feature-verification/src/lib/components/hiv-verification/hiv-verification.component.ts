@@ -19,6 +19,8 @@ export class HivVerificationComponent implements OnInit {
   rdoVerificationMethod!: string;
   verificationMethod$ = this.lovFacade.verificationMethod$;
   OptionControllerName:any ='providerOption';
+  isHivVerificationRemovalConfirmationOpened : boolean = false;
+  removeHivVerification$ = this.verificationFacade.removeHivVerification$;
 
   constructor(private readonly cd: ChangeDetectorRef, private verificationFacade: VerificationFacade,private readonly lovFacade: LovFacade){
 
@@ -28,10 +30,24 @@ export class HivVerificationComponent implements OnInit {
     this.hivVerificationForm?.get('providerOption')?.valueChanges.subscribe(val => {
       this.cd.detectChanges();
     });
-   
+    this.removeHivVerification$.subscribe(response=>{
+      if(response==true && this.clientId!=0){
+        this.onHivRemoveConfirmationClosed();
+        this.cd.detectChanges();
+      }
+    });
   }
   providerChange(event:any){
     this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
     this.cd.detectChanges();
+  }
+  onHivRemoveConfirmationClosed() {
+    this.isHivVerificationRemovalConfirmationOpened = false;
+  }
+  onHivRemoveConfirmation(){
+    this.verificationFacade.removeHivVerificationAttachment("32AB97F9-5553-4B08-9FBB-8FF5D2D86AE6",this.clientId);
+  }
+  onHivRemoveConfirmationOpen() {
+    this.isHivVerificationRemovalConfirmationOpened = true;
   }
 }

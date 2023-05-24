@@ -56,6 +56,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.hivVerificationForm = this.formBuilder.group({
       providerEmailAddress: [''],
       providerOption:[''],
+      attachmentType:[''],
       verificationStatusDate:[''],
       requestedUserName:[''],
       userId:['']

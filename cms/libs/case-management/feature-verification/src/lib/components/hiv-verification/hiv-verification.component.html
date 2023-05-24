@@ -34,8 +34,15 @@
   </section>
   <div >
     <case-management-hiv-verification-request
-      [hivVerificationForm]="hivVerificationForm"  [clientId]="clientId" 
+      [hivVerificationForm]="hivVerificationForm"  [clientId]="clientId" (openRemoveAttachmentConfirmationEvent)="onHivRemoveConfirmationOpen()"
     ></case-management-hiv-verification-request>
   </div>
 </div>
 </form>
+<kendo-dialog *ngIf="isHivVerificationRemovalConfirmationOpened" (close)="onHivRemoveConfirmationClosed()" class="app-c-modal app-c-modal-md app-c-modal-np"
+  title="Remove HIV Verification Attachment?" kendoTooltip>
+  <case-management-hiv-verification-attachment-removal-confirmation 
+  (closeRemoveAttachmentConfirmationEvent)="onHivRemoveConfirmationClosed()"
+  (removeAttachmentConfirmationEvent)="onHivRemoveConfirmation()"
+    ></case-management-hiv-verification-attachment-removal-confirmation>
+</kendo-dialog>

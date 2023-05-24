@@ -1,12 +1,18 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef,Output,EventEmitter } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { IntlService } from '@progress/kendo-angular-intl';
 /** Internal Libraries **/
-import { VerificationFacade, ClientHivVerification, VerificationStatusCode, VerificationTypeCode, ProviderOption } from '@cms/case-management/domain';
+import { VerificationFacade,
+   ClientHivVerification,
+  VerificationStatusCode,
+  VerificationTypeCode,
+  ProviderOption,
+  ClientDocumentFacade } from '@cms/case-management/domain';
 import { SnackBarNotificationType,ConfigurationProvider} from '@cms/shared/util-core';
+import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
 
 
 @Component({
@@ -19,7 +25,9 @@ export class HivVerificationRequestComponent implements OnInit {
   /** Input properties **/
   @Input() hivVerificationForm!: FormGroup;
   @Input() clientId!: number;
+  @Output() openRemoveAttachmentConfirmationEvent = new EventEmitter();
   userId!: any;
+  hivVerificationAttachment!: File | undefined;
   public uploadRemoveUrl = 'removeUrl';
   /** Public properties **/
   providerValue$ = this.verificationFacade.providerValue$;
@@ -27,9 +35,12 @@ export class HivVerificationRequestComponent implements OnInit {
   isSendRequest = false;
   isResendRequest = false;
   isEmailFieldVisible=false;
+  showHivVerificationAttachmentRequiredValidation = false;
+  showHivVerificationAttachmentSizeValidation = false;
   sentDate !:Date ;
   clientHivVerification:ClientHivVerification = new ClientHivVerification;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  fileSize = this.configurationProvider.appSettings?.uploadFileSizeLimit;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public uploadFileRestrictions: UploadFileRistrictionOptions =
   new UploadFileRistrictionOptions();
@@ -50,6 +61,7 @@ export class HivVerificationRequestComponent implements OnInit {
       text: "Remove Attachment",
       icon: "delete",
       click: (): void => {
+        this.openRemoveAttachmentConfirmationEvent.emit();
       },
     },
   ];
@@ -65,7 +77,8 @@ export class HivVerificationRequestComponent implements OnInit {
 
   constructor( private verificationFacade: VerificationFacade,
     private readonly cdr: ChangeDetectorRef,
-    private intl: IntlService, private readonly configurationProvider: ConfigurationProvider,){}
+    private intl: IntlService, private readonly configurationProvider: ConfigurationProvider,
+    public readonly clientDocumentFacade:ClientDocumentFacade){}
   /** Internal event methods **/
   ngOnInit(): void {
     this.providerValue$.subscribe(data=>{
@@ -112,6 +125,18 @@ export class HivVerificationRequestComponent implements OnInit {
     this.isSendRequest = false;
     this.isResendRequest = true;
     this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
+  }
+  handleFileSelected(e: SelectEvent) {
+    //this.homeAddressProofFile = undefined;
+    this.hivVerificationAttachment = undefined;
+    this.hivVerificationAttachment = e.files[0].rawFile;
+    this.showHivVerificationAttachmentRequiredValidation = false;
+    this.showHivVerificationAttachmentSizeValidation = (this.hivVerificationAttachment?.size ?? 0) > this.configurationProvider.appSettings?.uploadFileSizeLimit;
+    //this.updateHomeAddressProofCount(true);
+  }
+
+  handleFileRemoved(e: SelectEvent) {
+    this.openRemoveAttachmentConfirmationEvent.emit();
   }
   private populateModel(){
     this.clientHivVerification.clientId = this.clientId;

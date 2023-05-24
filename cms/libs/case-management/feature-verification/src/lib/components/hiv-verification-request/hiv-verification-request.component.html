@@ -40,14 +40,14 @@
         <div class="component-list-h">
           <span class="app-checkboxwidtext-wrapper">
             <input type="radio" kendoRadioButton id="upoadattachment" value="upoadattachment" name="upoadattachment"
-              aria-labelledby="upoadattachment" formControlName="upoadattachment"   />
+              aria-labelledby="upoadattachment" formControlName="attachmentType" value="Attach From Computer"  />
 
             <kendo-label class="k-radio-label" for="upoadattachment" text="Attach From Computer"></kendo-label>
 
           </span>
           <span class="app-checkboxwidtext-wrapper">
             <input type="radio" kendoRadioButton id="upoadattachment" value="upoadattachment" name="upoadattachment"
-              aria-labelledby="upoadattachment" formControlName="upoadattachment" />
+              aria-labelledby="upoadattachment" formControlName="attachmentType" value="Attach From Client Attachments" />
 
             <kendo-label class="k-radio-label" for="upoadattachment"
               text="Attach From Client Attachments"></kendo-label>
@@ -55,23 +55,34 @@
           </span>
         </div>
       </div>
-      <!-- Select file form computer -->
-      <div class="flex-col flex-col-6 ml-1  mt-2">
-        <kendo-upload #Uploadanattachment id="Uploadanattachment" aria-label="upload proof" name="upload proof"
-          [restrictions]="uploadFileRestrictions.fileRestrictions" [multiple]="false" [autoUpload]="false"
-          [removeUrl]="uploadRemoveUrl">
-          <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-            <span>
-              <span>{{ files[0].name }} </span>
-              <br>
-              <span>{{ files[0].size | fileSize }}</span>
-            </span>
-          </ng-template>
-        </kendo-upload>
-        <kendo-formhint>Max file size 25MB</kendo-formhint>
+      <!-- Select file form computer [ngModel]="homeAddressProofFile" [ngModelOptions]="{standalone: true}"-->
+      <div *ngIf="hivVerificationForm.controls['attachmentType'].value == 'Attach From Computer'" class="flex-col flex-col-6 ml-1  mt-2">
+        <kendo-fileselect 
+            aria-label="proof of home address"  
+            name="upload proof"
+            [multiple]="false"   
+            (select)="handleFileSelected($event)" 
+            (remove)="handleFileRemoved($event)"
+            id="verificationAttachmentUploaded"
+            #verificationAttachmentUploaded>
+            <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+              <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
+              <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>   
+                <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
+                  <a>{{ files[0].name }} </a>
+                </button>
+                <br>
+                <span>{{   files[0].size  | fileSize  }}</span> 
+              </span>
+            </ng-template>
+          </kendo-fileselect>
+          <kendo-formhint>Max file size {{fileSize}}MB</kendo-formhint> 
+          <kendo-formerror *ngIf="showHivVerificationAttachmentRequiredValidation"> Proof of Home Address is required
+          </kendo-formerror>
+          <kendo-formerror *ngIf="showHivVerificationAttachmentSizeValidation">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
       </div>
       <!-- Select file form client attachment --> 
-      <div class="flex-col flex-col-8 mt-2 ml-1">
+      <div *ngIf="hivVerificationForm.controls['attachmentType'].value == 'Attach From Client Attachments'" class="flex-col flex-col-8 mt-2 ml-1">
         <kendo-floatinglabel text="Client Documents">
          
           <span *ngIf="showDocInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
