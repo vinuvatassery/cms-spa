@@ -23,4 +23,39 @@ export class VerificationDataService {
           {hivVerificationId:hivVerificationId}
         );
       }
-}
+      saveHivVerification(clientHivVerification: any)
+      {
+        const fd = new FormData();
+        if (clientHivVerification?.hivVerificationDoc?.document) {
+          fd.append('HivVerificationDoc', clientHivVerification?.hivVerificationDoc?.document ?? '', clientHivVerification?.hivVerificationDoc?.document?.name);
+        }
+        this.formDataAppendObject(fd, clientHivVerification);
+        return this.http.post(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification`,
+          fd
+        );
+      }
+      formDataAppendObject(fd: FormData, obj: any, key?: any) {
+        let i, k;
+        for (i in obj) {
+          k = key ? key + '[' + i + ']' : i;
+          if (obj[i] instanceof File) {
+            continue;
+          }
+          else if (typeof obj[i] == 'object') {
+            this.formDataAppendObject(fd, obj[i], k);
+          }
+          else {
+            fd.append(k, obj[i]);
+
+          }
+        }
+      }
+      getHivVerificationWithAttachment(clientId:any, clientCaseEligibilityId : any) {
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification/${clientId}/eligibility-periods/${clientCaseEligibilityId}/hiv-verification`);
+      }
+
+      getClientHivDocuments(clientId:any){
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification/${clientId}/documents`);
+      }
+    }

@@ -6,7 +6,8 @@ import { forkJoin, mergeMap, of, Subscription, first } from 'rxjs';
 /** Internal Libraries **/
 import { VerificationFacade, NavigationType, WorkflowFacade } from '@cms/case-management/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SnackBarNotificationType} from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+
 
 
 @Component({
@@ -20,17 +21,23 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   hivVerificationForm!:FormGroup;
   sessionId!: string;
   clientCaseId!: string;
-  clientId!: number;  
+  clientId!: number;
   userId!:any;
+  clientCaseEligibilityId : any
   private loadSessionSubscription!: Subscription;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
+  clientHivVerification: any;
+
 
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
     private verificationFacade: VerificationFacade,private formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,private workFlowFacade: WorkflowFacade,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute, private readonly loaderService: LoaderService,
+    private readonly loggingService: LoggingService,
+    private readonly snackbarService: NotificationSnackbarService,
+) { }
 
   /** Lifecycle Hooks **/
   ngOnInit(): void {
@@ -49,7 +56,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
 
   ngAfterViewInit(){
     this.workflowFacade.enableSaveButton();
-  } 
+  }
 
   /** Private Methods **/
   private buildForm() {
@@ -64,17 +71,25 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
 
   }
   private addSaveSubscription(): void {
-    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(      
+    this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
-    ).subscribe(([navigationType, isSaved]) => {
-      if (isSaved) {
-        this.verificationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,'HIV Verification status updated');
-        this.workflowFacade.navigate(navigationType);
-      } else {
-        this.workflowFacade.enableSaveButton();
-      }
+    ).subscribe({
+      next: ([navigationType, isSaved]) => {
+        this.loaderService.hide();
+        if (isSaved) {
+          this.verificationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,'HIV Verification status updated');
+          this.workflowFacade.navigate(navigationType);
+        } else {
+          this.workflowFacade.enableSaveButton();
+        }
+      },
+      error: (err) => {
+        this.loaderService.hide();
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
     });
   }
 
@@ -86,6 +101,9 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
         if (session && session?.sessionData) {
           this.clientCaseId = JSON.parse(session.sessionData)?.ClientCaseId
           this.clientId = JSON.parse(session.sessionData)?.clientId ?? this.clientId;
+          this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
+          this.verificationFacade.getClientHivDocuments(this.clientId);
+          this.cdr.detectChanges();
           this.load();
         }
 
@@ -94,18 +112,41 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
 
   private load(){
     this.verificationFacade.showLoader();
-    this.verificationFacade.getHivVerification( this.clientId).subscribe({
+    this.verificationFacade.getHivVerificationWithAttachment( this.clientId, this.clientCaseEligibilityId).subscribe({
       next:(data)=>{
-        if(data !== null){
-          if(data?.hivVerification !== null){
-            this.hivVerificationForm.controls["providerEmailAddress"].setValue(data.hivVerification["verificationToEmail"]);
-            this.hivVerificationForm.controls["providerOption"].setValue(data.hivVerification["verificationMethodCode"]);
-            this.hivVerificationForm.controls["verificationStatusDate"].setValue(data.hivVerification["verificationStatusDate"]);
-            this.hivVerificationForm.controls["requestedUserName"].setValue(data["requestedUserName"]);
-            this.hivVerificationForm.controls["userId"].setValue(data.hivVerification["creatorId"]);
-            this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);              
-          }      
+        if(data?.clientHivVerificationId){
+          if(data?.verificationMethodCode == "UPLOAD_ATTACHMENT")
+          {
+            this.verificationFacade.showAttachmentOptions.next(false);
+            this.hivVerificationForm.controls["providerOption"].setValue(data?.verificationMethodCode);
+            this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
+            if (data?.hivVerification?.documentName) {
+              this.verificationFacade.hivVerificationUploadedDocument.next(data);
+            }
+            else {
+              this.verificationFacade.hivVerificationUploadedDocument.next(undefined);
+            }
+            this.cdr.detectChanges();
+          }
+          else
+          {
+            this.verificationFacade.showAttachmentOptions.next(true);
+          }
+
+          // if(data?.hivVerification !== null){
+          //   this.hivVerificationForm.controls["providerEmailAddress"].setValue(data.hivVerification["verificationToEmail"]);
+          //   this.hivVerificationForm.controls["providerOption"].setValue(data.hivVerification["verificationMethodCode"]);
+          //   this.hivVerificationForm.controls["verificationStatusDate"].setValue(data.hivVerification["verificationStatusDate"]);
+          //   this.hivVerificationForm.controls["requestedUserName"].setValue(data["requestedUserName"]);
+          //   this.hivVerificationForm.controls["userId"].setValue(data.hivVerification["creatorId"]);
+          //   this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
+          // }
         }
+        else
+        {
+          this.verificationFacade.showAttachmentOptions.next(true);
+        }
+
         this.verificationFacade.hideLoader();
       },
       error:(error)=>{
@@ -123,9 +164,10 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.validateForm();
     this.cdr.detectChanges();
     if (this.hivVerificationForm.valid) {
-      return of(true);
+      this.loaderService.show()
+      return this.saveHivVerification();
     }
-    
+
     return of(false)
   }
   private validateForm(){
@@ -133,5 +175,13 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.hivVerificationForm.controls["providerOption"].setValidators([Validators.required])
     this.hivVerificationForm.controls["providerOption"].updateValueAndValidity();
     this.hivVerificationForm.updateValueAndValidity();
+  }
+
+  onAttachmentConfirmationEvent(event:any)
+  {
+    this.clientHivVerification = event;
+  }
+  private saveHivVerification() {
+    return this.verificationFacade.saveHivVerification(this.clientHivVerification);
   }
 }

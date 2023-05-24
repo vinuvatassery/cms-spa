@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit,Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 /** Internal Libraries **/
 import { VerificationFacade } from '@cms/case-management/domain';
@@ -14,7 +14,11 @@ export class HivVerificationComponent implements OnInit {
 
    /** Input properties **/
   @Input() hivVerificationForm!: FormGroup;
-  @Input() clientId!: number;  
+  @Input() clientId!: number;
+  @Input() clientCaseId!: any;
+  @Input() clientCaseEligibilityId!: any;
+  @Output() onAttachmentConfirmationEvent = new EventEmitter();
+
   /** Public properties **/
   rdoVerificationMethod!: string;
   verificationMethod$ = this.lovFacade.verificationMethod$;
@@ -49,5 +53,9 @@ export class HivVerificationComponent implements OnInit {
   }
   onHivRemoveConfirmationOpen() {
     this.isHivVerificationRemovalConfirmationOpened = true;
+  }
+  onAttachmentConfirmation(event:any)
+  {
+    this.onAttachmentConfirmationEvent.emit(event);
   }
 }

@@ -10,7 +10,8 @@ import { VerificationFacade,
   VerificationStatusCode,
   VerificationTypeCode,
   ProviderOption,
-  ClientDocumentFacade } from '@cms/case-management/domain';
+  ClientDocumentFacade,
+  HivVerificationDocument } from '@cms/case-management/domain';
 import { SnackBarNotificationType,ConfigurationProvider} from '@cms/shared/util-core';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
 
@@ -21,15 +22,28 @@ import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
   styleUrls: ['./hiv-verification-request.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HivVerificationRequestComponent implements OnInit {
+export class HivVerificationRequestComponent implements OnInit{
   /** Input properties **/
   @Input() hivVerificationForm!: FormGroup;
   @Input() clientId!: number;
+  @Input() clientCaseId!: any;
+  @Input() clientCaseEligibilityId!: any;
+  clientHivDocumentsList$: any;
   @Output() openRemoveAttachmentConfirmationEvent = new EventEmitter();
+  @Output() onAttachmentConfirmationEvent = new EventEmitter();
   userId!: any;
   hivVerificationAttachment!: File | undefined;
   public uploadRemoveUrl = 'removeUrl';
+  public hivVerificationUploadFile: any = undefined;
+  showAttachmentOptions = true;
+  uploadedAttachment: any
+  uploadedDate: any;
+  uploadedBy: any;
+
   /** Public properties **/
+  fileUploadRestrictions: FileRestrictions = {
+    maxFileSize: this.configurationProvider.appSettings.uploadFileSizeLimit,
+  };
   providerValue$ = this.verificationFacade.providerValue$;
   providerOption:any;
   isSendRequest = false;
@@ -45,6 +59,7 @@ export class HivVerificationRequestComponent implements OnInit {
   public uploadFileRestrictions: UploadFileRistrictionOptions =
   new UploadFileRistrictionOptions();
   showDocInputLoader = false;
+  hivDocument = new HivVerificationDocument();
   popupClass1 = 'more-action-dropdown app-dropdown-action-list ';
   public data = [
     {
@@ -54,8 +69,8 @@ export class HivVerificationRequestComponent implements OnInit {
       click: (): void => {
       },
     },
- 
-    
+
+
     {
       buttonType:"btn-h-danger",
       text: "Remove Attachment",
@@ -68,8 +83,8 @@ export class HivVerificationRequestComponent implements OnInit {
 
 
   public clientDocList = [
-    { 
-      clientDocumentsId: 'Lorem ipsum', 
+    {
+      clientDocumentsId: 'Lorem ipsum',
        clientDocumentsName: 'Lorem ipsum dolor sit amet Lorem ipsum ',
        documentType:'Lorem ipsum Lorem ipsum'
       },
@@ -104,9 +119,35 @@ export class HivVerificationRequestComponent implements OnInit {
       }
       this.cdr.detectChanges();
     });
-   
+    this.verificationFacade.showAttachmentOptions$.subscribe(response=>{
+      this.showAttachmentOptions = response;
+      this.cdr.detectChanges();
+    });
+    this.verificationFacade.clientHivDocumentsList$.subscribe(response=>{
+      this.clientHivDocumentsList$ = response;
+      this.cdr.detectChanges();
+    });
+    this.verificationFacade.hivUploadedDocument$.subscribe(data=>{
+      if(data)
+      {
+        let documentData = [
+          {
+            name: data?.hivVerification?.documentName,
+            size: data?.hivVerification?.documentSize,
+            src: data?.hivVerification?.documentPath,
+            uid: data?.hivVerification?.documentId,
+            documentId: data?.hivVerification?.documentId,
+          },
+        ];
+        this.uploadedAttachment = documentData;
+        this.userId = data?.creatorId;
+        this.uploadedDate = data?.verificationUploadedDate;
+        this.uploadedBy = data?.uploadedBy
+        this.cdr.detectChanges();
+      }
+    });
   }
-  onSendRequestClicked() { 
+  onSendRequestClicked() {
     if (this.providerOption ===ProviderOption.HealthCareProvider) {
       this.hivVerificationForm.markAllAsTouched();
       this.hivVerificationForm.controls["providerEmailAddress"].setValidators([Validators.required, Validators.email])
@@ -132,10 +173,29 @@ export class HivVerificationRequestComponent implements OnInit {
     this.hivVerificationAttachment = e.files[0].rawFile;
     this.showHivVerificationAttachmentRequiredValidation = false;
     this.showHivVerificationAttachmentSizeValidation = (this.hivVerificationAttachment?.size ?? 0) > this.configurationProvider.appSettings?.uploadFileSizeLimit;
+    if (this.hivVerificationAttachment)
+    {
+      let hivVerificationDoc: HivVerificationDocument | undefined = undefined;
+      hivVerificationDoc = {
+        documentName: this.hivVerificationAttachment.name,
+        document: this.hivVerificationAttachment,
+        documentSize: this.hivVerificationAttachment.size
+      };
+      this.clientHivVerification.hivVerificationDoc = hivVerificationDoc;
+      this.clientHivVerification.clientId = this.clientId;
+      this.clientHivVerification.clientCaseEligibilityId = this.clientCaseEligibilityId;
+      this.clientHivVerification.clientCaseId = this.clientCaseId;
+      this.clientHivVerification.verificationMethodCode = this.providerOption;
+      if(!this.showHivVerificationAttachmentRequiredValidation && !this.showHivVerificationAttachmentSizeValidation)
+      {
+        this.onAttachmentConfirmationEvent.emit(this.clientHivVerification);
+      }
+    }
     //this.updateHomeAddressProofCount(true);
   }
 
   handleFileRemoved(e: SelectEvent) {
+    this.showHivVerificationAttachmentRequiredValidation = true;
     this.openRemoveAttachmentConfirmationEvent.emit();
   }
   private populateModel(){
