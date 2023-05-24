@@ -1,107 +1,109 @@
+<div class="vendor_header_container"> 
+<common-bread-crumb></common-bread-crumb>
 <div class="app-l-inner-rapper pt-0 pb-0 pl-0" kendoRippleContainer kendoTooltip>
-
-  <kendo-popover #userCard width="330" position="left">
-    <ng-template kendoPopoverBodyTemplate>
-      <common-user-profile-card [reassign]=true></common-user-profile-card>
-    </ng-template>
-  </kendo-popover>
-
   <!-- Main Title Section -->
   <section class="app-l-mainTittle">
-    <div class="d-flex">
-    <h2 class="title-md">
-      <span class="normal-text pl-1"> A Very Nice Provider</span>
-      <span class="title-star-icon icon-filled" aria-label="user details" aria-hidden="true">
-        <span kendoPopoverAnchor showOn="hover" class="material-icons" aria-label="user information star"
-          aria-hidden="true">star</span>
-      </span>
-      
-    </h2>
-    <div class="title-client-info-block ml-2">
-      <span class="title-client-info">TIN XXX-XX-XXXX </span>
-      <span class="title-client-info">Pmt. via Check </span>
-      <span class="title-client-info">5 Unreconciled Claim(s) </span>
-    </div>
+    <div class="d-flex mb-1">
+      <button aria-label="back to vendor list" kendoButton look="flat" (click)="onBackClicked()"> <span class="material-icons">
+        arrow_back  </span> </button>
+      <h1 class="title_with_bld">
+        <span class="bold-text pl-1"> A Very Nice Provider</span>
+        <span class="title-star-icon icon-filled" aria-label="user details" aria-hidden="true">
+          <span kendoPopoverAnchor showOn="hover" class="material-icons" aria-label="user information star"
+            aria-hidden="true">star</span>
+        </span>
+
+      </h1>
+      <div class="title-client-info-block ml-2">
+        <span class="title-client-info">TIN XXX-XX-XXXX </span>
+        <span class="title-client-info">Pmt. via Check </span>
+        <span class="title-client-info">5 Unreconciled Claim(s) </span>
+      </div>
     </div>
   </section>
-
-
-
-  <!-- Banners -->
-
 </div>
-
-
 <section>
   <div class="info-banners canyon-banner" hidden>
     <span class="material-icons" aria-label="to do item" aria-hidden="true">notifications</span>
     <span>To Do Item</span>
   </div>
-  <div class="info-banners red-banner hover-link">
-    <span class="material-icons" aria-label="to do" aria-hidden="true">playlist_add_check</span>
-    <span class="text-bold">Renew Eligibility </span>
-    <span class="text-normal">(Due today)</span>
+  <div class="flex-row align-items-center">
+    <div class="flex-col flex-col-10">
+      <div class="info-banners red-banner hover-link">
+    
+        <div class="flex-col info-banners p-0">
+          <span class="material-icons" aria-label="to do" aria-hidden="true">playlist_add_check</span>
+          <span class="text-bold">Renew Eligibility </span>
+          <span class="text-normal">(Due today)</span>
+        </div>
+        
+    <div class="">
+    
+    
+    
+        <kendo-dropdownbutton
+        icon="more-vertical"
+        title="More option"
+          [data]="reminderActions" 
+          look="bare"
+          aria-label="more actions"
+          class="small-i-btn app-dropdown-action cvp_three_dot_drop_btn"
+          [popupSettings]="{
+            popupClass: reminderActionPopupClass,
+            animate: true
+          }"
+        >
+       <span hidden> More Option</span>
+            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+              <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+                <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+                <label>   {{ dataItem.text }} </label>
+            </button>
+          </ng-template>
+        </kendo-dropdownbutton> 
+      </div>
+      </div>
+
+    </div>
+    <div class="flex-col flex-col-2">
+      <button aria-label="" kendoButton look="flat" class="card-link-button" >
+    2+ More Items
+    </button>
+    </div>
+  </div>
+ 
+</section>
+</div>
+<section class="client-tab-section vendor-tab">
+  <div class="tab-over-icon-btn">
+    <button kendoButton class="k-icon-button small-i-btn" title="New To-Do Item" aria-label="New To-Do Item">
+      <span class="material-icons" role="button" aria-label="New To-Do Item" aria-hidden="true">playlist_add</span>
+    </button>
+    <button kendoButton class="k-icon-button small-i-btn" title="New Reminder" aria-label="New Reminder">
+      <span class="material-icons" role="button" aria-label="New Reminder" aria-hidden="true">add_alarm</span>
+    </button>
+    <kendo-dropdownbutton [data]="sendActions" class="TableActionPopup app-dropdown-action k-border-s-dropdown"
+      buttonClass="k-flat-button" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+      Send
+      <span class="material-icons" aria-label="expand" aria-hidden="true" role="menuitem">arrow_right</span>
+      <ng-template class="app-dropdown-action-list" kendoSplitButtonItemTemplate let-dataItem>
+        <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+          aria-hidden="false" (click)="dataItem.click">
+          <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+          <label> {{ dataItem.text }} </label>
+        </button>
+      </ng-template>
+    </kendo-dropdownbutton>
+  </div>
+  <div class="client-tab-bar-wrappers">
+
+    <div class="custom-client-tab-main-wrapper">
+      <button kendoButton>Provider Info</button>
+      <button kendoButton>Invoice</button>
+      <button kendoButton>Clients</button>
+      <button kendoButton>Contacts</button>
+    </div>
+    <div class="custom-client-tab-inner-wrapper">
+    </div>
   </div>
 </section>
-<!-- 
-<div>
-    <button aria-label="" kendoButton look="flat" class="card-link-button"
-    (click)="onBackClicked()">
-  back to vendor list button
-  </button>
-</div>
-
-<div class="app-l-inner-rapper pt-0 pb-0" kendoRippleContainer kendoTooltip>
-
-   
- 
-    <section class="app-l-mainTittle" >
-      <h2 class="title-md">
-      
-        <span class="normal-text text-muted pl-1" ></span>
-       
-      
-        <span class="client-pronouns text-muted" title="">pronouns</span>
-      </h2>
-      <div class="title-client-info-block">
-        <span class="title-client-info">ID </span>
-        <span class="title-client-info">CASE ID </span>
-        <span class="title-client-info">URN </span>
-        <span
-          class="title-client-info c-pointer on-hover-t-primary"
-          title="Start New Status Period"
-          
-          ></span
-        >
-        <span
-          class="title-client-info c-pointer on-hover-t-primary"
-          title="Change Group"
-         
-          > </span
-        >
-        <span
-          class="title-client-info c-pointer on-hover-t-primary"
-          title="Edit Status Period Dates"
-          
-          ></span
-        >
-        <span class="title-client-info">FPL </span>  
-      
-     
-      </div>
-    </section>
-  
-   
-   
-  </div> -->
-<div class="client-tab-bar-wrappers">
-
-  <div class="custom-client-tab-main-wrapper">
-    <button kendoButton>Provider Info</button>
-    <button kendoButton>Invoice</button>
-    <button kendoButton>Clients</button>
-    <button kendoButton>Contacts</button>
-  </div>
-  <div class="custom-client-tab-inner-wrapper">
-  </div>
-</div>
