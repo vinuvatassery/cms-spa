@@ -96,5 +96,11 @@ export class EmailDataService {
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/docgen/GenerateText/${clientId}/${clientCaseEligibilityId}`,selectedTemplate
       );
     }
+
+    saveEmailForLater(draftTemplate: any, isSaveForLater: boolean){
+      return this.http.post<any>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates?isSaveForLater=${isSaveForLater}`,draftTemplate
+      );
+    }
 }
  

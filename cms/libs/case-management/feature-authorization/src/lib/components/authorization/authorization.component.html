@@ -31,7 +31,7 @@
           (valueChange)="onChange($event)"
           >
           </kendo-datepicker>
-          <kendo-formerror *ngIf="incompleteDateValidation == true">Invalid date format</kendo-formerror>
+          <!-- <kendo-formerror *ngIf="incompleteDateValidation == true">Invalid date format</kendo-formerror> -->
           <kendo-formerror *ngIf="cerDateValidator && currentDate != null">Date Applicant Signed cannot be greater than Current Date.</kendo-formerror>
           <!-- <kendo-formerror>Date Applicant Signed is
             required.</kendo-formerror> -->
