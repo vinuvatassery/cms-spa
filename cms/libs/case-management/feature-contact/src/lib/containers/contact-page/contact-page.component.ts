@@ -75,6 +75,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   oldOtherPhone?: ClientPhone;
   oldEmail?: ClientEmail;
   oldPreferredContact?: string;
+  oldPreferredContactMethodName?: string ='';
   oldFriendsOrFamilyContact?: FriendsOrFamilyContact;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -1120,11 +1121,26 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.oldWorkPhone = data?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.WorkPhone)[0];
           this.oldOtherPhone = data?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.OtherPhone)[0];
           this.oldEmail = data?.email;
-          if (this.oldHomePhone?.preferredFlag === StatusFlag.Yes) this.oldPreferredContact = this.formatPhoneNumber(this.oldHomePhone?.phoneNbr ?? '');
-          else if (this.oldCellPhone?.preferredFlag === StatusFlag.Yes) this.oldPreferredContact = this.formatPhoneNumber(this.oldCellPhone?.phoneNbr ?? '');
-          else if (this.oldWorkPhone?.preferredFlag === StatusFlag.Yes) this.oldPreferredContact = this.formatPhoneNumber(this.oldWorkPhone?.phoneNbr ?? '');
-          else if (this.oldOtherPhone?.preferredFlag === StatusFlag.Yes) this.oldPreferredContact = this.formatPhoneNumber(this.oldOtherPhone?.phoneNbr ?? '');
-          else if (this.oldEmail?.preferredFlag === StatusFlag.Yes) this.oldPreferredContact = this.oldEmail?.email;
+          if (this.oldHomePhone?.preferredFlag === StatusFlag.Yes){
+             this.oldPreferredContactMethodName = 'Home Phone';
+             this.oldPreferredContact = this.formatPhoneNumber(this.oldHomePhone?.phoneNbr ?? '');
+          }
+          else if (this.oldCellPhone?.preferredFlag === StatusFlag.Yes){
+            this.oldPreferredContactMethodName = 'Cell Phone';
+            this.oldPreferredContact = this.formatPhoneNumber(this.oldCellPhone?.phoneNbr ?? '');
+          }
+          else if (this.oldWorkPhone?.preferredFlag === StatusFlag.Yes){
+            this.oldPreferredContactMethodName = 'Work Phone';
+            this.oldPreferredContact = this.formatPhoneNumber(this.oldWorkPhone?.phoneNbr ?? '');
+          }
+          else if (this.oldOtherPhone?.preferredFlag === StatusFlag.Yes){
+            this.oldPreferredContactMethodName = 'Other Phone';
+            this.oldPreferredContact = this.formatPhoneNumber(this.oldOtherPhone?.phoneNbr ?? '');
+          }
+          else if (this.oldEmail?.preferredFlag === StatusFlag.Yes){
+            this.oldPreferredContactMethodName = 'Email';
+            this.oldPreferredContact = this.oldEmail?.email;
+          }
           this.oldFriendsOrFamilyContact = data?.friendsOrFamilyContact;
           this.setFormValues();
         }
