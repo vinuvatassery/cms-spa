@@ -44,7 +44,7 @@ export class ProfileEmploymentPageComponent implements OnInit {
   
   private loadEmploymentData(clientId: any, eligibilityId: any, skipCount: number,
     pageSize: number, sortBy: string, sortType: string) {
-    this.employmentFacade.loadEmployers(clientId, eligibilityId, skipCount, pageSize, sortBy, sortType);
+    this.employmentFacade.loadEmployers(clientId, eligibilityId, skipCount, pageSize, sortBy, sortType, 'All');
   }
 
   /** Load Employments **/
