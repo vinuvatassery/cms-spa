@@ -6,6 +6,110 @@ import { SearchFacade, CaseStatusCode, CaseFacade, FinancialManagementFacade } f
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  Subject } from 'rxjs';
+import { groupBy } from "@progress/kendo-data-query";
+
+export interface VendorList {
+  id: number;
+  title: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+ 
+}
+
+
+export const vendorList: VendorList[] =  [
+  {
+    id: 1,
+    title: "Mod Health",
+    address: "xxx, 55 Main St",
+    city: "Portland",
+    state: "OR",
+    zip: "97205",
+  },
+  {
+    id: 2,
+    title: "Mod Health",
+    address: "xxx, 55 Main St",
+    city: "Portland",
+    state: "OR",
+    zip: "97205",
+  },
+  {
+    id: 21,
+    title: "Mod Health",
+    address: "xxx, 55 Main St",
+    city: "Portland",
+    state: "OR",
+    zip: "97205",
+  },
+  {
+    id: 22,
+    title: "Mod Health",
+    address: "xxx, 55 Main St",
+    city: "Portland",
+    state: "OR",
+    zip: "97205",
+  },
+  {
+    id: 3,
+    title: "Mods Insurance",
+    address: "xxx, 55 Main St",
+    city: "Portland",
+    state: "OR",
+    zip: "97205",
+  },
+  {
+    id: 4,
+    title: "Mods Insurance",
+    address: "xxx, 55 Main St",
+    city: "Portland",
+    state: "OR",
+    zip: "97205",
+  },
+  {
+    id: 5,
+    title: "Mods Insurance",
+    address: "xxx, 55 Main St",
+    city: "Portland",
+    state: "OR",
+    zip: "97205",
+  },
+  {
+    id: 6,
+    title: "Mods Insurance",
+    address: "xxx, 55 Main St",
+    city: "Portland",
+    state: "OR",
+    zip: "97205",
+  },
+  {
+    id: 7,
+    title: "Vendor Name",
+    address: "xxx, 55 Main St",
+    city: "Portland",
+    state: "OR",
+    zip: "97205",
+  },
+  {
+    id: 8,
+    title: "Vendor Name",
+    address: "xxx, 55 Main St",
+    city: "Portland",
+    state: "OR",
+    zip: "97205",
+  },
+  {
+    id: 9,
+    title: "Vendor Name",
+    address: "xxx, 55 Main St",
+    city: "Portland",
+    state: "OR",
+    zip: "97205",
+  },
+];
+
 @Component({
   selector: 'case-management-search-page',
   templateUrl: './search-page.component.html',
@@ -20,14 +124,14 @@ export class SearchPageComponent implements OnInit {
   public formUiStyle : UIFormStyle = new UIFormStyle();
   filterManager: Subject<string> = new Subject<string>();
   searchBars$ = this.caseFacade.searchBars$
-
+  vendorList: any[] = groupBy(vendorList, [{ field: "title" }]);
   /** Constructor **/
   constructor(private readonly searchFacade: SearchFacade,private router: Router,
     private caseFacade: CaseFacade,
     private loggingService: LoggingService,
     private loaderService: LoaderService
    ) {
-     
+  
   }
 
   /** Lifecycle hooks **/
@@ -80,6 +184,5 @@ export class SearchPageComponent implements OnInit {
   }
 
 }
-
 
 

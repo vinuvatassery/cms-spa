@@ -755,3 +755,22 @@
   }
 }
 
+.vendor_head_search_list{
+ 
+  .k-table-group-row,
+  .k-table-group-sticky-header{
+      .k-table-th{
+        color: $black-3;
+        display: inline-block;
+        padding: 8px 10px!important;
+        font-family: $font-family-bold;
+        width: 100%;
+      }
+  }
+  .k-table-row{
+    .k-table-td{
+      padding-left: 20px !important;
+    }
+ 
+  }
+}

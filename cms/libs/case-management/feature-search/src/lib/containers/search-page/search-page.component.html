@@ -55,38 +55,26 @@ class="global-search header-search field-label-hide combotable_search_list" [ngC
     <span *ngIf="showHeaderSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
     <kendo-label text="Search Vendor">
   <kendo-multicolumncombobox
-    [data]="clientSearchResult$  | async"
-    textField="clientFullName"
-    valueField="clientId"
+    [data]="vendorList"
+    textField="address"
+    valueField="id"
     [loading] = "showHeaderSearchInputLoader"
     [fillMode]="formUiStyle.dropDownFillMode"
     placeholder="Search Vendor"
-    [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+    [popupSettings]="{popupClass: 'combotable_search_list vendor_head_search_list', animate: true }"
     [filterable]="true"
     (filterChange)="onSearchTextChange($event)"
     (selectionChange)="onSelectChange($event)"> 
     <button kendoButton fillMode="clear" icon="image"></button>   
-
     <kendo-combobox-column>
       <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
-        <span  >{{ dataItem.clientFullName }}</span>
+        <span  >{{ dataItem.address }} {{ dataItem.city }} {{ dataItem.state }} {{ dataItem.zip }}</span>
       </ng-template>
     </kendo-combobox-column>
-    <kendo-combobox-column  [width]="100">
-      <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
-        <span class=" text-muted"> <em>ID:</em> {{dataItem.clientId}}</span>
-      </ng-template>
-    </kendo-combobox-column>
-    <kendo-combobox-column   [width]="125">
-      <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
-        <span class=" text-muted"> <em>DOB:</em> {{ dataItem.dob | date: 'MM-dd-yyyy'}}</span>
-      </ng-template>
-    </kendo-combobox-column>
-    <kendo-combobox-column  [width]="135">
-      <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
-        <span class="text-muted"><em> SSN:</em> {{ dataItem.ssn }}</span>
-      </ng-template>
-    </kendo-combobox-column>   
+     
+    <ng-template kendoMultiColumnComboBoxGroupTemplate let-groupName>
+       {{ groupName }} 
+    </ng-template>
   </kendo-multicolumncombobox>
 </kendo-label>
 </div>
