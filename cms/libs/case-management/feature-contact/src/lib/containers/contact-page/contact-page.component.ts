@@ -1482,6 +1482,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setVisibilityByNoFriendsOrFamily(isChecked: boolean) {
+    const otherDesc: CompletionChecklist = {
+      dataPointName: 'relationshipCodeOther',
+      status: StatusFlag.No
+    };
     if (isChecked) {
       this.contactInfoForm?.get('familyAndFriendsContact.contactName')?.disable();
       this.contactInfoForm?.get('familyAndFriendsContact.contactRelationshipCode')?.disable();
@@ -1491,8 +1495,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm?.get('familyAndFriendsContact.contactName')?.enable();
       this.contactInfoForm?.get('familyAndFriendsContact.contactRelationshipCode')?.enable();
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.enable();
-
+      otherDesc.status = this.contactInfoForm?.get('familyAndFriendsContact.contactRelationshipCode')?.value === 'O' ? StatusFlag.Yes : StatusFlag.No;
     }
+    this.workflowFacade.updateBasedOnDtAttrChecklist([otherDesc]);
   }
 
   private setVisibilityByHomelessFlag(isChecked: boolean) {
@@ -1900,16 +1905,15 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     this.removePhoneEmailValidation();
-    if ((ffContactGroup.controls['noFriendOrFamilyContactFlag']?.value ?? false) === false) {
-      ffContactGroup.controls['contactName'].setValidators(null);
-      ffContactGroup.controls['contactName'].updateValueAndValidity();
-      ffContactGroup.controls['contactRelationshipCode'].setValidators(null);
-      ffContactGroup.controls['contactRelationshipCode'].updateValueAndValidity();
-      ffContactGroup.controls['contactPhoneNbr'].setValidators(null);
-      ffContactGroup.controls['contactPhoneNbr'].updateValueAndValidity();
-      ffContactGroup.controls['otherDesc'].setValidators(null);
-      ffContactGroup.controls['otherDesc'].updateValueAndValidity();
-    }
+    ffContactGroup.controls['contactName'].setValidators(null);
+    ffContactGroup.controls['contactName'].updateValueAndValidity();
+    ffContactGroup.controls['contactRelationshipCode'].setValidators(null);
+    ffContactGroup.controls['contactRelationshipCode'].updateValueAndValidity();
+    ffContactGroup.controls['contactPhoneNbr'].setValidators(null);
+    ffContactGroup.controls['contactPhoneNbr'].updateValueAndValidity();
+    ffContactGroup.controls['otherDesc'].setValidators(null);
+    ffContactGroup.controls['otherDesc'].updateValueAndValidity();
+
   }
 
   private removePhoneEmailValidation() {
