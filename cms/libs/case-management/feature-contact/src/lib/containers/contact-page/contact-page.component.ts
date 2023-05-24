@@ -534,9 +534,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     const isMailAddressRequired = (mailingAddressGroup.controls['mailingAddressChangedFlag']?.value === StatusFlag.Yes) && this.isCerForm || !this.isCerForm;
     const isHomeAddressRequired = (homeAddressGroup.controls['homeAddressChangedFlag']?.value === StatusFlag.Yes) && this.isCerForm || !this.isCerForm;
     if (isMailAddressRequired) {
-      mailingAddressGroup.controls['address1'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+[/]?[A-Za-z0-9 ]+$')]);
+      mailingAddressGroup.controls['address1'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9# ]+[/]?[A-Za-z0-9# ]+$')]);
       mailingAddressGroup.controls['address1'].updateValueAndValidity();
-      mailingAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9 ]+[/]?[A-Za-z0-9 ]+$')]);
+      mailingAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9# ]+[/]?[A-Za-z0-9# ]+$')]);
       mailingAddressGroup.controls['address2'].updateValueAndValidity();
       mailingAddressGroup.controls['city'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+')]);
       mailingAddressGroup.controls['city'].updateValueAndValidity();
@@ -547,9 +547,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     if (isHomeAddressRequired) {
       if ((homeAddressGroup.controls['homelessFlag']?.value ?? false) === false) {
-        homeAddressGroup.controls['address1'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+[/]?[A-Za-z0-9 ]+$')]);
+        homeAddressGroup.controls['address1'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9# ]+[/]?[A-Za-z0-9# ]+$')]);
         homeAddressGroup.controls['address1'].updateValueAndValidity();
-        homeAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9 ]+[/]?[A-Za-z0-9 ]+$')]);
+        homeAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9# ]+[/]?[A-Za-z0-9# ]+$')]);
         homeAddressGroup.controls['address2'].updateValueAndValidity();
         homeAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
         homeAddressGroup.controls['zip'].updateValueAndValidity();
@@ -577,7 +577,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setPhoneEmailValidation() {
     const emailGroup = this.contactInfoForm.get('email') as FormGroup;
-    const isPhoneChangedInCer = this.contactInfoForm.controls['homePhone.phoneNumberChangedFlag']?.value === StatusFlag.Yes && this.isCerForm;
+    const isPhoneChangedInCer = (this.contactInfoForm.get('homePhone') as FormGroup)?.controls['phoneNumberChangedFlag']?.value === StatusFlag.Yes && this.isCerForm;
     const isEmailChangedInCer = (emailGroup.controls['emailAddressChangedFlag']?.value === StatusFlag.Yes) && this.isCerForm;
     const isPreferredFlagRequired = (((isPhoneChangedInCer || isEmailChangedInCer) && this.isCerForm) || !this.isCerForm);
     this.setHomePhone(isPhoneChangedInCer);
@@ -1826,7 +1826,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   checkValidations() {
     this.setValidation();
     this.contactInfoForm.markAllAsTouched();
-    const isAddressProofRequired = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof == undefined && this.homeAddressProofFile[0]?.name == undefined)
+    const isAddressProofRequired = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof == undefined && (this.homeAddressProofFile === undefined || this.homeAddressProofFile[0]?.name == undefined))
     if (isAddressProofRequired) {
       this.showAddressProofRequiredValidation = true;
     }

@@ -1,6 +1,6 @@
 /** Angular **/
 import {
-  Component,  
+  Component,
   ChangeDetectionStrategy,
   Input,
   Output,
@@ -76,7 +76,7 @@ export class CaseManagerListComponent implements OnChanges {
   public newAppActions = [
     {
       buttonType: 'btn-h-danger',
-      text: 'Unassign Case Manager',
+      text: 'Unassign',
       icon: 'delete',
       buttonName: 'unAssignMngr',
       click: (
@@ -96,7 +96,7 @@ export class CaseManagerListComponent implements OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Case Manager',
+      text: 'Edit',
       icon: 'edit',
       buttonName: 'editMngr',
       click: (clientCaseId: string, caseManagerId: string): void => {
@@ -110,7 +110,7 @@ export class CaseManagerListComponent implements OnChanges {
 
     {
       buttonType: 'btn-h-danger',
-      text: 'Remove Case Manager',
+      text: 'Remove',
       icon: 'delete',
       buttonName: 'removeMngr',
       click: (clientCaseId: string, caseManagerId: string): void => {
@@ -301,12 +301,12 @@ constructor(private caseFacade: CaseFacade){}
   }
   showReferalBtnClicked()
   {
-     this.showReferralPopup =true;    
+     this.showReferralPopup =true;
   }
 
   submitReferalEvent(confirm : boolean)
   {
-     this.showReferralPopup =false;    
+     this.showReferralPopup =false;
   }
 
   onDeleteConfirmHandle(data: any) {

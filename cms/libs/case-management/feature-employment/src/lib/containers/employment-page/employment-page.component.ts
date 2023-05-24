@@ -139,7 +139,8 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
         gridDataRefiner.skipcount,
         gridDataRefiner.maxResultCount,
         gridDataRefiner.sort,
-        gridDataRefiner.sortType
+        gridDataRefiner.sortType,
+        'New'
       );
       this.isEmpListGridLoaderShow = false;
     }
