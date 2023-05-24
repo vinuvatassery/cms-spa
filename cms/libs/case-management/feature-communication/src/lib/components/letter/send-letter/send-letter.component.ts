@@ -6,10 +6,19 @@ import {
   Output,
   EventEmitter,
   Input,
+  ChangeDetectorRef
 } from '@angular/core';
-/** Enums **/
-import { CommunicationEvents } from '@cms/case-management/domain';
-import { Observable } from 'rxjs';
+
+
+/** Internal Libraries **/
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+
+/** External Libraries **/
+import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
+
 
 @Component({
   selector: 'case-management-send-letter',
@@ -25,8 +34,21 @@ export class SendLetterComponent implements OnInit {
   /** Output properties  **/
   @Output() closeSendLetterEvent = new EventEmitter<CommunicationEvents>();
   @Output() loadInitialData = new EventEmitter();
+  @Output() openDdlLetterEvent = new EventEmitter();
+  @Output() emailEditorValueEvent = new EventEmitter<any>();
+
+  private currentSessionSubscription !: Subscription;
+   /** Constructor **/
+   constructor(private readonly communicationFacade: CommunicationFacade,
+    private readonly loaderService: LoaderService,
+    private readonly loggingService: LoggingService,
+    private readonly ref: ChangeDetectorRef,
+    private readonly route: ActivatedRoute,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    private readonly workflowFacade: WorkflowFacade,) { }
 
   /** Public properties **/
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   letterEditorValueEvent = new EventEmitter<boolean>();
   letterContentValue!: any;
   isNewLetterClicked!: any;
@@ -34,12 +56,17 @@ export class SendLetterComponent implements OnInit {
   isShowPreviewLetterPopupClicked = false;
   isShowSaveForLaterPopupClicked = false;
   isShowSendLetterToPrintPopupClicked = false;
+  currentLetterData:any;
+  currentLetterPreviewData:any;
+  prevClientCaseEligibilityId!: string;
+  selectedTemplate!: any;
   dataValue: Array<any> = [
     {
       text: '',
     },
   ];
   popupClass = 'app-c-split-button';
+  ddlTemplates: any;
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -47,7 +74,23 @@ export class SendLetterComponent implements OnInit {
       this.isNewLetterClicked = true;
     } else {
       this.isNewLetterClicked = false;
-    }    
+    }
+    this.loadDropdownLetterTemplates(); 
+    this.loadCurrentSession();   
+  }
+
+  private loadCurrentSession() {
+    const sessionId = this.route.snapshot.queryParams['sid'];
+    this.loaderService.show();
+    this.workflowFacade.loadWorkFlowSessionData(sessionId);
+    this.currentSessionSubscription = this.workflowFacade.sessionDataSubject$.subscribe((resp) => {
+      if (resp) {
+        this.prevClientCaseEligibilityId = JSON.parse(resp.sessionData)?.prevClientCaseEligibilityId;
+        if (this.prevClientCaseEligibilityId) {
+        }
+        this.loaderService.hide();
+      }
+    });
   }
 
   /** Internal event methods **/
@@ -79,9 +122,29 @@ export class SendLetterComponent implements OnInit {
 
   onPreviewLetterClicked() {
     this.isShowPreviewLetterPopupClicked = true;
-    this.isShowSaveForLaterPopupClicked = false;
-    this.isShowSendLetterToPrintPopupClicked = false;
-    this.letterEditorValueEvent.emit(true);
+    this.emailEditorValueEvent.emit(this.currentLetterData);
+    this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
+    this.generateText(this.selectedTemplate);
+  }
+  private generateText(emailData: any){
+    this.loaderService.show();
+    const clientId = this.workflowFacade.clientId ?? 0;
+    const caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
+    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', emailData ?? '')
+        .subscribe({
+          next: (data: any) =>{
+            this.loaderService.hide();
+          if (data) {
+            this.currentLetterPreviewData = data;
+            this.ref.detectChanges();
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+        },
+      });
   }
 
   onSendLetterToPrintClicked() {
@@ -97,11 +160,39 @@ export class SendLetterComponent implements OnInit {
 
   /** External event methods **/
   handleLetterEditor(event: any) {
-    this.letterContentValue = event;
+    this.currentLetterData = event;
   }
 
-  handleOpenTemplateClicked() {
+  handleOpenTemplateClicked() { 
     this.isOpenLetterTemplate = true;
     this.loadInitialData.emit();
+  }
+  onClosePreview(){
+    this.isShowPreviewLetterPopupClicked = false;
+  }
+
+  private loadDropdownLetterTemplates() {
+    this.loaderService.show();
+    const channelTypeCode = 'LETTER';
+    this.communicationFacade.loadEmailTemplates('CER_AUTHORIZATION_LETTER', channelTypeCode)
+    .subscribe({
+      next: (data: any) =>{
+        if (data) {
+          this.ddlTemplates = data;
+        }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+    },
+  });
+  }
+  handleDdlLetterValueChange(event: any) {
+    this.isOpenLetterTemplate=true;
+    this.selectedTemplate = event;
+    this.handleLetterEditor(event);
+    this.ref.detectChanges();
+    this.openDdlLetterEvent.emit();
   }
 }
