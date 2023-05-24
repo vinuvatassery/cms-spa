@@ -1,5 +1,6 @@
 /** Angular **/
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 /** Internal Library **/
 import { NavigationMenuFacade } from '@cms/system-config/domain';
 @Component({
@@ -20,7 +21,8 @@ export class SideNavigationComponent implements OnInit {
     { key: "DIRECT_MESSAGES", value: 10 }
   ];
   /** Constructor **/
-  constructor(private readonly navigationMenuFacade: NavigationMenuFacade) { }
+  constructor(private readonly router: Router,
+    private readonly navigationMenuFacade: NavigationMenuFacade) { }
 
   /** Lifecycle events **/
   ngOnInit(): void {
@@ -35,4 +37,24 @@ export class SideNavigationComponent implements OnInit {
   getBadge(key: string) {
     return this.menuBadges.find(i => i.key === key)?.value ?? 0;
   }
+
+  onMenuClick(menu: any) {
+    if (menu && menu?.url) {
+      if (menu?.target === '_blank') {
+        window.open(menu?.url, '_blank');
+      }
+      else {
+        this.router.navigate([menu?.url]);
+      }
+    }
+
+    this.expandMenu(menu);
+  }
+
+  expandMenu(menu: any){
+    if(menu?.subMenus?.length > 0){
+      menu.isExpanded = !(menu?.isExpanded ?? false);
+    }
+  }
+
 }
