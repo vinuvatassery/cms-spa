@@ -89,6 +89,7 @@ export interface HomeAddressProof {
   documentPath?: string;
   document?: File;
   concurrencyStamp?: string;
+  documentTypeCode?: string;
 }
 
 export interface PreferredContactLov {

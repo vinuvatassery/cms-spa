@@ -31,11 +31,11 @@ export class EmployersDataService {
     maxResultCount: number,
     sort: string,
     sortType: string,
-    isOld: boolean = false
+    type: string = 'All'
   ) {
     return this.http.get<ClientEmployer>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clients/${clientId}/employers?clientCaseEligibilityId=${clientCaseEligibilityId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&IsOldEmployers=${isOld}`
+      `/case-management/clients/${clientId}/employers?clientCaseEligibilityId=${clientCaseEligibilityId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&EmployerType=${type}`
     );
   }
   // geting the  employer details

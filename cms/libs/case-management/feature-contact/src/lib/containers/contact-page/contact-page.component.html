@@ -459,29 +459,15 @@
         </div>        
         <div class="flex-row mt-2">
           <div class="flex-col flex-col-10">
-            <kendo-fileselect 
-            aria-label="proof of home address"  
-            name="upload proof"
-            [disabled]="isNoProofOfHomeChecked"
-            [restrictions]="fileUploadRestrictions" 
-            [multiple]="false"   
-            (select)="handleFileSelected($event)" 
-            (remove)="handleFileRemoved($event)"            
-            [ngModel]="homeAddressProofFile"  
-            [ngModelOptions]="{standalone: true}"
-            id="homeAddressProofUploaded"
-            #homeAddressProofUploaded>
-            <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-              <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-              <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>   
-                <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
-                  <a>{{ files[0].name }} </a>
-                </button>
-                <br>
-                <span>{{   files[0].size  | fileSize  }}</span> 
-              </span>
-            </ng-template>
-          </kendo-fileselect>
+          <common-document-upload
+          [typeCode]="'HOME_ADDRESS_PROOF'"
+          [isDisabled]="isNoProofOfHomeChecked"
+          [file]="homeAddressProofFile"
+          [isFileViewable]="true"
+          (handleFileSelectEvent)="handleFileSelected($event)"
+          (handleFileRemoveEvent)="handleFileRemoved($event)"
+          (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
+          </common-document-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint> 
           <kendo-formerror *ngIf="showAddressProofRequiredValidation"> Proof of Home Address is required
           </kendo-formerror>
@@ -1071,7 +1057,7 @@
                 >
                 </kendo-dropdownlist>
               </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Preferred Contact Method:</b> {{oldPreferredContact | phone}} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('email.preferredContactMethod',oldPreferredContact??'')">Use Old  </button></p> 
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Preferred Contact Method:</b> {{ oldPreferredContact }} <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('email.preferredContactMethod',oldPreferredContact??'')">Use Old  </button></p> 
 
               <kendo-formerror>Preferred contact is required</kendo-formerror>
             </kendo-formfield>

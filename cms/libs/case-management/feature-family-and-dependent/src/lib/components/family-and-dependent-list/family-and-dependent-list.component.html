@@ -56,7 +56,7 @@
     </ng-template>
   </kendo-grid-column>
   <kendo-grid-column [width]="80"
-  *ngIf="!isAddOrEditFamilyDependentDisplay"
+  *ngIf="!isAddOrEditFamilyDependentDisplay || isCerForm"
       field="ssn"
       title="SSN"
       [sortable]="true"

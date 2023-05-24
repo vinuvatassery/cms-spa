@@ -32,6 +32,27 @@ export class DependentDataService {
 
   }
 
+  loadPreviousRelations(previousEligibilityId: string, clientId: number) {
+    return this.http.get<Dependent[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
+      `/clients/${clientId}/eligibility-periods/${previousEligibilityId}/dependents`
+    );
+  }
+
+  updateFamilyChangedStatus(previousEligibilityId: string, friendFamilyChangedFlag: string) {
+    return this.http.patch(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
+      `/eligibility-periods/${previousEligibilityId}/has-family-change?friendFamilyChangedFlag=${friendFamilyChangedFlag}`
+      , null);
+  }
+
+  updateAdditionalFamilyStatus(previousEligibilityId: string, hasAdditionalFamilyFlag: string) {
+    return this.http.patch(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
+      `/eligibility-periods/${previousEligibilityId}/has-additional-family?hasAdditionalFamilyFlag=${hasAdditionalFamilyFlag}`
+      , null);
+  }
+
   ///2load dependent status  for checkbox
   loadDependentsStatus(eligibilityId: string) {
     return this.http.get<Dependent[]>(
@@ -104,9 +125,9 @@ export class DependentDataService {
 
 
   //7 mark dependent as inactive
-  deleteDependent(eligibilityId: string, clientDependentId: string, isCER: boolean = false) {
+  deleteDependent(eligibilityId: string, clientDependentId: string, isCER: boolean = false, status?: String) {
     return this.http.delete(
-      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/eligibility-periods/${eligibilityId}/dependents/${clientDependentId}/${isCER}`
+      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/eligibility-periods/${eligibilityId}/dependents/${clientDependentId}?IsCER=${isCER}&Status=${status}`
     );
   }
 
@@ -139,9 +160,9 @@ export class DependentDataService {
     );
   }
 
-  loadClientDependents(clientId: any) {
+  loadClientDependents(clientId: any,caseEligibilityId:any) {
     return this.http.get<Array<Dependent>>(
-      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/clients/${clientId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/clients/${clientId}/relationships/?eligibilityId=${caseEligibilityId}`
     );
   }
 
