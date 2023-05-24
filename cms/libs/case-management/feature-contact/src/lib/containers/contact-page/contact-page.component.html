@@ -1188,7 +1188,7 @@
               >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Relationship: </b> {{oldFriendsOrFamilyContact?.contactRelationshipCode}} <button aria-label="client name" kendoButton look="flat" class="card-link-button"  (click)="useOldOnClick('familyAndFriendsContact.contactRelationshipCode',oldFriendsOrFamilyContact?.contactRelationshipCode??'')">Use Old  </button></p> 
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Relationship: </b> {{oldFriendsOrFamilyContact?.contactRelationshipDesc}} <button aria-label="client name" kendoButton look="flat" class="card-link-button"  (click)="useOldOnClick('familyAndFriendsContact.contactRelationshipCode',oldFriendsOrFamilyContact?.contactRelationshipCode??'')">Use Old  </button></p> 
 
             <kendo-formerror>Contact's Relationship to Client is required</kendo-formerror>
           </kendo-formfield>
