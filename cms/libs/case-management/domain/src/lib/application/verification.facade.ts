@@ -18,12 +18,14 @@ export class VerificationFacade {
   private clientHivDocumentsListSubject = new Subject<any>();
   hivVerificationUploadedDocument = new Subject<any>();
   showAttachmentOptions = new BehaviorSubject<boolean>(false);
+  isSaveandContinueSubject = new BehaviorSubject<boolean>(true);
 
   /** Public properties **/
   hivVerificationSave$ = this.hivVerificationSaveSubject.asObservable();
   showAttachmentOptions$ = this.showAttachmentOptions.asObservable();
   hivUploadedDocument$ = this.hivVerificationUploadedDocument.asObservable();
   clientHivDocumentsList$ = this.clientHivDocumentsListSubject.asObservable();
+  isSaveandContinue$ = this.isSaveandContinueSubject.asObservable();
 
 
   constructor(private readonly verificationDataService: VerificationDataService,

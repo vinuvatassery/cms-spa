@@ -28,6 +28,8 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   clientHivVerification: any;
+  isNotUploaded = true;
+  alreadyUploaded = false;
 
 
   /** Constructor **/
@@ -46,6 +48,10 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.loadSessionData();
     this.verificationFacade.hivVerificationSave$.subscribe(data=>{
       this.load();
+    });
+    this.verificationFacade.isSaveandContinue$.subscribe(response=>{
+      this.isNotUploaded = response;
+      this.cdr.detectChanges();
     });
   }
 
@@ -122,9 +128,11 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
             this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
             if (data?.hivVerification?.documentName) {
               this.verificationFacade.hivVerificationUploadedDocument.next(data);
+              this.alreadyUploaded = true;
             }
             else {
               this.verificationFacade.hivVerificationUploadedDocument.next(undefined);
+              this.alreadyUploaded = false;
             }
             this.cdr.detectChanges();
           }
@@ -164,8 +172,15 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.validateForm();
     this.cdr.detectChanges();
     if (this.hivVerificationForm.valid) {
-      this.loaderService.show()
-      return this.saveHivVerification();
+      if(this.hivVerificationForm.controls["providerOption"].value == 'UPLOAD_ATTACHMENT' && !this.isNotUploaded)
+      {
+        this.loaderService.show()
+        return this.saveHivVerification();
+      }
+      else if(this.hivVerificationForm.controls["providerOption"].value !== 'UPLOAD_ATTACHMENT' || this.alreadyUploaded)
+      {
+        return of(true)
+      }
     }
 
     return of(false)
