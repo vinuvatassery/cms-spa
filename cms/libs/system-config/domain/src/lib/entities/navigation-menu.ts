@@ -9,4 +9,5 @@ export interface NavigationMenu {
     sequenceNbr: number;
     target:string;
     subMenus: NavigationMenu[];
+    isExpanded: boolean;
 }

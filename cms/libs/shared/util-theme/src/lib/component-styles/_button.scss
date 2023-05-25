@@ -456,3 +456,24 @@
     }
   }
 }
+.k-menu-group {
+  .k-item {
+
+    >.k-link:active,
+    >.k-link.k-active,
+    >.k-link.k-selected { color: $app-primary;}
+  }
+}
+
+.k-menu {
+  &.k-context-men {
+    .k-context-men {
+      >.k-link:active,
+      >.k-link.k-active,
+      >.k-link.k-selected {
+        color: $app-primary;
+      }
+    }
+  }
+}
+ 
