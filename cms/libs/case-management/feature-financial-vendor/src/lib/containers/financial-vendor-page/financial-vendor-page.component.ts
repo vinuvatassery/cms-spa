@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { CaseFacade, FinancialVendorProviderTabCode, SearchHeaderType } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -8,7 +8,7 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
   styleUrls: ['./financial-vendor-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialVendorPageComponent {
+export class FinancialVendorPageComponent implements OnInit{
   isVendorDetailFormShow = false;
 
   data = [
@@ -41,6 +41,13 @@ export class FinancialVendorPageComponent {
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
   //todo make the tabstrip  dynamic with vendor type codes
   vendorTypeCode = '';
+
+  constructor(    private caseFacade: CaseFacade    ) {}
+
+    /** Lifecycle hooks **/
+    ngOnInit() {    
+      this.caseFacade.enableSearchHeader(SearchHeaderType.VendorSearch);
+    }
 
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
     return FinancialVendorProviderTabCode;

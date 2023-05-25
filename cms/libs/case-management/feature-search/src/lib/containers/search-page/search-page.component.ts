@@ -1,8 +1,8 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 /** Facades **/
-import { SearchFacade, CaseStatusCode, CaseFacade, FinancialManagementFacade } from '@cms/case-management/domain';
+import { SearchFacade, CaseStatusCode, CaseFacade, FinancialManagementFacade, SearchHeaderType } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  Subject } from 'rxjs';
@@ -116,7 +116,7 @@ export const vendorList: VendorList[] =  [
   styleUrls: ['./search-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchPageComponent implements OnInit {
+export class SearchPageComponent implements OnInit, AfterViewInit {
   /** Public properties **/
   showHeaderSearchInputLoader = false;
   clientSearchResult$ = this.searchFacade.clientSearch$;;
@@ -124,12 +124,16 @@ export class SearchPageComponent implements OnInit {
   public formUiStyle : UIFormStyle = new UIFormStyle();
   filterManager: Subject<string> = new Subject<string>();
   searchBars$ = this.caseFacade.searchBars$
+
+  searchHeaderTypeSubject = new Subject<any>()
+  searchHeaderType$ = this.searchHeaderTypeSubject.asObservable()
+
   vendorList: any[] = groupBy(vendorList, [{ field: "title" }]);
   /** Constructor **/
   constructor(private readonly searchFacade: SearchFacade,private router: Router,
     private caseFacade: CaseFacade,
     private loggingService: LoggingService,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,private cdRef : ChangeDetectorRef
    ) {
   
   }
@@ -139,8 +143,22 @@ export class SearchPageComponent implements OnInit {
       this.clientSearchResult$.subscribe(data=>{
       this.showHeaderSearchInputLoader = false;
     })
-  
+   
   }
+
+  ngAfterViewInit() {
+
+    this.searchBars$.subscribe((searchHeaderType: string) =>
+    {
+      debugger
+      if(searchHeaderType)
+      {       
+         this.searchHeaderTypeSubject.next(searchHeaderType);
+         this.cdRef.detectChanges();
+      }
+    });    
+  }
+
   clickMobileHeaderSearchOpen(){
       this.mobileHeaderSearchOpen = !this.mobileHeaderSearchOpen
   }

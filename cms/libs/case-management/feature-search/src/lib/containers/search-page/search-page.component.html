@@ -1,4 +1,4 @@
-<div *ngIf="(searchBars$ | async) === 'Case_Search'"
+<div *ngIf="(searchHeaderType$ | async) === 'Case_Search'"
 class="global-search header-search field-label-hide combotable_search_list" [ngClass]="{'mobile_header-search_show': mobileHeaderSearchOpen}">
   <span
     class="material-icons global-search-icon"
@@ -45,7 +45,7 @@ class="global-search header-search field-label-hide combotable_search_list" [ngC
 </div>
 
 
-<div *ngIf="(searchBars$ | async) === 'Vendor_Search'"
+<div *ngIf="(searchHeaderType$ | async) === 'Vendor_Search'"
  class="global-search header-search field-label-hide combotable_search_list" [ngClass]="{'mobile_header-search_show': mobileHeaderSearchOpen}">
   <span
     class="material-icons global-search-icon"
