@@ -156,21 +156,17 @@
           <span>{{ dataItem.text }}</span>
         </ng-template>
       </kendo-toolbar-dropdownbutton>
-      <kendo-upload *ngIf="showAttachmentUpload" >
-      </kendo-upload>
     </kendo-toolbar>
-    <kendo-upload *ngIf="showAttachmentUpload" >
-    </kendo-upload>
   </kendo-editor>
   
   <!-- Attachment Panel -->
+  <div class="panelbar-wrapper">
   <kendo-panelbar>
-    <kendo-panelbar-item title="3 attachment(s)">
-      <ng-template kendoPanelBarContent>
+    <kendo-panelbar-item [items]="selectedAttachedFile" title="{{selectedAttachedFile.length}} attachment(s)">
+      <ng-template kendoPanelBarContent let-items>
         <div class="attachment-item-list" kendoTooltip>
-          <a class="attachment-item_name">attachment-doc.pdf</a>
-          <div> 
-          <span class="attachment-item_size">(2MB)</span>
+          <a class="attachment-item_name">{{items.name}}</a>
+          <span class="attachment-item_size">{{items.size | fileSize}}</span>
           <button
             kendoButton
             class="attachment-item_remove k-icon-button small-i-btn"
@@ -184,50 +180,53 @@
               >close</span
             >
           </button>
-        </div>
-        </div>
-        <div class="attachment-item-list" kendoTooltip>
-          <a class="attachment-item_name">attachment-doc-01.pdf</a>
-          <div>
-            <span class="attachment-item_size">(1.5MB)</span>
-            <button
-              kendoButton
-              class="attachment-item_remove k-icon-button small-i-btn"
-              title="Remove attachment"
-              aria-label="remove attachment"
-            >
-              <span
-                class="material-icons"
-                aria-label="close attachment"
-                aria-hidden="true"
-                >close</span
-              >
-            </button>
-          </div>
-        
-        </div>
-        <div class="attachment-item-list" kendoTooltip>
-          <a class="attachment-item_name">attachment-doc-new.pdf</a>
-          <div>
-          <span class="attachment-item_size">(1MB)</span>
-          <button
-            kendoButton
-            class="attachment-item_remove k-icon-button small-i-btn"
-            title="Remove attachment"
-            aria-label="remove attachment"
-          >
-            <span
-              class="material-icons"
-              aria-label="close attachment"
-              aria-hidden="true"
-              >close</span
-            >
-          </button>
-        </div>
         </div>
       </ng-template>
     </kendo-panelbar-item>
   </kendo-panelbar>
+  </div>
 </div>
-<kendo-upload *ngIf="showAttachmentUpload" >
-</kendo-upload>
+<!-- <kendo-upload *ngIf="showAttachmentUpload" >
+</kendo-upload> -->
+<!-- <div class="flex-col" *ngIf="showAttachmentUpload"> -->
+  <!-- <kendo-upload *ngIf="showAttachmentUpload" aria-label="upload attachment" name="upload attachment"
+  [restrictions]="uploadFileRestrictions.fileRestrictions" [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event)" (remove)="handleFileRemoved($event)"
+    [ngModel]="uploadedAttachedFile">
+    <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+      <span >
+        <span>{{ files[0].name }} </span> 
+        <br>
+        <span>{{   files[0].size }}</span> 
+      </span>
+    </ng-template>
+  </kendo-upload> -->
+  <!-- <kendo-upload (select)="handleFileSelected($event)" (remove)="handleFileRemoved($event)"
+  [ngModel]="uploadedAttachedFile" [multiple]="false" [autoUpload]="false">
+    <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+      <span >
+        <span>{{ files[0].name }} </span> 
+        <br>
+        <span>{{   files[0].size }}</span> 
+      </span>
+    </ng-template>
+  </kendo-upload>
+  <kendo-formhint>Max file size 25MB</kendo-formhint> -->
+  <!-- <kendo-formerror *ngIf="attachmentFileValidator"> Upload proof is required </kendo-formerror> -->
+  <!-- <kendo-formerror *ngIf="attachedFileValidatorSize">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror> -->
+
+<!-- </div> -->
+<div class="flex-col">
+  <kendo-upload *ngIf="showAttachmentUpload" (select)="handleFileSelected($event)" [ngModel]="uploadedAttachedFile" (remove)="handleFileRemoved($event)"
+  #attachmentUploaded [ngModelOptions]="{standalone: true}" [removeUrl]="uploadRemoveUrl" [restrictions]="uploadFileRestrictions.fileRestrictions">
+    <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+      <span >
+        <span>{{ files[0].name }} </span> 
+        <br>
+        <span>{{   files[0].size | fileSize }}</span> 
+      </span>
+    </ng-template>
+  </kendo-upload>
+  <kendo-formhint *ngIf="showAttachmentUpload">Max file size 25MB</kendo-formhint>
+  <!-- <kendo-formerror *ngIf="showCopyOfSignedApplicationRequiredValidation"> Copy Of Signed Application is required</kendo-formerror> -->
+  <kendo-formerror *ngIf="attachedFileValidatorSize">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
+</div>

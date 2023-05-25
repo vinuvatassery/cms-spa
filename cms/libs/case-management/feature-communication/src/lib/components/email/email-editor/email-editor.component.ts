@@ -9,15 +9,16 @@ import {
   EventEmitter,
   Input,
   Output,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 /** Facades **/
 import { CommunicationFacade } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { EditorComponent } from '@progress/kendo-angular-editor';
+import { SharedUiCommonModule } from '@cms/shared/ui-common';
 
 /** External Libraries **/
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType} from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider} from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-email-editor',
@@ -47,9 +48,16 @@ export class EmailEditorComponent implements OnInit {
   previewValue!: any;
   showPreviewEmail: boolean = false;
   showAttachmentUpload: boolean = false;
+  attachedFiles: any;
+  attachedFileValidatorSize: boolean = false;
+  public defaultAttachedFile: any[] = [];
+  public uploadedAttachedFile: any[] = [];
+  public selectedAttachedFile: any[] = [];
+  public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
+  public uploadRemoveUrl = 'removeUrl';
   public editorUploadOptions = [
     {
-      text: "Attach from System",
+      text: "Attach from Computer",
       click: (): void => {
         this.showAttachmentUpload = true;
       },
@@ -65,7 +73,8 @@ export class EmailEditorComponent implements OnInit {
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
-    private readonly notificationSnackbarService : NotificationSnackbarService) {}
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    private readonly configurationProvider: ConfigurationProvider,) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -168,5 +177,39 @@ export class EmailEditorComponent implements OnInit {
     editor.exec('insertText', { text: '{{' +item + '}}' });
     editor.value = editor.value.replace(/#CURSOR#/, item);
     this.onSearchClosed();
+  }
+
+  handleFileSelected(event: any) {
+    this.attachedFiles = null;
+    this.attachedFileValidatorSize=false;
+    this.attachedFiles = event.files[0].rawFile;
+   if(this.attachedFiles.size>this.configurationProvider.appSettings.uploadFileSizeLimit)
+   {
+    this.attachedFileValidatorSize = true;
+    this.attachedFiles = null;
+    this.showAttachmentUpload = true;
+   }
+   this.uploadedAttachedFile = [
+    {
+      document: event.files[0],
+      size: event.files[0].size,
+      name: event.files[0].name,
+      uid: ''
+    },
+  ];
+  this.selectedAttachedFile.push(
+    {
+      document: event.files[0],
+      size: event.files[0].size,
+      name: event.files[0].name,
+      uid: ''
+    }
+  );
+  this.handleFileRemoved(event);
+  this.showAttachmentUpload = false;
+  }
+
+  handleFileRemoved(event: any) {
+    this.attachedFiles = null;
   }
 }
