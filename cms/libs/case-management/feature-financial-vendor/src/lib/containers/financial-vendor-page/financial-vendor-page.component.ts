@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -40,6 +41,10 @@ export class FinancialVendorPageComponent {
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
   //todo make the tabstrip  dynamic with vendor type codes
   vendorTypeCode = '';
+
+  get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
+    return FinancialVendorProviderTabCode;
+  }
 
   clickOpenVendorDetails(dataItem : any) {
     this.isVendorDetailFormShow = true;

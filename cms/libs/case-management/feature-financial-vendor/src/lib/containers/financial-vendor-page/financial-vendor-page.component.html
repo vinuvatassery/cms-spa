@@ -18,52 +18,52 @@
 
         <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
           class="app-c-tab case-360-tab">
-          <kendo-tabstrip-tab title="Manufacturers" [selected]="true">
+          <kendo-tabstrip-tab title="Manufacturers" [selected]="true"  *ifPermission='["Financial_Manufacturers_Tab"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <div class="flex-col flex-space-bw align-items-center mb-1">
                 </div>
-                <cms-financial-vendors-list [vendorTypeCode]="vendorTypeCode"></cms-financial-vendors-list>
+                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.Manufacturers"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
 
-          <kendo-tabstrip-tab title="Medical Providers">
+          <kendo-tabstrip-tab title="Medical Providers" *ifPermission='["Financial_MedicalProvider_Tab"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <div class="flex-col flex-space-bw align-items-center mb-1">
                 </div>
-                <cms-financial-providers-list></cms-financial-providers-list>
+                <cms-financial-providers-list [financeTabTypeCode]="financeManagementTabs.MedicalProvider"></cms-financial-providers-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
 
-          <kendo-tabstrip-tab title="Insurance Vendors">
+          <kendo-tabstrip-tab title="Insurance Vendors" *ifPermission='["Financial_InsuranceVendors_Tab"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <div class="flex-col flex-space-bw align-items-center mb-1">
                 </div>
-                <cms-financial-vendors-list></cms-financial-vendors-list>
+                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.InsuranceVendors"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
 
-          <kendo-tabstrip-tab title="Pharmacies">
+          <kendo-tabstrip-tab title="Pharmacies" *ifPermission='["Financial_Pharmacy_Tab"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <div class="flex-col flex-space-bw align-items-center mb-1">
                 </div>
-                <cms-financial-vendors-list></cms-financial-vendors-list>
+                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.Pharmacy"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
 
-          <kendo-tabstrip-tab title="Dental Providers">
+          <kendo-tabstrip-tab title="Dental Providers" *ifPermission='["Financial_DentalProvider_Tab"]'>
             <ng-template kendoTabContent>
               <div class="block-section mt-1">
                 <div class="flex-col flex-space-bw align-items-center mb-1">
                 </div>
-                <cms-financial-providers-list></cms-financial-providers-list>
+                <cms-financial-providers-list [financeTabTypeCode]="financeManagementTabs.DentalProvider"></cms-financial-providers-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>

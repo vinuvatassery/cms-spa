@@ -17,7 +17,11 @@ import { FinancialReminderComponent } from './components/financial-reminder/fina
 import { ProvidersListComponent } from './components/providers-list/providers-list.component';
 import { VendorInfoComponent } from './components/vendor-info/vendor-info.component';
 import { VendorHeaderToolsComponent } from './components/vendor-header-tools/vendor-header-tools.component';
-
+import { PaymentAddressesComponent } from './components/payment-addresses/payment-addresses.component';
+import { FinancialDrugsComponent } from './components/financial-drugs/financial-drugs.component';
+import { FinancialPaymentComponent } from './components/financial-payments/financial-payments.component';
+import { FinancialInsurancePlansComponent } from './components/financial-insurance-plans/financial-insurance-plans.component';
+import { FinancialPharmacyClaimsComponent } from './components/financial-pharmacy-claims/financial-pharmacy-claims.component';
 
 @NgModule({
   imports: [
@@ -26,7 +30,7 @@ import { VendorHeaderToolsComponent } from './components/vendor-header-tools/ven
     SharedUiCommonModule,
     CommonModule,
     CaseManagementFeatureFinancialVendorRoutingModule,
-    ProductivityToolsFeatureTodoModule
+    ProductivityToolsFeatureTodoModule,
   ],
   declarations: [
     FinancialVendorPageComponent,
@@ -40,11 +44,16 @@ import { VendorHeaderToolsComponent } from './components/vendor-header-tools/ven
     VendorDetailsComponent,
     ProvidersListComponent,
     VendorInfoComponent,
-    VendorHeaderToolsComponent
+    VendorHeaderToolsComponent,
+    PaymentAddressesComponent,
+    FinancialDrugsComponent,
+    FinancialPaymentComponent,
+    FinancialInsurancePlansComponent,
+    FinancialPharmacyClaimsComponent
   ],
   exports: [
     FinancialVendorPageComponent,
-    FinancialVendorProfileComponent, 
+    FinancialVendorProfileComponent,
     InvoicesComponent,
     ClientsComponent,
     ContactsComponent,
@@ -52,9 +61,14 @@ import { VendorHeaderToolsComponent } from './components/vendor-header-tools/ven
     VendorsListComponent,
     FinancialReminderComponent,
     VendorDetailsComponent,
-    ProvidersListComponent  ,
+    ProvidersListComponent,
     VendorInfoComponent,
-    VendorHeaderToolsComponent 
+    VendorHeaderToolsComponent,
+    PaymentAddressesComponent,
+    FinancialDrugsComponent,
+    FinancialPaymentComponent,
+    FinancialInsurancePlansComponent,
+    FinancialPharmacyClaimsComponent
   ],
 })
 export class CaseManagementFeatureFinancialVendorModule {}
