@@ -56,15 +56,13 @@
         </div>
       </div>
       <!-- Select file form computer [ngModel]="homeAddressProofFile" [ngModelOptions]="{standalone: true}"-->
-      <div *ngIf="hivVerificationForm.controls['attachmentType'].value == 'Attach From Computer' || !showAttachmentOptions" class="flex-col flex-col-6 ml-1  mt-2">
+      <div *ngIf="hivVerificationForm.controls['attachmentType'].value == 'Attach From Computer'" class="flex-col flex-col-6 ml-1  mt-2">
         <kendo-fileselect
             aria-label="proof of home address"
             [multiple]="false"
             [restrictions]="fileUploadRestrictions"
             (select)="handleFileSelected($event)"
             (remove)="handleFileRemoved($event)"
-            [ngModel]="uploadedAttachment"
-            [ngModelOptions]="{standalone: true}"
             id="verificationAttachmentUploaded"
             #verificationAttachmentUploaded>
             <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
@@ -78,20 +76,14 @@
               </span>
             </ng-template>
           </kendo-fileselect>
-          <kendo-formhint>Max file size {{fileSize}}MB</kendo-formhint>
+          <kendo-formhint>Max file size 25 MB</kendo-formhint>
           <kendo-formerror *ngIf="showHivVerificationAttachmentRequiredValidation"> Proof of Home Address is required
           </kendo-formerror>
           <kendo-formerror *ngIf="showHivVerificationAttachmentSizeValidation">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
-          <p *ngIf="uploadedDate">Uploaded by
-            <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
-            [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh aria-label="user profile">
-            {{uploadedBy}}
-          </button>
-          on {{uploadedDate}}</p>
       </div>
       <!-- Select file form client attachment -->
       <div *ngIf="hivVerificationForm.controls['attachmentType'].value == 'Attach From Client Attachments' || !showAttachmentOptions" class="flex-col flex-col-8 mt-2 ml-1">
-        <kendo-floatinglabel text="Client Documents">
+        <kendo-floatinglabel *ngIf="showAttachmentOptions" text="Client Documents">
 
           <span *ngIf="showDocInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
           <kendo-multicolumncombobox
@@ -127,7 +119,7 @@
               file_present
             </span>
             <div>
-              <span>DOCUMENT NAME</span>
+              <span>{{uploadedAttachment[0].name}}</span>
             </div>
             <kendo-dropdownbutton [data]="data" icon="more-vertical" title="More option" look="bare"
               aria-label="more actions" class="small-i-btn app-dropdown-action hide_more-text"
@@ -147,7 +139,7 @@
             [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh aria-label="user profile">
             {{uploadedBy}}
           </button>
-          on {{uploadedDate}}</p>
+          on {{uploadedDate | date:'MM/dd/yyyy'}}</p>
         </div>
 
       </div>

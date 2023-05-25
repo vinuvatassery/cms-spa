@@ -67,6 +67,10 @@ export class HivVerificationRequestComponent implements OnInit{
       text: "View in New Tab",
       icon: "open_in_new",
       click: (): void => {
+        if(this.uploadedAttachment)
+        {
+          this.clientDocumentFacade.viewOrDownloadFile('view',this.uploadedAttachment[0].documentId,this.uploadedAttachment[0].name)
+        }
       },
     },
 
