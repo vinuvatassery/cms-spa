@@ -172,10 +172,10 @@ export class HivVerificationRequestComponent implements OnInit{
     this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
   }
   handleFileSelected(e: SelectEvent) {
-    //this.homeAddressProofFile = undefined;
     this.hivVerificationAttachment = undefined;
     this.hivVerificationAttachment = e.files[0].rawFile;
     this.showHivVerificationAttachmentRequiredValidation = false;
+    this.verificationFacade.isSaveandContinueSubject.next(this.showHivVerificationAttachmentRequiredValidation);
     this.showHivVerificationAttachmentSizeValidation = (this.hivVerificationAttachment?.size ?? 0) > this.configurationProvider.appSettings?.uploadFileSizeLimit;
     if (this.hivVerificationAttachment)
     {
@@ -200,6 +200,7 @@ export class HivVerificationRequestComponent implements OnInit{
 
   handleFileRemoved(e: SelectEvent) {
     this.showHivVerificationAttachmentRequiredValidation = true;
+    this.verificationFacade.isSaveandContinueSubject.next(this.showHivVerificationAttachmentRequiredValidation);
     this.openRemoveAttachmentConfirmationEvent.emit();
   }
   private populateModel(){
@@ -235,5 +236,16 @@ export class HivVerificationRequestComponent implements OnInit{
         }
       }
     });
+  }
+  clientAttachmentChange(event:any)
+  {
+    this.clientHivVerification.hivVerificationDoc = null;
+    this.clientHivVerification.clientId = this.clientId;
+    this.clientHivVerification.documentId = event.clientDocumentId;
+    this.clientHivVerification.clientCaseEligibilityId = this.clientCaseEligibilityId;
+    this.clientHivVerification.clientCaseId = this.clientCaseId;
+    this.clientHivVerification.verificationMethodCode = this.providerOption;
+    this.onAttachmentConfirmationEvent.emit(this.clientHivVerification);
+
   }
 }
