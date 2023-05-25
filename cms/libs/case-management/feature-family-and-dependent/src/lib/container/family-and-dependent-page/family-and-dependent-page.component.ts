@@ -51,6 +51,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   haveTheyHaveFamilyMember!: string;
   haveTheyHaveAdditionalFamilyMember! : string;
   previousRelationsList: any = [];
+  isCerFormValid: boolean = true;
   /** Constructor **/
   constructor(
     private familyAndDependentFacade: FamilyAndDependentFacade,
@@ -198,8 +199,12 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   }
 
   private save() {
-    this.familyStatus = this.isFamilyGridDisplay === true ? StatusFlag.Yes : StatusFlag.No
-    if(!this.isDependentAvailable && (this.familyStatus === StatusFlag.No)){
+    this.familyStatus = this.isFamilyGridDisplay === true ? StatusFlag.Yes : StatusFlag.No;
+    if(this.isCerForm && (!this.haveTheyHaveAdditionalFamilyMember || !this.haveTheyHaveFamilyMember)) {
+      this.isCerFormValid = false;
+      return of(false);
+    }
+    if((!this.isDependentAvailable && (this.familyStatus === StatusFlag.No)) || (!this.isDependentAvailable && (this.haveTheyHaveAdditionalFamilyMember === StatusFlag.Yes))){
       this.familyAndDependentFacade.dependentValidSubject.next(false);
       return of(false);
     }
@@ -312,8 +317,12 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   }
 
   checkValidations(){
-    this.familyStatus = this.isFamilyGridDisplay === true ? StatusFlag.Yes : StatusFlag.No
-    if(!this.isDependentAvailable && (this.familyStatus === StatusFlag.No)){
+    this.familyStatus = this.isFamilyGridDisplay === true ? StatusFlag.Yes : StatusFlag.No;
+    if(this.isCerForm && (!this.haveTheyHaveAdditionalFamilyMember || !this.haveTheyHaveFamilyMember)) {
+      this.isCerFormValid = false;
+      return false;
+    }
+    if(!this.isDependentAvailable && (this.familyStatus === StatusFlag.No) || (!this.isDependentAvailable && (this.haveTheyHaveAdditionalFamilyMember === StatusFlag.Yes))){
       this.familyAndDependentFacade.dependentValidSubject.next(false);
       return false;
     }
