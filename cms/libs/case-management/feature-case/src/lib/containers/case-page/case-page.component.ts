@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 
 /** Internal Libraries **/
-import { CaseFacade, CaseScreenTab, WorkflowFacade,  UserDefaultRoles,ModuleCode  } from '@cms/case-management/domain';
+import { CaseFacade, CaseScreenTab, WorkflowFacade,  UserDefaultRoles, SearchHeaderType,ModuleCode  } from '@cms/case-management/domain';
 import {UITabStripScroll} from '@cms/shared/ui-tpa'
 import { LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
@@ -54,6 +54,7 @@ export class CasePageComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit() {
+    this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
     this.loadColumnDroplist();
     this.loadCases();
   }

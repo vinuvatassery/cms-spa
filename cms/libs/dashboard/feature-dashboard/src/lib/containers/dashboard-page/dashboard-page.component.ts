@@ -1,5 +1,6 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { CaseFacade, SearchHeaderType } from '@cms/case-management/domain';
 /** Facades **/
 import { DashboardFacade } from '@cms/dashboard/domain';
 /** Services **/
@@ -18,11 +19,13 @@ export class DashboardPageComponent implements OnInit {
   /** Constructor **/
   constructor(
     private readonly dashboardFacade: DashboardFacade,
-    private readonly localStorageService: LocalStorageService
+    private readonly localStorageService: LocalStorageService,
+    private readonly caseFacade: CaseFacade
   ) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
+    this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
     this.loadDashboard();
   }
 
