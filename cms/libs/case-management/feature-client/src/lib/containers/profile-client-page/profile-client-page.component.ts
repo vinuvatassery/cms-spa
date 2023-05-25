@@ -140,7 +140,7 @@ export class ProfileClientPageComponent implements OnInit {
                 question.answer = this.answersKeys.find(answer =>answer.key == question.key)?.value;
                 if(question.answer == "Yes" && question.otherKey != 'interpreterType' && question.otherFormatKey != 'materialInAlternateFormatOther' && question.descKey != 'materialInAlternateFormatCodeOtherDesccription' && question.key != 'limitingConditionDescription'){
                   question.answer = question.answer+' ' +', Since age'+ ' ' +this.answersKeys.find(answer =>answer.key == question.otherKey)?.value; 
-                } else if(question.id == 1  ){
+                } else if(question.key == 'notes' ){
                   question.answer =this.clientNotes.length > 0 ? this.clientNotes.map(function (e) { return e?.note;}).join(', ') : 'No Notes'
                 } else if(question.answer == "Yes" && question.otherKey == 'interpreterType'){
                   question.answer ='Yes' + ' ,' + this.answersKeys.find(answer =>answer.key == question.otherKey)?.value;

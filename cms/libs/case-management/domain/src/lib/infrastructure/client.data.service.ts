@@ -189,6 +189,7 @@ export class ClientDataService {
       return of([
         {
           id: 1,
+          key:'notes',
           specialHandling: 'Case Worker Note',
           answer: '',
         },
