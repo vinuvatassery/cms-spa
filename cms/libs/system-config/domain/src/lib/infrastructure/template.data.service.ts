@@ -1,16 +1,19 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 /** Data services **/
 import { Template } from '../entities/template';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { map } from "rxjs/operators";
 
 @Injectable({ providedIn: 'root' })
 export class TemplateDataService {
   /** Constructor **/
-  constructor(private readonly http: HttpClient
+  constructor(private readonly http: HttpClient,
+    private readonly configurationProvider: ConfigurationProvider
    ) { }
 
   /** Public methods **/
@@ -30,12 +33,23 @@ export class TemplateDataService {
     ]);
   }
 
-  //NOSONAR TODO - Add API to fetch templates
-  getTemplates(templateId?: string) {
-    //NOSONAR let url = `/case-management/templates` + (!!templateId ? `?templateId=${templateId}` : '');
-    // return this.http.get(
-    //   `${this.configurationProvider.appSettings.caseApiUrl}` + url
-    // );
+  getDirectoryContent(typeCode:any ,filepath?: any) {
+    let params = new HttpParams();
+    params = params.append('templateId',filepath);
+    params = params.append('typeCode',typeCode);
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + '/case-management/templates/'+`${typeCode}`+'/forms',{params:params}
+    );
+  }
+
+  getFormsandDocumentsViewDownload(templateId: string) {
+    let roleId = "";
+    let url = `/case-management/templates/${templateId}/content`;
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + url+ `/${roleId}`
+      , {
+        responseType: 'blob'
+      });
   }
 
 }

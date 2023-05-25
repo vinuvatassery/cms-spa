@@ -25,6 +25,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   @Input() clientCaseId : any
   @Input() isEdit : any
   @Input() isStatusPeriodEdit: boolean=false;
+  @Input() isCopyPeriod: boolean=false;
   @Output() isModalSavedClicked = new EventEmitter();
   /** Public properties **/
   ddlStatus$ = this.lovFacade.eligibilityStatusCp$;
@@ -50,24 +51,27 @@ export class EligibilityPeriodDetailComponent implements OnInit {
 
   /** Constructor **/
   constructor(
-    private readonly clientEligibilityFacade: ClientEligibilityFacade, 
+    private readonly clientEligibilityFacade: ClientEligibilityFacade,
     private readonly lovFacade: LovFacade,
     private readonly caseFacade: CaseFacade,
     private formBuilder: FormBuilder,
     private readonly cd: ChangeDetectorRef,
     private loaderService: LoaderService,
     public intl: IntlService,
-    private configurationProvider: ConfigurationProvider    
+    private configurationProvider: ConfigurationProvider
   ) {}
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.buildEligibilityPeriodForm();
-    this.disableFormFields();
+    if(!this.isCopyPeriod)
+    {
+      this.disableFormFields();
+    }
     this.getCurrentEligibility();
     this.loadLovs();
     this.getGroupData();
-   
+
   }
 
   /** Public methods **/
@@ -78,7 +82,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     this.disableFormFields();
     this.checkEligibilityStatusAllowed();
 
-  }  
+  }
 
   startNewEligibility() {
     this.validateForm();
@@ -94,7 +98,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
         );
       }
       else{
-      this.loaderService.show();    
+      this.loaderService.show();
         this.acceptedApplication.clientCaseId = this.clientCaseId;
         this.acceptedApplication.clientCaseEligibilityId = this.clientCaseEligibilityId;
         this.acceptedApplication.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusStartDate'].value, this.dateFormat));
@@ -128,23 +132,24 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     this.setUpdateEligibilityValidations();
     if (this.eligibilityPeriodForm.valid) {
       let editEligibilityData = this.currentEligibility;
-      if(this.isStatusPeriodEdit){
-        editEligibilityData.ClientCaseEligibilityGroupId = this.currentEligibility.ClientCaseEligibilityGroupId;
-        editEligibilityData.groupCode = this.eligibilityPeriodForm.controls['group'].value;
-        editEligibilityData.groupCodeId = this.groupList.filter((group:any)=>group.groupCode == editEligibilityData.groupCode)[0].groupCodeId;
-        editEligibilityData.reasonCode = this.eligibilityPeriodForm.controls['reasonCode'].value;
-        editEligibilityData.otherReasonDesc = this.eligibilityPeriodForm.controls['otherReasonDesc'].value
-      }
       editEligibilityData.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusStartDate'].value, this.dateFormat));
       editEligibilityData.eligibilityEndDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusEndDate'].value, this.dateFormat));
       this.loaderService.show();
       this.clientEligibilityFacade.saveAcceptedApplication(editEligibilityData, this.clientCaseId, this.clientCaseEligibilityId, EligibilityRequestType.eligibilityStatus).subscribe({
         next: (data) => {
-          this.clientEligibilityFacade.showHideSnackBar(
-            SnackBarNotificationType.SUCCESS,
-            'Eligibility period updated!'
-          );
-          this.isModalSavedClicked.emit(true);
+          if(data){
+            this.clientEligibilityFacade.showHideSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              'Eligibility period updated!'
+            );
+            this.isModalSavedClicked.emit(true);
+          }
+          else{
+            this.clientEligibilityFacade.showHideSnackBar(
+              SnackBarNotificationType.WARNING,
+              'There cannot be two eligibility periods with overlapping date ranges.'
+            );
+          }
           this.loaderService.hide();
         },
         error: (err) => {
@@ -176,7 +181,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       this.eligibilityPeriodForm.controls['statusStartDate'].markAllAsTouched();
       this.eligibilityPeriodForm.controls['statusStartDate'].setValidators([Validators.required]);
       this.eligibilityPeriodForm.controls['statusStartDate'].updateValueAndValidity();
-      
+
       this.statusEndDateIsGreaterThanStartDate = false;
     }
     else if (this.eligibilityPeriodForm.controls['statusEndDate'].value !== null) {
@@ -207,12 +212,12 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   /** Private methods **/
   private getCurrentEligibility(){
     this.loaderService.show();
-    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,((this.isEdit || this.isStatusPeriodEdit) ? EligibilityRequestType.clientEligibilityInfo :EligibilityRequestType.acceptedEligibility)).subscribe(data=>{
+    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,((this.isEdit || this.isStatusPeriodEdit) ? EligibilityRequestType.clientEligibilityInfo : this.isCopyPeriod? EligibilityRequestType.copyEligibility :EligibilityRequestType.acceptedEligibility)).subscribe(data=>{
       this.currentEligibility = data;
       this.clientCaseEligibilityId = this.currentEligibility.clientCaseEligibilityId;
-      if(this.isEdit || this.isStatusPeriodEdit){
+      if(this.isEdit || this.isStatusPeriodEdit || this.isCopyPeriod){
         this.bindEligibilityToForm(this.currentEligibility);
-      }     
+      }
       this.cd.detectChanges();
       this.loaderService.hide();
     });
@@ -222,7 +227,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     if(this.currentEligibility.eligibilityStatusCode.toUpperCase() === EligibilityStatus.New.toUpperCase()
      || this.currentEligibility.eligibilityStatusCode.toUpperCase() === EligibilityStatus.Accept.toUpperCase()){
       this.eligibilityStatusAllowed = true;
-    }   
+    }
     if(this.currentEligibility.eligibilityStatusCode.toUpperCase() === EligibilityStatus.Restricted.toUpperCase())
     {
       if(this.eligibilityPeriodForm.controls['eligibilityStatus'].value.toUpperCase() === EligibilityStatus.Accept.toUpperCase()
@@ -231,11 +236,11 @@ export class EligibilityPeriodDetailComponent implements OnInit {
         this.eligibilityStatusAllowed = true;
       }
       else{
-      
+
         this.eligibilityPeriodForm.controls['eligibilityStatus'].setErrors({ 'incorrect': true });
         this.eligibilityStatusAllowed = false;
       }
-      
+
     }
     if(this.currentEligibility.eligibilityStatusCode.toUpperCase() === EligibilityStatus.Disenrolled.toUpperCase())
     {
@@ -253,7 +258,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
         this.eligibilityPeriodForm.controls['eligibilityStatus'].setErrors({ 'incorrect': true });
         this.eligibilityStatusAllowed = false;
       }
-      
+
     }
     if(this.currentEligibility.eligibilityStatusCode.toUpperCase() === EligibilityStatus.Reject.toUpperCase())
     {
@@ -265,20 +270,20 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   private loadLovs(){
     this.lovFacade.getEligibilityStatusCpLovs();
     this.caseFacade.loadGroupCode();
-    this.lovFacade.getDisenrollmentReasonLovs();    
+    this.lovFacade.getDisenrollmentReasonLovs();
   }
   private getDay(date: Date, locale: string, options?: Intl.DateTimeFormatOptions): string {
     const formatter = new Intl.DateTimeFormat(locale, options);
     return formatter.format(date);
   }
   private setStartDateEndDateByStatus(status:string)
-  {   
-    let currentEligibilityEndDate=new Date(this.currentEligibility.eligibilityEndDate);    
+  {
+    let currentEligibilityEndDate=new Date(this.currentEligibility.eligibilityEndDate);
     let dayFromDate = this.getDay(this.addDays(new Date(this.currentEligibility.eligibilityEndDate), 1), 'en-US', this.dayOptions);
     this.eligibilityPeriodForm.controls['statusStartDate'].reset();
     this.eligibilityPeriodForm.controls['statusEndDate'].reset();
     this.eligibilityPeriodForm.controls['group'].reset();
-    let today = new Date(); 
+    let today = new Date();
     switch (status.toUpperCase()) {
       case EligibilityStatus.Accept.toUpperCase():
         this.setDatesAndDisableFieldsAccept(dayFromDate,today,currentEligibilityEndDate);
@@ -289,7 +294,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       case EligibilityStatus.Disenrolled.toUpperCase():
         this. setDatesAndDisableFieldsDisenrolled(today);
         break;
-     
+
     }
   }
 
@@ -302,7 +307,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     else{
        additionalMonth = 7;
     }
-    
+
     if (currentEligibilityEndDate) {
       this.eligibilityPeriodForm.controls['statusStartDate'].setValue(this.addDays(currentEligibilityEndDate, 1));
       this.eligibilityPeriodForm.controls['statusEndDate'].setValue(new Date(currentEligibilityEndDate.getFullYear(), currentEligibilityEndDate.getMonth() + additionalMonth, 0));
@@ -314,7 +319,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   }
 
   private setDatesAndDisableFieldsRestricted(dayFromDate:string,today:Date,currentEligibilityEndDate:Date){
-        this.disableFields = [];   
+        this.disableFields = [];
         let additionalMonth = 0;
         if(dayFromDate === '1'){
           additionalMonth = 3;
@@ -322,7 +327,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
         else{
            additionalMonth = 4;
         }
-        
+
         if (currentEligibilityEndDate) {
           this.eligibilityPeriodForm.controls['statusStartDate'].setValue(this.addDays(currentEligibilityEndDate, 1));
           let startDateValue = this.eligibilityPeriodForm.controls['statusStartDate'].value;
@@ -357,7 +362,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       else{
         this.disableFields =['eligibilityStatus'];
       }
-     
+
     }
     this.disableFields.forEach((key: string) => {
       this.eligibilityPeriodForm.controls[key].disable();
@@ -382,7 +387,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     });
 
   }
-  
+
   private addDays(date: Date, days: number): Date {
     date.setDate(date.getDate() + days);
     return date;
@@ -392,32 +397,32 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     this.eligibilityPeriodForm.controls['eligibilityStatus'].setValidators([Validators.required]);
     this.eligibilityPeriodForm.controls['eligibilityStatus'].updateValueAndValidity();
     let eligibilityStatusValue=this.eligibilityPeriodForm.controls['eligibilityStatus'].value;
-    if(eligibilityStatusValue === null || eligibilityStatusValue ===''){ 
+    if(eligibilityStatusValue === null || eligibilityStatusValue ===''){
       eligibilityStatusValue = EligibilityStatus.New.toUpperCase();
     }
-      if(eligibilityStatusValue === EligibilityStatus.New.toUpperCase() 
+      if(eligibilityStatusValue === EligibilityStatus.New.toUpperCase()
       || eligibilityStatusValue === EligibilityStatus.Accept.toUpperCase()||
       eligibilityStatusValue === EligibilityStatus.Restricted.toUpperCase()){
         this.requiredFields = [
           'statusStartDate',
           'statusEndDate',
           'group',
-        ]; 
-      }       
+        ];
+      }
       else if(eligibilityStatusValue === EligibilityStatus.Disenrolled.toUpperCase()){
         this.requiredFields = [
           'statusStartDate',
           'reasonCode'
-        ]; 
-      }    
-    
+        ];
+      }
+
     else{
       this.removeValidation();
     }
     this.validate();
   }
 
-  private validate(){   
+  private validate(){
     this.requiredFields.forEach((key: string) => {
       this.eligibilityPeriodForm.controls[key].setValidators([Validators.required]);
       this.eligibilityPeriodForm.controls[key].updateValueAndValidity();
@@ -447,7 +452,17 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       this.eligibilityPeriodForm.controls['group'].setValue(currentEligibility.groupCode);
       this.eligibilityPeriodForm.controls['group'].updateValueAndValidity()
     }
-    this.disableFormFields();
+    if(!this.isCopyPeriod)
+    {
+      this.disableFormFields();
+    }
+    else if(this.isCopyPeriod)
+    {
+      this.eligibilityPeriodForm.controls['eligibilityStatus'].setValue(currentEligibility.eligibilityStatusCode);
+      this.setStartDateEndDateByStatus(this.eligibilityPeriodForm.controls['eligibilityStatus'].value);
+      this.eligibilityPeriodForm.controls['group'].setValue(currentEligibility.groupCode);
+      this.eligibilityPeriodForm.controls['group'].updateValueAndValidity();
+    }
   }
 
   private setUpdateEligibilityValidations() {
@@ -460,36 +475,36 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     if(this.isStatusPeriodEdit){
       this.removeValidation();
       let eligibilityStatusValue= this.currentEligibility.eligibilityStatusCode;
-      if(eligibilityStatusValue === EligibilityStatus.New.toUpperCase() 
+      if(eligibilityStatusValue === EligibilityStatus.New.toUpperCase()
       || eligibilityStatusValue === EligibilityStatus.Accept.toUpperCase()||
       eligibilityStatusValue === EligibilityStatus.Restricted.toUpperCase()){
         this.requiredFields = [
           'statusStartDate',
           'statusEndDate',
           'group',
-        ]; 
-      }       
+        ];
+      }
       else if(eligibilityStatusValue === EligibilityStatus.Disenrolled.toUpperCase()){
         this.requiredFields = [
           'statusStartDate',
           'reasonCode'
-        ]; 
-      }  
+        ];
+      }
       this.validate();
     }
 
   }
-  private eligibilityPeriodsOverlapCheck(currentStartDate: Date,  newStartDate: Date, newEndDate: Date) {   
+  private eligibilityPeriodsOverlapCheck(currentStartDate: Date,  newStartDate: Date, newEndDate: Date) {
     let cuStartDate =this.intl.formatDate(currentStartDate, this.dateFormat) ;
     let nwStartDate = this.intl.formatDate(newStartDate,  this.dateFormat ) ;
     let nwEndDate = this.intl.formatDate(newEndDate,this.dateFormat ) ;
 
     if (cuStartDate === nwStartDate){
      return true;
-    }       
+    }
     if (nwStartDate <= cuStartDate && nwEndDate >= cuStartDate ) {
       return true;
-    }        
+    }
     return false;
   }
 

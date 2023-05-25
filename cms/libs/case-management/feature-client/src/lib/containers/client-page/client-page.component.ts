@@ -335,7 +335,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.clientCaseEligibilityId !== null &&
         this.clientCaseEligibilityId !== undefined
       ) {
-        this.message = 'Applicant info updated successfully';
+        this.message = 'Applicant Info updated';
         return this.clientFacade.update(this.applicantInfo, this.clientId).pipe(
           catchError((error: any) => {
             if (error) {

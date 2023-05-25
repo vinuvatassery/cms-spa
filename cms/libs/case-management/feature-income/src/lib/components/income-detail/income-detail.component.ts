@@ -53,6 +53,7 @@ export class IncomeDetailComponent implements OnInit {
   tareaJustificationMaxLength = 300;
   startDate!:any;
   incomeTypesOther = '';
+  documentTypeCode!: string;
   public IncomeDetailsFormData: { incomeAmount: number } = {
     incomeAmount: 0,
   };
@@ -221,7 +222,8 @@ export class IncomeDetailComponent implements OnInit {
           .saveClientIncome(
             this.clientId,
             this.IncomeDetailsForm.value,
-            this.proofOfIncomeFiles
+            this.proofOfIncomeFiles,
+            this.documentTypeCode
           )
           .subscribe({
             next: (incomeResponse) => {
@@ -260,7 +262,8 @@ export class IncomeDetailComponent implements OnInit {
             this.clientId,
             this.selectedIncome.clientIncomeId,
             this.IncomeDetailsForm.value,
-            this.proofOfIncomeFiles
+            this.proofOfIncomeFiles,
+            this.documentTypeCode
           )
           .subscribe({
             next: (incomeResponse) => {
@@ -300,6 +303,11 @@ export class IncomeDetailComponent implements OnInit {
 
   handleFileRemoved(event: any) {
     this.proofOfIncomeFiles = null;
+    this.documentTypeCode='';
+  }
+  handleTypeCodeEvent(e:any)
+  {
+    this.documentTypeCode=e;
   }
 
   // checking the validation

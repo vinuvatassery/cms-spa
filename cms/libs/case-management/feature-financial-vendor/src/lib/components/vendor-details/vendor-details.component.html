@@ -1,0 +1,83 @@
+<!-- <kendo-dialog-titlebar>Add New Medical Provider</kendo-dialog-titlebar> -->
+<section class="k-dialog-body">
+    <p class="text-muted mb-2">
+        All fields are required unless otherwise stated.
+    </p>
+    <div class="flex-row">
+        <div class="flex-col">
+            <kendo-floatinglabel text="Provider Name">
+                <kendo-textbox aria-label="Provider Name" [fillMode]="formUiStyle.inputFillMode">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+        </div>
+
+        <div class="flex-col">
+            <kendo-floatinglabel text="TIN">
+                <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+        </div>
+
+        <div class="flex-col">
+            <kendo-floatinglabel text="Mail Code">
+                <kendo-textbox aria-label="Mail Code" [fillMode]="formUiStyle.inputFillMode">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+        </div>
+
+
+        <div class="flex-col mt-1">
+            <h5 class="mb-0"> Payment Method </h5>
+            <div class="component-list-h">
+                <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton aria-labelledby="Check" name="Check" id="Check" />
+                    <kendo-label class="k-radio-label" text="Check" for="Check"></kendo-label>
+                </span>
+                <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton name="ACH" id=" ACH" aria-labelledby="ACH" />
+                    <kendo-label class="k-radio-label" text="No" for="ACH"></kendo-label>
+                </span>
+                <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton name="SPOTS" id="SPOTS" aria-labelledby="SPOTS" />
+                    <kendo-label class="k-radio-label" text="SPOTS" for="SPOTS"></kendo-label>
+                </span>
+                <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton name="limitingConditionCode" id="DOR Hold"
+                        aria-labelledby="DOR Hold" />
+                    <kendo-label class="k-radio-label" text="DOR Hold" for="DOR Hold"></kendo-label>
+                </span>
+            </div>
+        </div>
+
+        <div class="flex-col flex-col-11">
+            <kendo-floatinglabel text="Special Handling (optional)">
+                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #SpecialHandling resizable="auto"
+                    id="SpecialHandling" [maxlength]="SpecialHandlingLength" aria-label="Special Handling">
+                    <!-- <kendo-textarea-suffix class="justify-content-end">
+                      <span class="tareacounter"
+                        >{{ item?.note.length }}/{{
+                            SpecialHandling
+                        }}</span
+                      >
+                    </kendo-textarea-suffix> -->
+                </kendo-textarea>
+            </kendo-floatinglabel>
+        </div>
+
+
+    </div>
+</section>
+
+<kendo-dialog-actions>
+    <div class="justify-content-between">
+        <div class="justify-content-start d-flex">
+            <button kendoButton class="k-danger-link" aria-label="Remove"> Remove </button>
+            <button kendoButton look="outline" [primary]="true" aria-label="deactivate phone"> Edit </button>
+        </div>
+        <div class="justify-content-end">
+            <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"> Cancel
+            </button>
+            <button kendoButton [primary]="true" aria-label="update or add phone detail"> Save </button>
+        </div>
+    </div>
+</kendo-dialog-actions>

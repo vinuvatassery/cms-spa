@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 /** Data services **/
 import { ClientEligibilityDataService } from '../infrastructure/client-eligibility.data.service';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class ClientEligibilityFacade {
@@ -14,19 +15,22 @@ export class ClientEligibilityFacade {
   private ddlGroupsSubject = new BehaviorSubject<any>([]);
   private ddlStatusSubject = new BehaviorSubject<any>([]);
   eligibilityPeriodPopupOpenSubject = new Subject<boolean>();
+  private disEnrollResultSubject =  new Subject<any>();
 
   /** Public properties **/
   ddlAcceptApplications$ = this.ddlAcceptApplicationsSubject.asObservable();
   ddlGroups$ = this.ddlGroupsSubject.asObservable();
   ddlStatus$ = this.ddlStatusSubject.asObservable();
   eligibilityPeriodPopupOpen$ = this.eligibilityPeriodPopupOpenSubject.asObservable();
+  disEnrollResult$ = this.disEnrollResultSubject.asObservable();
 
   /** Constructor**/
   constructor(
     private readonly clientEligibilityDataService: ClientEligibilityDataService,
     private readonly loggingService : LoggingService,
     private readonly loaderService: LoaderService ,
-    private readonly notificationSnackbarService : NotificationSnackbarService
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    private readonly router: Router
   ) {}
 
   /** Public methods **/
@@ -85,5 +89,27 @@ export class ClientEligibilityFacade {
     return this.clientEligibilityDataService.saveNewStatusPeriod(newEligibilityPeriods,caseId,eligibilityId);
   }
   
+  disEnrollCerApplication(caseId:any,eligibilityId:any,disenrollReasonCode:string): void 
+  {    
+    this.showLoader();
+    this.clientEligibilityDataService.disEnrollCerApplication(caseId, eligibilityId, disenrollReasonCode)
+    .subscribe({
+      next: (disEnrollResult) => {        
+       
+        this.disEnrollResultSubject.next(disEnrollResult);   
+        if(disEnrollResult === true)
+        {
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Client Disenrolled') 
+        this.router.navigate(['/case-management/cer-case-detail/send-letter/disenroll'], {
+            queryParamsHandling: "preserve"
+          });      
+        }     
+        this.hideLoader();    
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)      
+      },
+    });
+  }
   
 }

@@ -32,4 +32,7 @@ export class ClientEligibilityDataService {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${caseId}/eligibility-periods/${eligibilityId}`, newEligibilityPeriod);
   }
   
+  disEnrollCerApplication(caseId:any,eligibilityId:any,disenrollReasonCode:string) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${caseId}/eligibility-periods/${eligibilityId}/disenroll/${disenrollReasonCode}`, null);
+  }
 }

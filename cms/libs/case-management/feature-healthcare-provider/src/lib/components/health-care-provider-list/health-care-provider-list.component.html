@@ -38,13 +38,13 @@
         </kendo-grid-column>
         <kendo-grid-column *ngIf="!managementTab" field="providerPriority" title="Provider Type" [width]="50"
           [sortable]="false" [columnMenu]="false"></kendo-grid-column>
-        <kendo-grid-column field="primaryPhone" title="Provider Phone" [width]="70" [sortable]="false"
+        <kendo-grid-column field="primaryPhone" title="Phone" [width]="70" [sortable]="false"
           [columnMenu]="false">
         </kendo-grid-column>
         <kendo-grid-column *ngIf="managementTab" field="emailAddress" title="Email" [width]="70" [sortable]="false"
           [columnMenu]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="address1" title="Provider Address" [width]="180" [sortable]="false"
+        <kendo-grid-column field="address1" title="Address" [width]="180" [sortable]="false"
           [columnMenu]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.address1}} {{dataItem.address2}} {{dataItem.city+' '+dataItem.stateCode+' '+dataItem.zip}}
@@ -173,7 +173,7 @@
 
 <!-- Deactivate Modal -->
 <kendo-dialog *ngIf="isOpenedDeactivateConfirm" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="onDeleteConfirmCloseClicked()"> Deactivate healthcare provider? </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onDeactConfirmCloseClicked()"> Deactivate healthcare provider? </kendo-dialog-titlebar>
   <case-management-health-care-provider-deactivate-confirmation [prvId]="clientProviderId"
     (deactivateConfimEvent)="handleAcceptProviderDeact($event)">
   </case-management-health-care-provider-deactivate-confirmation>
@@ -181,7 +181,7 @@
 
 <!-- Reactivate Modal -->
 <kendo-dialog *ngIf="isOpenedReactivateConfirm" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="onDeleteConfirmCloseClicked()"> Re-activate healthcare provider? </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onReactConfirmCloseClicked()"> Re-activate healthcare provider? </kendo-dialog-titlebar>
   <case-management-health-care-provider-reactivate-confirmation [prvId]="clientProviderId"
     (reactivateConfimEvent)="handleAcceptPrvReact($event)">
   </case-management-health-care-provider-reactivate-confirmation>

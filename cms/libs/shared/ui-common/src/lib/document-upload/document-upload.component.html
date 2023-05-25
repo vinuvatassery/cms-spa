@@ -1,0 +1,58 @@
+<div *ngIf="!typeCode || selectedTypeCode">
+    <kendo-floatinglabel text="{{typeCodeLabel}}"> 
+      <kendo-dropdownlist
+                    aria-label="typeCode"
+                    required
+                    [fillMode]="formUiStyle.dropDownFillMode"
+                    [data]="documentTypeCodeSubject$ | async"
+                    textField="lovDesc"
+                    valueField="lovCode"
+                    [(ngModel)]="currentTypeCode"
+                    [valuePrimitive]="true"  placeholder="Type Code"
+                    (valueChange)="loadSubTypeCodeLov()" >
+      </kendo-dropdownlist>
+    </kendo-floatinglabel>
+    <kendo-formerror *ngIf="!currentTypeCode && formSubmitted">
+      {{typeCodeLabel}} is required.
+    </kendo-formerror>
+  </div>
+  <div  *ngIf="subTypeCodes.length>0">
+    <kendo-floatinglabel text="{{subTypeCodeLabel}}"> 
+      <kendo-dropdownlist
+                    aria-label="SubTypeCode"
+                    [fillMode]="formUiStyle.dropDownFillMode"
+                    [data]="subTypeCodes"
+                    textField="lovDesc"
+                    valueField="lovCode"
+                    [(ngModel)]="selectedsubTypeCode"
+                    [valuePrimitive]="true"  placeholder="Sub Type Code"
+                    >
+      </kendo-dropdownlist>
+    </kendo-floatinglabel>
+  </div>
+  <div class="mt-2">
+  <kendo-fileselect
+              aria-label="proof of home address"
+              name="upload proof"
+              [disabled]="isDisabled"
+              [restrictions]="fileUploadRestrictions"
+              [multiple]="false"
+              (select)="handleFileSelected($event)"
+              (remove)="handleFileRemoved($event)"
+              [(ngModel)]="file"
+              [ngModelOptions]="{standalone: true}"
+              id="homeAddressProofUploaded"
+              #homeAddressProofUploaded>
+              <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+                <span (click)="documentFacade.viewOrDownloadFile(isFileViewable,files[0]?.documentId,files[0]?.name)">
+                <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>
+                  <button aria-label="doc name" *ngIf="files[0]?.documentId" kendoButton look="flat" class="card-link-button"  >
+                    <a>{{ files[0].name }} </a>
+                  </button>
+                  <br>
+                  <span>{{   files[0]?.size  | fileSize  }}</span>
+                </span>
+              </ng-template>
+  </kendo-fileselect>
+</div>
+  
