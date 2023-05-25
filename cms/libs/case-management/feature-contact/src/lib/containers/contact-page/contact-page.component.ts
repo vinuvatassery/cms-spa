@@ -76,6 +76,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   oldOtherPhone?: ClientPhone;
   oldEmail?: ClientEmail;
   oldPreferredContact?: string;
+  oldPreferredContactMethodName?: string = '';
   oldFriendsOrFamilyContact?: FriendsOrFamilyContact;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
@@ -1122,11 +1123,26 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.oldWorkPhone = data?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.WorkPhone)[0];
           this.oldOtherPhone = data?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.OtherPhone)[0];
           this.oldEmail = data?.email;
-          if (this.oldHomePhone?.preferredFlag === StatusFlag.Yes) this.oldPreferredContact = this.formatPhoneNumber(this.oldHomePhone?.phoneNbr ?? '');
-          else if (this.oldCellPhone?.preferredFlag === StatusFlag.Yes) this.oldPreferredContact = this.formatPhoneNumber(this.oldCellPhone?.phoneNbr ?? '');
-          else if (this.oldWorkPhone?.preferredFlag === StatusFlag.Yes) this.oldPreferredContact = this.formatPhoneNumber(this.oldWorkPhone?.phoneNbr ?? '');
-          else if (this.oldOtherPhone?.preferredFlag === StatusFlag.Yes) this.oldPreferredContact = this.formatPhoneNumber(this.oldOtherPhone?.phoneNbr ?? '');
-          else if (this.oldEmail?.preferredFlag === StatusFlag.Yes) this.oldPreferredContact = this.oldEmail?.email;
+          if (this.oldHomePhone?.preferredFlag === StatusFlag.Yes) {
+            this.oldPreferredContactMethodName = 'Home Phone';
+            this.oldPreferredContact = this.formatPhoneNumber(this.oldHomePhone?.phoneNbr ?? '');
+          }
+          else if (this.oldCellPhone?.preferredFlag === StatusFlag.Yes) {
+            this.oldPreferredContactMethodName = 'Cell Phone';
+            this.oldPreferredContact = this.formatPhoneNumber(this.oldCellPhone?.phoneNbr ?? '');
+          }
+          else if (this.oldWorkPhone?.preferredFlag === StatusFlag.Yes) {
+            this.oldPreferredContactMethodName = 'Work Phone';
+            this.oldPreferredContact = this.formatPhoneNumber(this.oldWorkPhone?.phoneNbr ?? '');
+          }
+          else if (this.oldOtherPhone?.preferredFlag === StatusFlag.Yes) {
+            this.oldPreferredContactMethodName = 'Other Phone';
+            this.oldPreferredContact = this.formatPhoneNumber(this.oldOtherPhone?.phoneNbr ?? '');
+          }
+          else if (this.oldEmail?.preferredFlag === StatusFlag.Yes) {
+            this.oldPreferredContactMethodName = 'Email';
+            this.oldPreferredContact = this.oldEmail?.email;
+          }
           this.oldFriendsOrFamilyContact = data?.friendsOrFamilyContact;
           this.setFormValues();
         }
@@ -1468,6 +1484,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setVisibilityByNoFriendsOrFamily(isChecked: boolean) {
+    const otherDesc: CompletionChecklist = {
+      dataPointName: 'relationshipCodeOther',
+      status: StatusFlag.No
+    };
     if (isChecked) {
       this.contactInfoForm?.get('familyAndFriendsContact.contactName')?.disable();
       this.contactInfoForm?.get('familyAndFriendsContact.contactRelationshipCode')?.disable();
@@ -1477,8 +1497,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm?.get('familyAndFriendsContact.contactName')?.enable();
       this.contactInfoForm?.get('familyAndFriendsContact.contactRelationshipCode')?.enable();
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.enable();
-
+      otherDesc.status = this.contactInfoForm?.get('familyAndFriendsContact.contactRelationshipCode')?.value === 'O' ? StatusFlag.Yes : StatusFlag.No;
     }
+    this.workflowFacade.updateBasedOnDtAttrChecklist([otherDesc]);
   }
 
   private setVisibilityByHomelessFlag(isChecked: boolean) {
@@ -1892,19 +1913,15 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     this.removePhoneEmailValidation();
-    if ((ffContactGroup.controls['noFriendOrFamilyContactFlag']?.value ?? false) === false) {
-      ffContactGroup.controls['contactName'].setValidators(null);
-      ffContactGroup.controls['contactName'].updateValueAndValidity();
-      ffContactGroup.controls['contactRelationshipCode'].setValidators(null);
-      ffContactGroup.controls['contactRelationshipCode'].updateValueAndValidity();
-      ffContactGroup.controls['contactPhoneNbr'].setValidators(null);
-      ffContactGroup.controls['contactPhoneNbr'].updateValueAndValidity();
+    ffContactGroup.controls['contactName'].setValidators(null);
+    ffContactGroup.controls['contactName'].updateValueAndValidity();
+    ffContactGroup.controls['contactRelationshipCode'].setValidators(null);
+    ffContactGroup.controls['contactRelationshipCode'].updateValueAndValidity();
+    ffContactGroup.controls['contactPhoneNbr'].setValidators(null);
+    ffContactGroup.controls['contactPhoneNbr'].updateValueAndValidity();
+    ffContactGroup.controls['otherDesc'].setValidators(null);
+    ffContactGroup.controls['otherDesc'].updateValueAndValidity();
 
-      if (ffContactGroup.controls['contactRelationshipCode']?.value === 'O') {
-        ffContactGroup.controls['otherDesc'].setValidators(null);
-        ffContactGroup.controls['otherDesc'].updateValueAndValidity();
-      }
-    }
   }
 
   private removePhoneEmailValidation() {

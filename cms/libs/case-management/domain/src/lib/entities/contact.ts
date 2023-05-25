@@ -49,6 +49,7 @@ export interface FriendsOrFamilyContact {
   clientDependentId?: string;
   contactName?: string;
   contactRelationshipCode?: string;
+  contactRelationshipDesc?: string;
   otherDesc?: string;
   contactPhoneNbr?: string;
   noFriendOrFamilyContactFlag?: string;
