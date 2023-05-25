@@ -139,7 +139,7 @@
             kendoCheckBox
             (click)="onNoFamilyMemberClicked()" 
             id="clientsDoesNotHaveFamilyOrDependents"
-           [checked]="dependentStatus$ | async"   
+            [checked]="(dependentStatus$ | async)?.noDependentFlag === 'Y'"   
            aria-labelledby="clientsDoesNotHaveFamilyOrDependents"        
           />
           <label
