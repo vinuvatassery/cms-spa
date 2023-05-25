@@ -114,12 +114,15 @@ cms-sidenav {
         width: 100%;
         white-space: nowrap;
         .sidebar-sub-menu_items {
-          padding: 10px 10px 10px 55px;
+          padding: 10px 10px 10px 50px;
           cursor: pointer;
           color: $white;
           transition: ease-in all 0.3s;
           margin-bottom: 1px;
           font-size: $font-size-m;
+          &.menu-level-three{
+            padding-left: 20px;
+          }
           &:hover,
           &.active-item {
             background-color: darken($app-primary-darken, 5%);

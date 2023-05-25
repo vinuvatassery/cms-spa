@@ -13,7 +13,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 })
 export class ReminderListComponent {
   public formUiStyle : UIFormStyle = new UIFormStyle();
-  
+  isOpenDeleteTODOItem = false;
+  isOpenTODOItemDetailsNoFeature= false;
   /** Public properties **/
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
@@ -35,6 +36,15 @@ export class ReminderListComponent {
       text: "Edit",
       icon: "edit",
       click: (): void => {
+        this.clickOpenReminderToDoDetails();
+      },
+    },
+    {
+      buttonType:"btn-h-danger",
+      text: "Delete",
+      icon: "delete",
+      click: (): void => {
+        this.clickOpenDeleteToDo();
       },
     },
   ];
@@ -56,4 +66,23 @@ export class ReminderListComponent {
   onAddReminderClicked() {
     this.isShowReminderDetailsModal = true;
   }
+
+  
+  clickOpenReminderToDoDetails( ) {
+    this.isOpenTODOItemDetailsNoFeature = true;
+  
+  }
+  clickCloseReminderToDoDetails() {
+    this.isOpenTODOItemDetailsNoFeature = false;
+  }
+
+  clickOpenDeleteToDo( ) {
+    this.isOpenDeleteTODOItem = true;
+  
+  }
+  clickCloseDeleteToDo() {
+    this.isOpenDeleteTODOItem = false;
+  }
+
+  
 }
