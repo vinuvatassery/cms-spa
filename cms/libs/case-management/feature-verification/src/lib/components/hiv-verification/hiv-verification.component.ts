@@ -24,6 +24,7 @@ export class HivVerificationComponent implements OnInit {
   verificationMethod$ = this.lovFacade.verificationMethod$;
   OptionControllerName:any ='providerOption';
   isHivVerificationRemovalConfirmationOpened : boolean = false;
+  clientHivVerificationId!:string;
   removeHivVerification$ = this.verificationFacade.removeHivVerification$;
 
   constructor(private readonly cd: ChangeDetectorRef, private verificationFacade: VerificationFacade,private readonly lovFacade: LovFacade){
@@ -36,6 +37,7 @@ export class HivVerificationComponent implements OnInit {
     });
     this.removeHivVerification$.subscribe(response=>{
       if(response==true && this.clientId!=0){
+        this.verificationFacade.showAttachmentOptions.next(true);
         this.onHivRemoveConfirmationClosed();
         this.cd.detectChanges();
       }
@@ -49,10 +51,13 @@ export class HivVerificationComponent implements OnInit {
     this.isHivVerificationRemovalConfirmationOpened = false;
   }
   onHivRemoveConfirmation(){
-    this.verificationFacade.removeHivVerificationAttachment("32AB97F9-5553-4B08-9FBB-8FF5D2D86AE6",this.clientId);
+    this.verificationFacade.removeHivVerificationAttachment(this.clientHivVerificationId,this.clientId);
   }
-  onHivRemoveConfirmationOpen() {
-    this.isHivVerificationRemovalConfirmationOpened = true;
+  onHivRemoveConfirmationOpen(clientHivVerificationId:string) {
+    if(clientHivVerificationId && clientHivVerificationId != ""){
+      this.isHivVerificationRemovalConfirmationOpened = true;
+      this.clientHivVerificationId = clientHivVerificationId;
+    }
   }
   onAttachmentConfirmation(event:any)
   {

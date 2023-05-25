@@ -29,7 +29,7 @@ export class HivVerificationRequestComponent implements OnInit{
   @Input() clientCaseId!: any;
   @Input() clientCaseEligibilityId!: any;
   clientHivDocumentsList$: any;
-  @Output() openRemoveAttachmentConfirmationEvent = new EventEmitter();
+  @Output() openRemoveAttachmentConfirmationEvent : EventEmitter<string> = new EventEmitter();
   @Output() onAttachmentConfirmationEvent = new EventEmitter();
   userId!: any;
   hivVerificationAttachment!: File | undefined;
@@ -80,7 +80,9 @@ export class HivVerificationRequestComponent implements OnInit{
       text: "Remove Attachment",
       icon: "delete",
       click: (): void => {
-        this.openRemoveAttachmentConfirmationEvent.emit();
+        debugger;
+        this.showHivVerificationAttachmentRequiredValidation = true;
+        this.openRemoveAttachmentConfirmationEvent.emit(this.uploadedAttachment[0].clientHivVerificationId);
       },
     },
   ];
@@ -125,6 +127,7 @@ export class HivVerificationRequestComponent implements OnInit{
     });
     this.verificationFacade.showAttachmentOptions$.subscribe(response=>{
       this.showAttachmentOptions = response;
+      this.uploadedAttachment = undefined;
       this.cdr.detectChanges();
     });
     this.verificationFacade.clientHivDocumentsList$.subscribe(response=>{
@@ -141,6 +144,7 @@ export class HivVerificationRequestComponent implements OnInit{
             src: data?.hivVerification?.documentPath,
             uid: data?.hivVerification?.documentId,
             documentId: data?.hivVerification?.documentId,
+            clientHivVerificationId: data?.clientHivVerificationId,
           },
         ];
         this.uploadedAttachment = documentData;
@@ -199,8 +203,10 @@ export class HivVerificationRequestComponent implements OnInit{
   }
 
   handleFileRemoved(e: SelectEvent) {
+    debugger
     this.showHivVerificationAttachmentRequiredValidation = true;
-    this.openRemoveAttachmentConfirmationEvent.emit();
+    console.log("clientHivVerificationId: ",this.uploadedAttachment[0].clientHivVerificationId);
+    this.openRemoveAttachmentConfirmationEvent.emit(this.uploadedAttachment[0].clientHivVerificationId);
   }
   private populateModel(){
     this.clientHivVerification.clientId = this.clientId;
