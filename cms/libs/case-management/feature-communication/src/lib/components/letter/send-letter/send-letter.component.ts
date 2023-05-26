@@ -107,8 +107,11 @@ export class SendLetterComponent implements OnInit {
   }
 
   onSaveForLaterClicked() {
-    this.isNewLetterClicked = false;
     this.isShowSaveForLaterPopupClicked = true;
+    this.isShowSaveForLaterPopupClicked = true;
+    this.emailEditorValueEvent.emit(this.currentLetterData);
+    this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
+    this.saveContact(this.selectedTemplate);
   }
 
   onSendLetterToPrintDialogClicked(event: any) {
@@ -124,13 +127,14 @@ export class SendLetterComponent implements OnInit {
     this.isShowPreviewLetterPopupClicked = true;
     this.emailEditorValueEvent.emit(this.currentLetterData);
     this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
-    this.generateText(this.selectedTemplate);
+    this.generateText(this.selectedTemplate,"Preview");
   }
-  private generateText(emailData: any){
+  private generateText(letterData: any, requestType: string){
     this.loaderService.show();
+    debugger;
     const clientId = this.workflowFacade.clientId ?? 0;
     const caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
-    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', emailData ?? '',"Preview")
+    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', letterData ?? '', requestType ??'')
         .subscribe({
           next: (data: any) =>{
             this.loaderService.hide();
@@ -148,10 +152,13 @@ export class SendLetterComponent implements OnInit {
   }
 
   onSendLetterToPrintClicked() {
-    this.isNewLetterClicked = false;
-    this.isShowSendLetterToPrintPopupClicked = true;
-    this.isShowPreviewLetterPopupClicked = false;
-    this.letterEditorValueEvent.emit(true);
+    // this.isNewLetterClicked = false;
+    // this.isShowSendLetterToPrintPopupClicked = true;
+    // this.isShowPreviewLetterPopupClicked = false;
+    // this.letterEditorValueEvent.emit(true);
+    this.emailEditorValueEvent.emit(this.currentLetterData);
+    this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
+    this.generateText(this.selectedTemplate,"SendLetter");
   }
 
   onCloseNewLetterClicked() {
@@ -194,5 +201,39 @@ export class SendLetterComponent implements OnInit {
     this.handleLetterEditor(event);
     this.ref.detectChanges();
     this.openDdlLetterEvent.emit();
+  }
+  private saveContact(draftTemplate: any) {
+    this.loaderService.show();
+    const isSaveFoLater = true;
+    this.communicationFacade.SaveForLaterEmailTemplate(draftTemplate, isSaveFoLater)
+        .subscribe({
+          next: (data: any) =>{
+            this.loaderService.hide();
+          if (data) {
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Template Saved As Draft')
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+        },
+      });
+  }
+
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
+      if(type == SnackBarNotificationType.ERROR)
+      {
+        const err= subtitle;    
+        this.loggingService.logException(err)
+      }  
+        this.notificationSnackbarService.manageSnackBar(type,subtitle)
+        this.hideLoader();   
+  }
+  hideLoader()
+  {
+    this.loaderService.hide();
   }
 }
