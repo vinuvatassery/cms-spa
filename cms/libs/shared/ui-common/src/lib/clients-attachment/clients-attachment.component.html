@@ -1,0 +1,32 @@
+<section [formGroup]="clientAttachmentForm">
+  <kendo-floatinglabel  text="Client Documents">
+
+    <!-- <span *ngIf="showDocInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span> -->
+    <kendo-multicolumncombobox
+      (valueChange)="clientAttachmentChange($event)"
+      [data]="clientDocumentList$"
+      textField="documentName"
+      valueField="clientDocumentId"
+      autofocusfield
+      id="clientdocuments"
+      formControlName="clientsAttachment"
+      #searchcaseornew
+      [fillMode]="formUiStyle.dropDownFillMode"
+      [popupSettings]="{popupClass: 'case-search-footer combotable_search_list',  appendTo:'component' ,animate: true }"
+      [filterable]="true"
+   >
+      <kendo-combobox-column >
+        <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
+          <span  >{{ dataItem.documentName }}</span>
+        </ng-template>
+      </kendo-combobox-column>
+      <kendo-combobox-column  [width]="200">
+        <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
+          <span>  {{dataItem.documentTypeCode}}</span>
+        </ng-template>
+      </kendo-combobox-column>
+    </kendo-multicolumncombobox>
+    <kendo-formerror *ngIf="!clientAttachmentForm.controls['clientsAttachment'].valid">A response is required.
+    </kendo-formerror>
+  </kendo-floatinglabel>
+</section>

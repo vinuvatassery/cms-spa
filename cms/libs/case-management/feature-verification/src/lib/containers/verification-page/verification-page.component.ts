@@ -102,6 +102,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   private loadSessionData() {
+    this.verificationFacade.showLoader();
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
@@ -119,7 +120,6 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   private load(){
-    this.verificationFacade.showLoader();
     this.verificationFacade.getHivVerificationWithAttachment( this.clientId, this.clientCaseEligibilityId).subscribe({
       next:(data)=>{
         if(data?.clientHivVerificationId){

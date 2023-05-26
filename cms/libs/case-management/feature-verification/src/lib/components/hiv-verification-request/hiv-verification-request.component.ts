@@ -201,7 +201,6 @@ export class HivVerificationRequestComponent implements OnInit{
         this.onAttachmentConfirmationEvent.emit(this.clientHivVerification);
       }
     }
-    //this.updateHomeAddressProofCount(true);
   }
 
   handleFileRemoved(e: SelectEvent) {

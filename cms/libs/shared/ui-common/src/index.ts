@@ -38,3 +38,4 @@ export * from './lib/directives/after-value-changed.directive';
 export * from './lib/enums/yes-no-flag-enum';
 export * from './lib/enums/material-format.enum';
 
+export * from './lib/clients-attachment/clients-attachment.component';

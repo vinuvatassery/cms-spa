@@ -85,37 +85,11 @@
       </div>
       <!-- Select file form client attachment -->
       <div *ngIf="hivVerificationForm.controls['attachmentType'].value == 'Attach From Client Attachments' || !showAttachmentOptions" class="flex-col flex-col-8 mt-2 ml-1">
-        <kendo-floatinglabel *ngIf="showAttachmentOptions" text="Client Documents">
-
-          <span *ngIf="showDocInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
-          <kendo-multicolumncombobox
-            (valueChange)="clientAttachmentChange($event)"
-            [data]="clientHivDocumentsList$"
-            textField="documentName"
-            valueField="clientDocumentId"
-            autofocusfield
-            id="clientdocuments"
-            formControlName="clientsAttachment"
-            #searchcaseornew
-            [loading] = "showDocInputLoader"
-            [fillMode]="formUiStyle.dropDownFillMode"
-            [popupSettings]="{popupClass: 'case-search-footer combotable_search_list',  appendTo:'component' ,animate: true }"
-            [filterable]="true"
-         >
-            <kendo-combobox-column >
-              <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
-                <span  >{{ dataItem.documentName }}</span>
-              </ng-template>
-            </kendo-combobox-column>
-            <kendo-combobox-column  [width]="200">
-              <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
-                <span>  {{dataItem.documentTypeCode}}</span>
-              </ng-template>
-            </kendo-combobox-column>
-          </kendo-multicolumncombobox>
-          <kendo-formerror *ngIf="!hivVerificationForm.controls['clientsAttachment'].valid">A response is required.
-          </kendo-formerror>
-        </kendo-floatinglabel>
+        <common-clients-attachment *ngIf="showAttachmentOptions"
+        [clientAttachmentForm]="hivVerificationForm"
+        [clientDocumentList$]="clientHivDocumentsList$"
+        (clientAttachmentChangeEvent)="clientAttachmentChange($event)"
+        ></common-clients-attachment>
       <div *ngIf="!showAttachmentOptions" class="attachment-from-client-lists-wrapper mt-2">
 
         <div class="attachment-from-client-lists-container">
