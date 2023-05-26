@@ -1,0 +1,85 @@
+<common-bread-crumb></common-bread-crumb>
+<div class=" pt-0">
+  <!-- Main Title Section -->
+
+  <kendo-dropdownbutton aria-label="new case" kendoButton icon="add" themeColor="primary" class="add-new-button"
+    [data]="data">
+    New Profile
+  </kendo-dropdownbutton>
+  <section class="app-l-mainTittle">
+    <h1 class="maintitle_withicon text-bold">
+      <span class="material-icons sidebar-menu_icon"> monetization_on </span>
+      Financial Management
+    </h1>
+  </section>
+  <section class="app-l-client-wrapper ">
+    <div class="app-l-client-left">
+      <section class="app-l-wrapper">
+
+        <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+          class="app-c-tab case-360-tab">
+          <kendo-tabstrip-tab title="Manufacturers" [selected]="true"  *ifPermission='["Financial_Manufacturers_Tab"]'>
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <div class="flex-col flex-space-bw align-items-center mb-1">
+                </div>
+                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.Manufacturers"></cms-financial-vendors-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+
+          <kendo-tabstrip-tab title="Medical Providers" *ifPermission='["Financial_MedicalProvider_Tab"]'>
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <div class="flex-col flex-space-bw align-items-center mb-1">
+                </div>
+                <cms-financial-providers-list [financeTabTypeCode]="financeManagementTabs.MedicalProvider"></cms-financial-providers-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+
+          <kendo-tabstrip-tab title="Insurance Vendors" *ifPermission='["Financial_InsuranceVendors_Tab"]'>
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <div class="flex-col flex-space-bw align-items-center mb-1">
+                </div>
+                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.InsuranceVendors"></cms-financial-vendors-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+
+          <kendo-tabstrip-tab title="Pharmacies" *ifPermission='["Financial_Pharmacy_Tab"]'>
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <div class="flex-col flex-space-bw align-items-center mb-1">
+                </div>
+                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.Pharmacy"></cms-financial-vendors-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+
+          <kendo-tabstrip-tab title="Dental Providers" *ifPermission='["Financial_DentalProvider_Tab"]'>
+            <ng-template kendoTabContent>
+              <div class="block-section mt-1">
+                <div class="flex-col flex-space-bw align-items-center mb-1">
+                </div>
+                <cms-financial-providers-list [financeTabTypeCode]="financeManagementTabs.DentalProvider"></cms-financial-providers-list>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+        </kendo-tabstrip>
+
+      </section>
+    </div>
+    <!-- Right Reminders-->
+    <div class="app-l-client-right todo-list">
+      <productivity-tools-reminder-list class="reminder-list-case-wrap"></productivity-tools-reminder-list> 
+    </div>
+  </section>
+</div>
+
+<kendo-dialog kendoRippleContainer *ngIf="isVendorDetailFormShow" (close)="clickCloseVendorDetails()"
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Medical Provider" kendoTooltip>
+  <cms-vendor-details></cms-vendor-details>
+</kendo-dialog>
+
