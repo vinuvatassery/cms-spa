@@ -43,7 +43,7 @@
               ></kendo-label>
             </span>
           </div>
-          <kendo-formerror *ngIf="!haveTheyHaveFamilyMember && !isCerFormValid"> A Response is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!haveTheyHaveFamilyMember && (isCerFormValid | async) == false"> A Response is required.</kendo-formerror>
           </fieldset> 
         </div>
         <div [hidden]="haveTheyHaveFamilyMember != 'Y'">
@@ -126,7 +126,7 @@
               ></kendo-label>
             </span>
           </div>
-          <kendo-formerror *ngIf="!haveTheyHaveAdditionalFamilyMember && !isCerFormValid"> A Response is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!haveTheyHaveAdditionalFamilyMember && (isCerFormValid | async) == false"> A Response is required.</kendo-formerror>
           </fieldset> 
         </div>
       </div>

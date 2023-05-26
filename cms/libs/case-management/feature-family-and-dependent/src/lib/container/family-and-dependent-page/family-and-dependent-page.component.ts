@@ -3,7 +3,7 @@ import { AfterViewInit, OnDestroy,ChangeDetectionStrategy, Component, OnInit } f
 import { ActivatedRoute, Router } from '@angular/router';
 
 /** External libraries **/
-import { catchError, filter, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
+import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';
 
 /** Internal libraries **/
 import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent, CompletionChecklist, NavigationType } from '@cms/case-management/domain';
@@ -51,7 +51,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   haveTheyHaveFamilyMember!: string;
   haveTheyHaveAdditionalFamilyMember! : string;
   previousRelationsList: any = [];
-  isCerFormValid: boolean = true;
+  isCerFormValid: Subject<boolean> = new Subject();
   /** Constructor **/
   constructor(
     private familyAndDependentFacade: FamilyAndDependentFacade,
@@ -201,10 +201,10 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   private save() {
     this.familyStatus = this.isFamilyGridDisplay === true ? StatusFlag.Yes : StatusFlag.No;
     if(this.isCerForm && (!this.haveTheyHaveAdditionalFamilyMember || !this.haveTheyHaveFamilyMember)) {
-      this.isCerFormValid = false;
+      this.isCerFormValid.next(false);
       return of(false);
     }
-    if((!this.isDependentAvailable && (this.familyStatus === StatusFlag.No)) || (!this.isDependentAvailable && (this.haveTheyHaveAdditionalFamilyMember === StatusFlag.Yes))){
+    if((!this.isDependentAvailable && (this.familyStatus === StatusFlag.No) && !this.isCerForm) || (!this.isDependentAvailable && (this.haveTheyHaveAdditionalFamilyMember === StatusFlag.Yes))){
       this.familyAndDependentFacade.dependentValidSubject.next(false);
       return of(false);
     }
@@ -319,10 +319,10 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   checkValidations(){
     this.familyStatus = this.isFamilyGridDisplay === true ? StatusFlag.Yes : StatusFlag.No;
     if(this.isCerForm && (!this.haveTheyHaveAdditionalFamilyMember || !this.haveTheyHaveFamilyMember)) {
-      this.isCerFormValid = false;
+      this.isCerFormValid.next(false);
       return false;
     }
-    if(!this.isDependentAvailable && (this.familyStatus === StatusFlag.No) || (!this.isDependentAvailable && (this.haveTheyHaveAdditionalFamilyMember === StatusFlag.Yes))){
+    if((!this.isDependentAvailable && (this.familyStatus === StatusFlag.No) && !this.isCerForm) || (!this.isDependentAvailable && (this.haveTheyHaveAdditionalFamilyMember === StatusFlag.Yes))){
       this.familyAndDependentFacade.dependentValidSubject.next(false);
       return false;
     }
