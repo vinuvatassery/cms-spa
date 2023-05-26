@@ -96,7 +96,8 @@ export class EmploymentFacade {
     skipcount: number,
     maxResultCount: number,
     sort: string,
-    sortType: string
+    sortType: string,
+    type:string
   ) {
     this.showLoader();
     this.employersDataService
@@ -106,7 +107,8 @@ export class EmploymentFacade {
         skipcount,
         maxResultCount,
         sort,
-        sortType
+        sortType,
+        type
       )
       .subscribe({
         next: (employersResponse: any) => {
@@ -139,7 +141,7 @@ export class EmploymentFacade {
       1000,
       '',
       '',
-      true
+      'Old'
     )
     .subscribe({
       next: (employersResponse: any) => {

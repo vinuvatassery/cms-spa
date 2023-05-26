@@ -160,7 +160,7 @@ export class IncomeFacade {
     return this.contactDataService.updateNoIncomeData(clientCaseEligibilityId, noIncomeData);
   }
 
-  saveClientIncome(clientId : any,clientIncome: any, proofOfIncomeFile: any) {
+  saveClientIncome(clientId : any,clientIncome: any, proofOfIncomeFile: any, documentTypeCode: any) {
 
     const formData: any = new FormData();
     for (let key in clientIncome) {
@@ -175,9 +175,10 @@ export class IncomeFacade {
       }
     }
     formData.append('ProofOfIncomeFile', proofOfIncomeFile);
+    formData.append('documentTypeCode', documentTypeCode);
     return this.contactDataService.saveIncome(clientId,formData);
   }
-  editClientIncome(clientId : any, clientIncomeId : any, clientIncome:any, proofOfIncomeFile:any){
+  editClientIncome(clientId : any, clientIncomeId : any, clientIncome:any, proofOfIncomeFile:any, documentTypeCode: any){
     const formData: any = new FormData();
     for (let key in clientIncome) {
       if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
@@ -191,6 +192,7 @@ export class IncomeFacade {
       }
     }
     formData.append('proofOfIncomeFile',proofOfIncomeFile)
+    formData.append('documentTypeCode', documentTypeCode);
     return this.contactDataService.editIncome(clientId, clientIncomeId, formData);
   }
 

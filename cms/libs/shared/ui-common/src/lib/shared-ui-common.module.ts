@@ -34,6 +34,7 @@ import { PermissionManagerDirective } from './directives/permission-manager.dire
 import { UserPhotoIconComponent } from './user-photo-icon/user-photo-icon.component';
 import { CaseEligibilityPeriodsComponent } from './case-eligibility-periods/case-eligibility-periods.component';
 import { GridCellDateRangeFilterComponent } from './grid-cell-date-range-filter/grid-cell-date-range-filter.component';
+import { DocumentUploadComponent } from './document-upload/document-upload.component';
 import { ClientsAttachmentComponent } from './clients-attachment/clients-attachment.component';
 
 @NgModule({
@@ -64,6 +65,7 @@ import { ClientsAttachmentComponent } from './clients-attachment/clients-attachm
     UserPhotoIconComponent,
     CaseEligibilityPeriodsComponent,
     GridCellDateRangeFilterComponent,
+    DocumentUploadComponent,
     ClientsAttachmentComponent,
   ],
   exports: [
@@ -92,6 +94,7 @@ import { ClientsAttachmentComponent } from './clients-attachment/clients-attachm
     UserPhotoIconComponent,
     CaseEligibilityPeriodsComponent,
     GridCellDateRangeFilterComponent,
+    DocumentUploadComponent,
     ClientsAttachmentComponent,
   ],
 })

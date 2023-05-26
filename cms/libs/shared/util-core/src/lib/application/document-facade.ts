@@ -1,0 +1,54 @@
+/** Angular **/
+import { Injectable } from '@angular/core';
+import { LoaderService } from '../application/services/app-loader.service';
+import { LoggingService } from '../api/services/logging.service';
+import { NotificationSnackbarService } from '../application/services/notification-snackbar-service';
+import { SnackBarNotificationType } from '../enums/snack-bar-notification-type.enum';
+import { DocumentDataService } from '../infrastructure/document.data.service';
+/** External libraries **/
+
+@Injectable({ providedIn: 'root' })
+export class DocumentFacade {
+
+    /** Constructor**/
+    constructor(
+        private readonly documentDataService: DocumentDataService,
+        private readonly loaderService: LoaderService,
+        private readonly loggingService: LoggingService,
+        private readonly snackbarService: NotificationSnackbarService) { }
+
+    /** Public methods **/
+    showSnackBar(type: SnackBarNotificationType, subtitle: any) {
+        if (type == SnackBarNotificationType.ERROR) {
+            const err = subtitle;
+            this.loggingService.logException(err)
+        }
+        this.snackbarService.manageSnackBar(type, subtitle);
+    }
+
+    viewOrDownloadFile(isFileViewable: boolean, clientDocumentId: string, documentName: string) {
+        if (clientDocumentId === undefined || clientDocumentId === '') {
+            return;
+        }
+        this.loaderService.show()
+        this.documentDataService.getClientDocumentsViewDownload(clientDocumentId).subscribe({
+            next: (data: any) => {
+
+                const fileUrl = window.URL.createObjectURL(data);
+                if (isFileViewable === true) {
+                    window.open(fileUrl, "_blank");
+                } else {
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = fileUrl;
+                    downloadLink.download = documentName;
+                    downloadLink.click();
+                }
+                this.loaderService.hide();
+            },
+            error: (error: any) => {
+                this.loaderService.hide();
+                this.showSnackBar(SnackBarNotificationType.ERROR, error)
+            }
+        })
+    }
+}

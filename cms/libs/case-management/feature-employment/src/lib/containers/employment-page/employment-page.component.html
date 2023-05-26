@@ -48,7 +48,7 @@
               <kendo-formfield>
                 <kendo-floatinglabel text="Employment End Date">
                 <kendo-datepicker [incompleteDateValidation]="true" #empHireDate  [fillMode]="formUiStyle.dateInputFillMode" [(ngModel)]="prvEmployer.endDate"
-                  format="MM-dd-yyyy" formatPlaceholder="formatPattern"   placeholder="Employment End Date" [max]="currentDate" (valueChange)="onOldEmployerChange()">
+                  format="MM-dd-yyyy" formatPlaceholder="formatPattern"   placeholder="Employment End Date" [min]="prvEmployer.dateOfHire" [max]="currentDate" (valueChange)="onOldEmployerChange()">
               </kendo-datepicker>
             </kendo-floatinglabel>
           </kendo-formfield>

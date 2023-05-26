@@ -49,6 +49,7 @@ export interface FriendsOrFamilyContact {
   clientDependentId?: string;
   contactName?: string;
   contactRelationshipCode?: string;
+  contactRelationshipDesc?: string;
   otherDesc?: string;
   contactPhoneNbr?: string;
   noFriendOrFamilyContactFlag?: string;
@@ -89,6 +90,7 @@ export interface HomeAddressProof {
   documentPath?: string;
   document?: File;
   concurrencyStamp?: string;
+  documentTypeCode?: string;
 }
 
 export interface PreferredContactLov {

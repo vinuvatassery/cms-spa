@@ -1,0 +1,112 @@
+<!-- Reminder list in view all reminder modal -->
+<section class="reminder-list-modal">
+    <div class="card-list-search align-items-end mb-3">
+      <div class="input-search">
+        <span
+          class="material-icons"
+          aria-label="search reminder"
+          aria-hidden="true"
+          >search</span
+        >
+        <kendo-floatinglabel text="Search Reminders">
+          <kendo-textbox aria-label="search reminder"   [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+      <button
+        kendoButton
+        [primary]="true"
+        (click)="onAddReminderClicked()"
+        aria-label="add new reminder"
+      >
+        <span class="material-icons" aria-label="new reminder" aria-hidden="true"
+          >add_alarm</span
+        >
+        New Reminder
+      </button>
+    </div>
+  
+    <section class="card-list-block">
+      <productivity-tools-reminder-item></productivity-tools-reminder-item>
+    </section>
+  
+    <!-- Create New Reminder Popup -->
+    <kendo-dialog
+      kendoRippleContainer
+      *ngIf="isShowReminderDetailsModal"
+      (close)="onCloseReminderClicked()"
+      class="app-c-modal app-c-modal-md app-c-modal-np"
+    >
+      <kendo-dialog-titlebar>
+        Create New Reminder for Donna
+      </kendo-dialog-titlebar>
+      <productivity-tools-reminder-detail></productivity-tools-reminder-detail>
+    </kendo-dialog>
+  </section>
+  
+  <!-- Reminder list case list sidebar -->
+  <section class="reminder-list-case">
+    <p class="due-main-heading">
+      <span class="material-icons" aria-label="reminder list" aria-hidden="true"
+        >playlist_add_check</span
+      >Due within 30 days
+    </p>
+    <div class="due-items-wrapper">
+      <div class="due-item-blocks red-item-block">
+        <p class="due-item-heading">James Bond - Renew Application</p>
+        <div class="due-item-details">
+          <span>Today</span>
+        </div>
+      </div>
+      <div class="due-item-blocks">
+        <p class="due-item-heading">Donna Summer - House Client</p>
+        <div class="due-item-details">
+          <span>10-11-2021</span>
+          <kendo-dropdownbutton
+          icon="more-vertical"
+          title="More option"
+            [data]="reminderActions" 
+            look="bare"
+            aria-label="more actions"
+            class="small-i-btn app-dropdown-action"
+            [popupSettings]="{
+              popupClass: reminderActionPopupClass,
+              animate: true
+            }"
+          >
+         <span hidden> More Option</span>
+              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+                <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+                  <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+                  <label>   {{ dataItem.text }} </label>
+              </button>
+            </ng-template>
+          </kendo-dropdownbutton>      
+        </div>
+      </div>
+      <div class="due-item-blocks canyon-item-block">
+        <p class="due-item-heading">David Miller - Review Application</p>
+        <div class="due-item-details">
+          <span>10-10-2021</span>
+        </div>
+      </div>
+      <div class="due-item-blocks canyon-item-block">
+        <p class="due-item-heading">Philip Disco - Review Application</p>
+        <div class="due-item-details">
+          <span>10-10-2021</span>
+        </div>
+      </div>
+      <div class="due-item-blocks red-item-block">
+        <p class="due-item-heading">Sara Leo - Call to get proof</p>
+        <div class="due-item-details">
+          <span>10-10-2021</span>
+        </div>
+      </div>
+      <div class="due-item-blocks red-item-block">
+        <p class="due-item-heading">Clever Booster - Renew Application</p>
+        <div class="due-item-details">
+          <span>10-10-2021</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  

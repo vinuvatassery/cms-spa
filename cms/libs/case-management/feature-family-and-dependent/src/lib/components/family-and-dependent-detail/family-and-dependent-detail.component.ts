@@ -154,7 +154,7 @@ export class FamilyAndDependentDetailComponent implements OnInit {
   {    
     const deleteParams =
     {
-      clientDependentId : this.clientDependentId ,
+      clientRelationshipId : this.clientDependentId ,
       dependentTypeCode : this.dependentTypeCode
     }
     this.formDeleteclickEvent.next(deleteParams);
