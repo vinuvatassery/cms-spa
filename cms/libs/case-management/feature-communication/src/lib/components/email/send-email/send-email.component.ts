@@ -173,20 +173,18 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowSendEmailConfirmationPopupClicked = false;
     if (CommunicationEvents.Print === event) {
       this.closeSendEmailEvent.emit(CommunicationEvents.Print);
+      this.emailEditorValueEvent.emit(this.currentEmailData);
+      this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
+      this.generateText(this.selectedTemplate,"SendEmail");
     } else if (CommunicationEvents.Close === event) {
       this.closeSendEmailEvent.emit(CommunicationEvents.Close);
     }
   }
 
   onSendEmailConfirmationClicked() {
-    // this.isOpenSendEmailClicked = false;
-    // this.isShowPreviewEmailPopupClicked = false;
-    // this.isShowSendEmailConfirmationPopupClicked = true;
-    // this.emailEditorValueEvent.emit(true);
-    //this.isShowPreviewEmailPopupClicked = true;
-    this.emailEditorValueEvent.emit(this.currentEmailData);
-    this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
-    this.generateText(this.selectedTemplate,"SendEmail");
+    this.isOpenSendEmailClicked = true;
+    this.isShowPreviewEmailPopupClicked = false;
+    this.isShowSendEmailConfirmationPopupClicked = true;
   }
 
   onCloseSendEmailClicked() {
@@ -224,18 +222,18 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', emailData ?? '', requestType ?? '')
         .subscribe({
           next: (data: any) =>{
-            this.loaderService.hide();
           if (data) {
             this.currentEmailData = data;
             this.emailContentValue = this.currentEmailData;
             this.emailEditorValueEvent.emit(this.emailContentValue);
           }
-          this.loaderService.hide();
           if(requestType=="SendEmail")
           {
+            this.isOpenSendEmailClicked = false;
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent for Esign..')
           this.onCloseSendEmailClicked();
           }
+          this.loaderService.hide();
         },
         error: (err: any) => {
           this.loaderService.hide();

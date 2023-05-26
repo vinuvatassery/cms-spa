@@ -57,13 +57,17 @@ export class EmailEditorComponent implements OnInit {
   public uploadRemoveUrl = 'removeUrl';
   public editorUploadOptions = [
     {
-      text: "Attach from Computer",
+      buttonType:"btn-h-primary",
+      text: "Attach from Computer system",
+      id: "uploadsystemfile",
       click: (): void => {
         this.showAttachmentUpload = true;
       },
     },
     {
+      buttonType:"btn-h-primary",
       text: "Attach from Client's Attachments",
+      id: "attachfromclient",
       click: (): void => {
       },
     },

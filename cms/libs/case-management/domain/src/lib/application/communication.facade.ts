@@ -98,6 +98,5 @@ export class CommunicationFacade {
 
   SaveForLaterEmailTemplate(draftTemplate: any, isSaveFoLater: boolean){
     return this.emailDataService.saveEmailForLater(draftTemplate, isSaveFoLater);
-
   }
 }
