@@ -130,7 +130,7 @@ export class SendLetterComponent implements OnInit {
     this.loaderService.show();
     const clientId = this.workflowFacade.clientId ?? 0;
     const caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
-    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', emailData ?? '')
+    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', emailData ?? '',"Preview")
         .subscribe({
           next: (data: any) =>{
             this.loaderService.hide();

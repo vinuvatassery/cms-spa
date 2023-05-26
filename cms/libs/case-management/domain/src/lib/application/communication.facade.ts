@@ -92,8 +92,8 @@ export class CommunicationFacade {
     return this.emailDataService.loadCERAuthorizationEmailVariables(lovTypes);
   }
 
-  generateTextTemplate(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any) {
-    return this.emailDataService.replaceAndGenerateTextTemplate(clientId, clientCaseEligibilityId, selectedTemplate);
+  generateTextTemplate(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
+    return this.emailDataService.replaceAndGenerateTextTemplate(clientId, clientCaseEligibilityId, selectedTemplate,requestType);
   }
 
   SaveForLaterEmailTemplate(draftTemplate: any, isSaveFoLater: boolean){
