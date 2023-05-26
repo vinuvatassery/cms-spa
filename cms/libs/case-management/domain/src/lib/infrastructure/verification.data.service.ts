@@ -19,7 +19,7 @@ export class VerificationDataService {
       }
       removeHivVerificationAttachment(hivVerificationId:any, clientId:any){
         return this.http.put(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification/${hivVerificationId}/clients/${clientId}/remove`,
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/hiv-verification/${hivVerificationId}/remove`,
           {hivVerificationId:hivVerificationId}
         );
       }
@@ -31,7 +31,7 @@ export class VerificationDataService {
         }
         this.formDataAppendObject(fd, clientHivVerification);
         return this.http.post(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification`,
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientHivVerification?.clientId}/hiv-verification`,
           fd
         );
       }
@@ -52,10 +52,10 @@ export class VerificationDataService {
         }
       }
       getHivVerificationWithAttachment(clientId:any, clientCaseEligibilityId : any) {
-        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification/${clientId}/eligibility-periods/${clientCaseEligibilityId}/hiv-verification`);
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/eligibility-periods/${clientCaseEligibilityId}/hiv-verification`);
       }
 
       getClientHivDocuments(clientId:any){
-        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/hiv-verification/${clientId}/documents`);
+        return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/hiv-verification/documents`);
       }
     }

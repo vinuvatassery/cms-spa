@@ -80,7 +80,6 @@ export class HivVerificationRequestComponent implements OnInit{
       text: "Remove Attachment",
       icon: "delete",
       click: (): void => {
-        debugger;
         this.showHivVerificationAttachmentRequiredValidation = true;
         this.openRemoveAttachmentConfirmationEvent.emit(this.uploadedAttachment[0].clientHivVerificationId);
       },
@@ -132,6 +131,9 @@ export class HivVerificationRequestComponent implements OnInit{
     });
     this.verificationFacade.clientHivDocumentsList$.subscribe(response=>{
       this.clientHivDocumentsList$ = response;
+      this.cdr.detectChanges();
+    });
+    this.verificationFacade.formChangeEvent$.subscribe(response=>{
       this.cdr.detectChanges();
     });
     this.verificationFacade.hivUploadedDocument$.subscribe(data=>{
@@ -203,7 +205,6 @@ export class HivVerificationRequestComponent implements OnInit{
   }
 
   handleFileRemoved(e: SelectEvent) {
-    debugger
     this.showHivVerificationAttachmentRequiredValidation = true;
     this.verificationFacade.isSaveandContinueSubject.next(this.showHivVerificationAttachmentRequiredValidation);
     this.openRemoveAttachmentConfirmationEvent.emit(this.uploadedAttachment[0].clientHivVerificationId);
@@ -244,6 +245,7 @@ export class HivVerificationRequestComponent implements OnInit{
   }
   clientAttachmentChange(event:any)
   {
+    this.verificationFacade.isSaveandContinueSubject.next(false);
     this.clientHivVerification.hivVerificationDoc = null;
     this.clientHivVerification.clientId = this.clientId;
     this.clientHivVerification.documentId = event.clientDocumentId;
@@ -252,5 +254,13 @@ export class HivVerificationRequestComponent implements OnInit{
     this.clientHivVerification.verificationMethodCode = this.providerOption;
     this.onAttachmentConfirmationEvent.emit(this.clientHivVerification);
 
+  }
+  attachmentRadioChanged(event:any)
+  {
+    this.hivVerificationForm.controls["clientsAttachment"].removeValidators(Validators.required);
+    this.hivVerificationForm.controls['clientsAttachment'].updateValueAndValidity();
+    this.hivVerificationForm.controls["computerAttachment"].removeValidators(Validators.required);
+    this.hivVerificationForm.controls['computerAttachment'].updateValueAndValidity();
+    this.verificationFacade.isSaveandContinueSubject.next(true);
   }
 }

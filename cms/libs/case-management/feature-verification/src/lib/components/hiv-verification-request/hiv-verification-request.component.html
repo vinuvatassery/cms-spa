@@ -39,19 +39,20 @@
       <div class="flex-col" *ngIf="showAttachmentOptions ">
         <div class="component-list-h">
           <span class="app-checkboxwidtext-wrapper">
-            <input type="radio" kendoRadioButton id="upoadattachment" value="upoadattachment"
+            <input type="radio" kendoRadioButton (change)="attachmentRadioChanged($event)"
               aria-labelledby="upoadattachment" formControlName="attachmentType" value="Attach From Computer"  />
 
             <kendo-label class="k-radio-label" for="upoadattachment" text="Attach From Computer"></kendo-label>
 
           </span>
           <span class="app-checkboxwidtext-wrapper">
-            <input type="radio" kendoRadioButton id="upoadattachment" value="upoadattachment"
+            <input type="radio" kendoRadioButton  (change)="attachmentRadioChanged($event)"
               aria-labelledby="upoadattachment" formControlName="attachmentType" value="Attach From Client Attachments" />
 
             <kendo-label class="k-radio-label" for="upoadattachment"
               text="Attach From Client Attachments"></kendo-label>
-
+              <kendo-formerror *ngIf="!hivVerificationForm.controls['attachmentType'].valid">A response is required.
+              </kendo-formerror>
           </span>
         </div>
       </div>
@@ -63,6 +64,7 @@
             [restrictions]="fileUploadRestrictions"
             (select)="handleFileSelected($event)"
             (remove)="handleFileRemoved($event)"
+            formControlName="computerAttachment"
             id="verificationAttachmentUploaded"
             #verificationAttachmentUploaded>
             <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
@@ -77,7 +79,7 @@
             </ng-template>
           </kendo-fileselect>
           <kendo-formhint>Max file size 25 MB</kendo-formhint>
-          <kendo-formerror *ngIf="showHivVerificationAttachmentRequiredValidation"> HIV Verification form is required
+          <kendo-formerror *ngIf="!hivVerificationForm.controls['computerAttachment'].valid"> HIV Verification form is required
           </kendo-formerror>
           <kendo-formerror *ngIf="showHivVerificationAttachmentSizeValidation">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
       </div>
@@ -93,6 +95,7 @@
             valueField="clientDocumentId"
             autofocusfield
             id="clientdocuments"
+            formControlName="clientsAttachment"
             #searchcaseornew
             [loading] = "showDocInputLoader"
             [fillMode]="formUiStyle.dropDownFillMode"
@@ -110,6 +113,8 @@
               </ng-template>
             </kendo-combobox-column>
           </kendo-multicolumncombobox>
+          <kendo-formerror *ngIf="!hivVerificationForm.controls['clientsAttachment'].valid">A response is required.
+          </kendo-formerror>
         </kendo-floatinglabel>
       <div *ngIf="!showAttachmentOptions" class="attachment-from-client-lists-wrapper mt-2">
 
@@ -142,7 +147,6 @@
           </button>
           on {{uploadedDate | date:'MM/dd/yyyy'}}</p>
         </div>
-
       </div>
     </div>
     </div>

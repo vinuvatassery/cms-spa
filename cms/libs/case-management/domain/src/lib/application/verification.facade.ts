@@ -19,6 +19,8 @@ export class VerificationFacade {
   hivVerificationUploadedDocument = new Subject<any>();
   showAttachmentOptions = new BehaviorSubject<boolean>(false);
   isSaveandContinueSubject = new BehaviorSubject<boolean>(true);
+  formChangeEventSubject = new BehaviorSubject<boolean>(false);
+
 
   /** Public properties **/
   hivVerificationSave$ = this.hivVerificationSaveSubject.asObservable();
@@ -26,6 +28,9 @@ export class VerificationFacade {
   hivUploadedDocument$ = this.hivVerificationUploadedDocument.asObservable();
   clientHivDocumentsList$ = this.clientHivDocumentsListSubject.asObservable();
   isSaveandContinue$ = this.isSaveandContinueSubject.asObservable();
+  formChangeEvent$ = this.formChangeEventSubject.asObservable();
+
+
 
 
   constructor(private readonly verificationDataService: VerificationDataService,

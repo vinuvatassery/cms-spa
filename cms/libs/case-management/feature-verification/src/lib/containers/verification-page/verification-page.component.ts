@@ -72,7 +72,9 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       attachmentType:[''],
       verificationStatusDate:[''],
       requestedUserName:[''],
-      userId:['']
+      userId:[''],
+      clientsAttachment:[],
+      computerAttachment:[]
     });
 
   }
@@ -189,6 +191,15 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     this.hivVerificationForm.markAllAsTouched();
     this.hivVerificationForm.controls["providerOption"].setValidators([Validators.required])
     this.hivVerificationForm.controls["providerOption"].updateValueAndValidity();
+    if(this.hivVerificationForm.controls['providerOption'].value == 'UPLOAD_ATTACHMENT')
+    {
+      this.validateUploadAttachemnt();
+      this.verificationFacade.formChangeEventSubject.next(true);
+    }
+    else
+    {
+      this.resetValidations();
+    }
     this.hivVerificationForm.updateValueAndValidity();
   }
 
@@ -198,5 +209,30 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   }
   private saveHivVerification() {
     return this.verificationFacade.saveHivVerification(this.clientHivVerification);
+  }
+  validateUploadAttachemnt()
+  {
+    this.hivVerificationForm.controls["attachmentType"].setValidators([Validators.required])
+    this.hivVerificationForm.controls["attachmentType"].updateValueAndValidity();
+    if(this.hivVerificationForm.controls['attachmentType'].value == 'Attach From Client Attachments')
+    {
+      this.hivVerificationForm.controls["clientsAttachment"].setValidators([Validators.required])
+      this.hivVerificationForm.controls["clientsAttachment"].updateValueAndValidity();
+    }
+    if(this.hivVerificationForm.controls['attachmentType'].value == 'Attach From Computer')
+    {
+      this.hivVerificationForm.controls["computerAttachment"].setValidators([Validators.required])
+      this.hivVerificationForm.controls["computerAttachment"].updateValueAndValidity();
+    }
+  }
+  resetValidations()
+  {
+    this.hivVerificationForm.controls["clientsAttachment"].removeValidators(Validators.required);
+    this.hivVerificationForm.controls['clientsAttachment'].updateValueAndValidity();
+    this.hivVerificationForm.controls["computerAttachment"].removeValidators(Validators.required);
+    this.hivVerificationForm.controls['computerAttachment'].updateValueAndValidity();
+    this.hivVerificationForm.controls["attachmentType"].removeValidators(Validators.required);
+    this.hivVerificationForm.controls['attachmentType'].updateValueAndValidity();
+
   }
 }
