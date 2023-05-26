@@ -10,6 +10,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 export class VendorsListComponent {
   public formUiStyle : UIFormStyle = new UIFormStyle();
 @Input() financeTabTypeCode! : string
+@Input() vendorTypeCode! : string
 
 vndorId! : string
 

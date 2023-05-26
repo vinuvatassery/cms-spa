@@ -23,7 +23,9 @@
               <div class="block-section mt-1">
                 <div class="flex-col flex-space-bw align-items-center mb-1">
                 </div>
-                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.Manufacturers"></cms-financial-vendors-list>
+                <cms-financial-vendors-list 
+                [financeTabTypeCode]="financeManagementTabs.Manufacturers"
+                [vendorTypeCode]="financeVendorTypeCodes.Manufacturers"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
@@ -43,7 +45,9 @@
               <div class="block-section mt-1">
                 <div class="flex-col flex-space-bw align-items-center mb-1">
                 </div>
-                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.InsuranceVendors"></cms-financial-vendors-list>
+                <cms-financial-vendors-list
+                 [financeTabTypeCode]="financeManagementTabs.InsuranceVendors"
+                 [vendorTypeCode]="financeVendorTypeCodes.InsuranceVendors"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
@@ -53,7 +57,9 @@
               <div class="block-section mt-1">
                 <div class="flex-col flex-space-bw align-items-center mb-1">
                 </div>
-                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.Pharmacy"></cms-financial-vendors-list>
+                <cms-financial-vendors-list
+                 [financeTabTypeCode]="financeManagementTabs.Pharmacy"
+                 [vendorTypeCode]="financeVendorTypeCodes.Pharmacy"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>

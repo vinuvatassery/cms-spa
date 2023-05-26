@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { CaseFacade, FinancialVendorProviderTabCode, SearchHeaderType } from '@cms/case-management/domain';
+import { CaseFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -51,6 +51,10 @@ export class FinancialVendorPageComponent implements OnInit{
 
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
     return FinancialVendorProviderTabCode;
+  }
+
+  get financeVendorTypeCodes(): typeof FinancialVendorTypeCode {
+    return FinancialVendorTypeCode;
   }
 
   clickOpenVendorDetails(dataItem : any) {
