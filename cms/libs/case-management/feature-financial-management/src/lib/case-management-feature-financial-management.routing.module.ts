@@ -28,7 +28,7 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureFinancialReplenishmentModule
       ),
     data: {
-      title: '',
+      title: 'Replenishment',
     },
   },
   {
@@ -38,7 +38,7 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureFinancialVendorRefundModule
       ),
     data: {
-      title: '',
+      title: 'Vendor Refund',
     },
   },
   {
@@ -48,7 +48,7 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureFinancialMedicalClaimsModule
       ),
     data: {
-      title: '',
+      title: 'Medical-Claims',
     },
   },
   {
@@ -58,7 +58,7 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureFinancialInsurancePremiumsModule
       ),
     data: {
-      title: '',
+      title: 'Medical-Premiums',
     },
   },
   {
@@ -68,7 +68,7 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureFinancialPharmacyClaimsModule
       ),
     data: {
-      title: '',
+      title: 'Pharmacy-Claims',
     },
   },
 ];
