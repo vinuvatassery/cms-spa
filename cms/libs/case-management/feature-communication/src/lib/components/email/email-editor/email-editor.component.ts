@@ -180,36 +180,37 @@ export class EmailEditorComponent implements OnInit {
   }
 
   handleFileSelected(event: any) {
-    this.attachedFiles = null;
     this.attachedFileValidatorSize=false;
-    this.attachedFiles = event.files[0].rawFile;
-   if(this.attachedFiles.size>this.configurationProvider.appSettings.uploadFileSizeLimit)
+    for(let i=0; i < event.files.length; i++){
+   if(event.files[i].size>this.configurationProvider.appSettings.uploadFileSizeLimit)
    {
     this.attachedFileValidatorSize = true;
-    this.attachedFiles = null;
     this.showAttachmentUpload = true;
+    event.files = [];
+    this.uploadedAttachedFile = [];
    }
-   this.uploadedAttachedFile = [
-    {
-      document: event.files[0],
-      size: event.files[0].size,
-      name: event.files[0].name,
-      uid: ''
-    },
-  ];
-  this.selectedAttachedFile.push(
-    {
-      document: event.files[0],
-      size: event.files[0].size,
-      name: event.files[0].name,
-      uid: ''
-    }
-  );
-  this.handleFileRemoved(event);
-  this.showAttachmentUpload = false;
   }
+  //  this.uploadedAttachedFile = event.files;
+if(this.attachedFileValidatorSize == false){
+  if(this.selectedAttachedFile.length == 0){
+    this.selectedAttachedFile = event.files;
+    // this.handleFileRemoved(event.files);
+    this.showAttachmentUpload = false;
+  }else{
+    for(let i=0; i< event.files.length; i++){
+      this.selectedAttachedFile.push(event.files[i]);
+      // this.handleFileRemoved(event.files);
+      this.showAttachmentUpload = false;
+      }
+  }
+}
+}
 
   handleFileRemoved(event: any) {
     this.attachedFiles = null;
+  }
+  
+  removeFile(index: any) {
+    this.selectedAttachedFile.splice(index, 1);
   }
 }

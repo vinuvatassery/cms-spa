@@ -93,7 +93,7 @@ export class EmailDataService {
 
   replaceAndGenerateTextTemplate(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any) {
       return this.http.post<string>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/docgen/GenerateText/${clientId}/${clientCaseEligibilityId}`,selectedTemplate
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientdocuments/generatetext/${clientId}/${clientCaseEligibilityId}`,selectedTemplate
       );
     }
 

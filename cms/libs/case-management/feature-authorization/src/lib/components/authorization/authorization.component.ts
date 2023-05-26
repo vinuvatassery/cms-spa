@@ -24,6 +24,7 @@ import {
 export class AuthorizationComponent   {
   currentDate?:any = null;;
   dateSignature?:any = null;
+  emailSentDate?:any = null;
   /** Public properties **/
   screenName = ScreenType.Authorization;
   isPrintClicked!: boolean;

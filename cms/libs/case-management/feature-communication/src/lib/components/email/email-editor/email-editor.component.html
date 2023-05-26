@@ -162,21 +162,22 @@
   <!-- Attachment Panel -->
   <div class="panelbar-wrapper">
   <kendo-panelbar>
-    <kendo-panelbar-item [items]="selectedAttachedFile" title="{{selectedAttachedFile.length}} attachment(s)">
-      <ng-template kendoPanelBarContent let-items>
-        <div class="attachment-item-list" kendoTooltip>
-          <a class="attachment-item_name">{{items.name}}</a>
-          <span class="attachment-item_size">{{items.size | fileSize}}</span>
+    <kendo-panelbar-item *ngIf="selectedAttachedFile.length > 0" title="{{selectedAttachedFile.length}} attachment(s)">
+      <ng-template kendoPanelBarContent>
+        <div class="attachment-item-list" kendoTooltip *ngFor="let item of selectedAttachedFile;let index = index">
+          <a class="attachment-item_name">{{item.name}}</a>
+          <span class="attachment-item_size">{{item.size | fileSize}}</span>
           <button
             kendoButton
             class="attachment-item_remove k-icon-button small-i-btn"
-            title="Remove attachment"
+            title="Remove Attachment"
             aria-label="remove attachment"
           >
             <span
               class="material-icons"
               aria-label="close attachment"
               aria-hidden="true"
+              (click)="removeFile(index)"
               >close</span
             >
           </button>

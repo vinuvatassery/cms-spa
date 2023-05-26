@@ -59,7 +59,7 @@
         >
           Send Letter
         </button>
-        <button [disabled]="dateSignature != null" 
+        <button *ngIf="isGoPaperlessOpted" [disabled]="dateSignature != null" 
           kendoButton
           [primary]="true"
           class="ml-2"
