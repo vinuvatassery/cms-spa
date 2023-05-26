@@ -179,11 +179,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   onSendEmailConfirmationClicked() {
-    // this.isOpenSendEmailClicked = false;
-    // this.isShowPreviewEmailPopupClicked = false;
-    // this.isShowSendEmailConfirmationPopupClicked = true;
-    // this.emailEditorValueEvent.emit(true);
-    //this.isShowPreviewEmailPopupClicked = true;
     this.emailEditorValueEvent.emit(this.currentEmailData);
     this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
     this.generateText(this.selectedTemplate,"SendEmail");
