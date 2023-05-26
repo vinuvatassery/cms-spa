@@ -94,7 +94,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         if (this.prevClientCaseEligibilityId) {
           this.isCerForm = true;
         }
-        this.loaderService.hide();
+        //this.loaderService.hide();
       }
     });
   }
@@ -166,7 +166,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowPreviewEmailPopupClicked = true;
     this.emailEditorValueEvent.emit(this.currentEmailData);
     this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
-    this.generateText(this.selectedTemplate);
+    this.generateText(this.selectedTemplate,"Preview");
   }
 
   onSendEmailConfirmationDialogClicked(event: any) {
@@ -179,10 +179,14 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   onSendEmailConfirmationClicked() {
-    this.isOpenSendEmailClicked = false;
-    this.isShowPreviewEmailPopupClicked = false;
-    this.isShowSendEmailConfirmationPopupClicked = true;
-    this.emailEditorValueEvent.emit(true);
+    // this.isOpenSendEmailClicked = false;
+    // this.isShowPreviewEmailPopupClicked = false;
+    // this.isShowSendEmailConfirmationPopupClicked = true;
+    // this.emailEditorValueEvent.emit(true);
+    //this.isShowPreviewEmailPopupClicked = true;
+    this.emailEditorValueEvent.emit(this.currentEmailData);
+    this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
+    this.generateText(this.selectedTemplate,"SendEmail");
   }
 
   onCloseSendEmailClicked() {
@@ -212,12 +216,12 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.selectedToEmail = event.email;
   }
 
-  private generateText(emailData: any){
+  private generateText(emailData: any, requestType: string){
     this.loaderService.show();
     this.loadCurrentSession();
     const clientId = this.workflowFacade.clientId ?? 0;
     const caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
-    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', emailData ?? '')
+    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', emailData ?? '', requestType ?? '')
         .subscribe({
           next: (data: any) =>{
             this.loaderService.hide();
@@ -227,6 +231,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
             this.emailEditorValueEvent.emit(this.emailContentValue);
           }
           this.loaderService.hide();
+          if(requestType=="SendEmail")
+          {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent for Esign..')
+          this.onCloseSendEmailClicked();
+          }
         },
         error: (err: any) => {
           this.loaderService.hide();
