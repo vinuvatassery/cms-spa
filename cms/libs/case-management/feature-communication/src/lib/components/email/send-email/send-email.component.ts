@@ -172,10 +172,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   onSendEmailConfirmationDialogClicked(event: any) {
     this.isShowSendEmailConfirmationPopupClicked = false;
     if (CommunicationEvents.Print === event) {
-      this.closeSendEmailEvent.emit(CommunicationEvents.Print);
       this.emailEditorValueEvent.emit(this.currentEmailData);
       this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
       this.generateText(this.selectedTemplate,"SendEmail");
+      this.closeSendEmailEvent.emit(CommunicationEvents.Print);
     } else if (CommunicationEvents.Close === event) {
       this.closeSendEmailEvent.emit(CommunicationEvents.Close);
     }
@@ -185,9 +185,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isOpenSendEmailClicked = true;
     this.isShowPreviewEmailPopupClicked = false;
     this.isShowSendEmailConfirmationPopupClicked = true;
-    this.emailEditorValueEvent.emit(this.currentEmailData);
-    this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
-    this.generateText(this.selectedTemplate,"SendEmail");
   }
 
   onCloseSendEmailClicked() {

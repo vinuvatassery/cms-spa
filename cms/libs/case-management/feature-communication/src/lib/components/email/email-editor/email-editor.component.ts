@@ -194,16 +194,13 @@ export class EmailEditorComponent implements OnInit {
     this.uploadedAttachedFile = [];
    }
   }
-  //  this.uploadedAttachedFile = event.files;
 if(this.attachedFileValidatorSize == false){
   if(this.selectedAttachedFile.length == 0){
     this.selectedAttachedFile = event.files;
-    // this.handleFileRemoved(event.files);
     this.showAttachmentUpload = false;
   }else{
     for(let i=0; i< event.files.length; i++){
       this.selectedAttachedFile.push(event.files[i]);
-      // this.handleFileRemoved(event.files);
       this.showAttachmentUpload = false;
       }
   }

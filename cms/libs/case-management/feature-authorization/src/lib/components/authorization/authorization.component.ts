@@ -7,6 +7,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 /** External Libraries **/
 import { ConfigurationProvider, LoaderService, LoggingService } from '@cms/shared/util-core';
 import { CommunicationEvents, ScreenType, StatusFlag } from '@cms/case-management/domain';
+import { UserDataService } from '@cms/system-config/domain';
 import { Subscription} from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 
@@ -22,7 +23,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorizationComponent   {
-  currentDate?:any = null;;
+  currentDate?:any = null;
   dateSignature?:any = null;
   emailSentDate?:any = null;
   /** Public properties **/
@@ -46,8 +47,10 @@ export class AuthorizationComponent   {
   toEmail: any = [];
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   incompleteDateValidation!: any;
+  loginUserName!:any;
     /** Private properties **/
     private currentSessionSubscription !: Subscription;
+    private userProfileSubsriction !: Subscription;
 
   constructor(
     private readonly configurationProvider: ConfigurationProvider,
@@ -57,7 +60,8 @@ export class AuthorizationComponent   {
     private readonly contactFacade: ContactFacade,
     private readonly route: ActivatedRoute,
     private readonly intl: IntlService,
-    private readonly ref: ChangeDetectorRef
+    private readonly ref: ChangeDetectorRef,
+    private readonly userDataService: UserDataService,
   ) {   }
 
   /** Lifecycle hooks **/
@@ -68,6 +72,7 @@ export class AuthorizationComponent   {
 
   ngOnDestroy(): void {
     this.currentSessionSubscription.unsubscribe();
+    this.userProfileSubsriction.unsubscribe();
   }
 
     /** Private methods **/
@@ -122,6 +127,17 @@ export class AuthorizationComponent   {
     });
   }
 
+  getLoggedInUserProfile(){
+    this.userProfileSubsriction=this.userDataService.getProfile$.subscribe((profile:any)=>{
+      if(profile?.length>0){
+       this.loginUserName= profile[0]?.firstName+' '+profile[0]?.lastName;
+       // As of now we are showing today's date but we need to change it with the email sent date
+       // once we save the email history to DB.
+       this.emailSentDate = this.intl.formatDate(new Date(), this.dateFormat);
+      }
+    })
+  }
+
   /** Internal event methods **/
   onSendNewLetterClicked() {
     this.isSendNewLetterPopupOpened = true;
@@ -148,6 +164,7 @@ export class AuthorizationComponent   {
       case CommunicationEvents.Print:
         this.isSendNewEmailPopupOpened = false;
         this.isSendEmailClicked = true;
+        this.getLoggedInUserProfile();
         break;
       default:
         break;
