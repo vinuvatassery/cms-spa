@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 /** Internal Library **/
-import { NavigationMenuFacade } from '@cms/system-config/domain';
+import { NavigationMenu, NavigationMenuFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-side-navigation',
   templateUrl: './side-navigation.component.html',
@@ -13,6 +13,7 @@ export class SideNavigationComponent implements OnInit {
   isProductivityMenuActivated = false;
   subMenuExpandStatus: boolean[] = [];
   menus$ = this.navigationMenuFacade.navigationMenu$;
+  searchText: string = '';
   //add menu badges on this variable
   menuBadges = [
     { key: "PRODUCTIVITY_TOOLS", value: 17 },
@@ -39,7 +40,7 @@ export class SideNavigationComponent implements OnInit {
   }
 
   onMenuClick(menu: any) {
-    if (menu && menu?.url) {
+    if (menu?.url) {
       if (menu?.target === '_blank') {
         window.open(menu?.url, '_blank');
       }
@@ -47,14 +48,9 @@ export class SideNavigationComponent implements OnInit {
         this.router.navigate([menu?.url]);
       }
     }
-
-    this.expandMenu(menu);
   }
 
-  expandMenu(menu: any){
-    if(menu?.subMenus?.length > 0){
-      menu.isExpanded = !(menu?.isExpanded ?? false);
-    }
-  }
+  isMenuHeadingVisible = (menus: NavigationMenu[]) => menus?.findIndex((menu: any) =>
+    menu.name?.toLowerCase()?.indexOf(this.searchText?.toLowerCase()) !== -1) !== -1;
 
 }
