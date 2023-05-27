@@ -24,7 +24,7 @@ export class FinancialVendorFacade {
   
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'vendorName'
-  public sortType = ''
+  public sortType = 'asc'
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
   }];

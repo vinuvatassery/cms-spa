@@ -25,7 +25,11 @@
                 </div>
                 <cms-financial-vendors-list 
                 [financeTabTypeCode]="financeManagementTabs.Manufacturers"
-                [vendorTypeCode]="financeVendorTypeCodes.Manufacturers"></cms-financial-vendors-list>
+                [vendorTypeCode]="financeVendorTypeCodes.Manufacturers"
+                [vendorsList$]="vendorsList$"
+                [pageSizes]="pageSizes" [sortValue]="sortValue"
+                [sortType]="sortType" [sort]="sort" 
+                (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
@@ -47,7 +51,11 @@
                 </div>
                 <cms-financial-vendors-list
                  [financeTabTypeCode]="financeManagementTabs.InsuranceVendors"
-                 [vendorTypeCode]="financeVendorTypeCodes.InsuranceVendors"></cms-financial-vendors-list>
+                 [vendorTypeCode]="financeVendorTypeCodes.InsuranceVendors"
+                 [vendorsList$]="vendorsList$"
+                 [pageSizes]="pageSizes" [sortValue]="sortValue"
+                 [sortType]="sortType" [sort]="sort" 
+                 (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
@@ -59,7 +67,11 @@
                 </div>
                 <cms-financial-vendors-list
                  [financeTabTypeCode]="financeManagementTabs.Pharmacy"
-                 [vendorTypeCode]="financeVendorTypeCodes.Pharmacy"></cms-financial-vendors-list>
+                 [vendorTypeCode]="financeVendorTypeCodes.Pharmacy"
+                 [vendorsList$]="vendorsList$"
+                 [pageSizes]="pageSizes" [sortValue]="sortValue"
+                 [sortType]="sortType" [sort]="sort" 
+                 (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>

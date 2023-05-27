@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { CaseFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
+import { CaseFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -38,11 +38,15 @@ export class FinancialVendorPageComponent implements OnInit{
     },
   ];
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
-  //todo make the tabstrip  dynamic with vendor type codes
-  vendorTypeCode = '';
+  public uiTabStripScroll: UITabStripScroll = new UITabStripScroll(); 
 
-  constructor(    private caseFacade: CaseFacade    ) {}
+  vendorsList$ = this.financialVendorFacade.vendorsList$
+  pageSizes = this.financialVendorFacade.gridPageSizes;
+  sortValue  = this.financialVendorFacade.sortValue;
+  sortType  = this.financialVendorFacade.sortType;
+  sort  = this.financialVendorFacade.sort;
+
+  constructor(private caseFacade: CaseFacade , private financialVendorFacade : FinancialVendorFacade) {}
 
     /** Lifecycle hooks **/
     ngOnInit() {    
@@ -63,6 +67,12 @@ export class FinancialVendorPageComponent implements OnInit{
   }
   clickCloseVendorDetails() {
     this.isVendorDetailFormShow = false;
+  }
+
+  loadFinancialVendorsList(data : any)
+  {   
+    
+    this.financialVendorFacade.getVendors(data?.skipCount,data?.pagesize,data?.sortColumn,data?.sortType,data?.vendorTypeCode)
   }
 
 
