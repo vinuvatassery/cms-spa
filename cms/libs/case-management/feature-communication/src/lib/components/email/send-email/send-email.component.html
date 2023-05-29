@@ -14,7 +14,7 @@
           <kendo-dropdownlist
           [fillMode]="formUiStyle.dropDownFillMode"
             [data]="ddlTemplates"
-            textField="templateDescription"
+            textField="description"
             valueField="documentTemplateId"
             (valueChange)="handleDdlEmailValueChange($event)"
           >
@@ -112,9 +112,8 @@
   </kendo-dialog-actions>
 </kendo-dialog>
 <!-- Save for Latter (Email Draft) Modal -->
-<kendo-dialog
+<kendo-dialog (close)="onCloseSaveForLaterClicked()"
   *ngIf="isShowSaveForLaterPopupClicked"
-  (close)="onCloseSaveForLaterClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   title="Email Draft Saved"
 >
@@ -130,7 +129,7 @@
         <button
           kendoButton
           [primary]="true"
-          (click)="onCloseSaveForLaterClicked()"
+          (click)="onSaveForLaterTemplateClicked()"
           aria-label="confirmation for save for later"
         >
           OK
