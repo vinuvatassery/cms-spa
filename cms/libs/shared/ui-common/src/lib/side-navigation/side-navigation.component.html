@@ -9,7 +9,6 @@
       <span class="sidebar-menu_label" attr.aria-label="{{ menu.name }}">
         {{ menu.name }} <span *ngIf="menu?.hasBadge" class="sidebar-menu_label-badge"> {{ getBadge(menu.code)}} </span>
       </span>
-      <span class="material-icons" *ngIf="menu.subMenus?.length !== 0"> arrow_drop_down </span>
     </a>
 
     <div class="secondary_submenu" *ngIf="menu.subMenus?.length !== 0"
