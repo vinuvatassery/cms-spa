@@ -177,8 +177,6 @@ export class AuthorizationComponent   {
         this.isSendNewLetterPopupOpened = false;
         break;
       case CommunicationEvents.Print:
-        this.isSendNewLetterPopupOpened = false;
-        this.isSendEmailClicked = true;
         this.isPrintClicked = true;
         this.getLoggedInUserProfile();
         break;

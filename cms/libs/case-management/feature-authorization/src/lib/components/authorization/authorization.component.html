@@ -48,7 +48,7 @@
       </div>
       <!-- Hide after sent letter or email -->
       <div class="flex-col mt-1" *ngIf="!isSendEmailClicked && !isPrintClicked">
-        <button [disabled]="dateSignature != null"
+        <button *ngIf="!isGoPaperlessOpted" [disabled]="dateSignature != null"
           kendoButton
           [primary]="true"
           (click)="onSendNewLetterClicked()"

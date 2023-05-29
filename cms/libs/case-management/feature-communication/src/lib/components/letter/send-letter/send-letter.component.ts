@@ -127,23 +127,24 @@ export class SendLetterComponent implements OnInit {
     this.isShowPreviewLetterPopupClicked = true;
     this.emailEditorValueEvent.emit(this.currentLetterData);
     this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
-    this.generateText(this.selectedTemplate,"Preview");
+    this.generateText(this.selectedTemplate,CommunicationEvents.Preview);
   }
-  private generateText(letterData: any, requestType: string){
+  private generateText(letterData: any, requestType: CommunicationEvents){
     this.loaderService.show();
     const clientId = this.workflowFacade.clientId ?? 0;
     const caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
-    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', letterData ?? '', requestType ??'')
+    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', letterData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
           if (data) {
             this.currentLetterPreviewData = data;
             this.ref.detectChanges();
           }
-          if(requestType=="SendLetter")
+          if(requestType==CommunicationEvents.SendLetter)
           {
             this.viewOrDownloadFile(data.clientDocumentId);
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent for Print')
+            this.closeSendLetterEvent.emit(CommunicationEvents.Close);
             this.onCloseNewLetterClicked();
           }
           this.loaderService.hide();
@@ -156,17 +157,14 @@ export class SendLetterComponent implements OnInit {
   }
 
   onSendLetterToPrintClicked() {
-    // this.isNewLetterClicked = false;
-    // this.isShowSendLetterToPrintPopupClicked = true;
-    // this.isShowPreviewLetterPopupClicked = false;
-    // this.letterEditorValueEvent.emit(true);
     this.emailEditorValueEvent.emit(this.currentLetterData);
     this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
-    this.generateText(this.selectedTemplate,"SendLetter");
+    this.generateText(this.selectedTemplate,CommunicationEvents.SendLetter);
+    this.closeSendLetterEvent.emit(CommunicationEvents.Print);
   }
 
   onCloseNewLetterClicked() {
-    this.closeSendLetterEvent.emit(CommunicationEvents.Print);
+    this.closeSendLetterEvent.emit(CommunicationEvents.Close);
   }
 
   /** External event methods **/
