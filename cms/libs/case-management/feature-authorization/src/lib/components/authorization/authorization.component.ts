@@ -63,7 +63,6 @@ export class AuthorizationComponent   {
   ngOnInit(): void 
   {  
     this.loadCurrentSession();
-    this.loadContactInfo();
   }
 
   ngOnDestroy(): void {
@@ -84,7 +83,7 @@ export class AuthorizationComponent   {
           if (this.prevClientCaseEligibilityId) {
             this.isCerForm = true
           }
-          // this.loadContactInfo();
+           this.loadContactInfo();
         }
       this.loaderService.hide();
     },
