@@ -30,6 +30,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   clientHivVerification: any;
   isNotUploaded = true;
   alreadyUploaded = false;
+  showAttachmentOptions = true;
 
 
   /** Constructor **/
@@ -51,6 +52,10 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
     });
     this.verificationFacade.isSaveandContinue$.subscribe(response=>{
       this.isNotUploaded = response;
+      this.cdr.detectChanges();
+    });
+    this.verificationFacade.showAttachmentOptions$.subscribe(response=>{
+      this.showAttachmentOptions = response;
       this.cdr.detectChanges();
     });
   }
@@ -173,6 +178,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   private save() {
     this.validateForm();
     this.cdr.detectChanges();
+    debugger;
     if (this.hivVerificationForm.valid) {
       if(this.hivVerificationForm.controls["providerOption"].value == 'UPLOAD_ATTACHMENT' && !this.isNotUploaded)
       {
@@ -212,8 +218,12 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   }
   validateUploadAttachemnt()
   {
-    this.hivVerificationForm.controls["attachmentType"].setValidators([Validators.required])
-    this.hivVerificationForm.controls["attachmentType"].updateValueAndValidity();
+    debugger;
+    if(this.showAttachmentOptions)
+    {
+      this.hivVerificationForm.controls["attachmentType"].setValidators([Validators.required])
+      this.hivVerificationForm.controls["attachmentType"].updateValueAndValidity();
+    }
     if(this.hivVerificationForm.controls['attachmentType'].value == 'Attach From Client Attachments')
     {
       this.hivVerificationForm.controls["clientsAttachment"].setValidators([Validators.required])
