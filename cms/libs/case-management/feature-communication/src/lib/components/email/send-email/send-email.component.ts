@@ -144,9 +144,18 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   /** Internal event methods **/
-  onCloseSaveForLaterClicked() {
+  onSaveForLaterTemplateClicked() {
     this.isShowSaveForLaterPopupClicked = false;
+    this.emailEditorValueEvent.emit(this.currentEmailData);
+    this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
+    this.saveTemplateForLater(this.selectedTemplate);
     this.onCloseSendEmailClicked();
+  }
+
+  onCloseSaveForLaterClicked(){
+    this.isShowSaveForLaterPopupClicked = false;
+    this.isShowPreviewEmailPopupClicked = false;
+    this.isOpenSendEmailClicked = true;
   }
 
   OnEditEmailClicked() {
@@ -156,10 +165,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   onSaveForLaterClicked() { 
-    this.isShowSaveForLaterPopupClicked = true;
-    this.emailEditorValueEvent.emit(this.currentEmailData);
-    this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
-    this.saveContact(this.selectedTemplate);
+    this.isShowSaveForLaterPopupClicked = true; 
   }
 
   onPreviewEmailClicked() { 
@@ -206,6 +212,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   handleEmailEditor(emailData: any) {
     this.currentEmailData = emailData;
   }
+
   onClosePreviewEmail(){
     this.isShowPreviewEmailPopupClicked = false;
   }
@@ -243,7 +250,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       });
   }
 
-  private saveContact(draftTemplate: any) {
+  private saveTemplateForLater(draftTemplate: any) {
     this.loaderService.show();
     const isSaveFoLater = true;
     this.communicationFacade.SaveForLaterEmailTemplate(draftTemplate, isSaveFoLater)
