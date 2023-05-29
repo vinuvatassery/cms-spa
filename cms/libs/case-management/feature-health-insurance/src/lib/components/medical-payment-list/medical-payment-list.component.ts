@@ -36,7 +36,7 @@ export class MedicalPaymentListComponent implements OnInit {
   @Input() clientId: any;
   @Input() tabStatus: any;
   isReadOnly$ = this.caseFacade.isCaseReadOnly$;
-  showTwelveMonthRecordFlag:boolean = false;
+  showTwelveMonthRecordFlag:boolean = true;
   carrierContactInfo!: any;
   /** Private **/
   private triggeredPremiumPaymentSubscription!: Subscription;

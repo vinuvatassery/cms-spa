@@ -1,7 +1,6 @@
 <section class="k-dialog-body">
-    <p class="text-muted mb-2" *ngIf="tabStatus === 'hlt-ins-prm-pym'"> {{isPaymentAddForm ? 'Add a new medical payment':'Edit or delete dental payment'}} </p>
-    <p class="text-muted mb-2" *ngIf="tabStatus === 'dnt-ins-prm-pym'"> {{isPaymentAddForm ? 'Add a new dental payment':'Edit or delete dental payment'}} </p>
-
+    
+    <p class="text-muted mb-2">  All fields are required unless otherwise stated</p>
     <form [formGroup]="copayPaymentForm">
         <div class="flex-row">
     
@@ -27,9 +26,9 @@
     
             </div>
             <div class="flex-col">
-                    <kendo-floatinglabel text="Insurance Policy Name" >   
+                    <kendo-floatinglabel text="Policy ID" >   
                         <kendo-combobox   
-                        aria-label="Insurance Policy Name"
+                        aria-label="Policy ID"
                         [fillMode]="formUiStyle.dropDownFillMode" 
                         [loading] = "isInsurancePoliciesLoading" 
                         formControlName="clientInsurancePolicyId"     
