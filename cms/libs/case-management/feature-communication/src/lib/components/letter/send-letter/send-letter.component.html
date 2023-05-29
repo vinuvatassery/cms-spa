@@ -10,7 +10,7 @@
             <kendo-dropdownlist
               [fillMode]="formUiStyle.dropDownFillMode"
               [data]="ddlTemplates"
-              textField="templateDescription"
+              textField="description"
               valueField="documentTemplateId"
               (valueChange)="handleDdlLetterValueChange($event)"
             >
@@ -18,21 +18,7 @@
           </kendo-floatinglabel>
       </div>
       <div *ngIf="isOpenLetterTemplate" class="mt-2">
-        <div class="flex-col mb-2">
-          <p class="text-capital text-bold">Mailing Address</p>
-          <span *ngIf="mailingAddress$ | async as mailingAddress">
-            <p *ngIf="mailingAddress?.address1">{{ mailingAddress?.address1 }}</p>
-            <p *ngIf="mailingAddress?.address2 || mailingAddress?.city">{{ mailingAddress?.address2 }} </p>
-            <p>{{ mailingAddress?.city }}, {{ mailingAddress?.state }} {{ mailingAddress?.zip}}</p>
-          </span>
-          <div style="width:60%" *ngIf="!(mailingAddress$ | async)">
-            <kendo-skeleton shape="text" animation="pulse" width="40%"></kendo-skeleton>
-            <p></p>
-            <kendo-skeleton shape="text" animation="pulse" width="60%"></kendo-skeleton>
-            <p></p>
-            <kendo-skeleton shape="text" animation="pulse" width="60%"></kendo-skeleton>
-          </div>
-        </div>
+       
         <div class="flex-col">
           <p>
             Type the body of the letter. Click “Preview Letter” to see what the
