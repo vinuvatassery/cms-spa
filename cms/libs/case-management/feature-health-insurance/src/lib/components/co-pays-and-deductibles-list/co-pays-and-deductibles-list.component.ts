@@ -64,6 +64,12 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   closeCoPaymentDetailsOpened() {
     this.isCoPaymentDetailsOpened = false;
   }
+  closeCoPaymentTriggered(event: any){
+    if(event){
+      this.closeCoPaymentDetailsOpened()
+    }
+
+  }
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;

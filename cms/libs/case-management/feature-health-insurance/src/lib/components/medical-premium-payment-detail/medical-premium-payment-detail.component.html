@@ -157,7 +157,7 @@
             <button *ngIf="!isPremiumPaymentAddForm" kendoButton [primary]="true" look="outline" aria-label="edit premium payment"> Edit </button>
         </div>
         <div class="justify-content-end">
-            <button kendoButton [primary]="true" look="outline" aria-label="cancel premium payment"> Cancel  </button>
+            <button kendoButton [primary]="true" look="outline" aria-label="cancel premium payment"(click)="closePremiumPayment()"> Cancel  </button>
             <button kendoButton [primary]="true" aria-label="save new premium payment" (click)="savePaymentDetailsClicked()"> Add</button>
 
         </div>

@@ -3,7 +3,7 @@ import {
   Component,
   ChangeDetectionStrategy,
   Input,
-  ChangeDetectorRef,
+  ChangeDetectorRef,EventEmitter,Output
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -31,9 +31,12 @@ export class MedicalPremiumPaymentDetailComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isPremiumPaymentAddForm = true;
   premiumPaymentForm!: FormGroup;
+
   @Input() caseEligibilityId: any;
   @Input() clientId: any;
   @Input() tabStatus: any;
+
+  @Output() closePremiumPaymentEvent = new EventEmitter();
   paymentRequest !: PaymentRequest;
   paymentRequestType$ = this.lovFacade.premiumPaymentType$;
   paymentReversal$ = this.lovFacade.premiumPaymentReversal$;
@@ -171,7 +174,9 @@ export class MedicalPremiumPaymentDetailComponent {
     }
   }
 
-
+  closePremiumPayment(){
+    this.closePremiumPaymentEvent.emit(true);
+  }
   setPremiumPaymentForm() {
     let date = new Date();
     let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);

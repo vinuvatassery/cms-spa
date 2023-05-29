@@ -3,7 +3,7 @@ import {
   Component,
   ChangeDetectionStrategy,
   Input,
-  ChangeDetectorRef,
+  ChangeDetectorRef,EventEmitter,Output
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -34,6 +34,7 @@ export class MedicalPaymentDetailComponent {
   @Input() caseEligibilityId: any;
   @Input() clientId: any;
   @Input() tabStatus: any;
+  @Output() closeCoPaymentDetailsEvent = new EventEmitter();
   paymentRequestType$ = this.lovFacade.paymentRequestType$;
 
   isLoading$ = this.vendorFacade.isVendorLoading$;
@@ -215,6 +216,9 @@ export class MedicalPaymentDetailComponent {
     if (this.copayPaymentForm.controls['serviceEndDate'].value !== null) {
       this.endDateOnChange();
     }
+  }
+  closeCoPaymentDetailsOpened(){
+    this.closeCoPaymentDetailsEvent.emit(true);
   }
   endDateOnChange() {
     this.statusEndDateIsGreaterThanStartDate = true;

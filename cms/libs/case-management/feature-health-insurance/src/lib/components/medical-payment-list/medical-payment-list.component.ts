@@ -75,6 +75,12 @@ export class MedicalPaymentListComponent implements OnInit {
   closePremiumPaymentDetailsOpened() {
     this.isPremiumPaymentDetailsOpened = false;
   }
+  closePremiumPaymentEventTriggered(event : any){
+    if(event){
+      this.closePremiumPaymentDetailsOpened();
+    }
+
+  }
   openPremiumPaymentDetailsOpened() {
     this.getPaymentRequestLov();
     this.isPremiumPaymentDetailsOpened = true;
