@@ -104,6 +104,7 @@ export class SendLetterComponent implements OnInit {
   onCloseSaveForLaterClicked() {
     this.isShowSaveForLaterPopupClicked = false;
     this.onCloseNewLetterClicked();
+    this.saveContact(this.selectedTemplate);
   }
 
   onSaveForLaterClicked() {
@@ -111,7 +112,6 @@ export class SendLetterComponent implements OnInit {
     this.isShowSaveForLaterPopupClicked = true;
     this.emailEditorValueEvent.emit(this.currentLetterData);
     this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
-    this.saveContact(this.selectedTemplate);
   }
 
   onSendLetterToPrintDialogClicked(event: any) {
@@ -131,16 +131,20 @@ export class SendLetterComponent implements OnInit {
   }
   private generateText(letterData: any, requestType: string){
     this.loaderService.show();
-    debugger;
     const clientId = this.workflowFacade.clientId ?? 0;
     const caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
     this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', letterData ?? '', requestType ??'')
         .subscribe({
           next: (data: any) =>{
-            this.loaderService.hide();
           if (data) {
             this.currentLetterPreviewData = data;
             this.ref.detectChanges();
+          }
+          if(requestType=="SendLetter")
+          {
+            this.viewOrDownloadFile(data.clientDocumentId);
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent for Print')
+            this.onCloseNewLetterClicked();
           }
           this.loaderService.hide();
         },
@@ -162,7 +166,7 @@ export class SendLetterComponent implements OnInit {
   }
 
   onCloseNewLetterClicked() {
-    this.closeSendLetterEvent.emit(CommunicationEvents.Close);
+    this.closeSendLetterEvent.emit(CommunicationEvents.Print);
   }
 
   /** External event methods **/
@@ -236,4 +240,26 @@ export class SendLetterComponent implements OnInit {
   {
     this.loaderService.hide();
   }
+
+  viewOrDownloadFile(clientDocumentId: string) {
+    if (clientDocumentId === undefined) {
+        return;
+    }
+    //this.loaderService.show()
+    this.getClientDocumentsViewDownload(clientDocumentId).subscribe({
+        next: (data: any) => {
+            const fileUrl = window.URL.createObjectURL(data);
+                window.open(fileUrl, "_blank");
+            this.loaderService.hide();
+        },
+        error: (error: any) => {
+            this.loaderService.hide();
+            //this.showSnackBar(SnackBarNotificationType.ERROR, error)
+        }
+    })
+  }
+
+  getClientDocumentsViewDownload(clientDocumentId: string) {
+    return this.communicationFacade.getClientDocumentsViewDownload(clientDocumentId);
+ }
 }

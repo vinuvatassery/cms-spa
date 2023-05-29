@@ -47,8 +47,8 @@
         </kendo-floatinglabel>
       </div>
       <!-- Hide after sent letter or email -->
-      <div class="flex-col mt-1" *ngIf="!isSendEmailClicked">
-        <button
+      <div class="flex-col mt-1" *ngIf="!isSendEmailClicked && !isPrintClicked">
+        <button [disabled]="dateSignature != null"
           kendoButton
           [primary]="true"
           (click)="onSendNewLetterClicked()"
@@ -71,12 +71,12 @@
         <div class="flex-row">
           <div class="flex-col align-items-center">
             <span
-              >Letter sent 01-01-2022 by
+              >Letter sent {{emailSentDate}} by
               <a
                 kendoPopoverAnchor
                 [popover]="onUserProfileCardHovered"
                 showOn="hover"
-                >Sara John</a
+                >{{loginUserName}}</a
               ></span
             >
             <button

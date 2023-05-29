@@ -102,5 +102,13 @@ export class EmailDataService {
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates?isSaveForLater=${isSaveForLater}`,draftTemplate
       );
     }
+    getClientDocumentsViewDownload(documentId: string) {
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${documentId}`
+        , {
+          responseType: 'blob'
+        });
+    }
+  
 }
  
