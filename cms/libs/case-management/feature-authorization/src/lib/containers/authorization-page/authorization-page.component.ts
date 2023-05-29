@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'case-management-authorization-page',

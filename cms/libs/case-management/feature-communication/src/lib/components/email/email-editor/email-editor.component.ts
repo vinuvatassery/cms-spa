@@ -15,7 +15,6 @@ import {
 import { CommunicationFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { EditorComponent } from '@progress/kendo-angular-editor';
-import { SharedUiCommonModule } from '@cms/shared/ui-common';
 
 /** External Libraries **/
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider} from '@cms/shared/util-core';
@@ -185,8 +184,8 @@ export class EmailEditorComponent implements OnInit {
 
   handleFileSelected(event: any) {
     this.attachedFileValidatorSize=false;
-    for(let i=0; i < event.files.length; i++){
-   if(event.files[i].size>this.configurationProvider.appSettings.uploadFileSizeLimit)
+    for (let file of event.files){
+   if(file.size>this.configurationProvider.appSettings.uploadFileSizeLimit)
    {
     this.attachedFileValidatorSize = true;
     this.showAttachmentUpload = true;
@@ -194,18 +193,18 @@ export class EmailEditorComponent implements OnInit {
     this.uploadedAttachedFile = [];
    }
   }
-if(this.attachedFileValidatorSize == false){
+if(!this.attachedFileValidatorSize){
   if(this.selectedAttachedFile.length == 0){
     this.selectedAttachedFile = event.files;
     this.showAttachmentUpload = false;
   }else{
-    for(let i=0; i< event.files.length; i++){
-      this.selectedAttachedFile.push(event.files[i]);
+    for (let file of event.files){
+      this.selectedAttachedFile.push(file);
       this.showAttachmentUpload = false;
-      }
+     }
+    }
+   }
   }
-}
-}
 
   handleFileRemoved(event: any) {
     this.attachedFiles = null;

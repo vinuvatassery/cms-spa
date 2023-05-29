@@ -14,7 +14,7 @@ import {
 import { CommunicationEvents, CommunicationFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
@@ -60,6 +60,7 @@ export class SendLetterComponent implements OnInit {
   currentLetterPreviewData:any;
   prevClientCaseEligibilityId!: string;
   selectedTemplate!: any;
+  isCerForm = false;
   dataValue: Array<any> = [
     {
       text: '',
@@ -87,6 +88,7 @@ export class SendLetterComponent implements OnInit {
       if (resp) {
         this.prevClientCaseEligibilityId = JSON.parse(resp.sessionData)?.prevClientCaseEligibilityId;
         if (this.prevClientCaseEligibilityId) {
+          this.isCerForm = true;
         }
         this.loaderService.hide();
       }

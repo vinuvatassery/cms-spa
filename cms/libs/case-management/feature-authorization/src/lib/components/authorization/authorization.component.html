@@ -104,10 +104,10 @@
       </div>
 
 <!-- Copy of signed application -->
-      <div class="flex-col mt-2" *ngIf="dateSignature != null">
+      <div class="flex-col mt-2" *ngIf="(dateSignature != null || isSendEmailClicked)">
         <h5>COPY OF SIGNED APPLICATION</h5>
       </div>
-      <div class="flex-col flex-col-6" *ngIf="dateSignature != null">
+      <div class="flex-col flex-col-6" *ngIf="(dateSignature != null || isSendEmailClicked)">
         <kendo-upload (select)="handleFileSelected($event)" [ngModel]="copyOfSignedApplication">
           <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
             <span >
@@ -118,7 +118,7 @@
           </ng-template>
         </kendo-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
-        <!-- <kendo-formerror *ngIf="showCopyOfSignedApplicationRequiredValidation"> Copy Of Signed Application is required</kendo-formerror> -->
+        <kendo-formerror *ngIf="showCopyOfSignedApplicationRequiredValidation"> Copy Of Signed Application is required</kendo-formerror>
         <kendo-formerror *ngIf="copyOfSignedApplicationSizeValidation">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
       </div>
 
@@ -155,13 +155,6 @@
             >
               Send Letter
             </button>
-          </div>
-          <div class="flex-col mt-2">
-            <h5>COPY OF SIGNED APPLICATION</h5>
-          </div>
-          <div class="flex-col flex-col-6">
-            <kendo-upload></kendo-upload>
-            <kendo-formhint>Max file size 25MB</kendo-formhint>
           </div>
         </div>
       </div>

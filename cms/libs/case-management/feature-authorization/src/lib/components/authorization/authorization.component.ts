@@ -6,15 +6,10 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 /** External Libraries **/
 import { ConfigurationProvider, LoaderService, LoggingService } from '@cms/shared/util-core';
-import { CommunicationEvents, ScreenType, StatusFlag } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, StatusFlag, WorkflowFacade, ContactFacade, ContactInfo } from '@cms/case-management/domain';
 import { UserDataService } from '@cms/system-config/domain';
 import { Subscription} from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
-
-/** Internal Libraries **/
-import {
-  WorkflowFacade, ContactFacade, ContactInfo, 
-} from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-authorization',
@@ -68,6 +63,7 @@ export class AuthorizationComponent   {
   ngOnInit(): void 
   {  
     this.loadCurrentSession();
+    this.loadContactInfo();
   }
 
   ngOnDestroy(): void {
@@ -88,7 +84,7 @@ export class AuthorizationComponent   {
           if (this.prevClientCaseEligibilityId) {
             this.isCerForm = true
           }
-          this.loadContactInfo();
+          // this.loadContactInfo();
         }
       this.loaderService.hide();
     },
@@ -109,7 +105,7 @@ export class AuthorizationComponent   {
               {
                 this.isGoPaperlessOpted = true;
                 if(data?.email?.email !== null){
-                  var emailObject = {
+                  let emailObject = {
                     clientEmailId : data?.email?.clientEmailId, 
                     email : data?.email?.email,
                   }
@@ -210,14 +206,17 @@ export class AuthorizationComponent   {
   }
 
   handleFileSelected(event: any) {
+    if(event === null || event === undefined || event.files[0] === null){
+      this.showCopyOfSignedApplicationRequiredValidation = false;
+    }else{
     this.copyOfSignedApplication = null;
     this.copyOfSignedApplicationSizeValidation = false;
     this.copyOfSignedApplication = event.files[0].rawFile;
-    this.showCopyOfSignedApplicationRequiredValidation = false;
    if(this.copyOfSignedApplication.size > this.configurationProvider.appSettings.uploadFileSizeLimit)
    {
     this.copyOfSignedApplicationSizeValidation=true;
     this.copyOfSignedApplication = null;
    }
   }
+}
 }

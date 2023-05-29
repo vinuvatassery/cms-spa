@@ -86,7 +86,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private loadCurrentSession() {
     const sessionId = this.route.snapshot.queryParams['sid'];
-    this.loaderService.show();
     this.workflowFacade.loadWorkFlowSessionData(sessionId);
     this.currentSessionSubscription = this.workflowFacade.sessionDataSubject$.subscribe((resp) => {
       if (resp) {
@@ -94,7 +93,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         if (this.prevClientCaseEligibilityId) {
           this.isCerForm = true;
         }
-        //this.loaderService.hide();
       }
     });
   }
