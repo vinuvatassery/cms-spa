@@ -178,7 +178,6 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   private save() {
     this.validateForm();
     this.cdr.detectChanges();
-    debugger;
     if (this.hivVerificationForm.valid) {
       if(this.hivVerificationForm.controls["providerOption"].value == 'UPLOAD_ATTACHMENT' && !this.isNotUploaded)
       {
@@ -218,7 +217,6 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
   }
   validateUploadAttachemnt()
   {
-    debugger;
     if(this.showAttachmentOptions)
     {
       this.hivVerificationForm.controls["attachmentType"].setValidators([Validators.required])
