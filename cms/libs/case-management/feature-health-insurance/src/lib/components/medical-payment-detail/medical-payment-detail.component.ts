@@ -31,12 +31,20 @@ export class MedicalPaymentDetailComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isPaymentAddForm = true;
   copayPaymentForm!: FormGroup;
+
+  /* Input Properties */
   @Input() caseEligibilityId: any;
   @Input() clientId: any;
   @Input() tabStatus: any;
-  @Output() closeCoPaymentDetailsEvent = new EventEmitter();
-  paymentRequestType$ = this.lovFacade.paymentRequestType$;
 
+  /* Output Properties */
+  @Output() closeCoPaymentDetailsEvent = new EventEmitter();
+
+  paymentRequestType$ = this.lovFacade.paymentRequestType$;
+  commentCharactersCount!: number;
+  commentCounter!: string;
+  commentMaxLength = 300;
+  commentNote = '';
   isLoading$ = this.vendorFacade.isVendorLoading$;
   carrierNames$ = this.vendorFacade.paymentRequestVendors$;
   isPlanLoading:boolean =false;
@@ -71,6 +79,7 @@ export class MedicalPaymentDetailComponent {
   /** Lifecycle hooks **/
   ngOnInit(){
     this.buildCoPaymentForm();
+    this.commentCounterInitiation();
     if(this.tabStatus=='hlt-ins-co-pay'){
       this.loadServiceProviderName(InsuranceStatusType.healthInsurance,'VENDOR_PAYMENT_REQUEST',this.clientId,this.caseEligibilityId);
     }
@@ -87,6 +96,18 @@ export class MedicalPaymentDetailComponent {
     this.vendorFacade.loadPaymentRequestVendors(type, vendorType, clientId, clientCaseligibilityId);
   }
 
+  private commentCounterInitiation() {
+    this.commentCharactersCount = this.commentNote
+      ? this.commentNote.length
+      : 0;
+    this.commentCounter = `${this.commentCharactersCount}/${this.commentMaxLength}`;
+  }
+
+  commentValueChange(event: any): void {
+    this.commentCharactersCount = event.length;
+    this.commentCounter = `${this.commentCharactersCount}/${this.commentMaxLength}`;
+  }
+  
   public serviceProviderNameChange(value: string): void {
     if(value){
       this.isInsurancePoliciesLoading=true;

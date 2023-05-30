@@ -136,8 +136,15 @@
 
         <div class="flex-col">
             <kendo-floatinglabel text="Comment">
-                <kendo-textarea formControlName="comments" aria-label="Comment"
-                    [fillMode]="formUiStyle.inputFillMode">
+                <kendo-textarea 
+                    formControlName="comments" 
+                    aria-label="Comment"
+                    [fillMode]="formUiStyle.inputFillMode"
+                    [maxlength]="commentMaxLength"
+                    (valueChange)="commentValueChange($event)">
+                    <kendo-textarea-suffix class="justify-content-end">
+                        <span class="counter"> {{ commentCounter }}</span>
+                      </kendo-textarea-suffix>
                 </kendo-textarea>
                 <kendo-formerror *ngIf="!premiumPaymentForm.controls['comments'].valid">Comment is
                     required.</kendo-formerror>

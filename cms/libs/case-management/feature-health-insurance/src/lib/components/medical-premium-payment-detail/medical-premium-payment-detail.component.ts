@@ -52,6 +52,10 @@ export class MedicalPremiumPaymentDetailComponent {
   isInsurancePoliciesLoading: boolean = false;
   insurancePlanList!: any;
   insurancePoliciesList!: any;
+  commentCharactersCount!: number;
+  commentCounter!: string;
+  commentMaxLength = 300;
+  commentNote = '';
   public caseOwnerfilterSettings: DropDownFilterSettings = {
     caseSensitive: false,
     operator: 'startsWith',
@@ -76,6 +80,7 @@ export class MedicalPremiumPaymentDetailComponent {
 
   ngOnInit(): void {
     this.buildPremiumPaymentForm();
+    this.commentCounterInitiation();
     if (this.tabStatus == ClientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS) {
       this.loadServiceProviderName(InsuranceStatusType.healthInsurance, 'VENDOR_PAYMENT_REQUEST', this.clientId, this.caseEligibilityId);
     }
@@ -172,6 +177,18 @@ export class MedicalPremiumPaymentDetailComponent {
         }
       });
     }
+  }
+
+  private commentCounterInitiation() {
+    this.commentCharactersCount = this.commentNote
+      ? this.commentNote.length
+      : 0;
+    this.commentCounter = `${this.commentCharactersCount}/${this.commentMaxLength}`;
+  }
+
+  commentValueChange(event: any): void {
+    this.commentCharactersCount = event.length;
+    this.commentCounter = `${this.commentCharactersCount}/${this.commentMaxLength}`;
   }
 
   closePremiumPayment(){
