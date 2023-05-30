@@ -70,6 +70,13 @@ export class LovFacade {
   private showLoaderOnEligibilityStatusCpSubject = new BehaviorSubject<boolean>(false);
   private disenrollmentReasonSubject = new BehaviorSubject<Lov[]>([]);
   private disenrollmentReasonStatusSubject = new BehaviorSubject<boolean>(false);
+  private paymentRequestTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private paymentReversalSubject = new BehaviorSubject<Lov[]>([]);
+  private premiumPaymentTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private premiumPaymentReversalSubject = new BehaviorSubject<Lov[]>([]);
+  private lovAttachmentsDroplistSubject = new BehaviorSubject<Lov[]>([]);
+  private documentTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
+  private documentSubTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -116,6 +123,13 @@ export class LovFacade {
   showLoaderOnRelationType$ = this.showLoaderOnRelationType.asObservable();
   disenrollmentReason$ = this.disenrollmentReasonSubject.asObservable();
   disenrollmentReasonStatus$ = this.disenrollmentReasonStatusSubject.asObservable();
+  paymentRequestType$ = this.paymentRequestTypeSubject.asObservable();
+  paymentReversal$ = this.paymentReversalSubject.asObservable();
+  premiumPaymentType$ = this.premiumPaymentTypeSubject.asObservable();
+  premiumPaymentReversal$ = this.premiumPaymentReversalSubject.asObservable();
+  attachmentTypeDroplistlov$ = this.lovAttachmentsDroplistSubject.asObservable();
+  documentTypeCodeSubject$ = this.documentTypeCodeSubject.asObservable();
+  documentSubTypeCodeSubject$ = this.documentSubTypeCodeSubject.asObservable();
 
 
 
@@ -579,7 +593,16 @@ getDisenrollmentReasonLovs(): void {
     },
   });
 }
-
+getAttachmentTypesLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.AttachmentsTypes).subscribe({
+    next: (lovResponse) => {
+      this.lovAttachmentsDroplistSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+}
 getEligibilityStatusCpLovs(): void {
   this.showLoaderOnEligibilityStatusCpSubject.next(true);
   this.lovDataService.getLovsbyType(LovType.EligibilityStatusCp).subscribe({
@@ -593,6 +616,51 @@ getEligibilityStatusCpLovs(): void {
     },
   });
 }
+getDocumentTypeLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.DocumentTypeCode).subscribe({
+    next: (lovResponse) => {
+      this.documentTypeCodeSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+}
+getDocumentSubTypeLovs(parentCode : string) {
+  return this.lovDataService.getLovsbyParent(LovType.DocumentSubTypeCode, parentCode)
+}
+
+  getCoPaymentRequestTypeLov(): void {
+    this.lovDataService.getLovsbyType(LovType.CoPaymentType).subscribe({
+      next: (lovResponse) => {
+        this.paymentRequestTypeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
+  getPremiumPaymentTypeLov(): void {
+    this.lovDataService.getLovsbyType(LovType.PremiumPaymentType).subscribe({
+      next: (lovResponse) => {
+        this.premiumPaymentTypeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+  getPremiumPaymentReversalLov(): void {
+    this.lovDataService.getLovsbyType(LovType.PremiumPaymentReversal).subscribe({
+      next: (lovResponse) => {
+        this.premiumPaymentReversalSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
 
 }
 

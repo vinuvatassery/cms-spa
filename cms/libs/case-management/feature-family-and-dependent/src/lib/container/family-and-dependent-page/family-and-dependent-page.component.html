@@ -17,6 +17,7 @@
                 value="Y"
                 name="havetheyhavefamilymember"
                 [(ngModel)]="haveTheyHaveFamilyMember"
+                (click)="onFamilyMemberStatusChange('Y')"
               />
               <kendo-label
                 class="k-radio-label"
@@ -33,6 +34,7 @@
                 value="N" 
                 name="havetheyhavefamilymember"
                 [(ngModel)]="haveTheyHaveFamilyMember"
+                (click)="onFamilyMemberStatusChange('N')"
               />
               <kendo-label
                 class="k-radio-label"
@@ -41,10 +43,11 @@
               ></kendo-label>
             </span>
           </div>
+          <kendo-formerror *ngIf="!haveTheyHaveFamilyMember && (isCerFormValid | async) == false"> A Response is required.</kendo-formerror>
           </fieldset> 
         </div>
         <div [hidden]="haveTheyHaveFamilyMember != 'Y'">
-          <div class="flex-col" *ngFor="let dependent of (dependentList$ | async)?.data; let i=index">
+          <div class="flex-col" *ngFor="let dependent of previousRelationsList; let i=index">
             <fieldset class="k-form-fieldset">
               <legend class="k-form-legend"><h5>Is “{{dependent.fullName}} ({{dependent.relationshipDescription}})” still in their family?</h5></legend>
 
@@ -55,6 +58,7 @@
                   class="form-control" 
                   value="Y"
                   name="dependent_{{i}}"
+                  [(ngModel)]="dependent.activeFlag"
                   (click)="onDependentStatusChange(dependent, 'Y')"
                 />
                 <kendo-label
@@ -71,6 +75,7 @@
                   id="dependent{{i}}n"
                   value="N" 
                   name="dependent_{{i}}"
+                  [(ngModel)]="dependent.activeFlag"
                   (click)="onDependentStatusChange(dependent, 'N')"
                 />
                 <kendo-label
@@ -95,6 +100,7 @@
                 value="Y"
                 name="haveTheyHaveAdditionalFamilyMember"
                 [(ngModel)]="haveTheyHaveAdditionalFamilyMember"
+                (click)="onAdditionalFamilyStatusChange('Y')"
               />
               <kendo-label
                 class="k-radio-label"
@@ -111,6 +117,7 @@
                 value="N" 
                 name="haveTheyHaveAdditionalFamilyMember"
                 [(ngModel)]="haveTheyHaveAdditionalFamilyMember"
+                (click)="onAdditionalFamilyStatusChange('N')"
               />
               <kendo-label
                 class="k-radio-label"
@@ -119,6 +126,7 @@
               ></kendo-label>
             </span>
           </div>
+          <kendo-formerror *ngIf="!haveTheyHaveAdditionalFamilyMember && (isCerFormValid | async) == false"> A Response is required.</kendo-formerror>
           </fieldset> 
         </div>
       </div>
@@ -133,7 +141,7 @@
             kendoCheckBox
             (click)="onNoFamilyMemberClicked()" 
             id="clientsDoesNotHaveFamilyOrDependents"
-           [checked]="dependentStatus$ | async"   
+            [checked]="(dependentStatus$ | async)?.noDependentFlag === 'Y'"   
            aria-labelledby="clientsDoesNotHaveFamilyOrDependents"        
           />
           <label
@@ -158,6 +166,7 @@
           [sortType]="sortType"
           [sort]="sort"
           [existdependentStatus$]="existdependentStatus$"
+          [isCerForm]="isCerForm"
           (addUpdateDependentEvent)="addUpdateDependentHandle($event)"
           (GetNewDependentHandleEvent)="getNewDependentHandle($event)"        
           (loadDependentsEvent)="loadDependentsHandle($event)"     

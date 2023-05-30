@@ -8,7 +8,8 @@ import {
   LoaderService,
   LoggingService,
   NotificationSnackbarService,
-  SnackBarNotificationType
+  SnackBarNotificationType,
+  DocumentFacade
 } from '@cms/shared/util-core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
@@ -71,7 +72,8 @@ export class ClientEligibilityComponent implements OnInit {
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loggingService: LoggingService,
     private readonly reviewQuestionAnswerFacade: ReviewQuestionAnswerFacade,
-    private readonly smokingCessationFacade : SmokingCessationFacade    
+    private readonly smokingCessationFacade : SmokingCessationFacade ,   
+    public readonly documentFacade: DocumentFacade
 
   ) {
     this.eligibilityForm = this.formBuilder.group({});
@@ -82,8 +84,8 @@ export class ClientEligibilityComponent implements OnInit {
 
   }
   ngOnDestroy(): void {
-    this.reviewQuestionAnswerSubscription.unsubscribe();
-    this.reviewQuestionResponseSubscription.unsubscribe();
+    this.reviewQuestionAnswerSubscription?.unsubscribe();
+    this.reviewQuestionResponseSubscription?.unsubscribe();
   }
 
   loadReviewQuestionAnswers() {
@@ -195,6 +197,10 @@ export class ClientEligibilityComponent implements OnInit {
             this.reviewQuestionAnswerFacade.getReviewQuestionAnswerByQuestionTypeCode(QuestionTypeCode.reviewChecklist);
           }
           this.loadDocumentsAndEligibility();
+          this.prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;     
+          if(this.prevClientCaseEligibilityId) {
+            this.isCerForm =  true;
+          }
         }
       });
   }

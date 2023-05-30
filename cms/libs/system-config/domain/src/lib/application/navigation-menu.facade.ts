@@ -10,11 +10,12 @@ import {
 import { BehaviorSubject } from 'rxjs';
 /** Internal libraries **/
 import { NavigationMenuService } from '../infrastructure/navigation-menu.data.service';
+import { NavigationMenu } from '../entities/navigation-menu';
 
 @Injectable({ providedIn: 'root' })
 export class NavigationMenuFacade {
   /** Private properties **/
-  private navigationMenuSubject = new BehaviorSubject<any[]>([]);
+  private navigationMenuSubject = new BehaviorSubject<NavigationMenu[]>([]);
 
   /** Public properties **/
   navigationMenu$ = this.navigationMenuSubject.asObservable();

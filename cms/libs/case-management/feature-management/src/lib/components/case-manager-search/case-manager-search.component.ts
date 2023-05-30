@@ -30,7 +30,7 @@ export class CaseManagerSearchComponent implements OnInit
   @Input() caseManagerSearchList$: any;    
   @Input() existingCaseManagerData: any; 
   @Input() selectedCustomCaseManagerName: any;  
- 
+  @Input() managementTab! : boolean
 
   /** Public properties **/
   isOpenNewProviderClicked = false;

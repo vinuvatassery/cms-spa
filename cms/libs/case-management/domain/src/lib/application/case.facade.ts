@@ -24,6 +24,7 @@ import { CaseScreenTab } from '../enums/case-screen-tab.enum';
 import { ActiveSessions } from '../entities/active-sessions';
 import { Router } from '@angular/router';
 import { ClientProfileTabs } from '../enums/client-profile-tabs.enum';
+import { SearchHeaderType } from '../enums/search-header-type.enum';
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
@@ -56,6 +57,7 @@ export class CaseFacade {
   private groupUpdatedSubject = new BehaviorSubject<any>(false);
   private groupDeletedSubject = new BehaviorSubject<boolean>(false);
   private ddlEligPeriodsSubject = new BehaviorSubject<any>([]);
+  private searchBarsubject = new Subject<string>();
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -85,6 +87,7 @@ export class CaseFacade {
   groupDeleted$ = this.groupDeletedSubject.asObservable();
   ddlEligPeriods$ = this.ddlEligPeriodsSubject.asObservable();
   isCaseReadOnly$ = this.isCaseReadOnlySubject.asObservable();
+  searchBars$ = this.searchBarsubject.asObservable();
 
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
@@ -173,6 +176,12 @@ export class CaseFacade {
       case ClientProfileTabs.DENTAL_INSURANCE_STATUS:
       case ClientProfileTabs.DENTAL_INSURANCE_COPAY:
       case ClientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS:
+        this.router.navigate(
+          [redirectUrl + '/health-insurance/profile'],
+          query
+        );
+        break;
+      case ClientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS:
         this.router.navigate(
           [redirectUrl + '/health-insurance/profile'],
           query
@@ -625,5 +634,9 @@ export class CaseFacade {
 
   getCaseStatusByClientEligibilityId(clientId: any, clientCaseEligibilityId: any) {
     return this.caseDataService.loadCasesStatusByClientEligibilityId(clientId,clientCaseEligibilityId);
+  }
+
+  enableSearchHeader(headerType : SearchHeaderType) {
+    this.searchBarsubject.next(headerType);
   }
 }

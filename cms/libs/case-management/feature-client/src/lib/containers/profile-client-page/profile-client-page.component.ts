@@ -1,8 +1,9 @@
 /** Angular **/
-import { OnInit, Component, ChangeDetectionStrategy } from '@angular/core';
+import { OnInit, Component, ChangeDetectionStrategy,ChangeDetectorRef} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CaseFacade, ClientProfile } from '@cms/case-management/domain';
+import { CaseFacade, ClientProfile,ClientFacade, StatusPeriodFacade } from '@cms/case-management/domain';
 import { first, Subject } from 'rxjs';
+import { SnackBarNotificationType,LoaderService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-profile-client-page',
@@ -14,19 +15,28 @@ export class ProfileClientPageComponent implements OnInit {
   profileClientId!: number;
   clientCaseEligibilityId!: any;
   clientCaseId!: any;
+  specialHandlings$ = this.clientFacade.specialHandlings$;
   tabId! : any
+  clientNotes:any[] =[];
+  answersKeys:any[] =[];
+  questions:any[] =[];
   private clientSubject = new Subject<any>();
   clientProfile$ = this.caseFacade.clientProfile$;
   loadedClient$ = this.clientSubject.asObservable();
+  ramSellInfo!: any;
   constructor(
     private readonly caseFacade: CaseFacade,
     private route: ActivatedRoute,
-  
+    private clientFacade: ClientFacade,
+    private loaderService: LoaderService,
+    private cdRef: ChangeDetectorRef,
+    private statusPeriodFacade: StatusPeriodFacade
   ) { }
   
   ngOnInit(): void {
-    this. loadQueryParams()  
+    this.loadQueryParams() ;
   }
+
 
   /** Private properties **/
   loadQueryParams()
@@ -39,7 +49,11 @@ export class ProfileClientPageComponent implements OnInit {
   }
 
   loadReadOnlyClientInfoEventHandler() {
-    this.caseFacade.loadClientProfile(this.clientCaseEligibilityId);   
+    this.caseFacade.loadClientProfile(this.clientCaseEligibilityId);  
+    this.specialHandlings$.subscribe(question =>{
+      this.questions = question;
+    })
+    this.loadApplicantInfo(); 
 
     this.onClientProfileLoad()
   }
@@ -81,6 +95,7 @@ export class ProfileClientPageComponent implements OnInit {
             clientTransgenderDesc: clientData?.clientTransgenderDesc,
             clientSexualIdentities: clientData?.clientSexualIdentities,
             otherSexualDesc: clientData?.otherSexualDesc,
+            sexAtBirth: clientData?.sexAtBirth,
             spokenLanguage: clientData?.spokenLanguage,
             writtenLanguage: clientData?.writtenLanguage,
             englishProficiency: clientData?.englishProficiency,
@@ -91,12 +106,71 @@ export class ProfileClientPageComponent implements OnInit {
             lastModifierName: clientData?.lastModifierName,
             lastModifierId: clientData?.lastModifierId
           }
-
+          this.loadRamSellInfo(client.clientId);
           this.clientSubject.next(client);
 
         }
       });
 
+  }
+   loadApplicantInfo() {
+   
+    this.loaderService.show();
+    this.clientFacade
+      .load(
+        this.profileClientId,
+        this.clientCaseId,
+        this.clientCaseEligibilityId)
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.loaderService.hide();
+            /**Populating Client */
+            //this.applicantInfo.client = response.client;
+            if(response.clientNotes?.length > 0){
+              this.clientNotes = response.clientNotes;
+            }else {
+              this.clientNotes = [];
+            }
+            
+            this.answersKeys = Object.entries(response?.client).map(([key, value]) => ({key, value}));
+            
+            if(this.answersKeys && this.answersKeys.length > 0){
+               this.questions.forEach(question =>{
+                question.answer = this.answersKeys.find(answer =>answer.key == question.key)?.value;
+                if(question.answer == "Yes" && question.otherKey != 'interpreterType' && question.otherFormatKey != 'materialInAlternateFormatOther' && question.descKey != 'materialInAlternateFormatCodeOtherDesccription' && question.key != 'limitingConditionDescription'){
+                  question.answer = question.answer+' ' +', Since age'+ ' ' +this.answersKeys.find(answer =>answer.key == question.otherKey)?.value; 
+                } else if(question.key == 'notes' ){
+                  question.answer =this.clientNotes.length > 0 ? this.clientNotes.map(function (e) { return e?.note;}).join(', ') : 'No Notes'
+                } else if(question.answer == "Yes" && question.otherKey == 'interpreterType'){
+                  question.answer ='Yes' + ' ,' + this.answersKeys.find(answer =>answer.key == question.otherKey)?.value;
+                }
+                else if(question.answer == "Yes"  &&  question.descKey == 'materialInAlternateFormatCodeOtherDesccription' && !this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value){
+                  question.answer = 'Yes' + ' ,' + this.answersKeys.find(answer =>answer.key == question.descKey)?.value;
+                }
+                else if(question.answer == "Yes"  &&  question.otherFormatKey == 'materialInAlternateFormatOther' ){
+                  question.answer ='Yes' + ' ,' + this.answersKeys.find(answer =>answer.key == question.descKey)?.value +' ,'+ this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value;
+                }
+              });
+              this.cdRef.detectChanges();
+            }
+          }
+        },
+        error: (error: any) => {
+          this.loaderService.hide();
+        },
+      });}
+  loadRamSellInfo(clientId: any) {
+    this.statusPeriodFacade.showLoader();
+    this.statusPeriodFacade.loadRamSellInfo(clientId).subscribe({
+      next: (data) => {
+        this.ramSellInfo = data;
+        this.statusPeriodFacade.hideLoader();
+      },
+      error: (err) => {
+        this.statusPeriodFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
   }
 
 }

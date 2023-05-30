@@ -10,12 +10,12 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
-import { CaseFacade,CaseScreenTab, CaseStatusCode } from '@cms/case-management/domain';
-import { Observable } from 'rxjs';
+import { CaseFacade,CaseScreenTab, CaseStatusCode, WorkflowTypeCode, GridFacade, GridStateKey } from '@cms/case-management/domain';
+import { Observable, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserDataService } from '@cms/system-config/domain';
 import { FilterService, ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
-import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
 import {ConfigurationProvider} from '@cms/shared/util-core';
 import { Router } from '@angular/router';
@@ -37,7 +37,7 @@ filteredBy = "";
 searchValue = "";
 isFiltered = false;
 
-public state!: State;
+public state!: any;
   /*** Input properties ***/
   @Input() cases: any;
   @Input() pageSizes : any;
@@ -46,6 +46,8 @@ public state!: State;
   @Input() sort : any;
   @Input() columnDroplist$ : any;
   @Input() selectedTab: CaseScreenTab = 0;
+  @Input() module: string = '';
+  @Input() parentModule: string = '';
   columns : any = {
     clientFullName:"Client Name",
     officialIdFullName:"Name on Official ID",
@@ -94,10 +96,14 @@ public state!: State;
   caseStatusTypes:any=[];
   caseStatusCodes:any=["CANCELED","REVIEW","NEW"];
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
+  private userProfileSubsriction !: Subscription;
+  loginUserId!:any;
   /** Constructor**/
-  constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public intl: IntlService,
-    private readonly configurationProvider: ConfigurationProvider, private cdr :ChangeDetectorRef,
-    private readonly router: Router
+  constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public readonly  intl: IntlService,
+    private readonly configurationProvider: ConfigurationProvider, private readonly  cdr :ChangeDetectorRef,
+    private readonly router: Router,
+    private readonly gridFacade: GridFacade,
+    private readonly userDataService: UserDataService
     ) {}
 
   /** Lifecycle hooks **/
@@ -108,10 +114,14 @@ public state!: State;
     this.getCaseStatusLovs();
     this.selectedColumn = 'ALL';
     this.getGroupLovs() ;
+    this.getLoggedInUserProfile();
+  }
+  ngOnDestroy(): void {
+    this.userProfileSubsriction.unsubscribe();
   }
 
   public get tabOptions(): typeof CaseScreenTab {
-    return CaseScreenTab; 
+    return CaseScreenTab;
   }
 
   private getGroupLovs() {
@@ -135,11 +145,8 @@ public state!: State;
     });
   }
   ngOnChanges(): void {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort
-      };
+      this.defaultGridState();
+
       this.sortColumn = this.columns[this.sort[0]?.field];
       if(this.sort[0]?.dir === 'asc') {
         this.sortDir = 'Ascending';
@@ -154,6 +161,14 @@ public state!: State;
         this.filter = "";
       }
     this.loadProfileCasesList()
+  }
+  defaultGridState(){
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      filters:{logic:'and',filters:[]}
+      };
   }
  filterChange(filter: CompositeFilterDescriptor): void {
     this.gridFilter = filter;
@@ -185,6 +200,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.loadProfileCasesList()
   }
   public dataStateChange(stateData: any): void {
+    this.state=stateData;
+    this.saveGridState();
     if(stateData.filter?.filters.length > 0)
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
@@ -239,6 +256,46 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
    }
 
   /** Private methods **/
+  getLoggedInUserProfile(){
+    this.userProfileSubsriction=this.userDataService.getProfile$.subscribe((profile:any)=>{
+      if(profile?.length>0){
+       this.loginUserId= profile[0]?.loginUserId;
+       this.getGridState();
+      }
+    })
+  }
+  private saveGridState(){
+    const gridState: any = {
+      gridStateKey: GridStateKey.GRID_STATE,
+      gridStateValue: JSON.stringify(this.state),
+      moduleCode:this.module,
+      parentModuleCode:this.parentModule,
+      userId:this.loginUserId
+    };
+    this.gridFacade.hideLoader();
+    this.gridFacade.createGridState(gridState).subscribe({
+      next: (x:any) =>{
+        this.gridFacade.hideLoader();
+      },
+      error: (error:any) =>{
+        this.gridFacade.hideLoader();
+      }
+    });
+  }
+  private getGridState(){
+    this.gridFacade.hideLoader();
+    this.gridFacade.loadGridState(this.loginUserId,GridStateKey.GRID_STATE,this.module).subscribe({
+      next: (x:any) =>{
+        if(x){
+          this.state=JSON.parse(x?.gridStateValue || '{}') ;
+        }
+        this.gridFacade.hideLoader();
+      },
+      error: (error:any) =>{
+        this.gridFacade.hideLoader();
+      }
+    });
+  }
   private loadDdlGridColumns() {
     this.caseFacade.loadDdlGridColumns();
     this.searchLoaderVisibility$.subscribe((data : any) => {
@@ -282,6 +339,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.searchValue = "";
     this.isFiltered = false;
     this.columnsReordered = false;
+    this.saveGridState();
     this.loadProfileCasesList();
   }
   onColumnReorder(event:any)
@@ -293,15 +351,16 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.cdr.detectChanges()
   }
 
-  onCaseClicked(session: any) {  
+  onCaseClicked(session: any) {
     if (session && session?.caseStatus !==CaseStatusCode.incomplete) {
-      this.router.navigate([`/case-management/cases/case360/${session?.clientId}`]);     
-    }    
+      this.router.navigate([`/case-management/cases/case360/${session?.clientId}`]);
+    }
     else {
       this.router.navigate(['case-management/case-detail'], {
         queryParams: {
           sid: session?.sessionId,
-          eid: session?.entityId
+          eid: session?.entityId,
+          wtc: WorkflowTypeCode.NewCase
         }
       });
     }

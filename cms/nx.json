@@ -14,8 +14,7 @@
     ".eslintrc.json": "*"
   },
   "tasksRunnerOptions": {
-    "default": {    
-    }
+    "default": {}
   },
   "generators": {
     "@nrwl/angular:application": {
