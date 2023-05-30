@@ -103,4 +103,8 @@ export class CommunicationFacade {
   getClientDocumentsViewDownload(clientDocumentId: string) {
     return this.emailDataService.getClientDocumentsViewDownload(clientDocumentId);
   }
+
+  getClientDocument(typeCode: string, subTypeCode: string, clientCaseEligibilityId: string) {
+    return this.emailDataService.getClientDocument(typeCode,subTypeCode,clientCaseEligibilityId);
+  }
 }

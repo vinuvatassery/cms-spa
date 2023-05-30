@@ -109,6 +109,14 @@ export class EmailDataService {
           responseType: 'blob'
         });
     }
+
+    getClientDocument(typeCode: string, subTypeCode: string, clientCaseEligibilityId: string) {
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientdocuments/${typeCode}/${subTypeCode}/${clientCaseEligibilityId}`);
+    }
+
+
+    
   
 }
  

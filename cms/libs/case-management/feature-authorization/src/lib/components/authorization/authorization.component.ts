@@ -6,7 +6,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 /** External Libraries **/
 import { ConfigurationProvider, LoaderService, LoggingService } from '@cms/shared/util-core';
-import { CommunicationEvents, ScreenType, StatusFlag, WorkflowFacade, ContactFacade, ContactInfo } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, StatusFlag, WorkflowFacade, ContactFacade, ContactInfo,CommunicationFacade } from '@cms/case-management/domain';
 import { UserDataService } from '@cms/system-config/domain';
 import { Subscription} from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -40,6 +40,8 @@ export class AuthorizationComponent   {
   contactInfo!: ContactInfo;
   isGoPaperlessOpted: boolean = false;
   toEmail: any = [];
+  typeCode!: string;
+  subTypeCode!: string;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   incompleteDateValidation!: any;
   loginUserName!:any;
@@ -57,6 +59,7 @@ export class AuthorizationComponent   {
     private readonly intl: IntlService,
     private readonly ref: ChangeDetectorRef,
     private readonly userDataService: UserDataService,
+    private readonly communicationFacade: CommunicationFacade
   ) {   }
 
   /** Lifecycle hooks **/
@@ -113,6 +116,43 @@ export class AuthorizationComponent   {
                 this.ref.detectChanges();
               }
             }
+            this.loadClientDocumentInfo();
+           this.loaderService.hide();
+      },
+      error: (err: any) => {
+        this.loaderService.hide();
+        this.loggingService.logException(err);
+      },
+    });
+  }
+
+  private loadClientDocumentInfo() {
+    this.loaderService.show();
+    if(this.isGoPaperlessOpted == true)
+    {
+      this.typeCode=CommunicationEvents.CerAuthorizationEmail
+      this.subTypeCode= CommunicationEvents.Email
+    }
+    else
+    {
+      this.typeCode=CommunicationEvents.CerAuthorizationLetter
+      this.subTypeCode= CommunicationEvents.Letter
+    }
+      this.communicationFacade.getClientDocument(this.typeCode ?? '', this.subTypeCode ?? '',this.workflowFacade.clientCaseEligibilityId ?? '')
+      .subscribe({
+        next: (data: any) =>{
+          if (data) {
+              this.emailSentDate = this.intl.formatDate(data.creationTime, this.dateFormat);
+              if(data.documentTypeCode==CommunicationEvents.CerAuthorizationEmail)
+              {
+              this.isSendEmailClicked=true;
+              }
+              else
+              {
+              this.isPrintClicked=true;
+              }
+              this.ref.detectChanges();
+            }
         this.loaderService.hide();
       },
       error: (err: any) => {
@@ -128,7 +168,7 @@ export class AuthorizationComponent   {
        this.loginUserName= profile[0]?.firstName+' '+profile[0]?.lastName;
        // As of now we are showing today's date but we need to change it with the email sent date
        // once we save the email history to DB.
-       this.emailSentDate = this.intl.formatDate(new Date(), this.dateFormat);
+       //this.emailSentDate = this.intl.formatDate(new Date(), this.dateFormat);
       }
     })
   }
@@ -173,6 +213,7 @@ export class AuthorizationComponent   {
         break;
       case CommunicationEvents.Print:
         this.isPrintClicked = true;
+        this.loadClientDocumentInfo();
         this.getLoggedInUserProfile();
         break;
       default:
