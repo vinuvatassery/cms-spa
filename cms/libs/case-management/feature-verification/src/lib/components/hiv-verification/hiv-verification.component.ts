@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit,Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 /** Internal Libraries **/
 import { VerificationFacade } from '@cms/case-management/domain';
@@ -14,11 +14,18 @@ export class HivVerificationComponent implements OnInit {
 
    /** Input properties **/
   @Input() hivVerificationForm!: FormGroup;
-  @Input() clientId!: number;  
+  @Input() clientId!: number;
+  @Input() clientCaseId!: any;
+  @Input() clientCaseEligibilityId!: any;
+  @Output() onAttachmentConfirmationEvent = new EventEmitter();
+
   /** Public properties **/
   rdoVerificationMethod!: string;
   verificationMethod$ = this.lovFacade.verificationMethod$;
   OptionControllerName:any ='providerOption';
+  isHivVerificationRemovalConfirmationOpened : boolean = false;
+  clientHivVerificationId!:string;
+  removeHivVerification$ = this.verificationFacade.removeHivVerification$;
 
   constructor(private readonly cd: ChangeDetectorRef, private verificationFacade: VerificationFacade,private readonly lovFacade: LovFacade){
 
@@ -28,10 +35,32 @@ export class HivVerificationComponent implements OnInit {
     this.hivVerificationForm?.get('providerOption')?.valueChanges.subscribe(val => {
       this.cd.detectChanges();
     });
-   
+    this.removeHivVerification$.subscribe(response=>{
+      if(response==true && this.clientId!=0){
+        this.verificationFacade.showAttachmentOptions.next(true);
+        this.onHivRemoveConfirmationClosed();
+        this.cd.detectChanges();
+      }
+    });
   }
   providerChange(event:any){
     this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
     this.cd.detectChanges();
+  }
+  onHivRemoveConfirmationClosed() {
+    this.isHivVerificationRemovalConfirmationOpened = false;
+  }
+  onHivRemoveConfirmation(){
+    this.verificationFacade.removeHivVerificationAttachment(this.clientHivVerificationId,this.clientId);
+  }
+  onHivRemoveConfirmationOpen(clientHivVerificationId:string) {
+    if(clientHivVerificationId && clientHivVerificationId != ""){
+      this.isHivVerificationRemovalConfirmationOpened = true;
+      this.clientHivVerificationId = clientHivVerificationId;
+    }
+  }
+  onAttachmentConfirmation(event:any)
+  {
+    this.onAttachmentConfirmationEvent.emit(event);
   }
 }
