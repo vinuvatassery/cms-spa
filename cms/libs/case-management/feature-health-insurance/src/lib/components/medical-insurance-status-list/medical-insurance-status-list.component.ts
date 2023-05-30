@@ -54,7 +54,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   sort!:any;
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
   isOpenedDeleteConfirm:boolean = false;
-  buttonText:string ="INSURANCE PREMIUM";
+  buttonText:string ="MEDICAL INSURANCE";
   public pageSizes = this.insurancePolicyFacade.gridPageSizes;
   public gridSkipCount = this.insurancePolicyFacade.skipCount;
   public gridOptionData = [
@@ -101,7 +101,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
     this.sort ={ field : 'creationTime' ,  dir: 'asc' };
     this.loadInsurancePolicies();
     if (this.insuranceStatus != InsuranceStatusType.dentalInsurance) {  
-      this.buttonText ="INSURANCE PREMIUM";  
+      this.buttonText ="MEDICAL INSURANCE";  
       this.gridOptionData.push({
         buttonType: "btn-h-primary",
         text: "Change Priority",
@@ -111,7 +111,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       })
     }
     else{
-      this.buttonText ="INSURANCE PREMIUM"; 
+      this.buttonText ="DENTAL INSURANCE"; 
     }
     this.priorityPopupShowSubscription();  
     this.dentalInsuranceListSubscription =  this.medicalHealthPlans$.subscribe((medicalHealthPolicy:any)=>{
