@@ -211,7 +211,11 @@
 <!-- Send CER Modal Html-->
 <kendo-dialog *ngIf="isOpenSendCER$ | async" (close)="onCloseSendCERClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np app-c-modal-top" title="Re-send CERs?">
-  <case-management-send-cer [isPaperLess]="isPaperLessFlag" [clientName]="clientName" (sendCerEvent)="sendCer()"
+  <case-management-send-cer 
+    [isPaperLess]="isPaperLessFlag" 
+    [clientName]="clientName" 
+    [cerId]="selectedEligibilityCerId" 
+    (sendCerEvent)="sendCer($event)"
     (cancelSendCerEvent)="onCloseSendCERClicked()">
   </case-management-send-cer>
 </kendo-dialog>

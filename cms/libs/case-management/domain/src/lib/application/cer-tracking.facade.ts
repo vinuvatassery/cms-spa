@@ -173,9 +173,13 @@ export class CerTrackingFacade {
     this.cerDataService.sendCerCounts(cerId)
     .subscribe({
       next: (sendCerCountResp: any) => {
-        if(!sendCerCountResp?? false){
+        if(!(sendCerCountResp?? false)){
          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, 'Something went wrong while sending CER.', NotificationSource.UI);
         }
+        else{
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'CER re-sent successfully.', NotificationSource.UI);
+        }
+
         this.sendResponseSubject.next(sendCerCountResp);
       },
       error: (err) => {
