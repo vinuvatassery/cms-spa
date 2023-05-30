@@ -103,6 +103,7 @@ export class AuthorizationComponent   {
               if(data?.clientCaseEligibility?.paperlessFlag === StatusFlag.Yes)
               {
                 this.isGoPaperlessOpted = true;
+                this.ref.detectChanges();
                 if(data?.email?.email !== null){
                   let emailObject = {
                     clientEmailId : data?.email?.clientEmailId, 
@@ -110,7 +111,6 @@ export class AuthorizationComponent   {
                   }
                   this.toEmail.push(emailObject);
                 }
-                this.ref.detectChanges();
               }
             }
         this.loaderService.hide();

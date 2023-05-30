@@ -126,15 +126,14 @@
       <div class="flex-col" *ngIf="isSendEmailClicked">
         <div class="flex-row">
           <div class="flex-col align-items-center">
-            <span
-              >Email sent {{emailSentDate}} by
+              <span>Send the application to the applicant to sign.</span><br/>
+              <span>Email sent {{emailSentDate}} by
               <a
                 kendoPopoverAnchor
                 [popover]="onUserProfileCardHovered"
                 showOn="hover"
-                >{{loginUserName}}</a
-              ></span
-            >
+                >{{loginUserName}}</a>
+              </span>
             <button
               kendoButton
               [primary]="true"
