@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { SearchFacade, CaseStatusCode, CaseFacade, FinancialManagementFacade, SearchHeaderType } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import {  Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { groupBy } from "@progress/kendo-data-query";
 
 export interface VendorList {
@@ -15,11 +15,11 @@ export interface VendorList {
   city: string;
   state: string;
   zip: string;
- 
+
 }
 
 
-export const vendorList: VendorList[] =  [
+export const vendorList: VendorList[] = [
   {
     id: 1,
     title: "Mod Health",
@@ -121,53 +121,55 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
   showHeaderSearchInputLoader = false;
   clientSearchResult$ = this.searchFacade.clientSearch$;;
   mobileHeaderSearchOpen = false;
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   filterManager: Subject<string> = new Subject<string>();
   searchBars$ = this.caseFacade.searchBars$
 
   searchHeaderTypeSubject = new Subject<any>()
   searchHeaderType$ = this.searchHeaderTypeSubject.asObservable()
-
+  searchHeaderType: string = '';
   vendorList: any[] = groupBy(vendorList, [{ field: "title" }]);
   /** Constructor **/
-  constructor(private readonly searchFacade: SearchFacade,private router: Router,
+  constructor(private readonly searchFacade: SearchFacade, private router: Router,
     private caseFacade: CaseFacade,
     private loggingService: LoggingService,
-    private loaderService: LoaderService,private cdRef : ChangeDetectorRef
-   ) {
-  
+    private loaderService: LoaderService, private cdRef: ChangeDetectorRef
+  ) {
+
   }
 
   /** Lifecycle hooks **/
   ngOnInit() {
-      this.clientSearchResult$.subscribe(data=>{
+    this.clientSearchResult$.subscribe(data => {
       this.showHeaderSearchInputLoader = false;
     })
-   
+
   }
 
   ngAfterViewInit() {
 
-    this.searchBars$.subscribe((searchHeaderType: string) =>
-    {
-      debugger
-      if(searchHeaderType)
-      {       
-         this.searchHeaderTypeSubject.next(searchHeaderType);
-         this.cdRef.detectChanges();
+    this.searchBars$.subscribe((searchHeaderType: string) => {
+      if (searchHeaderType) {
+        this.searchHeaderType = searchHeaderType;
+        this.searchHeaderTypeSubject.next(searchHeaderType);
+        this.cdRef.detectChanges();
       }
-    });    
+    });
   }
 
-  clickMobileHeaderSearchOpen(){
-      this.mobileHeaderSearchOpen = !this.mobileHeaderSearchOpen
+  clickMobileHeaderSearchOpen() {
+    this.mobileHeaderSearchOpen = !this.mobileHeaderSearchOpen
   }
-  
-  onSearchTextChange(selectedValue : string)
-  {  
-    this.showHeaderSearchInputLoader = true;    
-      this.searchFacade.loadCaseBySearchText(selectedValue);     
- 
+
+  onSearchTextChange(selectedValue: string) {
+    console.log(this.searchHeaderType);
+    this.showHeaderSearchInputLoader = true;
+    if(this.searchHeaderType==='Vendor_Search'){
+      this.searchFacade.loadVendorBySearchText(selectedValue);
+    }else{
+      this.searchFacade.loadCaseBySearchText(selectedValue);
+    }
+
   }
   onSelectChange(selectedValue: any) {
     if (selectedValue !== undefined) {
@@ -179,12 +181,12 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
           this.loaderService.show();
           this.caseFacade.getSessionInfoByCaseEligibilityId(selectedValue.clientCaseEligibilityId).subscribe({
             next: (response: any) => {
-              if (response) {                
+              if (response) {
                 this.loaderService.hide();
                 this.router.navigate(['case-management/case-detail'], {
                   queryParams: {
                     sid: response.sessionId,
-                    eid: response.entityID,                   
+                    eid: response.entityID,
                     wtc: response?.workflowTypeCode
                   },
                 });

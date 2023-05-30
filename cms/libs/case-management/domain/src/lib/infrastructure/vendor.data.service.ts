@@ -18,4 +18,8 @@ export class VendorDataService{
         return this.http.get<Vendor>(
           `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/vendors?type=${type}&vendorType=${vendorType}&clientId=${clientId}&eligibilityId=${clientCaseligibilityId}`);
       }
+      searchVendor(searchText:any){
+        return this.http.get(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/vendors/SearchText=${searchText}`);
+      }
 }

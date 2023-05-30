@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { SearchDataService } from '../infrastructure/search.data.service';
 import {  LoggingService, NotificationSnackbarService, SnackBarNotificationType,LoaderService, ConfigurationProvider } from '@cms/shared/util-core';
 import { CaseDataService } from '../infrastructure/case.data.service';
+import { VendorDataService } from '../infrastructure/vendor.data.service';
 
 @Injectable({ providedIn: 'root' })
 export class SearchFacade {
@@ -20,7 +21,9 @@ export class SearchFacade {
   constructor(private readonly searchDataService: SearchDataService,private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly loaderService: LoaderService , private configurationProvider : ConfigurationProvider,
-    private readonly caseDataService: CaseDataService) {}
+    private readonly caseDataService: CaseDataService,
+    private readonly vendorDataService: VendorDataService
+    ) {}
 
   /** Public methods **/
   showLoader()
@@ -44,6 +47,23 @@ export class SearchFacade {
     this.hideLoader();   
   }
 
+  loadVendorBySearchText(text : string): void {
+    if(text){
+      this.vendorDataService.searchVendor(text).subscribe({
+        next: (caseBySearchTextResponse) => {
+          debugger
+          this.clientSearchSubject.next(caseBySearchTextResponse);
+        }
+        ,
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        },
+      });
+    }
+    else{
+      this.clientSearchSubject.next(null);
+    }
+  }
   loadCaseBySearchText(text : string): void {
     if(text){
       this.caseDataService.loadCaseBySearchText(text).subscribe({
