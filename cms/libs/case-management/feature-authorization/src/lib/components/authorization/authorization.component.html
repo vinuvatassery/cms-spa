@@ -104,10 +104,10 @@
       </div>
 
 <!-- Copy of signed application -->
-      <div class="flex-col mt-2" *ngIf="(dateSignature != null || isSendEmailClicked)">
+      <div class="flex-col mt-2" *ngIf="(dateSignature != null || isSendEmailClicked || isPrintClicked)">
         <h5>COPY OF SIGNED APPLICATION</h5>
       </div>
-      <div class="flex-col flex-col-6" *ngIf="(dateSignature != null || isSendEmailClicked)">
+      <div class="flex-col flex-col-6" *ngIf="(dateSignature != null || isSendEmailClicked || isPrintClicked)">
         <kendo-upload (select)="handleFileSelected($event)" [ngModel]="copyOfSignedApplication">
           <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
             <span >
