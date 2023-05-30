@@ -182,6 +182,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
       if(this.hivVerificationForm.controls["providerOption"].value == 'UPLOAD_ATTACHMENT' && !this.isNotUploaded)
       {
         this.loaderService.show()
+        this.verificationFacade.isSaveandContinueSubject.next(true);
         return this.saveHivVerification();
       }
       else if(this.hivVerificationForm.controls["providerOption"].value !== 'UPLOAD_ATTACHMENT' || this.alreadyUploaded)
