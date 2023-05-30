@@ -57,7 +57,7 @@
         <kendo-grid-column field="clientCaseId" title="Options" [width]="25" class="text-center" [sticky]="true">
           <ng-template kendoGridCellTemplate let-manager let-clientCaseId="field">
             <kendo-dropdownbutton [data]="newAppActions" icon="more-vertical" title="More option" *ngIf="!managementTab"
-              class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button"
+              class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }" aria-label="more actions">
               <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem
@@ -74,7 +74,7 @@
             </kendo-dropdownbutton>
 
             <kendo-dropdownbutton [data]="tabActions" icon="more-vertical" title="More option" *ngIf="managementTab"
-            class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button"
+            class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
             [popupSettings]="{ popupClass: popupClassAction, animate: true }" aria-label="more actions">
             <span hidden> More Option</span>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem

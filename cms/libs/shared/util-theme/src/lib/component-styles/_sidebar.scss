@@ -398,6 +398,18 @@ cms-sidenav {
             }
 
             .submenu_list_container {
+                    &.submenu_list_active_item {
+                      .submenu_list_click_items {
+                        background: material-color($hive-success-palette, 50);
+                        color: $app-primary;
+                        transition: ease-in all 0.3s;
+
+                      }
+               
+        
+              }
+        
+       
               .submenu_list_click_items {
                 justify-content: space-between;
                 display: flex;

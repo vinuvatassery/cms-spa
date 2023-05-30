@@ -1,5 +1,5 @@
  <!-- Contact -->
- <div class="mt-2">
+ <div >
     <div class="flex-col flex-space-bw align-items-center">
       <h5 class="title-md mb-0 text-capital">Client</h5>
       <div>
@@ -43,7 +43,7 @@
           </kendo-grid-column>
           <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="75" class="text-center">
             <ng-template kendoGridCellTemplate let-dataItem>
-              <kendo-dropdownbutton [data]="actions" icon="more-vertical" class="TableActionPopup app-dropdown-action"
+              <kendo-dropdownbutton [data]="actions" icon="more-vertical" class="TableActionPopup app-dropdown-action more_action_wid"
                 buttonClass="k-icon-button" aria-label="more actions" title="More option"
                 [popupSettings]="{ popupClass: popupClassAction, animate: true }">
                 <span hidden> More Option</span>
