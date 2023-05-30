@@ -60,7 +60,7 @@ export class FinancialVendorFacade {
 
   
   getVendors(skipcount: number,maxResultCount: number,sort: string,sortType: string,vendorTypeCode: string): void {
-    this.showLoader();
+   
     this.financialVendorDataService.getVendors(skipcount,maxResultCount,sort,sortType,vendorTypeCode).subscribe({
       next: (vendorsResponse: any) => {
         if (vendorsResponse) {
@@ -70,7 +70,7 @@ export class FinancialVendorFacade {
           };
           this.vendorsSubject.next(gridView);
         }
-        this.hideLoader();
+       
       },
       error: (err) => {     
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
