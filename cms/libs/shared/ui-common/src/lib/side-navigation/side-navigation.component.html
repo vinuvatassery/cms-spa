@@ -19,10 +19,7 @@
         <div class="input-search">
           <span class="material-icons" aria-label="search" aria-hidden="true">search</span>
           <kendo-floatinglabel text="Search" class="pb-0">
-            <kendo-textbox 
-            fillMode="outline" 
-            [(ngModel)]="searchText"
-            [clearButton]="true">
+            <kendo-textbox fillMode="outline" [(ngModel)]="menu.filterText" [clearButton]="true">
             </kendo-textbox>
           </kendo-floatinglabel>
         </div>
@@ -32,7 +29,7 @@
 
         <div *ngIf="subMenu.subMenus?.length !== 0">
           <p class="submenu_list_heading" attr.aria-label="{{ subMenu.name }}"
-            *ngIf="isMenuHeadingVisible(subMenu.subMenus) || (subMenu.name |  lowercase).indexOf(searchText |  lowercase) != -1">
+            *ngIf="isMenuHeadingVisible(subMenu.subMenus, menu.filterText) || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1">
             {{ subMenu.name | uppercase }}
             <span *ngIf="subMenu?.hasBadge"> ({{ getBadge(subMenu.code)}}) </span>
           </p>
@@ -40,7 +37,7 @@
           <div class="submenu_list_container" *ngFor="let sprSubMenu of subMenu.subMenus"
             attr.aria-label="sub menu item {{ sprSubMenu.name }}">
             <div
-              *ngIf="(searchText === '' || (sprSubMenu.name |  lowercase).indexOf(searchText |  lowercase) != -1 || (subMenu.name |  lowercase).indexOf(searchText |  lowercase) != -1)">
+              *ngIf="(menu?.filterText === '' || (sprSubMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1 || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1)">
               <a class="submenu_list_click_items" attr.aria-label="{{ sprSubMenu.name }}"
                 (click)="onMenuClick(sprSubMenu)">
                 <span attr.aria-label="{{ sprSubMenu.name }}">
@@ -53,7 +50,7 @@
           </div>
         </div>
         <div
-          *ngIf="subMenu.subMenus?.length === 0 && (searchText === '' || (subMenu.name |  lowercase).indexOf(searchText |  lowercase) != -1)"
+          *ngIf="subMenu.subMenus?.length === 0 && (menu?.filterText === '' || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1)"
           class="submenu_list_container">
           <a class="submenu_list_click_items" attr.aria-label="{{ subMenu.name }}" (click)="onMenuClick(subMenu)">
             <span attr.aria-label="{{ subMenu.name }}">

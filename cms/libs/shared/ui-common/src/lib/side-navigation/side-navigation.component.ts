@@ -13,7 +13,6 @@ export class SideNavigationComponent implements OnInit {
   isProductivityMenuActivated = false;
   subMenuExpandStatus: boolean[] = [];
   menus$ = this.navigationMenuFacade.navigationMenu$;
-  searchText: string = '';
   //add menu badges on this variable
   menuBadges = [
     { key: "PRODUCTIVITY_TOOLS", value: 17 },
@@ -50,7 +49,8 @@ export class SideNavigationComponent implements OnInit {
     }
   }
 
-  isMenuHeadingVisible = (menus: NavigationMenu[]) => menus?.findIndex((menu: any) =>
-    menu.name?.toLowerCase()?.indexOf(this.searchText?.toLowerCase()) !== -1) !== -1;
+  isMenuHeadingVisible = (menus: NavigationMenu[], filterText: string) => menus?.findIndex((menu: any) =>
+    menu.name?.toLowerCase()?.indexOf(filterText?.toLowerCase()) !== -1) !== -1;
 
+  
 }
