@@ -4,7 +4,9 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-
+/** Facades **/
+import {ReminderFacade} from '@cms/productivity-tools/domain';
+import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'productivity-tools-reminder-list',
   templateUrl: './reminder-list.component.html',
@@ -49,14 +51,18 @@ export class ReminderListComponent {
     },
   ];
 
+  /** Constructor **/
+  constructor(
+    private reminderFacade : ReminderFacade,
+    private loaderService: LoaderService,
+  ){}
   /** Internal event methods **/
   onDoneClicked() {
-    const snackbarMessage: SnackBar = {
-      title: 'Notification message!',
-      subtitle: 'Sub title goes here.',
-      type: 'success',
-    };
-    this.snackbarSubject.next(snackbarMessage);
+    this.reminderFacade.showHideSnackBar(
+      SnackBarNotificationType.SUCCESS,
+      'Item  updated to Done successfully'
+    );
+   
   }
 
   onCloseReminderClicked() {

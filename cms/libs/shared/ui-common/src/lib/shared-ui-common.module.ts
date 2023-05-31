@@ -35,6 +35,7 @@ import { UserPhotoIconComponent } from './user-photo-icon/user-photo-icon.compon
 import { CaseEligibilityPeriodsComponent } from './case-eligibility-periods/case-eligibility-periods.component';
 import { GridCellDateRangeFilterComponent } from './grid-cell-date-range-filter/grid-cell-date-range-filter.component';
 import { DocumentUploadComponent } from './document-upload/document-upload.component';
+import { ClientsAttachmentComponent } from './clients-attachment/clients-attachment.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
@@ -65,6 +66,7 @@ import { DocumentUploadComponent } from './document-upload/document-upload.compo
     CaseEligibilityPeriodsComponent,
     GridCellDateRangeFilterComponent,
     DocumentUploadComponent,
+    ClientsAttachmentComponent,
   ],
   exports: [
     LoginStatusComponent,
@@ -93,6 +95,7 @@ import { DocumentUploadComponent } from './document-upload/document-upload.compo
     CaseEligibilityPeriodsComponent,
     GridCellDateRangeFilterComponent,
     DocumentUploadComponent,
+    ClientsAttachmentComponent,
   ],
 })
 export class SharedUiCommonModule {}
