@@ -156,7 +156,7 @@ export class ClientEligibilityPageComponent implements OnInit, OnDestroy, AfterV
   }
   saveAndUpdate(questoinsResponse: any, clientNote : any) {  
    
-    this.loaderService.show();
+    
     if(this.cerNote)
     {
        this.smokingCessationFacade.createSmokingCessationNote(clientNote).subscribe({
