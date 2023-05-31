@@ -58,12 +58,6 @@ export class HealthInsurancePolicyDataService {
     }
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy?clientInsurancePolicyId=${insurancePolicyId}`,options);
   }
-  
-  copyInsurancePolicy(insurancePolicyId:any){
-    return this.http.post(
-    `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policies/${insurancePolicyId}`,{}
-    );
-  }
 
   copyHealthInsurancePolicy(insurancePolicyId:any, insurancePolicy: any = {}){
     return this.http.post(

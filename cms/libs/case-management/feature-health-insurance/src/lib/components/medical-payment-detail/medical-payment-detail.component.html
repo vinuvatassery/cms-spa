@@ -1,7 +1,6 @@
 <section class="k-dialog-body">
-    <p class="text-muted mb-2" *ngIf="tabStatus === 'hlt-ins-prm-pym'"> {{isPaymentAddForm ? 'Add a new medical payment':'Edit or delete dental payment'}} </p>
-    <p class="text-muted mb-2" *ngIf="tabStatus === 'dnt-ins-prm-pym'"> {{isPaymentAddForm ? 'Add a new dental payment':'Edit or delete dental payment'}} </p>
-
+    
+    <p class="text-muted mb-2">  All fields are required unless otherwise stated</p>
     <form [formGroup]="copayPaymentForm">
         <div class="flex-row">
     
@@ -27,9 +26,9 @@
     
             </div>
             <div class="flex-col">
-                    <kendo-floatinglabel text="Insurance Policy Name" >   
+                    <kendo-floatinglabel text="Policy ID" >   
                         <kendo-combobox   
-                        aria-label="Insurance Policy Name"
+                        aria-label="Policy ID"
                         [fillMode]="formUiStyle.dropDownFillMode" 
                         [loading] = "isInsurancePoliciesLoading" 
                         formControlName="clientInsurancePolicyId"     
@@ -125,8 +124,16 @@
     
             <div class="flex-col">
                 <kendo-floatinglabel text="Comment">
-                    <kendo-textarea formControlName="comments" aria-label="Comment"
-                        [fillMode]="formUiStyle.inputFillMode">
+                    <kendo-textarea 
+                        formControlName="comments"                         
+                        aria-label="Comment"
+                        resizable="auto"
+                        [fillMode]="formUiStyle.inputFillMode"
+                        [maxlength]="commentMaxLength"
+                        (valueChange)="commentValueChange($event)">
+                        <kendo-textarea-suffix class="justify-content-end">
+                            <span class="counter"> {{ commentCounter }}</span>
+                          </kendo-textarea-suffix>
                     </kendo-textarea>
                     <kendo-formerror *ngIf="!copayPaymentForm.controls['comments'].valid">Comment is
                         required.</kendo-formerror>
@@ -144,7 +151,7 @@
             <button *ngIf="!isPaymentAddForm" kendoButton [primary]="true" look="outline" aria-label="edit Payment"> Edit </button>
         </div>
         <div class="justify-content-end">
-            <button kendoButton [primary]="true" look="outline" aria-label="cancel adding Payment"> Cancel  </button>
+            <button kendoButton [primary]="true" look="outline" aria-label="cancel adding Payment" (click) ="closeCoPaymentDetailsOpened()"> Cancel  </button>
             <button kendoButton [primary]="true" aria-label="add new Payment" (click)="savePaymentDetailsClicked()"> Add</button>
 
         </div>
