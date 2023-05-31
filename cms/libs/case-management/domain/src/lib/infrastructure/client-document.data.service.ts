@@ -51,4 +51,11 @@ export class ClientDocumentDataService {
          , {
             responseType: 'blob'} );
     }
+
+    getAllClientDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string) {
+        return this.http.get<ClientDocument>(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents?clientCaseEligibilityId=${clientCaseEligibilityId}`,
+        );
+    }
 }
+    

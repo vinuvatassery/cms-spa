@@ -29,6 +29,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() data!: any;
   @Input() ddlEmails$!: Observable<any>;
   @Input() toEmail!: [];
+  @Input() clientCaseEligibilityId!: any;
+  @Input() clientId!: any;
+  @Input() isCerForm!: any;
   
 
   /** Output properties  **/
@@ -57,11 +60,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   currentEmailData:any;
   showEmailPreview: boolean = false;
   previewEmailContent!: any;
-  isCerForm = false;
   prevClientCaseEligibilityId!: string;
   cerAuthorizationEmailTypeCode!: string;
   selectedToEmail!: any;
   showToEmailLoader: boolean = true;
+  caseEligibilityId!:any;
   /** Private properties **/
   private currentSessionSubscription !: Subscription;
 
@@ -82,19 +85,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.emailSubscription$.unsubscribe();
-  }
-
-  private loadCurrentSession() {
-    const sessionId = this.route.snapshot.queryParams['sid'];
-    this.workflowFacade.loadWorkFlowSessionData(sessionId);
-    this.currentSessionSubscription = this.workflowFacade.sessionDataSubject$.subscribe((resp) => {
-      if (resp) {
-        this.prevClientCaseEligibilityId = JSON.parse(resp.sessionData)?.prevClientCaseEligibilityId;
-        if (this.prevClientCaseEligibilityId) {
-          this.isCerForm = true;
-        }
-      }
-    });
   }
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -225,10 +215,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private generateText(emailData: any, requestType: string){
     this.loaderService.show();
-    this.loadCurrentSession();
-    const clientId = this.workflowFacade.clientId ?? 0;
-    const caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
-    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', emailData ?? '', requestType ?? '')
+    // this.loadCurrentSession();
+    // const clientId = this.workflowFacade.clientId ?? 0;
+    // this.caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
+    this.communicationFacade.generateTextTemplate(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', emailData ?? '', requestType ?? '')
         .subscribe({
           next: (data: any) =>{
           if (data) {

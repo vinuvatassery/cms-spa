@@ -60,8 +60,10 @@
           <case-management-email-editor
           [dataEvent]="emailEditorValueEvent"
           [currentValue]="currentEmailData"
+          [clientCaseEligibilityId]="clientCaseEligibilityId"
+          [clientId]="clientId"
           (editorValue)="handleEmailEditor($event)"
-            class="editor-lg-email"
+          class="editor-lg-email"
           ></case-management-email-editor>
         </div>
       </div>

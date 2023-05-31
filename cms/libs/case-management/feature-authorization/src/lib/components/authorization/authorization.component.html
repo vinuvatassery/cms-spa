@@ -193,6 +193,9 @@
   *ngIf="isSendNewEmailPopupOpened"
   [data]="screenName"
   [toEmail]="toEmail"
+  [clientId]="clientId"
+  [isCerForm]="isCerForm"
+  [clientCaseEligibilityId]="clientEligibilityId"
   (closeSendEmailEvent)="handleCloseSendNewEmailClicked($event)"
   kendoTooltip
 ></case-management-send-email>

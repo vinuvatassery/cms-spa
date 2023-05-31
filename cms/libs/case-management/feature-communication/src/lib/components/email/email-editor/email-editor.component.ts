@@ -12,12 +12,15 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 /** Facades **/
-import { CommunicationFacade } from '@cms/case-management/domain';
+import { CommunicationFacade, ClientDocumentFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { EditorComponent } from '@progress/kendo-angular-editor';
 
 /** External Libraries **/
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider} from '@cms/shared/util-core';
+
+/** Internal Libraries **/
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'case-management-email-editor',
@@ -31,9 +34,12 @@ export class EmailEditorComponent implements OnInit {
   @Input() dataEvent!: EventEmitter<any>;
   @Input() loadInitialData = new EventEmitter();
   @Input() currentValue!: any;
+  @Input() clientCaseEligibilityId!:string;
+  @Input() clientId!:any;
 
   /** Output properties  **/
   @Output() editorValue = new EventEmitter<any>();
+  @Output() onAttachmentConfirmationEvent = new EventEmitter();
 
   /** Public properties **/
   @ViewChild('anchor',{ read: ElementRef }) public anchor!: ElementRef;
@@ -47,19 +53,23 @@ export class EmailEditorComponent implements OnInit {
   previewValue!: any;
   showPreviewEmail: boolean = false;
   showAttachmentUpload: boolean = false;
+  showClientAttachmentUpload: boolean = false;
   attachedFiles: any;
   attachedFileValidatorSize: boolean = false;
+  cerAuthorizationForm!:FormGroup;
   public defaultAttachedFile: any[] = [];
   public uploadedAttachedFile: any[] = [];
   public selectedAttachedFile: any[] = [];
+  clientAllDocumentList$: any;
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   public uploadRemoveUrl = 'removeUrl';
   public editorUploadOptions = [
     {
       buttonType:"btn-h-primary",
-      text: "Attach from Computer system",
+      text: "Attach from Computer",
       id: "uploadsystemfile",
       click: (): void => {
+        this.showClientAttachmentUpload = false;
         this.showAttachmentUpload = true;
       },
     },
@@ -68,6 +78,8 @@ export class EmailEditorComponent implements OnInit {
       text: "Attach from Client's Attachments",
       id: "attachfromclient",
       click: (): void => {
+        this.showAttachmentUpload = false;
+        this.showClientAttachmentUpload = true;
       },
     },
   ];
@@ -77,7 +89,9 @@ export class EmailEditorComponent implements OnInit {
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly configurationProvider: ConfigurationProvider,) {}
+    private readonly configurationProvider: ConfigurationProvider,
+    private formBuilder: FormBuilder,
+    public readonly clientDocumentFacade: ClientDocumentFacade,) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -85,6 +99,10 @@ export class EmailEditorComponent implements OnInit {
     this.emailEditorValueEvent(this.currentValue);
     this.loadClientVariables();
     this.loadDdlEditorVariables();
+    this.loadAllClientDocuments(this.clientCaseEligibilityId);
+    this.cerAuthorizationForm = this.formBuilder.group({
+      clientsAttachment:[]
+    });
   }
 
   ngOnChanges(){
@@ -212,5 +230,45 @@ if(!this.attachedFileValidatorSize){
   
   removeFile(index: any) {
     this.selectedAttachedFile.splice(index, 1);
+  }
+
+  loadAllClientDocuments(clientCaseEligibilityId: string){
+    this.loaderService.show();
+    this.clientDocumentFacade.getAllClientDocumentsByClientCaseEligibilityId(clientCaseEligibilityId ??'')
+    .subscribe({
+      next: (clientFiles: any) =>{
+        if (clientFiles) {
+          this.clientAllDocumentList$ = clientFiles; 
+        }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+  }
+
+  clientAttachmentChange(event:any)
+  {
+    this.uploadedAttachedFile = [{
+      document: event,
+      size: event.documentSize,
+      name: event.documentName,
+      clientDocumentId: event.clientDocumentId,
+      uid: ''
+    }];
+    if(this.selectedAttachedFile.length == 0){
+      this.selectedAttachedFile = this.uploadedAttachedFile;
+    }else{
+      for (let file of this.uploadedAttachedFile){
+        this.selectedAttachedFile.push(file);
+       }
+      }
+    this.uploadedAttachedFile = [];
+    this.onAttachmentConfirmationEvent.emit(event);
+    this.showClientAttachmentUpload = false;
+    event = [];
   }
 }

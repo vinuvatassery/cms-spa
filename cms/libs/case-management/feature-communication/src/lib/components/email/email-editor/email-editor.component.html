@@ -12,6 +12,14 @@
   <kendo-formhint >Max file size 25MB</kendo-formhint>
   <kendo-formerror *ngIf="attachedFileValidatorSize">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
 </div>
+<!-- Select file form client attachment -->
+<div *ngIf="showClientAttachmentUpload" class="mb-2 mt-2">
+  <common-clients-attachment
+  [clientAttachmentForm]="cerAuthorizationForm"
+  [clientDocumentList$]="clientAllDocumentList$"
+  (clientAttachmentChangeEvent)="clientAttachmentChange($event)"
+  ></common-clients-attachment>
+</div>
 <div class="app-c-editor letter-editor-height">
   <!-- Variable dropdown -->
   <button
@@ -91,6 +99,8 @@
   <kendo-editor #editor [(value)]="emailEditorvalue">
   <case-management-send-email
   (editorValue)="emailEditorValueEvent($event)"
+  [clientCaseEligibilityId]="clientCaseEligibilityId"
+  [clientId]="clientId"
 ></case-management-send-email>
     <kendo-toolbar>
       <kendo-toolbar-buttongroup>

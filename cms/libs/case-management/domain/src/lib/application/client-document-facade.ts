@@ -63,4 +63,8 @@ export class ClientDocumentFacade {
             }
         })
     }
+
+    getAllClientDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string) {
+        return this.clientDocumentDataService.getAllClientDocumentsByClientCaseEligibilityId(clientCaseEligibilityId);
+    }
 }
