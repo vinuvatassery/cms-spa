@@ -783,3 +783,13 @@
   padding: 5px 6px;
 }
 }
+
+.more_action_wid{
+  > .k-button-solid{
+    padding: 8px;
+    .k-button-text{
+      display: none;
+    }
+  }
+
+}

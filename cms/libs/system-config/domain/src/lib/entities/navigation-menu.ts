@@ -7,7 +7,8 @@ export interface NavigationMenu {
     icon: string;
     hasBadge: boolean;
     sequenceNbr: number;
-    target:string;
+    target: string;
     subMenus: NavigationMenu[];
-    isExpanded: boolean;
+    isActive: boolean;
+    filterText: string;
 }
