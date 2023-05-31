@@ -19,7 +19,17 @@ import { VendorInfoComponent } from './components/vendor-info/vendor-info.compon
 import { VendorHeaderToolsComponent } from './components/vendor-header-tools/vendor-header-tools.component';
 import { PaymentAddressesComponent } from './components/payment-addresses/payment-addresses.component';
 import { FinancialDrugsComponent } from './components/financial-drugs/financial-drugs.component';
-import { FinancialPaymentComponent } from './components/financial-payments/financial-payments.component';
+import { FinancialPaymentComponent } from './components/financial-payments/financial-payments.component'; 
+import { BillingAddressDeactivateComponent } from './components/billing-address-deactivate/billing-address-deactivate.component';
+import { BillingAddressDeleteComponent } from './components/billing-address-delete/billing-address-delete.component';
+import { BillingAddressDetailsComponent } from './components/billing-address-details/billing-address-details.component';
+import { BillingAddressListComponent } from './components/billing-address-list/billing-address-list.component';
+import { BillingEmailAddressDeleteComponent } from './components/billing-email-address-delete/billing-email-address-delete.component';
+import { BillingEmailAddressDetailsComponent } from './components/billing-email-address-details/billing-email-address-details.component';
+import { BillingEmailAddressListComponent } from './components/billing-email-address-list/billing-email-address-list.component';
+import { ContactsDeactivateComponent } from './components/contacts-deactivate/contacts-deactivate.component';
+import { ContactsDeleteComponent } from './components/contacts-delete/contacts-delete.component';
+import { ContactsDetailsComponent } from './components/contacts-details/contacts-details.component';
 import { FinancialInsurancePlansComponent } from './components/financial-insurance-plans/financial-insurance-plans.component';
 import { FinancialPharmacyClaimsComponent } from './components/financial-pharmacy-claims/financial-pharmacy-claims.component';
 
@@ -49,7 +59,17 @@ import { FinancialPharmacyClaimsComponent } from './components/financial-pharmac
     FinancialDrugsComponent,
     FinancialPaymentComponent,
     FinancialInsurancePlansComponent,
-    FinancialPharmacyClaimsComponent
+    FinancialPharmacyClaimsComponent,
+    BillingAddressDeactivateComponent,
+    BillingAddressDeleteComponent,
+    BillingAddressDetailsComponent,
+    BillingAddressListComponent,
+    BillingEmailAddressDeleteComponent,
+    BillingEmailAddressDetailsComponent,
+    BillingEmailAddressListComponent,
+    ContactsDeactivateComponent,
+    ContactsDeleteComponent,
+    ContactsDetailsComponent,
   ],
   exports: [
     FinancialVendorPageComponent,
@@ -68,7 +88,17 @@ import { FinancialPharmacyClaimsComponent } from './components/financial-pharmac
     FinancialDrugsComponent,
     FinancialPaymentComponent,
     FinancialInsurancePlansComponent,
-    FinancialPharmacyClaimsComponent
+    FinancialPharmacyClaimsComponent,
+    BillingAddressDeactivateComponent,
+    BillingAddressDeleteComponent,
+    BillingAddressDetailsComponent,
+    BillingAddressListComponent,
+    BillingEmailAddressDeleteComponent,
+    BillingEmailAddressDetailsComponent,
+    BillingEmailAddressListComponent,
+    ContactsDeactivateComponent,
+    ContactsDeleteComponent,
+    ContactsDetailsComponent,
   ],
 })
 export class CaseManagementFeatureFinancialVendorModule {}

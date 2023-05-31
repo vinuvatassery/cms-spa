@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
-  selector: 'cms-vendor-info',
-  templateUrl: './vendor-info.component.html',
-  styleUrls: [],
+  selector: 'cms-billing-address-list',
+  templateUrl: './billing-address-list.component.html',
+  styleUrls: ['./billing-address-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VendorInfoComponent {
+export class BillingAddressListComponent {
   SpecialHandlingLength = 100;
   public formUiStyle : UIFormStyle = new UIFormStyle();
 
@@ -40,8 +40,5 @@ export class VendorInfoComponent {
         
       },
     },
-   
-    
- 
   ];
 }
