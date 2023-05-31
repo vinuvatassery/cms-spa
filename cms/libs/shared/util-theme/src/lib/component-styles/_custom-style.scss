@@ -793,3 +793,15 @@
   }
 
 }
+
+.k-form .k-form-legend{
+  border: 0px !important;
+}
+.no_margin_fieldset{
+  &.k-form-fieldset{
+    margin: 0;
+  }
+  .k-form-legend{
+    margin: 0;
+  }
+}
