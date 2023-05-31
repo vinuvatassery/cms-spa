@@ -66,12 +66,12 @@ export class AuthorizationComponent   {
   /** Lifecycle hooks **/
   ngOnInit(): void 
   {  
-    // this.loadCurrentSession();
     this.loadUserContactInfo(this.clientId, this.clientEligibilityId);
   }
 
     /** Private methods **/  
   private loadUserContactInfo(clientId: any, clientEligibilityId: any) {
+    this.loaderService.show();
       this.contactFacade.loadContactInfo(this.clientId ?? 0, this.clientEligibilityId ?? '')
       .subscribe({
         next: (data: any) =>{
@@ -88,8 +88,8 @@ export class AuthorizationComponent   {
                   this.toEmail.push(emailObject);
                 }
               }
+              this.loadClientDocumentInfo();
             }
-            this.loadClientDocumentInfo();
       },
       error: (err: any) => {
         this.loaderService.hide();
@@ -99,6 +99,7 @@ export class AuthorizationComponent   {
   }
 
   private loadClientDocumentInfo() {
+    this.loaderService.show();
     if(this.isGoPaperlessOpted == true)
     {
       this.typeCode=CommunicationEvents.CerAuthorizationEmail
@@ -125,7 +126,7 @@ export class AuthorizationComponent   {
               this.ref.detectChanges();
               this.getLoggedInUserProfile();
             }
-        this.loaderService.hide();
+            this.loaderService.hide();
       },
       error: (err: any) => {
         this.loaderService.hide();

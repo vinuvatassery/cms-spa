@@ -65,6 +65,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   selectedToEmail!: any;
   showToEmailLoader: boolean = true;
   caseEligibilityId!:any;
+ 
   /** Private properties **/
   private currentSessionSubscription !: Subscription;
 
@@ -215,9 +216,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private generateText(emailData: any, requestType: string){
     this.loaderService.show();
-    // this.loadCurrentSession();
-    // const clientId = this.workflowFacade.clientId ?? 0;
-    // this.caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
     this.communicationFacade.generateTextTemplate(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', emailData ?? '', requestType ?? '')
         .subscribe({
           next: (data: any) =>{
@@ -228,9 +226,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           }
           if(requestType=="SendEmail")
           {
-            this.isOpenSendEmailClicked = false;
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent for Esign..')
           this.onCloseSendEmailClicked();
+          this.isOpenSendEmailClicked = false;
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent for Esign..')
           }
           this.loaderService.hide();
         },
@@ -250,7 +248,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           next: (data: any) =>{
             this.loaderService.hide();
           if (data) {
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Template Saved As Draft')
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Email Saved As Draft')
           }
           this.loaderService.hide();
         },

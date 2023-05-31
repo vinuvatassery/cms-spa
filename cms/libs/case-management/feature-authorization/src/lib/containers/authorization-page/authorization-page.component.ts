@@ -55,6 +55,7 @@ private loadCurrentSession() {
           this.ref.detectChanges();
         }
       }
+      this.loaderService.hide();
   },
   error: (err: any) => {
     this.loaderService.hide();

@@ -134,6 +134,7 @@ export class SendLetterComponent implements OnInit {
     this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
     this.generateText(this.selectedTemplate,CommunicationEvents.Preview);
   }
+
   private generateText(letterData: any, requestType: CommunicationEvents){
     this.loaderService.show();
     const clientId = this.workflowFacade.clientId ?? 0;
@@ -144,15 +145,13 @@ export class SendLetterComponent implements OnInit {
           if (data) {
             this.currentLetterPreviewData = data;
             this.ref.detectChanges();
+            if(requestType==CommunicationEvents.SendLetter)
+              {
+                this.onCloseNewLetterClicked();
+                this.viewOrDownloadFile(data.clientDocumentId);
+                this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent for Print')
+              }
           }
-          if(requestType==CommunicationEvents.SendLetter)
-          {
-            this.viewOrDownloadFile(data.clientDocumentId);
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent for Print')
-            this.closeSendLetterEvent.emit(CommunicationEvents.Close);
-            this.onCloseNewLetterClicked();
-          }
-          this.loaderService.hide();
         },
         error: (err: any) => {
           this.loaderService.hide();
@@ -168,10 +167,9 @@ export class SendLetterComponent implements OnInit {
   }
 
   onConfirmSendLetterToPrintClicked(){
-    this.emailEditorValueEvent.emit(this.currentLetterData);
-    this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
-    this.generateText(this.selectedTemplate,CommunicationEvents.SendLetter);
-    this.closeSendLetterEvent.emit(CommunicationEvents.Print);
+    this.isNewLetterClicked=true;
+    this.isShowSendLetterToPrintPopupClicked=true;
+    this.isShowPreviewLetterPopupClicked=false;
   }
 
   onCloseNewLetterClicked() {
@@ -226,7 +224,6 @@ this.isShowSendLetterToPrintPopupClicked = false;
     this.communicationFacade.SaveForLaterEmailTemplate(draftTemplate, isSaveFoLater)
         .subscribe({
           next: (data: any) =>{
-            this.loaderService.hide();
           if (data) {
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Template Saved As Draft')
           }
@@ -256,20 +253,20 @@ this.isShowSendLetterToPrintPopupClicked = false;
   }
 
   viewOrDownloadFile(clientDocumentId: string) {
+    this.loaderService.show();
     if (clientDocumentId === undefined) {
         return;
     }
-    //this.loaderService.show()
     this.getClientDocumentsViewDownload(clientDocumentId).subscribe({
         next: (data: any) => {
             const fileUrl = window.URL.createObjectURL(data);
                 window.open(fileUrl, "_blank");
-            this.loaderService.hide();
         },
         error: (error: any) => {
             this.loaderService.hide();
         }
     })
+    this.loaderService.hide();
   }
 
   getClientDocumentsViewDownload(clientDocumentId: string) {
