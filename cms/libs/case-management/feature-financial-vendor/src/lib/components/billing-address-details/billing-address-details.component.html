@@ -1,1 +1,57 @@
-<p>billing-address-details works!</p>
+<!-- employer form details -->
+<form class="k-form">
+    <section class="k-dialog-body">
+        <p class="text-muted mb-1">
+            All fields are required unless otherwise stated.
+        </p>
+        <div class="flex-row">
+            <div class="flex-col">
+                <kendo-floatinglabel text="Address Line 1">
+                    <kendo-textbox textFieldautofocus aria-label="Address Line 1"
+                        [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                </kendo-floatinglabel>
+
+            </div>
+            <div class="flex-col mb-1">
+
+                <kendo-floatinglabel text="Address Line 2 (optional)">
+                    <kendo-textbox aria-label="Address Line 2 (optional)" [fillMode]="formUiStyle.inputFillMode">
+                    </kendo-textbox>
+                </kendo-floatinglabel>
+            </div>
+            <div class="flex-col mb-1">
+
+                <kendo-floatinglabel text="City">
+                    <kendo-textbox aria-label="City" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                </kendo-floatinglabel>
+            </div>
+
+            <div class="flex-col mb-1 flex-col-6">
+                <kendo-floatinglabel text="State">
+                    <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" textField="lovDesc"
+                        valueField="lovCode" aria-label="State">
+                    </kendo-dropdownlist>
+                </kendo-floatinglabel>
+            </div>
+            <div class="flex-col mb-1 flex-col-6">
+                <kendo-floatinglabel text="ZIP">
+                    <kendo-textbox aria-label="ZIP" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                </kendo-floatinglabel>
+            </div>
+
+
+
+        </div>
+    </section>
+    <kendo-dialog-actions>
+        <div class="justify-content-between mt-2">
+            <div>
+                <button kendoButton [primary]="true" look="flat" aria-label="delete employer"> Deactivate </button> 
+            </div>
+            <div class="justify-content-end">
+                <button kendoButton [primary]="true" aria-label="cancel employer" look="outline"> Cancel  </button>
+                <button kendoButton [primary]="true" aria-label="add new employer">  Add  </button>
+            </div>
+        </div>
+    </kendo-dialog-actions>
+</form>
