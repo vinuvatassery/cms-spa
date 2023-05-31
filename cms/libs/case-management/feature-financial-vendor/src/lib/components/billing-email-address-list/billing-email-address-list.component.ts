@@ -8,40 +8,67 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class BillingEmailAddressListComponent {
   SpecialHandlingLength = 100;
-  public formUiStyle : UIFormStyle = new UIFormStyle();
-
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  isEmailBillingAddressDetailShow = false;
+  isEmailBillingAddressDeactivateShow = false;
+  isEmailBillingAddressDeleteShow = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  addressGridView = [];
-  public actions = [
+  emailAddressGridView = [
     {
-      buttonType: "btn-h-primary",
-      text: "Edit Address",
-      icon: "edit",
-      click: (address:any): void => {
-        
-        console.log(address);
-      },
+      emailAddress: 'Address `',
+      startDate:'address2', 
+      by: 'by',
     },
-    {
-      buttonType: "btn-h-primary",
-      text: "Deactivate Address",
-      icon: "block",
-      click: (address:any): void => {
-        console.log(address);
-        
-      },
-    },
-    {
-      buttonType: "btn-h-danger",
-      text: "Delete Address",
-      icon: "delete",
-      click: (address:any): void => {
-        console.log(address);
-        
-      },
-    },
-   
-    
- 
   ];
+  public emailBillingAddressActions = [
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Edit Address',
+      icon: 'edit',
+      click: (address: any): void => {
+        this.clickOpenAddEditEmailBillingAddressDetails();
+        console.log(address);
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Deactivate Address',
+      icon: 'block',
+      click: (address: any): void => {
+        console.log(address);
+        this.clickOpenDeactivateEmailBillingAddressDetails();
+      },
+    },
+    {
+      buttonType: 'btn-h-danger',
+      text: 'Delete Address',
+      icon: 'delete',
+      click: (address: any): void => {
+        console.log(address);
+        this.clickOpenDeleteEmailBillingAddressDetails();
+      },
+    },
+  ];
+
+  clickOpenAddEditEmailBillingAddressDetails() {
+    this.isEmailBillingAddressDetailShow = true;
+  }
+
+  clickCloseAddEditBillingAddressDetails() {
+    this.isEmailBillingAddressDetailShow = false;
+  }
+
+  clickOpenDeactivateEmailBillingAddressDetails() {
+    this.isEmailBillingAddressDeactivateShow = true;
+  }
+  clickCloseDeactivateBillingAddress() {
+    this.isEmailBillingAddressDeactivateShow = false;
+  }
+
+  clickOpenDeleteEmailBillingAddressDetails() {
+    this.isEmailBillingAddressDeleteShow = true;
+  }
+  clickCloseDeleteBillingAddress() {
+    this.isEmailBillingAddressDeleteShow = false;
+  }
 }

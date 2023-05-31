@@ -10,7 +10,7 @@
     </div>
     <div class="flex-col mt-1">
       <div class="app-c-table">
-        <kendo-grid [resizable]="true" [kendoGridBinding]="addressGridView">
+        <kendo-grid [resizable]="true" [kendoGridBinding]="emailAddressGridView">
   
           <kendo-grid-column field="emailAddress" title="Email Address" [width]="150">
           </kendo-grid-column>
@@ -34,7 +34,7 @@
           </kendo-grid-column>
           <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="75" class="text-center">
             <ng-template kendoGridCellTemplate let-dataItem>
-              <kendo-dropdownbutton [data]="actions" icon="more-vertical"
+              <kendo-dropdownbutton [data]="emailBillingAddressActions" icon="more-vertical"
                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                 aria-label="more actions" title="More option"
                 [popupSettings]="{ popupClass: popupClassAction, animate: true }">
@@ -69,13 +69,30 @@
       </div>
     </div>
     <div class="flex-col mt-1">
-      <button kendoButton [primary]="true" icon="add" aria-label="add address">
+      <button kendoButton [primary]="true" icon="add" aria-label="add address" (click)="clickOpenAddEditEmailBillingAddressDetails()">
         Email Address
       </button>
     </div>
   </div>
 
-  <!-- <kendo-dialog class="app-c-modal app-c-modal-sm app-c-modal-np" kendoTooltip>
-    <kendo-dialog-titlebar> </kendo-dialog-titlebar>
-    <cms-billing-email-address-details > </cms-billing-email-address-details>
-  </kendo-dialog> -->
+ 
+
+  
+<kendo-dialog *ngIf="isEmailBillingAddressDetailShow" (close)="clickCloseAddEditBillingAddressDetails()"
+class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog-titlebar (close)="clickCloseAddEditBillingAddressDetails()"> Add/Edit Billing email address
+</kendo-dialog-titlebar>
+<cms-billing-email-address-details> </cms-billing-email-address-details>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isEmailBillingAddressDeactivateShow" (close)="clickCloseDeactivateBillingAddress()"
+class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog-titlebar> Deactivate billing email address?</kendo-dialog-titlebar>
+<cms-billing-address-deactivate> </cms-billing-address-deactivate>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isEmailBillingAddressDeleteShow" (close)="clickCloseDeleteBillingAddress()"
+class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog-titlebar> Delete billing email address?</kendo-dialog-titlebar>
+<cms-billing-address-delete> </cms-billing-address-delete>
+</kendo-dialog>
