@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import {SnackbarDataService,Snackbar} from '@cms/productivity-tools/domain';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-vendor-header-tools',
   templateUrl: './vendor-header-tools.component.html',
@@ -18,6 +20,7 @@ export class VendorHeaderToolsComponent {
       icon: 'markunread_mailbox',
       isVisible: true,
       click: (): void => { 
+        this.letterSent();
       },
     },
     {
@@ -26,9 +29,24 @@ export class VendorHeaderToolsComponent {
       icon: 'mail_outline',
       isVisible: false,
       click: (): void => {
-     
+     this.emailSent();
       },
     },
      
   ];
+   /** Constructor **/
+   constructor(
+    private snackbar:SnackbarDataService,
+  ) {
+
+  }
+
+  emailSent(){
+    this.snackbar.showHideSnackBar( SnackBarNotificationType.SUCCESS,
+      Snackbar.emailSent);
+  }
+  letterSent(){
+    this.snackbar.showHideSnackBar( SnackBarNotificationType.SUCCESS,
+      Snackbar.letterPrint);
+  }
 }
