@@ -166,6 +166,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowSaveForLaterPopupClicked = true; 
   }
 
+  onSendEmailDailougeConfirmationClicked(){
+    this.isShowSendEmailConfirmationPopupClicked = false;
+  }
+
   onPreviewEmailClicked() { 
     this.isShowPreviewEmailPopupClicked = true;
     this.emailEditorValueEvent.emit(this.currentEmailData);

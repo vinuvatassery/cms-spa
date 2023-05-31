@@ -1,5 +1,8 @@
-<common-bread-crumb></common-bread-crumb>
+<!-- <common-bread-crumb></common-bread-crumb> -->
 <case-management-authorization
+  [isCerForm]="isCerForm"
+  [clientId]="clientId"
+  [clientEligibilityId]="clientCaseEligibilityId"
   (cerDateSignatureEvent)="loadDateSignature($event)"
 ></case-management-authorization>
 <!-- Application Review -->

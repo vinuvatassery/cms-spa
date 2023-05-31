@@ -119,7 +119,10 @@ export class SendLetterComponent implements OnInit {
   onSendLetterToPrintDialogClicked(event: any) {
     this.isShowSendLetterToPrintPopupClicked = false;
     if (event === CommunicationEvents.Print) {
-      this.closeSendLetterEvent.emit(CommunicationEvents.Print);
+      this.emailEditorValueEvent.emit(this.currentLetterData);
+    this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
+    this.generateText(this.selectedTemplate,CommunicationEvents.SendLetter);
+    this.closeSendLetterEvent.emit(CommunicationEvents.Print);
     } else if (event === CommunicationEvents.Close) {
       this.closeSendLetterEvent.emit(CommunicationEvents.Close);
     }
@@ -159,6 +162,12 @@ export class SendLetterComponent implements OnInit {
   }
 
   onSendLetterToPrintClicked() {
+    this.isNewLetterClicked=true;
+    this.isShowSendLetterToPrintPopupClicked=true;
+    this.isShowPreviewLetterPopupClicked=false;
+  }
+
+  onConfirmSendLetterToPrintClicked(){
     this.emailEditorValueEvent.emit(this.currentLetterData);
     this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
     this.generateText(this.selectedTemplate,CommunicationEvents.SendLetter);
@@ -178,8 +187,13 @@ export class SendLetterComponent implements OnInit {
     this.isOpenLetterTemplate = true;
     this.loadInitialData.emit();
   }
+
   onClosePreview(){
     this.isShowPreviewLetterPopupClicked = false;
+  }
+
+  onConfirmSendLetterToPrintDialogClicked(){
+this.isShowSendLetterToPrintPopupClicked = false;
   }
 
   private loadDropdownLetterTemplates() {
@@ -254,7 +268,6 @@ export class SendLetterComponent implements OnInit {
         },
         error: (error: any) => {
             this.loaderService.hide();
-            //this.showSnackBar(SnackBarNotificationType.ERROR, error)
         }
     })
   }

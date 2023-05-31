@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 /** Enums **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
@@ -30,7 +30,9 @@ export class AuthorizationComponent   {
   isAuthorizationNoticePopupOpened = false;
   uploadedDocument!: File | undefined;
   public formUiStyle : UIFormStyle = new UIFormStyle();
-  isCerForm = false;
+  @Input() isCerForm: boolean= false;
+  @Input() clientId!: any;
+  @Input() clientEligibilityId!: any;
   cerDateValidator: boolean = false;
   copyOfSignedApplication: any;
   showCopyOfSignedApplicationRequiredValidation: boolean = false;
@@ -46,7 +48,6 @@ export class AuthorizationComponent   {
   incompleteDateValidation!: any;
   loginUserName!:any;
     /** Private properties **/
-    private currentSessionSubscription !: Subscription;
     private userProfileSubsriction !: Subscription;
 
   constructor(
@@ -65,41 +66,13 @@ export class AuthorizationComponent   {
   /** Lifecycle hooks **/
   ngOnInit(): void 
   {  
-    this.loadCurrentSession();
+    // this.loadCurrentSession();
+    this.loadUserContactInfo(this.clientId, this.clientEligibilityId);
   }
 
-  ngOnDestroy(): void {
-    this.currentSessionSubscription.unsubscribe();
-    this.userProfileSubsriction.unsubscribe();
-  }
-
-    /** Private methods **/
-  private loadCurrentSession() {
-    const sessionId = this.route.snapshot.queryParams['sid'];
-    this.loaderService.show();
-    this.workflowFacade.loadWorkFlowSessionData(sessionId);
-    this.currentSessionSubscription = this.workflowFacade.sessionDataSubject$
-    .subscribe({
-      next: (resp: any) =>{
-        if (resp) {
-          this.prevClientCaseEligibilityId = JSON.parse(resp.sessionData)?.prevClientCaseEligibilityId;
-          if (this.prevClientCaseEligibilityId) {
-            this.isCerForm = true
-          }
-           this.loadContactInfo();
-        }
-      this.loaderService.hide();
-    },
-    error: (err: any) => {
-      this.loaderService.hide();
-      this.loggingService.logException(err);
-    },
-  });
-  }
-  
-  private loadContactInfo(isFormFillRequired = true) {
-    this.loaderService.show();
-      this.contactFacade.loadContactInfo(this.workflowFacade.clientId ?? 0, this.workflowFacade.clientCaseEligibilityId ?? '')
+    /** Private methods **/  
+  private loadUserContactInfo(clientId: any, clientEligibilityId: any) {
+      this.contactFacade.loadContactInfo(this.clientId ?? 0, this.clientEligibilityId ?? '')
       .subscribe({
         next: (data: any) =>{
           if (data) {
@@ -117,7 +90,6 @@ export class AuthorizationComponent   {
               }
             }
             this.loadClientDocumentInfo();
-           this.loaderService.hide();
       },
       error: (err: any) => {
         this.loaderService.hide();
@@ -127,7 +99,6 @@ export class AuthorizationComponent   {
   }
 
   private loadClientDocumentInfo() {
-    this.loaderService.show();
     if(this.isGoPaperlessOpted == true)
     {
       this.typeCode=CommunicationEvents.CerAuthorizationEmail
@@ -142,7 +113,7 @@ export class AuthorizationComponent   {
       .subscribe({
         next: (data: any) =>{
           if (data) {
-              this.emailSentDate = this.intl.formatDate(data.creationTime, this.dateFormat);
+              this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
               if(data.documentTypeCode==CommunicationEvents.CerAuthorizationEmail)
               {
               this.isSendEmailClicked=true;
@@ -152,6 +123,7 @@ export class AuthorizationComponent   {
               this.isPrintClicked=true;
               }
               this.ref.detectChanges();
+              this.getLoggedInUserProfile();
             }
         this.loaderService.hide();
       },
@@ -166,9 +138,6 @@ export class AuthorizationComponent   {
     this.userProfileSubsriction=this.userDataService.getProfile$.subscribe((profile:any)=>{
       if(profile?.length>0){
        this.loginUserName= profile[0]?.firstName+' '+profile[0]?.lastName;
-       // As of now we are showing today's date but we need to change it with the email sent date
-       // once we save the email history to DB.
-       //this.emailSentDate = this.intl.formatDate(new Date(), this.dateFormat);
       }
     })
   }
@@ -200,6 +169,7 @@ export class AuthorizationComponent   {
         this.isSendNewEmailPopupOpened = false;
         this.isSendEmailClicked = true;
         this.getLoggedInUserProfile();
+        this.loadClientDocumentInfo();
         break;
       default:
         break;

@@ -99,7 +99,7 @@ class="app-c-modal app-c-modal-lg app-c-modal-np no-title-actions"
       </div>
       <div class="justify-content-end align-items-center">
         <span class="pr-2">3 attachment(s) to be pinned</span>
-        <button kendoButton [primary]="true" (click)="onSendLetterToPrintClicked()" aria-label="send to print">
+        <button kendoButton [primary]="true" (click)="onConfirmSendLetterToPrintClicked()" aria-label="send to print">
           Send To Print
         </button>
       </div>
@@ -108,7 +108,7 @@ class="app-c-modal app-c-modal-lg app-c-modal-np no-title-actions"
 </kendo-dialog>
 
 <!--Send Letter to print Modal -->
-<kendo-dialog *ngIf="isShowSendLetterToPrintPopupClicked" (close)="onSendLetterToPrintDialogClicked('Close')"
+<kendo-dialog *ngIf="isShowSendLetterToPrintPopupClicked" (close)="onConfirmSendLetterToPrintDialogClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Send letter to print?">
   <section class="k-dialog-body">
     <p class="text-muted mb-2">The action cannot be undone</p>
