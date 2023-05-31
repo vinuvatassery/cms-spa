@@ -54,21 +54,21 @@ export class BillingEmailAddressListComponent {
     this.isEmailBillingAddressDetailShow = true;
   }
 
-  clickCloseAddEditBillingAddressDetails() {
+  clickCloseAddEditEmailBillingAddressDetails() {
     this.isEmailBillingAddressDetailShow = false;
   }
 
   clickOpenDeactivateEmailBillingAddressDetails() {
     this.isEmailBillingAddressDeactivateShow = true;
   }
-  clickCloseDeactivateBillingAddress() {
+  clickCloseDeactivateEmailBillingAddress() {
     this.isEmailBillingAddressDeactivateShow = false;
   }
 
   clickOpenDeleteEmailBillingAddressDetails() {
     this.isEmailBillingAddressDeleteShow = true;
   }
-  clickCloseDeleteBillingAddress() {
+  clickCloseDeleteEmailBillingAddress() {
     this.isEmailBillingAddressDeleteShow = false;
   }
 }

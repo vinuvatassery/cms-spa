@@ -11,7 +11,7 @@
     </div>
     <div class="flex-col mt-1">
       <div class="app-c-table">
-        <kendo-grid [resizable]="true" [kendoGridBinding]="addressGridView">
+        <kendo-grid [resizable]="true" [kendoGridBinding]="contactsGridView">
 
           <kendo-grid-column field="name" title="Name" [width]="150">
           </kendo-grid-column>
@@ -40,7 +40,7 @@
           </kendo-grid-column>
           <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="75" class="text-center">
             <ng-template kendoGridCellTemplate let-dataItem>
-              <kendo-dropdownbutton [data]="actions" icon="more-vertical" class="TableActionPopup app-dropdown-action more_action_wid"
+              <kendo-dropdownbutton [data]="contactsActions" icon="more-vertical" class="TableActionPopup app-dropdown-action more_action_wid"
                 buttonClass="k-icon-button" aria-label="more actions" title="More option"
                 [popupSettings]="{ popupClass: popupClassAction, animate: true }">
                 <span hidden> More Option</span>
@@ -75,8 +75,31 @@
       </div>
     </div>
     <div class="flex-col mt-1">
-      <button kendoButton [primary]="true" icon="add" aria-label="add address">
+      <button kendoButton [primary]="true" icon="add" aria-label="add address" (click)="clickOpenAddEditContactsDetails()">
         Contact
       </button>
     </div>
   </div>
+
+
+
+  
+  
+<kendo-dialog *ngIf="isContactsDetailShow" (close)="clickCloseAddEditContactsDetails()"
+class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog-titlebar (close)="clickCloseAddEditContactsDetails()"> Add/Edit contacts
+</kendo-dialog-titlebar>
+<cms-contacts-details> </cms-contacts-details>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isContactsDeactivateShow" (close)="clickCloseDeactivateContacts()"
+class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog-titlebar> Deactivate contacts?</kendo-dialog-titlebar>
+<cms-contacts-deactivate> </cms-contacts-deactivate>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isContactsDeleteShow" (close)="clickCloseDeleteContacts()"
+class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog-titlebar> Delete contacts?</kendo-dialog-titlebar>
+<cms-contacts-delete> </cms-contacts-delete>
+</kendo-dialog>
