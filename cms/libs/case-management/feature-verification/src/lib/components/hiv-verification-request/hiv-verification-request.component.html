@@ -36,71 +36,62 @@
       </div>
     </div>
     <div class="flex-row ml-4" *ngIf="providerOption === 'UPLOAD_ATTACHMENT'">
-      <div class="flex-col">
+      <div class="flex-col" *ngIf="showAttachmentOptions ">
         <div class="component-list-h">
           <span class="app-checkboxwidtext-wrapper">
-            <input type="radio" kendoRadioButton id="upoadattachment" value="upoadattachment" name="upoadattachment"
-              aria-labelledby="upoadattachment" formControlName="upoadattachment"   />
+            <input type="radio" kendoRadioButton (change)="attachmentRadioChanged($event)"
+              aria-labelledby="upoadattachment" formControlName="attachmentType" value="Attach From Computer"  />
 
             <kendo-label class="k-radio-label" for="upoadattachment" text="Attach From Computer"></kendo-label>
 
           </span>
           <span class="app-checkboxwidtext-wrapper">
-            <input type="radio" kendoRadioButton id="upoadattachment" value="upoadattachment" name="upoadattachment"
-              aria-labelledby="upoadattachment" formControlName="upoadattachment" />
+            <input type="radio" kendoRadioButton  (change)="attachmentRadioChanged($event)"
+              aria-labelledby="upoadattachment" formControlName="attachmentType" value="Attach From Client Attachments" />
 
             <kendo-label class="k-radio-label" for="upoadattachment"
               text="Attach From Client Attachments"></kendo-label>
-
+              <kendo-formerror *ngIf="!hivVerificationForm.controls['attachmentType'].valid">A response is required.
+              </kendo-formerror>
           </span>
         </div>
       </div>
-      <!-- Select file form computer -->
-      <div class="flex-col flex-col-6 ml-1  mt-2">
-        <kendo-upload #Uploadanattachment id="Uploadanattachment" aria-label="upload proof" name="upload proof"
-          [restrictions]="uploadFileRestrictions.fileRestrictions" [multiple]="false" [autoUpload]="false"
-          [removeUrl]="uploadRemoveUrl">
-          <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-            <span>
-              <span>{{ files[0].name }} </span>
-              <br>
-              <span>{{ files[0].size | fileSize }}</span>
-            </span>
-          </ng-template>
-        </kendo-upload>
-        <kendo-formhint>Max file size 25MB</kendo-formhint>
+      <!-- Select file form computer [ngModel]="homeAddressProofFile" [ngModelOptions]="{standalone: true}"-->
+      <div *ngIf="hivVerificationForm.controls['attachmentType'].value == 'Attach From Computer'" class="flex-col flex-col-6 ml-1  mt-2">
+        <kendo-fileselect
+            aria-label="proof of home address"
+            [multiple]="false"
+            [restrictions]="fileUploadRestrictions"
+            (select)="handleFileSelected($event)"
+            (remove)="handleFileRemoved($event)"
+            formControlName="computerAttachment"
+            id="verificationAttachmentUploaded"
+            #verificationAttachmentUploaded>
+            <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+              <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
+              <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>
+                <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
+                  <a>{{ files[0].name }} </a>
+                </button>
+                <br>
+                <span>{{   files[0].size  | fileSize  }}</span>
+              </span>
+            </ng-template>
+          </kendo-fileselect>
+          <kendo-formhint>Max file size 25 MB</kendo-formhint>
+          <kendo-formerror *ngIf="!hivVerificationForm.controls['computerAttachment'].valid"> HIV Verification form is required
+          </kendo-formerror>
+          <kendo-formerror *ngIf="showHivVerificationAttachmentSizeValidation">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
       </div>
-      <!-- Select file form client attachment --> 
-      <div class="flex-col flex-col-8 mt-2 ml-1">
-        <kendo-floatinglabel text="Client Documents">
-         
-          <span *ngIf="showDocInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
-          <kendo-multicolumncombobox         
-            [data]="clientDocList"
-            textField="clientDocumentsName"
-            valueField="clientDocumentsId"
-            autofocusfield
-            id="clientdocuments"
-            #searchcaseornew
-            [loading] = "showDocInputLoader" 
-            [fillMode]="formUiStyle.dropDownFillMode"
-            [popupSettings]="{popupClass: 'case-search-footer combotable_search_list',  appendTo:'component' ,animate: true }"
-            [filterable]="true"
-         >
-            <kendo-combobox-column >
-              <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
-                <span  >{{ dataItem.clientDocumentsName }}</span>
-              </ng-template>
-            </kendo-combobox-column>
-            <kendo-combobox-column  [width]="200">
-              <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
-                <span>  {{dataItem.documentType}}</span>
-              </ng-template>
-            </kendo-combobox-column>
-          </kendo-multicolumncombobox>
-        </kendo-floatinglabel>
-      <div class="attachment-from-client-lists-wrapper mt-2">
-         
+      <!-- Select file form client attachment -->
+      <div *ngIf="hivVerificationForm.controls['attachmentType'].value == 'Attach From Client Attachments' || !showAttachmentOptions" class="flex-col flex-col-8 mt-2 ml-1">
+        <common-clients-attachment *ngIf="showAttachmentOptions"
+        [clientAttachmentForm]="hivVerificationForm"
+        [clientDocumentList$]="clientHivDocumentsList$"
+        (clientAttachmentChangeEvent)="clientAttachmentChange($event)"
+        ></common-clients-attachment>
+      <div *ngIf="!showAttachmentOptions" class="attachment-from-client-lists-wrapper mt-2">
+
         <div class="attachment-from-client-lists-container">
 
           <div class="attachment-from-client-lists">
@@ -108,7 +99,7 @@
               file_present
             </span>
             <div>
-              <span>DOCUMENT NAME</span> 
+              <span>{{uploadedAttachment[0].name}}</span>
             </div>
             <kendo-dropdownbutton [data]="data" icon="more-vertical" title="More option" look="bare"
               aria-label="more actions" class="small-i-btn app-dropdown-action hide_more-text"
@@ -123,14 +114,13 @@
               </ng-template>
             </kendo-dropdownbutton>
           </div>
-          <p>Uploaded by    
+          <p *ngIf="uploadedDate">Uploaded by
             <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
             [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh aria-label="user profile">
-            Lisa McAuliffe
-          </button> 
-          on xx/xx/xxxxx</p>
+            {{uploadedBy}}
+          </button>
+          on {{uploadedDate | date:'MM/dd/yyyy'}}</p>
         </div>
-      
       </div>
     </div>
     </div>
