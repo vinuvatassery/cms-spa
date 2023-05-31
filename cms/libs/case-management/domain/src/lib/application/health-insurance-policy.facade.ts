@@ -156,11 +156,6 @@ export class HealthInsurancePolicyFacade {
   deleteInsurancePolicy(insurancePolicyId: any, endDate? : Date , isCerForm = false) {
     return this.healthInsurancePolicyService.deleteInsurancePolicy(insurancePolicyId , endDate , isCerForm);
   }
-
-  copyInsurancePolicy(insurancePolicyId: any) {
-    return this.healthInsurancePolicyService.copyInsurancePolicy(insurancePolicyId);
-  }
-
   copyHealthInsurancePolicy(insurancePolicyId: any, healthInsurancePolicy: any = {}) {
     const formData = new FormData();
     if (!!healthInsurancePolicy?.copyOfInsuranceCardFile) {

@@ -152,31 +152,6 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
         }
       })
     }
-
-  }
-  copyInsurancePolicy(insurancePolicyId: any) {
-    if (insurancePolicyId != undefined) {
-      this.loaderService.show();
-      this.closeDeleteModal = false;
-      this.insurancePolicyFacade.copyInsurancePolicy(insurancePolicyId).subscribe({
-        next: () => {
-          this.closeDeleteModal = true;
-          const gridDataRefinerValue = {
-            skipCount: this.insurancePolicyFacade.skipCount,
-            pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
-            sortColumn: 'creationTime',
-            sortType: 'asc',
-          };
-          this.loadHealthInsuranceHandle(gridDataRefinerValue);
-          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Insurance policy copied successfully");
-          this.loaderService.hide();
-          this.ref.detectChanges();
-        },
-        error: (error: any) => {
-          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
-        }
-      })
-    }
   }
   loadHistoricalData(isLoadHistoricalData:boolean){
     this.isHistoricalDataLoad =isLoadHistoricalData;

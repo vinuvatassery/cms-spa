@@ -38,7 +38,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   @Input() closeDeleteModal: boolean = false;
   @Output() loadInsurancePlanEvent = new EventEmitter<any>();
   @Output() deleteInsurancePlan = new EventEmitter<any>();
-  @Output() copyInsurancePlan = new EventEmitter<any>();
   @Output() loadHistoricalPlan = new EventEmitter<boolean>();
   showHistoricalFlag:boolean = false;
   carrierContactInfo:any;
@@ -64,6 +63,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       icon: "content_copy",
       type:"Copy",
       click: (): void => {
+        this.handleHealthInsuranceOpenClicked('copy');
       }
     },
     {
@@ -152,6 +152,10 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
         this.dialogTitle = 'Add';
         this.isEdit = false;
         break;
+      case 'copy':
+        this.dialogTitle = 'Copy';
+        this.isEdit = true;
+        break;
     }
   }
   handleShowHistoricalClick(){
@@ -181,9 +185,11 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       this.selectedInsurance=dataItem;
       this.onChangePriorityOpenClicked()
     }
-    if(type.toUpperCase() == 'COPY'){
+    if(type.toUpperCase() == 'COPY'){     
       this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
-      this.copyInsurancePlan.next(this.currentInsurancePolicyId);
+      this.handleHealthInsuranceOpenClicked('copy');
+      this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
+      this.insurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
     }
     this.cdr.detectChanges();
   }
