@@ -197,3 +197,8 @@
     }
   }
 }
+.transform-none{
+  .k-dialog-title{
+      text-transform: unset !important;
+  }
+}
