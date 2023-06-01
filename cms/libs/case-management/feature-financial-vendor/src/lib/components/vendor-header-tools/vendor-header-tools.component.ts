@@ -20,6 +20,7 @@ export class VendorHeaderToolsComponent {
       icon: 'markunread_mailbox',
       isVisible: true,
       click: (): void => { 
+        this.letterPrint();
       },
     },
     {
@@ -43,7 +44,11 @@ export class VendorHeaderToolsComponent {
 
   }
   emailSent(){
-    this.notificationSnackbarService.showHideSnackBar(SnackBarNotificationType.SUCCESS,
+    this.notificationSnackbarService.showNotification(SnackBarNotificationType.SUCCESS,
       this.configurationProvider.appSettings.messages.emailSent);
+  }
+  letterPrint(){
+    this.notificationSnackbarService.showNotification(SnackBarNotificationType.SUCCESS,
+      this.configurationProvider.appSettings.messages.letterPrint);
   }
 }
