@@ -124,11 +124,12 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   filterManager: Subject<string> = new Subject<string>();
   searchBars$ = this.caseFacade.searchBars$
+  vendorSearch$ = this.searchFacade.vendorSearch$
 
   searchHeaderTypeSubject = new Subject<any>()
   searchHeaderType$ = this.searchHeaderTypeSubject.asObservable()
   searchHeaderType: string = '';
-  vendorList: any[] = groupBy(vendorList, [{ field: "title" }]);
+  vendorList: any[] =[];// groupBy(vendorList, [{ field: "title" }]);
   /** Constructor **/
   constructor(private readonly searchFacade: SearchFacade, private router: Router,
     private caseFacade: CaseFacade,
@@ -155,17 +156,28 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
         this.cdRef.detectChanges();
       }
     });
+
+    this.vendorSearch$.subscribe(data => {
+      
+      if(data){
+        this.vendorList= groupBy(data, [{ field: "vendorName" }]);
+        this.cdRef.detectChanges();
+      }
+      
+    })
   }
+
+
 
   clickMobileHeaderSearchOpen() {
     this.mobileHeaderSearchOpen = !this.mobileHeaderSearchOpen
   }
 
   onSearchTextChange(selectedValue: string) {
-    console.log(this.searchHeaderType);
     this.showHeaderSearchInputLoader = true;
     if(this.searchHeaderType==='Vendor_Search'){
       this.searchFacade.loadVendorBySearchText(selectedValue);
+      this.vendorList =[];
     }else{
       this.searchFacade.loadCaseBySearchText(selectedValue);
     }

@@ -12,9 +12,11 @@ import { VendorDataService } from '../infrastructure/vendor.data.service';
 export class SearchFacade {
   /** Private properties **/
   private clientSearchSubject = new BehaviorSubject<any>([]);
+  private vendorSearchSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   clientSearch$ = this.clientSearchSubject.asObservable();
+  vendorSearch$ = this.vendorSearchSubject.asObservable();
   dateFormat = this.configurationProvider.appSettings.dateFormat;
 
   /** Constructor**/
@@ -48,21 +50,16 @@ export class SearchFacade {
   }
 
   loadVendorBySearchText(text : string): void {
-    if(text){
-      this.vendorDataService.searchVendor(text).subscribe({
-        next: (caseBySearchTextResponse) => {
-          debugger
-          this.clientSearchSubject.next(caseBySearchTextResponse);
-        }
-        ,
-        error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
-        },
-      });
-    }
-    else{
-      this.clientSearchSubject.next(null);
-    }
+    this.vendorSearchSubject.next(null);
+    this.vendorDataService.searchVendor(text).subscribe({
+      next: (response) => {
+        this.vendorSearchSubject.next(response);
+      }
+      ,
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+      },
+    });
   }
   loadCaseBySearchText(text : string): void {
     if(text){

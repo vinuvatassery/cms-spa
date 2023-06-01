@@ -56,8 +56,8 @@ class="global-search header-search field-label-hide combotable_search_list" [ngC
     <kendo-label text="Search Vendor">
   <kendo-multicolumncombobox
     [data]="vendorList"
-    textField="address"
-    valueField="id"
+    textField="vendorName"
+    valueField="vendorId"
     [loading] = "showHeaderSearchInputLoader"
     [fillMode]="formUiStyle.dropDownFillMode"
     placeholder="Search Vendor"
@@ -68,7 +68,7 @@ class="global-search header-search field-label-hide combotable_search_list" [ngC
     <button kendoButton fillMode="clear" icon="image"></button>   
     <kendo-combobox-column>
       <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
-        <span  >{{ dataItem.address }} {{ dataItem.city }} {{ dataItem.state }} {{ dataItem.zip }}</span>
+        <span  >{{ dataItem.vendorAddress }}</span>
       </ng-template>
     </kendo-combobox-column>
      
