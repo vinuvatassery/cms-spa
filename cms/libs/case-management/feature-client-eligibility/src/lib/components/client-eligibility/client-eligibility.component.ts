@@ -59,6 +59,7 @@ export class ClientEligibilityComponent implements OnInit {
   prevClientCaseEligibilityId: any;
   isCerForm = false;
   cerNote = ''
+  acceptanceModalTitle: String = 'Application Accepted';
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -186,6 +187,7 @@ export class ClientEligibilityComponent implements OnInit {
           this.prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;
           if (this.prevClientCaseEligibilityId) {
             this.isCerForm = true;
+            this.acceptanceModalTitle= this.isCerForm ? "Client Eligible" : "Application Accepted";
           }
 
           if(this.isCerForm)
