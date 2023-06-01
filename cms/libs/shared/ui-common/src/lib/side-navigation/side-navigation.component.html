@@ -1,31 +1,64 @@
 <ul class="sidebar-menu" aria-label="sidebar menu">
-  <li *ngFor="let menu of menus$ | async as menus; let i = index"
-    [routerLinkActive]="menu.subMenus?.length === 0 ? ['active-item'] :['']" [routerLinkActiveOptions]="{exact: true}"
-    attr.aria-label="sidebar menu item {{ menu.name }}"
-    [ngClass]="{ 'sidebar-menu_items':true, 'with-sub-menu': menu.subMenus?.length !== 0 }">
-    <span class="sub-menu-item"   attr.aria-label="{{ menu.name }}" *ngIf="menu.target!=='_blank'" (click)="onSubMenuClicked(i)" [routerLink]="menu.subMenus?.length === 0 ? [menu.url]:[]">
-      <span class="material-icons sidebar-menu_icon" attr.aria-label="{{ menu.name }}"  >
+  <li *ngFor="let menu of menus$ | async as menus; let i = index" attr.aria-label="sidebar menu item {{ menu.name }}"
+    [ngClass]="{ 'sidebar-menu_items':true, 'with-sub-menu': menu.subMenus?.length !== 0 }"
+    class="new_sub_sidebar_menu">
+    <a class="sub-menu-item" attr.aria-label="{{ menu.name }}" (click)="onMenuClick(menu)">
+      <span class="material-icons sidebar-menu_icon" attr.aria-label="{{ menu.name }}">
         {{menu.icon}}
       </span>
-      <span class="sidebar-menu_label" attr.aria-label="{{ menu.name }}"  >
-        {{ menu.name }} <span *ngIf="menu?.hasBadge" class="sidebar-menu_label-badge"> {{ getBadge(menu.code)}} </span>
-      </span>
-    </span>
-    <a class="sub-menu-item" *ngIf="menu.target==='_blank'" attr.aria-label="{{ menu.name }}" (click)="onSubMenuClicked(i)" [href]="[menu.url]" target="_blank">
-      <span class="material-icons sidebar-menu_icon" attr.aria-label="{{ menu.name }}"  >
-        {{menu.icon}}
-      </span>
-      <span class="sidebar-menu_label" attr.aria-label="{{ menu.name }}"  >
+      <span class="sidebar-menu_label" attr.aria-label="{{ menu.name }}">
         {{ menu.name }} <span *ngIf="menu?.hasBadge" class="sidebar-menu_label-badge"> {{ getBadge(menu.code)}} </span>
       </span>
     </a>
-    <ul class="sidebar-sub-menu" *ngIf="menu.subMenus?.length !== 0 && subMenuExpandStatus[i] === true"
+
+    <div class="secondary_submenu" *ngIf="menu.subMenus?.length !== 0"
       attr.aria-label="sidebar sub menu item {{ menu.name }}">
-      <li *ngFor="let subMenu of menu.subMenus" attr.aria-label="sub menu item {{ subMenu.name }}"
-        class="sidebar-sub-menu_items" [routerLinkActive]="['active-item']" [routerLink]="subMenu.url">
-        {{subMenu.name}} <span *ngIf="subMenu?.hasBadge" class="sidebar-menu_label-badge"> ({{ getBadge(subMenu.code)}})
-        </span>
-      </li>
-    </ul>
+      <div class="menu_search_header">
+        <p class="submenu_heading">{{menu.name}}</p>
+        <div class="input-search">
+          <span class="material-icons" aria-label="search" aria-hidden="true">search</span>
+          <kendo-floatinglabel text="Search" class="pb-0">
+            <kendo-textbox fillMode="outline" [(ngModel)]="menu.filterText" [clearButton]="true">
+            </kendo-textbox>
+          </kendo-floatinglabel>
+        </div>
+      </div>
+      <div class="submenu_list_wrapper" *ngFor="let subMenu of menu.subMenus"
+        attr.aria-label="sub menu item {{ subMenu.name }}">
+
+        <div *ngIf="subMenu.subMenus?.length !== 0">
+          <p class="submenu_list_heading" attr.aria-label="{{ subMenu.name }}"
+            *ngIf="isMenuHeadingVisible(subMenu.subMenus, menu.filterText) || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1">
+            {{ subMenu.name | uppercase }}
+            <span *ngIf="subMenu?.hasBadge"> ({{ getBadge(subMenu.code)}}) </span>
+          </p>
+
+          <div class="submenu_list_container" *ngFor="let sprSubMenu of subMenu.subMenus"
+            attr.aria-label="sub menu item {{ sprSubMenu.name }}">
+            <div
+              *ngIf="(menu?.filterText === '' || (sprSubMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1 || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1)">
+              <a class="submenu_list_click_items" attr.aria-label="{{ sprSubMenu.name }}"
+                (click)="onMenuClick(sprSubMenu)">
+                <span attr.aria-label="{{ sprSubMenu.name }}">
+                  {{ sprSubMenu.name }}
+                  <span *ngIf="sprSubMenu?.hasBadge" class="sidebar-menu_label-badge"> {{ getBadge(sprSubMenu.code)}}
+                  </span>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="subMenu.subMenus?.length === 0 && (menu?.filterText === '' || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1)"
+          class="submenu_list_container">
+          <a class="submenu_list_click_items" attr.aria-label="{{ subMenu.name }}" (click)="onMenuClick(subMenu)">
+            <span attr.aria-label="{{ subMenu.name }}">
+              {{ subMenu.name }}
+              <span *ngIf="subMenu?.hasBadge" class="sidebar-menu_label-badge"> ({{ getBadge(subMenu.code)}}) </span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
   </li>
 </ul>

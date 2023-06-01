@@ -63,7 +63,7 @@
 
 // Main Title
 .app-l-mainTittle {
-  h2 {
+  h2, .title_with_bld {
     display: flex;
     align-items: center;
     font-family: $font-family-bold;
@@ -114,6 +114,7 @@
       }
     }
   }
+  
   .title-client-info-block {
     margin: $size-xx $size-0;
     .title-client-info {

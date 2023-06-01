@@ -56,7 +56,7 @@
     </ng-template>
   </kendo-grid-column>
   <kendo-grid-column [width]="80"
-  *ngIf="!isAddOrEditFamilyDependentDisplay"
+  *ngIf="!isAddOrEditFamilyDependentDisplay || isCerForm"
       field="ssn"
       title="SSN"
       [sortable]="true"
@@ -114,7 +114,7 @@
         <kendo-dropdownbutton
           [data]=  "actions"
           icon="more-vertical"
-          class="TableActionPopup app-dropdown-action"
+          class="TableActionPopup app-dropdown-action more_action_wid"
           buttonClass="k-icon-button"
           title="More option"
           aria-label="more actions"

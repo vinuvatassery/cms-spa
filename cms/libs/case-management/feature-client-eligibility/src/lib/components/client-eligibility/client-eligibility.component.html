@@ -23,14 +23,14 @@
         </span>
         <span class="card-buttons-wrap" *ngFor="let doc of getQuestionDocuments(question.questionCode);">
           <button kendoButton look="flat" aria-label="download file" class="k-icon-button" title="Download"
-            (click)="clientDocumentFacade.viewOrDownloadFile('download',doc.clientDocumentId,doc.documentName)">
+            (click)="documentFacade.viewOrDownloadFile(false,doc.clientDocumentId,doc.documentName)">
             <span class="material-icons" aria-label="download file" aria-hidden="true">file_download</span>
           </button>
           <button kendoButton look="flat" aria-label="open in new tab" class="k-icon-button" title="Open in new tab"
-            (click)="clientDocumentFacade.viewOrDownloadFile('view',doc.clientDocumentId,doc.documentName)">
+            (click)="documentFacade.viewOrDownloadFile(true,doc.clientDocumentId,doc.documentName)">
             <span class="material-icons" aria-label="open in new tab" aria-hidden="true">open_in_new</span>
           </button>
-          <a class="text-bold text-underline" aria-label="open in new tab" (click)="clientDocumentFacade.viewOrDownloadFile('download',doc.clientDocumentId,doc.documentName)">{{doc.documentName}}</a>
+          <a class="text-bold text-underline" aria-label="open in new tab" (click)="documentFacade.viewOrDownloadFile(false,doc.clientDocumentId,doc.documentName)">{{doc.documentName}}</a>
           <span class="text-muted">({{doc.documentSize | fileSize}})</span>
         </span>
         <span *ngIf="question.questionCode==reviewQuestionCode.origonResident && checkQuestionDocuments(question.questionCode)==false">
@@ -89,11 +89,11 @@
             <h4 class="mb-0 mt-0">Leave a note to appear on the next CER</h4>        
           <kendo-floatinglabel text="Note">
             <kendo-textarea [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="cerNote" [ngModelOptions]="{standalone: true}"
-            (blur)="cerNotesChanged()"
+            (blur)="cerNotesChanged()" [maxlength]="7500"
               aria-label="note description" name="Note"
               [rows]="5" [cols]="40" (blur)="notesChanged()">
             </kendo-textarea>
-            <kendo-formhint class="justify-content-end">{{cerNote?.length}}/250</kendo-formhint>
+            <kendo-formhint class="justify-content-end">{{cerNote?.length}}/7500</kendo-formhint>
           </kendo-floatinglabel>        
         </div>
       </div>

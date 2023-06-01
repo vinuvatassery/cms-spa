@@ -2,6 +2,8 @@
 import { Injectable } from '@angular/core';
 /** External Libraries **/
 import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+
 /** Internal Libraries **/
 import { NotificationSnackbarService, SnackBarNotificationType, LoggingService, LoaderService } from '@cms/shared/util-core';
 import { ClientHivVerification } from '../entities/client-hiv-verification';
@@ -12,9 +14,24 @@ export class VerificationFacade {
 
   /** Private properties **/
   hivVerificationSaveSubject = new Subject<boolean>();
+  private removeHivVerificationAttachmentSubject = new Subject<any>();
+  private clientHivDocumentsListSubject = new Subject<any>();
+  hivVerificationUploadedDocument = new Subject<any>();
+  showAttachmentOptions = new BehaviorSubject<boolean>(false);
+  isSaveandContinueSubject = new BehaviorSubject<boolean>(true);
+  formChangeEventSubject = new BehaviorSubject<boolean>(false);
+
 
   /** Public properties **/
   hivVerificationSave$ = this.hivVerificationSaveSubject.asObservable();
+  showAttachmentOptions$ = this.showAttachmentOptions.asObservable();
+  hivUploadedDocument$ = this.hivVerificationUploadedDocument.asObservable();
+  clientHivDocumentsList$ = this.clientHivDocumentsListSubject.asObservable();
+  isSaveandContinue$ = this.isSaveandContinueSubject.asObservable();
+  formChangeEvent$ = this.formChangeEventSubject.asObservable();
+
+
+
 
   constructor(private readonly verificationDataService: VerificationDataService,
     private readonly loaderService: LoaderService,
@@ -41,6 +58,7 @@ export class VerificationFacade {
 
   /** Public properties **/
   providerValue$ = this.providerChange.asObservable();
+  removeHivVerification$ = this.removeHivVerificationAttachmentSubject.asObservable();
 
   providerValueChange(provider: string) {
     this.providerChange.next(provider);
@@ -50,5 +68,38 @@ export class VerificationFacade {
   }
   getHivVerification(clientId:any){
     return this.verificationDataService.getHivVerification(clientId);
+  }
+  removeHivVerificationAttachment(hivVerificationId:any, clientId:any){
+    this.showLoader();
+    this.verificationDataService.removeHivVerificationAttachment(hivVerificationId,clientId).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.removeHivVerificationAttachmentSubject.next(response);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "HIV Verification attachment removed");
+        }
+        this.hideLoader()
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+
+  saveHivVerification(clientHivVerification: ClientHivVerification): Observable<any> {
+    return this.verificationDataService.saveHivVerification(clientHivVerification);
+  }
+  getHivVerificationWithAttachment(clientId:any, clientCaseEligibilityId : any){
+    return this.verificationDataService.getHivVerificationWithAttachment(clientId, clientCaseEligibilityId);
+  }
+  getClientHivDocuments(clientId:any): void{
+    this.verificationDataService.getClientHivDocuments(clientId).subscribe({
+      next: (response) => {
+        this.clientHivDocumentsListSubject.next(response);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
   }
 }

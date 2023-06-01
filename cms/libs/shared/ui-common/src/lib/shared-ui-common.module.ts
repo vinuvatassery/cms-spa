@@ -21,7 +21,12 @@ import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 // directive
-import {KendoFileSelectDirective, FormFieldAutoFocus, TextFieldFormFieldAutoFocus, DropDownFieldFormFieldAutoFocus } from './directives/kendo-componentsforaccessibility.directive'
+import {
+  KendoFileSelectDirective,
+  FormFieldAutoFocus,
+  TextFieldFormFieldAutoFocus,
+  DropDownFieldFormFieldAutoFocus,
+} from './directives/kendo-componentsforaccessibility.directive';
 
 import { KendoFileUploadDirective } from './directives/kendo-file-upload-accessibility.directive';
 import { AfterValueChangedDirective } from './directives/after-value-changed.directive';
@@ -29,6 +34,8 @@ import { PermissionManagerDirective } from './directives/permission-manager.dire
 import { UserPhotoIconComponent } from './user-photo-icon/user-photo-icon.component';
 import { CaseEligibilityPeriodsComponent } from './case-eligibility-periods/case-eligibility-periods.component';
 import { GridCellDateRangeFilterComponent } from './grid-cell-date-range-filter/grid-cell-date-range-filter.component';
+import { DocumentUploadComponent } from './document-upload/document-upload.component';
+import { ClientsAttachmentComponent } from './clients-attachment/clients-attachment.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
@@ -58,6 +65,8 @@ import { GridCellDateRangeFilterComponent } from './grid-cell-date-range-filter/
     UserPhotoIconComponent,
     CaseEligibilityPeriodsComponent,
     GridCellDateRangeFilterComponent,
+    DocumentUploadComponent,
+    ClientsAttachmentComponent,
   ],
   exports: [
     LoginStatusComponent,
@@ -85,6 +94,8 @@ import { GridCellDateRangeFilterComponent } from './grid-cell-date-range-filter/
     UserPhotoIconComponent,
     CaseEligibilityPeriodsComponent,
     GridCellDateRangeFilterComponent,
+    DocumentUploadComponent,
+    ClientsAttachmentComponent,
   ],
 })
 export class SharedUiCommonModule {}

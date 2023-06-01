@@ -28,6 +28,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
   @Input() clientId!:any;
   @Input() clientCaseEligibilityId!:any;
   @Input() clientCaseId!:any; 
+  @Input() ramsellInfo!: any;
   applicantInfo = {} as ApplicantInfo;
   //public client! : ClientProfile
   isEditClientInformationPopup = false;

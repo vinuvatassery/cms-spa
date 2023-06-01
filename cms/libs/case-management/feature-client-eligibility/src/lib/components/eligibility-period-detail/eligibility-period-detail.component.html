@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar  (close)="onModalCloseClicked()">{{ isEdit || isStatusPeriodEdit ? 'Edit Status Period Dates' : isCopyPeriod ? 'Copy Status Period' : 'Start New Status Period' }}</kendo-dialog-titlebar>
+<kendo-dialog-titlebar  (close)="onModalCloseClicked()">{{ isEdit ? 'Edit Status Period Dates' : isStatusPeriodEdit ? 'Edit Eligibility Period' : isCopyPeriod ? 'Copy Status Period' : 'Start New Status Period' }}</kendo-dialog-titlebar>
 <div >
 <section class="k-dialog-body" [formGroup]="eligibilityPeriodForm" >
   <p *ngIf="!isEdit && !isStatusPeriodEdit && !isCopyPeriod" class="text-muted mb-2">
@@ -67,7 +67,7 @@
       *ngIf="!eligibilityPeriodForm.controls['statusEndDate'].valid && !statusEndDateIsGreaterThanStartDate && !eligibilityPeriodForm.controls['statusEndDate'].disabled">End Date must be after Start Date.
     </kendo-formerror>
     </div>
-    <div class="flex-col" *ngIf="!isEdit">
+    <div class="flex-col" *ngIf="!isEdit && !isStatusPeriodEdit">
       <kendo-floatinglabel text="Group">
         <kendo-dropdownlist
         [fillMode]="formUiStyle.dropDownFillMode"

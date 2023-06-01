@@ -1,12 +1,19 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef,Output,EventEmitter } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 /** External libraries **/
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { IntlService } from '@progress/kendo-angular-intl';
 /** Internal Libraries **/
-import { VerificationFacade, ClientHivVerification, VerificationStatusCode, VerificationTypeCode, ProviderOption } from '@cms/case-management/domain';
+import { VerificationFacade,
+   ClientHivVerification,
+  VerificationStatusCode,
+  VerificationTypeCode,
+  ProviderOption,
+  ClientDocumentFacade,
+  HivVerificationDocument } from '@cms/case-management/domain';
 import { SnackBarNotificationType,ConfigurationProvider} from '@cms/shared/util-core';
+import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
 
 
 @Component({
@@ -15,28 +22,83 @@ import { SnackBarNotificationType,ConfigurationProvider} from '@cms/shared/util-
   styleUrls: ['./hiv-verification-request.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HivVerificationRequestComponent implements OnInit {
+export class HivVerificationRequestComponent implements OnInit{
   /** Input properties **/
   @Input() hivVerificationForm!: FormGroup;
   @Input() clientId!: number;
+  @Input() clientCaseId!: any;
+  @Input() clientCaseEligibilityId!: any;
+  clientHivDocumentsList$: any;
+  @Output() openRemoveAttachmentConfirmationEvent : EventEmitter<string> = new EventEmitter();
+  @Output() onAttachmentConfirmationEvent = new EventEmitter();
   userId!: any;
+  hivVerificationAttachment!: File | undefined;
   public uploadRemoveUrl = 'removeUrl';
+  public hivVerificationUploadFile: any = undefined;
+  showAttachmentOptions = true;
+  uploadedAttachment: any
+  uploadedDate: any;
+  uploadedBy: any;
+
   /** Public properties **/
+  fileUploadRestrictions: FileRestrictions = {
+    maxFileSize: this.configurationProvider.appSettings.uploadFileSizeLimit,
+  };
   providerValue$ = this.verificationFacade.providerValue$;
   providerOption:any;
   isSendRequest = false;
   isResendRequest = false;
   isEmailFieldVisible=false;
+  showHivVerificationAttachmentRequiredValidation = false;
+  showHivVerificationAttachmentSizeValidation = false;
   sentDate !:Date ;
   clientHivVerification:ClientHivVerification = new ClientHivVerification;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  fileSize = this.configurationProvider.appSettings?.uploadFileSizeLimit;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public uploadFileRestrictions: UploadFileRistrictionOptions =
   new UploadFileRistrictionOptions();
+  showDocInputLoader = false;
+  hivDocument = new HivVerificationDocument();
+  popupClass1 = 'more-action-dropdown app-dropdown-action-list ';
+  public data = [
+    {
+      buttonType:"btn-h-primary",
+      text: "View in New Tab",
+      icon: "open_in_new",
+      click: (): void => {
+        if(this.uploadedAttachment)
+        {
+          this.clientDocumentFacade.viewOrDownloadFile('view',this.uploadedAttachment[0].documentId,this.uploadedAttachment[0].name)
+        }
+      },
+    },
+
+
+    {
+      buttonType:"btn-h-danger",
+      text: "Remove Attachment",
+      icon: "delete",
+      click: (): void => {
+        this.showHivVerificationAttachmentRequiredValidation = true;
+        this.openRemoveAttachmentConfirmationEvent.emit(this.uploadedAttachment[0].clientHivVerificationId);
+      },
+    },
+  ];
+
+
+  public clientDocList = [
+    {
+      clientDocumentsId: 'Lorem ipsum',
+       clientDocumentsName: 'Lorem ipsum dolor sit amet Lorem ipsum ',
+       documentType:'Lorem ipsum Lorem ipsum'
+      },
+    ]
 
   constructor( private verificationFacade: VerificationFacade,
     private readonly cdr: ChangeDetectorRef,
-    private intl: IntlService, private readonly configurationProvider: ConfigurationProvider,){}
+    private intl: IntlService, private readonly configurationProvider: ConfigurationProvider,
+    public readonly clientDocumentFacade:ClientDocumentFacade){}
   /** Internal event methods **/
   ngOnInit(): void {
     this.providerValue$.subscribe(data=>{
@@ -62,9 +124,40 @@ export class HivVerificationRequestComponent implements OnInit {
       }
       this.cdr.detectChanges();
     });
-   
+    this.verificationFacade.showAttachmentOptions$.subscribe(response=>{
+      this.showAttachmentOptions = response;
+      this.uploadedAttachment = undefined;
+      this.cdr.detectChanges();
+    });
+    this.verificationFacade.clientHivDocumentsList$.subscribe(response=>{
+      this.clientHivDocumentsList$ = response;
+      this.cdr.detectChanges();
+    });
+    this.verificationFacade.formChangeEvent$.subscribe(response=>{
+      this.cdr.detectChanges();
+    });
+    this.verificationFacade.hivUploadedDocument$.subscribe(data=>{
+      if(data)
+      {
+        let documentData = [
+          {
+            name: data?.hivVerification?.documentName,
+            size: data?.hivVerification?.documentSize,
+            src: data?.hivVerification?.documentPath,
+            uid: data?.hivVerification?.documentId,
+            documentId: data?.hivVerification?.documentId,
+            clientHivVerificationId: data?.clientHivVerificationId,
+          },
+        ];
+        this.uploadedAttachment = documentData;
+        this.userId = data?.creatorId;
+        this.uploadedDate = data?.verificationUploadedDate;
+        this.uploadedBy = data?.uploadedBy
+        this.cdr.detectChanges();
+      }
+    });
   }
-  onSendRequestClicked() { 
+  onSendRequestClicked() {
     if (this.providerOption ===ProviderOption.HealthCareProvider) {
       this.hivVerificationForm.markAllAsTouched();
       this.hivVerificationForm.controls["providerEmailAddress"].setValidators([Validators.required, Validators.email])
@@ -83,6 +176,37 @@ export class HivVerificationRequestComponent implements OnInit {
     this.isSendRequest = false;
     this.isResendRequest = true;
     this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
+  }
+  handleFileSelected(e: SelectEvent) {
+    this.hivVerificationAttachment = undefined;
+    this.hivVerificationAttachment = e.files[0].rawFile;
+    this.showHivVerificationAttachmentRequiredValidation = false;
+    this.verificationFacade.isSaveandContinueSubject.next(this.showHivVerificationAttachmentRequiredValidation);
+    this.showHivVerificationAttachmentSizeValidation = (this.hivVerificationAttachment?.size ?? 0) > this.configurationProvider.appSettings?.uploadFileSizeLimit;
+    if (this.hivVerificationAttachment)
+    {
+      let hivVerificationDoc: HivVerificationDocument | undefined = undefined;
+      hivVerificationDoc = {
+        documentName: this.hivVerificationAttachment.name,
+        document: this.hivVerificationAttachment,
+        documentSize: this.hivVerificationAttachment.size
+      };
+      this.clientHivVerification.hivVerificationDoc = hivVerificationDoc;
+      this.clientHivVerification.clientId = this.clientId;
+      this.clientHivVerification.clientCaseEligibilityId = this.clientCaseEligibilityId;
+      this.clientHivVerification.clientCaseId = this.clientCaseId;
+      this.clientHivVerification.verificationMethodCode = this.providerOption;
+      if(!this.showHivVerificationAttachmentRequiredValidation && !this.showHivVerificationAttachmentSizeValidation)
+      {
+        this.onAttachmentConfirmationEvent.emit(this.clientHivVerification);
+      }
+    }
+  }
+
+  handleFileRemoved(e: SelectEvent) {
+    this.showHivVerificationAttachmentRequiredValidation = true;
+    this.verificationFacade.isSaveandContinueSubject.next(this.showHivVerificationAttachmentRequiredValidation);
+    this.openRemoveAttachmentConfirmationEvent.emit(this.uploadedAttachment[0].clientHivVerificationId);
   }
   private populateModel(){
     this.clientHivVerification.clientId = this.clientId;
@@ -117,5 +241,25 @@ export class HivVerificationRequestComponent implements OnInit {
         }
       }
     });
+  }
+  clientAttachmentChange(event:any)
+  {
+    this.verificationFacade.isSaveandContinueSubject.next(false);
+    this.clientHivVerification.hivVerificationDoc = null;
+    this.clientHivVerification.clientId = this.clientId;
+    this.clientHivVerification.documentId = event.clientDocumentId;
+    this.clientHivVerification.clientCaseEligibilityId = this.clientCaseEligibilityId;
+    this.clientHivVerification.clientCaseId = this.clientCaseId;
+    this.clientHivVerification.verificationMethodCode = this.providerOption;
+    this.onAttachmentConfirmationEvent.emit(this.clientHivVerification);
+
+  }
+  attachmentRadioChanged(event:any)
+  {
+    this.hivVerificationForm.controls["clientsAttachment"].removeValidators(Validators.required);
+    this.hivVerificationForm.controls['clientsAttachment'].updateValueAndValidity();
+    this.hivVerificationForm.controls["computerAttachment"].removeValidators(Validators.required);
+    this.hivVerificationForm.controls['computerAttachment'].updateValueAndValidity();
+    this.verificationFacade.isSaveandContinueSubject.next(true);
   }
 }

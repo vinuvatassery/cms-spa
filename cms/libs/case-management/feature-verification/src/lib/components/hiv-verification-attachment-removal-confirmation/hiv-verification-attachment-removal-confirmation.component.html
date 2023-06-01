@@ -1,0 +1,32 @@
+<section class="k-dialog-body">
+    <div class="flex-row">
+      <div class="flex-col break">
+        You will need to upload new HIV Verification in order to complete the application. 
+        This attachment can still be found in the Attachments tab of the client's profile.
+      </div>
+    </div>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          (click)="onCloseRemoveAttachmentConfirmationClicked()"
+          aria-label="cancel send id"
+        >
+          Cancel
+        </button>
+        <button 
+          kendoButton
+          class="k-error-button"
+          aria-label="send id"
+          (click)="onRemoveAttachmentConfirmationClicked()"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+  

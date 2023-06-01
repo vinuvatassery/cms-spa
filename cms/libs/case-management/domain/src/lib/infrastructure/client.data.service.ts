@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
 import { ApplicantInfo } from '../entities/applicant-info';
+import { NewIDCardRequest } from '../entities/new-Id-card-request';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
@@ -188,20 +189,81 @@ export class ClientDataService {
       return of([
         {
           id: 1,
+          key:'notes',
           specialHandling: 'Case Worker Note',
-          answer: 'Immediately transfer to Wesley Marascas',
+          answer: '',
         },
         {
           id: 2,
           specialHandling:
-            'Blind or serious difficulty seeing, even when wearing glasses?',
-          answer: 'Don’t want to answer',
+            'Needs materials in alternate format (Braille, large print, audio recordings, etc.)?',
+            key:'materialInAlternateFormatDescription',
+            otherFormatKey:'materialInAlternateFormatOther',
+            descKey :"materialInAlternateFormatCodeOtherDesccription",
+            answer: '',
         },
         {
           id: 3,
           specialHandling:
-            'Any limiting physical, mental, or emotional conditions?',
-          answer: 'Yes, since age 43',
+            'Needs interpreter?',
+            key:'interpreterDescription',
+            otherKey:'interpreterType',
+            answer: '',
+        },
+        {
+          id: 4,
+          specialHandling:
+            'Deaf or serious difficulty hearing?',
+            key:'deafOrHearingDescription',
+            otherKey:'startAgeDeafOrHearing',
+            answer: '',
+        },
+        {
+          id: 5,
+          specialHandling:
+            'Blind or serious difficulty seeing, even when wearing glasses?',
+            key:'blindSeeingDescription',
+            otherKey:'startAgeBlindSeeing',
+            answer: '',
+        },
+        {
+          id: 6,
+          specialHandling:
+            'Any limiting physical, mental or emotional conditions?',
+            key:'limitingConditionDescription',
+            otherKey:'',
+            answer: '',
+        },
+        {
+          id: 7,
+          specialHandling:
+            'Serious difficulty walking or climbing stairs?',
+            key:'walkingClimbingDifficultyDescription',
+            otherKey:'startAgeWalkingClimbingDifficulty',
+            answer: '',
+        },{
+          id: 8,
+          specialHandling:
+            'Difficulty dressing or bathing?',
+            key:'dressingBathingDifficultyDescription',
+            otherKey:'startAgeDressingBathingDifficulty',
+            answer: '',
+        },
+        {
+          id: 9,
+          specialHandling:
+            'Serious difficulty concentrating, remembering, or making decisions due to a physical, mental, or emotional conditions?',
+          answer: '',
+          key:'concentratingDifficultyDescription',
+          otherKey:'startAgeConcentratingDifficulty',
+        },
+        {
+          id: 10,
+          specialHandling:
+            'Serious difficulty doing errands alone due to physical, mental, or emotional conditions?',
+          answer: '',
+          key:'errandsDifficultyDescription',
+          otherKey:'startAgeErrandsDifficulty',
         },
       ]);
     }
@@ -212,6 +274,13 @@ export class ClientDataService {
       applicantInfo,
 
     )}
+    sendNewIdCard(newIDCardRequest : NewIDCardRequest){
+      return this.http.post(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/sendidcard`,
+        newIDCardRequest,
+  
+      )
+    }
     load(clientId:any,caseId:any,eligibilityId:any){
       return this.http.get<ApplicantInfo>(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/cases/${caseId}/eligibility-periods/${eligibilityId}`,);

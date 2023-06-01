@@ -1,7 +1,5 @@
 <section class="k-dialog-body">
-    <p class="text-muted mb-2" *ngIf="tabStatus === 'hlt-ins-co-pay'"> {{isPremiumPaymentAddForm ? 'Add a new medical premium':'Edit or delete dental premium'}} </p>
-    <p class="text-muted mb-2" *ngIf="tabStatus === 'dnt-ins-co-pay'"> {{isPremiumPaymentAddForm ? 'Add a new dental premium':'Edit or delete dental premium'}} </p>
-
+    <p class="text-muted mb-2">  All fields are required unless otherwise stated</p>
     <form [formGroup]="premiumPaymentForm">
     <div class="flex-row">
 
@@ -27,9 +25,9 @@
 
         </div>
         <div class="flex-col">
-                <kendo-floatinglabel text="Insurance Policy Name" >   
+                <kendo-floatinglabel text="Policy ID" >   
                     <kendo-combobox   
-                    aria-label="Insurance Policy Name"
+                    aria-label="Policy ID"
                     [fillMode]="formUiStyle.dropDownFillMode" 
                     [loading] = "isInsurancePoliciesLoading" 
                     formControlName="clientInsurancePolicyId"     
@@ -91,7 +89,7 @@
         <div class="flex-col">
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel text="Service Start Date">
+                    <kendo-floatinglabel text="Coverage Start Date">
                         <kendo-datepicker formControlName="serviceStartDate"
                             [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                             aria-label="Coverage Start Date" formatPlaceholder="formatPattern" placeholder=""
@@ -99,12 +97,12 @@
                         </kendo-datepicker>
                     </kendo-floatinglabel>
                         <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid && !premiumPaymentForm.controls['serviceStartDate'].disabled && startDateIsFutureDate"> Future Date not allowed.</kendo-formerror>
-                        <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid && !premiumPaymentForm.controls['serviceStartDate'].disabled && !startDateIsFutureDate"> Service Start Date is
+                        <kendo-formerror *ngIf="!premiumPaymentForm.controls['serviceStartDate'].valid && !premiumPaymentForm.controls['serviceStartDate'].disabled && !startDateIsFutureDate"> Coverage Start Date is
                             required.</kendo-formerror>
 
                 </div>
                 <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel text="Service End Date">
+                    <kendo-floatinglabel text="Coverage End Date">
                         <kendo-datepicker formControlName="serviceEndDate"
                             [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                             aria-label="Coverage End Date" formatPlaceholder="formatPattern" placeholder=""
@@ -113,7 +111,7 @@
                     </kendo-floatinglabel>
                       <kendo-formerror
                         *ngIf="!premiumPaymentForm.controls['serviceEndDate'].valid && statusEndDateIsGreaterThanStartDate && !premiumPaymentForm.controls['serviceEndDate'].disabled">
-                        Service End Date is required.
+                        Coverage End Date is required.
                       </kendo-formerror>
                       <kendo-formerror
                         *ngIf="!premiumPaymentForm.controls['serviceEndDate'].valid && !statusEndDateIsGreaterThanStartDate && !premiumPaymentForm.controls['serviceEndDate'].disabled">Service End Date must be after Start Date.
@@ -138,8 +136,16 @@
 
         <div class="flex-col">
             <kendo-floatinglabel text="Comment">
-                <kendo-textarea formControlName="comments" aria-label="Comment"
-                    [fillMode]="formUiStyle.inputFillMode">
+                <kendo-textarea 
+                    formControlName="comments" 
+                    aria-label="Comment"
+                    resizable="auto"
+                    [fillMode]="formUiStyle.inputFillMode"
+                    [maxlength]="commentMaxLength"
+                    (valueChange)="commentValueChange($event)">
+                    <kendo-textarea-suffix class="justify-content-end">
+                        <span class="counter"> {{ commentCounter }}</span>
+                      </kendo-textarea-suffix>
                 </kendo-textarea>
                 <kendo-formerror *ngIf="!premiumPaymentForm.controls['comments'].valid">Comment is
                     required.</kendo-formerror>
@@ -159,7 +165,7 @@
             <button *ngIf="!isPremiumPaymentAddForm" kendoButton [primary]="true" look="outline" aria-label="edit premium payment"> Edit </button>
         </div>
         <div class="justify-content-end">
-            <button kendoButton [primary]="true" look="outline" aria-label="cancel premium payment"> Cancel  </button>
+            <button kendoButton [primary]="true" look="outline" aria-label="cancel premium payment"(click)="closePremiumPayment()"> Cancel  </button>
             <button kendoButton [primary]="true" aria-label="save new premium payment" (click)="savePaymentDetailsClicked()"> Add</button>
 
         </div>

@@ -74,6 +74,9 @@ export class LovFacade {
   private paymentReversalSubject = new BehaviorSubject<Lov[]>([]);
   private premiumPaymentTypeSubject = new BehaviorSubject<Lov[]>([]);
   private premiumPaymentReversalSubject = new BehaviorSubject<Lov[]>([]);
+  private lovAttachmentsDroplistSubject = new BehaviorSubject<Lov[]>([]);
+  private documentTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
+  private documentSubTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -124,6 +127,10 @@ export class LovFacade {
   paymentReversal$ = this.paymentReversalSubject.asObservable();
   premiumPaymentType$ = this.premiumPaymentTypeSubject.asObservable();
   premiumPaymentReversal$ = this.premiumPaymentReversalSubject.asObservable();
+  attachmentTypeDroplistlov$ = this.lovAttachmentsDroplistSubject.asObservable();
+  documentTypeCodeSubject$ = this.documentTypeCodeSubject.asObservable();
+  documentSubTypeCodeSubject$ = this.documentSubTypeCodeSubject.asObservable();
+
 
 
         /** Public methods **/
@@ -586,7 +593,16 @@ getDisenrollmentReasonLovs(): void {
     },
   });
 }
-
+getAttachmentTypesLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.AttachmentsTypes).subscribe({
+    next: (lovResponse) => {
+      this.lovAttachmentsDroplistSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+}
 getEligibilityStatusCpLovs(): void {
   this.showLoaderOnEligibilityStatusCpSubject.next(true);
   this.lovDataService.getLovsbyType(LovType.EligibilityStatusCp).subscribe({
@@ -599,6 +615,19 @@ getEligibilityStatusCpLovs(): void {
       this.showLoaderOnEligibilityStatusCpSubject.next(false);
     },
   });
+}
+getDocumentTypeLovs(): void {
+  this.lovDataService.getLovsbyType(LovType.DocumentTypeCode).subscribe({
+    next: (lovResponse) => {
+      this.documentTypeCodeSubject.next(lovResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+    },
+  });
+}
+getDocumentSubTypeLovs(parentCode : string) {
+  return this.lovDataService.getLovsbyParent(LovType.DocumentSubTypeCode, parentCode)
 }
 
   getCoPaymentRequestTypeLov(): void {

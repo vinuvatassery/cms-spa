@@ -63,7 +63,7 @@
               [data]="filterActionButtonOptions( pharmacyOptions,clientPharmacy)"
               icon="more-vertical"
               title="More Options"
-              class="TableActionPopup app-dropdown-action"
+              class="TableActionPopup app-dropdown-action more_action_wid"
               buttonClass="k-icon-button"
               aria-label="more actions"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }">
@@ -168,7 +168,7 @@
 <kendo-dialog *ngIf="isOpenReactivatePharmaciesClicked" (close)="handleCloseReactivatePharmaciesClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar> Reactivate Pharmacy </kendo-dialog-titlebar>
-  <case-management-reactivate-pharmacies   [clientPharmacyDetails]="selectClientPharmacyDetails"
+  <case-management-reactivate-pharmacies   [clientPharmacyDetails]="selectClientPharmacyDetails" [isShowHistoricalData]="isShowHistoricalData"
    (closeReactivatePharmacies)="handleCloseReactivatePharmaciesClicked()">
   </case-management-reactivate-pharmacies>
 </kendo-dialog>
