@@ -35,6 +35,8 @@ import { FinancialPharmacyClaimsComponent } from './components/financial-pharmac
 import { FinancialDrugsDetailsComponent } from './components/financial-drugs-details/financial-drugs-details.component';
 import { FinancialDrugsDeactivateComponent } from './components/financial-drugs-deactivate/financial-drugs-deactivate.component';
 import { FinancialDrugsReassignComponent } from './components/financial-drugs-reassign/financial-drugs-reassign.component';
+import { FinancialInsuranceProviderComponent } from './components/financial-insurance-provider/financial-insurance-provider.component';
+import { ProductivityToolsFeatureEventLogModule } from '@cms/productivity-tools/feature-event-log';
 
 @NgModule({
   imports: [
@@ -44,6 +46,7 @@ import { FinancialDrugsReassignComponent } from './components/financial-drugs-re
     CommonModule,
     CaseManagementFeatureFinancialVendorRoutingModule,
     ProductivityToolsFeatureTodoModule,
+    ProductivityToolsFeatureEventLogModule
   ],
   declarations: [
     FinancialVendorPageComponent,
@@ -75,7 +78,8 @@ import { FinancialDrugsReassignComponent } from './components/financial-drugs-re
     ContactsDetailsComponent,
     FinancialDrugsDetailsComponent,
     FinancialDrugsDeactivateComponent,
-    FinancialDrugsReassignComponent
+    FinancialDrugsReassignComponent,
+    FinancialInsuranceProviderComponent
   ],
   exports: [
     FinancialVendorPageComponent,
@@ -107,7 +111,8 @@ import { FinancialDrugsReassignComponent } from './components/financial-drugs-re
     ContactsDetailsComponent,
     FinancialDrugsDetailsComponent,
     FinancialDrugsDeactivateComponent,
-    FinancialDrugsReassignComponent
+    FinancialDrugsReassignComponent,
+    FinancialInsuranceProviderComponent
   ],
 })
 export class CaseManagementFeatureFinancialVendorModule {}
