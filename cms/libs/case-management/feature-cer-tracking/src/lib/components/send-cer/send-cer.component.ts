@@ -11,6 +11,7 @@ export class SendCerComponent implements OnInit {
   /* Input Properties */
   @Input() isPaperLess!: boolean;
   @Input() clientName!: string;
+  @Input() cerId!: string;
 
   /* Output Properties */
   @Output() sendCerEvent = new EventEmitter<any>();
@@ -18,14 +19,16 @@ export class SendCerComponent implements OnInit {
 
   client!: string;
   paperless!: boolean;
+  clientCaseEligibilityCerId!:string;
 
   ngOnInit(): void {
     this.client =this.clientName;
     this.paperless =this.isPaperLess;
+    this.clientCaseEligibilityCerId = this.cerId;
   }
   /* Public methods */
   sendCer() {
-    this.sendCerEvent.emit();
+    this.sendCerEvent.emit(this.clientCaseEligibilityCerId);
   }
 
   cancelSendCer() {

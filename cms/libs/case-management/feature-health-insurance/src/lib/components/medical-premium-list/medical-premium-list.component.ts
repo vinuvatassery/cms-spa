@@ -170,7 +170,7 @@ export class MedicalPremiumListComponent implements OnInit {
       }
     }
     else if (value?.confirm === false) {
-      this.isOpenedRemoveConfirm = true;
+      this.isOpenedRemoveConfirm = false;
     }
   }
   onRemoveCloseClicked() {
