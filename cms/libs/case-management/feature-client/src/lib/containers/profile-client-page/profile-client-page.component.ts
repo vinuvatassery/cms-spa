@@ -125,8 +125,7 @@ export class ProfileClientPageComponent implements OnInit {
         next: (response: any) => {
           if (response) {
             this.loaderService.hide();
-            /**Populating Client */
-            //this.applicantInfo.client = response.client;
+            /**Populating Client */          
             if(response.clientNotes?.length > 0){
               this.clientNotes = response.clientNotes;
             }else {

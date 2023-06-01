@@ -412,7 +412,7 @@ onCheckClientPharmacies(event:any){
       .subscribe((value: any) => {
 
         this.showPharmacySection = value ? false : true;
-        if(value==true){
+        if(value){
           this.showPharmacyRequiredValidation$.next(false);
         }
       });

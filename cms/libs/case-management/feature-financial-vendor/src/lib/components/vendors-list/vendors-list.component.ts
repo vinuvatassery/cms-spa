@@ -246,12 +246,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     };
     this.route.navigate(['/financial-management/vendors/profile'], query )
   }
-  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
-    
-  }
-
-  
-
+ 
   onChange(data: any)
   {
     this.defaultGridState()
@@ -285,10 +280,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
   {
     this.columnsReordered = true;
   }
-
-  columnChange($event : any)
-  {}
-
+ 
   dataStateChange(stateData: any): void {    
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
@@ -327,11 +319,8 @@ pageselectionchange(data: any) {
 }
 
 public filterChange(filter: CompositeFilterDescriptor): void {
-  debugger
+ 
   this.filterData = filter;
-debugger
- // this.gridDataResult.data = filterBy(this.gridDataResult.data, filter)
-  //this.gridCERDataSubject.next(this.gridDataResult);  
  }
 
   gridDataHandle() {   

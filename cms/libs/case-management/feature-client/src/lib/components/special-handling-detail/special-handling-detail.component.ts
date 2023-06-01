@@ -18,7 +18,7 @@ import {
   Client,
   ClientCaseEligibilityAndFlag,
 } from '@cms/case-management/domain';
-import { LovFacade, LovType } from '@cms/system-config/domain';
+import { LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -99,8 +99,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
     this.textFieldDisable = true;
     this.cdRef.detectChanges();
   }
-  ngAfterViewInit() {
-  }
+ 
   private loadLovs() {
     this.lovFacade.getMaterialYesLovs();
     this.lovFacade.getApplicantInfoLovs();

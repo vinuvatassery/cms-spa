@@ -3,7 +3,7 @@ import { AfterViewInit, OnDestroy,ChangeDetectionStrategy, Component, OnInit } f
 import { ActivatedRoute, Router } from '@angular/router';
 
 /** External libraries **/
-import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';
+import { catchError, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';
 
 /** Internal libraries **/
 import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent, CompletionChecklist, NavigationType } from '@cms/case-management/domain';

@@ -3,7 +3,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { TemplateManagementFacade } from '@cms/system-config/domain';
 import { map } from "rxjs/operators";
-import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 @Component({
   selector: 'system-config-forms-and-documents',

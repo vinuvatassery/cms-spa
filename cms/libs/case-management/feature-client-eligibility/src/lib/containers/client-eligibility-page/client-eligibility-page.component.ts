@@ -15,7 +15,7 @@ import {
   NotificationSnackbarService,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
-import { ClientNoteTypeCode, CompletionChecklist, ReviewQuestionResponseFacade, SmokingCessationFacade, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, ReviewQuestionResponseFacade, SmokingCessationFacade, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'case-management-client-eligibility-page',
