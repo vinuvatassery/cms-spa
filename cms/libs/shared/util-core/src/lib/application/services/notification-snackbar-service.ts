@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { debounceTime, Subject } from 'rxjs';
 import { ConfigurationProvider } from '../../api/providers/configuration.provider';
 import { NotificationSource, SnackBarNotificationText, SnackBarNotificationType } from '../../enums/snack-bar-notification-type.enum';
+import { LoaderService, LoggingService } from '@cms/shared/util-core';
 
 
 
@@ -14,7 +15,12 @@ export class NotificationSnackbarService {
   snackbarSubject = new Subject<any>();
   snackbar$ = this.snackbarSubject.asObservable(); 
 
-     constructor(private configurationProvider : ConfigurationProvider)
+     constructor(
+      // private loggingService: LoggingService,
+      private readonly loaderService: LoaderService,
+      private configurationProvider : ConfigurationProvider,
+      
+      )
      {
       this.filterManager
       .pipe(debounceTime(300))      
@@ -57,5 +63,21 @@ export class NotificationSnackbarService {
         };
         this.filterManager.next(snackbarMessage);
 
+      }
+
+      showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+      {      
+        
+        if(type == SnackBarNotificationType.SUCCESS)
+        {
+          this.manageSnackBar(type,subtitle)
+        this.hideLoader();   
+        }  
+        
+      }
+    
+      hideLoader()
+      {
+        this.loaderService.hide();
       }
 }

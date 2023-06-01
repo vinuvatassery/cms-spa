@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { NotificationSnackbarService,SnackBarNotificationType,ConfigurationProvider} from '@cms/shared/util-core';
+
 @Component({
   selector: 'cms-vendor-header-tools',
   templateUrl: './vendor-header-tools.component.html',
@@ -26,9 +28,22 @@ export class VendorHeaderToolsComponent {
       icon: 'mail_outline',
       isVisible: false,
       click: (): void => {
+       this.emailSent();
      
       },
     },
      
   ];
+  /** Constructor **/
+  constructor(
+   private readonly notificationSnackbarService: NotificationSnackbarService,
+    private configurationProvider : ConfigurationProvider
+   
+  ) {
+
+  }
+  emailSent(){
+    this.notificationSnackbarService.showHideSnackBar(SnackBarNotificationType.SUCCESS,
+      this.configurationProvider.appSettings.messages.emailSent);
+  }
 }
