@@ -89,11 +89,11 @@
             <h4 class="mb-0 mt-0">Leave a note to appear on the next CER</h4>        
           <kendo-floatinglabel text="Note">
             <kendo-textarea [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="cerNote" [ngModelOptions]="{standalone: true}"
-            (blur)="cerNotesChanged()"
+            (blur)="cerNotesChanged()" [maxlength]="7500"
               aria-label="note description" name="Note"
               [rows]="5" [cols]="40" (blur)="notesChanged()">
             </kendo-textarea>
-            <kendo-formhint class="justify-content-end">{{cerNote?.length}}/250</kendo-formhint>
+            <kendo-formhint class="justify-content-end">{{cerNote?.length}}/7500</kendo-formhint>
           </kendo-floatinglabel>        
         </div>
       </div>
