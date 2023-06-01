@@ -1,4 +1,4 @@
-<section class="k-dialog-body" [formGroup]="clientReminderForm">
+<section class="k-dialog-body" [formGroup]="reminderForm">
   <p class="text-muted">All fields are required unless otherwise stated.</p>
   <section>
     <div class="flex-row">
@@ -15,7 +15,7 @@
           </kendo-datepicker>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="dateValidator">Due Date cannot be less than Current Date.</kendo-formerror>
-        <kendo-formerror *ngIf="!clientReminderForm.controls['dueDate'].valid">Due Date is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!reminderForm.controls['dueDate'].valid">Due Date is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Time (Optional)">
@@ -44,7 +44,7 @@
             </kendo-textarea-suffix>
           </kendo-textarea>
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="!clientReminderForm.controls['description'].valid">Description is required.</kendo-formerror>
+        <kendo-formerror *ngIf="!reminderForm.controls['description'].valid">Description is required.</kendo-formerror>
 
       </div>
       

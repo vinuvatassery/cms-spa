@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 import { LoaderService, NotificationSnackbarService, SnackBarNotificationType, LoggingService } from '@cms/shared/util-core';
 import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
 /** Data services **/
-import { ClientReminderService } from '../infrastructure/client-reminder.service';
-import { ClientReminder } from '../entities/client-reminder';
+import { ReminderService } from '../infrastructure/reminder.service';
+import {Reminder } from '../entities/reminder';
 
 @Injectable({ providedIn: 'root' })
-export class ClientReminderFacade {
+export class ReminderFacade {
   /** Private properties **/
  
   /** Public properties **/
@@ -28,13 +28,13 @@ export class ClientReminderFacade {
   }
   /** Constructor**/
   constructor(
-    private  clientReminderService: ClientReminderService,
+    private  reminderService: ReminderService,
     private loggingService: LoggingService,
     private readonly loaderService: LoaderService,
     private readonly snackbarService: NotificationSnackbarService,
   ) { }
 
-   saveClientReminder(clientReminder: ClientReminder) {    
-      return this.clientReminderService.saveClientReminder(clientReminder);
+   saveReminder(reminder: Reminder) {    
+      return this.reminderService.saveReminder(reminder);
   }
 }

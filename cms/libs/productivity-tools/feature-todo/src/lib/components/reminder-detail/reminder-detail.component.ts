@@ -1,6 +1,6 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy,Output, EventEmitter, Input } from '@angular/core';
-import { CaseFacade, ClientReminder } from '@cms/case-management/domain';
+import { CaseFacade,Reminder } from '@cms/case-management/domain';
 import { TodoFacade} from '@cms/productivity-tools/domain';
 import { UIFormStyle, IntlDateService } from '@cms/shared/ui-tpa';
 import {
@@ -12,7 +12,7 @@ import {
 
 /** Facades **/
 import {
- ClientReminderFacade} from '@cms/case-management/domain';
+ReminderFacade} from '@cms/case-management/domain';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 
 @Component({
@@ -39,12 +39,12 @@ public formUiStyle : UIFormStyle = new UIFormStyle();
   clientCaseId: any;
   isShow=false;
   dateValidator: boolean = false;
-  clientReminder = new ClientReminder();
-  clientReminderForm !:FormGroup
+  clientReminder = new Reminder();
+  reminderForm !:FormGroup
   @Output() closeReminderEvent = new EventEmitter();
   constructor(
     private readonly todoFacade: TodoFacade,
-    private clientReminderFacade:ClientReminderFacade,
+    private reminderFacade:ReminderFacade,
     private readonly caseFacade: CaseFacade,
     private readonly loaderService: LoaderService,
     public readonly intl: IntlDateService,
@@ -79,7 +79,7 @@ public formUiStyle : UIFormStyle = new UIFormStyle();
     this.closeReminderEvent.emit();
   }
   private buildForm() {
-    this.clientReminderForm = new FormGroup({
+    this.reminderForm = new FormGroup({
       dueDate: new FormControl(''),
       time: new FormControl(''),
       description:new FormControl(''),
@@ -88,25 +88,25 @@ public formUiStyle : UIFormStyle = new UIFormStyle();
   }
   public save (){
     this.setValidators()
-      if (this.clientReminderForm.valid && this.dateValidator==false) {
+      if (this.reminderForm.valid && this.dateValidator==false) {
         this.loaderService.show();
         this.populateReminder();
-      this.clientReminderFacade
-        .saveClientReminder(this.clientReminder).subscribe({
+      this.reminderFacade
+        .saveReminder(this.clientReminder).subscribe({
           next: (response: any) =>{
             if(response)
             { 
-             this.clientReminderFacade.showHideSnackBar(
+             this.reminderFacade.showHideSnackBar(
                SnackBarNotificationType.SUCCESS,
                'Client Reminder added successfully'
              );
-             this.clientReminderFacade.hideLoader();
+             this.reminderFacade.hideLoader();
              this.closeReminderEvent.emit();
             }
            },
            error: (error: any) => {
              this.loaderService.hide();
-             this.clientReminderFacade.showHideSnackBar(
+             this.reminderFacade.showHideSnackBar(
                SnackBarNotificationType.ERROR,
                error)
            }
@@ -119,25 +119,25 @@ public formUiStyle : UIFormStyle = new UIFormStyle();
   }
   setValidators()
   {
-    this.clientReminderForm.markAllAsTouched();
-    this.clientReminderForm.controls['dueDate'].setValidators([Validators.required,]);
-    this.clientReminderForm.controls['dueDate'].updateValueAndValidity();
-    this.clientReminderForm.controls['description'].setValidators([Validators.required,]);
-    this.clientReminderForm.controls['description'].updateValueAndValidity();
+    this.reminderForm.markAllAsTouched();
+    this.reminderForm.controls['dueDate'].setValidators([Validators.required,]);
+    this.reminderForm.controls['dueDate'].updateValueAndValidity();
+    this.reminderForm.controls['description'].setValidators([Validators.required,]);
+    this.reminderForm.controls['description'].updateValueAndValidity();
 
   }
   populateReminder()
   {
     this.clientReminder.linkedItemId = this.clientId;
-    this.clientReminder.alertDueTime = this.clientReminderForm.controls['time'].value;
-    this.clientReminder.alertDueDate = this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat);
-    this.clientReminder.alertDesc = this.clientReminderForm.controls['description'].value;
-    this.clientReminder.addToOutlookFlag = this.clientReminderForm.controls['addToOutlookCalender'].value == true ? "Y": this.clientReminderForm.controls['addToOutlookCalender'].value == false ? "N": null ;
+    this.clientReminder.alertDueTime = this.reminderForm.controls['time'].value;
+    this.clientReminder.alertDueDate = this.intl.formatDate(this.reminderForm.controls['dueDate'].value, this.dateFormat);
+    this.clientReminder.alertDesc = this.reminderForm.controls['description'].value;
+    this.clientReminder.addToOutlookFlag = this.reminderForm.controls['addToOutlookCalender'].value == true ? "Y": this.reminderForm.controls['addToOutlookCalender'].value == false ? "N": null ;
   }
   
   dateValidate(event: Event) {
     this.dateValidator = false;
-    const signedDate = this.clientReminderForm.controls['dueDate'].value;
+    const signedDate = this.reminderForm.controls['dueDate'].value;
     const todayDate = new Date();
     signedDate.setHours(0, 0, 0, 0);
     todayDate.setHours(0, 0, 0, 0);

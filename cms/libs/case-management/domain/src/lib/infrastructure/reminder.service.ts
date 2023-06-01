@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 /** External libraries **/
 import { HttpClient } from '@angular/common/http';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { ClientReminder } from '../entities/client-reminder';
+import { Reminder } from '../entities/reminder';
 
 @Injectable({ providedIn: 'root' })
-export class ClientReminderService {
+export class ReminderService {
   /** Constructor**/
   constructor(
     private readonly http: HttpClient,
@@ -16,10 +16,10 @@ export class ClientReminderService {
       { }
 
   /** Public methods **/
-  saveClientReminder(clientReminder: ClientReminder) {  
+  saveReminder(reminder: Reminder) {  
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientReminder.linkedItemId}/reminder`,
-      clientReminder,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${reminder.linkedItemId}/reminder`,
+      reminder,
     )
   }
 }
