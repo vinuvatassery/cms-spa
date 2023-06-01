@@ -85,9 +85,9 @@ export class EmailDataService {
     );
   }
 
-  loadCERAuthorizationEmailVariables(lovTypes:string) {
+  loadCERAuthorizationEmailVariables(lovType:string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/types/${lovTypes}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${lovType}/variables`
     );
   }
 

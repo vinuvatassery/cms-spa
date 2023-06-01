@@ -89,6 +89,7 @@ export class AuthorizationComponent   {
               }
               this.loadClientDocumentInfo();
             }
+            this.loaderService.hide();
       },
       error: (err: any) => {
         this.loaderService.hide();
@@ -99,6 +100,7 @@ export class AuthorizationComponent   {
   }
 
   private loadClientDocumentInfo() {
+    this.loaderService.show();
     if(this.isGoPaperlessOpted)
     {
       this.typeCode=CommunicationEvents.CerAuthorizationEmail
@@ -136,11 +138,13 @@ export class AuthorizationComponent   {
   }
 
   getLoggedInUserProfile(){
+    this.loaderService.show();
     this.userProfileSubsriction=this.userDataService.getProfile$.subscribe((profile:any)=>{
       if(profile?.length>0){
        this.loginUserName= profile[0]?.firstName+' '+profile[0]?.lastName;
       }
     })
+    this.loaderService.hide();
   }
 
   /** Internal event methods **/

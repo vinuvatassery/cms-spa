@@ -6,5 +6,6 @@ export enum CommunicationEvents {
   CerAuthorizationEmail="CER_AUTHORIZATION_EMAIL",
   CerAuthorizationLetter="CER_AUTHORIZATION_LETTER",
   Letter="LETTER",
-  Email="EMAIL"
+  Email="EMAIL",
+  TemplateVariable="TEMPLATE_VARIABLE"
 }

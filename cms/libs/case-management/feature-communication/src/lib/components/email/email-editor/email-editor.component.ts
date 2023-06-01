@@ -12,7 +12,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 /** Facades **/
-import { CommunicationFacade, ClientDocumentFacade } from '@cms/case-management/domain';
+import { CommunicationFacade, ClientDocumentFacade, CommunicationEvents } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { EditorComponent } from '@progress/kendo-angular-editor';
 
@@ -139,8 +139,7 @@ export class EmailEditorComponent implements OnInit {
 
   private loadClientVariables() {
     this.loaderService.show();
-    const lovTypes = ['CER_AUTHORIZATION_CLIENT_VARIABLES','CER_AUTHORIZATION_MY_VARIABLES','CER_AUTHORIZATION_OTHER_VARIABLES'].toString();
-    this.communicationFacade.loadCERAuthorizationEmailEditVariables(lovTypes)
+    this.communicationFacade.loadCERAuthorizationEmailEditVariables(CommunicationEvents.TemplateVariable)
     .subscribe({
       next: (variables: any) =>{
         if (variables) {

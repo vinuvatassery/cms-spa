@@ -69,7 +69,7 @@
             aria-label="client variables"
             *ngFor="let item of clientVariables"
           >
-            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.lovTypeCode =='CER_AUTHORIZATION_CLIENT_VARIABLES'" aria-label="client variables item">{{ item.lovDesc }}</li>
+            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='Client'" aria-label="client variables item">{{ item.lovDesc }}</li>
           </ul>
         </section>
         <section>
@@ -79,7 +79,7 @@
             aria-label="my variables"
             *ngFor="let item of clientVariables"
           >
-            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.lovTypeCode =='CER_AUTHORIZATION_MY_VARIABLES'" aria-label="my variables item">{{ item.lovDesc }}</li>
+            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='Case Worker'" aria-label="my variables item">{{ item.lovDesc }}</li>
           </ul>
         </section>
         <section>
@@ -89,7 +89,7 @@
             aria-label="other variables"
             *ngFor="let item of clientVariables"
           >
-            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.lovTypeCode =='CER_AUTHORIZATION_OTHER_VARIABLES'" aria-label="other variables item">{{ item.lovDesc }}</li>
+            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='Other'" aria-label="other variables item">{{ item.lovDesc }}</li>
           </ul>
         </section>
       </div>
