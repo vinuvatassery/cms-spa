@@ -53,7 +53,7 @@ export class FormsAndDocumentsComponent {
     }));
 
     hasFiles = function (data: any) {
-      return (data.documentTemplateTypeCode.toUpperCase() === 'Form'.toUpperCase() && data.templateSize === 0) ? true : false;
+      return (data.typeCode.toUpperCase() === 'Form'.toUpperCase() && data.templateSize === 0) ? true : false;
     }
   /** Public methods **/
   showSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -93,7 +93,7 @@ export class FormsAndDocumentsComponent {
   folderstreeformatting(folderdata:any)
   {
   folderdata.forEach((element: any) => {
-    element.isFolder = (element.documentTemplateTypeCode.toUpperCase() === 'Form'.toUpperCase() && element.templateSize === 0);
+    element.isFolder = (element.typeCode.toUpperCase() === 'Form'.toUpperCase() && element.templateSize === 0);
     element.templateSize=(element.templateSize/(1024 * 1024));
   });
 
