@@ -19,7 +19,7 @@ export interface VendorList {
 }
 
 
-export const vendorList: VendorList[] = [
+export const vendorList: VendorList[] =[
   {
     id: 1,
     title: "Mod Health",
