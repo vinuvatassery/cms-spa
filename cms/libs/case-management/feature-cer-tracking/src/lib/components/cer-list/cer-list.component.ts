@@ -359,8 +359,8 @@ export class CerListComponent implements OnInit, OnChanges {
     });
   }
 
-  sendCer(){
-    this.sendCersEvent.emit(this.selectedEligibilityCerId);
+  sendCer(cerId:string){
+    this.sendCersEvent.emit(cerId);
   }
 
   setToDefault()
