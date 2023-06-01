@@ -125,7 +125,7 @@ export class DependentDataService {
 
 
   //7 mark dependent as inactive
-  deleteDependent(eligibilityId: string, clientDependentId: string, isCER: boolean = false, status?: String) {
+  deleteDependent(eligibilityId: string, clientDependentId: string, isCER: boolean = false, status?: string) {
     return this.http.delete(
       `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/eligibility-periods/${eligibilityId}/dependents/${clientDependentId}?IsCER=${isCER}&Status=${status}`
     );

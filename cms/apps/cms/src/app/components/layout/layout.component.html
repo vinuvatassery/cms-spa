@@ -30,24 +30,7 @@
     class="app-l-sidebar"
     [class.menuToggled]="isSideMenuToggled"  
   >
-    <div class="drawer-inner-container" role="menuitem" *ifPermission='["Layout_Menu_View_Only"]'>
-      <!-- <div class="sidebar-hamburger">
-        <button
-          (click)="onSideMenuToggleClicked()"
-          class="sidebar-hamburger_button"
-          kendoButton
-          look="flat"
-          aria-label="side navigation"
-        >
-          <span
-            class="material-icons sidebar-hamburger_icon-left"
-            aria-label="collapse side navigation"
-            aria-hidden="true"
-          >
-            chevron_left
-          </span>
-        </button>
-      </div> -->
+    <div class="drawer-inner-container" role="menuitem" *ifPermission='["Layout_Menu_View_Only"]'>     
       <cms-side-navigation></cms-side-navigation>
 
       <!-- Selector for active sessions -->

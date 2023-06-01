@@ -3,12 +3,9 @@ import { Injectable } from '@angular/core';
 /** External libraries **/
 import { Subject } from 'rxjs';
 import { SortDescriptor } from '@progress/kendo-data-query';
-import { IntlService } from '@progress/kendo-angular-intl';
 
 
 /** Internal libraries **/
-import { StatusFlag } from '../enums/status-flag.enum';
-import { SnackBar } from '@cms/shared/ui-common';
 import { ConfigurationProvider, LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
 import { FinancialVendorDataService } from '../infrastructure/financial-vendor.data.service';
 
