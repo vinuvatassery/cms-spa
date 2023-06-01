@@ -61,14 +61,14 @@ class="global-search header-search field-label-hide combotable_search_list" [ngC
     [loading] = "showHeaderSearchInputLoader"
     [fillMode]="formUiStyle.dropDownFillMode"
     placeholder="Search Vendor"
-    [popupSettings]="{popupClass: 'combotable_search_list vendor_head_search_list', animate: true }"
+    [popupSettings]="{popupClass: 'combotable_search_list vendor_head_search_list list_with_left_bar', animate: true }"
     [filterable]="true"
     (filterChange)="onSearchTextChange($event)"
-    (selectionChange)="onSelectChange($event)"> 
+    >
     <button kendoButton fillMode="clear" icon="image"></button>   
     <kendo-combobox-column>
       <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
-        <span  >{{ dataItem.vendorAddress }}</span>
+        <span  [ngClass]="{'active_gold_bar': dataItem.preferredFlag === 'Y'}">{{ dataItem.vendorAddress }}</span>
       </ng-template>
     </kendo-combobox-column>
      

@@ -51,6 +51,8 @@ export class SearchFacade {
 
   loadVendorBySearchText(text : string): void {
     this.vendorSearchSubject.next(null);
+    if(text==='')return;
+    this.vendorSearchSubject.next(null);
     this.vendorDataService.searchVendor(text).subscribe({
       next: (response) => {
         this.vendorSearchSubject.next(response);
