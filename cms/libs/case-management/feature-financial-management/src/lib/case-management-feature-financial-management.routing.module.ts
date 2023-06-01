@@ -28,7 +28,7 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureFinancialReplenishmentModule
       ),
     data: {
-      title: '',
+      title: null,
     },
   },
   {
@@ -38,7 +38,7 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureFinancialVendorRefundModule
       ),
     data: {
-      title: '',
+      title: null,
     },
   },
   {
@@ -48,7 +48,7 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureFinancialMedicalClaimsModule
       ),
     data: {
-      title: '',
+      title: null,
     },
   },
   {
@@ -58,7 +58,27 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureFinancialInsurancePremiumsModule
       ),
     data: {
-      title: '',
+      title: null,
+    },
+  },
+  {
+    path: 'dental-claims',
+    loadChildren: () =>
+      import('@cms/case-management/feature-financial-dental-claims').then(
+        (m) => m.CaseManagementFeatureFinancialDentalClaimsModule
+      ),
+    data: {
+      title: null,
+    },
+  },
+  {
+    path: 'dental-premiums',
+    loadChildren: () =>
+      import('@cms/case-management/feature-financial-dental-premiums').then(
+        (m) => m.CaseManagementFeatureFinancialDentalPremiumsModule
+      ),
+    data: {
+      title: null,
     },
   },
   {
@@ -68,7 +88,7 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureFinancialPharmacyClaimsModule
       ),
     data: {
-      title: '',
+      title: null,
     },
   },
 ];

@@ -1,19 +1,23 @@
 <div [formGroup]="healthInsuranceForm">
-    <h5>Is the client the policy holder?</h5>
+  <fieldset class="k-form-fieldset mt-2">
+    <legend class="k-form-legend">
+      <h5>Is the client the policy holder?</h5>
+    </legend>
+
     <div class="component-list-h">
         <span class="app-radiobtnwidtext-wrapper">
             <input type="radio" kendoRadioButton name="isClientPolicyHolderFlag" aria-labelledby="clientPolicyHolderYes"
-                id="clientPolicyHolderYes" tabindex="5" value="Y" formControlName="isClientPolicyHolderFlag" />
+                id="clientPolicyHolderYes"  value="Y" formControlName="isClientPolicyHolderFlag" />
             <kendo-label class="k-radio-label" text="Yes" for="clientPolicyHolderYes"></kendo-label>
         </span>
         <span class="app-radiobtnwidtext-wrapper">
             <input type="radio" kendoRadioButton name="isClientPolicyHolderFlag" aria-labelledby="clientPolicyHolderNo"
-                id="clientPolicyHolderNo" tabindex="6" value="N" formControlName="isClientPolicyHolderFlag" />
+                id="clientPolicyHolderNo"  value="N" formControlName="isClientPolicyHolderFlag" />
             <kendo-label class="k-radio-label" text="No" for="clientPolicyHolderNo"></kendo-label>
         </span>
         <kendo-formerror *ngIf="!healthInsuranceForm.controls['isClientPolicyHolderFlag'].valid && isViewContentEditable==false">	A Response is Required.</kendo-formerror>
     </div>
-
+</fieldset>
     <div class="flex-row pl-3 mt-2" *ngIf="healthInsuranceForm.controls['isClientPolicyHolderFlag'].value === 'N'">
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Policy Holder First Name">

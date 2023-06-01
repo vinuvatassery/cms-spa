@@ -5,8 +5,11 @@
 
   <section class="mb-2">
    
-    <h5 class="mt-1">Currently has HIV Case Manager?</h5>
-     
+  
+    <fieldset class="k-form-fieldset mt-2">
+      <legend class="k-form-legend">
+        <h5 class="mt-1">Currently has HIV Case Manager?</h5>
+      </legend>
     <div class="component-list-h">
       <span class="app-radiobtnwidtext-wrapper">
         <input
@@ -14,8 +17,7 @@
           kendoRadioButton      
           name="HIVManager"  
           aria-labelledby="currentlyHasHivManagerYes"
-          id="currentlyHasHivManagerYes"  
-          tabindex="1"  
+          id="currentlyHasHivManagerYes" 
           [(ngModel)]="hasManager"   
           value="Y"  
           (click)="hasManagerChangeEvent(true)" 
@@ -33,7 +35,7 @@
           aria-labelledby="currentlyHasHivManagerNo"    
           name="HIVManager"
           id="currentlyHasHivManagerNo"    
-          tabindex="2"    
+       
           [(ngModel)]="hasManager"   
           value="N"   
           (click)="hasManagerChangeEvent(false)" 
@@ -47,6 +49,7 @@
     <div class="flex-col">
       <kendo-formerror *ngIf="hasManagerValidation$ | async">Response Required</kendo-formerror>
       </div>
+      </fieldset>
   </section>
 
   <section *ngIf="showCaseManagers$ | async">
@@ -73,7 +76,12 @@
   </section>
 
   <section *ngIf="hasManager==='N'">
-    <h5 class="mt-1">Would you like one?</h5>
+   
+    
+    <fieldset class="k-form-fieldset mt-2">
+      <legend class="k-form-legend">
+        <h5 class="mt-1">Would you like one?</h5>
+      </legend>
     <div class="component-list-h">
       <span class="app-radiobtnwidtext-wrapper">
         <input
@@ -83,7 +91,6 @@
           name="HIVNeedManager"
           aria-labelledby="currentlyNeedHivManagerYes"
           id="currentlyNeedHivManagerYes"
-          tabindex="1"
           [(ngModel)]="needManager"   
           value="Y" 
           (change)="handleNeedManagerRadioChange($event)"
@@ -101,7 +108,6 @@
           aria-labelledby="currentlyNeedHivManagerNo"
           name="HIVNeedManager"
           id="currentlyNeedHivManagerNo"
-          tabindex="2"
           [(ngModel)]="needManager"   
           value="N" 
           (change)="handleNeedManagerRadioChange($event)"
@@ -116,6 +122,7 @@
     <div class="flex-col">
       <kendo-formerror *ngIf="needManagerValidation$ | async">Response Required</kendo-formerror>
       </div>
+      </fieldset>
     <div class="voterreg-info d-flex mt-1  align-items-center" *ngIf="needManager === 'Y'">
       <span class="material-icons" aria-label="info" aria-hidden="true">info</span><p>A Case Manager Referral will be sent once the application is saved  </div>
   </section>
