@@ -50,6 +50,13 @@ export class DisenrollClientComponent implements OnInit {
       };
       this.isCloseDisenrollModal.emit(clientDisenrollData);
     }
+    else if(confirm === true)
+    {
+      const clientDisenrollData = {
+        cancel: confirm       
+      };
+      this.isCloseDisenrollModal.emit(clientDisenrollData);
+    }
    
   }
 }

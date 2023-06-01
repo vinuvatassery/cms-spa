@@ -149,7 +149,7 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
 
     this.searchBars$.subscribe((searchHeaderType: string) =>
-    {      
+    {
       if(searchHeaderType)
       {       
          this.searchHeaderTypeSubject.next(searchHeaderType);

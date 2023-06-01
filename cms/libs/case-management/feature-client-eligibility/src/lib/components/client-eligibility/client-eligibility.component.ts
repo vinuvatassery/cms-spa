@@ -294,7 +294,7 @@ export class ClientEligibilityComponent implements OnInit {
     this.isOpenDisenroll = false;   
   }
 
-  handleClosAfterDisEnroll(event: any) {    
+  handleClosAfterDisEnroll(event: any) {        
     if (event.cancel === true) {
       this.isOpenDisenroll = false;   
     }

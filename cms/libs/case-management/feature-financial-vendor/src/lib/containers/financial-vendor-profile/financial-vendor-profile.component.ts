@@ -16,7 +16,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   vendorId!: string;
   providerId!: string;
   tabCode!: string;
-  profileInfoTitle!: string;
+  profileInfoTitle = "info";
   addressGridView = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
 

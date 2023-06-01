@@ -160,7 +160,7 @@
      [sticky]="true"     [columnMenu]="false">
       <ng-template kendoGridCellTemplate let-dataItem>
         <kendo-dropdownbutton [data]="gridActions" icon="more-vertical" title="More Options" *ngIf="dataItem.isHistorical==='N' && dataItem.clientCaseEligibilityCerId !== null && dataItem.clientCaseEligibilityId"  
-          class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button" aria-label="more actions"
+          class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button" aria-label="more actions"  
           [popupSettings]="{ popupClass: popupClassAction, animate: true }">
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
             <button  kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
@@ -211,7 +211,11 @@
 <!-- Send CER Modal Html-->
 <kendo-dialog *ngIf="isOpenSendCER$ | async" (close)="onCloseSendCERClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np app-c-modal-top" title="Re-send CERs?">
-  <case-management-send-cer [isPaperLess]="isPaperLessFlag" [clientName]="clientName" (sendCerEvent)="sendCer()"
+  <case-management-send-cer 
+    [isPaperLess]="isPaperLessFlag" 
+    [clientName]="clientName" 
+    [cerId]="selectedEligibilityCerId" 
+    (sendCerEvent)="sendCer($event)"
     (cancelSendCerEvent)="onCloseSendCERClicked()">
   </case-management-send-cer>
 </kendo-dialog>
