@@ -1,6 +1,6 @@
 <div class="flex-row">
   <div class="flex-col flex-space-bw align-items-center">
-    <h2 class="title-md mb-0 text-bold">Premium Payments</h2> 
+    <h2 class="title-md mb-0 text-bold">Insurance Premium Payments</h2> 
     <div> 
     <span class="app-checkboxwidtext-wrapper">
       <input
@@ -44,7 +44,7 @@
         </kendo-grid-column>
         <kendo-grid-column
           field="serviceStartDate"
-          title="Service Start Date"
+          title="Coverage Start Date"
           [width]="130"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
@@ -53,7 +53,7 @@
         </kendo-grid-column>
         <kendo-grid-column
           field="serviceEndDate"
-          title="Service End Date"
+          title="Coverage End Date"
           [width]="130"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
@@ -154,7 +154,7 @@
       (click)="openPremiumPaymentDetailsOpened()"
       [disabled]="(isReadOnly$ | async) ? true : false"
     >
-{{tabStatus === 'dnt-ins-prm-pym' ? 'Dental Premium' :'Medical Premium'}}
+{{tabStatus === 'dnt-ins-prm-pym' ? 'Insurance Premium' :'Insurance Premium'}}
     </button>
   </div>
 </div>
@@ -168,6 +168,7 @@
   [caseEligibilityId]="caseEligibilityId"
   [clientId] ="clientId"
   [tabStatus]="tabStatus" 
+  (closePremiumPaymentEvent)="closePremiumPaymentEventTriggered($event)"
   ></case-management-medical-premium-payment-detail>
 </kendo-dialog>
 

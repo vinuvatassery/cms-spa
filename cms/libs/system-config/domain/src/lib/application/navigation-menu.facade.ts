@@ -26,7 +26,7 @@ export class NavigationMenuFacade {
     private readonly loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loaderService: LoaderService
-  ) {}
+  ) { }
 
   showLoader() {
     this.loaderService.show();
@@ -41,13 +41,14 @@ export class NavigationMenuFacade {
     return this.navigationMenuService.getNavigationMenu().subscribe({
       next: (menuResponse) => {
         if (menuResponse) {
+          menuResponse?.forEach(menu => { menu.filterText = ''; });
           this.navigationMenuSubject.next(menuResponse);
-          this.hideLoader()  
+          this.hideLoader()
         }
-        this.hideLoader()  
+        this.hideLoader()
       },
       error: (err: any) => {
-        this.hideLoader()  
+        this.hideLoader()
         this.notificationSnackbarService.manageSnackBar(
           SnackBarNotificationType.ERROR,
           err

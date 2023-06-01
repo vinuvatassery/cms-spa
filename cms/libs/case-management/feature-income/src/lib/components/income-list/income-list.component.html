@@ -137,7 +137,7 @@
               [data]="actionsmore"
               icon="more-vertical"
               title="More option"
-              class="TableActionPopup"
+              class="TableActionPopup more_action_wid"
               buttonClass="k-icon-button"
               aria-label="more actions"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }"
@@ -314,7 +314,8 @@
 
 
 <kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened"  (close)="onRemoveIncomeConfirmationClosed()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Delete income source">
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar class="transform-none"> Delete income source </kendo-dialog-titlebar>
   <case-management-remove-income-confirmation
   (closeModal)="onRemoveIncomeConfirmationClosed()"
   [selectedIncome]="selectedIncome"

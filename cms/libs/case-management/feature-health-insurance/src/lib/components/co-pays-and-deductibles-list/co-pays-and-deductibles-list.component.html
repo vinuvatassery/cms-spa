@@ -116,7 +116,7 @@
   <kendo-dialog-titlebar *ngIf="tabStatus === 'hlt-ins-co-pay'"> Add Medical Payment</kendo-dialog-titlebar>
   <kendo-dialog-titlebar *ngIf="tabStatus === 'dnt-ins-co-pay'"> Add Dental Payment</kendo-dialog-titlebar>
   <case-management-medical-payment-detail [caseEligibilityId]="caseEligibilityId"
-    [clientId]="clientId" [tabStatus]="tabStatus"></case-management-medical-payment-detail>
+    [clientId]="clientId" [tabStatus]="tabStatus"(closeCoPaymentDetailsEvent)="closeCoPaymentTriggered($event)"></case-management-medical-payment-detail>
 </kendo-dialog>
 
 <kendo-popover #myPopover body="Popover Body" >
