@@ -594,3 +594,7 @@ table,
     padding: 1.5rem !important;
   }
 }
+.k-column-menu-popup.k-popup, .k-grid-columnmenu-popup.k-popup{
+  max-height: 36vh;
+  overflow-y: auto;
+}
