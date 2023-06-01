@@ -20,7 +20,7 @@ import { EditorComponent } from '@progress/kendo-angular-editor';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider} from '@cms/shared/util-core';
 
 /** Internal Libraries **/
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'case-management-email-editor',
@@ -269,6 +269,5 @@ if(!this.attachedFileValidatorSize){
     this.uploadedAttachedFile = [];
     this.onAttachmentConfirmationEvent.emit(event);
     this.showClientAttachmentUpload = false;
-    event = [];
   }
 }

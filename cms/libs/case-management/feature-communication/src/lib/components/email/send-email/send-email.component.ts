@@ -65,7 +65,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   selectedToEmail!: any;
   showToEmailLoader: boolean = true;
   caseEligibilityId!:any;
- 
   /** Private properties **/
   private currentSessionSubscription !: Subscription;
 
@@ -243,7 +242,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   private saveTemplateForLater(draftTemplate: any) {
     this.loaderService.show();
     const isSaveFoLater = true;
-    this.communicationFacade.SaveForLaterEmailTemplate(draftTemplate, isSaveFoLater)
+    this.communicationFacade.saveForLaterEmailTemplate(draftTemplate, isSaveFoLater)
         .subscribe({
           next: (data: any) =>{
             this.loaderService.hide();

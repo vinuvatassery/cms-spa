@@ -3,9 +3,8 @@ import { Component, ChangeDetectionStrategy, EventEmitter, Input, ChangeDetector
 import { ActivatedRoute } from '@angular/router';
 
 /** External Libraries **/
-import { ConfigurationProvider, LoaderService, LoggingService } from '@cms/shared/util-core';
-import { WorkflowFacade, CommunicationFacade } from '@cms/case-management/domain';
-import { UserDataService } from '@cms/system-config/domain';
+import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { WorkflowFacade } from '@cms/case-management/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription} from 'rxjs';
 
@@ -59,6 +58,7 @@ private loadCurrentSession() {
   },
   error: (err: any) => {
     this.loaderService.hide();
+    this.workflowFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
     this.loggingService.logException(err);
   },
 });

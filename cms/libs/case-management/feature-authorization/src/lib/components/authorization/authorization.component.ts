@@ -1,11 +1,11 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+
 /** Enums **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 /** External Libraries **/
-import { ConfigurationProvider, LoaderService, LoggingService } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { CommunicationEvents, ScreenType, StatusFlag, WorkflowFacade, ContactFacade, ContactInfo,CommunicationFacade } from '@cms/case-management/domain';
 import { UserDataService } from '@cms/system-config/domain';
 import { Subscription} from 'rxjs';
@@ -56,7 +56,6 @@ export class AuthorizationComponent   {
     private readonly workflowFacade: WorkflowFacade,
     private readonly loggingService: LoggingService,
     private readonly contactFacade: ContactFacade,
-    private readonly route: ActivatedRoute,
     private readonly intl: IntlService,
     private readonly ref: ChangeDetectorRef,
     private readonly userDataService: UserDataService,
@@ -93,14 +92,14 @@ export class AuthorizationComponent   {
       },
       error: (err: any) => {
         this.loaderService.hide();
+        this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.loggingService.logException(err);
       },
     });
   }
 
   private loadClientDocumentInfo() {
-    this.loaderService.show();
-    if(this.isGoPaperlessOpted == true)
+    if(this.isGoPaperlessOpted)
     {
       this.typeCode=CommunicationEvents.CerAuthorizationEmail
       this.subTypeCode= CommunicationEvents.Email
@@ -130,6 +129,7 @@ export class AuthorizationComponent   {
       },
       error: (err: any) => {
         this.loaderService.hide();
+        this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.loggingService.logException(err);
       },
     });

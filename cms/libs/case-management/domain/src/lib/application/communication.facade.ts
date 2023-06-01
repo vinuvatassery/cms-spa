@@ -96,7 +96,7 @@ export class CommunicationFacade {
     return this.emailDataService.replaceAndGenerateTextTemplate(clientId, clientCaseEligibilityId, selectedTemplate,requestType);
   }
 
-  SaveForLaterEmailTemplate(draftTemplate: any, isSaveFoLater: boolean){
+  saveForLaterEmailTemplate(draftTemplate: any, isSaveFoLater: boolean){
     return this.emailDataService.saveEmailForLater(draftTemplate, isSaveFoLater);
   }
 

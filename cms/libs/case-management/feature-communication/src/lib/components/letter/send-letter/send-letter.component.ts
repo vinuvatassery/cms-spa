@@ -149,24 +149,20 @@ export class SendLetterComponent implements OnInit {
               {
                 this.onCloseNewLetterClicked();
                 this.viewOrDownloadFile(data.clientDocumentId);
-                this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent for Print')
+                this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print')
               }
           }
+          this.loaderService.hide();
         },
         error: (err: any) => {
           this.loaderService.hide();
           this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , err);
         },
       });
   }
 
   onSendLetterToPrintClicked() {
-    this.isNewLetterClicked=true;
-    this.isShowSendLetterToPrintPopupClicked=true;
-    this.isShowPreviewLetterPopupClicked=false;
-  }
-
-  onConfirmSendLetterToPrintClicked(){
     this.isNewLetterClicked=true;
     this.isShowSendLetterToPrintPopupClicked=true;
     this.isShowPreviewLetterPopupClicked=false;
@@ -207,10 +203,12 @@ this.isShowSendLetterToPrintPopupClicked = false;
     },
     error: (err: any) => {
       this.loaderService.hide();
+      this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       this.loggingService.logException(err);
     },
   });
   }
+
   handleDdlLetterValueChange(event: any) {
     this.isOpenLetterTemplate=true;
     this.selectedTemplate = event;
@@ -218,10 +216,11 @@ this.isShowSendLetterToPrintPopupClicked = false;
     this.ref.detectChanges();
     this.openDdlLetterEvent.emit();
   }
+
   private saveContact(draftTemplate: any) {
     this.loaderService.show();
     const isSaveFoLater = true;
-    this.communicationFacade.SaveForLaterEmailTemplate(draftTemplate, isSaveFoLater)
+    this.communicationFacade.saveForLaterEmailTemplate(draftTemplate, isSaveFoLater)
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -232,7 +231,7 @@ this.isShowSendLetterToPrintPopupClicked = false;
         error: (err: any) => {
           this.loaderService.hide();
           this.loggingService.logException(err);
-          this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
         },
       });
   }
@@ -247,13 +246,13 @@ this.isShowSendLetterToPrintPopupClicked = false;
         this.notificationSnackbarService.manageSnackBar(type,subtitle)
         this.hideLoader();   
   }
+
   hideLoader()
   {
     this.loaderService.hide();
   }
 
   viewOrDownloadFile(clientDocumentId: string) {
-    this.loaderService.show();
     if (clientDocumentId === undefined) {
         return;
     }
@@ -264,9 +263,10 @@ this.isShowSendLetterToPrintPopupClicked = false;
         },
         error: (error: any) => {
             this.loaderService.hide();
+            this.loggingService.logException(error);
+            this.showHideSnackBar(SnackBarNotificationType.ERROR,error);
         }
     })
-    this.loaderService.hide();
   }
 
   getClientDocumentsViewDownload(clientDocumentId: string) {
