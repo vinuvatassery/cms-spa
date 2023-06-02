@@ -30,11 +30,7 @@ export class ReactivatePharmaciesComponent {
     this.closeReactivatePharmacies.emit();
   }
   onReactivateClick()
-  {
-    let pharmacy ={
-      ClientId:this.clientPharmacyDetails.clientId,
-      IsActive:true
-    }
+  {   
     this.drugPharmacyFacade.addClientPharmacy(this.clientPharmacyDetails.clientId,this.clientPharmacyDetails?.vendorId,this.isShowHistoricalData);
   }
 }
