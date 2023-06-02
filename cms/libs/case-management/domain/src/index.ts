@@ -145,6 +145,7 @@ export * from './lib/infrastructure/financial-management/drugs.data.service';
 export * from './lib/infrastructure/financial-management/payments.data.service';
 export * from './lib/infrastructure/financial-management/invoice.data.service';
 export * from './lib/infrastructure/financial-management/claims.data.service';
+export * from './lib/infrastructure/financial-management/insurance-provider.data.service';
 
 
 
@@ -190,6 +191,7 @@ export * from './lib/application/financial-management/drugs.facade';
 export * from './lib/application/financial-management/payments.facade';
 export * from './lib/application/financial-management/invoice.facade';
 export * from './lib/application/financial-management/claims.facade';
+export * from './lib/application/financial-management/insurance-provider.facade';
 
 
 

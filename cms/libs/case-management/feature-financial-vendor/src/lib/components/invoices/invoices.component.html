@@ -5,7 +5,7 @@
     </div>
     <div class="flex-col mt-1">
         <div class="app-c-table">
-            <kendo-grid  [resizable]="true" [loading]="isInvoiceGridLoaderShow" #billingAddressGrid [pageSize]="state.take" [pageable]="true"
+            <kendo-grid  [resizable]="true" [loading]="isInvoiceGridLoaderShow" [pageSize]="state.take" [pageable]="true"
             [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
             [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [navigable]="true" [data]="invoiceGridView$ | async">
 
