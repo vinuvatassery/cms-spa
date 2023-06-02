@@ -299,7 +299,7 @@ export class ClientFacade {
     );
   }
   sendNewIdCard(clientId: number):void{
-    var newIDCardRequest = new NewIDCardRequest();
+    let newIDCardRequest = new NewIDCardRequest();
     newIDCardRequest.clientId = clientId;
     this.showLoader();
     this.clientDataService.sendNewIdCard(newIDCardRequest).subscribe({
