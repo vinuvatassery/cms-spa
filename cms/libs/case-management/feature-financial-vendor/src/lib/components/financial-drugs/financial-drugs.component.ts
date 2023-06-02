@@ -8,8 +8,7 @@ import { State } from '@progress/kendo-data-query';
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialDrugsComponent {
-  SpecialHandlingLength = 100;
+export class FinancialDrugsComponent { 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isFinancialDrugsDetailShow = false;
   isFinancialDrugsDeactivateShow = false; 

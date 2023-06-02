@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'; 
 import { PaymentsFacade } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'cms-financial-payments',
   templateUrl: './financial-payments.component.html',
@@ -8,7 +9,7 @@ import { State } from '@progress/kendo-data-query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPaymentComponent {
- 
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isPaymentsGridLoaderShow = false;
   public sortValue = this.paymentsFacade.sortValue;
