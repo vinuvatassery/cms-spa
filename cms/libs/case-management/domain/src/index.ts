@@ -141,6 +141,7 @@ export * from './lib/infrastructure/grid.data.service';
 export * from './lib/infrastructure/financial-management/billing-address.data.service';
 export * from './lib/infrastructure/financial-management/billing-email-address.data.service';
 export * from './lib/infrastructure/financial-management/contacts.data.service';
+export * from './lib/infrastructure/financial-management/drugs.data.service';
 
 
 
@@ -182,6 +183,7 @@ export * from './lib/application/grid.facade';
 export * from './lib/application/financial-management/billing-address.facade';
 export * from './lib/application/financial-management/billing-email-address.facade';
 export * from './lib/application/financial-management/contacts.facade';
+export * from './lib/application/financial-management/drugs.facade';
 
 
 

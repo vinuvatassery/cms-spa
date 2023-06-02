@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { DrugsFacade } from '@cms/case-management/domain';
+import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'cms-financial-drugs',
   templateUrl: './financial-drugs.component.html',
@@ -13,18 +15,15 @@ export class FinancialDrugsComponent {
   isFinancialDrugsDeactivateShow = false; 
   isFinancialDrugsReassignShow  = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  drugsGridlists = [
-    {
-      NDC: 'XXXXXXXXXX `',
-      brandName:'Very Nice Brand Name', 
-      drugName: 'Drug Name',
-      deliveryMethod: 'Tablet',
-      includedInRebates: 'Yes',
-      hivDrugs: 'Yes',
-      hepDrugs: 'No',
-      oiDrugs: 'No',
-    },
-  ];
+  isDrugsGridLoaderShow = false;
+  public sortValue = this.drugsFacade.sortValue;
+  public sortType = this.drugsFacade.sortType;
+  public pageSizes = this.drugsFacade.gridPageSizes;
+  public gridSkipCount = this.drugsFacade.skipCount;
+  public sort = this.drugsFacade.sort;
+  public state!: State;
+  drugsGridView$ = this.drugsFacade.drugsData$;
+ 
   public emailBillingAddressActions = [
     {
       buttonType: 'btn-h-primary',
@@ -57,6 +56,42 @@ export class FinancialDrugsComponent {
 
 
   
+   /** Constructor **/
+   constructor(private readonly drugsFacade: DrugsFacade) {}
+
+
+   
+  ngOnInit(): void {
+    this.loadDrugsListGrid();
+  }
+  ngOnChanges(): void {
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+  }
+
+  // updating the pagination info based on dropdown selection
+  pageSelectionchange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+  }
+
+  public dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.state = stateData;
+  }
+  loadDrugsListGrid() {
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+    this.drugsFacade.loadDrugsListGrid();
+  }
   clickOpenAddEditFinancialDrugsDetails() {
     this.isFinancialDrugsDetailShow = true;
   }
