@@ -36,8 +36,10 @@ import { FinancialDrugsDetailsComponent } from './components/financial-drugs-det
 import { FinancialDrugsDeactivateComponent } from './components/financial-drugs-deactivate/financial-drugs-deactivate.component';
 import { FinancialDrugsReassignComponent } from './components/financial-drugs-reassign/financial-drugs-reassign.component';
 import { FinancialInsuranceProviderComponent } from './components/financial-insurance-provider/financial-insurance-provider.component';
+import {FinancialInsurancePlanDetailsComponent} from './components/financial-insurance-plan-details/financial-insurance-plan-details.component';
+import {FinancialInsurancePlanDeleteComponent} from './components/financial-insurance-plan-delete/financial-insurance-plan-delete.component';
+import {FinancialInsurancePlanDeactivateComponent} from './components/financial-insurance-plan-deactivate/financial-insurance-plan-deactivate.component';
 import { ProductivityToolsFeatureEventLogModule } from '@cms/productivity-tools/feature-event-log';
-
 @NgModule({
   imports: [
     CaseManagementDomainModule,
@@ -79,7 +81,10 @@ import { ProductivityToolsFeatureEventLogModule } from '@cms/productivity-tools/
     FinancialDrugsDetailsComponent,
     FinancialDrugsDeactivateComponent,
     FinancialDrugsReassignComponent,
-    FinancialInsuranceProviderComponent
+    FinancialInsuranceProviderComponent,
+    FinancialInsurancePlanDetailsComponent,
+    FinancialInsurancePlanDeleteComponent,
+    FinancialInsurancePlanDeactivateComponent
   ],
   exports: [
     FinancialVendorPageComponent,
@@ -112,7 +117,10 @@ import { ProductivityToolsFeatureEventLogModule } from '@cms/productivity-tools/
     FinancialDrugsDetailsComponent,
     FinancialDrugsDeactivateComponent,
     FinancialDrugsReassignComponent,
-    FinancialInsuranceProviderComponent
+    FinancialInsuranceProviderComponent,
+    FinancialInsurancePlanDetailsComponent,
+    FinancialInsurancePlanDeleteComponent,
+    FinancialInsurancePlanDeactivateComponent
   ],
 })
 export class CaseManagementFeatureFinancialVendorModule {}

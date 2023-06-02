@@ -17,17 +17,17 @@ export class VendorInfoComponent {
       buttonType: "btn-h-primary",
       text: "Edit Address",
       icon: "edit",
-      click: (address:any): void => {
+      click: (data:any): void => {
         
-        console.log(address);
+        console.log(data);
       },
     },
     {
       buttonType: "btn-h-primary",
       text: "Deactivate Address",
       icon: "block",
-      click: (address:any): void => {
-        console.log(address);
+      click: (data:any): void => {
+        console.log(data);
         
       },
     },
@@ -35,8 +35,8 @@ export class VendorInfoComponent {
       buttonType: "btn-h-danger",
       text: "Delete Address",
       icon: "delete",
-      click: (address:any): void => {
-        console.log(address);
+      click: (data:any): void => {
+        console.log(data);
         
       },
     },

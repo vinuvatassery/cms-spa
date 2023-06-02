@@ -20,14 +20,6 @@ export class FinancialInsuranceProviderComponent {
   public state!: State;
   insuranceProviderGridView$ = this.insuranceProviderFacade.insuranceProviderData$;
 
-  providerGridLists = [
-    {
-      ProviderName: 'A Provider Name',
-      ActivePlans:'XX', 
-      ActiveClients: 'XX', 
-      By: 'No',
-    },
-  ];
   public emailBillingAddressActions = [
     {
       buttonType: 'btn-h-primary',

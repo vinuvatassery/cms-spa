@@ -28,8 +28,8 @@ export class FinancialDrugsComponent {
       buttonType: 'btn-h-primary',
       text: 'Edit Drug',
       icon: 'edit',
-      click: (address: any): void => {        
-        console.log(address);
+      click: (data: any): void => {        
+        console.log(data);
         this.clickOpenAddEditFinancialDrugsDetails();
       },
     },
@@ -37,8 +37,8 @@ export class FinancialDrugsComponent {
       buttonType: 'btn-h-primary',
       text: 'Re-assign Drug',
       icon: 'compare_arrows',
-      click: (address: any): void => {
-        console.log(address);
+      click: (data: any): void => {
+        console.log(data);
         this.clickOpenReassignFinancialDrugsDetails();
       },
     },
@@ -46,8 +46,8 @@ export class FinancialDrugsComponent {
       buttonType: 'btn-h-primary',
       text: 'Deactivate Drug',
       icon: 'block',
-      click: (address: any): void => {
-        console.log(address);
+      click: (data: any): void => {
+        console.log(data);
         this.clickOpenDeactivateFinancialDrugsDetails();
       },
     },

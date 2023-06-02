@@ -27,28 +27,28 @@ export class ContactsComponent {
   public contactsActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Address',
+      text: 'Edit',
       icon: 'edit',
-      click: (address: any): void => {
+      click: (data: any): void => {
         this.clickOpenAddEditContactsDetails();
-        console.log(address);
+        console.log(data);
       },
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Deactivate Address',
+      text: 'Deactivate',
       icon: 'block',
-      click: (address: any): void => {
-        console.log(address);
+      click: (data: any): void => {
+        console.log(data);
         this.clickOpenDeactivateContactsDetails();
       },
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Address',
+      text: 'Delete',
       icon: 'delete',
-      click: (address: any): void => {
-        console.log(address);
+      click: (data: any): void => {
+        console.log(data);
         this.clickOpenDeleteContactsDetails();
       },
     },
