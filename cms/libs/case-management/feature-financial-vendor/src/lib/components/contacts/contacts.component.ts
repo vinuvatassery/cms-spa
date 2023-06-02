@@ -1,28 +1,29 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ContactsFacade } from '@cms/case-management/domain';
+import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'cms-contacts',
   templateUrl: './contacts.component.html',
   styleUrls: ['./contacts.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContactsComponent {
-  SpecialHandlingLength = 100;
+export class ContactsComponent { 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isContactsDetailShow = false;
   isContactsDeactivateShow = false;
   isContactsDeleteShow = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  contactsGridView = [
-    {
-      name: 'Address `',
-      jobTitle:'address2', 
-      phoneNumber:'address2', 
-      emailAddress:'address2', 
-      startDate:'address2', 
-      by: 'by',
-    },
-  ];
+  isContactsGridLoaderShow = false;
+  public sortValue = this.contactsFacade.sortValue;
+  public sortType = this.contactsFacade.sortType;
+  public pageSizes = this.contactsFacade.gridPageSizes;
+  public gridSkipCount = this.contactsFacade.skipCount;
+  public sort = this.contactsFacade.sort;
+  public state!: State;
+  contactsGridView$ = this.contactsFacade.contactsData$;
+
+ 
   public contactsActions = [
     {
       buttonType: 'btn-h-primary',
@@ -53,6 +54,42 @@ export class ContactsComponent {
     },
   ];
 
+   /** Constructor **/
+   constructor(private readonly contactsFacade: ContactsFacade) {}
+
+
+   
+  ngOnInit(): void {
+    this.loadContactsListGrid();
+  }
+  ngOnChanges(): void {
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+  }
+
+  // updating the pagination info based on dropdown selection
+  pageSelectionchange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+  }
+
+  public dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.state = stateData;
+  }
+  loadContactsListGrid() {
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+    this.contactsFacade.loadContactsListGrid();
+  }
   clickOpenAddEditContactsDetails() {
     this.isContactsDetailShow = true;
   }
