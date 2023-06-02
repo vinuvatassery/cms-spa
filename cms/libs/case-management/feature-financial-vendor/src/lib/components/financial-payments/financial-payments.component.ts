@@ -31,9 +31,7 @@ export class FinancialPaymentComponent {
       PaymentID: 'XXXXXX', 
     },
   ];
-   
-
-  
+     
    /** Constructor **/
    constructor(private readonly paymentsFacade: PaymentsFacade) {}
    
