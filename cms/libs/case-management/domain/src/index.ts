@@ -138,6 +138,7 @@ export * from './lib/infrastructure/health-insurance-policy.data.service';
 export * from './lib/infrastructure/review-question-answer.data.service';
 export * from './lib/infrastructure/review-question-response.data.service';
 export * from './lib/infrastructure/grid.data.service';
+export * from './lib/infrastructure/financial-management/billing-address.data.service';
 
 
 
@@ -177,6 +178,7 @@ export * from './lib/application/review-question-response.facade';
 export * from './lib/application/financial-management.facade';
 
 export * from './lib/application/grid.facade';
+export * from './lib/application/financial-management/billing-address.facade';
 
 
 
