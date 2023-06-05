@@ -123,8 +123,8 @@ export class ContactDataService {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
   }
 
-  loadFriendsorFamily(clientId: any) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contacts`);
+  loadFriendsorFamily(clientId: any, eligibilityId:any) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/eligibility-periods/${eligibilityId}/contacts`);
   }
 
   loadContactInfo(clientId: number, clientCaseEligibilityId: string, prevClientCaseEligibilityId:string) {
