@@ -22,7 +22,9 @@ export class PaymentsFacade {
   }];
 
   private paymentsDataSubject = new BehaviorSubject<any>([]);
+  private paymentsAddressDataSubject = new BehaviorSubject<any>([]);
   paymentsData$ = this.paymentsDataSubject.asObservable();
+  paymentsAddressData$ = this.paymentsAddressDataSubject.asObservable();
 
   
   /** Private properties **/
@@ -70,8 +72,22 @@ export class PaymentsFacade {
         this.hideLoader(); 
       },
     });
-   
-  
+  }
+
+
+
+
+  loadPaymentsAddressListGrid(){
+    this.paymentsDataService.loadPaymentsAddressListService().subscribe({
+      next: (dataResponse) => {
+        this.paymentsAddressDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });
   }
  
 }
