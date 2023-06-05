@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialVendorTypeCode } from '@cms/case-management/domain';
+import { FinancialVendorFacade, FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
@@ -185,8 +185,9 @@ dropDowncolumns : any = [
     "vendorTypeCode": "PHARMACY",
   }
 ]
-constructor(private route: Router, private readonly  cdr :ChangeDetectorRef) {
- 
+constructor(private route: Router, 
+  private readonly  cdr :ChangeDetectorRef,
+  private financialVendorFacade : FinancialVendorFacade) {
 }
 ngOnChanges(): void {  
   this.state = {
@@ -236,11 +237,12 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
    this.gridDataHandle()
  }
 
-  onVendorClicked(vendorId : string)
+  onVendorClicked(vendor: any)
   {
+    this.financialVendorFacade.updateSelectedVendor(vendor);
     const query = {
       queryParams: {
-        v_id: vendorId ,
+        v_id: vendor.vendorId ,
         tab_code :  this.financeTabTypeCode    
       },
     };

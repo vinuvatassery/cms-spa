@@ -15,9 +15,11 @@ export class FinancialVendorFacade {
 
   /** Private properties **/
   private vendorsSubject = new Subject<any>();
+  private selectedVendorSubject = new Subject<any>();
 
   /** Public properties **/
   vendorsList$ = this.vendorsSubject.asObservable();
+  selectedVendor$ = this.selectedVendorSubject.asObservable();
   
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'vendorName'
@@ -73,5 +75,9 @@ export class FinancialVendorFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
+  }
+
+  updateSelectedVendor(vendor: any) {
+    this.selectedVendorSubject.next(vendor);
   }
 }
