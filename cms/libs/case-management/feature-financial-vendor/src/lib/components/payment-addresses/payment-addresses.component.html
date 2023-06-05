@@ -166,5 +166,33 @@
             </kendo-grid>
         </div>
     </div>
-
+    <div class="flex-col mt-1">
+      <button kendoButton [primary]="true" icon="add" aria-label="add Address" class="mr-1"  (click)="clickOpenAddEditPaymentAddressDetails()">
+        Address
+      </button>
+       
+      <button kendoButton   icon="add" [primary]="true"  look="flat" aria-label="Add Contact" >
+          Contact
+        </button>
+    </div>
 </div>
+
+
+<kendo-dialog *ngIf="isPaymentAddressDetailShow" (close)="clickCloseAddEditPaymentAddressDetails()"
+class="app-c-modal app-c-modal-md app-c-modal-np">
+<kendo-dialog-titlebar (close)="clickCloseAddEditPaymentAddressDetails()"> Add/Edit Payment Address
+</kendo-dialog-titlebar>
+<cms-payment-address-details> </cms-payment-address-details>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isPaymentAddressDeactivateShow" (close)="clickCloseDeactivatePaymentAddress()"
+class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog-titlebar> Deactivate Payment Address?</kendo-dialog-titlebar>
+<cms-payment-address-deactivate> </cms-payment-address-deactivate>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isPaymentAddressDeleteShow" (close)="clickCloseDeletePaymentAddress()"
+class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog-titlebar> Delete Payment Address?</kendo-dialog-titlebar>
+<cms-payment-address-delete> </cms-payment-address-delete>
+</kendo-dialog>

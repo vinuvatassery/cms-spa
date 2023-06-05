@@ -19,7 +19,9 @@ export class PaymentAddressesComponent {
   public sort = this.paymentsFacade.sort;
   public state!: State;
   paymentsAddressGridView$ = this.paymentsFacade.paymentsAddressData$;
- 
+  isPaymentAddressDetailShow = false;
+  isPaymentAddressDeactivateShow = false;
+  isPaymentAddressDeleteShow = false;
   paymentAddressInnerGridLists = [
     {
       Name: 'FName LName',
@@ -42,6 +44,7 @@ export class PaymentAddressesComponent {
       icon: 'edit',
       click: (data: any): void => {        
         console.log(data); 
+        this.clickOpenAddEditPaymentAddressDetails();
          
       },
     }, 
@@ -51,6 +54,7 @@ export class PaymentAddressesComponent {
       icon: 'block',
       click: (data: any): void => {
         console.log(data); 
+        this.clickOpenDeactivatePaymentAddressDetails();
       },
     },
     {
@@ -59,6 +63,7 @@ export class PaymentAddressesComponent {
       icon: 'delete',
       click: (data: any): void => {
         console.log(data);  
+        this.clickOpenDeletePaymentAddressDetails();
       },
     },
   ];
@@ -96,5 +101,29 @@ export class PaymentAddressesComponent {
       sort: this.sort,
     };
     this.paymentsFacade.loadPaymentsAddressListGrid();
+  }
+
+  
+  
+  clickOpenAddEditPaymentAddressDetails() {
+    this.isPaymentAddressDetailShow = true;
+  }
+
+  clickCloseAddEditPaymentAddressDetails() {
+    this.isPaymentAddressDetailShow = false;
+  }
+
+  clickOpenDeactivatePaymentAddressDetails() {
+    this.isPaymentAddressDeactivateShow = true;
+  }
+  clickCloseDeactivatePaymentAddress() {
+    this.isPaymentAddressDeactivateShow = false;
+  }
+
+  clickOpenDeletePaymentAddressDetails() {
+    this.isPaymentAddressDeleteShow = true;
+  }
+  clickCloseDeletePaymentAddress() {
+    this.isPaymentAddressDeleteShow = false;
   }
 }
