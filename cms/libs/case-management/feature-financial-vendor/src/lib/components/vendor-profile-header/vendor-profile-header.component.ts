@@ -9,6 +9,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class VendorProfileHeaderComponent {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  showMoreAlert = false;
+  public list = [
+    {
+      item: 'a'
+    },
+  ]
   public sendActions = [
     {
       buttonType: 'btn-h-primary',

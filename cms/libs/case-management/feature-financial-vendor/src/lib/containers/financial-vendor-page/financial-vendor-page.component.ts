@@ -35,6 +35,14 @@ export class FinancialVendorPageComponent implements OnInit{
       click: (dataItem: any): void => {
         this.clickOpenVendorDetails(dataItem);
       },
+      
+    },
+    {
+      text: 'Dental Provider',
+      click: (dataItem: any): void => {
+        this.clickOpenVendorDetails(dataItem);
+      },
+      
     },
   ];
   public formUiStyle: UIFormStyle = new UIFormStyle();
