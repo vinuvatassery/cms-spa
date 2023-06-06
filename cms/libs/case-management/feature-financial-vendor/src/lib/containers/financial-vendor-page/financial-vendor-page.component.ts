@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { CaseFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
+import { CaseFacade, FinancialProviderTypeCode, FinancialVendorProviderTabCode, FinancialVendorTypeCode, ProvidersFacade, SearchHeaderType, VendorsFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -49,12 +49,17 @@ export class FinancialVendorPageComponent implements OnInit{
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll(); 
 
   vendorsList$ = this.financialVendorFacade.vendorsList$
+  providersList$ = this.financialProvidersFacade.providersList$
   pageSizes = this.financialVendorFacade.gridPageSizes;
   sortValue  = this.financialVendorFacade.sortValue;
   sortType  = this.financialVendorFacade.sortType;
   sort  = this.financialVendorFacade.sort;
+  providerSort  = this.financialProvidersFacade.sort;
+  providerSortValue  = this.financialProvidersFacade.sortValue;
 
-  constructor(private caseFacade: CaseFacade , private financialVendorFacade : FinancialVendorFacade) {}
+  constructor(private caseFacade: CaseFacade ,
+     private financialVendorFacade : VendorsFacade,
+     private financialProvidersFacade : ProvidersFacade) {}
 
     /** Lifecycle hooks **/
     ngOnInit() {    
@@ -69,6 +74,10 @@ export class FinancialVendorPageComponent implements OnInit{
     return FinancialVendorTypeCode;
   }
 
+  get financeProviderTypeCodes(): typeof FinancialProviderTypeCode {
+    return FinancialProviderTypeCode;
+  }
+  
   clickOpenVendorDetails(dataItem : any) {
     this.isVendorDetailFormShow = true;
   
@@ -81,6 +90,12 @@ export class FinancialVendorPageComponent implements OnInit{
   {   
     
     this.financialVendorFacade.getVendors(data?.skipCount,data?.pagesize,data?.sortColumn,data?.sortType,data?.vendorTypeCode)
+  }
+
+  loadFinancialProvidersList(data : any)
+  {   
+    
+    this.financialProvidersFacade.getProviders(data?.skipCount,data?.pagesize,data?.sortColumn,data?.sortType,data?.providerTypeCode)
   }
 
 

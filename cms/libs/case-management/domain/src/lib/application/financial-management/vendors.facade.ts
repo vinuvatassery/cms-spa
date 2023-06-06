@@ -7,11 +7,11 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 
 /** Internal libraries **/
 import { ConfigurationProvider, LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
-import { FinancialVendorDataService } from '../infrastructure/financial-vendor.data.service';
+import { VendorsDataService } from '../../infrastructure/financial-management/vendors.data.service';
 
 
 @Injectable({ providedIn: 'root' })
-export class FinancialVendorFacade {
+export class VendorsFacade {
 
   /** Private properties **/
   private vendorsSubject = new Subject<any>();
@@ -27,7 +27,7 @@ export class FinancialVendorFacade {
   }];
 
   /** Constructor**/
-  constructor(private readonly financialVendorDataService: FinancialVendorDataService,
+  constructor(private readonly financialVendorDataService: VendorsDataService,
     private readonly loaderService: LoaderService ,
     private configurationProvider : ConfigurationProvider ,
     private loggingService : LoggingService,

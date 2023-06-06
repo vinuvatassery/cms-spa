@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
-export class FinancialVendorDataService {
+export class ProvidersDataService {
   /** Constructor**/
   constructor(
     private readonly http: HttpClient,
@@ -13,11 +13,11 @@ export class FinancialVendorDataService {
   ) {}
 
   /** Public methods **/
-  getVendors(skipcount: number,maxResultCount: number,sort: string,sortType: string,vendorTypeCode: string)
+  getProviders(skipcount: number,maxResultCount: number,sort: string,sortType: string,providerTypeCode: string)
   {
     return this.http.get<any>(
         `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/vendors/?VendorTypeCode=${vendorTypeCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+        `/financial-management/providers/?ProviderTypeCode=${providerTypeCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
       );
   }
 }

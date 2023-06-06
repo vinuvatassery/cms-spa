@@ -38,7 +38,14 @@
             <ng-template kendoTabContent>
               <div class="block-section ">
                 
-                <cms-financial-providers-list [financeTabTypeCode]="financeManagementTabs.MedicalProvider"></cms-financial-providers-list>
+                <cms-financial-providers-list 
+                [financeTabTypeCode]="financeManagementTabs.MedicalProvider"
+                [providerTypeCode]="financeProviderTypeCodes.MedicalProvider"
+                [providersList$]="providersList$"
+                [pageSizes]="pageSizes" [sortValue]="providerSortValue"
+                [sortType]="sortType" [sort]="providerSort" 
+                (loadFinancialProvidersListEvent)="loadFinancialProvidersList($event)"
+                ></cms-financial-providers-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
@@ -77,7 +84,13 @@
             <ng-template kendoTabContent>
               <div class="block-section ">
                  
-                <cms-financial-providers-list [financeTabTypeCode]="financeManagementTabs.DentalProvider"></cms-financial-providers-list>
+                <cms-financial-providers-list 
+                [financeTabTypeCode]="financeManagementTabs.DentalProvider"               
+                [providerTypeCode]="financeProviderTypeCodes.DentalProvider"
+                [providersList$]="providersList$"
+                [pageSizes]="pageSizes" [sortValue]="providerSortValue"
+                [sortType]="sortType" [sort]="providerSort" 
+                (loadFinancialProvidersListEvent)="loadFinancialProvidersList($event)"></cms-financial-providers-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
