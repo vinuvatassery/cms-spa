@@ -1201,7 +1201,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         this.loggingService.logException(err);
       }
     });
-    if (this.ddlInsuranceType !== this.InsurancePlanTypes.DentalInsurance) {
+    if (this.ddlInsuranceType !== this.InsurancePlanTypes.DentalInsurance &&
+      this.ddlInsuranceType !== this.InsurancePlanTypes.Veterans) {
       this.insurancePolicyFacade.getCarrierContactInfo(value).subscribe({
         next: (data) => {
           this.carrierContactInfo = data;

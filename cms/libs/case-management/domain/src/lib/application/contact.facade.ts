@@ -204,9 +204,9 @@ export class ContactFacade {
     });
   }
 
-  loadFriendsorFamily(clientId:any): void {
+  loadFriendsorFamily(clientId:any, eligibilityId:any): void {
     this.contactGridLoaderSubject.next(true);
-    this.contactDataService.loadFriendsorFamily(clientId).subscribe({
+    this.contactDataService.loadFriendsorFamily(clientId, eligibilityId).subscribe({
       next: (friendsOrFamilyResponse) => {
         this.contactGridLoaderSubject.next(false);
         this.friendsOrFamilySubject.next(friendsOrFamilyResponse);

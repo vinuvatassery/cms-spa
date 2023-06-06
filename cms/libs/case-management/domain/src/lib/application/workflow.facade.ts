@@ -52,6 +52,7 @@ export class WorkflowFacade {
     WorkflowProcessCompletionStatus[]
   >([]);
   private routesSubject = new BehaviorSubject<any>([]);
+  private routesDataSubject = new BehaviorSubject<any>([]);
   private sessionSubject = new BehaviorSubject<any>([]);
   private sessionDataSubject = new Subject<any>();
   private workflowReadySubject = new Subject<boolean>();
@@ -66,6 +67,7 @@ export class WorkflowFacade {
   saveAndContinueClicked$ = this.saveAndContinueClickedSubject.asObservable();
   navigationTrigger$ = this.navigationTriggerSubject.asObservable();
   routes$ = this.routesSubject.asObservable();
+  routesData$ = this.routesDataSubject.asObservable();
   completionStatus$ = this.wfProcessCompletionStatusSubject.asObservable();
   sessionSubject$ = this.sessionSubject.asObservable();
   sessionDataSubject$ = this.sessionDataSubject.asObservable();
@@ -125,7 +127,7 @@ export class WorkflowFacade {
     this.saveAndContinueClickedSubject.next(navigationType);
   }
 
-  saveForLater(data: boolean) {
+  saveForLater(data: boolean) {    
     this.saveForLaterClickedSubject.next(data);
   }
 
@@ -231,6 +233,23 @@ export class WorkflowFacade {
           this.routesSubject.next(wfSession?.workFlowProgress);
           this.sessionSubject.next(this.currentSession);
           this.hideLoader();
+        },
+        error: (err: any) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+
+  loadWorkFlowMaster(sessionId : string) {
+    
+    this.showLoader();
+    this.workflowService
+      .loadWorkflow(sessionId)    
+      .subscribe({
+        next: (session) => {       
+          this.routesDataSubject.next(session?.workFlowProgress);
+                   this.hideLoader();
         },
         error: (err: any) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
