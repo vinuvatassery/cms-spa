@@ -112,9 +112,18 @@ export class EligibilityPeriodDetailComponent implements OnInit {
         this.acceptedApplication.otherReasonDesc = this.eligibilityPeriodForm.controls['otherReasonDesc'].value
         this.clientEligibilityFacade.saveNewStatusPeriod(this.acceptedApplication, this.clientCaseId, this.clientCaseEligibilityId).subscribe({
           next: (response) => {
-            this.clientEligibilityFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Status changed and new Eligibility Period started!.")
-            this.loaderService.hide();
-            this.isModalSavedClicked.emit(true);
+            if(response)
+            {
+              this.clientEligibilityFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Status changed and new Eligibility Period started!.")
+              this.loaderService.hide();
+              this.isModalSavedClicked.emit(true);
+            }
+            else{
+              this.clientEligibilityFacade.showHideSnackBar(
+                SnackBarNotificationType.WARNING,
+                'There cannot be two eligibility periods with overlapping date ranges.'
+              );
+            }
           },
           error: (err) => {
             this.loaderService.hide();
