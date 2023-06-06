@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FinancialVendorFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
@@ -8,9 +9,13 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VendorInfoComponent implements OnInit {
+
+  selectedVendorInfo$ = this.financialVendorFacade.selectedVendor$;
   SpecialHandlingLength = 100;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   vendorDetail!: any;
+  vendorId!: string;
+  openEditDailog: boolean = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   addressGridView = [];
   public actions = [
@@ -40,11 +45,24 @@ export class VendorInfoComponent implements OnInit {
     },
   ];
 
-  constructor(private financialVendorFacade: FinancialVendorFacade) { }
+  constructor(private financialVendorFacade: FinancialVendorFacade,
+    private activeRoute: ActivatedRoute) {
+  }
 
   ngOnInit() {
-    this.financialVendorFacade.selectedVendor$.subscribe((vendor: any)=> {
-      this.vendorDetail = vendor;
+    this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
+    this.loadVendorInfo();
+  }
+
+  loadVendorInfo() {
+    this.financialVendorFacade.getVendorDetails(this.vendorId);
+    this.financialVendorFacade.selectedVendor$.subscribe((details: any) => {
+      this.vendorDetail = details;
     });
   }
+
+  closeEditModal(value: any) {
+    this.openEditDailog = false;
+  }
+
 }

@@ -20,8 +20,8 @@ export class FinancialVendorFacade {
   /** Public properties **/
   vendorsList$ = this.vendorsSubject.asObservable();
   selectedVendor$ = this.selectedVendorSubject.asObservable();
-  
-  public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
+
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'vendorName'
   public sortType = 'asc'
   public sort: SortDescriptor[] = [{
@@ -30,37 +30,33 @@ export class FinancialVendorFacade {
 
   /** Constructor**/
   constructor(private readonly financialVendorDataService: FinancialVendorDataService,
-    private readonly loaderService: LoaderService ,
-    private configurationProvider : ConfigurationProvider ,
-    private loggingService : LoggingService,
-    private readonly notificationSnackbarService : NotificationSnackbarService,
-     ) {}
+    private readonly loaderService: LoaderService,
+    private configurationProvider: ConfigurationProvider,
+    private loggingService: LoggingService,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+  ) { }
 
-       /** Public methods **/
-  showLoader()
-  {
+  /** Public methods **/
+  showLoader() {
     this.loaderService.show();
   }
 
-  hideLoader()
-  {
+  hideLoader() {
     this.loaderService.hide();
   }
-  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {
-    if(type == SnackBarNotificationType.ERROR)
-    {
-       const err= subtitle;
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
       this.loggingService.logException(err)
     }
-    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.notificationSnackbarService.manageSnackBar(type, subtitle)
     this.hideLoader();
   }
 
-  
-  getVendors(skipcount: number,maxResultCount: number,sort: string,sortType: string,vendorTypeCode: string): void {
-   
-    this.financialVendorDataService.getVendors(skipcount,maxResultCount,sort,sortType,vendorTypeCode).subscribe({
+
+  getVendors(skipcount: number, maxResultCount: number, sort: string, sortType: string, vendorTypeCode: string): void {
+
+    this.financialVendorDataService.getVendors(skipcount, maxResultCount, sort, sortType, vendorTypeCode).subscribe({
       next: (vendorsResponse: any) => {
         if (vendorsResponse) {
           const gridView = {
@@ -69,15 +65,22 @@ export class FinancialVendorFacade {
           };
           this.vendorsSubject.next(gridView);
         }
-       
+
       },
-      error: (err) => {     
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
 
-  updateSelectedVendor(vendor: any) {
-    this.selectedVendorSubject.next(vendor);
+  getVendorDetails(vendorId: string) {
+    this.financialVendorDataService.getVendorDetails(vendorId).subscribe({
+      next: (vendorDetail: any) => {
+        this.selectedVendorSubject.next(vendorDetail);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      }
+    });
   }
 }
