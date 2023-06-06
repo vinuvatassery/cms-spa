@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { first, forkJoin, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { YesNoFlag,WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionCode, QuestionTypeCode,EligibilityRequestType, ClientNoteTypeCode, SmokingCessationFacade } from '@cms/case-management/domain';
@@ -19,7 +19,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
   styleUrls: ['./client-eligibility.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ClientEligibilityComponent implements OnInit {
+export class ClientEligibilityComponent implements OnInit,OnDestroy {
   @Input() eligibilityForm: FormGroup;
   @Input() formSubmited!: boolean;
   @Input() questions: any = [];
@@ -33,6 +33,7 @@ export class ClientEligibilityComponent implements OnInit {
 
   private reviewQuestionAnswerSubscription!: Subscription;
   private reviewQuestionResponseSubscription!: Subscription;
+  private discardChangesSubscription !: Subscription;
 
   /** Public properties **/
   isShowException = false;
@@ -60,6 +61,7 @@ export class ClientEligibilityComponent implements OnInit {
   isCerForm = false;
   cerNote = ''
   acceptanceModalTitle: String = 'Application Accepted';
+  private saveForLaterValidationSubscription !: Subscription;
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -81,12 +83,34 @@ export class ClientEligibilityComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadSessionData();   
-
+    this.addSaveForLaterValidationsSubscription();
+    this.addDiscardChangesSubscription();
+    this.loadSessionData();  
+   
   }
   ngOnDestroy(): void {
     this.reviewQuestionAnswerSubscription?.unsubscribe();
     this.reviewQuestionResponseSubscription?.unsubscribe();
+    this.saveForLaterValidationSubscription?.unsubscribe();
+
+  }
+ 
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
+      if (response) {
+        this.loadSessionData();  
+      }
+    });
+  }
+
+
+  private addSaveForLaterValidationsSubscription(): void {
+    this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      if (val) {
+      
+       
+      }
+    });
   }
 
   loadReviewQuestionAnswers() {
