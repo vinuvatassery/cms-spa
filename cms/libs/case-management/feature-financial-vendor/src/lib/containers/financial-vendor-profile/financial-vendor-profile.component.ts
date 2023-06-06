@@ -12,11 +12,11 @@ import { FinancialVendorProviderTabCode } from 'libs/case-management/domain/src/
 export class FinancialVendorProfileComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
-
+  isShownEventLog = false;
   vendorId!: string;
   providerId!: string;
   tabCode!: string;
-  profileInfoTitle = "info";
+  profileInfoTitle = "info";  
   addressGridView = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
 
@@ -51,5 +51,11 @@ export class FinancialVendorProfileComponent implements OnInit {
         this.profileInfoTitle = 'Pharmacy Info';
         break;
     }
+  }
+
+
+  handleShowEventLogClicked() {
+    this.isShownEventLog = !this.isShownEventLog;
+ 
   }
 }

@@ -77,7 +77,7 @@ export class FriendOrFamilyListComponent implements OnInit {
 
   /** Private methods **/
   private loadFriendsOrFamily() {
-    this.contactFacade.loadFriendsorFamily(this.clientId);
+    this.contactFacade.loadFriendsorFamily(this.clientId, this.caseEligibilityId);
     this.contactFacade.friendsOrFamily$.subscribe((contacts:any)=>{
       this.gridView= contacts.filter((x:any)=>x.activeFlag == StatusFlag.Yes);
       this.allList=contacts;
@@ -120,7 +120,7 @@ export class FriendOrFamilyListComponent implements OnInit {
   }
 
   onFriendOrFamilyDetailCloseEvent(event:any){
-    this.contactFacade.loadFriendsorFamily(this.clientId);
+    this.contactFacade.loadFriendsorFamily(this.clientId, this.caseEligibilityId);
     this.onFriendOrFamilyDetailClosed();
   }
   showHistoricalDataClick(){
@@ -136,11 +136,11 @@ export class FriendOrFamilyListComponent implements OnInit {
     "table-row-disabled": (args.dataItem.activeFlag != StatusFlag.Yes),
   });
   closeDeleteModal(event:any){
-    this.contactFacade.loadFriendsorFamily(this.clientId);
+    this.contactFacade.loadFriendsorFamily(this.clientId, this.caseEligibilityId);
     this.isDeleteFriendOrFamilyOpened = false;
   }
   closeDeactivateModal(event:any){
-    this.contactFacade.loadFriendsorFamily(this.clientId);
+    this.contactFacade.loadFriendsorFamily(this.clientId, this.caseEligibilityId);
     this.isDeactivateFriendOrFamilyOpened = false;
   }
 }

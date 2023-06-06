@@ -1,0 +1,160 @@
+<section class="k-dialog-body">
+    <p class="text-muted mb-2">
+        All fields are required unless otherwise stated.
+    </p>
+    <div class="flex-row">
+        <div class="flex-col">
+            <kendo-floatinglabel text="Mail Code">
+                <kendo-textbox aria-label="Mail Code" [fillMode]="formUiStyle.inputFillMode">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+        </div>
+
+        <div class="flex-col">
+            <kendo-floatinglabel text="Name on Check">
+                <kendo-textbox aria-label="Name on Check" [fillMode]="formUiStyle.inputFillMode">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+        </div>
+
+        <div class="flex-col">
+            <kendo-floatinglabel text="Name on Envelop">
+                <kendo-textbox aria-label="Name on Envelop" [fillMode]="formUiStyle.inputFillMode">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+        </div>
+        <div class="flex-col">
+            <kendo-floatinglabel text="Address Line 1">
+                <kendo-textbox aria-label="Address Line 1" [fillMode]="formUiStyle.inputFillMode">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+        </div>
+        <div class="flex-col">
+            <kendo-floatinglabel text="Address Line 2 (optional)">
+                <kendo-textbox aria-label="Address Line 2 (optional)" [fillMode]="formUiStyle.inputFillMode">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+        </div>
+        <div class="flex-col">
+            <kendo-floatinglabel text="City">
+                <kendo-textbox aria-label="City" [fillMode]="formUiStyle.inputFillMode">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+        </div>
+        <div class="flex-col flex-col-6">
+            <kendo-floatinglabel text="State">
+            <kendo-dropdownlist
+            [fillMode]="formUiStyle.dropDownFillMode" textField ="lovDesc"
+            valueField ="lovCode" >
+            </kendo-dropdownlist>
+            </kendo-floatinglabel>
+        </div>
+        <div class="flex-col flex-col-6">
+            <kendo-floatinglabel text="Zip">
+                <kendo-textbox aria-label="Zip" [fillMode]="formUiStyle.inputFillMode">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+        </div>
+
+        <div class="flex-col mt-1">
+            <fieldset class="k-form-fieldset">
+                <legend class="k-form-legend">
+                    <h5 class="mb-0"> Payment Method </h5>
+                </legend>
+           
+            <div class="component-list-h">
+                <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton aria-labelledby="Check" name="Check" id="Check" />
+                    <kendo-label class="k-radio-label" text="Check" for="Check"></kendo-label>
+                </span>
+                <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton name="ACH" id=" ACH" aria-labelledby="ACH" />
+                    <kendo-label class="k-radio-label" text="No" for="ACH"></kendo-label>
+                </span>
+                <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton name="SPOTS" id="SPOTS" aria-labelledby="SPOTS" />
+                    <kendo-label class="k-radio-label" text="SPOTS" for="SPOTS"></kendo-label>
+                </span>
+                <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton name="limitingConditionCode" id="DOR Hold"
+                        aria-labelledby="DOR Hold" />
+                    <kendo-label class="k-radio-label" text="DOR Hold" for="DOR Hold"></kendo-label>
+                </span>
+            </div>
+            </fieldset>
+        </div>
+        <div class="flex-col flex-col-6">
+            <kendo-floatinglabel text="Payment Run Date">
+            <kendo-dropdownlist
+            [fillMode]="formUiStyle.dropDownFillMode" textField ="lovDesc"
+            valueField ="lovCode" >
+            </kendo-dropdownlist>
+            </kendo-floatinglabel>
+        </div>
+        <div class="flex-col flex-col-6 mt-4">
+            <kendo-label> Of each Month</kendo-label>
+            </div>
+        <div class="flex-col mt-1">
+            <fieldset class="k-form-fieldset">
+                <legend class="k-form-legend">
+                    <h5 class="mb-0"> Accepts combined payments? </h5>
+                </legend>
+           
+            <div class="component-list-h">
+                <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton aria-labelledby="combinedpaymentsYes" name="combinedPayments" id="combinedpaymentsYes" />
+                    <kendo-label class="k-radio-label" text="Yes" for="combinedpaymentsYes"></kendo-label>
+                </span>
+                <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton name="combinedPayments" id=" combinedpaymentsno" aria-labelledby="combinedpaymentsno" />
+                    <kendo-label class="k-radio-label" text="No" for="combinedpaymentsno"></kendo-label>
+                </span>
+                
+            </div>
+            </fieldset>
+        </div>
+        
+        <div class="flex-col mt-1">
+            <fieldset class="k-form-fieldset">
+                <legend class="k-form-legend">
+                    <h5 class="mb-0"> Accepts reports? </h5>
+                </legend>
+           
+            <div class="component-list-h">
+                <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton aria-labelledby="reportsYes" name="reports" id="reportsYes" />
+                    <kendo-label class="k-radio-label" text="Yes" for="reportsYes"></kendo-label>
+                </span>
+                <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton name="reports" id="reportsno" aria-labelledby="reportsno" />
+                    <kendo-label class="k-radio-label" text="No" for="reportsno"></kendo-label>
+                </span>
+                
+            </div>
+            </fieldset>
+        </div>
+        <div class="flex-col flex-col-12">
+            <kendo-floatinglabel text="Special Handling (optional)">
+                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #SpecialHandling resizable="auto"
+                    id="SpecialHandling" [maxlength]="SpecialHandlingLength" aria-label="Special Handling">                  
+                </kendo-textarea>
+            </kendo-floatinglabel>
+        </div>
+
+
+    </div>
+</section>
+
+<kendo-dialog-actions>
+    <div class="justify-content-between">
+        <div class="justify-content-start d-flex">
+            <button kendoButton class="k-danger-link" aria-label="Remove"> Remove </button>
+            <button kendoButton look="outline" [primary]="true" aria-label="deactivate phone"> Edit </button>
+        </div>
+        <div class="justify-content-end">
+            <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"> Cancel
+            </button>
+            <button kendoButton [primary]="true" aria-label="update or add phone detail"> Save </button>
+        </div>
+    </div>
+</kendo-dialog-actions>
