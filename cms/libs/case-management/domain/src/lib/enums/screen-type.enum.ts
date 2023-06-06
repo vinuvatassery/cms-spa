@@ -5,4 +5,5 @@ export enum ScreenType {
   SendLetter = 'send-letter',
   Eligibility = 'eligibility',
   CaseDetailPage = 'case-detail',
+  VendorProfilePage = 'vendor-profile',
 }

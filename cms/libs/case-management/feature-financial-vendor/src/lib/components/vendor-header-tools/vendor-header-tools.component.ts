@@ -1,5 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import {
+  CommunicationEvents,
+  ContactFacade,
+  ScreenType,
+} from '@cms/case-management/domain';
 @Component({
   selector: 'cms-vendor-header-tools',
   templateUrl: './vendor-header-tools.component.html',
@@ -8,7 +13,12 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class VendorHeaderToolsComponent {
   SpecialHandlingLength = 100;
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  isTodoDetailsOpened = false;
+  screenName = ScreenType.VendorProfilePage;
+  isNewReminderOpened = false;
+  isSendNewLetterOpened = false;
+  isSendNewEmailOpened = false;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
 
   public sendActions = [
@@ -17,7 +27,8 @@ export class VendorHeaderToolsComponent {
       text: 'New Letter',
       icon: 'markunread_mailbox',
       isVisible: true,
-      click: (): void => { 
+      click: (): void => {
+        this.onSendNewLetterClicked();
       },
     },
     {
@@ -26,9 +37,39 @@ export class VendorHeaderToolsComponent {
       icon: 'mail_outline',
       isVisible: false,
       click: (): void => {
-     
+        this.onSendNewEmailClicked();
       },
     },
-     
   ];
+  handleSendNewEmailClosed(event: any) {
+    this.isSendNewEmailOpened = false;
+  }
+
+  handleSendNewLetterClosed(event: any) {
+    this.isSendNewLetterOpened = false;
+  }
+
+  onSendNewLetterClicked() {
+    this.isSendNewLetterOpened = true;
+  }
+
+  onSendNewEmailClicked() {
+    this.isSendNewEmailOpened = true;
+  }
+
+  onNewReminderClosed() {
+    this.isNewReminderOpened = false;
+  }
+
+  onNewReminderClicked() {
+    this.isNewReminderOpened = true;
+  }
+
+  onTodoDetailsClosed() {
+    this.isTodoDetailsOpened = false;
+  }
+
+  onTodoDetailsClicked() {
+    this.isTodoDetailsOpened = true;
+  }
 }

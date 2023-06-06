@@ -43,6 +43,7 @@ import {PaymentAddressDetailsComponent} from './components/payment-address-detai
 import {PaymentAddressDeactivateComponent} from './components/payment-address-deactivate/payment-address-deactivate.component';
 import {PaymentAddressDeleteComponent} from './components/payment-address-delete/payment-address-delete.component';
 import { ProductivityToolsFeatureEventLogModule } from '@cms/productivity-tools/feature-event-log';
+import { CaseManagementFeatureCommunicationModule } from '@cms/case-management/feature-communication';
 @NgModule({
   imports: [
     CaseManagementDomainModule,
@@ -51,6 +52,7 @@ import { ProductivityToolsFeatureEventLogModule } from '@cms/productivity-tools/
     CommonModule,
     CaseManagementFeatureFinancialVendorRoutingModule,
     ProductivityToolsFeatureTodoModule,
+    CaseManagementFeatureCommunicationModule,
     ProductivityToolsFeatureEventLogModule
   ],
   declarations: [
