@@ -180,7 +180,7 @@
 </kendo-dialog>
 
 <!-- Reactivate Modal -->
-<kendo-dialog *ngIf="isOpenedReactivateConfirm" class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog *ngIf="isOpenedReactivateConfirm" class="app-c-modal app-c-modal-md app-c-modal-np">
   <kendo-dialog-titlebar (close)="onReactConfirmCloseClicked()"> Re-activate healthcare provider? </kendo-dialog-titlebar>
   <case-management-health-care-provider-reactivate-confirmation [prvId]="clientProviderId"
     (reactivateConfimEvent)="handleAcceptPrvReact($event)">
