@@ -107,4 +107,8 @@ export class CommunicationFacade {
   getClientDocument(typeCode: string, subTypeCode: string, clientCaseEligibilityId: string) {
     return this.emailDataService.getClientDocument(typeCode,subTypeCode,clientCaseEligibilityId);
   }
+
+  loadCERAuthorizationTemplateAttachment(typeCode: string){
+    return this.emailDataService.getTemplateAttachment(typeCode);
+  }
 }

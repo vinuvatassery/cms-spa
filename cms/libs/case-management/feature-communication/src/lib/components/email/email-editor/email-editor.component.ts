@@ -10,6 +10,7 @@ import {
   Input,
   Output,
   ViewEncapsulation,
+  ChangeDetectorRef
 } from '@angular/core';
 /** Facades **/
 import { CommunicationFacade, ClientDocumentFacade, CommunicationEvents } from '@cms/case-management/domain';
@@ -39,7 +40,7 @@ export class EmailEditorComponent implements OnInit {
 
   /** Output properties  **/
   @Output() editorValue = new EventEmitter<any>();
-  @Output() onAttachmentConfirmationEvent = new EventEmitter();
+  @Output() cerEmailAttachments = new EventEmitter();
 
   /** Public properties **/
   @ViewChild('anchor',{ read: ElementRef }) public anchor!: ElementRef;
@@ -57,7 +58,7 @@ export class EmailEditorComponent implements OnInit {
   attachedFiles: any;
   attachedFileValidatorSize: boolean = false;
   cerAuthorizationForm!:FormGroup;
-  public defaultAttachedFile: any[] = [];
+  isDefaultAttachment: boolean = false;
   public uploadedAttachedFile: any[] = [];
   public selectedAttachedFile: any[] = [];
   clientAllDocumentList$: any;
@@ -91,13 +92,15 @@ export class EmailEditorComponent implements OnInit {
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly configurationProvider: ConfigurationProvider,
     private formBuilder: FormBuilder,
-    public readonly clientDocumentFacade: ClientDocumentFacade,) {}
+    public readonly clientDocumentFacade: ClientDocumentFacade,
+    private readonly ref: ChangeDetectorRef,) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.dataEventSubscribed();
     this.emailEditorValueEvent(this.currentValue);
     this.loadClientVariables();
+    this.loadTemplateAttachment();
     this.loadDdlEditorVariables();
     this.loadAllClientDocuments(this.clientCaseEligibilityId);
     this.cerAuthorizationForm = this.formBuilder.group({
@@ -112,6 +115,10 @@ export class EmailEditorComponent implements OnInit {
   }
 
   /** Private methods **/
+
+  ceremailAttachmentEvent(event:any){
+    this.cerEmailAttachments.emit(event);
+  }
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -221,6 +228,7 @@ if(!this.attachedFileValidatorSize){
      }
     }
    }
+   this.cerEmailAttachments.emit(this.selectedAttachedFile);
   }
 
   handleFileRemoved(event: any) {
@@ -266,7 +274,34 @@ if(!this.attachedFileValidatorSize){
        }
       }
     this.uploadedAttachedFile = [];
-    this.onAttachmentConfirmationEvent.emit(event);
+    this.cerEmailAttachments.emit(event);
     this.showClientAttachmentUpload = false;
+  }
+
+  private loadTemplateAttachment() {
+    this.loaderService.show();
+    this.communicationFacade.loadCERAuthorizationTemplateAttachment(CommunicationEvents.TemplateAttachmentTypeCode)
+    .subscribe({
+      next: (attachments: any) =>{
+        if (attachments) {
+          for (let file of attachments){
+          this.selectedAttachedFile.push({
+            document: file,
+            size: file.templateSize,
+            name: file.description,
+            documentTemplateId: file.documentTemplateId
+          })
+        }
+        this.ref.detectChanges();
+        this.cerEmailAttachments.emit(this.selectedAttachedFile);
+        }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+    },
+  });
   }
 }

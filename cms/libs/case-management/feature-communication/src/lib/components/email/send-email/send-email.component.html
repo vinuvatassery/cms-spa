@@ -3,7 +3,7 @@
   (close)="onCloseSendEmailClicked()"
   class="app-c-modal app-c-modal-lg app-c-modal-np"
   title="Send New Email "
->
+  >
   <section class="k-dialog-body">
     <p class="text-muted mb-1">
       Select an existing template or draft a custom email.
@@ -62,6 +62,7 @@
           [currentValue]="currentEmailData"
           [clientCaseEligibilityId]="clientCaseEligibilityId"
           [clientId]="clientId"
+          (cerEmailAttachments)="cerEmailAttachments($event)"
           (editorValue)="handleEmailEditor($event)"
           class="editor-lg-email"
           ></case-management-email-editor>

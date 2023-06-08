@@ -115,8 +115,10 @@ export class EmailDataService {
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientdocuments/${typeCode}/${subTypeCode}/${clientCaseEligibilityId}`);
     }
 
-
-    
-  
+    getTemplateAttachment(typeCode: string){
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/forms`
+      );
+    } 
 }
  

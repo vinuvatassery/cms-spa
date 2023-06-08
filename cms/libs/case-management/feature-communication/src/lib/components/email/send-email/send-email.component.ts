@@ -31,8 +31,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() toEmail!: [];
   @Input() clientCaseEligibilityId!: any;
   @Input() clientId!: any;
-  @Input() isCerForm!: any;
-  
+  @Input() isCerForm!: any;  
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
@@ -65,6 +64,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   selectedToEmail!: any;
   showToEmailLoader: boolean = true;
   caseEligibilityId!:any;
+  cerEmailAttachedFiles: any[] = [];
+  userSelectedAttachment: any[] = [];
   /** Private properties **/
   private currentSessionSubscription !: Subscription;
 
@@ -245,6 +246,47 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.communicationFacade.saveForLaterEmailTemplate(draftTemplate, isSaveFoLater)
         .subscribe({
           next: (data: any) =>{
+            // this.loaderService.hide();
+          if (data) {
+            this.cerEmailAttachedFiles.forEach((element: any) => {
+              if(element.documentTemplateId === null || element.documentTemplateId === undefined){
+                this.userSelectedAttachment.push({
+                  document: element,
+                  templateSize: element.size,
+                  description: element.name,
+                  documentTemplateTypeCode: CommunicationEvents.CerAuthorizationEmail,
+                  subTypeCode: CommunicationEvents.Email,
+                  channelTypeCode: CommunicationEvents.Email,
+                  systemCode: CommunicationEvents.SystemCode,
+                  languageCode: CommunicationEvents.LanguageCode,
+                  documentTemplateId: element.documentTemplateId
+                })
+              }
+            });
+            this.saveTemplateAttachmentsForLater(this.userSelectedAttachment, data);
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Email Saved As Draft')
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+        },
+      });
+  }
+
+
+  private saveTemplateAttachmentsForLater(attchments: any, documentTemplateId: string) {
+    this.loaderService.show();
+    const isSaveFoLater = true;
+    attchments.forEach((element: any) => {
+      (element.templatePath !== null || element.templatePath !== undefined) &&
+      element.documentTemplateTypeCode ===CommunicationEvents.TemplateAttachmentTypeCode;
+    });
+    this.communicationFacade.saveForLaterEmailTemplate(attchments, isSaveFoLater)
+        .subscribe({
+          next: (data: any) =>{
             this.loaderService.hide();
           if (data) {
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Email Saved As Draft')
@@ -257,6 +299,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
         },
       });
+  }
+  cerEmailAttachments(event:any){
+    this.cerEmailAttachedFiles = event;
   }
 }
 
