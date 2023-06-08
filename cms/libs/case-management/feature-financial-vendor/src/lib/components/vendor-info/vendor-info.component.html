@@ -47,9 +47,28 @@
       </table>
       <!-- Last Updated by -->
       <p class="mt-1 mb1">
-        <span class="badge-dot-info bdi-left"></span> Last Updated {{(selectedVendorInfo$ | async)?.lastUpdatedOn | date: 'MM/dd/yyyy' }}
+        <span class="badge-dot-info bdi-left"></span> Last Updated {{(selectedVendorInfo$ | async)?.lastModificationTime | date: 'MM/dd/yyyy' }}
         by
-        <a kendoPopoverAnchor showOn="hover"> {{(selectedVendorInfo$ | async)?.lastModifiedBy}}</a>
+        <button
+          kendoButton
+          [primary]="true"
+          class="avatar-sm-btn c-default"
+          kendoPopoverAnchor
+          [popover]="onUserProfileDetailsHovered"
+          showOn="hover"
+          aria-label="profile avathar"
+        >
+        <common-user-photo-icon  [userId]="(selectedVendorInfo$ | async)?.lastModifierId"></common-user-photo-icon>
+        </button>
+        <kendo-popover
+          #onUserProfileDetailsHovered
+          width="330"
+          position="left"
+        >
+          <ng-template kendoPopoverBodyTemplate>
+            <common-user-profile-card [userId]="(selectedVendorInfo$ | async)?.lastModifierId"></common-user-profile-card>
+          </ng-template>
+        </kendo-popover>
       </p>
     </div>
   </div>
