@@ -83,7 +83,8 @@ export class CasePageComponent implements OnInit {
         this.isRightReminderBarEnabled = false;
          break;
       }
-      case CaseScreenTab.MY_CASES: {
+      case CaseScreenTab.MY_CASES:
+      case CaseScreenTab.ALL: {
         //associated with the logged in caseworker,
         this.isRightReminderBarEnabled = true;
         this.totalClientsCount = null;
@@ -94,16 +95,9 @@ export class CasePageComponent implements OnInit {
         this.isRightReminderBarEnabled = true;
         this.totalClientsCount = this.caseFacade.totalClientsCount;
         break;
-     }
-     case CaseScreenTab.ALL: {
-      //All of the clients in the system
-      this.isRightReminderBarEnabled = true;
-      this.totalClientsCount = null;
-      break;
-     }
+     }    
       default:
-      {
-         //statements;
+      {        
          break;
       }
    }

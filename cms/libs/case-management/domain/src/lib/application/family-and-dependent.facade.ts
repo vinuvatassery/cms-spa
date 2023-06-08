@@ -98,7 +98,7 @@ export class FamilyAndDependentFacade {
     this.loaderService.hide();
   }
 
-  deleteDependent(eligibilityId: string, dependentId: string, isCER: boolean = false, status?: String): void {
+  deleteDependent(eligibilityId: string, dependentId: string, isCER: boolean = false, status?: string): void {
     this.showLoader();
     this.dependentDataService.deleteDependent(eligibilityId, dependentId, isCER, status).subscribe({
       next: (deleteResponse) => {

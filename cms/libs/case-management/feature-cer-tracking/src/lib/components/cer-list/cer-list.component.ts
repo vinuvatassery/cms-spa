@@ -12,9 +12,9 @@ import {
 import { CerTrackingFacade, StatusFlag } from '@cms/case-management/domain';
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor, State , filterBy, process} from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State , filterBy} from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
-import { ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'case-management-cer-list',
   templateUrl: './cer-list.component.html',
@@ -206,6 +206,7 @@ export class CerListComponent implements OnInit, OnChanges {
     this.loadCerTrackingList();    
   }
   pageselectionchange(data: any) {
+    this.loader = true;
     this.state.take = data.value;   
     this.loadCerTrackingList();
   }
@@ -273,31 +274,10 @@ export class CerListComponent implements OnInit, OnChanges {
     this.statusTitle = data?.data[0]?.isHistorical === StatusFlag.Yes ?  'Status @ End of EP' : 'Status'
     this.titleSubject.next(this.statusTitle)
     this.gridDataResult = data    
-    for (var res in this.gridDataResult?.data) { 
-      if(this.gridDataResult?.data[res].dob)
-      {     
-      this.gridDataResult.data[res].dob = new Date(this.gridDataResult?.data[res].dob)
-      }
-      if(this.gridDataResult?.data[res].cerSentDate)
-      {     
-      this.gridDataResult.data[res].cerSentDate = new Date(this.gridDataResult?.data[res].cerSentDate)
-      }
-
-      if(this.gridDataResult?.data[res].cerReceivedDate)
-      {     
-      this.gridDataResult.data[res].cerReceivedDate = new Date(this.gridDataResult?.data[res].cerReceivedDate)
-      }
-
-      if(this.gridDataResult?.data[res].cerCompletedDate)
-      {     
-      this.gridDataResult.data[res].cerCompletedDate = new Date(this.gridDataResult?.data[res].cerCompletedDate)
-      }
-
-      if(this.gridDataResult?.data[res].reminderSentDate)
-      {     
-      this.gridDataResult.data[res].reminderSentDate = new Date(this.gridDataResult?.data[res].reminderSentDate)
-      }
-
+    for (const res in this.gridDataResult?.data) { 
+     
+      this.validateDates(res)
+      
       if(this.gridDataResult?.data[res].cerResentDate)
       {     
       this.gridDataResult.data[res].cerResentDate = new Date(this.gridDataResult?.data[res].cerResentDate)
@@ -331,6 +311,33 @@ export class CerListComponent implements OnInit, OnChanges {
       }
     });
   }
+
+ private validateDates( res :  any) 
+ {
+  if(this.gridDataResult?.data[res].dob)
+  {     
+  this.gridDataResult.data[res].dob = new Date(this.gridDataResult?.data[res].dob)
+  }
+  if(this.gridDataResult?.data[res].cerSentDate)
+  {     
+  this.gridDataResult.data[res].cerSentDate = new Date(this.gridDataResult?.data[res].cerSentDate)
+  }
+
+  if(this.gridDataResult?.data[res].cerReceivedDate)
+  {     
+  this.gridDataResult.data[res].cerReceivedDate = new Date(this.gridDataResult?.data[res].cerReceivedDate)
+  }
+
+  if(this.gridDataResult?.data[res].cerCompletedDate)
+  {     
+  this.gridDataResult.data[res].cerCompletedDate = new Date(this.gridDataResult?.data[res].cerCompletedDate)
+  }
+
+  if(this.gridDataResult?.data[res].reminderSentDate)
+  {     
+  this.gridDataResult.data[res].reminderSentDate = new Date(this.gridDataResult?.data[res].reminderSentDate)
+  }
+ }
   
  public filterChange(filter: CompositeFilterDescriptor): void {
   this.filterData = filter;

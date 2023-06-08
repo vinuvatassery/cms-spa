@@ -21,19 +21,23 @@
           class="app-c-tab case-360-tab">
           <kendo-tabstrip-tab title="Manufacturers" [selected]="true"  *ifPermission='["Financial_Manufacturers_Tab"]'>
             <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <div class="flex-col flex-space-bw align-items-center mb-1">
-                </div>
-                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.Manufacturers"></cms-financial-vendors-list>
+              <div class="block-section ">
+                
+                <cms-financial-vendors-list 
+                [financeTabTypeCode]="financeManagementTabs.Manufacturers"
+                [vendorTypeCode]="financeVendorTypeCodes.Manufacturers"
+                [vendorsList$]="vendorsList$"
+                [pageSizes]="pageSizes" [sortValue]="sortValue"
+                [sortType]="sortType" [sort]="sort" 
+                (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
 
           <kendo-tabstrip-tab title="Medical Providers" *ifPermission='["Financial_MedicalProvider_Tab"]'>
             <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <div class="flex-col flex-space-bw align-items-center mb-1">
-                </div>
+              <div class="block-section ">
+                
                 <cms-financial-providers-list [financeTabTypeCode]="financeManagementTabs.MedicalProvider"></cms-financial-providers-list>
               </div>
             </ng-template>
@@ -41,29 +45,38 @@
 
           <kendo-tabstrip-tab title="Insurance Vendors" *ifPermission='["Financial_InsuranceVendors_Tab"]'>
             <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <div class="flex-col flex-space-bw align-items-center mb-1">
-                </div>
-                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.InsuranceVendors"></cms-financial-vendors-list>
+              <div class="block-section ">
+                
+                <cms-financial-vendors-list
+                 [financeTabTypeCode]="financeManagementTabs.InsuranceVendors"
+                 [vendorTypeCode]="financeVendorTypeCodes.InsuranceVendors"
+                 [vendorsList$]="vendorsList$"
+                 [pageSizes]="pageSizes" [sortValue]="sortValue"
+                 [sortType]="sortType" [sort]="sort" 
+                 (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
 
           <kendo-tabstrip-tab title="Pharmacies" *ifPermission='["Financial_Pharmacy_Tab"]'>
             <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <div class="flex-col flex-space-bw align-items-center mb-1">
-                </div>
-                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.Pharmacy"></cms-financial-vendors-list>
+              <div class="block-section ">
+                
+                <cms-financial-vendors-list
+                 [financeTabTypeCode]="financeManagementTabs.Pharmacy"
+                 [vendorTypeCode]="financeVendorTypeCodes.Pharmacy"
+                 [vendorsList$]="vendorsList$"
+                 [pageSizes]="pageSizes" [sortValue]="sortValue"
+                 [sortType]="sortType" [sort]="sort" 
+                 (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
 
           <kendo-tabstrip-tab title="Dental Providers" *ifPermission='["Financial_DentalProvider_Tab"]'>
             <ng-template kendoTabContent>
-              <div class="block-section mt-1">
-                <div class="flex-col flex-space-bw align-items-center mb-1">
-                </div>
+              <div class="block-section ">
+                 
                 <cms-financial-providers-list [financeTabTypeCode]="financeManagementTabs.DentalProvider"></cms-financial-providers-list>
               </div>
             </ng-template>

@@ -119,7 +119,7 @@
 <!-- Application Acceptance Modal Html-->
 <kendo-dialog *ngIf="isOpenAcceptance || isSaveAndContinueAcceptance" (close)="onCloseAcceptanceClicked()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
-  <kendo-dialog-titlebar> Application Accepted </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar> {{acceptanceModalTitle}} </kendo-dialog-titlebar>
   <case-management-accept-application (isCloseModalEvent)="onCloseAcceptanceClicked()" [isEdit]="isEdit"
     [clientId]="clientId"
     [clientCaseId]="clientCaseId" [isCerForm]="isCerForm"

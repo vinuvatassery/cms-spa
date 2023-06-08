@@ -12,11 +12,8 @@
       <div class="flex-col">
         <button
           kendoButton
-          [primary]="true"
-          routerLink="/case-detail/application-eligibility/eligibility"
-          aria-label="start application review"
-          [disabled]="btnDisabled"
-          (click)="btnDisabled = true;"
+          [primary]="true"        
+          (click)="navigateReviewPage()"
         >
           Start
         </button>

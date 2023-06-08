@@ -26,7 +26,7 @@
               </kendo-popover>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="pNumber" title="PNUmber" [width]="100" *ngIf="managementTab"></kendo-grid-column>
+        <kendo-grid-column field="pNumber" title="PNumber" [width]="100" *ngIf="managementTab"></kendo-grid-column>
         <kendo-grid-column field="domainCode" title="Domain" [width]="100" *ngIf="managementTab || isCerForm"></kendo-grid-column>
         <kendo-grid-column field="assisterGroup" title="Assister Group" [width]="100"
           *ngIf="managementTab"></kendo-grid-column>
@@ -153,7 +153,7 @@
 <!-- Search Provider  Modal -->
 <kendo-dialog *ngIf="editformVisible$ | async" (close)="onCloseCsManagerSearchClicked()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
-  <kendo-dialog-titlebar>{{ isEditSearchCaseManagerProvider ? 'Edit Case Manager' : 'Add Case Manager' }}
+  <kendo-dialog-titlebar>{{ isEditSearchCaseManagerProvider ? 'Edit Case Manager' : 'Assign Case Manager' }}
   </kendo-dialog-titlebar>
   <case-management-case-manager-search [caseManagerSearchList$]="getManagerUsers$" [managementTab]="managementTab"
     [existingCaseManagerData]="existingCaseManagerData" [selectedCustomCaseManagerName]="selectedCustomCaseManagerName"

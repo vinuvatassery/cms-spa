@@ -1,7 +1,6 @@
 <section [formGroup]="clientAttachmentForm">
   <kendo-floatinglabel  text="Client Documents">
-
-    <!-- <span *ngIf="showDocInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span> -->
+    
     <kendo-multicolumncombobox
       (valueChange)="clientAttachmentChange($event)"
       [data]="clientDocumentList$"

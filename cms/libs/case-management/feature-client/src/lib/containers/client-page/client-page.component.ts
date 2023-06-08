@@ -420,16 +420,9 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.dateFormat
       )
     );
-    if (!this.isCerForm) {
-      this.applicantInfo.client.genderAtBirthCode =
-        this.appInfoForm.controls['BirthGender'].value;
-      if (
-        this.applicantInfo.client.genderAtBirthCode === PronounCode.notListed
-      ) {
-        this.applicantInfo.client.genderAtBirthDesc =
-          this.appInfoForm.controls['BirthGenderDescription'].value;
-      }
-    }
+
+    this.populateClientCERForm();
+   
     if (this.appInfoForm.controls['ssnNotApplicable'].value) {
       this.applicantInfo.client.ssn = null;
       this.applicantInfo.client.ssnNotApplicableFlag = StatusFlag.Yes;
@@ -439,6 +432,20 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
           ? null
           : this.appInfoForm.controls['ssn'].value;
       this.applicantInfo.client.ssnNotApplicableFlag = StatusFlag.No;
+    }
+  }
+
+  private populateClientCERForm()
+  {
+    if (!this.isCerForm) {
+      this.applicantInfo.client.genderAtBirthCode =
+        this.appInfoForm.controls['BirthGender'].value;
+      if (
+        this.applicantInfo.client.genderAtBirthCode === PronounCode.notListed
+      ) {
+        this.applicantInfo.client.genderAtBirthDesc =
+          this.appInfoForm.controls['BirthGenderDescription'].value;
+      }
     }
   }
 

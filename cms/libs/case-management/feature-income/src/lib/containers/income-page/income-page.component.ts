@@ -263,7 +263,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.incomeData = incomeresponse;
       this.incomeListRequiredValidation = false;
       this.hasValidIncome=false;
-      var todayDate = new Date();
+      let todayDate = new Date();
       todayDate = new Date(`${todayDate.getFullYear()}-${todayDate.getMonth()+1}-${todayDate.getDate()}`)
       if(this.incomeData.clientIncomes?.filter((x:any) => (x.incomeEndDate != null && new Date(x.incomeEndDate.split('T')[0]) >= todayDate) || x.incomeEndDate === null).length>0){
         this.hasValidIncome=true;
