@@ -74,11 +74,14 @@ export class FinancialVendorFacade {
   }
 
   getVendorDetails(vendorId: string) {
+    this.showLoader();
     this.financialVendorDataService.getVendorDetails(vendorId).subscribe({
       next: (vendorDetail: any) => {
         this.selectedVendorSubject.next(vendorDetail);
+        this.hideLoader();
       },
       error: (err) => {
+        this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       }
     });

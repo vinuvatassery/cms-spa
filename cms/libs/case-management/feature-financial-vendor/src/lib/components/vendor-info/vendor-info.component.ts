@@ -61,8 +61,11 @@ export class VendorInfoComponent implements OnInit {
     });
   }
 
-  closeEditModal(value: any) {
+  closeEditModal(isEditSuccessfull: boolean) {
     this.openEditDailog = false;
+    if(isEditSuccessfull){
+      this.loadVendorInfo();
+    }
   }
 
 }

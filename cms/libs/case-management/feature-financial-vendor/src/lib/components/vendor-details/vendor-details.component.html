@@ -5,15 +5,17 @@
     <form [formGroup]="vendorDetailForm">
     <div class="flex-row">
         <div class="flex-col">
-            <kendo-floatinglabel text="Provider Name">
-                <kendo-textbox aria-label="Provider Name" [fillMode]="formUiStyle.inputFillMode"
+            <kendo-floatinglabel text="Vendor Name">
+                <kendo-textbox aria-label="Vendor Name" [fillMode]="formUiStyle.inputFillMode"
                 formControlName="vendorName">
                 </kendo-textbox>
+                <kendo-formerror *ngIf="!vendorDetailForm.controls['vendorName'].valid"> Vendor name is required.
+                </kendo-formerror>
             </kendo-floatinglabel>
         </div>
 
         <div class="flex-col">
-            <kendo-floatinglabel text="TIN">
+            <kendo-floatinglabel text="TIN (optional)">
                 <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" 
                 formControlName="tin">
                 </kendo-textbox>
