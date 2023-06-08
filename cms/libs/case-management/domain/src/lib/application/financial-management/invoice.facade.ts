@@ -22,7 +22,9 @@ export class InvoiceFacade {
   }];
 
   private invoiceDataSubject = new BehaviorSubject<any>([]);
+  private serviceDataSubject = new BehaviorSubject<any>([]);
   invoiceData$ = this.invoiceDataSubject.asObservable();
+  serviceData$ = this.serviceDataSubject.asObservable();
 
   
   /** Private properties **/
@@ -59,19 +61,37 @@ export class InvoiceFacade {
   ) { }
 
   /** Public methods **/
-  loadInvoiceListGrid(){
-    this.invoiceDataService.loadInvoiceListService().subscribe({
+  loadInvoiceListGrid(providerId:any,state:any,tabCode:any){
+    this.showLoader();
+    this.invoiceDataService.loadInvoiceListService(providerId,state,tabCode).subscribe({
       next: (dataResponse) => {
-        this.invoiceDataSubject.next(dataResponse);
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.invoiceDataSubject.next(gridView);
         this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
         this.hideLoader(); 
       },
-    });
-   
+    });  
   
+  }
+  loadPaymentRequestServices(invoiceNumber:any,vendorId:any,vendorType:any,paymentRequestBatchId:any,clientId:any){
+    this.showLoader();
+    this.invoiceDataService.loadPaymentRequestServices(invoiceNumber,vendorId,vendorType,paymentRequestBatchId,clientId).subscribe({
+      next: (dataResponse) => {      
+        this.serviceDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+
   }
  
 }

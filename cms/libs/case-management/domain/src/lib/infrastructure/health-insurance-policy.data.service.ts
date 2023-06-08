@@ -300,7 +300,7 @@ export class HealthInsurancePolicyDataService {
 
   loadInsurancePoliciesByProviderId(providerId: any, clientId: any, clientCaseEligibilityId: any, isDental: any) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/vendors/${providerId}/insurance-policies?clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}&dentalPlan=${isDental}`);
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/vendors/${providerId}/insurance-policies?clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}&dentalPlan=${isDental}`,{});
   }
   
 
