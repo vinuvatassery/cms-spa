@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, Input, Output, EventEmitter
 import { FinancialVendorFacade, FinancialVendorDataService } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { Validators, FormGroup, FormControl, } from '@angular/forms';
 
 @Component({
   selector: 'cms-vendor-details',
@@ -17,7 +18,10 @@ export class VendorDetailsComponent implements OnInit {
 
   SpecialHandlingLength = 100;
   public formUiStyle: UIFormStyle = new UIFormStyle();
-
+  public vendorDetailForm: FormGroup = new FormGroup({
+    vendorName: new FormControl('', []),
+    tin: new FormControl('', []),
+  });
   constructor(
     private financialVendorFacade: FinancialVendorFacade,
     private financialVendorDataService: FinancialVendorDataService
@@ -25,6 +29,7 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.setVendorDetailFormValues();
   }
 
   updateVendorInfo() {
@@ -44,6 +49,11 @@ export class VendorDetailsComponent implements OnInit {
 
   onCancelClick() {
     this.closeModal.emit(true);
+  }
+
+  setVendorDetailFormValues() {
+    this.vendorDetailForm.controls['vendorName'].setValue(this.vendorDetails.vendoName);
+    this.vendorDetailForm.controls['tin'].setValue(this.vendorDetails.tin);
   }
 
 }

@@ -2,17 +2,20 @@
     <p class="text-muted mb-2">
         All fields are required unless otherwise stated.
     </p>
+    <form [formGroup]="vendorDetailForm">
     <div class="flex-row">
         <div class="flex-col">
             <kendo-floatinglabel text="Provider Name">
-                <kendo-textbox aria-label="Provider Name" [fillMode]="formUiStyle.inputFillMode">
+                <kendo-textbox aria-label="Provider Name" [fillMode]="formUiStyle.inputFillMode"
+                formControlName="vendorName">
                 </kendo-textbox>
             </kendo-floatinglabel>
         </div>
 
         <div class="flex-col">
             <kendo-floatinglabel text="TIN">
-                <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode">
+                <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" 
+                formControlName="tin">
                 </kendo-textbox>
             </kendo-floatinglabel>
         </div>
@@ -293,6 +296,7 @@
 
 
     </div>
+</form>
 </section>
 
 <kendo-dialog-actions>
