@@ -46,7 +46,15 @@
     </kendo-grid-column>
 
     <kendo-grid-column field="paymentMethod" title="Payment Method"
-      *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors">
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="totalClaims" title="Total Claims"
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="unreconciledClaims" title="Unreconciled Claims"
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
     </kendo-grid-column>
 
     <kendo-grid-column field="totalPayments" title="Total Payments"
@@ -73,18 +81,20 @@
     <kendo-grid-column field="openInvoices" title="Open Invoices"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers">
     </kendo-grid-column>
-    <kendo-grid-column field="phones" title="Phones" *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers">
+    <kendo-grid-column field="phones" title="Phones" 
+    *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
     </kendo-grid-column>
 
     <kendo-grid-column field="emails" title="Emails"
-      *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.Pharmacy">
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.Pharmacy || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
     </kendo-grid-column>
 
     <kendo-grid-column field="mailCode" title="Mail Codes"
-      *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers">
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
     </kendo-grid-column>
 
-    <kendo-grid-column field="address" title="Address" *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers">
+    <kendo-grid-column field="address" title="Address" 
+    *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
     </kendo-grid-column>
 
     <kendo-grid-column field="preferredFlag" title="Preferred" *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy">

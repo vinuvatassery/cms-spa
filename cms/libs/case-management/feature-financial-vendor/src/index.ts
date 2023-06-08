@@ -11,7 +11,6 @@ export * from './lib/components/vendor-profile-header/vendor-profile-header.comp
 export * from './lib/components/vendors-list/vendors-list.component';
 export * from './lib/components/vendor-details/vendor-details.component';
 export * from './lib/components/financial-reminder/financial-reminder.component';
-export * from './lib/components/providers-list/providers-list.component';
 export * from './lib/components/vendor-info/vendor-info.component';
 export * from './lib/components/vendor-header-tools/vendor-header-tools.component';
 export * from './lib/components/payment-addresses/payment-addresses.component';
