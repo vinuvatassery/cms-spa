@@ -17,21 +17,28 @@ export class InsuranceProviderFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortValue = 'address1';
   public sortType = 'asc';
+  public clientsSortValue = 'clientName'
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
   }];
+  public clientSort: SortDescriptor[] = [{
+    field: this.clientsSortValue,
+  }];
 
   private insuranceProviderDataSubject = new BehaviorSubject<any>([]);
+  private providerClientsDataSubject = new BehaviorSubject<any>([]);
+
+  providerClientsData$ = this.providerClientsDataSubject.asObservable();
   insuranceProviderData$ = this.insuranceProviderDataSubject.asObservable();
 
-  
+
   /** Private properties **/
- 
+
   /** Public properties **/
- 
+
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>(); 
+  snackbarSubject = new Subject<SnackBar>();
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
@@ -67,11 +74,35 @@ export class InsuranceProviderFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
     });
-   
-  
+
+
   }
- 
+  loadProviderClientsListGrid(
+    providerId:any,
+    tabCode:any,
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string){
+    this.showLoader();
+    this.insuranceProviderDataService.loadProviderClientsListGrid(providerId,tabCode, skipcount,maxResultCount,sort,sortType).subscribe({
+      next: (dataResponse) => {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.providerClientsDataSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+      },
+    });
+
+  }
+
 }
