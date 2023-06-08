@@ -1,7 +1,8 @@
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { VendorFacade } from '@cms/case-management/domain';
+import { VendorFacade, ContactFacade, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-vendor-details',
   templateUrl: './vendor-details.component.html',
@@ -9,7 +10,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VendorDetailsComponent implements OnInit {
-  @Input() isMedicalProvider: boolean = false;
+  @Input() providerType!: any;
   @Input() medicalProviderForm: FormGroup;
 
   SpecialHandlingLength = 100;
@@ -17,19 +18,26 @@ export class VendorDetailsComponent implements OnInit {
   
   isViewContentEditable!: boolean;
   isValidateForm: boolean = false;
+  ddlStates$ = this.contactFacade.ddlStates$;
+  paymentMethodList:any []=[];
+
 
   constructor(
     private readonly formBuilder: FormBuilder,
     private vendorFacade: VendorFacade,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly contactFacade: ContactFacade,
+    private lovFacade: LovFacade
   ) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
 
   ngOnInit(): void {
+    this.contactFacade.loadDdlStates();
+    this.getPaymentMethods();
   }
 
-  get newAddContactForm() : FormArray{
+  get AddContactForm() : FormArray{
     return this.medicalProviderForm.get("newAddContactForm") as FormArray;
   }
 
@@ -41,12 +49,12 @@ export class VendorDetailsComponent implements OnInit {
       fax: new FormControl(),
       email: new FormControl()
     });
-    this.newAddContactForm.push(addContactForm);
+    this.AddContactForm.push(addContactForm);
     this.cdr.detectChanges();
   }
 
   removeContact(i: number) {
-    this.newAddContactForm.removeAt(i);
+    this.AddContactForm.removeAt(i);
   }
 
   getContactControl(index: number, fieldName: string) {
@@ -56,7 +64,8 @@ export class VendorDetailsComponent implements OnInit {
   save() {
     this.validateForm();
     this.isValidateForm = true
-    this.vendorFacade.showLoader();
+    console.log(this.medicalProviderForm.value)
+    //this.vendorFacade.showLoader();
   }
 
   validateForm() {
@@ -87,6 +96,29 @@ export class VendorDetailsComponent implements OnInit {
       ]);
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();      
     }
+
+    this.medicalProviderForm.controls['paymentMethod']
+    .setValidators([
+      Validators.required,
+    ]);
+    this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();  
     
   }
+
+  getPaymentMethods(){
+    this.lovFacade.getPaymentMethodLov();
+    this.vendorFacade.showLoader();
+    this.lovFacade.paymentMethodType$.subscribe((paymentMethod:any)=>{
+      if(paymentMethod){
+        this.paymentMethodList=paymentMethod;
+        this.vendorFacade.hideLoader();
+      }
+    })
+  }
+
+  public get vendorTypes(): typeof FinancialVendorProviderTabCode {
+    return FinancialVendorProviderTabCode; 
+  }
+
+
 }

@@ -10,10 +10,12 @@ import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@ang
   styleUrls: ['./financial-vendor-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialVendorPageComponent implements OnInit{
+export class FinancialVendorPageComponent implements OnInit {
   isVendorDetailFormShow = false;
-  isMedicalProvider: boolean = false;
   medicalProviderForm: FormGroup;
+  providerTypeCode: string = '';
+  isShowMedicalProvider: boolean = false;
+  isShowDentalProvider: boolean = false;
 
   data = [
     {
@@ -25,9 +27,7 @@ export class FinancialVendorPageComponent implements OnInit{
     {
       text: 'Medical Provider',
       click: (dataItem: any): void => {
-        this.isMedicalProvider = true;
-        this.buildMPForm();
-        this.clickOpenVendorDetails(dataItem);
+        this.clickOpenMedicalProviderDetails();
       },
     },
     {
@@ -41,34 +41,34 @@ export class FinancialVendorPageComponent implements OnInit{
       click: (dataItem: any): void => {
         this.clickOpenVendorDetails(dataItem);
       },
-      
+
     },
     {
       text: 'Dental Provider',
       click: (dataItem: any): void => {
-        this.clickOpenVendorDetails(dataItem);
+        this.clickOpenDentalProviderDetails();
       },
-      
+
     },
   ];
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  public uiTabStripScroll: UITabStripScroll = new UITabStripScroll(); 
+  public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
   vendorsList$ = this.financialVendorFacade.vendorsList$
   pageSizes = this.financialVendorFacade.gridPageSizes;
-  sortValue  = this.financialVendorFacade.sortValue;
-  sortType  = this.financialVendorFacade.sortType;
-  sort  = this.financialVendorFacade.sort;
+  sortValue = this.financialVendorFacade.sortValue;
+  sortType = this.financialVendorFacade.sortType;
+  sort = this.financialVendorFacade.sort;
 
-  constructor(private caseFacade: CaseFacade , private financialVendorFacade : FinancialVendorFacade,
+  constructor(private caseFacade: CaseFacade, private financialVendorFacade: FinancialVendorFacade,
     private readonly formBuilder: FormBuilder) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
 
-    /** Lifecycle hooks **/
-    ngOnInit() {    
-      this.caseFacade.enableSearchHeader(SearchHeaderType.VendorSearch);
-    }
+  /** Lifecycle hooks **/
+  ngOnInit() {
+    this.caseFacade.enableSearchHeader(SearchHeaderType.VendorSearch);
+  }
 
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
     return FinancialVendorProviderTabCode;
@@ -78,25 +78,46 @@ export class FinancialVendorPageComponent implements OnInit{
     return FinancialVendorTypeCode;
   }
 
-  clickOpenVendorDetails(dataItem : any) {
+  clickOpenVendorDetails(dataItem: any) {
     this.isVendorDetailFormShow = true;
-  
+
   }
+
+  clickOpenMedicalProviderDetails() {
+    this.buildVendorForm();
+    this.providerTypeCode = FinancialVendorTypeCode.MedicalProvider;
+    this.isShowMedicalProvider = true;
+  }
+
+  clickOpenDentalProviderDetails() {
+    this.buildVendorForm();
+    this.providerTypeCode = FinancialVendorTypeCode.DentalProvider;
+    this.isShowDentalProvider = true;
+  }
+
+  clickCloseMedicalVendorDetails() {
+    this.isShowMedicalProvider = false;
+  }
+
+  clickCloseDentalVendorDetails() {
+    this.isShowDentalProvider = false;
+  }
+
   clickCloseVendorDetails() {
     this.isVendorDetailFormShow = false;
   }
 
-  loadFinancialVendorsList(data : any)
-  {   
-    
-    this.financialVendorFacade.getVendors(data?.skipCount,data?.pagesize,data?.sortColumn,data?.sortType,data?.vendorTypeCode)
+  loadFinancialVendorsList(data: any) {
+
+    this.financialVendorFacade.getVendors(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.vendorTypeCode)
   }
 
-  buildMPForm() {
+  buildVendorForm() {
+    this.medicalProviderForm.reset();
     this.medicalProviderForm = this.formBuilder.group({
       providerName: ['', Validators.required],
       tinNumber: [''],
-      paymentMethodRB: [''],
+      paymentMethod: [''],
       specialHandling: [''],
       mailCode: [''],
       nameOnCheck: [''],
@@ -106,6 +127,7 @@ export class FinancialVendorPageComponent implements OnInit{
       city: [''],
       state: [''],
       zip: [''],
+      emailAddress: [''],
       newAddContactForm: this.formBuilder.array([
         this.formBuilder.group({
           contactName: new FormControl('', Validators.maxLength(40)),
@@ -118,5 +140,8 @@ export class FinancialVendorPageComponent implements OnInit{
     });
   }
 
+  public get vendorTypes(): typeof FinancialVendorProviderTabCode {
+    return FinancialVendorProviderTabCode;
+  }
 
 }

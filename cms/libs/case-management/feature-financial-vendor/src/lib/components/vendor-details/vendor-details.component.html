@@ -21,7 +21,7 @@
           </kendo-textbox>
         </kendo-floatinglabel>
       </div>
-      <div *ngIf="!isMedicalProvider" class="flex-col mt-1">
+      <div *ngIf="providerType != vendorTypes.MedicalProvider && providerType != vendorTypes.DentalProvider" class="flex-col mt-1">
         <div class="component-list-h">
           <span class="app-checkboxwidtext-wrapper">
             <input type="checkbox" kendoCheckBox aria-labelledby="Rebate" id="isPreferedPharmacy"
@@ -34,9 +34,12 @@
     <!-- Payment address  -->
     <div class="flex-row mt-1">
       <div class="flex-col">
-        <h4 class="mb-1">PAYMENT ADDRESS (OPTIONAL)</h4>
-        <p>Add a payment address and contacts for that address. Additional payment addresses may be added once the
-          manufacturer is added. If you add a payment address, all fields are required unless otherwise stated.
+        <h4 class="mb-1">PAYMENT ADDRESS</h4>
+        <p *ngIf="providerType == vendorTypes.MedicalProvider">Add a payment address and contacts for that address. Additional payment addresses may be added once the medical provider is added. 
+          If you add a payment address, all fields are required unless otherwise stated.
+        </p>
+        <p *ngIf="providerType == vendorTypes.DentalProvider">Add a payment address and contacts for that address. Additional payment addresses may be added once the dental provider is added.
+          If you add a payment address, all fields are required unless otherwise stated.
         </p>
       </div>
 
@@ -90,8 +93,15 @@
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="State">
-          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" textField="lovDesc" valueField="lovCode"
-            [valuePrimitive]="true" formControlName="state">
+           <kendo-dropdownlist 
+          aria-label="State" 
+          [fillMode]="formUiStyle.dropDownFillMode"
+          formControlName="state"
+          [data]="ddlStates$ | async"
+          textField="stateName"
+          valueField="stateCode"
+          [valuePrimitive]="true" placeholder="State"
+          >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="!medicalProviderForm.controls['state'].valid && isValidateForm">
@@ -108,7 +118,14 @@
         </kendo-floatinglabel>
       </div>
 
-      <div *ngIf="!isMedicalProvider" class="flex-col mt-1">
+      <div class="flex-col mb-1 ">
+        <kendo-floatinglabel text="Email Address">
+          <kendo-textbox aria-label="Email Address" [fillMode]="formUiStyle.inputFillMode" formControlName="emailAddress">
+          </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+
+      <div *ngIf="(providerType != vendorTypes.MedicalProvider) && (providerType != vendorTypes.DentalProvider)" class="flex-col mt-1">
         <button kendoButton icon="add" [primary]="true" look="flat" aria-label="Add address">
           Address
         </button>
@@ -122,28 +139,31 @@
           </legend>
 
           <div class="component-list-h">
-            <span class="app-radiobtnwidtext-wrapper">
-              <input type="radio" kendoRadioButton aria-labelledby="Check" name="paymentMethodRB"
-                formControlName="paymentMethodRB" id="Check" />
-              <kendo-label class="k-radio-label" text="Check" for="Check"></kendo-label>
-            </span>
-            <span class="app-radiobtnwidtext-wrapper">
-              <input type="radio" kendoRadioButton name="paymentMethodRB" formControlName="paymentMethodRB" id=" ACH"
-                aria-labelledby="ACH" />
-              <kendo-label class="k-radio-label" text="No" for="ACH"></kendo-label>
-            </span>
-            <span class="app-radiobtnwidtext-wrapper">
-              <input type="radio" kendoRadioButton name="paymentMethodRB" formControlName="paymentMethodRB" id="SPOTS"
-                value="1" aria-labelledby="SPOTS" />
-              <kendo-label class="k-radio-label" text="SPOTS" for="SPOTS"></kendo-label>
-            </span>
-            <span class="app-radiobtnwidtext-wrapper">
-              <input type="radio" kendoRadioButton name="paymentMethodRB" formControlName="paymentMethodRB"
-                id="DOR Hold" aria-labelledby="DOR Hold" />
-              <kendo-label class="k-radio-label" text="DOR Hold" for="DOR Hold"></kendo-label>
+            <span *ngFor="let paymentMethod of paymentMethodList; let i = index">
+              <div class="flex-row">
+                <div class="flex-col flex-col-12">
+                  <span class="app-radiobtnwidtext-wrapper">
+                  <input
+                    type="radio"
+                    kendoRadioButton
+                    formControlName="paymentMethod"
+                    [value]="paymentMethod.lovCode"
+                    name="paymentMethod" 
+                    attr.aria-labelledby="{{ paymentMethod.lovCode }}" 
+                    id="{{ paymentMethod.lovCode }}"
+                  />
+      
+                  <kendo-label
+                    class="k-radio-label"
+                    for="trans{{ paymentMethod.lovCode }}"
+                    text="{{ paymentMethod.lovDesc }}"
+                  ></kendo-label>
+                  </span>
+                </div>
+              </div>
             </span>
           </div>
-          <kendo-formerror *ngIf="!medicalProviderForm.controls['paymentMethodRB'].valid && isValidateForm">
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['paymentMethod'].valid && isValidateForm">
             Payment Method is required
           </kendo-formerror>
         </fieldset>
@@ -158,18 +178,18 @@
         </kendo-floatinglabel>
       </div>
 
-      <div class="flex-col flex-col-6" *ngIf="!isMedicalProvider">
+      <div class="flex-col flex-col-6" *ngIf="providerType != vendorTypes.MedicalProvider && providerType != vendorTypes.DentalProvider">
         <kendo-floatinglabel text="Payment Run Date">
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" textField="lovDesc" valueField="lovCode"
             [valuePrimitive]="true" formControlName="paymentRunDate">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
-      <div class="flex-col flex-col-6 mt-4" *ngIf="!isMedicalProvider">
+      <div class="flex-col flex-col-6 mt-4" *ngIf="providerType != vendorTypes.MedicalProvider && providerType != vendorTypes.DentalProvider">
         <kendo-label> Of each Month</kendo-label>
       </div>
 
-      <div class="flex-col mt-1" *ngIf="!isMedicalProvider">
+      <div class="flex-col mt-1" *ngIf="providerType != vendorTypes.MedicalProvider && providerType != vendorTypes.DentalProvider">
         <fieldset class="k-form-fieldset">
           <legend class="k-form-legend">
             <h5 class="mb-0"> Accepts combined payments? </h5>
@@ -191,7 +211,7 @@
         </fieldset>
       </div>
 
-      <div class="flex-col mt-1" *ngIf="!isMedicalProvider">
+      <div class="flex-col mt-1" *ngIf="providerType != vendorTypes.MedicalProvider && providerType != vendorTypes.DentalProvider">
         <fieldset class="k-form-fieldset">
           <legend class="k-form-legend">
             <h5 class="mb-0"> Accepts reports? </h5>
@@ -212,7 +232,7 @@
           </div>
         </fieldset>
       </div>
-      <div class="flex-col" *ngIf="!isMedicalProvider">
+      <div class="flex-col" *ngIf="providerType != vendorTypes.MedicalProvider && providerType != vendorTypes.DentalProvider">
         <fieldset class="k-form-fieldset no_margin_fieldset">
           <legend class="k-form-legend">
             <h5>Invoice For (Select all that apply)</h5>
@@ -234,7 +254,7 @@
           </div>
         </fieldset>
       </div>
-      <div class="flex-col flex-col-12" *ngIf="!isMedicalProvider">
+      <div class="flex-col flex-col-12" *ngIf="providerType != vendorTypes.MedicalProvider && providerType != vendorTypes.DentalProvider">
         <kendo-floatinglabel text="Special Handling (optional)">
           <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #SpecialHandling resizable="auto" id="SpecialHandling"
             [maxlength]="SpecialHandlingLength" aria-label="Special Handling">
@@ -246,7 +266,7 @@
     <!-- Contacts -->
 
     <div formArrayName="newAddContactForm">
-      <div *ngFor="let contact of newAddContactForm.controls; let i=index">
+      <div *ngFor="let contact of AddContactForm.controls; let i=index">
         <div [formGroupName]="i" class="flex-row mt-2">
 
           <div class="flex-col d-flex align-iems-center justify-content-between" [formGroupName]="i">
