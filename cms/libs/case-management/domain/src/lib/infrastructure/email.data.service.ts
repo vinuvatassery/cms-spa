@@ -119,6 +119,12 @@ export class EmailDataService {
       return this.http.get(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/forms`
       );
-    } 
+    }
+    
+    initiateEsignRequest(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
+      return this.http.post<string>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/esign/${clientId}/${clientCaseEligibilityId}`,selectedTemplate
+      );
+    }
 }
  
