@@ -327,9 +327,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     };
     completedDataPoints.push(addressProof);
 
+    const isNoFamilyContactSelected = this.contactInfoForm?.get('familyAndFriendsContact.noFriendOrFamilyContactFlag')?.value ?? false;
     const otherDesc: CompletionChecklist = {
       dataPointName: 'relationshipCodeOther',
-      status: this.contactInfo?.friendsOrFamilyContact?.contactRelationshipCode === 'O' ? StatusFlag.Yes : StatusFlag.No
+      status: this.contactInfo?.friendsOrFamilyContact?.contactRelationshipCode === 'O' && !isNoFamilyContactSelected ? StatusFlag.Yes : StatusFlag.No
     };
     completedDataPoints.push(otherDesc);
 
@@ -1496,6 +1497,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm?.get('familyAndFriendsContact.firstName')?.disable();
       this.contactInfoForm?.get('familyAndFriendsContact.lastName')?.disable();
       this.contactInfoForm?.get('familyAndFriendsContact.contactRelationshipCode')?.disable();
+      this.contactInfoForm?.get('familyAndFriendsContact.otherDesc')?.disable();
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.disable();
     }
     else {
@@ -1534,9 +1536,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       dataPointName: 'relationshipCodeOther',
       status: StatusFlag.No
     };
-
-    if (selectedValue === 'O') {
+    const isNoFamilySelected = this.contactInfoForm?.get('familyAndFriendsContact.noFriendOrFamilyContactFlag')?.value ?? false;
+    if (selectedValue === 'O' && !isNoFamilySelected) {
       this.showRelationshipOtherDec = true;
+      this.contactInfoForm?.get('familyAndFriendsContact.otherDesc')?.enable();
       otherDesc.status = StatusFlag.Yes;
     }
     else {
