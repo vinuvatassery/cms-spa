@@ -32,7 +32,7 @@ export class ClientsComponent implements OnInit, OnChanges{
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
     };
-    this.providerId='4A0C8A12-9480-4AE6-B979-08FC6BEAA712'
+    this.providerId='F49E42C5-1F8A-4297-A06A-C84F8EF187BF'
     this.loadClientsListGrid();
   }
 
@@ -94,4 +94,8 @@ export class ClientsComponent implements OnInit, OnChanges{
     console.log(this.tabCode);
     this.insuranceProviderFacade.loadProviderClientsListGrid(this.providerId,this.tabCode,this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType);
   }
+  onClientClicked(clientId: any) {
+    this.router.navigate([`/case-management/cases/case360/${clientId}`]);
+
+}
 }
