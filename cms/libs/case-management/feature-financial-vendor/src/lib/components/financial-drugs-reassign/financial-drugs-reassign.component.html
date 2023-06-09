@@ -1,0 +1,73 @@
+<!-- employer form details -->
+<form class="k-form">
+    <section class="k-dialog-body">
+        <p class="text-muted mb-1">
+            All NDCs beginning with the same first five digits will be assigned to the new manufacturer. Re-assignment
+            will update the master list of drugs and create new invoices with the suffix “.2” or “.3” etc. New invoices
+            will generate retroactively based on the date entered below. All fields are required unless otherwise
+            stated..
+        </p>
+        <p class="text-muted mb-1"> NDC first five digits: <strong>01234</strong></p>
+        <p class="text-muted mb-1"> Total drugs to be re-assigned: <strong>20</strong> </p>
+        <p class="text-muted mb-1"> New invoices to be generated: <strong>1</strong></p>
+        <div class="flex-row">
+            <div class="flex-col">
+                <kendo-floatinglabel text="New Manufacturer">
+                    <kendo-textbox textFieldautofocus aria-label="New Manufacturer"
+                        [fillMode]="formUiStyle.inputFillMode">
+                    </kendo-textbox>
+                </kendo-floatinglabel>
+
+            </div>
+            <div class="flex-col mb-1">
+
+                <kendo-floatinglabel text="Date the Drugs Changed Manufacturers">
+                    <kendo-datepicker aria-label="Date the Drugs Changed Manufacturers"
+                        [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
+                        placeholder="Date the Drugs Changed Manufacturers">
+                    </kendo-datepicker>
+                </kendo-floatinglabel>
+            </div>
+            <div class="flex-col mb-1">
+                <kendo-floatinglabel text="Delivery Method">
+                    <kendo-textarea
+                    [fillMode]="formUiStyle.inputFillMode"
+                      aria-label="custom todo description"
+                      #tareaCustomTodo
+                      resizable="auto"
+                      [maxlength]="tareaCustomTodoMaxLength"
+                      [value]="tareaCustomTodoDescription"
+                      (valueChange)="onTareaCustomTodoValueChange($event)"
+                    >
+                      <kendo-textarea-suffix class="justify-content-end">
+                        <span class="tareacustomtodocounter">{{
+                          tareaCustomTodoCounter
+                        }}</span>
+                      </kendo-textarea-suffix>
+                    </kendo-textarea>
+                </kendo-floatinglabel>
+            </div>
+          
+                <div class="flex-col mt-2">
+                    <h5>ATTACH PROOF OF MANUFACTURE CHANGE (OPTIONAL)</h5>
+                  </div>
+                  <div class="flex-col ">
+                    <kendo-upload></kendo-upload>
+                    <kendo-formhint>Max file size 25MB</kendo-formhint>
+                  </div>
+            
+          
+        </div>
+    </section>
+    <kendo-dialog-actions>
+        <div class="justify-content-between mt-2">
+            <div>
+                <button kendoButton [primary]="true" look="flat" aria-label="delete employer"> Deactivate </button>
+            </div>
+            <div class="justify-content-end">
+                <button kendoButton [primary]="true" aria-label="cancel employer" look="outline"> Cancel </button>
+                <button kendoButton [primary]="true" aria-label="add new employer"> RE-ASSIGN </button>
+            </div>
+        </div>
+    </kendo-dialog-actions>
+</form>

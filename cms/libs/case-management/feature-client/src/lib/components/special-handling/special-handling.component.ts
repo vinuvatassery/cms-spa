@@ -1,12 +1,12 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input,ChangeDetectorRef } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, Input,ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 /** Facades **/
 import { ClientFacade, CaseFacade } from '@cms/case-management/domain';
 import { LoaderService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-special-handling',
   templateUrl: './special-handling.component.html',
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SpecialHandlingComponent implements OnInit {
   /** Public properties **/
