@@ -1,5 +1,7 @@
 export enum FinancialVendorTypeCode {
     Manufacturers = 'MANUFACTURERS',
-    InsuranceVendors = 'INSURANCE_PROVIDER',   
-    Pharmacy = 'PHARMACY'
+    InsuranceVendors = 'INSURANCE_VENDOR',   
+    Pharmacy = 'PHARMACY',
+    DentalProviders = 'DENTAL_PROVIDER',
+    MedicalProviders = 'MEDICAL_PROVIDER'
 }

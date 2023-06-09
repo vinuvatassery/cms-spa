@@ -14,7 +14,6 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { VendorsListComponent } from './components/vendors-list/vendors-list.component';
 import { VendorDetailsComponent } from './components/vendor-details/vendor-details.component';
 import { FinancialReminderComponent } from './components/financial-reminder/financial-reminder.component';
-import { ProvidersListComponent } from './components/providers-list/providers-list.component';
 import { VendorInfoComponent } from './components/vendor-info/vendor-info.component';
 import { VendorHeaderToolsComponent } from './components/vendor-header-tools/vendor-header-tools.component';
 import { PaymentAddressesComponent } from './components/payment-addresses/payment-addresses.component';
@@ -65,7 +64,6 @@ import { CaseManagementFeatureCommunicationModule } from '@cms/case-management/f
     VendorsListComponent,
     FinancialReminderComponent,
     VendorDetailsComponent,
-    ProvidersListComponent,
     VendorInfoComponent,
     VendorHeaderToolsComponent,
     PaymentAddressesComponent,
@@ -103,8 +101,7 @@ import { CaseManagementFeatureCommunicationModule } from '@cms/case-management/f
     VendorProfileHeaderComponent,
     VendorsListComponent,
     FinancialReminderComponent,
-    VendorDetailsComponent,
-    ProvidersListComponent,
+    VendorDetailsComponent, 
     VendorInfoComponent,
     VendorHeaderToolsComponent,
     PaymentAddressesComponent,
