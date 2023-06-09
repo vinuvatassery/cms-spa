@@ -35,7 +35,7 @@ export class InsuranceProviderDataService {
     sort: string,
     sortType: string) {
   return this.http.get<any>(
-    `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/providers/${providerId}/clients?tabCode=${tabCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`);
+    `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${providerId}/clients?vendorTypeCode=${tabCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`);
   }
 
 }
