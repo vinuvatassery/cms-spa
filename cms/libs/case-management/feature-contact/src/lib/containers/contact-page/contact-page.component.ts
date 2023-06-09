@@ -546,7 +546,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       mailingAddressGroup.controls['city'].updateValueAndValidity();
       mailingAddressGroup.controls['state'].setValidators([Validators.required]);
       mailingAddressGroup.controls['state'].updateValueAndValidity();
-      mailingAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
+      mailingAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 -]+$')]);
       mailingAddressGroup.controls['zip'].updateValueAndValidity();
     }
     if (isHomeAddressRequired) {
@@ -555,7 +555,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         homeAddressGroup.controls['address1'].updateValueAndValidity();
         homeAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9# ]+[/]?[A-Za-z0-9# ]+$')]);
         homeAddressGroup.controls['address2'].updateValueAndValidity();
-        homeAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
+        homeAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 -]+$')]);
         homeAddressGroup.controls['zip'].updateValueAndValidity();
       }
 
@@ -1560,7 +1560,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       address2: address?.address1 == '' ? '' : address?.address2,
       city: address?.city,
       state: address?.state,
-      zip: address?.zip5,
+      zip: `${address?.zip5}-${address?.zip4}`,
     };
     if (type === AddressTypeCode.Mail) {
       this.mailAddressEntered = address;
