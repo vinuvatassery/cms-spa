@@ -90,7 +90,6 @@ export class ClientsComponent implements OnInit, OnChanges{
   }
   loadClientsListGrid()
   {
-    debugger;
     console.log(this.tabCode);
     this.insuranceProviderFacade.loadProviderClientsListGrid(this.providerId,this.tabCode,this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType);
   }

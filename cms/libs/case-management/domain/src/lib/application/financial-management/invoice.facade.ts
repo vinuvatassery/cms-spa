@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { Observable, Subject } from 'rxjs';
+import {  Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
@@ -15,7 +15,7 @@ export class InvoiceFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'address1';
+  public sortValue = 'InvoiceNbr';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
@@ -23,11 +23,13 @@ export class InvoiceFacade {
 
   private invoiceDataSubject = new BehaviorSubject<any>([]);
   private serviceDataSubject = new BehaviorSubject<any>([]);
+  private isInvoiceLoadingSubject = new BehaviorSubject<boolean>(false);
+
+  /** Private properties **/
+
   invoiceData$ = this.invoiceDataSubject.asObservable();
   serviceData$ = this.serviceDataSubject.asObservable();
-
-  
-  /** Private properties **/
+  isInvoiceLoading$ = this.isInvoiceLoadingSubject.asObservable();
  
   /** Public properties **/
  
@@ -61,34 +63,40 @@ export class InvoiceFacade {
   ) { }
 
   /** Public methods **/
-  loadInvoiceListGrid(providerId:any,state:any,tabCode:any){
-    this.showLoader();
-    this.invoiceDataService.loadInvoiceListService(providerId,state,tabCode).subscribe({
+  loadInvoiceListGrid(vendorId:any,state:any,tabCode:any,sortValue:any,sortType:any){
+    this.isInvoiceLoadingSubject.next(true);
+    this.invoiceDataService.loadInvoiceListService(vendorId,state,tabCode,sortValue,sortType).subscribe({
       next: (dataResponse) => {
         const gridView = {
           data: dataResponse['items'],
           total: dataResponse['totalCount'],
         };
         this.invoiceDataSubject.next(gridView);
-        this.hideLoader();
+        this.isInvoiceLoadingSubject.next(false);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.isInvoiceLoadingSubject.next(false);
       },
     });  
   
   }
-  loadPaymentRequestServices(invoiceNumber:any,vendorId:any,vendorType:any,paymentRequestBatchId:any,clientId:any){
-    this.showLoader();
+  loadPaymentRequestServices(invoiceNumber:any,vendorId:any,vendorType:any,paymentRequestBatchId:any,clientId:any){  
+    this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == paymentRequestBatchId && x.clientId === clientId).IsInvoiceServiceLoader = true;  
     this.invoiceDataService.loadPaymentRequestServices(invoiceNumber,vendorId,vendorType,paymentRequestBatchId,clientId).subscribe({
-      next: (dataResponse) => {      
+      next: (dataResponse) => {   
         this.serviceDataSubject.next(dataResponse);
-        this.hideLoader();
+        this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == paymentRequestBatchId && x.clientId === clientId).invoiceServices = dataResponse;
+        this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == paymentRequestBatchId && x.clientId === clientId).IsInvoiceServiceLoader = false;
+        const gridView = {
+          data: this.invoiceDataSubject.value.data,
+          total: this.invoiceDataSubject.value.total,
+        };
+        this.invoiceDataSubject.next(gridView);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == paymentRequestBatchId && x.clientId === clientId).IsInvoiceServiceLoader = false;
       },
     });  
 
