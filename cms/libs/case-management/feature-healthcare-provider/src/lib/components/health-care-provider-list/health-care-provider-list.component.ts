@@ -101,7 +101,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Reactivate',
+      text: 'Re-activate',
       icon: 'done',
       buttonName: 'reactivate',
       click: (clientProviderId: string): void => {

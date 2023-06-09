@@ -206,6 +206,7 @@ export class CerListComponent implements OnInit, OnChanges {
     this.loadCerTrackingList();    
   }
   pageselectionchange(data: any) {
+    this.loader = true;
     this.state.take = data.value;   
     this.loadCerTrackingList();
   }
