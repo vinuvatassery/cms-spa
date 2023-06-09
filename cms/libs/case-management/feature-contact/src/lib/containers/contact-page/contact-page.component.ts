@@ -1161,11 +1161,6 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   useOldOnClick(formName: string, value: string) {
-    if (formName === 'email.preferredContactMethod') {
-      if (!this.preferredContactMethods?.includes(value)) {
-        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, `${value} does not exist in preferred contact list.Please choose one form the list.`, NotificationSource.UI);
-      }
-    }
     this.contactInfoForm.get(formName)?.patchValue(value);
   }
 

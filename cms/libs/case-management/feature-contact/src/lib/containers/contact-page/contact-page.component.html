@@ -1057,7 +1057,7 @@
                 >
                 </kendo-dropdownlist>
               </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Preferred Contact Method: </b>{{oldPreferredContactMethodName}} - {{ oldPreferredContact }} <button *ngIf="preferredContactMethods?.includes(oldPreferredContact ?? '') ?? false" aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('email.preferredContactMethod',oldPreferredContact??'')">Use Old  </button></p> 
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Preferred Contact Method: </b>{{oldPreferredContactMethodName}} - {{ oldPreferredContact }} </p> 
 
               <kendo-formerror>Preferred contact is required</kendo-formerror>
             </kendo-formfield>
