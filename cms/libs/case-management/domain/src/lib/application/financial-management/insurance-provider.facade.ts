@@ -83,12 +83,12 @@ export class InsuranceProviderFacade {
   loadProviderClientsListGrid(
     providerId:any,
     tabCode:any,
-    skipcount: number,
+    skipCount: number,
     maxResultCount: number,
     sort: string,
     sortType: string){
     this.showLoader();
-    this.insuranceProviderDataService.loadProviderClientsListGrid(providerId,tabCode, skipcount,maxResultCount,sort,sortType).subscribe({
+    this.insuranceProviderDataService.loadProviderClientsListGrid(providerId,tabCode, skipCount,maxResultCount,sort,sortType).subscribe({
       next: (dataResponse) => {
         const gridView = {
           data: dataResponse['items'],

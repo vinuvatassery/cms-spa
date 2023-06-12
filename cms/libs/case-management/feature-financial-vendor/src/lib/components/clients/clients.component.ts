@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'cms-clients',
   templateUrl: './clients.component.html',
-  styleUrls: ['./clients.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClientsComponent implements OnInit, OnChanges{
@@ -43,38 +42,6 @@ export class ClientsComponent implements OnInit, OnChanges{
       sort: this.sort,
     };
   }
-
-  public actions = [
-    {
-      buttonType: "btn-h-primary",
-      text: "Edit Address",
-      icon: "edit",
-      click: (address:any): void => {
-
-
-      },
-    },
-    {
-      buttonType: "btn-h-primary",
-      text: "Deactivate Address",
-      icon: "block",
-      click: (address:any): void => {
-
-      },
-    },
-    {
-      buttonType: "btn-h-danger",
-      text: "Delete Address",
-      icon: "delete",
-      click: (address:any): void => {
-
-      },
-    },
-
-
-
-
-  ];
 
   public dataStateChange(stateData: any): void {
     this.sort = stateData.sort;

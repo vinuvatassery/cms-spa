@@ -30,12 +30,12 @@ export class InsuranceProviderDataService {
   loadProviderClientsListGrid(
     providerId:any,
     tabCode:any,
-    skipcount: number,
+    skipCount: number,
     maxResultCount: number,
     sort: string,
     sortType: string) {
   return this.http.get<any>(
-    `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${providerId}/clients?vendorTypeCode=${tabCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`);
+    `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${providerId}/clients?vendorTypeCode=${tabCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`);
   }
 
 }
