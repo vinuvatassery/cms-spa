@@ -7,7 +7,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 
 /** Internal libraries **/
 import { ConfigurationProvider, LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
-import { FinancialVendorDataService } from '../infrastructure/financial-vendor.data.service';
+import { FinancialVendorDataService } from '../../infrastructure/financial-management/vendor.data.service';
 
 
 @Injectable({ providedIn: 'root' })
@@ -15,9 +15,11 @@ export class FinancialVendorFacade {
 
   /** Private properties **/
   private vendorsSubject = new Subject<any>();
+  private vendorProfileSubject = new Subject<any>();
 
   /** Public properties **/
   vendorsList$ = this.vendorsSubject.asObservable();
+  vendorsProfile$ = this.vendorProfileSubject.asObservable();
   
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'vendorName'
@@ -68,6 +70,22 @@ export class FinancialVendorFacade {
           this.vendorsSubject.next(gridView);
         }
        
+      },
+      error: (err) => {     
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+  }
+
+
+  getVendorProfile(vendorId: string,tabCode: string): void {
+   
+    this.financialVendorDataService.getVendorProfile(vendorId,tabCode).subscribe({
+      next: (vendorResponse: any) => {
+        if (vendorResponse) {
+          
+          this.vendorProfileSubject.next(vendorResponse);
+        }       
       },
       error: (err) => {     
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
