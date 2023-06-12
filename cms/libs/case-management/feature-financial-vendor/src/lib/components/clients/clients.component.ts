@@ -20,7 +20,7 @@ export class ClientsComponent implements OnInit, OnChanges{
   public sort = this.insuranceProviderFacade.clientSort;
   public state!: State;
   providerClientGridView$ = this.insuranceProviderFacade.providerClientsData$;
-  providerId:any;
+  @Input() providerId:any;
   addressGridView = [];
   @Input() tabCode: any;
 
@@ -90,8 +90,6 @@ export class ClientsComponent implements OnInit, OnChanges{
   }
   loadClientsListGrid()
   {
-    debugger;
-    console.log(this.tabCode);
     this.insuranceProviderFacade.loadProviderClientsListGrid(this.providerId,this.tabCode,this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType);
   }
   onClientClicked(clientId: any) {
