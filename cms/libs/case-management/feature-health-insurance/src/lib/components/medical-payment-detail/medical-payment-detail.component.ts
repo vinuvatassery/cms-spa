@@ -196,7 +196,7 @@ export class MedicalPaymentDetailComponent {
     this.paymentRequest.clientId = this.clientId;
     this.paymentRequest.clientCaseEligibilityId =  this.caseEligibilityId;    
     this.paymentRequest.entityId = this.copayPaymentForm.controls['vendorId'].value;
-    this.paymentRequest.entityTypeCode ='VENDOR'
+    this.paymentRequest.entityTypeCode = EntityTypeCode.Vendor.toUpperCase();
     this.paymentRequest.clientInsurancePolicyId = this.copayPaymentForm.controls['clientInsurancePolicyId'].value;
     this.paymentRequest.serviceTypeCode = this.copayPaymentForm.controls['serviceTypeCode'].value;
     this.paymentRequest.amountRequested = this.copayPaymentForm.controls['amountRequested'].value;

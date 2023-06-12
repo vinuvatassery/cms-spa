@@ -15,6 +15,7 @@ import {
   VendorFacade,
   InsuranceStatusType,
   ClientProfileTabs,
+  EntityTypeCode,
 } from '@cms/case-management/domain';
 import { SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -142,7 +143,7 @@ export class MedicalPremiumPaymentDetailComponent {
     this.paymentRequest.clientId = this.clientId;
     this.paymentRequest.clientCaseEligibilityId =  this.caseEligibilityId;    
     this.paymentRequest.entityId = this.premiumPaymentForm.controls['vendorId'].value;
-    this.paymentRequest.entityTypeCode = 'VENDOR';
+    this.paymentRequest.entityTypeCode = EntityTypeCode.Vendor.toUpperCase();
     this.paymentRequest.clientInsurancePolicyId = this.premiumPaymentForm.controls['clientInsurancePolicyId'].value;
     this.paymentRequest.serviceTypeCode = this.premiumPaymentForm.controls['serviceTypeCode'].value;
     this.paymentRequest.amountRequested = this.premiumPaymentForm.controls['amountRequested'].value;
