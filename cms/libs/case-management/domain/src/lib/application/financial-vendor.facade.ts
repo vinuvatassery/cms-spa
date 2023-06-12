@@ -74,4 +74,8 @@ export class FinancialVendorFacade {
       },
     });
   }
+
+  addVendorProfile(vendorProfile: any) {
+  return this.financialVendorDataService.addVendorProfile(vendorProfile);
+  }
 }

@@ -118,13 +118,6 @@
         </kendo-floatinglabel>
       </div>
 
-      <div class="flex-col mb-1 ">
-        <kendo-floatinglabel text="Email Address">
-          <kendo-textbox aria-label="Email Address" [fillMode]="formUiStyle.inputFillMode" formControlName="emailAddress">
-          </kendo-textbox>
-        </kendo-floatinglabel>
-      </div>
-
       <div *ngIf="(providerType != vendorTypes.MedicalProvider) && (providerType != vendorTypes.DentalProvider)" class="flex-col mt-1">
         <button kendoButton icon="add" [primary]="true" look="flat" aria-label="Add address">
           Address

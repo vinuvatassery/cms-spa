@@ -20,4 +20,12 @@ export class FinancialVendorDataService {
         `/financial-management/vendors/?VendorTypeCode=${vendorTypeCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
       );
   }
+
+  addVendorProfile(vendorProfile:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/financial-management/vendors/profile`,
+      vendorProfile
+    );
+  }
 }

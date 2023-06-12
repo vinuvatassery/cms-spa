@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { CaseFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'cms-financial-vendor-page',
@@ -129,13 +129,13 @@ export class FinancialVendorPageComponent implements OnInit {
       zip: [''],
       emailAddress: [''],
       newAddContactForm: this.formBuilder.array([
-        this.formBuilder.group({
-          contactName: new FormControl('', Validators.maxLength(40)),
-          description: new FormControl(),
-          phoneNumber: new FormControl(),
-          fax: new FormControl(),
-          email: new FormControl()
-        })
+        // this.formBuilder.group({
+        //   contactName: new FormControl('', Validators.maxLength(40)),
+        //   description: new FormControl(),
+        //   phoneNumber: new FormControl(),
+        //   fax: new FormControl(),
+        //   email: new FormControl()
+        // })
       ]),
     });
   }
@@ -144,4 +144,21 @@ export class FinancialVendorPageComponent implements OnInit {
     return FinancialVendorProviderTabCode;
   }
 
+  saveVendorProfile(vendorProfile: any){
+    this.financialVendorFacade.showLoader();
+    this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
+      next:(response:any)=>{
+        this.financialVendorFacade.hideLoader();
+        this.closeVendorDetailModal();
+      },
+      error:(err:any)=>{
+        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+      }
+    });
+  }
+
+  closeVendorDetailModal(){
+    this.isShowMedicalProvider = false;
+    this.isShowDentalProvider = false;
+  }
 }

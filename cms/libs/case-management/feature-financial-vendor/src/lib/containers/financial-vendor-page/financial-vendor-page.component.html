@@ -94,12 +94,12 @@
 </div>
 <kendo-dialog kendoRippleContainer *ngIf="isShowMedicalProvider" (close)="clickCloseMedicalVendorDetails()"
   class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Medical Provider" kendoTooltip>
-  <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.MedicalProvider"></cms-vendor-details>
+  <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.MedicalProvider" (saveProviderEventClicked)="saveVendorProfile($event)"></cms-vendor-details>
 </kendo-dialog>
 
 <kendo-dialog kendoRippleContainer *ngIf="isShowDentalProvider" (close)="clickCloseDentalVendorDetails()"
   class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Dental Provider" kendoTooltip>
-  <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.DentalProvider"></cms-vendor-details>
+  <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.DentalProvider" (saveProviderEventClicked)="saveVendorProfile($event)"></cms-vendor-details>
 </kendo-dialog>
 
 
