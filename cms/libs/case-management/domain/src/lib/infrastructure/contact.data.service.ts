@@ -344,4 +344,11 @@ export class ContactDataService {
   deleteClientContact(clientId: any, clientRelationshipId: any) {
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contacts/${clientRelationshipId}`);
   }
+
+  saveContactAddress(clientId: any, contactAddress: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income`, contactAddress);
+  }
+  loadContactAddress(clientId: any, clientCaseEligibilityId: string) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/?clientCaseEligibilityId=${clientCaseEligibilityId}`);
+  }
 }

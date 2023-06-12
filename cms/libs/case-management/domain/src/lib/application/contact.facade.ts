@@ -681,4 +681,20 @@ export class ContactFacade {
     return this.contactDataService.deleteClientContact(clientId,clientRelationshipId);
   }
   //#endregion client phone//NOSONAR
+
+  loadContactAddress(clientId: any, clientCaseEligibilityId: any) {
+    return this.contactDataService.loadContactAddress(clientId, clientCaseEligibilityId);
+  }
+  saveContactAddress(contactAddress: any) {  
+    return this.contactDataService.saveContactAddress(contactAddress?.clientId, contactAddress).pipe(
+      catchError((err: any) => {
+        this.loaderService.hide();
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        if (!(err?.error ?? false)) {
+          this.loggingService.logException(err);
+        }
+        return of(false);
+      })
+    );
+  }
 }

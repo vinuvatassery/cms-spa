@@ -2,7 +2,8 @@ import { Component,OnInit,  Output,
   EventEmitter } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ContactAddress } from '@cms/case-management/domain';
+import { ContactAddress,ContactFacade } from '@cms/case-management/domain';
+import { LoaderService,LoggingService,SnackBarNotificationType} from '@cms/shared/util-core';
 @Component({
   selector: 'cms-contact-address-details',
   templateUrl: './contact-address-details.component.html',
@@ -15,7 +16,10 @@ export class ContactAddressDetailsComponent implements OnInit {
   public contactDetailForm!: FormGroup;
   contactAddress = new ContactAddress();
 
-  constructor(private formBuilder: FormBuilder,){
+  constructor(
+    private formBuilder: FormBuilder,
+    private contactFacade:ContactFacade,
+    private readonly loaderService: LoaderService){
 
   }
 ngOnInit(): void {
@@ -44,7 +48,7 @@ ngOnInit(): void {
     this.contactDetailForm.controls['name'].updateValueAndValidity();
 
   }
-  populateReminder()
+  populateContactAddress()
   {
      this.contactAddress.mailCode = this.contactDetailForm.controls['mailCode'].value;
      this.contactAddress.name = this.contactDetailForm.controls['name'].value;
@@ -53,5 +57,37 @@ ngOnInit(): void {
      this.contactAddress.description = this.contactDetailForm.controls['description'].value;
      this.contactAddress.email = this.contactDetailForm.controls['email'].value;
     
+  }
+  
+  public save (){
+    this.setValidators()
+      if (this.contactDetailForm.valid) {
+        this.loaderService.show();
+        this.populateContactAddress();
+      this.contactFacade
+        .saveContactAddress(this.contactAddress).subscribe({
+          next: (response: any) =>{
+            if(response)
+            { 
+             this.contactFacade.showHideSnackBar(
+               SnackBarNotificationType.SUCCESS,
+               'Client Reminder added successfully'
+             );
+             this.contactFacade.hideLoader();
+             this.isContactDetailPopupClose.emit();
+            }
+           },
+           error: (error: any) => {
+             this.loaderService.hide();
+             this.contactFacade.showHideSnackBar(
+               SnackBarNotificationType.ERROR,
+               error)
+           }
+        }
+       
+        );
+      }
+    
+   
   }
 }
