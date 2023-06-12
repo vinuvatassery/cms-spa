@@ -204,7 +204,7 @@ ngOnInit(): void {
   this.bindDropdownClumns()
   if(!this.selectedColumn)
       {
-        this.selectedColumn = "";     
+        this.selectedColumn = "vendorName";     
       }
 }
 
@@ -256,7 +256,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
       "filters": [
           {
               "field": this.selectedColumn ?? "vendorName",
-              "operator": "contains",
+              "operator": "startswith",
               "value": data
           }
       ],
