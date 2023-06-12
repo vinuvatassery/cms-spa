@@ -96,13 +96,13 @@
                                 </button>
                               </ng-template> </kendo-grid-column> 
                         <kendo-grid-column field="Description" title="Description" [width]="100"> </kendo-grid-column>
-                        <kendo-grid-column field="PremiumAmount" title="Premium Amount" [width]="60">
+                        <!-- <kendo-grid-column field="PremiumAmount" title="Premium Amount1111" [width]="60">
                             <ng-template kendoGridCellTemplate let-dataItem>
                                 <span class="text-muted">$</span>
                                   {{ dataItem.PremiumAmount }}
                                
                               </ng-template> 
-                             </kendo-grid-column>
+                             </kendo-grid-column> -->
                         <kendo-grid-column field="PhoneNumber" title="Phone Number" [width]="60"> </kendo-grid-column>
                         <kendo-grid-column field="FaxNumber" title="Fax Number" [width]="60"> </kendo-grid-column>
                         <kendo-grid-column field="EmailAddress" title="Email Address" [width]="60"> </kendo-grid-column>
@@ -179,7 +179,8 @@
 
 <kendo-dialog *ngIf="isContactDetailShow" (close)="clickCloseAddEditPaymentAddressDetails()"
 class="app-c-modal app-c-modal-md app-c-modal-np">
-<kendo-dialog-titlebar (close)="clickCloseAddContactDetails()"> Add Contact(s)
+<kendo-dialog-titlebar (close)="clickCloseAddContactDetails()"> Add Contact(
+  <span style="font-size: small;  font-weight: bold;" >s</span>)
   
 </kendo-dialog-titlebar>
 <cms-contact-address-details (isContactDetailPopupClose)="onClose($event)"></cms-contact-address-details>
