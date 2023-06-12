@@ -278,6 +278,25 @@ if(!this.attachedFileValidatorSize){
     this.showClientAttachmentUpload = false;
   }
 
+  clientAttachmentClick(item:any)
+  {
+    this.loaderService.show();
+    this.communicationFacade.generateTextTemplate(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', item.document ?? '', "Preview")
+        .subscribe({
+          next: (data: any) =>{
+          if (data) {
+            debugger;
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+        },
+      });
+  }
+
   private loadTemplateAttachment() {
     this.loaderService.show();
     this.communicationFacade.loadCERAuthorizationTemplateAttachment(CommunicationEvents.TemplateAttachmentTypeCode)
