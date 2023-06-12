@@ -1,0 +1,102 @@
+<form [formGroup]="contactDetailForm" name="contactDetailForm" class="k-form">
+<section class="k-dialog-body">
+    <p class="text-muted mb-2">
+        Select which mail code to add the contact(s) for. All fields are required unless otherwise stated.
+    </p>
+  <!-- Contacts -->
+ 
+    <div class="flex-row mt-2">
+        <div class="flex-col ">
+          <kendo-floatinglabel text="Mail Code">
+            <kendo-dropdownlist
+              [fillMode]="formUiStyle.dropDownFillMode"
+             
+              formControlName="mailCode"
+            >
+            </kendo-dropdownlist>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="(!contactDetailForm.controls['mailCode'].valid )">A mail code must be selected</kendo-formerror>
+        </div>
+        <div class="flex-col">
+          <h4 class="mb-0">CONTACT 1</h4>
+        </div>
+    
+        <div class="flex-col">
+          <kendo-floatinglabel text=" Name">
+            <kendo-textbox
+              aria-label="Contact Name"
+              formControlName="name"
+              [fillMode]="formUiStyle.inputFillMode"
+            >
+            </kendo-textbox>
+          </kendo-floatinglabel>
+         
+         <kendo-formerror *ngIf="(!contactDetailForm.controls['name'].valid )">A Contact Name is required</kendo-formerror>
+        </div>
+        <div class="flex-col mb-1">
+          <kendo-floatinglabel text="Description (Optional)">
+            <kendo-textarea 
+            [fillMode]="formUiStyle.inputFillMode"
+            formControlName="description"
+            resizable="vertical"
+          ></kendo-textarea>
+          </kendo-floatinglabel>
+        </div>
+        <div class="flex-col mb-1">
+          <kendo-floatinglabel text="Phone Number (optional)">
+            <kendo-textbox
+              aria-label="Phone Number (optional)"
+              formControlName="phone"
+              [fillMode]="formUiStyle.inputFillMode"
+            >
+            </kendo-textbox>
+          </kendo-floatinglabel>
+        </div>
+        <div class="flex-col mb-1">
+          <kendo-floatinglabel text="Fax (optional)">
+            <kendo-textbox
+              aria-label="Fax (optional)"
+              formControlName="fax"
+              [fillMode]="formUiStyle.inputFillMode"
+            >
+            </kendo-textbox>
+          </kendo-floatinglabel>
+        </div>
+    
+        <div class="flex-col mb-1">
+          <kendo-floatinglabel text="Email Address (optional)">
+            <kendo-textbox
+              aria-label="Email Address (optional)"
+              formControlName="email"
+              [fillMode]="formUiStyle.inputFillMode"
+            >
+            </kendo-textbox>
+          </kendo-floatinglabel>
+        </div>
+      </div>
+
+
+</section>
+</form>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button
+        kendoButton
+        [primary]="true"
+        look="outline"
+        aria-label="cancel adding phone detail"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
+      <button
+        kendoButton
+        [primary]="true"
+        aria-label="update or add phone detail"
+      >
+        Add
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>

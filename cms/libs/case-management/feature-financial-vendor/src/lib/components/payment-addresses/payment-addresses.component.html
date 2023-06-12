@@ -171,13 +171,19 @@
         Address
       </button>
        
-      <button kendoButton   icon="add" [primary]="true"  look="flat" aria-label="Add Contact" >
+      <button kendoButton   icon="add" [primary]="true" (click)="clickOpenAddContactDetails()" look="flat" aria-label="Add Contact" >
           Contact
         </button>
     </div>
 </div>
 
-
+<kendo-dialog *ngIf="isContactDetailShow" (close)="clickCloseAddEditPaymentAddressDetails()"
+class="app-c-modal app-c-modal-md app-c-modal-np">
+<kendo-dialog-titlebar (close)="clickCloseAddContactDetails()"> Add Contact(s)
+  
+</kendo-dialog-titlebar>
+<cms-contact-address-details (isContactDetailPopupClose)="onClose($event)"></cms-contact-address-details>
+</kendo-dialog>
 <kendo-dialog *ngIf="isPaymentAddressDetailShow" (close)="clickCloseAddEditPaymentAddressDetails()"
 class="app-c-modal app-c-modal-md app-c-modal-np">
 <kendo-dialog-titlebar (close)="clickCloseAddEditPaymentAddressDetails()"> Add/Edit Payment Address

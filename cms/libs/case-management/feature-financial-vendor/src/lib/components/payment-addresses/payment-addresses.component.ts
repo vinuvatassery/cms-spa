@@ -20,6 +20,7 @@ export class PaymentAddressesComponent {
   public state!: State;
   paymentsAddressGridView$ = this.paymentsFacade.paymentsAddressData$;
   isPaymentAddressDetailShow = false;
+  isContactDetailShow = false;
   isPaymentAddressDeactivateShow = false;
   isPaymentAddressDeleteShow = false;
   paymentAddressInnerGridLists = [
@@ -111,6 +112,18 @@ export class PaymentAddressesComponent {
 
   clickCloseAddEditPaymentAddressDetails() {
     this.isPaymentAddressDetailShow = false;
+  }
+  clickOpenAddContactDetails() {
+    this.isContactDetailShow = true;
+  }
+  onClose(isClosed:any){
+    if(isClosed){
+      this.clickCloseAddContactDetails()
+    }
+  }
+
+  clickCloseAddContactDetails() {
+    this.isContactDetailShow = false;
   }
 
   clickOpenDeactivatePaymentAddressDetails() {
