@@ -327,9 +327,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     };
     completedDataPoints.push(addressProof);
 
+    const isNoFamilyContactSelected = this.contactInfoForm?.get('familyAndFriendsContact.noFriendOrFamilyContactFlag')?.value ?? false;
     const otherDesc: CompletionChecklist = {
       dataPointName: 'relationshipCodeOther',
-      status: this.contactInfo?.friendsOrFamilyContact?.contactRelationshipCode === 'O' ? StatusFlag.Yes : StatusFlag.No
+      status: this.contactInfo?.friendsOrFamilyContact?.contactRelationshipCode === 'O' && !isNoFamilyContactSelected ? StatusFlag.Yes : StatusFlag.No
     };
     completedDataPoints.push(otherDesc);
 
@@ -546,7 +547,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       mailingAddressGroup.controls['city'].updateValueAndValidity();
       mailingAddressGroup.controls['state'].setValidators([Validators.required]);
       mailingAddressGroup.controls['state'].updateValueAndValidity();
-      mailingAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
+      mailingAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 -]+$')]);
       mailingAddressGroup.controls['zip'].updateValueAndValidity();
     }
     if (isHomeAddressRequired) {
@@ -555,7 +556,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         homeAddressGroup.controls['address1'].updateValueAndValidity();
         homeAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9# ]+[/]?[A-Za-z0-9# ]+$')]);
         homeAddressGroup.controls['address2'].updateValueAndValidity();
-        homeAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+$')]);
+        homeAddressGroup.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 -]+$')]);
         homeAddressGroup.controls['zip'].updateValueAndValidity();
       }
 
@@ -1160,11 +1161,6 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   useOldOnClick(formName: string, value: string) {
-    if (formName === 'email.preferredContactMethod') {
-      if (!this.preferredContactMethods?.includes(value)) {
-        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, `${value} does not exist in preferred contact list.Please choose one form the list.`, NotificationSource.UI);
-      }
-    }
     this.contactInfoForm.get(formName)?.patchValue(value);
   }
 
@@ -1496,6 +1492,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm?.get('familyAndFriendsContact.firstName')?.disable();
       this.contactInfoForm?.get('familyAndFriendsContact.lastName')?.disable();
       this.contactInfoForm?.get('familyAndFriendsContact.contactRelationshipCode')?.disable();
+      this.contactInfoForm?.get('familyAndFriendsContact.otherDesc')?.disable();
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.disable();
     }
     else {
@@ -1534,9 +1531,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       dataPointName: 'relationshipCodeOther',
       status: StatusFlag.No
     };
-
-    if (selectedValue === 'O') {
+    const isNoFamilySelected = this.contactInfoForm?.get('familyAndFriendsContact.noFriendOrFamilyContactFlag')?.value ?? false;
+    if (selectedValue === 'O' && !isNoFamilySelected) {
       this.showRelationshipOtherDec = true;
+      this.contactInfoForm?.get('familyAndFriendsContact.otherDesc')?.enable();
       otherDesc.status = StatusFlag.Yes;
     }
     else {
@@ -1560,7 +1558,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       address2: address?.address1 == '' ? '' : address?.address2,
       city: address?.city,
       state: address?.state,
-      zip: address?.zip5,
+      zip: `${address?.zip5}-${address?.zip4}`,
     };
     if (type === AddressTypeCode.Mail) {
       this.mailAddressEntered = address;
