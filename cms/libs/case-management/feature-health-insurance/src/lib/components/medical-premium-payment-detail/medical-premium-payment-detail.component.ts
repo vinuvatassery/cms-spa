@@ -141,7 +141,8 @@ export class MedicalPremiumPaymentDetailComponent {
     this.paymentRequest = new PaymentRequest()
     this.paymentRequest.clientId = this.clientId;
     this.paymentRequest.clientCaseEligibilityId =  this.caseEligibilityId;    
-    this.paymentRequest.vendorId = this.premiumPaymentForm.controls['vendorId'].value;
+    this.paymentRequest.entityId = this.premiumPaymentForm.controls['vendorId'].value;
+    this.paymentRequest.entityTypeCode = 'VENDOR';
     this.paymentRequest.clientInsurancePolicyId = this.premiumPaymentForm.controls['clientInsurancePolicyId'].value;
     this.paymentRequest.serviceTypeCode = this.premiumPaymentForm.controls['serviceTypeCode'].value;
     this.paymentRequest.amountRequested = this.premiumPaymentForm.controls['amountRequested'].value;
