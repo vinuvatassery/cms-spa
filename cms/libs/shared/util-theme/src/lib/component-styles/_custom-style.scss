@@ -54,9 +54,9 @@
 }
 
 .client-header-wrapper-stickey {
-  z-index: 7;
+  z-index: 6;
   background: $white;
-  position: static;
+  position: sticky;
 
   .k-breadcrumb {
     background: transparent;

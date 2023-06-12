@@ -52,19 +52,19 @@
       <span
         class="title-client-info c-pointer on-hover-t-primary"
         title="Start New Status Period"
-        (click)="onStatusPeriodDetailClicked()"
+        (click)="onStatusPeriodDetailClicked(eligibilityPeriodDetail)"
         >{{loadedClientHeader?.caseStatus}}</span
       >
       <span
         class="title-client-info c-pointer on-hover-t-primary"
         title="Change Group"
-        (click)="onGroupDetailClicked(loadedClientHeader?.clientCaseEligibilityId)"
+        (click)="onGroupDetailClicked(loadedClientHeader?.clientCaseEligibilityId, eligibilityGroupDetail)"
         > {{loadedClientHeader?.group}}</span
       >
       <span
         class="title-client-info c-pointer on-hover-t-primary"
         title="Edit Status Period Dates"
-        (click)="onStatusPeriodEditClicked()"
+        (click)="onStatusPeriodEditClicked(eligibilityPeriodDetail)"
         >{{loadedClientHeader?.eilgibilityStartDate}} - {{loadedClientHeader?.eligibilityEndDate}}</span
       >
       <span class="title-client-info">FPL {{loadedClientHeader?.fpl}}%</span>
@@ -95,7 +95,19 @@
   ></case-management-case360-header-notifications>
 </div>
 
+
+
 <!-- Status Period Detail Modal -->
+<ng-template #eligibilityPeriodDetail>
+  <case-management-eligibility-period-detail
+  [clientId]="clientId"
+  [clientCaseEligibilityId]="clientCaseEligibilityId"
+  [clientCaseId]="clientCaseId"
+  [isEdit]="isEditEligibilityFlag"
+  (isModalPeriodCloseClicked)="onModalPeriodClose($event)"
+  (isModalSavedClicked)="onModalSaveAndClose($event)"></case-management-eligibility-period-detail>
+</ng-template>
+<!-- 
 <kendo-dialog
   *ngIf="isStatusPeriodDetailOpened"
   (close)="onStatusPeriodDetailClosed()"
@@ -108,10 +120,20 @@
   [clientCaseId]="clientCaseId"
   [isEdit]="isEditEligibilityFlag"
   (isModalSavedClicked)="onModalSaveAndClose($event)"></case-management-eligibility-period-detail>
-</kendo-dialog>
+</kendo-dialog> -->
 
 <!-- Eligibility Group Detail Modal -->
-<kendo-dialog
+<ng-template #eligibilityGroupDetail>
+  <case-management-group-detail
+  [currentGroup$]="currentGroup$" 
+  [ddlGroups$] ="ddlGroups$"
+  (isModalGroupCloseClicked)="onModalGroupClose($event)"
+  (updateGroup)="onGroupChangeUpdateClicked($event)"
+  (cancelGroupChange)="onGroupChangeCancelClicked()"
+  (checkIfSCheduled)="checkIfSCheduledGroup($event)"
+  ></case-management-group-detail>
+  </ng-template>
+<!-- <kendo-dialog
   *ngIf="isGroupDetailOpened$ | async "
   (close)="onGroupChangeCancelClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
@@ -125,4 +147,4 @@
     (cancelGroupChange)="onGroupChangeCancelClicked()"
     (checkIfSCheduled)="checkIfSCheduledGroup($event)"
     ></case-management-group-detail>
-</kendo-dialog>
+</kendo-dialog> -->
