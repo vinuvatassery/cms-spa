@@ -37,7 +37,7 @@ export class StatusPeriodComponent implements OnInit {
   public actions = [
     {
       buttonType: "btn-h-primary",
-      text: "Copy Status Period",
+      text: "Copy Eligibility Period",
       icon: "content_copy",
       click: (dataItem: any): void => {
         //  this.onDeactivatePhoneNumberClicked()
@@ -49,7 +49,7 @@ export class StatusPeriodComponent implements OnInit {
     },
     {
       buttonType: "btn-h-primary",
-      text: "Edit Status Period",
+      text: "Edit Eligibility Period",
       icon: "edit",
       click: (dataItem: any): void => {
         if(dataItem.clientCaseEligibilityId){
