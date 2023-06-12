@@ -14,7 +14,8 @@ import {
   InsuranceStatusType,
   VendorFacade,
   ClientProfileTabs,
-  PaymentRequest
+  PaymentRequest,
+  EntityTypeCode
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  LovFacade } from '@cms/system-config/domain';
