@@ -17,8 +17,7 @@ export class VendorHeaderToolsComponent {
       text: 'New Letter',
       icon: 'markunread_mailbox',
       isVisible: true,
-      click: (): void => {
-        console.log("test");
+      click: (): void => { 
       },
     },
     {
@@ -26,8 +25,7 @@ export class VendorHeaderToolsComponent {
       text: 'New Email',
       icon: 'mail_outline',
       isVisible: false,
-      click: (): void => {
-       console.log("test");
+      click: (): void => { 
       },
     },
   ];
