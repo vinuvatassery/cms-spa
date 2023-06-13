@@ -53,7 +53,7 @@
 
 <!-- Eligibility Group Detail Modal -->
 <ng-template #eligibilityGroupDetail>
-    <kendo-dialog-titlebar>Edit Scheduled Group Change </kendo-dialog-titlebar>
+    <kendo-dialog-titlebar (close)="onGroupDetailClosed($event)">Edit Scheduled Group Change </kendo-dialog-titlebar>
     <case-management-group-detail [showDeleteOption]="true" [currentGroup$]="currentGroup$" [ddlGroups$]="ddlGroups$"
     (isModalGroupCloseClicked)="onGroupDetailClosed($event)"
     (updateGroup)="onGroupChangeUpdateClicked($event)" (deleteGroupChange)="onDeleteGroupClicked($event)"

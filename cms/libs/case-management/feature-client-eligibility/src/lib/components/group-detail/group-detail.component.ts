@@ -25,7 +25,7 @@ export class GroupDetailComponent implements OnInit {
   @Output() deleteGroupChange = new EventEmitter();
   @Output() deleteGroup = new EventEmitter<any>();
   @Output() checkIfSCheduled = new EventEmitter<boolean>();
-  @Output() isModalGroupCloseClicked = new EventEmitter<boolean>();
+  @Output() isModalGroupCloseClicked = new EventEmitter();
   /** Public properties **/
   currentDate = new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate());
   formUiStyle: UIFormStyle = new UIFormStyle();
