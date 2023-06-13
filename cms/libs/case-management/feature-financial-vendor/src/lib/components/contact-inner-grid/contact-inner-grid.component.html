@@ -1,0 +1,51 @@
+<kendo-grid [resizable]="true" [navigable]="true" [kendoGridBinding]="contactResponse">
+
+    <kendo-grid-column field="contactName" title="Name" [width]="100">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <button aria-label="name" kendoButton look="flat" class="card-link-button">
+              {{ dataItem.contactName }}
+            </button>
+          </ng-template> </kendo-grid-column> 
+    <kendo-grid-column field="contactDesc" title="Description" [width]="100"> </kendo-grid-column>
+    <!-- <kendo-grid-column field="PremiumAmount" title="Premium Amount1111" [width]="60">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="text-muted">$</span>
+              {{ dataItem.PremiumAmount }}
+           
+          </ng-template> 
+         </kendo-grid-column> -->
+    <kendo-grid-column field="phoneNbr" title="Phone Number" [width]="60"> </kendo-grid-column>
+    <kendo-grid-column field="faxNbr" title="Fax Number" [width]="60"> </kendo-grid-column>
+    <kendo-grid-column field="emailAddress" title="Email Address" [width]="60"> </kendo-grid-column>
+    <kendo-grid-column field="effectiveDate" title="Effective Date" [width]="60"> 
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.effectiveDate|date:'short' }}
+    </ng-template>
+
+    </kendo-grid-column>
+    <kendo-grid-column field="emailAddress" title="By" [width]="50">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button
+          kendoButton
+          [primary]="true"
+          class="avatar-sm-btn c-default"
+          kendoPopoverAnchor
+          [popover]="onUserProfileDetailsHovered"
+          showOn="hover"
+          aria-label="profile avatar"
+        >
+        <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>  
+        </button>
+        <kendo-popover
+          #onUserProfileDetailsHovered
+          width="330"
+          position="left"
+        >
+          <ng-template kendoPopoverBodyTemplate>
+            <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
+          </ng-template>
+        </kendo-popover>
+      </ng-template>
+    </kendo-grid-column>
+    </kendo-grid>
+
