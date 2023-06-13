@@ -31,41 +31,49 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   isFirstLoad = false;
   private todoDetailsDialog : any;
   private newReminderDetailsDialog : any;
+  private isSendNewLetterDialog : any;
+  private isSendNewEmailOpenedDialog : any;
+  private isNewSMSTextOpenedDialog : any;
+  private isIdCardOpenedDialog : any;  
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'New Letter',
       icon: 'markunread_mailbox',
       isVisible: true,
-      click: (): void => {
-        this.onSendNewLetterClicked();
+      id: 'new_letter',
+      click: (templatename: any): void => {
+        this.onSendNewLetterClicked(templatename);
       },
     },
     {
       buttonType: 'btn-h-primary',
       text: 'New Email',
       icon: 'mail_outline',
+      id: 'new_email',
       isVisible: false,
-      click: (): void => {
-        this.onSendNewEmailClicked();
+      click: (templatename: any): void => {
+        this.onSendNewEmailClicked(templatename);
       },
     },
     {
       buttonType: 'btn-h-primary',
       text: 'New SMS Text',
       icon: 'comment',
+      id: 'new_sms_text',
       isVisible: false,
-      click: (): void => {
-        this.onNewSMSTextClicked();
+      click: (templatename: any): void => {
+        this.onNewSMSTextClicked(templatename);
       },
     },
     {
       buttonType: 'btn-h-primary',
       text: 'New ID Card',
       icon: 'call_to_action',
+      id:'new_id_card',
       isVisible: true,
-      click: (): void => {
-        this.onIdCardClicked();
+      click: (templatename: any): void => {
+        this.onIdCardClicked(templatename);
       },
     },
   ];
@@ -112,25 +120,59 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
 
   /* Internal Methods */
-  onSendNewLetterClicked() {
-    this.isSendNewLetterOpened = true;
+ 
+
+  onSendNewLetterClicked(template: TemplateRef<unknown>): void {
+    this.isSendNewLetterDialog = this.dialogService.open({ 
+      content: template, 
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
+    }); 
+  }
+  handleSendNewLetterClosed(value: CommunicationEvents) {
+    if (value === CommunicationEvents.Close) {
+      this.isSendNewLetterDialog.close(value);
+      this.isSendNewLetterOpened = false;
+    }
+  }
+  onSendNewEmailClicked(template: TemplateRef<unknown>): void {
+    this.isSendNewEmailOpenedDialog = this.dialogService.open({
+      content: template, 
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+    }); 
+  }
+  handleSendNewEmailClosed(value: CommunicationEvents) {
+    if (value === CommunicationEvents.Close) {
+      this.isSendNewEmailOpened = false;
+      this.isSendNewEmailOpenedDialog.close();
+    }
   }
 
-  onSendNewEmailClicked() {
-    this.isSendNewEmailOpened = true;
+  onNewSMSTextClicked(template: TemplateRef<unknown>): void {
+    this.isNewSMSTextOpenedDialog = this.dialogService.open({
+      content: template, 
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+    }); 
   }
-
-  onNewSMSTextClicked() {
-    this.isNewSMSTextOpened = true;
+  handleNewSMSTextClosed(value: CommunicationEvents) {
+    if (value === CommunicationEvents.Close) {
+      this.isNewSMSTextOpenedDialog.close();
+      this.isNewSMSTextOpened = false;
+    }
   }
-
-  onIdCardClosed() {
-    this.isIdCardOpened = false;
+  onIdCardClicked(template: TemplateRef<unknown>): void {
+    this.isIdCardOpenedDialog = this.dialogService.open({
+      title: 'Send New ID Card',
+      content: template, 
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    }); 
   }
-
-  onIdCardClicked() {
-    this.isIdCardOpened = true;
+  handleIdCardClosed(result: any) {
+    if(result){
+      this.isIdCardOpened = false;
+      this.isIdCardOpenedDialog.close();
+    }
   }
+ 
   onNewReminderClosed(result: any) {
     if(result){
       this.newReminderDetailsDialog.close()
@@ -141,28 +183,6 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     }); 
-  }
-
-  handleSendNewEmailClosed(value: CommunicationEvents) {
-    if (value === CommunicationEvents.Close) {
-      this.isSendNewEmailOpened = false;
-    }
-  }
-
-  handleNewSMSTextClosed(value: CommunicationEvents) {
-    if (value === CommunicationEvents.Close) {
-      this.isNewSMSTextOpened = false;
-    }
-  }
-
-  handleSendNewLetterClosed(value: CommunicationEvents) {
-    if (value === CommunicationEvents.Close) {
-      this.isSendNewLetterOpened = false;
-    }
-  }
-
-  handleIdCardClosed() {
-    this.isIdCardOpened = false;
   }
 
   onTodoDetailsClosed(result: any) {
