@@ -1,9 +1,9 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef,} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommunicationEvents, ContactFacade, ScreenType } from '@cms/case-management/domain';
 import { Subscription } from 'rxjs';
-
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'case-management-case360-header-tools',
   templateUrl: './case360-header-tools.component.html',
@@ -14,8 +14,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   /* Input properties */
   @Input() clientCaseEligibilityId: any
   @Input() clientId: any
-  /* Public properties */
-  isTodoDetailsOpened = false;
+  /* Public properties */ 
   screenName = ScreenType.Case360Page;
   isNewReminderOpened = false;
   isIdCardOpened = false;
@@ -31,6 +30,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   reloadSubscription$ = new Subscription();
   buttonList!: any[];
   isFirstLoad = false;
+  private todoDetailsDialog : any;
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -71,7 +71,8 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   ];
 
   /* constructor */
-  constructor(private readonly contactFacade: ContactFacade, private readonly route: ActivatedRoute) {
+  constructor(private readonly contactFacade: ContactFacade, private readonly route: ActivatedRoute, 
+    private dialogService: DialogService) {
   }
   ngOnDestroy(): void {
     this.emailSubscription$.unsubscribe();
@@ -159,12 +160,17 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
     this.isIdCardOpened = false;
   }
 
-  onTodoDetailsClosed() {
-    this.isTodoDetailsOpened = false;
+  onTodoDetailsClosed(result: any) {
+    if(result){ 
+      this.todoDetailsDialog.close();
+    }
   }
 
-  onTodoDetailsClicked() {
-    this.isTodoDetailsOpened = true;
+  onTodoDetailsClicked( template: TemplateRef<unknown>): void {
+    this.todoDetailsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    }); 
   }
 
   loadMailingAddress() {
