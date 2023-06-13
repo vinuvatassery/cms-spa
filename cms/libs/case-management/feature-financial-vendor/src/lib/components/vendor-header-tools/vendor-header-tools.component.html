@@ -1,10 +1,10 @@
 <section class="client-tab-section vendor-tab">
     <div class="tab-over-icon-btn">
       <button kendoButton class="k-icon-button small-i-btn" title="New To-Do Item" aria-label="New To-Do Item">
-        <span class="material-icons" role="button" aria-label="New To-Do Item" aria-hidden="true"  (click)="onTodoDetailsClicked()">playlist_add</span>
+        <span class="material-icons" role="button" aria-label="New To-Do Item" aria-hidden="true"  >playlist_add</span>
       </button>
       <button kendoButton class="k-icon-button small-i-btn" title="New Reminder" aria-label="New Reminder">
-        <span class="material-icons" role="button" aria-label="New Reminder" aria-hidden="true" (click)="onNewReminderClicked()">add_alarm</span>
+        <span class="material-icons" role="button" aria-label="New Reminder" aria-hidden="true" >add_alarm</span>
       </button>
       <kendo-dropdownbutton [data]="sendActions" class="TableActionPopup app-dropdown-action k-border-s-dropdown"
         buttonClass="k-flat-button" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
@@ -23,23 +23,4 @@
   </section>
 
   
-
-<!-- Create New To Do Modal Html-->
-<kendo-dialog *ngIf="isTodoDetailsOpened" (close)="onTodoDetailsClosed()"
-class="app-c-modal app-c-modal-sm app-c-modal-np" title="Create To Do Item for Donna" kendoTooltip>
-<productivity-tools-todo-detail></productivity-tools-todo-detail>
-</kendo-dialog>
-
-<!-- Create New Reminder Popup -->
-<kendo-dialog kendoRippleContainer *ngIf="isNewReminderOpened" (close)="onNewReminderClosed()"
-class="app-c-modal app-c-modal-md app-c-modal-np" title="Create New Reminder for Donna" kendoTooltip>
-<productivity-tools-reminder-detail></productivity-tools-reminder-detail>
-</kendo-dialog>
-
-<!-- Send New Letter Modal -->
-
-<case-management-send-letter *ngIf="isSendNewLetterOpened"   [data]="screenName"  (closeSendLetterEvent)="handleSendNewLetterClosed($event)"
-kendoTooltip></case-management-send-letter>
-
-<!-- Send New Email Modal -->
-<case-management-send-email *ngIf="isSendNewEmailOpened" [data]="screenName" (closeSendEmailEvent)="handleSendNewEmailClosed($event)"  kendoTooltip></case-management-send-email>
+ 
