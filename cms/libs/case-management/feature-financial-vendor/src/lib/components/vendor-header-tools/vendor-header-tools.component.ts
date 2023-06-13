@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
- 
 @Component({
   selector: 'cms-vendor-header-tools',
   templateUrl: './vendor-header-tools.component.html',
