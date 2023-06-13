@@ -28,6 +28,18 @@ export class FinancialVendorDataService {
     );
   }
 
+  getVendorDetails(vendorId: string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/${vendorId}`
+    );
+  }
+
+  updateVendorDetails(details: any) {
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors`, details
+    );
+  }
+
   getVendorProfile(vendorId: string, tabCode: string) {
     let path = '';
     switch (tabCode) {
