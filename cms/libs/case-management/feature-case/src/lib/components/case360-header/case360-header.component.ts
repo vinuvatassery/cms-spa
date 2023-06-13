@@ -86,16 +86,13 @@ export class Case360HeaderComponent implements OnInit {
     this.isStatusPeriodDetailOpened = true;
   }
 
-  onGroupDetailClicked(
-    eligibilityId: string,
-    template: TemplateRef<unknown>
-  ): void {
+  onGroupDetailClicked(eligibilityId: string, template: TemplateRef<unknown>): void {
     if (eligibilityId) {
       this.loadChangeGroupEvent.emit(eligibilityId);
     }
 
     this.isGroupDetailOpened$.next(true);
-    this.statusPeriodDialog = this.dialogService.open({
+    this.statusGroupDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
