@@ -36,7 +36,7 @@
     <kendo-grid-column field="vendorName" title="Vendor Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="Vendor Name" kendoButton look="flat" class="card-link-button"
-          (click)="onVendorClicked(dataItem.vendorId)">
+          (click)="onVendorClicked(dataItem.vendorId,dataItem.vendorAddressId)">
           {{ dataItem.vendorName }}
         </button>
       </ng-template>

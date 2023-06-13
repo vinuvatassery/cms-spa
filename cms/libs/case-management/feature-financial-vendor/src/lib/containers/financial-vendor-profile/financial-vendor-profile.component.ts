@@ -20,7 +20,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   profileInfoTitle = "info";  
   addressGridView = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+  vendorProfile$ = this.financialVendorFacade.vendorProfile$
   constructor(private activeRoute: ActivatedRoute, private financialVendorFacade : FinancialVendorFacade) {}
 
   ngOnInit(): void {

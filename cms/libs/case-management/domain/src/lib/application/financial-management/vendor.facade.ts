@@ -20,7 +20,7 @@ export class FinancialVendorFacade {
   /** Public properties **/
   vendorsList$ = this.vendorsSubject.asObservable();
   selectedVendor$ = this.selectedVendorSubject.asObservable();
-  vendorsProfile$ = this.vendorProfileSubject.asObservable();
+  vendorProfile$ = this.vendorProfileSubject.asObservable();
   
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'vendorName'
@@ -78,15 +78,16 @@ export class FinancialVendorFacade {
     });
   }
   getVendorProfile(vendorId: string,tabCode: string): void {
-   
+    this.showLoader();
     this.financialVendorDataService.getVendorProfile(vendorId,tabCode).subscribe({
       next: (vendorResponse: any) => {
-        if (vendorResponse) {
-          
+        if (vendorResponse) {        
           this.vendorProfileSubject.next(vendorResponse);
+          this.hideLoader();
         }       
       },
       error: (err) => {     
+        this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });

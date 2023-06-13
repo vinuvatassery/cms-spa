@@ -236,11 +236,12 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
    this.gridDataHandle()
  }
 
-  onVendorClicked(vendorId: any)
+  onVendorClicked(vendorId: any, vendorAddressId : any)
   {
     const query = {
       queryParams: {
         v_id: vendorId ,
+        v_ad_id : vendorAddressId,
         tab_code :  this.financeTabTypeCode    
       },
     };
