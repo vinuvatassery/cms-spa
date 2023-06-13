@@ -10,12 +10,15 @@
           <kendo-floatinglabel text="Mail Code">
             <kendo-dropdownlist
               [fillMode]="formUiStyle.dropDownFillMode"
-             
-              formControlName="mailCode"
+              [data]="mailCodes"
+              formControlName ="mailcode"
+              textField ="mailCode"
+              valueField ="mailCode"
+              [valuePrimitive]="true"
             >
             </kendo-dropdownlist>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="(!contactDetailForm.controls['mailCode'].valid )">A mail code must be selected</kendo-formerror>
+          <kendo-formerror *ngIf="(!contactDetailForm.controls['mailcode'].valid )">A mail code must be selected</kendo-formerror>
         </div>
         <div class="flex-col">
           <h4 class="mb-0">CONTACT 1</h4>
@@ -25,19 +28,19 @@
           <kendo-floatinglabel text=" Name">
             <kendo-textbox
               aria-label="Contact Name"
-              formControlName="name"
+              formControlName="contactName"
               [fillMode]="formUiStyle.inputFillMode"
             >
             </kendo-textbox>
           </kendo-floatinglabel>
          
-         <kendo-formerror *ngIf="(!contactDetailForm.controls['name'].valid )">A Contact Name is required</kendo-formerror>
+         <kendo-formerror *ngIf="(!contactDetailForm.controls['contactName'].valid )">A Contact Name is required</kendo-formerror>
         </div>
         <div class="flex-col mb-1">
           <kendo-floatinglabel text="Description (Optional)">
             <kendo-textarea 
             [fillMode]="formUiStyle.inputFillMode"
-            formControlName="description"
+            formControlName="contactDesc"
             resizable="vertical"
           ></kendo-textarea>
           </kendo-floatinglabel>
@@ -46,7 +49,7 @@
           <kendo-floatinglabel text="Phone Number (optional)">
             <kendo-textbox
               aria-label="Phone Number (optional)"
-              formControlName="phone"
+              formControlName="phoneNbr"
               [fillMode]="formUiStyle.inputFillMode"
             >
             </kendo-textbox>
@@ -56,7 +59,7 @@
           <kendo-floatinglabel text="Fax (optional)">
             <kendo-textbox
               aria-label="Fax (optional)"
-              formControlName="fax"
+              formControlName="faxNbr"
               [fillMode]="formUiStyle.inputFillMode"
             >
             </kendo-textbox>
@@ -67,7 +70,7 @@
           <kendo-floatinglabel text="Email Address (optional)">
             <kendo-textbox
               aria-label="Email Address (optional)"
-              formControlName="email"
+              formControlName="emailAddress"
               [fillMode]="formUiStyle.inputFillMode"
             >
             </kendo-textbox>
@@ -94,6 +97,7 @@
         kendoButton
         [primary]="true"
         aria-label="update or add phone detail"
+        (click)="save()"
       >
         Add
       </button>

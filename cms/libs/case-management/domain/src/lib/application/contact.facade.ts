@@ -47,6 +47,7 @@ export class ContactFacade {
   private removeClientEmailSubject = new Subject<any>();
   private clientPhonesSubject = new Subject<any>();
   private clientPhoneSubject = new Subject<any>();
+  private mailCodeSubject = new Subject<any>();
   private addClientPhoneSubject = new Subject<any>();
   private preferredClientPhoneSubject = new Subject<any>();
   private deactivateClientPhoneSubject = new Subject<any>();
@@ -84,6 +85,7 @@ export class ContactFacade {
   removeClientEmail$ = this.removeClientEmailSubject.asObservable();
   clientPhones$ = this.clientPhonesSubject.asObservable();
   clientPhone$ = this.clientPhoneSubject.asObservable();
+  mailCodes$ = this.mailCodeSubject.asObservable();
   addClientPhoneResponse$ = this.addClientPhoneSubject.asObservable();
   preferredClientPhone$ = this.preferredClientPhoneSubject.asObservable();
   deactivateClientPhone$ = this.deactivateClientPhoneSubject.asObservable();
@@ -589,6 +591,20 @@ export class ContactFacade {
       },
     });
   }
+  loadMailCodes(vendorId: number): void {
+    this.showLoader();
+    this.contactDataService.loadVendorMailCodes(vendorId).subscribe({
+      next: (reponse: any) => {
+        if (reponse) {
+          this.hideLoader();
+          this.mailCodeSubject.next(reponse);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
 
   addClientPhone(phoneData: any) {
     this.showLoader();
@@ -682,11 +698,9 @@ export class ContactFacade {
   }
   //#endregion client phone//NOSONAR
 
-  loadContactAddress(clientId: any, clientCaseEligibilityId: any) {
-    return this.contactDataService.loadContactAddress(clientId, clientCaseEligibilityId);
-  }
+  //#region  Payment Contact Address
   saveContactAddress(contactAddress: any) {  
-    return this.contactDataService.saveContactAddress(contactAddress?.clientId, contactAddress).pipe(
+    return this.contactDataService.saveContactAddress(contactAddress).pipe(
       catchError((err: any) => {
         this.loaderService.hide();
         this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
@@ -697,4 +711,5 @@ export class ContactFacade {
       })
     );
   }
+ //#endregion Payment Contact Address
 }

@@ -299,6 +299,13 @@ export class ContactDataService {
     );
 
   }
+  loadVendorMailCodes(vendorId: number) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/financial-management/vendorprofile/${vendorId}/mailcodes`
+    );
+
+  }
 
   savePhone(phoneData: any) {
     if (phoneData?.clientPhoneId) {
@@ -345,10 +352,7 @@ export class ContactDataService {
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contacts/${clientRelationshipId}`);
   }
 
-  saveContactAddress(clientId: any, contactAddress: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income`, contactAddress);
-  }
-  loadContactAddress(clientId: any, clientCaseEligibilityId: string) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/?clientCaseEligibilityId=${clientCaseEligibilityId}`);
+  saveContactAddress(contact: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/vendoraddresscontact`, contact);
   }
 }

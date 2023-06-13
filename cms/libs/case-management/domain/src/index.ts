@@ -8,7 +8,6 @@ export * from './lib/entities/client';
 export * from './lib/entities/contact';
 export * from './lib/entities/case-manager';
 export * from './lib/entities/cer';
-export * from './lib/entities/contact-address';
 export * from './lib/entities/client-eligibility';
 export * from './lib/entities/document';
 export * from './lib/entities/dental-insurance';

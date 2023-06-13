@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'; 
+import { ChangeDetectionStrategy, Component,Input } from '@angular/core'; 
 import { PaymentsFacade } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -9,6 +9,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentAddressesComponent {
+  @Input() vendorId: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isPaymentsAddressGridLoaderShow = false;

@@ -183,7 +183,7 @@ class="app-c-modal app-c-modal-md app-c-modal-np">
   <span style="font-size: small;  font-weight: bold;" >s</span>)
   
 </kendo-dialog-titlebar>
-<cms-contact-address-details (isContactDetailPopupClose)="onClose($event)"></cms-contact-address-details>
+<cms-contact-address-details [vendorId]="vendorId" (isContactDetailPopupClose)="onClose($event)"></cms-contact-address-details>
 </kendo-dialog>
 <kendo-dialog *ngIf="isPaymentAddressDetailShow" (close)="clickCloseAddEditPaymentAddressDetails()"
 class="app-c-modal app-c-modal-md app-c-modal-np">
