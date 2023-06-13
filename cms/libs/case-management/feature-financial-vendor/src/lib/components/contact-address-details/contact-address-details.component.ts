@@ -2,7 +2,7 @@ import { Component,OnInit,  Output,Input,
   EventEmitter } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { VendorContacts,ContactFacade,ContactData } from '@cms/case-management/domain';
+import { VendorContacts,ContactFacade,ContactData,EmailTypeCode,PhoneTypeCode } from '@cms/case-management/domain';
 import { LoaderService,SnackBarNotificationType} from '@cms/shared/util-core';
 @Component({
   selector: 'cms-contact-address-details',
@@ -65,8 +65,8 @@ ngOnInit(): void {
      this.contactAddress.phoneNbr = this.contactDetailForm.controls['phoneNbr'].value;
      this.contactAddress.contactDesc = this.contactDetailForm.controls['contactDesc'].value;
      this.contactAddress.emailAddress = this.contactDetailForm.controls['emailAddress'].value;
-     this.contactAddress.emailAddressTypeCode='EMAIL';
-     this.contactAddress.phoneTypeCode='W';
+     this.contactAddress.emailAddressTypeCode=EmailTypeCode.Email;
+     this.contactAddress.phoneTypeCode=PhoneTypeCode.Phone;
      this.contact.vendorContacts.push(this.contactAddress);
   }
 
