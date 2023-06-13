@@ -15,10 +15,11 @@ export class FinancialVendorFacade {
 
   /** Private properties **/
   private vendorsSubject = new Subject<any>();
+  private selectedVendorSubject = new Subject<any>();
   private vendorProfileSubject = new Subject<any>();
-
   /** Public properties **/
   vendorsList$ = this.vendorsSubject.asObservable();
+  selectedVendor$ = this.selectedVendorSubject.asObservable();
   vendorsProfile$ = this.vendorProfileSubject.asObservable();
   
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
@@ -76,8 +77,6 @@ export class FinancialVendorFacade {
       },
     });
   }
-
-
   getVendorProfile(vendorId: string,tabCode: string): void {
    
     this.financialVendorDataService.getVendorProfile(vendorId,tabCode).subscribe({
@@ -90,6 +89,20 @@ export class FinancialVendorFacade {
       error: (err) => {     
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
+    });
+  }
+
+  getVendorDetails(vendorId: string) {
+    this.showLoader();
+    this.financialVendorDataService.getVendorDetails(vendorId).subscribe({
+      next: (vendorDetail: any) => {
+        this.selectedVendorSubject.next(vendorDetail);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      }
     });
   }
 }
