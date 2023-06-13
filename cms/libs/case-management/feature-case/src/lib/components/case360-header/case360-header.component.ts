@@ -109,6 +109,7 @@ export class Case360HeaderComponent implements OnInit {
       groupStartDate: group.groupStartDate,
     };
     this.updateChangeGroupEvent.emit(group);
+    this.onModalGroupClose(true);
   }
 
   onGroupChangeCancelClicked() {

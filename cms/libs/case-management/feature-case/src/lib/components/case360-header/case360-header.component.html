@@ -124,6 +124,7 @@
 
 <!-- Eligibility Group Detail Modal -->
 <ng-template #eligibilityGroupDetail>
+  <kendo-dialog-titlebar> {{ groupChangeTitle }} </kendo-dialog-titlebar>
   <case-management-group-detail
   [currentGroup$]="currentGroup$" 
   [ddlGroups$] ="ddlGroups$"

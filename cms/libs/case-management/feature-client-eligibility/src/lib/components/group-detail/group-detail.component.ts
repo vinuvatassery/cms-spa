@@ -84,8 +84,9 @@ export class GroupDetailComponent implements OnInit {
 
   /* Internal events */
   onCancelGroupChange() {
+    this.isModalGroupCloseClicked.emit(true);  
     this.cancelGroupChange.emit();    
-    this.isModalGroupCloseClicked.emit();    
+    
   }
 
   onDeleteGroupChange() {
@@ -106,7 +107,7 @@ export class GroupDetailComponent implements OnInit {
         groupStartDate: this.intl.formatDate(this.groupForm.controls['groupStartDate'].value, this.configProvider.appSettings.dateFormat)
       };
 
-      this.updateGroup.emit(groupChanged);
+      this.updateGroup.emit(groupChanged); 
     }
   }
 }
