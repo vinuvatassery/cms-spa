@@ -1,7 +1,7 @@
 <div class="block-section">
   <div class="flex-row mb-1">
     <div class="flex-col flex-col-6 align-items-center" kendoTooltip>
-      <h2 class="title-md mb-0 text-bold">Vendor Info</h2>
+      <h2 class="title-md mb-0 text-bold">{{profileInfoTitle}}</h2>
       <button kendoButton class="ml-2 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit Client Info"
         aria-label="edit client info" (click)="openEditDailog=true;"></button>
     </div>
@@ -9,7 +9,7 @@
   <div class="flex-row">
     <div class="flex-col flex-col-6">
       <table class="info-table-custom">
-        <caption hidden> Vendor Info</caption>
+        <caption hidden> {{profileInfoTitle}}</caption>
         <tr hidden>
           <th scope="col"></th>
           <th scope="col"></th>
@@ -36,11 +36,23 @@
         </tr>
         <tbody>
           <tr>
-            <td>Vendor Name</td>
+            <td>{{profileInfoTitle.split(' ')[0]}} Name</td>
             <td>{{(selectedVendorInfo$ | async)?.vendorName}}</td>
           </tr>
           <tr>
             <td>TIN</td>
+            <td>{{(selectedVendorInfo$ | async)?.tin}}</td>
+          </tr>
+          <tr *ngIf="profileInfoTitle == 'Pharmacy Info'">
+            <td>NABP</td>
+            <td>{{(selectedVendorInfo$ | async)?.tin}}</td>
+          </tr>
+          <tr *ngIf="profileInfoTitle == 'Pharmacy Info'">
+            <td>NCPDP</td>
+            <td>{{(selectedVendorInfo$ | async)?.tin}}</td>
+          </tr>
+          <tr *ngIf="profileInfoTitle == 'Pharmacy Info'">
+            <td>preferred Pharmacy?</td>
             <td>{{(selectedVendorInfo$ | async)?.tin}}</td>
           </tr>
         </tbody>

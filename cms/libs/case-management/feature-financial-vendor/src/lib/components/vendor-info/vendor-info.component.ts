@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FinancialVendorFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -10,6 +10,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class VendorInfoComponent implements OnInit {
 
+  @Input() profileInfoTitle!: string; 
   selectedVendorInfo$ = this.financialVendorFacade.selectedVendor$;
   SpecialHandlingLength = 100;
   public formUiStyle: UIFormStyle = new UIFormStyle();
