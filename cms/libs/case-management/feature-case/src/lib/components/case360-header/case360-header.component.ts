@@ -76,10 +76,6 @@ export class Case360HeaderComponent implements OnInit {
     this.isEditEligibilityFlag = false;
     // this.isStatusPeriodDetailOpened = true;
   }
-  // onStatusPeriodDetailClicked() {
-  //   this.isEditEligibilityFlag=false;
-  //   this.isStatusPeriodDetailOpened = true;
-  // }
 
   onStatusPeriodEditClicked(template: TemplateRef<unknown>): void {
     this.statusPeriodDialog = this.dialogService.open({
