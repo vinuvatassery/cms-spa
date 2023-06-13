@@ -17,6 +17,9 @@
       min-width: 10px;
     }
   }
+  .sidebar-hamburger{
+    display: none !important;
+  }
   .global-search {
     &.header-search {
       display: none;
