@@ -27,6 +27,8 @@ export class PaymentsFacade {
   paymentsAddressData$ = this.paymentsAddressDataSubject.asObservable();
 
   
+  private contactsSubject = new BehaviorSubject<any>([]);
+  contacts$ = this.contactsSubject.asObservable();
   /** Private properties **/
  
   /** Public properties **/
@@ -88,6 +90,20 @@ export class PaymentsFacade {
         this.hideLoader(); 
       },
     });
+  }
+  loadcontacts(mailcode:string)
+  {
+    this.showLoader();
+    this.paymentsDataService.loadcontacts(mailcode).subscribe({
+      next:(res:any)=>{
+      this.contactsSubject.next(res);
+      this.hideLoader();
+      },
+      error:(err:any)=>{
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+     this.hideLoader(); 
+      }
+    })
   }
  
 }
