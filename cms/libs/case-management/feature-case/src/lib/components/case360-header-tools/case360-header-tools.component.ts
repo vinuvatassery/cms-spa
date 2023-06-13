@@ -15,8 +15,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   @Input() clientCaseEligibilityId: any
   @Input() clientId: any
   /* Public properties */ 
-  screenName = ScreenType.Case360Page;
-  isNewReminderOpened = false;
+  screenName = ScreenType.Case360Page; 
   isIdCardOpened = false;
   isSendNewLetterOpened = false;
   isSendNewEmailOpened = false;
@@ -31,6 +30,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   buttonList!: any[];
   isFirstLoad = false;
   private todoDetailsDialog : any;
+  private newReminderDetailsDialog : any;
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -131,13 +131,18 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   onIdCardClicked() {
     this.isIdCardOpened = true;
   }
-  onNewReminderClosed() {
-    this.isNewReminderOpened = false;
+  onNewReminderClosed(result: any) {
+    if(result){
+      this.newReminderDetailsDialog.close()
+    }}
+
+  onNewReminderClicked(template: TemplateRef<unknown>): void {
+    this.newReminderDetailsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    }); 
   }
 
-  onNewReminderClicked() {
-    this.isNewReminderOpened = true;
-  }
   handleSendNewEmailClosed(value: CommunicationEvents) {
     if (value === CommunicationEvents.Close) {
       this.isSendNewEmailOpened = false;
