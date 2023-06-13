@@ -2,7 +2,7 @@ import { Component,OnInit,  Output,Input,
   EventEmitter } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { VendorContacts,ContactFacade,ContactData,EmailTypeCode,PhoneTypeCode } from '@cms/case-management/domain';
+import { VendorContacts,ContactFacade,ContactData,EmailTypeCode,PhoneTypeCode,PaymentsFacade } from '@cms/case-management/domain';
 import { LoaderService,SnackBarNotificationType} from '@cms/shared/util-core';
 @Component({
   selector: 'cms-contact-address-details',
@@ -22,6 +22,7 @@ export class ContactAddressDetailsComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private contactFacade:ContactFacade,
+    private readonly paymentsFacade: PaymentsFacade,
     private readonly loaderService: LoaderService){
 
   }
@@ -84,6 +85,7 @@ ngOnInit(): void {
                SnackBarNotificationType.SUCCESS,
                'Contact Address added successfully'
              );
+             this.paymentsFacade.loadcontacts('123');
              this.contactFacade.hideLoader();
              this.isContactDetailPopupClose.emit(true);
             }
