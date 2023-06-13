@@ -34,6 +34,7 @@ export class CerListComponent implements OnInit, OnChanges {
   @Output() loadCerTrackingDateListEvent = new EventEmitter<any>();
   @Output() sendCersEvent = new EventEmitter<any>();
   @Output() goToCerEvent = new EventEmitter<any>();
+  @Output() saveCersStateEvent = new EventEmitter<any>();
 
   /** Public properties **/
   isOpenSendCER$ =  new BehaviorSubject<boolean>(false);;
@@ -238,6 +239,7 @@ export class CerListComponent implements OnInit, OnChanges {
     if(this.selectedDate)
     {
     this.loadCerTrackingListEvent.next(gridDataRefinerValue);
+    this.saveCersStateEvent.emit(this.state)
     }
     this.gridDataHandle()
   }
