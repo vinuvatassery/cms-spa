@@ -14,7 +14,8 @@ import {
   InsuranceStatusType,
   VendorFacade,
   ClientProfileTabs,
-  PaymentRequest
+  PaymentRequest,
+  EntityTypeCode
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  LovFacade } from '@cms/system-config/domain';
@@ -195,7 +196,8 @@ export class MedicalPaymentDetailComponent {
     this.paymentRequest = new PaymentRequest()
     this.paymentRequest.clientId = this.clientId;
     this.paymentRequest.clientCaseEligibilityId =  this.caseEligibilityId;    
-    this.paymentRequest.vendorId = this.copayPaymentForm.controls['vendorId'].value;
+    this.paymentRequest.entityId = this.copayPaymentForm.controls['vendorId'].value;
+    this.paymentRequest.entityTypeCode = EntityTypeCode.Vendor.toUpperCase();
     this.paymentRequest.clientInsurancePolicyId = this.copayPaymentForm.controls['clientInsurancePolicyId'].value;
     this.paymentRequest.serviceTypeCode = this.copayPaymentForm.controls['serviceTypeCode'].value;
     this.paymentRequest.amountRequested = this.copayPaymentForm.controls['amountRequested'].value;
