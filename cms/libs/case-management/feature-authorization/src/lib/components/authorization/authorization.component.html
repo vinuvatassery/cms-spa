@@ -19,25 +19,34 @@
         </button>
       </div>
     </div>
-    <div class="flex-row">
+    <div class="flex-row" [formGroup]="authorizationForm">
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Date Applicant Signed">
           <kendo-datepicker
           [fillMode]="formUiStyle.dateInputFillMode"
             format="MM-dd-yyyy"
-            [(ngModel)]="currentDate"
+            formControlName="applicantSignedDate"
+            [max]="currentDate"
             formatPlaceholder="formatPattern"
           >
           </kendo-datepicker>
+          <kendo-formerror *ngIf="authForm?.applicantSignedDate?.errors?.required">Date Applicant Signed is required</kendo-formerror>
+          <kendo-formerror *ngIf="invalidSignatureDate$ | async">Date Applicant Signed cannot be greater than Current Date.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Date Signature Noted">
-          <kendo-textbox placeholder="Date Signature Noted" aria-label="Date Signature Noted" [disabled]="true" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+          <kendo-textbox 
+          placeholder="Date Signature Noted" 
+          aria-label="Date Signature Noted" 
+          [disabled]="true" 
+          [fillMode]="formUiStyle.inputFillMode"
+          formControlName="signatureNotedDate"
+          >   </kendo-textbox>
         </kendo-floatinglabel>
       </div>
       <!-- Hide after sent letter or email -->
-      <div class="flex-col mt-1" *ngIf="!isPrintClicked && !isSendEmailClicked">
+      <div class="flex-col mt-1" *ngIf="!isPrintClicked && !isSendEmailClicked && !authForm?.applicantSignedDate?.value">
         <button
           kendoButton
           [primary]="true"
@@ -57,7 +66,7 @@
         </button>
       </div>
       <!-- Show after sent letter -->
-      <div class="flex-col" *ngIf="isPrintClicked">
+      <div class="flex-col" *ngIf="isPrintClicked  && !authForm?.applicantSignedDate?.value">
         <div class="flex-row">
           <div class="flex-col align-items-center">
             <span
@@ -89,24 +98,31 @@
             >
               Send Email
             </button>
+          </div>        
           </div>
+        </div>
+      </div>
+
+      <div class="flex-col">
+        <div class="flex-row">
           <div class="flex-col mt-2">
             <h5>COPY OF SIGNED APPLICATION</h5>
           </div>
           <div class="flex-col flex-col-6">
-            <kendo-upload>
-              <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-                <span >
-                  <span>{{ files[0].name }} </span> 
-                  <br>
-                  <span>{{   files[0].size | fileSize }}</span> 
-                </span>
-              </ng-template>
-            </kendo-upload>
-            <kendo-formhint>Max file size 25MB</kendo-formhint>
-          </div>
+            <common-document-upload
+              [typeCode]="'COPY_OF_SIGNED_APPLICATION'"
+              [file]="copyOfSignedApplication"
+              [isFileViewable]="true"
+              (handleFileSelectEvent)="handleFileSelected($event)"
+              (handleFileRemoveEvent)="handleFileRemoved($event)"
+              (handleTypeCodeEvent)="handleTypeCodeEvent($event)"> 
+            </common-document-upload>
+            <kendo-formhint>Max file size 25MB</kendo-formhint> 
+            <kendo-formerror *ngIf="showCopyOfSignedApplicationRequiredValidation | async"> Copy of signed application is required</kendo-formerror>
+            <kendo-formerror *ngIf="showCopyOfSignedApplicationSizeValidation | async">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
         </div>
       </div>
+
       <!-- Show after send email -->
       <div class="flex-col" *ngIf="isSendEmailClicked">
         <div class="flex-row">
@@ -162,7 +178,8 @@
   title="Authorization Notice"
   kendoTooltip
 >
-  <case-management-authorization-notice></case-management-authorization-notice>
+  <case-management-authorization-notice
+  [templateNotice$]="templateNotice$ | async"></case-management-authorization-notice>
 </kendo-dialog>
 
 <!-- Send New Letter Modal -->
