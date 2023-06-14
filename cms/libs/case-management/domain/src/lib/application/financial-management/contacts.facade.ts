@@ -33,9 +33,11 @@ export class ContactsFacade {
   /** Private properties **/
   private contactsDataSubject = new BehaviorSubject<any>([]);
   private contactsSubject = new BehaviorSubject<any>([]);
+  private deActiveContactAddressSubject = new BehaviorSubject<boolean>(false);
   /** Public properties **/
   contactsData$ = this.contactsDataSubject.asObservable();
   contacts$ = this.contactsSubject.asObservable();
+  deActiveContactAddressObs = this.deActiveContactAddressSubject.asObservable();
   
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
@@ -114,4 +116,28 @@ export class ContactsFacade {
       })
     );
   }
+  deactiveContactAddress(vendorContactId: string){ 
+    return new Promise((resolve,reject) =>{
+      this.loaderService.show();
+      this.contactsDataService.deactiveContactAddress(vendorContactId).subscribe({
+       next: (response:any) => {
+         if(response){
+          this.deActiveContactAddressSubject.next(true);
+          resolve(true);
+         }
+         this.loaderService.hide();
+         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy De-Activated Successfully');
+         //this.loadcontacts(123);
+       },
+       error: (err) => {
+        resolve(false);
+         this.loaderService.hide();
+         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+         this.loggingService.logException(err);
+       },
+     });
+    })
+    
+  }
 }
+
