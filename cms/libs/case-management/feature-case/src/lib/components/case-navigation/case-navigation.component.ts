@@ -23,7 +23,6 @@ export class CaseNavigationComponent implements OnInit {
   @Input() currentSession: any
   @Input() navigationEvent = new EventEmitter<string>();
   @Input() workflowType!: string
-  @Input() startReviewButtonVisibility$ !: Observable<boolean>;
   /** Output Properties **/
   @Output() workflowChange = new EventEmitter<object>();
 
@@ -35,7 +34,6 @@ export class CaseNavigationComponent implements OnInit {
   routes!: any[];
   review!: WorkFlowProgress;
   isNotReadyForReview = true;
-  reviewButtonDisabled$ = new BehaviorSubject<boolean>(false);
 
   /** constructor **/
   constructor(
@@ -49,13 +47,6 @@ export class CaseNavigationComponent implements OnInit {
     this.loadCaseNavigationDetails();
     this.navigationInitiated();
     this.addNavigationSubscription();
-    this.reviewButtonVisibilitySubscription();    
-  }
-
-  private reviewButtonVisibilitySubscription(){
-    this.startReviewButtonVisibility$.subscribe(value => {
-      this.reviewButtonDisabled$.next(!(value ?? false) || this.isNotReadyForReview);
-    });
   }
 
   private loadCaseNavigationDetails() {

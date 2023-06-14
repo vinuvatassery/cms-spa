@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthorizationFacade, NavigationType, WorkFlowProgress, WorkflowFacade } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { Subscription, first } from 'rxjs';
+import { BehaviorSubject, Subscription, first } from 'rxjs';
 
 @Component({
   selector: 'case-management-authorization-page',
@@ -23,7 +23,7 @@ export class AuthorizationPageComponent implements OnInit, OnDestroy {
 
   clientId!: any;
   clientCaseEligibilityId!: any;
-  startReviewButtonVisibility$ = this.workflowFacade.reviewStartButtonVisibility$;
+  startReviewButtonVisibility$ = new BehaviorSubject(false);
   private loadSessionSubscription!: Subscription;
   templateNotice$ = this.authorizationFacade.authApplicationNotice$
 
@@ -146,6 +146,6 @@ export class AuthorizationPageComponent implements OnInit, OnDestroy {
   }
 
   setStartButtonVisibility(isVisible: boolean){
-    this.workflowFacade.setReviewStartButtonVisibility(isVisible);
+    this.startReviewButtonVisibility$.next(isVisible);
   }
 }

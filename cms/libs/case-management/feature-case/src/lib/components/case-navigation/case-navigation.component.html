@@ -27,7 +27,7 @@
     <button
       aria-label="start review"
       kendoButton
-      [disabled]="(reviewButtonDisabled$ | async) ?? false"
+      [disabled]="isNotReadyForReview"
       [primary]="true"
       (click)="onApplicationReviewClicked()"   
     >

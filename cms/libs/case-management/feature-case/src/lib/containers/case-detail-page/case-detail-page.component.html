@@ -2,7 +2,7 @@
   <div class="add-client_left">
     <!-- Case Navigation -->
     <case-management-case-navigation [routes$]="routes$" [completeStaus$]="completeStaus$" [workflowType]="workflowType"
-      [navigationEvent]="workflowNavigationEvent" [startReviewButtonVisibility$]="startReviewButtonVisibility$" (workflowChange)="applyWorkflowChanges($event)" [currentSession]="currentSession">
+      [navigationEvent]="workflowNavigationEvent" (workflowChange)="applyWorkflowChanges($event)" [currentSession]="currentSession">
     </case-management-case-navigation>
     <button class="createcase-mobile-menu-btn  createbtn-close" (click)="openInnerLeftMenu()"> <span class="material-icons">
       menu_open

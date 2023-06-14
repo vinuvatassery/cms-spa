@@ -63,7 +63,6 @@ export class WorkflowFacade {
   private isSaveButtonEnabledSubject = new Subject<boolean>();
   private discardChangesClickedSubject = new Subject<boolean>();
   private cancelApplicationClickedSubject = new Subject<boolean>();
-  private reviewStartButtonVisibilitySubject = new Subject<boolean>();
   /** Public properties **/
   saveAndContinueClicked$ = this.saveAndContinueClickedSubject.asObservable();
   navigationTrigger$ = this.navigationTriggerSubject.asObservable();
@@ -74,7 +73,6 @@ export class WorkflowFacade {
   sessionDataSubject$ = this.sessionDataSubject.asObservable();
   workflowReady$ = this.workflowReadySubject.asObservable();
   isSaveButtonEnabled$ = this.isSaveButtonEnabledSubject.asObservable();
-  reviewStartButtonVisibility$= this.reviewStartButtonVisibilitySubject.asObservable();
 
   saveForLaterClicked$ = this.saveForLaterClickedSubject.asObservable();
   saveForLaterValidationClicked$ =
@@ -740,9 +738,5 @@ export class WorkflowFacade {
     } else {
       this.router.navigate([`/case-management/cases`]);
     }
-  }
-
-  setReviewStartButtonVisibility(isEnabled: boolean){
-    this.reviewStartButtonVisibilitySubject.next(isEnabled);
   }
 }

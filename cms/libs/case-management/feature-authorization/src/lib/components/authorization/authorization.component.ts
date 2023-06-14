@@ -1,16 +1,14 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, TemplateRef, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** Enums **/
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { AuthorizationApplicationSignature, AuthorizationFacade, ClientDocumentFacade, CommunicationEvents, CompletionChecklist, ContactFacade, NavigationType, ScreenType, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
+import { AuthorizationApplicationSignature, AuthorizationFacade, ClientDocumentFacade, CommunicationEvents, CompletionChecklist, NavigationType, ScreenType, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserDataService } from '@cms/system-config/domain';
 import { IntlService, formatDate } from '@progress/kendo-angular-intl';
 import { SelectEvent } from '@progress/kendo-angular-upload';
 import { BehaviorSubject, Subscription, forkJoin, mergeMap, of, tap } from 'rxjs';
-
 
 @Component({
   selector: 'case-management-authorization',
@@ -20,15 +18,12 @@ import { BehaviorSubject, Subscription, forkJoin, mergeMap, of, tap } from 'rxjs
 })
 export class AuthorizationComponent {
   @Input() isCerForm: boolean = false;
-  // @Input() clientId!: any;
   @Input() clientCaseEligibilityId!: any;
   @Input() templateNotice$ : any
   @Output() loadAuthorizationData = new EventEmitter();
   @Output() saveAuthorizationData = new EventEmitter<any>();
   @Output() loadAuthorizationNotice = new EventEmitter();
   @Output() setStartButtonVisibility = new EventEmitter<any>();
-  // applicationSignedDate!: Date;
-  // dateSignatureNoted: string = '';
   copyOfSignedApplication: any;
   uploadedCopyOfSignedApplication: any;
 
@@ -49,16 +44,16 @@ export class AuthorizationComponent {
   signedApplication!: AuthorizationApplicationSignature;
   private saveClickSubscription !: Subscription;
   private discardChangesSubscription !: Subscription;
+  private isSendLetterOpenedDialog : any;
+  private isSendEmailOpenedDialog : any;
 
+    /** Constructor **/
   constructor(
     private readonly configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService,
     private readonly workflowFacade: WorkflowFacade,
     private readonly loggingService: LoggingService,
-    private readonly contactFacade: ContactFacade,
     private readonly intl: IntlService,
-    private readonly ref: ChangeDetectorRef,
-    private readonly userDataService: UserDataService,
     private readonly authorizationFacade: AuthorizationFacade,
     private readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly notificationSnackbarService: NotificationSnackbarService,
@@ -114,6 +109,7 @@ export class AuthorizationComponent {
         }
 
         this.updateInitialDataPoints(resp?.applicantSignedDate, resp.signedApplication);
+        this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
       }
     })
   }
@@ -207,12 +203,7 @@ export class AuthorizationComponent {
     this.authorizationForm?.get('applicantSignedDate')?.updateValueAndValidity();
   }
 
-  private isSendLetterOpenedDialog : any;
-  private isSendEmailOpenedDialog : any;
   /** Internal event methods **/
-  
-  /* constructor */
-  // constructor() {}
 
   onSendNewLetterClicked(template: TemplateRef<unknown>): void {
     this.isSendLetterOpenedDialog = this.dialogService.open({ 
@@ -245,9 +236,13 @@ export class AuthorizationComponent {
       }
       const isValid = value && value < today;
       this.updateDataPoints('applicantSignedDate', isValid)
-      this.setStartButtonVisibility.emit(isValid);
+      this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
     })
   }
+
+  private isStartButtonEnabled = () => ((this.copyOfSignedApplication?.length > 0 && this.copyOfSignedApplication[0]?.documentId) || this.uploadedCopyOfSignedApplication)
+  && this.authorizationForm?.get('applicantSignedDate')?.value
+  && this.authorizationForm?.get('applicantSignedDate')?.value < new Date();
 
   /** External event methods **/
   handleCloseSendNewEmailClicked(event: CommunicationEvents) {
@@ -287,6 +282,7 @@ export class AuthorizationComponent {
     const isLargeFile = (this.uploadedCopyOfSignedApplication?.size ?? 0) > this.configurationProvider.appSettings?.uploadFileSizeLimit;
     this.showCopyOfSignedApplicationSizeValidation.next(isLargeFile);
     this.updateDataPoints('copyOfSignedApplication', true);
+    this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
   }
 
   handleFileRemoved(e: SelectEvent) {
@@ -303,6 +299,7 @@ export class AuthorizationComponent {
             this.signedApplication.signedApplication = undefined;
             this.loaderService.hide();
             this.updateDataPoints('copyOfSignedApplication', false);
+            this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
           }
         },
         error: (err) => {
@@ -316,6 +313,7 @@ export class AuthorizationComponent {
       this.copyOfSignedApplication = undefined;
       this.updateDataPoints('copyOfSignedApplication', false);
       this.loaderService.hide();
+      this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
     }
 
   }
