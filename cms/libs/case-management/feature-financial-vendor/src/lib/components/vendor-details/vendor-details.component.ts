@@ -52,7 +52,7 @@ export class VendorDetailsComponent implements OnInit {
 
   onToggleAddNewContactClick() {
     let addContactForm = this.formBuilder.group({
-      contactName: new FormControl('', Validators.maxLength(40)),
+      contactName: new FormControl('', [Validators.maxLength(40), Validators.required]),
       description: new FormControl(),
       phoneNumber: new FormControl(),
       fax: new FormControl(),
@@ -67,7 +67,8 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   getContactControl(index: number, fieldName: string) {
-    return (<FormArray>this.medicalProviderForm.get('newAddContactForm')).at(index).get(fieldName);
+    let field = (<FormArray>this.medicalProviderForm.get('newAddContactForm')).at(index).get(fieldName);
+    return field;
   }
 
   save() {
@@ -82,6 +83,9 @@ export class VendorDetailsComponent implements OnInit {
 
   validateForm() {
     this.medicalProviderForm.markAllAsTouched();
+
+    let field = (<FormArray>this.medicalProviderForm.get('newAddContactForm'));
+    debugger;
     var mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if (mailCode) {
       this.medicalProviderForm.controls['addressLine1']

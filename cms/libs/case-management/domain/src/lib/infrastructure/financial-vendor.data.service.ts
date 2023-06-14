@@ -24,7 +24,7 @@ export class FinancialVendorDataService {
   addVendorProfile(vendorProfile:any) {
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/financial-management/vendors/profile`,
+      `/financial-management/vendorprofile/profile`,
       vendorProfile
     );
   }
