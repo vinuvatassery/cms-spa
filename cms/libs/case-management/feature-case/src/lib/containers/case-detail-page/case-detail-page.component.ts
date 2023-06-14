@@ -95,6 +95,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   currentSession = this.workflowFacade.currentSession;
   isWorkflowReady$ = this.workflowFacade.workflowReady$;
   isSaveButtonEnabled$ = this.workflowFacade.isSaveButtonEnabled$;
+  startReviewButtonVisibility$ = this.workflowFacade.reviewStartButtonVisibility$;
   constructor(
     private caseFacade: CaseFacade,
     private route: ActivatedRoute,

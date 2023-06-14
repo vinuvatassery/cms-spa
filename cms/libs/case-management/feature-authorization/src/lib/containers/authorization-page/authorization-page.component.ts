@@ -23,6 +23,7 @@ export class AuthorizationPageComponent implements OnInit, OnDestroy {
 
   clientId!: any;
   clientCaseEligibilityId!: any;
+  startReviewButtonVisibility$ = this.workflowFacade.reviewStartButtonVisibility$;
   private loadSessionSubscription!: Subscription;
 
   /** Constructor **/
@@ -137,5 +138,9 @@ export class AuthorizationPageComponent implements OnInit, OnDestroy {
 
   onStartButtonClick(){
     this.workflowFacade.save(NavigationType.Next);
+  }
+
+  setStartButtonVisibility(isVisible: boolean){
+    this.workflowFacade.setReviewStartButtonVisibility(isVisible);
   }
 }

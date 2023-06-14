@@ -46,7 +46,7 @@
         </kendo-floatinglabel>
       </div>
       <!-- Hide after sent letter or email -->
-      <div class="flex-col mt-1" *ngIf="!isPrintClicked && !isSendEmailClicked">
+      <div class="flex-col mt-1" *ngIf="!isPrintClicked && !isSendEmailClicked && !authForm?.applicantSignedDate?.value">
         <button
           kendoButton
           [primary]="true"
@@ -66,7 +66,7 @@
         </button>
       </div>
       <!-- Show after sent letter -->
-      <div class="flex-col" *ngIf="isPrintClicked">
+      <div class="flex-col" *ngIf="isPrintClicked  && !authForm?.applicantSignedDate?.value">
         <div class="flex-row">
           <div class="flex-col align-items-center">
             <span

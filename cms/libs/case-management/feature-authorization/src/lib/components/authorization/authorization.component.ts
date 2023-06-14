@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** Enums **/
-import { AuthorizationApplicationSignature, AuthorizationFacade, ClientDocumentFacade, CommunicationEvents, ContactFacade, NavigationType, ScreenType, WorkflowFacade } from '@cms/case-management/domain';
+import { AuthorizationApplicationSignature, AuthorizationFacade, ClientDocumentFacade, CommunicationEvents, CompletionChecklist, ContactFacade, NavigationType, ScreenType, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserDataService } from '@cms/system-config/domain';
@@ -22,6 +22,7 @@ export class AuthorizationComponent {
   @Input() clientCaseEligibilityId!: any;
   @Output() loadAuthorizationData = new EventEmitter();
   @Output() saveAuthorizationData = new EventEmitter<any>();
+  @Output() setStartButtonVisibility = new EventEmitter<any>();
   // applicationSignedDate!: Date;
   // dateSignatureNoted: string = '';
   copyOfSignedApplication: any;
@@ -108,6 +109,8 @@ export class AuthorizationComponent {
             },
           ];
         }
+
+        this.updateInitialDataPoints(resp?.applicantSignedDate, resp.signedApplication);
       }
     })
   }
@@ -154,7 +157,7 @@ export class AuthorizationComponent {
       }
 
       if (this.uploadedCopyOfSignedApplication) {
-        var documentId = this.copyOfSignedApplication.length > 0 ? (this.copyOfSignedApplication[0]?.uid ?? null) : null;
+        var documentId = this.copyOfSignedApplication?.length > 0 ? (this.copyOfSignedApplication[0]?.uid ?? null) : null;
         authorization.signedApplication = {
           documentId: documentId,
           documentName: this.uploadedCopyOfSignedApplication.name,
@@ -220,11 +223,14 @@ export class AuthorizationComponent {
 
   addSignedDateSubscription() {
     this.authorizationForm?.get('applicantSignedDate')?.valueChanges?.subscribe((value: Date) => {
+      const today = new Date();
       if (value) {
-        const today = new Date();
         this.authorizationForm?.get('signatureNotedDate')?.setValue(formatDate(today, 'MM-dd-yyyy'));
         this.invalidSignatureDate$.next(value > today);
       }
+      var isValid = value && value < today;
+      this.updateDataPoints('applicantSignedDate', isValid)
+      this.setStartButtonVisibility.emit(isValid);
     })
   }
 
@@ -266,7 +272,7 @@ export class AuthorizationComponent {
     this.showCopyOfSignedApplicationRequiredValidation.next(false);
     const isLargeFile = (this.uploadedCopyOfSignedApplication?.size ?? 0) > this.configurationProvider.appSettings?.uploadFileSizeLimit;
     this.showCopyOfSignedApplicationSizeValidation.next(isLargeFile);
-
+    this.updateDataPoints('copyOfSignedApplication', true);
   }
 
   handleFileRemoved(e: SelectEvent) {
@@ -282,6 +288,7 @@ export class AuthorizationComponent {
             this.uploadedCopyOfSignedApplication = undefined;
             this.signedApplication.signedApplication = undefined;
             this.loaderService.hide();
+            this.updateDataPoints('copyOfSignedApplication', false);
           }
         },
         error: (err) => {
@@ -291,11 +298,40 @@ export class AuthorizationComponent {
       });
     }
     else {
+      this.uploadedCopyOfSignedApplication = undefined;
       this.copyOfSignedApplication = undefined;
+      this.updateDataPoints('copyOfSignedApplication', false);
       this.loaderService.hide();
     }
 
   }
 
   get authForm() { return this.authorizationForm.controls as any; }
+
+  private updateInitialDataPoints(applicantSignedDate: Date, copyOfSignedApplication: any) {
+    const workFlowData: CompletionChecklist[] = [
+      {
+        dataPointName: 'applicantSignedDate',
+        status: applicantSignedDate ? StatusFlag.Yes : StatusFlag.No
+      },
+      {
+        dataPointName: 'copyOfSignedApplication',
+        status: copyOfSignedApplication ? StatusFlag.Yes : StatusFlag.No
+      },
+    ];
+
+    this.workflowFacade.updateChecklist(workFlowData);
+  }
+
+  private updateDataPoints(dataPoint: string, isCompleted: boolean) {
+    const workFlowData: CompletionChecklist[] = [
+      {
+        dataPointName: dataPoint,
+        status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+      }];
+
+    this.workflowFacade.updateChecklist(workFlowData);
+  }
 }
+
+

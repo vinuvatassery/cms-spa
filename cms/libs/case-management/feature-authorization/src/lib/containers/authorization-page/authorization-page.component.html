@@ -4,6 +4,7 @@
   [clientCaseEligibilityId]="clientCaseEligibilityId"
   (loadAuthorizationData)="loadAuthorization()"
   (saveAuthorizationData)="saveAuthorization($event)"
+  (setStartButtonVisibility)="setStartButtonVisibility($event)"
 ></case-management-authorization>
 
 <!-- Application Review -->
@@ -14,7 +15,8 @@
       <div class="flex-col">
         <button
           kendoButton
-          [primary]="true"        
+          [primary]="true"  
+          [disabled]="!(startReviewButtonVisibility$ | async)"      
           (click)="onStartButtonClick()"
         >
           Start
