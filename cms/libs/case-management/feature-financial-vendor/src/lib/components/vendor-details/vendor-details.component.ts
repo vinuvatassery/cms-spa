@@ -14,6 +14,7 @@ export class VendorDetailsComponent implements OnInit {
 
   @Input() vendorDetails!: any;
   @Input() editVendorInfo: boolean = false;
+  @Input() profileInfoTitle!: string;
   @Output() closeModal: EventEmitter<boolean> = new EventEmitter();
 
   SpecialHandlingLength = 100;
@@ -21,6 +22,8 @@ export class VendorDetailsComponent implements OnInit {
   public vendorDetailForm: FormGroup = new FormGroup({
     vendorName: new FormControl('', []),
     tin: new FormControl('', []),
+    npiNbr: new FormControl('', []),
+    preferredFlag: new FormControl('', [])
   });
   constructor(
     private financialVendorFacade: FinancialVendorFacade,
@@ -38,13 +41,16 @@ export class VendorDetailsComponent implements OnInit {
       this.financialVendorFacade.showLoader();
       let vendorValues = this.vendorDetailForm.value;
       vendorValues['vendorId'] = this.vendorDetails.vendorId;
+      if (vendorValues['preferredFlag'] != null) {
+        vendorValues['preferredFlag'] = vendorValues['preferredFlag'] ? 'Y' : 'N';
+      }
       this.financialVendorDataService.updateVendorDetails(vendorValues).subscribe((resp: any) => {
         if (resp) {
-          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Vendor information updated.');
+          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, this.profileInfoTitle.split(' ')[0] + ' information updated.');
           this.closeModal.emit(true);
         }
         else {
-          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.WARNING, 'Vendor information not updated.');
+          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.WARNING, this.profileInfoTitle.split(' ')[0] + ' information not updated.');
         }
         this.financialVendorFacade.hideLoader();
       },
@@ -70,6 +76,14 @@ export class VendorDetailsComponent implements OnInit {
   setVendorDetailFormValues() {
     this.vendorDetailForm.controls['vendorName'].setValue(this.vendorDetails.vendorName);
     this.vendorDetailForm.controls['tin'].setValue(this.vendorDetails.tin);
+    this.vendorDetailForm.controls['npiNbr'].setValue(this.vendorDetails.npiNbr);
+    if (this.vendorDetails.preferredFlag != null) {
+      let flag = this.vendorDetails.preferredFlag == 'Y' ? true : false
+      this.vendorDetailForm.controls['preferredFlag'].setValue(flag);
+    }
+    else {
+      this.vendorDetailForm.controls['preferredFlag'].setValue(this.vendorDetails.preferredFlag);
+    }
   }
 
 }

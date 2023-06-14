@@ -21,26 +21,18 @@
                 </kendo-textbox>
             </kendo-floatinglabel>
         </div>
-        <div class="flex-col">
-            <kendo-floatinglabel text="NABP (optional)">
-                <kendo-textbox aria-label="NABP" [fillMode]="formUiStyle.inputFillMode" 
-                formControlName="nabp">
+        <div class="flex-col" *ngIf="profileInfoTitle == 'Pharmacy Info'">
+            <kendo-floatinglabel text="NPI (optional)">
+                <kendo-textbox aria-label="NPI" [fillMode]="formUiStyle.inputFillMode" 
+                formControlName="npiNbr">
                 </kendo-textbox>
             </kendo-floatinglabel>
         </div>
-        <div class="flex-col">
-            <kendo-floatinglabel text="NCPDP (optional)">
-                <kendo-textbox aria-label="NCPDP" [fillMode]="formUiStyle.inputFillMode" 
-                formControlName="ncpdp">
-                </kendo-textbox>
-            </kendo-floatinglabel>
-        </div>
-        <div class="flex-col mt-1" *ngIf="!editVendorInfo">
+        <div class="flex-col mt-1" *ngIf="profileInfoTitle == 'Pharmacy Info'">
             <div class="component-list-h">
                 <span class="app-checkboxwidtext-wrapper">
-                    <input type="checkbox" kendoCheckBox aria-labelledby="Rebate" id="Rebate" />
+                    <input type="checkbox" formControlName="preferredFlag" kendoCheckBox aria-labelledby="Rebate" id="Rebate" />
                     <label class="k-checkbox-label" for="Rebate"> This is a preferred pharmacy </label>
-
                 </span>
             </div>
         </div>
