@@ -1,7 +1,8 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** Enums **/
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { AuthorizationApplicationSignature, AuthorizationFacade, ClientDocumentFacade, CommunicationEvents, CompletionChecklist, ContactFacade, NavigationType, ScreenType, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -9,6 +10,7 @@ import { UserDataService } from '@cms/system-config/domain';
 import { IntlService, formatDate } from '@progress/kendo-angular-intl';
 import { SelectEvent } from '@progress/kendo-angular-upload';
 import { BehaviorSubject, Subscription, forkJoin, mergeMap, of, tap } from 'rxjs';
+
 
 @Component({
   selector: 'case-management-authorization',
@@ -38,9 +40,7 @@ export class AuthorizationComponent {
   documentTypeCode!: string;
   screenName = ScreenType.Authorization;
   isPrintClicked!: boolean;
-  isSendEmailClicked!: boolean;
-  isSendNewLetterPopupOpened = false;
-  isSendNewEmailPopupOpened = false;
+  isSendEmailClicked!: boolean;  
   isAuthorizationNoticePopupOpened = false;
   formUiStyle: UIFormStyle = new UIFormStyle();
   dateFormat = this.configurationProvider.appSettings.dateFormat;
@@ -62,6 +62,7 @@ export class AuthorizationComponent {
     private readonly authorizationFacade: AuthorizationFacade,
     private readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly notificationSnackbarService: NotificationSnackbarService,
+    private dialogService: DialogService
   ) { }
 
 
@@ -206,15 +207,26 @@ export class AuthorizationComponent {
     this.authorizationForm?.get('applicantSignedDate')?.updateValueAndValidity();
   }
 
+  private isSendLetterOpenedDialog : any;
+  private isSendEmailOpenedDialog : any;
   /** Internal event methods **/
-  onSendNewLetterClicked() {
-    this.isSendNewLetterPopupOpened = true;
+  
+  /* constructor */
+  // constructor() {}
+
+  onSendNewLetterClicked(template: TemplateRef<unknown>): void {
+    this.isSendLetterOpenedDialog = this.dialogService.open({ 
+      content: template, 
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
+    }); 
   }
 
-  onSendNewEmailClicked() {
-    this.isSendNewEmailPopupOpened = true;
+  onSendNewEmailClicked(template: TemplateRef<unknown>): void {
+    this.isSendEmailOpenedDialog = this.dialogService.open({ 
+      content: template, 
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
+    }); 
   }
-
   onCloseAuthorizationNoticeClicked() {
     this.isAuthorizationNoticePopupOpened = false;
   }
@@ -241,10 +253,9 @@ export class AuthorizationComponent {
   handleCloseSendNewEmailClicked(event: CommunicationEvents) {
     switch (event) {
       case CommunicationEvents.Close:
-        this.isSendNewEmailPopupOpened = false;
+        this.isSendEmailOpenedDialog.close(event);
         break;
-      case CommunicationEvents.Print:
-        this.isSendNewEmailPopupOpened = false;
+      case CommunicationEvents.Print: 
         this.isSendEmailClicked = true;
         break;
       default:
@@ -255,10 +266,10 @@ export class AuthorizationComponent {
   handleCloseSendNewLetterClicked(event: CommunicationEvents) {
     switch (event) {
       case CommunicationEvents.Close:
-        this.isSendNewLetterPopupOpened = false;
+     
+        this.isSendLetterOpenedDialog.close(event);
         break;
-      case CommunicationEvents.Print:
-        this.isSendNewLetterPopupOpened = false;
+      case CommunicationEvents.Print: 
         this.isPrintClicked = true;
         break;
       default:
@@ -335,6 +346,6 @@ export class AuthorizationComponent {
 
     this.workflowFacade.updateChecklist(workFlowData);
   }
-}
+} 
 
 
