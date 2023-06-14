@@ -45,6 +45,7 @@ export class AuthorizationComponent {
   authApplicationSignatureDetails$ = this.authorizationFacade.authApplicationSignatureDetails$;
   signedApplication!: AuthorizationApplicationSignature;
   private saveClickSubscription !: Subscription;
+  private discardChangesSubscription !: Subscription;
 
   constructor(
     private readonly configurationProvider: ConfigurationProvider,
@@ -68,11 +69,13 @@ export class AuthorizationComponent {
     this.addApplicationSignatureDetailsSubscription();
     this.addSaveSubscription();
     this.addSignedDateSubscription();
+    this.addDiscardChangesSubscription();
 
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -111,29 +114,31 @@ export class AuthorizationComponent {
 
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
-      tap(() => { this.workflowFacade.disableSaveButton(); this.loaderService.show();}),
+      tap(() => { this.workflowFacade.disableSaveButton(); this.loaderService.show(); }),
       mergeMap((navigationType: NavigationType) =>
         forkJoin([of(navigationType), this.save()])
       ),
     ).subscribe({
       next: ([navigationType, isSaved]) => {
-        //this.loaderService.hide();
-        //if (isSaved) {
-          //this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Contact Info Saved Successfully!');
-          //this.workflowFacade.navigate(navigationType);
-       // }
-        //else {
-          if(!isSaved){
-            this.workflowFacade.enableSaveButton();
-            this.loaderService.hide();
-          }
-        //}
+        if (!isSaved) {
+          this.workflowFacade.enableSaveButton();
+          this.loaderService.hide();
+        }
       },
       error: (err) => {
         this.loaderService.hide();
-        //this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
         this.loggingService.logException(err);
       },
+    });
+  }
+
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
+      if (response) {
+        this.authorizationForm.reset();
+        this.reSetValidations();
+        this.loadAuthorizationData.emit();
+      }
     });
   }
 
@@ -149,8 +154,9 @@ export class AuthorizationComponent {
       }
 
       if (this.uploadedCopyOfSignedApplication) {
+        var documentId = this.copyOfSignedApplication.length > 0 ? (this.copyOfSignedApplication[0]?.uid ?? null) : null;
         authorization.signedApplication = {
-          documentId: this.copyOfSignedApplication?.uid ?? null,
+          documentId: documentId,
           documentName: this.uploadedCopyOfSignedApplication.name,
           documentSize: this.uploadedCopyOfSignedApplication.size,
           documentTypeCode: this.documentTypeCode,
@@ -159,7 +165,7 @@ export class AuthorizationComponent {
 
       this.saveAuthorizationData.emit(authorization);
       return of(true);
-    }   
+    }
 
     return of(false);
   }
@@ -211,11 +217,14 @@ export class AuthorizationComponent {
   onAuthorizationNoticeClicked() {
     this.isAuthorizationNoticePopupOpened = true;
   }
- 
+
   addSignedDateSubscription() {
-    this.authorizationForm?.get('applicantSignedDate')?.valueChanges?.subscribe(value => {
-      const today = new Date();
-      this.authorizationForm?.get('signatureNotedDate')?.setValue(formatDate(today, 'MM-dd-yyyy'));
+    this.authorizationForm?.get('applicantSignedDate')?.valueChanges?.subscribe((value: Date) => {
+      if (value) {
+        const today = new Date();
+        this.authorizationForm?.get('signatureNotedDate')?.setValue(formatDate(today, 'MM-dd-yyyy'));
+        this.invalidSignatureDate$.next(value > today);
+      }
     })
   }
 

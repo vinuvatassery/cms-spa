@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthorizationApplicationSignature, AuthorizationFacade, WorkFlowProgress, WorkflowFacade } from '@cms/case-management/domain';
+import { AuthorizationApplicationSignature, AuthorizationFacade, NavigationType, WorkFlowProgress, WorkflowFacade } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Subscription, first } from 'rxjs';
 
@@ -133,5 +133,9 @@ export class AuthorizationPageComponent implements OnInit, OnDestroy {
         this.loaderService.hide();
         this.workflowFacade.updateNonequenceNavigation(this.reviewRoute);
       });
+  }
+
+  onStartButtonClick(){
+    this.workflowFacade.save(NavigationType.Next);
   }
 }
