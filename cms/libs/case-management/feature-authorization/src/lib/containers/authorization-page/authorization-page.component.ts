@@ -23,6 +23,7 @@ export class AuthorizationPageComponent implements OnInit, OnDestroy {
 
   clientId!: any;
   clientCaseEligibilityId!: any;
+  startReviewButtonVisibility$ = this.workflowFacade.reviewStartButtonVisibility$;
   private loadSessionSubscription!: Subscription;
   templateNotice$ = this.authorizationFacade.authApplicationNotice$
 
@@ -143,5 +144,9 @@ export class AuthorizationPageComponent implements OnInit, OnDestroy {
   loadAuthorizationNotice()
   {
         this.authorizationFacade.getNoticeTemplate('AUTHORIZATION_NOTICE')
+  }
+
+  setStartButtonVisibility(isVisible: boolean){
+    this.workflowFacade.setReviewStartButtonVisibility(isVisible);
   }
 }
