@@ -41,7 +41,7 @@
         <button
           kendoButton
           [primary]="true"
-          (click)="onSendNewLetterClicked()"
+          (click)="onSendNewLetterClicked(sendLetterDialog)"
           aria-label="send letter"
         >
           Send Letter
@@ -50,7 +50,7 @@
           kendoButton
           [primary]="true"
           class="ml-2"
-          (click)="onSendNewEmailClicked()"
+          (click)="onSendNewEmailClicked(sendEmailDialog)"
           aria-label="send email"
         >
           Send Email
@@ -74,7 +74,7 @@
               [primary]="true"
               look="flat"
               class="ml-1"
-              (click)="onSendNewLetterClicked()"
+              (click)="onSendNewLetterClicked(sendLetterDialog)"
               aria-label="re send letter"
             >
               Re-Send Letter
@@ -84,7 +84,7 @@
               [primary]="true"
               look="flat"
               class="ml-1"
-              (click)="onSendNewEmailClicked()"
+              (click)="onSendNewEmailClicked(sendEmailDialog)"
               aria-label="send email"
             >
               Send Email
@@ -125,7 +125,7 @@
               [primary]="true"
               look="flat"
               class="ml-1"
-              (click)="onSendNewEmailClicked()"
+              (click)="onSendNewEmailClicked(sendEmailDialog)"
               aria-label="re send email"
             >
               Re-Send Email
@@ -135,7 +135,7 @@
               [primary]="true"
               look="flat"
               class="ml-1"
-              (click)="onSendNewLetterClicked()"
+              (click)="onSendNewLetterClicked(sendLetterDialog)"
               aria-label="send letter"
             >
               Send Letter
@@ -166,21 +166,19 @@
 </kendo-dialog>
 
 <!-- Send New Letter Modal -->
-<case-management-send-letter
-  *ngIf="isSendNewLetterPopupOpened"
+<ng-template #sendLetterDialog>
+<case-management-send-letter 
   [data]="screenName"
   (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)"
   kendoTooltip
 >
 </case-management-send-letter>
-
+</ng-template>
 <!-- Send New Email Modal -->
-<case-management-send-email
-  *ngIf="isSendNewEmailPopupOpened"
-  [data]="screenName"
-  (closeSendEmailEvent)="handleCloseSendNewEmailClicked($event)"
-  kendoTooltip
+<ng-template #sendEmailDialog>
+<case-management-send-email [data]="screenName" (closeSendEmailEvent)="handleCloseSendNewEmailClicked($event)" kendoTooltip
 ></case-management-send-email>
+</ng-template>
 <!-- User Profile Card -->
 <kendo-popover #onUserProfileCardHovered width="330">
   <ng-template kendoPopoverBodyTemplate>
