@@ -24,14 +24,14 @@ export class BillingAddressFacade {
   private billingAddressDataSubject = new BehaviorSubject<any>([]);
   billingAddressData$ = this.billingAddressDataSubject.asObservable();
 
-  
+
   /** Private properties **/
- 
+
   /** Public properties **/
- 
+
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>(); 
+  snackbarSubject = new Subject<SnackBar>();
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
@@ -59,6 +59,11 @@ export class BillingAddressFacade {
   ) { }
 
   /** Public methods **/
+
+  saveBillingAddress(vendorId: any, paymentAddress: any) {
+    this.showLoader();
+    return this.billingAddressDataService.saveBillingAddress(paymentAddress, vendorId);
+  }
   loadBillingAddressListGridService(){
     this.billingAddressDataService.loadBillingAddressListService().subscribe({
       next: (dataResponse) => {
@@ -67,11 +72,11 @@ export class BillingAddressFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
     });
-   
-  
+
+
   }
- 
+
 }

@@ -16,6 +16,9 @@ export class BillingAddressDataService {
 
   /** Public methods **/
 
+  saveBillingAddress(paymentAddress:any,vendorId:any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/payment-address`, paymentAddress);
+  }
  
   loadBillingAddressListService( ) {
     return of([
