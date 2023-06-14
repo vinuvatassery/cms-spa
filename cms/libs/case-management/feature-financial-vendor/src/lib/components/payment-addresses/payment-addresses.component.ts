@@ -79,7 +79,7 @@ export class PaymentAddressesComponent {
   }
 
   public onDetailExpand(e: any): void {
-    this.contactFacade.loadcontacts('123');
+    this.contactFacade.loadcontacts('CO1');
   }
   public dataStateChange(stateData: any): void {
     this.sort = stateData.sort;

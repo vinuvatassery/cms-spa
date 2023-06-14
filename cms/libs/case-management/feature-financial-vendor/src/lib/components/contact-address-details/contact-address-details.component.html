@@ -14,7 +14,7 @@
             textField="mailCode" valueField="mailCode" [valuePrimitive]="true">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="(!contactForm.controls['mailcode'].valid )">A mail code must be
+        <kendo-formerror *ngIf="(!contactForm.controls['mailcode'].valid) &&isSubmitted">A mail code must be
           selected</kendo-formerror>
       </div>
       <ng-container formArrayName="vendorContacts">
@@ -35,7 +35,7 @@
                 </kendo-textbox>
               </kendo-floatinglabel>
 
-              <kendo-formerror *ngIf="IsContactNameValid(i)">A Contact Name is
+              <kendo-formerror *ngIf="IsContactNameValid(i)&&isSubmitted">A Contact Name is
                 required</kendo-formerror>
             </div>
             <div class="flex-col">

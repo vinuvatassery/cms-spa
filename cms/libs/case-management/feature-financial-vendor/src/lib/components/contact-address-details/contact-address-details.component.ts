@@ -19,7 +19,7 @@ export class ContactAddressDetailsComponent implements OnInit {
   contactAddress = new VendorContacts();
   contact = new ContactData();
   contactForm!: FormGroup;
-
+  isSubmitted:boolean=false;
   constructor(
     private formBuilder: FormBuilder,
     private contactFacade:ContactFacade,
@@ -105,8 +105,10 @@ ngOnInit(): void {
 
 
   public save() {
+    this.isSubmitted=true;3
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
     const dat = this.contactForm.value;
+    debugger
     if (this.contactForm.valid) {
       this.loaderService.show();
       this.contactsFacade.saveContactAddress(this.contactForm.value).subscribe({
@@ -131,10 +133,10 @@ ngOnInit(): void {
       });
     }
   }
-  get AddContactForm(): FormArray {
+  get AddContactForm(): FormArray {    
     return this.contactForm.get('vendorContacts') as FormArray;
   }
-  IsContactNameValid(index: any) {
+  IsContactNameValid(index: any) {    
     var contactNameIsvalid = this.AddContactForm.at(index) as FormGroup;
     return contactNameIsvalid.controls['contactName'].status == 'INVALID';
   }
@@ -142,7 +144,7 @@ ngOnInit(): void {
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl(
         this.contactAddress.contactName,
-        Validators.maxLength(40)
+        [Validators.required]
       ),
       contactDesc: new FormControl(this.contactAddress.contactDesc),
       phoneNbr: new FormControl(this.contactAddress.phoneNbr),

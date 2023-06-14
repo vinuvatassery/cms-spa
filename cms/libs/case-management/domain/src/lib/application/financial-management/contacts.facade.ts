@@ -36,6 +36,7 @@ export class ContactsFacade {
   private deActiveContactAddressSubject = new BehaviorSubject<boolean>(false);
   /** Public properties **/
   contactsData$ = this.contactsDataSubject.asObservable();
+  
   contacts$ = this.contactsSubject.asObservable();
   deActiveContactAddressObs = this.deActiveContactAddressSubject.asObservable();
   

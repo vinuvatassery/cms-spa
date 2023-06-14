@@ -4,7 +4,7 @@ import {
   ViewEncapsulation,
   ChangeDetectorRef
 } from '@angular/core';
-import { PaymentsFacade, contactResponse } from '@cms/case-management/domain';
+import { ContactsFacade, contactResponse } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
@@ -50,11 +50,12 @@ export class ContactInnerGridComponent {
       },
     },
   ];
-  constructor(private readonly paymentsFacade: PaymentsFacade,private cd:ChangeDetectorRef) {}
+  constructor(private readonly contactsfacade: ContactsFacade,private cd:ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.contactResponse=[];
-    this.paymentsFacade.contacts$.subscribe((res: any) => {
+    this.contactsfacade.contacts$.subscribe((res: any) => {
+      debugger
       this.contactResponse = res;
       this.cd.detectChanges();
 
