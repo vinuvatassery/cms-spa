@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { Observable, Subject } from 'rxjs';
+import { catchError,Observable,of, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
@@ -30,15 +30,13 @@ export class ContactsFacade {
     },
   ];
 
-  private contactsDataSubject = new BehaviorSubject<any>([]);
-  contactsData$ = this.contactsDataSubject.asObservable();
-
-  
-
   /** Private properties **/
-
+  private contactsDataSubject = new BehaviorSubject<any>([]);
+  private contactsSubject = new BehaviorSubject<any>([]);
   /** Public properties **/
-
+  contactsData$ = this.contactsDataSubject.asObservable();
+  contacts$ = this.contactsSubject.asObservable();
+  
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
@@ -88,5 +86,32 @@ export class ContactsFacade {
       },
     });
   }
+  loadcontacts(mailcode:string)
+  {
+    this.showLoader();
+    this.contactsDataService.loadcontacts(mailcode).subscribe({
+      next:(res:any)=>{
+      this.contactsSubject.next(res);
+      this.hideLoader();
+      },
+      error:(err:any)=>{
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+     this.hideLoader(); 
+      }
+    })
+  }
+  saveContactAddress(contactAddress: any) {  
 
+     
+    return this.contactsDataService.saveContactAddress(contactAddress).pipe(
+      catchError((err: any) => {
+        this.loaderService.hide();
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        if (!(err?.error ?? false)) {
+          this.loggingService.logException(err);
+        }
+        return of(false);
+      })
+    );
+  }
 }

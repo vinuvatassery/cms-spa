@@ -91,19 +91,5 @@ export class PaymentsFacade {
       },
     });
   }
-  loadcontacts(mailcode:string)
-  {
-    this.showLoader();
-    this.paymentsDataService.loadcontacts(mailcode).subscribe({
-      next:(res:any)=>{
-      this.contactsSubject.next(res);
-      this.hideLoader();
-      },
-      error:(err:any)=>{
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-     this.hideLoader(); 
-      }
-    })
-  }
  
 }

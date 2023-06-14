@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component,Input } from '@angular/core'; 
-import { PaymentsFacade, contactResponse } from '@cms/case-management/domain';
+import { PaymentsFacade,ContactsFacade, contactResponse } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
@@ -56,7 +56,7 @@ export class PaymentAddressesComponent {
   ];
   contactResponse: contactResponse[] = [];
   /** Constructor **/
-  constructor(private readonly paymentsFacade: PaymentsFacade) {}
+  constructor(private readonly paymentsFacade: PaymentsFacade,private readonly contactFacade: ContactsFacade) {}
 
   ngOnInit(): void {
     this.loadPaymentsAddressListGrid();
@@ -79,7 +79,7 @@ export class PaymentAddressesComponent {
   }
 
   public onDetailExpand(e: any): void {
-    this.paymentsFacade.loadcontacts('123');
+    this.contactFacade.loadcontacts('123');
   }
   public dataStateChange(stateData: any): void {
     this.sort = stateData.sort;

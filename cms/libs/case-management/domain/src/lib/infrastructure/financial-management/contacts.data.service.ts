@@ -29,5 +29,16 @@ export class ContactsDataService {
       },
     ]);
   }
+  loadcontacts( mailcode:string) { return this.http.get<any>( `${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendorprofile/${mailcode}/getcontacts`);
+   }
+  saveContactAddress(contact: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/vendoraddresscontact`, contact);
+  }
+  removeContactAddress(vendorContactId: string,) {
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/${vendorContactId}/vendorcontact`);
+  }
+  deactiveContactAddress(vendorContactId: string) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/${vendorContactId}/deactivatevendorcontact`,null);
+  }
 
 }

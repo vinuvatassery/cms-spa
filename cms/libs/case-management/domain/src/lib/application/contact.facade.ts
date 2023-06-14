@@ -55,6 +55,7 @@ export class ContactFacade {
   private paperlessSubject = new Subject<any>();
   showAddContactPopupSubject = new BehaviorSubject<boolean>(false);
   private contactGridLoaderSubject = new BehaviorSubject<boolean>(false);
+  private removeContactAddressResponseSubject = new BehaviorSubject<boolean>(false);
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -91,6 +92,7 @@ export class ContactFacade {
   deactivateClientPhone$ = this.deactivateClientPhoneSubject.asObservable();
   removeClientPhone$ = this.removeClientPhoneSubject.asObservable();
   paperless$ = this.paperlessSubject.asObservable();
+  removeContactAddressResponse$ = this.removeContactAddressResponseSubject.asObservable();
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' ';
@@ -697,19 +699,4 @@ export class ContactFacade {
     return this.contactDataService.deleteClientContact(clientId,clientRelationshipId);
   }
   //#endregion client phone//NOSONAR
-
-  //#region  Payment Contact Address
-  saveContactAddress(contactAddress: any) {  
-    return this.contactDataService.saveContactAddress(contactAddress).pipe(
-      catchError((err: any) => {
-        this.loaderService.hide();
-        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
-        if (!(err?.error ?? false)) {
-          this.loggingService.logException(err);
-        }
-        return of(false);
-      })
-    );
-  }
- //#endregion Payment Contact Address
 }

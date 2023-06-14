@@ -56,12 +56,5 @@ export class PaymentsDataService {
       },
     ]);
   }
-  loadcontacts(
-    mailcode:string
-   ) {
-     return this.http.get<any>(
-       `${this.configurationProvider.appSettings.caseApiUrl}` +
-       `/financial-management/vendorprofile/${mailcode}/getcontacts`
-     );
-   }
+ 
 }

@@ -351,8 +351,4 @@ export class ContactDataService {
   deleteClientContact(clientId: any, clientRelationshipId: any) {
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contacts/${clientRelationshipId}`);
   }
-
-  saveContactAddress(contact: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/vendoraddresscontact`, contact);
-  }
 }
