@@ -191,7 +191,8 @@
   title="Authorization Notice"
   kendoTooltip
 >
-  <case-management-authorization-notice></case-management-authorization-notice>
+  <case-management-authorization-notice
+  [templateNotice$]="templateNotice$ | async"></case-management-authorization-notice>
 </kendo-dialog>
 
 <!-- Send New Letter Modal -->

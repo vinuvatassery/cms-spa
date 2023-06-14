@@ -2,8 +2,10 @@
 <case-management-authorization
   [isCerForm] = "isCerForm"
   [clientCaseEligibilityId]="clientCaseEligibilityId"
+  [templateNotice$]="templateNotice$"
   (loadAuthorizationData)="loadAuthorization()"
   (saveAuthorizationData)="saveAuthorization($event)"
+  (loadAuthorizationNotice)="loadAuthorizationNotice()"
 ></case-management-authorization>
 
 <!-- Application Review -->

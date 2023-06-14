@@ -24,6 +24,7 @@ export class AuthorizationPageComponent implements OnInit, OnDestroy {
   clientId!: any;
   clientCaseEligibilityId!: any;
   private loadSessionSubscription!: Subscription;
+  templateNotice$ = this.authorizationFacade.authApplicationNotice$
 
   /** Constructor **/
   constructor(
@@ -137,5 +138,10 @@ export class AuthorizationPageComponent implements OnInit, OnDestroy {
 
   onStartButtonClick(){
     this.workflowFacade.save(NavigationType.Next);
+  }
+
+  loadAuthorizationNotice()
+  {
+        this.authorizationFacade.getNoticeTemplate('AUTHORIZATION_NOTICE')
   }
 }

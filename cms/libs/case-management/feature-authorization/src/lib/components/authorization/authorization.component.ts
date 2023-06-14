@@ -20,8 +20,10 @@ export class AuthorizationComponent {
   @Input() isCerForm: boolean = false;
   // @Input() clientId!: any;
   @Input() clientCaseEligibilityId!: any;
+  @Input() templateNotice$ : any
   @Output() loadAuthorizationData = new EventEmitter();
   @Output() saveAuthorizationData = new EventEmitter<any>();
+  @Output() loadAuthorizationNotice = new EventEmitter();
   // applicationSignedDate!: Date;
   // dateSignatureNoted: string = '';
   copyOfSignedApplication: any;
@@ -215,6 +217,7 @@ export class AuthorizationComponent {
   }
 
   onAuthorizationNoticeClicked() {
+    this.loadAuthorizationNotice.emit()
     this.isAuthorizationNoticePopupOpened = true;
   }
 

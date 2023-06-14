@@ -2,13 +2,15 @@
 import { Injectable } from '@angular/core';
 import { AuthorizationDataService } from '../infrastructure/authorization.data.service';
 import { LoggingService, LoaderService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { AuthorizationApplicationSignature } from '../entities/authorization';
 
 @Injectable({ providedIn: 'root' })
 export class AuthorizationFacade {
     private authApplicationSignatureSubject = new BehaviorSubject<any>([]);
     authApplicationSignatureDetails$ = this.authApplicationSignatureSubject.asObservable();
+    private authApplicationNoticeSubject = new Subject<any>;
+    authApplicationNotice$ = this.authApplicationNoticeSubject.asObservable();
 
     /** Constructor**/
     constructor(
@@ -50,5 +52,18 @@ export class AuthorizationFacade {
 
     updateAuthorization(data: any) {
         return this.authorizationDataService.updateAuthorization(data);
+    }
+
+    getNoticeTemplate(documentTemplateTypeCode: string) {
+        this.showLoader();
+        return this.authorizationDataService.getNoticeTemplate(documentTemplateTypeCode).subscribe({
+            next: (response) => {
+                this.hideLoader();
+                this.authApplicationNoticeSubject.next(response);
+            },
+            error: (err) => {
+                this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+            },
+        });
     }
 }

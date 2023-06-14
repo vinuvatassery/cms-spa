@@ -27,4 +27,9 @@ export class AuthorizationDataService {
         return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/authorization/application-signature`, formData);
     }
 
+    getNoticeTemplate(documentTemplateTypeCode :  string)
+    {
+        return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/authorization/template?documentTemplateTypeCode=${documentTemplateTypeCode}`);
+    }
+
 }
