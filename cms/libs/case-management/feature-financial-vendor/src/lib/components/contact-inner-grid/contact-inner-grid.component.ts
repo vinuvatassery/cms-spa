@@ -21,29 +21,6 @@ export class ContactInnerGridComponent {
   isContactAddressDeleteShow = false; 
   isContactAddressDetailShow = false;
   VendorContactId:any;
-  paymentAddressInnerGridLists = [
-
-    {
-
-      Name: 'FName LName',
-
-      Description:'FName LName',
-
-      PremiumAmount: '500.00',
-
-      PhoneNumber: 'XXXXXX',
-
-      FaxNumber: 'XXXXXX',
-
-      EmailAddress: 'XXXXXX',
-
-      EffectiveDate: 'XXXXXX',
-
-      by: 'XX',
-
-    },
-
-  ];
   public contactAddressActions = [
     {
       buttonType: 'btn-h-primary',
