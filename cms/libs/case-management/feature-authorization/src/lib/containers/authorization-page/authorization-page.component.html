@@ -1,4 +1,10 @@
-<case-management-authorization></case-management-authorization>
+
+<case-management-authorization
+  [isCerForm] = "isCerForm"
+  [clientCaseEligibilityId]="clientCaseEligibilityId"
+  (loadAuthorizationData)="loadAuthorization()"
+  (saveAuthorizationData)="saveAuthorization($event)"
+></case-management-authorization>
 
 <!-- Application Review -->
 <div class="client-data-block mt-4">
