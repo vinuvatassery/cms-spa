@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy, ChangeDetectorRef, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain'
 /** External libraries **/
@@ -10,7 +10,7 @@ import { forkJoin, mergeMap, of, Subscription, tap, first, filter } from 'rxjs';
 import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, StatusFlag, ButtonType, CaseStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'case-management-case-detail-page',
   templateUrl: './case-detail-page.component.html',
@@ -19,6 +19,8 @@ import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNot
 export class CaseDetailPageComponent implements OnInit, OnDestroy {
 
   /**Private properties**/
+  @ViewChild('sendNewEmailModalDialog', { read: TemplateRef })
+  sendNewEmailModalDialog!: TemplateRef<any>;  
   private navigationSubscription !: Subscription;
   private loadSessionSubscription !: Subscription;
   private showSendNewsLetterSubscription !: Subscription;
@@ -47,7 +49,6 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   isShowSaveLaterPopup = false;
   isShowDeleteConfirmPopup = false;
   isShowDiscardConfirmPopup = false;
-  isShowSendNewLetterPopup = false;
   isInnerLeftMenuOpen = false;
   sessionId!: string;
   case$ = this.caseFacade.getCase$;
@@ -57,6 +58,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   sendLetterFlag!: any;
   cancelApplicationFlag!: boolean;
   workflowType! :string
+  sendNewEmailModalDialogService : any;
   data: Array<any> = [
     {
       text: '',
@@ -106,6 +108,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
+    private dialogService: DialogService
   ) {
   }
 
@@ -288,15 +291,22 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     this.isShowDiscardConfirmPopup = true;
   }
 
-  onSendNewLetterClicked() {
-    this.isShowSendNewLetterPopup = true;
+  onSendNewLetterClicked(template: TemplateRef<unknown>): void {
+    this.sendNewEmailModalDialogService = this.dialogService.open({ 
+      content: template, 
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
+    }); 
+    
     this.isShowSaveLaterPopup = false;
   }
+ 
+ 
 
   /** External event methods **/
   handleCloseSendNewLetterClicked(event: CommunicationEvents) {
     if (event === CommunicationEvents.Close) {
-      this.isShowSendNewLetterPopup = false;
+      
+      this.sendNewEmailModalDialogService.close(true)
     }
     this.router.navigateByUrl(`case-management/cases`);
   }
@@ -440,7 +450,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   showSendNewsLetterPopup() {
     this.showSendNewsLetterSubscription = this.workflowFacade.sendEmailLetterClicked$.subscribe((response: any) => {
       if (response) {
-        this.onSendNewLetterClicked();
+        this.onSendNewLetterClicked(this.sendNewEmailModalDialog);
         this.cdr.detectChanges();
       }
     })

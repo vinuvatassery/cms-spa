@@ -1,8 +1,6 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-
+import { Component, OnInit, ChangeDetectionStrategy , Input, Output, EventEmitter} from '@angular/core';
 import { CaseFacade  } from '@cms/case-management/domain';
-
 import {  LovFacade } from '@cms/system-config/domain';
 /** facades **/
 import { TodoFacade } from '@cms/productivity-tools/domain';
@@ -23,7 +21,7 @@ export class TodoDetailComponent implements OnInit {
   ddlCaseOrigins$ = this.lovFacade.lovs$;
   tareaCustomTodoCounter!: string;
   tareaCustomTodoDescription = '';
- 
+  @Output() isModalTodoDetailsCloseClicked = new EventEmitter();
 
   /** Constructor **/
   constructor(private readonly todoFacade: TodoFacade,
@@ -53,5 +51,8 @@ export class TodoDetailComponent implements OnInit {
   onTareaCustomTodoValueChange(event: any): void {
     this.tareaCustomTodoCharactersCount = event.length;
     this.tareaCustomTodoCounter = `${this.tareaCustomTodoCharactersCount}/${this.tareaCustomTodoMaxLength}`;
+  }
+  closeTodoDetailsClicked(){
+    this.isModalTodoDetailsCloseClicked.emit(true);  
   }
 }

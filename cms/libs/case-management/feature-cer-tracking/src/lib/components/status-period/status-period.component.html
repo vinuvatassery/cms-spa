@@ -106,7 +106,7 @@
                 [primary]="true"
                 icon="add"
                 aria-label="add status"
-                (click)="onStatusPeriodDetailClicked()"
+                (click)="onStatusPeriodDetailClicked(eligibilityStatusPeriodDetail)"
               >
                 NEW STATUS
               </button>
@@ -118,7 +118,18 @@
 </div>
 
 <!-- Status Period Detail Modal -->
-<kendo-dialog
+<ng-template #eligibilityStatusPeriodDetail>
+    <case-management-eligibility-period-detail
+    [clientId]="clientId"
+    [clientCaseEligibilityId]="selectedEligibilityId"
+    [clientCaseId]="selectedCaseId"
+    [isEdit]="false"
+    [isStatusPeriodEdit]="isStatusPeriodEdit"
+    [isCopyPeriod]="isCopyPeriod"
+    (isModalPeriodCloseClicked)="onStatusPeriodDetailClosed($event)"
+    (isModalSavedClicked)="onModalSaveAndClose($event)"></case-management-eligibility-period-detail>
+</ng-template>
+<!-- <kendo-dialog
   *ngIf="isStatusPeriodDetailOpened"
   (close)="onStatusPeriodDetailClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
@@ -132,4 +143,4 @@
   [isStatusPeriodEdit]="isStatusPeriodEdit"
   [isCopyPeriod]="isCopyPeriod"
   (isModalSavedClicked)="onModalSaveAndClose($event)"></case-management-eligibility-period-detail>
-</kendo-dialog>
+</kendo-dialog> -->
