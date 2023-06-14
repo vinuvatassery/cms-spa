@@ -19,10 +19,10 @@ export class InvoiceDataService {
     `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/invoices?vendorId=${vendorId}&tabCode=${tabCode}&skipCount=
     ${state.skip}&maxResultCount=${state.take}&SortType=${sortType}&Sorting=${sortValue}`);      
   }
-  loadPaymentRequestServices(invoiceNumber:string,vendorId:any,vendorType:any,paymentRequestBatchId:any,clientId:any) {  
+  loadPaymentRequestServices(dataItem:any,vendorId:any,vendorType:any) {  
   return this.http.get<any>(      
-    `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/invoices/${invoiceNumber}/services?vendorId=${vendorId}&vendorType=
-    ${vendorType}&paymentRequestBatchId=${paymentRequestBatchId}&clientId=${clientId}`);      
+    `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/invoices/${dataItem.invoiceNbr}/services?vendorId=${vendorId}&vendorType=
+    ${vendorType}&paymentRequestBatchId=${dataItem.batchId}&clientId=${dataItem.clientId}`);      
   }
 
 }

@@ -81,13 +81,13 @@ export class InvoiceFacade {
     });  
   
   }
-  loadPaymentRequestServices(invoiceNumber:any,vendorId:any,vendorType:any,paymentRequestBatchId:any,clientId:any){  
-    this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == paymentRequestBatchId && x.clientId === clientId).IsInvoiceServiceLoader = true;  
-    this.invoiceDataService.loadPaymentRequestServices(invoiceNumber,vendorId,vendorType,paymentRequestBatchId,clientId).subscribe({
+  loadPaymentRequestServices(dataItem:any,vendorId:any,vendorType:any){  
+    this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == dataItem.batchId && x.clientId === dataItem.clientId && x.invoiceNbr ===dataItem.invoiceNbr).IsInvoiceServiceLoader = true;  
+    this.invoiceDataService.loadPaymentRequestServices(dataItem,vendorId,vendorType).subscribe({
       next: (dataResponse) => {   
         this.serviceDataSubject.next(dataResponse);
-        this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == paymentRequestBatchId && x.clientId === clientId).invoiceServices = dataResponse;
-        this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == paymentRequestBatchId && x.clientId === clientId).IsInvoiceServiceLoader = false;
+        this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == dataItem.batchId && x.clientId === dataItem.clientId && x.invoiceNbr ===dataItem.invoiceNbr).invoiceServices = dataResponse;
+        this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == dataItem.batchId && x.clientId === dataItem.clientId && x.invoiceNbr ===dataItem.invoiceNbr).IsInvoiceServiceLoader = false; 
         const gridView = {
           data: this.invoiceDataSubject.value.data,
           total: this.invoiceDataSubject.value.total,
@@ -96,7 +96,7 @@ export class InvoiceFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
-        this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == paymentRequestBatchId && x.clientId === clientId).IsInvoiceServiceLoader = false;
+        this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == dataItem.batchId && x.clientId === dataItem.clientId && x.invoiceNbr ===dataItem.invoiceNbr).IsInvoiceServiceLoader = false; 
       },
     });  
 
