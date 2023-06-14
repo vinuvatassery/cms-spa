@@ -6,7 +6,7 @@ import { AuthorizationApplicationSignature, AuthorizationFacade, ClientDocumentF
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserDataService } from '@cms/system-config/domain';
-import { IntlService, format, formatDate } from '@progress/kendo-angular-intl';
+import { IntlService, formatDate } from '@progress/kendo-angular-intl';
 import { SelectEvent } from '@progress/kendo-angular-upload';
 import { BehaviorSubject, Subscription, forkJoin, mergeMap, of, tap } from 'rxjs';
 
@@ -98,7 +98,7 @@ export class AuthorizationComponent {
       if (resp?.applicantSignedDate) {
         this.signedApplication = resp;
         this.authorizationForm?.get('applicantSignedDate')?.patchValue(new Date(resp?.applicantSignedDate));
-        var signatureNotedDate = resp?.signatureNotedDate ? formatDate(new Date(resp?.signatureNotedDate), 'MM-dd-yyyy') : '';
+        const signatureNotedDate = resp?.signatureNotedDate ? formatDate(new Date(resp?.signatureNotedDate), 'MM-dd-yyyy') : '';
         this.authorizationForm?.get('signatureNotedDate')?.patchValue(signatureNotedDate);
         if (resp.signedApplication) {
           this.copyOfSignedApplication = [
@@ -159,7 +159,7 @@ export class AuthorizationComponent {
       }
 
       if (this.uploadedCopyOfSignedApplication) {
-        var documentId = this.copyOfSignedApplication?.length > 0 ? (this.copyOfSignedApplication[0]?.uid ?? null) : null;
+        const documentId = this.copyOfSignedApplication?.length > 0 ? (this.copyOfSignedApplication[0]?.uid ?? null) : null;
         authorization.signedApplication = {
           documentId: documentId,
           documentName: this.uploadedCopyOfSignedApplication.name,
@@ -231,7 +231,7 @@ export class AuthorizationComponent {
         this.authorizationForm?.get('signatureNotedDate')?.setValue(formatDate(today, 'MM-dd-yyyy'));
         this.invalidSignatureDate$.next(value > today);
       }
-      var isValid = value && value < today;
+      const isValid = value && value < today;
       this.updateDataPoints('applicantSignedDate', isValid)
       this.setStartButtonVisibility.emit(isValid);
     })

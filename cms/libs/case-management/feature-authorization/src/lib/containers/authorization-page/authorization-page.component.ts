@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthorizationApplicationSignature, AuthorizationFacade, NavigationType, WorkFlowProgress, WorkflowFacade } from '@cms/case-management/domain';
+import { AuthorizationFacade, NavigationType, WorkFlowProgress, WorkflowFacade } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Subscription, first } from 'rxjs';
 
@@ -86,7 +86,6 @@ export class AuthorizationPageComponent implements OnInit, OnDestroy {
             this.prevClientCaseEligibilityId = JSON.parse(resp.sessionData)?.prevClientCaseEligibilityId;
             if (this.prevClientCaseEligibilityId) {
               this.isCerForm = true
-              //this.ref.detectChanges();
             }
             this.loadAuthorization();
           }
