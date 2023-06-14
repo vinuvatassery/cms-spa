@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, Output,ChangeDetectionStrategy, EventEmitter} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CaseFacade } from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
@@ -20,8 +20,6 @@ public formUiStyle : UIFormStyle = new UIFormStyle();
   tareaReminderCharachtersCount!: number;
   tareaReminderCounter!: string;
   tareaReminderDescription = '';
-  @Output() isModalNewReminderCloseClicked  = new EventEmitter();
-
   constructor(private readonly todoFacade: TodoFacade,private readonly caseFacade: CaseFacade,) {}
 
   /** Lifecycle hooks **/
@@ -41,8 +39,5 @@ public formUiStyle : UIFormStyle = new UIFormStyle();
   onTareaReminderValueChange(event: any): void {
     this.tareaReminderCharachtersCount = event.length;
     this.tareaReminderCounter = `${this.tareaReminderCharachtersCount}/${this.tareaRemindermaxLength}`;
-  }
-  closeReminderDetails(){
-    this.isModalNewReminderCloseClicked.emit(true);
   }
 }

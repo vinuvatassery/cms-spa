@@ -146,10 +146,9 @@
 </kendo-dialog>
 
     <!-- Send New Email Modal -->
-    <ng-template #sendNewEmailModalDialog>
-<case-management-send-email [data]="ScreenName"
+<case-management-send-email *ngIf="isShowSendNewLetterPopup" [data]="ScreenName"
 (closeSendEmailEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-email>
-</ng-template>
+
 <!-- Cancel Application Modal -->
 <kendo-dialog *ngIf="cancelApplicationFlag" class="app-c-modal app-c-modal-md app-c-modal-np" (close)="closeCancelApplicationPopup()">
   <kendo-dialog-titlebar> Cancel Application</kendo-dialog-titlebar>

@@ -1,9 +1,9 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 /** Enums **/
 import { CommunicationEvents, ScreenType } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa'  
-import { DialogService } from '@progress/kendo-angular-dialog';
+import { UIFormStyle } from '@cms/shared/ui-tpa' 
+ 
 
 @Component({
   selector: 'case-management-authorization',
@@ -17,30 +17,21 @@ export class AuthorizationComponent {
   /** Public properties **/
   screenName = ScreenType.Authorization;
   isPrintClicked!: boolean;
-  isSendEmailClicked!: boolean;  
+  isSendEmailClicked!: boolean;
+  isSendNewLetterPopupOpened = false;
+  isSendNewEmailPopupOpened = false;
   isAuthorizationNoticePopupOpened = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   isCerForm = false;
-  private isSendLetterOpenedDialog : any;
-  private isSendEmailOpenedDialog : any;
   /** Internal event methods **/
-  
-  /* constructor */
-  constructor(private dialogService: DialogService) {}
-
-  onSendNewLetterClicked(template: TemplateRef<unknown>): void {
-    this.isSendLetterOpenedDialog = this.dialogService.open({ 
-      content: template, 
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
-    }); 
+  onSendNewLetterClicked() {
+    this.isSendNewLetterPopupOpened = true;
   }
 
-  onSendNewEmailClicked(template: TemplateRef<unknown>): void {
-    this.isSendEmailOpenedDialog = this.dialogService.open({ 
-      content: template, 
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
-    }); 
+  onSendNewEmailClicked() {
+    this.isSendNewEmailPopupOpened = true;
   }
+
   onCloseAuthorizationNoticeClicked() {
     this.isAuthorizationNoticePopupOpened = false;
   }
@@ -53,9 +44,10 @@ export class AuthorizationComponent {
   handleCloseSendNewEmailClicked(event: CommunicationEvents) {
     switch (event) {
       case CommunicationEvents.Close:
-        this.isSendEmailOpenedDialog.close(event);
+        this.isSendNewEmailPopupOpened = false;
         break;
-      case CommunicationEvents.Print: 
+      case CommunicationEvents.Print:
+        this.isSendNewEmailPopupOpened = false;
         this.isSendEmailClicked = true;
         break;
       default:
@@ -66,10 +58,10 @@ export class AuthorizationComponent {
   handleCloseSendNewLetterClicked(event: CommunicationEvents) {
     switch (event) {
       case CommunicationEvents.Close:
-     
-        this.isSendLetterOpenedDialog.close(event);
+        this.isSendNewLetterPopupOpened = false;
         break;
-      case CommunicationEvents.Print: 
+      case CommunicationEvents.Print:
+        this.isSendNewLetterPopupOpened = false;
         this.isPrintClicked = true;
         break;
       default:

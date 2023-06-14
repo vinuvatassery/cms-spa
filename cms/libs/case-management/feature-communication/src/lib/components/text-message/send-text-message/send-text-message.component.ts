@@ -114,8 +114,7 @@ export class SendTextMessageComponent implements OnInit {
     this.isShowSendMessageConfirmPopupClicked = true;
   }
 
-  onCloseSendMessageClicked() { 
-    this.isShowSaveForLaterPopupClicked = false;
+  onCloseSendMessageClicked() {
     this.closeSendMessageEvent.emit(CommunicationEvents.Close);
   }
 
@@ -124,14 +123,13 @@ export class SendTextMessageComponent implements OnInit {
     if (this.data === ScreenType.Authorization) {
       this.closeSendMessageEvent.emit(CommunicationEvents.Print);
     } else if (this.data === ScreenType.Case360Page) {
-      this.isShowSendMessageConfirmPopupClicked = false;
-      // this.closeSendMessageEvent.emit(CommunicationEvents.Close);
+      this.closeSendMessageEvent.emit(CommunicationEvents.Close);
     }
   }
 
   onCloseSaveForLaterClicked() {
     this.isShowSaveForLaterPopupClicked = false;
-    // this.closeSendMessageEvent.emit(CommunicationEvents.Close);
+    this.closeSendMessageEvent.emit(CommunicationEvents.Close);
   }
 
   /** External event methods **/

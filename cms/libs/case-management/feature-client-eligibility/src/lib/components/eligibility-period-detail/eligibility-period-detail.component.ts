@@ -27,7 +27,6 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   @Input() isStatusPeriodEdit: boolean=false;
   @Input() isCopyPeriod: boolean=false;
   @Output() isModalSavedClicked = new EventEmitter();
-  @Output() isModalPeriodCloseClicked = new EventEmitter();
   /** Public properties **/
   ddlStatus$ = this.lovFacade.eligibilityStatusCp$;
   disenrollmentReason$ = this.lovFacade.disenrollmentReason$
@@ -207,9 +206,8 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       }
     }
   }
-  onModalCloseClicked() {    
+  onModalCloseClicked() {
     this.clientEligibilityFacade.eligibilityPeriodPopupOpenSubject.next(false);
-    this.isModalPeriodCloseClicked.emit(true);
   }
   /** Private methods **/
   private getCurrentEligibility(){

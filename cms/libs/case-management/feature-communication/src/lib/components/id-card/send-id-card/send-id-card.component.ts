@@ -42,7 +42,7 @@ export class SendIdCardComponent implements OnInit {
   }
   /** Internal event methods **/
   onCloseSendIdClicked() {
-    this.closeSendIdEvent.emit(true);
+    this.closeSendIdEvent.emit();
   }
   sendNewIdCard():void{
     this.clientfacade.sendNewIdCard(this.clientId);

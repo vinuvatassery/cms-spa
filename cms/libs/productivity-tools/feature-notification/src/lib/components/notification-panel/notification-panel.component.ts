@@ -5,12 +5,12 @@ import {
   ChangeDetectionStrategy,
   HostListener,
   ViewChild,
-  ElementRef, TemplateRef
+  ElementRef,
 } from '@angular/core';
 /** Facades **/
 import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { LoggingService } from '@cms/shared/util-core';
-import { DialogService } from '@progress/kendo-angular-dialog';
+
 @Component({
   selector: 'productivity-tools-notification-panel',
   templateUrl: './notification-panel.component.html',
@@ -26,7 +26,6 @@ export class NotificationPanelComponent implements OnInit {
   isNotificationPopupOpened = false;
   isNewReminderOpened = false;
   isNotificationsAndRemindersOpened = false;
-  private newReminderDetailsDialog : any;
   public data = [
     {
       buttonType:"btn-h-primary",
@@ -69,8 +68,7 @@ export class NotificationPanelComponent implements OnInit {
   constructor(
     private readonly notificationFacade: NotificationFacade,
     private readonly todoFacade: TodoFacade,
-    private loggingService : LoggingService,
-    private dialogService: DialogService
+    private loggingService : LoggingService
   ) {}
 
   /** Lifecycle hooks **/
@@ -126,16 +124,12 @@ export class NotificationPanelComponent implements OnInit {
     this.onNotificationButtonToggleClicked(false);
   }
 
-  onNewReminderClosed(result: any) {
-    if(result){
-      this.newReminderDetailsDialog.close()
-    }}
+  onNewReminderClosed() {
+    this.isNewReminderOpened = false;
+  }
 
-    onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
-    this.newReminderDetailsDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    }); 
+  onNewReminderOpenClicked() {
+    this.isNewReminderOpened = true;
   }
 
   onNotificationsAndRemindersClosed() {
