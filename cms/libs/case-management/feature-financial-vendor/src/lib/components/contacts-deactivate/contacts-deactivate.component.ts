@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component,EventEmitter,Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component,EventEmitter,Output,Input } from '@angular/core';
 import { ContactsFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-contacts-deactivate',
@@ -7,6 +7,7 @@ import { ContactsFacade } from '@cms/case-management/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactsDeactivateComponent {
+  @Input() VendorContactId:any;
   @Output() closeDeactivateContactAddress = new EventEmitter();
 
  /** Constructor **/
@@ -15,9 +16,15 @@ export class ContactsDeactivateComponent {
 ) {
 }
   onCloseDeactivateContactAddressClicked() {
-    this.closeDeactivateContactAddress.emit();
+    this.closeDeactivateContactAddress.emit(true);
   }
-
+  deactiveContactAddress(){
+    this.contactsFacade.deactiveContactAddress(this.VendorContactId).then((isDeavtivated:any) =>{
+      if(isDeavtivated){
+        this.onCloseDeactivateContactAddressClicked();
+      } 
+    })
+  }
   onDeactivateClick()
   {
    // this.contactsFacade.deactiveContactAddress(this.clientPharmacyDetails.clientPharmacyId);

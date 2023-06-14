@@ -34,11 +34,14 @@ export class ContactsFacade {
   private contactsDataSubject = new BehaviorSubject<any>([]);
   private contactsSubject = new BehaviorSubject<any>([]);
   private deActiveContactAddressSubject = new BehaviorSubject<boolean>(false);
+  private removeContactAddressSubject = new BehaviorSubject<boolean>(false);
   /** Public properties **/
   contactsData$ = this.contactsDataSubject.asObservable();
   
   contacts$ = this.contactsSubject.asObservable();
   deActiveContactAddressObs = this.deActiveContactAddressSubject.asObservable();
+  removeContactAddressObs = this.removeContactAddressSubject.asObservable();
+  
   
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
@@ -127,8 +130,8 @@ export class ContactsFacade {
           resolve(true);
          }
          this.loaderService.hide();
-         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy De-Activated Successfully');
-         //this.loadcontacts(123);
+         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, ' Address De-Activated Successfully');
+         this.loadcontacts('CO1');
        },
        error: (err) => {
         resolve(false);
@@ -137,6 +140,31 @@ export class ContactsFacade {
          this.loggingService.logException(err);
        },
      });
+    })
+    
+  }
+
+  removeContactAddress( vendorContactId: string) {
+    return new Promise((resolve,reject) =>{
+      this.loaderService.show();
+      return this.contactsDataService.deactiveContactAddress(vendorContactId).subscribe({
+        next: (response) => {
+          if (response === true) {
+            this.removeContactAddressSubject.next(true);
+            resolve(true);
+            this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Address Removed Successfully');
+            this.loadcontacts('CO1');
+          }
+          this.loaderService.hide();
+        },
+        error: (err) => {
+          resolve(false);
+          this.removeContactAddressSubject.next(false);
+          this.loaderService.hide();
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+          this.loggingService.logException(err);
+        },
+      });
     })
     
   }

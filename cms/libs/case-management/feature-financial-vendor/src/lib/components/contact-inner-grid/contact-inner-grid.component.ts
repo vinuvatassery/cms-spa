@@ -20,7 +20,7 @@ export class ContactInnerGridComponent {
   isContactAddressDeactivateShow = false;
   isContactAddressDeleteShow = false; 
   isContactAddressDetailShow = false;
-
+  VendorContactId:any;
   public contactAddressActions = [
     {
       buttonType: 'btn-h-primary',
@@ -37,7 +37,11 @@ export class ContactInnerGridComponent {
       icon: 'block',
       click: (data: any): void => {
         console.log(data);
-        this.clickOpenDeactivateContactAddressDetails();
+        if(data?.VendorContactId){
+          this.VendorContactId = data?.VendorContactId;
+          this.clickOpenDeactivateContactAddressDetails();
+        }
+        
       },
     },
     {
@@ -45,8 +49,12 @@ export class ContactInnerGridComponent {
       text: 'Delete Address',
       icon: 'delete',
       click: (data: any): void => {
-        console.log(data);
-        this.clickOpenDeleteContactAddressDetails();
+       
+        if(data?.VendorContactId){
+          this.VendorContactId = data?.VendorContactId;
+          this.clickOpenDeleteContactAddressDetails();
+        }
+        
       },
     },
   ];
@@ -70,4 +78,24 @@ export class ContactInnerGridComponent {
   clickOpenDeleteContactAddressDetails() {
     this.isContactAddressDeleteShow = true;
   }
+  
+  clickCloseDeleteContactAddress()
+  {
+    this.isContactAddressDeleteShow = false;
+  }
+  clickCloseDeactivateContactAddress()
+  {
+    this.isContactAddressDeactivateShow = false;
+  }
+  onCancelPopup(isCancel:any){
+   if(isCancel){
+    this.clickCloseDeleteContactAddress();
+   }
+  }
+  onDeactiveCancel(isCancel:any){
+    if(isCancel){
+      this.clickCloseDeactivateContactAddress();
+     }
+  }
+  
 }
