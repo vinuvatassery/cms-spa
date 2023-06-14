@@ -16,7 +16,40 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class ContactInnerGridComponent {
   contactResponse: contactResponse[] = [];
+  popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  isContactAddressDeactivateShow = false;
+  isContactAddressDeleteShow = false; 
+  isContactAddressDetailShow = false;
 
+  public contactAddressActions = [
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Edit Address',
+      icon: 'edit',
+      click: (data: any): void => {
+        console.log(data);
+        this.clickOpenAddEditContactAddressDetails();
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Deactivate Address',
+      icon: 'block',
+      click: (data: any): void => {
+        console.log(data);
+        this.clickOpenDeactivateContactAddressDetails();
+      },
+    },
+    {
+      buttonType: 'btn-h-danger',
+      text: 'Delete Address',
+      icon: 'delete',
+      click: (data: any): void => {
+        console.log(data);
+        this.clickOpenDeleteContactAddressDetails();
+      },
+    },
+  ];
   constructor(private readonly paymentsFacade: PaymentsFacade,private cd:ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -26,5 +59,14 @@ export class ContactInnerGridComponent {
       this.cd.detectChanges();
 
     });
+  }
+  clickOpenAddEditContactAddressDetails() {
+    this.isContactAddressDetailShow = true;
+  }
+  clickOpenDeactivateContactAddressDetails() {
+    this.isContactAddressDeactivateShow = true;
+  }
+  clickOpenDeleteContactAddressDetails() {
+    this.isContactAddressDeleteShow = true;
   }
 }
