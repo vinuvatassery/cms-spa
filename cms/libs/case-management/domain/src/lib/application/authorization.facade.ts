@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { AuthorizationDataService } from '../infrastructure/authorization.data.service';
 import { LoggingService, LoaderService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { AuthorizationApplicationSignature } from '../entities/authorization';
 
 @Injectable({ providedIn: 'root' })
 export class AuthorizationFacade {
@@ -62,6 +61,7 @@ export class AuthorizationFacade {
                 this.authApplicationNoticeSubject.next(response);
             },
             error: (err) => {
+                this.hideLoader();
                 this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
             },
         });
