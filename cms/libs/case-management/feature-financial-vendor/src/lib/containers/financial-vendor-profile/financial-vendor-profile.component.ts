@@ -16,7 +16,8 @@ export class FinancialVendorProfileComponent implements OnInit {
   vendorId!: string;
   providerId!: string;
   tabCode!: string;
-  profileInfoTitle = "info";  
+  vendorTypeCode!: string;
+  profileInfoTitle = "info";
   addressGridView = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
 
@@ -29,12 +30,13 @@ export class FinancialVendorProfileComponent implements OnInit {
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
     return FinancialVendorProviderTabCode;
   }
-  
+
   /** Private properties **/
   loadQueryParams() {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
     this.providerId = this.activeRoute.snapshot.queryParams['prv_id'];
     this.tabCode = this.activeRoute.snapshot.queryParams['tab_code'];
+    this.vendorTypeCode = this.activeRoute.snapshot.queryParams['vendor_type_code'];
 
     switch (this.tabCode) {
       case FinancialVendorProviderTabCode.Manufacturers:
@@ -56,6 +58,6 @@ export class FinancialVendorProfileComponent implements OnInit {
 
   handleShowEventLogClicked() {
     this.isShownEventLog = !this.isShownEventLog;
- 
+
   }
 }

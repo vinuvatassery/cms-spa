@@ -21,7 +21,7 @@ export class ClientsComponent implements OnInit, OnChanges{
   providerClientGridView$ = this.insuranceProviderFacade.providerClientsData$;
   @Input() providerId:any;
   addressGridView = [];
-  @Input() tabCode: any;
+  @Input() vendorTypeCode: any;
 
   /** Constructor **/
   constructor(private readonly insuranceProviderFacade: InsuranceProviderFacade,private readonly router: Router,) {}
@@ -31,7 +31,7 @@ export class ClientsComponent implements OnInit, OnChanges{
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
     };
-    this.providerId='F49E42C5-1F8A-4297-A06A-C84F8EF187BF'
+    //this.providerId='F49E42C5-1F8A-4297-A06A-C84F8EF187BF'
     this.loadClientsListGrid();
   }
 
@@ -57,7 +57,7 @@ export class ClientsComponent implements OnInit, OnChanges{
   }
   loadClientsListGrid()
   {
-    this.insuranceProviderFacade.loadProviderClientsListGrid(this.providerId,this.tabCode,this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType);
+    this.insuranceProviderFacade.loadProviderClientsListGrid(this.providerId,this.vendorTypeCode,this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType);
   }
   onClientClicked(clientId: any) {
     this.router.navigate([`/case-management/cases/case360/${clientId}`]);
