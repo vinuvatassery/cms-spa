@@ -36,7 +36,6 @@ export class InvoicesComponent {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
     };
-    this.vendorId='F49E42C5-1F8A-4297-A06A-C84F8EF187BF'
     this.loadInvoiceListGrid();
     this.isInvoiceLoadingSubscription = this.isInvoiceLoading$.subscribe(data=>{
       this.isInvoiceGridLoaderShow = data;
@@ -74,6 +73,6 @@ export class InvoicesComponent {
     this.router.navigate([`/financial-management/medical-claims`]);    
   } 
   onExpand(event:any) {
-    this.invoiceFacade.loadPaymentRequestServices(event.dataItem.invoiceNbr,this.vendorId,this.tabCode,event.dataItem.batchId,event.dataItem.clientId)   
+    this.invoiceFacade.loadPaymentRequestServices(event.dataItem,this.vendorId,this.tabCode)   
   }
 }
