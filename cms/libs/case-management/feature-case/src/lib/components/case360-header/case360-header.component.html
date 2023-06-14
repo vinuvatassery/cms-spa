@@ -107,24 +107,11 @@
   (isModalPeriodCloseClicked)="onModalPeriodClose($event)"
   (isModalSavedClicked)="onModalSaveAndClose($event)"></case-management-eligibility-period-detail>
 </ng-template>
-<!-- 
-<kendo-dialog
-  *ngIf="isStatusPeriodDetailOpened"
-  (close)="onStatusPeriodDetailClosed()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
-  kendoTooltip
->
-  <case-management-eligibility-period-detail
-  [clientId]="clientId"
-  [clientCaseEligibilityId]="clientCaseEligibilityId"
-  [clientCaseId]="clientCaseId"
-  [isEdit]="isEditEligibilityFlag"
-  (isModalSavedClicked)="onModalSaveAndClose($event)"></case-management-eligibility-period-detail>
-</kendo-dialog> -->
+ 
 
 <!-- Eligibility Group Detail Modal -->
 <ng-template #eligibilityGroupDetail>
-  <kendo-dialog-titlebar> {{ groupChangeTitle }} </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onModalGroupClose($event)"> {{ groupChangeTitle }} </kendo-dialog-titlebar>
   <case-management-group-detail
   [currentGroup$]="currentGroup$" 
   [ddlGroups$] ="ddlGroups$"
@@ -134,18 +121,4 @@
   (checkIfSCheduled)="checkIfSCheduledGroup($event)"
   ></case-management-group-detail>
   </ng-template>
-<!-- <kendo-dialog
-  *ngIf="isGroupDetailOpened$ | async "
-  (close)="onGroupChangeCancelClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
-  kendoTooltip
->
-<kendo-dialog-titlebar> {{ groupChangeTitle }} </kendo-dialog-titlebar>
-  <case-management-group-detail
-    [currentGroup$]="currentGroup$" 
-    [ddlGroups$] ="ddlGroups$"
-    (updateGroup)="onGroupChangeUpdateClicked($event)"
-    (cancelGroupChange)="onGroupChangeCancelClicked()"
-    (checkIfSCheduled)="checkIfSCheduledGroup($event)"
-    ></case-management-group-detail>
-</kendo-dialog> -->
+ 
