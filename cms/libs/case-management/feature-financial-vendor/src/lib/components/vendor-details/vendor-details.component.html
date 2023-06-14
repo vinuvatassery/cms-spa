@@ -4,9 +4,31 @@
       All fields are required unless otherwise stated.
     </p>
     <div class="flex-row">
-      <div class="flex-col">
-        <kendo-floatinglabel text="Provider Name">
+      <div class="flex-col" *ngIf="providerType == vendorTypes.InsuranceVendors">
+        <kendo-floatinglabel text="Insurance Vendor Name">
           <kendo-textbox aria-label="Provider Name" [fillMode]="formUiStyle.inputFillMode"
+            formControlName="providerName">
+          </kendo-textbox>
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
+            Insurance Vendor name is required
+          </kendo-formerror>
+        </kendo-floatinglabel>
+      </div>
+
+      <div class="flex-col" *ngIf="providerType == vendorTypes.Pharmacy">
+        <kendo-floatinglabel text="Insurance Vendor Name">
+          <kendo-textbox aria-label="Pharmacy Name" [fillMode]="formUiStyle.inputFillMode"
+            formControlName="providerName">
+          </kendo-textbox>
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
+            Pharmacy name is required
+          </kendo-formerror>
+        </kendo-floatinglabel>
+      </div>
+
+      <div class="flex-col" *ngIf="providerType == vendorTypes.MedicalProvider || providerType == vendorTypes.DentalProvider">
+        <kendo-floatinglabel text="Provider Name">
+          <kendo-textbox aria-label="Pharmacy Name" [fillMode]="formUiStyle.inputFillMode"
             formControlName="providerName">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
@@ -21,7 +43,7 @@
           </kendo-textbox>
         </kendo-floatinglabel>
       </div>
-      <div *ngIf="providerType != vendorTypes.MedicalProvider && providerType != vendorTypes.DentalProvider" class="flex-col mt-1">
+      <div *ngIf="providerType == vendorTypes.Pharmacy" class="flex-col mt-1">
         <div class="component-list-h">
           <span class="app-checkboxwidtext-wrapper">
             <input type="checkbox" kendoCheckBox aria-labelledby="Rebate" id="isPreferedPharmacy"
@@ -39,6 +61,12 @@
           If you add a payment address, all fields are required unless otherwise stated.
         </p>
         <p *ngIf="providerType == vendorTypes.DentalProvider">Add a payment address and contacts for that address. Additional payment addresses may be added once the dental provider is added.
+          If you add a payment address, all fields are required unless otherwise stated.
+        </p>
+        <p *ngIf="providerType == vendorTypes.InsuranceVendors">Add a payment address and contacts for that address. Additional payment addresses may be added once the insurance vendor is added. 
+          If you add a payment address, all fields are required unless otherwise stated.
+        </p>
+        <p *ngIf="providerType == vendorTypes.Pharmacy">Add a payment address and contacts for that address. Additional payment addresses may be added once the insurance vendor is added.
           If you add a payment address, all fields are required unless otherwise stated.
         </p>
       </div>
@@ -118,7 +146,7 @@
         </kendo-floatinglabel>
       </div>
 
-      <div *ngIf="(providerType != vendorTypes.MedicalProvider) && (providerType != vendorTypes.DentalProvider)" class="flex-col mt-1">
+      <div *ngIf="(providerType != vendorTypes.MedicalProvider) && (providerType != vendorTypes.DentalProvider) && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy" class="flex-col mt-1">
         <button kendoButton icon="add" [primary]="true" look="flat" aria-label="Add address">
           Address
         </button>
@@ -162,27 +190,17 @@
         </fieldset>
       </div>
 
-      <!-- special handling -->
-      <div class="flex-col flex-col-11">
-        <kendo-floatinglabel text="Special Handling (optional)">
-          <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #SpecialHandling resizable="auto" id="SpecialHandling"
-            [maxlength]="SpecialHandlingLength" aria-label="Special Handling" formControlName="specialHandling">
-          </kendo-textarea>
-        </kendo-floatinglabel>
-      </div>
-
-      <div class="flex-col flex-col-6" *ngIf="providerType != vendorTypes.MedicalProvider && providerType != vendorTypes.DentalProvider">
+      <div class="flex-col flex-col-6" *ngIf="providerType == vendorTypes.InsuranceVendors">
         <kendo-floatinglabel text="Payment Run Date">
-          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" textField="lovDesc" valueField="lovCode"
+          <kendo-dropdownlist [data]="paymentRunDateList" [fillMode]="formUiStyle.dropDownFillMode" textField="lovDesc" valueField="lovCode"
             [valuePrimitive]="true" formControlName="paymentRunDate">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="!medicalProviderForm.controls['paymentRunDate'].valid && isValidateForm">
+          Payment Run Date is required
+        </kendo-formerror>
       </div>
-      <div class="flex-col flex-col-6 mt-4" *ngIf="providerType != vendorTypes.MedicalProvider && providerType != vendorTypes.DentalProvider">
-        <kendo-label> Of each Month</kendo-label>
-      </div>
-
-      <div class="flex-col mt-1" *ngIf="providerType != vendorTypes.MedicalProvider && providerType != vendorTypes.DentalProvider">
+      <div class="flex-col mt-1" *ngIf="providerType == vendorTypes.InsuranceVendors">
         <fieldset class="k-form-fieldset">
           <legend class="k-form-legend">
             <h5 class="mb-0"> Accepts combined payments? </h5>
@@ -190,21 +208,25 @@
 
           <div class="component-list-h">
             <span class="app-radiobtnwidtext-wrapper">
-              <input type="radio" kendoRadioButton aria-labelledby="combinedpaymentsYes" name="combinedPayments"
-                id="combinedpaymentsYes" formControlName="combinedPayments" />
+              <input type="radio" kendoRadioButton aria-labelledby="combinedpaymentsYes" name="isAcceptCombinedPayment"
+                id="combinedpaymentsYes" value="Y" formControlName="isAcceptCombinedPayment" />
               <kendo-label class="k-radio-label" text="Yes" for="combinedpaymentsYes"></kendo-label>
             </span>
             <span class="app-radiobtnwidtext-wrapper">
-              <input type="radio" kendoRadioButton name="combinedPayments" id=" combinedpaymentsno"
-                name="combinedPayments" aria-labelledby="combinedpaymentsno" formControlName="combinedPayments" />
+              <input type="radio" kendoRadioButton name="isAcceptCombinedPayment" id="combinedpaymentsno"
+                  aria-labelledby="combinedpaymentsno" value="N" formControlName="isAcceptCombinedPayment" />
               <kendo-label class="k-radio-label" text="No" for="combinedpaymentsno"></kendo-label>
             </span>
 
           </div>
+          
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['isAcceptCombinedPayment'].valid && isValidateForm">
+            Accepts combined payments is required
+          </kendo-formerror>
         </fieldset>
       </div>
 
-      <div class="flex-col mt-1" *ngIf="providerType != vendorTypes.MedicalProvider && providerType != vendorTypes.DentalProvider">
+      <div class="flex-col mt-1" *ngIf="providerType == vendorTypes.InsuranceVendors">
         <fieldset class="k-form-fieldset">
           <legend class="k-form-legend">
             <h5 class="mb-0"> Accepts reports? </h5>
@@ -212,20 +234,37 @@
 
           <div class="component-list-h">
             <span class="app-radiobtnwidtext-wrapper">
-              <input type="radio" kendoRadioButton aria-labelledby="reportsYes" name="medicalReportsYes"
-                formControlName="medicalReportsYes" id="reportsYes" />
-              <kendo-label class="k-radio-label" text="Yes" for="reportsYes"></kendo-label>
+              <input type="radio" kendoRadioButton aria-labelledby="reportsYes" name="isAcceptReports"
+                formControlName="isAcceptReports" id="reportsYes" />
+              <kendo-label class="k-radio-label" value="Y" text="Yes" for="reportsYes"></kendo-label>
             </span>
             <span class="app-radiobtnwidtext-wrapper">
               <input type="radio" kendoRadioButton name="reports" id="reportsno" aria-labelledby="reportsno"
-                name="medicalReportsNo" formControlName="medicalReportsNo" />
+                name="isAcceptReports" value="N" formControlName="isAcceptReports" />
               <kendo-label class="k-radio-label" text="No" for="reportsno"></kendo-label>
             </span>
-
           </div>
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['isAcceptReports'].valid && isValidateForm">
+            Accepts reports? is required
+          </kendo-formerror>
         </fieldset>
       </div>
-      <div class="flex-col" *ngIf="providerType != vendorTypes.MedicalProvider && providerType != vendorTypes.DentalProvider">
+
+      <!-- special handling -->
+      <div class="flex-col flex-col-12">
+        <kendo-floatinglabel text="Special Handling (optional)">
+          <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #SpecialHandling resizable="auto" id="SpecialHandling"
+            [maxlength]="SpecialHandlingLength" aria-label="Special Handling" formControlName="specialHandling">
+          </kendo-textarea>
+        </kendo-floatinglabel>
+      </div>
+
+
+
+  
+
+   
+      <div class="flex-col" *ngIf="providerType != vendorTypes.MedicalProvider && providerType != vendorTypes.DentalProvider && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy">
         <fieldset class="k-form-fieldset no_margin_fieldset">
           <legend class="k-form-legend">
             <h5>Invoice For (Select all that apply)</h5>
@@ -246,13 +285,6 @@
 
           </div>
         </fieldset>
-      </div>
-      <div class="flex-col flex-col-12" *ngIf="providerType != vendorTypes.MedicalProvider && providerType != vendorTypes.DentalProvider">
-        <kendo-floatinglabel text="Special Handling (optional)">
-          <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #SpecialHandling resizable="auto" id="SpecialHandling"
-            [maxlength]="SpecialHandlingLength" aria-label="Special Handling">
-          </kendo-textarea>
-        </kendo-floatinglabel>
       </div>
     </div>
 

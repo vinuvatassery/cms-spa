@@ -1,8 +1,10 @@
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { VendorFacade, ContactFacade, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { VendorFacade, ContactFacade, FinancialVendorProviderTabCode, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'cms-vendor-details',
   templateUrl: './vendor-details.component.html',
@@ -22,15 +24,18 @@ export class VendorDetailsComponent implements OnInit {
   isValidateForm: boolean = false;
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodList: any[] = [];
+  paymentRunDateList: any[] = [];
   vendorContactList: any[] = [];
-
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
 
   constructor(
     private readonly formBuilder: FormBuilder,
     private vendorFacade: VendorFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly contactFacade: ContactFacade,
-    private lovFacade: LovFacade
+    private lovFacade: LovFacade,
+    public readonly intl: IntlService,
+    private readonly configurationProvider: ConfigurationProvider,
   ) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
@@ -38,6 +43,7 @@ export class VendorDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.contactFacade.loadDdlStates();
     this.getPaymentMethods();
+    this.getPaymentRunDate();
   }
 
   get AddContactForm(): FormArray {
@@ -109,6 +115,27 @@ export class VendorDetailsComponent implements OnInit {
       ]);
     this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();
 
+    if (this.providerType == this.vendorTypes.InsuranceVendors) {
+
+      this.medicalProviderForm.controls['paymentRunDate']
+        .setValidators([
+          Validators.required,
+        ]);
+      this.medicalProviderForm.controls['paymentRunDate'].updateValueAndValidity();
+
+      this.medicalProviderForm.controls['isAcceptCombinedPayment']
+        .setValidators([
+          Validators.required,
+        ]);
+      this.medicalProviderForm.controls['isAcceptCombinedPayment'].updateValueAndValidity();
+
+      this.medicalProviderForm.controls['isAcceptReports']
+      .setValidators([
+        Validators.required,
+      ]);
+      this.medicalProviderForm.controls['isAcceptReports'].updateValueAndValidity();
+    }
+
   }
 
   getPaymentMethods() {
@@ -117,6 +144,17 @@ export class VendorDetailsComponent implements OnInit {
     this.lovFacade.paymentMethodType$.subscribe((paymentMethod: any) => {
       if (paymentMethod) {
         this.paymentMethodList = paymentMethod;
+        this.vendorFacade.hideLoader();
+      }
+    })
+  }
+
+  getPaymentRunDate() {
+    this.lovFacade.getPaymentRunDateLov();
+    this.vendorFacade.showLoader();
+    this.lovFacade.paymentRunDates$.subscribe((paymentRunDates: any) => {
+      if (paymentRunDates) {
+        this.paymentRunDateList = paymentRunDates;
         this.vendorFacade.hideLoader();
       }
     })
@@ -158,9 +196,12 @@ export class VendorDetailsComponent implements OnInit {
       paymentMethodCode: formValues.paymentMethod,
       specialHandling: formValues.specialHandling,
       phoneTypeCode: this.providerType,
-      vendorContacts:this.vendorContactList
+      vendorContacts: this.vendorContactList,
+      AcceptsReportsFlag: formValues.isAcceptReports,
+      AcceptsCombinedPaymentsFlag: formValues.isAcceptCombinedPayment,
+      PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? this.intl.formatDate(formValues.paymentRunDate,this.dateFormat) : null,
+      PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes
     }
     return vendorProfileData;
   }
-
 }

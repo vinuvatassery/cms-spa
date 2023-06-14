@@ -16,6 +16,8 @@ export class FinancialVendorPageComponent implements OnInit {
   providerTypeCode: string = '';
   isShowMedicalProvider: boolean = false;
   isShowDentalProvider: boolean = false;
+  isShowInsuranceProvider: boolean = false;
+  isShowPharmacyProvider: boolean = false;
 
   data = [
     {
@@ -33,13 +35,13 @@ export class FinancialVendorPageComponent implements OnInit {
     {
       text: 'Insurance Vendor',
       click: (dataItem: any): void => {
-        this.clickOpenVendorDetails(dataItem);
+        this.clickOpenInsuranceVendorModal();
       },
     },
     {
       text: 'Pharmacy',
       click: (dataItem: any): void => {
-        this.clickOpenVendorDetails(dataItem);
+        this.clickOpenPharmacyVendorModal();
       },
 
     },
@@ -127,15 +129,11 @@ export class FinancialVendorPageComponent implements OnInit {
       city: [''],
       state: [''],
       zip: [''],
-      emailAddress: [''],
+      isPreferedPharmacy: [''],
+      paymentRunDate:[''],
+      isAcceptCombinedPayment:[''],
+      isAcceptReports: [''],
       newAddContactForm: this.formBuilder.array([
-        // this.formBuilder.group({
-        //   contactName: new FormControl('', Validators.maxLength(40)),
-        //   description: new FormControl(),
-        //   phoneNumber: new FormControl(),
-        //   fax: new FormControl(),
-        //   email: new FormControl()
-        // })
       ]),
     });
   }
@@ -160,5 +158,19 @@ export class FinancialVendorPageComponent implements OnInit {
   closeVendorDetailModal(){
     this.isShowMedicalProvider = false;
     this.isShowDentalProvider = false;
+    this.isShowInsuranceProvider =false;
+    this.isShowPharmacyProvider = false;
+  }
+
+  clickOpenInsuranceVendorModal(){
+    this.buildVendorForm();
+    this.providerTypeCode = FinancialVendorTypeCode.InsuranceVendors;
+    this.isShowInsuranceProvider = true;
+  }
+
+  clickOpenPharmacyVendorModal(){
+    this.buildVendorForm();
+    this.providerTypeCode = FinancialVendorTypeCode.Pharmacy;
+    this.isShowPharmacyProvider = true;
   }
 }
