@@ -4,7 +4,7 @@ import {
   ViewEncapsulation,
   ChangeDetectorRef
 } from '@angular/core';
-import { PaymentsFacade, contactResponse } from '@cms/case-management/domain';
+import { PaymentsFacade, contactResponse,ContactsFacade } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
@@ -20,7 +20,30 @@ export class ContactInnerGridComponent {
   isContactAddressDeactivateShow = false;
   isContactAddressDeleteShow = false; 
   isContactAddressDetailShow = false;
+  VendorContactId:any;
+  paymentAddressInnerGridLists = [
 
+    {
+
+      Name: 'FName LName',
+
+      Description:'FName LName',
+
+      PremiumAmount: '500.00',
+
+      PhoneNumber: 'XXXXXX',
+
+      FaxNumber: 'XXXXXX',
+
+      EmailAddress: 'XXXXXX',
+
+      EffectiveDate: 'XXXXXX',
+
+      by: 'XX',
+
+    },
+
+  ];
   public contactAddressActions = [
     {
       buttonType: 'btn-h-primary',
@@ -37,7 +60,11 @@ export class ContactInnerGridComponent {
       icon: 'block',
       click: (data: any): void => {
         console.log(data);
-        this.clickOpenDeactivateContactAddressDetails();
+        if(data?.VendorContactId){
+          this.VendorContactId = data?.VendorContactId;
+          this.clickOpenDeactivateContactAddressDetails();
+        }
+        
       },
     },
     {
@@ -45,12 +72,19 @@ export class ContactInnerGridComponent {
       text: 'Delete Address',
       icon: 'delete',
       click: (data: any): void => {
-        console.log(data);
-        this.clickOpenDeleteContactAddressDetails();
+       
+        if(data?.VendorContactId){
+          this.VendorContactId = data?.VendorContactId;
+          this.clickOpenDeleteContactAddressDetails();
+        }
+        
       },
     },
   ];
-  constructor(private readonly paymentsFacade: PaymentsFacade,private cd:ChangeDetectorRef) {}
+  constructor(private readonly paymentsFacade: PaymentsFacade,
+    private cd:ChangeDetectorRef,
+    private readonly contactsFacade: ContactsFacade,
+    ) {}
 
   ngOnInit(): void {
     this.contactResponse=[];
@@ -69,4 +103,24 @@ export class ContactInnerGridComponent {
   clickOpenDeleteContactAddressDetails() {
     this.isContactAddressDeleteShow = true;
   }
+  
+  clickCloseDeleteContactAddress()
+  {
+    this.isContactAddressDeleteShow = false;
+  }
+  clickCloseDeactivateContactAddress()
+  {
+    this.isContactAddressDeactivateShow = false;
+  }
+  onCancelPopup(isCancel:any){
+   if(isCancel){
+    this.clickCloseDeleteContactAddress();
+   }
+  }
+  onDeactiveCancel(isCancel:any){
+    if(isCancel){
+      this.clickCloseDeactivateContactAddress();
+     }
+  }
+  
 }
