@@ -96,7 +96,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   /** Internal event methods **/
   onCloseSaveForLaterClicked() {
     this.isShowSaveForLaterPopupClicked = false;
-    // this.onCloseSendEmailClicked();
+    this.onCloseSendEmailClicked();
   }
 
   OnEditEmailClicked() {
@@ -120,6 +120,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowSendEmailConfirmationPopupClicked = false;
     if (CommunicationEvents.Print === event) {
       this.closeSendEmailEvent.emit(CommunicationEvents.Print);
+    } else if (CommunicationEvents.Close === event) {
+      this.closeSendEmailEvent.emit(CommunicationEvents.Close);
     }
   }
 
@@ -133,9 +135,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   onCloseSendEmailClicked() {
     this.closeSendEmailEvent.emit(CommunicationEvents.Close);
   }
-onClosePreviewEmail(){
-  this.isShowPreviewEmailPopupClicked = false;
-}
+
   /** External event methods **/
   handleDdlEmailValueChange() {
     this.isClearEmails =true;

@@ -1,6 +1,9 @@
- 
-
-<kendo-dialog-titlebar (close)="onCloseSendEmailClicked()">Send New Email </kendo-dialog-titlebar>
+<kendo-dialog
+  *ngIf="isOpenSendEmailClicked"
+  (close)="onCloseSendEmailClicked()"
+  class="app-c-modal app-c-modal-lg app-c-modal-np"
+  title="Send New Email "
+>
   <section class="k-dialog-body">
     <p class="text-muted mb-1">
       Select an existing template or draft a custom email.
@@ -105,7 +108,7 @@
       </div>
     </div>
   </kendo-dialog-actions>
- 
+</kendo-dialog>
 <!-- Save for Latter (Email Draft) Modal -->
 <kendo-dialog
   *ngIf="isShowSaveForLaterPopupClicked"
@@ -138,7 +141,6 @@
 <!-- Email Preview Modal -->
 <kendo-dialog
   *ngIf="isShowPreviewEmailPopupClicked"
-  (close)="onClosePreviewEmail()"
   class="app-c-modal app-c-modal-lg app-c-modal-np no-title-actions"
   title="Preview Email"
 >

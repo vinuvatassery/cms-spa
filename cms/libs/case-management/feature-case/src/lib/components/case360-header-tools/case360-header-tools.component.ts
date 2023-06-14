@@ -1,9 +1,9 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef,} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommunicationEvents, ContactFacade, ScreenType } from '@cms/case-management/domain';
 import { Subscription } from 'rxjs';
-import { DialogService } from '@progress/kendo-angular-dialog';
+
 @Component({
   selector: 'case-management-case360-header-tools',
   templateUrl: './case360-header-tools.component.html',
@@ -14,8 +14,10 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   /* Input properties */
   @Input() clientCaseEligibilityId: any
   @Input() clientId: any
-  /* Public properties */ 
-  screenName = ScreenType.Case360Page; 
+  /* Public properties */
+  isTodoDetailsOpened = false;
+  screenName = ScreenType.Case360Page;
+  isNewReminderOpened = false;
   isIdCardOpened = false;
   isSendNewLetterOpened = false;
   isSendNewEmailOpened = false;
@@ -29,58 +31,47 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   reloadSubscription$ = new Subscription();
   buttonList!: any[];
   isFirstLoad = false;
-  private todoDetailsDialog : any;
-  private newReminderDetailsDialog : any;
-  private isSendNewLetterDialog : any;
-  private isSendNewEmailOpenedDialog : any;
-  private isNewSMSTextOpenedDialog : any;
-  private isIdCardOpenedDialog : any;  
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'New Letter',
       icon: 'markunread_mailbox',
       isVisible: true,
-      id: 'new_letter',
-      click: (templatename: any): void => {
-        this.onSendNewLetterClicked(templatename);
+      click: (): void => {
+        this.onSendNewLetterClicked();
       },
     },
     {
       buttonType: 'btn-h-primary',
       text: 'New Email',
       icon: 'mail_outline',
-      id: 'new_email',
       isVisible: false,
-      click: (templatename: any): void => {
-        this.onSendNewEmailClicked(templatename);
+      click: (): void => {
+        this.onSendNewEmailClicked();
       },
     },
     {
       buttonType: 'btn-h-primary',
       text: 'New SMS Text',
       icon: 'comment',
-      id: 'new_sms_text',
       isVisible: false,
-      click: (templatename: any): void => {
-        this.onNewSMSTextClicked(templatename);
+      click: (): void => {
+        this.onNewSMSTextClicked();
       },
     },
     {
       buttonType: 'btn-h-primary',
       text: 'New ID Card',
       icon: 'call_to_action',
-      id:'new_id_card',
       isVisible: true,
-      click: (templatename: any): void => {
-        this.onIdCardClicked(templatename);
+      click: (): void => {
+        this.onIdCardClicked();
       },
     },
   ];
 
   /* constructor */
-  constructor(private readonly contactFacade: ContactFacade, private readonly route: ActivatedRoute, 
-    private dialogService: DialogService) {
+  constructor(private readonly contactFacade: ContactFacade, private readonly route: ActivatedRoute) {
   }
   ngOnDestroy(): void {
     this.emailSubscription$.unsubscribe();
@@ -120,82 +111,60 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
 
   /* Internal Methods */
- 
+  onSendNewLetterClicked() {
+    this.isSendNewLetterOpened = true;
+  }
 
-  onSendNewLetterClicked(template: TemplateRef<unknown>): void {
-    this.isSendNewLetterDialog = this.dialogService.open({ 
-      content: template, 
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
-    }); 
+  onSendNewEmailClicked() {
+    this.isSendNewEmailOpened = true;
   }
-  handleSendNewLetterClosed(value: CommunicationEvents) {
-    if (value === CommunicationEvents.Close) {
-      this.isSendNewLetterDialog.close(value);
-      this.isSendNewLetterOpened = false;
-    }
+
+  onNewSMSTextClicked() {
+    this.isNewSMSTextOpened = true;
   }
-  onSendNewEmailClicked(template: TemplateRef<unknown>): void {
-    this.isSendNewEmailOpenedDialog = this.dialogService.open({
-      content: template, 
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
-    }); 
+
+  onIdCardClosed() {
+    this.isIdCardOpened = false;
+  }
+
+  onIdCardClicked() {
+    this.isIdCardOpened = true;
+  }
+  onNewReminderClosed() {
+    this.isNewReminderOpened = false;
+  }
+
+  onNewReminderClicked() {
+    this.isNewReminderOpened = true;
   }
   handleSendNewEmailClosed(value: CommunicationEvents) {
     if (value === CommunicationEvents.Close) {
       this.isSendNewEmailOpened = false;
-      this.isSendNewEmailOpenedDialog.close();
     }
   }
 
-  onNewSMSTextClicked(template: TemplateRef<unknown>): void {
-    this.isNewSMSTextOpenedDialog = this.dialogService.open({
-      content: template, 
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
-    }); 
-  }
   handleNewSMSTextClosed(value: CommunicationEvents) {
     if (value === CommunicationEvents.Close) {
-      this.isNewSMSTextOpenedDialog.close();
       this.isNewSMSTextOpened = false;
     }
   }
-  onIdCardClicked(template: TemplateRef<unknown>): void {
-    this.isIdCardOpenedDialog = this.dialogService.open({
-      title: 'Send New ID Card',
-      content: template, 
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    }); 
-  }
-  handleIdCardClosed(result: any) {
-    if(result){
-      this.isIdCardOpened = false;
-      this.isIdCardOpenedDialog.close();
-    }
-  }
- 
-  onNewReminderClosed(result: any) {
-    if(result){
-      this.newReminderDetailsDialog.close()
-    }}
 
-  onNewReminderClicked(template: TemplateRef<unknown>): void {
-    this.newReminderDetailsDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    }); 
-  }
-
-  onTodoDetailsClosed(result: any) {
-    if(result){ 
-      this.todoDetailsDialog.close();
+  handleSendNewLetterClosed(value: CommunicationEvents) {
+    if (value === CommunicationEvents.Close) {
+      this.isSendNewLetterOpened = false;
     }
   }
 
-  onTodoDetailsClicked( template: TemplateRef<unknown>): void {
-    this.todoDetailsDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    }); 
+  handleIdCardClosed() {
+    this.isIdCardOpened = false;
+  }
+
+  onTodoDetailsClosed() {
+    this.isTodoDetailsOpened = false;
+  }
+
+  onTodoDetailsClicked() {
+    this.isTodoDetailsOpened = true;
   }
 
   loadMailingAddress() {

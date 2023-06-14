@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CaseFacade, StatusPeriodFacade } from '@cms/case-management/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { Subject } from 'rxjs/internal/Subject';
-import { DialogService } from '@progress/kendo-angular-dialog';
+
 @Component({
   selector: 'case-management-status-group-history',
   templateUrl: './status-group-history.component.html',
@@ -19,11 +19,10 @@ export class StatusGroupHistoryComponent implements OnInit {
   isGroupDeleteModalOpened: boolean = false;
   selectedGroupId!: string;
   loader: boolean = false;
-  private statusGroupDialog: any;
+
   constructor(
     private statusPeriodFacade: StatusPeriodFacade,
-    private caseFacade: CaseFacade,    
-    private dialogService: DialogService) {
+    private caseFacade: CaseFacade) {
   }
 
   ngOnInit() {
@@ -45,23 +44,15 @@ export class StatusGroupHistoryComponent implements OnInit {
     });
   }
 
-  loadEligibilityChangeModal(event: any, template: TemplateRef<unknown>): void{
+  loadEligibilityChangeModal(event: any) {
     this.caseFacade.loadEligibilityChangeGroups(this.eligibilityId);
     this.isGroupDetailOpened = true;
     this.selectedGroupId = event.groupId;
-    this.statusGroupDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    });
   }
 
-  onGroupDetailClosed(result: any) {
+  onGroupDetailClosed() {
     this.isGroupDetailOpened = false;
-    if (result) {
-      this.statusGroupDialog.close();
-    }
     this.selectedGroupId = "";
-    
   }
 
   onGroupChangeUpdateClicked(group: any) {

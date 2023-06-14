@@ -60,7 +60,7 @@ export class SendLetterComponent implements OnInit {
 
   onCloseSaveForLaterClicked() {
     this.isShowSaveForLaterPopupClicked = false;
- 
+    this.onCloseNewLetterClicked();
   }
 
   onSaveForLaterClicked() {
@@ -73,7 +73,7 @@ export class SendLetterComponent implements OnInit {
     if (event === CommunicationEvents.Print) {
       this.closeSendLetterEvent.emit(CommunicationEvents.Print);
     } else if (event === CommunicationEvents.Close) {
-      this.isShowSendLetterToPrintPopupClicked = false;
+      this.closeSendLetterEvent.emit(CommunicationEvents.Close);
     }
   }
 
@@ -93,9 +93,6 @@ export class SendLetterComponent implements OnInit {
 
   onCloseNewLetterClicked() {
     this.closeSendLetterEvent.emit(CommunicationEvents.Close);
-  }
-  onPreviewLetterClose(){
-    this.isShowPreviewLetterPopupClicked = false;
   }
 
   /** External event methods **/

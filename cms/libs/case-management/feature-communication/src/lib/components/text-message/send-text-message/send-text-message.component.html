@@ -1,5 +1,9 @@
- 
-<kendo-dialog-titlebar (close)="onCloseSendMessageClicked()">Send New SMS Text </kendo-dialog-titlebar>
+<kendo-dialog
+  *ngIf="isOpenSendMessageClicked"
+  (close)="onCloseSendMessageClicked()"
+  class="app-c-modal app-c-modal-md app-c-modal-np"
+  title="Send New SMS Text"
+>
   <section class="k-dialog-body">
     <p class="text-muted mb-1">
       Select an existing template or draft custom text messages.
@@ -71,7 +75,7 @@
       </div>
     </div>
   </kendo-dialog-actions>
- 
+</kendo-dialog>
 
 <!-- Save for Latter (SMS Draft) Modal -->
 <kendo-dialog
@@ -91,7 +95,8 @@
       <div class="justify-content-end">
         <button
           kendoButton
-          [primary]="true" 
+          [primary]="true"
+          (click)="onCloseSendMessageClicked()"
           aria-label="confirmation for close send message"
         >
           OK
