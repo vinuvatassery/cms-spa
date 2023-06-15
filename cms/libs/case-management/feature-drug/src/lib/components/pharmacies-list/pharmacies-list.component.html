@@ -21,8 +21,8 @@
         <kendo-grid-column field="phone" title="Phone Number" [width]="130"></kendo-grid-column>
         <kendo-grid-column field="fax" title="Fax Number" [width]="130"></kendo-grid-column>
         <kendo-grid-column field="mailCode" title="Mail Codes" [width]="100"></kendo-grid-column>
-        <kendo-grid-column field="priorityName" title="Priority" [width]="100"></kendo-grid-column>
         <kendo-grid-column field="address" title="Address" [width]="200"></kendo-grid-column>
+        <kendo-grid-column field="npi" title="NPI" [width]="200"></kendo-grid-column>
         <kendo-grid-column field="effectiveDate" title="Effective Date" [width]="120">
           <ng-template kendoGridCellTemplate let-dataItem>
             <span *ngIf="dataItem.activeFlag == 'Y' ;else endDateBlock">

@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy , ElementRef, TemplateRef} from '@angular/core';
 /** External libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
@@ -7,6 +7,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 /** Facades **/
 import {ReminderFacade} from '@cms/productivity-tools/domain';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-reminder-list',
   templateUrl: './reminder-list.component.html',
@@ -23,7 +24,7 @@ export class ReminderListComponent {
   snackbar$ = this.snackbarSubject.asObservable();
   isShowReminderDetailsModal = false;
   reminderActionPopupClass = 'more-action-dropdown app-dropdown-action-list';
-
+  private newReminderDetailsDialog : any;
   public reminderActions = [
     {
       buttonType:"btn-h-primary",
@@ -54,7 +55,8 @@ export class ReminderListComponent {
   /** Constructor **/
   constructor(
     private reminderFacade : ReminderFacade,
-    private loaderService: LoaderService,
+    private loaderService: LoaderService,    
+    private dialogService: DialogService
   ){}
   /** Internal event methods **/
   onDoneClicked() {
@@ -65,14 +67,19 @@ export class ReminderListComponent {
    
   }
 
-  onCloseReminderClicked() {
-    this.isShowReminderDetailsModal = false;
-  }
+ 
 
-  onAddReminderClicked() {
-    this.isShowReminderDetailsModal = true;
-  }
+  onNewReminderClosed(result: any) {
+    if(result){
+      this.newReminderDetailsDialog.close()
+    }}
 
+    onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
+    this.newReminderDetailsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    }); 
+  }
   
   clickOpenReminderToDoDetails( ) {
     this.isOpenTODOItemDetailsNoFeature = true;

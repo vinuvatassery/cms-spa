@@ -3,7 +3,7 @@
     Send new ID card to the mailing address below? This action cannot be undone.
   </p>
   <div class="flex-row">
-    <div style="width:60%" *ngIf="!(mailingAddress$ | async)">
+    <div class="flex-col" style="width:60%" *ngIf="!(mailingAddress$ | async)">
       <kendo-skeleton shape="text" animation="pulse" width="40%"></kendo-skeleton>
       <p></p>
       <kendo-skeleton shape="text" animation="pulse" width="60%"></kendo-skeleton>
