@@ -52,6 +52,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   haveTheyHaveAdditionalFamilyMember! : string;
   previousRelationsList: any = [];
   isCerFormValid: Subject<boolean> = new Subject();
+  requestObj: any = {};
   /** Constructor **/
   constructor(
     private familyAndDependentFacade: FamilyAndDependentFacade,
@@ -167,33 +168,54 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   }
 
   onDependentStatusChange(dependent: any, status: string) {
-    if(!!dependent.clientRelationshipId) {
-      this.familyAndDependentFacade.deleteDependent(this.clientCaseEligibilityId, dependent.clientRelationshipId, this.isCerForm, status);
-      this.dependentdelete$.pipe(first((deleteResponse: any ) => deleteResponse != null))
-        .subscribe((dependentData: any) =>
-        {
-          if(dependentData ?? false)
-          {
-            this.familyAndDependentFacade.loadPreviousRelations(this.prevClientCaseEligibilityId, this.clientId);
-          }
-        });
+    if(!!this.requestObj['dependents'] && this.requestObj['dependents'].length > 0){
+      let checkDependentIndex = this.requestObj['dependents'].findIndex((x: any)=>x.dependent == dependent);
+      if(checkDependentIndex >= 0) {
+        this.requestObj['dependents'][checkDependentIndex]['status'] = status;
+      } else {
+        this.requestObj['dependents'].push({'dependent': dependent, 'status': status});
+      }
     }
+    else {
+      this.requestObj['dependents'].push({'dependent': dependent, 'status': status});
+    }
+    // if(!!dependent.clientRelationshipId) {
+    //   this.familyAndDependentFacade.deleteDependent(this.clientCaseEligibilityId, dependent.clientRelationshipId, this.isCerForm, status);
+    //   this.dependentdelete$.pipe(first((deleteResponse: any ) => deleteResponse != null))
+    //     .subscribe((dependentData: any) =>
+    //     {
+    //       if(dependentData ?? false)
+    //       {
+    //         this.familyAndDependentFacade.loadPreviousRelations(this.prevClientCaseEligibilityId, this.clientId);
+    //       }
+    //     });
+    // }
   }
 
   onFamilyMemberStatusChange(status: string) {
-    this.familyAndDependentFacade.updateFamilyChangedStatus
-    (this.prevClientCaseEligibilityId, status).subscribe((isSaved) => {
-      if (isSaved ?? false) {
-        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Family Changed Status Updated');
-      }
-    });
+    this.requestObj['onFamilyMemberStatus'] = status;
+    // this.familyAndDependentFacade.updateFamilyChangedStatus
+    // (this.prevClientCaseEligibilityId, status).subscribe((isSaved) => {
+    //   if (isSaved ?? false) {
+    //     this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Family Changed Status Updated');
+    //   }
+    // });
   }
 
   onAdditionalFamilyStatusChange(status: string) {
-    this.familyAndDependentFacade.updateAdditionalFamilyStatus
-    (this.prevClientCaseEligibilityId, status).subscribe((isSaved) => {
+    this.requestObj['onAdditionalFamilyStatus'] = status;
+    // this.familyAndDependentFacade.updateAdditionalFamilyStatus
+    // (this.prevClientCaseEligibilityId, status).subscribe((isSaved) => {
+    //   if (isSaved ?? false) {
+    //     this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Additional Family Status Updated');
+    //   }
+    // });
+  }
+
+  udpateDependentValues() {
+    this.familyAndDependentFacade.updateDependentValues(this.prevClientCaseEligibilityId, this.requestObj).subscribe((isSaved: any) => {
       if (isSaved ?? false) {
-        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Additional Family Status Updated');
+        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent detail saved.');
       }
     });
   }
@@ -209,6 +231,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       return of(false);
     }
     else{
+      this.udpateDependentValues();
       this.familyAndDependentFacade.dependentValidSubject.next(true);
       return  this.familyAndDependentFacade.saveAndContinueDependents
         (this.clientId, this.clientCaseEligibilityId, this.familyStatus)

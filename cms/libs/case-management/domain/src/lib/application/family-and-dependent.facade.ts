@@ -237,6 +237,11 @@ export class FamilyAndDependentFacade {
     return this.dependentDataService.updateAdditionalFamilyStatus(previousEligibilityId , hasAdditionalFamilyFlag);
   }
 
+  updateDependentValues(eligibilityId: string, request: any) {
+    this.showLoader();
+    return this.dependentDataService.updateDependentValues(eligibilityId, request);
+  }
+
   loadDependentsStatus(clientCaseEligibilityId : string) : void {
     this.showLoader();
     this.dependentDataService.loadDependentsStatus(clientCaseEligibilityId).subscribe({
