@@ -67,135 +67,135 @@ columns : any = {
 }
 
 dropDowncolumns : any = [
-  {   
-    "columnCode": "vendorName",    
+  {
+    "columnCode": "vendorName",
     "columnDesc": "Vendor Name"   ,
     "vendorTypeCode": "ALL",
   },
-  {   
-    "columnCode": "tin",    
+  {
+    "columnCode": "tin",
     "columnDesc": "Tin"   ,
     "vendorTypeCode": "ALL",
   }
   ,
-  {   
-    "columnCode": "paymentMethod",    
+  {
+    "columnCode": "paymentMethod",
     "columnDesc": "Payment Method"   ,
     "vendorTypeCode": "INSURANCE_PROVIDER",
   }
   ,
-  {   
-    "columnCode": "totalPayments",    
+  {
+    "columnCode": "totalPayments",
     "columnDesc": "Total Payments"   ,
     "vendorTypeCode": "INSURANCE_PROVIDER",
   }
   ,
-  {   
-    "columnCode": "unreconciledPayments",    
+  {
+    "columnCode": "unreconciledPayments",
     "columnDesc": "Unreconciled Payments"   ,
     "vendorTypeCode": "INSURANCE_PROVIDER",
   }
   ,
-  {   
-    "columnCode": "insurancePlans",    
+  {
+    "columnCode": "insurancePlans",
     "columnDesc": "Insurance Plans"   ,
     "vendorTypeCode": "INSURANCE_PROVIDER",
   }
   ,
-  {   
-    "columnCode": "clients",    
+  {
+    "columnCode": "clients",
     "columnDesc": "Clients"   ,
     "vendorTypeCode": "INSURANCE_PROVIDER",
   }
   ,
-  {   
-    "columnCode": "invoiceDelivery",    
+  {
+    "columnCode": "invoiceDelivery",
     "columnDesc": "Invoice Delivery"   ,
     "vendorTypeCode": "MANUFACTURERS",
   }
 
   ,
-  {   
-    "columnCode": "totalDrugs",    
+  {
+    "columnCode": "totalDrugs",
     "columnDesc": "Total Drugs"   ,
     "vendorTypeCode": "MANUFACTURERS",
   },
-  {   
-    "columnCode": "openInvoices",    
+  {
+    "columnCode": "openInvoices",
     "columnDesc": "Open Invoices"   ,
     "vendorTypeCode": "MANUFACTURERS",
   }
   ,
-  {   
-    "columnCode": "phones",    
+  {
+    "columnCode": "phones",
     "columnDesc": "Phones"   ,
     "vendorTypeCode": "MANUFACTURERS",
   }
   ,
-  {   
-    "columnCode": "emails",    
+  {
+    "columnCode": "emails",
     "columnDesc": "Emails"   ,
     "vendorTypeCode": "MANUFACTURERS",
   }
   ,
-  {   
-    "columnCode": "mailCode",    
+  {
+    "columnCode": "mailCode",
     "columnDesc": "Mail Code"   ,
     "vendorTypeCode": "MANUFACTURERS",
   }
   ,
-  {   
-    "columnCode": "address",    
+  {
+    "columnCode": "address",
     "columnDesc": "Address"   ,
     "vendorTypeCode": "MANUFACTURERS",
   },
-  {   
-    "columnCode": "unreconciledPayments",    
+  {
+    "columnCode": "unreconciledPayments",
     "columnDesc": "Unreconciled Payments"   ,
     "vendorTypeCode": "PHARMACY",
   }
   ,
-  {   
-    "columnCode": "emails",    
+  {
+    "columnCode": "emails",
     "columnDesc": "Emails"   ,
     "vendorTypeCode": "PHARMACY",
   }
   ,
-  {   
-    "columnCode": "preferredFlag",    
+  {
+    "columnCode": "preferredFlag",
     "columnDesc": "Preferred Flag"   ,
     "vendorTypeCode": "PHARMACY",
   }
   ,
-  {   
-    "columnCode": "nabp",    
+  {
+    "columnCode": "nabp",
     "columnDesc": "Nabp"   ,
     "vendorTypeCode": "PHARMACY",
   }
   ,
-  {   
-    "columnCode": "ncpdp",    
+  {
+    "columnCode": "ncpdp",
     "columnDesc": "Ncpdp"   ,
     "vendorTypeCode": "PHARMACY",
   }
-  ,  
-  {   
-    "columnCode": "physicalAddress",    
+  ,
+  {
+    "columnCode": "physicalAddress",
     "columnDesc": "Physical Address"   ,
     "vendorTypeCode": "PHARMACY",
   }
 ]
-constructor(private route: Router, 
+constructor(private route: Router,
   private readonly  cdr :ChangeDetectorRef) {
 }
-ngOnChanges(): void {  
+ngOnChanges(): void {
   this.state = {
     skip: 0,
     take: this.pageSizes[0]?.value,
     sort: this.sort
     };
   if(this.vendorTypeCode)
-  {  
+  {
    this.loadFinancialVendorsList()
   }
 }
@@ -204,14 +204,14 @@ ngOnInit(): void {
   this.bindDropdownClumns()
   if(!this.selectedColumn)
       {
-        this.selectedColumn = "vendorName";     
+        this.selectedColumn = "vendorName";
       }
 }
 
 
 private bindDropdownClumns()
-{    
-  this.dropDowncolumns = this.dropDowncolumns.filter((x : any)=>x.vendorTypeCode === this.vendorTypeCode || x.vendorTypeCode === 'ALL') 
+{
+  this.dropDowncolumns = this.dropDowncolumns.filter((x : any)=>x.vendorTypeCode === this.vendorTypeCode || x.vendorTypeCode === 'ALL')
 }
 
 get financeVendorTypeCodes(): typeof FinancialVendorTypeCode {
@@ -230,7 +230,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
      pagesize : maxResultCountValue,
      sortColumn : sortValue,
      sortType : sortTypeValue,
-     vendorTypeCode : this.vendorTypeCode     
+     vendorTypeCode : this.vendorTypeCode
    }
    this.loadFinancialVendorsListEvent.emit(gridDataRefinerValue)
    this.gridDataHandle()
@@ -241,16 +241,17 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     const query = {
       queryParams: {
         v_id: vendorId ,
-        tab_code :  this.financeTabTypeCode    
+        tab_code :  this.financeTabTypeCode,
+        vendor_type_code: this.vendorTypeCode
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query )
   }
- 
+
   onChange(data: any)
   {
     this.defaultGridState()
-    
+
     this.sortColumn = this.columns[this.selectedColumn];
     this.filterData = {logic:'and',filters:[{
       "filters": [
@@ -280,14 +281,14 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
   {
     this.columnsReordered = true;
   }
- 
-  dataStateChange(stateData: any): void {    
+
+  dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc'
     this.state=stateData;
 
-    this.sortColumn = this.columns[stateData.sort[0]?.field];    
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
     this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': 'Descending';
 
     if(stateData.filter?.filters.length > 0)
@@ -304,7 +305,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     }
     else
     {
-      this.filter = "";    
+      this.filter = "";
       this.isFiltered = false
     }
 
@@ -319,22 +320,22 @@ pageselectionchange(data: any) {
 }
 
 public filterChange(filter: CompositeFilterDescriptor): void {
- 
+
   this.filterData = filter;
  }
 
-  gridDataHandle() {   
+  gridDataHandle() {
 
-    this.vendorsList$.subscribe((data: GridDataResult) => {          
+    this.vendorsList$.subscribe((data: GridDataResult) => {
 
-      this.gridDataResult = data    
+      this.gridDataResult = data
       this.gridDataResult.data = filterBy(this.gridDataResult.data, this.filterData)
-      this.gridVendorsDataSubject.next(this.gridDataResult);  
+      this.gridVendorsDataSubject.next(this.gridDataResult);
         if (data?.total >= 0 || data?.total === -1) {
-          this.loader = false;          
+          this.loader = false;
         }
     });
 
   }
-  
+
 }

@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
-import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class InsuranceProviderDataService {
@@ -16,16 +16,26 @@ export class InsuranceProviderDataService {
 
   /** Public methods **/
 
- 
+
   loadInsuranceProviderListService() {
     return of([
       {
         ProviderName: 'A Provider Name',
-        ActivePlans:'XX', 
-        ActiveClients: 'XX', 
+        ActivePlans:'XX',
+        ActiveClients: 'XX',
         By: 'No',
       },
     ]);
+  }
+  loadProviderClientsListGrid(
+    providerId:any,
+    tabCode:any,
+    skipCount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string) {
+  return this.http.get<any>(
+    `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${providerId}/clients?vendorTypeCode=${tabCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`);
   }
 
 }
