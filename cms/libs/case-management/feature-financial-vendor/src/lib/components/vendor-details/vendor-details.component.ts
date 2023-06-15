@@ -17,7 +17,6 @@ export class VendorDetailsComponent implements OnInit {
 
   @Output() saveProviderEventClicked = new EventEmitter<any>();
 
-  SpecialHandlingLength = 100;
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
   isViewContentEditable!: boolean;
@@ -29,6 +28,11 @@ export class VendorDetailsComponent implements OnInit {
   clinicNameNotApplicable: boolean= false;
   firstLastNameNotApplicable: boolean= false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+
+  tareaJustificationCounter!: string;
+  tareaJustificationCharachtersCount!: number;
+  tareaJustificationMaxLength = 100;
+  tareaJustification = '';
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -54,7 +58,7 @@ export class VendorDetailsComponent implements OnInit {
 
   onToggleAddNewContactClick() {
     let addContactForm = this.formBuilder.group({
-      contactName: new FormControl('', [Validators.maxLength(40), Validators.required]),
+      contactName: new FormControl('',  Validators.required),
       description: new FormControl(),
       phoneNumber: new FormControl(),
       fax: new FormControl(),
@@ -69,8 +73,7 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   getContactControl(index: number, fieldName: string) {
-    let field = (<FormArray>this.medicalProviderForm.get('newAddContactForm')).at(index).get(fieldName);
-    return field;
+    return (<FormArray>this.medicalProviderForm.get('newAddContactForm')).at(index).get(fieldName);
   }
 
   save() {
@@ -192,8 +195,8 @@ export class VendorDetailsComponent implements OnInit {
           let vendorContact = {
             contactName: contact.contactName,
             contactDesc: contact.description,
-            phoneNumber: contact.phoneNumber,
-            email: contact.email,
+            phoneNbr: contact.phoneNumber,
+            emailAddress: contact.email,
           }
           this.vendorContactList.push(vendorContact);
         }
@@ -221,12 +224,24 @@ export class VendorDetailsComponent implements OnInit {
       AcceptsReportsFlag: formValues.isAcceptReports,
       AcceptsCombinedPaymentsFlag: formValues.isAcceptCombinedPayment,
       PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? this.intl.formatDate(formValues.paymentRunDate,this.dateFormat) : null,
-      PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes
+      PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes,
+      emailAddressTypeCode: 'EMAIL'
     }
     return vendorProfileData;
   }
 
-  onClinicNameChecked(isChecked: any){
+  private tareaJustificationWordCount() {
+    this.tareaJustificationCharachtersCount = this.tareaJustification
+      ? this.tareaJustification.length
+      : 0;
+    this.tareaJustificationCounter = `${this.tareaJustificationCharachtersCount}/${this.tareaJustificationMaxLength}`;
+  }
+
+  onTareaJustificationValueChange(event: any): void {
+    this.tareaJustificationCharachtersCount = event.length;
+    this.tareaJustificationCounter = `${this.tareaJustificationCharachtersCount}/${this.tareaJustificationMaxLength}`;
+  }
+onClinicNameChecked(isChecked: any){
     if(isChecked){
       this.medicalProviderForm.controls['providerName'].setValue(null);
       this.medicalProviderForm.controls['providerName'].disable();
@@ -240,5 +255,4 @@ export class VendorDetailsComponent implements OnInit {
       this.medicalProviderForm.controls['firstName'].disable();
       this.medicalProviderForm.controls['lastName'].disable();
     }
-  }
-}
+  }}
