@@ -1,6 +1,6 @@
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { VendorFacade, ContactFacade, FinancialVendorProviderTabCode, StatusFlag, AddressType } from '@cms/case-management/domain';
+import { VendorFacade, ContactFacade, FinancialVendorProviderTabCode, StatusFlag, AddressType, FinancialVendorFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -16,6 +16,7 @@ export class VendorDetailsComponent implements OnInit {
   @Input() medicalProviderForm: FormGroup;
 
   @Output() saveProviderEventClicked = new EventEmitter<any>();
+  @Output() closeModalEventClicked = new EventEmitter<any>();
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
@@ -33,10 +34,13 @@ export class VendorDetailsComponent implements OnInit {
   tareaJustificationCharachtersCount!: number;
   tareaJustificationMaxLength = 100;
   tareaJustification = '';
-
+  selectedClinicVendorId!: any;
+  clinicVendorList$ = this.financialVendorFacade.clinicVendorList$;
+  clinicVendorLoader$ = this.financialVendorFacade.clinicVendorLoader$;
   constructor(
     private readonly formBuilder: FormBuilder,
     private vendorFacade: VendorFacade,
+    private financialVendorFacade: FinancialVendorFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly contactFacade: ContactFacade,
     private lovFacade: LovFacade,
@@ -45,6 +49,18 @@ export class VendorDetailsComponent implements OnInit {
   ) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
+  public areaList: Array<string> = [
+    "Amsterdam",
+    "Athens",
+    "Barcelona",
+    "Berlin",
+    "Brussels",
+    "Chicago",
+    "Copenhagen",
+    "Dublin",
+    "Helsinki",
+    "Houston"
+  ];
 
   ngOnInit(): void {
     this.contactFacade.loadDdlStates();
@@ -203,6 +219,7 @@ export class VendorDetailsComponent implements OnInit {
       })
     }
     let vendorProfileData = {
+      vendorId: this.selectedClinicVendorId,
       vendorName: formValues.providerName,
       firstName: formValues.firstName,
       lastName: formValues.lastName,
@@ -241,20 +258,43 @@ export class VendorDetailsComponent implements OnInit {
     this.tareaJustificationCharachtersCount = event.length;
     this.tareaJustificationCounter = `${this.tareaJustificationCharachtersCount}/${this.tareaJustificationMaxLength}`;
   }
-  
-  onClinicNameChecked(isChecked: any) {
-    if (isChecked) {
+
+  onClinicNameChecked() {
+    if (this.clinicNameNotApplicable) {
       this.medicalProviderForm.controls['providerName'].setValue(null);
       this.medicalProviderForm.controls['providerName'].disable();
     }
+    else {
+      this.medicalProviderForm.controls['providerName'].enable();
+    }
   }
 
-  onNameChecked(isChecked: any) {
-    if (isChecked) {
+  onNameChecked() {
+    if (this.firstLastNameNotApplicable) {
       this.medicalProviderForm.controls['firstName'].setValue(null);
       this.medicalProviderForm.controls['lastName'].setValue(null);
       this.medicalProviderForm.controls['firstName'].disable();
       this.medicalProviderForm.controls['lastName'].disable();
     }
+    else {
+      this.medicalProviderForm.controls['firstName'].enable();
+      this.medicalProviderForm.controls['lastName'].enable();
+    }
+  }
+
+  onSearchTemplateClick(clinicDetail: any) {
+    this.selectedClinicVendorId = clinicDetail.vendorId
+    this.medicalProviderForm.controls['providerName'].setValue(clinicDetail.vendorName);
+  }
+
+  searchClinic(clinicName: any) {
+    if (clinicName != '') {
+      this.selectedClinicVendorId = null;
+      this.financialVendorFacade.searchClinicVendor(clinicName);
+    }
+  }
+
+  closeVedorModal() {
+    this.closeModalEventClicked.next(true);
   }
 }

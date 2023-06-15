@@ -28,4 +28,12 @@ export class FinancialVendorDataService {
       vendorProfile
     );
   }
+
+  searchClinicVendors(vendorName: any)
+  {
+    return this.http.get<any>(
+        `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors/${vendorName}/search`
+      );
+  }
 }
