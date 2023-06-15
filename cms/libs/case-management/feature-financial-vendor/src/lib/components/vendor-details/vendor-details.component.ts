@@ -1,6 +1,6 @@
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { VendorFacade, ContactFacade, FinancialVendorProviderTabCode, StatusFlag, AddressType, FinancialVendorFacade } from '@cms/case-management/domain';
+import { VendorFacade, FinancialVendorTypeCode, ContactFacade, FinancialVendorProviderTabCode, StatusFlag, AddressType, FinancialVendorFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -198,13 +198,13 @@ export class VendorDetailsComponent implements OnInit {
     })
   }
 
-  public get vendorTypes(): typeof FinancialVendorProviderTabCode {
-    return FinancialVendorProviderTabCode;
+  public get vendorTypes(): typeof FinancialVendorTypeCode {
+    return FinancialVendorTypeCode;
   }
 
   mappVendorProfileData() {
     let formValues = this.medicalProviderForm.value;
-
+    this.vendorContactList = [];
     if (formValues.newAddContactForm.length > 0) {
       formValues.newAddContactForm.forEach((contact: any) => {
         if (contact.contactName != '' || contact.description != '' || contact.phoneNumber != '' || contact.email != '') {
@@ -213,6 +213,8 @@ export class VendorDetailsComponent implements OnInit {
             contactDesc: contact.description,
             phoneNbr: contact.phoneNumber,
             emailAddress: contact.email,
+            emailAddressTypeCode: AddressType.Email,
+            faxNbr: contact.fax
           }
           this.vendorContactList.push(vendorContact);
         }
@@ -220,7 +222,8 @@ export class VendorDetailsComponent implements OnInit {
     }
     let vendorProfileData = {
       vendorId: this.selectedClinicVendorId,
-      vendorName: formValues.providerName,
+      vendorName: (this.providerType== FinancialVendorTypeCode.MedicalProvider
+        || this.providerType == FinancialVendorTypeCode.DentalProvider)? null : formValues.providerName,
       firstName: formValues.firstName,
       lastName: formValues.lastName,
       vendorTypeCode: this.providerType,
@@ -228,7 +231,7 @@ export class VendorDetailsComponent implements OnInit {
       mailCode: formValues.mailCode,
       addressTypeCode: AddressType.Mailing,
       address1: formValues.addressLine1,
-      address2: formValues.addressLine1,
+      address2: formValues.addressLine2,
       cityCode: formValues.city,
       stateCode: formValues.state,
       zip: formValues.zip,
@@ -238,8 +241,8 @@ export class VendorDetailsComponent implements OnInit {
       specialHandling: formValues.specialHandling,
       phoneTypeCode: AddressType.Mailing,
       vendorContacts: this.vendorContactList,
-      AcceptsReportsFlag: formValues.isAcceptReports,
-      AcceptsCombinedPaymentsFlag: formValues.isAcceptCombinedPayment,
+      AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,
+      AcceptsCombinedPaymentsFlag: (formValues.isAcceptCombinedPayment != null && formValues.isAcceptCombinedPayment != '') ? formValues.isAcceptCombinedPayment : null,
       PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? this.intl.formatDate(formValues.paymentRunDate, this.dateFormat) : null,
       PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes,
       emailAddressTypeCode: AddressType.Mailing

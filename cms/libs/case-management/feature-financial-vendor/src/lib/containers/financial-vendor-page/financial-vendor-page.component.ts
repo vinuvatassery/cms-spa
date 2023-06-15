@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CaseFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
@@ -63,7 +63,8 @@ export class FinancialVendorPageComponent implements OnInit {
   sort = this.financialVendorFacade.sort;
 
   constructor(private caseFacade: CaseFacade, private financialVendorFacade: FinancialVendorFacade,
-    private readonly formBuilder: FormBuilder) {
+    private readonly formBuilder: FormBuilder,
+    private readonly cdr: ChangeDetectorRef) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
 
@@ -140,8 +141,8 @@ export class FinancialVendorPageComponent implements OnInit {
     });
   }
 
-  public get vendorTypes(): typeof FinancialVendorProviderTabCode {
-    return FinancialVendorProviderTabCode;
+  public get vendorTypes(): typeof FinancialVendorTypeCode {
+    return FinancialVendorTypeCode;
   }
 
   saveVendorProfile(vendorProfile: any){
@@ -150,6 +151,7 @@ export class FinancialVendorPageComponent implements OnInit {
       next:(response:any)=>{
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal();
+        this.cdr.detectChanges();
       },
       error:(err:any)=>{
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);

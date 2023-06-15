@@ -97,7 +97,8 @@
 
       <div class="flex-col">
         <kendo-floatinglabel text="TIN">
-          <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" formControlName="tinNumber">
+          <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" formControlName="tinNumber"
+          [maxlength]="100">
           </kendo-textbox>
         </kendo-floatinglabel>
       </div>
@@ -135,7 +136,8 @@
 
       <div class="flex-col">
         <kendo-floatinglabel text="Mail Code">
-          <kendo-textbox aria-label="Mail Code" [fillMode]="formUiStyle.inputFillMode" formControlName="mailCode">
+          <kendo-textbox aria-label="Mail Code" [fillMode]="formUiStyle.inputFillMode" formControlName="mailCode"
+          [maxlength]="3">
           </kendo-textbox>
         </kendo-floatinglabel>
       </div>
