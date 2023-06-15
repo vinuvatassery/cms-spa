@@ -100,7 +100,6 @@ export class EmailEditorComponent implements OnInit {
     this.dataEventSubscribed();
     this.emailEditorValueEvent(this.currentValue);
     this.loadClientVariables();
-    this.loadTemplateAttachment();
     this.loadDdlEditorVariables();
     this.loadAllClientDocuments(this.clientCaseEligibilityId);
     this.cerAuthorizationForm = this.formBuilder.group({
@@ -111,6 +110,9 @@ export class EmailEditorComponent implements OnInit {
   ngOnChanges(){
     if(this.currentValue){
       this.emailEditorValueEvent(this.currentValue);
+      this.selectedAttachedFile = [];
+      this.loadDraftTemplateAttachment();
+      this.loadDefaultTemplateAttachment();
     }
   }
 
@@ -297,7 +299,7 @@ if(!this.attachedFileValidatorSize){
       });
   }
 
-  private loadTemplateAttachment() {
+  private loadDefaultTemplateAttachment() {
     this.loaderService.show();
     this.communicationFacade.loadCERAuthorizationTemplateAttachment(CommunicationEvents.TemplateAttachmentTypeCode)
     .subscribe({
@@ -308,7 +310,36 @@ if(!this.attachedFileValidatorSize){
             document: file,
             size: file.templateSize,
             name: file.description,
-            documentTemplateId: file.documentTemplateId
+            documentTemplateId: file.documentTemplateId,
+            documentTemplateTypeCode: file.documentTemplateTypeCode
+          })
+        }
+        this.ref.detectChanges();
+        this.cerEmailAttachments.emit(this.selectedAttachedFile);
+        }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+    },
+  });
+  }
+
+  private loadDraftTemplateAttachment() {
+    this.loaderService.show();
+    this.communicationFacade.loadCERAuthorizationDraftAttachment(CommunicationEvents.CERAttachmentTypeCode, this.currentValue.documentTemplateId)
+    .subscribe({
+      next: (attachments: any) =>{
+        if (attachments) {
+          for (let file of attachments){
+          this.selectedAttachedFile.push({
+            document: file,
+            size: file.templateSize,
+            name: file.description,
+            documentTemplateId: file.documentTemplateId,
+            documentTemplateTypeCode: file.documentTemplateTypeCode
           })
         }
         this.ref.detectChanges();

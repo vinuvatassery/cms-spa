@@ -111,4 +111,12 @@ export class CommunicationFacade {
   loadCERAuthorizationTemplateAttachment(typeCode: string){
     return this.emailDataService.getTemplateAttachment(typeCode);
   }
+
+  loadCERAuthorizationDraftAttachment(typeCode: string, documentTemplateId: string){
+    return this.emailDataService.getDraftTemplateAttachment(typeCode, documentTemplateId);
+  }
+
+  initiateAdobeesignRequest(formData: any, clientId: string, clientCaseEligibilityId: string) {
+    return this.emailDataService.initiateAdobeEsignRequest(formData, clientId, clientCaseEligibilityId);
+  }
 }

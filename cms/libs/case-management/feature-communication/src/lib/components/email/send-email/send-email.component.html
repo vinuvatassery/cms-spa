@@ -13,7 +13,7 @@
         <kendo-floatinglabel text="Email Templates">
           <kendo-dropdownlist
           [fillMode]="formUiStyle.dropDownFillMode"
-            [data]="ddlTemplates"
+            [data]="ddlTemplates" 
             textField="description"
             valueField="documentTemplateId"
             (valueChange)="handleDdlEmailValueChange($event)"
@@ -46,7 +46,7 @@
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Subject">
-            <kendo-textbox  placeholder="Subject"  aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+            <kendo-textbox  placeholder="Subject" [(ngModel)]="emailSubject" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
           </kendo-floatinglabel>
         </div>
         <div class="flex-col mt-3">
@@ -186,7 +186,6 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   title="Send email?"
 >
-  <case-management-send-email-confirmation></case-management-send-email-confirmation>
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="w100">

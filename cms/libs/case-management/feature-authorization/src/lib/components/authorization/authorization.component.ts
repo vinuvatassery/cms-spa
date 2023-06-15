@@ -18,10 +18,18 @@ import { IntlService } from '@progress/kendo-angular-intl';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorizationComponent   {
+  /** Input properties **/
+  @Input() isCerForm: boolean= false;
+  @Input() clientId!: any;
+  @Input() clientEligibilityId!: any;
+
+  /** Output properties **/
+  @Output() cerDateSignatureEvent = new EventEmitter<any>(); 
+
+  /** Public properties **/
   currentDate?:any = null;
   dateSignature?:any = null;
   emailSentDate?:any = null;
-  /** Public properties **/
   screenName = ScreenType.Authorization;
   isPrintClicked!: boolean;
   isSendEmailClicked!: boolean;
@@ -30,14 +38,10 @@ export class AuthorizationComponent   {
   isAuthorizationNoticePopupOpened = false;
   uploadedDocument!: File | undefined;
   public formUiStyle : UIFormStyle = new UIFormStyle();
-  @Input() isCerForm: boolean= false;
-  @Input() clientId!: any;
-  @Input() clientEligibilityId!: any;
   cerDateValidator: boolean = false;
   copyOfSignedApplication: any;
   showCopyOfSignedApplicationRequiredValidation: boolean = false;
   copyOfSignedApplicationSizeValidation: boolean = false;
-  @Output() cerDateSignatureEvent = new EventEmitter<any>(); 
   prevClientCaseEligibilityId!: string;
   contactInfo!: ContactInfo;
   isGoPaperlessOpted: boolean = false;
@@ -47,8 +51,9 @@ export class AuthorizationComponent   {
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   incompleteDateValidation!: any;
   loginUserName!:any;
-    /** Private properties **/
-    private userProfileSubsriction !: Subscription;
+  isSendEmailSuccess: boolean = false;
+  /** Private properties **/
+  private userProfileSubsriction !: Subscription;
 
   constructor(
     private readonly configurationProvider: ConfigurationProvider,
@@ -68,7 +73,7 @@ export class AuthorizationComponent   {
     this.loadUserContactInfo(this.clientId, this.clientEligibilityId);
   }
 
-    /** Private methods **/  
+  /** Private methods **/  
   private loadUserContactInfo(clientId: any, clientEligibilityId: any) {
     this.loaderService.show();
       this.contactFacade.loadContactInfo(this.clientId ?? 0, this.clientEligibilityId ?? '')
@@ -172,12 +177,16 @@ export class AuthorizationComponent   {
         break;
       case CommunicationEvents.Print:
         this.isSendNewEmailPopupOpened = false;
+        if(this.isSendEmailSuccess){
         this.isSendEmailClicked = true;
         this.getLoggedInUserProfile();
         this.loadClientDocumentInfo();
-        break;
+      }else{
+        this.isSendEmailClicked = false;
+      }
+      break;
       default:
-        break;
+      break;
     }
   }
 
@@ -195,6 +204,7 @@ export class AuthorizationComponent   {
         break;
     }
   }
+
   loadDateSignature(){
   this.cerDateSignatureEvent.emit(this.dateSignature);
   }
@@ -233,5 +243,9 @@ export class AuthorizationComponent   {
     this.copyOfSignedApplication = null;
    }
   }
+}
+
+updateSendEmailSuccessStatus(event:any){
+ this.isSendEmailSuccess = event;
 }
 }

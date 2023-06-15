@@ -126,5 +126,17 @@ export class EmailDataService {
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/esign/${clientId}/${clientCaseEligibilityId}`,selectedTemplate
       );
     }
+
+    getDraftTemplateAttachment(typeCode: string, templateId: string){
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/forms?templateId=${templateId}`,
+      );
+    }
+
+    initiateAdobeEsignRequest(formData: any, clientId: string, clientCaseEligibilityId: string){
+      return this.http.post<any>(
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?clientId=${clientId}?clientCaseEligibilityId=${clientCaseEligibilityId}`,formData
+      );
+    }
 }
  

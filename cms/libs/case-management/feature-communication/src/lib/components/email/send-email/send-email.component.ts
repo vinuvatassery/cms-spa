@@ -10,6 +10,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 /** Internal Libraries **/
 import { CommunicationEvents, CommunicationFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -28,10 +29,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   /** Input properties **/
   @Input() data!: any;
   @Input() ddlEmails$!: Observable<any>;
-  @Input() toEmail!: [];
+  @Input() toEmail: any = [];
   @Input() clientCaseEligibilityId!: any;
   @Input() clientId!: any;
-  @Input() isCerForm!: any;  
+  @Input() isCerForm!: any; 
+  
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
@@ -39,6 +41,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Output() cerEmailContentEvent = new EventEmitter<any>(); 
   @Output() emailEditorValueEvent = new EventEmitter<any>();
   @Output() editorValue = new EventEmitter<any>();
+  @Output() isSendEmailSuccess = new EventEmitter<boolean>();
 
   /** Public properties **/
   ddlLetterTemplates$ = this.communicationFacade.ddlLetterTemplates$;
@@ -66,6 +69,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   caseEligibilityId!:any;
   cerEmailAttachedFiles: any[] = [];
   userSelectedAttachment: any[] = [];
+  emailSubject!: string;
+  existingFile: any = [];
+  selectedEmail!: string;
   /** Private properties **/
   private currentSessionSubscription !: Subscription;
 
@@ -76,7 +82,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly ref: ChangeDetectorRef,
     private readonly route: ActivatedRoute,
-    private readonly workflowFacade: WorkflowFacade,) { }
+    private readonly workflowFacade: WorkflowFacade,
+    private formBuilder: FormBuilder,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -114,8 +121,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private loadEmailTemplates() {
     this.loaderService.show();
-    this.cerAuthorizationEmailTypeCode = 'CER_AUTHORIZATION_EMAIL';
-    const channelTypeCode = 'EMAIL';
+    this.cerAuthorizationEmailTypeCode = CommunicationEvents.CerAuthorizationEmail;
+    const channelTypeCode = CommunicationEvents.Email;
     this.communicationFacade.loadEmailTemplates(this.cerAuthorizationEmailTypeCode ?? '', channelTypeCode??'')
     .subscribe({
       next: (data: any) =>{
@@ -137,6 +144,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowSaveForLaterPopupClicked = false;
     this.emailEditorValueEvent.emit(this.currentEmailData);
     this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
+    this.selectedTemplate.toEmailAddress = this.selectedToEmail;
     this.saveTemplateForLater(this.selectedTemplate);
     this.onCloseSendEmailClicked();
   }
@@ -173,7 +181,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if (CommunicationEvents.Print === event) {
       this.emailEditorValueEvent.emit(this.currentEmailData);
       this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
-      this.generateText(this.selectedTemplate,"SendEmail");
+      this.initiateAdobeEsignProcess(this.selectedTemplate,"SendEmail");
       this.closeSendEmailEvent.emit(CommunicationEvents.Print);
     } else if (CommunicationEvents.Close === event) {
       this.closeSendEmailEvent.emit(CommunicationEvents.Close);
@@ -197,6 +205,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isOpenDdlEmailDetails = true;
     this.selectedTemplate = event;
     this.emailContentValue = event.templateContent;
+    this.emailSubject = event.emailSubject;
     this.handleEmailEditor(event);
     this.showToEmailLoader = false;
     this.ref.detectChanges();
@@ -211,7 +220,46 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   onEmailChange(event: any){
-    this.selectedToEmail = event.email;
+    this.selectedToEmail = event[0].email;
+  }
+
+  private initiateAdobeEsignProcess(emailData: any, requestType: string){
+    this.loaderService.show();
+    const formData = new FormData();
+    formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
+    formData.append('requestBody', emailData?.templateContent ?? '');
+    formData.append('toEmailAddress', this.selectedToEmail ?? '');
+    formData.append('clientCaseEligibilityId', this.clientCaseEligibilityId ?? '');
+    formData.append('clientId', this.clientId ?? '');
+    formData.append('requestSubject', this.emailSubject ?? '');
+    let i = 0;
+    this.cerEmailAttachedFiles.forEach((file) => { 
+      if(file.rawFile == undefined || file.rawFile == null){
+      formData.append('savedAttachment['+i+'][fileName]', file.document.description);
+      formData.append('savedAttachment['+i+'][filePath]', file.document.templatePath);
+      i++;
+      }else{
+        formData.append('attachments', file.rawFile); 
+      }
+    });
+    this.communicationFacade.initiateAdobeesignRequest(formData, this.clientId ?? 0, this.clientCaseEligibilityId ?? '')
+        .subscribe({
+          next: (data: any) =>{
+          if (data) {
+          this.onCloseSendEmailClicked();
+          this.isOpenSendEmailClicked = false;
+          this.isSendEmailSuccess.emit(true);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent for Esign..')
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.isSendEmailSuccess.emit(false);
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+        },
+      });
   }
 
   private generateText(emailData: any, requestType: string){
@@ -223,12 +271,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
             this.currentEmailData = data;
             this.emailContentValue = this.currentEmailData;
             this.emailEditorValueEvent.emit(this.emailContentValue);
-          }
-          if(requestType=="SendEmail")
-          {
-          this.onCloseSendEmailClicked();
-          this.isOpenSendEmailClicked = false;
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent for Esign..')
           }
           this.loaderService.hide();
         },
@@ -243,51 +285,30 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   private saveTemplateForLater(draftTemplate: any) {
     this.loaderService.show();
     const isSaveFoLater = true;
-    this.communicationFacade.saveForLaterEmailTemplate(draftTemplate, isSaveFoLater)
+    const formData = new FormData();
+      formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
+      formData.append('systemCode', draftTemplate?.systemCode ?? '');
+      formData.append('documentTemplateTypeCode', draftTemplate?.documentTemplateTypeCode ?? '');
+      formData.append('subtypeCode', draftTemplate?.subtypeCode ?? '');
+      formData.append('channelTypeCode', draftTemplate?.channelTypeCode ?? '');
+      formData.append('languageCode', draftTemplate?.languageCode ?? '');
+      formData.append('description', draftTemplate?.description ?? '');
+      formData.append('templateContent', draftTemplate?.templateContent ?? '');
+      formData.append('toEmailAddress', this.selectedToEmail ?? '');
+      let i = 0;
+    this.cerEmailAttachedFiles.forEach((file) => { 
+      if(file.documentTemplateTypeCode != CommunicationEvents.TemplateAttachmentTypeCode){
+        if(file.rawFile == undefined || file.rawFile == null){
+          formData.append('savedAttachmentId', file.document.documentTemplateId);
+          i++;
+        }else{
+          formData.append('fileData', file.rawFile); 
+        }
+      }
+    });  
+    this.communicationFacade.saveForLaterEmailTemplate(formData, isSaveFoLater)
         .subscribe({
           next: (data: any) =>{
-            // this.loaderService.hide();
-          if (data) {
-            this.cerEmailAttachedFiles.forEach((element: any) => {
-              if(element.documentTemplateId === null || element.documentTemplateId === undefined){
-                this.userSelectedAttachment.push({
-                  document: element,
-                  templateSize: element.size,
-                  description: element.name,
-                  documentTemplateTypeCode: CommunicationEvents.CerAuthorizationEmail,
-                  subTypeCode: CommunicationEvents.Email,
-                  channelTypeCode: CommunicationEvents.Email,
-                  systemCode: CommunicationEvents.SystemCode,
-                  languageCode: CommunicationEvents.LanguageCode,
-                  documentTemplateId: element.documentTemplateId
-                })
-              }
-            });
-            this.saveTemplateAttachmentsForLater(this.userSelectedAttachment, data);
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Email Saved As Draft')
-          }
-          this.loaderService.hide();
-        },
-        error: (err: any) => {
-          this.loaderService.hide();
-          this.loggingService.logException(err);
-          this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
-        },
-      });
-  }
-
-
-  private saveTemplateAttachmentsForLater(attchments: any, documentTemplateId: string) {
-    this.loaderService.show();
-    const isSaveFoLater = true;
-    attchments.forEach((element: any) => {
-      (element.templatePath !== null || element.templatePath !== undefined) &&
-      element.documentTemplateTypeCode ===CommunicationEvents.TemplateAttachmentTypeCode;
-    });
-    this.communicationFacade.saveForLaterEmailTemplate(attchments, isSaveFoLater)
-        .subscribe({
-          next: (data: any) =>{
-            this.loaderService.hide();
           if (data) {
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Email Saved As Draft')
           }
@@ -300,8 +321,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         },
       });
   }
+  
   cerEmailAttachments(event:any){
-    this.cerEmailAttachedFiles = event;
+    this.cerEmailAttachedFiles = event; 
   }
 }
 

@@ -9,6 +9,7 @@ export enum CommunicationEvents {
   Email="EMAIL",
   TemplateVariable="TEMPLATE_VARIABLE",
   TemplateAttachmentTypeCode="CER_AUTHORIZATION_ATTACHMENT",
+  CERAttachmentTypeCode="CER_ATTACHMENT",
   SystemCode="HIVE",
   LanguageCode="EN"
 }

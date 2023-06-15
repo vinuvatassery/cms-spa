@@ -188,6 +188,7 @@
   [isCerForm]="isCerForm"
   [clientCaseEligibilityId]="clientEligibilityId"
   (closeSendEmailEvent)="handleCloseSendNewEmailClicked($event)"
+  (isSendEmailSuccess)="updateSendEmailSuccessStatus($event)"
   kendoTooltip
 ></case-management-send-email>
 <!-- User Profile Card -->
