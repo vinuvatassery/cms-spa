@@ -54,9 +54,10 @@
 }
 
 .client-header-wrapper-stickey {
-  z-index: 7;
+  z-index: 6;
   background: $white;
-  position: static;
+  position: sticky;
+  top: 0;
 
   .k-breadcrumb {
     background: transparent;
@@ -88,8 +89,8 @@
 }
 
 .client-profile-outlet {
-  max-height: calc(100vh - 236px);
-  overflow-y: auto;
+  // max-height: calc(100vh - 236px);
+  // overflow-y: auto;
   padding: 16px;
   // margin-top: 4px;
 }

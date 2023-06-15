@@ -192,7 +192,7 @@
           kendoButton
           look="flat"
           icon=""
-          (click)="onNewReminderOpenClicked()"
+          (click)="onNewReminderOpenClicked(NewReminderTemplate)"
           aria-label="add reminder"
         >
           <span
@@ -208,7 +208,14 @@
 </span>
 
 <!-- Create New Reminder Popup -->
-<kendo-dialog
+<ng-template #NewReminderTemplate>
+  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">Create New Reminder for Donna </kendo-dialog-titlebar>
+  <productivity-tools-reminder-detail   (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"></productivity-tools-reminder-detail>
+ 
+</ng-template>
+
+
+<!-- <kendo-dialog
   kendoRippleContainer
   *ngIf="isNewReminderOpened"
   (close)="onNewReminderClosed()"
@@ -216,7 +223,7 @@
 >
   <kendo-dialog-titlebar> Create New Reminder for Donna </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail></productivity-tools-reminder-detail>
-</kendo-dialog>
+</kendo-dialog> -->
 
 <!-- Create New Reminder Popup -->
 <kendo-dialog

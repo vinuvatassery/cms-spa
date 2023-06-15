@@ -1,6 +1,6 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-
+import { Component, ChangeDetectionStrategy, TemplateRef,} from '@angular/core';
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-todo-page',
   templateUrl: './todo-page.component.html',
@@ -9,14 +9,21 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 })
 export class TodoPageComponent {
   /** Public properties **/
-  isOpenTodo = false;
+  private todoDetailsDialog: any;
 
+  /** Constructor **/
+  constructor(private dialogService: DialogService) {}
   /** Public methods **/
-  onCloseTodoClicked() {
-    this.isOpenTodo = false;
+  onCloseTodoClicked(result: any) {
+    if (result) {
+      this.todoDetailsDialog.close();
+    }
   }
 
-  onOpenTodoClicked() {
-    this.isOpenTodo = true;
+  onOpenTodoClicked(template: TemplateRef<unknown>): void {
+    this.todoDetailsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np mnl',
+    });
   }
 }
