@@ -32,6 +32,9 @@ export class ClientsComponent implements OnInit, OnChanges{
       take: this.pageSizes[0]?.value
     };
     this.loadClientsListGrid();
+    this.insuranceProviderFacade.gridLoaderVisibility$.subscribe(response=>{
+      this.isclientsGridLoaderShow = response;
+    });
   }
 
   ngOnChanges(): void {

@@ -27,9 +27,12 @@ export class InsuranceProviderFacade {
 
   private insuranceProviderDataSubject = new BehaviorSubject<any>([]);
   private providerClientsDataSubject = new BehaviorSubject<any>([]);
+  private gridLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
+
 
   providerClientsData$ = this.providerClientsDataSubject.asObservable();
   insuranceProviderData$ = this.insuranceProviderDataSubject.asObservable();
+  gridLoaderVisibility$ = this.gridLoaderVisibilitySubject.asObservable();
 
 
   /** Private properties **/
@@ -87,7 +90,7 @@ export class InsuranceProviderFacade {
     maxResultCount: number,
     sort: string,
     sortType: string){
-    this.showLoader();
+    this.gridLoaderVisibilitySubject.next(true);
     this.insuranceProviderDataService.loadProviderClientsListGrid(providerId,tabCode, skipCount,maxResultCount,sort,sortType).subscribe({
       next: (dataResponse) => {
         const gridView = {
@@ -95,11 +98,11 @@ export class InsuranceProviderFacade {
           total: dataResponse['totalCount'],
         };
         this.providerClientsDataSubject.next(gridView);
-        this.hideLoader();
+        this.gridLoaderVisibilitySubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader();
+        this.gridLoaderVisibilitySubject.next(false);
       },
     });
 
