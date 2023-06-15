@@ -6,7 +6,7 @@
         <ng-template kendoGridCellTemplate let-dataItem>
             <div *ngIf="dataItem.isFutureStartDate">
                 <button aria-label="scheduled link" kendoButton look="flat" class="card-link-button"
-                    (click)="loadEligibilityChangeModal(dataItem)">
+                    (click)="loadEligibilityChangeModal(dataItem, eligibilityGroupDetail)">
                     Scheduled for {{dataItem.groupStartDate | date:'MM/dd/yyyy'}}
                 </button>
             </div>
@@ -52,14 +52,22 @@
 </kendo-grid>
 
 <!-- Eligibility Group Detail Modal -->
-<kendo-dialog *ngIf="isGroupDetailOpened" (close)="onGroupDetailClosed()"
+<ng-template #eligibilityGroupDetail>
+    <kendo-dialog-titlebar (close)="onGroupDetailClosed($event)">Edit Scheduled Group Change </kendo-dialog-titlebar>
+    <case-management-group-detail [showDeleteOption]="true" [currentGroup$]="currentGroup$" [ddlGroups$]="ddlGroups$"
+    (isModalGroupCloseClicked)="onGroupDetailClosed($event)"
+    (updateGroup)="onGroupChangeUpdateClicked($event)" (deleteGroupChange)="onDeleteGroupClicked($event)"
+    (cancelGroupChange)="onGroupChangeCancelClicked($event)">
+</case-management-group-detail>
+</ng-template>
+<!-- <kendo-dialog *ngIf="isGroupDetailOpened" (close)="onGroupDetailClosed()"
     class="app-c-modal app-c-modal-sm app-c-modal-np" kendoTooltip>
     <kendo-dialog-titlebar>Edit Scheduled Group Change </kendo-dialog-titlebar>
     <case-management-group-detail [showDeleteOption]="true" [currentGroup$]="currentGroup$" [ddlGroups$]="ddlGroups$"
         (updateGroup)="onGroupChangeUpdateClicked($event)" (deleteGroupChange)="onDeleteGroupClicked($event)"
         (cancelGroupChange)="onGroupChangeCancelClicked($event)">
     </case-management-group-detail>
-</kendo-dialog>
+</kendo-dialog> -->
 
 <!-- Eligibility Group delete Modal -->
 <kendo-dialog *ngIf="isGroupDeleteModalOpened" (close)="onCancelDelete()"
