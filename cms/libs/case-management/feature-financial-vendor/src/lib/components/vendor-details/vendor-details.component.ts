@@ -1,6 +1,6 @@
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { VendorFacade, ContactFacade, FinancialVendorProviderTabCode, StatusFlag } from '@cms/case-management/domain';
+import { VendorFacade, ContactFacade, FinancialVendorProviderTabCode, StatusFlag, AddressType } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -25,8 +25,8 @@ export class VendorDetailsComponent implements OnInit {
   paymentMethodList: any[] = [];
   paymentRunDateList: any[] = [];
   vendorContactList: any[] = [];
-  clinicNameNotApplicable: boolean= false;
-  firstLastNameNotApplicable: boolean= false;
+  clinicNameNotApplicable: boolean = false;
+  firstLastNameNotApplicable: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
 
   tareaJustificationCounter!: string;
@@ -58,7 +58,7 @@ export class VendorDetailsComponent implements OnInit {
 
   onToggleAddNewContactClick() {
     let addContactForm = this.formBuilder.group({
-      contactName: new FormControl('',  Validators.required),
+      contactName: new FormControl('', Validators.required),
       description: new FormControl(),
       phoneNumber: new FormControl(),
       fax: new FormControl(),
@@ -88,19 +88,19 @@ export class VendorDetailsComponent implements OnInit {
 
   validateForm() {
     this.medicalProviderForm.markAllAsTouched();
-    if(this.providerType == this.vendorTypes.MedicalProvider || this.providerType == this.vendorTypes.DentalProvider){
-      if(!this.clinicNameNotApplicable){
+    if (this.providerType == this.vendorTypes.MedicalProvider || this.providerType == this.vendorTypes.DentalProvider) {
+      if (!this.clinicNameNotApplicable) {
         this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
       }
-      if(!this.firstLastNameNotApplicable){
+      if (!this.firstLastNameNotApplicable) {
         this.medicalProviderForm.controls['firstName'].setValidators([Validators.required]);
         this.medicalProviderForm.controls['lastName'].setValidators([Validators.required]);
         this.medicalProviderForm.controls['firstName'].updateValueAndValidity();
         this.medicalProviderForm.controls['lastName'].updateValueAndValidity();
       }
     }
-    else{
+    else {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
@@ -152,9 +152,9 @@ export class VendorDetailsComponent implements OnInit {
       this.medicalProviderForm.controls['isAcceptCombinedPayment'].updateValueAndValidity();
 
       this.medicalProviderForm.controls['isAcceptReports']
-      .setValidators([
-        Validators.required,
-      ]);
+        .setValidators([
+          Validators.required,
+        ]);
       this.medicalProviderForm.controls['isAcceptReports'].updateValueAndValidity();
     }
 
@@ -209,7 +209,7 @@ export class VendorDetailsComponent implements OnInit {
       vendorTypeCode: this.providerType,
       tin: formValues.tinNumber,
       mailCode: formValues.mailCode,
-      addressTypeCode: this.providerType,
+      addressTypeCode: AddressType.Mailing,
       address1: formValues.addressLine1,
       address2: formValues.addressLine1,
       cityCode: formValues.city,
@@ -219,13 +219,13 @@ export class VendorDetailsComponent implements OnInit {
       nameOnEnvelope: formValues.nameOnEnvolop,
       paymentMethodCode: formValues.paymentMethod,
       specialHandling: formValues.specialHandling,
-      phoneTypeCode: this.providerType,
+      phoneTypeCode: AddressType.Mailing,
       vendorContacts: this.vendorContactList,
       AcceptsReportsFlag: formValues.isAcceptReports,
       AcceptsCombinedPaymentsFlag: formValues.isAcceptCombinedPayment,
-      PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? this.intl.formatDate(formValues.paymentRunDate,this.dateFormat) : null,
+      PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? this.intl.formatDate(formValues.paymentRunDate, this.dateFormat) : null,
       PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes,
-      emailAddressTypeCode: 'EMAIL'
+      emailAddressTypeCode: AddressType.Mailing
     }
     return vendorProfileData;
   }
@@ -241,18 +241,20 @@ export class VendorDetailsComponent implements OnInit {
     this.tareaJustificationCharachtersCount = event.length;
     this.tareaJustificationCounter = `${this.tareaJustificationCharachtersCount}/${this.tareaJustificationMaxLength}`;
   }
-onClinicNameChecked(isChecked: any){
-    if(isChecked){
+  
+  onClinicNameChecked(isChecked: any) {
+    if (isChecked) {
       this.medicalProviderForm.controls['providerName'].setValue(null);
       this.medicalProviderForm.controls['providerName'].disable();
     }
   }
 
-  onNameChecked(isChecked: any){
-    if(isChecked){
+  onNameChecked(isChecked: any) {
+    if (isChecked) {
       this.medicalProviderForm.controls['firstName'].setValue(null);
       this.medicalProviderForm.controls['lastName'].setValue(null);
       this.medicalProviderForm.controls['firstName'].disable();
       this.medicalProviderForm.controls['lastName'].disable();
     }
-  }}
+  }
+}
