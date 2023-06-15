@@ -117,7 +117,9 @@ export class FinancialVendorPageComponent implements OnInit {
   buildVendorForm() {
     this.medicalProviderForm.reset();
     this.medicalProviderForm = this.formBuilder.group({
-      providerName: ['', Validators.required],
+      firstName:[''],
+      lastName:[],
+      providerName: [''],
       tinNumber: [''],
       paymentMethod: [''],
       specialHandling: [''],

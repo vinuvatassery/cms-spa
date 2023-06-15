@@ -26,6 +26,8 @@ export class VendorDetailsComponent implements OnInit {
   paymentMethodList: any[] = [];
   paymentRunDateList: any[] = [];
   vendorContactList: any[] = [];
+  clinicNameNotApplicable: boolean= false;
+  firstLastNameNotApplicable: boolean= false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
 
   constructor(
@@ -83,9 +85,22 @@ export class VendorDetailsComponent implements OnInit {
 
   validateForm() {
     this.medicalProviderForm.markAllAsTouched();
-
-    let field = (<FormArray>this.medicalProviderForm.get('newAddContactForm'));
-    debugger;
+    if(this.providerType == this.vendorTypes.MedicalProvider || this.providerType == this.vendorTypes.DentalProvider){
+      if(!this.clinicNameNotApplicable){
+        this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
+        this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
+      }
+      if(!this.firstLastNameNotApplicable){
+        this.medicalProviderForm.controls['firstName'].setValidators([Validators.required]);
+        this.medicalProviderForm.controls['lastName'].setValidators([Validators.required]);
+        this.medicalProviderForm.controls['firstName'].updateValueAndValidity();
+        this.medicalProviderForm.controls['lastName'].updateValueAndValidity();
+      }
+    }
+    else{
+      this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
+      this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
+    }
     var mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if (mailCode) {
       this.medicalProviderForm.controls['addressLine1']
@@ -186,6 +201,8 @@ export class VendorDetailsComponent implements OnInit {
     }
     let vendorProfileData = {
       vendorName: formValues.providerName,
+      firstName: formValues.firstName,
+      lastName: formValues.lastName,
       vendorTypeCode: this.providerType,
       tin: formValues.tinNumber,
       mailCode: formValues.mailCode,
@@ -207,5 +224,21 @@ export class VendorDetailsComponent implements OnInit {
       PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes
     }
     return vendorProfileData;
+  }
+
+  onClinicNameChecked(isChecked: any){
+    if(isChecked){
+      this.medicalProviderForm.controls['providerName'].setValue(null);
+      this.medicalProviderForm.controls['providerName'].disable();
+    }
+  }
+
+  onNameChecked(isChecked: any){
+    if(isChecked){
+      this.medicalProviderForm.controls['firstName'].setValue(null);
+      this.medicalProviderForm.controls['lastName'].setValue(null);
+      this.medicalProviderForm.controls['firstName'].disable();
+      this.medicalProviderForm.controls['lastName'].disable();
+    }
   }
 }
