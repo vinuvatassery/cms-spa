@@ -25,7 +25,7 @@ export class VendorContacts {
   emailAddress: string| null = null;
   faxNbr: string| null = null;
   vendorName: string| null = null;
-  effectiveDate: string | null = null;
+  effectiveDate: any | null = null;
 }
 export interface ClientAddress {
   clientAddressId?: string;

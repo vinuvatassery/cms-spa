@@ -37,8 +37,8 @@ export class ContactInnerGridComponent {
       icon: 'block',
       click: (data: any): void => {
         console.log(data);
-        if(data?.VendorContactId){
-          this.VendorContactId = data?.VendorContactId;
+        if(data?.vendorContactId){
+          this.VendorContactId = data?.vendorContactId;
           this.clickOpenDeactivateContactAddressDetails();
         }
         
@@ -50,8 +50,8 @@ export class ContactInnerGridComponent {
       icon: 'delete',
       click: (data: any): void => {
        
-        if(data?.VendorContactId){
-          this.VendorContactId = data?.VendorContactId;
+        if(data?.vendorContactId){
+          this.VendorContactId = data?.vendorContactId;
           this.clickOpenDeleteContactAddressDetails();
         }
         

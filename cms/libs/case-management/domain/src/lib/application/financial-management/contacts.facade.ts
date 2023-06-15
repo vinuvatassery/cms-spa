@@ -147,7 +147,7 @@ export class ContactsFacade {
   removeContactAddress( vendorContactId: string) {
     return new Promise((resolve,reject) =>{
       this.loaderService.show();
-      return this.contactsDataService.deactiveContactAddress(vendorContactId).subscribe({
+      return this.contactsDataService.removeContactAddress(vendorContactId).subscribe({
         next: (response) => {
           if (response === true) {
             this.removeContactAddressSubject.next(true);

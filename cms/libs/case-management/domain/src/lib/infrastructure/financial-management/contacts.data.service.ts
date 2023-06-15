@@ -38,7 +38,7 @@ export class ContactsDataService {
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/${vendorContactId}/vendorcontact`);
   }
   deactiveContactAddress(vendorContactId: string) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/${vendorContactId}/deactivatevendorcontact`,null);
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/${vendorContactId}/deactivatevendorcotnact`,null);
   }
 
 }

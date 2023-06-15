@@ -72,7 +72,8 @@ ngOnInit(): void {
       contactDesc: [''],
       phoneNbr: [''],
       faxNbr: [''],
-      emailAddress: ['']
+      emailAddress: [''],
+      
     });
   }
   onCancel(){
@@ -100,6 +101,7 @@ ngOnInit(): void {
      this.contactAddress.emailAddress = this.contactDetailForm.controls['emailAddress'].value;
      this.contactAddress.emailAddressTypeCode=EmailTypeCode.Email;
      this.contactAddress.phoneTypeCode=PhoneTypeCode.Phone;
+    // this.contactAddress.effectiveDate = new Date();
      this.contact.vendorContacts.push(this.contactAddress);
   }
 
@@ -108,7 +110,7 @@ ngOnInit(): void {
     this.isSubmitted=true;3
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
     const dat = this.contactForm.value;
-    debugger
+    
     if (this.contactForm.valid) {
       this.loaderService.show();
       this.contactsFacade.saveContactAddress(this.contactForm.value).subscribe({
