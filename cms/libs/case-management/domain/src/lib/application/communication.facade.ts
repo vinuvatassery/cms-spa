@@ -116,7 +116,7 @@ export class CommunicationFacade {
     return this.emailDataService.getDraftTemplateAttachment(typeCode, documentTemplateId);
   }
 
-  initiateAdobeesignRequest(formData: any, clientId: string, clientCaseEligibilityId: string) {
-    return this.emailDataService.initiateAdobeEsignRequest(formData, clientId, clientCaseEligibilityId);
+  initiateAdobeesignRequest(formData: any) {
+    return this.emailDataService.initiateAdobeEsignRequest(formData);
   }
 }

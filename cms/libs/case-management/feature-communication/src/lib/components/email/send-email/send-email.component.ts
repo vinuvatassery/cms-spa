@@ -235,14 +235,14 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     let i = 0;
     this.cerEmailAttachedFiles.forEach((file) => { 
       if(file.rawFile == undefined || file.rawFile == null){
-      formData.append('savedAttachment['+i+'][fileName]', file.document.description);
-      formData.append('savedAttachment['+i+'][filePath]', file.document.templatePath);
+      formData.append('AttachmentDetails['+i+'][fileName]', file.document.description);
+      formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath);
       i++;
       }else{
         formData.append('attachments', file.rawFile); 
       }
     });
-    this.communicationFacade.initiateAdobeesignRequest(formData, this.clientId ?? 0, this.clientCaseEligibilityId ?? '')
+    this.communicationFacade.initiateAdobeesignRequest(formData)
         .subscribe({
           next: (data: any) =>{
           if (data) {

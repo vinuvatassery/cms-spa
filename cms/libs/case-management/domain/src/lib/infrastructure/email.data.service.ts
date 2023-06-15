@@ -133,9 +133,9 @@ export class EmailDataService {
       );
     }
 
-    initiateAdobeEsignRequest(formData: any, clientId: string, clientCaseEligibilityId: string){
+    initiateAdobeEsignRequest(formData: any){
       return this.http.post<any>(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?clientId=${clientId}?clientCaseEligibilityId=${clientCaseEligibilityId}`,formData
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign`,formData
       );
     }
 }
