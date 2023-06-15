@@ -222,8 +222,7 @@ export class VendorDetailsComponent implements OnInit {
     }
     let vendorProfileData = {
       vendorId: this.selectedClinicVendorId,
-      vendorName: (this.providerType== FinancialVendorTypeCode.MedicalProvider
-        || this.providerType == FinancialVendorTypeCode.DentalProvider)? null : formValues.providerName,
+      vendorName: formValues.providerName,
       firstName: formValues.firstName,
       lastName: formValues.lastName,
       vendorTypeCode: this.providerType,
