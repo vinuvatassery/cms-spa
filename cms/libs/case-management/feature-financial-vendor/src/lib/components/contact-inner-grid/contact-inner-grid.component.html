@@ -17,13 +17,13 @@
     <kendo-grid-column field="phoneNbr" title="Phone Number" [width]="60"> </kendo-grid-column>
     <kendo-grid-column field="faxNbr" title="Fax Number" [width]="60"> </kendo-grid-column>
     <kendo-grid-column field="emailAddress" title="Email Address" [width]="60"> </kendo-grid-column>
-    <kendo-grid-column field="effectiveDate" title="Effective Date" [width]="60"> 
+    <kendo-grid-column field="startDate" title="Effective Date" [width]="60"> 
       <ng-template kendoGridCellTemplate let-dataItem>
         <span *ngIf="dataItem.activeFlag == 'Y' ;else endDateBlock">
-          {{dataItem.effectiveDate | date:'MM/dd/yyyy'}}
+          {{dataItem.startDate | date:'MM/dd/yyyy'}}
         </span>
         <ng-template #endDateBlock>
-          {{dataItem.effectiveDate | date:'MM/dd/yyyy'}} {{ (dataItem.endDate) ? ' - '+ (dataItem.endDate | date:'MM/dd/yyyy') : ''}}
+          {{dataItem.startDate | date:'MM/dd/yyyy'}} {{ (dataItem.endDate) ? ' - '+ (dataItem.endDate | date:'MM/dd/yyyy') : ''}}
         </ng-template>
     </ng-template>
 
