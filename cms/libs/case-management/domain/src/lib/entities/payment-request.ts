@@ -4,7 +4,8 @@ export class PaymentRequest {
     clientCaseEligibilityId : string | null = null;
     clientInsurancePolicyId : string | null = null;
     batchId : string | null = null;
-    vendorId : string | null = null;
+    entityId : string | null = null;
+    entityTypeCode: string|null = null;
     vendorAddressId : string | null = null;
     vendorCheckRequestId : string | null = null;
     serviceStartDate :string | null = null;

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -8,6 +8,8 @@ import { ActivatedRoute, Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VendorProfileHeaderComponent {
+@Input() vendorProfile$ : any
+
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   showMoreAlert = false;
   public list = [

@@ -22,8 +22,7 @@ export class CaseNavigationComponent implements OnInit {
   @Input() completeStaus$!: Observable<any>;
   @Input() currentSession: any
   @Input() navigationEvent = new EventEmitter<string>();
-  @Input() workflowType! : string
-
+  @Input() workflowType!: string
   /** Output Properties **/
   @Output() workflowChange = new EventEmitter<object>();
 
@@ -115,7 +114,7 @@ export class CaseNavigationComponent implements OnInit {
             sid: sessionId,
             pid: routes[this.navigationIndex].processId,
             eid: entityId,
-            wtc : this.workflowType
+            wtc: this.workflowType
           }
         }
       );
@@ -130,8 +129,8 @@ export class CaseNavigationComponent implements OnInit {
         next: () => {
           if (this.isApplicationReviewOpened === true) {
             const routeArray = this.router.url?.substring(0, this.router.url?.indexOf('?') !== -1 ? this.router.url?.indexOf('?') : this.router.url?.length).split('/');
-            const isNotNavigatedAwayFromReview = routeArray?.findIndex((i: any) => i === ScreenType.Eligibility || i=== ScreenType.SendLetter) !== -1;
-            if(!isNotNavigatedAwayFromReview){ this.isApplicationReviewOpened = false }
+            const isNotNavigatedAwayFromReview = routeArray?.findIndex((i: any) => i === ScreenType.Eligibility || i === ScreenType.SendLetter) !== -1;
+            if (!isNotNavigatedAwayFromReview) { this.isApplicationReviewOpened = false }
             const isSendLetter = routeArray?.findIndex((i: any) => i === ScreenType.SendLetter) !== -1;
             this.isSendLetterProfileOpenedSubject.next(isSendLetter);
           }
