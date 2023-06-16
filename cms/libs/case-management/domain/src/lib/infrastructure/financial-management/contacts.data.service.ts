@@ -40,5 +40,10 @@ export class ContactsDataService {
   deactiveContactAddress(vendorContactId: string) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/${vendorContactId}/deactivatevendorcontact`,null);
   }
-
+  getContactAddress(vendorContactId: string) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/getcontact/${vendorContactId}`, null);
+  }
+  updateContactAddress() {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/vendoraddresscontact`, null);
+  }
 }
