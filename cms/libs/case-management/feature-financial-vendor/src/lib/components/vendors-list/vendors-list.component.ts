@@ -240,7 +240,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
   {
     const query = {
       queryParams: {
-        v_id: vendorId ,
+        v_id: vendorId ,      
         tab_code :  this.financeTabTypeCode    
       },
     };
