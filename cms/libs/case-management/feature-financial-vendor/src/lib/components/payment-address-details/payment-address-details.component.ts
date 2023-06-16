@@ -59,6 +59,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
       zip: ['', Validators.required],
       paymentMethodCode: ['', Validators.required],
       specialHandlingDesc: [''],
+      newAddContactForm: this.formBuilder.array([]),
     });
 
     this.paymentAddressForm.addControl('paymentRunDateMonthly',new FormControl('', [Validators.required]))
