@@ -12,6 +12,7 @@ import { LoggingService, NotificationSnackbarService, SnackBarNotificationType }
 })
 export class FinancialInsurancePlanListComponent implements OnInit {
     /* Input Properties */
+    @Input() vendorId!: string;
     @Input() providerId!: string;
 
     public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -87,7 +88,7 @@ export class FinancialInsurancePlanListComponent implements OnInit {
 
     loadVendorInsurancePlan() {
         this.loader$.next(true);
-        this.vendorInsurancePlanFacade.loadVendorInsurancePlan(this.providerId, this.state).subscribe({
+        this.vendorInsurancePlanFacade.loadVendorInsurancePlan(this.vendorId, this.providerId, this.state).subscribe({
             next: (dataResponse: any) => {
                 const gridView: any = {
                     data: dataResponse['items'],

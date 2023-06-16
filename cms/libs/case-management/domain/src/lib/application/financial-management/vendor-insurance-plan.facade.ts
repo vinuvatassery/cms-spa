@@ -78,8 +78,8 @@ export class VendorInsurancePlanFacade {
     });
   }
 
-  loadVendorInsurancePlan(providerId:string, pageParameters: State) {
-    return this.vendorInsurancePlanDataService.loadVendorInsurancePlan(providerId, pageParameters);
+  loadVendorInsurancePlan(vendorId:string, providerId:string, pageParameters: State) {
+    return this.vendorInsurancePlanDataService.loadVendorInsurancePlan(vendorId, providerId, pageParameters);
   }
 
 }

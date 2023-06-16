@@ -20,9 +20,9 @@ export class VendorInsurancePlanDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/insurances-providers?SkipCount=${pageParameters?.skip}&MaxResultCount=${pageParameters?.take}${sorting}`);
   }
 
-  loadVendorInsurancePlan(providerId:string, pageParameters: State) {
+  loadVendorInsurancePlan(vendorId:string, providerId:string, pageParameters: State) {
     const sorting = this.getSortingParams(pageParameters);
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurances-providers/${providerId}/insurance-plans?SkipCount=${pageParameters?.skip}&MaxResultCount=${pageParameters?.take}${sorting}`);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/insurances-providers/${providerId}/insurance-plans?SkipCount=${pageParameters?.skip}&MaxResultCount=${pageParameters?.take}${sorting}`);
   }
 
   getSortingParams(paginationParameters: State) {

@@ -6,7 +6,7 @@
     <div class="app-c-table">
       <kendo-grid [resizable]="true" [loading]="gridLoader$ | async" [pageSize]="state.take" [pageable]="true"
         [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-        [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
+        [columnMenu]="{ filter: false }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
         [data]="vendorInsurancePlanGridView$ | async">
         <kendo-grid-column field="providerName" title="Insurance Provider" [width]="100"> </kendo-grid-column>
         <kendo-grid-column field="insurancePlanCount" title="# Of Active Plans" [width]="50"> </kendo-grid-column>
@@ -45,7 +45,7 @@
         </kendo-grid-column>
 
         <div *kendoGridDetailTemplate="let dataItem">
-          <cms-financial-insurance-plan-list [providerId]="dataItem.providerId"></cms-financial-insurance-plan-list>
+          <cms-financial-insurance-plan-list [vendorId]="vendorId" [providerId]="dataItem.providerId"></cms-financial-insurance-plan-list>
         </div>
 
         <!-- grid Pagination template -->
