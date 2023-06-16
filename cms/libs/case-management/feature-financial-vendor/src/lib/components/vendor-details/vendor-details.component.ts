@@ -53,18 +53,6 @@ export class VendorDetailsComponent implements OnInit {
   ) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
-  public areaList: Array<string> = [
-    "Amsterdam",
-    "Athens",
-    "Barcelona",
-    "Berlin",
-    "Brussels",
-    "Chicago",
-    "Copenhagen",
-    "Dublin",
-    "Helsinki",
-    "Houston"
-  ];
 
   ngOnInit(): void {
     this.contactFacade.loadDdlStates();
