@@ -29,7 +29,17 @@ export class FinancialInsuranceProviderListComponent implements OnInit  {
   public emailBillingAddressActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit',
+      text: 'Add plan',
+      icon: 'add',
+      click: (data: any): void => {
+        console.log(data);
+        this.clickOpenAddEditInsurancePlanDetails();
+
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Edit Provider',
       icon: 'edit',
       click: (data: any): void => {
         console.log(data);
@@ -39,8 +49,8 @@ export class FinancialInsuranceProviderListComponent implements OnInit  {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Deactivate',
-      icon: 'block',
+      text: 'Activate Provider',
+      icon: 'check',
       click: (data: any): void => {
         console.log(data);
         this.clickOpenDeactivateInsurancePlanDetails();
@@ -48,8 +58,8 @@ export class FinancialInsuranceProviderListComponent implements OnInit  {
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete',
-      icon: 'delete',
+      text: 'Deactivate Provider',
+      icon: 'block',
       click: (data: any): void => {
         console.log(data);
         this.clickOpenDeleteInsurancePlanDetails();
