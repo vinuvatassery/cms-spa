@@ -68,7 +68,6 @@ export class PaymentAddressesComponent {
   ];
 
    /** Constructor **/
-   //constructor(private readonly paymentsFacade: PaymentsFacade,
    constructor(private readonly paymentsFacade: BillingAddressFacade,
     private route: ActivatedRoute, private readonly cdr: ChangeDetectorRef) {}
 
@@ -147,7 +146,6 @@ export class PaymentAddressesComponent {
   getTabCode() {
     this.route.queryParams.subscribe(params => {
       let _tabCode = params['tab_code'];
-      console.log(_tabCode);
       switch (_tabCode) {
         case FinancialVendorProviderTabCode.Manufacturers:
           this.tabCode = FinancialVendorTypeCode.Manufacturers;
@@ -165,7 +163,7 @@ export class PaymentAddressesComponent {
           this.tabCode = FinancialVendorTypeCode.MedicalProviders;
           break;
         default:
-          this.tabCode = ''; // Set a default value if none of the cases match
+          this.tabCode = '';
           break;
       }
     });

@@ -36,11 +36,6 @@ export class PaymentsDataService {
 
 
   loadPaymentsAddressListService() {
-
-    // return this.http.get<ClientProfileCase[]>(
-    //   `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientCaseEligibilityId}/profile`
-    // );
-
     return of([
       {
         MailCode: 'XXXXXXXXXX `',
@@ -58,7 +53,7 @@ export class PaymentsDataService {
         SpecialHandling: 'XXXXX',
         EffectiveDates: 'XXXXX',
       by: 'No',
-      }
+      },
     ]);
   }
 

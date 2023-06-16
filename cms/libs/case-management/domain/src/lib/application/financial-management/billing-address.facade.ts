@@ -23,11 +23,9 @@ export class BillingAddressFacade {
   }];
   private searchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
   private billingAddressDataSubject = new BehaviorSubject<any>([]);
-  //private deactivateAddressDataSubject = new BehaviorSubject<any>([]);
 
   billingAddressData$ = this.billingAddressDataSubject.asObservable();
   searchLoaderVisibility$ = this.searchLoaderVisibilitySubject.asObservable();
-  //deactivateAddressData$ = this.searchLoaderVisibilitySubject.asObservable();
 
 
   /** Private properties **/
@@ -119,7 +117,6 @@ export class BillingAddressFacade {
       });
   }
 
-  //to deactivate any payment address
   deactivateAddress(addressId: string): Observable<any> {
     this.loaderService.show();
     return this.billingAddressDataService.deactivatePaymentAddress(addressId).pipe(
@@ -132,12 +129,11 @@ export class BillingAddressFacade {
         this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.loggingService.logException(err);
-        throw err; // Rethrow the error to be handled by the caller
+        throw err;
       })
     );
   }
 
-  //to delete any payment address
   deleteAddress(addressId: string): Observable<any> {
     this.loaderService.show();
     return this.billingAddressDataService.deletePaymentAddress(addressId).pipe(
@@ -150,7 +146,7 @@ export class BillingAddressFacade {
         this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.loggingService.logException(err);
-        throw err; // Rethrow the error to be handled by the caller
+        throw err;
       })
     );
   }
