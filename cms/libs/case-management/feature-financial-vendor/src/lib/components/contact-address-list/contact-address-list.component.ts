@@ -21,7 +21,8 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   isContactAddressDeleteShow = false;
   isContactAddressDetailShow = false;
   isContactsDetailShow = false;
-  VendorContactId: any;
+  VendorContactId:any;
+  VendorContactAddressId: string="8227DB0E-75F2-49C5-AA97-BFAAF56342E5";
   @Input() VendorAddressId: any;
   showLoader() {
     this.loaderService.show();
@@ -71,14 +72,11 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   ngOnInit(): void {
 
   }
-  ngOnChanges(changes: SimpleChanges) {
-    this.showLoader();
-    this.contactResponse = [];
+  ngOnChanges(changes: SimpleChanges) { 
     this.contactsfacade.loadcontacts(this.VendorAddressId);    
     this.contactsfacade.contacts$.subscribe((res: any) => {
       this.contactResponse = res;
       this.cd.detectChanges();
-      this.hideLoader();
     });
   }
   clickOpenAddEditContactAddressDetails() {
@@ -103,13 +101,16 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
 
   onCancelPopup(isCancel: any) {
     if (isCancel) {
+      this.contactsfacade.loadcontacts(this.VendorAddressId);
       this.clickCloseDeleteContactAddress();
     }
   }
 
   onDeactiveCancel(isCancel: any) {
     if (isCancel) {
+      this.contactsfacade.loadcontacts(this.VendorAddressId);
       this.clickCloseDeactivateContactAddress();
+
     }
   }
 

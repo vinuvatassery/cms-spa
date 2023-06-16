@@ -18,6 +18,7 @@ export class ContactsDeleteComponent {
     this.closeDeleteContactAddress.emit(true);
   }
   deleteContactAddress(){
+    
     this.contactsFacade.removeContactAddress(this.VendorContactId).then((isDeleted:any) =>{
       if(isDeleted){
         this.onCloseDeleteContactAddressClicked();

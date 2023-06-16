@@ -592,21 +592,7 @@ export class ContactFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
-  }
-  loadMailCodes(vendorId: number): void {
-    this.showLoader();
-    this.contactDataService.loadVendorMailCodes(vendorId).subscribe({
-      next: (reponse: any) => {
-        if (reponse) {
-          this.hideLoader();
-          this.mailCodeSubject.next(reponse);
-        }
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-      },
-    });
-  }
+  } 
 
   addClientPhone(phoneData: any) {
     this.showLoader();

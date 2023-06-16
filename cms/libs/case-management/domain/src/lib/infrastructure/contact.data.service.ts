@@ -299,13 +299,7 @@ export class ContactDataService {
     );
 
   }
-  loadVendorMailCodes(vendorId: number) {
-    return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/financial-management/vendorprofile/${vendorId}/mailcodes`
-    );
 
-  }
 
   savePhone(phoneData: any) {
     if (phoneData?.clientPhoneId) {

@@ -44,6 +44,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       vendorAddressId: [this.contact.vendorAddressId],
       vendorContacts: new FormArray([]),
     });
+
     const vendorContacts = this.contactForm.get('vendorContacts') as FormArray;
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl(this.contactAddress.contactName, [
@@ -69,26 +70,26 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       effectiveDate: new FormControl(this.contactAddress.effectiveDate),
     });
     vendorContacts.push(addContactForm);
-
   }
   ngOnInit(): void {
-    this.contactFacade.mailCodes$.subscribe((mailCode: any) => {
+    this.contactsFacade.mailCodes$.subscribe((mailCode: any) => {
       this.mailCodes = mailCode;
       this.cd.detectChanges();
     })
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.contactAddress = this.VendorContactId;
-    this.AddContactForm.removeAt(0);
-    this.onToggleAddNewContactClick();
-    this.cd.detectChanges();
-  }
-  getallmailcodes() {
-    if (this.contactAddress.vendorContactId == null) {
-      this.contactFacade.loadMailCodes(this.vendorId);
+    if (this.VendorContactId != undefined) {
+      this.contactAddress = this.VendorContactId;
+      this.AddContactForm.removeAt(0);
+      this.onToggleAddNewContactClick();
+      this.cd.detectChanges();
+    } else {
+      this.contactsFacade.loadMailCodes(this.vendorId);
     }
+
   }
+
   onCancel() {
     this.isContactDetailPopupClose.emit(true);
   }
@@ -106,7 +107,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
               SnackBarNotificationType.SUCCESS,
               'Contact Address added successfully'
             );
-            this.contactsFacade.loadcontacts('CO1');
+            this.contactsFacade.loadcontacts(this.contactAddress.vendorAddressId ?? "");
             this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);
           }
@@ -132,7 +133,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
               SnackBarNotificationType.SUCCESS,
               'Contact Address Updated successfully'
             );
-            this.contactsFacade.loadcontacts('CO1');
+            this.contactsFacade.loadcontacts(this.contactAddress.vendorAddressId ?? "");
             this.loaderService.hide();
             this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);

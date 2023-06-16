@@ -35,12 +35,14 @@ export class ContactsFacade {
   private contactsSubject = new BehaviorSubject<any>([]);
   private deActiveContactAddressSubject = new BehaviorSubject<boolean>(false);
   private removeContactAddressSubject = new BehaviorSubject<boolean>(false);
+  private mailCodeSubject = new Subject<any>();
   /** Public properties **/
   contactsData$ = this.contactsDataSubject.asObservable();  
   contacts$ = this.contactsSubject.asObservable();
 
   deActiveContactAddressObs = this.deActiveContactAddressSubject.asObservable();
   removeContactAddressObs = this.removeContactAddressSubject.asObservable();
+  mailCodes$ = this.mailCodeSubject.asObservable();
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
@@ -88,11 +90,13 @@ export class ContactsFacade {
       },
     });
   }
-  loadcontacts(mailcode:string)
+  loadcontacts(vendorAddressId:string)
   { 
-    this.contactsDataService.loadcontacts(mailcode).subscribe({
+    this.showLoader();
+    this.contactsDataService.loadcontacts(vendorAddressId).subscribe({
       next:(res:any)=>{
       this.contactsSubject.next(res);
+      this.hideLoader();
       },
       error:(err:any)=>{
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
@@ -102,13 +106,14 @@ export class ContactsFacade {
   }
   saveContactAddress(contactAddress: any) {  
 
-     
+    this.showLoader();
     return this.contactsDataService.saveContactAddress(contactAddress).pipe(
       catchError((err: any) => {
         this.loaderService.hide();
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
         if (!(err?.error ?? false)) {
           this.loggingService.logException(err);
+          this.hideLoader();
         }
         return of(false);
       })
@@ -122,10 +127,10 @@ export class ContactsFacade {
          if(response){
           this.deActiveContactAddressSubject.next(true);
           resolve(true);
+          this.loaderService.hide();
          }
          this.loaderService.hide();
-         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, ' Address De-Activated Successfully');
-         this.loadcontacts('CO1');
+         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, ' Address De-Activated Successfully');       
        },
        error: (err) => {
         resolve(false);
@@ -147,7 +152,7 @@ export class ContactsFacade {
             this.removeContactAddressSubject.next(true);
             resolve(true);
             this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Address Removed Successfully');
-            this.loadcontacts('CO1');
+            this.loaderService.hide();
           }
           this.loaderService.hide();
         },
@@ -163,12 +168,13 @@ export class ContactsFacade {
     
   }
   updateContactAddress(contact:any){  
-
+    this.loaderService.show();
     return this.contactsDataService.updateContactAddress(contact).pipe(
       catchError((err: any) => {
         this.loaderService.hide();
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
         if (!(err?.error ?? false)) {
+          this.loaderService.hide();
           this.loggingService.logException(err);
         }
         return of(false);
@@ -179,5 +185,19 @@ export class ContactsFacade {
    getContactAddress(vendorContactId: string){
     return this.contactsDataService.getContactAddress(vendorContactId);
    }
+   loadMailCodes(vendorId: number): void {
+    this.showLoader();
+    this.contactsDataService.loadVendorMailCodes(vendorId).subscribe({
+      next: (reponse: any) => {
+        if (reponse) {
+          this.hideLoader();
+          this.mailCodeSubject.next(reponse);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
 }
 
