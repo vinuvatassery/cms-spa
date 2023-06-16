@@ -52,8 +52,8 @@ import { ContactInnerGridComponent } from './components/contact-inner-grid/conta
     SharedUiCommonModule,
     CommonModule,
     CaseManagementFeatureFinancialVendorRoutingModule,
-    ProductivityToolsFeatureTodoModule,
-    ProductivityToolsFeatureEventLogModule,
+    ProductivityToolsFeatureTodoModule, 
+    ProductivityToolsFeatureEventLogModule
   ],
   declarations: [
     FinancialVendorPageComponent,
