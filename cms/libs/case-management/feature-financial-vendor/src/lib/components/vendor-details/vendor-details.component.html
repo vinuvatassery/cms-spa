@@ -305,12 +305,12 @@
       <div class="flex-col flex-col-12">
         <kendo-floatinglabel text="Special Handling (optional)">
           <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #SpecialHandling resizable="auto" id="SpecialHandling"
-            [maxlength]="tareaJustificationMaxLength" aria-label="Special Handling" formControlName="specialHandling"
-            (valueChange)="onTareaJustificationValueChange($event)" [value]="tareaJustification">
+            [maxlength]="specialHandlingMaxLength" aria-label="Special Handling" formControlName="specialHandling"
+            (valueChange)="onspecialHandlingTextAreaValueChange($event)" [value]="specialHandlingTextArea">
           </kendo-textarea>
           <kendo-textarea-suffix class="justify-content-end">
-            <span class="tareajustificationcounter">{{
-              tareaJustificationCounter
+            <span class="specialhandlingCounter">{{
+              specialhandlingCounter
               }}</span>
           </kendo-textarea-suffix>
         </kendo-floatinglabel>

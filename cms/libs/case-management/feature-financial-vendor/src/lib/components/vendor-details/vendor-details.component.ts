@@ -34,10 +34,10 @@ export class VendorDetailsComponent implements OnInit {
   firstLastNameNotApplicable: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
 
-  tareaJustificationCounter!: string;
-  tareaJustificationCharachtersCount!: number;
-  tareaJustificationMaxLength = 100;
-  tareaJustification = '';
+  specialhandlingCounter!: string;
+  specialHandlingCharachtersCount!: number;
+  specialHandlingMaxLength = 100;
+  specialHandlingTextArea = '';
   selectedClinicVendorId!: any;
   clinicVendorList$ = this.financialVendorFacade.clinicVendorList$;
   clinicVendorLoader$ = this.financialVendorFacade.clinicVendorLoader$;
@@ -241,16 +241,16 @@ export class VendorDetailsComponent implements OnInit {
     return vendorProfileData;
   }
 
-  private tareaJustificationWordCount() {
-    this.tareaJustificationCharachtersCount = this.tareaJustification
-      ? this.tareaJustification.length
+  private specialHandlingTextAreaWordCount() {
+    this.specialHandlingCharachtersCount = this.specialHandlingTextArea
+      ? this.specialHandlingTextArea.length
       : 0;
-    this.tareaJustificationCounter = `${this.tareaJustificationCharachtersCount}/${this.tareaJustificationMaxLength}`;
+    this.specialhandlingCounter = `${this.specialHandlingCharachtersCount}/${this.specialHandlingMaxLength}`;
   }
 
-  onTareaJustificationValueChange(event: any): void {
-    this.tareaJustificationCharachtersCount = event.length;
-    this.tareaJustificationCounter = `${this.tareaJustificationCharachtersCount}/${this.tareaJustificationMaxLength}`;
+  onspecialHandlingTextAreaValueChange(event: any): void {
+    this.specialHandlingCharachtersCount = event.length;
+    this.specialhandlingCounter = `${this.specialHandlingCharachtersCount}/${this.specialHandlingMaxLength}`;
   }
 
   onClinicNameChecked() {
