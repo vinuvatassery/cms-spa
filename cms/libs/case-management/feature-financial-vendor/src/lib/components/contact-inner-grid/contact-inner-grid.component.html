@@ -1,0 +1,101 @@
+<kendo-grid [resizable]="true" [navigable]="true" [kendoGridBinding]="contactResponse">
+
+    <kendo-grid-column field="contactName" title="Name" [width]="100">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <button aria-label="name" kendoButton look="flat" class="card-link-button">
+              {{ dataItem.contactName }}
+            </button>
+          </ng-template> </kendo-grid-column> 
+    <kendo-grid-column field="contactDesc" title="Description" [width]="100"> </kendo-grid-column>
+    <!-- <kendo-grid-column field="PremiumAmount" title="Premium Amount1111" [width]="60">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="text-muted">$</span>
+              {{ dataItem.PremiumAmount }}
+           
+          </ng-template> 
+         </kendo-grid-column> -->
+    <kendo-grid-column field="phoneNbr" title="Phone Number" [width]="60"> </kendo-grid-column>
+    <kendo-grid-column field="faxNbr" title="Fax Number" [width]="60"> </kendo-grid-column>
+    <kendo-grid-column field="emailAddress" title="Email Address" [width]="60"> </kendo-grid-column>
+    <kendo-grid-column field="startDate" title="Effective Date" [width]="60"> 
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span *ngIf="dataItem.activeFlag == 'Y' ;else endDateBlock">
+          {{dataItem.startDate | date:'MM/dd/yyyy'}}
+        </span>
+        <ng-template #endDateBlock>
+          {{dataItem.startDate | date:'MM/dd/yyyy'}} {{ (dataItem.endDate) ? ' - '+ (dataItem.endDate | date:'MM/dd/yyyy') : ''}}
+        </ng-template>
+    </ng-template>
+
+    </kendo-grid-column>
+    <kendo-grid-column field="creatorId" title="By" [width]="50">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button
+          kendoButton
+          [primary]="true"
+          class="avatar-sm-btn c-default"
+          kendoPopoverAnchor
+          [popover]="onUserProfileDetailsHovered"
+          showOn="hover"
+          aria-label="profile avatar"
+        >
+        <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>  
+        </button>
+        <kendo-popover
+          #onUserProfileDetailsHovered
+          width="330"
+          position="left"
+        >
+          <ng-template kendoPopoverBodyTemplate>
+            <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
+          </ng-template>
+        </kendo-popover>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="60" class="text-center">
+      <ng-template kendoGridCellTemplate let-dataItem>
+          <kendo-dropdownbutton [data]="contactAddressActions" icon="more-vertical"
+              class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
+              aria-label="more actions" title="More option"
+              [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+              <span hidden> More Option</span>
+              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate
+                  let-buttondataItem>
+                  <ng-container>
+                      <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                          [class]="buttondataItem.buttonType" aria-hidden="false"
+                          (click)="buttondataItem.click(dataItem)">
+                          <span class="material-icons"
+                              [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                          <label> {{ buttondataItem.text }} </label>
+                      </button>
+                  </ng-container>
+              
+                  
+            
+
+
+
+              </ng-template>
+          </kendo-dropdownbutton>
+      </ng-template>
+  </kendo-grid-column>
+    </kendo-grid>
+    <kendo-dialog *ngIf="isContactAddressDeactivateShow" (close)="clickCloseDeactivateContactAddress()"
+    class="app-c-modal app-c-modal-sm app-c-modal-np">
+    <kendo-dialog-titlebar> Deactivate contacts?</kendo-dialog-titlebar>
+       <cms-contacts-deactivate (closeDeactivateContactAddress)="onDeactiveCancel($event)" [VendorContactId]="VendorContactId"> </cms-contacts-deactivate>
+    </kendo-dialog>
+
+    <kendo-dialog *ngIf="isContactAddressDeleteShow" (close)="clickCloseDeleteContactAddress()"
+    class="app-c-modal app-c-modal-sm app-c-modal-np">
+    <kendo-dialog-titlebar> Delete contacts?</kendo-dialog-titlebar>
+        <cms-contacts-delete (closeDeleteContactAddress)="onCancelPopup($event)" [VendorContactId]="VendorContactId"> </cms-contacts-delete>
+    </kendo-dialog>
+    <kendo-dialog *ngIf="isContactsDetailShow" (close)="clickCloseAddEditContactsDetails()"
+    class="app-c-modal app-c-modal-sm app-c-modal-np">
+    <kendo-dialog-titlebar (close)="clickCloseAddEditContactsDetails()"> Add/Edit contacts
+    </kendo-dialog-titlebar>
+    <cms-contact-address-details> </cms-contact-address-details>
+    <!-- <cms-contacts-details> </cms-contacts-details> -->
+    </kendo-dialog>
