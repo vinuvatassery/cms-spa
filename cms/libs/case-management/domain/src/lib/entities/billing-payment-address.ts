@@ -21,18 +21,3 @@ export interface BillingPaymentAddress {
     vendorId: string;
     zip: string;
 }
-//     MailCode: 'XXXXXXXXXX `',
-//     NameCheck:'1',
-//     NameEnvelope: '3',
-//     PaymentMethod: '1,000.00',
-//     PaymentRunDate: 'XX/XX/XXXX',
-//     AcceptCombinedPayments: 'Yes',
-//     AcceptsReports: 'Pending',
-//     Address1: 'No',
-//     Address2: 'XXXXX',
-//     City: 'XXXXX',
-//     State: 'XXXXX',
-//     Zip: 'XXXXX',
-//     SpecialHandling: 'XXXXX',
-//     EffectiveDates: 'XXXXX',
-//   by: 'No',
