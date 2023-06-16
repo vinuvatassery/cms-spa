@@ -43,7 +43,7 @@ import { PaymentAddressDeactivateComponent } from './components/payment-address-
 import { PaymentAddressDeleteComponent } from './components/payment-address-delete/payment-address-delete.component';
 import { ProductivityToolsFeatureEventLogModule } from '@cms/productivity-tools/feature-event-log';
 import { ContactAddressDetailsComponent } from './components/contact-address-details/contact-address-details.component';
-import { ContactInnerGridComponent } from './components/contact-inner-grid/contact-inner-grid.component';
+import { ContactAddressListComponent } from './components/contact-address-list/contact-address-list.component';
 
 @NgModule({
   imports: [
@@ -93,7 +93,7 @@ import { ContactInnerGridComponent } from './components/contact-inner-grid/conta
     PaymentAddressDeactivateComponent,
     PaymentAddressDeleteComponent,
     ContactAddressDetailsComponent,
-    ContactInnerGridComponent,
+    ContactAddressListComponent,
   ],
   exports: [
     FinancialVendorPageComponent,
@@ -133,7 +133,7 @@ import { ContactInnerGridComponent } from './components/contact-inner-grid/conta
     PaymentAddressDeactivateComponent,
     PaymentAddressDeleteComponent,
     ContactAddressDetailsComponent,
-    ContactInnerGridComponent,
+    ContactAddressListComponent,
   ],
 })
 export class CaseManagementFeatureFinancialVendorModule {}

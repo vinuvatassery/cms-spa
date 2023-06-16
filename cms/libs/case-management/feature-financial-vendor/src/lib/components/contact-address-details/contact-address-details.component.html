@@ -5,10 +5,10 @@
     <p class="text-muted mb-2">
       Select which mail code to add the contact(s) for. All fields are required unless otherwise stated.
     </p>
-    <!-- Contacts -->
 
+    <!-- Contacts -->
     <div class="flex-row mt-2">
-      <div class="flex-col">
+      <div class="flex-col"  *ngIf="this.contactAddress.vendorContactId==null">
         <kendo-floatinglabel text="Mail Code">
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="mailCodes" formControlName="mailcode"
             textField="mailCode" valueField="mailCode" [valuePrimitive]="true">
@@ -20,21 +20,19 @@
       <ng-container formArrayName="vendorContacts">
         <ng-container *ngFor="let contact of AddContactForm.controls; let i=index">
           <ng-container [formGroupName]="i">
-            <div class="flex-col d-flex align-iems-center justify-content-between" [formGroupName]="i">
+            <div class="flex-col d-flex align-iems-center justify-content-between" [formGroupName]="i" *ngIf="this.contactAddress.vendorContactId==null">
               <h4 class="mb-0">CONTACT {{i+1}} (OPTIONAL)</h4>
               <button kendoButton class="card-link-button no-ul text-bold k-danger-link" aria-label="delete contact"
                 (click)="removeContact(i)">
                 DELETE CONTACT
               </button>
             </div>
-
             <div class="flex-col">
               <kendo-floatinglabel text=" Name">
                 <kendo-textbox aria-label="Contact Name" formControlName="contactName"
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>
-
               <kendo-formerror *ngIf="IsContactNameValid(i)&&isSubmitted">A Contact Name is
                 required</kendo-formerror>
             </div>
@@ -69,20 +67,15 @@
 
           </ng-container>
         </ng-container>
-        <div class="flex-col">
-          <button kendoButton icon="add" [primary]="true" look="flat" aria-label="Add Contact"
+        <div class="flex-col"  *ngIf="this.contactAddress.vendorContactId==null">
+          <button  kendoButton icon="add" [primary]="true" look="flat" aria-label="Add Contact" 
             (click)="onToggleAddNewContactClick()">
             Contact
           </button>
         </div>
       </ng-container>
     </div>
-
-
   </section>
-
-
-
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
@@ -90,9 +83,13 @@
           (click)="onCancel()">
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="save()">
-          Add
+
+        <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="save()" *ngIf="this.contactAddress.vendorContactId==null" >
+            Add
         </button>
+        <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="Update()" *ngIf="this.contactAddress.vendorContactId!=null" >
+          Edit
+      </button>
       </div>
     </div>
   </kendo-dialog-actions>

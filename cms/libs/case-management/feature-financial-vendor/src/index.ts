@@ -34,4 +34,4 @@ export * from './lib/components/financial-insurance-plan-details/financial-insur
 export * from './lib/components/financial-insurance-plan-delete/financial-insurance-plan-delete.component';
 export * from './lib/components/financial-insurance-plan-deactivate/financial-insurance-plan-deactivate.component';
 
-export * from './lib/components/contact-inner-grid/contact-inner-grid.component';
+export * from './lib/components/contact-address-list/contact-address-list.component';

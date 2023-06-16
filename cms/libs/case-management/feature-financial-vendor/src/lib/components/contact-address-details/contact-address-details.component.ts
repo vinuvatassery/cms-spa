@@ -1,5 +1,5 @@
 import {
-  Component, OnInit, Output, Input,
+  Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Output, Input, SimpleChanges, OnChanges,
   EventEmitter
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -10,9 +10,11 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
   selector: 'cms-contact-address-details',
   templateUrl: './contact-address-details.component.html',
   styleUrls: ['./contact-address-details.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContactAddressDetailsComponent implements OnInit {
+export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   @Input() vendorId: any;
+  @Input() VendorContactId: any;
   @Output() isContactDetailPopupClose = new EventEmitter<any>();
   SpecialHandlingLength = 100;
   mailCodes: any[] = [];
@@ -22,12 +24,20 @@ export class ContactAddressDetailsComponent implements OnInit {
   contact = new ContactData();
   contactForm!: FormGroup;
   isSubmitted: boolean = false;
+  showLoader() {
+    this.loaderService.show();
+  }
+  hideLoader() {
+    this.loaderService.hide();
+  }
   constructor(
     private formBuilder: FormBuilder,
     private contactFacade: ContactFacade,
     private contactsFacade: ContactsFacade,
     private readonly paymentsFacade: PaymentsFacade,
-    private readonly loaderService: LoaderService) {
+    private readonly loaderService: LoaderService,
+    private cd: ChangeDetectorRef
+  ) {
     this.contactForm = this.formBuilder.group({
       mailcode: [this.contact.mailCode, Validators.required],
       vendorId: [this.contact.vendorId],
@@ -59,19 +69,31 @@ export class ContactAddressDetailsComponent implements OnInit {
       effectiveDate: new FormControl(this.contactAddress.effectiveDate),
     });
     vendorContacts.push(addContactForm);
+
   }
   ngOnInit(): void {
-    this.contactFacade.loadMailCodes(this.vendorId);
     this.contactFacade.mailCodes$.subscribe((mailCode: any) => {
       this.mailCodes = mailCode;
+      this.cd.detectChanges();
     })
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    this.contactAddress = this.VendorContactId;
+    this.AddContactForm.removeAt(0);
+    this.onToggleAddNewContactClick();
+    this.cd.detectChanges();
+  }
+  getallmailcodes() {
+    if (this.contactAddress.vendorContactId == null) {
+      this.contactFacade.loadMailCodes(this.vendorId);
+    }
+  }
   onCancel() {
     this.isContactDetailPopupClose.emit(true);
   }
   public save() {
-    this.isSubmitted = true; 3
+    this.isSubmitted = true;
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
     const dat = this.contactForm.value;
 
@@ -99,13 +121,43 @@ export class ContactAddressDetailsComponent implements OnInit {
       });
     }
   }
+  public Update() {
+    this.isSubmitted = true;
+    if (this.contactForm.controls['vendorContacts'].valid) {
+      this.loaderService.show();
+      this.contactsFacade.updateContactAddress(this.contactForm.value.vendorContacts[0]).subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.contactFacade.showHideSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              'Contact Address Updated successfully'
+            );
+            this.contactsFacade.loadcontacts('CO1');
+            this.loaderService.hide();
+            this.contactFacade.hideLoader();
+            this.isContactDetailPopupClose.emit(true);
+            this.onCancel();
+          }
+        },
+        error: (error: any) => {
+          this.loaderService.hide();
+          this.contactFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+        },
+      });
+    }
+  }
   get AddContactForm(): FormArray {
     return this.contactForm.get('vendorContacts') as FormArray;
   }
+
   IsContactNameValid(index: any) {
     var contactNameIsvalid = this.AddContactForm.at(index) as FormGroup;
     return contactNameIsvalid.controls['contactName'].status == 'INVALID';
   }
+  
   onToggleAddNewContactClick() {
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl(

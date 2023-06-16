@@ -41,9 +41,9 @@ export class ContactsDataService {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/${vendorContactId}/deactivatevendorcontact`,null);
   }
   getContactAddress(vendorContactId: string) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/getcontact/${vendorContactId}`, null);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/getcontact/${vendorContactId}`);
   }
-  updateContactAddress() {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/vendoraddresscontact`, null);
+  updateContactAddress(contact:any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendorprofile/vendoraddresscontact`,contact);
   }
 }

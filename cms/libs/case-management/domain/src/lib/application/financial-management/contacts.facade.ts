@@ -36,13 +36,11 @@ export class ContactsFacade {
   private deActiveContactAddressSubject = new BehaviorSubject<boolean>(false);
   private removeContactAddressSubject = new BehaviorSubject<boolean>(false);
   /** Public properties **/
-  contactsData$ = this.contactsDataSubject.asObservable();
-  
+  contactsData$ = this.contactsDataSubject.asObservable();  
   contacts$ = this.contactsSubject.asObservable();
+
   deActiveContactAddressObs = this.deActiveContactAddressSubject.asObservable();
   removeContactAddressObs = this.removeContactAddressSubject.asObservable();
-  
-  
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
@@ -168,46 +166,22 @@ export class ContactsFacade {
     })
     
   }
-  updateContactAddress(){
-    return new Promise((resolve,reject) =>{
-     this.loaderService.show();
-     this.contactsDataService.updateContactAddress().subscribe({
-      next: (response:any) => {
-        this.loaderService.hide();
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Contact Address updated Successfully');
-        this.loadcontacts('CO1');
-        resolve(true)
-      },
-      error: (err) => {
+  updateContactAddress(contact:any){  
+
+    return this.contactsDataService.updateContactAddress(contact).pipe(
+      catchError((err: any) => {
         this.loaderService.hide();
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
-        this.loggingService.logException(err);
-        resolve(false);
-      },
-    }); 
-    })
-     
+        if (!(err?.error ?? false)) {
+          this.loggingService.logException(err);
+        }
+        return of(false);
+      })
+    );
    }
 
    getContactAddress(vendorContactId: string){
-    return new Promise((resolve,reject) =>{
-     this.loaderService.show();
-     this.contactsDataService.getContactAddress(vendorContactId).subscribe({
-      next: (response:any) => {
-        this.loaderService.hide();
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Contact Address get  Successfully');
-        this.loadcontacts('CO1');
-        resolve(true)
-      },
-      error: (err) => {
-        this.loaderService.hide();
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
-        this.loggingService.logException(err);
-        resolve(false);
-      },
-    }); 
-    })
-     
+    return this.contactsDataService.getContactAddress(vendorContactId);
    }
 }
 
