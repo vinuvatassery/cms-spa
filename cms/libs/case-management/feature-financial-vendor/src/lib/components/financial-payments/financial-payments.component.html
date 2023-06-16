@@ -43,7 +43,7 @@
         <kendo-grid-column field="warrantNumber" title="Warrant #" [width]="100"> </kendo-grid-column>
         <kendo-grid-column field="pcaCode" title="PCA" [width]="100"> </kendo-grid-column>
 
-        <!-- <kendo-grid-column field="by" title="By" [width]="50">
+        <kendo-grid-column field="by" title="By" [width]="50">
                     <ng-template kendoGridCellTemplate let-dataItem>
                       <button
                         kendoButton
@@ -66,33 +66,7 @@
                         </ng-template>
                       </kendo-popover>
                     </ng-template>
-                  </kendo-grid-column> -->
-
-        <!-- <div *kendoGridDetailTemplate="let dataItem">
-          <kendo-grid [resizable]="true" [navigable]="true" [kendoGridBinding]="ClientGridLists">
-
-            <kendo-grid-column field="ClientName" title="Client Name" [width]="150">
-              <ng-template kendoGridCellTemplate let-dataItem>
-                <button aria-label="client name" kendoButton look="flat" class="card-link-button">
-                  {{ dataItem.ClientName }}
-                </button>
-              </ng-template> </kendo-grid-column>
-            <kendo-grid-column field="PrimaryInsuranceCard" title="Name on Primary Insurance Card" [width]="100">
-            </kendo-grid-column>
-            <kendo-grid-column field="PremiumAmount" title="Premium Amount" [width]="100">
-              <ng-template kendoGridCellTemplate let-dataItem>
-                <span class="text-muted">$</span>
-                {{ dataItem.PremiumAmount }}
-
-              </ng-template>
-            </kendo-grid-column>
-            <kendo-grid-column field="MemberID" title="Member ID" [width]="100"> </kendo-grid-column>
-            <kendo-grid-column field="PolicyID" title="Policy ID" [width]="100"> </kendo-grid-column>
-            <kendo-grid-column field="GroupID" title="Group ID" [width]="100"> </kendo-grid-column>
-            <kendo-grid-column field="PaymentID" title="Payment ID" [width]="100"> </kendo-grid-column>
-
-          </kendo-grid>
-        </div> -->
+                  </kendo-grid-column>
         <div *kendoGridDetailTemplate="let dataItem">
           <cms-financial-payment-sub-list [batchId]="dataItem.batchId"></cms-financial-payment-sub-list>
         </div>
