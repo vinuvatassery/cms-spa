@@ -37,16 +37,17 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     private readonly paymentsFacade: PaymentsFacade,
     private readonly loaderService: LoaderService,
     private cd: ChangeDetectorRef
-  ) { }
-
-  ngOnInit(): void {
-
+  ) {
     this.contactForm = this.formBuilder.group({
       mailcode: [this.contact.mailCode, Validators.required],
       vendorId: [this.contact.vendorId],
       vendorAddressId: [this.contact.vendorAddressId],
       vendorContacts: new FormArray([]),
     });
+
+  }
+
+  ngOnInit(): void {
 
     this.contactsFacade.mailCodes$.subscribe((mailCode: any) => {
       this.mailCodes = mailCode;
@@ -56,12 +57,11 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.VendorContactId != undefined) {
-      this.contactAddress = this.VendorContactId;     
+      this.contactAddress = this.VendorContactId;
     } else {
       this.contactsFacade.loadMailCodes(this.vendorId);
     }
     this.onToggleAddNewContactClick();
-    this.cd.detectChanges();
   }
 
   onCancel() {
@@ -124,7 +124,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       });
     }
   }
-  
+
   get AddContactForm(): FormArray {
     return this.contactForm.get('vendorContacts') as FormArray;
   }
@@ -159,6 +159,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       effectiveDate: new FormControl(this.contactAddress.effectiveDate),
     });
     this.AddContactForm.push(addContactForm);
+    this.cd.detectChanges();
   }
 
   removeContact(i: number) {
