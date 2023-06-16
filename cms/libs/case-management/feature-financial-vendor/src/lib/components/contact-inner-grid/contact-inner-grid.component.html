@@ -92,3 +92,10 @@
     <kendo-dialog-titlebar> Delete contacts?</kendo-dialog-titlebar>
         <cms-contacts-delete (closeDeleteContactAddress)="onCancelPopup($event)" [VendorContactId]="VendorContactId"> </cms-contacts-delete>
     </kendo-dialog>
+    <kendo-dialog *ngIf="isContactsDetailShow" (close)="clickCloseAddEditContactsDetails()"
+    class="app-c-modal app-c-modal-sm app-c-modal-np">
+    <kendo-dialog-titlebar (close)="clickCloseAddEditContactsDetails()"> Add/Edit contacts
+    </kendo-dialog-titlebar>
+    <cms-contact-address-details> </cms-contact-address-details>
+    <!-- <cms-contacts-details> </cms-contacts-details> -->
+    </kendo-dialog>

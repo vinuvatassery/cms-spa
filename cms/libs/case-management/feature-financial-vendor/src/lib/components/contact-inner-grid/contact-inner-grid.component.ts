@@ -20,6 +20,7 @@ export class ContactInnerGridComponent {
   isContactAddressDeactivateShow = false;
   isContactAddressDeleteShow = false; 
   isContactAddressDetailShow = false;
+  isContactsDetailShow=false;
   VendorContactId:any;
   public contactAddressActions = [
     {
@@ -63,14 +64,13 @@ export class ContactInnerGridComponent {
   ngOnInit(): void {
     this.contactResponse=[];
     this.contactsfacade.contacts$.subscribe((res: any) => {
-      debugger
       this.contactResponse = res;
       this.cd.detectChanges();
 
     });
   }
   clickOpenAddEditContactAddressDetails() {
-    this.isContactAddressDetailShow = true;
+    this.isContactsDetailShow = true;
   }
   clickOpenDeactivateContactAddressDetails() {
     this.isContactAddressDeactivateShow = true;
@@ -96,6 +96,9 @@ export class ContactInnerGridComponent {
     if(isCancel){
       this.clickCloseDeactivateContactAddress();
      }
+  }
+  clickCloseAddEditContactsDetails() {
+    this.isContactsDetailShow = false;
   }
   
 }
