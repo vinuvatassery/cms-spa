@@ -30,9 +30,9 @@ export class VendorDetailsComponent implements OnInit {
   firstLastNameNotApplicable: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
 
-  tareaJustificationCounter!: string;
-  tareaJustificationCharachtersCount!: number;
-  tareaJustificationMaxLength = 100;
+  textareaCounter!: string;
+  textareaCharachtersCounter!: number;
+  specialHandlingMaxlength = 100;
   tareaJustification = '';
   selectedClinicVendorId!: any;
   clinicVendorList$ = this.financialVendorFacade.clinicVendorList$;
@@ -250,15 +250,15 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   private tareaJustificationWordCount() {
-    this.tareaJustificationCharachtersCount = this.tareaJustification
+    this.textareaCharachtersCounter = this.tareaJustification
       ? this.tareaJustification.length
       : 0;
-    this.tareaJustificationCounter = `${this.tareaJustificationCharachtersCount}/${this.tareaJustificationMaxLength}`;
+    this.textareaCounter = `${this.textareaCharachtersCounter}/${this.specialHandlingMaxlength}`;
   }
 
   onTareaJustificationValueChange(event: any): void {
-    this.tareaJustificationCharachtersCount = event.length;
-    this.tareaJustificationCounter = `${this.tareaJustificationCharachtersCount}/${this.tareaJustificationMaxLength}`;
+    this.textareaCharachtersCounter = event.length;
+    this.textareaCounter = `${this.textareaCharachtersCounter}/${this.specialHandlingMaxlength}`;
   }
 
   onClinicNameChecked() {
