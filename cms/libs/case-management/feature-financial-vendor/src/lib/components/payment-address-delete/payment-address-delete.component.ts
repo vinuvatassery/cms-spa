@@ -24,7 +24,6 @@ export class PaymentAddressDeleteComponent {
         }
       },
       (error) => {
-        console.log(error);
         this.onCloseDeletePaymentAddressClicked(false);
       }
     );

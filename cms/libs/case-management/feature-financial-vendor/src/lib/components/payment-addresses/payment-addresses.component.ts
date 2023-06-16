@@ -81,6 +81,7 @@ export class PaymentAddressesComponent {
     this.getTabCode();
     this.loadPaymentsAddressListGrid();
   }
+
   ngOnChanges(): void {
     this.state = {
       skip: this.gridSkipCount,
@@ -103,11 +104,12 @@ export class PaymentAddressesComponent {
     this.state = stateData;
     this.loadPaymentsAddressListGrid();
   }
+
   loadPaymentsAddressListGrid() {
     this.paymentsFacade.loadPaymentsAddressListGrid(
       this.tabCode,
-      this.state.skip ?? 0,//this.gridSkipCount,
-      this.state.take ?? 0,//this.pageSizes[0]?.value,
+      this.state.skip ?? 0,
+      this.state.take ?? 0,
       this.sortValue,
       this.sortType
     );
@@ -147,19 +149,19 @@ export class PaymentAddressesComponent {
       let _tabCode = params['tab_code'];
       console.log(_tabCode);
       switch (_tabCode) {
-        case FinancialVendorProviderTabCode.Manufacturers://'mnfc':
+        case FinancialVendorProviderTabCode.Manufacturers:
           this.tabCode = FinancialVendorTypeCode.Manufacturers;
           break;
-        case FinancialVendorProviderTabCode.InsuranceVendors://'ins_vend':
+        case FinancialVendorProviderTabCode.InsuranceVendors:
           this.tabCode = FinancialVendorTypeCode.InsuranceVendors;
           break;
-        case FinancialVendorProviderTabCode.Pharmacy://'phrm':
+        case FinancialVendorProviderTabCode.Pharmacy:
           this.tabCode = FinancialVendorTypeCode.Pharmacy;
           break;
-        case FinancialVendorProviderTabCode.DentalProvider://'dent_prv':
+        case FinancialVendorProviderTabCode.DentalProvider:
           this.tabCode = FinancialVendorTypeCode.DentalProviders;
           break;
-        case FinancialVendorProviderTabCode.MedicalProvider://'med_prv':
+        case FinancialVendorProviderTabCode.MedicalProvider:
           this.tabCode = FinancialVendorTypeCode.MedicalProviders;
           break;
         default:
@@ -170,15 +172,12 @@ export class PaymentAddressesComponent {
   }
 
   handleOptionClick(dataItem: any, type: any) {
-    debugger;
     if (type == 'Delete') {
       this.addressId = dataItem.vendorAddressId ?? this.addressId;
       this.clickOpenDeletePaymentAddressDetails();
     }
     else if (type == 'Edit') {
       this.addressId = dataItem.vendorAddressId ?? this.addressId;
-
-      //this.addressId = dataItem.vendorAddressId;
       this.clickOpenAddEditPaymentAddressDetails();
     }
     else if (type == 'Deactivate') {

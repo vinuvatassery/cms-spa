@@ -124,7 +124,6 @@ export class BillingAddressFacade {
     this.loaderService.show();
     return this.billingAddressDataService.deactivatePaymentAddress(addressId).pipe(
       map((response) => {
-        //this.deactivateAddressDataSubject.next(response);
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Payment Address De-Activated Successfully');
         this.hideLoader();
         return response;
@@ -138,7 +137,8 @@ export class BillingAddressFacade {
     );
   }
 
-    deleteAddress(addressId: string): Observable<any> {
+  //to delete any payment address
+  deleteAddress(addressId: string): Observable<any> {
     this.loaderService.show();
     return this.billingAddressDataService.deletePaymentAddress(addressId).pipe(
       map((response) => {

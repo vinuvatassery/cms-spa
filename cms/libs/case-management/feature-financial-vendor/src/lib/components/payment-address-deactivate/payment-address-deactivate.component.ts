@@ -25,7 +25,6 @@ export class PaymentAddressDeactivateComponent {
         }
       },
       (error) => {
-        console.log(error);
         this.onCloseDeactivatePaymentAddressClicked(false);
       }
     );
