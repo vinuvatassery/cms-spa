@@ -37,7 +37,10 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     private readonly paymentsFacade: PaymentsFacade,
     private readonly loaderService: LoaderService,
     private cd: ChangeDetectorRef
-  ) {
+  ) { }
+
+  ngOnInit(): void {
+
     this.contactForm = this.formBuilder.group({
       mailcode: [this.contact.mailCode, Validators.required],
       vendorId: [this.contact.vendorId],
@@ -45,33 +48,6 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       vendorContacts: new FormArray([]),
     });
 
-    const vendorContacts = this.contactForm.get('vendorContacts') as FormArray;
-    let addContactForm = this.formBuilder.group({
-      contactName: new FormControl(this.contactAddress.contactName, [
-        Validators.required,
-        Validators.maxLength(40),
-      ]),
-      contactDesc: new FormControl(this.contactAddress.contactDesc),
-      phoneNbr: new FormControl(this.contactAddress.phoneNbr),
-      faxNbr: new FormControl(this.contactAddress.faxNbr),
-      emailAddress: new FormControl(this.contactAddress.emailAddress),
-      emailAddressTypeCode: new FormControl(EmailTypeCode.Email),
-      phoneTypeCode: new FormControl(PhoneTypeCode.Phone),
-      vendorContactId: new FormControl(this.contactAddress.vendorContactId),
-      vendorAddressId: new FormControl(this.contactAddress.vendorAddressId),
-      vendorContactPhoneId: new FormControl(
-        this.contactAddress.vendorContactPhoneId
-      ),
-      vendorContactEmailId: new FormControl(
-        this.contactAddress.vendorContactEmailId
-      ),
-      jobTitle: new FormControl(this.contactAddress.jobTitle),
-      vendorName: new FormControl(this.contactAddress.vendorName),
-      effectiveDate: new FormControl(this.contactAddress.effectiveDate),
-    });
-    vendorContacts.push(addContactForm);
-  }
-  ngOnInit(): void {
     this.contactsFacade.mailCodes$.subscribe((mailCode: any) => {
       this.mailCodes = mailCode;
       this.cd.detectChanges();
@@ -80,24 +56,22 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.VendorContactId != undefined) {
-      this.contactAddress = this.VendorContactId;
-      this.AddContactForm.removeAt(0);
-      this.onToggleAddNewContactClick();
-      this.cd.detectChanges();
+      this.contactAddress = this.VendorContactId;     
     } else {
       this.contactsFacade.loadMailCodes(this.vendorId);
     }
-
+    this.onToggleAddNewContactClick();
+    this.cd.detectChanges();
   }
 
   onCancel() {
     this.isContactDetailPopupClose.emit(true);
   }
+
   public save() {
     this.isSubmitted = true;
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
     const dat = this.contactForm.value;
-
     if (this.contactForm.valid) {
       this.loaderService.show();
       this.contactsFacade.saveContactAddress(this.contactForm.value).subscribe({
@@ -122,6 +96,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       });
     }
   }
+
   public Update() {
     this.isSubmitted = true;
     if (this.contactForm.controls['vendorContacts'].valid) {
@@ -149,6 +124,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       });
     }
   }
+  
   get AddContactForm(): FormArray {
     return this.contactForm.get('vendorContacts') as FormArray;
   }
