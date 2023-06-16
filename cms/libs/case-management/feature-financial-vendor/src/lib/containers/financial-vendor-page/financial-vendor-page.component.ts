@@ -88,13 +88,13 @@ export class FinancialVendorPageComponent implements OnInit {
 
   clickOpenMedicalProviderDetails() {
     this.buildVendorForm();
-    this.providerTypeCode = FinancialVendorTypeCode.MedicalProvider;
+    this.providerTypeCode = FinancialVendorTypeCode.MedicalProviders;
     this.isShowMedicalProvider = true;
   }
 
   clickOpenDentalProviderDetails() {
     this.buildVendorForm();
-    this.providerTypeCode = FinancialVendorTypeCode.DentalProvider;
+    this.providerTypeCode = FinancialVendorTypeCode.DentalProviders;
     this.isShowDentalProvider = true;
   }
 

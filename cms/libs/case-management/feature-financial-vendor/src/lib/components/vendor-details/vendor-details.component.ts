@@ -14,7 +14,11 @@ import { IntlService } from '@progress/kendo-angular-intl';
 export class VendorDetailsComponent implements OnInit {
   @Input() providerType!: any;
   @Input() medicalProviderForm: FormGroup;
+  @Input() editVendorInfo: boolean = false;
+  @Input() vendorDetails!: any;
+  
 
+  @Output() closeModal = new EventEmitter<any>();
   @Output() saveProviderEventClicked = new EventEmitter<any>();
   @Output() closeModalEventClicked = new EventEmitter<any>();
 
@@ -104,7 +108,7 @@ export class VendorDetailsComponent implements OnInit {
 
   validateForm() {
     this.medicalProviderForm.markAllAsTouched();
-    if (this.providerType == this.vendorTypes.MedicalProvider || this.providerType == this.vendorTypes.DentalProvider) {
+    if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders) {
       if (!this.clinicNameNotApplicable) {
         this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
@@ -242,7 +246,7 @@ export class VendorDetailsComponent implements OnInit {
       vendorContacts: this.vendorContactList,
       AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,
       AcceptsCombinedPaymentsFlag: (formValues.isAcceptCombinedPayment != null && formValues.isAcceptCombinedPayment != '') ? formValues.isAcceptCombinedPayment : null,
-      PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? this.intl.formatDate(formValues.paymentRunDate, this.dateFormat) : null,
+      PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? Number(formValues.paymentRunDate) : null,
       PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes,
       emailAddressTypeCode: AddressType.Mailing
     }
