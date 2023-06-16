@@ -82,21 +82,17 @@ export class ContactsFacade {
     this.contactsDataService.loadContactsListService().subscribe({
       next: (dataResponse) => {
         this.contactsDataSubject.next(dataResponse);
-        this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.hideLoader();
       },
     });
   }
   loadcontacts(mailcode:string)
-  {
-    this.showLoader();
+  { 
     this.contactsDataService.loadcontacts(mailcode).subscribe({
       next:(res:any)=>{
       this.contactsSubject.next(res);
-      this.hideLoader();
       },
       error:(err:any)=>{
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);

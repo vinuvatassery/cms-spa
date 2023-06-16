@@ -24,7 +24,7 @@ export class PaymentAddressesComponent {
   isContactDetailShow = false;
   isPaymentAddressDeactivateShow = false;
   isPaymentAddressDeleteShow = false; 
-
+  VendorAddressId:any;
   public paymentAddressActions = [
     {
       buttonType: 'btn-h-primary',
@@ -69,17 +69,17 @@ export class PaymentAddressesComponent {
     };
   }
 
-  // updating the pagination info based on dropdown selection
   pageSelectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
   }
   public onDetailCollapse(e: any): void {
-    console.log('Detail collapsed:', e);
   }
 
-  public onDetailExpand(e: any): void {
-    this.contactFacade.loadcontacts('CO1');
+  public onDetailExpand(e: any): void { 
+    //this.VendorAddressId=e.dataItem.VendorAddressId;
+    this.VendorAddressId='CO1';   
+   
   }
   public dataStateChange(stateData: any): void {
     this.sort = stateData.sort;

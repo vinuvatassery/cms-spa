@@ -1,10 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ViewEncapsulation,
+  Input,OnInit,
+  SimpleChanges, OnChanges,  ViewEncapsulation,
   ChangeDetectorRef
 } from '@angular/core';
 import { ContactsFacade, contactResponse } from '@cms/case-management/domain';
+import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-contact-address-list',
   templateUrl: './contact-address-list.component.html',
@@ -12,7 +14,7 @@ import { ContactsFacade, contactResponse } from '@cms/case-management/domain';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContactAddressListComponent {
+export class ContactAddressListComponent implements OnInit, OnChanges {
   contactResponse: contactResponse[] = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isContactAddressDeactivateShow = false;
@@ -20,6 +22,14 @@ export class ContactAddressListComponent {
   isContactAddressDetailShow = false;
   isContactsDetailShow = false;
   VendorContactId: any;
+  @Input() VendorAddressId: any;
+  showLoader() {
+    this.loaderService.show();
+  }
+  hideLoader() {
+    this.loaderService.hide();
+  }
+
   public contactAddressActions = [
     {
       buttonType: 'btn-h-primary',
@@ -57,15 +67,20 @@ export class ContactAddressListComponent {
       },
     },
   ];
-  constructor(private readonly contactsfacade: ContactsFacade, private cd: ChangeDetectorRef) { }
+  constructor(private readonly contactsfacade: ContactsFacade, private cd: ChangeDetectorRef, private readonly loaderService: LoaderService,) { }
   ngOnInit(): void {
+
+  }
+  ngOnChanges(changes: SimpleChanges) {
+    this.showLoader();
     this.contactResponse = [];
+    this.contactsfacade.loadcontacts(this.VendorAddressId);    
     this.contactsfacade.contacts$.subscribe((res: any) => {
       this.contactResponse = res;
       this.cd.detectChanges();
+      this.hideLoader();
     });
   }
-
   clickOpenAddEditContactAddressDetails() {
     this.isContactsDetailShow = true;
   }

@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
-import { VendorContacts, ContactFacade, ContactData, EmailTypeCode, PhoneTypeCode, PaymentsFacade, ContactsFacade } from '@cms/case-management/domain';
+import { VendorContacts, ContactFacade, Contacts, EmailTypeCode, PhoneTypeCode, PaymentsFacade, ContactsFacade } from '@cms/case-management/domain';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-contact-address-details',
@@ -21,7 +21,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public contactDetailForm!: FormGroup;
   contactAddress = new VendorContacts();
-  contact = new ContactData();
+  contact = new Contacts();
   contactForm!: FormGroup;
   isSubmitted: boolean = false;
   showLoader() {
@@ -136,7 +136,6 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
             this.loaderService.hide();
             this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);
-            this.onCancel();
           }
         },
         error: (error: any) => {
@@ -157,7 +156,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     var contactNameIsvalid = this.AddContactForm.at(index) as FormGroup;
     return contactNameIsvalid.controls['contactName'].status == 'INVALID';
   }
-  
+
   onToggleAddNewContactClick() {
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl(
