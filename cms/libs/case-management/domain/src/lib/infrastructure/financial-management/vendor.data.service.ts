@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { FinancialVendorTypeCode } from '../../enums/financial-vendor-type-code';
 import { FinancialVendorProviderTabCode } from '../../enums/financial-vendor-provider-tab-code';
 
 @Injectable({ providedIn: 'root' })

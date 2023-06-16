@@ -1,6 +1,6 @@
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { VendorFacade, FinancialVendorTypeCode, ContactFacade, FinancialVendorProviderTabCode, StatusFlag, AddressType, FinancialVendorFacade } from '@cms/case-management/domain';
+import { VendorFacade, FinancialVendorTypeCode, ContactFacade, StatusFlag, AddressType, FinancialVendorFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -112,7 +112,7 @@ export class VendorDetailsComponent implements OnInit {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
-    var mailCode = this.medicalProviderForm.controls['mailCode'].value;
+    let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if (mailCode) {
       this.medicalProviderForm.controls['addressLine1']
         .setValidators([
