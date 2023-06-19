@@ -33,7 +33,7 @@ export class BillingAddressDataService {
 
   loadBillingPaymentsAddressListService(vendorTypeCode: string, skipcount: number, maxResultCount: number, sort: string, sortType: string) : Observable<any> {
     return this.http.get<any>(
-     `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/payment-address?VendorTypeCode=${vendorTypeCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+     `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/address?VendorTypeCode=${vendorTypeCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
     );
   }
 
