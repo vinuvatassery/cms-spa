@@ -13,10 +13,10 @@
   <kendo-grid-column field="effectiveDate" title="Effective Date" [width]="60">
     <ng-template kendoGridCellTemplate let-dataItem>
       <span *ngIf="dataItem.activeFlag == 'Y' ;else endDateBlock">
-        {{dataItem.effectiveDate | date:'MM/dd/yyyy'}}
+        {{dataItem.startDate | date:'MM/dd/yyyy'}}
       </span>
       <ng-template #endDateBlock>
-        {{dataItem.effectiveDate | date:'MM/dd/yyyy'}} {{ (dataItem.endDate) ? ' - '+ (dataItem.endDate |
+        {{dataItem.startDate | date:'MM/dd/yyyy'}} {{ (dataItem.endDate) ? ' - '+ (dataItem.endDate |
         date:'MM/dd/yyyy') : ''}}
       </ng-template>
     </ng-template>
