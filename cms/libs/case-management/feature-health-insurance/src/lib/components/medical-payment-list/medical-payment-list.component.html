@@ -83,6 +83,10 @@
         <kendo-grid-column field="warrant" title="Warrant" [width]="130">
         </kendo-grid-column>
         <kendo-grid-column field="comments" title="Comment" [width]="150">
+          <ng-template kendoGridCellTemplate let-dataItem>
+          
+             <span class="grid-line-clip"> {{ dataItem.comments }}</span>
+           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="paymentTypeDesc" title="Type" [width]="130">
         </kendo-grid-column>
