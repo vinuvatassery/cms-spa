@@ -1,20 +1,19 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,OnInit,
+  Input,
   SimpleChanges, OnChanges,  ViewEncapsulation,
   ChangeDetectorRef
 } from '@angular/core';
 import { ContactsFacade, contactResponse } from '@cms/case-management/domain';
-import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService} from '@cms/shared/util-core';
 @Component({
   selector: 'cms-contact-address-list',
   templateUrl: './contact-address-list.component.html',
-  styleUrls: ['./contact-address-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContactAddressListComponent implements OnInit, OnChanges {
+export class ContactAddressListComponent implements OnChanges {
   contactResponse: contactResponse[] = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isContactAddressDeactivateShow = false;
@@ -48,7 +47,6 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
       text: 'Deactivate Address',
       icon: 'block',
       click: (data: any): void => {
-        console.log(data);
         if (data?.vendorContactId) {
           this.VendorContactId = data?.vendorContactId;
           this.clickOpenDeactivateContactAddressDetails();
@@ -69,9 +67,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
     },
   ];
   constructor(private readonly contactsfacade: ContactsFacade, private cd: ChangeDetectorRef, private readonly loaderService: LoaderService,) { }
-  ngOnInit(): void {
 
-  }
   ngOnChanges(changes: SimpleChanges) { 
     this.contactsfacade.loadcontacts(this.VendorAddressId);    
     this.contactsfacade.contacts$.subscribe((res: any) => {

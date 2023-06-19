@@ -9,7 +9,6 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-contact-address-details',
   templateUrl: './contact-address-details.component.html',
-  styleUrls: ['./contact-address-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactAddressDetailsComponent implements OnInit, OnChanges {
@@ -71,7 +70,6 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   public save() {
     this.isSubmitted = true;
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
-    const dat = this.contactForm.value;
     if (this.contactForm.valid) {
       this.loaderService.show();
       this.contactsFacade.saveContactAddress(this.contactForm.value).subscribe({
@@ -130,7 +128,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   }
 
   IsContactNameValid(index: any) {
-    var contactNameIsvalid = this.AddContactForm.at(index) as FormGroup;
+    let contactNameIsvalid = this.AddContactForm.at(index) as FormGroup;
     return contactNameIsvalid.controls['contactName'].status == 'INVALID';
   }
 

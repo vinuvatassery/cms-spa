@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component,Input } from '@angular/core'; 
+import {  Component,Input } from '@angular/core'; 
 import { PaymentsFacade,ContactsFacade, contactResponse } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -6,7 +6,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   selector: 'cms-payment-addresses',
   templateUrl: './payment-addresses.component.html',
   styleUrls: [],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentAddressesComponent {
   @Input() vendorId: any;
@@ -30,8 +29,7 @@ export class PaymentAddressesComponent {
       buttonType: 'btn-h-primary',
       text: 'Edit Address',
       icon: 'edit',
-      click: (data: any): void => {
-        console.log(data);
+      click: (data: any): void => {;
         this.clickOpenAddEditPaymentAddressDetails();
       },
     },
@@ -40,7 +38,6 @@ export class PaymentAddressesComponent {
       text: 'Deactivate Address',
       icon: 'block',
       click: (data: any): void => {
-        console.log(data);
         this.clickOpenDeactivatePaymentAddressDetails();
       },
     },
@@ -49,7 +46,6 @@ export class PaymentAddressesComponent {
       text: 'Delete Address',
       icon: 'delete',
       click: (data: any): void => {
-        console.log(data);
         this.clickOpenDeletePaymentAddressDetails();
       },
     },
