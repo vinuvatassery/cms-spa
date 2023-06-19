@@ -58,7 +58,6 @@ export class StatusPeriodComponent implements OnInit {
           this.isStatusPeriodEdit = true;
           this.onEditEligibilityPeriodClicked(dataItem.clientCaseId,dataItem.clientCaseEligibilityId, template);
         }
-        //  this.isOpenDocAttachment = true
       },
     }
   ];
@@ -87,7 +86,7 @@ export class StatusPeriodComponent implements OnInit {
     });
   }
 
-  pageselectionchange(data: any) {
+  pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadStatusPeriodData();

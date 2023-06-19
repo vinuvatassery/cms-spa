@@ -77,7 +77,7 @@
       <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
       <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
         [valueField]="'value'" #RowsPerPage id="RowsPerPage" aria-label ="Rows Per Page" [valuePrimitive]="true" [(value)]="state.take"
-        (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
+        (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
       <kendo-pager-info> </kendo-pager-info>
       <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
     </div>
@@ -129,18 +129,4 @@
     (isModalPeriodCloseClicked)="onStatusPeriodDetailClosed($event)"
     (isModalSavedClicked)="onModalSaveAndClose($event)"></case-management-eligibility-period-detail>
 </ng-template>
-<!-- <kendo-dialog
-  *ngIf="isStatusPeriodDetailOpened"
-  (close)="onStatusPeriodDetailClosed()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
-  kendoTooltip
->
-  <case-management-eligibility-period-detail
-  [clientId]="clientId"
-  [clientCaseEligibilityId]="selectedEligibilityId"
-  [clientCaseId]="selectedCaseId"
-  [isEdit]="false"
-  [isStatusPeriodEdit]="isStatusPeriodEdit"
-  [isCopyPeriod]="isCopyPeriod"
-  (isModalSavedClicked)="onModalSaveAndClose($event)"></case-management-eligibility-period-detail>
-</kendo-dialog> -->
+
