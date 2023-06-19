@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component} from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { UserDataService } from '@cms/system-config/domain';
 
 @Component({
@@ -7,11 +7,10 @@ import { UserDataService } from '@cms/system-config/domain';
   templateUrl: './layout.component.html',
 })
 export class LayoutComponent {
-
- constructor(private readonly userDataService: UserDataService){}
+  constructor(private readonly userDataService: UserDataService) {}
 
   /** Public properties **/
-  isSideMenuToggled = true;
+  isSideMenuToggled = false;
   isOpenMobileMenu = false;
 
   /** Internal event methods **/
@@ -20,7 +19,20 @@ export class LayoutComponent {
     this.isSideMenuToggled = !this.isSideMenuToggled;
   }
 
-  openMobileMenu(){
-      this.isOpenMobileMenu = !this.isOpenMobileMenu
+  openMobileMenu() {
+    this.isOpenMobileMenu = !this.isOpenMobileMenu;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  sizeChange(event: any) {
+    let screenSize = event.currentTarget.window.innerWidth;
+    if (screenSize <= 600) {
+      this.isSideMenuToggled = true;
+    }
+  }
+
+  @HostListener('window:load', ['$event'])
+  onLoadEvent(event: any) {
+    this.sizeChange(event);
   }
 }

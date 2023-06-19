@@ -1,9 +1,14 @@
+
 <case-management-authorization
-  [isCerForm]="isCerForm"
-  [clientId]="clientId"
-  [clientEligibilityId]="clientCaseEligibilityId"
-  (cerDateSignatureEvent)="loadDateSignature($event)"
+  [isCerForm] = "isCerForm"
+  [clientCaseEligibilityId]="clientCaseEligibilityId"
+  [templateNotice$]="templateNotice$"
+  (loadAuthorizationData)="loadAuthorization()"
+  (saveAuthorizationData)="saveAuthorization($event)"
+  (loadAuthorizationNotice)="loadAuthorizationNotice()"
+  (setStartButtonVisibility)="setStartButtonVisibility($event)"
 ></case-management-authorization>
+
 <!-- Application Review -->
 <div class="client-data-block mt-4">
   <h3>{{isCerForm ?'Eligibility Review' : 'Application Review'}}</h3>
@@ -12,8 +17,9 @@
       <div class="flex-col">
         <button
           kendoButton
-          [primary]="true"        
-          (click)="navigateReviewPage()"
+          [primary]="true"  
+          [disabled]="!(startReviewButtonVisibility$ | async)"      
+          (click)="onStartButtonClick()"
         >
           Start
         </button>

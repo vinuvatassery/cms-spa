@@ -61,6 +61,7 @@ export class EmailEditorComponent implements OnInit {
   isDefaultAttachment: boolean = false;
   public uploadedAttachedFile: any[] = [];
   public selectedAttachedFile: any[] = [];
+  cerFormPreviewData:any;
   clientAllDocumentList$: any;
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   public uploadRemoveUrl = 'removeUrl';
@@ -142,6 +143,7 @@ export class EmailEditorComponent implements OnInit {
         this.loaderService.hide();
         this.loggingService.logException(err);
         this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+        this.loggingService.logException(err);
       },
     });
   }
@@ -160,6 +162,7 @@ export class EmailEditorComponent implements OnInit {
       this.loaderService.hide();
       this.loggingService.logException(err);
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      this.loggingService.logException(err);
     },
   });
   }
@@ -255,6 +258,7 @@ if(!this.attachedFileValidatorSize){
       this.loaderService.hide();
       this.loggingService.logException(err);
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      this.loggingService.logException(err);
     },
   });
   }
@@ -287,7 +291,9 @@ if(!this.attachedFileValidatorSize){
         .subscribe({
           next: (data: any) =>{
           if (data) {
-            debugger;
+            this.cerFormPreviewData = data;
+            this.ref.detectChanges();
+            this.viewOrDownloadFile(data.clientDocumentId);
           }
           this.loaderService.hide();
         },
@@ -295,9 +301,32 @@ if(!this.attachedFileValidatorSize){
           this.loaderService.hide();
           this.loggingService.logException(err);
           this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+          this.loggingService.logException(err);
         },
       });
   }
+
+  viewOrDownloadFile(clientDocumentId: string) {
+    if (clientDocumentId === undefined) {
+        return;
+    }
+    this.getClientDocumentsViewDownload(clientDocumentId).subscribe({
+        next: (data: any) => {
+            const fileUrl = window.URL.createObjectURL(data);
+                window.open(fileUrl, "_blank");
+        },
+        error: (error: any) => {
+            this.loaderService.hide();
+            this.loggingService.logException(error);
+            this.showHideSnackBar(SnackBarNotificationType.ERROR,error);
+            this.loggingService.logException(error);
+        }
+    })
+  }
+
+  getClientDocumentsViewDownload(clientDocumentId: string) {
+    return this.communicationFacade.getClientDocumentsViewDownload(clientDocumentId);
+ }
 
   private loadDefaultTemplateAttachment() {
     this.loaderService.show();
@@ -323,6 +352,7 @@ if(!this.attachedFileValidatorSize){
       this.loaderService.hide();
       this.loggingService.logException(err);
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+      this.loggingService.logException(err);
     },
   });
   }
@@ -351,6 +381,7 @@ if(!this.attachedFileValidatorSize){
       this.loaderService.hide();
       this.loggingService.logException(err);
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+      this.loggingService.logException(err);
     },
   });
   }

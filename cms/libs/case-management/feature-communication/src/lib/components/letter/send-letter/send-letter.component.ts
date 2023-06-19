@@ -124,7 +124,7 @@ export class SendLetterComponent implements OnInit {
     this.generateText(this.selectedTemplate,CommunicationEvents.SendLetter);
     this.closeSendLetterEvent.emit(CommunicationEvents.Print);
     } else if (event === CommunicationEvents.Close) {
-      this.closeSendLetterEvent.emit(CommunicationEvents.Close);
+      this.isShowSendLetterToPrintPopupClicked = false;
     }
   }
 
@@ -170,6 +170,9 @@ export class SendLetterComponent implements OnInit {
 
   onCloseNewLetterClicked() {
     this.closeSendLetterEvent.emit(CommunicationEvents.Close);
+  }
+  onPreviewLetterClose(){
+    this.isShowPreviewLetterPopupClicked = false;
   }
 
   /** External event methods **/

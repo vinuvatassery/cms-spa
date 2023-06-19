@@ -147,7 +147,7 @@ export * from './lib/infrastructure/financial-management/invoice.data.service';
 export * from './lib/infrastructure/financial-management/claims.data.service';
 export * from './lib/infrastructure/financial-management/insurance-provider.data.service';
 export * from './lib/infrastructure/financial-management/vendor-insurance-plan.data.service';
-export * from './lib/infrastructure/financial-vendor.data.service';
+export * from './lib/infrastructure/financial-management/vendor.data.service';
 
 
 
@@ -185,7 +185,7 @@ export * from './lib/application/health-insurance-policy.facade';
 export * from './lib/application/review-question-answer.facade';
 export * from './lib/application/review-question-response.facade';
 export * from './lib/application/financial-management.facade';
-export * from './lib/application/financial-vendor.facade';
+export * from './lib/application/financial-management/vendor.facade';
 export * from './lib/application/grid.facade';
 export * from './lib/application/financial-management/billing-address.facade';
 export * from './lib/application/financial-management/billing-email-address.facade';

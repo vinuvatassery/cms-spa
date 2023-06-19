@@ -1,15 +1,15 @@
 <div class="block-section">
   <div class="flex-row mb-1">
     <div class="flex-col flex-col-6 align-items-center" kendoTooltip>
-      <h2 class="title-md mb-0 text-bold">Client Info</h2>
+      <h2 class="title-md mb-0 text-bold">Vendor Info</h2>
       <button kendoButton class="ml-2 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit Client Info"
-        aria-label="edit client info"></button>
+        aria-label="edit client info" (click)="openEditDailog=true;"></button>
     </div>
   </div>
   <div class="flex-row">
     <div class="flex-col flex-col-6">
       <table class="info-table-custom">
-        <caption hidden> Client Info</caption>
+        <caption hidden> Vendor Info</caption>
         <tr hidden>
           <th scope="col"></th>
           <th scope="col"></th>
@@ -36,31 +36,39 @@
         </tr>
         <tbody>
           <tr>
-            <td>Provider Name</td>
-            <td>A Very Nice Provider</td>
+            <td>Vendor Name</td>
+            <td>{{(selectedVendorInfo$ | async)?.vendorName}}</td>
           </tr>
           <tr>
             <td>TIN</td>
-            <td>XXX-XX-XXXX</td>
+            <td>{{(selectedVendorInfo$ | async)?.tin}}</td>
           </tr>
-          <tr>
-            <td>Payment Method</td>
-            <td>Check</td>
-          </tr>
-          <tr>
-            <td>Special Handling</td>
-            <td>
-              Call Joan Directly, they do not turn
-            </td>
-          </tr>
-
         </tbody>
       </table>
       <!-- Last Updated by -->
       <p class="mt-1 mb1">
-        <span class="badge-dot-info bdi-left"></span> Last Updated on XX/XX/XXXX
+        <span class="badge-dot-info bdi-left"></span> Last Updated {{(selectedVendorInfo$ | async)?.lastModificationTime | date: 'MM/dd/yyyy' }}
         by
-        <a kendoPopoverAnchor showOn="hover"> Fname Lname</a>
+        <button
+          kendoButton
+          [primary]="true"
+          class="avatar-sm-btn c-default"
+          kendoPopoverAnchor
+          [popover]="onUserProfileDetailsHovered"
+          showOn="hover"
+          aria-label="profile avathar"
+        >
+        <common-user-photo-icon  [userId]="(selectedVendorInfo$ | async)?.lastModifierId"></common-user-photo-icon>
+        </button>
+        <kendo-popover
+          #onUserProfileDetailsHovered
+          width="330"
+          position="left"
+        >
+          <ng-template kendoPopoverBodyTemplate>
+            <common-user-profile-card [userId]="(selectedVendorInfo$ | async)?.lastModifierId"></common-user-profile-card>
+          </ng-template>
+        </kendo-popover>
       </p>
     </div>
   </div>
@@ -72,3 +80,11 @@
 <div class="mt-2">
   <cms-billing-email-address-list></cms-billing-email-address-list>
 </div>
+
+<div >
+</div>
+
+<kendo-dialog *ngIf="openEditDailog" (close)="openEditDailog=false;" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar class="transform-none"> Edit Insurance Vendor Info </kendo-dialog-titlebar>
+  <cms-vendor-details [editVendorInfo]="true" [vendorDetails]="vendorDetail" (closeModal)="closeEditModal($event)"></cms-vendor-details>
+</kendo-dialog>

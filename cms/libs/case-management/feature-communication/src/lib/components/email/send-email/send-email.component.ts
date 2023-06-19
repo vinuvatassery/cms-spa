@@ -183,8 +183,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
       this.initiateAdobeEsignProcess(this.selectedTemplate,"SendEmail");
       this.closeSendEmailEvent.emit(CommunicationEvents.Print);
-    } else if (CommunicationEvents.Close === event) {
-      this.closeSendEmailEvent.emit(CommunicationEvents.Close);
     }
   }
 
@@ -198,6 +196,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.closeSendEmailEvent.emit(CommunicationEvents.Close);
   }
 
+onClosePreviewEmail(){
+  this.isShowPreviewEmailPopupClicked = false;
+}
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
     this.isClearEmails =true;
@@ -213,10 +214,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   handleEmailEditor(emailData: any) {
     this.currentEmailData = emailData;
-  }
-
-  onClosePreviewEmail(){
-    this.isShowPreviewEmailPopupClicked = false;
   }
 
   onEmailChange(event: any){
