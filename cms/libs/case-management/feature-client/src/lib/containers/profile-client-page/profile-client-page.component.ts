@@ -125,8 +125,7 @@ export class ProfileClientPageComponent implements OnInit {
         next: (response: any) => {
           if (response) {
             this.loaderService.hide();
-            /**Populating Client */
-            //this.applicantInfo.client = response.client;
+            /**Populating Client */          
             if(response.clientNotes?.length > 0){
               this.clientNotes = response.clientNotes;
             }else {
@@ -139,17 +138,17 @@ export class ProfileClientPageComponent implements OnInit {
                this.questions.forEach(question =>{
                 question.answer = this.answersKeys.find(answer =>answer.key == question.key)?.value;
                 if(question.answer == "Yes" && question.otherKey != 'interpreterType' && question.otherFormatKey != 'materialInAlternateFormatOther' && question.descKey != 'materialInAlternateFormatCodeOtherDesccription' && question.key != 'limitingConditionDescription'){
-                  question.answer = question.answer+' ' +', Since age'+ ' ' +this.answersKeys.find(answer =>answer.key == question.otherKey)?.value; 
+                  question.answer = question.answer+', Since age'+ ' ' +this.answersKeys.find(answer =>answer.key == question.otherKey)?.value; 
                 } else if(question.key == 'notes' ){
                   question.answer =this.clientNotes.length > 0 ? this.clientNotes.map(function (e) { return e?.note;}).join(', ') : 'No Notes'
                 } else if(question.answer == "Yes" && question.otherKey == 'interpreterType'){
-                  question.answer ='Yes' + ' ,' + this.answersKeys.find(answer =>answer.key == question.otherKey)?.value;
+                  question.answer ='Yes' + ','+' ' + this.answersKeys.find(answer =>answer.key == question.otherKey)?.value;
                 }
                 else if(question.answer == "Yes"  &&  question.descKey == 'materialInAlternateFormatCodeOtherDesccription' && !this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value){
-                  question.answer = 'Yes' + ' ,' + this.answersKeys.find(answer =>answer.key == question.descKey)?.value;
+                  question.answer = 'Yes' + ',' +' '+ this.answersKeys.find(answer =>answer.key == question.descKey)?.value;
                 }
                 else if(question.answer == "Yes"  &&  question.otherFormatKey == 'materialInAlternateFormatOther' ){
-                  question.answer ='Yes' + ' ,' + this.answersKeys.find(answer =>answer.key == question.descKey)?.value +' ,'+ this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value;
+                  question.answer ='Yes' + ',' +' ' + this.answersKeys.find(answer =>answer.key == question.descKey)?.value +',' +' ' + this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value;
                 }
               });
               this.cdRef.detectChanges();

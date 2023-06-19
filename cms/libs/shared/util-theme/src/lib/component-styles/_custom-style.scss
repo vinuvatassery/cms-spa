@@ -4,20 +4,25 @@
   width: 100%;
   min-width: 100%;
   gap: $size-xlg1;
+
   @media (max-width: $breakpoint-xlg) {
     flex-direction: column;
   }
+
   .app-l-client-left {
     width: 100%;
     max-width: 100%;
+
     @media (max-width: $breakpoint-xlg) {
       max-width: 100%;
     }
   }
+
   .app-l-client-right {
     max-width: 200px;
     width: 200px;
     min-width: 200px;
+
     @media (max-width: $breakpoint-xlg) {
       width: 100%;
       max-width: 100%;
@@ -28,15 +33,18 @@
     .app-l-client-left {
       width: calc(100% - 219px);
       max-width: 100%;
+
       @media (max-width: $breakpoint-xlg) {
         width: 100%;
         max-width: 100% !important;
       }
     }
+
     .app-l-client-right {
       max-width: 200px;
       width: 200px;
       min-width: 200px;
+
       @media (max-width: $breakpoint-xlg) {
         width: 100%;
         max-width: 100%;
@@ -44,18 +52,23 @@
     }
   }
 }
-.client-header-wrapper-stickey{
-  z-index: 7;
-  background: $white; 
-  position: static; 
-  .k-breadcrumb{
+
+.client-header-wrapper-stickey {
+  z-index: 6;
+  background: $white;
+  position: sticky;
+  top: 0;
+
+  .k-breadcrumb {
     background: transparent;
   }
 }
+
 /* Case Tabs*/
 .client-tab-section {
   position: relative;
   margin-top: $size-xx;
+
   .tab-over-icon-btn {
     position: absolute;
     right: $size-xlg;
@@ -65,6 +78,7 @@
     align-items: center;
     opacity: 0.8;
     gap: $size-l;
+
     .small-i-btn {
       &.k-button {
         width: 30px;
@@ -73,19 +87,21 @@
     }
   }
 }
- 
-.client-profile-outlet{
-  max-height: calc(100vh - 236px); 
-  overflow-y: auto;
+
+.client-profile-outlet {
+  // max-height: calc(100vh - 236px);
+  // overflow-y: auto;
   padding: 16px;
   // margin-top: 4px;
 }
+
 .maintitle_withicon {
   span {
     font-size: inherit;
     vertical-align: top;
   }
 }
+
 /* Add client details wrapper*/
 .add-client-wrapper,
 .inner-split-wrapper {
@@ -103,8 +119,10 @@
     min-height: calc(100vh - $header-height);
     overflow-y: auto;
     overflow-x: hidden;
+
     .kendo-list-base {
       padding-top: $size-0 !important;
+
       .kendo-list-items {
         justify-content: space-between;
         display: flex;
@@ -114,6 +132,7 @@
         padding: ($size-xx + $size-s) $size-xlg;
         position: relative;
         cursor: pointer;
+
         .material-icons {
           font-size: $font-size-xlg;
           color: material-color($hive-success-palette, 900);
@@ -121,16 +140,19 @@
           right: 14px;
           top: 8px;
         }
+
         &:hover,
         &:active,
         &:focus,
         &.active-item {
           background: material-color($hive-success-palette, 50);
           border-radius: $size-0;
+
           &.case-menu-disabled {
             opacity: 1;
           }
         }
+
         &.case-menu-disabled {
           cursor: default;
           pointer-events: none;
@@ -139,41 +161,50 @@
         }
       }
     }
+
     .section-completed {
       background: material-color($hive-success-palette, 100);
     }
+
     .sections-heading {
       display: flex;
       justify-content: space-between;
       padding: $size-xlg;
       align-items: center;
       background-color: $white !important;
+
       &.sh-top-border {
         border-top: 1px solid darken($theme-border, 30%);
         padding: $size-xx $size-xlg;
       }
+
       .submenutop-text {
         margin: 0px;
         font-family: $font-family-bold;
         font-weight: normal;
         font-size: 14px;
       }
+
       &.heading-as-menu {
         justify-content: flex-start;
         border-bottom: 1px solid darken($theme-border, 30%);
         transition: ease-in all 0.4s;
+
         .submenutop-text {
           font-family: $font-family;
           font-weight: normal;
         }
+
         .submenutop-text,
         .material-icons {
           color: material-color($hive-neutral-palette, 900);
         }
+
         &:hover {
           cursor: pointer;
           background: material-color($hive-success-palette, 100);
           color: $app-primary;
+
           .submenutop-text,
           .material-icons {
             color: $app-primary;
@@ -181,18 +212,23 @@
         }
       }
     }
+
     .list-b-border {
       border-bottom: 1px solid darken($theme-border, 30%);
     }
+
     .user-side-profile {
       padding: $size-xlg;
     }
+
     @media (max-width: $breakpoint-xlg) {
       max-width: 250px;
     }
   }
+
   .inner-split_left {
     max-width: 260px;
+
     .kendo-list-base {
       .kendo-list-items {
         &.active-item {
@@ -202,6 +238,7 @@
       }
     }
   }
+
   /* Case Details Router */
   .add-client_right,
   .inner-split_right {
@@ -211,9 +248,11 @@
     max-height: calc(100vh - $header-height);
     overflow-y: auto;
     overflow-x: hidden;
+
     .client-data-block {
       border-left: 2px solid $theme-border;
       position: relative;
+
       &:before {
         height: $size-xxx * 2;
         background: $white;
@@ -223,6 +262,7 @@
         top: $size-0;
         content: '';
       }
+
       h3 {
         margin-left: -2px !important;
         background-color: $white;
@@ -232,31 +272,39 @@
         font-family: $font-family-bold;
         font-size: $font-size-xlg;
       }
+
       h5 {
         margin: 20px 0px 8px;
+
         &.text-capital {
           margin-top: 8px;
         }
       }
+
       section {
         padding-left: $size-xxx;
       }
     }
+
     .client-data-block-empty {
       height: 200px;
     }
+
     @media (max-width: $breakpoint-sm) {
       padding: $size-0;
     }
+
     .app-l-breadcrumb {
       padding: $size-0 !important;
       min-height: 32px !important;
+
       &.fixed-top-breadcrumb {
         position: relative;
         top: 0;
         background: $white;
         z-index: 6;
         padding: $size-xlg $size-0 $size-xlg !important;
+
         @media (max-width: $breakpoint-xlg) {
           padding: $size-xlg $size-xlg !important;
         }
@@ -264,10 +312,14 @@
     }
   }
 }
+
 .looking-for-message {
-  padding: $size-xx ($size-xxx + $size-m);
-  color: $app-primary-font-color;
+  padding: $size-xx (
+    $size-xxx + $size-m
+  );
+color: $app-primary-font-color;
 }
+
 .member-selected-list {
   border: 1px solid $theme-border;
   border-radius: $border-radius-sm;
@@ -276,17 +328,20 @@
   gap: $size-xl;
   align-items: center;
   position: relative;
+
   .material-icons {
     font-size: $font-size-l;
     display: flex;
     align-items: center;
     justify-content: center;
   }
+
   .small-i-btn {
     position: absolute;
     right: 0;
   }
 }
+
 .preferred-phoneNo {
   position: absolute;
   left: -$size-m;
@@ -299,6 +354,7 @@
   justify-content: center;
   display: flex;
   cursor: default;
+
   .material-icons {
     color: $white;
     font-size: $font-size-l;
@@ -312,6 +368,7 @@
     margin-bottom: $size-xx;
   }
 }
+
 /*Client Details Tab*/
 .tab-inner-link-head {
   padding-left: $size-xxx;
@@ -322,9 +379,11 @@
   top: 0px;
   z-index: 1;
   background: $white;
+
   .tab-head-menu {
     display: flex;
     gap: $size-xx;
+
     .tab-head-menu_item {
       width: auto;
       height: 32px;
@@ -334,6 +393,7 @@
       justify-content: center;
       color: material-color($hive-neutral-palette, 600);
       cursor: pointer;
+
       &:after {
         width: 0px;
         transition: ease-in all 0.2s;
@@ -343,6 +403,7 @@
         height: 2px;
         background: $app-primary;
       }
+
       &.selected-menu-item,
       &:hover,
       &:focus {
@@ -350,6 +411,7 @@
         border-radius: $size-0;
         position: relative;
         color: $app-primary;
+
         &:after {
           width: 100%;
           transition: ease-in all 0.2s;
@@ -358,6 +420,7 @@
     }
   }
 }
+
 // SMS Text Style
 .sms-text-header {
   background: material-color($hive-neutral-palette, 700);
@@ -367,12 +430,14 @@
   padding: $size-l $size-xx;
   border-top-left-radius: $border-radius-md;
   border-top-right-radius: $border-radius-md;
+
   h5 {
     color: $white;
     margin: 0;
     font-weight: normal;
     font-family: $font-family-medium;
   }
+
   .mat-button,
   .k-button {
     background: $white;
@@ -381,24 +446,30 @@
     font-family: $font-family-bold;
   }
 }
+
 .sms-popup-content {
   padding: $size-xlg;
+
   .input-search .material-icons {
     top: $size-m;
   }
+
   h5 {
     color: $black-3;
     font-family: $font-family-bold;
     padding: $size-xlg $size-0 $size-m $size-0;
   }
+
   .var-list-block {
     max-height: 200px;
     overflow: auto;
+
     .var-list-item {
       li {
         padding: $size-l $size-xx;
         cursor: pointer;
         transition: ease-in all 0.4s;
+
         &:hover {
           background: material-color($hive-neutral-palette, 100);
           transition: ease-in all 0.4s;
@@ -430,28 +501,35 @@
   .input-search {
     position: relative;
     padding: 0px 10px;
+
     .material-icons {
       left: 18px;
       top: 28px;
     }
   }
+
   .k-ripple-focus {
     border-color: $theme-border !important;
+
     &:before {
       display: none !important;
     }
   }
+
   input[type='checkbox'] {
     width: $size-xxx;
     height: $size-xxx;
   }
+
   kendo-list {
     max-height: 40vh !important;
     overflow: auto;
   }
+
   .k-list-scroller {
     overflow: visible;
   }
+
   .k-list-item {
     &.k-selected {
       background: material-color($hive-primary-palette, 50) !important;
@@ -497,9 +575,11 @@
   transition: 0.2s;
   display: none;
   background: $white;
+
   .material-icons {
     color: $app-primary;
   }
+
   &:hover {
     background: material-color($hive-primary-palette, 50);
   }
@@ -533,10 +613,12 @@
 }
 
 .autocompletecombo {
+
   .k-list-header-text,
   .k-list-item-text {
     font-family: $font-family-bold;
   }
+
   .namecolumn {
     display: inline-block;
     width: calc(100% - 260px);
@@ -569,6 +651,7 @@
     position: relative;
     min-height: 37px;
   }
+
   .k-numerictextbox.k-input .k-button.k-icon-button {
     min-height: auto;
   }
@@ -577,12 +660,14 @@
 .auto-complete-with-template {
   .k-list-item {
     padding: 0px;
+
     span {
       padding: 8px 16px;
       display: inline-block;
       width: 100%;
     }
   }
+
   .template-list-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -595,6 +680,7 @@
   .material-icons {
     color: rgba($black, 0.6);
   }
+
   padding: 1rem;
   text-align: center;
 }
@@ -602,6 +688,7 @@
 .client-important-loader {
   padding: 2rem;
   text-align: center;
+
   span {
     font-size: $font-size-xxx;
   }
@@ -610,7 +697,7 @@
 .client-tab-bar-wrappers {
   box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.14);
 }
- 
+
 .custom-client-tab-main-wrapper {
   max-width: calc(100% - 150px);
   word-wrap: normal;
@@ -618,9 +705,11 @@
   overflow-y: hidden;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
+
   .k-scrollview {
     border-top: 0px !important;
   }
+
   .k-button {
     font-family: $font-family-medium;
     letter-spacing: 0.18px;
@@ -630,10 +719,12 @@
     padding: 6px 20px 6px 20px;
     border-radius: 0px;
     box-shadow: 0px -2px 0px 0px inset transparent;
+
     &:hover {
       color: $app-primary;
       box-shadow: 0px -2px 0px 0px inset transparent;
     }
+
     &.custom-tab-main-active {
       box-shadow: 0px -2px 0px 0px inset $app-primary;
       color: $app-primary;
@@ -643,9 +734,11 @@
 
 .custom-client-tab-inner-wrapper {
   padding: 0px 16px;
+
   .k-scrollview {
     border: 0px !important;
   }
+
   .k-button {
     font-family: $font-family-medium;
     letter-spacing: 0.18px;
@@ -657,10 +750,12 @@
     border-radius: 0px;
     box-shadow: 0px -2px 0px 0px inset transparent;
     margin-right: 8px;
+
     &:hover {
       color: $app-primary;
       box-shadow: 0px -2px 0px 0px inset transparent;
     }
+
     &.custom-inner-tab-active {
       box-shadow: 0px -2px 0px 0px inset $app-primary;
       color: $app-primary;
@@ -673,24 +768,28 @@
 }
 
 .k-menu-item {
-  .k-menu-link{
-    > div{
+  .k-menu-link {
+    >div {
       width: 100%;
     }
   }
 }
+
 .cer-eligibility-screen {
   &.add-client-wrapper {
     .add-client_right {
-      .CerForm-contact-screen { 
+      .CerForm-contact-screen {
         &.client-data-block {
           border-left: 0px;
         }
+
         section {
           padding-left: 0px;
+
           .block-section-two {
             border-left: 2px solid $theme-border;
             padding-left: $size-xxx;
+
             &.pt-1 {
               padding-top: 0px !important;
             }
@@ -705,20 +804,25 @@
             align-items: baseline;
           }
         }
+
         .k-form-fieldset {
           margin-bottom: 1.2rem;
         }
+
         .k-form-legend {
           h5 {
             margin: 0px 0px 8px;
           }
         }
+
         .cer-top-space {
           padding-top: 2rem;
         }
+
         h5 {
           margin: 20px 0px 0px;
         }
+
         .cer-mb-3 {
           margin-bottom: 3rem;
         }
@@ -730,66 +834,85 @@
 
 
 
-.attachment-from-client-lists-container{
+.attachment-from-client-lists-container {
   margin-bottom: 16px;
-  .attachment-from-client-lists{
+
+  .attachment-from-client-lists {
     display: grid;
     gap: 10px;
     padding: 10px;
     border: 1px solid $grey-c;
     align-items: center;
     grid-template-columns: 30px 1fr 30px;
-    .material-icons{
+
+    .material-icons {
       color: $black-6;
       font-size: 30px;
     }
   }
 }
 
-.hide_more-text{
-  >.k-button{
+.hide_more-text {
+  >.k-button {
     width: 30px;
   }
-  .k-button-text{
+
+  .k-button-text {
     display: none;
   }
 }
 
-.vendor_head_search_list{
- 
+.vendor_head_search_list {
+
   .k-table-group-row,
-  .k-table-group-sticky-header{
-      .k-table-th{
-        color: $black-3;
-        display: inline-block;
-        padding: 8px 10px!important;
-        font-family: $font-family-bold;
-        width: 100%;
-      }
+  .k-table-group-sticky-header {
+    .k-table-th {
+      color: $black-3;
+      display: inline-block;
+      padding: 8px 10px !important;
+      font-family: $font-family-bold;
+      width: 100%;
+    }
   }
-  .k-table-row{
-    .k-table-td{
+
+  .k-table-row {
+    .k-table-td {
       padding-left: 20px !important;
     }
- 
+
   }
 }
 
-.cvp_three_dot_drop_btn{
-> .k-button{
-  display: inline-block;
-  width: 30px;
-  background: transparent;
-  padding: 5px 6px;
-}
+.cvp_three_dot_drop_btn {
+  >.k-button {
+    display: inline-block;
+    width: 30px;
+    background: transparent;
+    padding: 5px 6px;
+  }
 }
 
-.more_action_wid{
-  > .k-button-solid{
+.more_action_wid {
+  >.k-button-solid {
     padding: 8px;
-    .k-button-text{
+
+    .k-button-text {
       display: none;
     }
   }
 
+}
+
+.k-form .k-form-legend {
+  border: 0px !important;
+}
+
+.no_margin_fieldset {
+  &.k-form-fieldset {
+    margin: 0;
+  }
+
+  .k-form-legend {
+    margin: 0;
+  }
 }

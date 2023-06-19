@@ -47,7 +47,8 @@ export interface ClientEmail {
 
 export interface FriendsOrFamilyContact {
   clientDependentId?: string;
-  contactName?: string;
+  firstName?: string;
+  lastName?: string;
   contactRelationshipCode?: string;
   contactRelationshipDesc?: string;
   otherDesc?: string;
@@ -104,6 +105,7 @@ export interface FriendsOrFamilyContactClientProfile {
   clientCaseEligibilityId?: string;
   relationshipSubTypeCode?: string;
   firstName?: string;
+  lastName?: string;
   phoneNbr?: string;
   activeFlag?: string;
   concurrencyStamp?: string;

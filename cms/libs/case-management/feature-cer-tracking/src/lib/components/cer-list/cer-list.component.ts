@@ -12,9 +12,9 @@ import {
 import { CerTrackingFacade, StatusFlag } from '@cms/case-management/domain';
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor, State , filterBy, process} from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State , filterBy} from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
-import { ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'case-management-cer-list',
   templateUrl: './cer-list.component.html',
@@ -29,11 +29,13 @@ export class CerListComponent implements OnInit, OnChanges {
   @Input() cerTrackingData$: any;
   @Input() cerTrackingDates$: any
   @Input() cerTrackingCount$: any;
-  @Input() sendResponse$!: Observable<any>;;
+  @Input() sendResponse$!: Observable<any>;
+  @Input() gridState$! : any
   @Output() loadCerTrackingListEvent = new EventEmitter<any>();
   @Output() loadCerTrackingDateListEvent = new EventEmitter<any>();
   @Output() sendCersEvent = new EventEmitter<any>();
   @Output() goToCerEvent = new EventEmitter<any>();
+  @Output() saveCersStateEvent = new EventEmitter<any>();
 
   /** Public properties **/
   isOpenSendCER$ =  new BehaviorSubject<boolean>(false);;
@@ -134,16 +136,24 @@ export class CerListComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.dateDropdownDisabled = false
     this.loader = true;    
-    this.loadcerTrackingDates();
-
   }
   ngOnChanges(): void {
+    
+  
+   if(this.gridState$)
+   {    
+    this.state = this.gridState$
+    this.loadcerTrackingDates();
+   }
+   else
+   {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-  
+    this.loadcerTrackingDates();
+   }
   }
   /** Private methods **/
   private loadcerTrackingDates() {
@@ -169,7 +179,7 @@ export class CerListComponent implements OnInit, OnChanges {
   
   setTitle(data : any)
   {
-    this.statusTitle = data?.isHistorical === StatusFlag.Yes ?  'Status @ End of EP' : 'Status'
+    this.statusTitle = data?.isHistorical === StatusFlag.Yes ?  'Status @ End of EP' : 'Current Status'
     this.titleSubject.next(this.statusTitle)
   }
   public dataStateChange(stateData: any): void {      
@@ -206,6 +216,7 @@ export class CerListComponent implements OnInit, OnChanges {
     this.loadCerTrackingList();    
   }
   pageselectionchange(data: any) {
+    this.loader = true;
     this.state.take = data.value;   
     this.loadCerTrackingList();
   }
@@ -237,6 +248,7 @@ export class CerListComponent implements OnInit, OnChanges {
     if(this.selectedDate)
     {
     this.loadCerTrackingListEvent.next(gridDataRefinerValue);
+    this.saveCersStateEvent.emit(this.state)
     }
     this.gridDataHandle()
   }
@@ -273,31 +285,10 @@ export class CerListComponent implements OnInit, OnChanges {
     this.statusTitle = data?.data[0]?.isHistorical === StatusFlag.Yes ?  'Status @ End of EP' : 'Status'
     this.titleSubject.next(this.statusTitle)
     this.gridDataResult = data    
-    for (var res in this.gridDataResult?.data) { 
-      if(this.gridDataResult?.data[res].dob)
-      {     
-      this.gridDataResult.data[res].dob = new Date(this.gridDataResult?.data[res].dob)
-      }
-      if(this.gridDataResult?.data[res].cerSentDate)
-      {     
-      this.gridDataResult.data[res].cerSentDate = new Date(this.gridDataResult?.data[res].cerSentDate)
-      }
-
-      if(this.gridDataResult?.data[res].cerReceivedDate)
-      {     
-      this.gridDataResult.data[res].cerReceivedDate = new Date(this.gridDataResult?.data[res].cerReceivedDate)
-      }
-
-      if(this.gridDataResult?.data[res].cerCompletedDate)
-      {     
-      this.gridDataResult.data[res].cerCompletedDate = new Date(this.gridDataResult?.data[res].cerCompletedDate)
-      }
-
-      if(this.gridDataResult?.data[res].reminderSentDate)
-      {     
-      this.gridDataResult.data[res].reminderSentDate = new Date(this.gridDataResult?.data[res].reminderSentDate)
-      }
-
+    for (const res in this.gridDataResult?.data) { 
+     
+      this.validateDates(res)
+      
       if(this.gridDataResult?.data[res].cerResentDate)
       {     
       this.gridDataResult.data[res].cerResentDate = new Date(this.gridDataResult?.data[res].cerResentDate)
@@ -331,6 +322,33 @@ export class CerListComponent implements OnInit, OnChanges {
       }
     });
   }
+
+ private validateDates( res :  any) 
+ {
+  if(this.gridDataResult?.data[res].dob)
+  {     
+  this.gridDataResult.data[res].dob = new Date(this.gridDataResult?.data[res].dob)
+  }
+  if(this.gridDataResult?.data[res].cerSentDate)
+  {     
+  this.gridDataResult.data[res].cerSentDate = new Date(this.gridDataResult?.data[res].cerSentDate)
+  }
+
+  if(this.gridDataResult?.data[res].cerReceivedDate)
+  {     
+  this.gridDataResult.data[res].cerReceivedDate = new Date(this.gridDataResult?.data[res].cerReceivedDate)
+  }
+
+  if(this.gridDataResult?.data[res].cerCompletedDate)
+  {     
+  this.gridDataResult.data[res].cerCompletedDate = new Date(this.gridDataResult?.data[res].cerCompletedDate)
+  }
+
+  if(this.gridDataResult?.data[res].reminderSentDate)
+  {     
+  this.gridDataResult.data[res].reminderSentDate = new Date(this.gridDataResult?.data[res].reminderSentDate)
+  }
+ }
   
  public filterChange(filter: CompositeFilterDescriptor): void {
   this.filterData = filter;
@@ -341,11 +359,16 @@ export class CerListComponent implements OnInit, OnChanges {
   public columnChange(e: ColumnVisibilityChangeEvent) {    
     const columnsRemoved = e?.columns.filter(x=> x.hidden).length
     const columnsAdded = e?.columns.filter(x=> x.hidden === false).length
-    if(columnsAdded > 0 || columnsRemoved > 0)
+    if(columnsAdded > 0)
     {
-      this.addRemoveColumns = columnsAdded + " columns added and "+columnsRemoved+"  columns removed"
+      this.addRemoveColumns = "Columns Added"
     }
-    else
+
+    if(columnsRemoved > 0)
+    {
+      this.addRemoveColumns += " Columns Removed"
+    }
+    if(columnsAdded == 0 && columnsRemoved == 0)
     {
       this.addRemoveColumns = "Default Columns"
     }

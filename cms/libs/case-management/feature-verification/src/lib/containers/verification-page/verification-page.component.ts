@@ -6,7 +6,7 @@ import { forkJoin, mergeMap, of, Subscription, first } from 'rxjs';
 /** Internal Libraries **/
 import { VerificationFacade, NavigationType, WorkflowFacade } from '@cms/case-management/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 
 
@@ -146,16 +146,7 @@ export class VerificationPageComponent implements OnInit, OnDestroy, AfterViewIn
           else
           {
             this.verificationFacade.showAttachmentOptions.next(true);
-          }
-
-          // if(data?.hivVerification !== null){
-          //   this.hivVerificationForm.controls["providerEmailAddress"].setValue(data.hivVerification["verificationToEmail"]);
-          //   this.hivVerificationForm.controls["providerOption"].setValue(data.hivVerification["verificationMethodCode"]);
-          //   this.hivVerificationForm.controls["verificationStatusDate"].setValue(data.hivVerification["verificationStatusDate"]);
-          //   this.hivVerificationForm.controls["requestedUserName"].setValue(data["requestedUserName"]);
-          //   this.hivVerificationForm.controls["userId"].setValue(data.hivVerification["creatorId"]);
-          //   this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
-          // }
+          }         
         }
         else
         {

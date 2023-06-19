@@ -16,7 +16,7 @@ const routes: Routes = [
     path: 'send-letter',
     component: SendLetterPageComponent,
     data: {
-      title: 'Send Letter',
+      title: 'Send Approval Letter',
     },
   },
   {

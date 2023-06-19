@@ -8,13 +8,24 @@
   </p>
   <div class="flex-row">
     <div class="flex-col">
-      <kendo-floatinglabel  text="Contact’s Name">
-        <kendo-textbox aria-label="contacts name" formControlName="contactName" placeholder="Contact’s Name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+      <kendo-floatinglabel  text="Contact’s First Name">
+        <kendo-textbox aria-label="Contact’s First Name" formControlName="firstName" placeholder="Contact’s First Name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="fAfContact?.contactName.errors?.required">
-        Contact's Name is required
+      <kendo-formerror *ngIf="fAfContact?.firstName.errors?.required">
+        Contact’s First Name is required
       </kendo-formerror>
-      <kendo-formerror *ngIf="fAfContact?.contactName.errors?.pattern">
+      <kendo-formerror *ngIf="fAfContact?.firstName.errors?.pattern">
+        Special characters are not allowed except '-'
+      </kendo-formerror>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel  text="Contact’s Last Name">
+        <kendo-textbox aria-label="contacts name" formControlName="lastName" placeholder="Contact’s Last Name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="fAfContact?.lastName?.errors?.required">
+        Contact’s Last Name is required
+      </kendo-formerror>
+      <kendo-formerror *ngIf="fAfContact?.lastName?.errors?.pattern">
         Special characters are not allowed except '-'
       </kendo-formerror>
     </div>

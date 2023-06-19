@@ -1057,7 +1057,7 @@
                 >
                 </kendo-dropdownlist>
               </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Preferred Contact Method: </b>{{oldPreferredContactMethodName}} - {{ oldPreferredContact }} <button *ngIf="preferredContactMethods?.includes(oldPreferredContact ?? '') ?? false" aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('email.preferredContactMethod',oldPreferredContact??'')">Use Old  </button></p> 
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Preferred Contact Method: </b>{{oldPreferredContactMethodName}} - {{ oldPreferredContact }} </p> 
 
               <kendo-formerror>Preferred contact is required</kendo-formerror>
             </kendo-formfield>
@@ -1138,21 +1138,44 @@
         <div class="flex-row">
           <div class="flex-col flex-col-6">
             <kendo-formfield>
-            <kendo-floatinglabel text="Contact's Name">
+            <kendo-floatinglabel text="Contact's First Name">
               <kendo-textbox 
-              aria-label="contacts name" 
+              aria-label="Contact's First Name" 
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="40"
-              formControlName="contactName"
-              placeholder="Contact's Name"
+              formControlName="firstName"
+              placeholder="Contact's First Name"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Name: </b> {{oldFriendsOrFamilyContact?.contactName}} <button *ngIf="!(fAfContact?.noFriendOrFamilyContactFlag?.value ?? false)" aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('familyAndFriendsContact.contactName',oldFriendsOrFamilyContact?.contactName??'')">Use Old  </button></p> 
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old First Name: </b> {{oldFriendsOrFamilyContact?.firstName}} <button *ngIf="!(fAfContact?.noFriendOrFamilyContactFlag?.value ?? false)" aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('familyAndFriendsContact.firstName',oldFriendsOrFamilyContact?.firstName??'')">Use Old  </button></p> 
 
-            <kendo-formerror *ngIf="fAfContact.contactName.errors?.required">
-              Contact's Name is required
+            <kendo-formerror *ngIf="fAfContact.firstName.errors?.required">
+              Contact's First Name is required
             </kendo-formerror>
-            <kendo-formerror *ngIf="fAfContact.contactName.errors?.pattern">
+            <kendo-formerror *ngIf="fAfContact.firstName.errors?.pattern">
+              Special characters are not allowed except '-'
+            </kendo-formerror>
+          </kendo-formfield>
+          </div>
+        </div>
+        <div class="flex-row">
+          <div class="flex-col flex-col-6">
+            <kendo-formfield>
+            <kendo-floatinglabel text="Contact's Last Name">
+              <kendo-textbox 
+              aria-label="Contact's Last Name" 
+              [fillMode]="formUiStyle.inputFillMode"
+              [maxlength]="40"
+              formControlName="lastName"
+              placeholder="Contact's Last Name"
+              > </kendo-textbox>
+            </kendo-floatinglabel>
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Last Name: </b> {{oldFriendsOrFamilyContact?.lastName}} <button *ngIf="!(fAfContact?.noFriendOrFamilyContactFlag?.value ?? false)" aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('familyAndFriendsContact.lastName',oldFriendsOrFamilyContact?.lastName??'')">Use Old  </button></p> 
+
+            <kendo-formerror *ngIf="fAfContact.lastName.errors?.required">
+              Contact's Last Name is required
+            </kendo-formerror>
+            <kendo-formerror *ngIf="fAfContact.lastName.errors?.pattern">
               Special characters are not allowed except '-'
             </kendo-formerror>
           </kendo-formfield>
@@ -1292,7 +1315,7 @@
       <div class="mt-2 ml-3 break">
         <p>   {{mailAddressSuggested?.address1}}</p>
         <p>  {{mailAddressSuggested?.address2}} </p>
-        <p>  {{mailAddressSuggested?.city}}, {{mailAddressSuggested?.state}} {{mailAddressSuggested?.zip5}}</p>
+        <p>  {{mailAddressSuggested?.city}}, {{mailAddressSuggested?.state}} {{mailAddressSuggested?.zip5}}-{{mailAddressSuggested?.zip4}}</p>
       </div>
       </div>
     </div> 
@@ -1371,7 +1394,7 @@
         <div class="mt-2 ml-3 break">
           <p>  {{homeAddressSuggested?.address1}} </p>
           <p>  {{homeAddressSuggested?.address2}} </p>
-          <p>  {{homeAddressSuggested?.city}}, {{homeAddressSuggested?.state}} {{homeAddressSuggested?.zip5}} </p>
+          <p>  {{homeAddressSuggested?.city}}, {{homeAddressSuggested?.state}} {{homeAddressSuggested?.zip5}}-{{homeAddressSuggested?.zip4}} </p>
         </div>
       </div>
     </div> 

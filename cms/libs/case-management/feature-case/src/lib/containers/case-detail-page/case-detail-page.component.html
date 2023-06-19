@@ -7,9 +7,7 @@
     <button class="createcase-mobile-menu-btn  createbtn-close" (click)="openInnerLeftMenu()"> <span class="material-icons">
       menu_open
       </span>
-  </button>
-    <!-- Send Letter Side profile -->
-    <!-- <case-management-send-letter-profile hidden></case-management-send-letter-profile> -->
+  </button> 
   </div>
   <div class="add-client_right">
     <!-- Breadcrumb Section -->
@@ -51,7 +49,7 @@
 
 <!-- Finish the application later Modal -->
 <kendo-dialog *ngIf="isShowSaveLaterPopup" (close)="onCloseSaveLaterClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Finish the application later?">
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Finish the CER later?">
   <section class="k-dialog-body">
     <p class="text-muted mb-2">
       The application status will be set to REJECT if not completed within 45
@@ -148,9 +146,10 @@
 </kendo-dialog>
 
     <!-- Send New Email Modal -->
-<case-management-send-email *ngIf="isShowSendNewLetterPopup" [data]="ScreenName"
+    <ng-template #sendNewEmailModalDialog>
+<case-management-send-email [data]="ScreenName"
 (closeSendEmailEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-email>
-
+</ng-template>
 <!-- Cancel Application Modal -->
 <kendo-dialog *ngIf="cancelApplicationFlag" class="app-c-modal app-c-modal-md app-c-modal-np" (close)="closeCancelApplicationPopup()">
   <kendo-dialog-titlebar> Cancel Application</kendo-dialog-titlebar>

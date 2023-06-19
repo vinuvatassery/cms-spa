@@ -36,7 +36,7 @@ export class HivVerificationComponent implements OnInit {
       this.cd.detectChanges();
     });
     this.removeHivVerification$.subscribe(response=>{
-      if(response==true && this.clientId!=0){
+      if(response && this.clientId!=0){
         this.verificationFacade.showAttachmentOptions.next(true);
         this.onHivRemoveConfirmationClosed();
         this.cd.detectChanges();
