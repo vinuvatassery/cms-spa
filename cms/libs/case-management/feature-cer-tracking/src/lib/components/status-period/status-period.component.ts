@@ -42,7 +42,6 @@ export class StatusPeriodComponent implements OnInit {
       text: "Copy Status Period",
       icon: "content_copy",
       click: (dataItem: any, template: TemplateRef<unknown>): void => {
-        //  this.onDeactivatePhoneNumberClicked()
         if(dataItem.clientCaseEligibilityId){
           this.isCopyPeriod = true;
           this.onEditEligibilityPeriodClicked(dataItem.clientCaseId,dataItem.clientCaseEligibilityId, template);
