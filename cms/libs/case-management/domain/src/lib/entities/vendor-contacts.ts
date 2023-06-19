@@ -22,3 +22,21 @@ export class VendorContacts {
   vendorName: string| null = null;
   effectiveDate: any | null = null;
 }
+export interface contactResponse {
+  
+  vendorContactId: string;
+  vendorAddressId: string;
+  vendorContactPhoneId: string;
+  vendorContactEmailId: string;
+  creatorId: string;
+  contactName: string;
+  contactDesc: string;
+  jobTitle: any;
+  phoneTypeCode: any;
+  phoneNbr: string;
+  emailAddressTypeCode: any;
+  emailAddress: string;
+  faxNbr: string;
+  vendorName: any;
+  effectiveDate: any;
+}
