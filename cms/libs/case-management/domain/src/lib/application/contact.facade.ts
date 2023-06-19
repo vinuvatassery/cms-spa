@@ -47,7 +47,6 @@ export class ContactFacade {
   private removeClientEmailSubject = new Subject<any>();
   private clientPhonesSubject = new Subject<any>();
   private clientPhoneSubject = new Subject<any>();
-  private mailCodeSubject = new Subject<any>();
   private addClientPhoneSubject = new Subject<any>();
   private preferredClientPhoneSubject = new Subject<any>();
   private deactivateClientPhoneSubject = new Subject<any>();
@@ -55,7 +54,6 @@ export class ContactFacade {
   private paperlessSubject = new Subject<any>();
   showAddContactPopupSubject = new BehaviorSubject<boolean>(false);
   private contactGridLoaderSubject = new BehaviorSubject<boolean>(false);
-  private removeContactAddressResponseSubject = new BehaviorSubject<boolean>(false);
 
   /** Public properties **/
   ddlStates$ = this.ddlStatesSubject.asObservable();
@@ -86,13 +84,11 @@ export class ContactFacade {
   removeClientEmail$ = this.removeClientEmailSubject.asObservable();
   clientPhones$ = this.clientPhonesSubject.asObservable();
   clientPhone$ = this.clientPhoneSubject.asObservable();
-  mailCodes$ = this.mailCodeSubject.asObservable();
   addClientPhoneResponse$ = this.addClientPhoneSubject.asObservable();
   preferredClientPhone$ = this.preferredClientPhoneSubject.asObservable();
   deactivateClientPhone$ = this.deactivateClientPhoneSubject.asObservable();
   removeClientPhone$ = this.removeClientPhoneSubject.asObservable();
   paperless$ = this.paperlessSubject.asObservable();
-  removeContactAddressResponse$ = this.removeContactAddressResponseSubject.asObservable();
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' ';

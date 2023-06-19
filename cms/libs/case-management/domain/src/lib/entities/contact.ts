@@ -4,6 +4,7 @@ export interface Contact {
   description: string;
 }
 
+
 export interface ClientAddress {
   clientAddressId?: string;
   clientId?: number;

@@ -26,6 +26,7 @@ export class PaymentsFacade {
   paymentsData$ = this.paymentsDataSubject.asObservable();
   paymentsAddressData$ = this.paymentsAddressDataSubject.asObservable();
 
+  
   /** Private properties **/
  
   /** Public properties **/

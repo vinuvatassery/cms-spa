@@ -142,10 +142,12 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
   ngOnInit() {
       this.clientSearchResult$.subscribe(data=>{
       this.showHeaderSearchInputLoader = false;
-    })   
+    }) 
+
   }
 
   ngAfterViewInit() {
+    
     this.searchBars$.subscribe((searchHeaderType: string) =>
     {
       if(searchHeaderType)

@@ -19,12 +19,12 @@ export class ContactsDataService {
   loadContactsListService() {
     return of([
       {
-        name: 'Address `',
-        jobTitle: 'address2',
-        phoneNumber: 'address2',
-        emailAddress: 'address2',
-        startDate: 'address2',
-        by: 'by',
+        name:'Address `',
+        jobTitle:'address2',
+        phoneNumber:'address2',
+        emailAddress:'address2',
+        startDate:'address2',
+        by:'by',
       },
     ]);
   }
