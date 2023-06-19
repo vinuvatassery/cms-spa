@@ -3,7 +3,6 @@ import { ContactsFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-contacts-deactivate',
   templateUrl: './contacts-deactivate.component.html',
-  styleUrls: ['./contacts-deactivate.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactsDeactivateComponent {
@@ -25,8 +24,5 @@ export class ContactsDeactivateComponent {
       } 
     })
   }
-  onDeactivateClick()
-  {
-   // this.contactsFacade.deactiveContactAddress(this.clientPharmacyDetails.clientPharmacyId);
-  }
+ 
 }
