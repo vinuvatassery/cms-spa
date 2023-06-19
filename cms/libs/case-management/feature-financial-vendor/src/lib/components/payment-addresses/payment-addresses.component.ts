@@ -76,7 +76,7 @@ export class PaymentAddressesComponent {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
     };
-
+    this.tabCode = this.route.snapshot.queryParams['tab_code'];
     this.getTabCode();
     this.loadPaymentsAddressListGrid();
   }
@@ -144,29 +144,26 @@ export class PaymentAddressesComponent {
   }
 
   getTabCode() {
-    this.route.queryParams.subscribe(params => {
-      let _tabCode = params['tab_code'];
-      switch (_tabCode) {
-        case FinancialVendorProviderTabCode.Manufacturers:
-          this.tabCode = FinancialVendorTypeCode.Manufacturers;
-          break;
-        case FinancialVendorProviderTabCode.InsuranceVendors:
-          this.tabCode = FinancialVendorTypeCode.InsuranceVendors;
-          break;
-        case FinancialVendorProviderTabCode.Pharmacy:
-          this.tabCode = FinancialVendorTypeCode.Pharmacy;
-          break;
-        case FinancialVendorProviderTabCode.DentalProvider:
-          this.tabCode = FinancialVendorTypeCode.DentalProviders;
-          break;
-        case FinancialVendorProviderTabCode.MedicalProvider:
-          this.tabCode = FinancialVendorTypeCode.MedicalProviders;
-          break;
-        default:
-          this.tabCode = '';
-          break;
-      }
-    });
+    switch (this.tabCode) {
+      case FinancialVendorProviderTabCode.Manufacturers:
+        this.tabCode = FinancialVendorTypeCode.Manufacturers;
+        break;
+      case FinancialVendorProviderTabCode.InsuranceVendors:
+        this.tabCode = FinancialVendorTypeCode.InsuranceVendors;
+        break;
+      case FinancialVendorProviderTabCode.Pharmacy:
+        this.tabCode = FinancialVendorTypeCode.Pharmacy;
+        break;
+      case FinancialVendorProviderTabCode.DentalProvider:
+        this.tabCode = FinancialVendorTypeCode.DentalProviders;
+        break;
+      case FinancialVendorProviderTabCode.MedicalProvider:
+        this.tabCode = FinancialVendorTypeCode.MedicalProviders;
+        break;
+      default:
+        this.tabCode = '';
+        break;
+    }
   }
 
   handleOptionClick(dataItem: any, type: any) {
