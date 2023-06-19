@@ -216,7 +216,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       }
     }
   }
-  onModalCloseClicked() {    
+  onModalCloseClicked() {
     this.clientEligibilityFacade.eligibilityPeriodPopupOpenSubject.next(false);
     this.isModalPeriodCloseClicked.emit(true);
   }
