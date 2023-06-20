@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { FinancialVendorTypeCode } from '../../enums/financial-vendor-type-code';
 import { FinancialVendorProviderTabCode } from '../../enums/financial-vendor-provider-tab-code';
 
 @Injectable({ providedIn: 'root' })
@@ -69,4 +68,25 @@ export class FinancialVendorDataService {
         `/financial-management/vendors/${path}/${vendorId}/profile`
     );
   }
+
+  
+  addVendorProfile(vendorProfile:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/financial-management/vendors/profile`,
+      vendorProfile
+    );
+  }
+
+  searchClinicVendors(vendorName: any)
+  {
+    return this.http.get<any>(
+        `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors/${vendorName}/search`
+      );
+  }
+
+
+
+
 }

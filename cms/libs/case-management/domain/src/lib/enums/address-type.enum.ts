@@ -1,5 +1,6 @@
 export enum AddressType {
     Home = 'H',
     UnHoused = 'U',
-    Mailing ='M'
+    Mailing ='M',
+    Email = 'EMAIL'
 }
