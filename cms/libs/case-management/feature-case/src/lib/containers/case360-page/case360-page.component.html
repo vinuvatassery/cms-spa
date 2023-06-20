@@ -54,7 +54,7 @@
         (click)="onTabClick(clientProfileTabs.ATTACHMENTS)" *ifPermission='["Client_Profile_Attachments_Tab_View_Only"]'>
         Attachments</button>
       <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName ===clientProfileTabs.APP_HISTORY}"
-        (click)="onTabClick(clientProfileTabs.APP_HISTORY)" *ifPermission='["Client_Profile_AppHistory_Tab_View_Only"]'> App
+        (click)="onTabClick(clientProfileTabs.APP_HISTORY)" *ifPermission='["Client_Profile_AppHistory_Tab_View_Only_hidden"]'> App
         History</button>
 
 
