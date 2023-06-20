@@ -9,6 +9,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { BillingAddressDataService } from '../../infrastructure/financial-management/billing-address.data.service';
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class BillingAddressFacade {
@@ -20,9 +21,11 @@ export class BillingAddressFacade {
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
   }];
-
+  private searchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
   private billingAddressDataSubject = new BehaviorSubject<any>([]);
+
   billingAddressData$ = this.billingAddressDataSubject.asObservable();
+  searchLoaderVisibility$ = this.searchLoaderVisibilitySubject.asObservable();
 
 
   /** Private properties **/
@@ -77,6 +80,81 @@ export class BillingAddressFacade {
     });
 
 
+
+
   }
 
+  loadPaymentsAddressListGrid(
+    vendorTypeCode: string,
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string
+  ) {
+    this.showLoader();
+
+    this.searchLoaderVisibilitySubject.next(true);
+
+    this.billingAddressDataService
+      .loadBillingPaymentsAddressListService(
+        vendorTypeCode,
+        skipcount,
+        maxResultCount,
+        sort,
+        sortType
+      )
+      .subscribe({
+        next: (dataResponse) => {
+          this.billingAddressDataSubject.next(dataResponse);
+          if (dataResponse) {
+            const gridView = {
+              data: dataResponse['items'],
+              total: dataResponse['totalCount'],
+            };
+            this.billingAddressDataSubject.next(gridView);
+          }
+          this.searchLoaderVisibilitySubject.next(false);
+          this.hideLoader();
+        },
+        error: (err) => {
+          this.searchLoaderVisibilitySubject.next(false);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.hideLoader();
+        },
+      });
+  }
+
+  deactivateAddress(addressId: string): Observable<any> {
+    this.loaderService.show();
+    return this.billingAddressDataService.deactivatePaymentAddress(addressId).pipe(
+      map((response) => {
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Payment Address De-Activated Successfully');
+        this.hideLoader();
+        return response;
+      }),
+      catchError((err: Error) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+        throw err;
+      })
+    );
+  }
+
+  deleteAddress(addressId: string): Observable<any> {
+    this.loaderService.show();
+    return this.billingAddressDataService.deletePaymentAddress(addressId).pipe(
+      map((response) => {
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Payment Address Deleted Successfully');
+        this.hideLoader();
+        return response;
+      }),
+      catchError((err: Error) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+        throw err;
+      })
+    );
+  }
 }
