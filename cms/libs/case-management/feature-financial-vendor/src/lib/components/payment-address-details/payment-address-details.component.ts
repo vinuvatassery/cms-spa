@@ -75,8 +75,6 @@ export class PaymentAddressDetailsComponent implements OnInit {
     this.billingAddressFacade.showLoader();
     this.billingAddressFacade.getPaymentsAddressContacts(vendorAddressId).subscribe({
       next: (resp) => {
-        console.log(resp)
-
         resp.forEach((item:any) => {
           let addContactForm = this.formBuilder.group({
             contactName: new FormControl(item.contactName, Validators.required),
