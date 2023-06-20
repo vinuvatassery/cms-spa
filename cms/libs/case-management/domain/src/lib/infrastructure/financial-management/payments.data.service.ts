@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
-import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentsDataService {
@@ -16,12 +16,12 @@ export class PaymentsDataService {
 
   /** Public methods **/
 
- 
+
   loadPaymentsListService() {
     return of([
       {
         Batch: 'XXXXXXXXXX `',
-      Item:'1', 
+      Item:'1',
       ItemCount: '3',
       TotalAmount: '1,000.00',
       DatePmtRequested: 'XX/XX/XXXX',
@@ -34,12 +34,12 @@ export class PaymentsDataService {
     ]);
   }
 
-   
+
   loadPaymentsAddressListService() {
     return of([
       {
         MailCode: 'XXXXXXXXXX `',
-        NameCheck:'1', 
+        NameCheck:'1',
         NameEnvelope: '3',
         PaymentMethod: '1,000.00',
         PaymentRunDate: 'XX/XX/XXXX',
