@@ -21,7 +21,7 @@ export class ProfileIncomePageComponent implements OnInit {
   }
 
   eligibilityPeriodData$ = this.caseFacade.ddlEligPeriods$
-  historyClientCaseEligibilityId!: string;
+  currentClientCaseEligibilityId!: string;
   clientCaseId!: string;
   clientId!: number;
   clientCaseEligibilityId!: any; 
@@ -38,7 +38,7 @@ export class ProfileIncomePageComponent implements OnInit {
     this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];    
     this.tabId = this.route.snapshot.queryParams['tid'];  
     this.clientCaseId = this.route.snapshot.queryParams['cid'];  
-    this.historyClientCaseEligibilityId = this.clientCaseEligibilityId     
+    this.currentClientCaseEligibilityId = this.clientCaseEligibilityId     
     this.caseFacade.loadEligibilityPeriods(this.clientCaseId);
     this.loadIncomes();
   }
