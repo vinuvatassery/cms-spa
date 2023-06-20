@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from '@angular/core';
 import { PaymentsFacade, BillingAddressFacade } from '@cms/case-management/domain';
+import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from '@angular/core';
+import { PaymentsFacade, BillingAddressFacade } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
@@ -141,6 +143,8 @@ export class PaymentAddressesComponent {
   clickOpenDeactivatePaymentAddressDetails() {
     this.isPaymentAddressDeactivateShow = true;
   }
+
+  clickCloseDeactivatePaymentAddress(isSuccess: boolean): void {
 
   clickCloseDeactivatePaymentAddress(isSuccess: boolean): void {
     this.isPaymentAddressDeactivateShow = false;
