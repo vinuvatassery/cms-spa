@@ -39,7 +39,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   @Output() loadInsurancePlanEvent = new EventEmitter<any>();
   @Output() deleteInsurancePlan = new EventEmitter<any>();
   @Output() loadHistoricalPlan = new EventEmitter<boolean>();
-  showHistoricalFlag:boolean = false;
+  showHistoricalFlag:boolean = true;
   carrierContactInfo:any;
   insurancePlanName:any;
   insuranceStatusType:any;
@@ -257,7 +257,8 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       skipCount: skipcountValue,
       pagesize: maxResultCountValue,
       sortColumn: sortColumn,
-      sortType: sortType
+      sortType: sortType,
+      loadHistoricalData:this.showHistoricalFlag
     };
     this.loadInsurancePlanEvent.next(gridDataRefinerValue);
   }
