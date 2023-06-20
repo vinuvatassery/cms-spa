@@ -30,6 +30,7 @@ import { MedicalCarrierContactInfoComponent } from './components/medical-carrier
 import { ProfileHealthInsurancePageComponent } from './containers/profile-healthe-insurance/profile-health-insurance-page.component';
 import { MedicalPremiumPaymentDetailComponent } from './components/medical-premium-payment-detail/medical-premium-payment-detail.component';
 import { DeactivateInsuranceConfirmationComponent } from './components/deactivate-medical-premium-confirmation/deactivate-medical-premium.component';
+import { VendorNameComponent } from './components/vendor-name/vendor-name.component';
 
 @NgModule({
   imports: [
@@ -62,7 +63,8 @@ import { DeactivateInsuranceConfirmationComponent } from './components/deactivat
     MedicalCarrierContactInfoComponent,
     ProfileHealthInsurancePageComponent,
     MedicalPremiumPaymentDetailComponent,
-    DeactivateInsuranceConfirmationComponent
+    DeactivateInsuranceConfirmationComponent,
+    VendorNameComponent,
   ],
   exports: [
     MedicalInsuranceStatusListComponent,
@@ -75,7 +77,7 @@ import { DeactivateInsuranceConfirmationComponent } from './components/deactivat
     CoPaysAndDeductiblesListComponent,
     CoPaysAndDeductiblesDetailComponent,
     ProfileHealthInsurancePageComponent,
-    DeactivateInsuranceConfirmationComponent
+    DeactivateInsuranceConfirmationComponent,
   ],
 })
 export class CaseManagementFeatureHealthInsuranceModule {}

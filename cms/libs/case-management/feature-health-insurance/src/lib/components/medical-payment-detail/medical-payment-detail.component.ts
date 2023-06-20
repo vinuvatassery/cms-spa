@@ -15,7 +15,8 @@ import {
   VendorFacade,
   ClientProfileTabs,
   PaymentRequest,
-  EntityTypeCode
+  EntityTypeCode,
+  VendorTypeCode
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  LovFacade } from '@cms/system-config/domain';
@@ -93,8 +94,8 @@ export class MedicalPaymentDetailComponent {
     this.copayPaymentForm.updateValueAndValidity();
   }
 
-  private loadServiceProviderName(type: string, vendorType: string, clientId: any, clientCaseligibilityId: any) {
-    this.vendorFacade.loadPaymentRequestVendors(type, vendorType, clientId, clientCaseligibilityId);
+  private loadServiceProviderName(type: string, requestType: string, clientId: any, clientCaseligibilityId: any) {
+    this.vendorFacade.loadPaymentRequestVendors(type,VendorTypeCode.InsuranceProvider, requestType, clientId, clientCaseligibilityId);
   }
 
   private commentCounterInitiation() {

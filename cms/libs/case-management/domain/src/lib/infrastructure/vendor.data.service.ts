@@ -9,13 +9,13 @@ export class VendorDataService{
      
     }
     
-      loadAllVendors(type:string,vendorTypeCode:any){
+      loadAllVendors(type:string,vendorTypeCode:any,requestType:any=null,clientId: any=null, clientCaseEligibilityId: any=null){
         return this.http.get<Vendor>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/vendors?type=${type}&vendorType=${vendorTypeCode}`);
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/vendors?type=${type}&vendorTypeCode=${vendorTypeCode}&requestType=${requestType}&clientId=${clientId}&eligibilityId=${clientCaseEligibilityId}`);
       }
 
-      loadPayemntRequestVendors(type:string, vendorType:string, clientId: any, clientCaseligibilityId: any){
-        return this.http.get<Vendor>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/vendors?type=${type}&vendorType=${vendorType}&clientId=${clientId}&eligibilityId=${clientCaseligibilityId}`);
-      }
+      // loadPayemntRequestVendors(type:string, vendorType:string, clientId: any, clientCaseligibilityId: any){
+      //   return this.http.get<Vendor>(
+      //     `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/vendors?type=${type}&vendorType=${vendorType}&clientId=${clientId}&eligibilityId=${clientCaseligibilityId}`);
+      // }
 }

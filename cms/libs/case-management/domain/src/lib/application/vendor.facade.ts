@@ -41,9 +41,10 @@ export class VendorFacade {
     return this.vendorDataService.loadAllVendors(type,vendorTypeCode);
   }
 
-  loadPaymentRequestVendors(type: string, vendorType: string, clientId: any, clientCaseligibilityId: any) {
+  loadPaymentRequestVendors(type: string,VendorTypeCode:any, requestType: string, clientId: any, clientCaseEligibilityId: any) {
+    debugger
     this.isVendorLoadingSubject.next(true);
-    return this.vendorDataService.loadPayemntRequestVendors(type, vendorType, clientId, clientCaseligibilityId).subscribe({
+    return this.vendorDataService.loadAllVendors(type,VendorTypeCode, requestType, clientId, clientCaseEligibilityId).subscribe({
       next: (vendorResponse: any) => {
         this.paymentRequestVendorsSubject.next(vendorResponse);
         this.isVendorLoadingSubject.next(false);

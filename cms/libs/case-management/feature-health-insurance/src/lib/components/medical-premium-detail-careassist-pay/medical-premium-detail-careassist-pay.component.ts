@@ -15,6 +15,7 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
   @Input() ddlInsuranceType: string = '';
   @Input() clientId: any;
   @Input() caseEligibilityId: any;
+  @Input() insuranceStatus: any;
 
   InsurancePlanTypes: typeof HealthInsurancePlan = HealthInsurancePlan;
   premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;

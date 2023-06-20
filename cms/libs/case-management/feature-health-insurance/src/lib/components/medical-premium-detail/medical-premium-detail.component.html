@@ -202,7 +202,7 @@
           *ngIf="ddlInsuranceType === InsurancePlanTypes.DentalInsurance || ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare">
           <case-management-medical-premium-detail-careassist-pay [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable" [sameAsInsuranceIdFlag]="sameAsInsuranceIdFlag"
-            [ddlInsuranceType]="ddlInsuranceType"
+            [ddlInsuranceType]="ddlInsuranceType" [insuranceStatus] ="insuranceStatus"
             [clientId]="clientId" [caseEligibilityId]="caseEligibilityId"></case-management-medical-premium-detail-careassist-pay>
         </div>
 

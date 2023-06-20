@@ -16,6 +16,7 @@ import {
   InsuranceStatusType,
   ClientProfileTabs,
   EntityTypeCode,
+  VendorTypeCode
 } from '@cms/case-management/domain';
 import { SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -156,8 +157,8 @@ export class MedicalPremiumPaymentDetailComponent {
     this.paymentRequest.comments = this.premiumPaymentForm.controls['comments'].value;
   }
 
-  private loadServiceProviderName(type: string, vendorType: string, clientId: any, clientCaseligibilityId: any) {
-    this.vendorFacade.loadPaymentRequestVendors(type, vendorType, clientId, clientCaseligibilityId);
+  private loadServiceProviderName(type: string, requestType: string, clientId: any, clientCaseEligibilityId: any) {
+    this.vendorFacade.loadPaymentRequestVendors(type,VendorTypeCode.InsuranceProvider, requestType, clientId, clientCaseEligibilityId);
   }
 
   public serviceProviderNameChange(value: string): void {

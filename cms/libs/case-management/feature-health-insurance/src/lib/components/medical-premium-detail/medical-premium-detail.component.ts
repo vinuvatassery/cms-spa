@@ -560,7 +560,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       'premiumFrequencyCode',
       'paymentIdNbr',
       'isClientPolicyHolderFlag',
-      'othersCoveredOnPlanFlag'
+      'othersCoveredOnPlanFlag',
+      'vendorName'
     ];
     const policyHolderRequiredFields: Array<string> = [
       'policyHolderFirstName',
@@ -1355,6 +1356,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsuranceForm.controls["policyHolderFirstName"].disable();
       this.healthInsuranceForm.controls["policyHolderLastName"].disable();
       this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].disable();
+      this.healthInsuranceForm.controls['vendorName'].disable();
     }
     else {
       this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].enable();
@@ -1384,6 +1386,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsuranceForm.controls["medicarePartBStartDate"].enable();
       this.healthInsuranceForm.controls["onQmbFlag"].enable();
       this.healthInsuranceForm.controls["premiumPaidThruDate"].enable();
+      this.healthInsuranceForm.controls['vendorName'].enable();
       this.healthInsuranceForm.controls["nextPremiumDueDate"].enable();
       this.healthInsuranceForm.controls["premiumAmt"].enable();
       this.healthInsuranceForm.controls["premiumFrequencyCode"].enable();
