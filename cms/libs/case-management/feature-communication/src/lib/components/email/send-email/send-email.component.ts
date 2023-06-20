@@ -15,6 +15,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommunicationEvents, CommunicationFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { UserDataService } from '@cms/system-config/domain';
 
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
@@ -72,6 +73,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   emailSubject!: string;
   existingFile: any = [];
   selectedEmail!: string;
+  loginUserId!: any;
   /** Private properties **/
   private currentSessionSubscription !: Subscription;
 
@@ -83,7 +85,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     private readonly ref: ChangeDetectorRef,
     private readonly route: ActivatedRoute,
     private readonly workflowFacade: WorkflowFacade,
-    private formBuilder: FormBuilder,) { }
+    private formBuilder: FormBuilder,
+    private readonly userDataService: UserDataService) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -142,11 +145,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   /** Internal event methods **/
   onSaveForLaterTemplateClicked() {
     this.isShowSaveForLaterPopupClicked = false;
+    this.isOpenSendEmailClicked = true;
     this.emailEditorValueEvent.emit(this.currentEmailData);
     this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
     this.selectedTemplate.toEmailAddress = this.selectedToEmail;
     this.saveTemplateForLater(this.selectedTemplate);
-    this.onCloseSendEmailClicked();
   }
 
   onCloseSaveForLaterClicked(){
@@ -222,13 +225,15 @@ onClosePreviewEmail(){
 
   private initiateAdobeEsignProcess(emailData: any, requestType: string){
     this.loaderService.show();
+    this.getLoggedInUserProfile();
     const formData = new FormData();
     formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
     formData.append('toEmailAddress', this.selectedToEmail ?? '');
     formData.append('clientCaseEligibilityId', this.clientCaseEligibilityId ?? '');
     formData.append('clientId', this.clientId ?? '');
-    formData.append('requestSubject', this.emailSubject ?? '');
+    formData.append('requestSubject', this.emailSubject ?? ''); 
+    formData.append('loginUserId', this.loginUserId ?? ''); 
     let i = 0;
     this.cerEmailAttachedFiles.forEach((file) => { 
       if(file.rawFile == undefined || file.rawFile == null){
@@ -285,7 +290,7 @@ onClosePreviewEmail(){
     const formData = new FormData();
       formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
       formData.append('systemCode', draftTemplate?.systemCode ?? '');
-      formData.append('documentTemplateTypeCode', draftTemplate?.documentTemplateTypeCode ?? '');
+      formData.append('typeCode', draftTemplate?.typeCode ?? '');
       formData.append('subtypeCode', draftTemplate?.subtypeCode ?? '');
       formData.append('channelTypeCode', draftTemplate?.channelTypeCode ?? '');
       formData.append('languageCode', draftTemplate?.languageCode ?? '');
@@ -294,7 +299,7 @@ onClosePreviewEmail(){
       formData.append('toEmailAddress', this.selectedToEmail ?? '');
       let i = 0;
     this.cerEmailAttachedFiles.forEach((file) => { 
-      if(file.documentTemplateTypeCode != CommunicationEvents.TemplateAttachmentTypeCode){
+      if(file.typeCode != CommunicationEvents.TemplateAttachmentTypeCode){
         if(file.rawFile == undefined || file.rawFile == null){
           formData.append('savedAttachmentId', file.document.documentTemplateId);
           i++;
@@ -307,12 +312,14 @@ onClosePreviewEmail(){
         .subscribe({
           next: (data: any) =>{
           if (data) {
+            this.onCloseSendEmailClicked();
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Email Saved As Draft')
           }
           this.loaderService.hide();
         },
         error: (err: any) => {
           this.loaderService.hide();
+          this.isOpenSendEmailClicked = true;
           this.loggingService.logException(err);
           this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
         },
@@ -321,6 +328,16 @@ onClosePreviewEmail(){
   
   cerEmailAttachments(event:any){
     this.cerEmailAttachedFiles = event; 
+  }
+
+  getLoggedInUserProfile(){
+    this.loaderService.show();
+    this.userDataService.getProfile$.subscribe((profile:any)=>{
+      if(profile?.length>0){
+        this.loginUserId= profile[0]?.loginUserId;
+      }
+    })
+    this.loaderService.hide();
   }
 }
 

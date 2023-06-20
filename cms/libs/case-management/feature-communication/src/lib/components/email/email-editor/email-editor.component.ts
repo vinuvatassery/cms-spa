@@ -112,8 +112,8 @@ export class EmailEditorComponent implements OnInit {
     if(this.currentValue){
       this.emailEditorValueEvent(this.currentValue);
       this.selectedAttachedFile = [];
-      this.loadDraftTemplateAttachment();
       this.loadDefaultTemplateAttachment();
+      this.loadDraftTemplateAttachment();
     }
   }
 
@@ -287,7 +287,7 @@ if(!this.attachedFileValidatorSize){
   clientAttachmentClick(item:any)
   {
     this.loaderService.show();
-    this.communicationFacade.generateTextTemplate(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', item.document ?? '', "Preview")
+    this.communicationFacade.generateTextTemplate(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', item.document ?? '', "AttachmentPreview")
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -301,7 +301,6 @@ if(!this.attachedFileValidatorSize){
           this.loaderService.hide();
           this.loggingService.logException(err);
           this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
-          this.loggingService.logException(err);
         },
       });
   }
@@ -340,7 +339,7 @@ if(!this.attachedFileValidatorSize){
             size: file.templateSize,
             name: file.description,
             documentTemplateId: file.documentTemplateId,
-            documentTemplateTypeCode: file.documentTemplateTypeCode
+            typeCode: file.typeCode
           })
         }
         this.ref.detectChanges();

@@ -27,7 +27,7 @@ export class AuthorizationComponent   {
   @Input() templateNotice$ : any
 
   /** Output properties **/
-  // @Output() cerDateSignatureEvent = new EventEmitter<any>(); 
+  @Output() cerDateSignatureEvent = new EventEmitter<any>(); 
   @Output() loadAuthorizationData = new EventEmitter();
   @Output() saveAuthorizationData = new EventEmitter<any>();
   @Output() loadAuthorizationNotice = new EventEmitter();
@@ -67,6 +67,7 @@ export class AuthorizationComponent   {
   private isSendEmailOpenedDialog : any;
   uploadedCopyOfSignedApplication: any;
   isSendNewEmailPopupOpened = false;
+  isSendNewLetterPopupOpened = false;
   dateSignatureNoted!: any;
   /** Private properties **/
   private userProfileSubsriction !: Subscription;
@@ -207,7 +208,6 @@ export class AuthorizationComponent   {
             },
           ];
         }
-        this.dateSignatureNoted = signatureNotedDate;
         this.updateInitialDataPoints(resp?.applicantSignedDate, resp.signedApplication);
         this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
       }
@@ -254,7 +254,6 @@ export class AuthorizationComponent   {
         signedApplicationDocument: this.uploadedCopyOfSignedApplication,
         signedApplication: {}
       }
-      this.dateSignatureNoted = this.intl.formatDate(new Date(this.authorizationForm?.get('signatureNotedDate')?.value));
       if (this.uploadedCopyOfSignedApplication) {
         const documentId = this.copyOfSignedApplication?.length > 0 ? (this.copyOfSignedApplication[0]?.uid ?? null) : null;
         authorization.signedApplication = {
@@ -319,6 +318,10 @@ export class AuthorizationComponent   {
     }); 
   }
 
+  onSendNewLetterButtonClicked() {
+    this.isSendNewLetterPopupOpened = true;
+  }
+
   onSendNewEmailButtonClicked() {
     this.isSendNewEmailPopupOpened = true;
   }
@@ -338,7 +341,6 @@ export class AuthorizationComponent   {
       if (value) {
         this.authorizationForm?.get('signatureNotedDate')?.setValue(formatDate(today, 'MM-dd-yyyy'));
         this.invalidSignatureDate$.next(value > today);
-        this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate');
       }
       const isValid = value && value < today;
       this.updateDataPoints('applicantSignedDate', isValid)
@@ -460,45 +462,32 @@ export class AuthorizationComponent   {
     this.workflowFacade.updateChecklist(workFlowData);
   } 
 
-  // loadDateSignature(){
-  // this.cerDateSignatureEvent.emit(this.dateSignature);
-  // }
+  loadDateSignature(){
+  this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+  }
 
-  // onChange(event : Date) {
-  //   this.cerDateValidator = false;
-  //   const signedDate = event;
-  //   const todayDate = new Date();
-  //   if (signedDate == null) {
-  //     this.currentDate = signedDate;
-  //     this.dateSignature = null;
-  //     this.cerDateSignatureEvent.emit(this.dateSignature);
-  //   }
-  //   else if (signedDate > todayDate) {
-  //     this.currentDate = signedDate;
-  //     this.cerDateValidator = true;
-  //     this.dateSignature = null;
-  //     this.cerDateSignatureEvent.emit(this.dateSignature);
-  //   }else{
-  //     this.currentDate = event;
-  //     this.dateSignature = this.intl.formatDate(new Date(), this.dateFormat);
-  //     this.cerDateSignatureEvent.emit(this.dateSignature);
-  //   }
-  // }
+  onChange(event : Date) {
+    this.cerDateValidator = false;
+    const signedDate = event;
+    const todayDate = new Date();
+    if (signedDate == null) {
+      this.currentDate = signedDate;
+      this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.patchValue(null);
+      this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+    }
+    else if (signedDate > todayDate) {
+      this.currentDate = signedDate;
+      this.cerDateValidator = true;
+      this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.patchValue(null);
+      this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+    }else{
+      this.currentDate = event;
+      this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.value;
+      this.cerDateSignatureEvent.emit(this.dateSignatureNoted); 
+    }
+  }
 
-//   handleFileSelected(event: any) {
-//     if(event === null || event === undefined || event.files[0] === null){
-//       this.showCopyOfSignedApplicationRequiredValidation = false;
-//     }else{
-//     this.copyOfSignedApplication = null;
-//     this.copyOfSignedApplicationSizeValidation = false;
-//     this.copyOfSignedApplication = event.files[0].rawFile;
-//    if(this.copyOfSignedApplication.size > this.configurationProvider.appSettings.uploadFileSizeLimit)
-//    {
-//     this.copyOfSignedApplicationSizeValidation=true;
-//     this.copyOfSignedApplication = null;
-//    }
-//   }
-// }
+
 
 updateSendEmailSuccessStatus(event:any){
  this.isSendEmailSuccess = event;

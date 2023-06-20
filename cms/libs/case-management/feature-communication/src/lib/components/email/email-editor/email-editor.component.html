@@ -192,7 +192,7 @@
         <div class="attachment-item-list" kendoTooltip *ngFor="let item of selectedAttachedFile;let index = index">
           <a class="attachment-item_name" (click)="clientAttachmentClick(item)">{{item.name}}</a>
           <span class="attachment-item_size">{{item.size | fileSize}}</span>
-          <button *ngIf="item.documentTemplateTypeCode !=='CER_AUTHORIZATION_ATTACHMENT'"
+          <button *ngIf="item.typeCode !=='CER_AUTHORIZATION_ATTACHMENT'"
             kendoButton
             class="attachment-item_remove k-icon-button small-i-btn"
             title="Remove Attachment"

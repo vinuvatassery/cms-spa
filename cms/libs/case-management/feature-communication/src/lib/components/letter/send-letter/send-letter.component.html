@@ -30,8 +30,9 @@
           <case-management-email-editor
           [dataEvent]="emailEditorValueEvent"
           [currentValue]="currentLetterData"
-          (editorValue)="handleLetterEditor($event)"
-            class="editor-lg-email"
+          [clientCaseEligibilityId]="clientCaseEligibilityId"
+          [clientId]="clientId"
+          (cerEmailAttachments)="cerEmailAttachments($event)"
           ></case-management-email-editor>
         </div>
       </div>

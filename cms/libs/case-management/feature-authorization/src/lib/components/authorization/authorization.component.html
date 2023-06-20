@@ -29,6 +29,7 @@
             formControlName="applicantSignedDate"
             [max]="currentDate"
             formatPlaceholder="formatPattern"
+            (valueChange)="onChange($event)"
           >
           </kendo-datepicker>
           <kendo-formerror *ngIf="authForm?.applicantSignedDate?.errors?.required">Date Applicant Signed is required</kendo-formerror>
@@ -43,7 +44,8 @@
           [disabled]="true" 
           [fillMode]="formUiStyle.inputFillMode"
           formControlName="signatureNotedDate"
-          >   </kendo-textbox>
+          >   
+        </kendo-textbox>
         </kendo-floatinglabel>
       </div>
       <!-- Hide after sent letter or email -->
@@ -51,7 +53,7 @@
         <button *ngIf="!isGoPaperlessOpted" [disabled]="dateSignatureNoted != null"
           kendoButton
           [primary]="true"
-          (click)="onSendNewLetterClicked(sendLetterDialog)"
+          (click)="!cerDateValidator ? onSendNewLetterClicked(sendLetterDialog) : null"
           aria-label="send letter"
         >
           Send Letter
@@ -60,7 +62,7 @@
           kendoButton
           [primary]="true"
           class="ml-2"
-          (click)="!cerDateValidator ? onSendNewEmailButtonClicked() : null"
+          (click)="!cerDateValidator ? onSendNewEmailClicked(sendEmailDialog) : null"
           aria-label="send email"
         >
           Send Email
@@ -105,7 +107,7 @@
       </div>
 
       <div class="flex-col">
-        <div class="flex-row">
+        <div class="flex-row" *ngIf="(dateSignatureNoted != null || isSendEmailClicked || isPrintClicked)">
           <div class="flex-col mt-2">
             <h5>COPY OF SIGNED APPLICATION</h5>
           </div>
@@ -177,6 +179,9 @@
 <ng-template #sendLetterDialog>
 <case-management-send-letter 
   [data]="screenName"
+  [clientId]="clientId"
+  [isCerForm]="isCerForm"
+  [clientCaseEligibilityId]="clientCaseEligibilityId"
   (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)"
   kendoTooltip
 >
@@ -185,7 +190,6 @@
 <!-- Send New Email Modal -->
 <ng-template #sendEmailDialog>
 <case-management-send-email
-  *ngIf="isSendNewEmailPopupOpened"
   [data]="screenName"
   [toEmail]="toEmail"
   [clientId]="clientId"

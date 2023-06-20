@@ -30,6 +30,9 @@ export class SendLetterComponent implements OnInit {
   /** Input properties **/
   @Input() data!: any;
   @Input() mailingAddress$!: Observable<any>;
+  @Input() clientCaseEligibilityId!: any;
+  @Input() clientId!: any;
+  @Input() isCerForm!: any; 
 
   /** Output properties  **/
   @Output() closeSendLetterEvent = new EventEmitter<CommunicationEvents>();
@@ -60,7 +63,7 @@ export class SendLetterComponent implements OnInit {
   currentLetterPreviewData:any;
   prevClientCaseEligibilityId!: string;
   selectedTemplate!: any;
-  isCerForm = false;
+  cerEmailAttachedFiles: any[] = [];
   dataValue: Array<any> = [
     {
       text: '',
@@ -106,7 +109,7 @@ export class SendLetterComponent implements OnInit {
   onCloseSaveForLaterClicked() {
     this.isShowSaveForLaterPopupClicked = false;
     this.onCloseNewLetterClicked();
-    this.saveContact(this.selectedTemplate);
+    this.saveLetterTemplateForLater(this.selectedTemplate);
   }
 
   onSaveForLaterClicked() {
@@ -220,21 +223,42 @@ this.isShowSendLetterToPrintPopupClicked = false;
     this.openDdlLetterEvent.emit();
   }
 
-  private saveContact(draftTemplate: any) {
+  private saveLetterTemplateForLater(draftTemplate: any) {
     this.loaderService.show();
     const isSaveFoLater = true;
-    this.communicationFacade.saveForLaterEmailTemplate(draftTemplate, isSaveFoLater)
+    const formData = new FormData();
+      formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
+      formData.append('systemCode', draftTemplate?.systemCode ?? '');
+      formData.append('typeCode', draftTemplate?.typeCode ?? '');
+      formData.append('subtypeCode', draftTemplate?.subtypeCode ?? '');
+      formData.append('channelTypeCode', draftTemplate?.channelTypeCode ?? '');
+      formData.append('languageCode', draftTemplate?.languageCode ?? '');
+      formData.append('description', draftTemplate?.description ?? '');
+      formData.append('templateContent', draftTemplate?.templateContent ?? '');
+      let i = 0;
+    this.cerEmailAttachedFiles.forEach((file) => { 
+      if(file.typeCode != CommunicationEvents.TemplateAttachmentTypeCode){
+        if(file.rawFile == undefined || file.rawFile == null){
+          formData.append('savedAttachmentId', file.document.documentTemplateId);
+          i++;
+        }else{
+          formData.append('fileData', file.rawFile); 
+        }
+      }
+    });  
+    this.communicationFacade.saveForLaterEmailTemplate(formData, isSaveFoLater)
         .subscribe({
           next: (data: any) =>{
           if (data) {
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Template Saved As Draft')
+            this.onCloseNewLetterClicked();
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter Saved As Draft')
           }
           this.loaderService.hide();
         },
         error: (err: any) => {
           this.loaderService.hide();
           this.loggingService.logException(err);
-          this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
         },
       });
   }
@@ -275,4 +299,8 @@ this.isShowSendLetterToPrintPopupClicked = false;
   getClientDocumentsViewDownload(clientDocumentId: string) {
     return this.communicationFacade.getClientDocumentsViewDownload(clientDocumentId);
  }
+
+ cerEmailAttachments(event:any){
+  this.cerEmailAttachedFiles = event; 
+}
 }
