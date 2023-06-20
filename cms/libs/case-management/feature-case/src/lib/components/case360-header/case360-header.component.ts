@@ -136,6 +136,7 @@ export class Case360HeaderComponent implements OnInit {
   onModalSaveAndClose(result: any) {
     if (result) {
       this.isStatusPeriodDetailOpened = false;
+      this.statusPeriodDialog.close();
       this.loadClientProfileInfoEvent.emit();
     }
   }

@@ -7,7 +7,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 
 /** Internal libraries **/
 import { ConfigurationProvider, LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
-import { FinancialVendorDataService } from '../infrastructure/financial-vendor.data.service';
+import { FinancialVendorDataService } from '../../infrastructure/financial-management/vendor.data.service';
 
 
 @Injectable({ providedIn: 'root' })
@@ -16,12 +16,15 @@ export class FinancialVendorFacade {
   /** Private properties **/
   private vendorsSubject = new Subject<any>();
   private selectedVendorSubject = new Subject<any>();
-
-  /** Public properties **/
+  private vendorProfileSubject = new Subject<any>();
+  private clinicVendorSubject = new Subject<any>();
+  private clinicVendorLoaderSubject = new Subject<any>();  /** Public properties **/
   vendorsList$ = this.vendorsSubject.asObservable();
   selectedVendor$ = this.selectedVendorSubject.asObservable();
-
-  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  vendorProfile$ = this.vendorProfileSubject.asObservable();
+   clinicVendorList$ = this.clinicVendorSubject.asObservable();
+  clinicVendorLoader$ = this.clinicVendorLoaderSubject.asObservable();
+  public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'vendorName'
   public sortType = 'asc'
   public sort: SortDescriptor[] = [{
@@ -72,6 +75,21 @@ export class FinancialVendorFacade {
       },
     });
   }
+  getVendorProfile(vendorId: string,tabCode: string): void {
+    this.showLoader();
+    this.financialVendorDataService.getVendorProfile(vendorId,tabCode).subscribe({
+      next: (vendorResponse: any) => {
+        if (vendorResponse) {        
+          this.vendorProfileSubject.next(vendorResponse);
+          this.hideLoader();
+        }       
+      },
+      error: (err) => {     
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+  }
 
   getVendorDetails(vendorId: string) {
     this.showLoader();
@@ -84,6 +102,27 @@ export class FinancialVendorFacade {
         this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       }
+    });
+  }
+
+
+  addVendorProfile(vendorProfile: any) {
+    return this.financialVendorDataService.addVendorProfile(vendorProfile);
+  }
+
+  searchClinicVendor(vendorName: any){
+    this.clinicVendorLoaderSubject.next(true);
+    this.clinicVendorSubject.next(null);
+    this.financialVendorDataService.searchClinicVendors(vendorName).subscribe({
+      next: (vendorsResponse: any) => {
+        if (vendorsResponse) {
+          this.clinicVendorSubject.next(vendorsResponse);
+          this.clinicVendorLoaderSubject.next(false);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
     });
   }
 }
