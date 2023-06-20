@@ -70,6 +70,15 @@ export class FinancialVendorDataService {
   }
 
   
+  getVendorProfileSpecialHandling(vendorId: string) {  
+
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors/${vendorId}/profile/special-handling`
+    );
+  }
+
+  
   addVendorProfile(vendorProfile:any) {
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
