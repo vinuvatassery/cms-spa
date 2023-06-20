@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
-import { VendorFacade, HealthInsurancePolicyFacade, InsurancePlanFacade, InsuranceStatusType } from '@cms/case-management/domain';
+import { VendorFacade, HealthInsurancePolicyFacade, InsurancePlanFacade, InsuranceStatusType,VendorTypeCode } from '@cms/case-management/domain';
 import { LoaderService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-medical-premium-detail-insurance-carrier-name',
@@ -49,7 +49,7 @@ public isLoading =false;
 
   private loadInsuranceCarrierName(type:string) {
     this.isLoading=true;
-    this.vendorFacade.loadAllVendors(type).subscribe({
+    this.vendorFacade.loadAllVendors(type,VendorTypeCode.InsuranceProvider).subscribe({
       next: (data: any) => {
         if (!Array.isArray(data)) return;
         this.sortCarrier(data);   

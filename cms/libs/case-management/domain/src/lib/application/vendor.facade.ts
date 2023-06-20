@@ -37,8 +37,8 @@ export class VendorFacade {
     this.loaderService.hide();
   }
 
-  loadAllVendors(type: string) {
-    return this.vendorDataService.loadAllVendors(type);
+  loadAllVendors(type: string,vendorTypeCode:any) {
+    return this.vendorDataService.loadAllVendors(type,vendorTypeCode);
   }
 
   loadPaymentRequestVendors(type: string, vendorType: string, clientId: any, clientCaseligibilityId: any) {
