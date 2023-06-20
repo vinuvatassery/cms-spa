@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, OnInit, Component, EventEmitter, Output, Input } from '@angular/core';
+import { ChangeDetectionStrategy, OnInit, Component, EventEmitter, Output, Input, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AddressType, AddressTypeCode, BillingAddressFacade, ContactFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
@@ -16,6 +16,7 @@ type NewType = LovFacade;
 export class PaymentAddressDetailsComponent implements OnInit {
   @Output() closeEvent = new EventEmitter<any>();
   @Input() isEdit!: any
+  @Input() billingAddress!: any
   SpecialHandlingLength = 100;
   ddlStates$ = this.contactFacade.ddlStates$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -26,7 +27,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
   addressTypeCode: string = '';
   paymentMethodVendorlov$ = this.lovFacade.paymentMethodVendorlov$;
   paymentRunDatelov$ = this.lovFacade.paymentRunDatelov$;
-  financialVendorProviderTabCode:any=FinancialVendorProviderTabCode;
+  financialVendorProviderTabCode: any = FinancialVendorProviderTabCode;
   /** Constructor**/
   constructor(
     private readonly billingAddressFacade: BillingAddressFacade,
@@ -34,6 +35,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
     private readonly lovFacade: LovFacade,
     private readonly formBuilder: FormBuilder,
     private readonly activatedRoute: ActivatedRoute,
+    private readonly cdr: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
@@ -45,6 +47,57 @@ export class PaymentAddressDetailsComponent implements OnInit {
     this.lovFacade.getVendorPaymentRunDatesLovs();
     this.buildForm();
 
+    if (this.isEdit) {
+      this.paymentAddressForm.addControl('vendorAddressId', new FormControl(this.billingAddress.vendorAddressId, [Validators.required]))
+      this.paymentAddressForm.controls['mailCode'].setValue(this.billingAddress.mailCode);
+      this.paymentAddressForm.controls['nameOnCheck'].setValue(this.billingAddress.nameOnCheck);
+      this.paymentAddressForm.controls['nameOnEnvelope'].setValue(this.billingAddress.nameOnEnvelope);
+      this.paymentAddressForm.controls['address1'].setValue(this.billingAddress.address1);
+      this.paymentAddressForm.controls['address2'].setValue(this.billingAddress.address2);
+      this.paymentAddressForm.controls['cityCode'].setValue(this.billingAddress.cityCode);
+      this.paymentAddressForm.controls['stateCode'].setValue(this.billingAddress.stateCode);
+      this.paymentAddressForm.controls['zip'].setValue(this.billingAddress.zip);
+      this.paymentAddressForm.controls['paymentMethodCode'].setValue(this.billingAddress.paymentMethodCode);
+      this.paymentAddressForm.controls['specialHandlingDesc'].setValue(this.billingAddress.specialHandlingDesc);
+      if (this.tabCode === FinancialVendorProviderTabCode.InsuranceVendors) {
+        this.paymentAddressForm.controls['acceptsReportsFlag'].setValue(this.billingAddress.acceptsReportsFlag);
+        this.paymentAddressForm.controls['acceptsCombinedPaymentsFlag'].setValue(this.billingAddress.acceptsCombinedPaymentsFlag);
+      }
+      this.getContacts(this.billingAddress.vendorAddressId);
+    }
+
+  }
+
+  get AddContactForm(): FormArray {
+    return this.paymentAddressForm.get("newAddContactForm") as FormArray;
+  }
+  getContacts(vendorAddressId: any) {
+    this.billingAddressFacade.showLoader();
+    this.billingAddressFacade.getPaymentsAddressContacts(vendorAddressId).subscribe({
+      next: (resp) => {
+        console.log(resp)
+
+        resp.forEach((item:any) => {
+          let addContactForm = this.formBuilder.group({
+            contactName: new FormControl(item.contactName, Validators.required),
+            description: new FormControl(item.contactDesc),
+            phoneNumber: new FormControl(item.vendorContactPhone[0]?.phoneNbr),
+            fax: new FormControl(item.vendorContactPhone[0]?.faxNbr),
+            email: new FormControl(item.vendorContactEmail[0]?.emailAddress)
+          });
+
+          this.AddContactForm.push(addContactForm);
+          this.cdr.detectChanges();
+        });
+
+        this.billingAddressFacade.hideLoader();
+        
+      },
+      error: (err) => {
+        this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.billingAddressFacade.hideLoader();
+      },
+    });
   }
 
   private buildForm() {
@@ -124,19 +177,26 @@ export class PaymentAddressDetailsComponent implements OnInit {
       })
     }
     this.billingAddressFacade.showLoader();
-    this.billingAddressFacade.saveBillingAddress(this.vendorId, formValues).subscribe({
+    this.addUpdateBillingAddress(this.vendorId, formValues).subscribe({
       next: (resp) => {
         if (resp) {
           this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment Address Added Successfully')
         }
         this.billingAddressFacade.hideLoader();
-        this.closeModal(true);
+        this.closeModal('saved');
       },
       error: (err) => {
         this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.billingAddressFacade.hideLoader();
       },
     });
+  }
+
+  addUpdateBillingAddress(vendorId: any, formValues: any) {
+    if (this.isEdit) {
+      return this.billingAddressFacade.updateBillingAddress(this.vendorId, formValues);
+    }
+    return this.billingAddressFacade.saveBillingAddress(this.vendorId, formValues);
   }
 
 }

@@ -3,7 +3,7 @@ import { PaymentsFacade, BillingAddressFacade } from '@cms/case-management/domai
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
-import { FinancialVendorTypeCode,FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-payment-addresses',
@@ -32,7 +32,7 @@ export class PaymentAddressesComponent {
   paymentAddressInnerGridLists = [
     {
       Name: 'FName LName',
-      Description:'FName LName',
+      Description: 'FName LName',
       PremiumAmount: '500.00',
       PhoneNumber: 'XXXXXX',
       FaxNumber: 'XXXXXX',
@@ -50,27 +50,27 @@ export class PaymentAddressesComponent {
       text: 'Edit Address',
       icon: 'edit',
       type: "Edit",
-      click: (data: any): void => {},
+      click: (data: any): void => { },
     },
     {
       buttonType: 'btn-h-primary',
       text: 'Deactivate Address',
       icon: 'block',
       type: "Deactivate",
-      click: (data: any): void => {},
+      click: (data: any): void => { },
     },
     {
       buttonType: 'btn-h-danger',
       text: 'Delete Address',
       icon: 'delete',
       type: "Delete",
-      click: (data: any): void => {},
+      click: (data: any): void => { },
     },
   ];
 
-   /** Constructor **/
-   constructor(private readonly paymentsFacade: BillingAddressFacade,
-    private route: ActivatedRoute, private readonly cdr: ChangeDetectorRef) {}
+  /** Constructor **/
+  constructor(private readonly paymentsFacade: BillingAddressFacade,
+    private route: ActivatedRoute, private readonly cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.state = {
@@ -119,15 +119,23 @@ export class PaymentAddressesComponent {
 
   clickOpenAddEditPaymentAddressDetails() {
     this.isPaymentAddressDetailShow = true;
-    this.isPaymentAddressDetailIsEdit=false;
+    this.isPaymentAddressDetailIsEdit = false;
+  }
+
+  clickOpenEditPaymentAddressDetails() {
+    this.isPaymentAddressDetailShow = true;
+    this.isPaymentAddressDetailIsEdit = true;
   }
 
   clickCloseAddEditPaymentAddressDetails() {
     this.isPaymentAddressDetailShow = false;
   }
 
-  closePaymentAddressDetails(event:any){
-   this.clickCloseAddEditPaymentAddressDetails(); 
+  closePaymentAddressDetails(event: any) {
+    if (event === 'saved') {
+      this.loadPaymentsAddressListGrid();
+    }
+    this.clickCloseAddEditPaymentAddressDetails();
   }
 
   clickOpenDeactivatePaymentAddressDetails() {
@@ -136,7 +144,7 @@ export class PaymentAddressesComponent {
 
   clickCloseDeactivatePaymentAddress(isSuccess: boolean): void {
     this.isPaymentAddressDeactivateShow = false;
-    if(isSuccess)
+    if (isSuccess)
       this.loadPaymentsAddressListGrid();
   }
 
@@ -145,7 +153,7 @@ export class PaymentAddressesComponent {
   }
   clickCloseDeletePaymentAddress(isSuccess: boolean): void {
     this.isPaymentAddressDeleteShow = false;
-    if(isSuccess)
+    if (isSuccess)
       this.loadPaymentsAddressListGrid();
   }
 
@@ -179,7 +187,8 @@ export class PaymentAddressesComponent {
     }
     else if (type == 'Edit') {
       this.addressId = dataItem.vendorAddressId ?? this.addressId;
-      this.clickOpenAddEditPaymentAddressDetails();
+      this.billingAddressObj = dataItem;
+      this.clickOpenEditPaymentAddressDetails();
     }
     else if (type == 'Deactivate') {
       this.addressId = dataItem.vendorAddressId ?? this.addressId;

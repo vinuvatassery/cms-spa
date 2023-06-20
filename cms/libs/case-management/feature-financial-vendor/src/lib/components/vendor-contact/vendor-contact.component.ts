@@ -19,6 +19,7 @@ export class VendorContactComponent {
     private readonly cdr: ChangeDetectorRef,
   ) {
     this.from = this.formBuilder.group({});
+    
   }
 
   getContactControl(index: number, fieldName: string) {

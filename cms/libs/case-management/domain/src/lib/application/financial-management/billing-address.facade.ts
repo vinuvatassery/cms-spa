@@ -64,10 +64,16 @@ export class BillingAddressFacade {
   /** Public methods **/
 
   saveBillingAddress(vendorId: any, paymentAddress: any) {
-    this.showLoader();
     return this.billingAddressDataService.saveBillingAddress(paymentAddress, vendorId);
   }
+  updateBillingAddress(vendorId: any, paymentAddress: any) {
+    return this.billingAddressDataService.updateBillingAddress(paymentAddress, vendorId);
+  }
+  getPaymentsAddressContacts(addressId: string) {
+    return this.billingAddressDataService.getPaymentsAddressContacts(addressId);
+  }
   loadBillingAddressListGridService(){
+    this.showLoader();
     this.billingAddressDataService.loadBillingAddressListService().subscribe({
       next: (dataResponse) => {
         this.billingAddressDataSubject.next(dataResponse);
