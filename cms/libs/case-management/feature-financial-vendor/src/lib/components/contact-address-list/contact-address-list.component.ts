@@ -21,7 +21,7 @@ export class ContactAddressListComponent implements OnChanges {
   isContactAddressDetailShow = false;
   isContactsDetailShow = false;
   VendorContactId:any;
-  VendorContactAddressId: string="84EBA062-31D0-489B-8154-ADABD5A81192";
+  VendorContactAddressId: string="";
   @Input() VendorAddressId: any;
   showLoader() {
     this.loaderService.show();

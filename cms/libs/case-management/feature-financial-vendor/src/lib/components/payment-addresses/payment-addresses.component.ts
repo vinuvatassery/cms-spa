@@ -73,8 +73,7 @@ export class PaymentAddressesComponent {
   }
 
   public onDetailExpand(e: any): void { 
-    //this.VendorAddressId=e.dataItem.VendorAddressId;
-    this.VendorAddressId='84EBA062-31D0-489B-8154-ADABD5A81192';   
+    this.VendorAddressId=e.dataItem.VendorAddressId;  
    
   }
   public dataStateChange(stateData: any): void {
