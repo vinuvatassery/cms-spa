@@ -20,6 +20,7 @@ export class PaymentAddressesComponent {
   public state!: State;
   paymentsAddressGridView$ = this.paymentsFacade.paymentsAddressData$;
   isPaymentAddressDetailShow = false;
+  isPaymentAddressDetailIsEdit = false;
   isPaymentAddressDeactivateShow = false;
   isPaymentAddressDeleteShow = false;
   paymentAddressInnerGridLists = [
@@ -107,10 +108,15 @@ export class PaymentAddressesComponent {
   
   clickOpenAddEditPaymentAddressDetails() {
     this.isPaymentAddressDetailShow = true;
+    this.isPaymentAddressDetailIsEdit=false;
   }
 
   clickCloseAddEditPaymentAddressDetails() {
     this.isPaymentAddressDetailShow = false;
+  }
+
+  closePaymentAddressDetails(event:any){
+   this.clickCloseAddEditPaymentAddressDetails(); 
   }
 
   clickOpenDeactivatePaymentAddressDetails() {

@@ -102,7 +102,7 @@
             <div class="flex-col flex-col-6 mt-4">
                 <kendo-label> Of each Month</kendo-label>
             </div>
-            <div class="flex-col mt-1">
+            <div class="flex-col mt-1" *ngIf="tabCode === financialVendorProviderTabCode.InsuranceVendors">
                 <fieldset class="k-form-fieldset">
                     <legend class="k-form-legend">
                         <h5 class="mb-0"> Accepts combined payments? </h5>
@@ -129,7 +129,7 @@
                     selection is required.</kendo-formerror>
             </div>
 
-            <div class="flex-col mt-1">
+            <div class="flex-col mt-1" *ngIf="tabCode === financialVendorProviderTabCode.InsuranceVendors">
                 <fieldset class="k-form-fieldset">
                     <legend class="k-form-legend">
                         <h5 class="mb-0"> Accepts reports? </h5>
@@ -161,20 +161,19 @@
                     </kendo-textarea>
                 </kendo-floatinglabel>
             </div>
-
-            <cms-vendor-contact [from]="paymentAddressForm" [formSubmitted]="formIsSubmitted"></cms-vendor-contact>
+            <div class="flex-col">
+                <cms-vendor-contact [from]="paymentAddressForm" [formSubmitted]="formIsSubmitted"></cms-vendor-contact>
+            </div>
+            
 
         </div>
     </section>
 
     <kendo-dialog-actions>
         <div class="justify-content-between">
-            <div class="justify-content-start d-flex">
-                <button kendoButton class="k-danger-link" aria-label="Remove"> Remove </button>
-                <button kendoButton look="outline" [primary]="true" aria-label="deactivate phone"> Edit </button>
-            </div>
+            
             <div class="justify-content-end">
-                <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"> Cancel
+                <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail" (click)="closeModal(true)"> Cancel
                 </button>
                 <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="submit()"> Save
                 </button>

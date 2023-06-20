@@ -182,7 +182,7 @@
 class="app-c-modal app-c-modal-md app-c-modal-np">
 <kendo-dialog-titlebar (close)="clickCloseAddEditPaymentAddressDetails()"> Add Payment Address
 </kendo-dialog-titlebar>
-<cms-payment-address-details> </cms-payment-address-details>
+<cms-payment-address-details (closeEvent)="closePaymentAddressDetails($event)" [isEdit]="isPaymentAddressDetailIsEdit" > </cms-payment-address-details>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isPaymentAddressDeactivateShow" (close)="clickCloseDeactivatePaymentAddress()"
