@@ -124,7 +124,7 @@ export class SendLetterComponent implements OnInit {
     if (event === CommunicationEvents.Print) {
       this.emailEditorValueEvent.emit(this.currentLetterData);
     this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
-    this.generateText(this.selectedTemplate,CommunicationEvents.SendLetter);
+    this.sendLetterToPrint(this.selectedTemplate, CommunicationEvents.SendLetter);
     this.closeSendLetterEvent.emit(CommunicationEvents.Print);
     } else if (event === CommunicationEvents.Close) {
       this.isShowSendLetterToPrintPopupClicked = false;
@@ -135,7 +135,7 @@ export class SendLetterComponent implements OnInit {
     this.isShowPreviewLetterPopupClicked = true;
     this.emailEditorValueEvent.emit(this.currentLetterData);
     this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
-    this.generateText(this.selectedTemplate,CommunicationEvents.Preview);
+    this.generateText(this.selectedTemplate, CommunicationEvents.Preview);
   }
 
   private generateText(letterData: any, requestType: CommunicationEvents){
@@ -148,12 +148,53 @@ export class SendLetterComponent implements OnInit {
           if (data) {
             this.currentLetterPreviewData = data;
             this.ref.detectChanges();
-            if(requestType==CommunicationEvents.SendLetter)
-              {
-                this.onCloseNewLetterClicked();
-                this.viewOrDownloadFile(data.clientDocumentId);
-                this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print')
-              }
+            this.onCloseNewLetterClicked();
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print')
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , err);
+        },
+      });
+  }
+
+  private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
+    this.loaderService.show();
+    const clientId = this.workflowFacade.clientId ?? 0;
+    const caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
+    const formData = new FormData();
+      formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
+      formData.append('systemCode', draftTemplate?.systemCode ?? '');
+      formData.append('typeCode', draftTemplate?.typeCode ?? '');
+      formData.append('subtypeCode', draftTemplate?.subtypeCode ?? '');
+      formData.append('channelTypeCode', draftTemplate?.channelTypeCode ?? '');
+      formData.append('languageCode', draftTemplate?.languageCode ?? '');
+      formData.append('description', draftTemplate?.description ?? '');
+      formData.append('templateContent', draftTemplate?.templateContent ?? '');
+      let i = 0;
+      this.cerEmailAttachedFiles.forEach((file) => { 
+      if(file.typeCode != CommunicationEvents.TemplateAttachmentTypeCode){
+        if(file.rawFile == undefined || file.rawFile == null){
+          formData.append('savedAttachmentId', file.document.documentTemplateId);
+          i++;
+        }else{
+          formData.append('fileData', file.rawFile); 
+        }
+      }
+    });  
+
+    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', draftTemplate ?? '', requestType.toString() ??'')
+        .subscribe({
+          next: (data: any) =>{
+          if (data) {
+            this.currentLetterPreviewData = data;
+            this.ref.detectChanges();
+            this.onCloseNewLetterClicked();
+            this.viewOrDownloadFile(data.clientDocumentId);
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print')
           }
           this.loaderService.hide();
         },
