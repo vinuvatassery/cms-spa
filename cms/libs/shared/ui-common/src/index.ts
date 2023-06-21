@@ -27,6 +27,7 @@ export * from './lib/grid-cell-date-range-filter/grid-cell-date-range-filter.com
 export * from './lib/pipes/ssn.pipe';
 export * from './lib/pipes/fileSize.pipe';
 export * from './lib/pipes/phone.pipe';
+export * from './lib/pipes/yes-or-no.pipe';
 
 /** Directives **/
 export * from './lib/directives/kendo-componentsforaccessibility.directive';

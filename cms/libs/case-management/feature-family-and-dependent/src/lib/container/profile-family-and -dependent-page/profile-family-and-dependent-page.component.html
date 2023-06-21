@@ -11,7 +11,7 @@
         <span class="text-bold" for="FamilyAndDependentEP">EP:&nbsp;</span>
         <div class="fmly-epdorpdown">
           <case-management-case-eligibility-periods [eligibilityPeriodsData]="eligibilityPeriodData$ | async"
-          [caseEligibilityId]="historyClientCaseEligibilityId"
+          [caseEligibilityId]="currentClientCaseEligibilityId" [currentClientCaseEligibilityId]="currentClientCaseEligibilityId"
           (onEligibilityPeriodChange)="onDependentPeriodSelectionChange($event)" (updateHistoryStatus)="updateHistoryStatus($event)">
           </case-management-case-eligibility-periods>
         </div>

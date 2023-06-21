@@ -1,4 +1,7 @@
-<cms-vendor-profile-header></cms-vendor-profile-header>
+<cms-vendor-profile-header
+[vendorProfile$]="vendorProfile$ | async"
+[vendorProfileSpecialHandling$]="vendorProfileSpecialHandling$"
+(loadSpecialHandlingEvent)="loadSpecialHandling()"></cms-vendor-profile-header>
 
 
 
@@ -47,19 +50,7 @@
         <div class="block-section">
 
           <div class="client-profile-outlet">
-            <cms-financial-payments></cms-financial-payments>
-          </div>
-        </div>
-      </ng-template>
-    </kendo-tabstrip-tab>
-
-    <kendo-tabstrip-tab title="Insurance Plans" *ngIf="tabCode === financeManagementTabs.InsuranceVendors">
-
-      <ng-template kendoTabContent>
-        <div class="block-section">
-
-          <div class="client-profile-outlet">
-            <cms-financial-insurance-plans></cms-financial-insurance-plans>
+            <cms-financial-payments *ngIf="vendorId" [vendorId]="vendorId"></cms-financial-payments>
           </div>
         </div>
       </ng-template>
@@ -71,11 +62,23 @@
         <div class="block-section">
 
           <div class="client-profile-outlet">
-            <cms-financial-insurance-provider></cms-financial-insurance-provider>
+            <cms-financial-insurance-provider-list  [vendorId]="vendorId"></cms-financial-insurance-provider-list>
           </div>
         </div>
       </ng-template>
     </kendo-tabstrip-tab>
+
+    <!-- <kendo-tabstrip-tab title="Insurance Provider" *ngIf="tabCode === financeManagementTabs.InsuranceVendors">
+
+      <ng-template kendoTabContent>
+        <div class="block-section">
+
+          <div class="client-profile-outlet">
+            <cms-financial-insurance-provider></cms-financial-insurance-provider>
+          </div>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab> -->
 
     <kendo-tabstrip-tab title="Claims" *ngIf="tabCode === financeManagementTabs.Pharmacy">
 
