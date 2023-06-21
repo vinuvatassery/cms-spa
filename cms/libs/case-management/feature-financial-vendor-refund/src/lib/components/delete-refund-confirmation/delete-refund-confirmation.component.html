@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar > Delete refund(s)? </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeDeleteRefundClicked()"> Delete refund(s)? </kendo-dialog-titlebar>
 <section class="k-dialog-body mb-2">
    
         <p class="text-muted mb-1">  This action cannot be undone, but you may add a refund at any time.    </p>
@@ -8,8 +8,8 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" aria-label="Cancel" look="outline"> Cancel  </button>
-        <button kendoButton class="k-error-button" aria-label="belete">Delete  </button>
+        <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="closeDeleteRefundClicked()" > Cancel  </button>
+        <button kendoButton class="k-error-button" aria-label="delete">Delete  </button>
       </div>
     </div>
   </kendo-dialog-actions>

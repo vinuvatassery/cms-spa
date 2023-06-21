@@ -1,19 +1,20 @@
 <div class="app-l-inner-rapper pt-0">
     <common-bread-crumb></common-bread-crumb>
-    <div class=" pt-0">
-
+    <div class=" pt-0"> 
         <section class="app-l-mainTittle">
-            <h1 class="maintitle_withicon text-bold">Vendor Refunds  </h1>
+            <h1 class="maintitle_withicon text-bold">Vendor Refunds </h1>
         </section>
         <section class="app-l-client-wrapper ">
-            <section class="app-l-wrapper">
-
+            <section class="app-l-wrapper"> 
                 <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
                     class="app-c-tab case-360-tab">
                     <kendo-tabstrip-tab title="Process" [selected]="true">
                         <ng-template kendoTabContent>
                             <div class="block-section ">
-                                <cms-refund-process-list></cms-refund-process-list> 
+                                <cms-refund-process-list
+                                    (isModalBatchRefundOpenClicked)="onBatchRefundClicked(batchRefundConfirmationDialog)"
+                                    (isModalDeleteRefundOpenClicked)="onDeleteRefundClicked(deleteRefundConfirmationDialog)">
+                                </cms-refund-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -21,7 +22,7 @@
                     <kendo-tabstrip-tab title="Batches">
                         <ng-template kendoTabContent>
                             <div class="block-section ">
-                                <cms-refund-batches-list></cms-refund-batches-list> 
+                                <cms-refund-batches-list></cms-refund-batches-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -33,13 +34,17 @@
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
-
-
-                </kendo-tabstrip>
-
-            </section>
-
-
+                </kendo-tabstrip> 
+            </section> 
         </section>
     </div>
 </div>
+
+<ng-template #batchRefundConfirmationDialog>
+    <cms-batch-refund-confirmation
+        (isModalBatchRefundCloseClicked)="onModalBatchRefundModalClose($event)"></cms-batch-refund-confirmation>
+</ng-template>
+<ng-template #deleteRefundConfirmationDialog>
+    <cms-delete-refund-confirmation
+        (isModalDeleteRefundCloseClicked)="onModalDeleteRefundModalClose($event)"></cms-delete-refund-confirmation>
+</ng-template>

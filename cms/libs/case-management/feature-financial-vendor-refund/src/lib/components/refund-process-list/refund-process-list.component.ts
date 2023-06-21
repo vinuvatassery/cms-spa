@@ -1,8 +1,18 @@
 /** Angular **/
-import { Component,  OnInit,  ChangeDetectionStrategy,  Input,  EventEmitter,  Output,  OnChanges,  ChangeDetectorRef,} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  TemplateRef,
+  Input,
+  EventEmitter,
+  Output,
+  OnChanges,
+ 
+} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FinancialVendorRefundFacade } from '@cms/case-management/domain'; 
 @Component({
   selector: 'cms-refund-process-list',
   templateUrl: './refund-process-list.component.html',
@@ -11,6 +21,8 @@ import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 })
 export class RefundProcessListComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  @Output() isModalBatchRefundOpenClicked = new EventEmitter();
+  @Output() isModalDeleteRefundOpenClicked = new EventEmitter();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isVendorRefundProcessGridLoaderShow = false;
   public sortValue = this.financialVendorRefundFacade.sortValueRefundProcess;
@@ -19,27 +31,33 @@ export class RefundProcessListComponent {
   public gridSkipCount = this.financialVendorRefundFacade.skipCount;
   public sort = this.financialVendorRefundFacade.sortProcessList;
   public state!: State;
-  vendorRefundProcessGridLists$ = this.financialVendorRefundFacade.vendorRefundProcessData$;
-  public saveForLaterData = [
+  vendorRefundProcessGridLists$ =
+    this.financialVendorRefundFacade.vendorRefundProcessData$;
+
+  public refundProcessMore = [
     {
-      buttonType: "btn-h-primary",
-      text: "BATCH REFUNDS",
-      icon: "check",
-      click: (): void => { 
-      },
-    },
- 
-    {
-      buttonType: "btn-h-danger",
-      text: "DELETE REFUNDS",
-      icon: "delete",
-      click: (): void => { 
+      buttonType: 'btn-h-primary',
+      text: 'BATCH REFUNDS',
+      icon: 'check',
+      click: (data: any): void => { 
+        this.isModalBatchRefundOpenClicked.emit();  
       },
     },
 
+    {
+      buttonType: 'btn-h-danger',
+      text: 'DELETE REFUNDS',
+      icon: 'delete',
+      click: (data: any): void => { 
+        this.isModalDeleteRefundOpenClicked.emit();  
+
+      },
+    },
   ];
   /** Constructor **/
-  constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade) {}
+  constructor(
+    private readonly financialVendorRefundFacade: FinancialVendorRefundFacade 
+  ) {}
 
   ngOnInit(): void {
     this.loadVendorRefundProcessListGrid();
@@ -72,5 +90,4 @@ export class RefundProcessListComponent {
     };
     this.financialVendorRefundFacade.loadVendorRefundProcessListGrid();
   }
-
 }
