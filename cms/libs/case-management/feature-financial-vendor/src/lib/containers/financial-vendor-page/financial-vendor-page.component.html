@@ -38,7 +38,13 @@
             <ng-template kendoTabContent>
               <div class="block-section ">
                 
-                <cms-financial-providers-list [financeTabTypeCode]="financeManagementTabs.MedicalProvider"></cms-financial-providers-list>
+                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.MedicalProvider"
+                [financeTabTypeCode]="financeManagementTabs.MedicalProvider"
+                [vendorTypeCode]="financeVendorTypeCodes.MedicalProviders"
+                [vendorsList$]="vendorsList$"
+                [pageSizes]="pageSizes" [sortValue]="sortValue"
+                [sortType]="sortType" [sort]="sort" 
+                (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
@@ -77,7 +83,13 @@
             <ng-template kendoTabContent>
               <div class="block-section ">
                  
-                <cms-financial-providers-list [financeTabTypeCode]="financeManagementTabs.DentalProvider"></cms-financial-providers-list>
+                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.DentalProvider"
+                [financeTabTypeCode]="financeManagementTabs.DentalProvider"
+                [vendorTypeCode]="financeVendorTypeCodes.DentalProviders"
+                [vendorsList$]="vendorsList$"
+                [pageSizes]="pageSizes" [sortValue]="sortValue"
+                [sortType]="sortType" [sort]="sort" 
+                (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
@@ -92,8 +104,23 @@
   </section>
 </div>
 </div>
-<kendo-dialog kendoRippleContainer *ngIf="isVendorDetailFormShow" (close)="clickCloseVendorDetails()"
+<kendo-dialog kendoRippleContainer *ngIf="isShowMedicalProvider" (close)="closeVendorDetailModal()"
   class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Medical Provider" kendoTooltip>
-  <cms-vendor-details></cms-vendor-details>
+  <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.MedicalProviders" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"></cms-vendor-details>
 </kendo-dialog>
+
+<kendo-dialog kendoRippleContainer *ngIf="isShowDentalProvider" (close)="closeVendorDetailModal()"
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Dental Provider" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.DentalProviders" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"></cms-vendor-details>
+</kendo-dialog>
+
+<kendo-dialog kendoRippleContainer *ngIf="isShowInsuranceProvider" (close)="closeVendorDetailModal()"
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Insurance Vendor" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.InsuranceVendors" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"></cms-vendor-details>
+</kendo-dialog>
+<kendo-dialog kendoRippleContainer *ngIf="isShowPharmacyProvider" (close)="closeVendorDetailModal()"
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Pharmacy" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.Pharmacy" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"></cms-vendor-details>
+</kendo-dialog>
+
 

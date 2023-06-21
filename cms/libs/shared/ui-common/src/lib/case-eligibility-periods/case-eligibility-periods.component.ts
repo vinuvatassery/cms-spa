@@ -11,7 +11,7 @@ export class CaseEligibilityPeriodsComponent {
   eligibilityPeriodsList: any = [];
   selectedValue: any = {};
 
-  @Input() historyClientCaseEligibilityId: string = "";
+  @Input() currentClientCaseEligibilityId: string = "";
   private caseEligibilityPeriodsData: any = [];
   @Input()
   get eligibilityPeriodsData(): any {
@@ -41,8 +41,8 @@ export class CaseEligibilityPeriodsComponent {
     this.eligibilityPeriodsData.forEach((x: any) => {
       let period = {
         id: x.clientCaseEligibilityId,
-        label: new Date(x.eligibilityStartDate).toLocaleDateString()
-          + ' - ' + new Date(x.eligibilityEndDate).toLocaleDateString()
+        label: new Date(x.eligibilityStartDate).toLocaleDateString("en-US")
+          + ' - ' + new Date(x.eligibilityEndDate).toLocaleDateString("en-US")
       };
       this.eligibilityPeriodsList.push(period);
     });
@@ -58,13 +58,13 @@ export class CaseEligibilityPeriodsComponent {
   onPeriodChange(value: any) {
     this.selectedValue = value;
     this.onEligibilityPeriodChange.emit(this.selectedValue);
-    if (!!this.historyClientCaseEligibilityId) {
+    if (!!this.currentClientCaseEligibilityId) {
       this.checkHistoryStatus();
     }
   }
 
   checkHistoryStatus() {
-    let historyData = this.eligibilityPeriodsData.filter((x: any) => x.clientCaseEligibilityId == this.historyClientCaseEligibilityId);
+    let historyData = this.eligibilityPeriodsData.filter((x: any) => x.clientCaseEligibilityId == this.currentClientCaseEligibilityId);
     let selectedData = this.eligibilityPeriodsData.filter((x: any) => x.clientCaseEligibilityId == this.selectedValue.id);
     if (historyData[0].eligibilityStartDate == selectedData[0].eligibilityStartDate
       && historyData[0].eligibilityEndDate == selectedData[0].eligibilityEndDate) {

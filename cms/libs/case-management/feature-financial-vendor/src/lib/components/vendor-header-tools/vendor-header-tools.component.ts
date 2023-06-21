@@ -7,8 +7,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VendorHeaderToolsComponent {
-  SpecialHandlingLength = 100;
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  SpecialHandlingLength = 100; 
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
 
   public sendActions = [
@@ -25,10 +25,8 @@ export class VendorHeaderToolsComponent {
       text: 'New Email',
       icon: 'mail_outline',
       isVisible: false,
-      click: (): void => {
-     
+      click: (): void => { 
       },
     },
-     
   ];
 }

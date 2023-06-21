@@ -1,9 +1,10 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, TemplateRef } from '@angular/core';
 /** Facades **/
 import { CaseFacade, StatusPeriodFacade, ClientEligibilityFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'case-management-status-period',
   templateUrl: './status-period.component.html',
@@ -34,16 +35,16 @@ export class StatusPeriodComponent implements OnInit {
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   isStatusPeriodEdit = false;
   isCopyPeriod = false;
+  private statusPeriodDialog: any;
   public actions = [
     {
       buttonType: "btn-h-primary",
       text: "Copy Eligibility Period",
       icon: "content_copy",
-      click: (dataItem: any): void => {
-        //  this.onDeactivatePhoneNumberClicked()
+      click: (dataItem: any, template: TemplateRef<unknown>): void => {
         if(dataItem.clientCaseEligibilityId){
           this.isCopyPeriod = true;
-          this.onEditEligibilityPeriodClicked(dataItem.clientCaseId,dataItem.clientCaseEligibilityId);
+          this.onEditEligibilityPeriodClicked(dataItem.clientCaseId,dataItem.clientCaseEligibilityId, template);
         }
       },
     },
@@ -51,12 +52,11 @@ export class StatusPeriodComponent implements OnInit {
       buttonType: "btn-h-primary",
       text: "Edit Eligibility Period",
       icon: "edit",
-      click: (dataItem: any): void => {
+      click: (dataItem: any, template: TemplateRef<unknown>): void => {
         if(dataItem.clientCaseEligibilityId){
           this.isStatusPeriodEdit = true;
-          this.onEditEligibilityPeriodClicked(dataItem.clientCaseId,dataItem.clientCaseEligibilityId);
+          this.onEditEligibilityPeriodClicked(dataItem.clientCaseId,dataItem.clientCaseEligibilityId, template);
         }
-        //  this.isOpenDocAttachment = true
       },
     }
   ];
@@ -65,7 +65,8 @@ export class StatusPeriodComponent implements OnInit {
     private readonly statusPeriodFacade: StatusPeriodFacade,
     private caseFacade: CaseFacade,
     private cdr: ChangeDetectorRef,
-    private clientEligibilityFacade: ClientEligibilityFacade,) { }
+    private clientEligibilityFacade: ClientEligibilityFacade,
+    private dialogService: DialogService) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -84,7 +85,7 @@ export class StatusPeriodComponent implements OnInit {
     });
   }
 
-  pageselectionchange(data: any) {
+  pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadStatusPeriodData();
@@ -114,15 +115,19 @@ export class StatusPeriodComponent implements OnInit {
     this.loadStatusPeriodEvent.next(gridDataRefinerValue);
   }
 
-  onStatusPeriodDetailClosed() {
+  onStatusPeriodDetailClosed(result: any) {
     this.isStatusPeriodDetailOpened = false;
     this.isStatusPeriodEdit = false;
     this.isCopyPeriod = false;
+    if (result) {
+      this.statusPeriodDialog.close();
+    }
     this.cdr.detectChanges();
   }
 
   onModalSaveAndClose(result:any){
     if(result){
+      this.statusPeriodDialog.close();
       this.clientEligibilityFacade.eligibilityPeriodPopupOpenSubject.next(false);
       this.isStatusPeriodDetailOpened=false;
       this.isStatusPeriodEdit = false;
@@ -131,18 +136,28 @@ export class StatusPeriodComponent implements OnInit {
     }
   }
 
-  onEditEligibilityPeriodClicked(clientCaseId: any, clientCaseEligibilityId: any) {
+  onEditEligibilityPeriodClicked(clientCaseId: any, clientCaseEligibilityId: any, template: TemplateRef<unknown>) {
     this.selectedCaseId = clientCaseId;
     this.selectedEligibilityId = clientCaseEligibilityId;
     this.clientEligibilityFacade.eligibilityPeriodPopupOpenSubject.next(true);
+    this.statusPeriodDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
   }
-  onStatusPeriodDetailClicked() {
+  onStatusPeriodDetailClicked(template: TemplateRef<unknown>): void {
+    this.statusPeriodDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
     this.isStatusPeriodEdit = false;
     this.isCopyPeriod = false;
     this.selectedCaseId = this.clientCaseId;
     this.selectedEligibilityId = this.clientCaseEligibilityId;
     this.isStatusPeriodDetailOpened = true;
   }
+
+
 }
 
 

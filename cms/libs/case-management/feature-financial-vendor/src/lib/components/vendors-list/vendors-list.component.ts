@@ -185,8 +185,8 @@ dropDowncolumns : any = [
     "vendorTypeCode": "PHARMACY",
   }
 ]
-constructor(private route: Router, private readonly  cdr :ChangeDetectorRef) {
- 
+constructor(private route: Router, 
+  private readonly  cdr :ChangeDetectorRef) {
 }
 ngOnChanges(): void {  
   this.state = {
@@ -204,7 +204,7 @@ ngOnInit(): void {
   this.bindDropdownClumns()
   if(!this.selectedColumn)
       {
-        this.selectedColumn = "";     
+        this.selectedColumn = "vendorName";     
       }
 }
 
@@ -236,11 +236,11 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
    this.gridDataHandle()
  }
 
-  onVendorClicked(vendorId : string)
+  onVendorClicked(vendorId: any)
   {
     const query = {
       queryParams: {
-        v_id: vendorId ,
+        v_id: vendorId ,      
         tab_code :  this.financeTabTypeCode    
       },
     };
@@ -256,7 +256,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
       "filters": [
           {
               "field": this.selectedColumn ?? "vendorName",
-              "operator": "contains",
+              "operator": "startswith",
               "value": data
           }
       ],

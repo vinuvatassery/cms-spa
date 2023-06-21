@@ -12,6 +12,7 @@ cms-sidenav {
   border-color: $theme-border;
   width: $app-left_menu-width;
   transition: ease-in all 0.3s;
+  z-index: 7;
 
   .drawer-inner-container {
     transition: ease-in all 0.3s;
@@ -111,8 +112,7 @@ cms-sidenav {
         font-size: $font-size;
         white-space: nowrap;
         cursor: pointer;
-        letter-spacing: .5px;
-        display: none;
+        letter-spacing: .5px; 
 
         .sidebar-menu_label-badge {
           background: $badge-alerts;
@@ -247,15 +247,125 @@ cms-sidenav {
     max-height: calc(100vh - 420px);
     overflow-y: auto;
   }
+  // new menu css
 
+  .new_sub_sidebar_menu {
+    &:hover {
+      .secondary_submenu {
+        display: block;
+      }
+    }
+
+    >.secondary_submenu {
+      display: none;
+      position: fixed;
+      left: $app-left_menu-width;
+      top: $header-height;
+      background: $white;
+      height: 100%;
+      max-height: calc(100% - $header-height);
+      overflow: auto;
+      border-left: 1px solid material-color($hive-primary-palette, 600);
+      width: 250px;
+      box-shadow:5px 0px 3px 0px rgba(61, 69, 76, 0.1);
+      padding: $size-xlg1;
+      max-width: 250px;
+      transition: .3s;
+      z-index: 0;
+
+      .menu_search_header {
+        margin-top: 1rem;
+
+        .submenu_heading {
+          font-size: 16px;
+          font-family: $font-family-bold;
+        }
+
+        .input-search {
+          position: relative;
+          top: -10px;
+        }
+      }
+
+      .submenu_list_wrapper {
+        .submenu_list_heading {
+          padding: $size-xx $size-0;
+          font-family: $font-family-bold;
+          text-transform: capitalize;
+        }
+
+        .submenu_list_container {
+                &.submenu_list_active_item {
+                  .submenu_list_click_items {
+                    background: material-color($hive-success-palette, 50);
+                    color: $app-primary;
+                    transition: ease-in all 0.3s;
+
+                  }
+           
+    
+          }
+    
+   
+          .submenu_list_click_items {
+            justify-content: space-between;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            transition: ease-in all 0.4s;
+            padding: ($size-xx + $size-s);
+            position: relative;
+            cursor: pointer;
+            color: $black-3;
+            border-radius: 6px;
+
+            .material-icons {
+              font-size: $font-size-xlg;
+              color: material-color($hive-success-palette, 900);
+              position: absolute;
+              right: 14px;
+              top: 8px;
+            }
+
+            &:hover,
+            &:active,
+            &:focus,
+            &.active-item {
+              background: material-color($hive-success-palette, 50);
+
+              color: $app-primary;
+
+              &.case-menu-disabled {
+                opacity: 1;
+              }
+            }
+
+            &.sub-menu-disabled {
+              cursor: default;
+              pointer-events: none;
+              opacity: 0.4;
+              user-select: none;
+            }
+          }
+        }
+
+      }
+    }
+
+
+
+  }
   &.menuToggled {
     overflow: visible;
-    position: relative;
-    z-index: 7;
-    width: 55px;
-
+    position: relative; 
+    width: $sidebar-width;
+    .new_sub_sidebar_menu { 
+      >.secondary_submenu { 
+        left: $sidebar-width;
+      }
+    }
     .drawer-inner-container {
-      width: 55px;
+      width: $sidebar-width;
       transition: ease-in all 0.3s;
 
       .sidebar-hamburger {
@@ -276,8 +386,8 @@ cms-sidenav {
       .sidebar-menu {
         .sidebar-menu_icon {
 
-          width: 55px;
-          min-width: 55px;
+          width: $sidebar-width;
+          min-width: $sidebar-width;
 
         }
 
@@ -351,113 +461,7 @@ cms-sidenav {
 
       }
 
-      // new menu css
-
-      .new_sub_sidebar_menu {
-        &:hover {
-          .secondary_submenu {
-            display: block;
-          }
-        }
-
-        >.secondary_submenu {
-          display: none;
-          position: fixed;
-          left: $sidebar-width;
-          top: $header-height;
-          background: $white;
-          height: 100%;
-          max-height: calc(100% - $header-height);
-          overflow: auto;
-          border-left: 1px solid material-color($hive-primary-palette, 600);
-          width: 250px;
-          box-shadow: 0px 4px 10px rgba(61, 69, 76, 0.3);
-          padding: $size-xlg1;
-          max-width: 250px;
-        transition: .3s;
-
-          .menu_search_header {
-            margin-top: 1rem;
-
-            .submenu_heading {
-              font-size: 16px;
-              font-family: $font-family-bold;
-            }
-
-            .input-search {
-              position: relative;
-              top: -10px;
-            }
-          }
-
-          .submenu_list_wrapper {
-            .submenu_list_heading {
-              padding: $size-xx $size-0;
-              font-family: $font-family-bold;
-              text-transform: capitalize;
-            }
-
-            .submenu_list_container {
-                    &.submenu_list_active_item {
-                      .submenu_list_click_items {
-                        background: material-color($hive-success-palette, 50);
-                        color: $app-primary;
-                        transition: ease-in all 0.3s;
-
-                      }
-               
-        
-              }
-        
-       
-              .submenu_list_click_items {
-                justify-content: space-between;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                transition: ease-in all 0.4s;
-                padding: ($size-xx + $size-s);
-                position: relative;
-                cursor: pointer;
-                color: $black-3;
-                border-radius: 6px;
-
-                .material-icons {
-                  font-size: $font-size-xlg;
-                  color: material-color($hive-success-palette, 900);
-                  position: absolute;
-                  right: 14px;
-                  top: 8px;
-                }
-
-                &:hover,
-                &:active,
-                &:focus,
-                &.active-item {
-                  background: material-color($hive-success-palette, 50);
-
-                  color: $app-primary;
-
-                  &.case-menu-disabled {
-                    opacity: 1;
-                  }
-                }
-
-                &.sub-menu-disabled {
-                  cursor: default;
-                  pointer-events: none;
-                  opacity: 0.4;
-                  user-select: none;
-                }
-              }
-            }
-
-          }
-        }
-
-
-
-      }
+    
 
       .sidebar-last-visited-cases-container {
         .active-menu-toggled {

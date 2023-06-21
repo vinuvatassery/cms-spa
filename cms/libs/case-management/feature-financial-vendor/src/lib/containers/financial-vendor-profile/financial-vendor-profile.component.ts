@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FinancialVendorFacade, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
-import { FinancialVendorProviderTabCode } from 'libs/case-management/domain/src/lib/enums/financial-vendor-provider-tab-code';
+
 
 @Component({
   selector: 'cms-financial-vendor-profile',
@@ -19,8 +20,9 @@ export class FinancialVendorProfileComponent implements OnInit {
   profileInfoTitle = "info";  
   addressGridView = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
-  constructor(private activeRoute: ActivatedRoute) {}
+  vendorProfile$ = this.financialVendorFacade.vendorProfile$
+  vendorProfileSpecialHandling$ = this.financialVendorFacade.vendorProfileSpecialHandling$
+  constructor(private activeRoute: ActivatedRoute, private financialVendorFacade : FinancialVendorFacade) {}
 
   ngOnInit(): void {
     this.loadQueryParams();
@@ -35,6 +37,11 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
     this.providerId = this.activeRoute.snapshot.queryParams['prv_id'];
     this.tabCode = this.activeRoute.snapshot.queryParams['tab_code'];
+
+    if(this.vendorId && this.tabCode)
+    {
+    this.loadFinancialVendorProfile(this.vendorId)
+    }
 
     switch (this.tabCode) {
       case FinancialVendorProviderTabCode.Manufacturers:
@@ -57,5 +64,14 @@ export class FinancialVendorProfileComponent implements OnInit {
   handleShowEventLogClicked() {
     this.isShownEventLog = !this.isShownEventLog;
  
+  }
+
+  loadFinancialVendorProfile(vendorId : string)
+  {       
+    this.financialVendorFacade.getVendorProfile(vendorId,this.tabCode)
+  }
+
+  loadSpecialHandling() {
+    this.financialVendorFacade.getVendorProfileSpecialHandling(this.vendorId); 
   }
 }
