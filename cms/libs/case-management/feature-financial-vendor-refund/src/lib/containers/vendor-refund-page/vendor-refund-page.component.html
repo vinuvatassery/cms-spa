@@ -1,8 +1,45 @@
-<div class="app-l-inner-rapper pt-0" kendoRippleContainer>
+<div class="app-l-inner-rapper pt-0">
     <common-bread-crumb></common-bread-crumb>
-    <section class="app-l-mainTittle">
-        <h1 class="maintitle_withicon text-bold"> 
-            vendor-refund-page works!
-        </h1>
-      </section>
+    <div class=" pt-0">
+
+        <section class="app-l-mainTittle">
+            <h1 class="maintitle_withicon text-bold">Vendor Refunds  </h1>
+        </section>
+        <section class="app-l-client-wrapper ">
+            <section class="app-l-wrapper">
+
+                <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+                    class="app-c-tab case-360-tab">
+                    <kendo-tabstrip-tab title="Process" [selected]="true">
+                        <ng-template kendoTabContent>
+                            <div class="block-section ">
+                                <cms-refund-process-list></cms-refund-process-list> 
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+
+                    <kendo-tabstrip-tab title="Batches">
+                        <ng-template kendoTabContent>
+                            <div class="block-section ">
+                                <cms-refund-batch-log-list></cms-refund-batch-log-list> 
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+
+                    <kendo-tabstrip-tab title="All Payments">
+                        <ng-template kendoTabContent>
+                            <div class="block-section ">
+                                <cms-refund-all-payment-list></cms-refund-all-payment-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+
+
+                </kendo-tabstrip>
+
+            </section>
+
+
+        </section>
+    </div>
 </div>
