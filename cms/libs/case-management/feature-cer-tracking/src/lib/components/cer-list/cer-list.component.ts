@@ -29,11 +29,13 @@ export class CerListComponent implements OnInit, OnChanges {
   @Input() cerTrackingData$: any;
   @Input() cerTrackingDates$: any
   @Input() cerTrackingCount$: any;
-  @Input() sendResponse$!: Observable<any>;;
+  @Input() sendResponse$!: Observable<any>;
+  @Input() gridState$! : any
   @Output() loadCerTrackingListEvent = new EventEmitter<any>();
   @Output() loadCerTrackingDateListEvent = new EventEmitter<any>();
   @Output() sendCersEvent = new EventEmitter<any>();
   @Output() goToCerEvent = new EventEmitter<any>();
+  @Output() saveCersStateEvent = new EventEmitter<any>();
 
   /** Public properties **/
   isOpenSendCER$ =  new BehaviorSubject<boolean>(false);;
@@ -134,16 +136,24 @@ export class CerListComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.dateDropdownDisabled = false
     this.loader = true;    
-    this.loadcerTrackingDates();
-
   }
   ngOnChanges(): void {
+    
+  
+   if(this.gridState$)
+   {    
+    this.state = this.gridState$
+    this.loadcerTrackingDates();
+   }
+   else
+   {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-  
+    this.loadcerTrackingDates();
+   }
   }
   /** Private methods **/
   private loadcerTrackingDates() {
@@ -169,7 +179,7 @@ export class CerListComponent implements OnInit, OnChanges {
   
   setTitle(data : any)
   {
-    this.statusTitle = data?.isHistorical === StatusFlag.Yes ?  'Status @ End of EP' : 'Status'
+    this.statusTitle = data?.isHistorical === StatusFlag.Yes ?  'Status @ End of EP' : 'Current Status'
     this.titleSubject.next(this.statusTitle)
   }
   public dataStateChange(stateData: any): void {      
@@ -238,6 +248,7 @@ export class CerListComponent implements OnInit, OnChanges {
     if(this.selectedDate)
     {
     this.loadCerTrackingListEvent.next(gridDataRefinerValue);
+    this.saveCersStateEvent.emit(this.state)
     }
     this.gridDataHandle()
   }
@@ -348,11 +359,16 @@ export class CerListComponent implements OnInit, OnChanges {
   public columnChange(e: ColumnVisibilityChangeEvent) {    
     const columnsRemoved = e?.columns.filter(x=> x.hidden).length
     const columnsAdded = e?.columns.filter(x=> x.hidden === false).length
-    if(columnsAdded > 0 || columnsRemoved > 0)
+    if(columnsAdded > 0)
     {
-      this.addRemoveColumns = columnsAdded + " columns added and "+columnsRemoved+"  columns removed"
+      this.addRemoveColumns = "Columns Added"
     }
-    else
+
+    if(columnsRemoved > 0)
+    {
+      this.addRemoveColumns += " Columns Removed"
+    }
+    if(columnsAdded == 0 && columnsRemoved == 0)
     {
       this.addRemoveColumns = "Default Columns"
     }

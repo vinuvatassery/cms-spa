@@ -44,5 +44,7 @@ export enum LovType {
     PremiumPaymentReversal = "PREMIUM_PAYMENT_REVERSAL",
     AttachmentsTypes = 'DOCUMENT_TYPE',
     DocumentTypeCode = 'DOCUMENT_TYPE',
-    DocumentSubTypeCode = 'DOCUMENT_SUB_TYPE'
+    DocumentSubTypeCode = 'DOCUMENT_SUB_TYPE',
+    PaymentMethodCode = 'PAYMENT_METHOD',
+    PaymentRunDate = 'PAYMENT_RUN_DATE'
   }

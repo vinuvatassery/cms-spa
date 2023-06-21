@@ -42,6 +42,7 @@ import {PaymentAddressDetailsComponent} from './components/payment-address-detai
 import {PaymentAddressDeactivateComponent} from './components/payment-address-deactivate/payment-address-deactivate.component';
 import {PaymentAddressDeleteComponent} from './components/payment-address-delete/payment-address-delete.component';
 import { ProductivityToolsFeatureEventLogModule } from '@cms/productivity-tools/feature-event-log'; 
+import { VendorSpecialHandlingComponent } from './components/vendor-special-handling/vendor-special-handling.component';
 import { FinancialPaymentBatchSubListComponent } from './components/financial-payment-sub-list/financial-payment-sub-list.component';
 import { FinancialInsurancePlanListComponent } from './components/financial-insurance-plan-list/financial-insurance-plan-list.component';
 @NgModule({
@@ -91,6 +92,7 @@ import { FinancialInsurancePlanListComponent } from './components/financial-insu
     PaymentAddressDetailsComponent,
     PaymentAddressDeactivateComponent,
     PaymentAddressDeleteComponent,
+    VendorSpecialHandlingComponent,
     FinancialPaymentBatchSubListComponent,
     FinancialInsurancePlanListComponent
   ],
@@ -131,6 +133,7 @@ import { FinancialInsurancePlanListComponent } from './components/financial-insu
     PaymentAddressDetailsComponent,
     PaymentAddressDeactivateComponent,
     PaymentAddressDeleteComponent,
+    VendorSpecialHandlingComponent,
     FinancialPaymentBatchSubListComponent,
     FinancialInsurancePlanListComponent
   ],

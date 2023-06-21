@@ -98,6 +98,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   private addDiscardChangesSubscription(): void {
     this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
       if (response) {
+        this.cerNote = ""
         this.loadSessionData();  
       }
     });

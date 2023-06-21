@@ -44,7 +44,7 @@
         </button>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="clientId" title="Mem. ID" [width]="100" filter="numeric">
+    <kendo-grid-column field="clientId" title="Client ID" [width]="100" filter="numeric">
     </kendo-grid-column>
     <kendo-grid-column field="dob" title="Date of Birth" [width]="130" filter="date">  
       <ng-template kendoGridFilterCellTemplate let-filter let-column="column">
@@ -93,7 +93,7 @@
         {{dataItem.restrictedSentDate | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="spokenLanguage" title="Spoken Language" [hidden]="true" [width]="130"></kendo-grid-column>
+    <kendo-grid-column field="spokenLanguage" title="Spoken Language"  [width]="130"></kendo-grid-column>
     <kendo-grid-column field="writtenLanguage" title="Written Language" [hidden]="true" [width]="130"></kendo-grid-column>
     <kendo-grid-column field="englishProficiency" title="English Proficiency" [hidden]="true" [width]="130"></kendo-grid-column>
     <kendo-grid-column field="assignedCm" title="Case Manager" [width]="130">
@@ -117,11 +117,11 @@
   </kendo-grid-column>
     <kendo-grid-column field="caseManagerDomain" title="Case Manager Domain" [width]="130"
    ></kendo-grid-column>
-    <kendo-grid-column field="pronouns" [sortable]="false" title="Pronouns" [width]="130"
+    <kendo-grid-column field="pronouns"  title="Pronouns" [width]="130"
       [hidden]="true"></kendo-grid-column>
-      <kendo-grid-column field="sexes" [sortable]="false"  [hidden]="true" title="Sexes" [width]="130"
+      <kendo-grid-column field="sexes"   [hidden]="true" title="Sexes" [width]="130"
       [hidden]="true"></kendo-grid-column>
-    <kendo-grid-column field="genders" [sortable]="false" title="Gender" [width]="130"
+    <kendo-grid-column field="genders"  title="Gender" [width]="130"
       [hidden]="true"></kendo-grid-column>
     <kendo-grid-column field="phone"  title="Phone" [width]="130" [hidden]="true" filter="numeric"></kendo-grid-column>
     <kendo-grid-column field="email"  title="Email" [width]="130" [hidden]="true"></kendo-grid-column>
