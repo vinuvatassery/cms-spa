@@ -28,6 +28,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
   paymentMethodVendorlov$ = this.lovFacade.paymentMethodVendorlov$;
   paymentRunDatelov$ = this.lovFacade.paymentRunDatelov$;
   financialVendorProviderTabCode: any = FinancialVendorProviderTabCode;
+  vendorAddressId: string = '';
   /** Constructor**/
   constructor(
     private readonly billingAddressFacade: BillingAddressFacade,
@@ -46,56 +47,29 @@ export class PaymentAddressDetailsComponent implements OnInit {
     this.loadVenderPaymentMethos();
     this.lovFacade.getVendorPaymentRunDatesLovs();
     this.buildForm();
-
     if (this.isEdit) {
-      this.paymentAddressForm.addControl('vendorAddressId', new FormControl(this.billingAddress.vendorAddressId, [Validators.required]))
-      this.paymentAddressForm.controls['mailCode'].setValue(this.billingAddress.mailCode);
-      this.paymentAddressForm.controls['nameOnCheck'].setValue(this.billingAddress.nameOnCheck);
-      this.paymentAddressForm.controls['nameOnEnvelope'].setValue(this.billingAddress.nameOnEnvelope);
-      this.paymentAddressForm.controls['address1'].setValue(this.billingAddress.address1);
-      this.paymentAddressForm.controls['address2'].setValue(this.billingAddress.address2);
-      this.paymentAddressForm.controls['cityCode'].setValue(this.billingAddress.cityCode);
-      this.paymentAddressForm.controls['stateCode'].setValue(this.billingAddress.stateCode);
-      this.paymentAddressForm.controls['zip'].setValue(this.billingAddress.zip);
-      this.paymentAddressForm.controls['paymentMethodCode'].setValue(this.billingAddress.paymentMethodCode);
-      this.paymentAddressForm.controls['specialHandlingDesc'].setValue(this.billingAddress.specialHandlingDesc);
-      if (this.tabCode === FinancialVendorProviderTabCode.InsuranceVendors) {
-        this.paymentAddressForm.controls['acceptsReportsFlag'].setValue(this.billingAddress.acceptsReportsFlag);
-        this.paymentAddressForm.controls['acceptsCombinedPaymentsFlag'].setValue(this.billingAddress.acceptsCombinedPaymentsFlag);
-      }
-      this.getContacts(this.billingAddress.vendorAddressId);
+      this.vendorAddressId = this.billingAddress.vendorAddressId;
+      this.editBindData();
     }
-
   }
 
-  get AddContactForm(): FormArray {
-    return this.paymentAddressForm.get("newAddContactForm") as FormArray;
-  }
-  getContacts(vendorAddressId: any) {
-    this.billingAddressFacade.showLoader();
-    this.billingAddressFacade.getPaymentsAddressContacts(vendorAddressId).subscribe({
-      next: (resp) => {
-        resp.forEach((item:any) => {
-          let addContactForm = this.formBuilder.group({
-            contactName: new FormControl(item.contactName, Validators.required),
-            description: new FormControl(item.contactDesc),
-            phoneNumber: new FormControl(item.vendorContactPhone[0]?.phoneNbr),
-            fax: new FormControl(item.vendorContactPhone[0]?.faxNbr),
-            email: new FormControl(item.vendorContactEmail[0]?.emailAddress)
-          });
-
-          this.AddContactForm.push(addContactForm);
-          this.cdr.detectChanges();
-        });
-
-        this.billingAddressFacade.hideLoader();
-        
-      },
-      error: (err) => {
-        this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.billingAddressFacade.hideLoader();
-      },
-    });
+  editBindData() {
+    this.paymentAddressForm.addControl('vendorAddressId', new FormControl(this.vendorAddressId, [Validators.required]))
+    this.paymentAddressForm.controls['mailCode'].setValue(this.billingAddress.mailCode);
+    this.paymentAddressForm.controls['nameOnCheck'].setValue(this.billingAddress.nameOnCheck);
+    this.paymentAddressForm.controls['nameOnEnvelope'].setValue(this.billingAddress.nameOnEnvelope);
+    this.paymentAddressForm.controls['address1'].setValue(this.billingAddress.address1);
+    this.paymentAddressForm.controls['address2'].setValue(this.billingAddress.address2);
+    this.paymentAddressForm.controls['cityCode'].setValue(this.billingAddress.cityCode);
+    this.paymentAddressForm.controls['stateCode'].setValue(this.billingAddress.stateCode);
+    this.paymentAddressForm.controls['zip'].setValue(this.billingAddress.zip);
+    this.paymentAddressForm.controls['paymentMethodCode'].setValue(this.billingAddress.paymentMethodCode);
+    this.paymentAddressForm.controls['specialHandlingDesc'].setValue(this.billingAddress.specialHandlingDesc);
+    if (this.tabCode === FinancialVendorProviderTabCode.InsuranceVendors) {
+      this.paymentAddressForm.controls['acceptsReportsFlag'].setValue(this.billingAddress.acceptsReportsFlag);
+      this.paymentAddressForm.controls['acceptsCombinedPaymentsFlag'].setValue(this.billingAddress.acceptsCombinedPaymentsFlag);
+    }
+    this.cdr.detectChanges();
   }
 
   private buildForm() {
