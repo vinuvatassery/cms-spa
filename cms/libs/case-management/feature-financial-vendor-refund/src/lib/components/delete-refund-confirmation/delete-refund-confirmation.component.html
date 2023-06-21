@@ -1,1 +1,15 @@
-<p>delete-refund-confirmation works!</p>
+<kendo-dialog-titlebar > Delete refund(s)? </kendo-dialog-titlebar>
+<section class="k-dialog-body mb-2">
+   
+        <p class="text-muted mb-1">  This action cannot be undone, but you may add a refund at any time.    </p>
+        <p class="text-muted mb-2">   Refunds to be deleted: 1   </p>
+     
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" aria-label="Cancel" look="outline"> Cancel  </button>
+        <button kendoButton class="k-error-button" aria-label="belete">Delete  </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>

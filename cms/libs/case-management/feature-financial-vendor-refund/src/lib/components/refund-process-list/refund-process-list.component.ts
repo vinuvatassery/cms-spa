@@ -20,7 +20,24 @@ export class RefundProcessListComponent {
   public sort = this.financialVendorRefundFacade.sortProcessList;
   public state!: State;
   vendorRefundProcessGridLists$ = this.financialVendorRefundFacade.vendorRefundProcessData$;
-  
+  public saveForLaterData = [
+    {
+      buttonType: "btn-h-primary",
+      text: "BATCH REFUNDS",
+      icon: "check",
+      click: (): void => { 
+      },
+    },
+ 
+    {
+      buttonType: "btn-h-danger",
+      text: "DELETE REFUNDS",
+      icon: "delete",
+      click: (): void => { 
+      },
+    },
+
+  ];
   /** Constructor **/
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade) {}
 

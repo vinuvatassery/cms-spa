@@ -916,3 +916,26 @@ color: $app-primary-font-color;
     margin: 0;
   }
 }
+
+.bottom-fixed-wrapper{
+  position: fixed;
+  padding:8px 16px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: 0px -3px 6px #0000003D;
+  bottom: 0;
+  right: 0;
+  width: auto;
+  left: 0;
+  .k-button-solid-primary{
+    box-shadow: none;
+  }
+  > .k-button{
+    padding: 8px 16px;
+  }
+  &.flex-gap{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
