@@ -303,7 +303,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.hasNoIncome) {
       this.noIncomeDetailsForm = new FormGroup({
         noIncomeClientSignedDate: new FormControl('', []),
-        noIncomeSignatureNotedDate: new FormControl({value: this.todaysDate, disabled: true}, []),
+        noIncomeSignatureNotedDate: new FormControl({value: null, disabled: true}, []),
         noIncomeNote: new FormControl('', []),
       });
       this.isNodateSignatureNoted = true;
@@ -465,8 +465,11 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.noIncomeDetailsForm.controls['noIncomeNote'].updateValueAndValidity();
     }
   }
-  dateChange()
+  dateChange(date:any)
   {
-    this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValue(this.noIncomeDetailsForm.get("noIncomeClientSignedDate")?.value);
+    if(date.value)
+    {
+      this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValue(this.todaysDate);
+    }
   }
 }
