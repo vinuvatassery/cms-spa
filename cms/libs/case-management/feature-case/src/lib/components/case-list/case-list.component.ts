@@ -366,16 +366,16 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       if(e.columns[i].hidden == false)
         break;
       else{
-        let _field =  (e.columns[i] as ColumnComponent)?.field;
+        let field =  (e.columns[i] as ColumnComponent)?.field;
         let mainFilters = this.state.filter.filters;
         let flag = false;
         for (let k=0; k<mainFilters.length; k++){
           let filterList = mainFilters[k].filters;
           for (let j=0; j< filterList.length; j++){
-            if(filterList[j].field == _field){
+            if(filterList[j].field == field){
               flag = true;
               this.state.filter.filters[k].filters = this.state.filter.filters[k].filters.filter((x: any) => {
-                return x.field !== _field;
+                return x.field !== field;
               });
               this.selectedColumn = "";
               this.columnName = "";
