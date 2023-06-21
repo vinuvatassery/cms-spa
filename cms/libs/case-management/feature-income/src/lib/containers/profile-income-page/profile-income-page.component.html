@@ -12,7 +12,7 @@
                 <span class="text-bold" for="incomeEP">EP:&nbsp;</span>
                 <div class="fmly-epdorpdown">
                     <case-management-case-eligibility-periods [eligibilityPeriodsData]="eligibilityPeriodData$ | async"
-                        [caseEligibilityId]="historyClientCaseEligibilityId" [historyClientCaseEligibilityId]="historyClientCaseEligibilityId"
+                        [caseEligibilityId]="currentClientCaseEligibilityId" [currentClientCaseEligibilityId]="currentClientCaseEligibilityId"
                         (onEligibilityPeriodChange)="onPeriodSelectionChange($event)" (updateHistoryStatus)="updateHistoryStatus($event)">
                     </case-management-case-eligibility-periods>
                 </div>

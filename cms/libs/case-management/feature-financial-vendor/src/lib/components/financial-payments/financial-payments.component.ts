@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'; 
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { PaymentsFacade } from '@cms/case-management/domain';
-import { State } from '@progress/kendo-data-query';
+import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'cms-financial-payments',
@@ -9,32 +9,34 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPaymentComponent {
+  /** Input Properties **/
+  @Input() vendorId!: string;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  isPaymentsGridLoaderShow = false;
   public sortValue = this.paymentsFacade.sortValue;
   public sortType = this.paymentsFacade.sortType;
   public pageSizes = this.paymentsFacade.gridPageSizes;
   public gridSkipCount = this.paymentsFacade.skipCount;
-  public sort = this.paymentsFacade.sort;
+  public sort: SortDescriptor[] = [{ field: 'BatchName', dir: 'asc'}];
   public state!: State;
-  paymentsGridView$ = this.paymentsFacade.paymentsData$;
- 
+  paymentBatchesGridView$ = this.paymentsFacade.paymentBatches$;
+  paymentBatchLoader$ = this.paymentsFacade.paymentBatchLoader$;
+
   ClientGridLists = [
     {
       ClientName: 'FName LName `',
-      PrimaryInsuranceCard:'FName LName', 
+      PrimaryInsuranceCard: 'FName LName',
       PremiumAmount: '500.00',
       MemberID: 'XXXXXX',
       PolicyID: 'XXXXXX',
       GroupID: 'XXXXXX',
-      PaymentID: 'XXXXXX', 
+      PaymentID: 'XXXXXX',
     },
   ];
-     
-   /** Constructor **/
-   constructor(private readonly paymentsFacade: PaymentsFacade) {}
-   
+
+  /** Constructor **/
+  constructor(private readonly paymentsFacade: PaymentsFacade) { }
+
   ngOnInit(): void {
     this.loadPaymentsListGrid();
   }
@@ -50,6 +52,7 @@ export class FinancialPaymentComponent {
   pageSelectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
+    this.loadPaymentsListGrid();
   }
 
   public dataStateChange(stateData: any): void {
@@ -57,14 +60,17 @@ export class FinancialPaymentComponent {
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
+    this.loadPaymentsListGrid();
   }
+
   loadPaymentsListGrid() {
-    this.state = {
-      skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
-    this.paymentsFacade.loadPaymentsListGrid();
+    // this.state = {
+    //   skip: this.gridSkipCount,
+    //   take: this.pageSizes[0]?.value,
+    //   sort: this.sort,
+    // };
+
+    this.paymentsFacade.loadPaymentsListGrid(this.vendorId, this.state);
   }
 
 }

@@ -70,6 +70,13 @@ export class DependentDataService {
       , null);
   }
 
+  updateEligibilityStatusDetails(eligibilityId: string, request: any) {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
+      `/eligibility-periods/${eligibilityId}/dependent-status/details`
+      , request);
+  }
+
 
   ///4add new dependent
   addNewDependent(eligibilityId: string, dependent: Dependent) {

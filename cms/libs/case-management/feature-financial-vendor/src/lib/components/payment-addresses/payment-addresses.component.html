@@ -16,28 +16,28 @@
             [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [navigable]="true" [data]="paymentsAddressGridView$ | async"   (detailCollapse)="onDetailCollapse($event)"
             (detailExpand)="onDetailExpand($event)" >
 
-                <kendo-grid-column field="MailCode" title="Mail Code" [width]="150">
+                <kendo-grid-column field="mailCode" title="Mail Code" [width]="150">
                     <ng-template kendoGridCellTemplate let-dataItem>
                         <button aria-label="Mail Code" kendoButton look="flat" class="card-link-button"
                           >
-                          {{ dataItem.MailCode }}
+                          {{ dataItem.mailCode }}
                         </button>
                       </ng-template>
-                     </kendo-grid-column> 
-                <kendo-grid-column field="NameCheck" title="Name on Check" [width]="130"> </kendo-grid-column>
-                <kendo-grid-column field="NameEnvelope" title="Name on Envelope" [width]="150"> </kendo-grid-column>
-                <kendo-grid-column field="PaymentMethod" title="Payment Method" [width]="150"> </kendo-grid-column>
-                <kendo-grid-column field="PaymentRunDate" title="Payment Run Date" [width]="150"> </kendo-grid-column>
-                <kendo-grid-column field="AcceptCombinedPayments" title="Accept Combined Payments?" [width]="180"> </kendo-grid-column>
-                <kendo-grid-column field="AcceptsReports" title="Accepts Reports?" [width]="150"> </kendo-grid-column>
-                <kendo-grid-column field="Address1" title="Address 1" [width]="180">   </kendo-grid-column>
-                <kendo-grid-column field="Address2" title="Address 2" [width]="120">   </kendo-grid-column>
-                <kendo-grid-column field="City" title="City" [width]="100">   </kendo-grid-column>
-                <kendo-grid-column field="State" title="State" [width]="100">   </kendo-grid-column>
-                <kendo-grid-column field="Zip" title="Zip" [width]="100">   </kendo-grid-column>
-                <kendo-grid-column field="SpecialHandling" title="Special Handling" [width]="100">   </kendo-grid-column>
-                <kendo-grid-column field="EffectiveDates" title="Effective Dates" [width]="100">   </kendo-grid-column>
-                <kendo-grid-column field="by" title="By" [width]="70">
+                     </kendo-grid-column>
+                <kendo-grid-column field="nameOnCheck" title="Name on Check" [width]="130"> </kendo-grid-column>
+                <kendo-grid-column field="nameOnEnvelope" title="Name on Envelope" [width]="150"> </kendo-grid-column>
+                <kendo-grid-column field="paymentMethod" title="Payment Method" [width]="150"> </kendo-grid-column>
+                <kendo-grid-column field="paymentRunDateMonthly" title="Payment Run Date" [width]="150"> </kendo-grid-column>
+                <kendo-grid-column field="acceptsCombinedPaymentsFlag" title="Accept Combined Payments?" [width]="180"> </kendo-grid-column>
+                <kendo-grid-column field="acceptsReportsFlag" title="Accepts Reports?" [width]="150"> </kendo-grid-column>
+                <kendo-grid-column field="address1" title="Address 1" [width]="180">   </kendo-grid-column>
+                <kendo-grid-column field="address2" title="Address 2" [width]="120">   </kendo-grid-column>
+                <kendo-grid-column field="cityCode" title="City" [width]="100">   </kendo-grid-column>
+                <kendo-grid-column field="state" title="State" [width]="100">   </kendo-grid-column>
+                <kendo-grid-column field="zip" title="Zip" [width]="100">   </kendo-grid-column>
+                <kendo-grid-column field="specialHandlingDesc" title="Special Handling" [width]="100">   </kendo-grid-column>
+                <kendo-grid-column field="effectiveDates" title="Effective Dates" [width]="100">   </kendo-grid-column>
+                <kendo-grid-column field="creatorId" title="By" [width]="70">
                     <ng-template kendoGridCellTemplate let-dataItem>
                       <button
                         kendoButton
@@ -48,7 +48,7 @@
                         showOn="hover"
                         aria-label="profile avatar"
                       >
-                      <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>  
+                      <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
                       </button>
                       <kendo-popover
                         #onUserProfileDetailsHovered
@@ -73,7 +73,9 @@
                                 <ng-container>
                                     <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                                         [class]="buttondataItem.buttonType" aria-hidden="false"
-                                        (click)="buttondataItem.click(dataItem)">
+
+                                        (click)="handleOptionClick(dataItem,buttondataItem.type)"
+                                        >
                                         <span class="material-icons"
                                             [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                                         <label> {{ buttondataItem.text }} </label>
@@ -88,9 +90,9 @@
                     <cms-contact-address-list [VendorAddressId]="VendorAddressId"></cms-contact-address-list>
                   
                     </div>
-                  
+
                         <!-- grid Pagination template -->
-           <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+          <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
            let-currentPage="currentPage">
            <div class="grid-custom-paginationtemplates d-flex">
              <div class="d-flex align-items-center">
@@ -107,7 +109,8 @@
                <kendo-pager-next-buttons></kendo-pager-next-buttons>
              </div>
            </div>
-         </ng-template>
+          </ng-template>
+
                 <!-- grid Loader Template -->
                 <ng-template kendoGridLoadingTemplate>
                     <common-grid-loader-component></common-grid-loader-component>
@@ -147,14 +150,13 @@ class="app-c-modal app-c-modal-md app-c-modal-np">
 <cms-payment-address-details> </cms-payment-address-details>
 </kendo-dialog>
 
-<kendo-dialog *ngIf="isPaymentAddressDeactivateShow" (close)="clickCloseDeactivatePaymentAddress()"
-class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog *ngIf="isPaymentAddressDeactivateShow" (close)="clickCloseDeactivatePaymentAddress(false)" class="app-c-modal app-c-modal-sm app-c-modal-np">
 <kendo-dialog-titlebar> Deactivate Payment Address?</kendo-dialog-titlebar>
-<cms-payment-address-deactivate> </cms-payment-address-deactivate>
+<cms-payment-address-deactivate [addressId]="addressId" (closeDeactivatePaymentAddress)="clickCloseDeactivatePaymentAddress($event)"></cms-payment-address-deactivate>
 </kendo-dialog>
 
-<kendo-dialog *ngIf="isPaymentAddressDeleteShow" (close)="clickCloseDeletePaymentAddress()"
+<kendo-dialog *ngIf="isPaymentAddressDeleteShow" (close)="clickCloseDeletePaymentAddress(false)"
 class="app-c-modal app-c-modal-sm app-c-modal-np">
 <kendo-dialog-titlebar> Delete Payment Address?</kendo-dialog-titlebar>
-<cms-payment-address-delete> </cms-payment-address-delete>
+<cms-payment-address-delete [addressId]="addressId" (closeDeletePaymentAddress)="clickCloseDeletePaymentAddress($event)"> </cms-payment-address-delete>
 </kendo-dialog>
