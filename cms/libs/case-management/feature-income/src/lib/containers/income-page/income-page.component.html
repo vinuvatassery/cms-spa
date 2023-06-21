@@ -27,7 +27,7 @@
                   </div>
                 <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Date Client Signed">
-                    <kendo-datepicker autofocusfield [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                       formatPlaceholder="formatPattern" aria-label="Date Client Signed" name="Date Client Signed"
                       formControlName="noIncomeClientSignedDate" #noIncomeClientSignedDate  placeholder=""
                       (blur)="dateChange(noIncomeClientSignedDate)">
