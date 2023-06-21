@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
-import { ContactsDataService } from '../../infrastructure/financial-management/contacts.data.service';
+import { VendorContactsDataService } from '../../infrastructure/financial-management/vendor-contacts.data.service';
 /** Providers **/
 import {
   ConfigurationProvider,
@@ -18,7 +18,7 @@ import {
 } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
-export class ContactsFacade {
+export class VendorContactsFacade {
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -72,7 +72,7 @@ export class ContactsFacade {
 
   /** Constructor**/
   constructor(
-    public contactsDataService: ContactsDataService,
+    public vendorcontactsDataService: VendorContactsDataService,
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
@@ -81,7 +81,7 @@ export class ContactsFacade {
 
   /** Public methods **/
   loadContactsListGrid() {
-    this.contactsDataService.loadContactsListService().subscribe({
+    this.vendorcontactsDataService.loadContactsListService().subscribe({
       next: (dataResponse) => {
         this.contactsDataSubject.next(dataResponse);
       },
@@ -93,7 +93,7 @@ export class ContactsFacade {
   loadcontacts(vendorAddressId:string)
   { 
     this.showLoader();
-    this.contactsDataService.loadcontacts(vendorAddressId).subscribe({
+    this.vendorcontactsDataService.loadcontacts(vendorAddressId).subscribe({
       next:(res:any)=>{
       this.contactsSubject.next(res);
       this.hideLoader();
@@ -107,7 +107,7 @@ export class ContactsFacade {
   saveContactAddress(contactAddress: any) {  
 
     this.showLoader();
-    return this.contactsDataService.saveContactAddress(contactAddress).pipe(
+    return this.vendorcontactsDataService.saveContactAddress(contactAddress).pipe(
       catchError((err: any) => {
         this.loaderService.hide();
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
@@ -122,7 +122,7 @@ export class ContactsFacade {
   deactiveContactAddress(vendorContactId: string){ 
     return new Promise((resolve,reject) =>{
       this.loaderService.show();
-      this.contactsDataService.deactiveContactAddress(vendorContactId).subscribe({
+      this.vendorcontactsDataService.deactiveContactAddress(vendorContactId).subscribe({
        next: (response:any) => {
          if(response){
           this.deActiveContactAddressSubject.next(true);
@@ -146,7 +146,7 @@ export class ContactsFacade {
   removeContactAddress( vendorContactId: string) {
     return new Promise((resolve,reject) =>{
       this.loaderService.show();
-      return this.contactsDataService.removeContactAddress(vendorContactId).subscribe({
+      return this.vendorcontactsDataService.removeContactAddress(vendorContactId).subscribe({
         next: (response) => {
           if (response === true) {
             this.removeContactAddressSubject.next(true);
@@ -169,7 +169,7 @@ export class ContactsFacade {
   }
   updateContactAddress(contact:any){  
     this.loaderService.show();
-    return this.contactsDataService.updateContactAddress(contact).pipe(
+    return this.vendorcontactsDataService.updateContactAddress(contact).pipe(
       catchError((err: any) => {
         this.loaderService.hide();
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
@@ -183,11 +183,11 @@ export class ContactsFacade {
    }
 
    getContactAddress(vendorContactId: string){
-    return this.contactsDataService.getContactAddress(vendorContactId);
+    return this.vendorcontactsDataService.getContactAddress(vendorContactId);
    }
    loadMailCodes(vendorId: number): void {
     this.showLoader();
-    this.contactsDataService.loadVendorMailCodes(vendorId).subscribe({
+    this.vendorcontactsDataService.loadVendorMailCodes(vendorId).subscribe({
       next: (reponse: any) => {
         if (reponse) {
           this.hideLoader();

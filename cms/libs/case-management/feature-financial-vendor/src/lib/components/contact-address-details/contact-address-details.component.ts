@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
-import { VendorContacts, ContactFacade, Contacts, EmailTypeCode, PhoneTypeCode, PaymentsFacade, ContactsFacade } from '@cms/case-management/domain';
+import { VendorContacts, VendorContactsFacade, Contacts, EmailAddressTypeCode, PhoneTypeCode, PaymentsFacade, ContactFacade } from '@cms/case-management/domain';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-contact-address-details',
@@ -32,7 +32,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   constructor(
     private formBuilder: FormBuilder,
     private contactFacade: ContactFacade,
-    private contactsFacade: ContactsFacade,
+    private vendocontactsFacade: VendorContactsFacade,
     private readonly paymentsFacade: PaymentsFacade,
     private readonly loaderService: LoaderService,
     private cd: ChangeDetectorRef
@@ -48,7 +48,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
 
-    this.contactsFacade.mailCodes$.subscribe((mailCode: any) => {
+    this.vendocontactsFacade.mailCodes$.subscribe((mailCode: any) => {
       this.mailCodes = mailCode;
       this.cd.detectChanges();
     })
@@ -58,7 +58,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     if (this.VendorContactId != undefined) {
       this.contactAddress = this.VendorContactId;
     } else {
-      this.contactsFacade.loadMailCodes(this.vendorId);
+      this.vendocontactsFacade.loadMailCodes(this.vendorId);
     }
     this.onToggleAddNewContactClick();
   }
@@ -72,14 +72,14 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
     if (this.contactForm.valid) {
       this.loaderService.show();
-      this.contactsFacade.saveContactAddress(this.contactForm.value).subscribe({
+      this.vendocontactsFacade.saveContactAddress(this.contactForm.value).subscribe({
         next: (response: any) => {
           if (response) {
             this.contactFacade.showHideSnackBar(
               SnackBarNotificationType.SUCCESS,
               'Contact Address added successfully'
             );
-            this.contactsFacade.loadcontacts(this.contactAddress.vendorAddressId??"");
+            this.vendocontactsFacade.loadcontacts(this.contactAddress.vendorAddressId??"");
             this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);
           }
@@ -99,14 +99,14 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     this.isSubmitted = true;
     if (this.contactForm.controls['vendorContacts'].valid) {
       this.loaderService.show();
-      this.contactsFacade.updateContactAddress(this.contactForm.value.vendorContacts[0]).subscribe({
+      this.vendocontactsFacade.updateContactAddress(this.contactForm.value.vendorContacts[0]).subscribe({
         next: (response: any) => {
           if (response) {
             this.contactFacade.showHideSnackBar(
               SnackBarNotificationType.SUCCESS,
               'Contact Address Updated successfully'
             );
-            this.contactsFacade.loadcontacts(this.contactAddress.vendorAddressId ?? "");
+            this.vendocontactsFacade.loadcontacts(this.contactAddress.vendorAddressId ?? "");
             this.loaderService.hide();
             this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);
@@ -142,7 +142,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       phoneNbr: new FormControl(this.contactAddress.phoneNbr),
       faxNbr: new FormControl(this.contactAddress.faxNbr),
       emailAddress: new FormControl(this.contactAddress.emailAddress),
-      emailAddressTypeCode: new FormControl(EmailTypeCode.Email),
+      emailAddressTypeCode: new FormControl(EmailAddressTypeCode.Work),
       phoneTypeCode: new FormControl(PhoneTypeCode.Phone),
       vendorContactId: new FormControl(this.contactAddress.vendorContactId),
       vendorAddressId: new FormControl(this.contactAddress.vendorAddressId),

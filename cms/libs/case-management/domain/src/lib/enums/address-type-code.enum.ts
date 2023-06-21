@@ -3,11 +3,14 @@ export enum AddressTypeCode{
     Home='H'
     
 }
-export enum EmailTypeCode{
-    Email ='EMAIL'
-    
+export enum EmailAddressTypeCode{
+    Work ='Work',
+    Personal='Personal'      
 }
+
 export enum PhoneTypeCode{
-    Phone ='P'
-    
+    Phone ='P',
+    Home='H',
+    Work='W',
+    Office='O'    
 }

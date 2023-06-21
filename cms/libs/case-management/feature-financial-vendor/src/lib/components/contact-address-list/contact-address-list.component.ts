@@ -5,7 +5,7 @@ import {
   SimpleChanges, OnChanges,  ViewEncapsulation,
   ChangeDetectorRef
 } from '@angular/core';
-import { ContactsFacade, contactResponse } from '@cms/case-management/domain';
+import { VendorContactsFacade, contactResponse } from '@cms/case-management/domain';
 import { LoaderService} from '@cms/shared/util-core';
 @Component({
   selector: 'cms-contact-address-list',
@@ -66,11 +66,11 @@ export class ContactAddressListComponent implements OnChanges {
       },
     },
   ];
-  constructor(private readonly contactsfacade: ContactsFacade, private cd: ChangeDetectorRef, private readonly loaderService: LoaderService,) { }
+  constructor(private readonly vendocontactsFacade: VendorContactsFacade, private cd: ChangeDetectorRef, private readonly loaderService: LoaderService,) { }
 
   ngOnChanges(changes: SimpleChanges) { 
-    this.contactsfacade.loadcontacts(this.VendorAddressId);    
-    this.contactsfacade.contacts$.subscribe((res: any) => {
+    this.vendocontactsFacade.loadcontacts(this.VendorAddressId);    
+    this.vendocontactsFacade.contacts$.subscribe((res: any) => {
       this.contactResponse = res;
       this.cd.detectChanges();
     });
@@ -97,14 +97,14 @@ export class ContactAddressListComponent implements OnChanges {
 
   onCancelPopup(isCancel: any) {
     if (isCancel) {
-      this.contactsfacade.loadcontacts(this.VendorAddressId);
+      this.vendocontactsFacade.loadcontacts(this.VendorAddressId);
       this.clickCloseDeleteContactAddress();
     }
   }
 
   onDeactiveCancel(isCancel: any) {
     if (isCancel) {
-      this.contactsfacade.loadcontacts(this.VendorAddressId);
+      this.vendocontactsFacade.loadcontacts(this.VendorAddressId);
       this.clickCloseDeactivateContactAddress();
 
     }

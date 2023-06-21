@@ -6,7 +6,7 @@ import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
-export class ContactsDataService {
+export class VendorContactsDataService {
   /** Constructor**/
   constructor(
     private readonly http: HttpClient,
@@ -44,12 +44,12 @@ export class ContactsDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/contacts/${vendorContactId}`);
   }
   updateContactAddress(contact: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/contact`, contact);
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/contacts`, contact);
   }
   loadVendorMailCodes(vendorId: number) {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/financial-management/vendors/${vendorId}/mailcodes`
+      `/financial-management/vendors/${vendorId}/addresses`
     );
   }
 }

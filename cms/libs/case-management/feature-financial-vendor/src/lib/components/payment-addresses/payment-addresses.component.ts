@@ -1,5 +1,5 @@
 import {  Component,Input } from '@angular/core'; 
-import { PaymentsFacade,ContactsFacade, contactResponse } from '@cms/case-management/domain';
+import { PaymentsFacade,VendorContactsFacade, contactResponse } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
@@ -52,7 +52,7 @@ export class PaymentAddressesComponent {
   ];
   contactResponse: contactResponse[] = [];
   /** Constructor **/
-  constructor(private readonly paymentsFacade: PaymentsFacade,private readonly contactFacade: ContactsFacade) {}
+  constructor(private readonly paymentsFacade: PaymentsFacade,private readonly vendorcontactFacade: VendorContactsFacade) {}
 
   ngOnInit(): void {
     this.loadPaymentsAddressListGrid();

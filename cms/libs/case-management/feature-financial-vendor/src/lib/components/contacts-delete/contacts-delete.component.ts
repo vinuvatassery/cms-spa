@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component,Output,EventEmitter ,Input} from '@angular/core';
-import { ContactsFacade } from '@cms/case-management/domain';
+import { VendorContactsFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-contacts-delete',
   templateUrl: './contacts-delete.component.html',
@@ -10,7 +10,7 @@ export class ContactsDeleteComponent {
   @Output() closeDeleteContactAddress = new EventEmitter();
  /** Constructor **/
  constructor(
-  private readonly contactsFacade: ContactsFacade
+  private readonly vendocontactsFacade: VendorContactsFacade
 ) {
 }
   onCloseDeleteContactAddressClicked() {
@@ -18,7 +18,7 @@ export class ContactsDeleteComponent {
   }
   deleteContactAddress(){
     
-    this.contactsFacade.removeContactAddress(this.VendorContactId).then((isDeleted:any) =>{
+    this.vendocontactsFacade.removeContactAddress(this.VendorContactId).then((isDeleted:any) =>{
       if(isDeleted){
         this.onCloseDeleteContactAddressClicked();
       } 
