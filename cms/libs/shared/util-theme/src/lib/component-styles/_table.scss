@@ -40,8 +40,16 @@ $pagination-height : 48px;
     
         }
     }
-  
+    .k-checkbox {
+      border-color: $white;
+    background-color: $white;
 
+  }
+  .k-checkbox:checked, .k-checkbox.k-checked {
+    border-color: $app-primary;
+    color: white;
+    background-color: $app-primary;
+}
   }
   .k-grid-header-sticky {
     border-left-color: material-color($hive-neutral-palette, 600) !important;

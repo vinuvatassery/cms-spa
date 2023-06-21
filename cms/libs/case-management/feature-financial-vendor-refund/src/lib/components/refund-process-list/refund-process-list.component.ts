@@ -20,35 +20,6 @@ export class RefundProcessListComponent {
   public sort = this.financialVendorRefundFacade.sortProcessList;
   public state!: State;
   vendorRefundProcessGridLists$ = this.financialVendorRefundFacade.vendorRefundProcessData$;
-
- 
-  public emailBillingAddressActions = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Edit',
-      icon: 'edit',
-      click: (data: any): void => { 
-        console.log(data);
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Deactivate',
-      icon: 'block',
-      click: (data: any): void => {
-        console.log(data); 
-      },
-    },
-    {
-      buttonType: 'btn-h-danger',
-      text: 'Delete',
-      icon: 'delete',
-      click: (data: any): void => {
-        console.log(data); 
-      },
-    },
-  ];
-
   
   /** Constructor **/
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade) {}

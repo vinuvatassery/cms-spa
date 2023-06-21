@@ -27,10 +27,20 @@ export class FinancialVendorRefundFacade {
     field: this.sortValueRefundBatch,
   }];
 
+  public sortValueRefundPayments = 'batch';
+  public sortPaymentsList: SortDescriptor[] = [{
+    field: this.sortValueRefundPayments,
+  }];
+
   private vendorRefundProcessDataSubject = new BehaviorSubject<any>([]);
   vendorRefundProcessData$ = this.vendorRefundProcessDataSubject.asObservable();
 
+  private vendorRefundBatchDataSubject = new BehaviorSubject<any>([]);
+  vendorRefundBatchData$ = this.vendorRefundBatchDataSubject.asObservable();
   
+
+  private vendorRefundAllPaymentsDataSubject = new BehaviorSubject<any>([]);
+  vendorRefundAllPaymentsData$ = this.vendorRefundAllPaymentsDataSubject.asObservable();
   /** Private properties **/
  
   /** Public properties **/
@@ -77,4 +87,32 @@ export class FinancialVendorRefundFacade {
       },
     });  
   }   
+
+
+  loadVendorRefundBatchListGrid(){
+    this.financialVendorRefundDataService.loadVendorRefundBatchListService().subscribe({
+      next: (dataResponse) => {
+        this.vendorRefundBatchDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  }
+
+
+  loadVendorRefundAllPaymentsListGrid(){
+    this.financialVendorRefundDataService.loadVendorRefundAllPaymentsListService().subscribe({
+      next: (dataResponse) => {
+        this.vendorRefundAllPaymentsDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  }
 }

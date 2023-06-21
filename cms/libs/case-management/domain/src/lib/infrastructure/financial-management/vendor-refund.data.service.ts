@@ -20,7 +20,7 @@ export class FinancialVendorRefundDataService {
     return of([
       {
         vendorName: 'Address `',
-        Type:'address2', 
+        type:'address2', 
         clientName:'address2', 
         refundWarrant:'address2', 
         refundAmount:'address2', 
@@ -36,6 +36,43 @@ export class FinancialVendorRefundDataService {
       },
     ]);
   }
-
+  loadVendorRefundBatchListService( ) {
+    return of([
+      {
+        batch: '05012021_001 `',
+        tpaRefunds:'XX', 
+        insRefunds:'XX', 
+        taxRefunds:'XX', 
+        rxRefunds:'XX', 
+        totalOriginalAmountPaid:'XX,XXX.XX', 
+        totalRefundAmount:'XX,XXX.XX',  
+      },
+    ]);
+  }
+  loadVendorRefundAllPaymentsListService( ) {
+    return of([
+      {
+        batch: 'MMDDYYYY_XXX',
+        vendor: 'Provider Name',
+        type:'TPA', 
+        clientName:'FName LName', 
+        primaryInsurance:'FName LName', 
+        memberID:'FName LName', 
+        refundWarrant:'address2', 
+        refundAmount:'address2', 
+        depositDate:'address2', 
+        depositMethod:'address2', 
+        originalWarranty:'XXXXXX', 
+        originalAmount:'XXXXXX', 
+        indexCode:'address2', 
+        pca:'address2', 
+        grant:'address2', 
+        vp:'address2', 
+        refundNote:'address2', 
+        entryDate:'XX-XX-XXXX',  
+        by: 'by',
+      },
+    ]);
+  }
   
 }
