@@ -5,7 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
-import { SortDescriptor } from '@progress/kendo-data-query';
+import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { PaymentsDataService } from '../../infrastructure/financial-management/payments.data.service';
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -21,26 +21,28 @@ export class PaymentsFacade {
     field: this.sortValue,
   }];
 
-  private paymentsDataSubject = new BehaviorSubject<any>([]);
+  private paymentBatchesSubject = new BehaviorSubject<any>([]);
+  private paymentBatchSubListSubject = new BehaviorSubject<any>([]);
   private paymentsAddressDataSubject = new BehaviorSubject<any>([]);
-  paymentsData$ = this.paymentsDataSubject.asObservable();
+  private paymentBatchLoaderSubject = new BehaviorSubject<boolean>(false);
+  paymentBatches$ = this.paymentBatchesSubject.asObservable();
+  paymentBatchSubList$ = this.paymentBatchSubListSubject.asObservable();
   paymentsAddressData$ = this.paymentsAddressDataSubject.asObservable();
+  paymentBatchLoader$ = this.paymentBatchLoaderSubject.asObservable();
 
-  
   /** Private properties **/
- 
+
   /** Public properties **/
- 
+
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>(); 
+  snackbarSubject = new Subject<SnackBar>();
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
 
-  errorShowHideSnackBar( subtitle : any)
-  {
-    this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR,subtitle, NotificationSource.UI)
+  errorShowHideSnackBar(subtitle: any) {
+    this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, subtitle, NotificationSource.UI)
   }
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -61,33 +63,39 @@ export class PaymentsFacade {
   ) { }
 
   /** Public methods **/
-  loadPaymentsListGrid(){
-    this.paymentsDataService.loadPaymentsListService().subscribe({
-      next: (dataResponse) => {
-        this.paymentsDataSubject.next(dataResponse);
-        this.hideLoader();
+  loadPaymentsListGrid(vendorId: string, paginationParameters: State) {
+    this.paymentBatchLoaderSubject.next(true);
+    this.paymentsDataService.loadPaymentsListService(vendorId, paginationParameters).subscribe({
+      next: (dataResponse: any) => {
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+        this.paymentBatchesSubject.next(gridView);
+        this.paymentBatchLoaderSubject.next(false);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err); 
+        this.paymentBatchLoaderSubject.next(false);
       },
     });
   }
 
+  loadPaymentBatchSubList(batchId: string, paginationParameters: State) {
+    return this.paymentsDataService.loadPaymentBatchSubListService(batchId, paginationParameters);
+  }
 
-
-
-  loadPaymentsAddressListGrid(){
+  loadPaymentsAddressListGrid() {
     this.paymentsDataService.loadPaymentsAddressListService().subscribe({
       next: (dataResponse) => {
         this.paymentsAddressDataSubject.next(dataResponse);
         this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
       },
     });
   }
- 
+
 }

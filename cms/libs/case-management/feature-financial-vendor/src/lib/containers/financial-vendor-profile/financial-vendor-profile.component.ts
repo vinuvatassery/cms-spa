@@ -21,6 +21,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   addressGridView = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   vendorProfile$ = this.financialVendorFacade.vendorProfile$
+  vendorProfileSpecialHandling$ = this.financialVendorFacade.vendorProfileSpecialHandling$
   constructor(private activeRoute: ActivatedRoute, private financialVendorFacade : FinancialVendorFacade) {}
 
   ngOnInit(): void {
@@ -68,5 +69,9 @@ export class FinancialVendorProfileComponent implements OnInit {
   loadFinancialVendorProfile(vendorId : string)
   {       
     this.financialVendorFacade.getVendorProfile(vendorId,this.tabCode)
+  }
+
+  loadSpecialHandling() {
+    this.financialVendorFacade.getVendorProfileSpecialHandling(this.vendorId); 
   }
 }
