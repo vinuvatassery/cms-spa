@@ -26,7 +26,7 @@ export * from './lib/components/billing-email-address-list/billing-email-address
 export * from './lib/components/contacts-deactivate/contacts-deactivate.component';
 export * from './lib/components/contacts-delete/contacts-delete.component';
 export * from './lib/components/contacts-details/contacts-details.component';
-export * from './lib/components/financial-insurance-plans/financial-insurance-plans.component';
+export * from './lib/components/financial-insurance-provider-list/financial-insurance-provider-list.component';
 export * from './lib/components/financial-pharmacy-claims/financial-pharmacy-claims.component';
 export * from './lib/components/financial-drugs-details/financial-drugs-details.component';
 export * from './lib/components/financial-drugs-deactivate/financial-drugs-deactivate.component';
@@ -35,3 +35,5 @@ export * from './lib/components/financial-insurance-provider/financial-insurance
 export * from './lib/components/financial-insurance-plan-details/financial-insurance-plan-details.component';
 export * from './lib/components/financial-insurance-plan-delete/financial-insurance-plan-delete.component';
 export * from './lib/components/financial-insurance-plan-deactivate/financial-insurance-plan-deactivate.component';
+export * from './lib/components/financial-payment-sub-list/financial-payment-sub-list.component';
+export * from './lib/components/financial-insurance-plan-list/financial-insurance-plan-list.component';
