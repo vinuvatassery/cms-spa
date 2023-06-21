@@ -13,11 +13,11 @@ export class RefundProcessListComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isVendorRefundProcessGridLoaderShow = false;
-  public sortValue = this.financialVendorRefundFacade.sortValue;
+  public sortValue = this.financialVendorRefundFacade.sortValueRefundProcess;
   public sortType = this.financialVendorRefundFacade.sortType;
   public pageSizes = this.financialVendorRefundFacade.gridPageSizes;
   public gridSkipCount = this.financialVendorRefundFacade.skipCount;
-  public sort = this.financialVendorRefundFacade.sort;
+  public sort = this.financialVendorRefundFacade.sortProcessList;
   public state!: State;
   vendorRefundProcessGridLists$ = this.financialVendorRefundFacade.vendorRefundProcessData$;
 

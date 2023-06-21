@@ -15,10 +15,16 @@ export class FinancialVendorRefundFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'address1';
   public sortType = 'asc';
-  public sort: SortDescriptor[] = [{
-    field: this.sortValue,
+
+  public sortValueRefundProcess = 'vendorName';
+  public sortProcessList: SortDescriptor[] = [{
+    field: this.sortValueRefundProcess,
+  }];
+
+  public sortValueRefundBatch = 'batch';
+  public sortBatchList: SortDescriptor[] = [{
+    field: this.sortValueRefundBatch,
   }];
 
   private vendorRefundProcessDataSubject = new BehaviorSubject<any>([]);
@@ -69,9 +75,6 @@ export class FinancialVendorRefundFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
         this.hideLoader(); 
       },
-    });
-   
-  
-  }
-   
+    });  
+  }   
 }
