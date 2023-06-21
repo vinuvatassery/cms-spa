@@ -36,7 +36,6 @@ export class InvoicesComponent {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
     };
-    this.vendorId='F49E42C5-1F8A-4297-A06A-C84F8EF187BF'
     this.loadInvoiceListGrid();
     this.isInvoiceLoadingSubscription = this.isInvoiceLoading$.subscribe(data=>{
       this.isInvoiceGridLoaderShow = data;
