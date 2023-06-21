@@ -1,9 +1,14 @@
+/** Angular libraries **/
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core'; 
-import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { InvoiceFacade } from '@cms/case-management/domain';
-import { State } from '@progress/kendo-data-query';
 import { Router } from '@angular/router';
+
+/** External libraries **/
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { State } from '@progress/kendo-data-query';
 import { Subscription } from 'rxjs';
+
+/** Facade **/
+import { InvoiceFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-invoices',

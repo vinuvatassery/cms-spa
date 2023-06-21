@@ -13,7 +13,6 @@ export class InvoiceDataService {
   ) { }
 
   /** Public methods **/
-
  
   loadInvoiceListService(vendorId:any,state:any,tabCode:any,sortValue:any,sortType:any) {  
     return this.http.get<any>(      
