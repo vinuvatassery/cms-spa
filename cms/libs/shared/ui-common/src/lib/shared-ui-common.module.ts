@@ -36,6 +36,7 @@ import { CaseEligibilityPeriodsComponent } from './case-eligibility-periods/case
 import { GridCellDateRangeFilterComponent } from './grid-cell-date-range-filter/grid-cell-date-range-filter.component';
 import { DocumentUploadComponent } from './document-upload/document-upload.component';
 import { ClientsAttachmentComponent } from './clients-attachment/clients-attachment.component';
+import { YesOrNoPipe } from './pipes/yes-or-no.pipe';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
@@ -67,6 +68,7 @@ import { ClientsAttachmentComponent } from './clients-attachment/clients-attachm
     GridCellDateRangeFilterComponent,
     DocumentUploadComponent,
     ClientsAttachmentComponent,
+    YesOrNoPipe
   ],
   exports: [
     LoginStatusComponent,
@@ -96,6 +98,7 @@ import { ClientsAttachmentComponent } from './clients-attachment/clients-attachm
     GridCellDateRangeFilterComponent,
     DocumentUploadComponent,
     ClientsAttachmentComponent,
+    YesOrNoPipe
   ],
 })
 export class SharedUiCommonModule {}
