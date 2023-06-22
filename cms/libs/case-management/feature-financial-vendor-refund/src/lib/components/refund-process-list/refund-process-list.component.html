@@ -134,3 +134,12 @@
     </ng-template>
   </kendo-splitbutton>
 </div>
+
+<ng-template #batchRefundConfirmationDialog>
+  <cms-batch-refund-confirmation
+      (isModalBatchRefundCloseClicked)="onModalBatchRefundModalClose($event)"></cms-batch-refund-confirmation>
+</ng-template>
+<ng-template #deleteRefundConfirmationDialog>
+  <cms-delete-refund-confirmation
+      (isModalDeleteRefundCloseClicked)="onModalDeleteRefundModalClose($event)"></cms-delete-refund-confirmation>
+</ng-template>

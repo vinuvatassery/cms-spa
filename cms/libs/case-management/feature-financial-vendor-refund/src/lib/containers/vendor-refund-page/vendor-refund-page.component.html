@@ -11,10 +11,7 @@
                     <kendo-tabstrip-tab title="Process" [selected]="true">
                         <ng-template kendoTabContent>
                             <div class="block-section ">
-                                <cms-refund-process-list
-                                    (isModalBatchRefundOpenClicked)="onBatchRefundClicked(batchRefundConfirmationDialog)"
-                                    (isModalDeleteRefundOpenClicked)="onDeleteRefundClicked(deleteRefundConfirmationDialog)">
-                                </cms-refund-process-list>
+                                <cms-refund-process-list> </cms-refund-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -40,11 +37,3 @@
     </div>
 </div>
 
-<ng-template #batchRefundConfirmationDialog>
-    <cms-batch-refund-confirmation
-        (isModalBatchRefundCloseClicked)="onModalBatchRefundModalClose($event)"></cms-batch-refund-confirmation>
-</ng-template>
-<ng-template #deleteRefundConfirmationDialog>
-    <cms-delete-refund-confirmation
-        (isModalDeleteRefundCloseClicked)="onModalDeleteRefundModalClose($event)"></cms-delete-refund-confirmation>
-</ng-template>

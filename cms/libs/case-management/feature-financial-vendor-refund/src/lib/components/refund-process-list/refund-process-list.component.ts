@@ -6,6 +6,7 @@ import {
   TemplateRef,
   Input,
   EventEmitter,
+  ViewChild,
   Output,
   OnChanges,
  
@@ -13,6 +14,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain'; 
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'cms-refund-process-list',
   templateUrl: './refund-process-list.component.html',
@@ -21,8 +23,14 @@ import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 })
 export class RefundProcessListComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  @Output() isModalBatchRefundOpenClicked = new EventEmitter();
-  @Output() isModalDeleteRefundOpenClicked = new EventEmitter();
+  @ViewChild('batchRefundConfirmationDialog', { read: TemplateRef })
+  batchRefundConfirmationDialog!: TemplateRef<any>;
+  @ViewChild('deleteRefundConfirmationDialog', { read: TemplateRef })
+  deleteRefundConfirmationDialog!: TemplateRef<any>;
+  private deleteRefundDialog: any;
+  private batchConfirmRefundDialog: any;
+  isDeleteBatchClosed = false; 
+  isProcessBatchClosed = false; 
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isVendorRefundProcessGridLoaderShow = false;
   public sortValue = this.financialVendorRefundFacade.sortValueRefundProcess;
@@ -40,7 +48,10 @@ export class RefundProcessListComponent {
       text: 'BATCH REFUNDS',
       icon: 'check',
       click: (data: any): void => { 
-        this.isModalBatchRefundOpenClicked.emit();  
+        if(!this.isProcessBatchClosed){
+          this.isProcessBatchClosed = true;
+          this.onBatchRefundClicked(this.batchRefundConfirmationDialog, data);
+        }  
       },
     },
 
@@ -49,13 +60,17 @@ export class RefundProcessListComponent {
       text: 'DELETE REFUNDS',
       icon: 'delete',
       click: (data: any): void => { 
-        this.isModalDeleteRefundOpenClicked.emit();  
+        if(!this.isDeleteBatchClosed){
+          this.isDeleteBatchClosed = true; 
+          this.onDeleteRefundOpenClicked(this.deleteRefundConfirmationDialog, data);
+        }
 
       },
     },
   ];
   /** Constructor **/
   constructor(
+    private dialogService: DialogService,
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade 
   ) {}
 
@@ -89,5 +104,34 @@ export class RefundProcessListComponent {
       sort: this.sort,
     };
     this.financialVendorRefundFacade.loadVendorRefundProcessListGrid();
+  }
+  public onBatchRefundClicked(template: TemplateRef<unknown>, data:any): void {
+    this.batchConfirmRefundDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+    // this.isStatusPeriodDetailOpened = true;
+  }
+  onModalBatchRefundModalClose(result: any) {
+    if (result) {
+      this.isProcessBatchClosed = false;
+      this.batchConfirmRefundDialog.close();
+    }
+  }
+
+  public onDeleteRefundOpenClicked(
+    template: TemplateRef<unknown>, data:any
+  ): void {
+    this.deleteRefundDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+    // this.isStatusPeriodDetailOpened = true;
+  }
+  onModalDeleteRefundModalClose(result: any) {
+    if (result) {
+      this.isDeleteBatchClosed = false;
+      this.deleteRefundDialog.close();
+    }
   }
 }
