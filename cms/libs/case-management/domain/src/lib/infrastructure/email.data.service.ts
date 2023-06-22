@@ -127,15 +127,39 @@ export class EmailDataService {
       );
     }
 
-    getDraftTemplateAttachment(typeCode: string, templateId: string){
+    getDraftTemplateAttachment(esignRequestId: string){
       return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/forms?templateId=${templateId}`,
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?esignRequestId=${esignRequestId}`,
       );
     }
 
-    initiateAdobeEsignRequest(formData: any){
+    initiateAdobeEsignRequest(formData: any, isSaveForLater: boolean){
       return this.http.post<any>(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign`,formData
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?isSaveForLater=${isSaveForLater}`,formData
+      );
+    }
+    
+    saveEmailTemplateForLater(formData: any, isSaveForLater: boolean){
+      return this.http.post<any>(
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?isSaveForLater=${isSaveForLater}`,formData
+      );
+    }
+
+    loadUserSpecificDraftTemplates(clientId: number, clientCaseEligibilityId: string, loggedInUserId: string){
+      return this.http.get(
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign/${clientId}/${clientCaseEligibilityId}/${loggedInUserId}`,
+      );
+    }
+
+    deleteEsignRequestAttachment(esignRequestAttachmentId:any){
+      return this.http.delete(
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?esignRequestAttachmentId=${esignRequestAttachmentId}`,
+      );
+    }
+
+    updateEsignRequestTemplate(formData: any, isSaveForLater: boolean){
+      return this.http.put(
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?isSaveForLater=${isSaveForLater}`,formData
       );
     }
 }

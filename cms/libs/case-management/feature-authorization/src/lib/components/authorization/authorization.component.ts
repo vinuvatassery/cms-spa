@@ -113,7 +113,7 @@ export class AuthorizationComponent   {
                 if(data?.email?.email !== null){
                   let emailObject = {
                     clientEmailId : data?.email?.clientEmailId, 
-                    email : data?.email?.email,
+                    email : data?.email?.email.trim()
                   }
                   this.toEmail.push(emailObject);
                 }
@@ -316,14 +316,6 @@ export class AuthorizationComponent   {
       content: template, 
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
     }); 
-  }
-
-  onSendNewLetterButtonClicked() {
-    this.isSendNewLetterPopupOpened = true;
-  }
-
-  onSendNewEmailButtonClicked() {
-    this.isSendNewEmailPopupOpened = true;
   }
 
   onCloseAuthorizationNoticeClicked() {

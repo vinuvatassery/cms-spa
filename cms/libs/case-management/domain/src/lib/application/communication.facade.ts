@@ -112,11 +112,27 @@ export class CommunicationFacade {
     return this.emailDataService.getTemplateAttachment(typeCode);
   }
 
-  loadCERAuthorizationDraftAttachment(typeCode: string, documentTemplateId: string){
-    return this.emailDataService.getDraftTemplateAttachment(typeCode, documentTemplateId);
+  loadCERAuthorizationDraftAttachment(esignRequestId: string){
+    return this.emailDataService.getDraftTemplateAttachment(esignRequestId);
   }
 
-  initiateAdobeesignRequest(formData: any) {
-    return this.emailDataService.initiateAdobeEsignRequest(formData);
+  initiateAdobeesignRequest(formData: any, isSaveFoLater: boolean) {
+    return this.emailDataService.initiateAdobeEsignRequest(formData, isSaveFoLater);
+  }
+
+  saveEmailTemplateForLater(formData: any, isSaveFoLater: boolean) {
+    return this.emailDataService.saveEmailTemplateForLater(formData, isSaveFoLater);
+  }
+
+  loadUserSpecificTemplates(clientId: number, clientCaseEligibilityId: string, loginUserId: string){
+    return this.emailDataService.loadUserSpecificDraftTemplates(clientId, clientCaseEligibilityId, loginUserId);
+  }
+
+  deleteAttachmentRequest(attachmentRequest: any){
+    return this.emailDataService.deleteEsignRequestAttachment(attachmentRequest);
+  }
+
+  updateEmailTemplateForLater(formData: any, isSaveFoLater: boolean){
+    return this.emailDataService.updateEsignRequestTemplate(formData, isSaveFoLater);
   }
 }

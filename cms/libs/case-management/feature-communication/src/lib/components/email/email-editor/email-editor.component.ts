@@ -112,8 +112,7 @@ export class EmailEditorComponent implements OnInit {
     if(this.currentValue){
       this.emailEditorValueEvent(this.currentValue);
       this.selectedAttachedFile = [];
-      this.loadDefaultTemplateAttachment();
-      this.loadDraftTemplateAttachment();
+      this.loadUserDraftTemplateAttachment();
     }
   }
 
@@ -201,7 +200,7 @@ export class EmailEditorComponent implements OnInit {
   }
 
   emailEditorValueEvent(emailData:any){
-    this.emailEditorvalue = emailData.templateContent;
+    this.emailEditorvalue = emailData.templateContent == undefined? emailData.requestBody : emailData.templateContent;
     this.showAttachmentUpload = false;
   }
 
@@ -240,8 +239,8 @@ if(!this.attachedFileValidatorSize){
     this.attachedFiles = null;
   }
   
-  removeFile(index: any) {
-    this.selectedAttachedFile.splice(index, 1);
+  removeFile(event:any, index: any) {
+    this.deleteEsignRequestAttachment(event, index);
   }
 
   loadAllClientDocuments(clientCaseEligibilityId: string){
@@ -356,21 +355,46 @@ if(!this.attachedFileValidatorSize){
   });
   }
 
-  private loadDraftTemplateAttachment() {
+  private deleteEsignRequestAttachment(attachmentRequest: any, index: any) {
     this.loaderService.show();
-    this.communicationFacade.loadCERAuthorizationDraftAttachment(CommunicationEvents.CERAttachmentTypeCode, this.currentValue.documentTemplateId)
+    this.communicationFacade.deleteAttachmentRequest(attachmentRequest.document.esignRequestAttachmentId)
+    .subscribe({
+      next: (data: any) =>{
+        if (data) {
+        this.selectedAttachedFile.splice(index, 1);
+        this.ref.detectChanges();
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Attachment removed successfully.');
+        }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+      this.loggingService.logException(err);
+    },
+  });
+  }
+
+  private loadUserDraftTemplateAttachment() {
+    this.loaderService.show();
+    this.communicationFacade.loadCERAuthorizationDraftAttachment(this.currentValue.documentTemplateId)
     .subscribe({
       next: (attachments: any) =>{
         if (attachments) {
-          for (let file of attachments){
-          this.selectedAttachedFile.push({
-            document: file,
-            size: file.templateSize,
-            name: file.description,
-            documentTemplateId: file.documentTemplateId,
-            documentTemplateTypeCode: file.documentTemplateTypeCode
-          })
-        }
+          if(attachments?.esignRequestAttachments != undefined || attachments?.esignRequestAttachments != null){
+            for (let file of attachments.esignRequestAttachments){
+              this.selectedAttachedFile.push({
+                document: file,
+                size: file.attachmentSize,
+                name: file.attachmentName,
+                esignRequestId: file.esignRequestId,
+                typeCode: file.attachmentTypeCode
+              })
+            }
+          }else{
+            this.loadDefaultTemplateAttachment();
+          }
         this.ref.detectChanges();
         this.cerEmailAttachments.emit(this.selectedAttachedFile);
         }
