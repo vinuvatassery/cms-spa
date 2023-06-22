@@ -17,6 +17,13 @@
   
       </kendo-floatinglabel>
     </span>
+    <span class="right-overlay-export">
+      <button kendoButton [primary]="true" look="flat" class="button-lg">
+        <span class="material-icons" aria-label="export" aria-invalid="true"
+          >exit_to_app</span
+        >Export
+      </button>
+    </span>
   </section>
   
   <!-- Sorted Info -->
@@ -32,7 +39,8 @@
   <div class="app-c-table">
     <kendo-grid [resizable]="true" [loading]="isVendorRefundBatchGridLoaderShow"  [pageSize]="state.take" [pageable]="true"
     [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-    [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [data]="vendorRefundBatchGridLists$ | async"  [selectable]="true">
+    [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [data]="vendorRefundBatchGridLists$ | async"  [selectable]="true" 
+    (cellClick)="onCellClick($event)">
       <kendo-grid-checkbox-column  [sticky]="true"  [columnMenu]="false" [showSelectAll]="true"  [width]="40"></kendo-grid-checkbox-column>
       <kendo-grid-column field="batch" title="Batch #" [width]="120"> </kendo-grid-column>
       <kendo-grid-column field="tpaRefunds" title="# TPA Refunds" [width]="120"> </kendo-grid-column> 

@@ -212,6 +212,7 @@ $pagination-height : 48px;
 .table-filter-section {
   display: flex;
   margin-bottom: $size-xx; 
+  position: relative;
   .filter-section_items {
     width: 100%;
     &.filter--select {
@@ -276,6 +277,12 @@ $pagination-height : 48px;
         margin-top: $size-xx;
       }
     }
+  }
+  .right-overlay-export{
+    position: absolute; 
+    top: 40%;
+    z-index: 1;
+    right: 3px;
   }
 }
 

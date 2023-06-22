@@ -1,5 +1,6 @@
 import { Component,  OnInit,  ChangeDetectionStrategy,  Input,  EventEmitter,  Output,  OnChanges,  ChangeDetectorRef,} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { Router } from '@angular/router';
 import { State } from '@progress/kendo-data-query';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 @Component({
@@ -21,7 +22,7 @@ export class RefundBatchesListComponent {
   vendorRefundBatchGridLists$ = this.financialVendorRefundFacade.vendorRefundBatchData$;
   
   /** Constructor **/
-  constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade) {}
+  constructor(private route: Router,private readonly financialVendorRefundFacade: FinancialVendorRefundFacade) {}
 
   ngOnInit(): void {
     this.loadVendorRefundBatchListGrid();
@@ -54,5 +55,12 @@ export class RefundBatchesListComponent {
     };
     this.financialVendorRefundFacade.loadVendorRefundBatchListGrid();
   }
-
+  onCellClick(event : any){ 
+    const query = {
+      queryParams: {
+        b_id: event.dataItem.id ,         
+      },
+    };
+    this.route.navigate(['/financial-management/vendor-refund/batch-log'], query );
+  }
 }

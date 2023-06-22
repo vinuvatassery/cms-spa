@@ -32,15 +32,22 @@ export class FinancialVendorRefundFacade {
     field: this.sortValueRefundPayments,
   }];
 
+  public sortValueBatchLog = 'batch';
+  public sortBatchLogList: SortDescriptor[] = [{
+    field: this.sortValueBatchLog,
+  }];
+
   private vendorRefundProcessDataSubject = new BehaviorSubject<any>([]);
   vendorRefundProcessData$ = this.vendorRefundProcessDataSubject.asObservable();
 
   private vendorRefundBatchDataSubject = new BehaviorSubject<any>([]);
-  vendorRefundBatchData$ = this.vendorRefundBatchDataSubject.asObservable();
-  
+  vendorRefundBatchData$ = this.vendorRefundBatchDataSubject.asObservable();  
 
   private vendorRefundAllPaymentsDataSubject = new BehaviorSubject<any>([]);
   vendorRefundAllPaymentsData$ = this.vendorRefundAllPaymentsDataSubject.asObservable();
+
+  private batchLogDataSubject = new BehaviorSubject<any>([]);
+  batchLogData$ = this.batchLogDataSubject.asObservable();
   /** Private properties **/
  
   /** Public properties **/
@@ -107,6 +114,20 @@ export class FinancialVendorRefundFacade {
     this.financialVendorRefundDataService.loadVendorRefundAllPaymentsListService().subscribe({
       next: (dataResponse) => {
         this.vendorRefundAllPaymentsDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  }
+
+
+  loadBatchLogListGrid(){
+    this.financialVendorRefundDataService.loadBatchLogListService().subscribe({
+      next: (dataResponse) => {
+        this.batchLogDataSubject.next(dataResponse);
         this.hideLoader();
       },
       error: (err) => {
