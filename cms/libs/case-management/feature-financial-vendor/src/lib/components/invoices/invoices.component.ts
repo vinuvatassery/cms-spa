@@ -1,5 +1,5 @@
 /** Angular libraries **/
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core'; 
+import { ChangeDetectionStrategy, Component, Input, ViewChild, OnInit, OnDestroy } from '@angular/core'; 
 import { Router } from '@angular/router';
 
 /** External libraries **/
@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 
 /** Facade **/
 import { InvoiceFacade } from '@cms/case-management/domain';
+import { GridComponent } from '@progress/kendo-angular-grid';
 
 @Component({
   selector: 'cms-invoices',
@@ -16,7 +17,7 @@ import { InvoiceFacade } from '@cms/case-management/domain';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class InvoicesComponent {
+export class InvoicesComponent implements OnInit, OnDestroy {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isInvoiceGridLoaderShow = false;
@@ -32,17 +33,20 @@ export class InvoicesComponent {
   isInvoiceLoadingSubscription!:Subscription;
   @Input() tabCode: any;
   @Input() vendorId: any;
+  @ViewChild(GridComponent)
+  invoiceGrid!: GridComponent;
 
    /** Constructor **/
-   constructor(private readonly invoiceFacade: InvoiceFacade,private readonly router: Router,) {}
+   constructor(private readonly invoiceFacade: InvoiceFacade,private readonly router: Router) {}
 
   ngOnInit(): void {
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
     };
+    this.vendorId='F49E42C5-1F8A-4297-A06A-C84F8EF187BF'
     this.loadInvoiceListGrid();
-    this.isInvoiceLoadingSubscription = this.isInvoiceLoading$.subscribe(data=>{
+    this.isInvoiceLoadingSubscription = this.isInvoiceLoading$.subscribe((data:boolean)=>{
       this.isInvoiceGridLoaderShow = data;
     })
   }
@@ -54,18 +58,32 @@ export class InvoicesComponent {
       sort: this.sort,
     };
   }
+
+  ngOnDestroy(): void {
+    this.isInvoiceLoadingSubscription.unsubscribe();
+  }
+
   public dataStateChange(stateData: any): void {
+    this.collapseAll(this.state?.take);
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.loadInvoiceListGrid();
   }
+
+  collapseAll(rowCount:any){
+    for(let i=0; i<rowCount;i++){
+      this.invoiceGrid.collapseRow(i)
+    }
+  }
+
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadInvoiceListGrid();
   }
+
   loadInvoiceListGrid() {
     this.invoiceFacade.loadInvoiceListGrid(this.vendorId,this.state,this.tabCode,this.sortValue,this.sortType);
   }
@@ -74,10 +92,12 @@ export class InvoicesComponent {
       this.router.navigate([`/case-management/cases/case360/${clientId}`]);
       
   }
+
   onBatchClicked() {
     this.router.navigate([`/financial-management/medical-claims`]);    
   } 
+
   onExpand(event:any) {
     this.invoiceFacade.loadPaymentRequestServices(event.dataItem,this.vendorId,this.tabCode)   
-  }
+  } 
 }
