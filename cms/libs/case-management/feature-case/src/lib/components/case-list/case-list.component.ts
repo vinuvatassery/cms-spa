@@ -198,6 +198,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
  pageselectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
+    this.saveGridState();
     this.loadProfileCasesList()
   }
   public dataStateChange(stateData: any): void {
@@ -258,13 +259,11 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
 
   /** Private methods **/
   getLoggedInUserProfile(){
-    this.gridFacade.showLoader();
     this.userProfileSubsriction=this.userDataService.getProfile$.subscribe((profile:any)=>{
       if(profile?.length>0){
        this.loginUserId= profile[0]?.loginUserId;
        this.getGridState();
       }
-      this.gridFacade.hideLoader();
     })
   }
   private saveGridState(){
@@ -275,7 +274,6 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       parentModuleCode:this.parentModule,
       userId:this.loginUserId
     };
-    this.gridFacade.showLoader();
     this.gridFacade.createGridState(gridState).subscribe({
       next: (x:any) =>{
         this.gridFacade.hideLoader();
@@ -363,9 +361,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
 
   public columnChange(e: ColumnVisibilityChangeEvent) {
     for(let i=0; i<e.columns.length; i++){
-      if(e.columns[i].hidden == false)
-        break;
-      else{
+       if(e.columns[i].hidden == true) {
         let field =  (e.columns[i] as ColumnComponent)?.field;
         let mainFilters = this.state.filter.filters;
         let flag = false;
@@ -390,6 +386,9 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
           this.loadProfileCasesList();
       }
     }
+
+
+
     this.cdr.detectChanges();
   }
 
