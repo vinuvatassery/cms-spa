@@ -1,10 +1,9 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-/** External libraries **/
-import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
-import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { State } from '@progress/kendo-data-query';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentsDataService {
@@ -16,30 +15,34 @@ export class PaymentsDataService {
 
   /** Public methods **/
 
- 
-  loadPaymentsListService() {
-    return of([
-      {
-        Batch: 'XXXXXXXXXX `',
-      Item:'1', 
-      ItemCount: '3',
-      TotalAmount: '1,000.00',
-      DatePmtRequested: 'XX/XX/XXXX',
-      DatePmtSent: 'Yes',
-      PmtStatus: 'Pending',
-      Warrant: 'No',
-      PCA: 'XXXXX',
-      by: 'No',
-      },
-    ]);
+
+  loadPaymentsListService(vendorId: string, paginationParameters: State) {
+    const sorting = this.getSortingParams(paginationParameters);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/payment-batches?SkipCount=${paginationParameters?.skip}&MaxResultCount=${paginationParameters?.take}${sorting}`);
   }
 
-   
+  loadPaymentBatchSubListService(batchId: string, paginationParameters: State) {
+    const sorting = this.getSortingParams(paginationParameters);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}/payments?SkipCount=${paginationParameters?.skip}&MaxResultCount=${paginationParameters?.take}${sorting}`);
+  }
+
+  getSortingParams(paginationParameters: State) {
+    let sorting = '';
+    if (paginationParameters?.sort && paginationParameters?.sort?.length > 0 && paginationParameters?.sort[0]) {
+    console.log(paginationParameters?.sort[0]);
+      sorting = `&Sorting=${paginationParameters?.sort[0]?.field}&SortType=${paginationParameters?.sort[0]?.dir ?? 'asc'}`;
+    }
+
+    return sorting;
+  }
+
+
+
   loadPaymentsAddressListService() {
     return of([
       {
         MailCode: 'XXXXXXXXXX `',
-        NameCheck:'1', 
+        NameCheck: '1',
         NameEnvelope: '3',
         PaymentMethod: '1,000.00',
         PaymentRunDate: 'XX/XX/XXXX',
@@ -52,7 +55,7 @@ export class PaymentsDataService {
         Zip: 'XXXXX',
         SpecialHandling: 'XXXXX',
         EffectiveDates: 'XXXXX',
-      by: 'No',
+        by: 'No',
       },
     ]);
   }

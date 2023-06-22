@@ -607,3 +607,10 @@ table,
   max-height: 36vh;
   overflow-y: auto;
 }
+
+.grid-line-clip{
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}

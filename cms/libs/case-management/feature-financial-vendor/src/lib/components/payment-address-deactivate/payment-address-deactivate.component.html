@@ -3,23 +3,16 @@
         It will still be viewable in the profile. You may add a new one at any time.
     </p>
   </section>
-  
+
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button
-          kendoButton
-          [primary]="true"
-          look="outline"
-          aria-label="cancel deactivation of confirmation"
-          
-        >
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel deactivation of confirmation" (click)="onCloseDeactivatePaymentAddressClicked(false)">
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="deactivate"  >
+        <button kendoButton [primary]="true" aria-label="deactivate" (click)="deactivatePaymentAddress()" >
           Deactivate
         </button>
       </div>
     </div>
   </kendo-dialog-actions>
-  

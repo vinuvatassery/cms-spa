@@ -1,14 +1,14 @@
 <div class="flex-row">
   <div class="flex-col flex-space-bw align-items-center">
-    <h2 class="title-md mb-0 text-bold">Insurance Premium Payments</h2> 
-    <div> 
+    <h2 class="title-md mb-0 text-bold">Insurance Premium Payments</h2>
+    <div>
     <span class="app-checkboxwidtext-wrapper">
       <input
         type="checkbox"
         kendoCheckBox
         aria-labelledby="PaymentspremiumsWithinLast12Months"
         id="PaymentspremiumsWithinLast12Months"
-        [(ngModel)]="showTwelveMonthRecordFlag"        
+        [(ngModel)]="showTwelveMonthRecordFlag"
         (change)="handleShowHistoricalClick()"
       />
       <label class="k-checkbox-label" for="PaymentspremiumsWithinLast12Months"
@@ -19,7 +19,7 @@
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
-      <kendo-grid  [data]="medicalPremiumPayments$ | async"
+      <kendo-grid [resizable]="true" [data]="medicalPremiumPayments$ | async"
       [pageSize]="state.take" [pageable]="true" (dataStateChange)="dataStateChange($event)">
         <kendo-grid-column
           field="vendorName"
@@ -83,6 +83,10 @@
         <kendo-grid-column field="warrant" title="Warrant" [width]="130">
         </kendo-grid-column>
         <kendo-grid-column field="comments" title="Comment" [width]="150">
+          <ng-template kendoGridCellTemplate let-dataItem>
+          
+             <span class="grid-line-clip"> {{ dataItem.comments }}</span>
+           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="paymentTypeDesc" title="Type" [width]="130">
         </kendo-grid-column>
@@ -97,7 +101,7 @@
               showOn="hover"
               aria-label="profile avatar"
             >
-            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>  
+            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
             <kendo-popover
               #onUserProfileDetailsHovered
@@ -123,7 +127,7 @@
               id="RowsPerPage" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages> 
-      
+
           </div>
           <div class="d-flex">
             <kendo-pager-input></kendo-pager-input>
@@ -132,11 +136,11 @@
           </div>
         </div>
       </ng-template>
-                <!-- grid Loader Template -->  
+                <!-- grid Loader Template -->
                <ng-template kendoGridLoadingTemplate>
                  <common-grid-loader-component></common-grid-loader-component>
                 </ng-template>
-                <!-- grid No data Template -->  
+                <!-- grid No data Template -->
                 <ng-template kendoGridNoRecordsTemplate>
                   <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
                   </div>
@@ -164,10 +168,10 @@
   class="app-c-modal app-c-modal-md app-c-modal-np">
   <kendo-dialog-titlebar *ngIf="tabStatus === 'hlt-ins-prm-pym'"> Add insurance premium payment</kendo-dialog-titlebar>
   <kendo-dialog-titlebar *ngIf="tabStatus === 'dnt-ins-prm-pym'"> Add insurance premium payment</kendo-dialog-titlebar>
-  <case-management-medical-premium-payment-detail 
+  <case-management-medical-premium-payment-detail
   [caseEligibilityId]="caseEligibilityId"
   [clientId] ="clientId"
-  [tabStatus]="tabStatus" 
+  [tabStatus]="tabStatus"
   (closePremiumPaymentEvent)="closePremiumPaymentEventTriggered($event)"
   ></case-management-medical-premium-payment-detail>
 </kendo-dialog>
