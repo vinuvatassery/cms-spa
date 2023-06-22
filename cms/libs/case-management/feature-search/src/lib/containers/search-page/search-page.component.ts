@@ -1,8 +1,9 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormGroup, FormBuilder } from '@angular/forms';
 /** Facades **/
-import { SearchFacade, CaseStatusCode, CaseFacade, FinancialManagementFacade, SearchHeaderType } from '@cms/case-management/domain';
+import { SearchFacade, CaseStatusCode, CaseFacade} from '@cms/case-management/domain';
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  Subject } from 'rxjs';
@@ -124,7 +125,7 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
   public formUiStyle : UIFormStyle = new UIFormStyle();
   filterManager: Subject<string> = new Subject<string>();
   searchBars$ = this.caseFacade.searchBars$
-
+  searchForm!: FormGroup;
   searchHeaderTypeSubject = new Subject<any>()
   searchHeaderType$ = this.searchHeaderTypeSubject.asObservable()
 
@@ -133,17 +134,25 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
   constructor(private readonly searchFacade: SearchFacade,private router: Router,
     private caseFacade: CaseFacade,
     private loggingService: LoggingService,
-    private loaderService: LoaderService,private cdRef : ChangeDetectorRef
+    private loaderService: LoaderService,private cdRef : ChangeDetectorRef,
+    private readonly formBuilder: FormBuilder
    ) {
   
   }
 
   /** Lifecycle hooks **/
   ngOnInit() {
+    this.buildForm();
       this.clientSearchResult$.subscribe(data=>{
       this.showHeaderSearchInputLoader = false;
     })
    
+  }
+
+  private buildForm() {
+    this.searchForm =  this.formBuilder.group({
+      itemSelected: []
+    });
   }
 
   ngAfterViewInit() {
@@ -197,6 +206,8 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
           })
         }
       }
+      this.searchForm.controls["itemSelected"].setValue(null);
+      this.cdRef.detectChanges();
     }
   }
 
