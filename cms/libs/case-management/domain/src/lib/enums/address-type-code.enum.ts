@@ -4,13 +4,9 @@ export enum AddressTypeCode{
     
 }
 export enum EmailAddressTypeCode{
-    Work ='Work',
-    Personal='Personal'      
+    Work ='Work'      
 }
 
 export enum PhoneTypeCode{
-    Phone ='P',
-    Home='H',
-    Work='W',
-    Office='O'    
+      Work='W'    
 }

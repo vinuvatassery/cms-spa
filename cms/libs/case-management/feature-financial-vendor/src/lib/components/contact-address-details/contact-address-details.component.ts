@@ -143,7 +143,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       faxNbr: new FormControl(this.contactAddress.faxNbr),
       emailAddress: new FormControl(this.contactAddress.emailAddress),
       emailAddressTypeCode: new FormControl(EmailAddressTypeCode.Work),
-      phoneTypeCode: new FormControl(PhoneTypeCode.Phone),
+      phoneTypeCode: new FormControl(PhoneTypeCode.Work),
       vendorContactId: new FormControl(this.contactAddress.vendorContactId),
       vendorAddressId: new FormControl(this.contactAddress.vendorAddressId),
       vendorContactPhoneId: new FormControl(
