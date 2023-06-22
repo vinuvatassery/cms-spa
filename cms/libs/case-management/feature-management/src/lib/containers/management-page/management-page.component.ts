@@ -161,7 +161,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
      
     .subscribe({
       next: (updateDateManagerResponse) => {
-      this.workflowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , "HIV Case Manager status updated")
+      this.workflowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , "Case Manager status updated Successfully")
       this.caseManagerFacade.hideLoader() 
      },
        error: (err) => {

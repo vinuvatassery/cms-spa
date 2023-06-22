@@ -158,7 +158,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       ),
     ).subscribe(([navigationType, isSaved ]) => {
       if (isSaved) {
-        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')
+        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated Successfully')
         this.checkBoxSubscription.unsubscribe();
         this.workflowFacade.navigate(navigationType);
       } else {
@@ -236,7 +236,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     this.familyAndDependentFacade.updateDependentStatus
     (this.clientCaseEligibilityId,this.familyStatus).subscribe((isSaved) => {
       if (isSaved ?? false) {
-        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated')
+        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated Successfully')
         if(this.isFamilyGridDisplay ?? false)
         {
           this.updateWorkFlowStatus();

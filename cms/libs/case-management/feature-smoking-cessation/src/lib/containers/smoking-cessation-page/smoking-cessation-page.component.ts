@@ -169,7 +169,7 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
         this.loaderService.hide();
-        this.smokingCessationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Smoking cessation saved sucessfully')
+        this.smokingCessationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Smoking cessation saved Sucessfully')
         this.workflowFacade.navigate(navigationType);
       } else {
         this.workflowFacade.enableSaveButton();
