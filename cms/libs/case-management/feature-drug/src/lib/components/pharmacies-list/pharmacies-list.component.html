@@ -69,7 +69,7 @@
               [popupSettings]="{ popupClass: popupClassAction, animate: true }">
 
                   <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
-                      <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                      <button kendoButton  [disabled]="(isReadOnly$ | async) ? true : false" look="flat" [attr.aria-label]="buttondataItem.text"
                           [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(clientPharmacy)">
                           <span class="material-icons"
                               [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
@@ -114,7 +114,7 @@
     </div>
     <div class="flex-row">
       <div class="flex-col mt-1">
-        <button kendoButton [primary]="true" icon="add" [disabled]="disableAddpharmacyButton((pharmaciesList$ | async))" (click)="onOpenPharmacyClicked()" aria-label="add pharmacy">
+        <button kendoButton [primary]="true" icon="add" [disabled]="disableAddpharmacyButton((pharmaciesList$ | async))||((isReadOnly$ | async) ? true : false)" (click)="onOpenPharmacyClicked()" aria-label="add pharmacy">
           Pharmacy
         </button>
       </div>
