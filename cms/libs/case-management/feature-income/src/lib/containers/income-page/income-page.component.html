@@ -71,6 +71,77 @@
               </div>
 
             </form>
+            <!-- Dependents' Proof of School -->
+<div class="flex-row mt-3" *ngIf="dependentsProofofSchools.length > 0 && !isCerForm">
+  <div class="flex-col">
+    <h5 class="text-capital align-items-center">Dependents' Proof of School</h5>
+    <div class="app-c-table">
+      <kendo-grid [data]="dependentsProofofSchools" [resizable]="true">
+        <kendo-grid-column field="name" title="Name" [width]="130">
+        </kendo-grid-column>
+        <kendo-grid-column field="age" title="Age" [width]="130">
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="relationship"
+          title="Relationship"
+          [width]="130"
+        ></kendo-grid-column>
+        <kendo-grid-column
+          field="ProofofSchool"
+          title="Proof of School"
+          [width]="130"
+          class="text-center"
+          [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled"
+        >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <div class="proof_income-more">
+              <span class="app-c-badge" *ngIf="dataItem.uploaingProofDoc"><span
+              class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span><span> </span>
+           </span>
+          <kendo-dropdownbutton  [data]="actions"   icon="upload"   class="TableActionPopup app-dropdown-action"   buttonClass="k-icon-button"
+            aria-label="more actions"  [popupSettings]="{ popupClass: popupClassAction, animate: true }"  >
+
+            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+
+          <button   kendoButton *ngIf="buttondataItem.id === 'attachfromclient' || (buttondataItem.id === 'removefile' && (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ')) "   class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
+            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'attachfromclient'">{{ (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? "Upload New  from client\'s attachments" : "Attach from client\'s attachments" }}  </label>
+            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'removefile'"><span class="material-icons middleicon">
+              delete
+              </span> {{ buttondataItem.text }}  </label>
+        </button>
+          <button  kendoButton  *ngIf="buttondataItem.id === 'proofOfSchoolUploaded' "  class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
+            <label  [for]="proofOfSchoolUploaded"> {{ (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? 'Upload New from computer' : 'Attach from computer ' }} </label>
+        </button>
+          </ng-template>
+
+          </kendo-dropdownbutton>
+          <button aria-label="doc name" *ngIf="dataItem.clientDocumentId !== null && dataItem.clientDocumentId!==' '" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
+            <a>{{dataItem.documentName}}</a>
+          </button>
+
+
+          <kendo-upload hidden  aria-label="upload proof" name="upload proof"
+          [restrictions]="uploadFileRestrictions.fileRestrictions"   [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event,dataItem)"
+          #proofOfSchoolUploaded [ngModel]="proofOfSchoolDocument" [ngModelOptions]="{standalone: true}">
+          </kendo-upload>
+        </div>
+        </ng-template>
+        </kendo-grid-column>
+
+         <!-- grid Loader Template -->
+    <ng-template kendoGridLoadingTemplate>
+      <common-grid-loader-component></common-grid-loader-component>
+     </ng-template>
+     <!-- grid No data Template -->
+     <ng-template kendoGridNoRecordsTemplate>
+       <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+       </div>
+       <p>There is no data to display.</p>
+     </ng-template>
+      </kendo-grid>
+    </div>
+  </div>
+</div>
           </div>
           <div *ngIf="!hasNoIncome">
             <case-management-income-list [isCerForm]="isCerForm" [hasNoIncome]="hasNoIncome" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
