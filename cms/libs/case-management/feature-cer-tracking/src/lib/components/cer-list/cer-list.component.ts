@@ -12,7 +12,7 @@ import {
 import { CerTrackingFacade, StatusFlag } from '@cms/case-management/domain';
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor, State , filterBy} from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, FilterDescriptor, State , filterBy} from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
 @Component({
@@ -237,13 +237,14 @@ export class CerListComponent implements OnInit, OnChanges {
     maxResultCountValue: number,
     sortValue: string,
     sortTypeValue: string
-  ) {
+  ) {   
     const gridDataRefinerValue = {
       trackingDate: this.selectedDate,
       skipCount: skipcountValue,
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter : this.state?.["filter"]?.["filters"] ?? []
     };    
     if(this.selectedDate)
     {
@@ -313,8 +314,8 @@ export class CerListComponent implements OnInit, OnChanges {
       {     
       this.gridDataResult.data[res].eligibilityEndDate = new Date(this.gridDataResult?.data[res].eligibilityEndDate)
       }
-    }  
-    this.gridDataResult.data = filterBy(this.gridDataResult.data, this.filterData)
+    }      
+    //this.gridDataResult.data = filterBy(this.gridDataResult.data, this.filterData)
     this.gridCERDataSubject.next(this.gridDataResult);  
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;
@@ -353,12 +354,14 @@ export class CerListComponent implements OnInit, OnChanges {
  public filterChange(filter: CompositeFilterDescriptor): void {
   this.filterData = filter;
 
-  this.gridDataResult.data = filterBy(this.gridDataResult.data, filter)
+  //this.gridDataResult.data = filterBy(this.gridDataResult.data, filter)
   this.gridCERDataSubject.next(this.gridDataResult);  
  }
   public columnChange(e: ColumnVisibilityChangeEvent) {    
     const columnsRemoved = e?.columns.filter(x=> x.hidden).length
     const columnsAdded = e?.columns.filter(x=> x.hidden === false).length
+
+    this.addRemoveColumns =''
     if(columnsAdded > 0)
     {
       this.addRemoveColumns = "Columns Added"
