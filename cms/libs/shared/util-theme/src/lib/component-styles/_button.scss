@@ -16,6 +16,11 @@
     border: 1px solid;
     color: $app-primary;
     border-color: $app-primary;
+    &.k-state-disabled,
+    &.k-disabled {
+      border-color: material-color($hive-neutral-palette, 600) !important;      
+      color: material-color($hive-neutral-palette, 600) !important;
+    }
   }
   &.k-primary,
   &.k-button-solid-primary {
@@ -69,6 +74,11 @@
   &.k-danger-link {
     color: material-color($hive-error-palette, 800) !important;
     background: transparent;
+    &.k-state-disabled,
+    &.k-disabled {
+      background: material-color($hive-neutral-palette, 50) !important;      
+      color: material-color($hive-neutral-palette, 600) !important;
+    }
   }
 
   &.k-primary-link {
