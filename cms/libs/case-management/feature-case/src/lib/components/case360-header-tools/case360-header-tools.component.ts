@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef,} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommunicationEvents, ContactFacade, ScreenType } from '@cms/case-management/domain';
+import { CommunicationEvents, ContactFacade, ScreenType, StatusFlag } from '@cms/case-management/domain';
 import { Subscription } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
@@ -110,7 +110,8 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   private addPhoneNumbersSubscription() {
     this.phoneNumbersSubscription$ = this.phoneNumbers$
       .subscribe((phone: any) => {
-        this.sendActions[2].isVisible = phone?.length > 0;
+        const smsOkPhoneExist = phone.filter((phone:any) => phone.smsTextConsentFlag === StatusFlag.Yes)?.length > 0;
+        this.sendActions[2].isVisible = smsOkPhoneExist;
         this.refreshButtonList();
       });
   }

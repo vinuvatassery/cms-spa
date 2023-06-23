@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
-import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class BillingAddressDataService {
@@ -16,6 +16,13 @@ export class BillingAddressDataService {
 
   /** Public methods **/
 
+  saveBillingAddress(paymentAddress:any,vendorId:any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/address`, paymentAddress);
+  }
+
+  updateBillingAddress(paymentAddress:any,vendorId:any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/address`, paymentAddress);
+  }
  
   loadBillingAddressListService( ) {
     return of([
@@ -31,4 +38,28 @@ export class BillingAddressDataService {
     ]);
   }
 
+  loadBillingPaymentsAddressListService(vendorTypeCode: string, skipcount: number, maxResultCount: number, sort: string, sortType: string) : Observable<any> {
+    return this.http.get<any>(
+     `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/address?VendorTypeCode=${vendorTypeCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+    );
+  }
+
+  getPaymentsAddressContacts(addressId: string) {
+    return this.http.get<any>(
+     `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${addressId}/payment-contact`
+    );
+  }
+
+
+  deactivatePaymentAddress(addressId:string){
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${addressId}/deactivate-payment-address`, {}
+     );
+  }
+
+  deletePaymentAddress(addressId:string){
+    return this.http.delete<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${addressId}/delete-payment-address`
+     );
+  }
 }

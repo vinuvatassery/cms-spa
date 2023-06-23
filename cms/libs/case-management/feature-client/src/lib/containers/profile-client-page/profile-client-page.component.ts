@@ -2,7 +2,7 @@
 import { OnInit, Component, ChangeDetectionStrategy,ChangeDetectorRef} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CaseFacade, ClientProfile,ClientFacade, StatusPeriodFacade } from '@cms/case-management/domain';
-import { first, Subject } from 'rxjs';
+import { BehaviorSubject, first, Subject } from 'rxjs';
 import { SnackBarNotificationType,LoaderService } from '@cms/shared/util-core';
 
 @Component({
@@ -107,8 +107,7 @@ export class ProfileClientPageComponent implements OnInit {
             lastModifierId: clientData?.lastModifierId
           }
           this.loadRamSellInfo(client.clientId);
-          this.clientSubject.next(client);
-
+          this.clientSubject.next(client);         
         }
       });
 
@@ -130,8 +129,7 @@ export class ProfileClientPageComponent implements OnInit {
               this.clientNotes = response.clientNotes;
             }else {
               this.clientNotes = [];
-            }
-            
+            }         
             this.answersKeys = Object.entries(response?.client).map(([key, value]) => ({key, value}));
             
             if(this.answersKeys && this.answersKeys.length > 0){
@@ -150,7 +148,7 @@ export class ProfileClientPageComponent implements OnInit {
                 else if(question.answer == "Yes"  &&  question.otherFormatKey == 'materialInAlternateFormatOther' ){
                   question.answer ='Yes' + ',' +' ' + this.answersKeys.find(answer =>answer.key == question.descKey)?.value +',' +' ' + this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value;
                 }
-              });
+              });             
               this.cdRef.detectChanges();
             }
           }

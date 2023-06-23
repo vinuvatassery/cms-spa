@@ -1,0 +1,112 @@
+<div>
+  <div class="flex-col flex-space-bw align-items-center">
+    <h5 class="title-md mb-0 text-capital">Insurance Providers</h5>
+  </div>
+  <div class="flex-col mt-1">
+    <div class="app-c-table">
+      <kendo-grid [resizable]="true" [loading]="gridLoader$ | async" [pageSize]="state.take" [pageable]="true"
+        [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
+        [columnMenu]="{ filter: false }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
+        [data]="vendorInsurancePlanGridView$ | async">
+        <kendo-grid-column field="providerName" title="Insurance Provider" [width]="100"> </kendo-grid-column>
+        <kendo-grid-column field="insurancePlanCount" title="# Of Active Plans" [width]="50"> </kendo-grid-column>
+        <kendo-grid-column field="clientCount" title="# Of Active Clients" [width]="50"> </kendo-grid-column>
+        <kendo-grid-column field="by" title="By" [width]="20">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
+              [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
+              <common-user-photo-icon [userId]="dataItem.lastUpdatedBy"></common-user-photo-icon>
+            </button>
+            <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+              <ng-template kendoPopoverBodyTemplate>
+                <common-user-profile-card [userId]="dataItem.lastUpdatedBy"></common-user-profile-card>
+              </ng-template>
+            </kendo-popover>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="Option" title="Option" [columnMenu]="false" [width]="10" class="text-center">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <kendo-dropdownbutton [data]="emailBillingAddressActions" icon="more-vertical"
+              class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
+              aria-label="more actions" title="More option"
+              [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+              <span hidden> More Option</span>
+              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+                <ng-container>
+                  <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                    [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                    <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                    <label> {{ buttondataItem.text }} </label>
+                  </button>
+                </ng-container>
+              </ng-template>
+            </kendo-dropdownbutton>
+          </ng-template>
+        </kendo-grid-column>
+
+        <div *kendoGridDetailTemplate="let dataItem">
+          <cms-financial-insurance-plan-list [vendorId]="vendorId" [providerId]="dataItem.providerId"></cms-financial-insurance-plan-list>
+        </div>
+
+        <!-- grid Pagination template -->
+        <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+          let-currentPage="currentPage">
+          <div class="grid-custom-paginationtemplates d-flex">
+            <div class="d-flex align-items-center">
+              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
+                [valueField]="'value'" aria-label="Rows Per Page" id="RowsPerPage" [valuePrimitive]="true"
+                [(value)]="state.take" (selectionChange)="pageSelectionchange($event)"></kendo-dropdownlist>
+              <kendo-pager-info> </kendo-pager-info>
+              <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+            </div>
+            <div class="d-flex">
+              <kendo-pager-input></kendo-pager-input>
+              <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+              <kendo-pager-next-buttons></kendo-pager-next-buttons>
+            </div>
+          </div>
+        </ng-template>
+        <!-- grid Loader Template -->
+        <ng-template kendoGridLoadingTemplate>
+          <common-grid-loader-component></common-grid-loader-component>
+        </ng-template>
+        <!-- grid No data Template -->
+        <ng-template kendoGridNoRecordsTemplate>
+          <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+          </div>
+          <p>There is no data to display.</p>
+        </ng-template>
+      </kendo-grid>
+    </div>
+  </div>
+  <div class="flex-col mt-1">
+    <button kendoButton [primary]="true" icon="add" aria-label="add Insurance Plan" class="mr-1"
+      (click)="clickOpenAddEditInsurancePlanDetails()">
+      Insurance Plan
+    </button>
+
+    <button kendoButton icon="export" [primary]="true" look="flat" aria-label="Export Insurance Plan">
+      Export
+    </button>
+  </div>
+</div>
+
+<kendo-dialog *ngIf="isInsurancePlanDetailShow" (close)="clickCloseAddEditInsurancePlanDetails()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar (close)="clickCloseAddEditInsurancePlanDetails()"> Add/Edit Insurance Plan
+  </kendo-dialog-titlebar>
+  <cms-financial-insurance-plan-details> </cms-financial-insurance-plan-details>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isInsurancePlanDeactivateShow" (close)="clickCloseDeactivateInsurancePlan()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar> Deactivate Insurance Plan?</kendo-dialog-titlebar>
+  <cms-financial-insurance-plan-deactivate> </cms-financial-insurance-plan-deactivate>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isInsurancePlanDeleteShow" (close)="clickCloseDeleteInsurancePlan()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar> Delete Insurance Plan?</kendo-dialog-titlebar>
+  <cms-financial-insurance-plan-delete> </cms-financial-insurance-plan-delete>
+</kendo-dialog>

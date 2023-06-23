@@ -354,12 +354,11 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
         this.addressForm.controls["address2"].enable();
         this.addressForm.controls["city"].enable();
         this.addressForm.controls["state"].enable();
-        this.addressForm.controls["state"].setValue('');
+        this.addressForm.controls["state"].setValue(null);
         this.addressForm.controls["zip"].enable();
         this.addressForm.controls["county"].disable();
         this.addressForm.controls["effectiveDate"].enable();
         break;
-
     }
     this.cd.detectChanges();
   }

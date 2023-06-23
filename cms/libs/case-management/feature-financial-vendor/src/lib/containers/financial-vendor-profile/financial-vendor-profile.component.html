@@ -1,5 +1,7 @@
 <cms-vendor-profile-header
-[vendorProfile$]="vendorProfile$ | async"></cms-vendor-profile-header>
+[vendorProfile$]="vendorProfile$ | async"
+[vendorProfileSpecialHandling$]="vendorProfileSpecialHandling$"
+(loadSpecialHandlingEvent)="loadSpecialHandling()"></cms-vendor-profile-header>
 
 
 
@@ -24,14 +26,14 @@
         <div class="block-section">
 
           <div class="client-profile-outlet">
-            <cms-payment-addresses></cms-payment-addresses>
+            <cms-payment-addresses [vendorId]="vendorId"></cms-payment-addresses>
           </div>
         </div>
       </ng-template>
     </kendo-tabstrip-tab>
 
     <kendo-tabstrip-tab title="Drugs" *ngIf="tabCode === financeManagementTabs.Manufacturers">
-     
+
       <ng-template kendoTabContent>
         <div class="block-section">
 
@@ -43,31 +45,31 @@
     </kendo-tabstrip-tab>
 
     <kendo-tabstrip-tab title="Payments" *ngIf="tabCode === financeManagementTabs.InsuranceVendors">
- 
+
       <ng-template kendoTabContent>
         <div class="block-section">
 
           <div class="client-profile-outlet">
-            <cms-financial-payments></cms-financial-payments>
-          </div>
-        </div>
-      </ng-template>
-    </kendo-tabstrip-tab>
-
-    <kendo-tabstrip-tab title="Insurance Plans" *ngIf="tabCode === financeManagementTabs.InsuranceVendors">
-  
-      <ng-template kendoTabContent>
-        <div class="block-section">
-
-          <div class="client-profile-outlet">
-            <cms-financial-insurance-plans></cms-financial-insurance-plans>
+            <cms-financial-payments *ngIf="vendorId" [vendorId]="vendorId"></cms-financial-payments>
           </div>
         </div>
       </ng-template>
     </kendo-tabstrip-tab>
 
     <kendo-tabstrip-tab title="Insurance Provider" *ngIf="tabCode === financeManagementTabs.InsuranceVendors">
-     
+
+      <ng-template kendoTabContent>
+        <div class="block-section">
+
+          <div class="client-profile-outlet">
+            <cms-financial-insurance-provider-list  [vendorId]="vendorId"></cms-financial-insurance-provider-list>
+          </div>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
+
+    <!-- <kendo-tabstrip-tab title="Insurance Provider" *ngIf="tabCode === financeManagementTabs.InsuranceVendors">
+
       <ng-template kendoTabContent>
         <div class="block-section">
 
@@ -76,10 +78,10 @@
           </div>
         </div>
       </ng-template>
-    </kendo-tabstrip-tab>
+    </kendo-tabstrip-tab> -->
 
     <kendo-tabstrip-tab title="Claims" *ngIf="tabCode === financeManagementTabs.Pharmacy">
-  
+
       <ng-template kendoTabContent>
         <div class="block-section">
 
@@ -91,24 +93,24 @@
     </kendo-tabstrip-tab>
 
     <kendo-tabstrip-tab title="Invoices" *ngIf="tabCode === financeManagementTabs.Manufacturers || tabCode === financeManagementTabs.MedicalProvider || tabCode === financeManagementTabs.DentalProvider">
- 
+
       <ng-template kendoTabContent>
         <div class="block-section">
 
           <div class="client-profile-outlet">
-            <cms-invoices></cms-invoices>
+            <cms-invoices [tabCode]="tabCode" [vendorId]="vendorId"></cms-invoices>
           </div>
         </div>
       </ng-template>
     </kendo-tabstrip-tab>
 
     <kendo-tabstrip-tab title="Clients" *ngIf="tabCode !== financeManagementTabs.Manufacturers">
-   
+
       <ng-template kendoTabContent>
         <div class="block-section ">
 
           <div class="client-profile-outlet">
-            <cms-clients></cms-clients>
+            <cms-clients [vendorTypeCode]="vendorTypeCode" [providerId]="vendorId"></cms-clients>
           </div>
         </div>
       </ng-template>
@@ -131,8 +133,8 @@
 <div class="app-c-fab-container" kendoTooltip position="left">
   <kendo-floatingactionbutton class="app-c-fab" title="Event Log" #myFab (click)="handleShowEventLogClicked()">
     <ng-template kendoFloatingActionButtonTemplate>
-      <span class="material-icons" aria-label="event log assignment" aria-hidden="true">assignment</span> 
-    </ng-template> 
+      <span class="material-icons" aria-label="event log assignment" aria-hidden="true">assignment</span>
+    </ng-template>
   </kendo-floatingactionbutton>
 
 

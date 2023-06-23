@@ -61,6 +61,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   isCerForm = false;
   cerNote = ''
   acceptanceModalTitle: String = 'Application Accepted';
+  isreviewQuestionAnswersFacadeSubscribed = false;
   private saveForLaterValidationSubscription !: Subscription;
   /** Constructor **/
   constructor(
@@ -98,6 +99,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   private addDiscardChangesSubscription(): void {
     this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
       if (response) {
+        this.cerNote = ""
         this.loadSessionData();  
       }
     });
@@ -114,6 +116,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   }
 
   loadReviewQuestionAnswers() {
+    this.isreviewQuestionAnswersFacadeSubscribed = true;
     this.reviewQuestionAnswerSubscription = this.reviewQuestionAnswerFacade.reviewQuestionAnswers$
       .subscribe((data: any) => {
         this.reviewQuestionAnswers = data;
@@ -241,7 +244,9 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
         this.eligibility = results[1];
         this.cdr.detectChanges();
         this.loaderService.hide();
-        this.loadReviewQuestionAnswers();
+        if(!this.isreviewQuestionAnswersFacadeSubscribed){
+          this.loadReviewQuestionAnswers();
+        }
       }
       , error: (error) => {
         this.showSnackBar(SnackBarNotificationType.ERROR, error);

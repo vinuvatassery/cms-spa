@@ -17,10 +17,12 @@ export class FinancialVendorProfileComponent implements OnInit {
   vendorId!: string;
   providerId!: string;
   tabCode!: string;
-  profileInfoTitle = "info";  
+  vendorTypeCode!: string;
+  profileInfoTitle = "info";
   addressGridView = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   vendorProfile$ = this.financialVendorFacade.vendorProfile$
+  vendorProfileSpecialHandling$ = this.financialVendorFacade.vendorProfileSpecialHandling$
   constructor(private activeRoute: ActivatedRoute, private financialVendorFacade : FinancialVendorFacade) {}
 
   ngOnInit(): void {
@@ -30,13 +32,13 @@ export class FinancialVendorProfileComponent implements OnInit {
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
     return FinancialVendorProviderTabCode;
   }
-  
+
   /** Private properties **/
   loadQueryParams() {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
     this.providerId = this.activeRoute.snapshot.queryParams['prv_id'];
     this.tabCode = this.activeRoute.snapshot.queryParams['tab_code'];
-
+    this.vendorTypeCode = this.activeRoute.snapshot.queryParams['vendor_type_code'];
     if(this.vendorId && this.tabCode)
     {
     this.loadFinancialVendorProfile(this.vendorId)
@@ -62,11 +64,15 @@ export class FinancialVendorProfileComponent implements OnInit {
 
   handleShowEventLogClicked() {
     this.isShownEventLog = !this.isShownEventLog;
- 
+
   }
 
   loadFinancialVendorProfile(vendorId : string)
-  {       
+  {
     this.financialVendorFacade.getVendorProfile(vendorId,this.tabCode)
+  }
+
+  loadSpecialHandling() {
+    this.financialVendorFacade.getVendorProfileSpecialHandling(this.vendorId);
   }
 }
