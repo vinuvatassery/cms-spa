@@ -1,4 +1,4 @@
-<section class="k-dialog-body">
+<section class="k-dialog-body" [formGroup]="clientReminderForm">
   <p class="text-muted">All fields are required unless otherwise stated.</p>
   <section>
     <div class="flex-row">
@@ -7,8 +7,9 @@
           <kendo-datepicker
             format="MM-dd-yyyy"
             [fillMode]="formUiStyle.dateInputFillMode"
-            [(ngModel)]="currentDate"
+            formControlName="dueDate"
             formatPlaceholder="formatPattern"
+            placeholder=""
           >
           </kendo-datepicker>
         </kendo-floatinglabel>
@@ -18,6 +19,7 @@
           <kendo-timepicker
             format="hh:mm"
             [fillMode]="formUiStyle.dateInputFillMode"
+            formControlName="time"
             formatPlaceholder="formatPattern"
           ></kendo-timepicker>
         </kendo-floatinglabel>
@@ -29,6 +31,7 @@
             [fillMode]="formUiStyle.inputFillMode"
             aria-label="custom remider description"
             resizable="auto"
+            formControlName="description"
             [maxlength]="tareaRemindermaxLength"
             [value]="tareaReminderDescription"
             (valueChange)="onTareaReminderValueChange($event)"
@@ -108,6 +111,7 @@
             id="addToOutlookCalender"
             kendoCheckBox
             aria-labelledby="addToOutlookCalender"
+            formControlName="addToOutlookCalender"
           />
           <label class="k-checkbox-label" for="addToOutlookCalender"
             >Add to Outlook Calendar</label
