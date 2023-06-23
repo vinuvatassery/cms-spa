@@ -60,6 +60,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   prevClientCaseEligibilityId: any;
   isCerForm = false;
   cerNote = ''
+  isreviewQuestionAnswersFacadeSubscribed = false;
   acceptanceModalTitle: String = 'Application Accepted';
   private saveForLaterValidationSubscription !: Subscription;
   /** Constructor **/
@@ -115,6 +116,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   }
 
   loadReviewQuestionAnswers() {
+    this.isreviewQuestionAnswersFacadeSubscribed = true;
     this.reviewQuestionAnswerSubscription = this.reviewQuestionAnswerFacade.reviewQuestionAnswers$
       .subscribe((data: any) => {
         this.reviewQuestionAnswers = data;
@@ -242,7 +244,9 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
         this.eligibility = results[1];
         this.cdr.detectChanges();
         this.loaderService.hide();
-        this.loadReviewQuestionAnswers();
+        if(!this.isreviewQuestionAnswersFacadeSubscribed){
+          this.loadReviewQuestionAnswers();
+        }
       }
       , error: (error) => {
         this.showSnackBar(SnackBarNotificationType.ERROR, error);
