@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -49,7 +49,8 @@ export class CasePageComponent implements OnInit {
       private readonly caseFacade: CaseFacade,
       private readonly workflowFacade :WorkflowFacade,
       private readonly loginUserFacade : UserManagementFacade,
-      private readonly lovFacade : LovFacade
+      private readonly lovFacade : LovFacade,
+      private readonly  cdr :ChangeDetectorRef
     ) {}
 
   /** Lifecycle hooks **/
@@ -95,9 +96,9 @@ export class CasePageComponent implements OnInit {
         this.isRightReminderBarEnabled = true;
         this.totalClientsCount = this.caseFacade.totalClientsCount;
         break;
-     }    
+     }
       default:
-      {        
+      {
          break;
       }
    }
@@ -160,6 +161,7 @@ export class CasePageComponent implements OnInit {
      {
        this.pageSizes = this.caseFacade.gridPageSizes;
         this.caseFacade.loadCases(this.selectedTab, skipcountValue ,maxResultCountValue  ,sortValue , sortTypeValue, columnName, filter, totalClientsCount);
-     }
+        this.cdr.detectChanges();
+      }
 
 }

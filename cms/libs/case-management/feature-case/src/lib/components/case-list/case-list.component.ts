@@ -14,7 +14,7 @@ import { CaseFacade,CaseScreenTab, CaseStatusCode, WorkflowTypeCode, GridFacade,
 import { Observable, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade, UserDataService } from '@cms/system-config/domain';
-import { FilterService, ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
+import { FilterService, ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
 import {ConfigurationProvider} from '@cms/shared/util-core';
@@ -82,7 +82,7 @@ public state!: any;
     NOOI:"officialIdFullName",
     CI:"clientId"
   }
-  columnName!: any;
+  columnName: any = "";
 
   /** Public properties **/
   dateFormat = this.configurationProvider.appSettings.dateFormat;
@@ -90,7 +90,7 @@ public state!: any;
   groupLov$ = this.lovFacade.groupLov$;
   caseStatusType$ = this.lovFacade.caseStatusType$;
   selectedColumn!: any;
-  filter! : any
+  filter : any = "";
   public formUiStyle : UIFormStyle = new UIFormStyle();
   @Output() loadCasesListEvent = new EventEmitter<any>();
   groupData:any=[]
@@ -147,7 +147,6 @@ public state!: any;
   }
   ngOnChanges(): void {
       this.defaultGridState();
-
       this.sortColumn = this.columns[this.sort[0]?.field];
       if(this.sort[0]?.dir === 'asc') {
         this.sortDir = 'Ascending';
@@ -161,14 +160,16 @@ public state!: any;
         this.columnName = "";
         this.filter = "";
       }
-    this.loadProfileCasesList()
   }
   defaultGridState(){
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
-      filters:{logic:'and',filters:[]}
+      filters:{logic:'and',filters:[]},
+      selectedColumn: 'ALL',
+      columnName: '',
+      searchValue: ''
       };
   }
  filterChange(filter: CompositeFilterDescriptor): void {
@@ -198,6 +199,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
  pageselectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
+    this.saveGridState();
     this.loadProfileCasesList()
   }
   public dataStateChange(stateData: any): void {
@@ -273,7 +275,6 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       parentModuleCode:this.parentModule,
       userId:this.loginUserId
     };
-    this.gridFacade.hideLoader();
     this.gridFacade.createGridState(gridState).subscribe({
       next: (x:any) =>{
         this.gridFacade.hideLoader();
@@ -284,12 +285,18 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     });
   }
   private getGridState(){
-    this.gridFacade.hideLoader();
+    this.gridFacade.showLoader();
     this.gridFacade.loadGridState(this.loginUserId,GridStateKey.GRID_STATE,this.module).subscribe({
       next: (x:any) =>{
         if(x){
           this.state=JSON.parse(x?.gridStateValue || '{}') ;
+          if(this.state.searchValue!='' && this.state.searchValue!=undefined){
+            this.filter = this.searchValue = this.state.searchValue;
+            this.columnName = this.state.columnName;
+            this.selectedColumn = this.state.selectedColumn;
+          }
         }
+        this.loadProfileCasesList();
         this.gridFacade.hideLoader();
       },
       error: (error:any) =>{
@@ -309,8 +316,10 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   {
     this.state.skip = 0;
     this.state.take = this.pageSizes[0]?.value;
-    this.columnName = this.columnDroplist[this.selectedColumn];
-    this.filter = event;
+    this.columnName = this.state.columnName = this.columnDroplist[this.selectedColumn];
+    this.filter = this.state.searchValue = event;
+    this.state.selectedColumn = this.selectedColumn;
+    this.saveGridState();
     this.loadProfileCasesList();
   }
   setToDefault()
@@ -328,7 +337,10 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort
+      sort: this.sort,
+      selectedColumn: 'ALL',
+      columnName: '',
+      searchValue: ''
       };
     this.gridFilter = {logic:'and',filters:[]}
     this.sortColumn = this.columns[this.sort[0]?.field];
@@ -366,6 +378,34 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     {
       this.addRemoveColumns = "Default Columns"
     }
+
+    for(let i=0; i<e.columns.length; i++){
+      if(e.columns[i].hidden == true) {
+       let field =  (e.columns[i] as ColumnComponent)?.field;
+       let mainFilters = this.state.filter.filters;
+       let flag = false;
+       for (let k=0; k<mainFilters.length; k++){
+         let filterList = mainFilters[k].filters;
+         for (let j=0; j< filterList.length; j++){
+           if(filterList[j].field == field){
+             flag = true;
+             this.state.filter.filters[k].filters = this.state.filter.filters[k].filters.filter((x: any) => {
+               return x.field !== field;
+             });
+             this.selectedColumn = "";
+             this.columnName = "";
+             this.filter = "";
+             this.state.searchValue = "";
+             this.state.selectedColumn = "";
+             this.state.columnName = "";
+           }
+         }
+       }
+       if (flag)
+         this.loadProfileCasesList();
+     }
+   }
+
     this.cdr.detectChanges()
   }
 
