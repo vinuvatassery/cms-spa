@@ -52,6 +52,7 @@ export class HivVerificationComponent implements OnInit {
   }
   onHivRemoveConfirmation(){
     this.verificationFacade.removeHivVerificationAttachment(this.clientHivVerificationId,this.clientId);
+    this.hivVerificationForm.controls["providerOption"].setValue(false);
   }
   onHivRemoveConfirmationOpen(clientHivVerificationId:string) {
     if(clientHivVerificationId && clientHivVerificationId != ""){

@@ -41,6 +41,7 @@ import {FinancialInsurancePlanDeactivateComponent} from './components/financial-
 import {PaymentAddressDetailsComponent} from './components/payment-address-details/payment-address-details.component';
 import {PaymentAddressDeactivateComponent} from './components/payment-address-deactivate/payment-address-deactivate.component';
 import {PaymentAddressDeleteComponent} from './components/payment-address-delete/payment-address-delete.component';
+import {VendorContactComponent} from './components/vendor-contact/vendor-contact.component';
 import { ProductivityToolsFeatureEventLogModule } from '@cms/productivity-tools/feature-event-log'; 
 import { VendorSpecialHandlingComponent } from './components/vendor-special-handling/vendor-special-handling.component';
 import { FinancialPaymentBatchSubListComponent } from './components/financial-payment-sub-list/financial-payment-sub-list.component';
@@ -98,7 +99,8 @@ import { ContactAddressListComponent } from './components/contact-address-list/c
     ContactAddressListComponent,
     VendorSpecialHandlingComponent,
     FinancialPaymentBatchSubListComponent,
-    FinancialInsurancePlanListComponent
+    FinancialInsurancePlanListComponent,
+    VendorContactComponent
   ],
   exports: [
     FinancialVendorPageComponent,

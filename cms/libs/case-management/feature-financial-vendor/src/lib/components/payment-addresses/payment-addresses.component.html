@@ -27,7 +27,7 @@
                 <kendo-grid-column field="nameOnCheck" title="Name on Check" [width]="130"> </kendo-grid-column>
                 <kendo-grid-column field="nameOnEnvelope" title="Name on Envelope" [width]="150"> </kendo-grid-column>
                 <kendo-grid-column field="paymentMethod" title="Payment Method" [width]="150"> </kendo-grid-column>
-                <kendo-grid-column field="paymentRunDateMonthly" title="Payment Run Date" [width]="150"> </kendo-grid-column>
+                <kendo-grid-column field="paymentRunDateMonthlyDesc" title="Payment Run Date" [width]="150"> </kendo-grid-column>
                 <kendo-grid-column field="acceptsCombinedPaymentsFlag" title="Accept Combined Payments?" [width]="180"> </kendo-grid-column>
                 <kendo-grid-column field="acceptsReportsFlag" title="Accepts Reports?" [width]="150"> </kendo-grid-column>
                 <kendo-grid-column field="address1" title="Address 1" [width]="180">   </kendo-grid-column>
@@ -145,9 +145,9 @@ class="app-c-modal app-c-modal-md app-c-modal-np">
 </kendo-dialog>
 <kendo-dialog *ngIf="isPaymentAddressDetailShow" (close)="clickCloseAddEditPaymentAddressDetails()"
 class="app-c-modal app-c-modal-md app-c-modal-np">
-<kendo-dialog-titlebar (close)="clickCloseAddEditPaymentAddressDetails()"> Add/Edit Payment Address
+<kendo-dialog-titlebar (close)="clickCloseAddEditPaymentAddressDetails()"> Add Payment Address
 </kendo-dialog-titlebar>
-<cms-payment-address-details> </cms-payment-address-details>
+<cms-payment-address-details (closeEvent)="closePaymentAddressDetails($event)" [isEdit]="isPaymentAddressDetailIsEdit" [billingAddress]="billingAddressObj" > </cms-payment-address-details>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isPaymentAddressDeactivateShow" (close)="clickCloseDeactivatePaymentAddress(false)" class="app-c-modal app-c-modal-sm app-c-modal-np">
