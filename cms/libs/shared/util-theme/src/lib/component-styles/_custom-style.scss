@@ -674,6 +674,13 @@ color: $app-primary-font-color;
     grid-gap: 0px;
     align-items: center;
   }
+  .template-list-wrapper-two-column {
+   display: block;
+   width: 100%;
+   > span{
+    width: 50%;
+   }
+  }
 }
 
 .no-data-available {
