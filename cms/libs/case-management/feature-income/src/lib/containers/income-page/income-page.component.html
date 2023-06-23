@@ -11,7 +11,7 @@
           <span>
             <input class="adjust-attr" type="checkbox" kendoCheckBox [(ngModel)]="noIncomeFlag" (change)="onIncomeValueChanged($event)"
               aria-labelledby="clientDoesNotRecieveAnyIncome" name="client does ot recieve any income"
-              id="clientDoesNotRecieveAnyIncome" [disabled]="isCerForm && hasValidIncome" />
+              id="clientDoesNotRecieveAnyIncome" [disabled]="isCerForm && hasValidIncome && !noIncomeFlag" />
             <label class="k-checkbox-label" for="clientDoesNotRecieveAnyIncome">Client does not receive any
               income</label>
           </span>
