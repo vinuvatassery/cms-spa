@@ -2,8 +2,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** External libraries **/
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
 
 @Injectable({ providedIn: 'root' })
@@ -15,21 +13,16 @@ export class InvoiceDataService {
   ) { }
 
   /** Public methods **/
-
  
-  loadInvoiceListService() {
-    return of([
-      {
-        Batch: 'XXXXXXXXXX `',
-        InvoiceID:'1', 
-        ClientName: 'Donna Summer',
-        NameOnPrimaryInsuranceCard: 'Donna Summer',
-        MemberID: 'XX/XX/XXXX',
-        ServiceCount: '5',
-        TotalCost: '9000',
-        by: 'No',
-      },
-    ]);
-  }
+  loadInvoiceListService(vendorId:any,state:any,tabCode:any,sortValue:any,sortType:any) {  
+    return this.http.get<any>(      
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/invoices?vendorId=${vendorId}&tabCode=${tabCode}&skipCount=
+      ${state.skip}&maxResultCount=${state.take}&SortType=${sortType}&Sorting=${sortValue}`);      
+    }
+    loadPaymentRequestServices(dataItem:any,vendorId:any,vendorType:any) {  
+    return this.http.get<any>(      
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/invoices/${dataItem.invoiceNbr}/services?vendorId=${vendorId}&vendorType=
+      ${vendorType}&paymentRequestBatchId=${dataItem.batchId}&clientId=${dataItem.clientId}`);      
+    }
 
 }
