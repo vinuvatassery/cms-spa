@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, Output, EventEmitter, OnInit, Input,ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, Input,ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
 /** Facades **/
 import { ClientFacade, CaseFacade } from '@cms/case-management/domain';
 import { LoaderService } from '@cms/shared/util-core';
@@ -31,13 +31,15 @@ export class SpecialHandlingComponent implements OnInit {
   ngOnInit(): void {
     this.loadSpecialHandlings();
     this.specialHandlings$.subscribe(question =>{
-      
       this.questions = question;
     })
+    this.clientFacade.specialHandlingChangeDetection$.subscribe(response=>{
+      this.cdRef.detectChanges();
+    });
     this.UpdateApplicantInfo.emit();
   }
   /** Private methods **/
-  private loadSpecialHandlings() { 
+  private loadSpecialHandlings() {
     this.clientFacade.loadSpecialHandlings();
   }
 

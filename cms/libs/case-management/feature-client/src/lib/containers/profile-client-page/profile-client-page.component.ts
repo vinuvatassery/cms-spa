@@ -32,7 +32,7 @@ export class ProfileClientPageComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private statusPeriodFacade: StatusPeriodFacade
   ) { }
-  
+
   ngOnInit(): void {
     this.loadQueryParams() ;
   }
@@ -42,18 +42,18 @@ export class ProfileClientPageComponent implements OnInit {
   loadQueryParams()
   {
     this.profileClientId = this.route.snapshot.queryParams['id'];
-    this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];   
+    this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
     this.tabId = this.route.snapshot.queryParams['tid'];
     this.clientCaseId =this.route.snapshot.queryParams['cid'];
     this.loadReadOnlyClientInfoEventHandler()
   }
 
   loadReadOnlyClientInfoEventHandler() {
-    this.caseFacade.loadClientProfile(this.clientCaseEligibilityId);  
+    this.caseFacade.loadClientProfile(this.clientCaseEligibilityId);
     this.specialHandlings$.subscribe(question =>{
       this.questions = question;
     })
-    this.loadApplicantInfo(); 
+    this.loadApplicantInfo();
 
     this.onClientProfileLoad()
   }
@@ -114,7 +114,6 @@ export class ProfileClientPageComponent implements OnInit {
 
   }
    loadApplicantInfo() {
-   
     this.loaderService.show();
     this.clientFacade
       .load(
@@ -124,21 +123,21 @@ export class ProfileClientPageComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           if (response) {
+            /**Populating Client */
             this.loaderService.hide();
-            /**Populating Client */          
             if(response.clientNotes?.length > 0){
               this.clientNotes = response.clientNotes;
             }else {
               this.clientNotes = [];
             }
-            
+
             this.answersKeys = Object.entries(response?.client).map(([key, value]) => ({key, value}));
-            
+
             if(this.answersKeys && this.answersKeys.length > 0){
                this.questions.forEach(question =>{
                 question.answer = this.answersKeys.find(answer =>answer.key == question.key)?.value;
                 if(question.answer == "Yes" && question.otherKey != 'interpreterType' && question.otherFormatKey != 'materialInAlternateFormatOther' && question.descKey != 'materialInAlternateFormatCodeOtherDesccription' && question.key != 'limitingConditionDescription'){
-                  question.answer = question.answer+', Since age'+ ' ' +this.answersKeys.find(answer =>answer.key == question.otherKey)?.value; 
+                  question.answer = question.answer+', Since age'+ ' ' +this.answersKeys.find(answer =>answer.key == question.otherKey)?.value;
                 } else if(question.key == 'notes' ){
                   question.answer =this.clientNotes.length > 0 ? this.clientNotes.map(function (e) { return e?.note;}).join(', ') : 'No Notes'
                 } else if(question.answer == "Yes" && question.otherKey == 'interpreterType'){
@@ -152,6 +151,7 @@ export class ProfileClientPageComponent implements OnInit {
                 }
               });
               this.cdRef.detectChanges();
+              this.clientFacade.specialHandlingChangeDetectionSubject.next(null);
             }
           }
         },
