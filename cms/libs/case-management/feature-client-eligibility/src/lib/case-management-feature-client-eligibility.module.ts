@@ -45,7 +45,8 @@ import { ClientEligibilityComponent } from './components/client-eligibility/clie
     PbmDetailComponent,
     DisenrollClientComponent,
     ClientEligibilityPageComponent,
-    ClientEligibilityComponent,
+    ClientEligibilityComponent
+    
   ],
   exports: [
     AcceptApplicationComponent,
@@ -61,7 +62,7 @@ import { ClientEligibilityComponent } from './components/client-eligibility/clie
     PbmDetailComponent,
     DisenrollClientComponent,
     ClientEligibilityPageComponent,
-    ClientEligibilityComponent,
+    ClientEligibilityComponent    
   ],
 })
 export class CaseManagementFeatureClientEligibilityModule {}
