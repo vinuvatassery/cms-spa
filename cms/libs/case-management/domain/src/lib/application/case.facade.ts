@@ -280,7 +280,7 @@ export class CaseFacade {
       if (response) {
         this.groupUpdatedSubject.next(true);
         this.currentGroupSubject.next(null);
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Group updated successfully');
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Group updated Successfully');
       }
     });
   }

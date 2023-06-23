@@ -161,7 +161,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
       .subscribe({
         next: (x: any) => {
           this.insurancePolicyFacade.hideLoader();
-          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Insurance priorities updated successfully')
+          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Insurance priorities updated Successfully')
           this.onModalCloseClicked();
           this.priorityAdded.emit();
         },

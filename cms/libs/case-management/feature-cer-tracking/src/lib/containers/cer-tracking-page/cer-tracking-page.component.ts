@@ -81,6 +81,7 @@ export class CerTrackingPageComponent implements OnInit {
       maxResultCount: gridDataRefinerValue.pagesize,
       sort: gridDataRefinerValue.sortColumn,
       sortType: gridDataRefinerValue.sortType,
+      filter: gridDataRefinerValue.filter
     };
 
     this.pageSizes = this.cerTrackingFacade.gridPageSizes;
@@ -89,7 +90,8 @@ export class CerTrackingPageComponent implements OnInit {
       gridDataRefiner.skipcount,
       gridDataRefiner.maxResultCount,
       gridDataRefiner.sort,
-      gridDataRefiner.sortType
+      gridDataRefiner.sortType,
+      gridDataRefiner.filter
     );
 
     this.cerTrackingFacade.getCerTrackingDateCounts(gridDataRefiner.trackingDate);

@@ -48,6 +48,7 @@ public state!: any;
   @Input() selectedTab: CaseScreenTab = 0;
   @Input() module: string = '';
   @Input() parentModule: string = '';
+  addRemoveColumns="Default Columns"
   columns : any = {
     clientFullName:"Client Name",
     officialIdFullName:"Name on Official ID",
@@ -348,6 +349,23 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   }
 
   public columnChange(e: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = e?.columns.filter(x=> x.hidden).length
+    const columnsAdded = e?.columns.filter(x=> x.hidden === false).length
+
+    this.addRemoveColumns =''
+    if(columnsAdded > 0)
+    {
+      this.addRemoveColumns = "Columns Added"
+    }
+
+    if(columnsRemoved > 0)
+    {
+      this.addRemoveColumns += " Columns Removed"
+    }
+    if(columnsAdded == 0 && columnsRemoved == 0)
+    {
+      this.addRemoveColumns = "Default Columns"
+    }
     this.cdr.detectChanges()
   }
 

@@ -145,8 +145,8 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
     this.buildForm();
       this.clientSearchResult$.subscribe(data=>{
       this.showHeaderSearchInputLoader = false;
-    })
-   
+    }) 
+
   }
 
   private buildForm() {
@@ -156,7 +156,7 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-
+    
     this.searchBars$.subscribe((searchHeaderType: string) =>
     {
       if(searchHeaderType)
