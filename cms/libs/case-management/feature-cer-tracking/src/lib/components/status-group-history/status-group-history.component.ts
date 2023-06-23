@@ -1,3 +1,4 @@
+
 import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { CaseFacade, StatusPeriodFacade } from '@cms/case-management/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
@@ -20,6 +21,7 @@ export class StatusGroupHistoryComponent implements OnInit {
   selectedGroupId!: string;
   loader: boolean = false;
   private statusGroupDialog: any;
+  private deleteStatusGroupDialog: any;
   constructor(
     private statusPeriodFacade: StatusPeriodFacade,
     private caseFacade: CaseFacade,    
@@ -57,6 +59,7 @@ export class StatusGroupHistoryComponent implements OnInit {
 
   onGroupDetailClosed(result: any) {
     this.isGroupDetailOpened = false;
+    this.statusGroupDialog.close();
     if (result) {
       this.statusGroupDialog.close();
     }
@@ -72,32 +75,42 @@ export class StatusGroupHistoryComponent implements OnInit {
     };
     this.caseFacade.updateEligibilityGroup(newGroup);
     this.isGroupDetailOpened = false;
+    this.statusGroupDialog.close();
     this.selectedGroupId = "";
   }
 
   onGroupChangeCancelClicked(event: any) {
     this.isGroupDetailOpened = false;
+    this.statusGroupDialog.close();
     this.selectedGroupId = "";
   }
 
-  onDeleteGroupClicked(event: any) {
+  onDeleteGroupClicked(event: any, template: TemplateRef<unknown>): void{
+    this.statusGroupDialog.close();
+    this.deleteStatusGroupDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
     this.isGroupDeleteModalOpened = true;
   }
 
   onConfirmGroupDelete() {
-    if (!!this.selectedGroupId) {
+    if (this.selectedGroupId) {
       this.caseFacade.deleteEligibilityGroup(this.selectedGroupId);
       this.groupDeleted$.subscribe((res)=>{
-        if(!!res){
+        if(res){
           this.loadGroupHistory();
         }
       });
-    }
-    this.isGroupDeleteModalOpened = false;
-    this.isGroupDetailOpened = false;
+      this.isGroupDeleteModalOpened = false;
+      this.isGroupDetailOpened = false;
+      this.deleteStatusGroupDialog.close();
+      this.statusGroupDialog.close();
+    }   
   }
 
   onCancelDelete() {
+    this.deleteStatusGroupDialog.close();
     this.isGroupDeleteModalOpened = false;
     this.selectedGroupId = "";
   }
