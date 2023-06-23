@@ -9,10 +9,14 @@
             [fillMode]="formUiStyle.dateInputFillMode"
             formControlName="dueDate"
             formatPlaceholder="formatPattern"
+            (select)="dateValidate($event)" (keyup)="dateValidate($event)"
             placeholder=""
           >
           </kendo-datepicker>
         </kendo-floatinglabel>
+        
+        <kendo-formerror *ngIf="dateValidator">Due Date cannot be less than Current Date.</kendo-formerror>
+        <kendo-formerror *ngIf="!clientReminderForm.controls['dueDate'].valid">Due Date is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Time (Optional)">
@@ -41,9 +45,10 @@
             </kendo-textarea-suffix>
           </kendo-textarea>
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="!clientReminderForm.controls['description'].valid">Description is required.</kendo-formerror>
       </div>
       
-      <div class="flex-col mt-3" *ngIf="isCustomReminder">
+      <div class="flex-col mt-3" *ngIf="isShow">
         <div class="autoSelect-search mat-form-no-b-space">
           <div class="global-search">
             <span
@@ -73,7 +78,7 @@
           </div>
         </div>
       </div>
-        <div class="flex-col mt-3" *ngIf="isCustomReminder"  >
+        <div class="flex-col mt-3" *ngIf="isShow"  >
           <div class="global-search mat-form-no-b-space">
             <span
               class="material-icons global-search-icon"
@@ -128,11 +133,11 @@
       [primary]="true"
       look="outline"
       aria-label="cancel creating reminder"
-      (click)="closeReminderDetails()"
+      (click)="onCloseReminderClicked()"
     >
       Cancel
     </button>
-    <button kendoButton [primary]="true" aria-label="create reminder">
+    <button kendoButton [primary]="true"  (click)="save()"  aria-label="create reminder">
       Create
     </button>
   </section>
