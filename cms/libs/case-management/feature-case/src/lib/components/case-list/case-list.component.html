@@ -59,7 +59,15 @@
     </kendo-grid-column>
     <kendo-grid-column field="insuranceFullName" title="Name on Primary Insurance Card"  [width]="160" [hidden]="true">
     </kendo-grid-column>
-    <kendo-grid-column field="dateOfBirth" title="Date of Birth" [width]="160" [format]="{ date: 'MM-dd-yyyy' }" [hidden]="true">
+    <kendo-grid-column field="dateOfBirth" title="Date of Birth" [width]="160" [format]="{ date: 'MM-dd-yyyy' }" [hidden]="true" filter="date">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <common-grid-cell-date-range-filter
+          [field]="'dateOfBirth'"
+          [filter]="filter"
+          [filterService]="filterService"
+        >
+        </common-grid-cell-date-range-filter>
+  </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="pronouns" title="Pronouns"   [width]="120">
     </kendo-grid-column>

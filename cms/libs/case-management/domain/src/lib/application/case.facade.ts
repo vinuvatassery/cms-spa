@@ -355,7 +355,9 @@ export class CaseFacade {
     sortType: string,
     columnName: any,
     filter: any,
-    totalClientsCount : any
+    totalClientsCount : any,
+    afterDate: any,
+    beforeDate: any
   ): void {
     this.searchLoaderVisibilitySubject.next(true);
     this.caseDataService
@@ -367,7 +369,9 @@ export class CaseFacade {
         sortType,
         columnName,
         filter,
-        totalClientsCount
+        totalClientsCount,
+        afterDate,
+        beforeDate
       )
       .subscribe({
         next: (casesResponse: any) => {

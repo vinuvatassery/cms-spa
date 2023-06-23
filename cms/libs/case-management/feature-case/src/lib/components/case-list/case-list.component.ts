@@ -90,6 +90,8 @@ public state!: any;
   caseStatusType$ = this.lovFacade.caseStatusType$;
   selectedColumn!: any;
   filter! : any
+  afterDate: any;
+  beforeDate: any;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   @Output() loadCasesListEvent = new EventEmitter<any>();
   groupData:any=[]
@@ -204,16 +206,34 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.saveGridState();
     if(stateData.filter?.filters.length > 0)
     {
+      let dateFilter=stateData.filter;
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.columnName = stateFilter.field;
-      if(this.columnName === 'eilgibilityStartDate' || this.columnName === 'eligibilityEndDate')
+      if(this.columnName === 'eilgibilityStartDate' || this.columnName === 'eligibilityEndDate' || this.columnName === 'dateOfBirth')
       {
         let date = this.intl.formatDate(stateFilter.value, this.dateFormat);
-        this.filter = date;
+        this.filter = "DateFilter";
+        let startDate= dateFilter.filters.slice(-1)[0].filters.find((x:any)=>x.operator=='gte')
+        if(startDate){
+          this.afterDate= this.intl.formatDate(startDate.value, this.dateFormat) ;
+        }
+        else{
+          this.afterDate= '' ;
+        }
+        let endDate= dateFilter.filters.slice(-1)[0].filters.find((x:any)=>x.operator=='lte')
+        if(endDate){
+          this.beforeDate= this.intl.formatDate(endDate.value, this.dateFormat) ;
+        }
+        else{
+          this.beforeDate= '';
+        }
+        
       }
       else
       {
         this.filter = stateFilter.value;
+        this.afterDate= '';
+        this.beforeDate= '';
       }
       this.isFiltered = true;
       const filterList = []
@@ -239,9 +259,10 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.loadProfileCasesList();
 }
   private loadProfileCasesList(): void {
-    this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType, this.columnName,this.filter)
+    this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType, this.columnName,this.filter,this.afterDate,this.beforeDate)
   }
-   loadCases(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any)
+
+   loadCases(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any, afterDate: any, beforeDate: any)
    {
      const gridDataRefinerValue =
      {
@@ -250,7 +271,9 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
        sortColumn : sortValue,
        sortType : sortTypeValue,
        columnName : columnName,
-       filter : filter
+       filter : filter,
+       afterDate: afterDate,
+       beforeDate: beforeDate
      }
      this.loadCasesListEvent.next(gridDataRefinerValue)
    }

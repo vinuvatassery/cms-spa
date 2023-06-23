@@ -144,9 +144,11 @@ export class CasePageComponent implements OnInit {
       columnName : gridDataRefinerValue.columnName,
       filter : gridDataRefinerValue.filter,
       totalClientsCount : this.totalClientsCount,
+      beforeDate: gridDataRefinerValue.beforeDate,
+      afterDate: gridDataRefinerValue.afterDate
     }
     this.pageSizes = this.caseFacade.gridPageSizes;
-    this.loadCaseList(gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType, gridDataRefiner.columnName, gridDataRefiner.filter, gridDataRefiner.totalClientsCount);
+    this.loadCaseList(gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType, gridDataRefiner.columnName, gridDataRefiner.filter, gridDataRefiner.totalClientsCount,gridDataRefiner.afterDate,gridDataRefiner.beforeDate);
   }
 
   loadColumnDroplist()
@@ -156,10 +158,10 @@ export class CasePageComponent implements OnInit {
 
       /** grid event methods **/
 
-    loadCaseList(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any, totalClientsCount : any)
+    loadCaseList(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any, totalClientsCount : any, afterDate: any, beforeDate: any)
      {
        this.pageSizes = this.caseFacade.gridPageSizes;
-        this.caseFacade.loadCases(this.selectedTab, skipcountValue ,maxResultCountValue  ,sortValue , sortTypeValue, columnName, filter, totalClientsCount);
+        this.caseFacade.loadCases(this.selectedTab, skipcountValue ,maxResultCountValue  ,sortValue , sortTypeValue, columnName, filter, totalClientsCount,afterDate,beforeDate);
      }
 
 }
