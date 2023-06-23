@@ -1,4 +1,5 @@
 export enum AddressTypeCode{
     Mail ='M',
-    Home='H'
+    Home='H',
+    Phone='P'
 }
