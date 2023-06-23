@@ -17,7 +17,7 @@ export class AfterValueChangedDirective implements OnDestroy {
   public afterValueChanged: EventEmitter<any> = new EventEmitter<any>();
 
   @Input()
-  public valueChangeDelay = 450;
+  public valueChangeDelay = 650;
 
   private stream: Subject<number> = new Subject<number>();
   private subscription: Subscription;
@@ -32,7 +32,7 @@ export class AfterValueChangedDirective implements OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  @HostListener('valueChange', [ '$event' ])
+  @HostListener('valueChange', ['$event'])
   public onValueChange(value: any): void {
     this.stream.next(value);
   }

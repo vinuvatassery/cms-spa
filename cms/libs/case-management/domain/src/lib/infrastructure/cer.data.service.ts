@@ -87,10 +87,10 @@ export class CerDataService {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
   }
 
-  getCerTrackingList(trackingDate: Date, skipcount: number, maxResultCount: number, sort: string, sortType: string) {
+  getCerTrackingList(trackingDate: Date, skipcount: number, maxResultCount: number, sort: string, sortType: string , filter : any) {
     
     return this.http.get<any[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cer?trackingDate=${trackingDate}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&Filter=''`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cer?trackingDate=${trackingDate}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&Filter=${encodeURIComponent(JSON.stringify(filter))}`
     );
 
   }
