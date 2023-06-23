@@ -190,7 +190,7 @@ export class HealthcareProviderFacade {
         if(healthCareProvidersSearchResponse)
         {            
           Object.values(healthCareProvidersSearchResponse).forEach((key) => {   
-                    key.selectedCustomProvider = key.fullName+' '+key.clinicName+' '+key.address
+                    key.selectedCustomProvider = (key.fullName ?? '') +' '+ (key.clinicName ?? '') +' '+key.address
           });
           this.healthCareProviderSearchSubject.next(healthCareProvidersSearchResponse);         
          }      

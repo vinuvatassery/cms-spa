@@ -8,7 +8,12 @@
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
-      <kendo-grid [resizable]="true" [pageSize]="5" [pageable]="true" [rowClass]="rowClass"  [data]="pharmaciesList$ | async">
+      <kendo-grid [resizable]="true" [pageSize]="5" [pageable]="true" [rowClass]="rowClass"  [data]="pharmaciesList$ | async"
+      [pageSize]="state.take" [pageable]="true"
+      [sortable]="true" [skip]="state.skip" [groupable]="false"
+       [reorderable]="true"
+      [columnMenu]="{ filter: true }"
+       [sort]="state.sort">
         <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="180">
           <ng-template kendoGridCellTemplate let-dataItem>
             <div class="d-flex align-items center pos-rel" kendoTooltip>
