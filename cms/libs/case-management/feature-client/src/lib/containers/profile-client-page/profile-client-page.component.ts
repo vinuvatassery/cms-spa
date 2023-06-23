@@ -2,7 +2,7 @@
 import { OnInit, Component, ChangeDetectionStrategy,ChangeDetectorRef} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CaseFacade, ClientProfile,ClientFacade, StatusPeriodFacade } from '@cms/case-management/domain';
-import { first, Subject } from 'rxjs';
+import { BehaviorSubject, first, Subject } from 'rxjs';
 import { SnackBarNotificationType,LoaderService } from '@cms/shared/util-core';
 
 @Component({
@@ -108,7 +108,6 @@ export class ProfileClientPageComponent implements OnInit {
           }
           this.loadRamSellInfo(client.clientId);
           this.clientSubject.next(client);
-
         }
       });
 
@@ -130,7 +129,6 @@ export class ProfileClientPageComponent implements OnInit {
             }else {
               this.clientNotes = [];
             }
-
             this.answersKeys = Object.entries(response?.client).map(([key, value]) => ({key, value}));
 
             if(this.answersKeys && this.answersKeys.length > 0){

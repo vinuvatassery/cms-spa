@@ -36,6 +36,8 @@ export class ClientFacade {
   applicationInfoSubject = new Subject<any>();
   pronounListSubject = new  BehaviorSubject<any>([]);
   specialHandlingChangeDetectionSubject = new  BehaviorSubject<any>([]);
+  private clientProfileReloadSubject = new BehaviorSubject<any>([]);
+
 
   /** Public properties **/
   ddlCaseOrigins$ = this.ddlCaseOriginsSubject.asObservable();
@@ -60,6 +62,7 @@ export class ClientFacade {
   pronounList$ = this.pronounListSubject.asObservable();
   sendNewIDCard$ = this.sendNewIDCardSubject.asObservable();
   specialHandlingChangeDetection$ = this.specialHandlingChangeDetectionSubject.asObservable();
+  clientProfileReload$ = this.clientProfileReloadSubject.asObservable();
 
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
@@ -286,6 +289,7 @@ export class ClientFacade {
       return this.clientDataService.save(applicantInfo);
   }
   load(clientId:any,clientCaseId:any,eligibilityId:any) {
+      this.clientProfileReloadSubject.next(true)
       return this.clientDataService.load(clientId,clientCaseId,eligibilityId);
   }
   update(applicantInfo:ApplicantInfo,clientId:any) {
