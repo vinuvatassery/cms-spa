@@ -57,9 +57,9 @@
         {{dataItem.dob | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="clientOfficialIdFullName" title="Official Id Full Name" [width]="130"
+    <kendo-grid-column field="clientOfficialIdFullName" title="Name on Official ID" [width]="130"
       [hidden]="true"></kendo-grid-column>
-    <kendo-grid-column field="clientInsuranceFullName" title="Official Insurance Full Name" [width]="130"
+    <kendo-grid-column field="clientInsuranceFullName" title="Name on Primary Insurance Card" [width]="130"
       [hidden]="true"></kendo-grid-column>
     <kendo-grid-column field="eligibilityStatus" title="{{title$ | async}}"   [width]="130">     
     </kendo-grid-column>
@@ -119,7 +119,7 @@
    ></kendo-grid-column>
     <kendo-grid-column field="pronouns"  title="Pronouns" [width]="130"
       [hidden]="true"></kendo-grid-column>
-      <kendo-grid-column field="sexes"   [hidden]="true" title="Sexes" [width]="130"
+      <kendo-grid-column field="sexes"   [hidden]="true" title="Sex" [width]="130"
       [hidden]="true"></kendo-grid-column>
     <kendo-grid-column field="genders"  title="Gender" [width]="130"
       [hidden]="true"></kendo-grid-column>
