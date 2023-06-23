@@ -20,6 +20,7 @@ public formUiStyle : UIFormStyle = new UIFormStyle();
   tareaReminderCharachtersCount!: number;
   tareaReminderCounter!: string;
   tareaReminderDescription = '';
+  isCustomReminder= false;
   @Output() isModalNewReminderCloseClicked  = new EventEmitter();
 
   constructor(private readonly todoFacade: TodoFacade,private readonly caseFacade: CaseFacade,) {}
