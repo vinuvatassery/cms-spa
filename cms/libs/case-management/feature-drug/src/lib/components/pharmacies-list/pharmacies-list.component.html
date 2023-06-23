@@ -38,7 +38,7 @@
             </ng-template>
         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="50" [sticky]="true">
+        <kendo-grid-column field="by" title="By" [width]="100" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
@@ -62,7 +62,7 @@
             </kendo-popover>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="Option" title="Options" [width]="50" class="text-center">
+        <kendo-grid-column field="Option" title="Options" [width]="110" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem let-clientPharmacy let-pharmacyId="field">
               <kendo-dropdownbutton 
               [data]="filterActionButtonOptions( pharmacyOptions,clientPharmacy)"
