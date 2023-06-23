@@ -82,7 +82,8 @@ export class CerTrackingFacade {
     skipcount: number,
     maxResultCount: number,
     sort: string,
-    sortType: string
+    sortType: string,
+    filter : any
   ): void {  
     this.cerDataService
       .getCerTrackingList(
@@ -90,7 +91,8 @@ export class CerTrackingFacade {
         skipcount,
         maxResultCount,
         sort,
-        sortType
+        sortType,
+        filter
       )
       .subscribe({
         next: (cerTrackingResponse: any) => {
