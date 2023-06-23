@@ -202,7 +202,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
             this.loaderService.hide();
             this.clientFacade.showHideSnackBar(
               SnackBarNotificationType.SUCCESS,
-              'Applicant Info updated'
+              'Applicant Info updated Successfully'
             );
             this.onCloseEditClientInformationClicked();
             this.onUpdateApplicantInfo.emit();

@@ -16,7 +16,14 @@ export class BillingAddressDataService {
 
   /** Public methods **/
 
+  saveBillingAddress(paymentAddress:any,vendorId:any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/address`, paymentAddress);
+  }
 
+  updateBillingAddress(paymentAddress:any,vendorId:any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/address`, paymentAddress);
+  }
+ 
   loadBillingAddressListService( ) {
     return of([
       {
@@ -36,6 +43,13 @@ export class BillingAddressDataService {
      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/address?VendorTypeCode=${vendorTypeCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
     );
   }
+
+  getPaymentsAddressContacts(addressId: string) {
+    return this.http.get<any>(
+     `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${addressId}/payment-contact`
+    );
+  }
+
 
   deactivatePaymentAddress(addressId:string){
     return this.http.put<any>(

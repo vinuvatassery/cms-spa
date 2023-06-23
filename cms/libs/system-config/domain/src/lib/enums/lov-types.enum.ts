@@ -46,5 +46,6 @@ export enum LovType {
     DocumentTypeCode = 'DOCUMENT_TYPE',
     DocumentSubTypeCode = 'DOCUMENT_SUB_TYPE',
     PaymentMethodCode = 'PAYMENT_METHOD',
-    PaymentRunDate = 'PAYMENT_RUN_DATE'
+    PaymentRunDate = 'PAYMENT_RUN_DATE',
+    PaymentMethodVendor = 'PAYMENT_METHOD_VENDOR',
   }
