@@ -20,23 +20,23 @@
         <div class="flex-col">
           <kendo-floatinglabel text="To" class="inline-search-loader">
           <span *ngIf="showToEmailLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-            <kendo-multiselect
-            [fillMode]="formUiStyle.dropDownFillMode"
-            [data]="toEmail"
-            textField="email"
-            valueField="clientEmailId"
-            (valueChange)="onEmailChange($event)"
-            aria-label="to address"
-            ></kendo-multiselect>
+          <kendo-multiselect
+          [readonly]="true"
+          [fillMode]="formUiStyle.dropDownFillMode"
+          [data]="toEmail"
+          [(ngModel)]="selectedEmail"
+          aria-label="to address"
+          ></kendo-multiselect>
           </kendo-floatinglabel>
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="CC">
             <kendo-multiselect
-            [fillMode]="formUiStyle.dropDownFillMode"
-              [data]="ddlEmails$ | async"
-              aria-label="cc of email"
-            ></kendo-multiselect>
+          [fillMode]="formUiStyle.dropDownFillMode"
+          [data]="ccEmail"
+          [(ngModel)]="selectedCCEmail"
+          aria-label="cc of email"
+          ></kendo-multiselect>
           </kendo-floatinglabel>
         </div>
         <div class="flex-col">

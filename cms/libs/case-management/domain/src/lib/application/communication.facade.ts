@@ -135,4 +135,8 @@ export class CommunicationFacade {
   updateEmailTemplateForLater(formData: any, isSaveFoLater: boolean){
     return this.emailDataService.updateEsignRequestTemplate(formData, isSaveFoLater);
   }
+
+  getCCList(clientId: number, loginUserId: string){
+    return this.emailDataService.getCCEmailListForCER(clientId, loginUserId);
+  }
 }

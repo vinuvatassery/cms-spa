@@ -52,7 +52,7 @@ export class AuthorizationComponent   {
   copyOfSignedApplicationSizeValidation: boolean = false;
   prevClientCaseEligibilityId!: string;
   isGoPaperlessOpted: boolean = false;
-  toEmail: any = [];
+  toEmail: Array<string> = [];
   typeCode!: string;
   subTypeCode!: string;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
@@ -111,11 +111,11 @@ export class AuthorizationComponent   {
                 this.isGoPaperlessOpted = true;
                 this.ref.detectChanges();
                 if(data?.email?.email !== null){
-                  let emailObject = {
-                    clientEmailId : data?.email?.clientEmailId, 
-                    email : data?.email?.email.trim()
-                  }
-                  this.toEmail.push(emailObject);
+                  // let emailObject = {
+                  //   clientEmailId : data?.email?.clientEmailId, 
+                  //   email : data?.email?.email.trim()
+                  // }
+                  this.toEmail.push(data?.email?.email.trim());
                 }
               }
               this.loadClientDocumentInfo();

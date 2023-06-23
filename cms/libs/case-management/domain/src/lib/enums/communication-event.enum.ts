@@ -2,6 +2,7 @@ export enum CommunicationEvents {
   Close = 'Close',
   Print = 'Print',
   SendLetter='SendLetter',
+  SendEmail='SendEmail',
   Preview="Preview",
   CerAuthorizationEmail="CER_AUTHORIZATION_EMAIL",
   CerAuthorizationLetter="CER_AUTHORIZATION_LETTER",

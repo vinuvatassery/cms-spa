@@ -120,12 +120,6 @@ export class EmailDataService {
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/forms`
       );
     }
-    
-    initiateEsignRequest(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
-      return this.http.post<string>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/esign/${clientId}/${clientCaseEligibilityId}`,selectedTemplate
-      );
-    }
 
     getDraftTemplateAttachment(esignRequestId: string){
       return this.http.get(
@@ -160,6 +154,12 @@ export class EmailDataService {
     updateEsignRequestTemplate(formData: any, isSaveForLater: boolean){
       return this.http.put(
         `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?isSaveForLater=${isSaveForLater}`,formData
+      );
+    }
+
+    getCCEmailListForCER(clientId: number, loginUserId: string){
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${clientId}/${loginUserId}`,
       );
     }
 }

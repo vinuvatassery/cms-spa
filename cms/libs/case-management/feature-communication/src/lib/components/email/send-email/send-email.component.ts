@@ -30,7 +30,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   /** Input properties **/
   @Input() data!: any;
   @Input() ddlEmails$!: Observable<any>;
-  @Input() toEmail: any = [];
+  @Input() toEmail: Array<string> = [];
   @Input() clientCaseEligibilityId!: any;
   @Input() clientId!: any;
   @Input() isCerForm!: any; 
@@ -47,6 +47,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   /** Public properties **/
   ddlLetterTemplates$ = this.communicationFacade.ddlLetterTemplates$;
   ddlTemplates: any = [];
+  selectEmail: any = [];
   emailContentValue: any;
   isOpenSendEmailClicked!: boolean;
   isOpenDdlEmailDetails = false;
@@ -66,6 +67,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   prevClientCaseEligibilityId!: string;
   cerAuthorizationEmailTypeCode!: string;
   selectedToEmail!: any;
+  selectedEmail: any=[];
+  ccEmail: Array<string> = [];
+  selectedCCEmail: any = [];
   showToEmailLoader: boolean = true;
   caseEligibilityId!:any;
   cerEmailAttachedFiles: any[] = [];
@@ -210,7 +214,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if (CommunicationEvents.Print === event) {
       this.emailEditorValueEvent.emit(this.currentEmailData);
       this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
-      this.initiateAdobeEsignProcess(this.selectedTemplate,"SendEmail");
+      this.initiateAdobeEsignProcess(this.selectedTemplate, CommunicationEvents.SendEmail);
     }
   }
 
@@ -235,9 +239,11 @@ onClosePreviewEmail(){
     this.selectedTemplate = event;
     this.emailContentValue = event.templateContent == undefined? event.requestBody : event.templateContent;
     this.emailSubject = CommunicationEvents.CERAuthorizationSubject;
-    // this.selectedToEmail = this.toEmail[0].email.trim();
+    this.selectedEmail.push(this.toEmail[0].trim());
+    this.selectedToEmail = this.selectedEmail;
     this.handleEmailEditor(event);
     this.showToEmailLoader = false;
+    this.getCCEmailList(this.clientId, this.loginUserId);
     this.ref.detectChanges();
   }
 
@@ -260,6 +266,7 @@ onClosePreviewEmail(){
     formData.append('clientId', this.clientId ?? '');
     formData.append('requestSubject', this.emailSubject ?? ''); 
     formData.append('loginUserId', this.loginUserId ?? ''); 
+    formData.append('cCEmail', this.selectedCCEmail ?? '');
     let i = 0;
     this.cerEmailAttachedFiles.forEach((file) => { 
       if(file.rawFile == undefined || file.rawFile == null){
@@ -328,7 +335,8 @@ onClosePreviewEmail(){
       formData.append('clientId', this.clientId ?? '');
       formData.append('requestSubject', this.emailSubject ?? ''); 
       formData.append('loginUserId', this.loginUserId ?? '');
-      formData.append('esignRequestStatusCode', CommunicationEvents.EsignRequestStatusCode ?? ''); 
+      formData.append('esignRequestStatusCode', CommunicationEvents.EsignRequestStatusCode ?? '');
+      formData.append('cCEmail', this.selectedCCEmail ?? ''); 
       let i = 0;
       this.cerEmailAttachedFiles.forEach((file) => { 
         if(file.rawFile == undefined || file.rawFile == null){
@@ -390,6 +398,27 @@ onClosePreviewEmail(){
       }
     })
     this.loaderService.hide();
+  }
+
+  getCCEmailList(clientId: number, loginUserId: string){
+    this.loaderService.show();
+    this.communicationFacade.getCCList(clientId ?? 0, loginUserId ?? '')
+    .subscribe({
+      next: (data: any) =>{
+      if (data){
+        this.ccEmail = data;
+        this.selectedCCEmail = data;
+        this.ref.detectChanges();
+      }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.isOpenSendEmailClicked = true;
+      this.loggingService.logException(err);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+    },
+  });
   }
 }
 
