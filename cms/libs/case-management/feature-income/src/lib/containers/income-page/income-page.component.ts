@@ -65,7 +65,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   new UploadFileRistrictionOptions();
   proofOfSchoolDocument!:any
   columnOptionDisabled = false;
-  dependentsProofofSchools:any = [];
+  dependentsProofOfSchools:any = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -78,7 +78,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       buttonType:"btn-h-primary",
       text: "Attach from client/'s attachments",
-      id: "attachfromclient",
+      id: "attachFromClient",
       click: (event: any,dataItem: any): void => {
       },
     },
@@ -86,7 +86,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       buttonType:"btn-h-danger",
       text: "Remove file",
-      id: "removefile",
+      id: "removeFile",
       click: (event: any,dataItem: any): void => {
       this.removeDependentsProofofSchoool(dataItem.clientDocumentId)
       },
@@ -553,7 +553,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.dependentFacade.uploadDependentProofOfSchool(this.clientCaseEligibilityId, dataItem.clientDependentId, formData).subscribe({
         next: (response: any) => {
           this.loadIncomeData();
-          this.loadDependentsProofofSchools();
+          this.loadDependentsProofOfSchools();
           this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
           this.dependentFacade.hideLoader();
           this.showHideImageUploadLoader(false, dataItem);
@@ -568,7 +568,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
   showHideImageUploadLoader(showHide:boolean,dataItem:any){
-    this.dependentsProofofSchools.filter((dep:any)=>dep.clientDependentId==dataItem.clientDependentId).forEach((element:any)=>{
+    this.dependentsProofOfSchools.filter((dep:any)=>dep.clientDependentId==dataItem.clientDependentId).forEach((element:any)=>{
       element["uploaingProofDoc"]=showHide;
       this.cdr.detectChanges();
     })
@@ -579,7 +579,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.clientDocumentFacade.removeDocument(documentid).subscribe({
         next: (response: any) => {
           this.loadIncomeData();
-          this.loadDependentsProofofSchools();
+          this.loadDependentsProofOfSchools();
           this.incomeFacade.hideLoader();
           this.incomeFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Proof of school attachment removed successfully') ;
         },
@@ -591,7 +591,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       );
     }
   }
-  private loadDependentsProofofSchools() {
+  private loadDependentsProofOfSchools() {
     this.incomeFacade.showLoader();
     this.incomeFacade.loadDependentsProofofSchools();
     this.incomeFacade.hideLoader();
@@ -599,11 +599,11 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   loadDependents(){
     this.incomeFacade.dependentsProofofSchools$.subscribe((response:any)=>{
       if(response&&response.length>0){
-        this.dependentsProofofSchools=response;
+        this.dependentsProofOfSchools=response;
         this.cdr.detectChanges();
       }
       else{
-        this.dependentsProofofSchools = [];
+        this.dependentsProofOfSchools = [];
       }
     })
   }

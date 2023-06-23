@@ -72,11 +72,11 @@
 
             </form>
             <!-- Dependents' Proof of School -->
-<div class="flex-row mt-3" *ngIf="dependentsProofofSchools.length > 0 && !isCerForm">
+<div class="flex-row mt-3" *ngIf="dependentsProofOfSchools.length > 0 && !isCerForm">
   <div class="flex-col">
     <h5 class="text-capital align-items-center">Dependents' Proof of School</h5>
     <div class="app-c-table">
-      <kendo-grid [data]="dependentsProofofSchools" [resizable]="true">
+      <kendo-grid [data]="dependentsProofOfSchools" [resizable]="true">
         <kendo-grid-column field="name" title="Name" [width]="130">
         </kendo-grid-column>
         <kendo-grid-column field="age" title="Age" [width]="130">
@@ -103,9 +103,9 @@
 
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
 
-          <button   kendoButton *ngIf="buttondataItem.id === 'attachfromclient' || (buttondataItem.id === 'removefile' && (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ')) "   class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
-            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'attachfromclient'">{{ (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? "Upload New  from client\'s attachments" : "Attach from client\'s attachments" }}  </label>
-            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'removefile'"><span class="material-icons middleicon">
+          <button   kendoButton *ngIf="buttondataItem.id === 'attachFromClient' || (buttondataItem.id === 'removeFile' && (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ')) "   class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
+            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'attachFromClient'">{{ (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? "Upload New  from client\'s attachments" : "Attach from client\'s attachments" }}  </label>
+            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'removeFile'"><span class="material-icons middleicon">
               delete
               </span> {{ buttondataItem.text }}  </label>
         </button>
