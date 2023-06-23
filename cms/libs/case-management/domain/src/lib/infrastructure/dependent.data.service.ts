@@ -73,7 +73,7 @@ export class DependentDataService {
   updateEligibilityStatusDetails(eligibilityId: string, request: any) {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
-      `/eligibility-periods/${eligibilityId}/dependent-status/details`
+      `/eligibility-periods/${eligibilityId}/dependent-status`
       , request);
   }
 

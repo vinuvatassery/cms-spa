@@ -299,7 +299,7 @@
       min-height: 32px !important;
 
       &.fixed-top-breadcrumb {
-        position: relative;
+        position: sticky;
         top: 0;
         background: $white;
         z-index: 6;
@@ -674,6 +674,13 @@ color: $app-primary-font-color;
     grid-gap: 0px;
     align-items: center;
   }
+  .template-list-wrapper-two-column {
+   display: block;
+   width: 100%;
+   > span{
+    width: 50%;
+   }
+  }
 }
 
 .no-data-available {
@@ -895,7 +902,7 @@ color: $app-primary-font-color;
 .more_action_wid {
   >.k-button-solid {
     padding: 8px;
-
+    background: transparent;
     .k-button-text {
       display: none;
     }

@@ -5,7 +5,7 @@
       <div class="flex-row">
         <div class="flex-col mb-2">
           <p *ngIf="!isEdit">Specify the attachment type, select the attachment, and add a note. All fields are required.</p>
-          <p *ngIf="isEdit">Make changes as needed then click "Update".</p>
+          <p *ngIf="isEdit">Make changes as needed and then click "Update".</p>
         </div>
         <div class="flex-col" *ngIf="isEdit">
           <legend class="k-form-legend">  <h5>Attachment Name:</h5> {{this.documentName}} </legend>

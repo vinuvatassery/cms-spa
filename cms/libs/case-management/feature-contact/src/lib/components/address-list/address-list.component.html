@@ -1,8 +1,8 @@
 <div class="flex-row mt-1">
   <div class="flex-col flex-space-bw align-items-center">
     <h5 class="title-md mb-0 text-capital">Addresses</h5>
-    <div>  
-    <span class="app-checkboxwidtext-wrapper"> 
+    <div>
+    <span class="app-checkboxwidtext-wrapper">
       <input
         type="checkbox"
         kendoCheckBox
@@ -59,7 +59,7 @@
               showOn="hover"
               aria-label="profile avatar"
             >
-            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>  
+            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
             <kendo-popover
               #onUserProfileDetailsHovered
@@ -114,21 +114,21 @@
                 </button>
                 </ng-container>
               </ng-template>
-                
+
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
         </kendo-grid-column>
-              <!-- grid Loader Template -->  
+              <!-- grid Loader Template -->
        <ng-template kendoGridLoadingTemplate>
         <common-grid-loader-component></common-grid-loader-component>
        </ng-template>
-       <!-- grid No data Template -->  
+       <!-- grid No data Template -->
        <ng-template kendoGridNoRecordsTemplate>
          <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
          </div>
          <p>There is no data to display.</p>
-       </ng-template> 
+       </ng-template>
       </kendo-grid>
     </div>
   </div>
@@ -183,7 +183,7 @@
   *ngIf="isDeleteAddressPopup"
   (close)="onDeleteAddressClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Delete Houseless Address?"
+  title="Delete Unhoused Address?"
 >
   <case-management-delete-address-confirmation [clientAddress]="clientAddress" [clientId]="clientId" (deleteModalCloseEvent)="closeDeleteModalAndReload($event)"></case-management-delete-address-confirmation>
 </kendo-dialog>

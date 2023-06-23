@@ -167,7 +167,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
             this.loaderService.hide();
             this.drugPharmacyFacade.loadClientPharmacyList(this.clientId,false,this.isShowHistoricalData);
             this.drugPharmacyFacade.newAddedPharmacySubject.next(true);
-            this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities updated successfully');
+            this.drugPharmacyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Pharmacy Priorities updated Successfully');
             this.onCloseChangePriorityClicked();
           }
         },

@@ -14,7 +14,8 @@ import {
   CaseFacade,
   ClientProfileTabs,
   WorkflowFacade,
-  CaseStatusCode
+  CaseStatusCode,
+  ClientFacade
 } from '@cms/case-management/domain';
 import { filter, first, Subject, Subscription } from 'rxjs';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
@@ -52,6 +53,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   ddlGroups$ = this.caseFacade.ddlGroups$;
   currentGroup$ = this.caseFacade.currentGroup$;
   groupUpdated$ = this.caseFacade.groupUpdated$;
+  clientProfileReload$ = this.clientFacade.clientProfileReload$;
   profileClientId = 0;
   clientCaseEligibilityId!: string;
   caseWorkerId!: string;
@@ -76,12 +78,16 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     private readonly workFlowFacade : WorkflowFacade,
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
+    private readonly clientFacade: ClientFacade
   ) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
     this.initialize();
     this.routeChangeSubscription();
+    this.clientProfileReload$.subscribe(data=>{
+      this.loadClientProfileInfoEventHandler();
+    })
   }
 
   ngOnDestroy(): void {
