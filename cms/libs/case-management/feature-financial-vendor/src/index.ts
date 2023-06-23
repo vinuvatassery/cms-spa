@@ -1,13 +1,11 @@
 export * from './lib/case-management-feature-financial-vendor.module';
 
-
-
 /** Components **/
 
 export * from './lib/components/invoices/invoices.component';
 export * from './lib/components/clients/clients.component';
 export * from './lib/components/contacts/contacts.component';
-export * from './lib/components/vendor-profile-header/vendor-profile-header.component'; 
+export * from './lib/components/vendor-profile-header/vendor-profile-header.component';
 export * from './lib/components/vendors-list/vendors-list.component';
 export * from './lib/components/vendor-details/vendor-details.component';
 export * from './lib/components/financial-reminder/financial-reminder.component';
@@ -15,7 +13,7 @@ export * from './lib/components/vendor-info/vendor-info.component';
 export * from './lib/components/vendor-header-tools/vendor-header-tools.component';
 export * from './lib/components/payment-addresses/payment-addresses.component';
 export * from './lib/components/financial-drugs/financial-drugs.component';
-export * from './lib/components/financial-payments/financial-payments.component'; 
+export * from './lib/components/financial-payments/financial-payments.component';
 export * from './lib/components/billing-address-deactivate/billing-address-deactivate.component';
 export * from './lib/components/billing-address-delete/billing-address-delete.component';
 export * from './lib/components/billing-address-details/billing-address-details.component';
@@ -37,3 +35,15 @@ export * from './lib/components/financial-insurance-plan-delete/financial-insura
 export * from './lib/components/financial-insurance-plan-deactivate/financial-insurance-plan-deactivate.component';
 export * from './lib/components/financial-payment-sub-list/financial-payment-sub-list.component';
 export * from './lib/components/financial-insurance-plan-list/financial-insurance-plan-list.component';
+
+export * from './lib/components/contact-address-list/contact-address-list.component';
+
+export * from './lib/components/contact-address-list/contact-address-list.component';
+
+export * from './lib/components/contact-address-list/contact-address-list.component';
+
+export * from './lib/components/contact-address-list/contact-address-list.component';
+
+export * from './lib/components/contact-address-list/contact-address-list.component';
+
+export * from './lib/components/contact-address-list/contact-address-list.component';
