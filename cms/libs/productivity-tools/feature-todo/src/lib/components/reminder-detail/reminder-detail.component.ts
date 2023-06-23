@@ -4,7 +4,7 @@ import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { CaseFacade } from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-
+import {SnackBarNotificationType,} from '@cms/shared/util-core';
 @Component({
   selector: 'productivity-tools-reminder-detail',
   templateUrl: './reminder-detail.component.html',
@@ -85,7 +85,7 @@ public formUiStyle : UIFormStyle = new UIFormStyle();
   public save (){
     this.setValidators();
     if (this.clientReminderForm.valid && this.dateValidator==false) {
-       // this.clientReminderFacade.showHideSnackBar( SnackBarNotificationType.SUCCESS, 'Client Reminder added successfully');
+       this.caseFacade.showHideSnackBar( SnackBarNotificationType.SUCCESS, 'Client Reminder added successfully');
     }
   
            }
