@@ -111,10 +111,6 @@ export class AuthorizationComponent   {
                 this.isGoPaperlessOpted = true;
                 this.ref.detectChanges();
                 if(data?.email?.email !== null){
-                  // let emailObject = {
-                  //   clientEmailId : data?.email?.clientEmailId, 
-                  //   email : data?.email?.email.trim()
-                  // }
                   this.toEmail.push(data?.email?.email.trim());
                 }
               }
