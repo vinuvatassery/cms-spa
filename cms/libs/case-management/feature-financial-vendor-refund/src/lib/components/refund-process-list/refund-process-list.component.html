@@ -121,7 +121,7 @@
   <kendo-splitbutton [data]="refundProcessMore" class="app-c-split-button app-dropdown-action"
     buttonClass="k-split-button" [tabindex]="0"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
-    <div class="btn-inner-block">
+    <div class="btn-inner-block" (click)="onClickOpenAddEditRefundFromModal(addEditRefundDialog)">
       <span class="material-icons" aria-label="New Refund" aria-hidden="false">add</span>
       New Refund
     </div>
@@ -142,4 +142,7 @@
 <ng-template #deleteRefundConfirmationDialog>
   <cms-delete-refund-confirmation
       (isModalDeleteRefundCloseClicked)="onModalDeleteRefundModalClose($event)"></cms-delete-refund-confirmation>
+</ng-template>
+<ng-template #addEditRefundDialog>
+  <cms-refund-new-form-details (onModalCloseAddEditRefundFormModal)="onModalCloseAddEditRefundFormModal($event)"></cms-refund-new-form-details>
 </ng-template>

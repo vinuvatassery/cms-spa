@@ -29,6 +29,7 @@ export class RefundProcessListComponent {
   deleteRefundConfirmationDialog!: TemplateRef<any>;
   private deleteRefundDialog: any;
   private batchConfirmRefundDialog: any;
+  private addEditRefundFormDialog: any;
   isDeleteBatchClosed = false; 
   isProcessBatchClosed = false; 
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -134,4 +135,19 @@ export class RefundProcessListComponent {
       this.deleteRefundDialog.close();
     }
   }
+
+
+  onClickOpenAddEditRefundFromModal(template: TemplateRef<unknown>): void {
+    this.addEditRefundFormDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-full',
+    });
+    // this.isStatusPeriodDetailOpened = true;
+  }
+  onModalCloseAddEditRefundFormModal(result: any) {
+    if (result) { 
+      this.addEditRefundFormDialog.close();
+    }
+  }
+   
 }
