@@ -89,10 +89,12 @@
 }
 
 .client-profile-outlet {
-  // max-height: calc(100vh - 236px);
-  // overflow-y: auto;
   padding: 16px;
-  // margin-top: 4px;
+  .TableActionPopup {
+    .k-animation-container{
+      z-index: 5;
+    }
+  }
 }
 
 .maintitle_withicon {
