@@ -3,7 +3,7 @@
 
         <div class="app-c-table">
 
-            <kendo-grid [pageSize]="state.take" [pageable]="true" [resizable]="true" [data]="StatusPeriod$ | async" (dataStateChange)="dataStateChange($event)">
+            <kendo-grid [pageSize]="state.take" [skip]="state.skip" [pageable]="true" [resizable]="true" [data]="StatusPeriod$ | async" (dataStateChange)="dataStateChange($event)">
                 <ng-template kendoGridDetailTemplate let-dataItem title="Status Start">
                     <section>
                         <case-management-status-ramsell-info [clientId]="clientId"></case-management-status-ramsell-info>
