@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ContactsFacade } from '@cms/case-management/domain';
+import { VendorContactsFacade } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'cms-contacts',
@@ -55,7 +55,7 @@ export class ContactsComponent {
   ];
 
    /** Constructor **/
-   constructor(private readonly contactsFacade: ContactsFacade) {}
+   constructor(private readonly contactsFacade: VendorContactsFacade) {}
 
 
    

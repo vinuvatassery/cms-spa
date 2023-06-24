@@ -588,7 +588,7 @@ export class ContactFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
-  }
+  } 
 
   addClientPhone(phoneData: any) {
     this.showLoader();
