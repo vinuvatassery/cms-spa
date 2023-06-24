@@ -8,6 +8,7 @@ import {
   EventEmitter,
   OnChanges,
   ChangeDetectorRef,
+  ViewChild,
 } from '@angular/core';
 /** Facades **/
 import { CaseFacade,CaseScreenTab, CaseStatusCode, WorkflowTypeCode, GridFacade, GridStateKey } from '@cms/case-management/domain';
@@ -91,6 +92,8 @@ public state!: any;
   caseStatusType$ = this.lovFacade.caseStatusType$;
   selectedColumn!: any;
   filter : any = "";
+  afterDate: any;
+  beforeDate: any;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   @Output() loadCasesListEvent = new EventEmitter<any>();
   groupData:any=[]
@@ -109,6 +112,7 @@ public state!: any;
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.defaultGridState();
     this.loadDdlGridColumns();
     this.lovFacade.getGroupLovs();
     this.lovFacade.getCaseStatusLovs();
@@ -146,20 +150,6 @@ public state!: any;
     });
   }
   ngOnChanges(): void {
-      this.defaultGridState();
-      this.sortColumn = this.columns[this.sort[0]?.field];
-      if(this.sort[0]?.dir === 'asc') {
-        this.sortDir = 'Ascending';
-      }
-      if(this.sort[0]?.dir === 'desc') {
-        this.sortDir = 'Descending';
-      }
-      if(!this.selectedColumn)
-      {
-        this.selectedColumn = "";
-        this.columnName = "";
-        this.filter = "";
-      }
   }
   defaultGridState(){
     this.state = {
@@ -205,46 +195,15 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   public dataStateChange(stateData: any): void {
     this.state=stateData;
     this.saveGridState();
-    if(stateData.filter?.filters.length > 0)
-    {
-      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
-      this.columnName = stateFilter.field;
-      if(this.columnName === 'eilgibilityStartDate' || this.columnName === 'eligibilityEndDate')
-      {
-        let date = this.intl.formatDate(stateFilter.value, this.dateFormat);
-        this.filter = date;
-      }
-      else
-      {
-        this.filter = stateFilter.value;
-      }
-      this.isFiltered = true;
-      const filterList = []
-      for(const filter of stateData.filter.filters)
-      {
-        filterList.push(this.columns[filter.filters[0].field]);
-      }
-      this.filteredBy =  filterList.toString();
-    }
-    else
-    {
-      this.filter = "";
-      this.columnName = "";
-      this.isFiltered = false
-    }
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? ""
-    this.sortType = stateData.sort[0]?.dir ?? ""
-    this.state=stateData;
-    this.sortColumn = this.columns[stateData.sort[0]?.field];
-    this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
-    this.sortDir = this.sort[0]?.dir === 'desc'? 'Descending': "";
+    this.setGridState(stateData);  
     this.loadProfileCasesList();
-}
-  private loadProfileCasesList(): void {
-    this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType, this.columnName,this.filter)
   }
-   loadCases(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any)
+
+  private loadProfileCasesList(): void {
+    this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType, this.columnName,this.filter,this.afterDate,this.beforeDate)
+  }
+
+   loadCases(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any, afterDate: any, beforeDate: any)
    {
      const gridDataRefinerValue =
      {
@@ -253,9 +212,12 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
        sortColumn : sortValue,
        sortType : sortTypeValue,
        columnName : columnName,
-       filter : filter
+       filter : filter,
+       afterDate: afterDate,
+       beforeDate: beforeDate
      }
-     this.loadCasesListEvent.next(gridDataRefinerValue)
+     this.loadCasesListEvent.next(gridDataRefinerValue);
+     this.cdr.detectChanges();
    }
 
   /** Private methods **/
@@ -285,7 +247,11 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     });
   }
   private getGridState(){
-    this.gridFacade.showLoader();
+    if(this.loginUserId == undefined){
+      return;
+    }
+    this.gridFacade.hideLoader();
+    this.isGridLoaderShow = true;
     this.gridFacade.loadGridState(this.loginUserId,GridStateKey.GRID_STATE,this.module).subscribe({
       next: (x:any) =>{
         if(x){
@@ -295,6 +261,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
             this.columnName = this.state.columnName;
             this.selectedColumn = this.state.selectedColumn;
           }
+          this.setGridState(this.state);
         }
         this.loadProfileCasesList();
         this.gridFacade.hideLoader();
@@ -422,5 +389,36 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
         }
       });
     }
+  }
+
+  public setGridState(stateData: any): void {
+      this.state=stateData;
+      if(stateData.filter?.filters.length > 0)
+      {
+        for (let i = 0; i < stateData.filter?.filters.length; i++) {
+          let val = stateData.filter?.filters[i]
+          if(val.field === 'eilgibilityStartDate' || val.field === 'eligibilityEndDate')
+          {
+            let date = this.intl.formatDate(val.value, this.dateFormat);
+            val = date;
+          }
+        }
+        const filterList = this.state?.["filter"]?.["filters"] ?? []                
+        this.filter = JSON.stringify(filterList);
+      }
+      else
+      {
+        this.filter = "";
+        this.columnName = "";
+        this.isFiltered = false
+      }
+      this.sort = stateData.sort;
+      this.sortValue = stateData.sort[0]?.field ?? ""
+      this.sortType = stateData.sort[0]?.dir ?? ""
+      this.state=stateData;
+      this.sortColumn = this.columns[stateData.sort[0]?.field];
+      this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
+      this.sortDir = this.sort[0]?.dir === 'desc'? 'Descending': "";
+      this.loadProfileCasesList();
   }
 }
