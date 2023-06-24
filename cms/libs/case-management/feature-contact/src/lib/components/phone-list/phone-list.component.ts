@@ -135,14 +135,14 @@ export class PhoneListComponent implements OnChanges {
     this.hasPhoneDeletePermission = this.userManage.hasPermission(["Client_Profile_Client_ContactInfo_Phone_Delete"]);
   }
   pageselectionchange(data: any) {
+    this.loader = true
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadClientPhonesList();
   }
   /** Private methods **/
 
-  private loadClientPhonesList(): void {
-    this.gridDataHandle();
+  private loadClientPhonesList(): void {  
     this.loadPhones(
       this.state.skip ?? 0,
       this.state.take ?? 0,
@@ -164,14 +164,15 @@ export class PhoneListComponent implements OnChanges {
       sortColumn: sortValue,
       sortType: sortTypeValue,
       showDeactivated: this.historychkBoxChecked,
-    };
-    this.loader = false;
+    };  
+    this.gridDataHandle();
     this.loadClientPhonesListEvent.next(gridDataRefinerValue);
   }
 
   /** grid event methods **/
 
   public dataStateChange(stateData: any): void {    
+    this.loader = true;
     this.sort = stateData.sort;
     this.sortValue = stateData?.sort[0]?.field ?? 'deviceTypeCode';
     this.sortType = stateData?.sort[0]?.dir ?? 'asc';
@@ -327,6 +328,7 @@ this.reloadEmailsEvent.emit();
 
   onhistorychkBoxChanged() {
     this.historychkBoxChecked = !this.historychkBoxChecked;
+    this.state.skip = 0
     this.loadPhones(
       this.state.skip ?? 0,
       this.state.take ?? 0,
