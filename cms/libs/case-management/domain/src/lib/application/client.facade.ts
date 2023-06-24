@@ -30,12 +30,13 @@ export class ClientFacade {
   private rdoDressedorBathedSubject = new BehaviorSubject<any[]>([]);
   private rdoConcentrationSubject = new BehaviorSubject<any[]>([]);
   private rdoErrandsSubject = new BehaviorSubject<any[]>([]);
-  private specialHandlingsSubject = new BehaviorSubject<any>([]); 
-  private sendNewIDCardSubject = new BehaviorSubject<any>([]);  
+  private specialHandlingsSubject = new BehaviorSubject<any>([]);
+  private sendNewIDCardSubject = new BehaviorSubject<any>([]);
   appInfoFormSubject = new BehaviorSubject<any>([]);
   applicationInfoSubject = new Subject<any>();
   pronounListSubject = new  BehaviorSubject<any>([]);
-  private clientProfileReloadSubject = new BehaviorSubject<any>([]); 
+  specialHandlingChangeDetectionSubject = new  BehaviorSubject<any>([]);
+  private clientProfileReloadSubject = new BehaviorSubject<any>([]);
 
 
   /** Public properties **/
@@ -60,6 +61,7 @@ export class ClientFacade {
   applicantInfo$ = this.applicationInfoSubject.asObservable();
   pronounList$ = this.pronounListSubject.asObservable();
   sendNewIDCard$ = this.sendNewIDCardSubject.asObservable();
+  specialHandlingChangeDetection$ = this.specialHandlingChangeDetectionSubject.asObservable();
   clientProfileReload$ = this.clientProfileReloadSubject.asObservable();
 
   snackbarMessage!: SnackBar;
@@ -67,15 +69,15 @@ export class ClientFacade {
   clientFacadesnackbar$ = this.snackbarSubject.asObservable();
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
+  {
     if(type == SnackBarNotificationType.ERROR)
     {
-       const err= subtitle;    
+       const err= subtitle;
        this.loggingService.logException(err)
-    }  
+    }
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
     this.hideLoader();
-       
+
   }
 
   /** Constructor**/
@@ -283,14 +285,14 @@ export class ClientFacade {
       },
     });
   }
-  save(applicantInfo:ApplicantInfo) {    
+  save(applicantInfo:ApplicantInfo) {
       return this.clientDataService.save(applicantInfo);
   }
-  load(clientId:any,clientCaseId:any,eligibilityId:any) { 
+  load(clientId:any,clientCaseId:any,eligibilityId:any) {
       this.clientProfileReloadSubject.next(true)
       return this.clientDataService.load(clientId,clientCaseId,eligibilityId);
   }
-  update(applicantInfo:ApplicantInfo,clientId:any) {    
+  update(applicantInfo:ApplicantInfo,clientId:any) {
     return this.clientDataService.update(applicantInfo,clientId);
   }
   searchDuplicateClient(clientData:any){
