@@ -72,7 +72,7 @@ export class PhoneDetailComponent implements OnInit {
   {    
       this.clientPhoneForm = this.formBuilder.group({   
         clientPhoneId: ['']   ,
-        phoneNbr: ['',Validators.required]   ,
+        phoneNbr: ['',[Validators.required, Validators.min(10)]] ,
         detailMsgConsentFlag: ['']   ,
         deviceTypeCode: ['',Validators.required]   ,
         smsTextConsentFlag: ['']   ,       
@@ -86,6 +86,10 @@ export class PhoneDetailComponent implements OnInit {
       }
   }
 
+  get f(){  
+    return this.clientPhoneForm.controls;  
+  }  
+  
   onSelectedPhoneFormLoad()
   {     
     this.selectedclientPhoneId = this.selectedPhoneData?.clientPhoneId 
