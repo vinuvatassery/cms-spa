@@ -103,7 +103,7 @@
             </div>
             <kendo-dropdownbutton [data]="data" icon="more-vertical" title="More option" look="bare"
               aria-label="more actions" class="small-i-btn app-dropdown-action hide_more-text"
-              [popupSettings]="{ popupClass: popupClass1, animate: true }">
+              [popupSettings]="{ popupClass: popupClass1, appendTo:'component',animate: true }">
               <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
                 <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
