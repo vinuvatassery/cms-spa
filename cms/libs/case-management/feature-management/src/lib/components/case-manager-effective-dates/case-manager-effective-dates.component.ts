@@ -29,8 +29,8 @@ export class CaseManagerEffectiveDatesComponent {
       if (this.startDate) {
         this.showstartDateError = false;
         const existCaseManagerData = {
-          startDate: this.startDate,
-          endDate: this.endDate,
+          startDate: this.formatDate(this.startDate),
+          endDate: this.endDate?this.formatDate(this.endDate):this.endDate,
           confirm: confirm,
           assignedcaseManagerId: this.assignedcaseManagerId,
           clientCaseManagerId: this.clientCaseManagerId,
@@ -50,5 +50,10 @@ export class CaseManagerEffectiveDatesComponent {
       };
       this.changeDateConfimEvent.emit(existCaseManagerData);
     }
+  }
+  formatDate(date:Date):Date{
+    return new Date(`${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`);
   }
 }
