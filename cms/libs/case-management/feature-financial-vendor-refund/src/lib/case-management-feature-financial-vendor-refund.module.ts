@@ -5,12 +5,14 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { VendorRefundPageComponent } from './containers/vendor-refund-page/vendor-refund-page.component';
 import { CaseManagementFeatureFinancialVendorRefundRoutingModule } from './case-management-feature-financial-vendor-refund.routing.module';
 import { RefundProcessListComponent } from './components/refund-process-list/refund-process-list.component';
-import { RefundBatchesListComponent } from './components/refund-batches-list/refund-batches-list.component'; 
+import { RefundBatchesListComponent } from './components/refund-batches-list/refund-batches-list.component';
 import { RefundAllPaymentListComponent } from './components/refund-all-payment-list/refund-all-payment-list.component';
 import { RefundBatchLogListComponent } from './components/refund-batch-log-list/refund-batch-log-list.component';
 import { RefundNewFormDetailsComponent } from './components/refund-new-form-details/refund-new-form-details.component';
 import { BatchRefundConfirmationComponent } from './components/batch-refund-confirmation/batch-refund-confirmation.component';
 import { DeleteRefundConfirmationComponent } from './components/delete-refund-confirmation/delete-refund-confirmation.component';
+import { VendorRefundClaimsListComponent } from './components/vendor-refund-claims-list/vendor-refund-claims-list.component';
+import { VendorRefundInsurancePremiumListComponent } from './components/vendor-refund-insurance-premium-list/vendor-refund-insurance-premium-list.component';
 
 @NgModule({
   imports: [
@@ -22,12 +24,14 @@ import { DeleteRefundConfirmationComponent } from './components/delete-refund-co
   declarations: [
     VendorRefundPageComponent,
     RefundProcessListComponent,
-    RefundBatchesListComponent, 
+    RefundBatchesListComponent,
     RefundAllPaymentListComponent,
     RefundBatchLogListComponent,
     RefundNewFormDetailsComponent,
     BatchRefundConfirmationComponent,
     DeleteRefundConfirmationComponent,
+    VendorRefundClaimsListComponent,
+    VendorRefundInsurancePremiumListComponent,
   ],
 })
 export class CaseManagementFeatureFinancialVendorRefundModule {}

@@ -140,7 +140,7 @@ export class RefundProcessListComponent {
   onClickOpenAddEditRefundFromModal(template: TemplateRef<unknown>): void {
     this.addEditRefundFormDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-full',
+      cssClass: 'app-c-modal app-c-modal-full add_refund_modal',
     });
     // this.isStatusPeriodDetailOpened = true;
   }
