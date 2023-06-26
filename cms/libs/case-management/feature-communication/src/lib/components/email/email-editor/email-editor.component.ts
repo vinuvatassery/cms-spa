@@ -113,6 +113,9 @@ export class EmailEditorComponent implements OnInit {
       this.emailEditorValueEvent(this.currentValue);
       this.selectedAttachedFile = [];
       this.loadUserDraftTemplateAttachment();
+      if(this.currentValue.typeCode == CommunicationEvents.CerAuthorizationLetter){
+        this.loadLetterAttachment(this.currentValue.documentTemplateId, CommunicationEvents.CERAttachmentTypeCode);
+      }
     }
   }
 
@@ -398,6 +401,35 @@ if(!this.attachedFileValidatorSize){
             }
           }else{
             this.loadDefaultTemplateAttachment();
+          }
+        this.ref.detectChanges();
+        this.cerEmailAttachments.emit(this.selectedAttachedFile);
+        }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+      this.loggingService.logException(err);
+    },
+  });
+  }
+
+  loadLetterAttachment(documentTemplateId: string, typeCode: string){
+    this.loaderService.show();
+    this.communicationFacade.loadCERLetterAttachment(documentTemplateId, typeCode)
+    .subscribe({
+      next: (attachments: any) =>{
+        if (attachments.length > 0) {
+          for (let file of attachments){
+            this.selectedAttachedFile.push({
+              document: file,
+              size: file.templateSize,
+              name: file.description,
+              documentTemplateId: file.documentTemplateId,
+              typeCode: file.typeCode
+            })
           }
         this.ref.detectChanges();
         this.cerEmailAttachments.emit(this.selectedAttachedFile);

@@ -114,6 +114,7 @@ export class AuthorizationComponent   {
                   this.toEmail.push(data?.email?.email.trim());
                 }
               }
+              this.loadEsignRequestInfo();
               this.loadClientDocumentInfo();
             }
             this.loaderService.hide();
@@ -350,8 +351,7 @@ export class AuthorizationComponent   {
         this.isSendNewEmailPopupOpened = false;
         if(this.isSendEmailSuccess){
         this.isSendEmailClicked = true;
-        this.getLoggedInUserProfile();
-        this.loadClientDocumentInfo();
+        this.loadEsignRequestInfo();
       }else{
         this.isSendEmailClicked = false;
       }
@@ -479,5 +479,26 @@ export class AuthorizationComponent   {
 
 updateSendEmailSuccessStatus(event:any){
  this.isSendEmailSuccess = event;
+}
+
+loadEsignRequestInfo(){
+  this.loaderService.show();
+    this.communicationFacade.getEsignRequestInfo(this.workflowFacade.clientId?? 0, this.workflowFacade.clientCaseEligibilityId ?? '')
+    .subscribe({
+      next: (data: any) =>{
+        if (data) {
+            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
+            this.isSendEmailClicked=true;
+            this.getLoggedInUserProfile();
+            this.ref.detectChanges();
+          }
+          this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      this.loggingService.logException(err);
+    },
+  });
 }
 }

@@ -93,7 +93,7 @@ export class CommunicationFacade {
   }
 
   generateTextTemplate(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
-    return this.emailDataService.replaceAndGenerateTextTemplate(clientId, clientCaseEligibilityId, selectedTemplate,requestType);
+    return this.emailDataService.replaceAndGenerateTextTemplate(clientId, clientCaseEligibilityId, selectedTemplate, requestType);
   }
 
   saveForLaterEmailTemplate(draftTemplate: any, isSaveFoLater: boolean){
@@ -139,4 +139,12 @@ export class CommunicationFacade {
   getCCList(clientId: number, loginUserId: string){
     return this.emailDataService.getCCEmailListForCER(clientId, loginUserId);
   }
+
+  getEsignRequestInfo(clientId: number, clientCaseEligibilityId: string,){
+    return this.emailDataService.getEsignRequest(clientId, clientCaseEligibilityId);
+  }
+
+  loadCERLetterAttachment(documentTemplateId: string, typeCode: string){
+    return this.emailDataService.getCerLetterAttachment(documentTemplateId, typeCode);
+}
 }

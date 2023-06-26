@@ -206,7 +206,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowPreviewEmailPopupClicked = true;
     this.emailEditorValueEvent.emit(this.currentEmailData);
     this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
-    this.generateText(this.selectedTemplate,"Preview");
+    this.generateText(this.selectedTemplate, CommunicationEvents.Preview);
   }
 
   onSendEmailConfirmationDialogClicked(event: any) {
@@ -259,7 +259,7 @@ onClosePreviewEmail(){
     this.loaderService.show();
     const isSaveFoLater = false;
     const formData = new FormData();
-    formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
+    formData.append('esignRequestId', emailData?.esignRequestId ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
     formData.append('toEmailAddress', this.selectedToEmail ?? '');
     formData.append('clientCaseEligibilityId', this.clientCaseEligibilityId ?? '');
@@ -292,14 +292,23 @@ onClosePreviewEmail(){
           this.loaderService.hide();
           this.isSendEmailSuccess.emit(false);
           this.loggingService.logException(err);
-          this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
         },
       });
   }
 
   private generateText(emailData: any, requestType: string){
     this.loaderService.show();
-    this.communicationFacade.generateTextTemplate(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', emailData ?? '', requestType ?? '')
+    const formData = new FormData();
+      formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
+      formData.append('systemCode', CommunicationEvents.SystemCode ?? '');
+      formData.append('typeCode', emailData?.typeCode ?? '');
+      formData.append('subtypeCode', CommunicationEvents?.Email ?? '');
+      formData.append('channelTypeCode', CommunicationEvents?.Email ?? '');
+      formData.append('languageCode', CommunicationEvents?.LanguageCode ?? '');
+      formData.append('description', emailData?.description ?? '');
+      formData.append('templateContent', emailData?.templateContent ?? '');
+    this.communicationFacade.generateTextTemplate(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', formData ?? '', requestType ?? '')
         .subscribe({
           next: (data: any) =>{
           if (data) {

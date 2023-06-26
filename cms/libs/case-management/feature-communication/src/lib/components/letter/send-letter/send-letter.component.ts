@@ -142,21 +142,32 @@ export class SendLetterComponent implements OnInit {
     this.loaderService.show();
     const clientId = this.workflowFacade.clientId ?? 0;
     const caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
-    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', letterData ?? '', requestType.toString() ??'')
+    const formData = new FormData();
+      formData.append('documentTemplateId', letterData?.documentTemplateId ?? '');
+      formData.append('systemCode', CommunicationEvents.SystemCode ?? '');
+      formData.append('typeCode', letterData?.typeCode ?? '');
+      formData.append('subtypeCode', CommunicationEvents?.Email ?? '');
+      formData.append('channelTypeCode', CommunicationEvents?.Email ?? '');
+      formData.append('languageCode', CommunicationEvents?.LanguageCode ?? '');
+      formData.append('description', letterData?.description ?? '');
+      formData.append('templateContent', letterData?.templateContent ?? '');
+    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
           if (data) {
             this.currentLetterPreviewData = data;
+            this.letterEditorValueEvent.emit(this.currentLetterPreviewData);
             this.ref.detectChanges();
-            this.onCloseNewLetterClicked();
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print')
+            if(requestType === CommunicationEvents.SendLetter){
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print');
+            }
           }
           this.loaderService.hide();
         },
         error: (err: any) => {
           this.loaderService.hide();
           this.loggingService.logException(err);
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         },
       });
   }
@@ -201,7 +212,7 @@ export class SendLetterComponent implements OnInit {
         error: (err: any) => {
           this.loaderService.hide();
           this.loggingService.logException(err);
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         },
       });
   }
@@ -239,8 +250,8 @@ this.isShowSendLetterToPrintPopupClicked = false;
 
   private loadDropdownLetterTemplates() {
     this.loaderService.show();
-    const channelTypeCode = 'LETTER';
-    this.communicationFacade.loadEmailTemplates('CER_AUTHORIZATION_LETTER', channelTypeCode)
+    const channelTypeCode = CommunicationEvents.Letter;
+    this.communicationFacade.loadEmailTemplates(CommunicationEvents.CerAuthorizationLetter, channelTypeCode)
     .subscribe({
       next: (data: any) =>{
         if (data) {
@@ -299,7 +310,7 @@ this.isShowSendLetterToPrintPopupClicked = false;
         error: (err: any) => {
           this.loaderService.hide();
           this.loggingService.logException(err);
-          this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
         },
       });
   }

@@ -162,5 +162,17 @@ export class EmailDataService {
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${clientId}/${loginUserId}`,
       );
     }
+
+    getEsignRequest(clientId: number, clientCaseEligibilityId: string){
+      return this.http.get(
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign/${clientId}/${clientCaseEligibilityId}`,
+      );
+    }
+
+    getCerLetterAttachment(templateId: string, typeCode: string){
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/forms?templateId=${templateId}`
+      );
+    }
 }
  
