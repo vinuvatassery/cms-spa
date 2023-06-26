@@ -350,6 +350,18 @@ table,
       }
     }
   }
+
+  &.left_right_align{
+    tr {
+      td {
+      text-align: right;
+        &:first-child { 
+          text-align: left; 
+        }
+        
+      }
+    } 
+  }
 }
 /*app-c-table-duplicate*/
 .app-c-table-duplicate {
