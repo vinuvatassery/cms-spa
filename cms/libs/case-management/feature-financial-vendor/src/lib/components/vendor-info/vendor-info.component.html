@@ -1,7 +1,7 @@
 <div class="block-section">
   <div class="flex-row mb-1">
     <div class="flex-col flex-col-6 align-items-center" kendoTooltip>
-      <h2 class="title-md mb-0 text-bold">Vendor Info</h2>
+      <h2 class="title-md mb-0 text-bold">{{profileInfoTitle}}</h2>
       <button kendoButton class="ml-2 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit Client Info"
         aria-label="edit client info" (click)="openEditDailog=true;"></button>
     </div>
@@ -9,7 +9,7 @@
   <div class="flex-row">
     <div class="flex-col flex-col-6">
       <table class="info-table-custom">
-        <caption hidden> Vendor Info</caption>
+        <caption hidden> {{profileInfoTitle}}</caption>
         <tr hidden>
           <th scope="col"></th>
           <th scope="col"></th>
@@ -36,7 +36,7 @@
         </tr>
         <tbody>
           <tr>
-            <td>Vendor Name</td>
+            <td>{{profileInfoTitle.split(' ')[0]}} Name</td>
             <td>{{(selectedVendorInfo$ | async)?.vendorName}}</td>
           </tr>
           <tr>
@@ -85,6 +85,7 @@
 </div>
 
 <kendo-dialog *ngIf="openEditDailog" (close)="openEditDailog=false;" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar class="transform-none"> Edit Insurance Vendor Info </kendo-dialog-titlebar>
-  <cms-vendor-details [editVendorInfo]="true" [vendorDetails]="vendorDetail" (closeModal)="closeEditModal($event)"></cms-vendor-details>
+  <kendo-dialog-titlebar class="transform-none"> Edit {{profileInfoTitle}} </kendo-dialog-titlebar>
+  <cms-vendor-details [editVendorInfo]="true" [vendorDetails]="vendorDetail" [providerType]="providerType"
+  [profileInfoTitle]="profileInfoTitle" (closeModal)="closeEditModal($event)"></cms-vendor-details>
 </kendo-dialog>

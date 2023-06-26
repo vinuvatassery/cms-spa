@@ -16,7 +16,7 @@ export class VendorDetailsComponent implements OnInit {
   @Input() medicalProviderForm: FormGroup;
   @Input() editVendorInfo: boolean = false;
   @Input() vendorDetails!: any;
-  
+  @Input() profileInfoTitle!: string;
 
   @Output() closeModal = new EventEmitter<any>();
   @Output() saveProviderEventClicked = new EventEmitter<any>();
@@ -55,13 +55,23 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.contactFacade.loadDdlStates();
-    this.getPaymentMethods();
-    this.getPaymentRunDate();
+    if (this.editVendorInfo) {
+      this.setVendorDetailFormValues();
+    }
+    else {
+      this.contactFacade.loadDdlStates();
+      this.getPaymentMethods();
+      this.getPaymentRunDate();
+    }
   }
 
   get AddContactForm(): FormArray {
     return this.medicalProviderForm.get("newAddContactForm") as FormArray;
+  }
+
+  setVendorDetailFormValues() {
+    this.medicalProviderForm.controls['vendorName'].setValue(this.vendorDetails.vendorName);
+    this.medicalProviderForm.controls['tin'].setValue(this.vendorDetails.tin);
   }
 
   onToggleAddNewContactClick() {

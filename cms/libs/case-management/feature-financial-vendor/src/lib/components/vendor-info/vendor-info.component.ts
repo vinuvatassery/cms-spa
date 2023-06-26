@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FinancialVendorFacade } from '@cms/case-management/domain';
+import { FinancialVendorFacade, FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'cms-vendor-info',
@@ -10,6 +10,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class VendorInfoComponent implements OnInit {
 
+  @Input() profileInfoTitle!: string;
   selectedVendorInfo$ = this.financialVendorFacade.selectedVendor$;
   SpecialHandlingLength = 100;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -18,6 +19,7 @@ export class VendorInfoComponent implements OnInit {
   openEditDailog: boolean = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   addressGridView = [];
+  providerType: string = this.vendorTypes.DentalProviders;
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -44,6 +46,10 @@ export class VendorInfoComponent implements OnInit {
       },
     },
   ];
+
+  public get vendorTypes(): typeof FinancialVendorTypeCode {
+    return FinancialVendorTypeCode;
+  }
 
   constructor(private financialVendorFacade: FinancialVendorFacade,
     private activeRoute: ActivatedRoute) {

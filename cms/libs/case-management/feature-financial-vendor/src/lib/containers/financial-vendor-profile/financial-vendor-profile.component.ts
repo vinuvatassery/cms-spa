@@ -49,7 +49,7 @@ export class FinancialVendorProfileComponent implements OnInit {
         this.profileInfoTitle = 'Manufacture Info';
         break;
       case FinancialVendorProviderTabCode.InsuranceVendors:
-        this.profileInfoTitle = 'Vendor Info';
+        this.profileInfoTitle = 'Insurance Vendor Info';
         break;
       case FinancialVendorProviderTabCode.MedicalProvider:
       case FinancialVendorProviderTabCode.DentalProvider:
