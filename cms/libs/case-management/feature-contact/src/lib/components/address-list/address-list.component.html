@@ -183,7 +183,7 @@
   *ngIf="isDeleteAddressPopup"
   (close)="onDeleteAddressClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Delete Unhoused Address?"
+  title="{{DialogboxTitle}}"
 >
   <case-management-delete-address-confirmation [clientAddress]="clientAddress" [clientId]="clientId" (deleteModalCloseEvent)="closeDeleteModalAndReload($event)"></case-management-delete-address-confirmation>
 </kendo-dialog>
