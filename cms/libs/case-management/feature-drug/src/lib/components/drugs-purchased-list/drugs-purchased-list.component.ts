@@ -29,6 +29,7 @@ export class DrugsPurchasedListComponent implements OnInit {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   isOnlyPremiumsWith12Months:boolean=true;
+  
   public actions = [
     {
       buttonType: 'btn-h-primary',
