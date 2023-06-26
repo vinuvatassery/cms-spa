@@ -18,6 +18,8 @@ export class ProfileEmploymentPageComponent implements OnInit {
   clientId!: number;
   clientCaseEligibilityId!: any; 
   tabId! : any
+  historyStatus: boolean = false;
+
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
@@ -78,6 +80,10 @@ export class ProfileEmploymentPageComponent implements OnInit {
   onPeriodSelectionChange(value: any) {
     this.clientCaseEligibilityId = value.id;
     this.loadEmployments();
+  }
+
+  updateHistoryStatus(historyStatus: boolean) {
+    this.historyStatus = historyStatus;
   }
 }
 

@@ -132,18 +132,19 @@
           <td>English Proficiency</td>
           <td>{{clientProfile?.englishProficiency}}</td>
         </tr>
-        <tr>
-          <td>Ethnic Identity</td>
-          <td>{{clientProfile?.ethnicIdentity}}</td>
-        </tr>
-        <tr>
+         <tr>
           <td>Racial Identity</td>
           <td>
             <span class="app-c-badge full-rounded" *ngFor="let item of clientProfile?.racialIdentities">{{item}}</span>
           </td>
         </tr>
         <tr>
-          <td>Primary Racial Identity</td>
+          <td>Ethnic Identity</td>
+          <td>{{clientProfile?.ethnicIdentity}}</td>
+        </tr>
+       
+        <tr>
+          <td>Primary Ethnic Identity</td>
           <td>{{clientProfile?.primaryRacialIdentity}}</td>
         </tr>
         

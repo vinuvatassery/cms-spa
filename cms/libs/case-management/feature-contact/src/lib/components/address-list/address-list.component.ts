@@ -31,6 +31,7 @@ export class AddressListComponent implements OnInit {
   clientAddressId!:any;
   editAddressTypeText:string='';
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  DialogboxTitle!:string;
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -127,8 +128,13 @@ export class AddressListComponent implements OnInit {
   }
   
   onDeleteAddressClicked(address:any){
-    if(address.addressTypeCode == AddressType.Home||address.addressTypeCode == AddressType.UnHoused){
+    if(address.addressTypeCode == AddressType.Home){
       this.isDeleteAddressPopup = true;
+      this.DialogboxTitle="Delete Home Address?"
+    }
+    if(address.addressTypeCode == AddressType.UnHoused){
+      this.isDeleteAddressPopup = true;
+      this.DialogboxTitle="Delete Unhoused Address";
     }
     if(address.addressTypeCode == AddressType.Mailing){
       this.showFormFieldsFlag=true;

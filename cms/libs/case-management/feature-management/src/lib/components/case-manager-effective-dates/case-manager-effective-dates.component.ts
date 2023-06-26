@@ -19,13 +19,15 @@ export class CaseManagerEffectiveDatesComponent {
 
   @Input() endDate!: any;
   @Input() startDate!: any;
-  showError = false;
+
+  showstartDateError = false
+
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Output() changeDateConfimEvent = new EventEmitter<any>();
   onUnAssignConfirm(confirm: boolean) {
     if (confirm) {
-      if (this.endDate && this.startDate) {
-        this.showError = false;
+      if (this.startDate) {
+        this.showstartDateError = false;
         const existCaseManagerData = {
           startDate: this.startDate,
           endDate: this.endDate,
@@ -34,10 +36,14 @@ export class CaseManagerEffectiveDatesComponent {
           clientCaseManagerId: this.clientCaseManagerId,
         };
         this.changeDateConfimEvent.emit(existCaseManagerData);
-      } else {
-        this.showError = true;
+      } else {       
+        if(!this.startDate)
+        {
+          this.showstartDateError =true;
+        }
       }
     } else {
+      
       const existCaseManagerData = {     
         confirm: confirm
        
