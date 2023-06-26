@@ -190,7 +190,7 @@
     <kendo-panelbar-item *ngIf="selectedAttachedFile.length > 0" title="{{selectedAttachedFile.length}} attachment(s)">
       <ng-template kendoPanelBarContent>
         <div class="attachment-item-list" kendoTooltip *ngFor="let item of selectedAttachedFile;let index = index">
-          <a class="attachment-item_name" (click)="clientAttachmentClick(item)">{{item.name}}</a>
+          <a class="attachment-item_name" (click)="item.typeCode ==='CER_DEF_ATTACHMENT' ? clientAttachmentClick(item) : null">{{item.name}}</a>
           <span class="attachment-item_size">{{item.size | fileSize}}</span>
           <button *ngIf="item.typeCode !=='CER_DEF_ATTACHMENT'"
             kendoButton
@@ -202,7 +202,7 @@
               class="material-icons"
               aria-label="close attachment"
               aria-hidden="true"
-              (click)="removeFile(item, index)"
+              (click)="item.typeCode ==='CER_ATTACHMENT' ? removeFile(item, index) : removeAddedFile(index)"
               >close</span
             >
           </button>

@@ -243,6 +243,10 @@ if(!this.attachedFileValidatorSize){
     this.deleteEsignRequestAttachment(event, index);
   }
 
+  removeAddedFile(index: any){
+    this.selectedAttachedFile.splice(index, 1);
+  }
+
   loadAllClientDocuments(clientCaseEligibilityId: string){
     this.loaderService.show();
     this.clientDocumentFacade.getAllClientDocumentsByClientCaseEligibilityId(clientCaseEligibilityId ??'')
