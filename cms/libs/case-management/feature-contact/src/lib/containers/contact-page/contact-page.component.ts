@@ -591,7 +591,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setOtherPhone(isPhoneChangedInCer);
 
     if ((emailGroup.controls['applicableFlag']?.value ?? false) === false && (isEmailChangedInCer || !this.isCerForm)) {
-      emailGroup.controls['email'].setValidators([Validators.required, Validators.email]);
+      emailGroup.controls['email'].setValidators([Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]); 
       emailGroup.controls['email'].updateValueAndValidity();
     }
 
@@ -1985,5 +1985,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.setValidators(null);
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.updateValueAndValidity();
     }
+  }
+
+  removeEmailValidation(){
+    this.contactInfoForm?.get('email.email')?.setValidators(null);
+    this.contactInfoForm?.get('email.email')?.updateValueAndValidity();
   }
 }

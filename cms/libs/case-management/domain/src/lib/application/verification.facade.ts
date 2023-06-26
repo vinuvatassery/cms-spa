@@ -75,7 +75,7 @@ export class VerificationFacade {
       next: (response: any) => {
         if (response) {
           this.removeHivVerificationAttachmentSubject.next(response);
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "HIV Verification attachment removed");
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "HIV Verification attachment removed Successfully");
         }
         this.hideLoader()
       },

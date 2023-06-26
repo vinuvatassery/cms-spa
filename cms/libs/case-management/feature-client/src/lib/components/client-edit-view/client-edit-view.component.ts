@@ -1167,14 +1167,11 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
     let ssnNotApplicable = this.appInfoForm.controls['ssnNotApplicable'].value;
     if (ssnNotApplicable) {
       clientSsn = '';
-    }
-    let parsedDate = new Date(
-      this.intl.formatDate(dateOfBirth, this.dateFormat)
-    );
+    }   
     let data = {
       firstName: firstName,
       lastName: lastName,
-      dob: parsedDate,
+      dob: this.intl.formatDate(dateOfBirth, this.dateFormat),
       ssn: clientSsn,
     };
     if (
@@ -1191,15 +1188,16 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       } else {
         this.showNameDuplicateLoader = false;
       }
-      this.getDuplicateClient(data);
+      this.getDuplicateClient(data,dateOfBirth);
     }
   }
 
-  private getDuplicateClient(data: any) {
+  private getDuplicateClient(data: any,dob:Date) {
     this.clientfacade.searchDuplicateClient(data).subscribe({
       next: (response: any) => {
         if (!!response) {
           this.currentClient = data;
+          this.currentClient.dob = dob;
           this.currentClient['clientCaseId'] = this.applicantInfo.clientCaseId;
           this.matchingClient = response;
           if (!!this.applicantInfo?.client) {

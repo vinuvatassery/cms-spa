@@ -8,7 +8,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, CommunicationFacade } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, CommunicationFacade, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 @Component({
@@ -59,7 +59,7 @@ export class SendTextMessageComponent implements OnInit {
       if(this.isClearPhoneNumbers){
         this.phoneNumbers =[];
       }else{
-      this.phoneNumbers = phoneResp;
+      this.phoneNumbers = phoneResp.filter((phone: any) => phone.smsTextConsentFlag === StatusFlag.Yes);
       this.isShowToPhoneNumbersLoader$.next(false);
       }
       this.isClearPhoneNumbers = false;

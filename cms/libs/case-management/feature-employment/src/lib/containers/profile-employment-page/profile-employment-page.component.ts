@@ -13,11 +13,13 @@ export class ProfileEmploymentPageComponent implements OnInit {
   screenName = ScreenType.Case360Page; 
   eligibilityPeriodData$ = this.caseFacade.ddlEligPeriods$
   employmentList$ = this.employmentFacade.employers$;
-  historyClientCaseEligibilityId!: string;
+  currentClientCaseEligibilityId!: string;
   clientCaseId!: string;
   clientId!: number;
   clientCaseEligibilityId!: any; 
   tabId! : any
+  historyStatus: boolean = false;
+
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
@@ -38,7 +40,7 @@ export class ProfileEmploymentPageComponent implements OnInit {
     this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];    
     this.tabId = this.route.snapshot.queryParams['tid'];  
     this.clientCaseId = this.route.snapshot.queryParams['cid'];  
-    this.historyClientCaseEligibilityId = this.clientCaseEligibilityId 
+    this.currentClientCaseEligibilityId = this.clientCaseEligibilityId 
     this.caseFacade.loadEligibilityPeriods(this.clientCaseId)   
   }
   
@@ -78,6 +80,10 @@ export class ProfileEmploymentPageComponent implements OnInit {
   onPeriodSelectionChange(value: any) {
     this.clientCaseEligibilityId = value.id;
     this.loadEmployments();
+  }
+
+  updateHistoryStatus(historyStatus: boolean) {
+    this.historyStatus = historyStatus;
   }
 }
 

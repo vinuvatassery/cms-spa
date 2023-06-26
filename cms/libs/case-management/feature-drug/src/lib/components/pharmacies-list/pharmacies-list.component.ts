@@ -14,7 +14,7 @@ import {
   Pharmacy,
   StatusFlag,
   CompletionChecklist,
-  PriorityCode,
+  PriorityCode,CaseFacade,
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
@@ -86,6 +86,7 @@ export class PharmaciesListComponent implements OnInit{
   public sort = this.drugPharmacyFacade.sort;
   public state!: State;
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public pharmacyOptions = [
@@ -223,6 +224,7 @@ export class PharmaciesListComponent implements OnInit{
     private readonly drugPharmacyFacade: DrugPharmacyFacade,
     private readonly workflowFacade: WorkflowFacade,
     private readonly loggingService: LoggingService,
+    private caseFacade: CaseFacade,
     private readonly cdr: ChangeDetectorRef
   ) {
 
@@ -498,7 +500,7 @@ export class PharmaciesListComponent implements OnInit{
     this.isRemoveClientPharmacyClicked$.next(false);
   }
   disableAddpharmacyButton(pharmacies:any[]):boolean {
-    let isDisable = false;
+    let isDisable = false;     
     if(pharmacies && pharmacies?.length > 0){
       isDisable =  pharmacies.filter(item =>item.activeFlag === 'Y').length >= 3 ? true : false;
     }

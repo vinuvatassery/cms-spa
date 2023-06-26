@@ -23,11 +23,13 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Phone Number">
           <kendo-maskedtextbox formControlName="phoneNbr" aria-label="phone number" placeholder="phone number"
-            [fillMode]="formUiStyle.inputFillMode" [maxlength]="10" [maskOnFocus]="true" mask="(999) 000-0000"
-            formatPlaceholder="formatPattern"> </kendo-maskedtextbox>
+            [fillMode]="formUiStyle.inputFillMode" [maxlength]="10" minlength="10" [maskOnFocus]="true" mask="(999) 000-0000"
+            formatPlaceholder="formatPattern" > </kendo-maskedtextbox>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="clientPhoneForm?.hasError('required','phoneNbr') && isFormSubmitted">Phone number
           is required</kendo-formerror>
+          <kendo-formerror *ngIf="clientPhoneForm?.controls?.['phoneNbr']?.errors
+          && clientPhoneForm?.controls?.['phoneNbr']?.dirty">Not a valid phone number format</kendo-formerror>
       </div>
       <div class="flex-col" *ngIf="displayPhoneNote">
         <kendo-floatinglabel text="Note" class="pb-0">

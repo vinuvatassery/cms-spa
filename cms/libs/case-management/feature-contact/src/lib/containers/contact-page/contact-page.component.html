@@ -979,6 +979,7 @@
                 formControlName="email" 
                 placeholder="Email Address" 
                 (blur)="loadPreferredContactMethod()" 
+                (valueChange)="removeEmailValidation()"
                 > </kendo-textbox>
               </kendo-floatinglabel>
             <p class="user-old-section" *ngIf="isCerForm"><b>Old Email Address:</b> {{getEmailUseOldText(oldEmail)}} <button *ngIf="!(email?.applicableFlag?.value ?? false)" aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldEmail(oldEmail)">Use Old  </button></p> 

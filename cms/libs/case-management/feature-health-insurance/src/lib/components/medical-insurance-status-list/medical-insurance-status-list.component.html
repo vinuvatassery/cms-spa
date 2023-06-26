@@ -55,6 +55,12 @@
         >
         </kendo-grid-column>
         <kendo-grid-column
+        field=""
+        title="Vendor"
+        [width]="120"
+      >
+      </kendo-grid-column>
+        <kendo-grid-column
           field="insuranceCarrierName"
           title="Insurance Carrier"
           [width]="150"
@@ -84,7 +90,7 @@
         <kendo-grid-column
         field="otherCoveredOnPlan"
         title="Others Covered"
-        [width]="100"
+        [width]="150"
       >
       </kendo-grid-column>
       <kendo-grid-column
@@ -114,8 +120,8 @@
           title="Monthly APTC Amount"
           [width]="150"
         >
-        </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="50">
+        </kendo-grid-column> 
+        <kendo-grid-column field="by" title="By" [width]="70"> 
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
@@ -143,7 +149,7 @@
         <kendo-grid-column
           field="Option"
           title="Options"
-          [width]="75"
+          [width]="100"
           class="text-center"
         >
           <ng-template kendoGridCellTemplate let-dataItem>
@@ -154,7 +160,7 @@
               class="TableActionPopup app-dropdown-action more_action_wid"
               buttonClass="k-icon-button"
               aria-label="more actions"
-              [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+              [popupSettings]="{ popupClass: popupClassAction, appendTo:'component', animate: true }">
             <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttonDataItem>
                 <button kendoButton  look="flat" [attr.aria-label]="buttonDataItem.text" [class]="buttonDataItem.buttonType" aria-hidden="false" 

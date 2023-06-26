@@ -5,7 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
-import { SortDescriptor } from '@progress/kendo-data-query';
+import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { VendorInsurancePlanDataService } from '../../infrastructure/financial-management/vendor-insurance-plan.data.service';
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -15,30 +15,31 @@ export class VendorInsurancePlanFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'address1';
-  public sortType = 'asc';
+  public sortValue = 'lastUpdatedBy';
+  public sortType = 'desc';
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
   }];
 
   private vendorInsurancePlanDataSubject = new BehaviorSubject<any>([]);
+  private vendorInsuranceGridLoaderSubject = new BehaviorSubject<any>([]);
   vendorInsurancePlanData$ = this.vendorInsurancePlanDataSubject.asObservable();
+  vendorInsuranceGridLoader$ = this.vendorInsuranceGridLoaderSubject.asObservable();
 
-  
+
   /** Private properties **/
- 
+
   /** Public properties **/
- 
+
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>(); 
+  snackbarSubject = new Subject<SnackBar>();
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
 
-  errorShowHideSnackBar( subtitle : any)
-  {
-    this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR,subtitle, NotificationSource.UI)
+  errorShowHideSnackBar(subtitle: any) {
+    this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, subtitle, NotificationSource.UI)
   }
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -59,19 +60,26 @@ export class VendorInsurancePlanFacade {
   ) { }
 
   /** Public methods **/
-  loadVendorInsurancePlanListGrid(){
-    this.vendorInsurancePlanDataService.loadVendorInsurancePlanListService().subscribe({
-      next: (dataResponse) => {
-        this.vendorInsurancePlanDataSubject.next(dataResponse);
-        this.hideLoader();
+  loadVendorInsuranceProviderListGrid(vendorId: string, pageParameters: State) {
+    this.vendorInsuranceGridLoaderSubject.next(true);
+    this.vendorInsurancePlanDataService.loadVendorInsuranceProviderListGrid(vendorId, pageParameters).subscribe({
+      next: (dataResponse: any) => {
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+        this.vendorInsurancePlanDataSubject.next(gridView);
+        this.vendorInsuranceGridLoaderSubject.next(false);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.vendorInsuranceGridLoaderSubject.next(false);
       },
     });
-   
-  
   }
- 
+
+  loadVendorInsurancePlan(vendorId:string, providerId:string, pageParameters: State) {
+    return this.vendorInsurancePlanDataService.loadVendorInsurancePlan(vendorId, providerId, pageParameters);
+  }
+
 }

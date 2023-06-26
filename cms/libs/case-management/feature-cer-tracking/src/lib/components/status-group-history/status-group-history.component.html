@@ -56,7 +56,7 @@
     <kendo-dialog-titlebar (close)="onGroupDetailClosed($event)">Edit Scheduled Group Change </kendo-dialog-titlebar>
     <case-management-group-detail [showDeleteOption]="true" [currentGroup$]="currentGroup$" [ddlGroups$]="ddlGroups$"
     (isModalGroupCloseClicked)="onGroupDetailClosed($event)"
-    (updateGroup)="onGroupChangeUpdateClicked($event)" (deleteGroupChange)="onDeleteGroupClicked($event)"
+    (updateGroup)="onGroupChangeUpdateClicked($event)" (deleteGroupChange)="onDeleteGroupClicked($event, deleteScheduleGroupChanges)"
     (cancelGroupChange)="onGroupChangeCancelClicked($event)">
 </case-management-group-detail>
 </ng-template>
@@ -70,26 +70,36 @@
 </kendo-dialog> -->
 
 <!-- Eligibility Group delete Modal -->
-<kendo-dialog *ngIf="isGroupDeleteModalOpened" (close)="onCancelDelete()"
-    class="app-c-modal app-c-modal-sm app-c-modal-np" kendoTooltip>
-    <kendo-dialog-titlebar> Delete scheduled group change </kendo-dialog-titlebar>
+<!-- <kendo-dialog *ngIf="isGroupDeleteModalOpened" 
+    class="app-c-modal app-c-modal-sm app-c-modal-np" kendoTooltip> -->
+    <ng-template #deleteScheduleGroupChanges>
+    <kendo-dialog-titlebar (close)="onCancelDelete()"> Delete scheduled group change </kendo-dialog-titlebar>
     <section class="k-dialog-body">
         <p class="text-muted mb-2">
             This action cannot be undone. You may schedule another group change at any time.
         </p>
     </section>
     <kendo-dialog-actions>
-        <div class="justify-content-between">
-            <button kendoButton aria-label="delete client’s benefits" [primary]="true" look="outline"
-                (click)="onConfirmGroupDelete()">
-                Delete
+       
+        <div class="justify-content-end">
+            <button
+              kendoButton
+              [primary]="true"
+              look="outline"
+              aria-label="cancel "
+              (click)="onCancelDelete()"
+            >
+              Cancel
             </button>
-            <div class="justify-content-end">
-                <button kendoButton aria-label="cancel client’s benefits" [primary]="true" look="outline"
-                    (click)="onCancelDelete()">
-                    Cancel
-                </button>
-            </div>
-        </div>
+            <button
+              kendoButton
+              class="k-error-button"
+              aria-label="delete "
+              (click)="onConfirmGroupDelete()"
+            >
+              DELETE
+            </button>
+          </div>
     </kendo-dialog-actions>
-</kendo-dialog>
+</ng-template>
+<!-- </kendo-dialog> -->

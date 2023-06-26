@@ -13,10 +13,10 @@
           look="outline"
           aria-label="cancel deactivation of confirmation"
           
-        >
+       (click)="onCloseDeactivateContactAddressClicked()" >
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="deactivate"  >
+        <button kendoButton [primary]="true" aria-label="deactivate" (click)="deactiveContactAddress()" >
           Deactivate
         </button>
       </div>

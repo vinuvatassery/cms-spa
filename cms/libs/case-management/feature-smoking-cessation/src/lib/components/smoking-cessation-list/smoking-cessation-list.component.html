@@ -1,9 +1,9 @@
 <div class="flex-row">
     <div class="flex-col flex-space-bw align-items-center">
         <h2 class="title-md mb-0 text-bold">Smoking Cessation</h2>
-   
-      <div>  
-      <span class="app-checkboxwidtext-wrapper"> 
+
+      <div>
+      <span class="app-checkboxwidtext-wrapper">
         <input
           type="checkbox"
           kendoCheckBox
@@ -41,10 +41,10 @@
           </kendo-grid-column>
           <kendo-grid-column
             field="note"
-            title="Note?"
+            title="Note"
             [width]="150"
           >
-          </kendo-grid-column> 
+          </kendo-grid-column>
           <kendo-grid-column field="by" title="By" [width]="50">
             <ng-template kendoGridCellTemplate let-dataItem>
               <button
@@ -72,12 +72,12 @@
           <ng-template kendoGridLoadingTemplate>
             <common-grid-loader-component></common-grid-loader-component>
            </ng-template>
-               <!-- grid No data Template -->  
+               <!-- grid No data Template -->
                <ng-template kendoGridNoRecordsTemplate>
                 <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
                 </div>
                 <p>There is no data to display.</p>
-              </ng-template> 
+              </ng-template>
         </kendo-grid>
       </div>
     </div>
@@ -94,44 +94,44 @@
       </button>
     </div>
   </div>
-  
- 
-  
+
+
+
   <kendo-dialog *ngIf="isAddReferralSmokingCessationOpen" (close)="closeAddReferralSmokingCessationClicked()"class="app-c-modal app-c-modal-md app-c-modal-np">
     <kendo-dialog-titlebar> Add Referral for Smoking Cessation</kendo-dialog-titlebar>
     <section class="k-dialog-body">
     <p class="text-muted mb-2" >  Add a note or indicate how referral was sent to client </p>
 
- 
-        <div class="form-group"  [formGroup]="smokingForm"> 
-     
+
+        <div class="form-group"  [formGroup]="smokingForm">
+
         <kendo-floatinglabel text="Smoking Cessation Note" >
           <kendo-textarea
             #tareaCessation
             [fillMode]="formUiStyle.inputFillMode"
             resizable="auto"
             [maxlength]="tareaCessationMaxLength"
-          
+
             (valueChange)="onTareaCessationValueChange($event)"
             aria-label="smoking cessation note"
-            class="form-control" 
+            class="form-control"
             formControlName="smokingCessationNote" >
             <kendo-textarea-suffix class="justify-content-end">
               <span class="counter">{{ tareaCessationCounter }}</span>
             </kendo-textarea-suffix>
           </kendo-textarea>
-        </kendo-floatinglabel>      
+        </kendo-floatinglabel>
       </div>
 
-     
+
 </section>
     <kendo-dialog-actions>
         <div class="justify-content-between">
-      
+
           <div class="justify-content-end">
             <button  kendoButton  (click)="closeAddReferralSmokingCessationClicked()" [primary]="true"  look="outline"  aria-label="cancel " > CANCEL </button>
             <button  aria-label="add" (click)="saveSmokingCessation()" kendoButton [primary]="true" > ADD </button>
-         
+
           </div>
         </div>
       </kendo-dialog-actions>
