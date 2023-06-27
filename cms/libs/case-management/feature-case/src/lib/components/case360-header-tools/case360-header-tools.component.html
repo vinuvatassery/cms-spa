@@ -55,14 +55,14 @@
 
 <!-- Send New Letter Modal -->
 <ng-template #sendLetterDialog>
-  <case-management-send-letter  [data]="screenName" [mailingAddress$]="mailingAddress$"
+  <case-management-send-letter  [data]="letterScreenName" [mailingAddress$]="mailingAddress$"
   (closeSendLetterEvent)="handleSendNewLetterClosed($event)" (loadInitialData)="loadMailingAddress()"
   kendoTooltip></case-management-send-letter>
 </ng-template>
 
 <!-- Send New Email Modal -->
 <ng-template #sendNewEmailDialog>
-  <case-management-send-email [data]="screenName" [ddlEmails$]="emailAddress$"
+  <case-management-send-email [data]="emailScreenName" [ddlEmails$]="emailAddress$"
   (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
 </ng-template>
 
@@ -75,6 +75,6 @@
 
 <!-- New SMS Text Modal Html-->
 <ng-template #sendTextMessageDialog>
-<case-management-send-text-message [data]="screenName" [ddlMessageRecipients$] ="phoneNumbers$"
+<case-management-send-text-message [data]="smsScreenName" [ddlMessageRecipients$] ="phoneNumbers$"
   (closeSendMessageEvent)="handleNewSMSTextClosed($event)" (loadInitialData)="loadPhoneNumbers()" kendoTooltip></case-management-send-text-message>
 </ng-template>
