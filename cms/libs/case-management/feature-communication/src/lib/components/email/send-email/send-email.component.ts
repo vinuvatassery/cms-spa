@@ -96,7 +96,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   /** Internal event methods **/
   onCloseSaveForLaterClicked() {
     this.isShowSaveForLaterPopupClicked = false;
-    // this.onCloseSendEmailClicked();
   }
 
   OnEditEmailClicked() {
