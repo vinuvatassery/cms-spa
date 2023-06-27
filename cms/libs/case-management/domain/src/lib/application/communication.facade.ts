@@ -116,8 +116,8 @@ export class CommunicationFacade {
     return this.emailDataService.getDraftTemplateAttachment(esignRequestId);
   }
 
-  initiateAdobeesignRequest(formData: any, isSaveFoLater: boolean) {
-    return this.emailDataService.initiateAdobeEsignRequest(formData, isSaveFoLater);
+  initiateAdobeesignRequest(sendEmailData: any, isSaveFoLater: boolean) {
+    return this.emailDataService.initiateAdobeEsignRequest(sendEmailData, isSaveFoLater);
   }
 
   saveEmailTemplateForLater(formData: any, isSaveFoLater: boolean) {

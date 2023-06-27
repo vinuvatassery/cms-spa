@@ -127,9 +127,9 @@ export class EmailDataService {
       );
     }
 
-    initiateAdobeEsignRequest(formData: any, isSaveForLater: boolean){
+    initiateAdobeEsignRequest(sendEmailData: any, isSaveForLater: boolean){
       return this.http.post<any>(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?isSaveForLater=${isSaveForLater}`,formData
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?isSaveForLater=${isSaveForLater}`,sendEmailData
       );
     }
     
