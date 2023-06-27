@@ -39,7 +39,7 @@ export class StatusPeriodComponent implements OnInit {
   public actions = [
     {
       buttonType: "btn-h-primary",
-      text: "Copy Eligibility Period",
+      text: "Copy Status Period",
       icon: "content_copy",
       click: (dataItem: any, template: TemplateRef<unknown>): void => {
         if(dataItem.clientCaseEligibilityId){
@@ -50,7 +50,7 @@ export class StatusPeriodComponent implements OnInit {
     },
     {
       buttonType: "btn-h-primary",
-      text: "Edit Eligibility Period",
+      text: "Edit Status Period",
       icon: "edit",
       click: (dataItem: any, template: TemplateRef<unknown>): void => {
         if(dataItem.clientCaseEligibilityId){

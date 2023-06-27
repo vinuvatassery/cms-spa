@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar  (close)="onModalCloseClicked()">{{ isEdit ? 'Edit Status Period Dates' : isStatusPeriodEdit ? 'Edit Eligibility Period' : isCopyPeriod ? 'Copy Eligibility Period' : 'Start New Status Period' }}</kendo-dialog-titlebar>
+<kendo-dialog-titlebar  (close)="onModalCloseClicked()">{{ isEdit ? 'Edit Status Period Dates' : isStatusPeriodEdit ? 'Edit Status Period' : isCopyPeriod ? 'Copy Status Period' : 'Start New Status Period' }}</kendo-dialog-titlebar>
 <div >
 <section class="k-dialog-body" [formGroup]="eligibilityPeriodForm" >
   <p *ngIf="!isEdit && !isStatusPeriodEdit && !isCopyPeriod" class="text-muted mb-2">
