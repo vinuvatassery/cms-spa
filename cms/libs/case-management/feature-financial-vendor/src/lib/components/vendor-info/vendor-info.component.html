@@ -3,7 +3,7 @@
     <div class="flex-col flex-col-6 align-items-center" kendoTooltip>
       <h2 class="title-md mb-0 text-bold">{{profileInfoTitle}}</h2>
       <button kendoButton class="ml-2 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit Client Info"
-        aria-label="edit client info" (click)="openEditDailog=true;"></button>
+        aria-label="edit client info" (click)="openEditInfoDialog();"></button>
     </div>
   </div>
   <div class="flex-row">
@@ -87,5 +87,6 @@
 <kendo-dialog *ngIf="openEditDailog" (close)="openEditDailog=false;" class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar class="transform-none"> Edit {{profileInfoTitle}} </kendo-dialog-titlebar>
   <cms-vendor-details [editVendorInfo]="true" [vendorDetails]="vendorDetail" [providerType]="providerType"
-  [profileInfoTitle]="profileInfoTitle" (closeModal)="closeEditModal($event)"></cms-vendor-details>
+  [profileInfoTitle]="profileInfoTitle" [medicalProviderForm]="medicalProviderForm" (closeModalEventClicked)="closeEditModal($event)">
+</cms-vendor-details>
 </kendo-dialog>

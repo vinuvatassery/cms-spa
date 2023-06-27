@@ -1,9 +1,9 @@
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { VendorFacade, FinancialVendorTypeCode, ContactFacade, StatusFlag, AddressType, FinancialVendorFacade } from '@cms/case-management/domain';
+import { VendorFacade, FinancialVendorTypeCode, ContactFacade, StatusFlag, AddressType, FinancialVendorFacade, FinancialVendorDataService } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'cms-vendor-details',
@@ -18,7 +18,6 @@ export class VendorDetailsComponent implements OnInit {
   @Input() vendorDetails!: any;
   @Input() profileInfoTitle!: string;
 
-  @Output() closeModal = new EventEmitter<any>();
   @Output() saveProviderEventClicked = new EventEmitter<any>();
   @Output() closeModalEventClicked = new EventEmitter<any>();
 
@@ -45,6 +44,7 @@ export class VendorDetailsComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private vendorFacade: VendorFacade,
     private financialVendorFacade: FinancialVendorFacade,
+    private readonly financialVendorDataService: FinancialVendorDataService,
     private readonly cdr: ChangeDetectorRef,
     private readonly contactFacade: ContactFacade,
     private lovFacade: LovFacade,
@@ -70,8 +70,8 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   setVendorDetailFormValues() {
-    this.medicalProviderForm.controls['vendorName'].setValue(this.vendorDetails.vendorName);
-    this.medicalProviderForm.controls['tin'].setValue(this.vendorDetails.tin);
+    this.medicalProviderForm.controls['providerName'].setValue(this.vendorDetails.vendorName);
+    this.medicalProviderForm.controls['tinNumber'].setValue(this.vendorDetails.tin);
   }
 
   onToggleAddNewContactClick() {
@@ -300,5 +300,37 @@ export class VendorDetailsComponent implements OnInit {
 
   closeVedorModal() {
     this.closeModalEventClicked.next(true);
+  }
+
+  updateVendorDetails() {
+    this.validateEditForm();
+    this.isValidateForm = true;
+    if (this.medicalProviderForm.valid) {
+      this.financialVendorFacade.showLoader();
+      let vendorValues: any = {};
+      vendorValues['vendorId'] = this.vendorDetails.vendorId;
+      vendorValues['vendorName'] = this.medicalProviderForm.controls['providerName'].value;
+      vendorValues['tin'] = this.medicalProviderForm.controls['tinNumber'].value;
+      this.financialVendorDataService.updateVendorDetails(vendorValues).subscribe((resp: any) => {
+        if (resp) {
+          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, this.profileInfoTitle.split(' ')[0] + ' information updated.');
+          this.closeModalEventClicked.emit(true);
+        }
+        else {
+          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.WARNING, this.profileInfoTitle.split(' ')[0] + ' information not updated.');
+        }
+        this.financialVendorFacade.hideLoader();
+      },
+        (error: any) => {
+          this.financialVendorFacade.hideLoader();
+          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error);
+        });
+    }
+  }
+
+  validateEditForm() {
+    this.medicalProviderForm.markAllAsTouched();
+    this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
+    this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
   }
 }

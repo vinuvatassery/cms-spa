@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core
 import { ActivatedRoute } from '@angular/router';
 import { FinancialVendorFacade, FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { FormBuilder, FormGroup } from '@angular/forms';
+
 @Component({
   selector: 'cms-vendor-info',
   templateUrl: './vendor-info.component.html',
@@ -11,6 +13,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class VendorInfoComponent implements OnInit {
 
   @Input() profileInfoTitle!: string;
+  medicalProviderForm: FormGroup;
   selectedVendorInfo$ = this.financialVendorFacade.selectedVendor$;
   SpecialHandlingLength = 100;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -19,7 +22,7 @@ export class VendorInfoComponent implements OnInit {
   openEditDailog: boolean = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   addressGridView = [];
-  providerType: string = this.vendorTypes.DentalProviders;
+  providerType!: string;
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -52,11 +55,14 @@ export class VendorInfoComponent implements OnInit {
   }
 
   constructor(private financialVendorFacade: FinancialVendorFacade,
+    private readonly formBuilder: FormBuilder,
     private activeRoute: ActivatedRoute) {
+    this.medicalProviderForm = this.formBuilder.group({});
   }
 
   ngOnInit() {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
+    this.providerType = this.activeRoute.snapshot.queryParams['vendor_type_code'];
     this.loadVendorInfo();
   }
 
@@ -67,10 +73,22 @@ export class VendorInfoComponent implements OnInit {
     });
   }
 
+  openEditInfoDialog() {
+    this.buildVendorForm();
+    this.openEditDailog = true;
+  }
+
+  buildVendorForm() {
+    this.medicalProviderForm.reset();
+    this.medicalProviderForm = this.formBuilder.group({
+      providerName: [''],
+      tinNumber: [''],
+    });
+  }
 
   closeEditModal(isEditSuccessfull: boolean) {
     this.openEditDailog = false;
-    if(isEditSuccessfull){
+    if (isEditSuccessfull) {
       this.loadVendorInfo();
     }
   }
