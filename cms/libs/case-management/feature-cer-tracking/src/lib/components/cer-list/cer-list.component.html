@@ -93,6 +93,12 @@
         {{dataItem.restrictedSentDate | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
+    <kendo-grid-column field="disEnrollmentDate" title="Disenrollment Date"   [width]="160"
+    [format]="{ date: 'MM-dd-yyyy' }" filter="date">
+    <ng-template kendoGridCellTemplate let-dataItem>
+      {{dataItem.disEnrollmentDate | date:'MM/dd/yyyy'}}
+    </ng-template>
+  </kendo-grid-column>
     <kendo-grid-column field="spokenLanguage" title="Spoken Language"  [width]="130"></kendo-grid-column>
     <kendo-grid-column field="writtenLanguage" title="Written Language" [hidden]="true" [width]="130"></kendo-grid-column>
     <kendo-grid-column field="englishProficiency" title="English Proficiency" [hidden]="true" [width]="130"></kendo-grid-column>
@@ -109,12 +115,7 @@
         </kendo-popover>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="disEnrollmentDate" title="Disenrollment Date"   [width]="160"
-    [format]="{ date: 'MM-dd-yyyy' }" filter="date">
-    <ng-template kendoGridCellTemplate let-dataItem>
-      {{dataItem.disEnrollmentDate | date:'MM/dd/yyyy'}}
-    </ng-template>
-  </kendo-grid-column>
+  
     <kendo-grid-column field="caseManagerDomain" title="Case Manager Domain" [width]="130"
    ></kendo-grid-column>
     <kendo-grid-column field="pronouns"  title="Pronouns" [width]="130"

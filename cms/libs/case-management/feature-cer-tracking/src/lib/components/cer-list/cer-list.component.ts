@@ -283,7 +283,7 @@ export class CerListComponent implements OnInit, OnChanges {
 
   gridDataHandle() {       
     this.cerTrackingData$.subscribe((data: GridDataResult) => {          
-    this.statusTitle = data?.data[0]?.isHistorical === StatusFlag.Yes ?  'Status @ End of EP' : 'Status'
+    this.statusTitle = data?.data[0]?.isHistorical === StatusFlag.Yes ?  'Status @ End of EP' : 'Current Status'
     this.titleSubject.next(this.statusTitle)
     this.gridDataResult = data    
     for (const res in this.gridDataResult?.data) { 
