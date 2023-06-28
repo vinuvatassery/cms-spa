@@ -63,6 +63,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   clientId: any;
   clientChangeSubscription$ = new Subscription();
+  clientProfileReloadSubscription$ = new Subscription();
 
   client_button_grp = true;
   health_button_grp = false;
@@ -82,16 +83,17 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   ) {}
 
   /** Lifecycle hooks **/
-  ngOnInit() {
+  ngOnInit() {    
     this.initialize();
     this.routeChangeSubscription();
-    this.clientProfileReload$.subscribe(data=>{
+    this.clientProfileReloadSubscription$ = this.clientProfileReload$.subscribe(data=>{
       this.loadClientProfileInfoEventHandler();
     })
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy(): void {    
     this.clientChangeSubscription$.unsubscribe();
+    this.clientProfileReloadSubscription$.unsubscribe();
   }
 
   /** Private methods **/
@@ -171,11 +173,12 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     this.onClientProfileHeaderLoad();
   }
 
-  onClientProfileHeaderLoad() {
+  onClientProfileHeaderLoad() {    
     this.clientProfileHeader$
       ?.pipe(first((clientHeaderData: any) => clientHeaderData?.clientId > 0))
       .subscribe((clientHeaderData: any) => {
         if (clientHeaderData?.clientId > 0) {
+          
           this.clientId = clientHeaderData?.clientId;
           this.clientCaseEligibilityId =
             clientHeaderData?.clientCaseEligibilityId;
@@ -263,6 +266,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         this.mng_button_grp = false;
         break;
     }
+    debugger
     this.caseFacade.onClientProfileTabSelect(
       tabName,
       this.profileClientId,
@@ -271,7 +275,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     );
   }
 
-  onTabSelect(tabName: string) {
+  onTabSelect(tabName: string) {    
     this.selectedTabName = tabName;
     this.caseFacade.onClientProfileTabSelect(
       tabName,
