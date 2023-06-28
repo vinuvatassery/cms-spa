@@ -265,8 +265,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         this.drugs_button_grp = false;
         this.mng_button_grp = false;
         break;
-    }
-    debugger
+    }    
     this.caseFacade.onClientProfileTabSelect(
       tabName,
       this.profileClientId,
