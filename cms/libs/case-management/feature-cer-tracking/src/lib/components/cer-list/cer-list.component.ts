@@ -95,10 +95,10 @@ export class CerListComponent implements OnInit, OnChanges {
     preferredContact:"Preferred Contact",
     eligibilityStatus:"Current Status",
     group:"Group",
-    eilgibilityStartDate:"Eligibility Start Date",
+    eligibilityStartDate:"Eligibility Start Date",
     eligibilityEndDate:"Eligibility End Date",
     email:"Email",
-    phone:"Phone",
+    phone:"Preferred Contact",
     genders:"Gender",
     homeAddress:"Home Address",
     ssn:"SSN",
@@ -386,7 +386,17 @@ export class CerListComponent implements OnInit, OnChanges {
   }
 
   sendCer(cerId:string){
-    this.sendCersEvent.emit(cerId);
+    this.loader = true;
+    const gridDataRefinerValue = {
+      trackingDate: this.selectedDate,
+      skipCount: this.state.skip ?? 0,
+      pagesize: this.state.take ?? 0,
+      sortColumn:  this.sortValue,
+      sortType: this.sortType,
+      filter : this.state?.["filter"]?.["filters"] ?? []
+    };
+
+    this.sendCersEvent.emit({cerId: cerId, gridDataRefinerValue: gridDataRefinerValue});
   }
 
   setToDefault()
