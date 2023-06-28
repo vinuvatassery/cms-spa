@@ -113,8 +113,7 @@ export class MedicalPaymentDetailComponent {
     if(value){
       this.isInsurancePoliciesLoading=true;
       this.insurancePolicyFacade.loadInsurancePoliciesByProviderId(value,this.clientId,this.caseEligibilityId,(this.tabStatus==ClientProfileTabs.DENTAL_INSURANCE_COPAY) ?  ClientProfileTabs.DENTAL_INSURANCE_STATUS: ClientProfileTabs.HEALTH_INSURANCE_STATUS  ).subscribe({
-        next: (data: any) => {  
-          debugger;        
+        next: (data: any) => {         
           data.forEach((policy:any)=>{
             if(policy.insuranceIdNumber !== null){
               policy["policyValueField"]= '['+policy.insuranceIdNumber+ " #] - [" + policy.insurancePlanName +']';
