@@ -486,7 +486,7 @@ loadEsignRequestInfo(){
     this.communicationFacade.getEsignRequestInfo(this.workflowFacade.clientId?? 0, this.workflowFacade.clientCaseEligibilityId ?? '')
     .subscribe({
       next: (data: any) =>{
-        if (data) {
+        if (data?.esignRequestId != null) {
             this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
             this.isSendEmailClicked=true;
             this.getLoggedInUserProfile();
