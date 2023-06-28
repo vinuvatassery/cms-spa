@@ -8,6 +8,7 @@ import {
   EventEmitter,
   OnChanges,
   ChangeDetectorRef,
+  ViewChild
 } from '@angular/core';
 /** Facades **/
 import { CaseFacade,CaseScreenTab, CaseStatusCode, WorkflowTypeCode, GridFacade, GridStateKey } from '@cms/case-management/domain';
@@ -19,7 +20,7 @@ import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
 import {ConfigurationProvider} from '@cms/shared/util-core';
 import { Router } from '@angular/router';
-
+import { GridComponent } from '@progress/kendo-angular-grid';
 
 @Component({
   selector: 'case-management-case-list',
@@ -48,7 +49,9 @@ public state!: any;
   @Input() selectedTab: CaseScreenTab = 0;
   @Input() module: string = '';
   @Input() parentModule: string = '';
+  @ViewChild('grid', { static: true }) grid!: GridComponent;
   addRemoveColumns="Default Columns"
+  columnOrder: string[] = [];
   columns : any = {
     clientFullName:"Client Name",
     officialIdFullName:"Name on Official ID",
@@ -99,6 +102,27 @@ public state!: any;
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
   private userProfileSubsriction !: Subscription;
   loginUserId!:any;
+  defaultColumnOrder: any[] = [
+	  'clientFullName',
+      'officialIdFullName',
+      'insuranceFullName',
+      'pronouns',
+      'clientId',
+      'urn',
+      'preferredContact',
+      'caseStatus',
+      'group',
+      'eilgibilityStartDate',
+      'eligibilityEndDate',
+      'email',
+      'phone',
+      'genders',
+      'homeAddress',
+      'ssn',
+      'insurancePolicyId',
+      'assignedCw'
+  ];
+
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public readonly  intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider, private readonly  cdr :ChangeDetectorRef,
@@ -313,8 +337,18 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.filter = event;
     this.loadProfileCasesList();
   }
+
   setToDefault()
   {
+    const currentColumns = this.grid.columns.toArray();
+
+    this.defaultColumnOrder.forEach((fieldName, newIndex) => {
+      const column = currentColumns.find((c:any) => c.field === fieldName);
+      if (column) {
+        this.grid.reorderColumn(column, newIndex);
+      }
+    });
+
     this.pageSizes = this.caseFacade.gridPageSizes;
     this.sortValue  = this.caseFacade.sortValue;
     this.sortType  = this.caseFacade.sortType;
@@ -343,6 +377,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.saveGridState();
     this.loadProfileCasesList();
   }
+
   onColumnReorder(event:any)
   {
     this.columnsReordered = true;
@@ -384,3 +419,4 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     }
   }
 }
+

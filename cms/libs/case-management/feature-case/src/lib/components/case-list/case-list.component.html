@@ -30,7 +30,7 @@
 
 <!-- Case List table -->
 <div class="app-c-table">
-  <kendo-grid
+  <kendo-grid #grid
   (columnReorder)="onColumnReorder($event)"
   (columnVisibilityChange)="columnChange($event)"
   [filter]="state.filter"
@@ -129,7 +129,7 @@
         </common-grid-cell-date-range-filter>
   </ng-template>
     </kendo-grid-column>
-    
+
 
     <kendo-grid-column field="caseManager" title="Case Manager"  [width]="160" [hidden]="true">
     </kendo-grid-column>
@@ -182,12 +182,12 @@
     <ng-template kendoGridLoadingTemplate>
       <common-grid-loader-component></common-grid-loader-component>
      </ng-template>
-         <!-- grid No data Template -->  
+         <!-- grid No data Template -->
          <ng-template kendoGridNoRecordsTemplate>
           <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
           </div>
           <p>There is no data to display.</p>
-        </ng-template> 
+        </ng-template>
 
   </kendo-grid>
 </div>
