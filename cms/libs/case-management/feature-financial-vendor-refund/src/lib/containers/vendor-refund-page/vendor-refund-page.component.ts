@@ -15,7 +15,7 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'cms-vendor-refund-page',
   templateUrl: './vendor-refund-page.component.html',
-  styleUrls: ['./vendor-refund-page.component.css']
+  styleUrls: ['./vendor-refund-page.component.scss']
 })
 export class VendorRefundPageComponent {
 

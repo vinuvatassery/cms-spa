@@ -5,7 +5,7 @@ import { CaseFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-page',
   templateUrl: './financial-page.component.html',
-  styleUrls: ['./financial-page.component.css'],
+  styleUrls: ['./financial-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPageComponent {
