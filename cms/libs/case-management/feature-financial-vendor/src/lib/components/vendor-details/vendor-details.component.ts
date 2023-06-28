@@ -72,6 +72,13 @@ export class VendorDetailsComponent implements OnInit {
   setVendorDetailFormValues() {
     this.medicalProviderForm.controls['providerName'].setValue(this.vendorDetails.vendorName);
     this.medicalProviderForm.controls['tinNumber'].setValue(this.vendorDetails.tin);
+    if (this.vendorDetails.preferredFlag != null) {
+      let flag = this.vendorDetails.preferredFlag == 'Y' ? true : false
+      this.medicalProviderForm.controls['isPreferedPharmacy'].setValue(flag);
+    }
+    else {
+      this.medicalProviderForm.controls['isPreferedPharmacy'].setValue(this.vendorDetails.preferredFlag);
+    }
   }
 
   onToggleAddNewContactClick() {
@@ -311,6 +318,9 @@ export class VendorDetailsComponent implements OnInit {
       vendorValues['vendorId'] = this.vendorDetails.vendorId;
       vendorValues['vendorName'] = this.medicalProviderForm.controls['providerName'].value;
       vendorValues['tin'] = this.medicalProviderForm.controls['tinNumber'].value;
+      if(this.medicalProviderForm.controls['isPreferedPharmacy']?.value != null && this.providerType == this.vendorTypes.Pharmacy){
+        vendorValues['preferredFlag'] = this.medicalProviderForm.controls['isPreferedPharmacy'].value ? 'Y' : 'N';
+      }
       this.financialVendorDataService.updateVendorDetails(vendorValues).subscribe((resp: any) => {
         if (resp) {
           this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, this.profileInfoTitle.split(' ')[0] + ' information updated.');

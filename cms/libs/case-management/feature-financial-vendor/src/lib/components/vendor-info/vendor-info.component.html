@@ -43,6 +43,12 @@
             <td>TIN</td>
             <td>{{(selectedVendorInfo$ | async)?.tin}}</td>
           </tr>
+          <tr *ngIf="providerType == vendorTypes.Pharmacy">
+            <td>Preferred Pharmacy?</td>
+            <td>{{(selectedVendorInfo$ | async)?.preferredFlag == 'Y' ? 'Yes' : 
+              ((selectedVendorInfo$ | async)?.preferredFlag == 'N' ? 'No' : '' )}}
+            </td>
+          </tr>
         </tbody>
       </table>
       <!-- Last Updated by -->
