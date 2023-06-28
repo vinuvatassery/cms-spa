@@ -61,6 +61,10 @@
       [hidden]="true"></kendo-grid-column>
     <kendo-grid-column field="clientInsuranceFullName" title="Name on Primary Insurance Card" [width]="130"
       [hidden]="true"></kendo-grid-column>
+      <kendo-grid-column field="urn" title="URN" [width]="130"
+      [hidden]="true"></kendo-grid-column>
+      <kendo-grid-column field="GroupCodeDesc" title="Group" [width]="130"
+      [hidden]="true"></kendo-grid-column>
     <kendo-grid-column field="eligibilityStatus" title="{{title$ | async}}"   [width]="130">     
     </kendo-grid-column>
     <kendo-grid-column field="cerSentDate" title="Date CER Sent"  [width]="130" filter="date">
@@ -124,15 +128,15 @@
       [hidden]="true"></kendo-grid-column>
     <kendo-grid-column field="genders"  title="Gender" [width]="130"
       [hidden]="true"></kendo-grid-column>
-    <kendo-grid-column field="phone"  title="Phone" [width]="130" [hidden]="true" filter="numeric"></kendo-grid-column>
+    <kendo-grid-column field="phone"  title="Preferred Contact" [width]="130" [hidden]="true" filter="numeric"></kendo-grid-column>
     <kendo-grid-column field="email"  title="Email" [width]="130" [hidden]="true"></kendo-grid-column>
     <kendo-grid-column field="homeAddress"  title="Home Address" [width]="130"
       [hidden]="true"></kendo-grid-column>
     <kendo-grid-column field="ssn"  title="SSN" [width]="130" [hidden]="true"></kendo-grid-column>
-    <kendo-grid-column field="eilgibilityStartDate" title="Eligibility Start Date"  [width]="160" [hidden]="true"
+    <kendo-grid-column field="eligibilityStartDate" title="Eligibility Start Date"  [width]="160" [hidden]="true"
       [format]="{ date: 'MM-dd-yyyy' }" filter="date">
       <ng-template kendoGridCellTemplate let-dataItem>
-        {{dataItem.eilgibilityStartDate | date:'MM/dd/yyyy'}}
+        {{dataItem.eligibilityStartDate | date:'MM/dd/yyyy'}}
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="160" [hidden]="true"

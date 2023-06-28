@@ -116,8 +116,8 @@ export class CerTrackingPageComponent implements OnInit {
     });
   }
 
-  sendCerCount(cerId: any){
-    this.cerTrackingFacade.sendCerCount(cerId);
+  sendCerCount(param: {cerId: any, gridDataRefinerValue: any }){
+    this.cerTrackingFacade.sendCerCount(param);
   }
 
   createCerSession(eligibilityId:string)
