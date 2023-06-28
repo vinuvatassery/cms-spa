@@ -166,10 +166,18 @@ export class MedicalPremiumPaymentDetailComponent {
       this.insurancePolicyFacade.loadInsurancePoliciesByProviderId(value, this.clientId, this.caseEligibilityId, (this.tabStatus == ClientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS) ? ClientProfileTabs.DENTAL_INSURANCE_STATUS : ClientProfileTabs.HEALTH_INSURANCE_STATUS).subscribe({
         next: (data: any) => {
           data.forEach((policy: any) => {
-            policy["policyValueField"] = policy.insuranceCarrierName + " - " + policy.insurancePlanName;
+            if(policy.insuranceIdNumber !== null){
+              policy["policyValueField"] = '['+policy.insuranceIdNumber+ " #] - [" + policy.insurancePlanName +']';
+            }
+            else{
+              policy["policyValueField"] =  '[' + policy.insurancePlanName +']';
+            }
           });
           this.insurancePoliciesList = data;
           this.isInsurancePoliciesLoading = false;
+          if(data.length ===1){
+            this.premiumPaymentForm.controls['clientInsurancePolicyId'].setValue(data[0].clientInsurancePolicyId);
+           }
           this.changeDetector.detectChanges();
         },
         error: (err) => {
