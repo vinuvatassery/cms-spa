@@ -69,7 +69,7 @@ export class CerListComponent implements OnInit, OnChanges {
   filter! : any
   columnName!: any;
   selectedColumn!: any;
-  statusTitle ="Status"
+  statusTitle ="Current Status"
   addRemoveColumns="Default Columns"
   gridDataResult! : GridDataResult
 
