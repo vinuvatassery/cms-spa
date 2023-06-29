@@ -280,15 +280,26 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   }
 
   onChange(event :any)
-  {
-    this.state.skip = 0;
-    this.state.take = this.pageSizes[0]?.value;
+  {    
+    this.defaultGridState()
     this.columnName = this.state.columnName = this.columnDroplist[this.selectedColumn];
-    this.filter = this.state.searchValue = event;
-    this.state.selectedColumn = this.selectedColumn;
+    this.sortColumn = this.columns[this.selectedColumn];
+    this.filter = {logic:'and',filters:[{
+      "filters": [
+          {
+              "field": this.columnDroplist[this.selectedColumn] ?? "clientFullName",
+              "operator": "startswith",
+              "value": event
+          }
+      ],
+      "logic": "and"
+  }]}
+  let stateData = this.state
+  stateData.filter = this.filter
+  this.dataStateChange(stateData);
     this.saveGridState();
     this.loadProfileCasesList();
-  }
+}
   setToDefault()
   {
     this.pageSizes = this.caseFacade.gridPageSizes;
