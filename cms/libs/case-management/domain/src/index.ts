@@ -109,6 +109,7 @@ export * from './lib/enums/payment-request-type.enum';
 export * from './lib/enums/search-header-type.enum';
 export * from './lib/enums/financial-vendor-provider-tab-code';
 export * from './lib/enums/financial-vendor-type-code';
+export * from './lib/enums/service-sub-type-code';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';

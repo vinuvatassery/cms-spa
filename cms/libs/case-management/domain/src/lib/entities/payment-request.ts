@@ -17,6 +17,7 @@ export class PaymentRequest {
     cptCode : string | null = null;
     pcaCode : string | null = null;
     serviceTypeCode : string | null = null;
+    serviceSubTypeCode : string | null = null;
     serviceCost : number | null = null;
     amountDue : number | null = null;
     invoiceNbr: string | null = null;
