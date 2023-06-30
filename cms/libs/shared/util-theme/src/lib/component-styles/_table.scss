@@ -688,7 +688,8 @@ table,
 .k-editor {
 
   .k-picker-solid,
-  .k-textbox {
+  .k-textbox,
+  .k-numerictextbox {
     border: 1px solid $theme-border !important;
     border-bottom: 1px solid $theme-border !important;
     border-radius: 4px !important;
