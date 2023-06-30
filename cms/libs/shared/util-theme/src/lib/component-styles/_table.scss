@@ -274,9 +274,9 @@ $pagination-height : 48px;
 .table-filter-section {
   display: flex;
   margin-bottom: $size-xx;
-  position: relative; 
+  position: relative;
 
- .filter-section_items {
+  .filter-section_items {
     width: 100%;
 
     &.filter--select {
