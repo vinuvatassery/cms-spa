@@ -100,8 +100,7 @@ export class ClientEligibilityPageComponent
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription =
       this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
-        if (val) {
-          debugger
+        if (val) {          
           this.formSubmited = true;
           this.ref.detectChanges();
           let questions = JSON.parse(JSON.stringify(this.questoinsResponse));

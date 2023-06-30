@@ -105,7 +105,8 @@ export class CerListComponent implements OnInit, OnChanges {
     insurancePolicyId:"Insurance Policy Id",
     assignedCw:"Case Worker",
     disEnrollmentDate:"Disenrollment Date",
-    caseManagerDomain: "Case Manager Domain"
+    caseManagerDomain: "Case Manager Domain",
+    sexes: "Sex"
   }
 
   public gridActions = [
