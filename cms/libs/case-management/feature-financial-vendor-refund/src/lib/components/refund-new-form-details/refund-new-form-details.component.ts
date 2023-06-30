@@ -56,10 +56,10 @@ export class RefundNewFormDetailsComponent{
   },
 
 ];
-  @Output() onModalCloseAddEditRefundFormModal = new EventEmitter();
+  @Output() modalCloseAddEditRefundFormModal = new EventEmitter();
 
 
   closeAddEditRefundFormModalClicked(){
-    this.onModalCloseAddEditRefundFormModal.emit(true);  
+    this.modalCloseAddEditRefundFormModal.emit(true);  
   }
 }

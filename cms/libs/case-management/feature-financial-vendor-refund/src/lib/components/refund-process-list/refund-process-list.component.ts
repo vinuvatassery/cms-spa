@@ -141,7 +141,7 @@ export class RefundProcessListComponent implements OnInit , OnChanges{
     });
     // this.isStatusPeriodDetailOpened = true;
   }
-  onModalCloseAddEditRefundFormModal(result: any) {
+  modalCloseAddEditRefundFormModal(result: any) {
     if (result) { 
       this.addEditRefundFormDialog.close();
     }

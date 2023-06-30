@@ -25,22 +25,19 @@ export class RefundBatchLogListComponent implements OnInit{
       buttonType: 'btn-h-primary',
       text: 'Edit Refund',
       icon: 'edit',
-      click: (data: any): void => {  
-      },
+      
     },
     {
       buttonType: 'btn-h-primary',
       text: 'Unbatch Refund',
       icon: 'undo',
-      click: (data: any): void => { 
-      },
+     
     },
     {
       buttonType: 'btn-h-danger',
       text: 'Delete Refund',
       icon: 'delete',
-      click: (data: any): void => { 
-      },
+      
     },
   ];
   /** Constructor **/

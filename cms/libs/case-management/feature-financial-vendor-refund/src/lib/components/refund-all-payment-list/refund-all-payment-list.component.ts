@@ -23,23 +23,17 @@ export class RefundAllPaymentListComponent implements OnInit{
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Refund',
-      icon: 'edit',
-      click: (data: any): void => {  
-      },
+      icon: 'edit', 
     },
     {
       buttonType: 'btn-h-primary',
       text: 'Unbatch Refund',
-      icon: 'undo',
-      click: (data: any): void => { 
-      },
+      icon: 'undo', 
     },
     {
       buttonType: 'btn-h-danger',
       text: 'Delete Refund',
-      icon: 'delete',
-      click: (data: any): void => { 
-      },
+      icon: 'delete', 
     },
   ];
   /** Constructor **/
