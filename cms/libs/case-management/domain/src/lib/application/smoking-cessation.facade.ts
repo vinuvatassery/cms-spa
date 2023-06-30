@@ -55,4 +55,8 @@ export class SmokingCessationFacade {
         return this.smokingCessationDataService.createSmokingCessationNote(clientNote);
       }
 
+      loadClientNote(clientCaseEligibilityId:any,clientId:any) {
+        return this.smokingCessationDataService.loadClientNote(clientCaseEligibilityId,clientId);
+      }
+
 }

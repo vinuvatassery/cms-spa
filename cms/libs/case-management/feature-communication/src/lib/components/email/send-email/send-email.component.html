@@ -32,10 +32,12 @@
           </kendo-floatinglabel>
         </div>
         <div class="flex-col">
-          <kendo-floatinglabel text="CC">
+          <kendo-floatinglabel text="CC" class="inline-search-loader">
             <kendo-multiselect
             [fillMode]="formUiStyle.dropDownFillMode"
               [data]="ddlEmails$ | async"
+              textField="email"
+              valueField="email"
               aria-label="cc of email"
             ></kendo-multiselect>
           </kendo-floatinglabel>
