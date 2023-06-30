@@ -435,6 +435,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
             this.workflowFacade.saveForLater(false);
           }
           this.isShowSaveLaterPopup = false;
+          this.cdr.detectChanges()
           this.caseFacade.loadActiveSession();
         },
         error: (err: any) => {

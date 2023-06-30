@@ -143,7 +143,7 @@ export class CerListComponent implements OnInit, OnChanges {
    if(this.gridState$)
    {    
     this.state = this.gridState$
-    this.loadcerTrackingDates();
+    this.dataStateChange(this.state);
    }
    else
    {
