@@ -15,7 +15,8 @@ import {
   VendorFacade,
   ClientProfileTabs,
   PaymentRequest,
-  EntityTypeCode
+  EntityTypeCode,
+  ServiceSubTypeCode
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  LovFacade } from '@cms/system-config/domain';
@@ -207,6 +208,8 @@ export class MedicalPaymentDetailComponent {
     this.paymentRequest.serviceStartDate = this.intl.formatDate(this.copayPaymentForm.controls['serviceStartDate'].value, this.dateFormat); 
     this.paymentRequest.serviceEndDate = this.intl.formatDate(this.copayPaymentForm.controls['serviceEndDate'].value, this.dateFormat); 
     this.paymentRequest.comments = this.copayPaymentForm.controls['comments'].value;
+    this.paymentRequest.serviceSubTypeCode = ServiceSubTypeCode.notApplicable
+    
   }
 
   validateForm(){
