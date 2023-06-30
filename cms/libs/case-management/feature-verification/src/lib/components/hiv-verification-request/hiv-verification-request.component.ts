@@ -36,6 +36,7 @@ export class HivVerificationRequestComponent implements OnInit{
   public uploadRemoveUrl = 'removeUrl';
   public hivVerificationUploadFile: any = undefined;
   showAttachmentOptions = true;
+  showHideAttachment = true;
   uploadedAttachment: any
   uploadedDate: any;
   uploadedBy: any;
@@ -127,6 +128,10 @@ export class HivVerificationRequestComponent implements OnInit{
     this.verificationFacade.showAttachmentOptions$.subscribe(response=>{
       this.showAttachmentOptions = response;
       this.uploadedAttachment = undefined;
+      this.cdr.detectChanges();
+    });
+    this.verificationFacade.showHideAttachment$.subscribe(response=>{
+      this.showHideAttachment = response;
       this.cdr.detectChanges();
     });
     this.verificationFacade.clientHivDocumentsList$.subscribe(response=>{
