@@ -1,14 +1,13 @@
-import { Component,  OnInit,  ChangeDetectionStrategy,  Input,  EventEmitter,  Output,  OnChanges,  ChangeDetectorRef,} from '@angular/core';
+import { Component,  ChangeDetectionStrategy,  OnInit} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-refund-all-payment-list',
-  templateUrl: './refund-all-payment-list.component.html',
-  styleUrls: ['./refund-all-payment-list.component.scss'],
+  templateUrl: './refund-all-payment-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundAllPaymentListComponent {
+export class RefundAllPaymentListComponent implements OnInit{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isVendorRefundAllPaymentsGridLoaderShow = false;

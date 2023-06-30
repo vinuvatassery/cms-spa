@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy , Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy , Output, EventEmitter} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'cms-refund-new-form-details',
@@ -6,7 +6,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   styleUrls: ['./refund-new-form-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundNewFormDetailsComponent {
+export class RefundNewFormDetailsComponent{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   clientsearchresult =[
 

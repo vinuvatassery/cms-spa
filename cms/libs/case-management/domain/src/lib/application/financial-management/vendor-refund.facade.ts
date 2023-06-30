@@ -42,19 +42,19 @@ export class FinancialVendorRefundFacade {
     field: this.sortValueClaims,
   }];
 
-  private vendorRefundProcessDataSubject = new BehaviorSubject<any>([]);
+  private vendorRefundProcessDataSubject = new Subject<any>();
   vendorRefundProcessData$ = this.vendorRefundProcessDataSubject.asObservable();
 
-  private vendorRefundBatchDataSubject = new BehaviorSubject<any>([]);
+  private vendorRefundBatchDataSubject =  new Subject<any>();
   vendorRefundBatchData$ = this.vendorRefundBatchDataSubject.asObservable();  
 
-  private vendorRefundAllPaymentsDataSubject = new BehaviorSubject<any>([]);
+  private vendorRefundAllPaymentsDataSubject =  new Subject<any>();
   vendorRefundAllPaymentsData$ = this.vendorRefundAllPaymentsDataSubject.asObservable();
 
-  private batchLogDataSubject = new BehaviorSubject<any>([]);
+  private batchLogDataSubject =  new Subject<any>();
   batchLogData$ = this.batchLogDataSubject.asObservable();
 
-  private claimsListDataSubject = new BehaviorSubject<any>([]);
+  private claimsListDataSubject =  new Subject<any>();
   claimsListData$ = this.claimsListDataSubject.asObservable();
   /** Private properties **/
  

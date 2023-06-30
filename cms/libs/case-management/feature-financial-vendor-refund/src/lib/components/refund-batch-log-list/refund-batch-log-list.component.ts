@@ -1,15 +1,14 @@
-import { Component,  OnInit,  ChangeDetectionStrategy,  Input,  EventEmitter,  Output,  OnChanges,  ChangeDetectorRef,} from '@angular/core';
+import { Component,  OnInit,  ChangeDetectionStrategy} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 @Component({
   selector: 'cms-refund-batch-log-list',
-  templateUrl: './refund-batch-log-list.component.html',
-  styleUrls: ['./refund-batch-log-list.component.scss'],
+  templateUrl: './refund-batch-log-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundBatchLogListComponent {
+export class RefundBatchLogListComponent implements OnInit{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;

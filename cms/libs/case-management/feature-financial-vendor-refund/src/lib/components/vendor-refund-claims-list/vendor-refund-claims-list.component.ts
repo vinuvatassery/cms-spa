@@ -1,26 +1,19 @@
 import {
   Component,
   OnInit,
-  ChangeDetectionStrategy,
-  TemplateRef,
-  Input,
-  EventEmitter,
-  ViewChild,
-  Output,
   OnChanges,
  
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain'; 
-import { DialogService } from '@progress/kendo-angular-dialog';
+
 
 @Component({
   selector: 'cms-vendor-refund-claims-list',
-  templateUrl: './vendor-refund-claims-list.component.html',
-  styleUrls: ['./vendor-refund-claims-list.component.scss'],
+  templateUrl: './vendor-refund-claims-list.component.html', 
 })
-export class VendorRefundClaimsListComponent {
+export class VendorRefundClaimsListComponent implements OnInit , OnChanges {
   
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isVendorRefundProcessGridLoaderShow = false;

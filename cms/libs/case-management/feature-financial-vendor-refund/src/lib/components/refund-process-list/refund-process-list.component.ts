@@ -3,9 +3,7 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  TemplateRef,
-  Input,
-  EventEmitter,
+  TemplateRef, 
   ViewChild,
   Output,
   OnChanges,
@@ -17,11 +15,10 @@ import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'cms-refund-process-list',
-  templateUrl: './refund-process-list.component.html',
-  styleUrls: ['./refund-process-list.component.scss'],
+  templateUrl: './refund-process-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundProcessListComponent {
+export class RefundProcessListComponent implements OnInit , OnChanges{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('batchRefundConfirmationDialog', { read: TemplateRef })
   batchRefundConfirmationDialog!: TemplateRef<any>;
