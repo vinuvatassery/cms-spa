@@ -116,6 +116,9 @@ $pagination-height : 48px;
     .k-table-th {
       .k-column-resizer {
         border-right: 1px solid rgba($white, 0.5);
+        &:hover{
+          color:transparent;
+        }
       }
     }
 
