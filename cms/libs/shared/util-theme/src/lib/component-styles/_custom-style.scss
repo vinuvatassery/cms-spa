@@ -54,7 +54,7 @@
 }
 
 .client-header-wrapper-stickey {
-  z-index: 6;
+  z-index: 102;
   background: $white;
   position: sticky;
   top: 0;
@@ -92,7 +92,7 @@
   padding: 16px;
   .TableActionPopup {
     .k-animation-container{
-      z-index: 5;
+      z-index: 4;
     }
   }
 }
@@ -304,7 +304,7 @@
         position: sticky;
         top: 0;
         background: $white;
-        z-index: 6;
+        z-index: 5;
         padding: $size-xlg $size-0 $size-xlg !important;
 
         @media (max-width: $breakpoint-xlg) {
