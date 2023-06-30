@@ -689,11 +689,15 @@ table,
 
   .k-picker-solid,
   .k-textbox,
-  .k-numerictextbox {
+  .k-numerictextbox,
+  .k-datepicker {
     border: 1px solid $theme-border !important;
     border-bottom: 1px solid $theme-border !important;
     border-radius: 4px !important;
     background: $white;
+    &.k-input-solid::after{
+      border-width: 0px;
+    }
   }
 }
 
