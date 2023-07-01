@@ -193,6 +193,28 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.loadProfileCasesList()
   }
   public dataStateChange(stateData: any): void {
+    if(stateData.filter?.filters.length > 0)
+    {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.columnName = stateFilter.field;
+     
+        this.filter = stateFilter.value;
+     
+      this.isFiltered = true;
+      const filterList = []
+      for(const filter of stateData.filter.filters)
+      {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.isFiltered =true;
+      this.filteredBy =  filterList.toString();
+    }
+    else
+    {
+      this.filter = "";
+      this.columnName = "";
+      this.isFiltered = false
+    }
     this.state=stateData;
     this.saveGridState();
     this.setGridState(stateData);  
@@ -404,6 +426,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
 
   public setGridState(stateData: any): void {
       this.state=stateData;
+      debugger
       if(stateData.filter?.filters.length > 0)
       {
         for (let i = 0; i < stateData.filter?.filters.length; i++) {
@@ -416,6 +439,17 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
         }
         const filterList = this.state?.["filter"]?.["filters"] ?? []                
         this.filter = JSON.stringify(filterList);
+        const filterListData = []
+        if(stateData.filter?.filters.length > 0)
+       {
+        for(const filter of stateData.filter.filters)
+        {
+          filterListData.push(this.columns[filter?.filters[0]?.field]);
+        }
+        this.isFiltered =true;
+        this.filteredBy =  filterListData.toString();
+        this.cdr.detectChanges();
+       }
       }
       else
       {
