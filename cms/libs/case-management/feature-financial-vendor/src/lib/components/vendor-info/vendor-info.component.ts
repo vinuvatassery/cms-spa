@@ -82,7 +82,10 @@ export class VendorInfoComponent implements OnInit {
     this.medicalProviderForm.reset();
     this.medicalProviderForm = this.formBuilder.group({
       providerName: [''],
+      firstName: [''],
+      lastName: [''],
       tinNumber: [''],
+      npiNbr: [],
       isPreferedPharmacy: ['']
     });
   }
