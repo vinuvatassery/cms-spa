@@ -72,8 +72,6 @@ export class VendorDetailsComponent implements OnInit {
   setVendorDetailFormValues() {
     if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders) {
       let name = !!this.vendorDetails.vendorName ? this.vendorDetails.vendorName : "";
-      name = name + (!!name && !!this.vendorDetails.firstName ? ' - ' : '')
-        + this.vendorDetails.firstName + (!!this.vendorDetails.lastName ? ' ' + this.vendorDetails.lastName : '');
       this.medicalProviderForm.controls['providerName'].setValue(name);
     }
     else {
@@ -89,6 +87,15 @@ export class VendorDetailsComponent implements OnInit {
     }
     else {
       this.medicalProviderForm.controls['isPreferedPharmacy'].setValue(this.vendorDetails.preferredFlag);
+    }
+    if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders) {
+      if (!this.vendorDetails.vendorName) {
+        this.medicalProviderForm.get('providerName')?.disable();
+      }
+      else {
+        this.medicalProviderForm.get('firstName')?.disable();
+        this.medicalProviderForm.get('lastName')?.disable();
+      }
     }
   }
 
@@ -355,7 +362,7 @@ export class VendorDetailsComponent implements OnInit {
   validateEditForm() {
     this.medicalProviderForm.markAllAsTouched();
     if (this.vendorTypes.DentalProviders == this.providerType || this.vendorTypes.MedicalProviders == this.providerType) {
-      if (!!this.vendorDetails.venorName) {
+      if (!!this.vendorDetails.vendorName) {
         this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
       }

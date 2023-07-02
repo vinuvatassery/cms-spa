@@ -95,7 +95,7 @@
 </div>
 
 <kendo-dialog *ngIf="openEditDailog" (close)="openEditDailog=false;" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar class="transform-none"> Edit {{profileInfoTitle}} </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar class="transform-none"> Edit {{editTitlePrefix + profileInfoTitle}} </kendo-dialog-titlebar>
   <cms-vendor-details [editVendorInfo]="true" [vendorDetails]="vendorDetail" [providerType]="providerType"
   [profileInfoTitle]="profileInfoTitle" [medicalProviderForm]="medicalProviderForm" (closeModalEventClicked)="closeEditModal($event)">
 </cms-vendor-details>

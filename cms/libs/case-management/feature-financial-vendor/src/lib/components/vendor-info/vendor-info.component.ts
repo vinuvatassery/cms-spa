@@ -23,6 +23,7 @@ export class VendorInfoComponent implements OnInit {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   addressGridView = [];
   providerType!: string;
+  editTitlePrefix: string = "";
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -64,6 +65,12 @@ export class VendorInfoComponent implements OnInit {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
     this.providerType = this.activeRoute.snapshot.queryParams['vendor_type_code'];
     this.loadVendorInfo();
+    if (this.providerType == this.vendorTypes.DentalProviders) {
+      this.editTitlePrefix = 'Dental ';
+    }
+    else if (this.providerType == this.vendorTypes.MedicalProviders) {
+      this.editTitlePrefix = 'Medical ';
+    }
   }
 
   loadVendorInfo() {
