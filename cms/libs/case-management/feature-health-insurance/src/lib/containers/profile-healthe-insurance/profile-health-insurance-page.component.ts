@@ -119,6 +119,9 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
       sortColumn: gridDataRefinerValue.sortColumn,
       sortType: gridDataRefinerValue.sortType,
     };
+    if(gridDataRefinerValue?.loadHistoricalData !== undefined){
+      this.isHistoricalDataLoad = gridDataRefinerValue.loadHistoricalData;
+    }
     this.insurancePolicyFacade.loadMedicalHealthPlans(
       this.clientId,
       this.isHistoricalDataLoad? null: this.clientCaseEligibilityId,
@@ -160,6 +163,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
       pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
       sortColumn: 'creationTime',
       sortType: 'asc',
+      loadHistoricalData:isLoadHistoricalData
     };
     this.loadHealthInsuranceHandle(gridDataRefinerValue);
   }

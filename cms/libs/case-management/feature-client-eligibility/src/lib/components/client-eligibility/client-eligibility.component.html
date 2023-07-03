@@ -101,7 +101,8 @@
   <div class="app-c-card app-c-card--border-box top-lg-space">
     <div class="flex-row">
       <div class="flex-col flex-col-8 align-items-center">
-        <h4 class="mb-0 mt-0">Is the application accepted?</h4>
+        <h4 class="mb-0 mt-0" *ngIf="!isCerForm">Is the application accepted?</h4>
+        <h4 class="mb-0 mt-0" *ngIf="isCerForm">Is the client eligible?</h4>
       </div>
       <div class="flex-col flex-col-4 text-right">
         <button [disabled]="acceptedApplicationStatus" kendoButton aria-label="application accepted yes" [primary]="true" (click)="isOpenAcceptanceClicked()">

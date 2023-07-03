@@ -9,8 +9,8 @@
             arrow_back </span> </button>
         <h1 class="title_with_bld">
           <span class="bold-text pl-1"> {{vendorProfile$?.vendorName}}</span>
-          <span class="title-star-icon icon-filled" aria-label="user details" aria-hidden="true">
-            <span kendoPopoverAnchor showOn="hover" class="material-icons" aria-label="user information star"
+          <span class="title-star-icon icon-filled" aria-label="special Handling Details" aria-hidden="true">
+            <span kendoPopoverAnchor showOn="hover"  [popover]="specialHandlingDetails" class="material-icons" aria-label="user information star"
               aria-hidden="true">star</span>
           </span>
 
@@ -37,7 +37,7 @@
           <div class=""> 
             <kendo-dropdownbutton icon="more-vertical" title="More option" [data]="reminderActions" look="bare"
               aria-label="more actions" class="small-i-btn app-dropdown-action cvp_three_dot_drop_btn" [popupSettings]="{
-            popupClass: reminderActionPopupClass,
+            popupClass: reminderActionPopupClass, 
             animate: true
           }">
               <span hidden> More Option</span>
@@ -62,7 +62,7 @@
           <div class=""> 
             <kendo-dropdownbutton icon="more-vertical" title="More option" [data]="reminderActions" look="bare"
               aria-label="more actions" class="small-i-btn app-dropdown-action cvp_three_dot_drop_btn" [popupSettings]="{
-            popupClass: reminderActionPopupClass,
+            popupClass: reminderActionPopupClass, 
             animate: true
           }">
               <span hidden> More Option</span>
@@ -87,7 +87,7 @@
           <div class=""> 
             <kendo-dropdownbutton icon="more-vertical" title="More option" [data]="reminderActions" look="bare"
               aria-label="more actions" class="small-i-btn app-dropdown-action cvp_three_dot_drop_btn" [popupSettings]="{
-            popupClass: reminderActionPopupClass,
+            popupClass: reminderActionPopupClass, 
             animate: true
           }">
               <span hidden> More Option</span>
@@ -116,3 +116,14 @@
 </div>
 
 <cms-vendor-header-tools></cms-vendor-header-tools>
+
+
+  <!-- special handling Details Popover -->
+  <kendo-popover #specialHandlingDetails [width]="380" position="bottom">
+    <ng-template kendoPopoverBodyTemplate>
+      <cms-vendor-special-handling     
+      [vendorProfileSpecialHandling$] ="vendorProfileSpecialHandling$ | async"
+      (loadSpecialHandlingEvent)="loadSpecialHandling()">
+    </cms-vendor-special-handling>
+    </ng-template>
+   </kendo-popover>

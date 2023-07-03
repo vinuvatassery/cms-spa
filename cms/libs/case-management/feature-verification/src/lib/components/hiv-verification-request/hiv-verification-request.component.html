@@ -36,7 +36,7 @@
       </div>
     </div>
     <div class="flex-row ml-4" *ngIf="providerOption === 'UPLOAD_ATTACHMENT'">
-      <div class="flex-col" *ngIf="showAttachmentOptions ">
+      <div class="flex-col" *ngIf="showAttachmentOptions && showHideAttachment">
         <div class="component-list-h">
           <span class="app-checkboxwidtext-wrapper">
             <input type="radio" kendoRadioButton (change)="attachmentRadioChanged($event)"
@@ -90,7 +90,7 @@
         [clientDocumentList$]="clientHivDocumentsList$"
         (clientAttachmentChangeEvent)="clientAttachmentChange($event)"
         ></common-clients-attachment>
-      <div *ngIf="!showAttachmentOptions" class="attachment-from-client-lists-wrapper mt-2">
+      <div *ngIf="!showAttachmentOptions && showHideAttachment" class="attachment-from-client-lists-wrapper mt-2">
 
         <div class="attachment-from-client-lists-container">
 
@@ -103,7 +103,7 @@
             </div>
             <kendo-dropdownbutton [data]="data" icon="more-vertical" title="More option" look="bare"
               aria-label="more actions" class="small-i-btn app-dropdown-action hide_more-text"
-              [popupSettings]="{ popupClass: popupClass1, animate: true }">
+              [popupSettings]="{ popupClass: popupClass1,  animate: true }">
               <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
                 <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"

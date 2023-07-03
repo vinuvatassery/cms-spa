@@ -140,7 +140,7 @@
               class="TableActionPopup more_action_wid"
               buttonClass="k-icon-button"
               aria-label="more actions"
-              [popupSettings]="{ popupClass: popupClassAction, animate: true }"
+              [popupSettings]="{ popupClass: popupClassAction,  animate: true }"
             >
             <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
@@ -236,7 +236,7 @@
               <span class="app-c-badge" *ngIf="dataItem.uploaingProofDoc"><span
               class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span><span> </span>
            </span>
-          <kendo-dropdownbutton  [data]="actions"   icon="upload"   class="TableActionPopup app-dropdown-action"   buttonClass="k-icon-button"
+          <kendo-dropdownbutton *ngIf="isAddIncomeButtonAndFooterNoteDisplay"  [data]="actions"   icon="upload"   class="TableActionPopup app-dropdown-action"   buttonClass="k-icon-button"
             aria-label="more actions"  [popupSettings]="{ popupClass: popupClassAction, animate: true }"  >
 
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>

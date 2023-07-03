@@ -54,7 +54,7 @@
 }
 
 .client-header-wrapper-stickey {
-  z-index: 6;
+  z-index: 102;
   background: $white;
   position: sticky;
   top: 0;
@@ -89,10 +89,12 @@
 }
 
 .client-profile-outlet {
-  // max-height: calc(100vh - 236px);
-  // overflow-y: auto;
   padding: 16px;
-  // margin-top: 4px;
+  .TableActionPopup {
+    .k-animation-container{
+      z-index: 4;
+    }
+  }
 }
 
 .maintitle_withicon {
@@ -299,10 +301,10 @@
       min-height: 32px !important;
 
       &.fixed-top-breadcrumb {
-        position: relative;
+        position: sticky;
         top: 0;
         background: $white;
-        z-index: 6;
+        z-index: 5;
         padding: $size-xlg $size-0 $size-xlg !important;
 
         @media (max-width: $breakpoint-xlg) {
@@ -674,6 +676,13 @@ color: $app-primary-font-color;
     grid-gap: 0px;
     align-items: center;
   }
+  .template-list-wrapper-two-column {
+   display: block;
+   width: 100%;
+   > span{
+    width: 50%;
+   }
+  }
 }
 
 .no-data-available {
@@ -895,7 +904,7 @@ color: $app-primary-font-color;
 .more_action_wid {
   >.k-button-solid {
     padding: 8px;
-
+    background: transparent;
     .k-button-text {
       display: none;
     }

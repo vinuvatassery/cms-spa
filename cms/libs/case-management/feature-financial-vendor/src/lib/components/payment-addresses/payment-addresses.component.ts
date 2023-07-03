@@ -1,7 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'; 
-import { PaymentsFacade } from '@cms/case-management/domain';
+import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input } from '@angular/core'; 
+import { PaymentsFacade,BillingAddressFacade,VendorContactsFacade, contactResponse  } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ActivatedRoute } from '@angular/router';
+import { FinancialVendorTypeCode, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+
 @Component({
   selector: 'cms-payment-addresses',
   templateUrl: './payment-addresses.component.html',
@@ -9,6 +12,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentAddressesComponent {
+  @Input() vendorId: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isPaymentsAddressGridLoaderShow = false;
@@ -18,14 +22,20 @@ export class PaymentAddressesComponent {
   public gridSkipCount = this.paymentsFacade.skipCount;
   public sort = this.paymentsFacade.sort;
   public state!: State;
-  paymentsAddressGridView$ = this.paymentsFacade.paymentsAddressData$;
+  paymentsAddressGridView$ = this.paymentBillingFacade.billingAddressData$;
   isPaymentAddressDetailShow = false;
+  isContactDetailShow = false;
+  isPaymentAddressDetailIsEdit = false;
   isPaymentAddressDeactivateShow = false;
-  isPaymentAddressDeleteShow = false;
+  isPaymentAddressDeleteShow = false; 
+  VendorAddressId:any;
+  billingAddressObj: any[] = [];
+  tabCode: string = '';
+  addressId: any;
   paymentAddressInnerGridLists = [
     {
       Name: 'FName LName',
-      Description:'FName LName', 
+      Description: 'FName LName',
       PremiumAmount: '500.00',
       PhoneNumber: 'XXXXXX',
       FaxNumber: 'XXXXXX',
@@ -42,18 +52,15 @@ export class PaymentAddressesComponent {
       buttonType: 'btn-h-primary',
       text: 'Edit Address',
       icon: 'edit',
-      click: (data: any): void => {        
-        console.log(data); 
+      click: (data: any): void => {;
         this.clickOpenAddEditPaymentAddressDetails();
-         
       },
-    }, 
+    },
     {
       buttonType: 'btn-h-primary',
       text: 'Deactivate Address',
       icon: 'block',
       click: (data: any): void => {
-        console.log(data); 
         this.clickOpenDeactivatePaymentAddressDetails();
       },
     },
@@ -62,18 +69,25 @@ export class PaymentAddressesComponent {
       text: 'Delete Address',
       icon: 'delete',
       click: (data: any): void => {
-        console.log(data);  
         this.clickOpenDeletePaymentAddressDetails();
       },
     },
   ];
+  contactResponse: contactResponse[] = [];
+  /** Constructor **/
+  constructor(private readonly paymentsFacade: PaymentsFacade,private readonly paymentBillingFacade: BillingAddressFacade,private readonly vendorcontactFacade: VendorContactsFacade,private route: ActivatedRoute, private readonly cdr: ChangeDetectorRef) { }
 
-   /** Constructor **/
-   constructor(private readonly paymentsFacade: PaymentsFacade) {}
    
   ngOnInit(): void {
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value
+    };
+    this.tabCode = this.route.snapshot.queryParams['tab_code'];
+    this.getTabCode();
     this.loadPaymentsAddressListGrid();
   }
+
   ngOnChanges(): void {
     this.state = {
       skip: this.gridSkipCount,
@@ -82,48 +96,130 @@ export class PaymentAddressesComponent {
     };
   }
 
-  // updating the pagination info based on dropdown selection
   pageSelectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
+    this.loadPaymentsAddressListGrid();
+  }
+  public onDetailCollapse(e: any): void {
   }
 
+  public onDetailExpand(e: any): void { 
+    this.VendorAddressId=e.dataItem.VendorAddressId;  
+   
+  }
   public dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-  }
-  loadPaymentsAddressListGrid() {
-    this.state = {
-      skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
-    this.paymentsFacade.loadPaymentsAddressListGrid();
+    this.loadPaymentsAddressListGrid();
   }
 
-  
-  
+  loadPaymentsAddressListGrid() {
+    this.paymentBillingFacade.loadPaymentsAddressListGrid(
+      this.tabCode,
+      this.state.skip ?? 0,
+      this.state.take ?? 0,
+      this.sortValue,
+      this.sortType
+    );
+  }
+
+
+
+
   clickOpenAddEditPaymentAddressDetails() {
     this.isPaymentAddressDetailShow = true;
+    this.isPaymentAddressDetailIsEdit = false;
+  }
+
+  clickOpenEditPaymentAddressDetails() {
+    this.isPaymentAddressDetailShow = true;
+    this.isPaymentAddressDetailIsEdit = true;
   }
 
   clickCloseAddEditPaymentAddressDetails() {
     this.isPaymentAddressDetailShow = false;
   }
+  clickOpenAddContactDetails() {
+    this.isContactDetailShow = true;
+  }
+  onClose(isClosed: any) {
+    if (isClosed) {
+      this.clickCloseAddContactDetails();
+    }
+  }
+
+  clickCloseAddContactDetails() {
+    this.isContactDetailShow = false;
+  }
+
+  closePaymentAddressDetails(event: any) {
+    if (event === 'saved') {
+      this.loadPaymentsAddressListGrid();
+    }
+    this.clickCloseAddEditPaymentAddressDetails();
+  }
 
   clickOpenDeactivatePaymentAddressDetails() {
     this.isPaymentAddressDeactivateShow = true;
   }
-  clickCloseDeactivatePaymentAddress() {
+
+  
+
+  clickCloseDeactivatePaymentAddress(isSuccess: boolean): void {
     this.isPaymentAddressDeactivateShow = false;
+    if (isSuccess)
+      this.loadPaymentsAddressListGrid();
   }
 
   clickOpenDeletePaymentAddressDetails() {
     this.isPaymentAddressDeleteShow = true;
   }
-  clickCloseDeletePaymentAddress() {
+  clickCloseDeletePaymentAddress(isSuccess: boolean): void {
     this.isPaymentAddressDeleteShow = false;
+    if (isSuccess)
+      this.loadPaymentsAddressListGrid();
+  }
+
+  getTabCode() {
+    switch (this.tabCode) {
+      case FinancialVendorProviderTabCode.Manufacturers:
+        this.tabCode = FinancialVendorTypeCode.Manufacturers;
+        break;
+      case FinancialVendorProviderTabCode.InsuranceVendors:
+        this.tabCode = FinancialVendorTypeCode.InsuranceVendors;
+        break;
+      case FinancialVendorProviderTabCode.Pharmacy:
+        this.tabCode = FinancialVendorTypeCode.Pharmacy;
+        break;
+      case FinancialVendorProviderTabCode.DentalProvider:
+        this.tabCode = FinancialVendorTypeCode.DentalProviders;
+        break;
+      case FinancialVendorProviderTabCode.MedicalProvider:
+        this.tabCode = FinancialVendorTypeCode.MedicalProviders;
+        break;
+      default:
+        this.tabCode = '';
+        break;
+    }
+  }
+
+  handleOptionClick(dataItem: any, type: any) {
+    if (type == 'Delete') {
+      this.addressId = dataItem.vendorAddressId ?? this.addressId;
+      this.clickOpenDeletePaymentAddressDetails();
+    }
+    else if (type == 'Edit') {
+      this.addressId = dataItem.vendorAddressId ?? this.addressId;
+      this.billingAddressObj = dataItem;
+      this.clickOpenEditPaymentAddressDetails();
+    }
+    else if (type == 'Deactivate') {
+      this.addressId = dataItem.vendorAddressId ?? this.addressId;
+      this.clickOpenDeactivatePaymentAddressDetails();
+    }
+    this.cdr.detectChanges();
   }
 }

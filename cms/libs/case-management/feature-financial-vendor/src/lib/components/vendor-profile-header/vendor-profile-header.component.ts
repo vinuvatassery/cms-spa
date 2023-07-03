@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -9,6 +9,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class VendorProfileHeaderComponent {
 @Input() vendorProfile$ : any
+@Input() vendorProfileSpecialHandling$ : any
+@Output() loadSpecialHandlingEvent =  new EventEmitter();
 
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   showMoreAlert = false;
@@ -72,5 +74,10 @@ export class VendorProfileHeaderComponent {
   onBackClicked()
   {
     this.route.navigate(['financial-management/vendors'])
+  }
+
+  loadSpecialHandling()
+  {
+    this.loadSpecialHandlingEvent.emit()  
   }
 }

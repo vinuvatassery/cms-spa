@@ -17,21 +17,31 @@ export class InsuranceProviderFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortValue = 'address1';
   public sortType = 'asc';
+  public clientsSortValue = 'clientName'
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
   }];
+  public clientSort: SortDescriptor[] = [{
+    field: this.clientsSortValue,
+  }];
 
   private insuranceProviderDataSubject = new BehaviorSubject<any>([]);
-  insuranceProviderData$ = this.insuranceProviderDataSubject.asObservable();
+  private providerClientsDataSubject = new BehaviorSubject<any>([]);
+  private gridLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
 
-  
+
+  providerClientsData$ = this.providerClientsDataSubject.asObservable();
+  insuranceProviderData$ = this.insuranceProviderDataSubject.asObservable();
+  gridLoaderVisibility$ = this.gridLoaderVisibilitySubject.asObservable();
+
+
   /** Private properties **/
- 
+
   /** Public properties **/
- 
+
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>(); 
+  snackbarSubject = new Subject<SnackBar>();
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
@@ -67,11 +77,35 @@ export class InsuranceProviderFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
     });
-   
-  
+
+
   }
- 
+  loadProviderClientsListGrid(
+    providerId:any,
+    tabCode:any,
+    skipCount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string){
+    this.gridLoaderVisibilitySubject.next(true);
+    this.insuranceProviderDataService.loadProviderClientsListGrid(providerId,tabCode, skipCount,maxResultCount,sort,sortType).subscribe({
+      next: (dataResponse) => {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.providerClientsDataSubject.next(gridView);
+        this.gridLoaderVisibilitySubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.gridLoaderVisibilitySubject.next(false);
+      },
+    });
+
+  }
+
 }

@@ -8,7 +8,12 @@
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
-      <kendo-grid [resizable]="true" [pageSize]="5" [pageable]="true" [rowClass]="rowClass"  [data]="pharmaciesList$ | async">
+      <kendo-grid [resizable]="true" [pageSize]="5" [pageable]="true" [rowClass]="rowClass"  [data]="pharmaciesList$ | async"
+      [pageSize]="state.take" [pageable]="true"
+      [sortable]="true" [skip]="state.skip" [groupable]="false"
+       [reorderable]="true"
+      [columnMenu]="{ filter: true }"
+       [sort]="state.sort">
         <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="180">
           <ng-template kendoGridCellTemplate let-dataItem>
             <div class="d-flex align-items center pos-rel" kendoTooltip>
@@ -33,7 +38,7 @@
             </ng-template>
         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="50" [sticky]="true">
+        <kendo-grid-column field="by" title="By" [width]="100" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
@@ -57,7 +62,7 @@
             </kendo-popover>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="Option" title="Options" [width]="50" class="text-center">
+        <kendo-grid-column field="Option" title="Options" [width]="110" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem let-clientPharmacy let-pharmacyId="field">
               <kendo-dropdownbutton 
               [data]="filterActionButtonOptions( pharmacyOptions,clientPharmacy)"
@@ -69,7 +74,7 @@
               [popupSettings]="{ popupClass: popupClassAction, animate: true }">
 
                   <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
-                      <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                      <button kendoButton  [disabled]="(isReadOnly$ | async) ? true : false" look="flat" [attr.aria-label]="buttondataItem.text"
                           [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(clientPharmacy)">
                           <span class="material-icons"
                               [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
@@ -114,7 +119,7 @@
     </div>
     <div class="flex-row">
       <div class="flex-col mt-1">
-        <button kendoButton [primary]="true" icon="add" [disabled]="disableAddpharmacyButton((pharmaciesList$ | async))" (click)="onOpenPharmacyClicked()" aria-label="add pharmacy">
+        <button kendoButton [primary]="true" icon="add" [disabled]="disableAddpharmacyButton((pharmaciesList$ | async))||((isReadOnly$ | async) ? true : false)" (click)="onOpenPharmacyClicked()" aria-label="add pharmacy">
           Pharmacy
         </button>
       </div>
@@ -167,7 +172,7 @@
 <!-- Reactivate-pharmacy Modal -->
 <kendo-dialog *ngIf="isOpenReactivatePharmaciesClicked" (close)="handleCloseReactivatePharmaciesClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Reactivate Pharmacy </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar> Re-activate pharmacy? </kendo-dialog-titlebar>
   <case-management-reactivate-pharmacies   [clientPharmacyDetails]="selectClientPharmacyDetails" [isShowHistoricalData]="isShowHistoricalData"
    (closeReactivatePharmacies)="handleCloseReactivatePharmaciesClicked()">
   </case-management-reactivate-pharmacies>

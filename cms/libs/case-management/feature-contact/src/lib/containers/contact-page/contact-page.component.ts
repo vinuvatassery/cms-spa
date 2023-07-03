@@ -591,7 +591,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setOtherPhone(isPhoneChangedInCer);
 
     if ((emailGroup.controls['applicableFlag']?.value ?? false) === false && (isEmailChangedInCer || !this.isCerForm)) {
-      emailGroup.controls['email'].setValidators([Validators.required, Validators.email]);
+      emailGroup.controls['email'].setValidators([Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]); 
       emailGroup.controls['email'].updateValueAndValidity();
     }
 
@@ -1553,12 +1553,13 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setAddress(address: MailAddress | undefined, type: AddressTypeCode) {
     if (!address) return;
+    var zipCode = address?.zip4 ? `${address?.zip5}-${address?.zip4}`: address?.zip5;
     const selectedAddress: ClientAddress = {
       address1: address?.address1 == '' ? address?.address2 : address?.address1,
       address2: address?.address1 == '' ? '' : address?.address2,
       city: address?.city,
       state: address?.state,
-      zip: `${address?.zip5}-${address?.zip4}`,
+      zip: zipCode,
     };
     if (type === AddressTypeCode.Mail) {
       this.mailAddressEntered = address;
@@ -1985,5 +1986,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.setValidators(null);
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.updateValueAndValidity();
     }
+  }
+
+  removeEmailValidation(){
+    this.contactInfoForm?.get('email.email')?.setValidators(null);
+    this.contactInfoForm?.get('email.email')?.updateValueAndValidity();
   }
 }
