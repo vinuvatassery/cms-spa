@@ -28,7 +28,7 @@ import { Subject } from 'rxjs';
   templateUrl: './refund-batches-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundBatchesListComponent implements OnInit{
+export class RefundBatchesListComponent implements OnInit, OnChanges{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isVendorRefundBatchGridLoaderShow = false;

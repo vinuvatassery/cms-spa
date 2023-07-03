@@ -38,7 +38,11 @@
                     <kendo-tabstrip-tab title="All Payments">
                         <ng-template kendoTabContent>
                             <div class="block-section ">
-                                <cms-refund-all-payment-list></cms-refund-all-payment-list>
+                                <cms-refund-all-payment-list 
+                                [vendorRefundAllPaymentsGridLists$]="vendorRefundAllPaymentsGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValue"
+                                [sortType]="sortType" [sort]="sort" 
+                                (loadVendorRefundAllPaymentsListEvent)="loadVendorRefundAllPaymentsListGrid($event)"></cms-refund-all-payment-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
