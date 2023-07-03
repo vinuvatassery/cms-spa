@@ -360,6 +360,17 @@ export class CaseFacade {
     beforeDate: any
   ): void {
     this.searchLoaderVisibilitySubject.next(true);
+    let isGridFilter = this.isGridFilter(filter);
+    if(!isGridFilter && columnName !== 'ALL'){
+      let _filter=
+        [{
+            filters:[{
+              field: columnName,
+              value: filter
+            }]
+        }]
+    filter = JSON.stringify(_filter);
+    }
     this.caseDataService
       .loadCases(
         CaseScreenType,
@@ -373,7 +384,7 @@ export class CaseFacade {
         afterDate,
         beforeDate
       )
-      .subscribe({
+      .subscribe({        
         next: (casesResponse: any) => {
           this.casesSubject.next(casesResponse);
           if (casesResponse) {
@@ -391,6 +402,14 @@ export class CaseFacade {
         },
       });
   }
+
+  isGridFilter(str: string) {
+    try {
+        return (JSON.parse(str) && !!str);
+    } catch (e) {
+        return false;
+    }
+}
 
   loadCaseBySearchText(text: string): void {
     this.caseDataService.loadCaseBySearchText(text).subscribe({
