@@ -140,7 +140,6 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
-    // this.isStatusPeriodDetailOpened = true;
   }
   onModalBatchRefundModalClose(result: any) {
     if (result) {

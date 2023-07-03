@@ -100,7 +100,7 @@ export class RefundBatchesListComponent implements OnInit, OnChanges{
         b_id: event.dataItem.id ,         
       },
     };
-    this.route.navigate(['/financial-management/vendor-refund/batch-log'], query );
+    this.route.navigate(['/financial-management/vendor-refund/batch/batch_log_list'], query );
   }
 
   
