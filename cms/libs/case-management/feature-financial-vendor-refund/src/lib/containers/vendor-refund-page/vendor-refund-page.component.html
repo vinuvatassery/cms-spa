@@ -11,7 +11,13 @@
                     <kendo-tabstrip-tab title="Process" [selected]="true">
                         <ng-template kendoTabContent>
                             <div class="block-section ">
-                                <cms-refund-process-list> </cms-refund-process-list>
+                                <cms-refund-process-list
+                                
+                                [vendorRefundProcessGridLists$]="vendorRefundProcessGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValue"
+                                [sortType]="sortType" [sort]="sort" 
+                                (loadVendorRefundProcessListEvent)="loadVendorRefundProcessListGrid($event)"
+                                > </cms-refund-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
