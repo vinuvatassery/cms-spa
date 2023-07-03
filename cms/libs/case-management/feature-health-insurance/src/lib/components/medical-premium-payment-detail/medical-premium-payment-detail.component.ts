@@ -16,6 +16,7 @@ import {
   InsuranceStatusType,
   ClientProfileTabs,
   EntityTypeCode,
+  ServiceSubTypeCode,
 } from '@cms/case-management/domain';
 import { SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -57,6 +58,7 @@ export class MedicalPremiumPaymentDetailComponent {
   commentCounter!: string;
   commentMaxLength = 300;
   commentNote = '';
+  serviceSubTypeCode !:any;
   public caseOwnerfilterSettings: DropDownFilterSettings = {
     caseSensitive: false,
     operator: 'startsWith',
@@ -83,9 +85,11 @@ export class MedicalPremiumPaymentDetailComponent {
     this.buildPremiumPaymentForm();
     this.commentCounterInitiation();
     if (this.tabStatus == ClientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS) {
+      this.serviceSubTypeCode =    ServiceSubTypeCode.medicalPremium
       this.loadServiceProviderName(InsuranceStatusType.healthInsurance, 'VENDOR_PAYMENT_REQUEST', this.clientId, this.caseEligibilityId);
     }
     else {
+      this.serviceSubTypeCode =    ServiceSubTypeCode.dentalPremium
       this.loadServiceProviderName(InsuranceStatusType.dentalInsurance, 'VENDOR_PAYMENT_REQUEST', this.clientId, this.caseEligibilityId);
     }
   }
@@ -146,6 +150,7 @@ export class MedicalPremiumPaymentDetailComponent {
     this.paymentRequest.entityTypeCode = EntityTypeCode.Vendor.toUpperCase();
     this.paymentRequest.clientInsurancePolicyId = this.premiumPaymentForm.controls['clientInsurancePolicyId'].value;
     this.paymentRequest.serviceTypeCode = this.premiumPaymentForm.controls['serviceTypeCode'].value;
+    this.paymentRequest.serviceSubTypeCode = this.serviceSubTypeCode
     this.paymentRequest.amountRequested = this.premiumPaymentForm.controls['amountRequested'].value;
     this.paymentRequest.paymentTypeCode = this.premiumPaymentForm.controls['paymentTypeCode'].value;
     this.paymentRequest.paymentRequestTypeCode = 'Expense'
@@ -154,6 +159,7 @@ export class MedicalPremiumPaymentDetailComponent {
     this.paymentRequest.serviceStartDate = this.intl.formatDate(this.premiumPaymentForm.controls['serviceStartDate'].value, this.dateFormat); 
     this.paymentRequest.serviceEndDate = this.intl.formatDate(this.premiumPaymentForm.controls['serviceEndDate'].value, this.dateFormat); 
     this.paymentRequest.comments = this.premiumPaymentForm.controls['comments'].value;
+    
   }
 
   private loadServiceProviderName(type: string, vendorType: string, clientId: any, clientCaseligibilityId: any) {
@@ -166,10 +172,18 @@ export class MedicalPremiumPaymentDetailComponent {
       this.insurancePolicyFacade.loadInsurancePoliciesByProviderId(value, this.clientId, this.caseEligibilityId, (this.tabStatus == ClientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS) ? ClientProfileTabs.DENTAL_INSURANCE_STATUS : ClientProfileTabs.HEALTH_INSURANCE_STATUS).subscribe({
         next: (data: any) => {
           data.forEach((policy: any) => {
-            policy["policyValueField"] = policy.insuranceCarrierName + " - " + policy.insurancePlanName;
+            if(policy.insuranceIdNumber !== null){
+              policy["policyValueField"] = '['+policy.insuranceIdNumber+ " #] - [" + policy.insurancePlanName +']';
+            }
+            else{
+              policy["policyValueField"] =  '[' + policy.insurancePlanName +']';
+            }
           });
           this.insurancePoliciesList = data;
           this.isInsurancePoliciesLoading = false;
+          if(data.length ===1){
+            this.premiumPaymentForm.controls['clientInsurancePolicyId'].setValue(data[0].clientInsurancePolicyId);
+           }
           this.changeDetector.detectChanges();
         },
         error: (err) => {

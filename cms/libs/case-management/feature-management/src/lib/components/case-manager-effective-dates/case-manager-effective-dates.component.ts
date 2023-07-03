@@ -7,7 +7,7 @@ import {
   Input,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 
 @Component({
@@ -22,19 +22,26 @@ export class CaseManagerEffectiveDatesComponent {
   @Input() endDate!: any;
   @Input() startDate!: any;
 
+  public min: Date = new Date(1917, 0, 1);  
+
   showstartDateError = false
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Output() changeDateConfimEvent = new EventEmitter<any>();
   constructor(
     public intl: IntlService,
-    private configurationProvider: ConfigurationProvider
+    private configurationProvider: ConfigurationProvider,
+    private readonly notificationSnackbarService : NotificationSnackbarService
   ){
     
   }
   onUnAssignConfirm(confirm: boolean) {
     if (confirm) {
-      if (this.startDate) {
+      if(this.startDate < this.min)
+      {
+         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, "Start date must be a valid date.", NotificationSource.UI)
+      }
+      if (this.startDate && this.startDate > this.min) {
         this.showstartDateError = false;
         const existCaseManagerData = {
           startDate: this.intl.formatDate(this.startDate, this.dateFormat),
