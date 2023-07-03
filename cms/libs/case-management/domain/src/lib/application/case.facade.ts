@@ -366,7 +366,8 @@ export class CaseFacade {
         [{
             filters:[{
               field: columnName,
-              value: filter
+              value: filter,
+              operator: "contains"
             }]
         }]
     filter = JSON.stringify(_filter);
