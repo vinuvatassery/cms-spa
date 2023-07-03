@@ -61,6 +61,8 @@ export class HealthCareProviderListComponent implements  OnChanges {
   clientProviderId! :any
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  notApplicable :any ='Not Applicable'
+
   public actions = [
     {
       buttonType:"btn-h-primary",
