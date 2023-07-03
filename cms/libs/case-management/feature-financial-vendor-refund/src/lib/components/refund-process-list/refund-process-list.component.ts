@@ -61,7 +61,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  loader = false;
+  
 
   public refundProcessMore = [
     {
@@ -124,6 +124,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     sortValue: string,
     sortTypeValue: string
   ) {
+    this.isVendorRefundProcessGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
@@ -131,6 +132,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       sortType: sortTypeValue,
     };
     this.loadVendorRefundProcessListEvent.emit(gridDataRefinerValue);
+    this.gridDataHandle();
   }
 
   public onBatchRefundClicked(template: TemplateRef<unknown>, data: any): void {
@@ -239,9 +241,11 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
         this.filterData
       );
       this.gridVendorsProcessDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) {
-        this.loader = false;
+      if (data?.total >= 0 || data?.total === -1) { 
+        this.isVendorRefundProcessGridLoaderShow = false;
       }
     });
+    this.isVendorRefundProcessGridLoaderShow = false;
+
   }
 }

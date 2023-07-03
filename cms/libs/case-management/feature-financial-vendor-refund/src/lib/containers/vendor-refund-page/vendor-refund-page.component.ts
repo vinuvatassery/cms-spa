@@ -19,6 +19,7 @@ export class VendorRefundPageComponent   {
    state!: State;
   vendorRefundProcessGridLists$ =
   this.financialVendorRefundFacade.vendorRefundProcessData$;
+  vendorRefundBatchGridLists$ = this.financialVendorRefundFacade.vendorRefundBatchData$;
   constructor( 
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade 
   ) {}
@@ -28,5 +29,10 @@ export class VendorRefundPageComponent   {
   
     this.financialVendorRefundFacade.loadVendorRefundProcessListGrid();
   }
+  
+
+  loadVendorRefundBatchListGrid(event: any) {
  
+    this.financialVendorRefundFacade.loadVendorRefundBatchListGrid();
+  }
 }

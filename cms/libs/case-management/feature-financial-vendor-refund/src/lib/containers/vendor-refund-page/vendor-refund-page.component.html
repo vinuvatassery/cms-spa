@@ -25,7 +25,12 @@
                     <kendo-tabstrip-tab title="Batches">
                         <ng-template kendoTabContent>
                             <div class="block-section ">
-                                <cms-refund-batches-list></cms-refund-batches-list>
+                                <cms-refund-batches-list
+                                [vendorRefundBatchGridLists$]="vendorRefundBatchGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValue"
+                                [sortType]="sortType" [sort]="sort" 
+                                (loadVendorRefundBatchListEvent)="loadVendorRefundBatchListGrid($event)"
+                                ></cms-refund-batches-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
