@@ -25,6 +25,7 @@ import { ActiveSessions } from '../entities/active-sessions';
 import { Router } from '@angular/router';
 import { ClientProfileTabs } from '../enums/client-profile-tabs.enum';
 import { SearchHeaderType } from '../enums/search-header-type.enum';
+import { GridColumnFilter} from '../enums/grid-column-filter.enum'
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
@@ -361,7 +362,7 @@ export class CaseFacade {
   ): void {
     this.searchLoaderVisibilitySubject.next(true);
     let isGridFilter = this.isGridFilter(filter);
-    if(!isGridFilter && columnName !== 'ALL'){
+    if(!isGridFilter && columnName !== GridColumnFilter.AllColumns){
       let _filter=
         [{
             filters:[{
