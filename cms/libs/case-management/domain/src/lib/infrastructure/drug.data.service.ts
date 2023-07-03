@@ -236,8 +236,8 @@ export class DrugDataService {
   loadDrugPharmacyList(clientId: number,isShowHistoricalData:boolean) {
     return this.http.get<ClientPharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs/${clientId}/pharmacies/${isShowHistoricalData}`);
   }
-  getDrugPurchasedList(clientId:number) {
-    return this.http.get<Pharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/drugpurchased`);
+  getDrugPurchasedList(clientId:number, skip: any, pageSize: any, sortBy: any, sortType: any) {
+    return this.http.get<Pharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/drugpurchased?SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}`);
   }
   removeDrugPharmacy(clientId: number, clientPharmacyId: string) {
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drug/clients/${clientId}/pharmacies/${clientPharmacyId}`);
