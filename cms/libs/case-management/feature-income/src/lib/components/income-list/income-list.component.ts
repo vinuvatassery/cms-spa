@@ -9,7 +9,7 @@ import { State } from '@progress/kendo-data-query';
 import { CompletionChecklist, ScreenType, StatusFlag, WorkflowFacade, ClientDocumentFacade, IncomeFacade, FamilyAndDependentFacade, CaseFacade } from '@cms/case-management/domain';
 import { DeleteRequest, SnackBar } from '@cms/shared/ui-common';
 import { UIFormStyle ,UploadFileRistrictionOptions} from '@cms/shared/ui-tpa';
-import { LoaderService,  LoggingService,  SnackBarNotificationType,} from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService,  LoggingService,  NotificationSource,  SnackBarNotificationType,} from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-income-list',
   templateUrl: './income-list.component.html',
@@ -112,7 +112,8 @@ export class IncomeListComponent implements OnInit {
       private readonly clientDocumentFacade: ClientDocumentFacade,
       private readonly dependentFacade:FamilyAndDependentFacade,
       private readonly cdr: ChangeDetectorRef,
-      private caseFacade: CaseFacade) {}
+      private caseFacade: CaseFacade,
+      private readonly configurationProvider: ConfigurationProvider) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -256,11 +257,18 @@ onIncomeActionClicked(
     }
   }
 
-  handleFileSelected(event: any, dataItem: any) {
+  handleFileSelected(event: any, dataItem: any) {    
     this.dependentFacade.showLoader();
-    if (event && event.files.length > 0) {
+    
+    if (event && event.files.length > 0) {     
       const formData: any = new FormData();
       let file = event.files[0].rawFile
+      if(file.size > this.configurationProvider.appSettings.uploadFileSizeLimit)
+      {
+        this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, "File is too large. Cannot be more than 25 MB.",NotificationSource.UI);
+      }
+      else
+      {
       if(dataItem.clientDocumentId){
         formData.append("clientDocumentId", dataItem.clientDocumentId);
         formData.append("concurrencyStamp", dataItem.documentConcurrencyStamp);
@@ -285,6 +293,7 @@ onIncomeActionClicked(
           this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         }
       })
+    }
     }
 
   }
