@@ -91,7 +91,7 @@
             >
               Re-Send Letter
             </button>
-            <button
+            <button *ngIf="toEmail[0] != undefined || toEmail[0] != null"
               kendoButton
               [primary]="true"
               look="flat"

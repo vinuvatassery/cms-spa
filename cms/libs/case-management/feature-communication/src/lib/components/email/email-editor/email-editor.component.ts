@@ -13,7 +13,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 /** Facades **/
-import { CommunicationFacade, ClientDocumentFacade, CommunicationEvents } from '@cms/case-management/domain';
+import { CommunicationFacade, ClientDocumentFacade, CommunicationEvents} from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { EditorComponent } from '@progress/kendo-angular-editor';
 
@@ -418,7 +418,7 @@ if(!this.attachedFileValidatorSize){
 
   loadLetterAttachment(documentTemplateId: string, typeCode: string){
     this.loaderService.show();
-    this.communicationFacade.loadCERLetterAttachment(documentTemplateId, typeCode)
+    this.communicationFacade.loadLetterAttachment(documentTemplateId, typeCode)
     .subscribe({
       next: (attachments: any) =>{
         if (attachments.length > 0) {

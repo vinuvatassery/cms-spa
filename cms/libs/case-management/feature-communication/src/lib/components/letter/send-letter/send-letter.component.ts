@@ -109,7 +109,7 @@ export class SendLetterComponent implements OnInit {
   onCloseSaveForLaterClicked() {
     this.isShowSaveForLaterPopupClicked = false;
     this.onCloseNewLetterClicked();
-    this.saveLetterTemplateForLater(this.selectedTemplate);
+    this.saveDraftLetterTemplate(this.selectedTemplate);
   }
 
   onSaveForLaterClicked() {
@@ -142,15 +142,7 @@ export class SendLetterComponent implements OnInit {
     this.loaderService.show();
     const clientId = this.workflowFacade.clientId ?? 0;
     const caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
-    const formData = new FormData();
-      formData.append('documentTemplateId', letterData?.documentTemplateId ?? '');
-      formData.append('systemCode', CommunicationEvents.SystemCode ?? '');
-      formData.append('typeCode', letterData?.typeCode ?? '');
-      formData.append('subtypeCode', CommunicationEvents?.Email ?? '');
-      formData.append('channelTypeCode', CommunicationEvents?.Email ?? '');
-      formData.append('languageCode', CommunicationEvents?.LanguageCode ?? '');
-      formData.append('description', letterData?.description ?? '');
-      formData.append('templateContent', letterData?.templateContent ?? '');
+    let formData = this.communicationFacade.preparePreviewModelData(letterData);
     this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
@@ -176,28 +168,8 @@ export class SendLetterComponent implements OnInit {
     this.loaderService.show();
     const clientId = this.workflowFacade.clientId ?? 0;
     const caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
-    const formData = new FormData();
-      formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
-      formData.append('systemCode', draftTemplate?.systemCode ?? '');
-      formData.append('typeCode', draftTemplate?.typeCode ?? '');
-      formData.append('subtypeCode', draftTemplate?.subtypeCode ?? '');
-      formData.append('channelTypeCode', draftTemplate?.channelTypeCode ?? '');
-      formData.append('languageCode', draftTemplate?.languageCode ?? '');
-      formData.append('description', draftTemplate?.description ?? '');
-      formData.append('templateContent', draftTemplate?.templateContent ?? '');
-      let i = 0;
-      this.cerEmailAttachedFiles.forEach((file) => { 
-      if(file.typeCode != CommunicationEvents.TemplateAttachmentTypeCode){
-        if(file.rawFile == undefined || file.rawFile == null){
-          formData.append('savedAttachmentId', file.document.documentTemplateId);
-          i++;
-        }else{
-          formData.append('fileData', file.rawFile); 
-        }
-      }
-    });  
-
-    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', draftTemplate ?? '', requestType.toString() ??'')
+    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.cerEmailAttachedFiles);
+    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -239,7 +211,7 @@ export class SendLetterComponent implements OnInit {
     this.isOpenLetterTemplate = true;
     this.loadInitialData.emit();
   }
-
+  
   onClosePreview(){
     this.isShowPreviewLetterPopupClicked = false;
   }
@@ -275,29 +247,10 @@ this.isShowSendLetterToPrintPopupClicked = false;
     this.openDdlLetterEvent.emit();
   }
 
-  private saveLetterTemplateForLater(draftTemplate: any) {
+  private saveDraftLetterTemplate(draftTemplate: any) {
     this.loaderService.show();
     const isSaveFoLater = true;
-    const formData = new FormData();
-      formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
-      formData.append('systemCode', draftTemplate?.systemCode ?? '');
-      formData.append('typeCode', draftTemplate?.typeCode ?? '');
-      formData.append('subtypeCode', draftTemplate?.subtypeCode ?? '');
-      formData.append('channelTypeCode', draftTemplate?.channelTypeCode ?? '');
-      formData.append('languageCode', draftTemplate?.languageCode ?? '');
-      formData.append('description', draftTemplate?.description ?? '');
-      formData.append('templateContent', draftTemplate?.templateContent ?? '');
-      let i = 0;
-    this.cerEmailAttachedFiles.forEach((file) => { 
-      if(file.typeCode != CommunicationEvents.TemplateAttachmentTypeCode){
-        if(file.rawFile == undefined || file.rawFile == null){
-          formData.append('savedAttachmentId', file.document.documentTemplateId);
-          i++;
-        }else{
-          formData.append('fileData', file.rawFile); 
-        }
-      }
-    });  
+    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.cerEmailAttachedFiles);
     this.communicationFacade.saveForLaterEmailTemplate(formData, isSaveFoLater)
         .subscribe({
           next: (data: any) =>{

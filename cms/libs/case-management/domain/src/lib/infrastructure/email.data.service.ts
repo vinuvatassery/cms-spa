@@ -116,7 +116,7 @@ export class EmailDataService {
         });
     }
 
-    getClientDocument(typeCode: string, subTypeCode: string, clientCaseEligibilityId: string) {
+    getClientDocuments(typeCode: string, subTypeCode: string, clientCaseEligibilityId: string) {
       return this.http.get(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientdocuments/${typeCode}/${subTypeCode}/${clientCaseEligibilityId}`);
     }
@@ -133,19 +133,19 @@ export class EmailDataService {
       );
     }
 
-    initiateAdobeEsignRequest(sendEmailData: any, isSaveForLater: boolean){
+    initiateAdobeEsignRequest(adobeEsignData: any){
       return this.http.post<any>(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?isSaveForLater=${isSaveForLater}`,sendEmailData
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign`,adobeEsignData
       );
     }
     
-    saveEmailTemplateForLater(formData: any, isSaveForLater: boolean){
+    saveDraftEsignRequest(formData: any){
       return this.http.post<any>(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?isSaveForLater=${isSaveForLater}`,formData
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign`,formData
       );
     }
 
-    loadUserSpecificDraftTemplates(clientId: number, clientCaseEligibilityId: string, loggedInUserId: string){
+    loadDraftEsignRequestByClinetId(clientId: number, clientCaseEligibilityId: string, loggedInUserId: string){
       return this.http.get(
         `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign/${clientId}/${clientCaseEligibilityId}/${loggedInUserId}`,
       );
@@ -157,9 +157,9 @@ export class EmailDataService {
       );
     }
 
-    updateEsignRequestTemplate(formData: any, isSaveForLater: boolean){
+    updateEsignRequestTemplate(formData: any){
       return this.http.put(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?isSaveForLater=${isSaveForLater}`,formData
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign`,formData
       );
     }
 
@@ -169,13 +169,13 @@ export class EmailDataService {
       );
     }
 
-    getEsignRequest(clientId: number, clientCaseEligibilityId: string){
+    getEsignRequest(clientCaseEligibilityId: string){
       return this.http.get(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign/${clientId}/${clientCaseEligibilityId}`,
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign/${clientCaseEligibilityId}`,
       );
     }
 
-    getCerLetterAttachment(templateId: string, typeCode: string){
+    getLetterAttachment(templateId: string, typeCode: string){
       return this.http.get(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/forms?templateId=${templateId}`
       );

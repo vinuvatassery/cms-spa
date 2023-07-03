@@ -139,7 +139,7 @@ export class AuthorizationComponent   {
       this.typeCode=CommunicationEvents.CerAuthorizationLetter
       this.subTypeCode= CommunicationEvents.Letter
     }
-      this.communicationFacade.getClientDocument(this.typeCode ?? '', this.subTypeCode ?? '',this.workflowFacade.clientCaseEligibilityId ?? '')
+      this.communicationFacade.getClientDocuments(this.typeCode ?? '', this.subTypeCode ?? '',this.workflowFacade.clientCaseEligibilityId ?? '')
       .subscribe({
         next: (data: any) =>{
           if (data) {
@@ -483,7 +483,7 @@ updateSendEmailSuccessStatus(event:any){
 
 loadEsignRequestInfo(){
   this.loaderService.show();
-    this.communicationFacade.getEsignRequestInfo(this.workflowFacade.clientId?? 0, this.workflowFacade.clientCaseEligibilityId ?? '')
+    this.communicationFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '')
     .subscribe({
       next: (data: any) =>{
         if (data?.esignRequestId != null) {

@@ -77,6 +77,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   emailSubject!: string;
   existingFile: any = [];
   loginUserId!: any;
+  isSaveFoLater: boolean = false;
   /** Private properties **/
   private currentSessionSubscription !: Subscription;
 
@@ -95,7 +96,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getLoggedInUserProfile();
     this.updateOpenSendEmailFlag();
-    this.loadUserSpecificDraftTemplates();
+    this.loadDraftEsignRequest();
   }
 
   ngOnDestroy(): void {
@@ -147,9 +148,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   });
   }
 
-  private loadUserSpecificDraftTemplates() {
+  private loadDraftEsignRequest() {
     this.loaderService.show();
-    this.communicationFacade.loadUserSpecificTemplates(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', this.loginUserId)
+    this.communicationFacade.loadDraftEsignRequestByClinetId(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', this.loginUserId)
     .subscribe({
       next: (data: any) =>{
         if (data.length > 0) {
@@ -179,7 +180,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.emailEditorValueEvent.emit(this.currentEmailData);
     this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
     this.selectedTemplate.toEmailAddress = this.selectedToEmail;
-    this.saveDraftTemplateForLater(this.selectedTemplate);
+    this.saveDraftEsignRequest(this.selectedTemplate);
   }
 
   onCloseSaveForLaterClicked(){
@@ -257,27 +258,8 @@ onClosePreviewEmail(){
 
   private initiateAdobeEsignProcess(emailData: any, requestType: string){
     this.loaderService.show();
-    const isSaveFoLater = false;
-    const sendEmailData = new FormData();
-    sendEmailData.append('esignRequestId', emailData?.esignRequestId ?? '');
-    sendEmailData.append('requestBody', emailData?.templateContent ?? '');
-    sendEmailData.append('toEmailAddress', this.selectedToEmail ?? '');
-    sendEmailData.append('clientCaseEligibilityId', this.clientCaseEligibilityId ?? '');
-    sendEmailData.append('clientId', this.clientId ?? '');
-    sendEmailData.append('requestSubject', this.emailSubject ?? ''); 
-    sendEmailData.append('loginUserId', this.loginUserId ?? ''); 
-    sendEmailData.append('cCEmail', this.selectedCCEmail ?? '');
-    let i = 0;
-    this.cerEmailAttachedFiles.forEach((file) => { 
-      if(file.rawFile == undefined || file.rawFile == null){
-        sendEmailData.append('AttachmentDetails['+i+'][fileName]', file.document.description);
-        sendEmailData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath);
-      i++;
-      }else{
-        sendEmailData.append('attachments', file.rawFile); 
-      }
-    });
-    this.communicationFacade.initiateAdobeesignRequest(sendEmailData, isSaveFoLater)
+    let formData = this.communicationFacade.prepareAdobeEsingData(emailData, this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater, this.cerEmailAttachedFiles);
+    this.communicationFacade.initiateAdobeesignRequest(formData)
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -299,15 +281,7 @@ onClosePreviewEmail(){
 
   private generateText(emailData: any, requestType: string){
     this.loaderService.show();
-    const formData = new FormData();
-      formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
-      formData.append('systemCode', CommunicationEvents.SystemCode ?? '');
-      formData.append('typeCode', emailData?.typeCode ?? '');
-      formData.append('subtypeCode', CommunicationEvents?.Email ?? '');
-      formData.append('channelTypeCode', CommunicationEvents?.Email ?? '');
-      formData.append('languageCode', CommunicationEvents?.LanguageCode ?? '');
-      formData.append('description', emailData?.description ?? '');
-      formData.append('templateContent', emailData?.templateContent ?? '');
+    let formData = this.communicationFacade.preparePreviewModelData(emailData);
     this.communicationFacade.generateTextTemplate(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', formData ?? '', requestType ?? '')
         .subscribe({
           next: (data: any) =>{
@@ -326,39 +300,12 @@ onClosePreviewEmail(){
       });
   }
 
-  private saveDraftTemplateForLater(draftTemplate: any) {
+  private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
-    const isSaveFoLater = true;
-    const formData = new FormData();
-      formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
-      formData.append('esignRequestId', draftTemplate?.esignRequestId ?? '');
-      formData.append('systemCode', draftTemplate?.systemCode ?? '');
-      formData.append('typeCode', draftTemplate?.typeCode ?? '');
-      formData.append('subtypeCode', draftTemplate?.subtypeCode ?? '');
-      formData.append('channelTypeCode', draftTemplate?.channelTypeCode ?? '');
-      formData.append('languageCode', draftTemplate?.languageCode ?? '');
-      formData.append('description', draftTemplate?.description ?? '');
-      formData.append('requestBody', draftTemplate?.templateContent ?? '');
-      formData.append('toEmailAddress', this.selectedToEmail ?? '');
-      formData.append('clientCaseEligibilityId', this.clientCaseEligibilityId ?? '');
-      formData.append('clientId', this.clientId ?? '');
-      formData.append('requestSubject', this.emailSubject ?? ''); 
-      formData.append('loginUserId', this.loginUserId ?? '');
-      formData.append('esignRequestStatusCode', CommunicationEvents.EsignRequestStatusCode ?? '');
-      formData.append('cCEmail', this.selectedCCEmail ?? ''); 
-      let i = 0;
-      this.cerEmailAttachedFiles.forEach((file) => { 
-        if(file.rawFile == undefined || file.rawFile == null){
-        formData.append('AttachmentDetails['+i+'][fileName]', file.document.description);
-        formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath);
-        formData.append('AttachmentDetails['+i+'][typeCode]', file.typeCode);
-        i++;
-        }else{
-          formData.append('attachments', file.rawFile); 
-        }
-      });  
+    this.isSaveFoLater = true;
+    let draftEsignRequest = this.communicationFacade.prepareDraftAdobeEsignRequest(draftTemplate, this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater, this.cerEmailAttachedFiles); 
       if(draftTemplate?.esignRequestId == undefined || draftTemplate?.esignRequestId == null){
-        this.communicationFacade.saveEmailTemplateForLater(formData, isSaveFoLater)
+        this.communicationFacade.saveDraftEsignRequest(draftEsignRequest)
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -375,7 +322,7 @@ onClosePreviewEmail(){
         },
       });
     }else{
-        this.communicationFacade.updateEmailTemplateForLater(formData, isSaveFoLater)
+        this.communicationFacade.updateEmailTemplateForLater(draftEsignRequest)
         .subscribe({
           next: (data: any) =>{
           if (data) {
