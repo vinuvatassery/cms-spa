@@ -12,11 +12,11 @@ export class RefundBatchPageComponent   {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
-   sortValue = this.financialVendorRefundFacade.sortValueRefundProcess;
+   sortValue = this.financialVendorRefundFacade.sortValueBatchLog;
    sortType = this.financialVendorRefundFacade.sortType;
    pageSizes = this.financialVendorRefundFacade.gridPageSizes;
    gridSkipCount = this.financialVendorRefundFacade.skipCount;
-   sort = this.financialVendorRefundFacade.sortProcessList;
+   sort = this.financialVendorRefundFacade.sortBatchLogList;
    state!: State;
    batchLogGridLists$ = this.financialVendorRefundFacade.batchLogData$;
   constructor( 

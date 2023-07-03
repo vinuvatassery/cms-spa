@@ -14,8 +14,8 @@
                                 <cms-refund-process-list
                                 
                                 [vendorRefundProcessGridLists$]="vendorRefundProcessGridLists$"
-                                [pageSizes]="pageSizes" [sortValue]="sortValue"
-                                [sortType]="sortType" [sort]="sort" 
+                                [pageSizes]="pageSizes" [sortValue]="sortValueRefundProcess"
+                                [sortType]="sortType" [sort]="sortProcessList" 
                                 (loadVendorRefundProcessListEvent)="loadVendorRefundProcessListGrid($event)"
                                 > </cms-refund-process-list>
                             </div>
@@ -27,8 +27,8 @@
                             <div class="block-section ">
                                 <cms-refund-batches-list
                                 [vendorRefundBatchGridLists$]="vendorRefundBatchGridLists$"
-                                [pageSizes]="pageSizes" [sortValue]="sortValue"
-                                [sortType]="sortType" [sort]="sort" 
+                                [pageSizes]="pageSizes" [sortValue]="sortValueRefundBatch"
+                                [sortType]="sortType" [sort]="sortBatchList" 
                                 (loadVendorRefundBatchListEvent)="loadVendorRefundBatchListGrid($event)"
                                 ></cms-refund-batches-list>
                             </div>
@@ -40,8 +40,8 @@
                             <div class="block-section ">
                                 <cms-refund-all-payment-list 
                                 [vendorRefundAllPaymentsGridLists$]="vendorRefundAllPaymentsGridLists$"
-                                [pageSizes]="pageSizes" [sortValue]="sortValue"
-                                [sortType]="sortType" [sort]="sort" 
+                                [pageSizes]="pageSizes" [sortValue]="sortValueRefundPayments"
+                                [sortType]="sortType" [sort]="sortPaymentsList" 
                                 (loadVendorRefundAllPaymentsListEvent)="loadVendorRefundAllPaymentsListGrid($event)"></cms-refund-all-payment-list>
                             </div>
                         </ng-template>

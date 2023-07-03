@@ -11,11 +11,19 @@ export class VendorRefundPageComponent    {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
-   sortValue = this.financialVendorRefundFacade.sortValueRefundProcess;
+
    sortType = this.financialVendorRefundFacade.sortType;
    pageSizes = this.financialVendorRefundFacade.gridPageSizes;
    gridSkipCount = this.financialVendorRefundFacade.skipCount;
-   sort = this.financialVendorRefundFacade.sortProcessList;
+
+   sortValueRefundProcess = this.financialVendorRefundFacade.sortValueRefundProcess;
+   sortProcessList = this.financialVendorRefundFacade.sortProcessList;
+   sortValueRefundBatch = this.financialVendorRefundFacade.sortValueRefundBatch;
+   sortBatchList = this.financialVendorRefundFacade.sortBatchList;
+   sortValueRefundPayments = this.financialVendorRefundFacade.sortValueRefundPayments;
+   sortPaymentsList = this.financialVendorRefundFacade.sortPaymentsList;
+   
+
    state!: State;
   vendorRefundProcessGridLists$ =
   this.financialVendorRefundFacade.vendorRefundProcessData$;

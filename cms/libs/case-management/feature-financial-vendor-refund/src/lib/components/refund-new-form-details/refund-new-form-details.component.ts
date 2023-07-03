@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy , Output, EventEmitter} from '@angular/core';
+import { Component, ChangeDetectionStrategy , Output, EventEmitter} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain'; 
@@ -10,15 +10,16 @@ import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 })
 export class RefundNewFormDetailsComponent{
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  isShownSearchLoader = false;
   claimsListData$ =
     this.financialVendorRefundFacade.claimsListData$;
-    sortValue = this.financialVendorRefundFacade.sortValueRefundProcess;
+    sortValue = this.financialVendorRefundFacade.sortValueClaims;
     sortType = this.financialVendorRefundFacade.sortType;
     pageSizes = this.financialVendorRefundFacade.gridPageSizes;
     gridSkipCount = this.financialVendorRefundFacade.skipCount;
-    sort = this.financialVendorRefundFacade.sortProcessList;
+    sort = this.financialVendorRefundFacade.sortClaimsList;
     state!: State;
-  clientsearchresult =[
+  clientSearchResult =[
 
     {
       clientId: '12',

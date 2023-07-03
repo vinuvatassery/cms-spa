@@ -1,18 +1,14 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnInit,
+  OnChanges,
   Output,
-  TemplateRef,
-  ViewChild,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
-import { DialogService } from '@progress/kendo-angular-dialog';
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
@@ -26,7 +22,7 @@ import { Router } from '@angular/router';
   templateUrl: './refund-batch-log-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundBatchLogListComponent implements OnInit{
+export class RefundBatchLogListComponent implements OnInit, OnChanges{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
