@@ -24,6 +24,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   @Input() formSubmited!: boolean;
   @Input() questions: any = [];
   @Input() isSaveAndContinueAcceptance!: boolean;
+  @Input() cerNote! : string
 
   @Output() getQuestionsResponse = new EventEmitter<any>();
   @Output() cerNoteResponse = new EventEmitter<any>();
@@ -59,10 +60,9 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   btnDisabled = false;
   prevClientCaseEligibilityId: any;
   isCerForm = false;
-  cerNote = ''
   acceptanceModalTitle: String = 'Application Accepted';
   isreviewQuestionAnswersFacadeSubscribed = false;
-  private saveForLaterValidationSubscription !: Subscription;
+ 
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -84,7 +84,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
-    this.addSaveForLaterValidationsSubscription();
+
     this.addDiscardChangesSubscription();
     this.loadSessionData();  
    
@@ -92,7 +92,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   ngOnDestroy(): void {
     this.reviewQuestionAnswerSubscription?.unsubscribe();
     this.reviewQuestionResponseSubscription?.unsubscribe();
-    this.saveForLaterValidationSubscription?.unsubscribe();
+
 
   }
  
@@ -101,16 +101,6 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
       if (response) {
         this.cerNote = ""
         this.loadSessionData();  
-      }
-    });
-  }
-
-
-  private addSaveForLaterValidationsSubscription(): void {
-    this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
-      if (val) {
-      
-       
       }
     });
   }
@@ -376,28 +366,5 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
     }
     return false;
   }
-
-
-  saveCerNote(){
-    const clientNote: any = {
-       clientCaseEligibilityId: this.clientCaseEligibilityId,
-       clientId: this.clientId,
-       note: this.cerNote,
-       NoteTypeCode:ClientNoteTypeCode.cerEligibility
-     };    
-     this.loaderService.show();
-     if(this.cerNote)
-     {
-        this.smokingCessationFacade.createSmokingCessationNote(clientNote).subscribe({
-          next: (x:any) =>{
-            
-            this.loaderService.hide();       
-          },
-          error: (error:any) =>{
-            this.loaderService.hide();
-          }
-        });
-    }
-      
-   }
+  
 }

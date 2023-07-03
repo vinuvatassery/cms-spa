@@ -120,7 +120,8 @@ export class PharmacyListComponent implements OnInit {
           this.pharmacyPriorityModalButtonText = 'Update';
         }
         pharmacies.forEach((pharmacyData: ClientPharmacy) => {
-          pharmacyData.pharmacyNameAndNumber = `${pharmacyData.pharmacyName} #${pharmacyData.pharmacyNumber}`;
+          const pharmacyNumber = pharmacyData?.pharmacyNumber ? `#${pharmacyData.pharmacyNumber}` : '';
+          pharmacyData.pharmacyNameAndNumber = `${pharmacyData?.pharmacyName ?? ''} ${pharmacyNumber}`;
         });
       },
       error: (err) => {

@@ -2,9 +2,9 @@
   <h2 class="title-md mb-0 text-bold"> {{labResultType === 'CD4_COUNT' ? 'CD4 Count' : 'VIRAL LOAD' }}</h2>
   <div>
     <span class="app-checkboxwidtext-wrapper">
-      <input type="checkbox" kendoCheckBox aria-labelledby="historyCheckBox" (click)="onHistoryChkBoxChanged()"
-        id="historyCheckBox" name="historyCheckBox" [checked]="historychkBoxChecked" />
-      <label class="k-checkbox-label" for="historyCheckBox">Show {{labResultType === 'CD4_COUNT' ? 'CD4 count' : 'viral loads' }} within the last 12 months</label>
+      <input type="checkbox" kendoCheckBox aria-labelledby="historyCheckBoxCdCount" (click)="onHistoryChkBoxChanged()"
+        id="historyCheckBoxCdCount" name="historyCheckBoxCdCount" [checked]="historychkBoxChecked" />
+      <label class="k-checkbox-label" for="historyCheckBoxCdCount">Show {{labResultType === 'CD4_COUNT' ? 'CD4 count' : 'viral loads' }} within the last 12 months</label>
     </span>
   </div>
 </div>
