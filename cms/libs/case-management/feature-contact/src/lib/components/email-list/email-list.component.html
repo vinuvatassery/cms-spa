@@ -4,13 +4,13 @@
     <div>  
     <span class="app-checkboxwidtext-wrapper"> 
       <input type="checkbox"
-      kendoCheckBox aria-labelledby="historyCheckBox"      
+      kendoCheckBox aria-labelledby="historyCheckBoxEmail"      
       (click)="onhistorychkBoxChanged()" 
-      id="historyCheckBox"
-      name="historyCheckBox"
+      id="historyCheckBoxEmail"
+      name="historyCheckBoxEmail"
       [checked]="historychkBoxChecked"
       />
-      <label class="k-checkbox-label" for="historyCheckBox"
+      <label class="k-checkbox-label" for="historyCheckBoxEmail"
         >Show historical</label
       >
     </span>
@@ -116,7 +116,7 @@
             class="TableActionPopup app-dropdown-action more_action_wid"
             buttonClass="k-icon-button"
             aria-label="more actions"
-            [popupSettings]="{ popupClass: popupClassAction, appendTo:'component', animate: true }"
+            [popupSettings]="{ popupClass: popupClassAction, animate: true }"
           >
           <span hidden> More Option</span>
             <ng-template class="app-dropdown-action-list"   kendoDropDownButtonItemTemplate let-dataItem let-clientEmailId="clientEmailId">

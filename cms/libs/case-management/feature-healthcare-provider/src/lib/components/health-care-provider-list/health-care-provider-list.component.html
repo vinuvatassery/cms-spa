@@ -77,7 +77,7 @@
           <ng-template kendoGridCellTemplate let-provider let-clientProviderId="field">
             <kendo-dropdownbutton [data]="actions" icon="more-vertical" title="More option"
               class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
-              [popupSettings]="{ popupClass: popupClassAction, appendTo:'component',animate: true }" aria-label="more actions">
+              [popupSettings]="{ popupClass: popupClassAction, animate: true }" aria-label="more actions">
               <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem
                 let-providerId="clientProviderId">
