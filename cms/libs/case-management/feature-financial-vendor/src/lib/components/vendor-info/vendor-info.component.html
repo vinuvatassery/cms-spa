@@ -44,6 +44,10 @@
             <td>{{(selectedVendorInfo$ | async)?.tin}}</td>
           </tr>
           <tr *ngIf="profileInfoTitle == 'Pharmacy Info'">
+            <td>Mail Code</td>
+            <td>{{(vendorProfile$ | async)?.mailCodes }}</td>
+          </tr>
+          <tr *ngIf="profileInfoTitle == 'Pharmacy Info'">
             <td>NPI</td>
             <td>{{(selectedVendorInfo$ | async)?.npiNbr }}</td>
           </tr>
