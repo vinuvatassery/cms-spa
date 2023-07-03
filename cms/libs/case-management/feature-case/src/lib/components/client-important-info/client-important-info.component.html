@@ -14,11 +14,16 @@
         <li aria-label="case worker notes menu item">{{note}}</li>
       </ul>
     </div>
-    <div class="flex-col" *ngIf="clientProfileImpInfo$?.preferredContact">
+    <div class="flex-col" *ngIf="clientProfileImpInfo$?.preferredContact || clientProfileImpInfo$?.preferredEmail">
       <h5>Preferred Contact</h5>
       <ul aria-label="preferred contact menu" class="user-bullet-list">
         <li aria-label="preferred contact menu item">
-          {{clientProfileImpInfo$?.preferredContact | phone}}
+          <span *ngIf="clientProfileImpInfo$?.preferredContact != null;else emailTemplate">
+            {{clientProfileImpInfo$?.preferredContact | phone}}
+          </span>
+          <ng-template #emailTemplate>
+            {{clientProfileImpInfo$?.preferredEmail}}
+          </ng-template>
         </li>
       </ul>
     </div>

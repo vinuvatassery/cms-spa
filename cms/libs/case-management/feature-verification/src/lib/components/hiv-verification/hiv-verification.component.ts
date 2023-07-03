@@ -42,8 +42,13 @@ export class HivVerificationComponent implements OnInit {
         this.cd.detectChanges();
       }
     });
+    this.verificationFacade.showHideAttachment.next(true);
   }
   providerChange(event:any){
+    if(this.hivVerificationForm.controls["providerOption"].value=="UPLOAD_ATTACHMENT")
+    {
+      this.verificationFacade.showHideAttachment.next(true);
+    }
     this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
     this.cd.detectChanges();
   }
@@ -53,6 +58,7 @@ export class HivVerificationComponent implements OnInit {
   onHivRemoveConfirmation(){
     this.verificationFacade.removeHivVerificationAttachment(this.clientHivVerificationId,this.clientId);
     this.hivVerificationForm.controls["providerOption"].setValue(false);
+    this.verificationFacade.showHideAttachment.next(false);
   }
   onHivRemoveConfirmationOpen(clientHivVerificationId:string) {
     if(clientHivVerificationId && clientHivVerificationId != ""){
