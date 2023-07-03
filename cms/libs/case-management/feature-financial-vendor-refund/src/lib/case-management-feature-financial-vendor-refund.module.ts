@@ -13,6 +13,7 @@ import { BatchRefundConfirmationComponent } from './components/batch-refund-conf
 import { DeleteRefundConfirmationComponent } from './components/delete-refund-confirmation/delete-refund-confirmation.component';
 import { VendorRefundClaimsListComponent } from './components/vendor-refund-claims-list/vendor-refund-claims-list.component';
 import { VendorRefundInsurancePremiumListComponent } from './components/vendor-refund-insurance-premium-list/vendor-refund-insurance-premium-list.component';
+import { RefundBatchPageComponent } from './containers/refund-batch-page/refund-batch-page.component';
 
 @NgModule({
   imports: [
@@ -32,6 +33,7 @@ import { VendorRefundInsurancePremiumListComponent } from './components/vendor-r
     DeleteRefundConfirmationComponent,
     VendorRefundClaimsListComponent,
     VendorRefundInsurancePremiumListComponent,
+    RefundBatchPageComponent,
   ],
 })
 export class CaseManagementFeatureFinancialVendorRefundModule {}
