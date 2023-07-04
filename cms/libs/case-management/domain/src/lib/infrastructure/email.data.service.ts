@@ -165,7 +165,7 @@ export class EmailDataService {
 
     getCCEmailListForCER(clientId: number, loginUserId: string){
       return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${clientId}/${loginUserId}`,
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/${loginUserId}`,
       );
     }
 
