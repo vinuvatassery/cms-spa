@@ -14,7 +14,7 @@ import { CerTrackingFacade, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, FilterDescriptor, State , filterBy} from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
-import { ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
+import { ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'case-management-cer-list',
   templateUrl: './cer-list.component.html',
@@ -77,37 +77,29 @@ export class CerListComponent implements OnInit, OnChanges {
 
   columns : any = {
     clientFullName:"Client Name",
-    dob :"Date of Birth",  
-    clientOfficialIdFullName:"Official Id Full Name",
-    clientInsuranceFullName:"Name on Primary Insurance Card",
     cerSentDate :"Date CER Sent",
     cerReceivedDate : "Date CER Received",
     cerCompletedDate : "Date CER Completed",
     reminderSentDate : "Reminder SentDate",
     cerResentDate : "CER Re-Sent Date",
     restrictedSentDate : "Restricted Sent Date",
-    spokenLanguage : "Spoken Language" ,
     assignedCmId : "Case Manager" ,
     assignedCwId : "Case Worker" ,
-    pronouns:"Pronouns",
     clientId:"Client ID",
-    urn:"URN",
-    preferredContact:"Preferred Contact",
     eligibilityStatus:"Current Status",
-    group:"Group",
-    eligibilityStartDate:"Eligibility Start Date",
-    eligibilityEndDate:"Eligibility End Date",
-    email:"Email",
-    phone:"Preferred Contact",
-    genders:"Gender",
-    homeAddress:"Home Address",
-    ssn:"SSN",
     insurancePolicyId:"Insurance Policy Id",
-    assignedCw:"Case Worker",
+    caseWorkerName:"Case Worker",
+    caseManagerName:"Case Manager",
     disEnrollmentDate:"Disenrollment Date",
     caseManagerDomain: "Case Manager Domain",
     sexes: "Sex"
   }
+
+  eligibilityStatus = [
+    'ACCEPT',
+    'DISENROLLED',
+    'RESTRICTED'
+  ];
 
   public gridActions = [
     {
@@ -220,6 +212,17 @@ export class CerListComponent implements OnInit, OnChanges {
     this.loader = true;
     this.state.take = data.value;   
     this.loadCerTrackingList();
+  }
+
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value:value
+      }],
+        logic: "or"
+    });
   }
 
   private loadCerTrackingList(): void {
