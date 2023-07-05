@@ -541,7 +541,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (isMailAddressRequired) {
       mailingAddressGroup.controls['address1'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9# ]+[/]?[A-Za-z0-9# ]+$')]);
       mailingAddressGroup.controls['address1'].updateValueAndValidity();
-      mailingAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9# ]+[/]?[A-Za-z0-9# ]+$')]);
+      mailingAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9 \]+$')]);
       mailingAddressGroup.controls['address2'].updateValueAndValidity();
       mailingAddressGroup.controls['city'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+')]);
       mailingAddressGroup.controls['city'].updateValueAndValidity();
@@ -1438,7 +1438,6 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.showAddressProofRequiredValidation = false;
       this.showAddressProofSizeValidation = false;
       const removeButton = this.elementRef.nativeElement.querySelectorAll('.k-delete');
-      removeButton[0]?.click();
     }
     this.updateHomeAddressProofCount(this.homeAddressProofFile?.length > 0);
   }
@@ -1553,12 +1552,13 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setAddress(address: MailAddress | undefined, type: AddressTypeCode) {
     if (!address) return;
+    var zipCode = address?.zip4 ? `${address?.zip5}-${address?.zip4}`: address?.zip5;
     const selectedAddress: ClientAddress = {
       address1: address?.address1 == '' ? address?.address2 : address?.address1,
       address2: address?.address1 == '' ? '' : address?.address2,
       city: address?.city,
       state: address?.state,
-      zip: `${address?.zip5}-${address?.zip4}`,
+      zip: zipCode,
     };
     if (type === AddressTypeCode.Mail) {
       this.mailAddressEntered = address;

@@ -3,7 +3,7 @@
   <h3>{{   isCerForm ? 'Mailing Address' : 'Contact Info' }}  </h3>
   <h4 hidden>Contact info</h4>
   <section>
-    <form [formGroup]="contactInfoForm" autocomplete="off" autoComplete='false'>
+    <form [formGroup]="contactInfoForm" autocomplete="off" >
       <!-- Contact Email Details-->
       <div class="block-section block-section-two cer-mb-3" formGroupName="mailingAddress">
         <div class="flex-row" *ngIf="!isCerForm">
@@ -92,7 +92,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address2"
-              autocomplete="disabled"
+              autocomplete="off"
               (blur)="validateMailingAddress()"
               placeholder="Address Line 2"
               > </kendo-textbox>
@@ -266,7 +266,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address1"
-              autocomplete="disabled"
+              autocomplete="off"
               (blur)="validateHomeAddress()" placeholder="Address Line 1"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -290,7 +290,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address2"
-              autocomplete="disabled"
+              autocomplete="off"
               (blur)="validateHomeAddress()"  placeholder="Address Line 2"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -313,7 +313,7 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="20"
               formControlName="city"
-              autocomplete="disabled"
+              autocomplete="off"
               (blur)="validateHomeAddress()"  placeholder="City"
               > </kendo-textbox>
             </kendo-floatinglabel>
@@ -346,7 +346,7 @@
                 >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old State:</b> {{ oldHomeAddress?.state }} <button *ngIf="!(homeAddress?.sameAsMailingAddressFlag?.value ?? false)" aria-label="client name" kendoButton look="flat" class="card-link-button"  (click)="useOldOnClick('homeAddress.state',oldHomeAddress?.state??'')">Use Old  </button></p>        
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old State:</b> {{ oldHomeAddress?.state }} <button *ngIf="(homeAddress?.sameAsMailingAddressFlag?.value ?? false)" aria-label="client name" kendoButton look="flat" class="card-link-button"  (click)="useOldOnClick('homeAddress.state',oldHomeAddress?.state??'')">Use Old  </button></p>        
 
             <kendo-formerror *ngIf="homeAddress?.state?.errors?.required">
               Home State is required
@@ -1316,7 +1316,7 @@
       <div class="mt-2 ml-3 break">
         <p>   {{mailAddressSuggested?.address1}}</p>
         <p>  {{mailAddressSuggested?.address2}} </p>
-        <p>  {{mailAddressSuggested?.city}}, {{mailAddressSuggested?.state}} {{mailAddressSuggested?.zip5}}-{{mailAddressSuggested?.zip4}}</p>
+        <p>  {{mailAddressSuggested?.city}}, {{mailAddressSuggested?.state}} {{mailAddressSuggested?.zip5}}{{mailAddressSuggested?.zip4 ? '-'+mailAddressSuggested?.zip4:''}}</p>
       </div>
       </div>
     </div> 
@@ -1395,7 +1395,7 @@
         <div class="mt-2 ml-3 break">
           <p>  {{homeAddressSuggested?.address1}} </p>
           <p>  {{homeAddressSuggested?.address2}} </p>
-          <p>  {{homeAddressSuggested?.city}}, {{homeAddressSuggested?.state}} {{homeAddressSuggested?.zip5}}-{{homeAddressSuggested?.zip4}} </p>
+          <p>  {{homeAddressSuggested?.city}}, {{homeAddressSuggested?.state}} {{homeAddressSuggested?.zip5}}{{homeAddressSuggested?.zip4 ? '-'+homeAddressSuggested?.zip4:''}}</p>
         </div>
       </div>
     </div> 

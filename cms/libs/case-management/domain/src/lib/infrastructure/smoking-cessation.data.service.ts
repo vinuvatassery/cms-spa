@@ -31,4 +31,9 @@ export class SmokingCessationDataService{
           clientNote,
 
         )}
+
+        loadClientNote(clientCaseEligibilityId:any,clientId:any){
+          return this.http.get<any>(
+            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/notes/cer?ClientCaseEligibilityId=${clientCaseEligibilityId}`);
+        }
 }

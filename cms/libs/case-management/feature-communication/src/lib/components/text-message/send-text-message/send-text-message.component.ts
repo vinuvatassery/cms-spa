@@ -123,15 +123,13 @@ export class SendTextMessageComponent implements OnInit {
     this.isShowSendMessageConfirmPopupClicked = false;
     if (this.data === ScreenType.Authorization) {
       this.closeSendMessageEvent.emit(CommunicationEvents.Print);
-    } else if (this.data === ScreenType.Case360Page) {
+    } else if (this.data === ScreenType.Case360PageSMS) {
       this.isShowSendMessageConfirmPopupClicked = false;
-      // this.closeSendMessageEvent.emit(CommunicationEvents.Close);
     }
   }
 
   onCloseSaveForLaterClicked() {
     this.isShowSaveForLaterPopupClicked = false;
-    // this.closeSendMessageEvent.emit(CommunicationEvents.Close);
   }
 
   /** External event methods **/

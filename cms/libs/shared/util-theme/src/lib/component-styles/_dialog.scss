@@ -196,6 +196,12 @@
       }
     }
   }
+
+  &.add_refund_modal{
+   .k-dialog-content{
+    padding: 0px;
+   }
+  }
 }
 .transform-none{
   .k-dialog-title{

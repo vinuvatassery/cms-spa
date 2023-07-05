@@ -193,6 +193,28 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.loadProfileCasesList()
   }
   public dataStateChange(stateData: any): void {
+    if(stateData.filter?.filters.length > 0)
+    {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.columnName = stateFilter.field;
+     
+        this.filter = stateFilter.value;
+     
+      this.isFiltered = true;
+      const filterList = []
+      for(const filter of stateData.filter.filters)
+      {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.isFiltered =true;
+      this.filteredBy =  filterList.toString();
+    }
+    else
+    {
+      this.filter = "";
+      this.columnName = "";
+      this.isFiltered = false
+    }
     this.state=stateData;
     this.saveGridState();
     this.setGridState(stateData);  
@@ -280,15 +302,26 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   }
 
   onChange(event :any)
-  {
-    this.state.skip = 0;
-    this.state.take = this.pageSizes[0]?.value;
+  {    
+    this.defaultGridState()
     this.columnName = this.state.columnName = this.columnDroplist[this.selectedColumn];
-    this.filter = this.state.searchValue = event;
-    this.state.selectedColumn = this.selectedColumn;
+    this.sortColumn = this.columns[this.selectedColumn];
+    this.filter = {logic:'and',filters:[{
+      "filters": [
+          {
+              "field": this.columnDroplist[this.selectedColumn] ?? "clientFullName",
+              "operator": "startswith",
+              "value": event
+          }
+      ],
+      "logic": "and"
+  }]}
+  let stateData = this.state
+  stateData.filter = this.filter
+  this.dataStateChange(stateData);
     this.saveGridState();
     this.loadProfileCasesList();
-  }
+}
   setToDefault()
   {
     this.pageSizes = this.caseFacade.gridPageSizes;
@@ -405,6 +438,17 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
         }
         const filterList = this.state?.["filter"]?.["filters"] ?? []                
         this.filter = JSON.stringify(filterList);
+        const filterListData = []
+        if(stateData.filter?.filters.length > 0)
+       {
+        for(const filter of stateData.filter.filters)
+        {
+          filterListData.push(this.columns[filter?.filters[0]?.field]);
+        }
+        this.isFiltered =true;
+        this.filteredBy =  filterListData.toString();
+        this.cdr.detectChanges();
+       }
       }
       else
       {
