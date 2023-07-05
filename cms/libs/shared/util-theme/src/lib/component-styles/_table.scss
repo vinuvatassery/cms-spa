@@ -103,6 +103,10 @@ $pagination-height : 48px;
     .k-table-th {
       .k-column-resizer {
         border-right: 1px solid rgba($white, 0.5);
+
+        &:hover {
+          color: transparent;
+        }
       }
     }
 
@@ -112,13 +116,14 @@ $pagination-height : 48px;
     .k-hierarchy-cell .k-icon.k-active,
     .k-hierarchy-cell .k-svg-icon.k-active {
       background: transparent;
-   
-      .k-icon-wrapper-host{
-        .k-i-more-vertical{
-        &::before{
-          content: "\ef4f"; 
-        }
-          font-family: "Material Icons"; 
+
+      .k-icon-wrapper-host {
+        .k-i-more-vertical {
+          &::before {
+            content: "\ef4f";
+          }
+
+          font-family: "Material Icons";
           display: inline-block;
         }
       }
@@ -683,11 +688,16 @@ table,
 .k-editor {
 
   .k-picker-solid,
-  .k-textbox {
+  .k-textbox,
+  .k-numerictextbox,
+  .k-datepicker {
     border: 1px solid $theme-border !important;
     border-bottom: 1px solid $theme-border !important;
     border-radius: 4px !important;
     background: $white;
+    &.k-input-solid::after{
+      border-width: 0px;
+    }
   }
 }
 
