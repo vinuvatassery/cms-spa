@@ -7,16 +7,14 @@ import { of } from 'rxjs/internal/observable/of';
 /** Entities **/
 import { Cer } from '../entities/cer';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { IntlService } from '@progress/kendo-angular-intl';
 
 @Injectable({ providedIn: 'root' })
 export class CerDataService {
   /** Constructor**/
   constructor(private readonly http: HttpClient,
-    private configurationProvider: ConfigurationProvider,
-    public readonly intl: IntlService,) { }
+    private configurationProvider: ConfigurationProvider
+    ) { }
 
-    dateFormat = this.configurationProvider.appSettings.dateFormat;
   /** Public methods **/
   loadCer(): Observable<Cer[]> {
     return of([
