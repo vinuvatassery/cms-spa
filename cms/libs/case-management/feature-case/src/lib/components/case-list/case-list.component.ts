@@ -7,7 +7,6 @@ import {
   Output,
   EventEmitter,
   ChangeDetectorRef,
-  ViewChild,
 } from '@angular/core';
 /** Facades **/
 import { CaseFacade,CaseScreenTab, CaseStatusCode, WorkflowTypeCode, GridFacade, GridStateKey } from '@cms/case-management/domain';

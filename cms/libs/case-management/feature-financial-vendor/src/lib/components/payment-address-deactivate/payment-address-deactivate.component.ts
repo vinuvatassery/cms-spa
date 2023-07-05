@@ -4,7 +4,6 @@ import { BillingAddressFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-payment-address-deactivate',
   templateUrl: './payment-address-deactivate.component.html',
-  styleUrls: ['./payment-address-deactivate.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentAddressDeactivateComponent {

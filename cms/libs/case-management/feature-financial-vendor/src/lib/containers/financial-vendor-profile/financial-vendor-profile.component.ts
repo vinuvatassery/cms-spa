@@ -7,7 +7,6 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'cms-financial-vendor-profile',
   templateUrl: './financial-vendor-profile.component.html',
-  styleUrls: ['./financial-vendor-profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialVendorProfileComponent implements OnInit {
