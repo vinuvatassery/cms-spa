@@ -147,7 +147,7 @@ export class NotificationPanelComponent implements OnInit {
   onNotificationsAndRemindersOpenClicked(template: TemplateRef<unknown>): void {
     this.notificationReminderDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-wid-md-full no_body_padding-modal',
+      cssClass: 'app-c-modal app-c-modal-wid-md-full no_body_padding-modal reminder_modal',
     }); 
     this.isNotificationsAndRemindersOpened = true;
   }

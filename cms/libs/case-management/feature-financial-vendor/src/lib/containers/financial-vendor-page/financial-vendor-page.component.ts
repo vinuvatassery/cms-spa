@@ -18,7 +18,7 @@ export class FinancialVendorPageComponent implements OnInit {
   isShowDentalProvider: boolean = false;
   isShowInsuranceProvider: boolean = false;
   isShowPharmacyProvider: boolean = false;
-
+  reminderTabOn = true;
   data = [
     {
       text: 'Manufacture',

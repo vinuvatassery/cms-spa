@@ -13,8 +13,8 @@
       Financial Management
     </h1>
   </section>
-  <section class="app-l-client-wrapper ">
-    <div class="app-l-client-left">
+  <section class="app-l-client-wrapper" [ngClass]="{'due-notification-on': reminderTabOn}">
+    <div class="app-l-client-left"  >
       <section class="app-l-wrapper">
 
         <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"

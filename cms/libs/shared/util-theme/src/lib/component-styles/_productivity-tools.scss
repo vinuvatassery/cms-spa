@@ -110,6 +110,10 @@
 .reminder_lists{
   .k-content{
     background: #f8fafb;
+    max-height: calc(100vh - 100px) !important;
+    overflow: auto !important; 
+    height: auto !important;
   }
  
 }
+

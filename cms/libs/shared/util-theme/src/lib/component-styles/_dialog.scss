@@ -195,6 +195,12 @@
         }
       }
     }
+    &.reminder_modal{
+      .k-window-content{
+        overflow: hidden;
+        height: auto;
+      }
+    }
   }
 
   &.add_refund_modal{

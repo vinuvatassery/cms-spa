@@ -260,6 +260,7 @@ max-width: 400px;
     border-bottom: 1px solid $theme-border;
     border-left: $size-l solid transparent;
     background: $white;
+    align-items: center;
     .card-type-icon {
       .material-icons {
         font-size: $font-size-xxx;
