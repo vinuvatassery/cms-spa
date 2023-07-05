@@ -135,6 +135,7 @@
     border-left: $size-m solid $app-primary;
     padding: $size-xx;
     transition: ease-in all 0.4s;
+    margin-bottom: 4px;
     &:hover {
       box-shadow: $size-0 $size-0 $size-xx $black-12;
     }

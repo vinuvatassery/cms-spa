@@ -33,6 +33,9 @@ section {
   align-items: center;
   display: flex;
 }
+.text-upper{
+  text-transform: uppercase;
+}
 .text {
   &-noWrap {
     white-space: nowrap;

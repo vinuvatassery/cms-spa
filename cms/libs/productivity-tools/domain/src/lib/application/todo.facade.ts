@@ -53,8 +53,8 @@ export class TodoFacade {
     });
   }
 
-  loadTodosearch(): void {
-    this.todoDataService.loadTodosearch().subscribe({
+  loadToDoSearch(): void {
+    this.todoDataService.loadToDoSearch().subscribe({
       next: (searchResponse: any) => {
         this.searchSubject.next(searchResponse);
       },

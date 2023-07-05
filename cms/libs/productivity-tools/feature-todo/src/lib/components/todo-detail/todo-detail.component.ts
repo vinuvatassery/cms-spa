@@ -32,7 +32,7 @@ export class TodoDetailComponent implements OnInit {
   public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadTodosearch();
+    this.loadToDoSearch();
     this.tareaVaribalesIntialization();
   }
 
@@ -43,8 +43,8 @@ export class TodoDetailComponent implements OnInit {
       : 0;
     this.tareaCustomTodoCounter = `${this.tareaCustomTodoCharactersCount}/${this.tareaCustomTodoMaxLength}`;
   }
-  private loadTodosearch() {
-    this.todoFacade.loadTodosearch();
+  private loadToDoSearch() {
+    this.todoFacade.loadToDoSearch();
   }
 
   /** Internal event methods **/
