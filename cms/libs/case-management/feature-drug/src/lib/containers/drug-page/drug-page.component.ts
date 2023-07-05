@@ -297,8 +297,8 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       next: (pharmacies) => {
         if (pharmacies?.length > 0) {
           pharmacies?.forEach((pharmacyData: any) => {
-            pharmacyData.PharmacyNameAndNumber =
-              pharmacyData.PharmacyName + ' #' + pharmacyData.PharmcayId;
+            const pharmacyNumber = pharmacyData?.pharmacyNumber ? `#${pharmacyData.pharmacyNumber}` : '';
+            pharmacyData.PharmacyNameAndNumber = `${pharmacyData.PharmacyName} ${pharmacyNumber}`;
           });
           this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].setValue(false);
           this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].updateValueAndValidity();
