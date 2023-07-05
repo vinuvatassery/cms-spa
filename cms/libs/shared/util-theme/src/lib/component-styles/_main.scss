@@ -58,6 +58,7 @@ li {
   background: $white;
   min-height: calc(100vh - $header-height);
   display: flex;
+  z-index: 0;
 }
 .app-l-body {
   transition: ease-in all 0.2s;
