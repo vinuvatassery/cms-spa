@@ -9,7 +9,7 @@ import { Document } from '../entities/document';
 import { ClientDocumnetEntityType } from '../enums/client-document-entity-type.enum';
 
 /** Data services **/
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class DocumentDataService {

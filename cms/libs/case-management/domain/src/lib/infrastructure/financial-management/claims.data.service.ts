@@ -2,7 +2,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** External libraries **/
-import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
 
