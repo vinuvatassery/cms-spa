@@ -18,6 +18,7 @@ import { LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 })
 export class CasePageComponent implements OnInit {
   /** Public Properties **/
+  public windowTop = 60;
   selectedTab: CaseScreenTab = 0;
   isRightReminderBarEnabled = true;
   isNewCaseDialogClicked = false;

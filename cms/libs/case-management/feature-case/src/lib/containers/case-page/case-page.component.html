@@ -98,12 +98,15 @@
     </div>
   </section>
 
-  <kendo-dialog
-    *ngIf="isNewCaseDialogClicked"
+<div  *ngIf="isNewCaseDialogClicked">
+  <div class="k-overlay" *ngIf="isNewCaseDialogClicked"></div>
+  <kendo-window
+   
     (close)="handleNewCaseDialogClosed()"
     title="Search Case"
-    class="app-c-modal app-c-modal-lg app-c-modal-top"
+    class="app-c-window app-c-window-lg"
     kendoTooltip
+    [(top)]="windowTop"
   >
     <case-management-new-case
       (isCreateNewCasePopupOpened)="handleNewCaseDialogClosed()"
@@ -115,6 +118,7 @@
       [formButtonDisabled] = "formButtonDisabled"
       (searchTextEvent)="handleSearchTextChange($event)"
     ></case-management-new-case>
-  </kendo-dialog>
+  </kendo-window>
+</div>
 </div>
 

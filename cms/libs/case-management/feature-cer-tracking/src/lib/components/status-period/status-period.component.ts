@@ -5,6 +5,11 @@ import { CaseFacade, StatusPeriodFacade, ClientEligibilityFacade } from '@cms/ca
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import {
+  WindowService,
+  WindowRef,
+  WindowCloseResult,
+} from "@progress/kendo-angular-dialog";
 @Component({
   selector: 'case-management-status-period',
   templateUrl: './status-period.component.html',
@@ -66,6 +71,7 @@ export class StatusPeriodComponent implements OnInit {
     private caseFacade: CaseFacade,
     private cdr: ChangeDetectorRef,
     private clientEligibilityFacade: ClientEligibilityFacade,
+    private windowService: WindowService,
     private dialogService: DialogService) { }
 
   /** Lifecycle hooks **/
@@ -146,9 +152,10 @@ export class StatusPeriodComponent implements OnInit {
     });
   }
   onStatusPeriodDetailClicked(template: TemplateRef<unknown>): void {
-    this.statusPeriodDialog = this.dialogService.open({
+    this.statusPeriodDialog = this.windowService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      cssClass: 'app-c-window app-c-window-md',
+      top: 60,
     });
     this.isStatusPeriodEdit = false;
     this.isCopyPeriod = false;

@@ -1,0 +1,121 @@
+ 
+.app-c-window {
+ 
+ 
+  &-xls { 
+      width: 1000px;
+      // max-width: 1000px;
+      height: auto !important; 
+      @media (max-width: $breakpoint-lg) {
+        width: calc(100% - 1rem);
+      }
+   
+  }
+  &-xl { 
+      width: 900px;
+      // max-width: 900px; 
+      @media (max-width: $breakpoint-md) {
+        width: calc(100% - 1rem);
+      }
+    
+  }
+  &-lg { 
+      width: 700px;
+      // max-width: 700px;
+      height: auto !important; 
+      top: 30px;
+      @media (max-width: $breakpoint-sm) {
+        width: calc(100% - 1rem);
+      }
+    
+    justify-content: flex-start; 
+  }
+  &-mdl { 
+      width: 620px;
+      // max-width: 620px;
+      height: auto !important; 
+      @media (max-width: $breakpoint-sm) {
+        width: calc(100% - 1rem);
+      }
+    
+    justify-content: flex-start; 
+  }
+  &-md { 
+      width: 550px;
+      // max-width: 550px;
+      height: auto !important; 
+      @media (max-width: $breakpoint-sm) {
+        width: calc(100% - 1rem);
+      }
+    
+    justify-content: flex-start; 
+  }
+  &-sm { 
+      width: 400px;
+      // max-width: 400px;
+      height: auto !important; 
+      @media (max-width: $breakpoint-sm) {
+        width: calc(100% - 1rem);
+      }
+    
+    justify-content: flex-start; 
+  }&.k-window-minimized{
+    .k-window-titlebar {
+      padding: $size-xxxl $size-xxx $size-xxxl $size-xxx; 
+    }
+  }
+  .k-window-titlebar {
+    padding: $size-xxxl $size-xxx $size-l $size-xxx; 
+    white-space: normal;
+    .k-window-title { 
+      font-size: $font-size-xx; 
+      align-items: center;
+      white-space: normal;
+      line-height: normal;
+      text-transform: capitalize;
+      margin: 0px;
+      padding: 0px;
+      .title-icons {
+        font-size: $font-size-xl;
+      }
+    }
+    .k-window-titlebar-actions {
+      .k-button { 
+        .k-icon {
+          font-size: $font-size-xlg;
+          color: material-color($hive-neutral-palette, 600);
+        }
+      }
+    }
+  }
+
+  .k-window-content{
+    padding: 0rem;
+ 
+  }
+  .k-dialog-body {
+    padding: $size-m $size-xxx;
+    max-height: 65vh;
+    overflow-y: auto;
+  }
+  .k-dialog-actions {
+    padding: $size-xlg 0 0;
+    border-width: 0;
+    .k-button {
+      min-width: 80px;
+      + .k-button {
+        margin-left: $size-xx;
+      }
+    }
+    .justify-content-end {
+      width: 100%;
+    }
+    .k-danger-link {
+      box-shadow: none;
+    }
+  }
+ 
+}
+
+ 
+ 

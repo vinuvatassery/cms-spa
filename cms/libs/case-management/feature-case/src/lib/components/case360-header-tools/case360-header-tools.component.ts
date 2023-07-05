@@ -4,6 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { CommunicationEvents, ContactFacade, ScreenType, StatusFlag } from '@cms/case-management/domain';
 import { Subscription } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import {
+  WindowService,
+  WindowRef,
+  WindowCloseResult,
+} from "@progress/kendo-angular-dialog";
 @Component({
   selector: 'case-management-case360-header-tools',
   templateUrl: './case360-header-tools.component.html',
@@ -82,7 +87,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   ];
 
   /* constructor */
-  constructor(private readonly contactFacade: ContactFacade, private readonly route: ActivatedRoute, 
+  constructor(private readonly contactFacade: ContactFacade,     private windowService: WindowService, private readonly route: ActivatedRoute, 
     private dialogService: DialogService) {
   }
   ngOnDestroy(): void {
@@ -196,9 +201,10 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
 
   onTodoDetailsClicked( template: TemplateRef<unknown>): void {
-    this.todoDetailsDialog = this.dialogService.open({
+    this.todoDetailsDialog = this.windowService.open({
+      title:'Create To Do Item for Donna',
       content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      cssClass: 'app-c-window app-c-window-md',
     }); 
   }
 
