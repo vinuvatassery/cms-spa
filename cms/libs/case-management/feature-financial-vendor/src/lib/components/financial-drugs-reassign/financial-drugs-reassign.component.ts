@@ -10,7 +10,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 @Component({
   selector: 'cms-financial-drugs-reassign',
   templateUrl: './financial-drugs-reassign.component.html',
-  styleUrls: ['./financial-drugs-reassign.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialDrugsReassignComponent {public formUiStyle: UIFormStyle = new UIFormStyle();
