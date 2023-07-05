@@ -194,9 +194,9 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.columnName = stateFilter.field;
-     
+
         this.filter = stateFilter.value;
-     
+
       this.isFiltered = true;
       const filterList = []
       for(const filter of stateData.filter.filters)
@@ -214,7 +214,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     }
     this.state=stateData;
     this.saveGridState();
-    this.setGridState(stateData);  
+    this.setGridState(stateData);
     this.loadProfileCasesList();
   }
 
@@ -299,7 +299,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   }
 
   onChange(event :any)
-  {    
+  {
     this.defaultGridState()
     this.columnName = this.state.columnName = this.columnDroplist[this.selectedColumn];
     this.sortColumn = this.columns[this.selectedColumn];
@@ -358,52 +358,38 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   }
 
   public columnChange(e: ColumnVisibilityChangeEvent) {
-    const columnsRemoved = e?.columns.filter(x=> x.hidden).length
-    const columnsAdded = e?.columns.filter(x=> x.hidden === false).length
+    const columnsRemoved = e?.columns.filter(x => x.hidden).length;
+  const columnsAdded = e?.columns.filter(x => !x.hidden).length;
 
-    this.addRemoveColumns =''
-    if(columnsAdded > 0)
-    {
-      this.addRemoveColumns = "Columns Added"
-    }
+  this.addRemoveColumns = columnsAdded > 0 ? 'Columns Added' : columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
 
-    if(columnsRemoved > 0)
-    {
-      this.addRemoveColumns += " Columns Removed"
-    }
-    if(columnsAdded == 0 && columnsRemoved == 0)
-    {
-      this.addRemoveColumns = "Default Columns"
-    }
+  e.columns.forEach(column => {
+    if (column.hidden) {
+      const field = (column as ColumnComponent)?.field;
+      const mainFilters = this.state.filter.filters;
 
-    for(let i=0; i<e.columns.length; i++){
-      if(e.columns[i].hidden == true) {
-       let field =  (e.columns[i] as ColumnComponent)?.field;
-       let mainFilters = this.state.filter.filters;
-       let flag = false;
-       for (let k=0; k<mainFilters.length; k++){
-         let filterList = mainFilters[k].filters;
-         for (let j=0; j< filterList.length; j++){
-           if(filterList[j].field == field){
-             flag = true;
-             this.state.filter.filters[k].filters = this.state.filter.filters[k].filters.filter((x: any) => {
-               return x.field !== field;
-             });
-             this.selectedColumn = "";
-             this.columnName = "";
-             this.filter = "";
-             this.state.searchValue = "";
-             this.state.selectedColumn = "";
-             this.state.columnName = "";
-           }
-         }
-       }
-       if (flag)
-         this.loadProfileCasesList();
-     }
-   }
+      mainFilters.forEach((filter:any) => {
+          const filterList = filter.filters;
 
-    this.cdr.detectChanges()
+          const foundFilter = filterList.find((x: any) => x.field === field);
+
+          if (foundFilter) {
+            filter.filters = filterList.filter((x: any) => x.field !== field);
+            this.clearSelectedColumn();
+            this.loadProfileCasesList();
+          }
+        });
+      }
+    });
+  }
+
+  private clearSelectedColumn() {
+    this.selectedColumn = '';
+    this.columnName = '';
+    this.filter = '';
+    this.state.searchValue = '';
+    this.state.selectedColumn = '';
+    this.state.columnName = '';
   }
 
   onCaseClicked(session: any) {
@@ -434,7 +420,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
             val = date;
           }
         }
-        const filterList = this.state?.["filter"]?.["filters"] ?? []                
+        const filterList = this.state?.["filter"]?.["filters"] ?? []
         this.filter = JSON.stringify(filterList);
         const filterListData = []
         if(stateData.filter?.filters.length > 0)
