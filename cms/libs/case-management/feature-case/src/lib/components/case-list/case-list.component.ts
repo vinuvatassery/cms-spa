@@ -408,45 +408,39 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   }
 
   public setGridState(stateData: any): void {
-      this.state=stateData;
-      debugger
-      if(stateData.filter?.filters.length > 0)
-      {
-        for (let i = 0; i < stateData.filter?.filters.length; i++) {
-          let val = stateData.filter?.filters[i]
-          if(val.field === 'eilgibilityStartDate' || val.field === 'eligibilityEndDate')
-          {
-            let date = this.intl.formatDate(val.value, this.dateFormat);
-            val = date;
-          }
-        }
-        const filterList = this.state?.["filter"]?.["filters"] ?? []
-        this.filter = JSON.stringify(filterList);
-        const filterListData = []
-        if(stateData.filter?.filters.length > 0)
-       {
-        for(const filter of stateData.filter.filters)
-        {
-          filterListData.push(this.columns[filter?.filters[0]?.field]);
-        }
-        this.isFiltered =true;
-        this.filteredBy =  filterListData.toString();
-        this.cdr.detectChanges();
-       }
+    this.state = stateData;
+
+    const filters = stateData.filter?.filters ?? [];
+
+    for (let i = 0; i < filters.length; i++) {
+      let val = filters[i];
+      if (val.field === 'eilgibilityStartDate' || val.field === 'eligibilityEndDate') {
+
+        let date = this.intl.formatDate(val.value, this.dateFormat);
+        val = date;
       }
-      else
-      {
-        this.filter = "";
-        this.columnName = "";
-        this.isFiltered = false
-      }
-      this.sort = stateData.sort;
-      this.sortValue = stateData.sort[0]?.field ?? ""
-      this.sortType = stateData.sort[0]?.dir ?? ""
-      this.state=stateData;
-      this.sortColumn = this.columns[stateData.sort[0]?.field];
-      this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
-      this.sortDir = this.sort[0]?.dir === 'desc'? 'Descending': "";
-      this.loadProfileCasesList();
+    }
+    const filterList = this.state?.filter?.filters ?? [];
+    this.filter = JSON.stringify(filterList);
+
+    if (filters.length > 0) {
+      const filterListData = filters.map((filter:any) => this.columns[filter?.filters[0]?.field]);
+      this.isFiltered = true;
+      this.filteredBy = filterListData.toString();
+      this.cdr.detectChanges();
+    }
+    else {
+      this.filter = "";
+      this.columnName = "";
+      this.isFiltered = false;
+    }
+
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? "";
+    this.sortType = stateData.sort[0]?.dir ?? "";
+    this.state = stateData;
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : (this.sort[0]?.dir === 'desc' ? 'Descending' : '');
+    this.loadProfileCasesList();
   }
 }
