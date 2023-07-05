@@ -7,12 +7,16 @@ import { of } from 'rxjs/internal/observable/of';
 /** Entities **/
 import { Cer } from '../entities/cer';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Injectable({ providedIn: 'root' })
 export class CerDataService {
   /** Constructor**/
   constructor(private readonly http: HttpClient,
-    private configurationProvider: ConfigurationProvider) { }
+    private configurationProvider: ConfigurationProvider,
+    public readonly intl: IntlService,) { }
+
+    dateFormat = this.configurationProvider.appSettings.dateFormat;
   /** Public methods **/
   loadCer(): Observable<Cer[]> {
     return of([
@@ -86,11 +90,19 @@ export class CerDataService {
   loadDdlCer() {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
   }
-
   getCerTrackingList(trackingDate: Date, skipcount: number, maxResultCount: number, sort: string, sortType: string , filter : any) {
-    
-    return this.http.get<any[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cer?trackingDate=${trackingDate}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&Filter=${encodeURIComponent(JSON.stringify(filter))}`
+     
+    const ClientCerPagedResultRequest = 
+    {     
+      SortType : sortType,
+      Sorting : sort ,
+      SkipCount : skipcount ,
+      MaxResultCount : maxResultCount ,
+      Filter : JSON.stringify(filter)
+    }
+    return this.http.post<any[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cer?trackingDate=${trackingDate}`,
+      ClientCerPagedResultRequest
     );
 
   }
