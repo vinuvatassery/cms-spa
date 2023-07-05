@@ -541,7 +541,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (isMailAddressRequired) {
       mailingAddressGroup.controls['address1'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9# ]+[/]?[A-Za-z0-9# ]+$')]);
       mailingAddressGroup.controls['address1'].updateValueAndValidity();
-      mailingAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9# ]+[/]?[A-Za-z0-9# ]+$')]);
+      mailingAddressGroup.controls['address2'].setValidators([Validators.pattern('^[A-Za-z0-9 \]+$')]);
       mailingAddressGroup.controls['address2'].updateValueAndValidity();
       mailingAddressGroup.controls['city'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 ]+')]);
       mailingAddressGroup.controls['city'].updateValueAndValidity();
