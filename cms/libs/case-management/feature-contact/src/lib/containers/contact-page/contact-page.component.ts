@@ -1438,7 +1438,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.showAddressProofRequiredValidation = false;
       this.showAddressProofSizeValidation = false;
       const removeButton = this.elementRef.nativeElement.querySelectorAll('.k-delete');
-      removeButton[0]?.click();
+      //removeButton[0]?.click();
     }
     this.updateHomeAddressProofCount(this.homeAddressProofFile?.length > 0);
   }
