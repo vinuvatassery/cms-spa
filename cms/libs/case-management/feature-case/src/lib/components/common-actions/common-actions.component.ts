@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 /** External libraries **/
 import { DialItem } from '@progress/kendo-angular-buttons';
 
@@ -22,11 +22,17 @@ export class CommonActionsComponent {
     this.clickedContact = event.item;
   }
 
+  ngOnInit() {    
+  }
   /** External event methods **/
   handleShowEventLogClicked() {
     this.isShownEventLog = !this.isShownEventLog;
     this.isShownDirectMessage = false;
     this.isShownTodoReminders = false;
+  }
+
+  loadEventLog(){
+
   }
 
   handleShowDirectMessageClicked() {
