@@ -84,7 +84,8 @@ export class CerTrackingFacade {
     sort: string,
     sortType: string,
     filter: any
-  ): void {
+  ): void {   
+  
     this.cerDataService
       .getCerTrackingList(
         trackingDate,
@@ -109,6 +110,13 @@ export class CerTrackingFacade {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       });
+  }
+  isGridFilter(str: string) {
+    try {
+        return (JSON.parse(str) && !!str);
+    } catch (e) {
+        return false;
+    }
   }
 
 
