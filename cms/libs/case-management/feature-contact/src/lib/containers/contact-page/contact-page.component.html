@@ -346,7 +346,7 @@
                 >
               </kendo-dropdownlist>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old State:</b> {{ oldHomeAddress?.state }} <button *ngIf="!(homeAddress?.sameAsMailingAddressFlag?.value ?? false)" aria-label="client name" kendoButton look="flat" class="card-link-button"  (click)="useOldOnClick('homeAddress.state',oldHomeAddress?.state??'')">Use Old  </button></p>        
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old State:</b> {{ oldHomeAddress?.state }} <button *ngIf="(homeAddress?.sameAsMailingAddressFlag?.value ?? false)" aria-label="client name" kendoButton look="flat" class="card-link-button"  (click)="useOldOnClick('homeAddress.state',oldHomeAddress?.state??'')">Use Old  </button></p>        
 
             <kendo-formerror *ngIf="homeAddress?.state?.errors?.required">
               Home State is required
