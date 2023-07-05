@@ -6,7 +6,6 @@ import {
   Input,
   Output,
   EventEmitter,
-  OnChanges,
   ChangeDetectorRef,
   ViewChild,
 } from '@angular/core';
@@ -27,7 +26,7 @@ import { Router } from '@angular/router';
   templateUrl: './case-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaseListComponent implements OnInit, OnChanges {
+export class CaseListComponent implements OnInit {
 
 public isGridLoaderShow = true;
 @Input() searchLoaderVisibility$!: Observable<boolean>;
@@ -148,8 +147,6 @@ public state!: any;
         this.caseStatusTypes=data.sort((value1:any,value2:any) => value1.sequenceNbr - value2.sequenceNbr);
       }
     });
-  }
-  ngOnChanges(): void {
   }
   defaultGridState(){
     this.state = {

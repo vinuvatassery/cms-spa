@@ -1553,7 +1553,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setAddress(address: MailAddress | undefined, type: AddressTypeCode) {
     if (!address) return;
-    var zipCode = address?.zip4 ? `${address?.zip5}-${address?.zip4}`: address?.zip5;
+    let zipCode = address?.zip4 ? `${address?.zip5}-${address?.zip4}`: address?.zip5;
     const selectedAddress: ClientAddress = {
       address1: address?.address1 == '' ? address?.address2 : address?.address1,
       address2: address?.address1 == '' ? '' : address?.address2,

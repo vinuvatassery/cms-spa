@@ -52,14 +52,12 @@ export class DocumentDataService {
 
   
   saveDocument(doc: any) {
-    let documentFormData = new FormData();
-    documentFormData = this.bindFormData(doc, ClientDocumnetEntityType.Save);
+    let documentFormData = this.bindFormData(doc, ClientDocumnetEntityType.Save);
     return this.http.post(this.getUrl(), documentFormData, { reportProgress: true });
   }
 
   updateDocument(doc: any) {
-    let documentFormData = new FormData();
-    documentFormData = this.bindFormData(doc, ClientDocumnetEntityType.Edit);
+    let documentFormData = this.bindFormData(doc, ClientDocumnetEntityType.Edit);
     return this.http.post(this.getUrl(), documentFormData, { reportProgress: true });
   }
   

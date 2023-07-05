@@ -49,7 +49,7 @@ export class FormsAndDocumentsComponent {
 
   fetchSubfolders = (node: any) =>
     this.templateManagementFacade.getDirectoryContent('Form',node.documentTemplateId).pipe(map((response: any[]) => {
-      return node.files = this.folderstreeformatting(response);
+      return this.folderstreeformatting(response);
     }));
 
     hasFiles = function (data: any) {
