@@ -64,7 +64,7 @@
             <kendo-floatinglabel text="Address Line 1">
               <kendo-textbox 
               textFieldautofocus
-              aria-label="address line 1" 
+              aria-label="Mailing Address Line 1" 
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address1"
@@ -88,7 +88,7 @@
             <kendo-formfield>
             <kendo-floatinglabel text="Address Line 2 (Optional)">
               <kendo-textbox 
-              aria-label="address line 2" 
+              aria-label="Mailing Address line 2 (Optional)" 
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address2"
@@ -109,7 +109,7 @@
             <kendo-formfield>
             <kendo-floatinglabel text="City">
               <kendo-textbox 
-              aria-label="city" 
+              aria-label="Mailing city" 
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="20"
               formControlName="city"
@@ -129,11 +129,14 @@
           </div>
         </div>
         <div class="flex-row">
-          <div class="flex-col flex-col-3">
+          <div class="flex-col flex-col-6">
+
+            <div class="flex-row">
+          <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="State">
               <kendo-dropdownlist 
-              aria-label="State" 
+              aria-label="Mailing State" 
               [fillMode]="formUiStyle.dropDownFillMode"
               formControlName="state"
               [data]="ddlStates$ | async"
@@ -148,11 +151,11 @@
             <kendo-formerror>Mailing State is required</kendo-formerror>
           </kendo-formfield>
           </div>
-          <div class="flex-col flex-col-3">
+          <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="Zip" class="">
               <kendo-textbox 
-              aria-label="Zip" 
+              aria-label="Mailing Zip" 
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="10"
               formControlName="zip"
@@ -170,8 +173,10 @@
             </kendo-formerror>
           </kendo-formfield>
           </div>
-          <div class="flex-col flex-col-3 mt-04" *ngIf="showMailAddressValidationLoader$ | async">
-            <span class="app-c-badge  mt-3">       
+          </div>
+        </div>
+          <div class="flex-col flex-col-4 mt-04" *ngIf="showMailAddressValidationLoader$ | async">
+            <span class="app-c-badge  mt-3" aria-label="Validating address">       
               <span class="k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
               <span> Validating address...</span> 
             </span>           
@@ -179,8 +184,8 @@
         </div>    
         <div class="flex-row" *ngIf="mailingAddressIsNotValid">
           <div class="flex-col flex-col-6">
-          <span class="app-c-badge badge-warn-light mt-3">       
-            <span class="material-icons" aria-label="income Information" aria-hidden="true">
+          <span class="app-c-badge badge-warn-light mt-3" aria-label="Info USPS can't validate this address">       
+            <span class="material-icons" aria-label="info USPS can't validate this address" aria-hidden="true">
               info
             </span>
                 USPS can't validate this address.
@@ -262,7 +267,7 @@
             <kendo-formfield>
             <kendo-floatinglabel text="Address Line 1">
               <kendo-textbox 
-              aria-label="address line 1" 
+              aria-label="Home Address line 1" 
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address1"
@@ -286,7 +291,7 @@
             <kendo-formfield>
             <kendo-floatinglabel text="Address Line 2 (Optional)">
               <kendo-textbox 
-              aria-label="address line 2" 
+              aria-label="Home Address line 2 (Optional)" 
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="100"
               formControlName="address2"
@@ -309,7 +314,7 @@
             <kendo-formfield>
             <kendo-floatinglabel text="City">    
               <kendo-textbox 
-              aria-label="city" 
+              aria-label="Home City" 
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="20"
               formControlName="city"
@@ -329,10 +334,14 @@
           </div>
         </div>
         <div class="flex-row">
-          <div class="flex-col flex-col-3">
+          <div class="flex-col flex-col-6">
+
+            <div class="flex-row">
+          <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="State" >
               <kendo-dropdownlist 
+              aria-label="Home State" 
               [disabled]="true"
               [fillMode]="formUiStyle.dropDownFillMode"
               [data]="ddlStates$ | async"
@@ -356,11 +365,11 @@
             Home address must be in Oregon
           </kendo-formerror>
           </div>
-          <div class="flex-col flex-col-3">
+          <div class="flex-col flex-col-6">
             <kendo-formfield>
             <kendo-floatinglabel text="Zip">
               <kendo-textbox 
-              aria-label="zip optional" 
+              aria-label="Home Zip optional" 
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="10"
               formControlName="zip"
@@ -378,7 +387,9 @@
             </kendo-formerror>
           </kendo-formfield>
           </div>
-          <div class="flex-col flex-col-3 mt-04" *ngIf="showHomeAddressValidationLoader$ | async">
+          </div>
+          </div>
+          <div class="flex-col flex-col-4 mt-04" *ngIf="showHomeAddressValidationLoader$ | async">
             <span class="app-c-badge  mt-3">       
               <span class="k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
               <span> Validating address...</span> 
@@ -391,7 +402,7 @@
             <kendo-floatinglabel text="County" class="inline-search-loader">
               <span *ngIf="showCountyLoader | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
               <kendo-dropdownlist 
-              aria-label="County" 
+              aria-label="Home County" 
               [fillMode]="formUiStyle.dropDownFillMode"
               formControlName="county"
               [data]="ddlCountries$ | async"
@@ -409,8 +420,8 @@
         </div>
         <div class="flex-row" *ngIf="homeAddressIsNotValid">
           <div class="flex-col flex-col-6">
-          <span class="app-c-badge badge-warn-light mt-3">
-            <span class="material-icons" aria-label="income Information" aria-hidden="true">
+          <span class="app-c-badge badge-warn-light mt-3" aria-label="Info USPS can't validate this address">
+            <span class="material-icons" aria-label="Info USPS can't validate this address" aria-hidden="true">
               info
             </span>
                 USPS can't validate this address.

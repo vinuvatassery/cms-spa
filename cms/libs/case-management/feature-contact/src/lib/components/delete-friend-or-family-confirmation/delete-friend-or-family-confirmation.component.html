@@ -11,12 +11,14 @@
         kendoButton
         [primary]="true"
         look="outline"
-        aria-label="cancel deactivation of confirmation"
+        aria-label="cancel"
         (click)="closeDeleteModal()"
       >
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="deactivate" (click)="deleteContact()">
+      <button kendoButton
+      class="k-error-button"
+      aria-label="delete" (click)="deleteContact()">
         Delete
       </button>
     </div>
