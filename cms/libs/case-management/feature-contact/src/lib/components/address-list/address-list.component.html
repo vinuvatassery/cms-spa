@@ -19,7 +19,12 @@
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
-      <kendo-grid [resizable]="true" [kendoGridBinding]="addressGridView" [rowClass]="rowClass" [loading]="addressListLoader">
+      <kendo-grid 
+      [sortable]="true" 
+      [groupable]="false"
+      [reorderable]="true"
+      [columnMenu]="{ filter: true }"
+      [resizable]="true" [kendoGridBinding]="addressGridView" [rowClass]="rowClass" [loading]="addressListLoader">
         <kendo-grid-column field="addressTypeDesc" title="Type" [width]="80">
         </kendo-grid-column>
         <kendo-grid-column field="address1" title="Address1" [width]="150">
@@ -48,7 +53,7 @@
           </ng-template>
         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="50">
+        <kendo-grid-column field="by" title="By" [width]="70">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
