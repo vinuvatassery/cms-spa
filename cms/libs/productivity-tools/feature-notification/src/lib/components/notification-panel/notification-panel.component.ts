@@ -27,6 +27,7 @@ export class NotificationPanelComponent implements OnInit {
   isNewReminderOpened = false;
   isNotificationsAndRemindersOpened = false;
   private newReminderDetailsDialog : any;
+  private notificationReminderDialog : any;
   public data = [
     {
       buttonType:"btn-h-primary",
@@ -140,9 +141,14 @@ export class NotificationPanelComponent implements OnInit {
 
   onNotificationsAndRemindersClosed() {
     this.isNotificationsAndRemindersOpened = false;
+    this.notificationReminderDialog.close()
   }
 
-  onNotificationsAndRemindersOpenClicked() {
+  onNotificationsAndRemindersOpenClicked(template: TemplateRef<unknown>): void {
+    this.notificationReminderDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-wid-md-full no_body_padding-modal reminder_modal',
+    }); 
     this.isNotificationsAndRemindersOpened = true;
   }
 

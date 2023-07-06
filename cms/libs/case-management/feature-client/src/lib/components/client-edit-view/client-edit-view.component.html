@@ -225,8 +225,7 @@
                 aria-labelledby="registertovoteno" formControlName="registerToVote"
                 (change)="registerToVoteSelected($event)" />
               <kendo-label class="k-radio-label" text="No" for="registertovoteno"></kendo-label>
-              <kendo-formerror *ngIf="!appInfoForm.controls['registerToVote'].valid">Register to vote is
-                required.</kendo-formerror>
+              <kendo-formerror *ngIf="!appInfoForm.controls['registerToVote'].valid">A Yes or No response is required.</kendo-formerror>
             </span>
             <div class="flex-col flex-col-6">
               <div class="info-banners blue-banner d-flex mt-2 align-item-fstart" *ngIf="isVisible">
