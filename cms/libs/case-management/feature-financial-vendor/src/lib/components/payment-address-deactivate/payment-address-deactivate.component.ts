@@ -15,18 +15,18 @@ export class PaymentAddressDeactivateComponent {
 
   deactivatePaymentAddress(): void {
     this.cdr.detectChanges();
-    this.billingAddressFacade.deactivateAddress(this.addressId).subscribe(
-      (response) => {
+    this.billingAddressFacade.deactivateAddress(this.addressId).subscribe({
+      next: (response) => {
         if (response) {
           this.onCloseDeactivatePaymentAddressClicked(true);
         } else {
           this.onCloseDeactivatePaymentAddressClicked(false);
         }
       },
-      (error) => {
+      error: (error) => {
         this.onCloseDeactivatePaymentAddressClicked(false);
       }
-    );
+    });
   }
 
   onCloseDeactivatePaymentAddressClicked(isSuccess: boolean): void {

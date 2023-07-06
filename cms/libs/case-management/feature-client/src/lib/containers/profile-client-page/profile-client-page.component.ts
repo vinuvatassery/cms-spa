@@ -2,7 +2,7 @@
 import { OnInit, Component, ChangeDetectionStrategy,ChangeDetectorRef} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CaseFacade, ClientProfile,ClientFacade, StatusPeriodFacade } from '@cms/case-management/domain';
-import { BehaviorSubject, first, Subject } from 'rxjs';
+import { first, Subject } from 'rxjs';
 import { SnackBarNotificationType,LoaderService } from '@cms/shared/util-core';
 
 @Component({

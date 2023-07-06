@@ -60,7 +60,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   btnDisabled = false;
   prevClientCaseEligibilityId: any;
   isCerForm = false;
-  acceptanceModalTitle: String = 'Application Accepted';
+  acceptanceModalTitle: string = 'Application Accepted';
   isreviewQuestionAnswersFacadeSubscribed = false;
  
   /** Constructor **/

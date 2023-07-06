@@ -411,8 +411,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
 
     const filters = stateData.filter?.filters ?? [];
 
-    for (let i = 0; i < filters.length; i++) {
-      let val = filters[i];
+    for (let val of filters) {
       if (val.field === 'eilgibilityStartDate' || val.field === 'eligibilityEndDate') {
 
         let date = this.intl.formatDate(val.value, this.dateFormat);

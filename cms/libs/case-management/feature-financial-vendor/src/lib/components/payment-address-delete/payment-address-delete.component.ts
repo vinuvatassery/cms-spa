@@ -14,18 +14,18 @@ export class PaymentAddressDeleteComponent {
 
   deletePaymentAddress(): void {
     this.cdr.detectChanges();
-    this.billingAddressFacade.deleteAddress(this.addressId).subscribe(
-      (response) => {
+    this.billingAddressFacade.deleteAddress(this.addressId).subscribe({
+      next: (response) => {
         if (response) {
           this.onCloseDeletePaymentAddressClicked(true);
         } else {
           this.onCloseDeletePaymentAddressClicked(false);
         }
       },
-      (error) => {
+      error: (error) => {
         this.onCloseDeletePaymentAddressClicked(false);
       }
-    );
+    });
   }
 
   onCloseDeletePaymentAddressClicked(isSuccess: boolean): void {
