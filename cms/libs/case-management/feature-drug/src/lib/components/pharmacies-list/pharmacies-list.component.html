@@ -190,12 +190,12 @@
 <!-- Change Pharmacy Priority Modal -->
 <kendo-dialog
   *ngIf="isTriggerPriorityPopup"
-  (close)="handleCloseChangePriorityClikced()"
+  (close)="handleCloseChangePriorityClick()"
   class="app-c-modal app-c-modal-md app-c-modal-np"
 >
   <kendo-dialog-titlebar> Select Pharmacy Priority </kendo-dialog-titlebar>
   <case-management-set-pharmacy-priority
-    (closeChangePriority)="handleCloseChangePriorityClikced()"
+    (closeChangePriority)="handleCloseChangePriorityClick()"
     [pharmacyPriorityModalButtonText]="pharmacyPriorityModalButtonText"
     [clientpharmacies]="pharmacies"
     [clientId]="clientId"

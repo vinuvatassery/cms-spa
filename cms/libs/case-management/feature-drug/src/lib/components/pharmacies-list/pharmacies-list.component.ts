@@ -260,7 +260,7 @@ export class PharmaciesListComponent implements OnInit {
     this.drugPharmacyFacade.newAddedPharmacyObs.subscribe((isAdded) => {
       if (isAdded) {
         this.triggerPriorityPopupNumber = 0;
-        this.handleCloseChangePriorityClikced();
+        this.handleCloseChangePriorityClick();
       }
     });
   }
@@ -353,8 +353,8 @@ export class PharmaciesListComponent implements OnInit {
       ];
       this.drugPharmacyFacade
         .deactivePharmacies(
-          this.clientId,
-          updatedPharmacy,
+          this.pharmacyId,
+          this.changePharmacyObj,
           this.isShowHistoricalData
         )
         .then((isSucceed: any) => {
@@ -564,7 +564,7 @@ export class PharmaciesListComponent implements OnInit {
   handleCloseSelectNewPrimaryPharmaciesClicked() {
     this.isOpenSelectNewPrimaryPharmaciesClicked = false;
   }
-  handleCloseChangePriorityClikced() {
+  handleCloseChangePriorityClick() {
     this.isTriggerPriorityPopup = false;
   }
   public rowClass = (args: any) => ({
