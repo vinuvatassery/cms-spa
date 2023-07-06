@@ -151,6 +151,7 @@ export class CommunicationFacade {
 
 prepareAdobeEsingData(emailData: any, selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, selectedCCEmail: any, isSaveFoLater: boolean, cerEmailAttachedFiles: any[]) {
   const formData = new FormData();
+    formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('esignRequestId', emailData?.esignRequestId ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
     formData.append('toEmailAddress', selectedToEmail ?? '');
