@@ -438,7 +438,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.sortType = stateData.sort[0]?.dir ?? "";
     this.state = stateData;
     this.sortColumn = this.columns[stateData.sort[0]?.field];
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : (this.sort[0]?.dir === 'desc' ? 'Descending' : '');
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending':'';
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
     this.loadProfileCasesList();
   }
 }
