@@ -148,6 +148,7 @@
     padding: $size-xx $size-xx;
     a {
       color: $white;
+      word-break: break-word;
     }
   }
   &.red-banner {
@@ -155,6 +156,7 @@
     color: material-color($hive-error-palette, 900);
     a {
       color: $white;
+      word-break: break-word;
     }
   }
   &.light-blue-banner {
@@ -163,6 +165,7 @@
     padding: $size-xlg1 $size-xlg1;
     a {
       color: $app-primary;
+      word-break: break-word;
     }
   }
   &.canyon-banner {
@@ -170,12 +173,14 @@
     color: material-color($hive-canyon-palette, 900);
     a {
       color: $white;
+      word-break: break-word;
     }
   }
   &.orange-banner {
     background: material-color($hive-warn-palette, 200);
     a {
       color: $white;
+      word-break: break-word;
     }
   }
   &.hover-link {

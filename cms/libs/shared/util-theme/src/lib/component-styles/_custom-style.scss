@@ -743,7 +743,11 @@ color: $app-primary-font-color;
 
 .custom-client-tab-inner-wrapper {
   padding: 0px 16px;
-
+  word-wrap: normal;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
   .k-scrollview {
     border: 0px !important;
   }
