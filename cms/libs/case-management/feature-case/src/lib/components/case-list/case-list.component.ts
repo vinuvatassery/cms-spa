@@ -218,22 +218,23 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   }
 
   private loadProfileCasesList(): void {
-    this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType, this.columnName,this.filter,this.afterDate,this.beforeDate)
+    const gridDataRefinerValue =
+    {
+      skipCount: this.state.skip ?? 0,
+      pagesize : this.state.take ?? 0,
+      sortColumn : this.sortValue,
+      sortType : this.sortType,
+      columnName : this.columnName,
+      filter : this.filter,
+      afterDate: this.afterDate,
+      beforeDate: this.beforeDate
+    }
+
+    this.loadCases(gridDataRefinerValue)
   }
 
-   loadCases(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any, afterDate: any, beforeDate: any)
+   loadCases(gridDataRefinerValue:any)
    {
-     const gridDataRefinerValue =
-     {
-       skipCount: skipcountValue,
-       pagesize : maxResultCountValue,
-       sortColumn : sortValue,
-       sortType : sortTypeValue,
-       columnName : columnName,
-       filter : filter,
-       afterDate: afterDate,
-       beforeDate: beforeDate
-     }
      this.loadCasesListEvent.next(gridDataRefinerValue);
      this.cdr.detectChanges();
    }
@@ -360,7 +361,12 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     const columnsRemoved = e?.columns.filter(x => x.hidden).length;
   const columnsAdded = e?.columns.filter(x => !x.hidden).length;
 
-  this.addRemoveColumns = columnsAdded > 0 ? 'Columns Added' : columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
+  if (columnsAdded > 0) {
+    this.addRemoveColumns = 'Columns Added';
+  }
+  else {
+    this.addRemoveColumns = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
+  }
 
   e.columns.forEach(column => {
     if (column.hidden) {
@@ -413,9 +419,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
 
     for (let val of filters) {
       if (val.field === 'eilgibilityStartDate' || val.field === 'eligibilityEndDate') {
-
-        let date = this.intl.formatDate(val.value, this.dateFormat);
-        val = date;
+        this.intl.formatDate(val.value, this.dateFormat);
       }
     }
     const filterList = this.state?.filter?.filters ?? [];
