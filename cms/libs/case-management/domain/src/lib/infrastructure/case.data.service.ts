@@ -25,9 +25,25 @@ export class CaseDataService {
 
   /** Public methods **/
   loadCases(CaseScreenType: CaseScreenTab, skipcount: number, maxResultCount: number, sort: string, sortType: string, columnName : any, filter : any,  totalClientsCount : any, afterDate: any, beforeDate: any ) {
-    return this.http.get<ClientProfileCase[]>(
+    const ClientCasesPagedResultRequest=
+      {
+        CaseScreenType : CaseScreenType,
+        SortType : sortType,
+        Sorting : sort,
+        SkipCount : skipcount,
+        MaxResultCount : maxResultCount,
+        columnName: columnName,
+        Filter: filter,
+        TotalCount: totalClientsCount,
+        AfterDate: afterDate,
+        BeforeDate: beforeDate
+      }
+   
+    return this.http.post<ClientProfileCase[]>(
+     
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clients/cases?CaseScreenType=${CaseScreenType}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&ColumnName=${columnName}&Filter=${filter}&TotalCount=${totalClientsCount}&AfterDate=${afterDate}&BeforeDate=${beforeDate}`
+      `/case-management/clients/cases`,
+      ClientCasesPagedResultRequest
     );
 
   }
