@@ -323,12 +323,16 @@ export class DrugPharmacyFacade {
   }
 
  
-  getDrugPurchasedList(clientId: number) {
+  getDrugPurchasedList(clientId: number, skip: any, pageSize: any, sortBy: any, sortType: any) {
     this.loaderService.show();
-    return this.drugDataService.getDrugPurchasedList(clientId).subscribe({
-      next: (response:DrugPurchased) => {
-        response.drugPurchased = `${response.vendorName} #${response.prescriptionFillId} ${response.drugName} ${response.ndcNbr} ${response.brandName} ${response.qty}${response.transactionTypeCode}${response.reversalDate} #${response.paymentTypeCode} ${response.amountRequested} ${response.calculatedIngredientCost} ${response.dispensingFeeSubmitted} ${response.ramsellProcessFee}${response.pharmacyTotalPaidAmount}${response.uandc}${response.revenue} ${response.entryDate}${response.clientGroup}`;
-        this.drugPurchaseSubject.next(response);
+    return this.drugDataService.getDrugPurchasedList(clientId,skip,pageSize, sortBy, sortType).subscribe({
+      next: (response:any) => {
+        const gridView: any = {
+          data: response.items,
+          total:response.totalCount,
+        };
+       this.drugPurchaseSubject.next(gridView);
+        
         this.loaderService.hide();
       },
       error: (err) => {

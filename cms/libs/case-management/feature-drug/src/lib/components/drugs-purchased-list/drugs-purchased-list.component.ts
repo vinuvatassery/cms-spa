@@ -62,17 +62,18 @@ export class DrugsPurchasedListComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadDrugsPurchased();
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
+    this.loadDrugsPurchased();
   }
-
+  
   /** Private methods **/
-  private loadDrugsPurchased() {
-    this.drugPharmacyFacade.getDrugPurchasedList(this.clientId);
+  private loadDrugsPurchased(  
+  ) { 
+    this.drugPharmacyFacade.getDrugPurchasedList(this.clientId,this.state.skip,this.state.take,this.sortValue,this.sortType);
   }
 
   /** Internal event methods **/
@@ -98,5 +99,15 @@ export class DrugsPurchasedListComponent implements OnInit {
   handleClosePharmacyClicked() {
     this.isOpenPharmacyClicked = false;
     this.isEditPharmacyListClicked = false;
+  }
+  pageselectionchange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadDrugsPurchased();
+  }
+
+  public dataStateChange(stateData: any): void {
+    this.state = stateData;
+   this.loadDrugsPurchased();
   }
 }

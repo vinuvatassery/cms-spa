@@ -48,6 +48,18 @@ $pagination-height : 48px;
 
       }
     }
+    .k-checkbox {
+      border-color: $white;
+      background-color: $white;
+
+    }
+
+    .k-checkbox:checked,
+    .k-checkbox.k-checked {
+      border-color: $app-primary;
+      color: white;
+      background-color: $app-primary;
+    }
 
 
   }
@@ -265,7 +277,7 @@ $pagination-height : 48px;
 .table-filter-section {
   display: flex;
   margin-bottom: $size-xx;
-
+  position: relative;
   .filter-section_items {
     width: 100%;
 
@@ -343,6 +355,12 @@ $pagination-height : 48px;
       }
     }
   }
+  .right-overlay-export {
+    position: absolute;
+    top: 40%;
+    z-index: 1;
+    right: 3px;
+  }
 }
 
 /*Table sort info section*/
@@ -415,6 +433,19 @@ table,
         position: absolute;
         right: $size-m;
         top: $size-xlg;
+      }
+    }
+  }
+
+  &.left_right_align {
+    tr {
+      td {
+        text-align: right;
+
+        &:first-child {
+          text-align: left;
+        }
+
       }
     }
   }
