@@ -1640,7 +1640,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       homeAddressGroup?.controls['address1']?.disable();
       homeAddressGroup?.controls['address2']?.disable();
-      homeAddressGroup?.controls['city']?.disable();
+      homeAddressGroup?.controls['city']?.enable();
       homeAddressGroup?.controls['state']?.disable();
       homeAddressGroup?.controls['zip']?.disable();
       this.isHomeAddressStateOregon$.next(address?.state === StatesInUSA.Oregon);
