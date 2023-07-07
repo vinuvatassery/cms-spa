@@ -591,7 +591,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setOtherPhone(isPhoneChangedInCer);
 
     if ((emailGroup.controls['applicableFlag']?.value ?? false) === false && (isEmailChangedInCer || !this.isCerForm)) {
-      emailGroup.controls['email'].setValidators([Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]); 
+      emailGroup.controls['email'].setValidators([Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]);
       emailGroup.controls['email'].updateValueAndValidity();
     }
 
@@ -699,7 +699,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       familyAndFriendsContact: new FormGroup({
         noFriendOrFamilyContactFlag: new FormControl(false),
         firstName: new FormControl(''),
-        lastName: new FormControl(''), 
+        lastName: new FormControl(''),
         contactRelationshipCode: new FormControl(''),
         otherDesc: new FormControl(''),
         contactPhoneNbr: new FormControl(''),
@@ -1437,7 +1437,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (isChecked) {
       this.showAddressProofRequiredValidation = false;
       this.showAddressProofSizeValidation = false;
-      const removeButton = this.elementRef.nativeElement.querySelectorAll('.k-delete');
+      this.elementRef.nativeElement.querySelectorAll('.k-delete');
     }
     this.updateHomeAddressProofCount(this.homeAddressProofFile?.length > 0);
   }
@@ -1737,9 +1737,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   {
     this.documentTypeCode=e;
   }
-  
+
   handleFileSelected(e: SelectEvent) {
-    
+
     this.homeAddressProofFile = undefined;
     this.uploadedHomeAddressProof = undefined;
     this.uploadedHomeAddressProof = e.files[0].rawFile;
