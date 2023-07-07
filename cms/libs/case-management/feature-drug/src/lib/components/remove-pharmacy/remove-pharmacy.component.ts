@@ -10,6 +10,7 @@ export class RemovePharmacyComponent {
   /** Input properties **/
   @Input() clientPharmacyId!: string;
   @Input() isShowHistoricalData: any;
+  @Input() isClientProfile:any = false;
   /** Output properties **/
   @Output() removeConfirmEvent = new EventEmitter<any>();
 
