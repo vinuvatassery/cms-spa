@@ -66,13 +66,13 @@ export class DocumentDataService {
   getDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string, skipcount: number, maxResultCount: number, sort: string, sortType: string, filter: any, columnName: any) {
     return this.http.get<any[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clientdocuments/${clientCaseEligibilityId}/documents?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&Filter=${filter}&ColumnName=${columnName}`
+      `/case-management/documents/${clientCaseEligibilityId}/documents?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&Filter=${filter}&ColumnName=${columnName}`
     );
   }
 
-  getClientDocumentsViewDownload(documentId: string) {
+  getClientDocumentsViewDownload(clientDocumentId: string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${documentId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${clientDocumentId}/content`
       , {
         responseType: 'blob'
       });
@@ -81,13 +81,13 @@ export class DocumentDataService {
   getDocumentByDocumentId(documentId: string) {
     return this.http.get<Document>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clientdocuments/clientDocumentId?clientDocumentId=${documentId}`
+      `/case-management/documents/clientDocumentId?clientDocumentId=${documentId}`
     );
   }
 
   /** private methods**/
   private getUrl() {
-    return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientdocuments/upload`
+    return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/upload`
   }
 
   private bindFormData(doc: any, event: any): FormData {

@@ -87,7 +87,7 @@ export class EmailDataService {
 
   loadEmailTemplates(typeCode: string, channelTypeCode: string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/forms?channelTypeCode=${channelTypeCode}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/templates?channelTypeCode=${channelTypeCode}`
     );
   }
 
@@ -103,27 +103,38 @@ export class EmailDataService {
       );
     }
 
-    saveEmailForLater(draftTemplate: any, isSaveForLater: boolean){
-      return this.http.post<any>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates?isSaveForLater=${isSaveForLater}`,draftTemplate
-      );
-    }
-    getClientDocumentsViewDownload(documentId: string) {
+    loadAttachmentPreview(clientId: number, clientCaseEligibilityId: string, templateId: any) {
       return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${documentId}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${clientId}/${clientCaseEligibilityId}/${templateId}`
         , {
           responseType: 'blob'
         });
     }
 
-    getClientDocuments(typeCode: string, subTypeCode: string, clientCaseEligibilityId: string) {
+    sendLetterToPrint(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
+      return this.http.post(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate/${clientId}/${clientCaseEligibilityId}?requestType=${requestType}`, selectedTemplate,
+        {responseType: 'blob'}
+      )
+    }
+
+    saveEmailForLater(draftTemplate: any){
+      return this.http.post<any>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates`,draftTemplate
+      );
+    }
+
+    getClientDocumentsViewDownload(clientDocumentId: string) {
       return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientdocuments/${typeCode}/${subTypeCode}/${clientCaseEligibilityId}`);
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${clientDocumentId}/content`
+        , {
+          responseType: 'blob'
+        });
     }
 
     getTemplateAttachment(typeCode: string){
       return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/forms`
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/templates`
       );
     }
 
@@ -133,51 +144,15 @@ export class EmailDataService {
       );
     }
 
-    initiateAdobeEsignRequest(adobeEsignData: any){
-      return this.http.post<any>(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign`,adobeEsignData
-      );
-    }
-    
-    saveDraftEsignRequest(formData: any){
-      return this.http.post<any>(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign`,formData
-      );
-    }
-
-    loadDraftEsignRequestByClinetId(clientId: number, clientCaseEligibilityId: string, loggedInUserId: string){
-      return this.http.get(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign/${clientId}/${clientCaseEligibilityId}/${loggedInUserId}`,
-      );
-    }
-
-    deleteEsignRequestAttachment(esignRequestAttachmentId:any){
-      return this.http.delete(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?esignRequestAttachmentId=${esignRequestAttachmentId}`,
-      );
-    }
-
-    updateEsignRequestTemplate(formData: any){
-      return this.http.put(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign`,formData
-      );
-    }
-
     getCCEmailListForCER(clientId: number, loginUserId: string){
       return this.http.get(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/${loginUserId}`,
       );
     }
 
-    getEsignRequest(clientCaseEligibilityId: string){
-      return this.http.get(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign/${clientCaseEligibilityId}`,
-      );
-    }
-
     getLetterAttachment(templateId: string, typeCode: string){
       return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/forms?templateId=${templateId}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/templates?templateId=${templateId}`
       );
     }
 }

@@ -18,6 +18,7 @@ import { Observable, Subscription } from 'rxjs';
 
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
+import { HttpHeaders } from '@angular/common/http';
 
 
 @Component({
@@ -169,14 +170,19 @@ export class SendLetterComponent implements OnInit {
     const clientId = this.workflowFacade.clientId ?? 0;
     const caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
     let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.cerEmailAttachedFiles);
-    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', formData ?? '', requestType.toString() ??'')
+    this.communicationFacade.sendLetterToPrint(clientId ?? 0, caseEligibilityId ?? '', formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
           if (data) {
             this.currentLetterPreviewData = data;
+            const fileUrl = window.URL.createObjectURL(data);
+            const documentName ='CER Authorization Letter.zip';
             this.ref.detectChanges();
+            const downloadLink = document.createElement('a');
+            downloadLink.href = fileUrl;
+            downloadLink.download = documentName;
+            downloadLink.click();
             this.onCloseNewLetterClicked();
-            this.viewOrDownloadFile(data.clientDocumentId);
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print')
           }
           this.loaderService.hide();
@@ -249,9 +255,8 @@ this.isShowSendLetterToPrintPopupClicked = false;
 
   private saveDraftLetterTemplate(draftTemplate: any) {
     this.loaderService.show();
-    const isSaveFoLater = true;
     let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.cerEmailAttachedFiles);
-    this.communicationFacade.saveForLaterEmailTemplate(formData, isSaveFoLater)
+    this.communicationFacade.saveForLaterEmailTemplate(formData)
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -282,23 +287,6 @@ this.isShowSendLetterToPrintPopupClicked = false;
   hideLoader()
   {
     this.loaderService.hide();
-  }
-
-  viewOrDownloadFile(clientDocumentId: string) {
-    if (clientDocumentId === undefined) {
-        return;
-    }
-    this.getClientDocumentsViewDownload(clientDocumentId).subscribe({
-        next: (data: any) => {
-            const fileUrl = window.URL.createObjectURL(data);
-                window.open(fileUrl, "_blank");
-        },
-        error: (error: any) => {
-            this.loaderService.hide();
-            this.loggingService.logException(error);
-            this.showHideSnackBar(SnackBarNotificationType.ERROR,error);
-        }
-    })
   }
 
   getClientDocumentsViewDownload(clientDocumentId: string) {

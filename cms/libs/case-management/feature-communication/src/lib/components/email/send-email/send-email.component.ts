@@ -12,7 +12,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 /** Internal Libraries **/
-import { CommunicationEvents, CommunicationFacade, WorkflowFacade } from '@cms/case-management/domain';
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { UserDataService } from '@cms/system-config/domain';
@@ -90,7 +90,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly workflowFacade: WorkflowFacade,
     private formBuilder: FormBuilder,
-    private readonly userDataService: UserDataService) { }
+    private readonly userDataService: UserDataService,
+    private readonly esignFacade: EsignFacade,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -150,7 +151,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private loadDraftEsignRequest() {
     this.loaderService.show();
-    this.communicationFacade.loadDraftEsignRequestByClinetId(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', this.loginUserId)
+    this.esignFacade.loadDraftEsignRequestByClinetId(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', this.loginUserId)
     .subscribe({
       next: (data: any) =>{
         if (data.length > 0) {
@@ -258,8 +259,8 @@ onClosePreviewEmail(){
 
   private initiateAdobeEsignProcess(emailData: any, requestType: string){
     this.loaderService.show();
-    let formData = this.communicationFacade.prepareAdobeEsingData(emailData, this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater, this.cerEmailAttachedFiles);
-    this.communicationFacade.initiateAdobeesignRequest(formData)
+    let formData = this.esignFacade.prepareAdobeEsingData(emailData, this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater, this.cerEmailAttachedFiles);
+    this.esignFacade.initiateAdobeesignRequest(formData)
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -303,9 +304,9 @@ onClosePreviewEmail(){
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
     this.isSaveFoLater = true;
-    let draftEsignRequest = this.communicationFacade.prepareDraftAdobeEsignRequest(draftTemplate, this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater, this.cerEmailAttachedFiles); 
+    let draftEsignRequest = this.esignFacade.prepareDraftAdobeEsignRequest(draftTemplate, this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater, this.cerEmailAttachedFiles); 
       if(draftTemplate?.esignRequestId == undefined || draftTemplate?.esignRequestId == null){
-        this.communicationFacade.saveDraftEsignRequest(draftEsignRequest)
+        this.esignFacade.saveDraftEsignRequest(draftEsignRequest)
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -322,7 +323,7 @@ onClosePreviewEmail(){
         },
       });
     }else{
-        this.communicationFacade.updateEmailTemplateForLater(draftEsignRequest)
+        this.esignFacade.updateEmailTemplateForLater(draftEsignRequest)
         .subscribe({
           next: (data: any) =>{
           if (data) {

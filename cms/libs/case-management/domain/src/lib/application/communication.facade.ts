@@ -97,16 +97,20 @@ export class CommunicationFacade {
     return this.emailDataService.replaceAndGenerateTextTemplate(clientId, clientCaseEligibilityId, selectedTemplate, requestType);
   }
 
-  saveForLaterEmailTemplate(draftTemplate: any, isSaveFoLater: boolean){
-    return this.emailDataService.saveEmailForLater(draftTemplate, isSaveFoLater);
+  loadAttachmentPreview(clientId: number, clientCaseEligibilityId: string, templateId: any) {
+    return this.emailDataService.loadAttachmentPreview(clientId, clientCaseEligibilityId, templateId);
+  }
+
+  sendLetterToPrint(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
+    return this.emailDataService.sendLetterToPrint(clientId, clientCaseEligibilityId, selectedTemplate, requestType);
+  }
+
+  saveForLaterEmailTemplate(draftTemplate: any){
+    return this.emailDataService.saveEmailForLater(draftTemplate);
   }
 
   getClientDocumentsViewDownload(clientDocumentId: string) {
     return this.emailDataService.getClientDocumentsViewDownload(clientDocumentId);
-  }
-
-  getClientDocuments(typeCode: string, subTypeCode: string, clientCaseEligibilityId: string) {
-    return this.emailDataService.getClientDocuments(typeCode,subTypeCode,clientCaseEligibilityId);
   }
 
   loadCERAuthorizationTemplateAttachment(typeCode: string){
@@ -117,62 +121,12 @@ export class CommunicationFacade {
     return this.emailDataService.getDraftTemplateAttachment(esignRequestId);
   }
 
-  initiateAdobeesignRequest(adobeEsignData: any) {
-    return this.emailDataService.initiateAdobeEsignRequest(adobeEsignData);
-  }
-
-  saveDraftEsignRequest(formData: any) {
-    return this.emailDataService.saveDraftEsignRequest(formData);
-  }
-
-  loadDraftEsignRequestByClinetId(clientId: number, clientCaseEligibilityId: string, loginUserId: string){
-    return this.emailDataService.loadDraftEsignRequestByClinetId(clientId, clientCaseEligibilityId, loginUserId);
-  }
-
-  deleteAttachmentRequest(attachmentRequest: any){
-    return this.emailDataService.deleteEsignRequestAttachment(attachmentRequest);
-  }
-
-  updateEmailTemplateForLater(formData: any){
-    return this.emailDataService.updateEsignRequestTemplate(formData);
-  }
-
   getCCList(clientId: number, loginUserId: string){
     return this.emailDataService.getCCEmailListForCER(clientId, loginUserId);
   }
 
-  getEsignRequestInfo(clientCaseEligibilityId: string,){
-    return this.emailDataService.getEsignRequest(clientCaseEligibilityId);
-  }
-
   loadLetterAttachment(documentTemplateId: string, typeCode: string){
     return this.emailDataService.getLetterAttachment(documentTemplateId, typeCode);
-}
-
-prepareAdobeEsingData(emailData: any, selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, selectedCCEmail: any, isSaveFoLater: boolean, cerEmailAttachedFiles: any[]) {
-  const formData = new FormData();
-    formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
-    formData.append('esignRequestId', emailData?.esignRequestId ?? '');
-    formData.append('requestBody', emailData?.templateContent ?? '');
-    formData.append('toEmailAddress', selectedToEmail ?? '');
-    formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
-    formData.append('clientId', clientId ?? '');
-    formData.append('requestSubject', emailSubject ?? ''); 
-    formData.append('loginUserId', loginUserId ?? ''); 
-    formData.append('cCEmail', selectedCCEmail ?? '');
-    formData.append('isSaveFoLater', new Boolean(isSaveFoLater).toString());
-    let i = 0;
-    cerEmailAttachedFiles.forEach((file) => { 
-      if(file.rawFile == undefined || file.rawFile == null){
-        formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.attachmentName : file.document.description);
-        formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.path : file.document.templatePath);
-        formData.append('AttachmentDetails['+i+'][typeCode]', file.document.typeCode == undefined ? file.document.attachmentTypeCode : file.document.typeCode);
-      i++;
-      }else{
-        formData.append('attachments', file.rawFile); 
-      }
-    });
-    return formData;
 }
 
 preparePreviewModelData(emailData: any) {
@@ -186,40 +140,8 @@ preparePreviewModelData(emailData: any) {
       return formData;
 }
 
-prepareDraftAdobeEsignRequest(draftTemplate: any, selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, selectedCCEmail: any, isSaveFoLater: boolean, cerEmailAttachedFiles: any[]) {
-    const formData = new FormData();
-      formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
-      formData.append('esignRequestId', draftTemplate?.esignRequestId ?? '');
-      formData.append('systemCode', draftTemplate?.systemCode ?? '');
-      formData.append('typeCode', draftTemplate?.typeCode ?? '');
-      formData.append('subtypeCode', draftTemplate?.subtypeCode ?? '');
-      formData.append('channelTypeCode', draftTemplate?.channelTypeCode ?? '');
-      formData.append('languageCode', draftTemplate?.languageCode ?? '');
-      formData.append('description', draftTemplate?.description ?? '');
-      formData.append('requestBody', draftTemplate?.templateContent ?? '');
-      formData.append('toEmailAddress', selectedToEmail ?? '');
-      formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
-      formData.append('clientId', clientId ?? '');
-      formData.append('requestSubject', emailSubject ?? ''); 
-      formData.append('loginUserId', loginUserId ?? '');
-      formData.append('esignRequestStatusCode', CommunicationEvents.EsignRequestStatusCode ?? '');
-      formData.append('cCEmail', selectedCCEmail ?? ''); 
-      formData.append('isSaveForLater', new Boolean(isSaveFoLater).toString()); 
-      let i = 0;
-      cerEmailAttachedFiles.forEach((file) => { 
-        if(file.rawFile == undefined || file.rawFile == null){
-        formData.append('AttachmentDetails['+i+'][fileName]', file.document.description);
-        formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath);
-        formData.append('AttachmentDetails['+i+'][typeCode]', file.typeCode);
-        i++;
-        }else{
-          formData.append('attachments', file.rawFile); 
-        }
-      });  
-      return formData;
-}
-
 prepareSendLetterData(draftTemplate: any, cerEmailAttachedFiles: any[]) {
+  const isSaveForLater = "true";
   const formData = new FormData();
   formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
   formData.append('systemCode', draftTemplate?.systemCode ?? '');
@@ -229,16 +151,15 @@ prepareSendLetterData(draftTemplate: any, cerEmailAttachedFiles: any[]) {
   formData.append('languageCode', draftTemplate?.languageCode ?? '');
   formData.append('description', draftTemplate?.description ?? '');
   formData.append('templateContent', draftTemplate?.templateContent ?? '');
+  formData.append('isSaveForLater', isSaveForLater??'');
   let i = 0;
   cerEmailAttachedFiles.forEach((file) => { 
-  if(file.typeCode != CommunicationEvents.TemplateAttachmentTypeCode){
     if(file.rawFile == undefined || file.rawFile == null){
       formData.append('savedAttachmentId', file.document.documentTemplateId);
       i++;
     }else{
       formData.append('fileData', file.rawFile); 
     }
-  }
 });  
 return formData;
 }

@@ -7,7 +7,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 /** External Libraries **/
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { UserDataService } from '@cms/system-config/domain';
-import { AuthorizationApplicationSignature, AuthorizationFacade, ClientDocumentFacade, CommunicationEvents, CompletionChecklist, NavigationType, ScreenType, StatusFlag, WorkflowFacade, ContactFacade, CommunicationFacade } from '@cms/case-management/domain';
+import { AuthorizationApplicationSignature, AuthorizationFacade, ClientDocumentFacade, CommunicationEvents, CompletionChecklist, NavigationType, ScreenType, StatusFlag, WorkflowFacade, ContactFacade, CommunicationFacade, EsignFacade } from '@cms/case-management/domain';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService, formatDate } from '@progress/kendo-angular-intl';
 import { SelectEvent } from '@progress/kendo-angular-upload';
@@ -85,7 +85,8 @@ export class AuthorizationComponent   {
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private dialogService: DialogService,
     private readonly authorizationFacade: AuthorizationFacade,
-    private readonly clientDocumentFacade: ClientDocumentFacade
+    private readonly clientDocumentFacade: ClientDocumentFacade,
+    private readonly esignFacade: EsignFacade
   ) {   }
 
   /** Lifecycle hooks **/
@@ -115,7 +116,7 @@ export class AuthorizationComponent   {
                 }
               }
               this.loadEsignRequestInfo();
-              this.loadClientDocumentInfo();
+              // this.loadClientDocumentInfo();
             }
             this.loaderService.hide();
       },
@@ -127,43 +128,43 @@ export class AuthorizationComponent   {
     });
   }
 
-  private loadClientDocumentInfo() {
-    this.loaderService.show();
-    if(this.isGoPaperlessOpted)
-    {
-      this.typeCode=CommunicationEvents.CerAuthorizationEmail
-      this.subTypeCode= CommunicationEvents.Email
-    }
-    else
-    {
-      this.typeCode=CommunicationEvents.CerAuthorizationLetter
-      this.subTypeCode= CommunicationEvents.Letter
-    }
-      this.communicationFacade.getClientDocuments(this.typeCode ?? '', this.subTypeCode ?? '',this.workflowFacade.clientCaseEligibilityId ?? '')
-      .subscribe({
-        next: (data: any) =>{
-          if (data) {
-              this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
-              if(data.documentTypeCode==CommunicationEvents.CerAuthorizationEmail)
-              {
-              this.isSendEmailClicked=true;
-              }
-              else
-              {
-              this.isPrintClicked=true;
-              }
-              this.ref.detectChanges();
-              this.getLoggedInUserProfile();
-            }
-            this.loaderService.hide();
-      },
-      error: (err: any) => {
-        this.loaderService.hide();
-        this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.loggingService.logException(err);
-      },
-    });
-  }
+  // private loadClientDocumentInfo() {
+  //   this.loaderService.show();
+  //   if(this.isGoPaperlessOpted)
+  //   {
+  //     this.typeCode=CommunicationEvents.CerAuthorizationEmail
+  //     this.subTypeCode= CommunicationEvents.Email
+  //   }
+  //   else
+  //   {
+  //     this.typeCode=CommunicationEvents.CerAuthorizationLetter
+  //     this.subTypeCode= CommunicationEvents.Letter
+  //   }
+  //     this.communicationFacade.getClientDocuments(this.typeCode ?? '', this.subTypeCode ?? '',this.workflowFacade.clientCaseEligibilityId ?? '')
+  //     .subscribe({
+  //       next: (data: any) =>{
+  //         if (data) {
+  //             this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
+  //             if(data.documentTypeCode==CommunicationEvents.CerAuthorizationEmail)
+  //             {
+  //             this.isSendEmailClicked=true;
+  //             }
+  //             else
+  //             {
+  //             this.isPrintClicked=true;
+  //             }
+  //             this.ref.detectChanges();
+  //             this.getLoggedInUserProfile();
+  //           }
+  //           this.loaderService.hide();
+  //     },
+  //     error: (err: any) => {
+  //       this.loaderService.hide();
+  //       this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+  //       this.loggingService.logException(err);
+  //     },
+  //   });
+  // }
 
   getLoggedInUserProfile(){
     this.loaderService.show();
@@ -369,7 +370,7 @@ export class AuthorizationComponent   {
         break;
       case CommunicationEvents.Print:
         this.isPrintClicked = true;
-        this.loadClientDocumentInfo();
+        // this.loadClientDocumentInfo();
         this.getLoggedInUserProfile();
         break;
       default:
@@ -483,7 +484,7 @@ updateSendEmailSuccessStatus(event:any){
 
 loadEsignRequestInfo(){
   this.loaderService.show();
-    this.communicationFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '')
+    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '')
     .subscribe({
       next: (data: any) =>{
         if (data?.esignRequestId != null) {

@@ -13,7 +13,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 /** Facades **/
-import { CommunicationFacade, ClientDocumentFacade, CommunicationEvents} from '@cms/case-management/domain';
+import { CommunicationFacade, ClientDocumentFacade, CommunicationEvents, EsignFacade} from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { EditorComponent } from '@progress/kendo-angular-editor';
 
@@ -94,7 +94,8 @@ export class EmailEditorComponent implements OnInit {
     private readonly configurationProvider: ConfigurationProvider,
     private formBuilder: FormBuilder,
     public readonly clientDocumentFacade: ClientDocumentFacade,
-    private readonly ref: ChangeDetectorRef,) {}
+    private readonly ref: ChangeDetectorRef,
+    private readonly esignFacade: EsignFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -102,7 +103,7 @@ export class EmailEditorComponent implements OnInit {
     this.emailEditorValueEvent(this.currentValue);
     this.loadClientVariables();
     this.loadDdlEditorVariables();
-    this.loadAllClientDocuments(this.clientCaseEligibilityId);
+    // this.loadAllClientDocuments(this.clientCaseEligibilityId);
     this.cerAuthorizationForm = this.formBuilder.group({
       clientsAttachment:[]
     });
@@ -250,25 +251,6 @@ if(!this.attachedFileValidatorSize){
     this.selectedAttachedFile.splice(index, 1);
   }
 
-  loadAllClientDocuments(clientCaseEligibilityId: string){
-    this.loaderService.show();
-    this.clientDocumentFacade.getAllClientDocumentsByClientCaseEligibilityId(clientCaseEligibilityId ??'')
-    .subscribe({
-      next: (clientFiles: any) =>{
-        if (clientFiles) {
-          this.clientAllDocumentList$ = clientFiles; 
-        }
-      this.loaderService.hide();
-    },
-    error: (err: any) => {
-      this.loaderService.hide();
-      this.loggingService.logException(err);
-      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
-      this.loggingService.logException(err);
-    },
-  });
-  }
-
   clientAttachmentChange(event:any)
   {
     this.uploadedAttachedFile = [{
@@ -290,16 +272,16 @@ if(!this.attachedFileValidatorSize){
     this.showClientAttachmentUpload = false;
   }
 
-  clientAttachmentClick(item:any)
+clientAttachmentClick(item:any)
   {
     this.loaderService.show();
-    this.communicationFacade.generateTextTemplate(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', item.document ?? '', "AttachmentPreview")
+    this.communicationFacade.loadAttachmentPreview(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', item?.documentTemplateId ?? null)
         .subscribe({
           next: (data: any) =>{
-          if (data) {
+         if (data) {
             this.cerFormPreviewData = data;
-            this.ref.detectChanges();
-            this.viewOrDownloadFile(data.clientDocumentId);
+            const fileUrl = window.URL.createObjectURL(data);
+            window.open(fileUrl, "_blank");
           }
           this.loaderService.hide();
         },
@@ -309,24 +291,6 @@ if(!this.attachedFileValidatorSize){
           this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
         },
       });
-  }
-
-  viewOrDownloadFile(clientDocumentId: string) {
-    if (clientDocumentId === undefined) {
-        return;
-    }
-    this.getClientDocumentsViewDownload(clientDocumentId).subscribe({
-        next: (data: any) => {
-            const fileUrl = window.URL.createObjectURL(data);
-                window.open(fileUrl, "_blank");
-        },
-        error: (error: any) => {
-            this.loaderService.hide();
-            this.loggingService.logException(error);
-            this.showHideSnackBar(SnackBarNotificationType.ERROR,error);
-            this.loggingService.logException(error);
-        }
-    })
   }
 
   getClientDocumentsViewDownload(clientDocumentId: string) {
@@ -364,7 +328,7 @@ if(!this.attachedFileValidatorSize){
 
   private deleteEsignRequestAttachment(attachmentRequest: any, index: any) {
     this.loaderService.show();
-    this.communicationFacade.deleteAttachmentRequest(attachmentRequest.document.esignRequestAttachmentId)
+    this.esignFacade.deleteAttachmentRequest(attachmentRequest.document.esignRequestAttachmentId)
     .subscribe({
       next: (data: any) =>{
         if (data) {
