@@ -30,7 +30,7 @@
             (blur)="searchDuplicateClient('fname')" formControlName="firstName" placeholder="First Name"
             [maxlength]="lengthRestrictForty" [fillMode]="formUiStyle.inputFillMode">
           </kendo-textbox>
-          <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First name is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!appInfoForm.controls['firstName'].valid">First Name is required.</kendo-formerror>
 
         </kendo-floatinglabel>
       </div>
@@ -42,7 +42,7 @@
 
           <kendo-formerror
             *ngIf="!appInfoForm.controls['middleName'].valid && !this.appInfoForm.controls['middleName'].disabled">Middle
-            initial is required.</kendo-formerror>
+            Initial is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-4 mt-checkbox">
@@ -61,7 +61,7 @@
           <kendo-textbox aria-label="last name" placeholder="Last Name" [fillMode]="formUiStyle.inputFillMode"
             (blur)="searchDuplicateClient('lname')" formControlName="lastName" [maxlength]="lengthRestrictForty">
           </kendo-textbox>
-          <kendo-formerror *ngIf="!appInfoForm.controls['lastName'].valid">Last name is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!appInfoForm.controls['lastName'].valid">Last Name is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-4 inlineloaderwrapper" *ngIf="showNameDuplicateLoader">
@@ -86,7 +86,7 @@
 
           <kendo-formerror
             *ngIf="!appInfoForm.controls['prmInsFirstName'].valid && !this.appInfoForm.controls['prmInsFirstName'].disabled">First
-            name on primary insurance card is required.</kendo-formerror>
+            Name on Primary Insurance Card is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-4">
@@ -98,7 +98,7 @@
 
           <kendo-formerror
             *ngIf="!appInfoForm.controls['prmInsLastName'].valid && !this.appInfoForm.controls['prmInsLastName'].disabled">Last
-            name on primary insurance card is required.</kendo-formerror>
+            Name on Primary Insurance Card is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-4 mt-checkbox">
@@ -125,7 +125,7 @@
         </kendo-floatinglabel>
         <kendo-formerror
           *ngIf="!appInfoForm.controls['officialIdFirstName'].valid && !this.appInfoForm.controls['officialIdFirstName'].disabled">First
-          Name on Official ID is required.</kendo-formerror>
+          Name on Official iD is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Last Name on Official ID">
@@ -161,7 +161,7 @@
             formatPlaceholder="formatPattern" (select)="dateValidate($event)" (keyup)="dateValidate($event)"
             placeholder=""></kendo-datepicker>
           <kendo-formerror *ngIf="dateValidator">Date of Birth cannot be greater than Current Date.</kendo-formerror>
-          <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of birth is
+          <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of Birth is
             required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -225,8 +225,7 @@
                 aria-labelledby="registertovoteno" formControlName="registerToVote"
                 (change)="registerToVoteSelected($event)" />
               <kendo-label class="k-radio-label" text="No" for="registertovoteno"></kendo-label>
-              <kendo-formerror *ngIf="!appInfoForm.controls['registerToVote'].valid">Register to vote is
-                required.</kendo-formerror>
+              <kendo-formerror *ngIf="!appInfoForm.controls['registerToVote'].valid">A Yes or No response is required.</kendo-formerror>
             </span>
             <div class="flex-col flex-col-6">
               <div class="info-banners blue-banner d-flex mt-2 align-item-fstart" *ngIf="isVisible">

@@ -426,7 +426,6 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
 
   public setGridState(stateData: any): void {
       this.state=stateData;
-      debugger
       if(stateData.filter?.filters.length > 0)
       {
         for (let i = 0; i < stateData.filter?.filters.length; i++) {
