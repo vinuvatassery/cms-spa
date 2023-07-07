@@ -391,54 +391,46 @@ export class PharmaciesListComponent implements OnInit {
   onRemovePharmacy(data: any) {
     if (data !== null) {
       this.removeButtonEmitted = true;
-      if (data && data.isNewAdded) {
-          this.drugPharmacyFacade
-          .removeClientPharmacy(
-                 this.clientId ?? 0,
-                this.pharmacyId,
-                this.isShowHistoricalData
-          )
-          .then((isSuceed) => {
-            if (isSuceed) {
-              this.drugPharmacyFacade.addDrugPharmacy(
-            this.clientId,
-            data.newPharmacy.vendorId,
-            PriorityCode.Primary,
-            this.isShowHistoricalData
-              );
-            }
-          });
-      } else if (data && !data.isNewAdded) {
-        let updatedPharmacy = [
-          {
-            ClientPharmacyId: data.newPharmacy.clientPharmacyId,
-            ClientId: this.clientId,
-            PriorityCode: PriorityCode.Primary,
-          },
-        ];
-        this.drugPharmacyFacade
-          .removeClientPharmacy(
-            this.clientId ?? 0,
-            this.pharmacyId,
-            this.isShowHistoricalData
-          )
-          .then((isSucceed: any) => {
-            if (isSucceed) {
-              this.drugPharmacyFacade.updateDrugPharamcyPriority(
-                this.clientId,
-                updatedPharmacy,
-                this.isShowHistoricalData
-              );
-            }
-          });
+      if (data.isNewAdded) {
+        this.handleNewAddedPharmacy(data);
+      } else {
+        this.handleExistingPharmacy(data);
       }
-    } else {
-      this.drugPharmacyFacade.removeClientPharmacy(
-        this.clientId ?? 0,
-        this.pharmacyId,
-        this.isShowHistoricalData
-      );
     }
+    else {
+        this.drugPharmacyFacade.removeClientPharmacy(this.clientId ?? 0, this.pharmacyId, this.isShowHistoricalData);
+    }
+  }
+  handleNewAddedPharmacy(data: any) {
+    this.drugPharmacyFacade
+      .removeClientPharmacy(this.clientId ?? 0, this.pharmacyId, this.isShowHistoricalData)
+      .then((isSuceed) => {
+        if (isSuceed) {
+          this.drugPharmacyFacade.addDrugPharmacy(this.clientId, data.newPharmacy.vendorId, PriorityCode.Primary, this.isShowHistoricalData);
+        }
+      });
+
+  }
+  handleExistingPharmacy(data: any) {
+    let updatedPharmacy = [
+      {
+        ClientPharmacyId: data.newPharmacy.clientPharmacyId,
+        ClientId: this.clientId,
+        PriorityCode: PriorityCode.Primary,
+      },
+    ];
+
+    this.drugPharmacyFacade
+      .removeClientPharmacy(this.clientId ?? 0, this.pharmacyId,this.isShowHistoricalData)
+      .then((isSucceed: any) => {
+        if (isSucceed) {
+          this.drugPharmacyFacade.updateDrugPharamcyPriority(
+            this.clientId,
+            updatedPharmacy,
+            this.isShowHistoricalData
+          );
+        }
+      });
   }
   onOpenPharmacyClicked() {
     this.isOpenPharmacyClicked = true;
