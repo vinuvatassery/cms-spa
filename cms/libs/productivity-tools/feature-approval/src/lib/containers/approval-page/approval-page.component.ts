@@ -12,6 +12,7 @@ import { ApprovalFacade } from '@cms/productivity-tools/domain';
 export class ApprovalPageComponent implements OnInit {
   /** Public properties **/
   approvals$ = this.approvalFacade.approvals$;
+  approvalPayments$ = this.approvalFacade.approvalsPaymentsList$;
 
   /** Contructor **/
   constructor(private readonly approvalFacade: ApprovalFacade) {}
@@ -24,5 +25,9 @@ export class ApprovalPageComponent implements OnInit {
   /** Private methods **/
   private loadApprovals(): void {
     this.approvalFacade.loadApprovals();
+  }
+
+  private loadApprovalPaymentsGrid(): void {
+    this.approvalFacade.loadApprovalPayments();
   }
 }
