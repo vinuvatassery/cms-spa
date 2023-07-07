@@ -43,6 +43,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   private checkBoxSubscription !: Subscription;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
+  private discardChangesSubscription !: Subscription;
   clientId ! : number
   clientCaseEligibilityId ! : string
   familyStatus! : StatusFlag
@@ -75,7 +76,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     this.addSaveSubscription();
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
-   
+    this.addDiscardChangesSubscription();
   }
 
   ngOnDestroy(): void {
@@ -98,7 +99,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId
      this.clientCaseEligibilityId =JSON.parse(session.sessionData).clientCaseEligibilityId
      this.clientId = JSON.parse(session.sessionData).clientId;
-     this.prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;     
+     this.prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;  
      if(this.prevClientCaseEligibilityId) {
         this.isCerForm =  true;
         this.familyAndDependentFacade.loadPreviousRelations(this.prevClientCaseEligibilityId, this.clientId);
@@ -326,5 +327,21 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       return false;
     }
     return true;
+  }
+
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
+      if (response) {
+        this.resetFields();
+        this.loadCase();
+      }
+    });
+  }
+
+  resetFields() {
+    this.haveTheyHaveFamilyMember = "";
+    this.haveTheyHaveAdditionalFamilyMember = "";
+    this.previousRelationsList = [];
+    this.updatedDependentsStatus = [];
   }
 }
