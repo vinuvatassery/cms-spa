@@ -24,7 +24,7 @@
         </kendo-grid-column>
         <kendo-grid-column field="effectiveDate" title="Effective Date">
           <ng-template kendoGridCellTemplate let-dataItem>
-            {{dataItem.dateOfHire | date: 'MM/dd/yyyy'}} - {{dataItem.endDate | date: 'MM/dd/yyyy'}}
+            {{dataItem.dateOfHire | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="80">
