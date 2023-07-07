@@ -4,7 +4,6 @@ import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNot
 import { TemplateManagementFacade } from '@cms/system-config/domain';
 import { map } from "rxjs/operators";
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
   selector: 'system-config-forms-and-documents',
