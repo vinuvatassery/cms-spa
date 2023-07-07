@@ -33,22 +33,22 @@
           </ng-template>
         </kendo-grid-column>
         
-        <kendo-grid-column field="providerName" title="Provider Name" [width]="150">
+        <kendo-grid-column field="providerName" title="Provider Name" [width]="180">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button look="flat" class="card-link-button" kendoButton (mouseover)="onProviderHover(dataItem)"
               kendoPopoverAnchor [popover]="onUserProfileDetailsHovered"
               showOn="hover">{{dataItem.providerName}}</button>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column *ngIf="!managementTab" field="providerPriority" title="Provider Type" [width]="50"
+        <kendo-grid-column *ngIf="!managementTab" field="providerPriority" title="Provider Type" [width]="150"
           [sortable]="false" [columnMenu]="false"></kendo-grid-column>
-        <kendo-grid-column field="primaryPhone" title="Phone" [width]="70" [sortable]="false"
+        <kendo-grid-column field="primaryPhone" title="Phone" [width]="120" [sortable]="false"
           [columnMenu]="false">
         </kendo-grid-column>
-        <kendo-grid-column *ngIf="managementTab" field="emailAddress" title="Email" [width]="70" [sortable]="false"
+        <kendo-grid-column *ngIf="managementTab" field="emailAddress" title="Email" [width]="120" [sortable]="false"
           [columnMenu]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="address1" title="Address" [width]="180" [sortable]="false"
+        <kendo-grid-column field="address1" title="Address" [width]="250" [sortable]="false"
           [columnMenu]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.address1}} {{dataItem.address2}} {{dataItem.city+' '+dataItem.stateCode+' '+dataItem.zip}}
@@ -63,7 +63,7 @@
             {{dataItem.startDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false" *ngIf="managementTab">
+        <kendo-grid-column field="creatorId" title="By" [width]="80" [sortable]="false" *ngIf="managementTab">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button *ngIf="dataItem?.creatorId" kendoButton [primary]="true" class="avatar-sm-btn c-default"
               kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
@@ -76,7 +76,7 @@
             </kendo-popover>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="clientProviderId" title="Options" [width]="50" class="text-center" [sticky]="true"
+        <kendo-grid-column field="clientProviderId" title="Options" [width]="80" class="text-center" [sticky]="true"
           [sortable]="false" [columnMenu]="false">
           <ng-template kendoGridCellTemplate let-provider let-clientProviderId="field">
             <kendo-dropdownbutton [data]="actions" icon="more-vertical" title="More option"

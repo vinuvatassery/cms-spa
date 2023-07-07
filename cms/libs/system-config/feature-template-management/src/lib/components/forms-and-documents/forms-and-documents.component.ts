@@ -1,26 +1,29 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy , OnInit, TemplateRef,} from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { TemplateManagementFacade } from '@cms/system-config/domain';
 import { map } from "rxjs/operators";
+import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
   selector: 'system-config-forms-and-documents',
   templateUrl: './forms-and-documents.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormsAndDocumentsComponent {
+export class FormsAndDocumentsComponent implements OnInit {
   /** Public properties **/
   isOpenAttachment = false;
   foldersList: any = [];
   foldersTree: any = [];
   selectedfolder: string = "";
   isShowLoader: boolean = true;
+  public formsDocumentDialog : any;
   public constructor(
     private readonly templateManagementFacade: TemplateManagementFacade,
     private readonly loaderService: LoaderService,
     private readonly snackbarService: NotificationSnackbarService,
     private readonly loggingService: LoggingService,
+    private dialogService: DialogService
   ) {
   }
 
@@ -35,10 +38,16 @@ export class FormsAndDocumentsComponent {
   }
   /** Internal event methods **/
   onCloseAttachmentClicked() {
-
+    this.formsDocumentDialog.close()
     this.isOpenAttachment = false;
   }
-  onOpenAttachmentClicked() {
+
+
+  onOpenAttachmentClicked(template: TemplateRef<unknown>): void {
+    this.formsDocumentDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-xls app-c-modal-np app-c-modal-top',
+    });
     this.isOpenAttachment = true;
     if (this.isShowLoader)
       this.loaderService.show();

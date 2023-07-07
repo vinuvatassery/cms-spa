@@ -183,7 +183,7 @@
           kendoButton
           class="text-t-normal text-bold"
           look="flat"
-          (click)="onNotificationsAndRemindersOpenClicked()"
+          (click)="onNotificationsAndRemindersOpenClicked(notificationsAndRemindersDialog)"
           aria-label="view all notifications"
         >
           View All Notifications
@@ -218,14 +218,9 @@
 
 
 <!-- Create New Reminder Popup -->
-<kendo-dialog
-  kendoRippleContainer
-  *ngIf="isNotificationsAndRemindersOpened"
-  (close)="onNotificationsAndRemindersClosed()"
-  class="app-c-modal app-c-modal-wid-md-full no_body_padding-modal"
-  
->
-  <kendo-dialog-titlebar>
+<ng-template #notificationsAndRemindersDialog>
+ 
+  <kendo-dialog-titlebar  (close)="onNotificationsAndRemindersClosed()">
     <span
       class="material-icons mr-1"
       aria-hidden="true"
@@ -234,7 +229,8 @@
     >
     <span class="text-bold">Notifications and Reminders</span>
   </kendo-dialog-titlebar>
-  <kendo-tabstrip class="app-c-tab app-c-tab--color">
+  <kendo-tabstrip class="app-c-tab app-c-tab--color reminder_lists">
+ 
     <kendo-tabstrip-tab [selected]="true">
       <ng-template kendoTabTitle>
         <span
@@ -266,4 +262,5 @@
       </ng-template>
     </kendo-tabstrip-tab>
   </kendo-tabstrip>
-</kendo-dialog>
+ 
+</ng-template>

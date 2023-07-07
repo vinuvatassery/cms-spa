@@ -471,7 +471,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       this.eligibilityPeriodForm.controls['statusEndDate'].updateValueAndValidity();
     }
     if(this.isStatusPeriodEdit){
-      this.eligibilityPeriodForm.controls['eligibilityStatus'].setValue(currentEligibility.status);
+      this.eligibilityPeriodForm.controls['eligibilityStatus'].setValue(currentEligibility.eligibilityStatusCode);
       this.eligibilityPeriodForm.controls['group'].setValue(currentEligibility.groupCode);
       this.eligibilityPeriodForm.controls['group'].updateValueAndValidity()
     }
@@ -504,7 +504,6 @@ export class EligibilityPeriodDetailComponent implements OnInit {
         this.requiredFields = [
           'statusStartDate',
           'statusEndDate',
-          'group',
         ];
       }
       else if(eligibilityStatusValue === EligibilityStatus.Disenrolled.toUpperCase()){
