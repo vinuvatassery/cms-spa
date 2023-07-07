@@ -114,6 +114,14 @@
     overflow: auto !important; 
     height: auto !important;
   }
+  .card-list{
+    max-height: 100%;
+    overflow: visible;
+  }
+  .card-list_items {
+    &:hover {
+      box-shadow: $size-0 $size-0 $size-xx $black-12;
+    }}
  
 }
 

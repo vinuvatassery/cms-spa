@@ -35,7 +35,7 @@ export class AppHistoryListComponent implements OnInit {
      },
     
      {
-       buttonType:"btn-h-danger",
+       buttonType:"",
        text: "Remove Doc",
        icon: "delete",
        click: (): void => {
