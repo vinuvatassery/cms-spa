@@ -3,7 +3,7 @@
 
         <div class="app-c-table">
 
-            <kendo-grid [pageSize]="state.take" [pageable]="true" [resizable]="true" [data]="StatusPeriod$ | async" (dataStateChange)="dataStateChange($event)">
+            <kendo-grid [pageSize]="state.take" [skip]="state.skip" [pageable]="true" [resizable]="true" [data]="StatusPeriod$ | async" (dataStateChange)="dataStateChange($event)">
                 <ng-template kendoGridDetailTemplate let-dataItem title="Status Start">
                     <section>
                         <case-management-status-ramsell-info [clientId]="clientId"></case-management-status-ramsell-info>
@@ -29,7 +29,7 @@
                 <kendo-grid-column field="groupCodeDesc" title="Current Group" [width]="100"></kendo-grid-column>
                 <kendo-grid-column field="daysInGroup" title="Days in Group" [width]="100"></kendo-grid-column>
                 <kendo-grid-column field="familySize" title="Family Size" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="grossMonthlyIncome" title="Gross Monthly Income" [width]="100">
+                <kendo-grid-column field="grossMonthlyIncome" title="Gross Monthly Income" format="{0:c2}" [width]="100">
                 </kendo-grid-column>
                 <kendo-grid-column field="fplspStart" title="FPL@SP Start" [width]="100"></kendo-grid-column>
                 <kendo-grid-column field="currentFPL" title="Current FPL" [width]="100"></kendo-grid-column>

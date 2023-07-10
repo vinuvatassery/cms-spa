@@ -110,7 +110,7 @@ export class EmployerDetailComponent implements OnInit{
                     this.addUpdateEmploymentEvent.next(response);
                     this.closeModal.emit(true);
                     this.employmentFacade.hideLoader();
-                    this.employmentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer added successfully') ;
+                    this.employmentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer added Successfully') ;
                   },
                   error: (err) => {
                     this.btnDisabled = false

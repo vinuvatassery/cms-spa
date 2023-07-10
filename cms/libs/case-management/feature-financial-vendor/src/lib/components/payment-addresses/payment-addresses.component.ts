@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from '@angular/core';
-import { PaymentsFacade, BillingAddressFacade } from '@cms/case-management/domain';
+import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input } from '@angular/core'; 
+import { PaymentsFacade,BillingAddressFacade,VendorContactsFacade, contactResponse  } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
-import { FinancialVendorTypeCode,FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-payment-addresses',
@@ -12,6 +12,7 @@ import { FinancialVendorTypeCode,FinancialVendorProviderTabCode } from '@cms/cas
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentAddressesComponent {
+  @Input() vendorId: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isPaymentsAddressGridLoaderShow = false;
@@ -21,56 +22,62 @@ export class PaymentAddressesComponent {
   public gridSkipCount = this.paymentsFacade.skipCount;
   public sort = this.paymentsFacade.sort;
   public state!: State;
-  paymentsAddressGridView$ = this.paymentsFacade.billingAddressData$;
+  paymentsAddressGridView$ = this.paymentBillingFacade.billingAddressData$;
   isPaymentAddressDetailShow = false;
+  isContactDetailShow = false;
+  isPaymentAddressDetailIsEdit = false;
   isPaymentAddressDeactivateShow = false;
-  isPaymentAddressDeleteShow = false;
+  isPaymentAddressDeleteShow = false; 
+  VendorAddressId:any;
   billingAddressObj: any[] = [];
   tabCode: string = '';
   addressId: any;
   paymentAddressInnerGridLists = [
     {
       Name: 'FName LName',
-      Description:'FName LName',
+      Description: 'FName LName',
       PremiumAmount: '500.00',
       PhoneNumber: 'XXXXXX',
       FaxNumber: 'XXXXXX',
       EmailAddress: 'XXXXXX',
-      EffectiveDate: 'XXXXXX',
-      by: 'XX',
+      EffectiveDate: 'XXXXXX', 
+      by: 'XX', 
     },
   ];
+     
 
-
-
+  
   public paymentAddressActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Address',
       icon: 'edit',
-      type: "Edit",
-      click: (data: any): void => {},
+      click: (data: any): void => {;
+        this.clickOpenAddEditPaymentAddressDetails();
+      },
     },
     {
       buttonType: 'btn-h-primary',
       text: 'Deactivate Address',
       icon: 'block',
-      type: "Deactivate",
-      click: (data: any): void => {},
+      click: (data: any): void => {
+        this.clickOpenDeactivatePaymentAddressDetails();
+      },
     },
     {
       buttonType: 'btn-h-danger',
       text: 'Delete Address',
       icon: 'delete',
-      type: "Delete",
-      click: (data: any): void => {},
+      click: (data: any): void => {
+        this.clickOpenDeletePaymentAddressDetails();
+      },
     },
   ];
+  contactResponse: contactResponse[] = [];
+  /** Constructor **/
+  constructor(private readonly paymentsFacade: PaymentsFacade,private readonly paymentBillingFacade: BillingAddressFacade,private readonly vendorcontactFacade: VendorContactsFacade,private route: ActivatedRoute, private readonly cdr: ChangeDetectorRef) { }
 
-   /** Constructor **/
-   constructor(private readonly paymentsFacade: BillingAddressFacade,
-    private route: ActivatedRoute, private readonly cdr: ChangeDetectorRef) {}
-
+   
   ngOnInit(): void {
     this.state = {
       skip: this.gridSkipCount,
@@ -89,13 +96,18 @@ export class PaymentAddressesComponent {
     };
   }
 
-  // updating the pagination info based on dropdown selection
   pageSelectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadPaymentsAddressListGrid();
   }
+  public onDetailCollapse(e: any): void {
+  }
 
+  public onDetailExpand(e: any): void { 
+    this.VendorAddressId=e.dataItem.VendorAddressId;  
+   
+  }
   public dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
@@ -105,7 +117,7 @@ export class PaymentAddressesComponent {
   }
 
   loadPaymentsAddressListGrid() {
-    this.paymentsFacade.loadPaymentsAddressListGrid(
+    this.paymentBillingFacade.loadPaymentsAddressListGrid(
       this.tabCode,
       this.state.skip ?? 0,
       this.state.take ?? 0,
@@ -116,21 +128,49 @@ export class PaymentAddressesComponent {
 
 
 
+
   clickOpenAddEditPaymentAddressDetails() {
     this.isPaymentAddressDetailShow = true;
+    this.isPaymentAddressDetailIsEdit = false;
+  }
+
+  clickOpenEditPaymentAddressDetails() {
+    this.isPaymentAddressDetailShow = true;
+    this.isPaymentAddressDetailIsEdit = true;
   }
 
   clickCloseAddEditPaymentAddressDetails() {
     this.isPaymentAddressDetailShow = false;
+  }
+  clickOpenAddContactDetails() {
+    this.isContactDetailShow = true;
+  }
+  onClose(isClosed: any) {
+    if (isClosed) {
+      this.clickCloseAddContactDetails();
+    }
+  }
+
+  clickCloseAddContactDetails() {
+    this.isContactDetailShow = false;
+  }
+
+  closePaymentAddressDetails(event: any) {
+    if (event === 'saved') {
+      this.loadPaymentsAddressListGrid();
+    }
+    this.clickCloseAddEditPaymentAddressDetails();
   }
 
   clickOpenDeactivatePaymentAddressDetails() {
     this.isPaymentAddressDeactivateShow = true;
   }
 
+  
+
   clickCloseDeactivatePaymentAddress(isSuccess: boolean): void {
     this.isPaymentAddressDeactivateShow = false;
-    if(isSuccess)
+    if (isSuccess)
       this.loadPaymentsAddressListGrid();
   }
 
@@ -139,7 +179,7 @@ export class PaymentAddressesComponent {
   }
   clickCloseDeletePaymentAddress(isSuccess: boolean): void {
     this.isPaymentAddressDeleteShow = false;
-    if(isSuccess)
+    if (isSuccess)
       this.loadPaymentsAddressListGrid();
   }
 
@@ -173,7 +213,8 @@ export class PaymentAddressesComponent {
     }
     else if (type == 'Edit') {
       this.addressId = dataItem.vendorAddressId ?? this.addressId;
-      this.clickOpenAddEditPaymentAddressDetails();
+      this.billingAddressObj = dataItem;
+      this.clickOpenEditPaymentAddressDetails();
     }
     else if (type == 'Deactivate') {
       this.addressId = dataItem.vendorAddressId ?? this.addressId;

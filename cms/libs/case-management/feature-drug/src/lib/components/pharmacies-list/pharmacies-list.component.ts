@@ -15,6 +15,7 @@ import {
   StatusFlag,
   CompletionChecklist,
   PriorityCode,
+  CaseFacade,
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
@@ -26,7 +27,7 @@ import { LoggingService } from '@cms/shared/util-core';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PharmaciesListComponent implements OnInit{
+export class PharmaciesListComponent implements OnInit {
   /** Input properties **/
   @Input() clientId: any;
   @Input() clientpharmacies$!: Observable<any>;
@@ -38,6 +39,7 @@ export class PharmaciesListComponent implements OnInit{
   @Input() removeDrugPharmacyResponse$!: Observable<boolean>;
   @Input() triggerPriorityPopup$!: Observable<boolean>;
   @Input() searchLoaderVisibility$!: Observable<boolean>;
+  @Input() isClientProfile: any;
   // @Input() clientpharmacies$!: Observable<any>;
   /** Output Properties **/
   @Output() searchPharmacy = new EventEmitter<string>();
@@ -86,6 +88,7 @@ export class PharmaciesListComponent implements OnInit{
   public sort = this.drugPharmacyFacade.sort;
   public state!: State;
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  isReadOnly$ = this.caseFacade.isCaseReadOnly$;
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public pharmacyOptions = [
@@ -103,9 +106,7 @@ export class PharmaciesListComponent implements OnInit{
           this.pharmacyId = clientPharmacy.clientPharmacyId;
           this.vendorId = clientPharmacy.vendorId;
           this.changePharmacyObj = pharmacyObj;
-          if (
-            clientPharmacy.priorityCode === PriorityCode.Primary
-          ) {
+          if (clientPharmacy.priorityCode === PriorityCode.Primary) {
             this.OpenSelectNewPrimaryPharmaciesClicked(
               clientPharmacy,
               'deactivate'
@@ -150,12 +151,12 @@ export class PharmaciesListComponent implements OnInit{
       type: 'Reactivate',
       click: (clientPharmacy: any): void => {
         if (clientPharmacy.vendorId) {
-         let pharmacy ={
-          ClientId:this.clientId,
-          IsActive:true,
-          vendorId:clientPharmacy.vendorId
-        }
-        this.OpenReactivatePharmaciesClicked(pharmacy);
+          let pharmacy = {
+            ClientId: this.clientId,
+            IsActive: true,
+            vendorId: clientPharmacy.vendorId,
+          };
+          this.OpenReactivatePharmaciesClicked(pharmacy);
         }
       },
     },
@@ -223,9 +224,9 @@ export class PharmaciesListComponent implements OnInit{
     private readonly drugPharmacyFacade: DrugPharmacyFacade,
     private readonly workflowFacade: WorkflowFacade,
     private readonly loggingService: LoggingService,
+    private caseFacade: CaseFacade,
     private readonly cdr: ChangeDetectorRef
   ) {
-
     this.isOpenPharmacyClicked$.next(false);
     this.isRemoveClientPharmacyClicked$.next(false);
   }
@@ -247,19 +248,22 @@ export class PharmaciesListComponent implements OnInit{
         this.isOpenDeactivatePharmaciesClicked = false;
       }
     });
-    this.triggerPriorityPopup$.subscribe(isTrigered =>{
-      if(isTrigered && this.triggerPriorityPopupNumber == 0 && !this.isSetAsPrimary){
+    this.triggerPriorityPopup$.subscribe((isTrigered) => {
+      if (
+        isTrigered &&
+        this.triggerPriorityPopupNumber == 0 &&
+        !this.isSetAsPrimary
+      ) {
         this.triggerPriorityPopupNumber++;
         this.isTriggerPriorityPopup = true;
-
       }
     });
-    this.drugPharmacyFacade.newAddedPharmacyObs.subscribe((isAdded) =>{
-      if(isAdded){
+    this.drugPharmacyFacade.newAddedPharmacyObs.subscribe((isAdded) => {
+      if (isAdded) {
         this.triggerPriorityPopupNumber = 0;
-        this.handleCloseChangePriorityClikced();
+        this.handleCloseChangePriorityClick();
       }
-    })
+    });
   }
 
   /** Private methods **/
@@ -274,7 +278,10 @@ export class PharmaciesListComponent implements OnInit{
       actionType.priorityCode != PriorityCode.Primary &&
       actionType.activeFlag === StatusFlag.No
     ) {
-      filteredOptions = options.filter((option) => option.type != 'Deactivate' && option.type != 'MarkAsPrimary');
+      filteredOptions = options.filter(
+        (option) =>
+          option.type != 'Deactivate' && option.type != 'MarkAsPrimary'
+      );
     } else if (
       actionType.priorityCode === PriorityCode.Primary &&
       actionType.activeFlag === StatusFlag.Yes
@@ -308,7 +315,6 @@ export class PharmaciesListComponent implements OnInit{
     this.workflowFacade.updateChecklist(workFlowdata);
   }
   onGetHistoricalPharmaciesData() {
-
     this.loadPharmacieslist();
   }
   private loadPharmacieslist() {
@@ -321,21 +327,21 @@ export class PharmaciesListComponent implements OnInit{
 
   /** Internal event methods **/
   updateAndDeactivatePharmacy(data: any) {
- 
     if (data && data.isNewAdded) {
       this.drugPharmacyFacade
-            .addDrugPharmacy(
+        .deactivePharmacies(
+          this.pharmacyId,
+          this.changePharmacyObj,
+          this.isShowHistoricalData
+        )
+        .then((isSucceed: any) => {
+          if (isSucceed) {
+            this.drugPharmacyFacade.addDrugPharmacy(
               this.clientId,
               data.newPharmacy.vendorId,
               PriorityCode.Primary,
               this.isShowHistoricalData
-            ).then((isSucceed: any) => {
-          if (isSucceed) {
-            this.drugPharmacyFacade.deactivePharmacies(
-                this.pharmacyId,
-                this.changePharmacyObj,
-                this.isShowHistoricalData
-              );
+            );
           }
         });
     } else if (data && !data.isNewAdded) {
@@ -347,13 +353,16 @@ export class PharmaciesListComponent implements OnInit{
         },
       ];
       this.drugPharmacyFacade
-        .updateDrugPharamcyPriority(this.clientId, updatedPharmacy,
-          this.isShowHistoricalData)
+        .deactivePharmacies(
+          this.pharmacyId,
+          this.changePharmacyObj,
+          this.isShowHistoricalData
+        )
         .then((isSucceed: any) => {
           if (isSucceed) {
-            this.drugPharmacyFacade.deactivePharmacies(
-              this.pharmacyId,
-              this.changePharmacyObj,
+            this.drugPharmacyFacade.updateDrugPharamcyPriority(
+              this.clientId,
+              updatedPharmacy,
               this.isShowHistoricalData
             );
           }
@@ -383,45 +392,46 @@ export class PharmaciesListComponent implements OnInit{
   onRemovePharmacy(data: any) {
     if (data !== null) {
       this.removeButtonEmitted = true;
-      if (data && data.isNewAdded) {
-        this.drugPharmacyFacade
-              .addDrugPharmacy(this.clientId, data.newPharmacy.vendorId, PriorityCode.Primary,
-              this.isShowHistoricalData).then((isSuceed) => {
-            if (isSuceed) {
-              this.drugPharmacyFacade.removeClientPharmacy(
-                    this.clientId ?? 0,
-                    this.pharmacyId,
-                    this.isShowHistoricalData
-                  );
-            }
-          });
-      } else if (data && !data.isNewAdded) {
-        let updatedPharmacy = [
-          {
-            ClientPharmacyId: data.newPharmacy.clientPharmacyId,
-            ClientId: this.clientId,
-            PriorityCode: PriorityCode.Primary,
-          },
-        ];
-        this.drugPharmacyFacade.removeClientPharmacy(
-          this.clientId ?? 0,
-          this.pharmacyId,
-          this.isShowHistoricalData
-        ).then((isSucceed: any) => {
-            if (isSucceed) {
-              this.drugPharmacyFacade
-              .updateDrugPharamcyPriority(this.clientId, updatedPharmacy,
-                this.isShowHistoricalData);
-            }
-          });
+      if (data.isNewAdded) {
+        this.handleNewAddedPharmacy(data);
+      } else {
+        this.handleExistingPharmacy(data);
       }
-    } else {
-      this.drugPharmacyFacade.removeClientPharmacy(
-        this.clientId ?? 0,
-        this.pharmacyId,
-        this.isShowHistoricalData
-      );
     }
+    else {
+        this.drugPharmacyFacade.removeClientPharmacy(this.clientId ?? 0, this.pharmacyId, this.isShowHistoricalData);
+    }
+  }
+  handleNewAddedPharmacy(data: any) {
+    this.drugPharmacyFacade
+      .removeClientPharmacy(this.clientId ?? 0, this.pharmacyId, this.isShowHistoricalData)
+      .then((isSuceed) => {
+        if (isSuceed) {
+          this.drugPharmacyFacade.addDrugPharmacy(this.clientId, data.newPharmacy.vendorId, PriorityCode.Primary, this.isShowHistoricalData);
+        }
+      });
+
+  }
+  handleExistingPharmacy(data: any) {
+    let updatedPharmacy = [
+      {
+        ClientPharmacyId: data.newPharmacy.clientPharmacyId,
+        ClientId: this.clientId,
+        PriorityCode: PriorityCode.Primary,
+      },
+    ];
+
+    this.drugPharmacyFacade
+      .removeClientPharmacy(this.clientId ?? 0, this.pharmacyId,this.isShowHistoricalData)
+      .then((isSucceed: any) => {
+        if (isSucceed) {
+          this.drugPharmacyFacade.updateDrugPharamcyPriority(
+            this.clientId,
+            updatedPharmacy,
+            this.isShowHistoricalData
+          );
+        }
+      });
   }
   onOpenPharmacyClicked() {
     this.isOpenPharmacyClicked = true;
@@ -455,29 +465,29 @@ export class PharmaciesListComponent implements OnInit{
   removePharmacyEvent(clientPharmacyId: string) {
     this.removeButtonEmitted = false;
     let data = {
-      vendorId:clientPharmacyId,
-      isShowHistoricalData:this.isShowHistoricalData
-    }
+      vendorId: clientPharmacyId,
+      isShowHistoricalData: this.isShowHistoricalData,
+    };
     this.removePharmacyClick.emit(data);
   }
   addPharmacyEvent(pharmacyId: string) {
     this.triggerPriorityPopupNumber = 0;
     let data = {
-      vendorId:pharmacyId,
-      isShowHistoricalData:this.isShowHistoricalData,
-      isSetAsPrimary:this.isSetAsPrimary
-    }
+      vendorId: pharmacyId,
+      isShowHistoricalData: this.isShowHistoricalData,
+      isSetAsPrimary: this.isSetAsPrimary,
+    };
     this.addPharmacyClick.emit(data);
   }
-  setAsPrimaryEvent(data:any){
+  setAsPrimaryEvent(data: any) {
     this.isSetAsPrimary = data;
-}
+  }
   removeClientPharmacyOnEditMode() {
     this.handleClosePharmacyClicked();
     let data = {
-      vendorId:this.selectClientPharmacyId,
-      isShowHistoricalData:this.isShowHistoricalData
-    }
+      vendorId: this.selectClientPharmacyId,
+      isShowHistoricalData: this.isShowHistoricalData,
+    };
     this.removePharmacyClick.emit(data);
   }
   onSearchPharmacy(searchText: string) {
@@ -497,10 +507,13 @@ export class PharmaciesListComponent implements OnInit{
     this.isOpenPharmacyClicked$.next(false);
     this.isRemoveClientPharmacyClicked$.next(false);
   }
-  disableAddpharmacyButton(pharmacies:any[]):boolean {
+  disableAddpharmacyButton(pharmacies: any[]): boolean {
     let isDisable = false;
-    if(pharmacies && pharmacies?.length > 0){
-      isDisable =  pharmacies.filter(item =>item.activeFlag === 'Y').length >= 3 ? true : false;
+    if (pharmacies && pharmacies?.length > 0) {
+      isDisable =
+        pharmacies.filter((item) => item.activeFlag === 'Y').length >= 3
+          ? true
+          : false;
     }
     return isDisable;
   }
@@ -544,10 +557,10 @@ export class PharmaciesListComponent implements OnInit{
   handleCloseSelectNewPrimaryPharmaciesClicked() {
     this.isOpenSelectNewPrimaryPharmaciesClicked = false;
   }
-  handleCloseChangePriorityClikced() {
+  handleCloseChangePriorityClick() {
     this.isTriggerPriorityPopup = false;
   }
-  public rowClass = (args:any) => ({
-    "table-row-disabled": (args.dataItem.activeFlag != StatusFlag.Yes),
+  public rowClass = (args: any) => ({
+    'table-row-disabled': args.dataItem.activeFlag != StatusFlag.Yes,
   });
 }

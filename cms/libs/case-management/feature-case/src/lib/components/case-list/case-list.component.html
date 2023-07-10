@@ -21,7 +21,7 @@
   Sorted {{sortDir}} by <span class="sort-items">{{sortColumn}}</span>
   <span *ngIf="!isFiltered" class="sort-items">No Filters</span>
   <span *ngIf="isFiltered" class="sort-items">Filtered by {{filteredBy}}</span>
-  <span *ngIf="!columnsReordered" class="sort-items">Default Columns</span>
+  <span class="sort-items">{{addRemoveColumns}}</span>
   <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
   <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
     <a>Set to Default</a>
@@ -46,25 +46,80 @@
   (dataStateChange)="dataStateChange($event)"
   (filterChange)="filterChange($event)"
   [loading]="isGridLoaderShow"
-  [data]="cases | async">
+  [data]="cases | async"> 
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160" [sticky]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="client name" kendoButton look="flat" class="card-link-button"
           (click)="onCaseClicked(dataItem)">
           {{ dataItem.clientFullName }}
         </button>
-      </ng-template>
+      </ng-template>   
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+      <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                <kendo-filter-contains-operator></kendo-filter-contains-operator>
+      </kendo-grid-string-filter-menu>
+       </ng-template>   
     </kendo-grid-column>
     <kendo-grid-column field="officialIdFullName" title="Name on Official ID"  [width]="160" [hidden]="true">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
     </kendo-grid-column>
     <kendo-grid-column field="insuranceFullName" title="Name on Primary Insurance Card"  [width]="160" [hidden]="true">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
     </kendo-grid-column>
-    <kendo-grid-column field="dateOfBirth" title="Date of Birth" [width]="160" [format]="{ date: 'MM-dd-yyyy' }" [hidden]="true">
+    <kendo-grid-column field="dateOfBirth" title="Date of Birth" [width]="160" [format]="{ date: 'MM-dd-yyyy' }" [hidden]="true" filter="date">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.dateOfBirth | date:'MM/dd/yyyy'}}
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <common-grid-cell-date-range-filter
+          [field]="'dateOfBirth'"
+          [filter]="filter"
+          [filterService]="filterService"
+        >
+        </common-grid-cell-date-range-filter>
+  </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="pronouns" title="Pronouns"   [width]="120">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">    
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="clientId" title="Client ID" [width]="120"></kendo-grid-column>
-    <kendo-grid-column field="urn" title="URN" [width]="110"></kendo-grid-column>
+    <kendo-grid-column field="clientId" title="Client ID" [width]="120"  format="0">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">                 
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>                              
+        </kendo-grid-numeric-filter-menu>
+         </ng-template> 
+    </kendo-grid-column>
+    <kendo-grid-column field="urn" title="URN" [width]="110">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template>
+    </kendo-grid-column>
     <kendo-grid-column field="caseStatus" title="Status" [width]="120">
       <ng-template kendoGridFilterMenuTemplate
       let-column="column"
@@ -98,6 +153,9 @@
     </kendo-grid-column>
     <kendo-grid-column field="eilgibilityStartDate" title="Eligibility Start Date" [width]="160"
       [format]="{ date: 'MM-dd-yyyy' }" filter="date" >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.eilgibilityStartDate | date:'MM/dd/yyyy'}}
+      </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <common-grid-cell-date-range-filter
             [field]="'eilgibilityStartDate'"
@@ -108,18 +166,53 @@
     </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="email" title="Email" [width]="120" [hidden]="true">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
     </kendo-grid-column>
     <kendo-grid-column field="phone" title="Phone" [width]="120" [hidden]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{ dataItem.phone | phone }}
       </ng-template>
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
     </kendo-grid-column>
-    <kendo-grid-column field="genders" title="Gender" [width]="120" [hidden]="true">
+    <kendo-grid-column field="genders" title="Gender" [width]="120" [hidden]="true"> 
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template>     
     </kendo-grid-column>
     <kendo-grid-column field="homeAddress" title="Home Address" [width]="120" [hidden]="true">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
     </kendo-grid-column>
     <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="160"  [sticky]="(selectedTab == tabOptions.MY_CASES)"
       [format]="{ date: 'MM-dd-yyyy' }" filter="date">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.eligibilityEndDate | date:'MM/dd/yyyy'}}
+      </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <common-grid-cell-date-range-filter
           [field]="'eligibilityEndDate'"
@@ -132,13 +225,37 @@
     
 
     <kendo-grid-column field="caseManager" title="Case Manager"  [width]="160" [hidden]="true">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
     </kendo-grid-column>
      <kendo-grid-column field="insurancePolicyId" title="Insurance Policy Id" [width]="120" [hidden]="true">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
     </kendo-grid-column>
     <kendo-grid-column field="ssn" title="SSN" [width]="120" [hidden]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
           {{ dataItem.ssn | ssn }}
       </ng-template>
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
     </kendo-grid-column>
     <kendo-grid-column field="assignedCw" title="Assigned to" [width]="120" [sticky]="(selectedTab != tabOptions.MY_CASES)" [hidden]="(selectedTab == tabOptions.MY_CASES)">
       <ng-template kendoGridCellTemplate let-dataItem>
@@ -158,7 +275,14 @@
             </ng-template>
           </kendo-popover>
       </ng-template>
-
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
     </kendo-grid-column>
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">

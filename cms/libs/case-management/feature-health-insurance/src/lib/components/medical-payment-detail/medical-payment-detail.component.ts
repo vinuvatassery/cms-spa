@@ -15,7 +15,8 @@ import {
   VendorFacade,
   ClientProfileTabs,
   PaymentRequest,
-  EntityTypeCode
+  EntityTypeCode,
+  ServiceSubTypeCode
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  LovFacade } from '@cms/system-config/domain';
@@ -113,12 +114,20 @@ export class MedicalPaymentDetailComponent {
     if(value){
       this.isInsurancePoliciesLoading=true;
       this.insurancePolicyFacade.loadInsurancePoliciesByProviderId(value,this.clientId,this.caseEligibilityId,(this.tabStatus==ClientProfileTabs.DENTAL_INSURANCE_COPAY) ?  ClientProfileTabs.DENTAL_INSURANCE_STATUS: ClientProfileTabs.HEALTH_INSURANCE_STATUS  ).subscribe({
-        next: (data: any) => {
+        next: (data: any) => {         
           data.forEach((policy:any)=>{
-            policy["policyValueField"]=policy.insuranceCarrierName+ " - " + policy.insurancePlanName;
+            if(policy.insuranceIdNumber !== null){
+              policy["policyValueField"]= '['+policy.insuranceIdNumber+ " #] - [" + policy.insurancePlanName +']';
+            }
+            else{
+              policy["policyValueField"]= '[' + policy.insurancePlanName +']';
+            }
           });
           this.insurancePoliciesList=data;
           this.isInsurancePoliciesLoading=false;
+          if(data.length ===1){
+           this.copayPaymentForm.controls['clientInsurancePolicyId'].setValue(data[0].clientInsurancePolicyId);
+          }
           this.changeDetector.detectChanges();
         },
         error: (err) => {
@@ -207,6 +216,8 @@ export class MedicalPaymentDetailComponent {
     this.paymentRequest.serviceStartDate = this.intl.formatDate(this.copayPaymentForm.controls['serviceStartDate'].value, this.dateFormat); 
     this.paymentRequest.serviceEndDate = this.intl.formatDate(this.copayPaymentForm.controls['serviceEndDate'].value, this.dateFormat); 
     this.paymentRequest.comments = this.copayPaymentForm.controls['comments'].value;
+    this.paymentRequest.serviceSubTypeCode = ServiceSubTypeCode.notApplicable
+    
   }
 
   validateForm(){

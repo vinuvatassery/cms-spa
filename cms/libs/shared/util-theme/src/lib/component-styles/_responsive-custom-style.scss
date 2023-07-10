@@ -201,6 +201,10 @@
       }
     }
     .client-tab-section {
+      .custom-client-tab-main-wrapper{
+        width: 100%;
+        max-width: 100%;
+      }
       .tab-over-icon-btn {
         position: relative;
         right: 14px;

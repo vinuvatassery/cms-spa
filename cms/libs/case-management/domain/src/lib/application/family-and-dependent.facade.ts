@@ -9,7 +9,7 @@ import { Dependent } from '../entities/dependent';
 import { ClientDependentGroupDesc} from '../enums/client-dependent-group.enum';
 import { DependentTypeCode } from '../enums/dependent-type.enum';
 import { DependentDataService } from '../infrastructure/dependent.data.service';
-import { ConfigurationProvider, LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService, NotificationSource } from '@cms/shared/util-core';
 import { WorkflowFacade } from './workflow.facade';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { StatusFlag } from '../enums/status-flag.enum';
@@ -67,14 +67,14 @@ export class FamilyAndDependentFacade {
 
 
 
-  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any, source :  NotificationSource  = NotificationSource.API)
   {
     if(type == SnackBarNotificationType.ERROR)
     {
        const err= subtitle;
       this.loggingService.logException(err)
     }
-    this.notificationSnackbarService.manageSnackBar(type,subtitle)
+    this.notificationSnackbarService.manageSnackBar(type,subtitle, source)
     this.hideLoader();
   }
 

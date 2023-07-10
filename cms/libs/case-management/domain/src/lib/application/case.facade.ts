@@ -25,6 +25,7 @@ import { ActiveSessions } from '../entities/active-sessions';
 import { Router } from '@angular/router';
 import { ClientProfileTabs } from '../enums/client-profile-tabs.enum';
 import { SearchHeaderType } from '../enums/search-header-type.enum';
+import { GridColumnFilter} from '../enums/grid-column-filter.enum';
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
@@ -280,7 +281,7 @@ export class CaseFacade {
       if (response) {
         this.groupUpdatedSubject.next(true);
         this.currentGroupSubject.next(null);
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Group updated successfully');
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Group updated Successfully');
       }
     });
   }
@@ -355,9 +356,23 @@ export class CaseFacade {
     sortType: string,
     columnName: any,
     filter: any,
-    totalClientsCount : any
+    totalClientsCount : any,
+    afterDate: any,
+    beforeDate: any
   ): void {
     this.searchLoaderVisibilitySubject.next(true);
+    let isGridFilter = this.isGridFilter(filter);
+    if(!isGridFilter && columnName !== GridColumnFilter.AllColumns){
+      let _filter=
+        [{
+            filters:[{
+              field: columnName,
+              value: filter,
+              operator: "contains"
+            }]
+        }]
+    filter = JSON.stringify(_filter);
+    }
     this.caseDataService
       .loadCases(
         CaseScreenType,
@@ -367,9 +382,11 @@ export class CaseFacade {
         sortType,
         columnName,
         filter,
-        totalClientsCount
+        totalClientsCount,
+        afterDate,
+        beforeDate
       )
-      .subscribe({
+      .subscribe({        
         next: (casesResponse: any) => {
           this.casesSubject.next(casesResponse);
           if (casesResponse) {
@@ -387,6 +404,14 @@ export class CaseFacade {
         },
       });
   }
+
+  isGridFilter(str: string) {
+    try {
+        return (JSON.parse(str) && !!str);
+    } catch (e) {
+        return false;
+    }
+}
 
   loadCaseBySearchText(text: string): void {
     this.caseDataService.loadCaseBySearchText(text).subscribe({

@@ -18,6 +18,7 @@ export class VerificationFacade {
   private clientHivDocumentsListSubject = new Subject<any>();
   hivVerificationUploadedDocument = new Subject<any>();
   showAttachmentOptions = new BehaviorSubject<boolean>(false);
+  showHideAttachment = new BehaviorSubject<boolean>(false);
   isSaveandContinueSubject = new BehaviorSubject<boolean>(true);
   formChangeEventSubject = new BehaviorSubject<boolean>(false);
 
@@ -25,6 +26,7 @@ export class VerificationFacade {
   /** Public properties **/
   hivVerificationSave$ = this.hivVerificationSaveSubject.asObservable();
   showAttachmentOptions$ = this.showAttachmentOptions.asObservable();
+  showHideAttachment$ = this.showHideAttachment.asObservable();
   hivUploadedDocument$ = this.hivVerificationUploadedDocument.asObservable();
   clientHivDocumentsList$ = this.clientHivDocumentsListSubject.asObservable();
   isSaveandContinue$ = this.isSaveandContinueSubject.asObservable();
@@ -75,7 +77,7 @@ export class VerificationFacade {
       next: (response: any) => {
         if (response) {
           this.removeHivVerificationAttachmentSubject.next(response);
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "HIV Verification attachment removed");
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "HIV Verification attachment removed Successfully");
         }
         this.hideLoader()
       },

@@ -165,7 +165,7 @@ export class CaseManagerListComponent implements OnChanges {
     {
       buttonType: 'btn-h-danger',
       text: 'Edit Dates',
-      icon: 'delete',
+      icon: 'edit',
       buttonName: 'editDatesMngr',
       click: (
         clientCaseId: string,

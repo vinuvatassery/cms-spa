@@ -54,7 +54,7 @@
 }
 
 .client-header-wrapper-stickey {
-  z-index: 6;
+  z-index: 102;
   background: $white;
   position: sticky;
   top: 0;
@@ -89,10 +89,12 @@
 }
 
 .client-profile-outlet {
-  // max-height: calc(100vh - 236px);
-  // overflow-y: auto;
   padding: 16px;
-  // margin-top: 4px;
+  .TableActionPopup {
+    .k-animation-container{
+      z-index: 4;
+    }
+  }
 }
 
 .maintitle_withicon {
@@ -302,7 +304,7 @@
         position: sticky;
         top: 0;
         background: $white;
-        z-index: 6;
+        z-index: 5;
         padding: $size-xlg $size-0 $size-xlg !important;
 
         @media (max-width: $breakpoint-xlg) {
@@ -674,6 +676,13 @@ color: $app-primary-font-color;
     grid-gap: 0px;
     align-items: center;
   }
+  .template-list-wrapper-two-column {
+   display: block;
+   width: 100%;
+   > span{
+    width: 50%;
+   }
+  }
 }
 
 .no-data-available {
@@ -734,7 +743,11 @@ color: $app-primary-font-color;
 
 .custom-client-tab-inner-wrapper {
   padding: 0px 16px;
-
+  word-wrap: normal;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
   .k-scrollview {
     border: 0px !important;
   }
@@ -914,5 +927,77 @@ color: $app-primary-font-color;
 
   .k-form-legend {
     margin: 0;
+  }
+}
+
+.bottom-fixed-wrapper{
+  position: fixed;
+  padding:8px 16px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: 0px -3px 6px #0000003D;
+  bottom: 0;
+  right: 0;
+  width: auto;
+  left: 0;
+  z-index: 2;
+  .k-button-solid-primary{
+    box-shadow: none;
+  }
+  > .k-button{
+    padding: 8px 16px;
+  }
+  &.flex-gap{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+
+.add_main_popup_screen{
+padding-bottom: 20rem;
+
+.add_new_top_section{
+  border-bottom: 1px solid #0000001F;
+  padding: 1.5rem;
+  padding-top: 0;
+}
+
+.new_refund_Search{
+  position: relative;
+  .global-search-icon{
+      position: absolute;
+      top: 8px;
+      left: 10px;
+  }
+  .input-inline-loader{
+      top: 10px;
+  }
+
+  .k-combobox.k-input{
+      padding-left: 1.4rem;
+  }
+}
+
+.add_new_bottom_section{
+  padding: 1.5rem;  
+}
+}
+
+.add_new_fixed_bottom{
+  background-color: #ffffff;
+  position: fixed;
+  bottom: 0;
+  padding: 1.5rem;
+  z-index: 2;
+  max-height: 250px;
+  overflow: auto;
+  box-shadow: 0px 0px 6px #00000029;
+  border-top: 1px solid #0000001F;
+  width: 100%;
+  .add_new_fixed_bottom_grid_section{
+      .k-grid-container {
+          height: 120px;
+      } 
   }
 }

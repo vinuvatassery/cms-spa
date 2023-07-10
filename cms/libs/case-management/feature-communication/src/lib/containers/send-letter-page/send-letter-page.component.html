@@ -94,3 +94,11 @@
     </div>
   </kendo-dialog-actions>
 </kendo-dialog>
+
+
+<!-- Status Period Detail Modal -->
+<ng-template #disenrollment_letter_later>
+  <case-management-disenrollment-letter-later
+  [clientId]="clientId" 
+  (closeLetterModalEvent)="closeLetterModalEvent()"></case-management-disenrollment-letter-later>
+</ng-template>

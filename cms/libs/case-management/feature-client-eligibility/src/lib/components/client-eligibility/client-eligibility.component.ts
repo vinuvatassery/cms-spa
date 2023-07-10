@@ -24,6 +24,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   @Input() formSubmited!: boolean;
   @Input() questions: any = [];
   @Input() isSaveAndContinueAcceptance!: boolean;
+  @Input() cerNote! : string
 
   @Output() getQuestionsResponse = new EventEmitter<any>();
   @Output() cerNoteResponse = new EventEmitter<any>();
@@ -59,9 +60,9 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   btnDisabled = false;
   prevClientCaseEligibilityId: any;
   isCerForm = false;
-  cerNote = ''
   acceptanceModalTitle: String = 'Application Accepted';
-  private saveForLaterValidationSubscription !: Subscription;
+  isreviewQuestionAnswersFacadeSubscribed = false;
+ 
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -83,7 +84,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
-    this.addSaveForLaterValidationsSubscription();
+
     this.addDiscardChangesSubscription();
     this.loadSessionData();  
    
@@ -91,7 +92,7 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
   ngOnDestroy(): void {
     this.reviewQuestionAnswerSubscription?.unsubscribe();
     this.reviewQuestionResponseSubscription?.unsubscribe();
-    this.saveForLaterValidationSubscription?.unsubscribe();
+
 
   }
  
@@ -104,17 +105,8 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
     });
   }
 
-
-  private addSaveForLaterValidationsSubscription(): void {
-    this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
-      if (val) {
-      
-       
-      }
-    });
-  }
-
   loadReviewQuestionAnswers() {
+    this.isreviewQuestionAnswersFacadeSubscribed = true;
     this.reviewQuestionAnswerSubscription = this.reviewQuestionAnswerFacade.reviewQuestionAnswers$
       .subscribe((data: any) => {
         this.reviewQuestionAnswers = data;
@@ -242,7 +234,9 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
         this.eligibility = results[1];
         this.cdr.detectChanges();
         this.loaderService.hide();
-        this.loadReviewQuestionAnswers();
+        if(!this.isreviewQuestionAnswersFacadeSubscribed){
+          this.loadReviewQuestionAnswers();
+        }
       }
       , error: (error) => {
         this.showSnackBar(SnackBarNotificationType.ERROR, error);
@@ -372,28 +366,5 @@ export class ClientEligibilityComponent implements OnInit,OnDestroy {
     }
     return false;
   }
-
-
-  saveCerNote(){
-    const clientNote: any = {
-       clientCaseEligibilityId: this.clientCaseEligibilityId,
-       clientId: this.clientId,
-       note: this.cerNote,
-       NoteTypeCode:ClientNoteTypeCode.cerEligibility
-     };    
-     this.loaderService.show();
-     if(this.cerNote)
-     {
-        this.smokingCessationFacade.createSmokingCessationNote(clientNote).subscribe({
-          next: (x:any) =>{
-            
-            this.loaderService.hide();       
-          },
-          error: (error:any) =>{
-            this.loaderService.hide();
-          }
-        });
-    }
-      
-   }
+  
 }

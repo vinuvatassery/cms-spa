@@ -13,10 +13,12 @@
           formatPlaceholder="formatPattern"           
           aria-label="Start Date"
           placeholder=""
-          [(ngModel)]="startDate">
+          [(ngModel)]="startDate"
+          [min]="min"
+         >
           </kendo-datepicker>       
         </kendo-floatinglabel>
-        <kendo-formerror *ngIf="showError">Start date must be a valid date.</kendo-formerror>
+        <kendo-formerror *ngIf="showstartDateError">Start date is required.</kendo-formerror>
       </div>            
     </div>
     <div class="flex-row">
@@ -29,8 +31,7 @@
             placeholder=""
             [(ngModel)]="endDate">
             </kendo-datepicker>       
-          </kendo-floatinglabel>
-          <kendo-formerror *ngIf="showError">End date must be a valid date.</kendo-formerror>
+          </kendo-floatinglabel>       
         </div>            
       </div>
   </section>

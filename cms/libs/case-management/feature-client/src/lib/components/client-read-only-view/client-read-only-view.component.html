@@ -102,11 +102,15 @@
         </tr>
         <tr>
           <td>Pronouns</td>
-          <td>{{clientProfile?.pronouns}} <span class="badge-dot-info"></span></td>
+          <td> 
+            <span  class="app-c-badge full-rounded" *ngFor="let item1 of clientProfile?.pronouns">{{item1}}</span>
+          </td>
         </tr>
         <tr>
           <td>Gender</td>
-          <td>{{clientProfile?.genderDescription}}</td>
+          <td> 
+            <span  class="app-c-badge full-rounded" *ngFor="let gender of clientProfile?.gender">{{gender}}</span>
+          </td>
         </tr>
         <tr>
           <td>Transgender?</td>
@@ -114,7 +118,9 @@
         </tr>
         <tr>
           <td>Sexual Orientation/Identity Description:</td>
-          <td>{{clientProfile?.clientSexualIdentities}}</td>
+          <td>
+            <span  class="app-c-badge full-rounded" *ngFor="let item of clientProfile?.clientSexualIdentities">{{item}}</span>
+          </td>
         </tr>
         <tr>
           <td>Sex assigned at Birth</td>
@@ -132,18 +138,19 @@
           <td>English Proficiency</td>
           <td>{{clientProfile?.englishProficiency}}</td>
         </tr>
-        <tr>
-          <td>Ethnic Identity</td>
-          <td>{{clientProfile?.ethnicIdentity}}</td>
-        </tr>
-        <tr>
+         <tr>
           <td>Racial Identity</td>
           <td>
             <span class="app-c-badge full-rounded" *ngFor="let item of clientProfile?.racialIdentities">{{item}}</span>
           </td>
         </tr>
         <tr>
-          <td>Primary Racial Identity</td>
+          <td>Ethnic Identity</td>
+          <td>{{clientProfile?.ethnicIdentity}}</td>
+        </tr>
+       
+        <tr>
+          <td>Primary Ethnic Identity</td>
           <td>{{clientProfile?.primaryRacialIdentity}}</td>
         </tr>
         

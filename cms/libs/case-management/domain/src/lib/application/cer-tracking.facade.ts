@@ -57,7 +57,7 @@ export class CerTrackingFacade {
     private readonly notificationSnackbarService: NotificationSnackbarService,
     public intl: IntlService,
     private configurationProvider: ConfigurationProvider
-  ) {}
+  ) { }
 
   showLoader() {
     this.loaderService.show();
@@ -82,19 +82,22 @@ export class CerTrackingFacade {
     skipcount: number,
     maxResultCount: number,
     sort: string,
-    sortType: string
-  ): void {  
+    sortType: string,
+    filter: any
+  ): void {   
+  
     this.cerDataService
       .getCerTrackingList(
         trackingDate,
         skipcount,
         maxResultCount,
         sort,
-        sortType
+        sortType,
+        filter
       )
       .subscribe({
         next: (cerTrackingResponse: any) => {
-          if (cerTrackingResponse) {            
+          if (cerTrackingResponse) {
             const gridView = {
               data: cerTrackingResponse['items'],
               total: cerTrackingResponse['totalCount'],
@@ -108,9 +111,16 @@ export class CerTrackingFacade {
         },
       });
   }
+  isGridFilter(str: string) {
+    try {
+        return (JSON.parse(str) && !!str);
+    } catch (e) {
+        return false;
+    }
+  }
 
 
-  getCerTrackingDatesList(): void {   
+  getCerTrackingDatesList(): void {
     this.cerDataService.getCerTrackingDatesList().subscribe({
       next: (cerTrackingDatesResponse: any) => {
         if (cerTrackingDatesResponse) {
@@ -121,9 +131,9 @@ export class CerTrackingFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
-  } 
+  }
 
-  getCerTrackingDateCounts(trackingDate : Date): void {
+  getCerTrackingDateCounts(trackingDate: Date): void {
     this.cerDataService.getCerTrackingDateCounts(trackingDate).subscribe({
       next: (cerTrackingCountResponse: any) => {
         if (cerTrackingCountResponse) {
@@ -169,22 +179,29 @@ export class CerTrackingFacade {
     });
   }
 
-  sendCerCount(cerId: any){
-    this.cerDataService.sendCerCounts(cerId)
-    .subscribe({
-      next: (sendCerCountResp: any) => {
-        if(!(sendCerCountResp?? false)){
-         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, 'Something went wrong while sending CER.', NotificationSource.UI);
-        }
-        else{
-          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'CER re-sent successfully.', NotificationSource.UI);
-        }
+  sendCerCount(param: { cerId: any, gridDataRefinerValue: any }) {
+    this.cerDataService.sendCerCounts(param.cerId)
+      .subscribe({
+        next: (sendCerCountResp: any) => {
+          if (!(sendCerCountResp ?? false)) {
+            this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, 'Something went wrong while sending CER.', NotificationSource.UI);
+          }
+          else {
+            this.getCerTrackingList(param?.gridDataRefinerValue?.trackingDate, 
+              param?.gridDataRefinerValue?.skipCount, 
+              param?.gridDataRefinerValue?.pagesize, 
+              param?.gridDataRefinerValue?.sortColumn, 
+              param?.gridDataRefinerValue?.sortType, 
+              param?.gridDataRefinerValue?.filter);
+              
+            this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'CER re-sent successfully.', NotificationSource.UI);
+          }
 
-        this.sendResponseSubject.next(sendCerCountResp);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-      },
-    });
+          this.sendResponseSubject.next(sendCerCountResp);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
   }
 }
