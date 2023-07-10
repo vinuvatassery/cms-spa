@@ -43,6 +43,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   isCerText=false;
   prevClientCaseEligibilityId:any;
   /** Private properties **/
+  private discardChangesSubscription !: Subscription;
   private saveClickSubscription!: Subscription;
   private loadSessionSubscription!: Subscription;
   private saveForLaterClickSubscription!: Subscription;
@@ -72,6 +73,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadSessionData();
     this.prescriptionDrugFormChanged();
     this.addHivCodeChangeSubscription();
+    this.addDiscardChangesSubscription();
   }
 
   ngOnDestroy(): void {
@@ -80,6 +82,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
     this.hivCodeValueSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
 
 
@@ -469,6 +472,16 @@ onCheckClientPharmacies(event:any){
         }
         
       });
+  }
+
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
+     if(response){
+      this.nonPreferredFlagValidation = false;
+      this.loadPrescriptionDrug();
+      this.loadClientPharmacies(this.clientId);
+     }
+    });
   }
 }
 
