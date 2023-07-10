@@ -133,6 +133,7 @@ export class MedicalPaymentListComponent implements OnInit {
   }
 
   getCarrierContactInfo(carrierId:string){
+    debugger;
     this.carrierContactInfo='';
     this.insurancePolicyFacade.getCarrierContactInfo(carrierId).subscribe({
       next: (data) => {

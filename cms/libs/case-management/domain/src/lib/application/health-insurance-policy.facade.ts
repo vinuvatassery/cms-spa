@@ -280,6 +280,7 @@ export class HealthInsurancePolicyFacade {
     this.showLoader()
     this.healthInsurancePolicyService.loadPaymentRequest(clientId, clientCaseId, clientCaseEligibilityId, gridDataRefinerValue).subscribe({
       next: (premiumPaymentsResponse: any) => {
+        debugger;
         const gridView = {
           data: premiumPaymentsResponse['items'],
           total: premiumPaymentsResponse['totalCount'],
