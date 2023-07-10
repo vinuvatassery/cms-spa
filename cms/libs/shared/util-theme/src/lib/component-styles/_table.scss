@@ -436,7 +436,16 @@ table,
 .info-table-custom {
   width: 100%;
   border-collapse: collapse;
-
+&.nobg-left{
+  tr {
+    td { 
+      &:first-child {
+        background:$white; 
+        text-align: left;
+      } 
+    }
+  }
+}
   tr {
     td {
       padding: $size-xl $size-xx;
