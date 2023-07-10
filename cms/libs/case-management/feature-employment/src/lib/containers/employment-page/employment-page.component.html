@@ -44,7 +44,9 @@
                 text="No"
               ></kendo-label>
             </span>
-            <span *ngIf="prvEmployer.cerReviewStatusCode === 'INACTIVE'">
+          </div>
+        </fieldset> 
+            <div class="flex-col flex-col-6 p-0" *ngIf="prvEmployer.cerReviewStatusCode === 'INACTIVE'">
               <kendo-formfield>
                 <kendo-floatinglabel text="Employment End Date">
                 <kendo-datepicker [incompleteDateValidation]="true" #empHireDate  [fillMode]="formUiStyle.dateInputFillMode" [(ngModel)]="prvEmployer.endDate"
@@ -52,11 +54,11 @@
               </kendo-datepicker>
             </kendo-floatinglabel>
           </kendo-formfield>
-           </span>
-          </div>
+           </div>
+        
           <kendo-formerror *ngIf="prvEmployer.cerReviewStatusCodeRequired && (prvEmployer.cerReviewStatusCode !== 'INACTIVE' && prvEmployer.cerReviewStatusCode !== 'ACTIVE')">Is the client still employed with “{{prvEmployer.employerName}}” is required</kendo-formerror>
           <kendo-formerror *ngIf="prvEmployer.endDateRequired && !prvEmployer.endDate">End Date is required</kendo-formerror>
-          </fieldset> 
+        
         </div>
         <div class="flex-col">
           <fieldset class="k-form-fieldset">
