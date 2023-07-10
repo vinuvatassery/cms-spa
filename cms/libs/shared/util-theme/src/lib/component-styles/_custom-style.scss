@@ -1001,3 +1001,32 @@ padding-bottom: 20rem;
       } 
   }
 }
+.tab-batch-notify{
+  display: inline-block;
+  padding: 0px 6px;
+  margin: 0px 6px;
+  border-radius: 4px;
+  font-size: $font-size-s;
+  background-color:   material-color($hive-primary-palette, 500);
+  color: $white;
+}
+.fill_width_group_btn{
+  width: 100%;
+  button{
+    width: 100%;
+  }
+}
+
+.approval_container{
+  background: $light-blue-one;
+  padding: 20px;
+  min-height: calc(100vh - 200px);
+  padding-bottom: 4rem;
+  .bg-white{
+    .k-picker,
+    .k-input{
+      background: $white !important;
+    }
+  }
+
+}

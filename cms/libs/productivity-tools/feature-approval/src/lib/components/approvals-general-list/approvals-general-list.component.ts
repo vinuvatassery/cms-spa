@@ -16,14 +16,18 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+import {
+  PanelBarCollapseEvent,
+  PanelBarExpandEvent,
+} from "@progress/kendo-angular-layout";
 
 @Component({
   selector: 'productivity-tools-approvals-general-list',
-  templateUrl: './approvals-general-list.component.html',
-  styleUrls: ['./approvals-general-list.component.scss'],
+  templateUrl: './approvals-general-list.component.html', 
 })
 export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
-
+ isPanelExpanded = false;
+ ifApproveOrDeny: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isApprovalGeneralGridLoaderShow = false;
@@ -162,5 +166,18 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
       }
     });
     this.isApprovalGeneralGridLoaderShow = false;
+  }
+
+  public onPanelCollapse(event: PanelBarCollapseEvent): void {
+    this.isPanelExpanded = false;
+  }
+
+  public onPanelExpand(event: PanelBarExpandEvent): void {
+    this.isPanelExpanded = true;
+
+  }
+
+  approveOrDeny(result:any){
+      this.ifApproveOrDeny = result;
   }
 }

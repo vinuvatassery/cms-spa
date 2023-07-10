@@ -18,12 +18,11 @@ import {
 import { Subject } from 'rxjs';
 @Component({
   selector: 'productivity-tools-approvals-payments-list',
-  templateUrl: './approvals-payments-list.component.html',
-  styleUrls: ['./approvals-payments-list.component.scss'],
+  templateUrl: './approvals-payments-list.component.html', 
 })
 export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{ 
- 
-
+  isSubmitApprovalPaymentItems = false;
+  isViewPaymentsBatchDialog = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isApprovalPaymentsGridLoaderShow = false;
@@ -66,8 +65,19 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
     this.loadApprovalPaymentsListGrid();
   }
+  onOpenSubmitApprovalPaymentItemsClicked(){
+    this.isSubmitApprovalPaymentItems = true;
+  }
+  onCloseSubmitApprovalPaymentItemsClicked(){
+    this.isSubmitApprovalPaymentItems = false;
+  }
 
-
+  onOpenViewPaymentsBatchClicked(){
+    this.isViewPaymentsBatchDialog = true;
+  }
+  onCloseViewPaymentsBatchClicked(){
+    this.isViewPaymentsBatchDialog = false;
+  }
   private loadApprovalPaymentsListGrid(): void {
     this.loadApprovalPayments(
       this.state?.skip ?? 0,
