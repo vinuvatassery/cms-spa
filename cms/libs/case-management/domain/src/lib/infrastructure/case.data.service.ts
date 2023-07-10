@@ -14,7 +14,6 @@ import { ClientCase } from '../entities/client-case';
 import { ClientProfileCase } from '../entities/client-profile-cases';
 import { CaseHistory } from '../entities/case-history';
 import { ActiveSessions } from '../entities/active-sessions';
-import { CaseScreenTab } from '../enums/case-screen-tab.enum';
 
 @Injectable({ providedIn: 'root' })
 export class CaseDataService {
