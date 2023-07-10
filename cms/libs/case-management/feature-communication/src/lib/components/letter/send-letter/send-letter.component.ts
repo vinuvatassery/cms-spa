@@ -11,15 +11,13 @@ import {
 
 
 /** Internal Libraries **/
-import { CommunicationEvents, CommunicationFacade, WorkflowFacade } from '@cms/case-management/domain';
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
-import { HttpHeaders } from '@angular/common/http';
-
 
 @Component({
   selector: 'case-management-send-letter',
@@ -49,7 +47,8 @@ export class SendLetterComponent implements OnInit {
     private readonly ref: ChangeDetectorRef,
     private readonly route: ActivatedRoute,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly workflowFacade: WorkflowFacade,) { }
+    private readonly workflowFacade: WorkflowFacade,
+    private readonly contactFacade: ContactFacade) { }
 
   /** Public properties **/
   public formUiStyle : UIFormStyle = new UIFormStyle();
@@ -65,6 +64,7 @@ export class SendLetterComponent implements OnInit {
   prevClientCaseEligibilityId!: string;
   selectedTemplate!: any;
   cerEmailAttachedFiles: any[] = [];
+  mailingAddress: any;
   dataValue: Array<any> = [
     {
       text: '',
@@ -75,13 +75,20 @@ export class SendLetterComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.contactFacade.mailingAddress$.subscribe((resp) => {
+      if (resp) {
+        this.mailingAddress = resp;
+      }
+      this.ref.detectChanges();
+    });
+
     if (this.data) {
       this.isNewLetterClicked = true;
     } else {
       this.isNewLetterClicked = false;
     }
     this.loadDropdownLetterTemplates(); 
-    this.loadCurrentSession();   
+    this.loadCurrentSession();
   }
 
   private loadCurrentSession() {
@@ -251,6 +258,7 @@ this.isShowSendLetterToPrintPopupClicked = false;
     this.handleLetterEditor(event);
     this.ref.detectChanges();
     this.openDdlLetterEvent.emit();
+    this.loadMailingAddress();
   }
 
   private saveDraftLetterTemplate(draftTemplate: any) {
@@ -295,5 +303,9 @@ this.isShowSendLetterToPrintPopupClicked = false;
 
  cerEmailAttachments(event:any){
   this.cerEmailAttachedFiles = event; 
+}
+
+loadMailingAddress() {
+  this.contactFacade.loadMailingAddress(this.clientId);
 }
 }

@@ -120,7 +120,6 @@ export class AuthorizationComponent   {
                 }
               }
               this.loadPendingEsignRequestInfo();
-              this.loadCompletedEsignRequestInfo();
             }
             this.loaderService.hide();
       },
