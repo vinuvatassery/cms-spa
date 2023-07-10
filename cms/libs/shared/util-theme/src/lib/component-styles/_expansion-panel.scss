@@ -247,13 +247,14 @@
     border: $size-0;
     border-radius: 6px;
     width: 100%;
-
+    
     > &:hover,
     > &:focus {
       box-shadow: 0px 6px 6px #00000014;
     }
 
     .k-panelbar-header {
+      margin-bottom: 1rem;
      > .k-link {
         padding: 16px;
 
