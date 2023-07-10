@@ -385,7 +385,8 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientId = JSON.parse(session.sessionData).clientId;
           this.getCaseStatusDetails();
-          if(JSON.parse(session.sessionData).clientId){
+          var prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;
+          if(JSON.parse(session.sessionData).clientId && !prevClientCaseEligibilityId){
               const activeSession = {
                 sessionId : this.sessionId,
                 clientCaseId :this.clientCaseId,

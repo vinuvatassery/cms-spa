@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit,Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 /** Internal Libraries **/
-import { VerificationFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, StatusFlag, VerificationFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -27,7 +27,8 @@ export class HivVerificationComponent implements OnInit {
   clientHivVerificationId!:string;
   removeHivVerification$ = this.verificationFacade.removeHivVerification$;
 
-  constructor(private readonly cd: ChangeDetectorRef, private verificationFacade: VerificationFacade,private readonly lovFacade: LovFacade){
+  constructor(private readonly cd: ChangeDetectorRef, private verificationFacade: VerificationFacade,private readonly lovFacade: LovFacade, 
+    private workFlowFacade: WorkflowFacade,){
 
   }
   ngOnInit(): void {
@@ -59,6 +60,7 @@ export class HivVerificationComponent implements OnInit {
     this.verificationFacade.removeHivVerificationAttachment(this.clientHivVerificationId,this.clientId);
     this.hivVerificationForm.controls["providerOption"].setValue(false);
     this.verificationFacade.showHideAttachment.next(false);
+    this.updateWorkFlowStatus(false);
   }
   onHivRemoveConfirmationOpen(clientHivVerificationId:string) {
     if(clientHivVerificationId && clientHivVerificationId != ""){
@@ -69,5 +71,16 @@ export class HivVerificationComponent implements OnInit {
   onAttachmentConfirmation(event:any)
   {
     this.onAttachmentConfirmationEvent.emit(event);
+    this.updateWorkFlowStatus(true);
+  }
+
+  private updateWorkFlowStatus(isCompleted: boolean)
+  {
+    const workFlowData: CompletionChecklist[] = [{
+      dataPointName: 'verificationMethod',
+      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+    }];
+
+    this.workFlowFacade.updateChecklist(workFlowData);
   }
 }

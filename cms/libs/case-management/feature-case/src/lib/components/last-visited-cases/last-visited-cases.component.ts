@@ -81,7 +81,8 @@ export class LastVisitedCasesComponent implements OnInit, OnDestroy {
       this.router.navigate(['case-management/case-detail'], {
         queryParams: {
           sid: session?.sessionId,
-          eid: session?.entityId
+          eid: session?.entityId,
+          wtc: WorkflowTypeCode.NewCase
         }
       });
     }
