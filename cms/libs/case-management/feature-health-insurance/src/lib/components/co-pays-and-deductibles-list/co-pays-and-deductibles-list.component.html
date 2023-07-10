@@ -4,7 +4,8 @@
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
-      <kendo-grid [resizable]="true" [data]="coPaysAndDeductibles$ | async" [pageSize]="state.take" [pageable]="true"
+      <kendo-grid  [sortable]="true" 
+      [groupable]="false" [reorderable]="true" [columnMenu]="{ filter: true }" [resizable]="true"  [data]="coPaysAndDeductibles$ | async" [pageSize]="state.take" [pageable]="true"
         (dataStateChange)="dataStateChange($event)">
         <kendo-grid-column field="vendorName" title="Service Provider" [width]="150">
           <ng-template kendoGridCellTemplate let-dataItem>
@@ -46,7 +47,7 @@
         </kendo-grid-column>
         <kendo-grid-column field="paymentTypeDesc" title="Type" [width]="130">
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="50">
+        <kendo-grid-column field="by" title="By" [width]="50" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
