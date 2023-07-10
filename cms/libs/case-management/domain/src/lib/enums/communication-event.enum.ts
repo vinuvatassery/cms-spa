@@ -12,5 +12,6 @@ export enum CommunicationEvents {
   TemplateAttachmentTypeCode="CER_DEF_ATTACHMENT",
   CERAttachmentTypeCode="CER_ATTACHMENT",
   EsignRequestStatusCode="DRAFT",
-  CERAuthorizationSubject = "CER Authorization Email"
+  CERAuthorizationSubject = "CER Authorization Email",
+  CopyOfSignedApplication="COPY_OF_SIGNED_APPLICATION"
 }

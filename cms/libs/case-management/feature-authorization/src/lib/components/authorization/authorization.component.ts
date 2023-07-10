@@ -61,6 +61,7 @@ export class AuthorizationComponent   {
   incompleteDateValidation!: any;
   loginUserName!:any;
   isSendEmailSuccess: boolean = false;
+  isCERApplicationSigned: boolean = false;
   private saveClickSubscription !: Subscription;
   private discardChangesSubscription !: Subscription;
   private isSendLetterOpenedDialog : any;
@@ -69,6 +70,9 @@ export class AuthorizationComponent   {
   isSendNewEmailPopupOpened = false;
   isSendNewLetterPopupOpened = false;
   dateSignatureNoted!: any;
+  errorMessage!: string;
+  isSendEmailFailed: boolean = false;
+  signedClietDocumentId!: string;
   /** Private properties **/
   private userProfileSubsriction !: Subscription;
 
@@ -115,8 +119,8 @@ export class AuthorizationComponent   {
                   this.toEmail.push(data?.email?.email.trim());
                 }
               }
-              this.loadEsignRequestInfo();
-              // this.loadClientDocumentInfo();
+              this.loadPendingEsignRequestInfo();
+              this.loadCompletedEsignRequestInfo();
             }
             this.loaderService.hide();
       },
@@ -127,44 +131,6 @@ export class AuthorizationComponent   {
       },
     });
   }
-
-  // private loadClientDocumentInfo() {
-  //   this.loaderService.show();
-  //   if(this.isGoPaperlessOpted)
-  //   {
-  //     this.typeCode=CommunicationEvents.CerAuthorizationEmail
-  //     this.subTypeCode= CommunicationEvents.Email
-  //   }
-  //   else
-  //   {
-  //     this.typeCode=CommunicationEvents.CerAuthorizationLetter
-  //     this.subTypeCode= CommunicationEvents.Letter
-  //   }
-  //     this.communicationFacade.getClientDocuments(this.typeCode ?? '', this.subTypeCode ?? '',this.workflowFacade.clientCaseEligibilityId ?? '')
-  //     .subscribe({
-  //       next: (data: any) =>{
-  //         if (data) {
-  //             this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
-  //             if(data.documentTypeCode==CommunicationEvents.CerAuthorizationEmail)
-  //             {
-  //             this.isSendEmailClicked=true;
-  //             }
-  //             else
-  //             {
-  //             this.isPrintClicked=true;
-  //             }
-  //             this.ref.detectChanges();
-  //             this.getLoggedInUserProfile();
-  //           }
-  //           this.loaderService.hide();
-  //     },
-  //     error: (err: any) => {
-  //       this.loaderService.hide();
-  //       this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-  //       this.loggingService.logException(err);
-  //     },
-  //   });
-  // }
 
   getLoggedInUserProfile(){
     this.loaderService.show();
@@ -352,7 +318,7 @@ export class AuthorizationComponent   {
         this.isSendNewEmailPopupOpened = false;
         if(this.isSendEmailSuccess){
         this.isSendEmailClicked = true;
-        this.loadEsignRequestInfo();
+        this.loadPendingEsignRequestInfo();
       }else{
         this.isSendEmailClicked = false;
       }
@@ -482,15 +448,27 @@ updateSendEmailSuccessStatus(event:any){
  this.isSendEmailSuccess = event;
 }
 
-loadEsignRequestInfo(){
+loadPendingEsignRequestInfo(){
   this.loaderService.show();
     this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '')
     .subscribe({
       next: (data: any) =>{
         if (data?.esignRequestId != null) {
+          if(data?.esignRequestStatusCode == 'PENDING' || data?.esignRequestStatusCode == 'INPROGRESS'){
             this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
             this.isSendEmailClicked=true;
             this.getLoggedInUserProfile();
+          }
+          else if(data?.esignRequestStatusCode == 'COMPLETE'){
+            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
+            this.isSendEmailClicked=true;
+            this.isCERApplicationSigned = true;
+            this.loadCompletedEsignRequestInfo();
+            this.getLoggedInUserProfile();
+          }else if(data?.esignRequestStatusCode == 'FAILED'){
+            this.isSendEmailFailed = true;
+            this.errorMessage = data?.errorMessage;
+          }
             this.ref.detectChanges();
           }
           this.loaderService.hide();
@@ -501,5 +479,43 @@ loadEsignRequestInfo(){
       this.loggingService.logException(err);
     },
   });
+}
+
+loadCompletedEsignRequestInfo(){
+  this.loaderService.show();
+  this.typeCode=CommunicationEvents.CopyOfSignedApplication;  
+  this.clientDocumentFacade.getSignedDocumentInfo(this.typeCode ?? ' ', this.subTypeCode ?? ' ',this.workflowFacade.clientCaseEligibilityId ?? '')
+    .subscribe({
+      next: (data: any) =>{
+        if (data?.clientDocumentId != null) {
+          this.signedClietDocumentId = data?.clientDocumentId;
+          this.isCERApplicationSigned = true;
+          this.ref.detectChanges();
+          }
+          this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      this.loggingService.logException(err);
+    },
+  });
+}
+
+onGetSignedApplicationClicked(){
+  this.loaderService.show()
+    this.clientDocumentFacade.getClientDocumentsViewDownload(this.signedClietDocumentId??'')
+    .subscribe({
+      next: (data: any) => {
+        const fileUrl = window.URL.createObjectURL(data);
+        window.open(fileUrl, "_blank");
+        this.loaderService.hide();
+      }, 
+      error: (error) => {
+        this.loaderService.hide();
+        this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error);
+        this.loggingService.logException(error);
+      }
+    });
 }
 }

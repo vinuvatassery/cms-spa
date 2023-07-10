@@ -147,7 +147,7 @@
             >
               Re-Send Email
             </button>
-            <button
+            <button *ngIf="!isCERApplicationSigned"
               kendoButton
               [primary]="true"
               look="flat"
@@ -157,8 +157,21 @@
             >
               Send Letter
             </button>
-          </div>
+            <button *ngIf="isCERApplicationSigned"
+            kendoButton
+            [primary]="true"
+            look="flat"
+            class="ml-1"
+            (click)="onGetSignedApplicationClicked()"
+            aria-label="view signed application"
+          >
+            View Signed Application
+          </button>
+          </div>{{isSendEmailFailed}}
         </div>
+        <div class="flex-col mt-2" *ngIf="isSendEmailFailed">
+          <p  style="color:red">ERROR: {{errorMessage}}</p>
+      </div>
     </div>
   </section>
 </div>

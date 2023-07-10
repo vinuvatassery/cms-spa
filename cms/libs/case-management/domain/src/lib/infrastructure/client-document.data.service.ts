@@ -57,4 +57,10 @@ export class ClientDocumentDataService {
           `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/clientCaseEligibilityId=${clientCaseEligibilityId}`,
         );
     }
+
+    getSignedDocumentInfo(typeCode: string, subTypeCode: string, clientCaseEligibilityId: string) {
+        return this.http.get(
+            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${typeCode}/${subTypeCode}/${clientCaseEligibilityId}`,
+          );
+    }
 }
