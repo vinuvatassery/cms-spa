@@ -13,13 +13,23 @@
     <kendo-tabstrip-tab [selected]="true" title="General">
       <ng-template kendoTabTitle> General </ng-template>
       <ng-template kendoTabContent>
-        <productivity-tools-approvals-general-list [approvalsLists]="approvals$"></productivity-tools-approvals-general-list>
+        <productivity-tools-approvals-general-list 
+        [approvalsGeneralLists$]="approvalsGeneralLists$"
+        [pageSizes]="pageSizes" [sortValue]="sortValueGeneralAPproval"
+        [sortType]="sortType" [sort]="sortGeneralList" 
+        (loadApprovalsGeneralGridEvent)="loadApprovalsGeneralGrid($event)"
+        ></productivity-tools-approvals-general-list>
       </ng-template>
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Payments">
       <ng-template kendoTabTitle> Payments  </ng-template>
       <ng-template kendoTabContent>
         <productivity-tools-approvals-payments-list
+        [approvalsPaymentsLists$]="approvalsPaymentsLists$"
+        [pageSizes]="pageSizes" [sortValue]="sortValueApprovalPaymentsAPproval"
+        [sortType]="sortType" [sort]="sortApprovalPaymentsList" 
+        (loadApprovalsPaymentsGridEvent)="loadApprovalsPaymentsGrid($event)"
+
           class="reminder-list-modal-wrap"></productivity-tools-approvals-payments-list>
       </ng-template>
     </kendo-tabstrip-tab>

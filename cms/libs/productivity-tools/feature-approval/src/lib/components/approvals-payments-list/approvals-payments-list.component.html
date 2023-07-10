@@ -1,6 +1,6 @@
 <!-- Table Top Filter, Search and Export -->
  
-<div class="align-items-center mat-form-no-b-space fmly-epdorpdown">
+<div class="align-items-center mat-form-no-b-space fmly-epdorpdown mt-2">
     <span class="text-bold" for="eemploymentep">Payment Request Type:&nbsp;</span>
     <div class="fmly-epdorpdown">
         <kendo-dropdownlist class="epdropdown" aria-label="EligibilityPeriods" [fillMode]="formUiStyle.dropDownFillMode">
@@ -41,7 +41,10 @@
 
 <!-- Case List table -->
 <div class="app-c-table">
-    <kendo-grid [resizable]="true" [data]="approvalPayments">
+    <kendo-grid [resizable]="true" [loading]="isApprovalPaymentsGridLoaderShow" [pageSize]="state.take"
+    [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
+    [columnMenu]="{ filter: true }" [sort]="state.sort"  (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"[selectable]="true"
+    [data]="approvalsPaymentsLists$ | async">
 
         <kendo-grid-column field="Attention" title="Attention" [width]="120"> </kendo-grid-column>
         <kendo-grid-column field="viewPmtsInBatch" title="View Pmts In Batch" [width]="120"> </kendo-grid-column>
@@ -98,9 +101,9 @@
             <div class="grid-custom-paginationtemplates d-flex">
                 <div class="d-flex align-items-center">
                     <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
-                    <!-- <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
+                    <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
               [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
-              [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist> -->
+              [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
                     <kendo-pager-info> </kendo-pager-info>
                     <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Vendors'" [pagerPage]="'Page'">
                     </kendo-grid-messages>

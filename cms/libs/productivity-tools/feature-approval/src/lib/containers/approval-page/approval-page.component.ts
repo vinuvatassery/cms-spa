@@ -1,5 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
+import { State } from '@progress/kendo-data-query';
 /** Facades **/
 import { ApprovalFacade } from '@cms/productivity-tools/domain';
 
@@ -9,25 +11,35 @@ import { ApprovalFacade } from '@cms/productivity-tools/domain';
   styleUrls: ['./approval-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApprovalPageComponent implements OnInit {
+export class ApprovalPageComponent {
   /** Public properties **/
-  approvals$ = this.approvalFacade.approvals$;
-  approvalPayments$ = this.approvalFacade.approvalsPaymentsList$;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
-  /** Contructor **/
+  sortType = this.approvalFacade.sortType;
+  pageSizes = this.approvalFacade.gridPageSizes;
+  gridSkipCount = this.approvalFacade.skipCount;
+
+  sortValueGeneralAPproval = this.approvalFacade.sortValueGeneralAPproval;
+  sortGeneralList = this.approvalFacade.sortGeneralList;
+  sortApprovalPaymentsList = this.approvalFacade.sortApprovalPaymentsList;
+  sortValueApprovalPaymentsAPproval = this.approvalFacade.sortValueApprovalPaymentsAPproval;
+  sortImportedClaimsList = this.approvalFacade.sortImportedClaimsList;
+  sortValueImportedClaimsAPproval = this.approvalFacade.sortValueImportedClaimsAPproval;
+
+  state!: State;
+  approvalsGeneralLists$ = this.approvalFacade.approvalsGeneralList$; 
+  approvalsPaymentsLists$ = this.approvalFacade.approvalsPaymentsList$;
+
+  /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade) {}
 
-  /** Lifecycle hooks **/
-  ngOnInit() {
-    this.loadApprovals();
+ 
+   loadApprovalsGeneralGrid(event: any): void {
+    this.approvalFacade.loadApprovalsGeneral();
   }
 
-  /** Private methods **/
-  private loadApprovals(): void {
-    this.approvalFacade.loadApprovals();
-  }
-
-  private loadApprovalPaymentsGrid(): void {
-    this.approvalFacade.loadApprovalPayments();
+  loadApprovalsPaymentsGrid(event: any): void {
+    this.approvalFacade.loadApprovalsPayments();
   }
 }

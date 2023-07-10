@@ -13,7 +13,7 @@ export class ApprovalDataService {
   constructor(private readonly http: HttpClient) {}
 
   /** Public methods **/
-  loadApprovals(): Observable<Approval[]> {
+  loadApprovalsGeneral(): Observable<Approval[]> {
     return of([
       { id: 1, name: 'Lorem ipsum', description: 'Lorem ipsum dolor sit amet' },
       {
