@@ -43,6 +43,18 @@
 
     </kendo-grid-column>
     <kendo-grid-column [width]="80"
+    *ngIf="!isAddOrEditFamilyDependentDisplay || isCerForm"
+        field="ssn"
+        title="SSN"
+        [sortable]="true"
+        [columnMenu]="false"
+  
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.ssn | ssn }}
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column [width]="80"
       field="dob"
       title="{{
         isAddOrEditFamilyDependentDisplay ? 'Date of Birth' : 'DOB(Age)'
@@ -55,18 +67,7 @@
       {{ dataItem.dob | date: 'MM/dd/yyyy' }}  (Age {{dataItem.age}})
     </ng-template>
   </kendo-grid-column>
-  <kendo-grid-column [width]="80"
-  *ngIf="!isAddOrEditFamilyDependentDisplay || isCerForm"
-      field="ssn"
-      title="SSN"
-      [sortable]="true"
-      [columnMenu]="false"
-
-    >
-      <ng-template kendoGridCellTemplate let-dataItem>
-          {{ dataItem.ssn | ssn }}
-      </ng-template>
-  </kendo-grid-column>
+ 
     <kendo-grid-column [width]="160"
       field="enrolledInInsuranceFlag"
       title="{{
