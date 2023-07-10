@@ -154,6 +154,7 @@
     <kendo-dialog-titlebar> Remove pharmacy? </kendo-dialog-titlebar>
       <case-management-remove-pharmacy
         [clientPharmacyId]="selectClientPharmacyId"
+        [isClientProfile]="false"
         (removeConfirmEvent)="removeClientPharmacy($event)"
     >     </case-management-remove-pharmacy>
 </kendo-dialog>

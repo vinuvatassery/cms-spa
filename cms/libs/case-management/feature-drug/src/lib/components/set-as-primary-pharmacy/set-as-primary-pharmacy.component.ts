@@ -88,7 +88,7 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
     if (pharmacy.vendorId) {
       this.selectedSearchedPharmacy = pharmacy;
       this.selectedPharmacy = null;
-      this.selectedVendorId = '';
+      //this.selectedVendorId = '';
       this.ref.detectChanges();
     }
   }
