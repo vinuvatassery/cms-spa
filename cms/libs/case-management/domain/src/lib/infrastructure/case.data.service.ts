@@ -24,37 +24,27 @@ export class CaseDataService {
 
 
   /** Public methods **/
-
-  loadCases1(CaseScreenType: CaseScreenTab, skipcount: number, maxResultCount: number, sort: string, sortType: string, columnName : any, filter : any,  totalClientsCount : any, afterDate: any, beforeDate: any ) {
+  loadCases(caseParams:any) {
     const ClientCasesPagedResultRequest=
       {
-        CaseScreenType : CaseScreenType,
-        SortType : sortType,
-        Sorting : sort,
-        SkipCount : skipcount,
-        MaxResultCount : maxResultCount,
-        columnName: columnName,
-        Filter: filter,
-        TotalCount: totalClientsCount,
-        AfterDate: afterDate,
-        BeforeDate: beforeDate
+        CaseScreenType : caseParams.caseScreenType,
+        SortType : caseParams.sortType,
+        Sorting : caseParams.sort,
+        SkipCount : caseParams.skipcount,
+        MaxResultCount : caseParams.maxResultCount,
+        columnName: caseParams.columnName,
+        Filter: caseParams.filter,
+        TotalCount: caseParams.totalClientsCount,
+        AfterDate: caseParams.afterDate,
+        BeforeDate: caseParams.beforeDate
       }
-   
+
     return this.http.post<ClientProfileCase[]>(
-     
+
       `${this.configurationProvider.appSettings.caseApiUrl}` +
       `/case-management/clients/cases`,
       ClientCasesPagedResultRequest
     );
-
-  }
-
-  loadCases(caseParams:any) {
-    return this.http.get<ClientProfileCase[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clients/cases?CaseScreenType=${caseParams.caseScreenType}&SortType=${caseParams.sortType}&Sorting=${caseParams.sort}&SkipCount=${caseParams.skipcount}&MaxResultCount=${caseParams.maxResultCount}&ColumnName=${caseParams.columnName}&Filter=${caseParams.filter}&TotalCount=${caseParams.totalClientsCount}&AfterDate=${caseParams.afterDate}&BeforeDate=${caseParams.beforeDate}`
-    );
-
   }
 
   loadClientProfile(clientCaseEligibilityId: string) {
