@@ -14,6 +14,7 @@ import { ClientCase } from '../entities/client-case';
 import { ClientProfileCase } from '../entities/client-profile-cases';
 import { CaseHistory } from '../entities/case-history';
 import { ActiveSessions } from '../entities/active-sessions';
+import { CaseScreenTab } from '../enums/case-screen-tab.enum';
 
 @Injectable({ providedIn: 'root' })
 export class CaseDataService {
@@ -23,6 +24,30 @@ export class CaseDataService {
 
 
   /** Public methods **/
+
+  loadCases1(CaseScreenType: CaseScreenTab, skipcount: number, maxResultCount: number, sort: string, sortType: string, columnName : any, filter : any,  totalClientsCount : any, afterDate: any, beforeDate: any ) {
+    const ClientCasesPagedResultRequest=
+      {
+        CaseScreenType : CaseScreenType,
+        SortType : sortType,
+        Sorting : sort,
+        SkipCount : skipcount,
+        MaxResultCount : maxResultCount,
+        columnName: columnName,
+        Filter: filter,
+        TotalCount: totalClientsCount,
+        AfterDate: afterDate,
+        BeforeDate: beforeDate
+      }
+   
+    return this.http.post<ClientProfileCase[]>(
+     
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/case-management/clients/cases`,
+      ClientCasesPagedResultRequest
+    );
+
+  }
 
   loadCases(caseParams:any) {
     return this.http.get<ClientProfileCase[]>(
