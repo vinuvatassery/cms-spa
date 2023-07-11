@@ -77,12 +77,12 @@
         </kendo-grid-column>
         <kendo-grid-column  title="Start Date" [width]="130"  field="startDate">
           <ng-template kendoGridCellTemplate let-dataItem>
-          {{ dataItem.startDate  | date: 'MM-dd-yyyy'}}
+          {{ dataItem.startDate  | date: 'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column title="End Date" [width]="130" field ="endDate">
           <ng-template kendoGridCellTemplate let-dataItem>
-            {{ dataItem.endDate  | date: 'MM-dd-yyyy'}}
+            {{ dataItem.endDate  | date: 'MM/dd/yyyy'}}
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="careassistPayingPremiumFlag" title="Help Pay?" [width]="150">
