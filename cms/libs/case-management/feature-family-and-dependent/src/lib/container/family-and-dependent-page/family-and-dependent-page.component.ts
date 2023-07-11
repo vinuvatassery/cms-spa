@@ -333,8 +333,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   cerDataPointAdjustmentChange(dataPointName: string, value:string){
     let prevDependentsDtPoints: CompletionChecklist[]  = [];
     if(dataPointName === 'haveFamilyMembersChanged'){
-      prevDependentsDtPoints = this.previousRelationsList.map((dependent:any)=>{
-      let status = this.updatedDependentsStatus.findIndex((x: any)=>x.dependentId === dependent.clientRelationshipId)?.status ?? 'N';
+      prevDependentsDtPoints = this.previousRelationsList.map((dependent:any)=>{      
         return {
           dataPointName: dependent.clientRelationshipId,
           status: value === StatusFlag.Yes ? dependent.activeFlag : StatusFlag.No
