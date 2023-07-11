@@ -1,13 +1,20 @@
 <div class="flex-row app-c-expansion-panel-two">
   <div class="flex-col">
-
+    <kendo-popover #onUserProfileDetailsHovered width="330" position="right">
+      <ng-template kendoPopoverBodyTemplate>
+        <common-user-profile-card> </common-user-profile-card>
+      </ng-template>
+    </kendo-popover>
     <kendo-panelbar (collapse)="onPanelCollapse($event)" (expand)="onPanelExpand($event)">
       <kendo-panelbar-item>
         <ng-template kendoPanelBarItemTitle>
           <div class="flex-row rw-100">
             <div class="flex-col flex-col-6">
               <h5>Request for Case Re-Assignment</h5>
-              <p>XX/XX/XXXX by <a>FName LName</a></p>
+              <p>XX/XX/XXXX by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
+                  aria-label="modified by" kendoButton look="flat" class="card-link-button">
+                  FName LName
+                </button> </p>
               <div *ngIf="isPanelExpanded">
                 <p class="mt-1 mb-1">Regarding <a>Donna Summer</a></p>
                 <i>The client has exceeded max benefits but it is very important that we pay this invoice for them.</i>
@@ -60,7 +67,10 @@
           <div class="flex-row rw-100">
             <div class="flex-col flex-col-6">
               <h5>Request for Case Re-Assignment</h5>
-              <p>XX/XX/XXXX by <a>FName LName</a></p>
+              <p>XX/XX/XXXX by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
+                  aria-label="modified by" kendoButton look="flat" class="card-link-button">
+                  FName LName
+                </button> </p>
 
             </div>
             <div class="flex-col flex-col-6">
@@ -162,8 +172,11 @@
         <ng-template kendoPanelBarItemTitle>
           <div class="flex-row rw-100">
             <div class="flex-col flex-col-6">
-              <h5>Request for Case Re-Assignment</h5>
-              <p>XX/XX/XXXX by <a>FName LName</a></p>
+              <h5>Rent Subsidy Calculation Submission - Sarah Phillips</h5>
+              <p>1 hr ago by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
+                  aria-label="modified by" kendoButton look="flat" class="card-link-button">
+                  FName LName
+                </button> </p>
 
             </div>
             <div class="flex-col flex-col-6">
@@ -179,7 +192,7 @@
         </ng-template>
         <ng-template kendoPanelBarContent>
           <div class="flex-row rw-100">
-            <div class="flex-col flex-col-6"> 
+            <div class="flex-col flex-col-6">
               <div class="flex-row mt-1">
                 <div class="flex-col flex-col-4">
                   <strong>Item Charge:</strong>
@@ -187,7 +200,7 @@
                 <div class="flex-col flex-col-8">
                   <span class="mr-1"> 372.00 </span>
                 </div>
-              </div> 
+              </div>
               <div class="flex-row mt-1">
                 <div class="flex-col flex-col-4">
                   <strong>Fund:</strong>
@@ -204,7 +217,15 @@
                   <span class="mr-1"> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
                     Ipsum has been the industry's standard dummy text ever since the 1500s </span>
                 </div>
-              </div> 
+              </div>
+              <p class="mt-1"><button aria-label="View Subsidy Calculation" kendoButton look="flat"
+                  class="card-link-button">
+                  View Subsidy Calculation
+                </button></p>
+              <p class="mt-1"> <button aria-label="View Supporting Documents" kendoButton look="flat"
+                  class="card-link-button">
+                  View Supporting Documents
+                </button></p>
             </div>
             <div class="flex-col flex-col-6">
               <div>
@@ -217,13 +238,113 @@
             </div>
 
           </div>
-        </ng-template> 
+        </ng-template>
+      </kendo-panelbar-item>
+
+
+      <kendo-panelbar-item>
+        <ng-template kendoPanelBarItemTitle>
+          <div class="flex-row rw-100">
+            <div class="flex-col flex-col-6">
+              <h5>Rent Subsidy Calculation Submission - Sarah Phillips</h5>
+              <p>1 hr ago by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
+                  aria-label="modified by" kendoButton look="flat" class="card-link-button">
+                  FName LName
+                </button> </p>
+
+            </div>
+            <div class="flex-col flex-col-6">
+              <div>
+                <kendo-buttongroup selection="single">
+                  <button kendoButton aria-label="allow" (click)="approveOrDeny('A')" [toggleable]="true">Approve
+                  </button>
+                  <button kendoButton aria-label="deny" (click)="approveOrDeny('D')" [toggleable]="true">Deny </button>
+                </kendo-buttongroup>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template kendoPanelBarContent>
+          <div class="flex-row rw-100">
+            <div class="flex-col flex-col-6">
+              <div class="flex-row mt-1">
+                <div class="flex-col flex-col-6">
+                  <strong>Date Certified</strong>
+                </div>
+                <div class="flex-col flex-col-6">
+                  <span class="mr-1"> 10/01/2020 </span>
+                </div>
+              </div>
+              <div class="flex-row mt-1">
+                <div class="flex-col flex-col-6">
+                  <strong> </strong>
+                </div>
+                <div class="flex-col flex-col-3">
+                  <strong class="mr-1"> Before </strong>
+                </div>
+                <div class="flex-col flex-col-3">
+                  <strong class="mr-1"> After </strong>
+                </div>
+              </div>
+              <div class="flex-row mt-1">
+                <div class="flex-col flex-col-6">
+                  <strong>Housing Search Expiration Date</strong>
+                </div>
+                <div class="flex-col flex-col-3">
+                  <span class="mr-1"> 10/10/2020 </span>
+                </div>
+                <div class="flex-col flex-col-3">
+                  <span class="mr-1"> 11/10/2020 </span>
+                </div>
+              </div>
+              <div class="flex-row mt-1">
+                <div class="flex-col flex-col-6">
+                  <strong>Period</strong>
+                </div>
+                <div class="flex-col flex-col-3">
+                  <span class="mr-1"> 30 Days </span>
+                </div>
+                <div class="flex-col flex-col-3">
+                  <span class="mr-1"> 60 Days </span>
+                </div>
+              </div>
+              <div class="flex-row mt-1">
+                <div class="flex-col flex-col-6">
+                  <strong>Comments:</strong>
+                </div>
+                <div class="flex-col flex-col-6">
+                  <span class="mr-1"> The client has been looking for housing options but there are none within the
+                    amount allowed. </span>
+                </div>
+              </div>
+              <p class="mt-1"><button aria-label="View Subsidy Calculation" kendoButton look="flat"
+                  class="card-link-button">
+                  View Subsidy Calculation
+                </button></p>
+              <p class="mt-1"> <button aria-label="View Supporting Documents" kendoButton look="flat"
+                  class="card-link-button">
+                  View Supporting Documents
+                </button></p>
+            </div>
+            <div class="flex-col flex-col-6">
+              <div>
+                <kendo-floatinglabel text="Notes">
+                  <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto" aria-label="Notes">
+
+                  </kendo-textarea>
+                </kendo-floatinglabel>
+              </div>
+            </div>
+
+          </div>
+        </ng-template>
       </kendo-panelbar-item>
     </kendo-panelbar>
   </div>
 
 </div>
 <div class="bottom-fixed-wrapper text-right flex-gap">
-
+  <span class="">1 Approved</span>
+  <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Save </button>
   <button kendoButton [primary]="true" aria-label="Submit" class=""> Submit </button>
 </div>

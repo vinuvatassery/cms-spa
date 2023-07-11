@@ -267,7 +267,7 @@
       }
 
       >.k-link {
-        padding: 16px 16px 10px;
+        padding: 16px 16px;
         align-items: flex-start;
         color: $black;
 
@@ -303,7 +303,7 @@
     }
 
     .k-panelbar-content {
-      padding: 10px 16px 16px 16px;
+      padding: 0px 16px 16px 16px;
     }
 
     &.k-state-focus {
