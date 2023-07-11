@@ -19,7 +19,7 @@
             <button look="flat" class="card-link-button" (mouseover)="onManagerHover(dataItem)" kendoButton
               kendoPopoverAnchor [popover]="onUserProfileDetailsHovered"
               showOn="hover">{{dataItem.caseManagerName}}</button>
-              <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+              <kendo-popover #onUserProfileDetailsHovered width="330" position="right">
                 <ng-template kendoPopoverBodyTemplate>
                   <common-user-profile-card [userId]="dataItem?.caseManagerId" [reassign]=false></common-user-profile-card>
                 </ng-template>
