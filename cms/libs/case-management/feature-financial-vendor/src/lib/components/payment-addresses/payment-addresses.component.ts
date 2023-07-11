@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input } from '@angular/core'; 
-import { PaymentsFacade,BillingAddressFacade,VendorContactsFacade, contactResponse  } from '@cms/case-management/domain';
+import { PaymentsFacade,BillingAddressFacade,VendorContactsFacade, ContactResponse ,FinancialVendorTypeCode, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
-import { FinancialVendorTypeCode, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+
 
 @Component({
   selector: 'cms-payment-addresses',
@@ -73,7 +73,7 @@ export class PaymentAddressesComponent {
       },
     },
   ];
-  contactResponse: contactResponse[] = [];
+  contactResponse: ContactResponse[] = [];
   /** Constructor **/
   constructor(private readonly paymentsFacade: PaymentsFacade,private readonly paymentBillingFacade: BillingAddressFacade,private readonly vendorcontactFacade: VendorContactsFacade,private route: ActivatedRoute, private readonly cdr: ChangeDetectorRef) { }
 

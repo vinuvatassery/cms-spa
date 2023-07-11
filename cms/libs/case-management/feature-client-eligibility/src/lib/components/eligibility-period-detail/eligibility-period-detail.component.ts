@@ -223,7 +223,19 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   /** Private methods **/
   private getCurrentEligibility(){
     this.loaderService.show();
-    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,((this.isEdit || this.isStatusPeriodEdit) ? EligibilityRequestType.clientEligibilityInfo : this.isCopyPeriod? EligibilityRequestType.copyEligibility :EligibilityRequestType.acceptedEligibility)).subscribe(data=>{
+
+    let eligibilityRequestType: EligibilityRequestType;
+
+    if (this.isEdit || this.isStatusPeriodEdit) {
+      eligibilityRequestType = EligibilityRequestType.clientEligibilityInfo;
+    } else if (this.isCopyPeriod) {
+      eligibilityRequestType = EligibilityRequestType.copyEligibility;
+    } else {
+      eligibilityRequestType = EligibilityRequestType.acceptedEligibility;
+    }
+
+    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId, eligibilityRequestType)
+      .subscribe(data=>{
       this.currentEligibility = data;
       this.clientCaseEligibilityId = this.currentEligibility.clientCaseEligibilityId;
       if(this.isEdit || this.isStatusPeriodEdit || this.isCopyPeriod){
