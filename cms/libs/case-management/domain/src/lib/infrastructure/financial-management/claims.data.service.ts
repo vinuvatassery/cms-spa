@@ -19,21 +19,6 @@ export class ClaimsDataService {
     const sorting = this.getSortingParams(paginationParameters);
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pharmacies/${pharmacyId}/claims?SkipCount=${paginationParameters?.skip}&MaxResultCount=${paginationParameters?.take}${sorting}`);
 
-
-    //   return of([
-    //     {
-    //       Batch: 'MMDDYYYY_XXX `',
-    //       Item:'XX', 
-    //       PharmacyName: 'Pharmacy Name #123',
-    //       PaymentMethod: 'SPOTS',
-    //       ClientName: 'Yes',
-    //       PrimaryInsuranceCard: 'FName LName',
-    //       MemberID: 'Member ID',
-    //       By: 'By',
-    //     },
-    //   ]);
-    // }
-
   }
 
   getSortingParams(paginationParameters: State) {
