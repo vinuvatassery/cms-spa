@@ -179,6 +179,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     else {
       this.updatedDependentsStatus.push({'dependentId': dependent.clientRelationshipId, 'status': status});
     }
+
+    this.updateWorkFlowStatus(dependent.clientRelationshipId, dependent.activeFlag ? StatusFlag.Yes: StatusFlag.No);
   }
 
   updateEligibilityStatusDetails() {
@@ -219,14 +221,14 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     }
     }
 
-     private updateWorkFlowStatus()
+     private updateWorkFlowStatus(dataPointName: string, status: string)
      {
-       const workFlowdata: CompletionChecklist[] = [{
-         dataPointName: 'family_dependents',
-         status: StatusFlag.Yes
+       const workFlowData: CompletionChecklist[] = [{
+         dataPointName: dataPointName,
+         status: status
        }];
 
-       this.workFlowFacade.updateChecklist(workFlowdata);
+       this.workFlowFacade.updateChecklist(workFlowData);
      }
 
   /** Internal event methods **/
@@ -239,7 +241,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
         this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Dependent Status Updated Successfully')
         if(this.isFamilyGridDisplay ?? false)
         {
-          this.updateWorkFlowStatus();
+          this.updateWorkFlowStatus('family_dependents', StatusFlag.Yes);
         }
       }
     });
@@ -327,4 +329,42 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     }
     return true;
   }
+
+  cerDataPointAdjustmentChange(dataPointName: string, value:string){
+    let prevDependentsDtPoints: CompletionChecklist[]  = [];
+    if(dataPointName === 'haveFamilyMembersChanged'){
+      prevDependentsDtPoints = this.previousRelationsList.map((dependent:any)=>{
+      let status = this.updatedDependentsStatus.findIndex((x: any)=>x.dependentId === dependent.clientRelationshipId)?.status ?? 'N';
+        return {
+          dataPointName: dependent.clientRelationshipId,
+          status: value === StatusFlag.Yes ? dependent.activeFlag : StatusFlag.No
+        }
+      });
+
+      this.updateDynamicDtPoints(prevDependentsDtPoints, value);
+    }
+
+    if(dataPointName === 'additionalFamilyMembers'){
+      const dtPoint = [{
+        dataPointName: 'family_dependents',
+        status: StatusFlag.No
+      }];
+
+      this.updateDynamicDtPoints(dtPoint, value);  
+    }
+
+    this.updateWorkFlowStatus(dataPointName, value? StatusFlag.Yes: StatusFlag.No);
+  }
+
+  updateDynamicDtPoints(checkList:CompletionChecklist[], status: string){
+    if(checkList?.length > 0){
+      if(status === StatusFlag.Yes){
+        this.workflowFacade.addDynamicDataPoints(checkList);
+      }
+      else{
+        this.workflowFacade.removeDynamicDataPoints(checkList);
+      }
+  }
+  }
+
 }

@@ -59,7 +59,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   public gridOptionData = [
     {
       buttonType:"btn-h-primary",
-      text: "Copy Record",
+      text: "Copy Insurance",
       icon: "content_copy",
       type:"Copy",
       click: (): void => {

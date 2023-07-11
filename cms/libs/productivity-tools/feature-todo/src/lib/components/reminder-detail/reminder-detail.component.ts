@@ -24,7 +24,7 @@ public formUiStyle : UIFormStyle = new UIFormStyle();
   tareaReminderDescription = '';
   isShow= false;
   dateValidator: boolean = false;
-  @Output() closeReminderEvent = new EventEmitter();
+  @Output() isModalNewReminderCloseClicked = new EventEmitter();
 
   constructor(private readonly todoFacade: TodoFacade,private readonly caseFacade: CaseFacade,) {}
 
@@ -57,7 +57,7 @@ public formUiStyle : UIFormStyle = new UIFormStyle();
   }
   onCloseReminderClicked() 
   {
-    this.closeReminderEvent.emit();
+    this.isModalNewReminderCloseClicked.emit();
   }
   setValidators()
   {

@@ -56,9 +56,12 @@
                     <div class="flex-col flex-col-6">
                         <kendo-floatinglabel text="Payment Amount" class="amount-with-symbol">
                             <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                            <kendo-textbox formControlName="amountRequested" aria-label="Payment Amount" placeholder=""
-                                [fillMode]="formUiStyle.inputFillMode">
-                            </kendo-textbox>
+                         
+                            <kendo-numerictextbox aria-label="premiumAmt" [spinners]="false" class="input-icon-right"
+                            placeholder="Payment Amount" placeholder="00.00" formControlName="amountRequested" 
+                            [fillMode]="formUiStyle.inputFillMode" name="premiumAmt" >    
+                            </kendo-numerictextbox>
+
                             <kendo-formerror *ngIf="!copayPaymentForm.controls['amountRequested'].valid">Payment Amount is
                                 required.</kendo-formerror>
                         </kendo-floatinglabel>
