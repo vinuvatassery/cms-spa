@@ -318,6 +318,9 @@
       &::before {
         opacity: 0;
       }
+      &.select-error{
+        background: material-color($hive-error-palette, 800) !important;
+      }
     }
   }
 
@@ -329,7 +332,21 @@
     }
   }
 }
-
+.k-selected{
+  &.select-error{
+    background: material-color($hive-error-palette, 800) !important;
+    color: $white;
+  }
+  &.select-primary{
+    background: $app-primary !important;
+    color: $white;
+  }
+}
+.cc-fwc{
+  text-transform: capitalize;
+  min-width: 120px;
+  text-align: center;
+}
 .btn-ico-spacer {
   height: 5px;
   width: 5px;

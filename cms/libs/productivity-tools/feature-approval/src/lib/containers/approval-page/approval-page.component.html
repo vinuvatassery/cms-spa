@@ -40,13 +40,15 @@
     <kendo-tabstrip-tab title="Imported Claims">
       <ng-template kendoTabTitle> Imported Claims  <span class="tab-batch-notify">4</span></ng-template>
       <ng-template kendoTabContent>
-        <productivity-tools-approvals-payments-list
-        [approvalsPaymentsLists$]="approvalsPaymentsLists$"
-        [pageSizes]="pageSizes" [sortValue]="sortValueApprovalPaymentsAPproval"
-        [sortType]="sortType" [sort]="sortApprovalPaymentsList" 
-        (loadApprovalsPaymentsGridEvent)="loadApprovalsPaymentsGrid($event)"
+        <div class="nm-20 approval_container">
+        <productivity-tools-imported-claims-lists
+        [approvalsImportedClaimsLists$]="approvalsImportedClaimsLists$"
+        [pageSizes]="pageSizes" [sortValue]="sortValueImportedClaimsAPproval"
+        [sortType]="sortType" [sort]="sortImportedClaimsList" 
+        (loadImportedClaimsGridEvent)="loadImportedClaimsGrid($event)"
 
-          class="reminder-list-modal-wrap"></productivity-tools-approvals-payments-list>
+          class="reminder-list-modal-wrap"></productivity-tools-imported-claims-lists>
+          </div>
       </ng-template>
     </kendo-tabstrip-tab>
   </kendo-tabstrip>

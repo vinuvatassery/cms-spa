@@ -36,10 +36,12 @@ export class ApprovalFacade {
   /** Private properties **/
   private approvalsGeneralSubject =  new Subject<any>();
   private approvalsPaymentsSubject =  new Subject<any>();
+  private ImportedClaimsSubject =  new Subject<any>();
 
   /** Public properties **/
   approvalsGeneralList$ = this.approvalsGeneralSubject.asObservable();
   approvalsPaymentsList$ = this.approvalsPaymentsSubject.asObservable();
+  approvalsImportedClaimsLists$ = this.ImportedClaimsSubject.asObservable();
 
     // handling the snackbar & loader
     snackbarMessage!: SnackBar;
@@ -86,6 +88,17 @@ export class ApprovalFacade {
     this.approvalDataService.loadPendingPaymentsListsServices().subscribe({
       next: (approvalsPaymentsResponse) => {
         this.approvalsPaymentsSubject.next(approvalsPaymentsResponse);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+
+  loadImportedClaimsLists(): void {
+    this.approvalDataService.loadImportedClaimsListServices().subscribe({
+      next: (Response) => {
+        this.ImportedClaimsSubject.next(Response);
       },
       error: (err) => {
         console.error('err', err);

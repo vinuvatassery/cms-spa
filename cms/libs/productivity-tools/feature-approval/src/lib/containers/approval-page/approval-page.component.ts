@@ -30,6 +30,7 @@ export class ApprovalPageComponent {
   state!: State;
   approvalsGeneralLists$ = this.approvalFacade.approvalsGeneralList$; 
   approvalsPaymentsLists$ = this.approvalFacade.approvalsPaymentsList$;
+  approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
 
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade) {}
@@ -41,5 +42,8 @@ export class ApprovalPageComponent {
 
   loadApprovalsPaymentsGrid(event: any): void {
     this.approvalFacade.loadApprovalsPayments();
+  }
+  loadImportedClaimsGrid(event: any): void {
+    this.approvalFacade.loadImportedClaimsLists();
   }
 }

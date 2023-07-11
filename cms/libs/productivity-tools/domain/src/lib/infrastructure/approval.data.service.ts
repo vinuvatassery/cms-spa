@@ -13,7 +13,7 @@ export class ApprovalDataService {
   constructor(private readonly http: HttpClient) {}
 
   /** Public methods **/
-  loadApprovalsGeneral(): Observable<Approval[]> {
+  loadApprovalsGeneral() {
     return of([
       { id: 1, name: 'Lorem ipsum', description: 'Lorem ipsum dolor sit amet' },
       {
@@ -30,7 +30,7 @@ export class ApprovalDataService {
   }
 
 
-  loadPendingPaymentsListsServices(): Observable<ApprovalPayments[]> {
+  loadPendingPaymentsListsServices() {
     return of([
       { 
         id: 1, 
@@ -59,9 +59,42 @@ export class ApprovalDataService {
         glAccount: '00000000', 
         sendBackNotes:'notes',
       },
-      
-      
-     
+    ]);
+  }
+
+
+  loadImportedClaimsListServices()  {
+    return of([
+      { 
+        id: 1, 
+        clientName: 'Attention', 
+        namePrimaryInsuranceCard: 'Attention', 
+        claimSource: 'Attention', 
+        policyID: 'xxxx', 
+        amountDue: 'xxxx', 
+        dateService: 'xxx', 
+        policyIDMatch: 'xx/xx/xxxx', 
+        eligibilityMatch: '12/2019',
+        validInsurance: 'Immediate',
+        belowMaxBenefits: 'Expense',
+        entryDate: 'Rent Deposit',
+        isDelete: 'Y',
+      },
+      { 
+        id: 2, 
+        clientName: 'Attention', 
+        namePrimaryInsuranceCard: 'Attention', 
+        claimSource: 'Attention', 
+        policyID: 'xxxx', 
+        amountDue: 'xxxx', 
+        dateService: 'xxx', 
+        policyIDMatch: 'xx/xx/xxxx', 
+        eligibilityMatch: '12/2019',
+        validInsurance: 'Immediate',
+        belowMaxBenefits: 'Expense',
+        entryDate: 'Rent Deposit',
+        isDelete: 'N',
+      },
     ]);
   }
 }
