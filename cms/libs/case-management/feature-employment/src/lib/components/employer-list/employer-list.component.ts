@@ -114,9 +114,6 @@ export class EmployerListComponent implements OnInit, OnChanges {
         if(stateData.sort[0].field == 'effectiveDate') {
           this.sortValue = 'dateOfHire';
         }
-        else if(stateData.sort[0].field == 'by'){
-          this.sortValue = 'creatorId';
-        }
         else {
           this.sortValue = stateData.sort[0]?.field;
         }

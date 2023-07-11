@@ -8,8 +8,8 @@ import { State } from '@progress/kendo-data-query';
 /** Internal Libraries **/
 import { CompletionChecklist, ScreenType, StatusFlag, WorkflowFacade, ClientDocumentFacade, IncomeFacade, FamilyAndDependentFacade, CaseFacade } from '@cms/case-management/domain';
 import { DeleteRequest, SnackBar } from '@cms/shared/ui-common';
-import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSource, SnackBarNotificationType, } from '@cms/shared/util-core';
+import { UIFormStyle ,UploadFileRistrictionOptions} from '@cms/shared/ui-tpa';
+import { ConfigurationProvider, LoaderService,  LoggingService,  NotificationSource,  SnackBarNotificationType,} from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-income-list',
   templateUrl: './income-list.component.html',
@@ -20,7 +20,7 @@ export class IncomeListComponent implements OnInit {
   /** Input properties **/
   @Input() data!: any;
   @Input() hasNoIncome!: boolean;
-  @Input() clientCaseEligibilityId: string = "";
+  @Input() clientCaseEligibilityId: string="";
   @Input() clientId: any;
   @Input() clientCaseId: any;
   @Input() isClientProfileTab: boolean = false;
@@ -31,12 +31,12 @@ export class IncomeListComponent implements OnInit {
   public pageSizes = this.incomeFacade.gridPageSizes;
   public gridSkipCount = this.incomeFacade.skipCount;
   public state!: State;
-  sort!: any;
+  sort!:any;
   /** Public properties **/
   incomes$ = this.incomeFacade.incomes$;
-  incomesTotal: any = {};
+  incomesTotal:any={};
   columnOptionDisabled = false;
-  dependentsProofofSchools: any = [];
+  dependentsProofofSchools:any = [];
   isEdit!: boolean;
   selectedIncome: any;
   showRemoveUpoadProofDoc = false;
@@ -49,35 +49,35 @@ export class IncomeListComponent implements OnInit {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
-  proofOfSchoolDocument!: any
+  proofOfSchoolDocument!:any
   incomeValid$ = this.incomeFacade.incomeValid$;
-  isIncomeAvailable: boolean = true;
-  isReadOnly$ = this.caseFacade.isCaseReadOnly$;
+  isIncomeAvailable:boolean = true;
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public uploadFileRestrictions: UploadFileRistrictionOptions =
     new UploadFileRistrictionOptions();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
-      buttonType: "btn-h-primary",
+      buttonType:"btn-h-primary",
       text: "Attach from computer",
       id: "proofOfSchoolUploaded",
-      click: (event: any, dataItem: any): void => {
+      click: (event: any,dataItem: any): void => {
       },
     },
     {
-      buttonType: "btn-h-primary",
+      buttonType:"btn-h-primary",
       text: "Attach from client/'s attachments",
       id: "attachfromclient",
-      click: (event: any, dataItem: any): void => {
+      click: (event: any,dataItem: any): void => {
       },
     },
 
     {
-      buttonType: "btn-h-danger",
+      buttonType:"btn-h-danger",
       text: "Remove file",
       id: "removefile",
-      click: (event: any, dataItem: any): void => {
-        this.removeDependentsProofofSchoool(dataItem.clientDocumentId)
+      click: (event: any,dataItem: any): void => {
+      this.removeDependentsProofofSchoool(dataItem.clientDocumentId)
       },
     },
 
@@ -86,15 +86,15 @@ export class IncomeListComponent implements OnInit {
 
   public actionsmore = [
     {
-      buttonType: "btn-h-primary",
+      buttonType:"btn-h-primary",
       text: "Edit Income",
-      icon: "edit",
-      type: 'edit',
+        icon: "edit",
+        type: 'edit',
     },
 
 
     {
-      buttonType: "btn-h-danger",
+      buttonType:"btn-h-danger",
       text: "Delete Income",
       icon: "delete",
       type: 'delete',
@@ -105,28 +105,28 @@ export class IncomeListComponent implements OnInit {
   ];
   /** Constructor **/
   constructor(
-    private readonly incomeFacade: IncomeFacade,
-    private readonly workflowFacade: WorkflowFacade,
-    private readonly loggingService: LoggingService,
-    private readonly loaderService: LoaderService,
-    private readonly clientDocumentFacade: ClientDocumentFacade,
-    private readonly dependentFacade: FamilyAndDependentFacade,
-    private readonly cdr: ChangeDetectorRef,
-    private caseFacade: CaseFacade,
-    private readonly configurationProvider: ConfigurationProvider) { }
+      private readonly incomeFacade: IncomeFacade,
+      private readonly workflowFacade: WorkflowFacade,
+      private readonly loggingService: LoggingService,
+      private readonly loaderService: LoaderService,
+      private readonly clientDocumentFacade: ClientDocumentFacade,
+      private readonly dependentFacade:FamilyAndDependentFacade,
+      private readonly cdr: ChangeDetectorRef,
+      private caseFacade: CaseFacade,
+      private readonly configurationProvider: ConfigurationProvider) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadIncomes();
     this.loadDependents();
     this.includeAddIncomeButtonAndFooterNote();
-    this.incomeValid$.subscribe(response => {
+    this.incomeValid$.subscribe(response=>{
       this.isIncomeAvailable = response;
       this.cdr.detectChanges();
-    })
+    })    
   }
 
-  ngOnChanges() {
+  ngOnChanges(){
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
@@ -135,35 +135,35 @@ export class IncomeListComponent implements OnInit {
   /** Private methods **/
   private loadIncomes() {
     this.incomeFacade.incomesResponse$.subscribe({
-      next: (incomeResponse: any) => {
-        this.incomesTotal = incomeResponse;
+      next:(incomeResponse:any)=>{
+        this.incomesTotal=incomeResponse;
         this.cdr.detectChanges();
       },
-      error: (error: any) => {
+      error:(error: any) => {
         this.loggingService.logException(error);
       }
     });
 
     this.incomes$.subscribe({
-      next: (income: any) => {
+      next:(income:any) => {
         this.updateWorkFlowStatus(income?.total > 0);
       },
-      error: () => {
+      error:()=>{
         this.updateWorkFlowStatus(false);
       }
     })
   }
-  // Grid More action clicl function
-  onIncomeActionClicked(
-    selectedincome: any, modalType: string = '') {
+// Grid More action clicl function
+onIncomeActionClicked(
+  selectedincome : any, modalType: string = '') {
     this.selectedIncome = selectedincome;
-    if (modalType == 'edit') {
-      this.onIncomeClicked(true);
-    }
-    if (modalType == 'delete') {
-      this.isRemoveIncomeConfirmationPopupOpened = true;
-    }
+  if (modalType == 'edit') {
+ this.onIncomeClicked(true);
   }
+  if (modalType == 'delete') {
+    this.isRemoveIncomeConfirmationPopupOpened = true;
+  }
+}
   private loadDependentsProofofSchools() {
     this.incomeFacade.showLoader();
     this.incomeFacade.loadDependentsProofofSchools();
@@ -178,10 +178,11 @@ export class IncomeListComponent implements OnInit {
     }
     this.cdr.detectChanges();
   }
-  private updateWorkFlowStatus(isCompleted: boolean) {
+  private updateWorkFlowStatus(isCompleted:boolean)
+  {
     const workFlowdata: CompletionChecklist[] = [{
       dataPointName: 'income',
-      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+      status: isCompleted ? StatusFlag.Yes :StatusFlag.No
     }];
 
     this.workflowFacade.updateChecklist(workFlowdata);
@@ -197,7 +198,7 @@ export class IncomeListComponent implements OnInit {
     this.isEdit = editValue;
   }
 
-  closeIncomePopup($event: any) {
+  closeIncomePopup($event:any){
     this.isOpenedIncome = $event.popupState;
   }
 
@@ -211,30 +212,18 @@ export class IncomeListComponent implements OnInit {
 
   onRemoveIncomeConfirmationClosed() {
     this.isRemoveIncomeConfirmationPopupOpened = false;
-  }
+}
   // updating the pagination infor based on dropdown selection
   pageselectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
-    this.sort = { field: 'incomeSourceCodeDesc', dir: 'asc' };
+    this.sort ={ field : 'incomeSourceCodeDesc' ,  dir: 'asc' };
     this.loadIncomeData();
   }
 
   public dataStateChange(stateData: any): void {
     this.state = stateData;
-    let sortValue = "";
-    if (stateData.sort[0]?.field) {
-      if (stateData.sort[0].field == 'by') {
-        sortValue = 'creatorId';
-      }
-      else {
-        sortValue = stateData.sort[0]?.field;
-      }
-    }
-    else {
-      sortValue = "incomeSourceCodeDesc";
-    }
-    this.sort = { field: sortValue, dir: stateData?.sort[0]?.dir ?? 'asc' };
+    this.sort ={ field : stateData?.sort[0]?.field ?? 'incomeSourceCodeDesc' ,  dir: stateData?.sort[0]?.dir  ?? 'asc'  };
     this.loadIncomeData();
   }
   // Loading the grid data based on pagination
@@ -262,86 +251,88 @@ export class IncomeListComponent implements OnInit {
     this.loadIncomeListEvent.next(gridDataRefinerValue);
   }
 
-  incomeDetailResponseHandle(event: any) {
-    if (event) {
+  incomeDetailResponseHandle(event:any){
+    if(event){
       this.loadIncomeData();
     }
   }
 
-  handleFileSelected(event: any, dataItem: any) {
+  handleFileSelected(event: any, dataItem: any) {    
     this.dependentFacade.showLoader();
-
-    if (event && event.files.length > 0) {
+    
+    if (event && event.files.length > 0) {     
       const formData: any = new FormData();
       let file = event.files[0].rawFile
-      if (file.size > this.configurationProvider.appSettings.uploadFileSizeLimit) {
-        this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, "File is too large. Cannot be more than 25 MB.", NotificationSource.UI);
+      if(file.size > this.configurationProvider.appSettings.uploadFileSizeLimit)
+      {
+        this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, "File is too large. Cannot be more than 25 MB.",NotificationSource.UI);
       }
-      else {
-        if (dataItem.clientDocumentId) {
-          formData.append("clientDocumentId", dataItem.clientDocumentId);
-          formData.append("concurrencyStamp", dataItem.documentConcurrencyStamp);
-        }
-        formData.append("document", file)
-        formData.append("clientId", this.clientId)
-        formData.append("clientCaseEligibilityId", this.clientCaseEligibilityId)
-        formData.append("clientCaseId", this.clientCaseId)
-        formData.append("EntityId", dataItem.clientDependentId)
-        formData.append("documentTypeCode", "DEPENDENT_PROOF_OF_SCHOOL")
-        this.showHideImageUploadLoader(true, dataItem);
-        this.dependentFacade.uploadDependentProofOfSchool(this.clientCaseEligibilityId, dataItem.clientDependentId, formData).subscribe({
-          next: (response: any) => {
-            this.loadIncomeData();
-            this.loadDependentsProofofSchools();
-            this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
-            this.dependentFacade.hideLoader();
-            this.showHideImageUploadLoader(false, dataItem);
+      else
+      {
+      if(dataItem.clientDocumentId){
+        formData.append("clientDocumentId", dataItem.clientDocumentId);
+        formData.append("concurrencyStamp", dataItem.documentConcurrencyStamp);
+      }
+      formData.append("document", file)
+      formData.append("clientId", this.clientId)
+      formData.append("clientCaseEligibilityId", this.clientCaseEligibilityId)
+      formData.append("clientCaseId", this.clientCaseId)
+      formData.append("EntityId", dataItem.clientDependentId)
+      formData.append("documentTypeCode", "DEPENDENT_PROOF_OF_SCHOOL")
+      this.showHideImageUploadLoader(true, dataItem);
+      this.dependentFacade.uploadDependentProofOfSchool(this.clientCaseEligibilityId, dataItem.clientDependentId, formData).subscribe({
+        next: (response: any) => {
+          this.loadIncomeData();
+          this.loadDependentsProofofSchools();
+          this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
+          this.dependentFacade.hideLoader();
+          this.showHideImageUploadLoader(false, dataItem);
 
-          },
-          error: (err: any) => {
-            this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-          }
-        })
-      }
+        },
+        error: (err: any) => {
+          this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        }
+      })
+    }
     }
 
   }
   viewOrDownloadFile(type: string, clientDocumentId: string, documentName: string) {
     this.loaderService.show()
     this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId)
-      .subscribe({
-        next: (data: any) => {
-          const fileUrl = window.URL.createObjectURL(data);
-          if (type === 'download') {
-            const downloadLink = document.createElement('a');
-            downloadLink.href = fileUrl;
-            downloadLink.download = documentName;
-            downloadLink.click();
-          } else {
-            window.open(fileUrl, "_blank");
-          }
-          this.loaderService.hide();
-        },
-        error: (error) => {
-          this.loaderService.hide();
-          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+    .subscribe({
+      next: (data: any) => {
+        const fileUrl = window.URL.createObjectURL(data);
+        if (type === 'download') {
+          const downloadLink = document.createElement('a');
+          downloadLink.href = fileUrl;
+          downloadLink.download = documentName;
+          downloadLink.click();
+        } else {
+          window.open(fileUrl, "_blank");
         }
-      });
+        this.loaderService.hide();
+      }, 
+      error: (error) => {
+        this.loaderService.hide();
+        this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+      }
+    });
   }
 
-  loadDependents() {
-    this.incomeFacade.dependentsProofofSchools$.subscribe((response: any) => {
-      if (response && response.length > 0) {
-        this.dependentsProofofSchools = response;
+  loadDependents(){
+    this.incomeFacade.dependentsProofofSchools$.subscribe((response:any)=>{
+      if(response&&response.length>0){
+        this.dependentsProofofSchools=response;
         this.cdr.detectChanges();
       }
-      else {
+      else{
         this.dependentsProofofSchools = [];
       }
     })
   }
 
-  removeDependentsProofofSchoool(documentid: string) {
+ removeDependentsProofofSchoool(documentid: string){
     if (documentid) {
       this.incomeFacade.showLoader();
       this.clientDocumentFacade.removeDocument(documentid).subscribe({
@@ -349,21 +340,21 @@ export class IncomeListComponent implements OnInit {
           this.loadIncomeData();
           this.loadDependentsProofofSchools();
           this.incomeFacade.hideLoader();
-          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Proof of school attachment removed successfully');
+          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Proof of school attachment removed successfully') ;
           this.sendDetailToIncomeList.next(true);
         },
         error: (err: any) => {
           this.incomeFacade.hideLoader();
-          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
       );
     }
   }
 
-  showHideImageUploadLoader(showHide: boolean, dataItem: any) {
-    this.dependentsProofofSchools.filter((dep: any) => dep.clientDependentId == dataItem.clientDependentId).forEach((element: any) => {
-      element["uploaingProofDoc"] = showHide;
+  showHideImageUploadLoader(showHide:boolean,dataItem:any){
+    this.dependentsProofofSchools.filter((dep:any)=>dep.clientDependentId==dataItem.clientDependentId).forEach((element:any)=>{
+      element["uploaingProofDoc"]=showHide;
       this.cdr.detectChanges();
     })
   }

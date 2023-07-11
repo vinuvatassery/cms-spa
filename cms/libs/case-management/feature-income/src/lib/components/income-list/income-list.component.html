@@ -100,7 +100,8 @@
           </ng-template>
 
         </kendo-grid-column>
-        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="65" [sticky]="true">
+        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="65" 
+        [sticky]="true" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
