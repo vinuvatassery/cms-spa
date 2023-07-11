@@ -66,13 +66,11 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.isShownEventLog = !this.isShownEventLog;
 
   }
-
+  loadSpecialHandling() {
+    this.financialVendorFacade.getVendorProfileSpecialHandling(this.vendorId);
+  }
   loadFinancialVendorProfile(vendorId : string)
   {
     this.financialVendorFacade.getVendorProfile(vendorId,this.tabCode)
-  }
-
-  loadSpecialHandling() {
-    this.financialVendorFacade.getVendorProfileSpecialHandling(this.vendorId);
   }
 }
