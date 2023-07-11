@@ -6,6 +6,8 @@ import {
   OnChanges,
   OnInit,
   Output,
+  TemplateRef,
+
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import { Router } from '@angular/router';
@@ -20,7 +22,7 @@ import {
   PanelBarCollapseEvent,
   PanelBarExpandEvent,
 } from "@progress/kendo-angular-layout";
-
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-approvals-general-list',
   templateUrl: './approvals-general-list.component.html', 
@@ -53,10 +55,11 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
+  private editListITemsDialog: any;
   
   /** Constructor **/
-  constructor(private route: Router, ) {}
+  constructor(private route: Router,
+    private dialogService: DialogService ) {}
 
   ngOnInit(): void {
     this.loadApprovalGeneralListGrid();
@@ -179,5 +182,19 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
 
   approveOrDeny(result:any){
       this.ifApproveOrDeny = result;
+  }
+
+  onEditListItemsDetailClicked(  template: TemplateRef<unknown>): void {   
+    this.editListITemsDialog = this.dialogService.open({
+      content: template,
+      animation:{
+        direction: 'left',
+        type: 'slide', 
+      }, 
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np app-c-modal-right-side',
+    });
+  }
+  onCloseEditListItemsDetailClicked(){
+    this.editListITemsDialog.close();
   }
 }

@@ -89,7 +89,7 @@
           <div class="flex-row">
             <div class="flex-col flex-col-6">
               <button kendoButton class="mb-1 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit "
-                aria-label="edit" title="Edit List Item"></button>
+                aria-label="edit" title="Edit List Item" (click)="onEditListItemsDetailClicked(editListItemDialogModal)"></button>
               <table class="info-table-custom nobg-left">
                 <caption hidden> Vendor Info</caption>
                 <tr hidden>
@@ -348,3 +348,8 @@
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Save </button>
   <button kendoButton [primary]="true" aria-label="Submit" class=""> Submit </button>
 </div>
+
+<ng-template #editListItemDialogModal>
+  <kendo-dialog-titlebar (close)="onCloseEditListItemsDetailClicked()">  Edit List Item</kendo-dialog-titlebar>
+<productivity-tools-approvals-edit-items> </productivity-tools-approvals-edit-items>
+</ng-template>
