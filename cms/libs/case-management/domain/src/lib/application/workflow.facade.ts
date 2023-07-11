@@ -470,7 +470,7 @@ export class WorkflowFacade {
       const completionChecklist: CompletionChecklist[] | undefined = this.completionChecklist?.find((cs: WorkflowProcessCompletionStatus) => cs.processId === processId)?.completionChecklist;
       if (completionChecklist) {
         checklist.forEach((chk: any) => {
-          const isNotExist = completionChecklist.findIndex((i: any) => i.datapointName === chk.dataPointName) === -1;
+          const isNotExist = completionChecklist.findIndex((i: any) => i.dataPointName === chk.dataPointName) === -1;
           if (isNotExist) {
             completionChecklist.push(chk);
           }
@@ -478,6 +478,21 @@ export class WorkflowFacade {
           this.addChkListItem(completionChecklist, chk.dataPointName);
         });
       }
+    }
+  }
+
+  removeDynamicDataPoints(checklist: CompletionChecklist[]) {
+    if (checklist) {
+      const processId = this.actRoute.snapshot.queryParams['pid'];
+      const completionChecklist: CompletionChecklist[] | undefined = this.completionChecklist?.find((cs: WorkflowProcessCompletionStatus) => cs.processId === processId)?.completionChecklist;
+      if (completionChecklist) {
+        checklist.forEach((chk: any) => {
+          const index = completionChecklist.findIndex((i: any) => i.dataPointName === chk.dataPointName);
+          if (index !== -1) {
+            completionChecklist.splice(index, 1);
+          }         
+        });
+      }      
     }
   }
 
