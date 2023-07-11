@@ -177,10 +177,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
     }
   }
  
-  onNewReminderClosed(result: any) {
-    if(result){
+  onNewReminderClosed() {
       this.newReminderDetailsDialog.close()
-    }}
+    }
 
   onNewReminderClicked(template: TemplateRef<unknown>): void {
     this.newReminderDetailsDialog = this.dialogService.open({
