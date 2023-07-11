@@ -118,7 +118,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
         },
       ],
     };
-    let stateData = this.state;
+    const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }

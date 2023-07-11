@@ -140,9 +140,10 @@
 </div>
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-    <span class="">0 batch(es) to be approved, 0 batch(es) to be sent back</span>
-    <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Cancel </button>
-    <button kendoButton [primary]="true" look="flat" class="" aria-label="APPROVE ALL" (click)="onOpenViewPaymentsBatchClicked()"> APPROVE ALL </button>
+    <span  class="">0 batch(es) to be approved, 0 batch(es) to be sent back</span>
+    <button (click)="onDepositDetailClicked(depositDetailsDialogModal)" kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Cancel </button>
+    <button kendoButton [primary]="true" look="flat" class="" aria-label="APPROVE ALL"
+        (click)="onOpenViewPaymentsBatchClicked()"> APPROVE ALL </button>
     <button kendoButton [primary]="true" aria-label="Submit" class=""
         (click)="onOpenSubmitApprovalPaymentItemsClicked()"> Submit </button>
 </div>
@@ -188,9 +189,17 @@
 
 
 
-<kendo-dialog *ngIf="isViewPaymentsBatchDialog"  (close)="onCloseViewPaymentsBatchClicked()"
+<kendo-dialog *ngIf="isViewPaymentsBatchDialog" (close)="onCloseViewPaymentsBatchClicked()"
     class="app-c-modal app-c-modal-lg app-c-modal-np" title="View Payments in Each Batch" kendoTooltip>
 
-    
-<productivity-tools-approval-batch-lists></productivity-tools-approval-batch-lists>
+
+    <productivity-tools-approval-batch-lists></productivity-tools-approval-batch-lists>
 </kendo-dialog>
+
+
+<ng-template #depositDetailsDialogModal>
+    <kendo-dialog-titlebar (close)="onCloseDepositDetailClicked()"> Rent Deposit Details <button kendoButton
+            class="ml-1 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit " aria-label="edit"
+            title="Edit"></button></kendo-dialog-titlebar>
+    <productivity-tools-deposit-details> </productivity-tools-deposit-details>
+</ng-template>

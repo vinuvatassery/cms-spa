@@ -72,8 +72,7 @@ li {
 .app-l-body-container {
   width: 100%;
   overflow-y: auto;
-  max-height: calc(100vh - $header-height);
-  z-index: 102;
+  max-height: calc(100vh - $header-height); 
 }
 .app-l-inner-rapper {
   padding: $size-xxx;

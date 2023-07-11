@@ -6,6 +6,7 @@ import {
   OnChanges,
   OnInit,
   Output,
+  TemplateRef
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import { Router } from '@angular/router';
@@ -16,6 +17,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-approvals-payments-list',
   templateUrl: './approvals-payments-list.component.html', 
@@ -49,9 +51,11 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   
+  private depositDetailsDialog: any;
   
   /** Constructor **/
-  constructor(private route: Router, ) {}
+  constructor(private route: Router, 
+    private dialogService: DialogService) {}
 
   ngOnInit(): void {
     this.loadApprovalPaymentsListGrid();
@@ -122,7 +126,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
         },
       ],
     };
-    let stateData = this.state;
+    const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
@@ -173,5 +177,19 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       }
     });
     this.isApprovalPaymentsGridLoaderShow = false;
+  }
+
+  onDepositDetailClicked(  template: TemplateRef<unknown>): void {   
+    this.depositDetailsDialog = this.dialogService.open({
+      content: template,
+      animation:{
+        direction: 'left',
+        type: 'slide', 
+      }, 
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np app-c-modal-right-side',
+    });
+  }
+  onCloseDepositDetailClicked(){
+    this.depositDetailsDialog.close();
   }
 }
