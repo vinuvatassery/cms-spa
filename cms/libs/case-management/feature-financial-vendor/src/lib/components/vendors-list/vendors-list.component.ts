@@ -230,7 +230,8 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
      pagesize : maxResultCountValue,
      sortColumn : sortValue,
      sortType : sortTypeValue,
-     vendorTypeCode : this.vendorTypeCode
+     vendorTypeCode : this.vendorTypeCode,
+     filter : this.state?.["filter"]?.["filters"] ?? []
    }
    this.loadFinancialVendorsListEvent.emit(gridDataRefinerValue)
    this.gridDataHandle()

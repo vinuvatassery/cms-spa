@@ -19,11 +19,22 @@ export class FinancialVendorDataService {
     maxResultCount: number,
     sort: string,
     sortType: string,
-    vendorTypeCode: string
+    vendorTypeCode: string,
+    filter : string
   ) {
-    return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/vendors/?VendorTypeCode=${vendorTypeCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+    filter = JSON.stringify(filter);
+
+   const vendorPageAndSortedRequest =
+   {
+    SkipCount: skipcount,
+    MaxResultCount: maxResultCount,
+    Sorting: sort,
+    SortType: sortType,
+    VendorTypeCode: vendorTypeCode,
+    Filter : filter
+   }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors`,vendorPageAndSortedRequest
     );
   }
 
