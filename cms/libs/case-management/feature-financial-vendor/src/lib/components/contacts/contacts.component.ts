@@ -5,7 +5,6 @@ import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'cms-contacts',
   templateUrl: './contacts.component.html',
-  styleUrls: ['./contacts.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContactsComponent { 

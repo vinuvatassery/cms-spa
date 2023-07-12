@@ -327,6 +327,7 @@ export class PharmaciesListComponent implements OnInit {
 
   /** Internal event methods **/
   updateAndDeactivatePharmacy(data: any) {
+
     if (data && data.isNewAdded) {
       this.drugPharmacyFacade
         .deactivePharmacies(
@@ -389,6 +390,7 @@ export class PharmaciesListComponent implements OnInit {
       this.isShowHistoricalData
     );
   }
+
   onRemovePharmacy(data: any) {
     if (data !== null) {
       this.removeButtonEmitted = true;

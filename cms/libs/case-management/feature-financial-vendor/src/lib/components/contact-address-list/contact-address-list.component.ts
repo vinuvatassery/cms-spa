@@ -5,7 +5,7 @@ import {
   SimpleChanges, OnChanges,  ViewEncapsulation,
   ChangeDetectorRef
 } from '@angular/core';
-import { VendorContactsFacade, contactResponse } from '@cms/case-management/domain';
+import { VendorContactsFacade, ContactResponse } from '@cms/case-management/domain';
 import { LoaderService} from '@cms/shared/util-core';
 @Component({
   selector: 'cms-contact-address-list',
@@ -14,7 +14,7 @@ import { LoaderService} from '@cms/shared/util-core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactAddressListComponent implements OnChanges {
-  contactResponse: contactResponse[] = [];
+  contactResponse: ContactResponse[] = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isContactAddressDeactivateShow = false;
   isContactAddressDeleteShow = false;
