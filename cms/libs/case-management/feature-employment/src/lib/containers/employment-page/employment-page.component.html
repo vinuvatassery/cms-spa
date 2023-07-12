@@ -12,29 +12,29 @@
 
           <div class="component-list-h comp-list-horizontal">
             <span class="app-radiobtnwidtext-wrapper">
-              <input type="radio" kendoRadioButton   
+              <input type="radio" kendoRadioButton
                aria-labelledby="employedwithChezDodoYes"
                 name="employedwithChezDodoYes_{{i}}"
                 id="employedwithChezDodoYes_{{i}}"
-                class="form-control" 
+                class="form-control"
                 value="ACTIVE"
                 [(ngModel)]="prvEmployer.cerReviewStatusCode"
                 (change)="onOldEmployerChange()"
               />
               <kendo-label
-                class="k-radio-label" 
+                class="k-radio-label"
                 for="employedwithChezDodoYes_{{i}}"
-                text="Yes"                
+                text="Yes"
               ></kendo-label>
             </span>
             <span class="app-radiobtnwidtext-wrapper">
               <input
                 type="radio"
                 kendoRadioButton
-                aria-labelledby="employedwithChezDodoNo" 
+                aria-labelledby="employedwithChezDodoNo"
                 id="employedwithChezDodoNo_{{i}}"
                 name="employedwithChezDodoNo_{{i}}"
-                value="INACTIVE" 
+                value="INACTIVE"
                 [(ngModel)]="prvEmployer.cerReviewStatusCode"
                 (change)="onOldEmployerChange()"
               />
@@ -44,7 +44,9 @@
                 text="No"
               ></kendo-label>
             </span>
-            <span *ngIf="prvEmployer.cerReviewStatusCode === 'INACTIVE'">
+          </div>
+        </fieldset> 
+            <div class="flex-col flex-col-6 p-0" *ngIf="prvEmployer.cerReviewStatusCode === 'INACTIVE'">
               <kendo-formfield>
                 <kendo-floatinglabel text="Employment End Date">
                 <kendo-datepicker [incompleteDateValidation]="true" #empHireDate  [fillMode]="formUiStyle.dateInputFillMode" [(ngModel)]="prvEmployer.endDate"
@@ -52,11 +54,12 @@
               </kendo-datepicker>
             </kendo-floatinglabel>
           </kendo-formfield>
-           </span>
-          </div>
+           </div>
+        
           <kendo-formerror *ngIf="prvEmployer.cerReviewStatusCodeRequired && (prvEmployer.cerReviewStatusCode !== 'INACTIVE' && prvEmployer.cerReviewStatusCode !== 'ACTIVE')">Is the client still employed with “{{prvEmployer.employerName}}” is required</kendo-formerror>
           <kendo-formerror *ngIf="prvEmployer.endDateRequired && !prvEmployer.endDate">End Date is required</kendo-formerror>
-          </fieldset> 
+          <kendo-formerror *ngIf="prvEmployer.endDateAfterHireDate && prvEmployer.endDate!==null && prvEmployer.endDate<prvEmployer.dateOfHire">End date must be later than start date</kendo-formerror>
+
         </div>
         <div class="flex-col">
           <fieldset class="k-form-fieldset">
@@ -66,10 +69,10 @@
             <span class="app-radiobtnwidtext-wrapper">
               <input type="radio" kendoRadioButton   aria-labelledby="haveadditionalemployersYes"
                 id="haveadditionalemployersYes"
-                class="form-control" 
+                class="form-control"
                 value="Y"
                 [(ngModel)]="hasAdditionalEmployersFlag"
-                (change)="onAdditionalEmployersClicked()"                
+                (change)="onAdditionalEmployersClicked()"
               />
               <kendo-label
                 class="k-radio-label"
@@ -81,11 +84,11 @@
               <input
                 type="radio"
                 kendoRadioButton
-                aria-labelledby="haveadditionalemployersNo" 
+                aria-labelledby="haveadditionalemployersNo"
                 id="haveadditionalemployersNo"
-                value="N" 
+                value="N"
                 [(ngModel)]="hasAdditionalEmployersFlag"
-                (change)="onAdditionalEmployersClicked()"              
+                (change)="onAdditionalEmployersClicked()"
               />
               <kendo-label
                 class="k-radio-label"
@@ -95,11 +98,11 @@
             </span>
           </div>
           <kendo-formerror *ngIf="hasAdditionalEmployersFlagRequired && !hasAdditionalEmployersFlag">Does the client have additional employers is required</kendo-formerror>
-          </fieldset> 
+          </fieldset>
         </div>
         </div>
       <div class="flex-row">
-        
+
         <div class="flex-col mb-2" *ngIf="isCerForm && hasAdditionalEmployersFlag ==='Y'">
           <h5 >Add new employers:</h5>
         </div>
@@ -115,8 +118,8 @@
           />
           <label class="k-checkbox-label" for="clientDoesNotHaveEmployment">Unemployed</label>
           </span>
-        </div>        
-        <div class="flex-col" *ngIf="!isEmployedGridDisplay || isCerForm">  
+        </div>
+        <div class="flex-col" *ngIf="!isEmployedGridDisplay || isCerForm">
           <case-management-employer-list
           [clientId]="clientId"
           [employment$]="employmentList$"

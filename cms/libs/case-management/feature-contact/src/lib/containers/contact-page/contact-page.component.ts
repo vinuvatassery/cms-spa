@@ -15,7 +15,7 @@ import {
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-contact-page',
@@ -591,7 +591,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setOtherPhone(isPhoneChangedInCer);
 
     if ((emailGroup.controls['applicableFlag']?.value ?? false) === false && (isEmailChangedInCer || !this.isCerForm)) {
-      emailGroup.controls['email'].setValidators([Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]); 
+      emailGroup.controls['email'].setValidators([Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]);
       emailGroup.controls['email'].updateValueAndValidity();
     }
 
@@ -699,7 +699,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       familyAndFriendsContact: new FormGroup({
         noFriendOrFamilyContactFlag: new FormControl(false),
         firstName: new FormControl(''),
-        lastName: new FormControl(''), 
+        lastName: new FormControl(''),
         contactRelationshipCode: new FormControl(''),
         otherDesc: new FormControl(''),
         contactPhoneNbr: new FormControl(''),
@@ -1437,7 +1437,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (isChecked) {
       this.showAddressProofRequiredValidation = false;
       this.showAddressProofSizeValidation = false;
-      const removeButton = this.elementRef.nativeElement.querySelectorAll('.k-delete');
+      this.elementRef.nativeElement.querySelectorAll('.k-delete');
     }
     this.updateHomeAddressProofCount(this.homeAddressProofFile?.length > 0);
   }
@@ -1552,7 +1552,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setAddress(address: MailAddress | undefined, type: AddressTypeCode) {
     if (!address) return;
-    var zipCode = address?.zip4 ? `${address?.zip5}-${address?.zip4}`: address?.zip5;
+    let zipCode = address?.zip4 ? `${address?.zip5}-${address?.zip4}`: address?.zip5;
     const selectedAddress: ClientAddress = {
       address1: address?.address1 == '' ? address?.address2 : address?.address1,
       address2: address?.address1 == '' ? '' : address?.address2,
@@ -1640,7 +1640,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       homeAddressGroup?.controls['address1']?.disable();
       homeAddressGroup?.controls['address2']?.disable();
-      homeAddressGroup?.controls['city']?.disable();
+      homeAddressGroup?.controls['city']?.enable();
       homeAddressGroup?.controls['state']?.disable();
       homeAddressGroup?.controls['zip']?.disable();
       this.isHomeAddressStateOregon$.next(address?.state === StatesInUSA.Oregon);
@@ -1737,9 +1737,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   {
     this.documentTypeCode=e;
   }
-  
+
   handleFileSelected(e: SelectEvent) {
-    
+
     this.homeAddressProofFile = undefined;
     this.uploadedHomeAddressProof = undefined;
     this.uploadedHomeAddressProof = e.files[0].rawFile;
