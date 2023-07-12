@@ -5,7 +5,6 @@ import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'cms-financial-insurance-provider',
   templateUrl: './financial-insurance-provider.component.html',
-  styleUrls: ['./financial-insurance-provider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialInsuranceProviderComponent { 

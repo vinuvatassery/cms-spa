@@ -22,7 +22,7 @@ export class FormsAndDocumentsComponent implements OnInit {
     private readonly templateManagementFacade: TemplateManagementFacade,
     private readonly loaderService: LoaderService,
     private readonly snackbarService: NotificationSnackbarService,
-    private readonly loggingService: LoggingService, 
+    private readonly loggingService: LoggingService,
     private dialogService: DialogService
   ) {
   }
@@ -42,12 +42,12 @@ export class FormsAndDocumentsComponent implements OnInit {
     this.isOpenAttachment = false;
   }
 
-  
+
   onOpenAttachmentClicked(template: TemplateRef<unknown>): void {
     this.formsDocumentDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-xls app-c-modal-np app-c-modal-top',
-    }); 
+    });
     this.isOpenAttachment = true;
     if (this.isShowLoader)
       this.loaderService.show();
@@ -57,7 +57,7 @@ export class FormsAndDocumentsComponent implements OnInit {
 
   fetchSubfolders = (node: any) =>
     this.templateManagementFacade.getDirectoryContent('Form',node.documentTemplateId).pipe(map((response: any[]) => {
-      return node.files = this.folderstreeformatting(response);
+      return this.folderstreeformatting(response);
     }));
 
     hasFiles = function (data: any) {

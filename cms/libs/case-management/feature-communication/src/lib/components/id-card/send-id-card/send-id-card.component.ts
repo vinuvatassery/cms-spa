@@ -34,7 +34,7 @@ export class SendIdCardComponent implements OnInit {
       }
     });
     this.sendNewIDCard$.subscribe(data=>{
-      if(data==true && this.clientId!=0){
+      if(data && this.clientId!=0) {
         this.onCloseSendIdClicked()
       }
     });

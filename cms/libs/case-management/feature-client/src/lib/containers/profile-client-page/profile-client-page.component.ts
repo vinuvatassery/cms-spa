@@ -2,7 +2,7 @@
 import { OnInit, Component, ChangeDetectionStrategy,ChangeDetectorRef} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CaseFacade, ClientProfile,ClientFacade, StatusPeriodFacade } from '@cms/case-management/domain';
-import { BehaviorSubject, first, Subject } from 'rxjs';
+import { first, Subject } from 'rxjs';
 import { SnackBarNotificationType,LoaderService } from '@cms/shared/util-core';
 
 @Component({
@@ -124,39 +124,48 @@ export class ProfileClientPageComponent implements OnInit {
           if (response) {
             /**Populating Client */
             this.loaderService.hide();
-            if(response.clientNotes?.length > 0){
-              this.clientNotes = response.clientNotes;
-            }else {
-              this.clientNotes = [];
-            }
+
+            this.clientNotes = (response.clientNotes?.length > 0) ? response.clientNotes : [];
+
             this.answersKeys = Object.entries(response?.client).map(([key, value]) => ({key, value}));
 
             if(this.answersKeys && this.answersKeys.length > 0){
-               this.questions.forEach(question =>{
-                question.answer = this.answersKeys.find(answer =>answer.key == question.key)?.value;
-                if(question.answer == "Yes" && question.otherKey != 'interpreterType' && question.otherFormatKey != 'materialInAlternateFormatOther' && question.descKey != 'materialInAlternateFormatCodeOtherDesccription' && question.key != 'limitingConditionDescription'){
-                  question.answer = question.answer+', Since age'+ ' ' +this.answersKeys.find(answer =>answer.key == question.otherKey)?.value;
-                } else if(question.key == 'notes' ){
-                  question.answer =this.clientNotes.length > 0 ? this.clientNotes.map(function (e) { return e?.note;}).join(', ') : 'No Notes'
-                } else if(question.answer == "Yes" && question.otherKey == 'interpreterType'){
-                  question.answer ='Yes' + ','+' ' + this.answersKeys.find(answer =>answer.key == question.otherKey)?.value;
-                }
-                else if(question.answer == "Yes"  &&  question.descKey == 'materialInAlternateFormatCodeOtherDesccription' && !this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value){
-                  question.answer = 'Yes' + ',' +' '+ this.answersKeys.find(answer =>answer.key == question.descKey)?.value;
-                }
-                else if(question.answer == "Yes"  &&  question.otherFormatKey == 'materialInAlternateFormatOther' ){
-                  question.answer ='Yes' + ',' +' ' + this.answersKeys.find(answer =>answer.key == question.descKey)?.value +',' +' ' + this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value;
-                }
-              });
-              this.cdRef.detectChanges();
-              this.clientFacade.specialHandlingChangeDetectionSubject.next(null);
+              this.processQuestionAnswers();
             }
           }
         },
         error: (error: any) => {
           this.loaderService.hide();
         },
-      });}
+      });
+    }
+
+
+    processQuestionAnswers() {
+      this.questions.forEach(question =>{
+        question.answer = this.answersKeys.find(answer =>answer.key == question.key)?.value;
+        if(question.answer == "Yes" && question.otherKey != 'interpreterType' && question.otherFormatKey != 'materialInAlternateFormatOther' && question.descKey != 'materialInAlternateFormatCodeOtherDesccription' && question.key != 'limitingConditionDescription'){
+          question.answer = question.answer+', Since age'+ ' ' +this.answersKeys.find(answer =>answer.key == question.otherKey)?.value;
+        }
+        else if(question.key == 'notes' ){
+          question.answer =this.clientNotes.length > 0 ? this.clientNotes.map(function (e) { return e?.note;}).join(', ') : 'No Notes'
+        }
+        else if(question.answer == "Yes" && question.otherKey == 'interpreterType'){
+          question.answer ='Yes' + ','+' ' + this.answersKeys.find(answer =>answer.key == question.otherKey)?.value;
+        }
+        else if(question.answer == "Yes"  &&  question.descKey == 'materialInAlternateFormatCodeOtherDesccription' && !this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value){
+          question.answer = 'Yes' + ',' +' '+ this.answersKeys.find(answer =>answer.key == question.descKey)?.value;
+        }
+        else if(question.answer == "Yes"  &&  question.otherFormatKey == 'materialInAlternateFormatOther' ){
+          question.answer ='Yes' + ',' +' ' + this.answersKeys.find(answer =>answer.key == question.descKey)?.value +',' +' ' + this.answersKeys.find(answer =>answer.key == question.otherFormatKey)?.value;
+        }
+      });
+
+      this.cdRef.detectChanges();
+      this.clientFacade.specialHandlingChangeDetectionSubject.next(null);
+    }
+
+
   loadRamSellInfo(clientId: any) {
     this.statusPeriodFacade.showLoader();
     this.statusPeriodFacade.loadRamSellInfo(clientId).subscribe({

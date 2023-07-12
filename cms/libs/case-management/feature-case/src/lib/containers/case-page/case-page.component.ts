@@ -138,6 +138,7 @@ export class CasePageComponent implements OnInit {
   {
     const gridDataRefiner =
     {
+      caseScreenType: this.selectedTab,
       skipcount: gridDataRefinerValue.skipCount,
       maxResultCount : gridDataRefinerValue.pagesize,
       sort : gridDataRefinerValue.sortColumn,
@@ -149,7 +150,7 @@ export class CasePageComponent implements OnInit {
       afterDate: gridDataRefinerValue.afterDate
     }
     this.pageSizes = this.caseFacade.gridPageSizes;
-    this.loadCaseList(gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType, gridDataRefiner.columnName, gridDataRefiner.filter, gridDataRefiner.totalClientsCount,gridDataRefiner.afterDate,gridDataRefiner.beforeDate);
+    this.loadCaseList(gridDataRefiner);
   }
 
   loadColumnDroplist()
@@ -159,11 +160,11 @@ export class CasePageComponent implements OnInit {
 
       /** grid event methods **/
 
-    loadCaseList(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any, totalClientsCount : any, afterDate: any, beforeDate: any)
-     {
-       this.pageSizes = this.caseFacade.gridPageSizes;
-        this.caseFacade.loadCases(this.selectedTab, skipcountValue ,maxResultCountValue  ,sortValue , sortTypeValue, columnName, filter, totalClientsCount,afterDate,beforeDate);
-        this.cdr.detectChanges();
-      }
+    loadCaseList(gridDataRefiner:any)
+    {
+      this.pageSizes = this.caseFacade.gridPageSizes;
+      this.caseFacade.loadCases(gridDataRefiner);
+      this.cdr.detectChanges();
+    }
 
 }

@@ -7,7 +7,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 @Component({
   selector: 'common-document-upload',
   templateUrl: './document-upload.component.html',
-  styleUrls: ['./document-upload.component.scss'],
 })
 export class DocumentUploadComponent  implements OnInit{
 
