@@ -118,9 +118,7 @@ export class EmployerListComponent implements OnInit, OnChanges {
           this.sortValue = stateData.sort[0]?.field;
         }
     }
-    else {
-      this.sortValue =  this.sortValue;
-    }
+    
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.loadEmployments();
