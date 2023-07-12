@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy , Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy ,  Output, EventEmitter} from '@angular/core';
 import { CaseFacade  } from '@cms/case-management/domain';
 import {  LovFacade } from '@cms/system-config/domain';
 /** facades **/

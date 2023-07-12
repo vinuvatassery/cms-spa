@@ -22,7 +22,7 @@ export class VendorContacts {
   vendorName: string| null = null;
   effectiveDate: any | null = null;
 }
-export interface contactResponse {
+export interface ContactResponse {
   
   vendorContactId: string;
   vendorAddressId: string;

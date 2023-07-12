@@ -3,24 +3,17 @@
 [vendorProfileSpecialHandling$]="vendorProfileSpecialHandling$"
 (loadSpecialHandlingEvent)="loadSpecialHandling()"></cms-vendor-profile-header>
 
-
-
-
 <section class="vendor-profile-tabs">
-
   <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab">
-
     <kendo-tabstrip-tab title="{{profileInfoTitle}}" [selected]="true">
       <ng-template kendoTabContent>
         <div class="block-section">
-
           <div class="client-profile-outlet">
             <cms-vendor-info></cms-vendor-info>
           </div>
         </div>
       </ng-template>
     </kendo-tabstrip-tab>
-
     <kendo-tabstrip-tab title="Payment Addresses">
       <ng-template kendoTabContent>
         <div class="block-section">
@@ -68,17 +61,7 @@
       </ng-template>
     </kendo-tabstrip-tab>
 
-    <!-- <kendo-tabstrip-tab title="Insurance Provider" *ngIf="tabCode === financeManagementTabs.InsuranceVendors">
-
-      <ng-template kendoTabContent>
-        <div class="block-section">
-
-          <div class="client-profile-outlet">
-            <cms-financial-insurance-provider></cms-financial-insurance-provider>
-          </div>
-        </div>
-      </ng-template>
-    </kendo-tabstrip-tab> -->
+    
 
     <kendo-tabstrip-tab title="Claims" *ngIf="tabCode === financeManagementTabs.Pharmacy">
 
@@ -86,7 +69,7 @@
         <div class="block-section">
 
           <div class="client-profile-outlet">
-            <cms-financial-pharmacy-claims></cms-financial-pharmacy-claims>
+            <cms-financial-pharmacy-claims [vendorId]="vendorId"></cms-financial-pharmacy-claims>
           </div>
         </div>
       </ng-template>

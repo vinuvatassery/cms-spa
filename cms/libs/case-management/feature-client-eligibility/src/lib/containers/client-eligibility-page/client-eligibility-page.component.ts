@@ -104,11 +104,9 @@ export class ClientEligibilityPageComponent
           this.formSubmited = true;
           this.ref.detectChanges();
           let questions = JSON.parse(JSON.stringify(this.questoinsResponse));
-          let inValid = false;
           questions.forEach((parent: any) => {
             if (parent.answerCode === 'NO') {
               parent.childQuestions.forEach((child: any) => {
-                inValid = child.answerCode === 'YES' && child.notes?.length < 1;
                 questions.push(child);
               });
             }
