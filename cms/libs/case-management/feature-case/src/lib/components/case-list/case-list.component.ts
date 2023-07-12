@@ -66,7 +66,9 @@ public state!: any;
     homeAddress:"Home Address",
     ssn:"SSN",
     insurancePolicyId:"Insurance Policy Id",
-    assignedCw:"Assigned to"
+    assignedCw:"Assigned to",
+    dateOfBirth:"Date Of Birth",
+    caseManager:"Case Manager"
   }
   columnDroplist : any = {
     ALL: "ALL",
