@@ -17,6 +17,7 @@
                 value="Y"
                 name="havetheyhavefamilymember"
                 [(ngModel)]="haveTheyHaveFamilyMember"
+                (change)="cerDataPointAdjustmentChange('haveFamilyMembersChanged', 'Y')"
               />
               <kendo-label
                 class="k-radio-label"
@@ -33,6 +34,7 @@
                 value="N" 
                 name="havetheyhavefamilymember"
                 [(ngModel)]="haveTheyHaveFamilyMember"
+                (change)="cerDataPointAdjustmentChange('haveFamilyMembersChanged', 'N')"
               />
               <kendo-label
                 class="k-radio-label"
@@ -98,6 +100,7 @@
                 value="Y"
                 name="haveTheyHaveAdditionalFamilyMember"
                 [(ngModel)]="haveTheyHaveAdditionalFamilyMember"
+                (change)="cerDataPointAdjustmentChange('additionalFamilyMembers', 'Y')"
               />
               <kendo-label
                 class="k-radio-label"
@@ -114,6 +117,7 @@
                 value="N" 
                 name="haveTheyHaveAdditionalFamilyMember"
                 [(ngModel)]="haveTheyHaveAdditionalFamilyMember"
+                (change)="cerDataPointAdjustmentChange('additionalFamilyMembers', 'N')"
               />
               <kendo-label
                 class="k-radio-label"

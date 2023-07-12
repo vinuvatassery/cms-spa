@@ -75,14 +75,14 @@
               {{ dataItem.insuranceCarrierName }}
             </button></ng-template>
         </kendo-grid-column>
-        <kendo-grid-column  title="Start Date" [width]="130" >
+        <kendo-grid-column  title="Start Date" [width]="130"  field="startDate">
           <ng-template kendoGridCellTemplate let-dataItem>
-          {{ dataItem.startDate  | date: 'MM-dd-yyyy'}}
+          {{ dataItem.startDate  | date: 'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column title="End Date" [width]="130">
+        <kendo-grid-column title="End Date" [width]="130" field ="endDate">
           <ng-template kendoGridCellTemplate let-dataItem>
-            {{ dataItem.endDate  | date: 'MM-dd-yyyy'}}
+            {{ dataItem.endDate  | date: 'MM/dd/yyyy'}}
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="careassistPayingPremiumFlag" title="Help Pay?" [width]="150">
@@ -121,8 +121,7 @@
           [width]="150"
         >
         </kendo-grid-column> 
-        <kendo-grid-column field="by" title="By" [width]="70" 
-        [sticky]="true"> 
+        <kendo-grid-column field="creatorId" title="By" [width]="70" [columnMenu]="false" [sticky]="true"> 
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
@@ -151,7 +150,9 @@
           field="Option"
           title="Options"
           [width]="100"
-          class="text-center"          
+          class="text-center"
+          [sortable]="false" 
+          [columnMenu]="false"
           [sticky]="true"
         >
           <ng-template kendoGridCellTemplate let-dataItem>

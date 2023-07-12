@@ -11,7 +11,7 @@
       [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
       [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
 
-      <kendo-grid-column *ngIf="isCerForm" field="ReviewInsurance" title="Review Insurance" [width]="120" [sortable]="false">
+      <kendo-grid-column *ngIf="isCerForm" field="ReviewInsurance" title="Review Insurance" [width]="180" [sortable]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button  
             *ngIf="dataItem.cerReviewStatusCode === 'PENDING' || dataItem.cerReviewStatusCode === 'START_REVIEW'" 
@@ -33,7 +33,7 @@
         
         </ng-template>
       </kendo-grid-column>
-        <kendo-grid-column field="FullDetail" title="Full Detail" [width]="100" [sortable]="false">
+        <kendo-grid-column field="FullDetail" title="Full Detail" [width]="160" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem><button kendoButton look="flat" class="card-link-button"
               (click)="handleHealthInsuranceOpenClicked('view')" (click)="handleInsuranceType(dataItem)"
               aria-label="view medical premium">
@@ -41,7 +41,7 @@
             </button></ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="healthInsuranceTypeDesc" title="Health Insurance Type"
-          [width]="200"></kendo-grid-column>
+          [width]="280"></kendo-grid-column>
         <kendo-grid-column field="priorityDesc" title="Priority" [width]="100">
         </kendo-grid-column>
         <kendo-grid-column field="insuranceCarrierName" title="Insurance Carrier Name" [width]="150">

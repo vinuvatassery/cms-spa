@@ -1,11 +1,11 @@
 /** Angular **/
 import {
-  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef
+  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter,
 } from '@angular/core';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SnackBarNotificationType, ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
 /** Internal Libraries **/
 import { LovFacade } from '@cms/system-config/domain';
 import {  DocumentFacade, Document } from '@cms/case-management/domain';

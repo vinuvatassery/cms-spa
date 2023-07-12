@@ -62,7 +62,7 @@
         </button>
         <button kendoButton [primary]="true" aria-label="add or update case manager"
         [disabled]="btnDisabled">
-          {{ isEditSearchCaseManagerValue ? 'Update' : 'ASSIGN' }}
+          {{ isEditSearchCaseManagerValue ? 'Update' : managementTab? 'ASSIGN' : 'Add' }}
         </button>
       </div>
     </div>

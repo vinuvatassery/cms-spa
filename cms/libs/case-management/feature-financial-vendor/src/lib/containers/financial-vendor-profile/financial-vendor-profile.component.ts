@@ -7,7 +7,6 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'cms-financial-vendor-profile',
   templateUrl: './financial-vendor-profile.component.html',
-  styleUrls: ['./financial-vendor-profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialVendorProfileComponent implements OnInit {
@@ -66,13 +65,11 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.isShownEventLog = !this.isShownEventLog;
 
   }
-
+  loadSpecialHandling() {
+    this.financialVendorFacade.getVendorProfileSpecialHandling(this.vendorId);
+  }
   loadFinancialVendorProfile(vendorId : string)
   {
     this.financialVendorFacade.getVendorProfile(vendorId,this.tabCode)
-  }
-
-  loadSpecialHandling() {
-    this.financialVendorFacade.getVendorProfileSpecialHandling(this.vendorId);
   }
 }
