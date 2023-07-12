@@ -1,11 +1,11 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
-import { SortDescriptor, State } from '@progress/kendo-data-query';
+import { SortDescriptor } from '@progress/kendo-data-query';
 import { ClaimsDataService } from '../../infrastructure/financial-management/claims.data.service';
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -22,9 +22,7 @@ export class ClaimsFacade {
   }];
 
   private claimsDataSubject = new BehaviorSubject<any>([]);
-  private claimsDataLoaderSubject = new BehaviorSubject<boolean>(false);
   claimsData$ = this.claimsDataSubject.asObservable();
-  claimsDataLoader$ = this.claimsDataLoaderSubject.asObservable();
 
   
   /** Private properties **/
@@ -61,20 +59,15 @@ export class ClaimsFacade {
   ) { }
 
   /** Public methods **/
-  loadClaimsListGrid(pharmacyId: string, paginationParameters: State){
-    this.claimsDataLoaderSubject.next(true);
-    this.claimsDataService.loadClaimsListService(pharmacyId, paginationParameters).subscribe({
-      next: (dataResponse:any) => {
-        const gridView: any = {
-          data: dataResponse['items'],
-          total: dataResponse?.totalCount,
-        };
-        this.claimsDataSubject.next(gridView);
-        this.claimsDataLoaderSubject.next(false);
+  loadClaimsListGrid(){
+    this.claimsDataService.loadClaimsListService().subscribe({
+      next: (dataResponse) => {
+        this.claimsDataSubject.next(dataResponse);
+        this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.claimsDataLoaderSubject.next(false);
+        this.hideLoader(); 
       },
     });
    

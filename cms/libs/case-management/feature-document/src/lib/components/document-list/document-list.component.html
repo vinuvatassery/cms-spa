@@ -1,6 +1,12 @@
 <div class="flex-row">
     <div class="flex-col">
       <div class="app-c-table">
+        <!-- <kendo-grid
+        [pageSize]="10"
+        [pageable]="true"
+        [data]="documents$ | async"
+        [resizable]="true"
+        [loading]="isGridLoaderShow"> -->
         <kendo-grid [data]="documentsList$ | async"
                     [pageSize]="state.take"
                     [pageable]="true"

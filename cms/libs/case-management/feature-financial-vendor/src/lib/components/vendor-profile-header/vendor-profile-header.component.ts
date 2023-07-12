@@ -4,11 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'cms-vendor-profile-header',
   templateUrl: './vendor-profile-header.component.html',
+  styleUrls: ['./vendor-profile-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VendorProfileHeaderComponent {
-@Input() vendorProfileSpecialHandling$ : any
 @Input() vendorProfile$ : any
+@Input() vendorProfileSpecialHandling$ : any
 @Output() loadSpecialHandlingEvent =  new EventEmitter();
 
   popupClassAction = 'TableActionPopup app-dropdown-action-list';

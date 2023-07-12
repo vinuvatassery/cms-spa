@@ -3,7 +3,11 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
+  Input,
+  EventEmitter,
+  Output,
   OnChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BillingAddressFacade } from '@cms/case-management/domain';
@@ -12,6 +16,7 @@ import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'cms-billing-address-list',
   templateUrl: './billing-address-list.component.html',
+  styleUrls: ['./billing-address-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BillingAddressListComponent implements OnInit, OnChanges {

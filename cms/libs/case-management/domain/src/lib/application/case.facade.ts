@@ -20,6 +20,7 @@ import { Case } from '../entities/case';
 /** Data services **/
 import { CaseDataService } from '../infrastructure/case.data.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { CaseScreenTab } from '../enums/case-screen-tab.enum';
 import { ActiveSessions } from '../entities/active-sessions';
 import { Router } from '@angular/router';
 import { ClientProfileTabs } from '../enums/client-profile-tabs.enum';
@@ -160,7 +161,7 @@ export class CaseFacade {
           query
         );
         break;
-
+        
       case ClientProfileTabs.CLIENT_INCOME:
         this.router.navigate([redirectUrl + '/income/profile'], query);
         break;
@@ -181,7 +182,7 @@ export class CaseFacade {
           [redirectUrl + '/health-insurance/profile'],
           query
         );
-        break;
+        break;     
       case ClientProfileTabs.DRUGS_PHARMACIES:
       case ClientProfileTabs.DRUGS_PURCHASED:
         this.router.navigate(
@@ -257,7 +258,7 @@ export class CaseFacade {
       mergeMap((currentGroup:any) => forkJoin([of(currentGroup), this.caseDataService.loadEligibilityGroups()]))
     )
     .subscribe({
-      next:([currentEligibilityGroup, ddlGroups]:[any,any])=>{
+      next:([currentEligibilityGroup, ddlGroups]:[any,any])=>{      
         this.ddlGroupsSubject.next(ddlGroups);
         this.currentGroupSubject.next(currentEligibilityGroup);
         this.hideLoader();
@@ -347,25 +348,45 @@ export class CaseFacade {
     });
   }
 
-  loadCases(caseParams:any): void {
+  loadCases(
+    CaseScreenType: CaseScreenTab,
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string,
+    columnName: any,
+    filter: any,
+    totalClientsCount : any,
+    afterDate: any,
+    beforeDate: any
+  ): void {
     this.searchLoaderVisibilitySubject.next(true);
-    let isGridFilter = this.isGridFilter(caseParams.filter);
-    if(!isGridFilter && caseParams.columnName !== GridColumnFilter.AllColumns){
+    let isGridFilter = this.isGridFilter(filter);
+    if(!isGridFilter && columnName !== GridColumnFilter.AllColumns){
       let _filter=
         [{
             filters:[{
-              field: caseParams.columnName,
-              value: caseParams.filter,
+              field: columnName,
+              value: filter,
               operator: "contains"
             }]
         }]
-        caseParams.filter = JSON.stringify(_filter);
+    filter = JSON.stringify(_filter);
     }
     this.caseDataService
       .loadCases(
-        caseParams
+        CaseScreenType,
+        skipcount,
+        maxResultCount,
+        sort,
+        sortType,
+        columnName,
+        filter,
+        totalClientsCount,
+        afterDate,
+        beforeDate
       )
-      .subscribe({
+      .subscribe({        
         next: (casesResponse: any) => {
           this.casesSubject.next(casesResponse);
           if (casesResponse) {

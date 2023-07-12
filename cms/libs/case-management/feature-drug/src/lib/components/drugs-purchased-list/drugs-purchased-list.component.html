@@ -10,19 +10,8 @@
         <div class="app-c-table">
             <kendo-grid [resizable]="true"[pageSize]="state.take" [pageable]="true"
              [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-            [columnMenu]="{ filter: true }" [sort]="state.sort" [pageable]="true" [data]="drugPurchases$ | async"  (dataStateChange)="dataStateChange($event)">               
-                <kendo-grid-column field="prescriptionFillDate" title="Fill Date" [width]="160" [format]="{ date: 'MM-dd-yyyy' }"  filter="date">
-                  <ng-template kendoGridCellTemplate let-dataItem>
-                    {{dataItem.prescriptionFillDate | date:'MM/dd/yyyy'}}
-                  </ng-template>
-                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                    <common-grid-cell-date-range-filter
-                      [field]="'prescriptionFillDate'"
-                      [filter]="filter"
-                      [filterService]="filterService"
-                    >
-                    </common-grid-cell-date-range-filter>
-              </ng-template>
+            [columnMenu]="{ filter: true }" [sort]="state.sort" [pageable]="true" [data]="drugPurchases$ | async"  (dataStateChange)="dataStateChange($event)">
+                <kendo-grid-column field="prescriptionFillDate" title="Fill Date" [width]="100">
                 </kendo-grid-column>
                 <kendo-grid-column field="pharmacyName" title="Pharmacy" [width]="180"></kendo-grid-column>
                 <kendo-grid-column field="drugName" title="Drug" [width]="200"></kendo-grid-column>
@@ -40,20 +29,9 @@
                 <kendo-grid-column field="pbmFee" title="PBM Fee" [width]="100"></kendo-grid-column>
                 <kendo-grid-column field="revenue" title="Revenue" [width]="100"></kendo-grid-column>
                 <kendo-grid-column field="uc" title="U & C" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="entryDate" title="Entry Date" [width]="160" [format]="{ date: 'MM-dd-yyyy' }"  filter="date">
-                  <ng-template kendoGridCellTemplate let-dataItem>
-                    {{dataItem.entryDate | date:'MM/dd/yyyy'}}
-                  </ng-template>
-                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                    <common-grid-cell-date-range-filter
-                      [field]="'entryDate'"
-                      [filter]="filter"
-                      [filterService]="filterService"
-                    >
-                    </common-grid-cell-date-range-filter>
-              </ng-template>
-                </kendo-grid-column>
-                <kendo-grid-column field="by" title="By" [width]="90" [sticky]="true">
+                <kendo-grid-column field="entryDate" title="Entry Date" [width]="100"></kendo-grid-column>
+
+                <kendo-grid-column field="by" title="By" [width]="50" [sticky]="true">
                     <ng-template kendoGridCellTemplate let-dataItem>
                       <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
                         [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar of Ahith Kumar">

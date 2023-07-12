@@ -24,7 +24,7 @@ public formUiStyle : UIFormStyle = new UIFormStyle();
   tareaReminderDescription = '';
   isShow= false;
   dateValidator: boolean = false;
-  @Output() isModalNewReminderCloseClicked = new EventEmitter();
+  @Output() closeReminderEvent = new EventEmitter();
 
   constructor(private readonly todoFacade: TodoFacade,private readonly caseFacade: CaseFacade,) {}
 
@@ -57,7 +57,7 @@ public formUiStyle : UIFormStyle = new UIFormStyle();
   }
   onCloseReminderClicked() 
   {
-    this.isModalNewReminderCloseClicked.emit();
+    this.closeReminderEvent.emit();
   }
   setValidators()
   {
@@ -84,7 +84,7 @@ public formUiStyle : UIFormStyle = new UIFormStyle();
   
   public save (){
     this.setValidators();
-    if (this.clientReminderForm.valid && !this.dateValidator) {
+    if (this.clientReminderForm.valid && this.dateValidator==false) {
        this.caseFacade.showHideSnackBar( SnackBarNotificationType.SUCCESS, 'Client Reminder added successfully');
     }
   

@@ -33,7 +33,6 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   public pageSizes = this.insurancePolicyFacade.gridPageSizes;
   public gridSkipCount = this.insurancePolicyFacade.skipCount;
   carrierContactInfo!: any;
-  sort!: any;
   /** Constructor **/
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly formBuilder: FormBuilder, private readonly cdr: ChangeDetectorRef, private caseFacade: CaseFacade,
@@ -74,12 +73,10 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
-    this.sort = { field: 'paymentRequestId', dir: 'asc' };
     this.loadCoPayDeductiblesData();
   }
   public dataStateChange(stateData: any): void {
     this.state = stateData;
-    this.sort = { field: stateData?.sort[0]?.field ?? 'paymentRequestId', dir: stateData?.sort[0]?.dir ?? 'asc' };
     this.loadCoPayDeductiblesData();
   }
 
@@ -88,25 +85,19 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   private loadCoPayDeductiblesData(): void {
     this.loadCoPayDeductiblesList(
       this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sort?.field ?? 'paymentRequestId',
-      this.sort?.dir ?? 'asc'
+      this.state?.take ?? 0
     );
   }
 
   loadCoPayDeductiblesList(
     skipCountValue: number,
-    maxResultCountValue: number,
-    sortColumn: any,
-    sortType: any,
+    maxResultCountValue: number
   ) 
   {
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       maxResultCount: maxResultCountValue,
       type: 'COPAYMENT',
-      sortColumn: sortColumn,
-      sortType: sortType,
       dentalPlanFlag: (this.tabStatus == ClientProfileTabs.HEALTH_INSURANCE_COPAY ) ? ClientProfileTabs.HEALTH_INSURANCE_STATUS : ClientProfileTabs.DENTAL_INSURANCE_STATUS,
       twelveMonthsRecords: false
     };

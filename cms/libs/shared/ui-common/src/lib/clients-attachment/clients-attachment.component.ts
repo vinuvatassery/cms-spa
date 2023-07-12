@@ -7,6 +7,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'common-clients-attachment',
   templateUrl: './clients-attachment.component.html',
+  styleUrls: ['./clients-attachment.component.scss'],
 })
 export class ClientsAttachmentComponent {
 

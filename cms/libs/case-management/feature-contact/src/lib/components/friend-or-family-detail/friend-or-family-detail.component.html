@@ -9,7 +9,7 @@
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel  text="Contact’s First Name">
-        <kendo-textbox [maxlength]="40" aria-label="Contact’s First Name" formControlName="firstName" placeholder="Contact’s First Name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="Contact’s First Name" formControlName="firstName" placeholder="Contact’s First Name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="fAfContact?.firstName.errors?.required">
         Contact’s First Name is required
@@ -20,7 +20,7 @@
     </div>
     <div class="flex-col">
       <kendo-floatinglabel  text="Contact’s Last Name">
-        <kendo-textbox  [maxlength]="40" aria-label="contacts name" formControlName="lastName" placeholder="Contact’s Last Name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="contacts name" formControlName="lastName" placeholder="Contact’s Last Name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="fAfContact?.lastName?.errors?.required">
         Contact’s Last Name is required

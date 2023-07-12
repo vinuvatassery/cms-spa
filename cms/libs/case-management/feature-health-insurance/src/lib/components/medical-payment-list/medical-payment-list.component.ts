@@ -38,7 +38,6 @@ export class MedicalPaymentListComponent implements OnInit {
   isReadOnly$ = this.caseFacade.isCaseReadOnly$;
   showTwelveMonthRecordFlag:boolean = true;
   carrierContactInfo!: any;
-  sort!: any;
   /** Private **/
   private triggeredPremiumPaymentSubscription!: Subscription;
 
@@ -86,25 +85,20 @@ export class MedicalPaymentListComponent implements OnInit {
     this.getPaymentRequestLov();
     this.isPremiumPaymentDetailsOpened = true;
   }
-
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
-    this.sort = { field: 'paymentRequestId', dir: 'asc' };
+    this.loadPremiumPaymentData();
+  }
+  public dataStateChange(stateData: any): void {
+    this.state = stateData;
     this.loadPremiumPaymentData();
   }
 
-  public dataStateChange(stateData: any): void {
-    this.state = stateData;
-    this.sort = { field: stateData?.sort[0]?.field ?? 'paymentRequestId', dir: stateData?.sort[0]?.dir ?? 'asc' };
-    this.loadPremiumPaymentData();
-  }
   private loadPremiumPaymentData(): void {
     this.loadPremiumPaymentList(
       this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sort?.field ?? 'paymentRequestId',
-      this.sort?.dir ?? 'asc'
+      this.state?.take ?? 0
     );
 
   }
@@ -120,16 +114,12 @@ export class MedicalPaymentListComponent implements OnInit {
 
   loadPremiumPaymentList(
     skipCountValue: number,
-    maxResultCountValue: number,
-    sortColumn: any,
-    sortType: any
+    maxResultCountValue: number
   ) {
 
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       maxResultCount: maxResultCountValue,
-      sortColumn: sortColumn,
-      sortType: sortType,
       type: 'MEDICAL_PREMIUM',
       dentalPlanFlag: (this.tabStatus == ClientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS ) ? ClientProfileTabs.HEALTH_INSURANCE_STATUS : ClientProfileTabs.DENTAL_INSURANCE_STATUS,
       twelveMonthsRecords: this.showTwelveMonthRecordFlag
@@ -137,7 +127,6 @@ export class MedicalPaymentListComponent implements OnInit {
 
     this.loadPremiumPaymentEvent.next(gridDataRefinerValue);
   }
-
   getPaymentRequestLov() {
     this.lovFacade.getPremiumPaymentTypeLov();
     this.lovFacade.getPremiumPaymentReversalLov();

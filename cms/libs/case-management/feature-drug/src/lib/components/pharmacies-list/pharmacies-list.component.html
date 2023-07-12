@@ -155,7 +155,6 @@
       <case-management-remove-pharmacy
         [clientPharmacyId]="selectClientPharmacyId"
         [isShowHistoricalData]="isShowHistoricalData"
-        [isClientProfile]="isClientProfile"
         (removeConfirmEvent)="removeClientPharmacy($event)"
     >     </case-management-remove-pharmacy>
 </kendo-dialog>
@@ -191,12 +190,12 @@
 <!-- Change Pharmacy Priority Modal -->
 <kendo-dialog
   *ngIf="isTriggerPriorityPopup"
-  (close)="handleCloseChangePriorityClick()"
+  (close)="handleCloseChangePriorityClikced()"
   class="app-c-modal app-c-modal-md app-c-modal-np"
 >
   <kendo-dialog-titlebar> Select Pharmacy Priority </kendo-dialog-titlebar>
   <case-management-set-pharmacy-priority
-    (closeChangePriority)="handleCloseChangePriorityClick()"
+    (closeChangePriority)="handleCloseChangePriorityClikced()"
     [pharmacyPriorityModalButtonText]="pharmacyPriorityModalButtonText"
     [clientpharmacies]="pharmacies"
     [clientId]="clientId"

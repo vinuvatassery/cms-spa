@@ -44,7 +44,6 @@ export class DeactivateFriendOrFamilyConfirmationComponent implements OnInit {
       clientCaseEligibilityId: this.clientContact.clientCaseEligibilityId,
       relationshipSubTypeCode: this.clientContact.relationshipSubTypeCode,
       firstName: this.clientContact.firstName,
-      lastName: this.clientContact.lastName,
       phoneNbr: this.clientContact.phoneNbr,
       activeFlag: StatusFlag.No,
       concurrencyStamp: this.clientContact.concurrencyStamp

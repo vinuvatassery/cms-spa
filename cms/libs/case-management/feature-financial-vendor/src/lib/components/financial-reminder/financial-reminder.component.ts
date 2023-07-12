@@ -6,6 +6,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 @Component({
   selector: 'cms-financial-reminder',
   templateUrl: './financial-reminder.component.html',
+  styleUrls: ['./financial-reminder.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FinancialReminderComponent {

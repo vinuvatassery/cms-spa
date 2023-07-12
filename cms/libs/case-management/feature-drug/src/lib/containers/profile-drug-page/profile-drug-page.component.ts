@@ -14,7 +14,6 @@ export class ProfileDrugPageComponent  implements OnInit , OnDestroy {
   clientCaseEligibilityId!: any;
   clientCaseId!: any;
   tabId! : any
-  isClientProfile = true;
 
   constructor(  
     private drugPharmacyFacade: DrugPharmacyFacade,

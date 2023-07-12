@@ -19,15 +19,14 @@
   (createCerSessionEvent)="createCerSession()"
 ></case-management-case360-header>
 <case-management-common-actions></case-management-common-actions>
+
 <!-- Case 360 details section -->
 <section class="client-tab-section">
   <!-- Case Details right Menus -->
   <case-management-case360-header-tools 
   [clientId] = "profileClientId" 
   [clientCaseEligibilityId]="clientCaseEligibilityId"
-  [loadedClientHeader]="loadedClientHeader$ | async" 
-  (loadClientProfileInfoEvent)="loadClientProfileInfoEventHandler()"
-  *ngIf="clientId && clientCaseEligibilityId" 
+  *ngIf="clientId && clientCaseEligibilityId"  
   ></case-management-case360-header-tools>
 
   <div class="client-tab-bar-wrappers">

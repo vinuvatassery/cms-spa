@@ -145,7 +145,7 @@ export class EmploymentFacade {
     )
     .subscribe({
       next: (employersResponse: any) => {
-        if (employersResponse) {
+        if (employersResponse) {      
           this.prvEmployersSubject.next(employersResponse['items']);
           this.hideLoader();
         }
@@ -209,10 +209,6 @@ export class EmploymentFacade {
       else if(emp.cerReviewStatusCode === 'INACTIVE' && !emp.endDate){
         isValid = false;
         emp.endDateRequired = true;
-      }
-      else if(emp.endDate !== null && emp.endDate<emp.dateOfHire){
-        isValid = false;
-        emp.endDateAfterHireDate = true;
       }
     });
     this.prvEmployersSubject.next(prvEmployers);

@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy ,  TemplateRef} from '@angular/core';
+import { Component, ChangeDetectionStrategy , ElementRef, TemplateRef} from '@angular/core';
 /** External libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';

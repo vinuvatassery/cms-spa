@@ -41,7 +41,7 @@
                   </kendo-combobox>
                 
                   </kendo-floatinglabel>
-                  <kendo-formerror *ngIf="!premiumPaymentForm.controls['clientInsurancePolicyId'].valid">Policy is required.</kendo-formerror>
+                  <kendo-formerror *ngIf="!premiumPaymentForm.controls['clientInsurancePolicyId'].valid">Insurance Policy is required.</kendo-formerror>
         </div>
         <div class="flex-col">
             <kendo-floatinglabel text="Service Description">
@@ -55,12 +55,10 @@
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
                         <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                        <kendo-numerictextbox aria-label="premiumAmt" [spinners]="false" class="input-icon-right"
-                        placeholder="Premium Amount" placeholder="00.00" formControlName="amountRequested" 
-                        [fillMode]="formUiStyle.inputFillMode" name="premiumAmt" >
-                        </kendo-numerictextbox>
-
-                        <kendo-formerror *ngIf="!premiumPaymentForm.controls['amountRequested'].valid">Premium Amount is
+                        <kendo-textbox formControlName="amountRequested" aria-label="Premium Amount" placeholder=""
+                            [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+                        <kendo-formerror *ngIf="!premiumPaymentForm.controls['amountRequested'].valid">Payment Amount is
                             required.</kendo-formerror>
                     </kendo-floatinglabel>
                 </div>

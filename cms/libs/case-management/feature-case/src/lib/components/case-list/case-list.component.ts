@@ -6,7 +6,9 @@ import {
   Input,
   Output,
   EventEmitter,
+  OnChanges,
   ChangeDetectorRef,
+  ViewChild,
 } from '@angular/core';
 /** Facades **/
 import { CaseFacade,CaseScreenTab, CaseStatusCode, WorkflowTypeCode, GridFacade, GridStateKey } from '@cms/case-management/domain';
@@ -25,7 +27,7 @@ import { Router } from '@angular/router';
   templateUrl: './case-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaseListComponent implements OnInit {
+export class CaseListComponent implements OnInit, OnChanges {
 
 public isGridLoaderShow = true;
 @Input() searchLoaderVisibility$!: Observable<boolean>;
@@ -147,6 +149,8 @@ public state!: any;
       }
     });
   }
+  ngOnChanges(): void {
+  }
   defaultGridState(){
     this.state = {
       skip: 0,
@@ -193,9 +197,9 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.columnName = stateFilter.field;
-
+     
         this.filter = stateFilter.value;
-
+     
       this.isFiltered = true;
       const filterList = []
       for(const filter of stateData.filter.filters)
@@ -213,28 +217,27 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     }
     this.state=stateData;
     this.saveGridState();
-    this.setGridState(stateData);
+    this.setGridState(stateData);  
     this.loadProfileCasesList();
   }
 
   private loadProfileCasesList(): void {
-    const gridDataRefinerValue =
-    {
-      skipCount: this.state.skip ?? 0,
-      pagesize : this.state.take ?? 0,
-      sortColumn : this.sortValue,
-      sortType : this.sortType,
-      columnName : this.columnName,
-      filter : this.filter,
-      afterDate: this.afterDate,
-      beforeDate: this.beforeDate
-    }
-
-    this.loadCases(gridDataRefinerValue)
+    this.loadCases(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType, this.columnName,this.filter,this.afterDate,this.beforeDate)
   }
 
-   loadCases(gridDataRefinerValue:any)
+   loadCases(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any, afterDate: any, beforeDate: any)
    {
+     const gridDataRefinerValue =
+     {
+       skipCount: skipcountValue,
+       pagesize : maxResultCountValue,
+       sortColumn : sortValue,
+       sortType : sortTypeValue,
+       columnName : columnName,
+       filter : filter,
+       afterDate: afterDate,
+       beforeDate: beforeDate
+     }
      this.loadCasesListEvent.next(gridDataRefinerValue);
      this.cdr.detectChanges();
    }
@@ -299,7 +302,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   }
 
   onChange(event :any)
-  {
+  {    
     this.defaultGridState()
     this.columnName = this.state.columnName = this.columnDroplist[this.selectedColumn];
     this.sortColumn = this.columns[this.selectedColumn];
@@ -358,43 +361,52 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   }
 
   public columnChange(e: ColumnVisibilityChangeEvent) {
-    const columnsRemoved = e?.columns.filter(x => x.hidden).length;
-  const columnsAdded = e?.columns.filter(x => !x.hidden).length;
+    const columnsRemoved = e?.columns.filter(x=> x.hidden).length
+    const columnsAdded = e?.columns.filter(x=> x.hidden === false).length
 
-  if (columnsAdded > 0) {
-    this.addRemoveColumns = 'Columns Added';
-  }
-  else {
-    this.addRemoveColumns = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
-  }
+    this.addRemoveColumns =''
+    if(columnsAdded > 0)
+    {
+      this.addRemoveColumns = "Columns Added"
+    }
 
-  e.columns.forEach(column => {
-    if (column.hidden) {
-      const field = (column as ColumnComponent)?.field;
-      const mainFilters = this.state.filter.filters;
+    if(columnsRemoved > 0)
+    {
+      this.addRemoveColumns += " Columns Removed"
+    }
+    if(columnsAdded == 0 && columnsRemoved == 0)
+    {
+      this.addRemoveColumns = "Default Columns"
+    }
 
-      mainFilters.forEach((filter:any) => {
-          const filterList = filter.filters;
+    for(let i=0; i<e.columns.length; i++){
+      if(e.columns[i].hidden == true) {
+       let field =  (e.columns[i] as ColumnComponent)?.field;
+       let mainFilters = this.state.filter.filters;
+       let flag = false;
+       for (let k=0; k<mainFilters.length; k++){
+         let filterList = mainFilters[k].filters;
+         for (let j=0; j< filterList.length; j++){
+           if(filterList[j].field == field){
+             flag = true;
+             this.state.filter.filters[k].filters = this.state.filter.filters[k].filters.filter((x: any) => {
+               return x.field !== field;
+             });
+             this.selectedColumn = "";
+             this.columnName = "";
+             this.filter = "";
+             this.state.searchValue = "";
+             this.state.selectedColumn = "";
+             this.state.columnName = "";
+           }
+         }
+       }
+       if (flag)
+         this.loadProfileCasesList();
+     }
+   }
 
-          const foundFilter = filterList.find((x: any) => x.field === field);
-
-          if (foundFilter) {
-            filter.filters = filterList.filter((x: any) => x.field !== field);
-            this.clearSelectedColumn();
-            this.loadProfileCasesList();
-          }
-        });
-      }
-    });
-  }
-
-  private clearSelectedColumn() {
-    this.selectedColumn = '';
-    this.columnName = '';
-    this.filter = '';
-    this.state.searchValue = '';
-    this.state.selectedColumn = '';
-    this.state.columnName = '';
+    this.cdr.detectChanges()
   }
 
   onCaseClicked(session: any) {
@@ -413,37 +425,44 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   }
 
   public setGridState(stateData: any): void {
-    this.state = stateData;
-
-    const filters = stateData.filter?.filters ?? [];
-
-    for (let val of filters) {
-      if (val.field === 'eilgibilityStartDate' || val.field === 'eligibilityEndDate') {
-        this.intl.formatDate(val.value, this.dateFormat);
+      this.state=stateData;
+      if(stateData.filter?.filters.length > 0)
+      {
+        for (let i = 0; i < stateData.filter?.filters.length; i++) {
+          let val = stateData.filter?.filters[i]
+          if(val.field === 'eilgibilityStartDate' || val.field === 'eligibilityEndDate')
+          {
+            let date = this.intl.formatDate(val.value, this.dateFormat);
+            val = date;
+          }
+        }
+        const filterList = this.state?.["filter"]?.["filters"] ?? []                
+        this.filter = JSON.stringify(filterList);
+        const filterListData = []
+        if(stateData.filter?.filters.length > 0)
+       {
+        for(const filter of stateData.filter.filters)
+        {
+          filterListData.push(this.columns[filter?.filters[0]?.field]);
+        }
+        this.isFiltered =true;
+        this.filteredBy =  filterListData.toString();
+        this.cdr.detectChanges();
+       }
       }
-    }
-    const filterList = this.state?.filter?.filters ?? [];
-    this.filter = JSON.stringify(filterList);
-
-    if (filters.length > 0) {
-      const filterListData = filters.map((filter:any) => this.columns[filter?.filters[0]?.field]);
-      this.isFiltered = true;
-      this.filteredBy = filterListData.toString();
-      this.cdr.detectChanges();
-    }
-    else {
-      this.filter = "";
-      this.columnName = "";
-      this.isFiltered = false;
-    }
-
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? "";
-    this.sortType = stateData.sort[0]?.dir ?? "";
-    this.state = stateData;
-    this.sortColumn = this.columns[stateData.sort[0]?.field];
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending':'';
-    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
-    this.loadProfileCasesList();
+      else
+      {
+        this.filter = "";
+        this.columnName = "";
+        this.isFiltered = false
+      }
+      this.sort = stateData.sort;
+      this.sortValue = stateData.sort[0]?.field ?? ""
+      this.sortType = stateData.sort[0]?.dir ?? ""
+      this.state=stateData;
+      this.sortColumn = this.columns[stateData.sort[0]?.field];
+      this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
+      this.sortDir = this.sort[0]?.dir === 'desc'? 'Descending': "";
+      this.loadProfileCasesList();
   }
 }

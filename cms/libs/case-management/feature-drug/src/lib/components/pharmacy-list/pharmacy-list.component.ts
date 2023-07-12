@@ -68,7 +68,6 @@ export class PharmacyListComponent implements OnInit {
       text: "Change Priority",
       icon: "format_line_spacing",
       click: (clientPharmacyId: string, vendorId: string): void => {
-        this.isEditPharmacyPriorityTitle = true;
           this.onOpenChangePriorityClicked()
       },
     },

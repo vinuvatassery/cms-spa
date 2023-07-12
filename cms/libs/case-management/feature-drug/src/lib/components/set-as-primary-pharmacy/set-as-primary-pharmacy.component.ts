@@ -70,7 +70,7 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
   searchPharmacies(searchText: string) {
     this.drugPharmacyFacade.searchPharmacies(searchText);
   }
-
+  filterPharmacies() {}
   onChangePharmacy(selectedPharmacy: any) {
     this.IsDeactivateSelectPrimaryPharmacies = true;
     this.isPharmacyError = false;
@@ -88,6 +88,7 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
     if (pharmacy.vendorId) {
       this.selectedSearchedPharmacy = pharmacy;
       this.selectedPharmacy = null;
+      this.selectedVendorId = '';
       this.ref.detectChanges();
     }
   }

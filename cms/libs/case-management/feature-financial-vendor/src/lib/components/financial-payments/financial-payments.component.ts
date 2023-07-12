@@ -64,6 +64,12 @@ export class FinancialPaymentComponent {
   }
 
   loadPaymentsListGrid() {
+    // this.state = {
+    //   skip: this.gridSkipCount,
+    //   take: this.pageSizes[0]?.value,
+    //   sort: this.sort,
+    // };
+
     this.paymentsFacade.loadPaymentsListGrid(this.vendorId, this.state);
   }
 
