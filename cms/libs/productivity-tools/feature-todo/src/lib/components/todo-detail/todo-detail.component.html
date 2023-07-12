@@ -16,7 +16,7 @@
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Repeat">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlCaseOrigins$ | async">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"  >
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
@@ -66,8 +66,7 @@
             aria-hidden="true"
             >search</span
           >
-          <kendo-multicolumncombobox
-            [data]="search$ | async"
+          <kendo-multicolumncombobox 
             textField="name"
             valueField="id"
             [fillMode]="formUiStyle.dropDownFillMode"
@@ -96,9 +95,7 @@
           aria-hidden="true"
           >search</span
         >
-        <kendo-multicolumncombobox
-           
-          [data]="caseSearched$ | async"
+        <kendo-multicolumncombobox 
           textField="name"
           valueField="id"
           placeholder="Search Case Name, Member ID or SSN"
