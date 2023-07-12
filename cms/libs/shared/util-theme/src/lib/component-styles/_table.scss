@@ -828,3 +828,21 @@ table,
     }
   }
 }
+
+.table_view_data_info{
+  
+    color: $black;
+    text-align: left;
+    tr{
+      th{
+        text-align: left;
+        padding: 10px 4px;
+      }
+      td{
+        padding:6px 4px;  
+        
+      }
+    }
+ 
+}
+

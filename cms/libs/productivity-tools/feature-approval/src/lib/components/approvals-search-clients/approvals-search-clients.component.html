@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar > Search Clients </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeSearchCase()"> Search Clients </kendo-dialog-titlebar>
 <section class="k-dialog-body add_main_popup_screen">
     <p class="text-muted mb-2">If the claim passes all criteria after clicking “Save” it will automatically be submitted
         for processing. This action cannot be undone. If it still fails one or more criteria, it will stay in your
@@ -12,11 +12,11 @@
                 <span class="material-icons global-search-icon" aria-label="search" aria-hidden="true">search</span>
                 <span *ngIf="isShownSearchLoader"
                     class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                <kendo-multicolumncombobox [data]="clientSearchResult" textField="clientFullName" valueField="clientId"
+                <kendo-multicolumncombobox [data]="clientSearchResult" textField="clientFullName"  
                     [fillMode]="formUiStyle.dropDownFillMode"
                     placeholder="Search client Name, Member ID, SSN, or Policy ID"
                     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-                    formControlName="itemSelected">
+                   >
                     <button kendoButton fillMode="clear" icon="image"></button>
 
                     <kendo-combobox-column>

@@ -50,7 +50,9 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+  private searchCaseDialog: any;
+  private expectationDialog: any;
+  private reviewPossibleMatchesDialog: any;
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService) {}
 
@@ -161,5 +163,38 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       }
     });
     this.isImportedClaimsGridLoaderShow = false;
+  };
+
+
+  onSearchClientsDialogClicked(  template: TemplateRef<unknown>): void {   
+    this.searchCaseDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
+    });
   }
+  onCloseSearchClientsDialogClicked(){
+    this.searchCaseDialog.close();
+  }
+
+
+  onMakeExpectationClicked(  template: TemplateRef<unknown>): void {   
+    this.expectationDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onCloseMakeExpectationDialogClicked(){
+    this.expectationDialog.close();
+  }
+
+  onReviewPossibleMatchesDialogClicked(  template: TemplateRef<unknown>): void {   
+    this.reviewPossibleMatchesDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
+    });
+  }
+  onCloseReviewPossibleMatchesDialogClicked(){
+    this.reviewPossibleMatchesDialog.close();
+  }
+  
 }

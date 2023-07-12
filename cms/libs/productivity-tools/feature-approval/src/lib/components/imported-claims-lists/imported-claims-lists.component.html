@@ -104,7 +104,22 @@
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
     <span class="">0 claim(s) to be denied, 0 claim(s) to be deleted</span>
-    <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Cancel </button>
-    <button kendoButton [primary]="true" look="flat" class="" aria-label="APPROVE ALL"> APPROVE ALL </button>
-    <button kendoButton [primary]="true" aria-label="Submit" class=""> Submit </button>
+    <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" (click)="onReviewPossibleMatchesDialogClicked(possibleMatchesDialogModal)"> Cancel </button>
+    <button kendoButton [primary]="true" (click)="onMakeExpectationClicked(expectationReasonDialogModal)" look="flat" class="" aria-label="APPROVE ALL"> APPROVE ALL </button>
+    <button kendoButton [primary]="true" (click)="onSearchClientsDialogClicked(searchClientsDialogModal)" aria-label="Submit" class=""> Submit </button>
 </div>
+
+
+<ng-template #searchClientsDialogModal>
+    <productivity-tools-approvals-search-clients (closeSearchClientsDialogClickedEvent)="onCloseSearchClientsDialogClicked()"></productivity-tools-approvals-search-clients>
+</ng-template>
+
+<ng-template #expectationReasonDialogModal>
+<productivity-tools-approvals-expectation-reason (closeMakeExpectationDialogClickedEvent)="onCloseMakeExpectationDialogClicked()"></productivity-tools-approvals-expectation-reason>
+</ng-template>
+
+
+<ng-template #possibleMatchesDialogModal>
+    <productivity-tools-approvals-review-possible-matches (closeReviewPossibleMatchesDialogClickedEvent)="onCloseReviewPossibleMatchesDialogClicked()"></productivity-tools-approvals-review-possible-matches>
+    </ng-template>
+

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Output,  EventEmitter, } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 @Component({
   selector: 'productivity-tools-approvals-search-clients',
@@ -8,6 +8,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class ApprovalsSearchClientsComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  @Output() closeSearchClientsDialogClickedEvent = new EventEmitter<any>();
   isShownSearchLoader = false;
   clientSearchResult =[
 
@@ -42,4 +43,8 @@ export class ApprovalsSearchClientsComponent {
       dob: '23/12/2023',
     },
   ];
+  closeSearchCase(){
+    this.closeSearchClientsDialogClickedEvent.emit();
+  }
+
 }
