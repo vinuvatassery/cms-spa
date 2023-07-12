@@ -30,7 +30,7 @@
     class="app-l-sidebar"
     [class.menuToggled]="isSideMenuToggled"  
   >
-    <div class="drawer-inner-container" role="menuitem" *ifPermission='["Layout_Menu_View_Only"]'>  
+    <div class="drawer-inner-container" role="menuitem" >  
       <div class="sidebar-hamburger">
         <button
           (click)="onSideMenuToggleClicked()"
@@ -48,10 +48,10 @@
           </span>
         </button>
       </div>   
-      <cms-side-navigation></cms-side-navigation>
+      <cms-side-navigation *ifPermission='["Layout_Menu_View_Only"]'></cms-side-navigation>
 
       <!-- Selector for active sessions -->
-      <case-management-last-visited-cases></case-management-last-visited-cases>
+      <case-management-last-visited-cases *ifPermission='["Layout_Menu_View_Only"]'></case-management-last-visited-cases>
     </div>
   </section>
   <section class="app-l-body-container">

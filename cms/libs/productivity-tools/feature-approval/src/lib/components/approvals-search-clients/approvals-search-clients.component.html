@@ -12,7 +12,7 @@
                 <span class="material-icons global-search-icon" aria-label="search" aria-hidden="true">search</span>
                 <span *ngIf="isShownSearchLoader"
                     class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                <kendo-multicolumncombobox [data]="clientSearchResult" textField="clientFullName"  
+                <kendo-multicolumncombobox [data]="clientSearchResult" textField="clientFullName" valueField="clientId"
                     [fillMode]="formUiStyle.dropDownFillMode"
                     placeholder="Search client Name, Member ID, SSN, or Policy ID"
                     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"

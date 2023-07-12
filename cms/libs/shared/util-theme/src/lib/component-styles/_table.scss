@@ -845,4 +845,53 @@ table,
     }
  
 }
+.abstab{
+//   .k-table-thead tr th:first-child{
+//     display: none !important;
+// }
+ 
+.k-grid {
+  .k-master-row{
+    
+      td.k-table-td:last-child{
+        border-block-start-width:1px
+      
+    }
+    .k-hierarchy-cell{
+      cursor: default;
+      pointer-events: none;
+      a{
+        display: none !important;
+      }
+     
+    }
+  }
+
+}
+.k-detail-row{
+  .k-hierarchy-cell{
+    display: none;
+  }
+  .k-detail-cell{
+    padding: 0;
+    .table_sub_row{
+      padding: 4px 6px;
+      font-size: 13px;
+      align-items: center; 
+      display: flex;
+      gap: 10px;
+      &.warning_info_row{
+        background: #FFF1D380 0% 0% no-repeat padding-box;
+        color: #623D00;
+         .card-link-button, .material-icons {
+        color: #623D00;
+        font-size: 13px;
+  
+        }
+      }
+   
+    }
+  }
+}
+}
 

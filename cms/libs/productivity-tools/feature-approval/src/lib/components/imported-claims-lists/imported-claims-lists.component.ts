@@ -9,6 +9,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { RowArgs } from "@progress/kendo-angular-grid";
 import { Router } from '@angular/router';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
@@ -52,7 +53,98 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   private searchCaseDialog: any;
   private expectationDialog: any;
-  private reviewPossibleMatchesDialog: any;
+  private reviewPossibleMatchesDialog: any; 
+
+  // Note to Developer: Please remove below when implementing API call and use this variable in data grid "approvalsImportedClaimsLists$""
+  claimsGridLists =[
+    { 
+      id: 1, 
+      clientName: 'Attention', 
+      namePrimaryInsuranceCard: 'Attention', 
+      claimSource: 'Attention', 
+      policyID: 'xxxx', 
+      amountDue: 'xxxx', 
+      dateService: 'xxx', 
+      policyIDMatch: 'xx/xx/xxxx', 
+      eligibilityMatch: '12/2019',
+      validInsurance: 'Immediate',
+      belowMaxBenefits: 'Expense',
+      entryDate: 'Rent Deposit',
+      isDelete: 'Y',
+      subRow: 
+        {
+          type:'01',
+          expand: 1,
+        }
+      
+    },
+    { 
+      id: 2, 
+      clientName: 'Attention', 
+      namePrimaryInsuranceCard: 'Attention', 
+      claimSource: 'Attention', 
+      policyID: 'xxxx', 
+      amountDue: 'xxxx', 
+      dateService: 'xxx', 
+      policyIDMatch: 'xx/xx/xxxx', 
+      eligibilityMatch: '12/2019',
+      validInsurance: 'Immediate',
+      belowMaxBenefits: 'Expense',
+      entryDate: 'Rent Deposit',
+      isDelete: 'N',
+      subRow: 
+        {
+          type:'02',
+          expand: 1,
+
+        }
+      
+    },
+    { 
+      id: 3, 
+      clientName: 'Attention', 
+      namePrimaryInsuranceCard: 'Attention', 
+      claimSource: 'Attention', 
+      policyID: 'xxxx', 
+      amountDue: 'xxxx', 
+      dateService: 'xxx', 
+      policyIDMatch: 'xx/xx/xxxx', 
+      eligibilityMatch: '12/2019',
+      validInsurance: 'Immediate',
+      belowMaxBenefits: 'Expense',
+      entryDate: 'Rent Deposit',
+      isDelete: 'N',
+      subRow: 
+        {
+          type:'03',
+          expand: 1,
+
+        }
+      
+    },
+    { 
+      id: 4, 
+      clientName: 'Attention', 
+      namePrimaryInsuranceCard: 'Attention', 
+      claimSource: 'Attention', 
+      policyID: 'xxxx', 
+      amountDue: 'xxxx', 
+      dateService: 'xxx', 
+      policyIDMatch: 'xx/xx/xxxx', 
+      eligibilityMatch: '12/2019',
+      validInsurance: 'Immediate',
+      belowMaxBenefits: 'Expense',
+      entryDate: 'Rent Deposit',
+      isDelete: 'N',
+      subRow: 
+        {
+          type:'04',
+          expand: 1,
+
+        }
+      
+    },
+  ]
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService) {}
 
@@ -68,7 +160,10 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
 
     this.loadImportedClaimsListGrid();
   }
-
+  public expandInStockProducts({ dataItem }: RowArgs): boolean {
+    return dataItem.subRow.expand === 1;
+  }
+ 
   private loadImportedClaimsListGrid(): void {
     this.loadImportedClaims(
       this.state?.skip ?? 0,
