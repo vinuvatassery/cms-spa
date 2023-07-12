@@ -1,4 +1,4 @@
-<section class="k-dialog-body">
+<section class="k-dialog-body" kendoTooltip>
   <p class="text-muted mb-2">
     All fields are required unless otherwise stated.
   </p>
@@ -51,6 +51,13 @@
       </kendo-floatinglabel>
     </div>
     <div class="flex-col mt-2">
+      <kendo-floatinglabel text="Link Reminder To">
+        <kendo-dropdownlist aria-label="Link Reminder To" [fillMode]="formUiStyle.dropDownFillMode" > </kendo-dropdownlist>
+    </kendo-floatinglabel>
+    <span class="material-icons" title="Select an entity if you want this item to be displayed in its profile.">info</span>
+    
+      </div>
+    <div class="flex-col mt-2">
       <div class="autoSelect-search mat-form-no-b-space">
         <div class="global-search">
           <span
@@ -79,6 +86,7 @@
           </kendo-multicolumncombobox>
         </div>
       </div>
+      <span class="material-icons" title="Select a client or service provider if you want this reminder to be displayed in their profile.">info</span>
     </div>
     <div class="flex-col mt-2">
       <div class="global-search mat-form-no-b-space">
@@ -116,8 +124,11 @@
 </section>
 
 
-<kendo-dialog-actions>
+<kendo-dialog-actions kendoTooltip>
   <div class="justify-content-between">
+    <div>
+      <button kendoButton aria-label="delete" class="k-danger-link">  Delete     </button>
+    </div>
     <div class="justify-content-end">
       <button
         kendoButton
