@@ -48,7 +48,7 @@
         </kendo-grid-column>
         <kendo-grid-column field="paymentTypeDesc" title="Type" [width]="130">
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="80" [sortable]="false" [columnMenu]="false">
+        <kendo-grid-column field="by" title="By" [width]="80" [sortable]="false" [columnMenu]="false" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
@@ -114,7 +114,6 @@
     </button>
   </div>
 </div>
-
 
 <kendo-dialog *ngIf="isCoPaymentDetailsOpened" (close)="closeCoPaymentDetailsOpened()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
