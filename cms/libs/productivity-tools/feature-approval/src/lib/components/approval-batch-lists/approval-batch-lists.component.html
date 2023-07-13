@@ -1,20 +1,38 @@
 <section class="k-dialog-body">
    <p>Click on the left and right navigational arrows to browse batches. Select whether to approve or send them back to the user who submitted them.</p>
-<div class="mt-1">
-    <kendo-buttongroup selection="single" class="fill_width_group_btn">
-        <button kendoButton aria-label="proof of address yes" [toggleable]="true">Approve
+<div class="custom_scroll_view mt-2">
+   <kendo-scrollview
+   [data]="items"
+   [width]="width"
+   [height]="height"
+   [arrows]="true"
+   [pageable]="false"
+ >
+   <ng-template let-item="item">
+    <div>
+      <div class="slidertitle-bar">
+        <p><strong>Batch # MMDDYYYY_002 </strong> <label class="ml-1">$XX,XXX.XX</label> <label class="ml-1"> 79 payment(s)</label></p>
+      </div>
+      <div class="mt-1">
+        <kendo-buttongroup selection="single" class="fill_width_group_btn">
+            <button kendoButton aria-label="proof of address yes" [toggleable]="true">Approve
+        
+            </button>
+            <button kendoButton aria-label="proof of address yes" [toggleable]="true">Send Back
+        
+            </button>
+        </kendo-buttongroup> 
+    </div>
+    <kendo-floatinglabel text="Send Back Notes">
+        <kendo-textbox aria-label="Send Back Notes" [fillMode]="formUiStyle.inputFillMode">
+        </kendo-textbox>
     
-        </button>
-        <button kendoButton aria-label="proof of address yes" [toggleable]="true">Send Back
-    
-        </button>
-    </kendo-buttongroup> 
-</div>
-<kendo-floatinglabel text="Send Back Notes">
-    <kendo-textbox aria-label="Send Back Notes" [fillMode]="formUiStyle.inputFillMode">
-    </kendo-textbox>
+    </kendo-floatinglabel>  
+    </div>
+   </ng-template>
+ </kendo-scrollview>
 
-</kendo-floatinglabel>  
+</div>
  
 </section>
   <kendo-dialog-actions>

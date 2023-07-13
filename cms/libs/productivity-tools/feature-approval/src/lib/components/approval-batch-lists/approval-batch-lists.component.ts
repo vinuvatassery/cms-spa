@@ -5,5 +5,10 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   templateUrl: './approval-batch-lists.component.html', 
 })
 export class ApprovalBatchListsComponent {
+  public width = "100%";
+  public height = "100%";
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  items = [
+    {},{}
+  ]
 }
