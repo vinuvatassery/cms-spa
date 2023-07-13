@@ -74,7 +74,6 @@ export class Case360HeaderComponent implements OnInit {
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
     this.isEditEligibilityFlag = false;
-    // this.isStatusPeriodDetailOpened = true;
   }
 
   onStatusPeriodEditClicked(template: TemplateRef<unknown>): void {

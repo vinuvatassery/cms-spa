@@ -123,7 +123,7 @@
       <button *ngIf="!isEdit && !isStatusPeriodEdit" kendoButton aria-label="start new status period" [primary]="true"(click)="startNewEligibility()" [disabled]="(isReadOnly$ | async) ? true : false">
         START
       </button>
-      <button *ngIf="isEdit || isStatusPeriodEdit" kendoButton aria-label="start new status period" [primary]="true"(click)="updateCurrentEligibility()" [disabled]="(isReadOnly$ | async) ? true : false">
+      <button *ngIf="isEdit || isStatusPeriodEdit" kendoButton aria-label="start new status period" [primary]="true"(click)="updateCurrentEligibility()" [disabled]="(isReadOnly$ | async) ? true : false || statusEndDateIsGreaterThanStartDate ? false:true">
         UPDATE
       </button>
     </div>

@@ -12,7 +12,7 @@ import {
 import { CerTrackingFacade, StatusFlag } from '@cms/case-management/domain';
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor, FilterDescriptor, State , filterBy} from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State ,} from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 @Component({

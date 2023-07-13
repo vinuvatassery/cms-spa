@@ -4,7 +4,6 @@ import { BillingAddressFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-payment-address-deactivate',
   templateUrl: './payment-address-deactivate.component.html',
-  styleUrls: ['./payment-address-deactivate.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentAddressDeactivateComponent {
@@ -16,18 +15,18 @@ export class PaymentAddressDeactivateComponent {
 
   deactivatePaymentAddress(): void {
     this.cdr.detectChanges();
-    this.billingAddressFacade.deactivateAddress(this.addressId).subscribe(
-      (response) => {
+    this.billingAddressFacade.deactivateAddress(this.addressId).subscribe({
+      next: (response) => {
         if (response) {
           this.onCloseDeactivatePaymentAddressClicked(true);
         } else {
           this.onCloseDeactivatePaymentAddressClicked(false);
         }
       },
-      (error) => {
+      error: (error) => {
         this.onCloseDeactivatePaymentAddressClicked(false);
       }
-    );
+    });
   }
 
   onCloseDeactivatePaymentAddressClicked(isSuccess: boolean): void {

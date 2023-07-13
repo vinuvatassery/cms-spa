@@ -173,7 +173,7 @@ export class MedicalPremiumPaymentDetailComponent {
         next: (data: any) => {
           data.forEach((policy: any) => {
             if(policy.insuranceIdNumber !== null){
-              policy["policyValueField"] = '['+policy.insuranceIdNumber+ " #] - [" + policy.insurancePlanName +']';
+              policy["policyValueField"] = '['+policy.insuranceIdNumber+ "] - [" + policy.insurancePlanName +']';
             }
             else{
               policy["policyValueField"] =  '[' + policy.insurancePlanName +']';
