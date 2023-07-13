@@ -8,7 +8,7 @@ import { SnackBarNotificationType } from '@cms/shared/util-core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteAddressConfirmationComponent {
-
+//test bug fix
   /** Constructor **/
   constructor(private readonly contactFacade: ContactFacade, private readonly cdr: ChangeDetectorRef) { }
   @Input() clientAddress!: any;
