@@ -37,7 +37,7 @@ export class HivVerificationRequestComponent implements OnInit{
   public hivVerificationUploadFile: any = undefined;
   showAttachmentOptions = true;
   showHideAttachment = true;
-  uploadedAttachment: any
+  uploadedAttachment: any = [];
   uploadedDate: any;
   uploadedBy: any;
 
@@ -127,7 +127,7 @@ export class HivVerificationRequestComponent implements OnInit{
     });
     this.verificationFacade.showAttachmentOptions$.subscribe(response=>{
       this.showAttachmentOptions = response;
-      this.uploadedAttachment = undefined;
+      this.uploadedAttachment = [];
       this.cdr.detectChanges();
     });
     this.verificationFacade.showHideAttachment$.subscribe(response=>{
