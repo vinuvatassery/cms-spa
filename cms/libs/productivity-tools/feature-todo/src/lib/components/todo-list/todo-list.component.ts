@@ -1,5 +1,13 @@
 /** Angular **/
-import { Component,  OnInit,    Output,  ChangeDetectionStrategy,  EventEmitter,  } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy,
+  ViewChild,
+  TemplateRef,
+  EventEmitter,
+} from '@angular/core';
 /** Facades **/
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -10,10 +18,12 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 })
 export class TodoListComponent implements OnInit {
   /** Public properties **/
+  @ViewChild('deleteToDODialogTemplate', { read: TemplateRef })
+  deleteToDODialogTemplate!: TemplateRef<any>;
   todoGrid$ = this.todoFacade.todoGrid$;
   isOpenDeleteTodo = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  private todoItemDetailsDialog: any;
+  public deleteToDoDialog: any;
   @Output() isModalTodoDetailsOpenClicked = new EventEmitter<any>();
   public moreactions = [
     {
@@ -37,7 +47,7 @@ export class TodoListComponent implements OnInit {
       text: 'Delete',
       icon: 'delete',
       click: (): void => {
-        this.onOpenDeleteTodoClicked();
+        this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
       },
     },
   ];
@@ -66,7 +76,16 @@ export class TodoListComponent implements OnInit {
     this.isOpenDeleteTodo = false;
   }
 
-  onOpenDeleteTodoClicked() {
-    this.isOpenDeleteTodo = true;
+  onOpenDeleteToDoClicked(template: TemplateRef<unknown>): void {
+    this.deleteToDoDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  onCloseDeleteToDoClicked(result: any) {
+    if (result) {
+      this.deleteToDoDialog.close();
+    }
   }
 }

@@ -10,10 +10,10 @@
       </p>
       <p class="text-muted">10-10-2021</p>
     </div>
-    <button kendoButton themeColor="primary"  fillMode="flat" class="clear-icon-btn"  aria-label="Edit Reminder" title="Edit Reminder">
+    <button kendoButton themeColor="primary" (click)="onNewReminderOpenClicked()" fillMode="flat" class="clear-icon-btn"  aria-label="Edit Reminder" title="Edit Reminder">
       <span class="material-icons">  edit </span>
     </button>
-    <button kendoButton fillMode="flat" class="clear-icon-btn" themeColor="error"  aria-label="Delete Reminder" title="Delete Reminder">
+    <button kendoButton fillMode="flat"class="clear-icon-btn"  (click)="onDeleteReminderOpenClicked()"  themeColor="error"  aria-label="Delete Reminder" title="Delete Reminder">
       <span class="material-icons">  delete   </span>
     </button>
 
@@ -167,3 +167,7 @@
  
 
 </ul>
+
+
+
+ 

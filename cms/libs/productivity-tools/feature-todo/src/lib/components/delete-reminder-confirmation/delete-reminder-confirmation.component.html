@@ -1,3 +1,4 @@
+<kendo-dialog-titlebar (close)="onCloseDeleteReminderClicked()">Delete Reminder for Donna </kendo-dialog-titlebar>
 <section class="k-dialog-body" kendoTooltip>
     <p class="text-muted mb-2">
       <!-- Once deleted the to do item won't be available anymore. If needed a new to
@@ -28,6 +29,7 @@
           [primary]="true"
           look="outline"
           aria-label="cancel deleting todo"
+          (click)="onCloseDeleteReminderClicked()"
         >
           Cancel
         </button>

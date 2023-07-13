@@ -47,13 +47,13 @@
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="!clientReminderForm.controls['description'].valid">Description is required.</kendo-formerror>
       </div>
-      <div class="flex-col mt-3" *ngIf="isShow">
+      <div class="flex-col mt-3 field_with_info" *ngIf="isShow">
         <kendo-floatinglabel text="Link Reminder To">
           <kendo-dropdownlist aria-label="Link Reminder To" [fillMode]="formUiStyle.dropDownFillMode" > </kendo-dropdownlist>
       </kendo-floatinglabel>
       <span class="material-icons" title="Select an entity if you want this item to be displayed in its profile.">info</span>
       </div>
-      <div class="flex-col mt-3" *ngIf="isShow">
+      <div class="flex-col mt-3 field_with_info" *ngIf="isShow">
         <div class="autoSelect-search mat-form-no-b-space">
           <div class="global-search">
             <span

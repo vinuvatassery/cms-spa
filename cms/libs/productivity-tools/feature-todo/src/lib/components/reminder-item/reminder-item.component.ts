@@ -1,6 +1,6 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-
+import { Component, ChangeDetectionStrategy, TemplateRef, Output, EventEmitter } from '@angular/core';
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-reminder-item',
   templateUrl: './reminder-item.component.html',
@@ -9,22 +9,24 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 export class ReminderItemComponent {
   /** Public properties **/
   popupClass1 = 'more-action-dropdown app-dropdown-action-list';
+  public newReminderDetailsDialog: any;
+  public deleteReminderDialog: any;
+  @Output() reminderDetailsClickedEvent = new EventEmitter();
+  @Output() deleteReminderOpenClickedEvent = new EventEmitter();
+  
+ 
 
-  public data = [
-    {
-      buttonType:"btn-h-primary",
-      
-      icon: "edit",
-      click: (): void => {
-      },
-    },
-    {
-      buttonType:"btn-h-danger",
-     
-      icon: "delete",
-      click: (): void => {
-      },
-    }
-  ];
+  /** Constructor **/
+  constructor() {}
+ 
+
+  onNewReminderOpenClicked( )  { 
+    this.reminderDetailsClickedEvent.emit(true)
+  }
+
+  onDeleteReminderOpenClicked(){
+    this.deleteReminderOpenClickedEvent.emit(true)
+
+  }
 
 }

@@ -7,14 +7,16 @@
         <kendo-textbox aria-label="search reminder" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
       </kendo-floatinglabel>
     </div>
-    <button kendoButton [primary]="true" (click)="onNewReminderOpenClicked(NewReminderTemplate)"
+    <button kendoButton [primary]="true" (click)="onNewReminderOpenClicked(reminderDetailsTemplate)"
       aria-label="add new reminder">
       <span class="material-icons" aria-label="new reminder" aria-hidden="true">add_alarm</span>
       New Reminder
     </button>
   </div>
   <section>
-    <productivity-tools-reminder-item></productivity-tools-reminder-item>
+    <productivity-tools-reminder-item (reminderDetailsClickedEvent)="onNewReminderOpenClicked(reminderDetailsTemplate)"
+    (deleteReminderOpenClickedEvent)="onDeleteReminderOpenClicked(deleteReminderTemplate)"
+    ></productivity-tools-reminder-item>
   </section>
 </section>
 <!-- Reminder list case list sidebar -->
@@ -80,36 +82,16 @@
 
 
 <!-- Create New Reminder Popup -->
-<ng-template #NewReminderTemplate>
+<ng-template #reminderDetailsTemplate>
   <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">Create New Reminder for Donna </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail
     (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"></productivity-tools-reminder-detail>
 </ng-template>
 
-<kendo-dialog *ngIf="isOpenTODOItemDetailsNoFeature" (close)="clickCloseReminderToDoDetails()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Edit TO DO Item </kendo-dialog-titlebar>
-  <section class="k-dialog-body mb-2">
-    <p>
-      This feature is part of a future scope of work for the ORCares project.
-    </p>
-  </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-start d-flex">
-      </div>
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"> Cancel
-        </button>
-        <button kendoButton [primary]="true" aria-label="update or add phone detail"> Update </button>
-      </div>
-    </div>
-  </kendo-dialog-actions>
-</kendo-dialog>
-
-
-<kendo-dialog *ngIf="isOpenDeleteTODOItem" (close)="clickCloseDeleteToDo()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Delete TO DO item? </kendo-dialog-titlebar>
-  <productivity-tools-delete-todo-confirmation> </productivity-tools-delete-todo-confirmation>
-</kendo-dialog>
+<ng-template #deleteReminderTemplate> 
+  <productivity-tools-delete-reminder-confirmation
+    (isModalDeleteReminderCloseClicked)="onDeleteReminderClosed($event)"></productivity-tools-delete-reminder-confirmation>
+</ng-template>
+<ng-template #deleteToDODialogTemplate>   
+  <productivity-tools-delete-todo-confirmation  (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)"> </productivity-tools-delete-todo-confirmation> 
+</ng-template>

@@ -55,9 +55,9 @@
 </kendo-popover>
 
 
-<!-- Delete To Do Modal Html-->
-<kendo-dialog *ngIf="isOpenDeleteTodo" (close)="onCloseDeleteTodoClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Delete To Do Item </kendo-dialog-titlebar>
-  <productivity-tools-delete-todo-confirmation></productivity-tools-delete-todo-confirmation>
-</kendo-dialog>
+<ng-template #deleteToDODialogTemplate>   
+  <productivity-tools-delete-todo-confirmation  (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)"> </productivity-tools-delete-todo-confirmation> 
+</ng-template>
+
+
+ 
