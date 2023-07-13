@@ -256,6 +256,7 @@ $pagination-height : 48px;
       background: material-color($hive-neutral-palette, 300);
       padding: $size-s $size-xxx;
       border-top: 1px solid $theme-border;
+      min-height: calc(100vh - 31vh);
 
       .k-grid-table {
         border-collapse: separate;
