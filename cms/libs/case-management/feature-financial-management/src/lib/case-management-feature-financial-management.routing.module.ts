@@ -62,6 +62,16 @@ const routes: Routes = [
     },
   },
   {
+    path: 'pcas',
+    loadChildren: () =>
+      import('@cms/case-management/feature-financial-pcas').then(
+        (m) => m.CaseManagementFeatureFinancialPcasModule
+      ),
+    data: {
+      title: null,
+    },
+  },
+  {
     path: 'insurance-premiums',
     loadChildren: () =>
       import('@cms/case-management/feature-financial-insurance-premiums').then(
