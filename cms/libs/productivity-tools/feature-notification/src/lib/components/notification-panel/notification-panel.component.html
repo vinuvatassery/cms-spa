@@ -214,7 +214,10 @@
  
 </ng-template>
 
-
+<ng-template #deleteReminderTemplate> 
+  <productivity-tools-delete-reminder-confirmation
+    (isModalDeleteReminderCloseClicked)="onDeleteReminderClosed($event)"></productivity-tools-delete-reminder-confirmation>
+</ng-template>
 
 
 <!-- Create New Reminder Popup -->

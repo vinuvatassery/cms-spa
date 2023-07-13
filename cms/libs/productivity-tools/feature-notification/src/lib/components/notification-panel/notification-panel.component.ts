@@ -20,6 +20,10 @@ export class NotificationPanelComponent implements OnInit {
   /** Public properties **/
   @ViewChild('anchor') anchor!: ElementRef;
   @ViewChild('popup', { read: ElementRef }) popup!: ElementRef;
+  @ViewChild('deleteReminderTemplate', { read: TemplateRef })
+  deleteReminderTemplate!: TemplateRef<any>;
+  @ViewChild('NewReminderTemplate', { read: TemplateRef })
+  NewReminderTemplate!: TemplateRef<any>;
   // data: Array<any> = [{}];
   notifications: any = [];
   popupClass1 = 'more-action-dropdown app-dropdown-action-list';
@@ -28,26 +32,17 @@ export class NotificationPanelComponent implements OnInit {
   isNotificationsAndRemindersOpened = false;
   private newReminderDetailsDialog : any;
   private notificationReminderDialog : any;
+  private deleteReminderDialog: any;
   public data = [
     {
       buttonType:"btn-h-primary",
       text: "Snooze",
-      icon: "snooze",
-      click: (): void => {
-      },
-    },
- 
-    
-    {
+      icon: "snooze", 
+    }, {
       buttonType:"btn-h-danger",
       text: "Discard",
-      icon: "notifications_off",
-      click: (): void => {
-      },
-    },
-   
-    
-  ];
+      icon: "notifications_off", 
+    }, ];
 
   public dataTwo = [
     {
@@ -55,6 +50,8 @@ export class NotificationPanelComponent implements OnInit {
       text: "Edit Remainder",
       icon: "edit",
       click: (): void => {
+        this.onNewReminderOpenClicked(this.NewReminderTemplate);
+
       },
     },
  
@@ -63,6 +60,7 @@ export class NotificationPanelComponent implements OnInit {
       text: "Delete Remainder",
       icon: "delete",
       click: (): void => {
+        this.onDeleteReminderOpenClicked(this.deleteReminderTemplate);
       },
     } 
   ];
@@ -157,5 +155,17 @@ export class NotificationPanelComponent implements OnInit {
   onNotificationButtonToggleClicked(show?: boolean): void {
     this.isNotificationPopupOpened =
       show !== undefined ? show : !this.isNotificationPopupOpened;
+  }
+
+  onDeleteReminderClosed(result: any) {
+    if (result) {
+      this.deleteReminderDialog.close();
+    }
+  }
+  onDeleteReminderOpenClicked(template: TemplateRef<unknown>): void {
+    this.deleteReminderDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
   }
 }
