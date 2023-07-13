@@ -1,6 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, TemplateRef, Output, EventEmitter } from '@angular/core';
-import { DialogService } from '@progress/kendo-angular-dialog';
+import { Component, ChangeDetectionStrategy,  Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'productivity-tools-reminder-item',
   templateUrl: './reminder-item.component.html',
@@ -14,12 +13,6 @@ export class ReminderItemComponent {
   @Output() reminderDetailsClickedEvent = new EventEmitter();
   @Output() deleteReminderOpenClickedEvent = new EventEmitter();
   
- 
-
-  /** Constructor **/
-  constructor() {}
- 
-
   onNewReminderOpenClicked( )  { 
     this.reminderDetailsClickedEvent.emit(true)
   }

@@ -6,6 +6,7 @@ import {
   ChangeDetectionStrategy,
   ViewChild,
   TemplateRef,
+  Input,
   EventEmitter,
 } from '@angular/core';
 /** Facades **/
@@ -24,7 +25,10 @@ export class TodoListComponent implements OnInit {
   isOpenDeleteTodo = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public deleteToDoDialog: any;
+  isToDODeleteActionOpen = false;
   @Output() isModalTodoDetailsOpenClicked = new EventEmitter<any>();
+  @Input() isToDODetailsActionOpen: any;
+
   public moreactions = [
     {
       buttonType: 'btn-h-primary',
@@ -39,7 +43,9 @@ export class TodoListComponent implements OnInit {
       text: 'Edit',
       icon: 'edit',
       click: (): void => {
-        this.onOpenTodoDetailsClicked();
+        if (!this.isToDODetailsActionOpen) {
+          this.onOpenTodoDetailsClicked();
+        }
       },
     },
     {
@@ -47,7 +53,10 @@ export class TodoListComponent implements OnInit {
       text: 'Delete',
       icon: 'delete',
       click: (): void => {
-        this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
+        if (!this.isToDODeleteActionOpen) {
+          this.isToDODeleteActionOpen = true;
+          this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
+        }
       },
     },
   ];
@@ -72,10 +81,6 @@ export class TodoListComponent implements OnInit {
     this.isModalTodoDetailsOpenClicked.emit();
   }
 
-  onCloseDeleteTodoClicked() {
-    this.isOpenDeleteTodo = false;
-  }
-
   onOpenDeleteToDoClicked(template: TemplateRef<unknown>): void {
     this.deleteToDoDialog = this.dialogService.open({
       content: template,
@@ -85,6 +90,7 @@ export class TodoListComponent implements OnInit {
 
   onCloseDeleteToDoClicked(result: any) {
     if (result) {
+      this.isToDODeleteActionOpen = false;
       this.deleteToDoDialog.close();
     }
   }

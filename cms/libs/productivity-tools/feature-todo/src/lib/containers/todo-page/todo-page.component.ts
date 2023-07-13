@@ -1,5 +1,11 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, TemplateRef,} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Output,
+  TemplateRef,
+} from '@angular/core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-todo-page',
@@ -10,12 +16,13 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 export class TodoPageComponent {
   /** Public properties **/
   private todoDetailsDialog: any;
-
+  @Output() isToDODetailsActionOpen!: boolean;
   /** Constructor **/
   constructor(private dialogService: DialogService) {}
   /** Public methods **/
   onCloseTodoClicked(result: any) {
     if (result) {
+      this.isToDODetailsActionOpen = false;
       this.todoDetailsDialog.close();
     }
   }
@@ -25,5 +32,6 @@ export class TodoPageComponent {
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np mnl',
     });
+    this.isToDODetailsActionOpen = true;
   }
 }
