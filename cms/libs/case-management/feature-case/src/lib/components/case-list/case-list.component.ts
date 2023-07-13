@@ -66,7 +66,9 @@ public state!: any;
     homeAddress:"Home Address",
     ssn:"SSN",
     insurancePolicyId:"Insurance Policy Id",
-    assignedCw:"Assigned to"
+    assignedCw:"Assigned to",
+    dateOfBirth:"Date Of Birth",
+    caseManager:"Case Manager"
   }
   columnDroplist : any = {
     ALL: "ALL",
@@ -357,9 +359,10 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.columnsReordered = true;
   }
 
-  public columnChange(e: ColumnVisibilityChangeEvent) {
-    const columnsRemoved = e?.columns.filter(x => x.hidden).length;
-  const columnsAdded = e?.columns.filter(x => !x.hidden).length;
+  public columnChange(e: any) {
+    let event = e as ColumnVisibilityChangeEvent;
+    const columnsRemoved = event?.columns.filter(x=> x.hidden).length
+    const columnsAdded = event?.columns.filter(x=> x.hidden === false).length
 
   if (columnsAdded > 0) {
     this.addRemoveColumns = 'Columns Added';
@@ -368,7 +371,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.addRemoveColumns = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 
-  e.columns.forEach(column => {
+  event.columns.forEach(column => {
     if (column.hidden) {
       const field = (column as ColumnComponent)?.field;
       const mainFilters = this.state.filter.filters;
@@ -385,6 +388,11 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
           }
         });
       }
+      if (!column.hidden) {
+        let columnData = column as ColumnComponent;
+        this.columns[columnData.field] = columnData.title;
+      }
+
     });
   }
 
@@ -442,8 +450,13 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.sortType = stateData.sort[0]?.dir ?? "";
     this.state = stateData;
     this.sortColumn = this.columns[stateData.sort[0]?.field];
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending':'';
-    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
+    this.sortDir = "";
+    if(this.sort[0]?.dir === 'asc'){
+      this.sortDir = 'Ascending';
+    }
+    if(this.sort[0]?.dir === 'desc'){
+      this.sortDir = 'Descending';
+    }
     this.loadProfileCasesList();
   }
 }
