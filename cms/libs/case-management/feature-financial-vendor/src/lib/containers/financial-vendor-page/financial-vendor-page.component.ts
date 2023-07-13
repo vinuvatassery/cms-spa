@@ -14,16 +14,18 @@ export class FinancialVendorPageComponent implements OnInit {
   isVendorDetailFormShow = false;
   medicalProviderForm: FormGroup;
   providerTypeCode: string = '';
+  
   isShowMedicalProvider: boolean = false;
   isShowDentalProvider: boolean = false;
   isShowInsuranceProvider: boolean = false;
   isShowPharmacyProvider: boolean = false;
+  isShowManufacturers: boolean = false;
 
   data = [
     {
       text: 'Manufacture',
       click: (dataItem: any): void => {
-        this.clickOpenVendorDetails(dataItem);
+        this.clickOpenManufacturers();
       },
     },
     {
@@ -164,6 +166,7 @@ export class FinancialVendorPageComponent implements OnInit {
     this.isShowDentalProvider = false;
     this.isShowInsuranceProvider =false;
     this.isShowPharmacyProvider = false;
+    this.isShowManufacturers = false;
   }
 
   clickOpenInsuranceVendorModal(){
@@ -176,5 +179,11 @@ export class FinancialVendorPageComponent implements OnInit {
     this.buildVendorForm();
     this.providerTypeCode = FinancialVendorTypeCode.Pharmacy;
     this.isShowPharmacyProvider = true;
+  }
+
+  clickOpenManufacturers() {
+    this.buildVendorForm();
+    this.providerTypeCode = FinancialVendorTypeCode.Manufacturers;
+    this.isShowManufacturers = true;
   }
 }

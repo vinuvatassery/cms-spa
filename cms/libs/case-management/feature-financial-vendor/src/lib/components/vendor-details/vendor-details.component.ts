@@ -139,11 +139,14 @@ export class VendorDetailsComponent implements OnInit {
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();
     }
 
-    this.medicalProviderForm.controls['paymentMethod']
-      .setValidators([
-        Validators.required,
-      ]);
-    this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();
+    if(this.providerType != this.vendorTypes.Manufacturers)
+    {
+      this.medicalProviderForm.controls['paymentMethod']
+        .setValidators([
+          Validators.required,
+        ]);
+      this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();
+    }
 
     if (this.providerType == this.vendorTypes.InsuranceVendors) {
 
