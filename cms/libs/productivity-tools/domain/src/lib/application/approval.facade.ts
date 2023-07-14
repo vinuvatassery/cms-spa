@@ -6,8 +6,7 @@ import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
-/** Entities **/
-import { Approval, ApprovalPayments } from '../entities/approval';
+/** Entities **/ 
 /** Data services **/
 import { ApprovalDataService } from '../infrastructure/approval.data.service';
 

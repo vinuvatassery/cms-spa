@@ -9,9 +9,8 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { RowArgs } from "@progress/kendo-angular-grid";
-import { Router } from '@angular/router';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { RowArgs, GridDataResult } from "@progress/kendo-angular-grid";
+import { Router } from '@angular/router'; 
 import {
   CompositeFilterDescriptor,
   State,

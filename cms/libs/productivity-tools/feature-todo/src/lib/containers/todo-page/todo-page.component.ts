@@ -1,8 +1,7 @@
 /** Angular **/
 import {
   Component,
-  ChangeDetectionStrategy,
-  Input,
+  ChangeDetectionStrategy, 
   Output,
   TemplateRef,
 } from '@angular/core';

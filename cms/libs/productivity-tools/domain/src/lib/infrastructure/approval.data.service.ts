@@ -1,11 +1,9 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-/** External libraries **/
-import { Observable } from 'rxjs/internal/Observable';
+/** External libraries **/ 
 import { of } from 'rxjs/internal/observable/of';
-/** Entities **/
-import { Approval, ApprovalPayments } from '../entities/approval'; 
+/** Entities **/ 
 
 @Injectable({ providedIn: 'root' })
 export class ApprovalDataService {
