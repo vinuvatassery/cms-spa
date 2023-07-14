@@ -58,12 +58,18 @@ export class VendorDetailsComponent implements OnInit {
     this.contactFacade.loadDdlStates();
     this.getPaymentMethods();
     this.getPaymentRunDate();
+    this.fillFormData();
+    console.log("providerType",this.providerType)
   }
 
   get AddContactForm(): FormArray {
     return this.medicalProviderForm.get("newAddContactForm") as FormArray;
   }
-
+fillFormData(){
+  this.medicalProviderForm.controls['tinNumber'].setValue(this.vendorDetails.tin);
+  this.medicalProviderForm.controls['providerName'].setValue(this.vendorDetails.vendorName);
+  this.medicalProviderForm.controls['vendorId'].setValue(this.vendorDetails.vendorId);
+}
   onToggleAddNewContactClick() {
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl('', Validators.required),
@@ -213,7 +219,7 @@ export class VendorDetailsComponent implements OnInit {
       })
     }
     let vendorProfileData = {
-      vendorId: this.selectedClinicVendorId,
+      vendorId: formValues.vendorId,
       vendorName: formValues.providerName,
       firstName: formValues.firstName,
       lastName: formValues.lastName,

@@ -25,6 +25,16 @@
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
+      <div class="flex-col" *ngIf="providerType == vendorTypes.Manufacturers">
+        <kendo-floatinglabel text="Manufacturer Name">
+          <kendo-textbox aria-label="Manufacturer Name" [fillMode]="formUiStyle.inputFillMode"
+            formControlName="providerName">
+          </kendo-textbox>
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
+            Manufacturers name is required
+          </kendo-formerror>
+        </kendo-floatinglabel>
+      </div>
       <div class="flex-col"
         *ngIf="providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders">
         <div class="flex-row">
@@ -113,7 +123,7 @@
       </div>
     </div>
     <!-- Payment address  -->
-    <div class="flex-row mt-1">
+    <div class="flex-row mt-1" *ngIf="providerType != vendorTypes.Manufacturers">
       <div class="flex-col">
         <h4 class="mb-1">PAYMENT ADDRESS</h4>
         <p *ngIf="providerType == vendorTypes.MedicalProviders">Add a payment address and contacts for that address.
@@ -348,7 +358,7 @@
 
     <!-- Contacts -->
 
-    <div formArrayName="newAddContactForm">
+    <div formArrayName="newAddContactForm" *ngIf="providerType != vendorTypes.Manufacturers">
       <div *ngFor="let contact of AddContactForm.controls; let i=index">
         <div [formGroupName]="i" class="flex-row mt-2">
 

@@ -85,6 +85,7 @@
 </div>
 
 <kendo-dialog *ngIf="openEditDailog" (close)="openEditDailog=false;" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar class="transform-none"> Edit Insurance Vendor Info </kendo-dialog-titlebar>
-  <cms-vendor-details [editVendorInfo]="true" [vendorDetails]="vendorDetail" (closeModal)="closeEditModal($event)"></cms-vendor-details>
+  <kendo-dialog-titlebar *ngIf="vendorDetail.vendorTypeCode!='MANUFACTURERS'" class="transform-none"> Edit Insurance Vendor Info </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar *ngIf="vendorDetail.vendorTypeCode=='MANUFACTURERS'" class="transform-none"> Edit Manufacturer Info </kendo-dialog-titlebar>
+  <cms-vendor-details [editVendorInfo]="true" [providerType]="vendorDetail.vendorTypeCode" [vendorDetails]="vendorDetail" (closeModal)="closeEditModal($event)" [medicalProviderForm] = medicalProviderForm (saveProviderEventClicked)="saveVendorProfile($event)"></cms-vendor-details>
 </kendo-dialog>

@@ -86,6 +86,13 @@ export class FinancialVendorDataService {
       vendorProfile
     );
   }
+  updateManufacturerProfile(vendorProfile:any) {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/financial-management/vendors/manufacturer/profile`,
+      vendorProfile
+    );
+  }
 
   searchClinicVendors(vendorName: any)
   {
