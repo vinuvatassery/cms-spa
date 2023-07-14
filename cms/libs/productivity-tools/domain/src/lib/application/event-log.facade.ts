@@ -42,4 +42,27 @@ export class EventLogFacade {
       },
     });
   }
+
+
+  // showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+  //   if (type == SnackBarNotificationType.ERROR) {
+  //     const err = subtitle;
+  //     this.loggingService.logException(err);
+  //   }
+  //   this.notificationSnackbarService.manageSnackBar(type, subtitle);
+  // }
+  
+  //   loadEventLog(clientId:any, clientCaseEligibilityId:any){
+  //       debugger;
+  //       this.profileTabDataService.loadEventLog(clientId,clientCaseEligibilityId)  .subscribe({
+  //           next: (data) => { 
+  //               this.eventLogSubject.next(data); 
+  //           },
+  //           error: (err: any) => {
+  //               this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+  //           },
+  //         });
+  //   }
+
+
 }

@@ -32,4 +32,10 @@ export class EventDataService {
   loadDdlEvents() {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
   }
+
+  // loadEventLog(clientId:any, clientCaseEligibilityId:any) {
+  //   return this.http.get(
+  //       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/event-log?clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}`
+  //     );
+  // }
 }
