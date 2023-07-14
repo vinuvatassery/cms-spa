@@ -995,7 +995,7 @@ color: $app-primary-font-color;
 }
 
 .add_new_fixed_bottom {
-  background-color: #ffffff;
+  background-color: $white;
   position: fixed;
   bottom: 0;
   padding: 1.5rem;
@@ -1090,7 +1090,7 @@ color: $app-primary-font-color;
     .k-svg-icon {
       font-size: 26px;
       font-weight: normal;
-      color: #333333;
+      color: $black-3;
     }
   }
 

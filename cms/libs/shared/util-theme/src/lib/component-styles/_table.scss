@@ -846,11 +846,7 @@ table,
     }
  
 }
-.abstab{
-//   .k-table-thead tr th:first-child{
-//     display: none !important;
-// }
- 
+.alternative_row_table{ 
 .k-grid {
   .k-master-row{
     
@@ -882,10 +878,10 @@ table,
       display: flex;
       gap: 10px;
       &.warning_info_row{
-        background: #FFF1D380 0% 0% no-repeat padding-box;
-        color: #623D00;
+        background: $greyShade;
+        color: material-color($hive-canyon-palette, 900);
          .card-link-button, .material-icons {
-        color: #623D00;
+        color: material-color($hive-canyon-palette, 900);
         font-size: 13px;
   
         }
