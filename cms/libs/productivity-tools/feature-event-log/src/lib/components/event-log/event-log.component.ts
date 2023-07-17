@@ -6,6 +6,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 /** Facades **/
 import { EventLogFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
@@ -25,6 +26,8 @@ export class EventLogComponent implements OnInit {
   isShowEventLog = false;
   isOpenEventLogDetails = false;
   isShownSearch = false;
+  vendorId:any;
+  vendorTypeCode:any;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -53,14 +56,21 @@ export class EventLogComponent implements OnInit {
   ];
 
   /** Constructor **/
-  constructor(private readonly eventLogFacade: EventLogFacade) {}
+  constructor(private readonly eventLogFacade: EventLogFacade,private readonly route: ActivatedRoute,) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
+    
+    this.getQuery();
     this.loadEvents();
   }
 
   /** Private methods **/
+
+  private getQuery(){
+    this.vendorId = this.route.snapshot.queryParams['v_id'];
+    this.vendorTypeCode = this.route.snapshot.queryParams['vendor_type_code'];
+  }
   private loadEvents(): void {
     this.eventLogFacade.loadEvents();
   }
