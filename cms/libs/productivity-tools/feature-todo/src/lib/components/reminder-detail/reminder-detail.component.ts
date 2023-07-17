@@ -23,8 +23,8 @@ export class ReminderDetailComponent implements OnInit {
   tareaReminderCounter!: string;
   tareaReminderDescription = '';
   isShow = false;
-  dateValidator: boolean = false;
-  @Output() closeReminderEvent = new EventEmitter();
+  dateValidator = false;
+  @Output() isModalNewReminderCloseClicked = new EventEmitter();
 
   constructor(private readonly todoFacade: TodoFacade, private readonly caseFacade: CaseFacade,) { }
 
@@ -55,8 +55,10 @@ export class ReminderDetailComponent implements OnInit {
       addToOutlookCalender: new FormControl(''),
     });
   }
-  onCloseReminderClicked() {
-    this.closeReminderEvent.emit(true);
+ 
+  onCloseReminderClicked() 
+  {
+    this.isModalNewReminderCloseClicked.emit(true);
   }
   setValidators() {
     this.clientReminderForm.markAllAsTouched();
@@ -83,7 +85,7 @@ export class ReminderDetailComponent implements OnInit {
     this.setValidators();
     if (this.clientReminderForm.valid && this.dateValidator == false) {
       this.caseFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Reminder added successfully');
-      this.closeReminderEvent.emit(true);
+      this.isModalNewReminderCloseClicked.emit(true);
     }
   }
 }
