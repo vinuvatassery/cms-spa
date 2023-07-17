@@ -1,8 +1,13 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy ,  Output, EventEmitter} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 /** facades **/
-import { TodoFacade } from '@cms/productivity-tools/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
   selector: 'productivity-tools-todo-detail',
@@ -15,12 +20,10 @@ export class TodoDetailComponent implements OnInit {
   tareaCustomTodoCounter!: string;
   tareaCustomTodoDescription = '';
   @Output() isModalTodoDetailsCloseClicked = new EventEmitter();
+  @Output() isLoadTodoGridEvent = new EventEmitter();
 
-  /** Constructor **/
-  constructor(private readonly todoFacade: TodoFacade) {}
-  
   public date = new Date();
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadToDoSearch();
@@ -35,7 +38,7 @@ export class TodoDetailComponent implements OnInit {
     this.tareaCustomTodoCounter = `${this.tareaCustomTodoCharactersCount}/${this.tareaCustomTodoMaxLength}`;
   }
   private loadToDoSearch() {
-    this.todoFacade.loadToDoSearch();
+    this.isLoadTodoGridEvent.emit();
   }
 
   /** Internal event methods **/
@@ -43,7 +46,7 @@ export class TodoDetailComponent implements OnInit {
     this.tareaCustomTodoCharactersCount = event.length;
     this.tareaCustomTodoCounter = `${this.tareaCustomTodoCharactersCount}/${this.tareaCustomTodoMaxLength}`;
   }
-  closeTodoDetailsClicked(){
-    this.isModalTodoDetailsCloseClicked.emit(true);  
+  closeTodoDetailsClicked() {
+    this.isModalTodoDetailsCloseClicked.emit(true);
   }
 }

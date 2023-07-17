@@ -10,7 +10,6 @@ import {
   EventEmitter,
 } from '@angular/core';
 /** Facades **/
-import { TodoFacade } from '@cms/productivity-tools/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-todo-list',
@@ -21,13 +20,14 @@ export class TodoListComponent implements OnInit {
   /** Public properties **/
   @ViewChild('deleteToDODialogTemplate', { read: TemplateRef })
   deleteToDODialogTemplate!: TemplateRef<any>;
-  todoGrid$ = this.todoFacade.todoGrid$;
   isOpenDeleteTodo = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public deleteToDoDialog: any;
   isToDODeleteActionOpen = false;
   @Output() isModalTodoDetailsOpenClicked = new EventEmitter<any>();
+  @Output() isLoadTodoGridEvent = new EventEmitter<any>();
   @Input() isToDODetailsActionOpen: any;
+  @Input()  todoGrid$ :any;
 
   public moreactions = [
     {
@@ -62,8 +62,7 @@ export class TodoListComponent implements OnInit {
   ];
 
   /** Constructor **/
-  constructor(
-    private readonly todoFacade: TodoFacade,
+  constructor( 
     private dialogService: DialogService
   ) {}
 
@@ -73,8 +72,8 @@ export class TodoListComponent implements OnInit {
   }
 
   /** Private methods **/
-  private loadTodoGrid() {
-    this.todoFacade.loadTodoGrid();
+  private loadTodoGrid() { 
+      this.isLoadTodoGridEvent.emit()
   }
 
   onOpenTodoDetailsClicked() {
