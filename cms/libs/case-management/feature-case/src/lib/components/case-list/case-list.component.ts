@@ -327,12 +327,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.sortValue  = this.caseFacade.sortValue;
     this.sortType  = this.caseFacade.sortType;
     this.sort  = this.caseFacade.sort;
-    if (this.selectedTab == 1)
-    {
-      this.sort = [];
-      this.sortType = "";
-      this.sortValue = "";
-    }
+
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
