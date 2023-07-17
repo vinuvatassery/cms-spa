@@ -183,7 +183,7 @@
           kendoButton
           class="text-t-normal text-bold"
           look="flat"
-          (click)="onNotificationsAndRemindersOpenClicked()"
+          (click)="onNotificationsAndRemindersOpenClicked(notificationsAndRemindersDialog)"
           aria-label="view all notifications"
         >
           View All Notifications
@@ -214,26 +214,16 @@
  
 </ng-template>
 
+<ng-template #deleteReminderTemplate> 
+  <productivity-tools-delete-reminder-confirmation
+    (isModalDeleteReminderCloseClicked)="onDeleteReminderClosed($event)"></productivity-tools-delete-reminder-confirmation>
+</ng-template>
 
-<!-- <kendo-dialog
-  kendoRippleContainer
-  *ngIf="isNewReminderOpened"
-  (close)="onNewReminderClosed()"
-  class="app-c-modal app-c-modal-md app-c-modal-np"
->
-  <kendo-dialog-titlebar> Create New Reminder for Donna </kendo-dialog-titlebar>
-  <productivity-tools-reminder-detail></productivity-tools-reminder-detail>
-</kendo-dialog> -->
 
 <!-- Create New Reminder Popup -->
-<kendo-dialog
-  kendoRippleContainer
-  *ngIf="isNotificationsAndRemindersOpened"
-  (close)="onNotificationsAndRemindersClosed()"
-  class="app-c-modal app-c-modal-wid-md-full no_body_padding-modal"
-  
->
-  <kendo-dialog-titlebar>
+<ng-template #notificationsAndRemindersDialog>
+ 
+  <kendo-dialog-titlebar  (close)="onNotificationsAndRemindersClosed()">
     <span
       class="material-icons mr-1"
       aria-hidden="true"
@@ -242,7 +232,7 @@
     >
     <span class="text-bold">Notifications and Reminders</span>
   </kendo-dialog-titlebar>
-  <kendo-tabstrip class="app-c-tab app-c-tab--color">
+  <kendo-tabstrip class="app-c-tab app-c-tab--color reminder_lists">
     <kendo-tabstrip-tab [selected]="true">
       <ng-template kendoTabTitle>
         <span
@@ -270,8 +260,10 @@
       <ng-template kendoTabContent>
         <productivity-tools-reminder-list
           class="reminder-list-modal-wrap"
+          (ReminderEventClicked)="onReminderDoneClicked($event)"
         ></productivity-tools-reminder-list>
       </ng-template>
     </kendo-tabstrip-tab>
   </kendo-tabstrip>
-</kendo-dialog>
+ 
+</ng-template>

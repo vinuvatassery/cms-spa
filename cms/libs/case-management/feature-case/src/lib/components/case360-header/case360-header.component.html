@@ -13,7 +13,7 @@
     <common-user-photo-icon  [userId]="caseWorkerId"></common-user-photo-icon>        
     </button>
   </div>
-  <kendo-popover #userCard width="330" position="left">
+  <kendo-popover #userCard width="330" position="bottom" [callout]="false">
     <ng-template kendoPopoverBodyTemplate>
       <common-user-profile-card 
       [userId]="caseWorkerId"     
@@ -27,7 +27,7 @@
     <h2 class="title-md">
       {{loadedClientHeader?.clientFullName}}
       <span class="normal-text text-muted pl-1" 
-      *ngIf="(loadedClientHeader?.clientOfficialIdFullName.trim().length > 0) && (loadedClientHeader?.clientOfficialIdFullName.trim() !== loadedClientHeader?.clientFullName)">({{loadedClientHeader?.clientOfficialIdFullName}})</span>
+      *ngIf="(loadedClientHeader?.clientOfficialIdFullName.trim().length > 0) && (loadedClientHeader?.clientOfficialIdFullName.trim() !== loadedClientHeader?.clientFullName)">({{loadedClientHeader?.clientOfficialIdFullName}}) </span>
       <span
         class="title-star-icon icon-filled" 
         aria-label="user details"
@@ -43,31 +43,31 @@
           >star</span
         >
       </span>
-      <span class="client-pronouns text-muted" title="{{loadedClientHeader?.pronouns}}">{{loadedClientHeader?.pronouns}}</span>
+      <span class="client-pronouns text-muted" title="{{loadedClientHeader?.pronouns}}">{{loadedClientHeader?.pronouns}} </span>
     </h2>
     <div class="title-client-info-block">
-      <span class="title-client-info">ID {{loadedClientHeader?.clientId}}</span>
-      <span class="title-client-info">CASE ID {{loadedClientHeader?.clientCaseIdentity}}</span>
-      <span class="title-client-info">URN {{loadedClientHeader?.urn}}</span>
+      <span class="title-client-info">ID {{loadedClientHeader?.clientId}} </span>
+      <span class="title-client-info">CASE ID {{loadedClientHeader?.clientCaseIdentity}} </span>
+      <span class="title-client-info">URN {{loadedClientHeader?.urn}} </span>
       <span
         class="title-client-info c-pointer on-hover-t-primary"
         title="Start New Status Period"
         (click)="onStatusPeriodDetailClicked(eligibilityPeriodDetail)"
-        >{{loadedClientHeader?.caseStatus}}</span
+        >{{loadedClientHeader?.caseStatus}} </span
       >
       <span
         class="title-client-info c-pointer on-hover-t-primary"
         title="Change Group"
         (click)="onGroupDetailClicked(loadedClientHeader?.clientCaseEligibilityId, eligibilityGroupDetail)"
-        > {{loadedClientHeader?.group}}</span
+        > {{loadedClientHeader?.group}} </span
       >
       <span
         class="title-client-info c-pointer on-hover-t-primary"
         title="Edit Status Period Dates"
         (click)="onStatusPeriodEditClicked(eligibilityPeriodDetail)"
-        >{{loadedClientHeader?.eilgibilityStartDate}} - {{loadedClientHeader?.eligibilityEndDate}}</span
+        >{{loadedClientHeader?.eilgibilityStartDate}} - {{loadedClientHeader?.eligibilityEndDate}} </span
       >
-      <span class="title-client-info">FPL {{loadedClientHeader?.fpl}}%</span>
+      <span class="title-client-info">FPL {{loadedClientHeader?.fpl}}% </span>
 
       <span *ngIf="loadedClientHeader?.clientCaseEligibilityCerId"
       class="title-client-info c-pointer on-hover-t-primary"

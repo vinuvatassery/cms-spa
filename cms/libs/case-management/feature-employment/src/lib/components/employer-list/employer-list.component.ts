@@ -110,7 +110,15 @@ export class EmployerListComponent implements OnInit, OnChanges {
 
   public dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    if(stateData.sort[0]?.field) {
+        if(stateData.sort[0].field == 'effectiveDate') {
+          this.sortValue = 'dateOfHire';
+        }
+        else {
+          this.sortValue = stateData.sort[0]?.field;
+        }
+    }
+    
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.loadEmployments();

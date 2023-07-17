@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component,  ChangeDetectionStrategy } from '@angular/core';
 
 import { CaseFacade  } from '@cms/case-management/domain';
 
@@ -10,7 +10,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 @Component({
   selector: 'cms-financial-drugs-reassign',
   templateUrl: './financial-drugs-reassign.component.html',
-  styleUrls: ['./financial-drugs-reassign.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialDrugsReassignComponent {public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -35,7 +34,7 @@ export class FinancialDrugsReassignComponent {public formUiStyle: UIFormStyle = 
  
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadTodosearch();
+    this.loadToDoSearch();
     this.tareaVaribalesIntialization();
   }
 
@@ -46,8 +45,8 @@ export class FinancialDrugsReassignComponent {public formUiStyle: UIFormStyle = 
       : 0;
     this.tareaCustomTodoCounter = `${this.tareaCustomTodoCharactersCount}/${this.tareaCustomTodoMaxLength}`;
   }
-  private loadTodosearch() {
-    this.todoFacade.loadTodosearch();
+  private loadToDoSearch() {
+    this.todoFacade.loadToDoSearch();
   }
 
   /** Internal event methods **/

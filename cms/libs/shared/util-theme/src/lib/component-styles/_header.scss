@@ -8,7 +8,7 @@
   padding: $size-xx $size-xx * 2;
   position: fixed;
   top: $size-0;
-  z-index: 103;
+  z-index: 104;
   height: $header-height;
   display: flex;
   justify-content: space-between;
@@ -152,6 +152,27 @@
   width: 100%;
   max-width: 100%;
 }
+.profile_popover_wrapper{
+  box-shadow: $size-0 $size-m $size-xx rgb(61 69 76 / 30%); 
+  color: $black;
+  background-color: $white;
+  position: fixed;
+  right: 10px;
+  top: 60px;
+  border-radius: 6px;
+  &::before {
+    content: " ";
+    display: block;
+    width: 15px;
+    height: 15px;
+    background:$white;
+    position: absolute;
+    right: 20px;
+    top: -5px;
+    transform: rotate(45deg);
+    box-shadow: -3px -2px 2px 0px rgb(61 69 76 / 5%);
+}
+}
 .user-setting-dropdown {
   min-width: 250px; 
   .k-list .k-item {
@@ -260,6 +281,7 @@ max-width: 400px;
     border-bottom: 1px solid $theme-border;
     border-left: $size-l solid transparent;
     background: $white;
+    align-items: center;
     .card-type-icon {
       .material-icons {
         font-size: $font-size-xxx;

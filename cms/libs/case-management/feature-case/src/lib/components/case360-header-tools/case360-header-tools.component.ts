@@ -14,6 +14,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   /* Input properties */
   @Input() clientCaseEligibilityId: any
   @Input() clientId: any
+  @Input() loadedClientHeader: any;
   /* Public properties */ 
   screenName = ScreenType.Case360Page;
   emailScreenName = ScreenType.Case360PageEmail; 
@@ -177,10 +178,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
     }
   }
  
-  onNewReminderClosed(result: any) {
-    if(result){
+  onNewReminderClosed() {
       this.newReminderDetailsDialog.close()
-    }}
+    }
 
   onNewReminderClicked(template: TemplateRef<unknown>): void {
     this.newReminderDetailsDialog = this.dialogService.open({

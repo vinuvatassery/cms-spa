@@ -1,10 +1,10 @@
 <span class="header-menu_notifications">
-  <button appendTo="body" kendoButton icon="attachment" look="flat" (click)="onOpenAttachmentClicked()"
+  <button appendTo="body" kendoButton icon="attachment" look="flat" (click)="onOpenAttachmentClicked(formAndDocumentsDialog)"
     class="header-buttons" aria-label="attachments" title="Forms and Document"></button>
 </span>
-<kendo-dialog kendoRippleContainer *ngIf="isOpenAttachment" (close)="onCloseAttachmentClicked()"
-  class="app-c-modal app-c-modal-xls app-c-modal-np app-c-modal-top" appendTo="body">
-  <kendo-dialog-titlebar>
+<ng-template #formAndDocumentsDialog>
+ 
+  <kendo-dialog-titlebar  (close)="onCloseAttachmentClicked()">
     <span class="title-icons k-icon k-i-attachment mr-1" aria-label="forms and document" aria-hidden="true"></span>
     Forms and Document
   </kendo-dialog-titlebar>
@@ -38,4 +38,4 @@
       </ng-template>
     </kendo-treeview>
   </section>
-</kendo-dialog>
+</ng-template>

@@ -1,11 +1,11 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-/** External libraries **/
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+/** External libraries **/ 
 import { Observable } from 'rxjs/internal/Observable';
 /** Enums **/
 import { HubMethodTypes } from '@cms/shared/util-core';
 /** Entities **/
+import {  Subject } from 'rxjs';
 import { Todo } from '../entities/todo';
 /** Data services **/
 import { TodoDataService } from '../infrastructure/todo.data.service';
@@ -15,9 +15,9 @@ import { SignalrEventHandlerService } from '@cms/shared/util-common';
 @Injectable({ providedIn: 'root' })
 export class TodoFacade {
   /** Private properties **/
-  private todoSubject = new BehaviorSubject<Todo[]>([]);
-  private searchSubject = new BehaviorSubject<any>([]);
-  private todoGridSubject = new BehaviorSubject<any>([]);
+  private todoSubject = new Subject<Todo[]>();
+  private searchSubject = new Subject<any>();
+  private todoGridSubject = new Subject<any>();
 
   /** Public properties **/
   todo$ = this.todoSubject.asObservable();
@@ -53,8 +53,8 @@ export class TodoFacade {
     });
   }
 
-  loadTodosearch(): void {
-    this.todoDataService.loadTodosearch().subscribe({
+  loadToDoSearch(): void {
+    this.todoDataService.loadToDoSearch().subscribe({
       next: (searchResponse: any) => {
         this.searchSubject.next(searchResponse);
       },

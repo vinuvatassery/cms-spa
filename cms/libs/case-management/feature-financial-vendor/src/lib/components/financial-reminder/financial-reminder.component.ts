@@ -6,7 +6,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 @Component({
   selector: 'cms-financial-reminder',
   templateUrl: './financial-reminder.component.html',
-  styleUrls: ['./financial-reminder.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FinancialReminderComponent {
@@ -26,7 +25,7 @@ export class FinancialReminderComponent {
       text: "Done",
       icon: "done",
       click: (): void => {
-        this.onDoneClicked();
+        this.onReminderDoneClicked();
       },
     },
     {
@@ -39,7 +38,7 @@ export class FinancialReminderComponent {
   ];
 
   /** Internal event methods **/
-  onDoneClicked() {
+  onReminderDoneClicked() {
     const snackbarMessage: SnackBar = {
       title: 'Notification message!',
       subtitle: 'Sub title goes here.',

@@ -1,13 +1,7 @@
 /** Angular **/
 import {
   Component,
-  OnInit,
   ChangeDetectionStrategy,
-  Input,
-  EventEmitter,
-  Output,
-  OnChanges,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BillingEmailAddressFacade } from '@cms/case-management/domain';
@@ -16,7 +10,6 @@ import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'cms-billing-email-address-list',
   templateUrl: './billing-email-address-list.component.html',
-  styleUrls: ['./billing-email-address-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BillingEmailAddressListComponent { 

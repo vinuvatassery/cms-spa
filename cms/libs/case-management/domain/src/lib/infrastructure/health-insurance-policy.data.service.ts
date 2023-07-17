@@ -287,9 +287,12 @@ export class HealthInsurancePolicyDataService {
   }
 
   loadPaymentRequest(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {
+    let params = new HttpParams();
+    params = params.append('sorting',gridDataRefinerValue.sortColumn);
+    params = params.append('sortType',gridDataRefinerValue.sortType);
      return this.http.get(    
     `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments?statusType=${gridDataRefinerValue.type}&clientId=${clientId}&skipCount=
-    ${gridDataRefinerValue.skipCount}&maxResultCount=${gridDataRefinerValue.maxResultCount}&dentalPlanFlag=${gridDataRefinerValue.dentalPlanFlag}&showTwelveMonthRecord=${gridDataRefinerValue.twelveMonthsRecords}`);
+    ${gridDataRefinerValue.skipCount}&maxResultCount=${gridDataRefinerValue.maxResultCount}&dentalPlanFlag=${gridDataRefinerValue.dentalPlanFlag}&showTwelveMonthRecord=${gridDataRefinerValue.twelveMonthsRecords}`,{params:params});
     }
   savePaymentRequest(paymentRequest:any){
     return this.http.post<PaymentRequest>(

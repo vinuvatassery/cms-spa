@@ -9,9 +9,6 @@ import {
   selector: 'case-management-hiv-verification-attachment-removal-confirmation',
   templateUrl:
     './hiv-verification-attachment-removal-confirmation.component.html',
-  styleUrls: [
-    './hiv-verification-attachment-removal-confirmation.component.scss',
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HivVerificationAttachmentRemovalConfirmationComponent {

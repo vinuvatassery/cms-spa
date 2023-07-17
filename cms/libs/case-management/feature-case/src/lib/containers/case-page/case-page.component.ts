@@ -6,7 +6,9 @@ import { Router } from '@angular/router';
 
 /** Internal Libraries **/
 import { CaseFacade, CaseScreenTab, WorkflowFacade,  UserDefaultRoles, SearchHeaderType,ModuleCode  } from '@cms/case-management/domain';
+import { ReminderFacade } from '@cms/productivity-tools/domain';
 import {UITabStripScroll} from '@cms/shared/ui-tpa'
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
 
@@ -50,7 +52,8 @@ export class CasePageComponent implements OnInit {
       private readonly workflowFacade :WorkflowFacade,
       private readonly loginUserFacade : UserManagementFacade,
       private readonly lovFacade : LovFacade,
-      private readonly  cdr :ChangeDetectorRef
+      private readonly  cdr :ChangeDetectorRef,
+      private reminderFacade: ReminderFacade
     ) {}
 
   /** Lifecycle hooks **/
@@ -138,6 +141,7 @@ export class CasePageComponent implements OnInit {
   {
     const gridDataRefiner =
     {
+      caseScreenType: this.selectedTab,
       skipcount: gridDataRefinerValue.skipCount,
       maxResultCount : gridDataRefinerValue.pagesize,
       sort : gridDataRefinerValue.sortColumn,
@@ -149,7 +153,7 @@ export class CasePageComponent implements OnInit {
       afterDate: gridDataRefinerValue.afterDate
     }
     this.pageSizes = this.caseFacade.gridPageSizes;
-    this.loadCaseList(gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType, gridDataRefiner.columnName, gridDataRefiner.filter, gridDataRefiner.totalClientsCount,gridDataRefiner.afterDate,gridDataRefiner.beforeDate);
+    this.loadCaseList(gridDataRefiner);
   }
 
   loadColumnDroplist()
@@ -159,11 +163,18 @@ export class CasePageComponent implements OnInit {
 
       /** grid event methods **/
 
-    loadCaseList(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string, columnName : any, filter : any, totalClientsCount : any, afterDate: any, beforeDate: any)
-     {
-       this.pageSizes = this.caseFacade.gridPageSizes;
-        this.caseFacade.loadCases(this.selectedTab, skipcountValue ,maxResultCountValue  ,sortValue , sortTypeValue, columnName, filter, totalClientsCount,afterDate,beforeDate);
-        this.cdr.detectChanges();
-      }
+    loadCaseList(gridDataRefiner:any)
+    {
+      this.pageSizes = this.caseFacade.gridPageSizes;
+      this.caseFacade.loadCases(gridDataRefiner);
+      this.cdr.detectChanges();
+    }
 
-}
+    onReminderDoneClicked(event:any) {
+      debugger
+      this.reminderFacade.showHideSnackBar(
+        SnackBarNotificationType.SUCCESS,
+        'Item  updated to Done successfully'
+      );
+    }
+  }
