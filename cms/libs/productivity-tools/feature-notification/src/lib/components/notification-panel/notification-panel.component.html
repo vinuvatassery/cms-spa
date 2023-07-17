@@ -260,6 +260,7 @@
       <ng-template kendoTabContent>
         <productivity-tools-reminder-list
           class="reminder-list-modal-wrap"
+          (ReminderEventClicked)="onReminderDoneClicked($event)"
         ></productivity-tools-reminder-list>
       </ng-template>
     </kendo-tabstrip-tab>

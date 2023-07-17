@@ -8,8 +8,8 @@ import {
   ElementRef, TemplateRef
 } from '@angular/core';
 /** Facades **/
-import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
-import { LoggingService } from '@cms/shared/util-core';
+import { NotificationFacade, ReminderFacade, TodoFacade } from '@cms/productivity-tools/domain';
+import { LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-notification-panel',
@@ -69,7 +69,8 @@ export class NotificationPanelComponent implements OnInit {
     private readonly notificationFacade: NotificationFacade,
     private readonly todoFacade: TodoFacade,
     private loggingService : LoggingService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private reminderFacade: ReminderFacade,
   ) {}
 
   /** Lifecycle hooks **/
@@ -167,5 +168,12 @@ export class NotificationPanelComponent implements OnInit {
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
+  }
+
+  onReminderDoneClicked(event:any) {
+    this.reminderFacade.showHideSnackBar(
+      SnackBarNotificationType.SUCCESS,
+      'Item  updated to Done successfully'
+    );
   }
 }

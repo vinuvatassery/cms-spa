@@ -3,6 +3,7 @@ import { CaseFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, Fina
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { ReminderFacade } from '@cms/productivity-tools/domain';
 
 @Component({
   selector: 'cms-financial-vendor-page',
@@ -64,7 +65,8 @@ export class FinancialVendorPageComponent implements OnInit {
 
   constructor(private caseFacade: CaseFacade, private financialVendorFacade: FinancialVendorFacade,
     private readonly formBuilder: FormBuilder,
-    private readonly cdr: ChangeDetectorRef) {
+    private readonly cdr: ChangeDetectorRef,
+    private reminderFacade: ReminderFacade) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
 
@@ -176,5 +178,11 @@ export class FinancialVendorPageComponent implements OnInit {
     this.buildVendorForm();
     this.providerTypeCode = FinancialVendorTypeCode.Pharmacy;
     this.isShowPharmacyProvider = true;
+  }
+  onReminderDoneClicked(event:any) {
+    this.reminderFacade.showHideSnackBar(
+      SnackBarNotificationType.SUCCESS,
+      'Item  updated to Done successfully'
+    );
   }
 }

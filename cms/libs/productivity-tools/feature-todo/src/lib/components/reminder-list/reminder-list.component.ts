@@ -4,14 +4,15 @@ import {
   ChangeDetectionStrategy,
   ViewChild,
   TemplateRef,
+  Output,
+  EventEmitter
 } from '@angular/core';
 /** External libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-/** Facades **/
-import { ReminderFacade } from '@cms/productivity-tools/domain';
-import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+/** Facades **/ 
+import { LoaderService } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-reminder-list',
@@ -35,13 +36,15 @@ export class ReminderListComponent {
   private newReminderDetailsDialog: any;
   public deleteReminderDialog: any;
   public deleteToDoDialog: any;
+  @Output() ReminderEventClicked  = new EventEmitter<any>();
+
   public reminderActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'Done',
       icon: 'done',
       click: (): void => {
-        this.onDoneClicked();
+        this.onReminderDoneClicked();
       },
     },
     {
@@ -63,17 +66,14 @@ export class ReminderListComponent {
   ];
 
   /** Constructor **/
-  constructor(
-    private reminderFacade: ReminderFacade,
+  constructor( 
     private loaderService: LoaderService,
     private dialogService: DialogService
   ) {}
   /** Internal event methods **/
-  onDoneClicked() {
-    this.reminderFacade.showHideSnackBar(
-      SnackBarNotificationType.SUCCESS,
-      'Item  updated to Done successfully'
-    );
+  onReminderDoneClicked() {
+   // this.tttt.emit();
+    this.ReminderEventClicked.emit();
   }
 
   onNewReminderClosed(result: any) {
