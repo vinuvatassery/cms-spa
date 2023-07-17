@@ -57,7 +57,7 @@ public formUiStyle : UIFormStyle = new UIFormStyle();
   }
   onCloseReminderClicked() 
   {
-    this.isModalNewReminderCloseClicked.emit();
+    this.isModalNewReminderCloseClicked.emit(true);
   }
   setValidators()
   {
