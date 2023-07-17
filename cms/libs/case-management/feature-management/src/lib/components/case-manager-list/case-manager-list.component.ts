@@ -30,6 +30,7 @@ export class CaseManagerListComponent implements OnChanges {
   /** Input properties **/
   @Input() getCaseManagers$: any;
   @Input() showAddNewManagerButton$: any;
+  @Input() showCaseListRequired$: any;
   @Input() getManagerUsers$: any;
   @Input() selectedCaseManagerDetails$: any;
   @Input() assignCaseManagerStatus$: any;

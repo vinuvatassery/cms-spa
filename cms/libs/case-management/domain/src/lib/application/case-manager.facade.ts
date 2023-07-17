@@ -9,6 +9,7 @@ import { UserDefaultRoles } from '../enums/user-default-roles.enum';
 import { CaseManagerDataService } from '../infrastructure/case-manager.data.service';
 import { WorkflowFacade } from './workflow.facade';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Injectable({ providedIn: 'root' })
 export class CaseManagerFacade {
@@ -24,6 +25,7 @@ private selectedCaseManagerDetailsSubject = new Subject<any>();
 private assignCaseManagerSubject = new Subject<any>();
 private genericCaseManagerSubject = new Subject<any>();
 private updateDatesCaseManagerSubject = new Subject<any>();
+public showCaseListRequiredSubject  = new BehaviorSubject<boolean>(false);
 
 
 /** Public properties **/
@@ -38,6 +40,7 @@ selectedCaseManagerDetails$ = this.selectedCaseManagerDetailsSubject.asObservabl
 assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
 genericCaseManager$ = this.genericCaseManagerSubject.asObservable();
 updateDatesCaseManager$ = this.updateDatesCaseManagerSubject.asObservable();
+showCaseListRequired$ = this.showCaseListRequiredSubject.asObservable();
 public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' '
   public sortType = 'asc'

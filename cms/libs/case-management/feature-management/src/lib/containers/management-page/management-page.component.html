@@ -63,6 +63,7 @@
     [selectedCaseManagerDetails$]="selectedCaseManagerDetails$"
     [getManagerUsers$]="getManagerUsers$"
     [getCaseManagers$]="getCaseManagers$"
+    [showCaseListRequired$]="showCaseListRequired$"
     [showAddNewManagerButton$]="showAddNewManagerButton$"
     [assignCaseManagerStatus$]="assignCaseManagerStatus$"
     [removeCaseManager$]="removeCaseManager$"
@@ -73,7 +74,7 @@
     (addExistingCaseManagerEvent)="assignCaseManagerEventHandler($event)"
     (loadprofilePhotoEvent)="getCaseManagerImage($event)">
     </case-management-case-manager-list>
-  </section>
+    </section>
 
   <section *ngIf="hasManager==='N'">
    

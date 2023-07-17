@@ -28,6 +28,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   hasManagerValidation =false;
   needManagerValidation =false;
   isCerForm = false;
+  isCaseManagerAvailable = false;
 
   gridVisibleSubject = new Subject<boolean>();
   showCaseManagers$ = this.gridVisibleSubject.asObservable();
@@ -37,6 +38,8 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   needManagerValidationSubject = new Subject<boolean>();
   needManagerValidation$ = this.needManagerValidationSubject.asObservable();
+
+  showCaseListRequired$ = this.caseManagerFacade.showCaseListRequiredSubject.asObservable();
 
   getCaseManagers$ = this.caseManagerFacade.getCaseManagers$;
   getCaseManagerHasManagerStatus$=this.caseManagerFacade.getCaseManagerHasManagerStatus$;
@@ -58,6 +61,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
   private discardChangesSubscription !: Subscription;
+  private caseListStatusSubscription !: Subscription;
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
     private caseManagerFacade: CaseManagerFacade,
@@ -74,6 +78,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
     this.addDiscardChangesSubscription();
+    this.addCaseListRequiredSubscription();
   }
 
   ngOnDestroy(): void {
@@ -81,6 +86,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
     this.discardChangesSubscription.unsubscribe();
+    this.caseListStatusSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -249,6 +255,11 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
         this.needManagerValidation = true;
         this.hasManagerValidation = false;
       }
+      if(this.hasManager === StatusFlag.Yes && !this.isCaseManagerAvailable)
+      {
+        this.caseManagerFacade.showCaseListRequiredSubject.next(true);
+        status = false;
+      }    
       this.hasManagerValidationSubject.next(this.hasManagerValidation)
       this.needManagerValidationSubject.next(this.needManagerValidation)
       return status;
@@ -371,6 +382,18 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
        this.cdr.detectChanges();
        this.getCaseManagerStatus();
      }
+    });
+  }
+
+  private addCaseListRequiredSubscription(): void {
+    this.caseListStatusSubscription = this.caseManagerFacade.getCaseManagers$.subscribe((res) => {      
+      if (res?.data?.length > 0 && this.hasManager === StatusFlag.Yes) {
+        this.isCaseManagerAvailable = true;
+        this.caseManagerFacade.showCaseListRequiredSubject.next(false);
+      }
+      else {
+          this.isCaseManagerAvailable = false;          
+      }      
     });
   }
 }

@@ -1,3 +1,6 @@
 {
-    "appService.defaultWebAppToDeploy": "None"
+    "appService.defaultWebAppToDeploy": "None",
+    "editor.fontSize": 12,
+    "window.zoomLevel": -1,
+    "editor.mouseWheelZoom": true
 }
