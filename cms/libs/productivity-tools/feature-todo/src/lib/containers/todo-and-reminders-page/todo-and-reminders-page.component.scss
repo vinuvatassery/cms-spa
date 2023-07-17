@@ -1,6 +1,6 @@
 .sidePanel-todo-reminders {
   .sidePanel_body {
-    max-height: 360px;
+    max-height: calc(100vh - 32vh);
     overflow: auto;
     &.todo-list {
       .due-main-heading {

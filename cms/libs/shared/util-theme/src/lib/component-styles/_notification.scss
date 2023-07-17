@@ -101,6 +101,9 @@
           font-family: $font-family-Material-icon;
         }
       }
+      .k-notification-actions, .snakbar-close-btn{
+        color: $black-3;
+      }
     }
     &.k-notification-info {
       border-color: material-color($hive-primary-palette, 400);
