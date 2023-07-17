@@ -1,9 +1,9 @@
 <section class="client-tab-section vendor-tab">
     <div class="tab-over-icon-btn">
-      <button kendoButton class="k-icon-button small-i-btn" title="New To-Do Item" aria-label="New To-Do Item">
+      <button kendoButton class="k-icon-button small-i-btn" title="New To-Do Item" aria-label="New To-Do Item" (click)="onTodoDetailsClicked(todoDetailTemplate)">
         <span class="material-icons" role="button" aria-label="New To-Do Item" aria-hidden="true">playlist_add</span>
       </button>
-      <button kendoButton class="k-icon-button small-i-btn" title="New Reminder" aria-label="New Reminder">
+      <button kendoButton class="k-icon-button small-i-btn" title="New Reminder" aria-label="New Reminder" (click)="onNewReminderClicked(NewReminderTemplate)">
         <span class="material-icons" role="button" aria-label="New Reminder" aria-hidden="true">add_alarm</span>
       </button>
       <kendo-dropdownbutton [data]="sendActions" class="TableActionPopup app-dropdown-action k-border-s-dropdown"
@@ -18,6 +18,19 @@
           </button>
         </ng-template>
       </kendo-dropdownbutton>
-    </div>
-   
+    </div>   
   </section> 
+
+   <!-- Create New To Do Modal Html-->
+<ng-template #todoDetailTemplate>
+  <kendo-dialog-titlebar (close)="onTodoDetailsClosed($event)">Create To Do Item for Donna </kendo-dialog-titlebar>
+  <productivity-tools-todo-detail 
+  (isModalTodoDetailsCloseClicked)="onTodoDetailsClosed($event)"
+  ></productivity-tools-todo-detail>
+</ng-template>
+
+<!-- Create New Reminder Popup -->
+<ng-template #NewReminderTemplate>
+  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">Create New Reminder for {{vendorProfile$?.vendorName}} </kendo-dialog-titlebar>
+  <productivity-tools-reminder-detail   (closeReminderEvent)="onNewReminderClosed($event)"></productivity-tools-reminder-detail>
+</ng-template>
