@@ -65,7 +65,7 @@
         class="title-client-info c-pointer on-hover-t-primary"
         title="Edit Status Period Dates"
         (click)="onStatusPeriodEditClicked(eligibilityPeriodDetail)"
-        >{{loadedClientHeader?.eilgibilityStartDate}} - {{loadedClientHeader?.eligibilityEndDate}} </span
+        >{{loadedClientHeader?.eilgibilityStartDate | date:'MM/dd/yyyy'}} - {{loadedClientHeader?.eligibilityEndDate | date:'MM/dd/yyyy'}} </span
       >
       <span class="title-client-info">FPL {{loadedClientHeader?.fpl}}% </span>
 
