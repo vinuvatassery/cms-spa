@@ -1,8 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  Subject } from 'rxjs';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import {  Subject } from 'rxjs'; 
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -22,9 +21,9 @@ export class ProductivityInvoiceFacade {
   }];
 
   /** Private properties **/
-  private invoiceDataSubject = new BehaviorSubject<any>([]);
-  private serviceDataSubject = new BehaviorSubject<any>([]);
-  private isInvoiceLoadingSubject = new BehaviorSubject<boolean>(false);
+  private invoiceDataSubject = new Subject<any>();
+  private serviceDataSubject = new Subject<any>();
+  private isInvoiceLoadingSubject = new Subject<boolean>();
 
   /** Public properties **/
   snackbarMessage!: SnackBar;

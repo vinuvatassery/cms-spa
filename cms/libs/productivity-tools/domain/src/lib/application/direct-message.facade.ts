@@ -7,8 +7,6 @@ import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
-
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
 import { DirectMessage } from '../entities/direct-message';
 /** Data services **/
@@ -29,7 +27,7 @@ export class DirectMessageFacade {
 
   
   /** Private properties **/
-  private directMessagesSubject = new BehaviorSubject<DirectMessage[]>([]);
+  private directMessagesSubject = new Subject<DirectMessage[]>();
   private directMessagesListSubject = new Subject<any>();
 
   /** Public properties **/
