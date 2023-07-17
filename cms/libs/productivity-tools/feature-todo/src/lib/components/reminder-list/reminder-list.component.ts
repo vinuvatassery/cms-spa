@@ -71,8 +71,7 @@ export class ReminderListComponent {
     private dialogService: DialogService
   ) {}
   /** Internal event methods **/
-  onReminderDoneClicked() {
-   // this.tttt.emit();
+  onReminderDoneClicked() { 
     this.ReminderEventClicked.emit();
   }
 
