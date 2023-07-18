@@ -19,6 +19,7 @@ import { MedicalClaimsRecentClaimsListComponent } from './components/medical-cla
 import { MedicalClaimsUnbatchClaimsComponent } from './components/medical-claims-unbatch-claims/medical-claims-unbatch-claims.component';
 import { MedicalClaimsBatchesLogListsComponent } from './components/medical-claims-batches-log-lists/medical-claims-batches-log-lists.component';
 import { MedicalClaimsBatchePageComponent } from './containers/medical-claims-batche-page/medical-claims-batche-page.component';
+import { MedicalClaimsBatchesReconcilePaymentsComponent } from './components/medical-claims-batches-reconcile-payments/medical-claims-batches-reconcile-payments.component';
 
 @NgModule({
   imports: [
@@ -44,6 +45,7 @@ import { MedicalClaimsBatchePageComponent } from './containers/medical-claims-ba
     MedicalClaimsUnbatchClaimsComponent,
     MedicalClaimsBatchesLogListsComponent,
     MedicalClaimsBatchePageComponent,
+    MedicalClaimsBatchesReconcilePaymentsComponent
   ],
   exports: [
     MedicalClaimsProcessListComponent,
@@ -61,6 +63,7 @@ import { MedicalClaimsBatchePageComponent } from './containers/medical-claims-ba
     MedicalClaimsUnbatchClaimsComponent,
     MedicalClaimsBatchesLogListsComponent,
     MedicalClaimsBatchePageComponent,
+    MedicalClaimsBatchesReconcilePaymentsComponent
   ],
 })
 export class CaseManagementFeatureFinancialMedicalClaimsModule {}
