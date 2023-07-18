@@ -121,12 +121,25 @@
           <p>There is no data to display.</p>
         </ng-template>
       </kendo-grid>
+        <div class="flex-col">
+          <kendo-formerror *ngIf="showCaseListRequired$ | async">Response Required</kendo-formerror>
+    </div>
     </div>
     <div class="flex-row">
       <div class="flex-col mt-1" *ngIf="(showAddNewManagerButton$ | async) && !managementTab">
         <button kendoButton [primary]="true" icon="add" (click)="onOpenManagerSearchClicked('','',false)"
           aria-label="add case manager provider" [disabled]="(isReadOnly$ | async) ? true : false">
           CASE MANAGER
+        </button>
+      <div class="flex-col mt-1" *ngIf="showAddNewManagerButton$ | async">
+        <button
+          kendoButton
+          [primary]="true"
+          icon="add"
+          (click)="onOpenManagerSearchClicked('','',false)"
+          aria-label="add case manager provider"
+        >
+         CASE MANAGER
         </button>
       </div>
     </div>
