@@ -31,7 +31,7 @@ export class FinancialMedicalClaimsFacade {
     field: this.sortValueMedicalClaimsPayments,
   }];
 
-  public sortValueBatchLog = 'batch';
+  public sortValueBatchLog = 'vendorName';
   public sortBatchLogList: SortDescriptor[] = [{
     field: this.sortValueBatchLog,
   }];

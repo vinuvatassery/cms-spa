@@ -175,7 +175,7 @@ export class MedicalClaimsBatchesListComponent implements OnInit, OnChanges{
     this.isMedicalClaimsBatchGridLoaderShow = false;
   }
   navToBatchDetails(event : any){  
-    this.route.navigate(['/financial-management/medical-claims/batch/batch_log_list'] );
+    this.route.navigate(['/financial-management/medical-claims/batch'] );
   }
 
 }
