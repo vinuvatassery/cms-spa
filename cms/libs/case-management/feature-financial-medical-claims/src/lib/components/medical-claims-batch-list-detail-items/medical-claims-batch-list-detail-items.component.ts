@@ -10,6 +10,6 @@ export class MedicalClaimsBatchListDetailItemsComponent {
   constructor(private route: Router, ) {}
 
   backToBatchLog(event : any){  
-    this.route.navigate(['/financial-management/medical-claims/batch/batch_log_list'] );
+    this.route.navigate(['/financial-management/medical-claims/batch'] );
   }
 }

@@ -15,5 +15,7 @@ export * from './lib/components/medical-claims-payment-details-form/medical-clai
 export * from './lib/components/medical-claims-recent-claims-list/medical-claims-recent-claims-list.component';
 export * from './lib/components/medical-claims-preview-payment-request/medical-claims-preview-payment-request.component';
 export * from './lib/components/medical-claims-print-authorization/medical-claims-print-authorization.component';
-export * from './lib/components/medical-claims-batches-log-lists/medical-claims-batches-log-lists.component'; 
+export * from './lib/components/medical-claims-batches-log-lists/medical-claims-batches-log-lists.component';
 export * from './lib/containers/medical-claims-batch-page/medical-claims-batch-page.component';
+export * from './lib/containers/medical-claims-batch-items-page/medical-claims-batch-items-page.component';
+export * from './lib/containers/medical-claims-reconcile-page/medical-claims-reconcile-page.component';

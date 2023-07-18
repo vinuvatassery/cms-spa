@@ -200,11 +200,11 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
   }
 
   goToBatchItems(event : any){  
-    this.route.navigate(['/financial-management/medical-claims/batch/batch_log_list/batch_log_items'] );
+    this.route.navigate(['/financial-management/medical-claims/batch/items'] );
   }
 
   navToReconcilePayments(event : any){  
-    this.route.navigate(['/financial-management/medical-claims/batch/batch_log_list/reconcile_payments'] );
+    this.route.navigate(['/financial-management/medical-claims/batch/reconcile-payments'] );
   }
  
 }

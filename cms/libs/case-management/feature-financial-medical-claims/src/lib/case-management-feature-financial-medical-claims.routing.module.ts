@@ -2,10 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FinancialMedicalClaimsPageComponent } from './containers/medical-claims-page/medical-claims-page.component';
 import { RouterModule } from '@angular/router';
-import { MedicalClaimsBatchesLogListsComponent } from './components/medical-claims-batches-log-lists/medical-claims-batches-log-lists.component';
-import { MedicalClaimsBatchListDetailItemsComponent } from './components/medical-claims-batch-list-detail-items/medical-claims-batch-list-detail-items.component';
-import { MedicalClaimsBatchesReconcilePaymentsComponent } from './components/medical-claims-batches-reconcile-payments/medical-claims-batches-reconcile-payments.component';
 import { MedicalClaimsBatchPageComponent } from './containers/medical-claims-batch-page/medical-claims-batch-page.component';
+import { MedicalClaimsBatchItemsPageComponent } from './containers/medical-claims-batch-items-page/medical-claims-batch-items-page.component';
+import { MedicalClaimsReconcilePageComponent } from './containers/medical-claims-reconcile-page/medical-claims-reconcile-page.component';
 const routes = [
   {
     path: '',
@@ -19,19 +18,19 @@ const routes = [
     component: MedicalClaimsBatchPageComponent,
   }, 
   {
-    path: 'batch/batch_log_list',
-    component: MedicalClaimsBatchesLogListsComponent,
+    path: 'batch/items',
+    component: MedicalClaimsBatchItemsPageComponent,
+    data: {
+      title: 'Items',
+    },
   }, 
   {
-    path: 'batch/batch_log_list/batch_log_items',
-    component: MedicalClaimsBatchListDetailItemsComponent,
+    path: 'batch/reconcile-payments',
+    component: MedicalClaimsReconcilePageComponent,
+    data: {
+      title: 'Reconcile Payments',
+    },
   }, 
-
-  {
-    path: 'batch/batch_log_list/reconcile_payments',
-    component: MedicalClaimsBatchesReconcilePaymentsComponent,
-  }, 
-  
 ]
 @NgModule({
   imports: [

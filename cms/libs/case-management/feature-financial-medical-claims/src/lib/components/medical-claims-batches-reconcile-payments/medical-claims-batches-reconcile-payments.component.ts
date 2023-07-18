@@ -11,6 +11,6 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent {
      constructor(private route: Router, ) {}
 
      navToBatchDetails(event : any){  
-       this.route.navigate(['/financial-management/medical-claims/batch/batch_log_list'] );
+       this.route.navigate(['/financial-management/medical-claims/batch'] );
      }
 }
