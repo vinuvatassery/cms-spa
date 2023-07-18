@@ -86,7 +86,7 @@ public formUiStyle : UIFormStyle = new UIFormStyle();
     this.setValidators();
     if (this.clientReminderForm.valid && !this.dateValidator) {
        this.caseFacade.showHideSnackBar( SnackBarNotificationType.SUCCESS, 'Client Reminder added successfully');
+       this.isModalNewReminderCloseClicked.emit();
     }
-  
-           }
+  }
 }
