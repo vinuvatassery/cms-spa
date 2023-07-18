@@ -70,7 +70,8 @@ export class VendorDetailsComponent implements OnInit {
       description: new FormControl(),
       phoneNumber: new FormControl(),
       fax: new FormControl(),
-      email: new FormControl()
+      email: new FormControl(),
+      isPreferedContact : new FormControl()
     });
     this.AddContactForm.push(addContactForm);
     this.cdr.detectChanges();
@@ -82,6 +83,16 @@ export class VendorDetailsComponent implements OnInit {
 
   getContactControl(index: number, fieldName: string) {
     return (<FormArray>this.medicalProviderForm.get('newAddContactForm')).at(index).get(fieldName);
+  }
+
+  checkContactPreference(i : number){
+    for (let index = 0; index < this.AddContactForm.length; index++) {
+      if(index != i)
+      {
+        (this.AddContactForm.controls[index] as FormGroup).controls['isPreferedContact'].setValue(false)
+      }
+    }
+
   }
 
   save() {
@@ -209,7 +220,8 @@ export class VendorDetailsComponent implements OnInit {
             phoneNbr: contact.phoneNumber,
             emailAddress: contact.email,
             emailAddressTypeCode: AddressType.Email,
-            faxNbr: contact.fax
+            faxNbr: contact.fax,
+            isPreferedContact : contact.isPreferedContact ? 'Y' : 'N'
           }
           this.vendorContactList.push(vendorContact);
         }
