@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'; 
+import { ChangeDetectionStrategy, Output , EventEmitter, Component } from '@angular/core'; 
 
 @Component({
   selector: 'cms-medical-claims-batch-claims',
@@ -6,4 +6,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./medical-claims-batch-claims.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MedicalClaimsBatchClaimsComponent {}
+export class MedicalClaimsBatchClaimsComponent {
+  
+  @Output() isModalBatchClaimsCloseClicked = new EventEmitter();
+
+  closeBatchClaimsClicked(){
+    this.isModalBatchClaimsCloseClicked.emit(true);  
+  }
+}

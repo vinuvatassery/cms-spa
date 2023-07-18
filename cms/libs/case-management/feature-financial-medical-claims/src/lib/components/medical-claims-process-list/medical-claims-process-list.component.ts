@@ -24,12 +24,17 @@ import { Subject } from 'rxjs';
   selector: 'cms-medical-claims-process-list',
   templateUrl: './medical-claims-process-list.component.html',
   styleUrls: ['./medical-claims-process-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MedicalClaimsProcessListComponent {
+export class MedicalClaimsProcessListComponent implements OnInit, OnChanges{
+  @ViewChild('batchClaimsConfirmationDialog', { read: TemplateRef })
+  batchClaimsConfirmationDialog!: TemplateRef<any>;
+  @ViewChild('deleteClaimsConfirmationDialog', { read: TemplateRef })
+  deleteClaimsConfirmationDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  private deleteRefundDialog: any;
-  private batchConfirmRefundDialog: any;
-  private addEditRefundFormDialog: any;
+  private deleteClaimsDialog: any;
+  private batchConfirmClaimsDialog: any;
+  private addEditClaimsFormDialog: any;
   isDeleteBatchClosed = false;
   isProcessBatchClosed = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -63,9 +68,9 @@ export class MedicalClaimsProcessListComponent {
       text: 'Batch Claims',
       icon: 'check',
       click: (data: any): void => {
-        if (!this.isProcessBatchClosed) {
+         if (!this.isProcessBatchClosed) {
           this.isProcessBatchClosed = true;
-         
+          this.onBatchClaimsClicked(this.batchClaimsConfirmationDialog, data);
         }
       },
     },
@@ -77,7 +82,10 @@ export class MedicalClaimsProcessListComponent {
       click: (data: any): void => {
         if (!this.isDeleteBatchClosed) {
           this.isDeleteBatchClosed = true;
-        
+          this.onDeleteClaimsOpenClicked(
+            this.deleteClaimsConfirmationDialog,
+            data
+          );
         }
       },
     },
@@ -103,14 +111,14 @@ export class MedicalClaimsProcessListComponent {
   }
 
   private loadMedicalClaimsProcessListGrid(): void {
-    this.loadRefundProcess(
+    this.loadClaimsProcess(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType
     );
   }
-  loadRefundProcess(
+  loadClaimsProcess(
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
@@ -199,4 +207,49 @@ export class MedicalClaimsProcessListComponent {
     this.isMedicalClaimsProcessGridLoaderShow = false;
 
   }
+
+
+
+  
+  public onBatchClaimsClicked(template: TemplateRef<unknown>, data: any): void {
+    this.batchConfirmClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onModalBatchClaimsModalClose(result: any) {
+    if (result) {
+      this.isProcessBatchClosed = false;
+      this.batchConfirmClaimsDialog.close();
+    }
+  }
+
+  public onDeleteClaimsOpenClicked(
+    template: TemplateRef<unknown>,
+    data: any
+  ): void {
+    this.deleteClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onModalDeleteClaimsModalClose(result: any) {
+    if (result) {
+      this.isDeleteBatchClosed = false;
+      this.deleteClaimsDialog.close();
+    }
+  }
+
+  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>): void {
+    this.addEditClaimsFormDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-full add_claims_modal',
+    });
+  }
+  modalCloseAddEditClaimsFormModal(result: any) {
+    if (result) {
+      this.addEditClaimsFormDialog.close();
+    }
+  }
+
 }

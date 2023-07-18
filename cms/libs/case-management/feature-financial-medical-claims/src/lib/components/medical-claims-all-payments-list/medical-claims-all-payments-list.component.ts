@@ -80,7 +80,7 @@ export class MedicalClaimsAllPaymentsListComponent implements OnInit, OnChanges{
     },
 
     {
-      buttonType: 'btn-h-danger',
+      buttonType: 'btn-h-primary',
       text: 'Reconcile Payments',
       icon: 'edit',
       click: (data: any): void => {

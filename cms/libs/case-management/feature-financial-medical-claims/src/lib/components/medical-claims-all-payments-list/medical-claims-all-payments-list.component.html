@@ -166,10 +166,7 @@
     <kendo-splitbutton [data]="claimsProcessMore" class="app-c-split-button app-dropdown-action"
       buttonClass="k-split-button" [tabindex]="0"
       [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
-      <div class="btn-inner-block"  >
-        <span class="material-icons" aria-label="New Refund" aria-hidden="false">add</span>
-        Bulk
-      </div>
+      <div class="btn-inner-block">Bulk</div>
       <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
         <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
           aria-hidden="false" (click)="dataItem.click(dataItem)">

@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar > Batch Claims? </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeBatchClaimsClicked()"> Batch Claims? </kendo-dialog-titlebar>
 
 <section class="k-dialog-body">
     <p class="text-muted mb-1">  You will not be able to add claims to batches, but you will be able to remove or edit them.   </p>
@@ -13,7 +13,7 @@
           [primary]="true"
           look="outline"
           aria-label="cancel"
-         
+          (click)="closeBatchClaimsClicked()"
         >
           Cancel
         </button>
