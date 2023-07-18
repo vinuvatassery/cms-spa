@@ -28,25 +28,32 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
-  
-  public batchLogGridActions = [
+  public bulkMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Refund',
+      text: 'Request Payments',
+      icon: 'local_atm',
+      click: (data: any): void => {
+      
+      },
+    },
+    
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Reconcile Payments',
       icon: 'edit',
-      
+      click: (data: any): void => {
+        this.navToReconcilePayments(data);
+      },  
     },
+
     {
       buttonType: 'btn-h-primary',
-      text: 'Unbatch Refund',
-      icon: 'undo',
-     
-    },
-    {
-      buttonType: 'btn-h-danger',
-      text: 'Delete Refund',
-      icon: 'delete',
+      text: 'Print Authorizations',
+      icon: 'print',
+      click: (data: any): void => {
       
+      },
     },
   ];
  

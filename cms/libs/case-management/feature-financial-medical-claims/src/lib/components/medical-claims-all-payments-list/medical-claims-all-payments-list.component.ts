@@ -73,7 +73,7 @@ export class MedicalClaimsAllPaymentsListComponent implements OnInit, OnChanges{
     {
       buttonType: 'btn-h-primary',
       text: 'Request Payments',
-      icon: 'check',
+      icon: 'local_atm',
       click: (data: any): void => {
          
       },
