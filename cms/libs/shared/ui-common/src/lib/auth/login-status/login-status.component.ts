@@ -11,7 +11,7 @@ export class LoginStatusComponent {
   /** Constructor **/
  
   isAccountSettingsPopup = false;
-
+  isProfilePopoverOpen = false;
   constructor(private authService: AuthService) { }
 
   @ViewChild('anchor')

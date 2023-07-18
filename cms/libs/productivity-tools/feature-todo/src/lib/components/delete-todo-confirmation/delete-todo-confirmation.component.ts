@@ -1,9 +1,18 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output,ChangeDetectionStrategy, EventEmitter } from '@angular/core';
+
 
 @Component({
   selector: 'productivity-tools-delete-todo-confirmation',
   templateUrl: './delete-todo-confirmation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DeleteTodoConfirmationComponent {}
+export class DeleteTodoConfirmationComponent {
+  @Output() isModalDeleteTodoCloseClicked = new EventEmitter();
+  @Input() userinfo: any;
+
+  onCloseDeleteToDOClicked() 
+  {
+    this.isModalDeleteTodoCloseClicked.emit(true);
+  }
+}

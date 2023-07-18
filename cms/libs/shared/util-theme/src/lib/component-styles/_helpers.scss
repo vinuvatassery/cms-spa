@@ -33,6 +33,9 @@ section {
   align-items: center;
   display: flex;
 }
+.text-upper{
+  text-transform: uppercase;
+}
 .text {
   &-noWrap {
     white-space: nowrap;
@@ -232,4 +235,13 @@ section {
 }
 .fade-5 {
   opacity: 0.5;
+}
+
+.nm-20{
+  margin-left: -20px;
+  margin-right: -20px;
+}
+
+.rw-100{
+  width: 100%;
 }

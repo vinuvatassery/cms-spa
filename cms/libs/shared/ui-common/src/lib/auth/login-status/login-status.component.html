@@ -3,15 +3,13 @@
     class="header-buttons user-button"
     aria-label="user account"
     kendoButton
-    [popover]="onTableActionClicked"
-    showOn="click"
-    kendoPopoverAnchor  >
+     (click)="isProfilePopoverOpen = !isProfilePopoverOpen"  >
     <div class="app-c-avatar">
       <span class="profile-text-avatar">XX</span>
     </div>
   </button>
-  <kendo-popover #onTableActionClicked width="250" position="bottom">
-    <ng-template kendoPopoverBodyTemplate>
+  <div class="profile_popover_wrapper"  *ngIf="isProfilePopoverOpen"  >
+   
       <div class="app-c-card user-setting-dropdown">
         <div class="app-c-card-header card-header-border-bottom">
           <div class="app-c-avatar avatar-lg">
@@ -50,8 +48,8 @@
           </button>
         </div>
       </div>
-    </ng-template>
-  </kendo-popover>
+    
+  </div>
 </span>
 
 
