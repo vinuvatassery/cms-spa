@@ -106,8 +106,7 @@
               </kendo-combobox-column>
             </kendo-multicolumncombobox>
           </div>
-        </div>
-      
+        </div>      
       </div>
       <div class="flex-col mb-1 mt-2">
         <span class="app-checkboxwidtext-wrapper">
@@ -122,22 +121,15 @@
             >Add to Outlook Calendar</label
           >
         </span>
-      </div>
-    
+      </div>    
   </section>
 </section>
 <kendo-dialog-actions>
   <section class="justify-content-end">
-    <button
-      kendoButton
-      [primary]="true"
-      look="outline"
-      aria-label="cancel creating reminder"
-      (click)="onCloseReminderClicked()"
-    >
+    <button kendoButton [primary]="true" look="outline" (click)="onCloseReminderClicked()" aria-label="cancel creating reminder">
       Cancel
     </button>
-    <button kendoButton [primary]="true"  (click)="save()"  aria-label="create reminder">
+    <button kendoButton [primary]="true" (click)="save()" aria-label="create reminder">
       Create
     </button>
   </section>
