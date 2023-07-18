@@ -7,13 +7,14 @@ import { Event } from '../entities/event';
 /** Data services **/
 import { EventDataService } from '../infrastructure/event.data.service';
 import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { EventLog } from '../entities/event-log';
 
 @Injectable({ providedIn: 'root' })
 export class EventLogFacade {
   /** Private properties **/
   private eventsSubject = new BehaviorSubject<Event[]>([]);
   private ddlEventsSubject = new BehaviorSubject<any[]>([]);
-  private eventLogsSubject = new BehaviorSubject<any>({});
+  private eventLogsSubject = new BehaviorSubject<EventLog[]>([]);
 
   /** Public properties **/
   events$ = this.eventsSubject.asObservable();
@@ -57,15 +58,21 @@ export class EventLogFacade {
   }
   
     loadEventLog(eventTypeCode:any){
-        debugger;
-        this.eventDataService.loadEventLog(eventTypeCode)  .subscribe({
-            next: (data) => { 
-                this.eventLogsSubject.next(data); 
+        this.eventDataService.loadEventLog(eventTypeCode).subscribe({
+            next: (data:EventLog[]) => { 
+                this.generateEventLogList(data);
             },
             error: (err: any) => {
                 this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
             },
           });
+    }
+
+    generateEventLogList(eventLog:EventLog[]){
+      let parentItem = eventLog.filter(x=>x.eventLogParentId===null);
+      let childItems = eventLog.filter(x=>x.eventLogParentId!==null);
+      parentItem.forEach(x=>x.subLogs= childItems.filter(y=>y.eventLogParentId===x.eventLogId));
+      this.eventLogsSubject.next(parentItem);
     }
 
 

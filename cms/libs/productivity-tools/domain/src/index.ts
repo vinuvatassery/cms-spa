@@ -7,6 +7,7 @@ export * from './lib/entities/approval';
 export * from './lib/entities/event';
 export * from './lib/entities/notification';
 export * from './lib/entities/direct-message';
+export * from './lib/entities/event-log';
 
 /** Data services **/
 export * from './lib/infrastructure/todo.data.service';

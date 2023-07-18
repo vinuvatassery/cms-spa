@@ -72,7 +72,8 @@
   <div class="sidePanel_body">
     <ul aria-label="event log menu" class="event-log-list">
       <!-- Event list items -->
-      <li aria-label="event log menu item" class="event-log-list_items">
+      <li aria-label="event log menu item" class="event-log-list_items"
+      *ngFor="let eventLog of eventLogs$ | async; let i = index">
         <section>
           <div class="items-head">
             <p class="items-head_label">Letter Sent</p>
@@ -95,20 +96,22 @@
                 >add</span
               >
             </button>
-            <span class="items-body_details"
-              >Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-              nibh tellus, sollicitudin vitae ante vel, fermentum
-              consequat</span
-            >
-            <span class="text-primary text-underline c-pointer"
+            <span  [ngClass]="'items-body_details text-ellipsis'"  id="{{'detailsList' +i}}"
+              >{{eventLog.eventDesc}} </span>            
+            <!-- <span class="text-primary text-underline c-pointer"
               >View Letter</span
-            >
+            > -->
+            <span  [ngClass]= "'text-primary text-underline c-pointer'"name ="readMore"  id="readMore{{i}}" (click)="readMore($event,i)"
+                  >Read More</span>
+                  <span [ngClass]="'text-primary text-underline c-pointer hidden'" name="readLess" id="readLess{{i}}" (click)="readLess($event,i)"
+                  >Read Less</span >
           </div>
         </section>
         <!-- Event sub list items -->
-        <ul aria-label="event log menu" class="event-log-list">
+        <ul aria-label="event log menu" class="event-log-list" >
           <!-- Event list items -->
-          <li aria-label="event log menu item" class="event-log-list_items">
+          <li aria-label="event log menu item" class="event-log-list_items"
+          *ngFor="let subLog of eventLog.subLogs; let j = index">
             <section>
               <div class="items-head">
                 <p class="items-head_label">Sub Event One</p>
@@ -132,160 +135,19 @@
                     >add</span
                   >
                 </button>
-                <span  [ngClass]="val"  id="detailsList1"
-                  >Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Integer nibh tellus, sollicitudin vitae ante vel, fermentum
-                  consequat leo. Nunc scelerisque purus ex, eget eleifend ligula
-                  convallis vitae. Pellentesque habitant morbi tristique
-                  senectus et netus et malesuada fames ac turpis egesta</span
+                <span  [ngClass]="'items-body_details text-ellipsis'"  id="{{'detailsList' +i+j}}"
+                  >{{subLog.eventDesc}}</span
                 >
-                <span class="text-primary text-underline c-pointer" id="1" (click)="readMore($event)"
+                <span [ngClass]="'text-primary text-underline c-pointer'" name ="readMore" id="readMore{{i}}{{j}}" (click)="readMore($event,i,j)"
                   >Read More</span
                 >
+                <span [ngClass]="'text-primary text-underline c-pointer hidden'"name ="readLess"  id="readLess{{i}}{{j}}" (click)="readLess($event,i,j)"
+                 >Read Less</span
+              >
               </div>
             </section>
-          </li>
-          <!-- Event list items -->
-          <li aria-label="event log menu item" class="event-log-list_items">
-            <section>
-              <div class="items-head">
-                <p class="items-head_label">Letter Sent</p>
-                <p class="items-head_info">
-                  09-01-2022 by
-                  <span class="items-head_info-user">Lisa Jackson</span>
-                </p>
-              </div>
-              <div class="items-body">
-                <button
-                  kendoButton
-                  class="k-icon-button small-i-btn add-sub-button"
-                  title="New sub-event"
-                  (click)="onOpenEventDetailsClicked()"
-                  aria-label="add event log details"
-                >
-                  <span
-                    class="material-icons"
-                    aria-label="add event log details"
-                    aria-hidden="true"
-                    >add</span
-                  >
-                </button>
-                <span class="items-body_details text-ellipsis"
-                  >Consectetur adipiscing elit. Integer nibh tellus,
-                  sollicitudin vitae ante vel, fermentum consequat leo. Nunc
-                  scelerisque purus ex, eget eleifend ligula convallis vitae.
-                  Pellentesque habitant morbi tristique</span
-                >
-                <span class="text-primary text-underline c-pointer"
-                  >Read More</span
-                >
-              </div>
-            </section>
-          </li>
+          </li>          
         </ul>
-      </li>
-      <!-- Event list items -->
-      <li aria-label="event log menu item" class="event-log-list_items">
-        <section>
-          <div class="items-head">
-            <p class="items-head_label">Event Type Two</p>
-            <p class="items-head_info">
-              09-01-2022 by
-              <span class="items-head_info-user">Philip Lisa</span>
-            </p>
-          </div>
-          <div class="items-body">
-            <button
-              kendoButton
-              class="k-icon-button small-i-btn add-sub-button"
-              title="New sub-event"
-              (click)="onOpenEventDetailsClicked()"
-              aria-label="add event log details"
-            >
-              <span
-                class="material-icons"
-                aria-label="add event log details"
-                aria-hidden="true"
-                >add</span
-              >
-            </button>
-            <span class="items-body_details"
-              >Sollicitudin elit. Integer nibh tellus, sollicitudin vitae ante
-              vel, fermentum consequat leo. Nunc scelerisque purus ex, eget
-              eleifend ligula convallis vitae. Pellentesque habitant morbi
-              tristique</span
-            >
-            <span class="text-primary text-underline c-pointer">Read More</span>
-          </div>
-        </section>
-      </li>
-      <!-- Event list items -->
-      <li aria-label="event log menu item" class="event-log-list_items">
-        <section>
-          <div class="items-head">
-            <p class="items-head_label">Event Type Three</p>
-            <p class="items-head_info">
-              09-01-2022 by <span class="items-head_info-user">Dora Lisa</span>
-            </p>
-          </div>
-          <div class="items-body">
-            <button
-              kendoButton
-              class="k-icon-button small-i-btn add-sub-button"
-              title="New sub-event"
-              (click)="onOpenEventDetailsClicked()"
-              aria-label="add event log details"
-            >
-              <span
-                class="material-icons"
-                aria-label="add event log details"
-                aria-hidden="true"
-                >add</span
-              >
-            </button>
-            <span class="items-body_details"
-              >Llicitudin elit. Integer nibh tellus, sollicitudin vitae ante
-              vel, fermentum consequat leo. Nunc scelerisque purus ex, eget
-              eleifend ligula convallis vitae. Pellentesque habitant morbi
-              tristique</span
-            >
-            <span class="text-primary text-underline c-pointer">Read More</span>
-          </div>
-        </section>
-      </li>
-      <!-- Event list items -->
-      <li aria-label="event log menu item" class="event-log-list_items">
-        <section>
-          <div class="items-head">
-            <p class="items-head_label">Event Type Four</p>
-            <p class="items-head_info">
-              09-01-2022 by <span class="items-head_info-user">Kill Lisa</span>
-            </p>
-          </div>
-          <div class="items-body">
-            <button
-              kendoButton
-              class="k-icon-button small-i-btn add-sub-button"
-              title="New sub-event"
-              (click)="onOpenEventDetailsClicked()"
-              aria-label="add event log details"
-            >
-              <span
-                class="material-icons"
-                aria-label="add event log details"
-                aria-hidden="true"
-                >add</span
-              >
-            </button>
-            <span class="items-body_details"
-              >Integer elit. Integer nibh tellus, sollicitudin vitae ante vel,
-              fermentum consequat leo. Nunc scelerisque purus ex, eget eleifend
-              ligula convallis vitae. Pellentesque habitant morbi
-              tristique</span
-            >
-            <span class="text-primary text-underline c-pointer">Read More</span>
-          </div>
-        </section>
       </li>
     </ul>
   </div>

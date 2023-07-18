@@ -7,6 +7,7 @@ import { of } from 'rxjs/internal/observable/of';
 /** Entities **/
 import { Event } from '../entities/event';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { EventLog } from '../entities/event-log';
 
 @Injectable({ providedIn: 'root' })
 export class EventDataService {
@@ -34,7 +35,7 @@ export class EventDataService {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
   }
 
-  loadEventLog(eventTypeCode:any) {
+  loadEventLog(eventTypeCode:any):Observable<any> {
     return this.http.get(
         `${this.configurationProvider.appSettings.productivityToolApiUrl}/productivity-tools/events/by-type-code/${eventTypeCode}`
       );

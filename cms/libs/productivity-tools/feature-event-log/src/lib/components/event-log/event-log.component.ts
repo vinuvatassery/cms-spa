@@ -62,8 +62,7 @@ export class EventLogComponent implements OnInit {
   constructor(private readonly eventLogFacade: EventLogFacade,private readonly route: ActivatedRoute,) {}
 
   /** Lifecycle hooks **/
-  ngOnInit() {
-    
+  ngOnInit() {    
     this.getQuery();
     this.loadEvents();
   }
@@ -95,13 +94,41 @@ export class EventLogComponent implements OnInit {
     this.isShowEventLog = !this.isShowEventLog;
   }
 
-  readMore(event : any){
-    this.val ='items-body_details';
-    let item = 'detailsList'+ event.currentTarget.id
+  readMore(event : any, index1:any,index2:any=''){
+    let item = 'detailsList'+ index1 +index2
+    let readMore =  event.currentTarget.id
+    let readLess =  'readLess'+ index1 +index2;
+    let readMoreControl = document.getElementById(readMore);
+    let readLessControl = document.getElementById(readLess);
     let control = document.getElementById(item);
     if(control !== null)
     {
-      control.classList.add('items-body_details');
+      control.classList.remove('text-ellipsis');
+      
+    }
+    if(readMoreControl != null){
+      readMoreControl.classList.add('hidden');;
+    }
+    if(readLessControl != null){
+      readLessControl.classList.remove('hidden');;
+    }
+  }
+  readLess(event : any,index1:any,index2:any=''){
+    let item = 'detailsList'+ index1 +index2
+    let control = document.getElementById(item);
+    let readMore = 'readMore'+ index1 +index2;
+    let readLess =  event.currentTarget.id
+    let readMoreControl = document.getElementById(readMore);
+    let readLessControl = document.getElementById(readLess);
+    if(control !== null)
+    {
+      control.classList.add('text-ellipsis');
+    }
+    if(readMoreControl != null){
+      readMoreControl.classList.remove('hidden');;
+    }
+    if(readLessControl != null){
+      readLessControl.classList.add('hidden');;
     }
   }
 }
