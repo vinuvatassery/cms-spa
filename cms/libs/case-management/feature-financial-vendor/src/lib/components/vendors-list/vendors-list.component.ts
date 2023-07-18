@@ -230,8 +230,11 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
      pagesize : maxResultCountValue,
      sortColumn : sortValue,
      sortType : sortTypeValue,
-     vendorTypeCode : this.vendorTypeCode
-   }
+     vendorTypeCode : this.vendorTypeCode,
+     filter : this.state?.["filter"]?.["filters"] ?? []
+   }   
+
+   debugger
    this.loadFinancialVendorsListEvent.emit(gridDataRefinerValue)
    this.gridDataHandle()
  }
@@ -315,7 +318,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
 // updating the pagination infor based on dropdown selection
 pageselectionchange(data: any) {
   this.state.take = data.value;
-  this.state.skip = 0;
+  this.state.skip = 0; 
   this.loadFinancialVendorsList()
 }
 
@@ -336,6 +339,29 @@ public filterChange(filter: CompositeFilterDescriptor): void {
         }
     });
 
+  }
+
+  setToDefault()
+  {
+   
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,  
+      };
+  
+    this.sortColumn = 'Vendor Name';
+    this.sortDir = 'Ascending';    
+    this.filter = "";    
+    this.searchValue = "";
+    this.isFiltered = false;
+    this.columnsReordered = false;
+    
+    this.sortValue  = 'vendorName';
+    this.sortType  = 'asc'
+    this.sort  = this.sortColumn;
+  
+    this.loadFinancialVendorsList();
   }
 
 }
