@@ -17,6 +17,8 @@ import { MedicalClaimsPrintAuthorizationComponent } from './components/medical-c
 import { MedicalClaimsProviderInfoComponent } from './components/medical-claims-provider-info/medical-claims-provider-info.component';
 import { MedicalClaimsRecentClaimsListComponent } from './components/medical-claims-recent-claims-list/medical-claims-recent-claims-list.component';
 import { MedicalClaimsUnbatchClaimsComponent } from './components/medical-claims-unbatch-claims/medical-claims-unbatch-claims.component';
+import { MedicalClaimsBatchesLogListsComponent } from './components/medical-claims-batches-log-lists/medical-claims-batches-log-lists.component';
+import { MedicalClaimsBatchePageComponent } from './containers/medical-claims-batche-page/medical-claims-batche-page.component';
 
 @NgModule({
   imports: [
@@ -39,7 +41,9 @@ import { MedicalClaimsUnbatchClaimsComponent } from './components/medical-claims
     MedicalClaimsPrintAuthorizationComponent,
     MedicalClaimsProviderInfoComponent,
     MedicalClaimsRecentClaimsListComponent,
-    MedicalClaimsUnbatchClaimsComponent
+    MedicalClaimsUnbatchClaimsComponent,
+    MedicalClaimsBatchesLogListsComponent,
+    MedicalClaimsBatchePageComponent,
   ],
   exports: [
     MedicalClaimsProcessListComponent,
@@ -54,7 +58,9 @@ import { MedicalClaimsUnbatchClaimsComponent } from './components/medical-claims
     MedicalClaimsPrintAuthorizationComponent,
     MedicalClaimsProviderInfoComponent,
     MedicalClaimsRecentClaimsListComponent,
-    MedicalClaimsUnbatchClaimsComponent
+    MedicalClaimsUnbatchClaimsComponent,
+    MedicalClaimsBatchesLogListsComponent,
+    MedicalClaimsBatchePageComponent,
   ],
 })
 export class CaseManagementFeatureFinancialMedicalClaimsModule {}
