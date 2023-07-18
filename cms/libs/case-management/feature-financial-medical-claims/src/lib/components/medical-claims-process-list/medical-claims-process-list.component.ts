@@ -5,4 +5,32 @@ import { Component } from '@angular/core';
   templateUrl: './medical-claims-process-list.component.html',
   styleUrls: ['./medical-claims-process-list.component.scss'],
 })
-export class MedicalClaimsProcessListComponent {}
+export class MedicalClaimsProcessListComponent {
+  isDeleteBatchClosed = false;
+  isProcessBatchClosed = false;
+  public claimsProcessMore = [
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Batch Claims',
+      icon: 'check',
+      click: (data: any): void => {
+        if (!this.isProcessBatchClosed) {
+          this.isProcessBatchClosed = true;
+         
+        }
+      },
+    },
+
+    {
+      buttonType: 'btn-h-danger',
+      text: 'Delete Claims',
+      icon: 'delete',
+      click: (data: any): void => {
+        if (!this.isDeleteBatchClosed) {
+          this.isDeleteBatchClosed = true;
+        
+        }
+      },
+    },
+  ];
+}

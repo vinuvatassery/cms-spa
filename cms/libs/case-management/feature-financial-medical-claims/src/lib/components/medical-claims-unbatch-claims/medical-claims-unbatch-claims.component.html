@@ -1,1 +1,26 @@
-<p>medical-claims-unbatch-claims works!</p>
+<kendo-dialog-titlebar > Unbatch claim?</kendo-dialog-titlebar>
+
+<section class="k-dialog-body">
+    <p class="text-muted mb-1">  This action cannot be undone, but you may add this claim to a new batch at any time.    </p>
+    <p class="text-muted mb-2">   Claims to be batched: 6  </p>
+  </section>
+  
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="cancel"
+         
+        >
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="Batch"  >
+          Batch
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+  

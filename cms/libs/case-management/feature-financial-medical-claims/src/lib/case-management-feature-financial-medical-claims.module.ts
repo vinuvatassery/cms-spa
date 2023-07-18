@@ -6,12 +6,12 @@ import { CaseManagementFeatureFinancialMedicalClaimsRoutingModule } from './case
 import { FinancialMedicalClaimsPageComponent } from './containers/medical-claims-page/medical-claims-page.component';
 import { MedicalClaimsProcessListComponent } from './components/medical-claims-process-list/medical-claims-process-list.component';
 import { MedicalClaimsBatchesListComponent } from './components/medical-claims-batches-list/medical-claims-batches-list.component';
-import { MedicalClaimsAppPaymentsListComponent } from './components/medical-claims-app-payments-list/medical-claims-app-payments-list.component';
+import { MedicalClaimsAllPaymentsListComponent } from './components/medical-claims-all-payments-list/medical-claims-all-payments-list.component';
 import { MedicalClaimsBatchClaimsComponent } from './components/medical-claims-batch-claims/medical-claims-batch-claims.component';
 import { MedicalClaimsBatchListDetailItemsComponent } from './components/medical-claims-batch-list-detail-items/medical-claims-batch-list-detail-items.component';
 import { MedicalClaimsDeleteClaimsComponent } from './components/medical-claims-delete-claims/medical-claims-delete-claims.component';
 import { MedicalClaimsDetailFormComponent } from './components/medical-claims-detail-form/medical-claims-detail-form.component';
-import { MedicalClaimsPaymentDetailsFromComponent } from './components/medical-claims-payment-details-from/medical-claims-payment-details-from.component';
+import { MedicalClaimsPaymentDetailsFormComponent } from './components/medical-claims-payment-details-form/medical-claims-payment-details-form.component';
 import { MedicalClaimsPreviewPaymentRequestComponent } from './components/medical-claims-preview-payment-request/medical-claims-preview-payment-request.component';
 import { MedicalClaimsPrintAuthorizationComponent } from './components/medical-claims-print-authorization/medical-claims-print-authorization.component';
 import { MedicalClaimsProviderInfoComponent } from './components/medical-claims-provider-info/medical-claims-provider-info.component';
@@ -29,12 +29,12 @@ import { MedicalClaimsUnbatchClaimsComponent } from './components/medical-claims
     FinancialMedicalClaimsPageComponent,
     MedicalClaimsProcessListComponent,
     MedicalClaimsBatchesListComponent,
-    MedicalClaimsAppPaymentsListComponent,
+    MedicalClaimsAllPaymentsListComponent,
     MedicalClaimsBatchClaimsComponent,
     MedicalClaimsBatchListDetailItemsComponent,
     MedicalClaimsDeleteClaimsComponent,
     MedicalClaimsDetailFormComponent,
-    MedicalClaimsPaymentDetailsFromComponent,
+    MedicalClaimsPaymentDetailsFormComponent,
     MedicalClaimsPreviewPaymentRequestComponent,
     MedicalClaimsPrintAuthorizationComponent,
     MedicalClaimsProviderInfoComponent,
@@ -44,12 +44,12 @@ import { MedicalClaimsUnbatchClaimsComponent } from './components/medical-claims
   exports: [
     MedicalClaimsProcessListComponent,
     MedicalClaimsBatchesListComponent,
-    MedicalClaimsAppPaymentsListComponent,
+    MedicalClaimsAllPaymentsListComponent,
     MedicalClaimsBatchClaimsComponent,
     MedicalClaimsBatchListDetailItemsComponent,
     MedicalClaimsDeleteClaimsComponent,
     MedicalClaimsDetailFormComponent,
-    MedicalClaimsPaymentDetailsFromComponent,
+    MedicalClaimsPaymentDetailsFormComponent,
     MedicalClaimsPreviewPaymentRequestComponent,
     MedicalClaimsPrintAuthorizationComponent,
     MedicalClaimsProviderInfoComponent,

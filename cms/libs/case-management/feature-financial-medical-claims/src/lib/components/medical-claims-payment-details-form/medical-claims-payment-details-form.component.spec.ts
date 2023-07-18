@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MedicalClaimsPaymentDetailsFromComponent } from './medical-claims-payment-details-from.component';
+import { MedicalClaimsPaymentDetailsFormComponent } from './medical-claims-payment-details-form.component';
 
 describe('MedicalClaimsPaymentDetailsFromComponent', () => {
-  let component: MedicalClaimsPaymentDetailsFromComponent;
-  let fixture: ComponentFixture<MedicalClaimsPaymentDetailsFromComponent>;
+  let component: MedicalClaimsPaymentDetailsFormComponent;
+  let fixture: ComponentFixture<MedicalClaimsPaymentDetailsFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MedicalClaimsPaymentDetailsFromComponent],
+      imports: [MedicalClaimsPaymentDetailsFormComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(MedicalClaimsPaymentDetailsFromComponent);
+    fixture = TestBed.createComponent(MedicalClaimsPaymentDetailsFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
