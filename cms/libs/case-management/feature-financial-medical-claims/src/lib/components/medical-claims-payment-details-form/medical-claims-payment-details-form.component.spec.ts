@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { MedicalClaimsPaymentDetailsFormComponent } from './medical-claims-payment-details-form.component';
 
 describe('MedicalClaimsPaymentDetailsFromComponent', () => {
