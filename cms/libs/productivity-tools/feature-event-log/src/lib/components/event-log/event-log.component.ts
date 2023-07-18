@@ -23,11 +23,14 @@ export class EventLogComponent implements OnInit {
 
   /** Public properties **/
   events$ = this.eventLogFacade.events$;
+  eventLogs$ = this.eventLogFacade.eventLogs$;
   isShowEventLog = false;
   isOpenEventLogDetails = false;
   isShownSearch = false;
   vendorId:any;
-  vendorTypeCode:any;
+  eventTypeCode:any;
+  val:any ='items-body_details text-ellipsis';
+  
   public formUiStyle : UIFormStyle = new UIFormStyle();
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -69,10 +72,10 @@ export class EventLogComponent implements OnInit {
 
   private getQuery(){
     this.vendorId = this.route.snapshot.queryParams['v_id'];
-    this.vendorTypeCode = this.route.snapshot.queryParams['vendor_type_code'];
+    this.eventTypeCode = this.route.snapshot.queryParams['vendor_type_code'];
   }
   private loadEvents(): void {
-    this.eventLogFacade.loadEvents();
+    this.eventLogFacade.loadEventLog(this.eventTypeCode);
   }
 
   /** Internal event methods **/
@@ -90,5 +93,15 @@ export class EventLogComponent implements OnInit {
   onCloseEventLogClicked() {
     this.closeAction.emit();
     this.isShowEventLog = !this.isShowEventLog;
+  }
+
+  readMore(event : any){
+    this.val ='items-body_details';
+    let item = 'detailsList'+ event.currentTarget.id
+    let control = document.getElementById(item);
+    if(control !== null)
+    {
+      control.classList.add('items-body_details');
+    }
   }
 }

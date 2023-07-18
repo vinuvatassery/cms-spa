@@ -6,19 +6,23 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Event } from '../entities/event';
 /** Data services **/
 import { EventDataService } from '../infrastructure/event.data.service';
+import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class EventLogFacade {
   /** Private properties **/
   private eventsSubject = new BehaviorSubject<Event[]>([]);
   private ddlEventsSubject = new BehaviorSubject<any[]>([]);
+  private eventLogsSubject = new BehaviorSubject<any>({});
 
   /** Public properties **/
   events$ = this.eventsSubject.asObservable();
   ddlEvents$ = this.ddlEventsSubject.asObservable();
+  eventLogs$ = this.eventLogsSubject.asObservable();
 
   /** Constructor **/
-  constructor(private readonly eventDataService: EventDataService) {}
+  constructor(private readonly eventDataService: EventDataService, private loggingService: LoggingService,
+    private readonly notificationSnackbarService: NotificationSnackbarService) {}
 
   /** Public methods **/
   loadEvents(): void {
@@ -44,25 +48,25 @@ export class EventLogFacade {
   }
 
 
-  // showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
-  //   if (type == SnackBarNotificationType.ERROR) {
-  //     const err = subtitle;
-  //     this.loggingService.logException(err);
-  //   }
-  //   this.notificationSnackbarService.manageSnackBar(type, subtitle);
-  // }
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err);
+    }
+    this.notificationSnackbarService.manageSnackBar(type, subtitle);
+  }
   
-  //   loadEventLog(clientId:any, clientCaseEligibilityId:any){
-  //       debugger;
-  //       this.profileTabDataService.loadEventLog(clientId,clientCaseEligibilityId)  .subscribe({
-  //           next: (data) => { 
-  //               this.eventLogSubject.next(data); 
-  //           },
-  //           error: (err: any) => {
-  //               this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-  //           },
-  //         });
-  //   }
+    loadEventLog(eventTypeCode:any){
+        debugger;
+        this.eventDataService.loadEventLog(eventTypeCode)  .subscribe({
+            next: (data) => { 
+                this.eventLogsSubject.next(data); 
+            },
+            error: (err: any) => {
+                this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+            },
+          });
+    }
 
 
 }

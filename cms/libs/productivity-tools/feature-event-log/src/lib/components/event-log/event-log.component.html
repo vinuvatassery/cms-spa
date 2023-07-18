@@ -132,14 +132,14 @@
                     >add</span
                   >
                 </button>
-                <span class="items-body_details text-ellipsis"
+                <span  [ngClass]="val"  id="detailsList1"
                   >Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Integer nibh tellus, sollicitudin vitae ante vel, fermentum
                   consequat leo. Nunc scelerisque purus ex, eget eleifend ligula
                   convallis vitae. Pellentesque habitant morbi tristique
                   senectus et netus et malesuada fames ac turpis egesta</span
                 >
-                <span class="text-primary text-underline c-pointer"
+                <span class="text-primary text-underline c-pointer" id="1" (click)="readMore($event)"
                   >Read More</span
                 >
               </div>
