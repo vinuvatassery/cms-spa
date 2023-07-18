@@ -166,7 +166,7 @@
 <!-- Search Provider  Modal -->
 <kendo-dialog *ngIf="editformVisible$ | async" (close)="onCloseCsManagerSearchClicked()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
-  <kendo-dialog-titlebar>{{ isEditSearchCaseManagerProvider ? 'Edit Case Manager' : 'Assign Case Manager' }}
+  <kendo-dialog-titlebar>{{ isEditSearchCaseManagerProvider ? 'Edit Case Manager' : managementTab?  'Assign Case Manager' : 'Add Case Manager' }}
   </kendo-dialog-titlebar>
   <case-management-case-manager-search [caseManagerSearchList$]="getManagerUsers$" [managementTab]="managementTab"
     [existingCaseManagerData]="existingCaseManagerData" [selectedCustomCaseManagerName]="selectedCustomCaseManagerName"
