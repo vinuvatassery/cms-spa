@@ -28,7 +28,7 @@ export class DrugsPurchasedListComponent implements OnInit {
   public formUiStyle : UIFormStyle = new UIFormStyle(); 
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
-  isOnlyPremiumsWith12Months:boolean=true;
+  isPermiumWithinLasttwelveMonthsData:boolean=true;
   public actions = [
     {
       buttonType: 'btn-h-primary',
@@ -72,8 +72,8 @@ export class DrugsPurchasedListComponent implements OnInit {
   
   /** Private methods **/
   private loadDrugsPurchased(  
-  ) { 
-    this.drugPharmacyFacade.getDrugPurchasedList(this.clientId,this.state.skip,this.state.take,this.sortValue,this.sortType);
+  ) {   
+    this.drugPharmacyFacade.getDrugPurchasedList(this.clientId,this.state.skip,this.state.take,this.sortValue,this.sortType,this.isPermiumWithinLasttwelveMonthsData);
   }
 
   /** Internal event methods **/
@@ -109,5 +109,9 @@ export class DrugsPurchasedListComponent implements OnInit {
   public dataStateChange(stateData: any): void {
     this.state = stateData;
    this.loadDrugsPurchased();
+  }
+  public onloadDrugsPurchasedsedData()
+  {
+    this.loadDrugsPurchased();
   }
 }
