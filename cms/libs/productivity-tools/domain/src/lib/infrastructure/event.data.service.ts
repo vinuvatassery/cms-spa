@@ -7,7 +7,6 @@ import { of } from 'rxjs/internal/observable/of';
 /** Entities **/
 import { Event } from '../entities/event';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { EventLog } from '../entities/event-log';
 
 @Injectable({ providedIn: 'root' })
 export class EventDataService {
