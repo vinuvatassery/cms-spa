@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MedicalClaimsRouterBatchPageComponent } from './medical-claims-router-batch-page.component';
+import { MedicalClaimsBatchRouterPageComponent } from './medical-claims-router-batch-page.component';
 
-describe('MedicalClaimsRouterPageComponent', () => {
-  let component: MedicalClaimsRouterBatchPageComponent;
-  let fixture: ComponentFixture<MedicalClaimsRouterBatchPageComponent>;
+describe('MedicalClaimsBatchRouterPageComponent', () => {
+  let component: MedicalClaimsBatchRouterPageComponent;
+  let fixture: MedicalClaimsBatchRouterPageComponent<MedicalClaimsRouterBatchPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MedicalClaimsRouterBatchPageComponent],
+      declarations: [MedicalClaimsBatchRouterPageComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(MedicalClaimsRouterBatchPageComponent);
+    fixture = TestBed.createComponent(MedicalClaimsBatchRouterPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

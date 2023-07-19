@@ -22,7 +22,7 @@ import { MedicalClaimsBatchPageComponent } from './containers/medical-claims-bat
 import { MedicalClaimsBatchesReconcilePaymentsComponent } from './components/medical-claims-batches-reconcile-payments/medical-claims-batches-reconcile-payments.component';
 import { MedicalClaimsBatchItemsPageComponent } from './containers/medical-claims-batch-items-page/medical-claims-batch-items-page.component';
 import { MedicalClaimsReconcilePageComponent } from './containers/medical-claims-reconcile-page/medical-claims-reconcile-page.component';
-import { MedicalClaimsRouterBatchPageComponent } from './containers/medical-claims-batch-router-page/medical-claims-router-batch-page.component';
+import { MedicalClaimsBatchRouterPageComponent } from './containers/medical-claims-batch-router-page/medical-claims-router-batch-page.component';
 import { MedicalClaimsPaymentsRouterPageComponent } from './containers/medical-claims-payments-router-page/medical-claims-payments-router-page.component';
 
 @NgModule({
@@ -52,7 +52,7 @@ import { MedicalClaimsPaymentsRouterPageComponent } from './containers/medical-c
     MedicalClaimsBatchesReconcilePaymentsComponent,
     MedicalClaimsBatchItemsPageComponent,
     MedicalClaimsReconcilePageComponent,
-    MedicalClaimsRouterBatchPageComponent,
+    MedicalClaimsBatchRouterPageComponent,
     MedicalClaimsPaymentsRouterPageComponent,
   ],
   exports: [
@@ -74,7 +74,7 @@ import { MedicalClaimsPaymentsRouterPageComponent } from './containers/medical-c
     MedicalClaimsBatchesReconcilePaymentsComponent,
     MedicalClaimsBatchItemsPageComponent,
     MedicalClaimsReconcilePageComponent,
-    MedicalClaimsRouterBatchPageComponent,
+    MedicalClaimsBatchRouterPageComponent,
     MedicalClaimsPaymentsRouterPageComponent,
   ],
 })

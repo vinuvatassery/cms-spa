@@ -5,8 +5,7 @@ import { RouterModule } from '@angular/router';
 import { MedicalClaimsBatchPageComponent } from './containers/medical-claims-batch-page/medical-claims-batch-page.component';
 import { MedicalClaimsBatchItemsPageComponent } from './containers/medical-claims-batch-items-page/medical-claims-batch-items-page.component';
 import { MedicalClaimsReconcilePageComponent } from './containers/medical-claims-reconcile-page/medical-claims-reconcile-page.component';
-import { MedicalClaimsBatchesLogListsComponent } from './components/medical-claims-batches-log-lists/medical-claims-batches-log-lists.component';
-import { MedicalClaimsRouterBatchPageComponent } from './containers/medical-claims-batch-router-page/medical-claims-router-batch-page.component';
+import { MedicalClaimsBatchRouterPageComponent } from './containers/medical-claims-batch-router-page/medical-claims-router-batch-page.component';
 import { MedicalClaimsPaymentsRouterPageComponent } from './containers/medical-claims-payments-router-page/medical-claims-payments-router-page.component';
 const routes = [
   {
@@ -18,7 +17,7 @@ const routes = [
   },
   {
     path: 'batch',
-    component: MedicalClaimsRouterBatchPageComponent,
+    component: MedicalClaimsBatchRouterPageComponent,
     data: {
       title: 'Batch',
     },

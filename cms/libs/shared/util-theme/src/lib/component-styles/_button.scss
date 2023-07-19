@@ -11,7 +11,9 @@
   border-radius: $border-radius-sm;
   letter-spacing: 0.56px;
   //  height: 32px;
-
+&.noshadow-btn{
+  box-shadow: none;
+}
   &.k-button-outline-primary {
     border: 1px solid;
     color: $app-primary;

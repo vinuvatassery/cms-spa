@@ -6,4 +6,4 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./medical-claims-router-batch-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MedicalClaimsRouterBatchPageComponent {}
+export class MedicalClaimsBatchRouterPageComponent {}
