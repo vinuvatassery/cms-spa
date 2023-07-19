@@ -79,7 +79,7 @@
           <div class="items-head">
             <p class="items-head_label">Comment</p>
             <p class="items-head_info">
-              {{eventLog.createdTime}} by <span class="items-head_info-user">{{eventLog.createdBy}}</span>
+              {{eventLog.createdTime | date: 'MM/dd/yyyy'}} by <span class="items-head_info-user">{{eventLog.createdBy}}</span>
             </p>
           </div>
           <div class="items-body">
@@ -98,10 +98,8 @@
               >
             </button>
             <span  [ngClass]="'items-body_details text-ellipsis'"  id="{{'detailsList' +i}}"
-              >{{eventLog.eventDesc}} </span>            
-            <!-- <span class="text-primary text-underline c-pointer"
-              >View Letter</span
-            > -->
+              >{{eventLog.eventDesc}} </span>        
+
             <span  [ngClass]= "'text-primary text-underline c-pointer'"name ="readMore"  id="readMore{{i}}" (click)="readMore($event,i)"
                   >Read More</span>
                   <span [ngClass]="'text-primary text-underline c-pointer hidden'" name="readLess" id="readLess{{i}}" (click)="readLess($event,i)"
@@ -117,7 +115,7 @@
               <div class="items-head">
                 <p class="items-head_label">Sub Event One</p>
                 <p class="items-head_info">
-                  {{subLog.createdTime}} by
+                  {{subLog.createdTime | date: 'MM/dd/yyyy'}} by
                   <span class="items-head_info-user">{{subLog.createdBy}}</span>
                 </p>
               </div>
