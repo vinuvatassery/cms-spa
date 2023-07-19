@@ -16,7 +16,7 @@ export class FinancialMedicalClaimsFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueMedicalClaimsProcess = 'vendorName';
+  public sortValueMedicalClaimsProcess = 'invoiceID';
   public sortProcessList: SortDescriptor[] = [{
     field: this.sortValueMedicalClaimsProcess,
   }];
