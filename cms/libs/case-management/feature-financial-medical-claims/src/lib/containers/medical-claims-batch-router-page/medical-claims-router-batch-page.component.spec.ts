@@ -4,7 +4,7 @@ import { MedicalClaimsBatchRouterPageComponent } from './medical-claims-router-b
 
 describe('MedicalClaimsBatchRouterPageComponent', () => {
   let component: MedicalClaimsBatchRouterPageComponent;
-  let fixture: MedicalClaimsBatchRouterPageComponent<MedicalClaimsRouterBatchPageComponent>;
+  let fixture: ComponentFixture<MedicalClaimsBatchRouterPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
