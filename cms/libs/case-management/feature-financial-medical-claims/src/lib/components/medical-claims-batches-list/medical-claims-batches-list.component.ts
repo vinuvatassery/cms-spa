@@ -51,7 +51,6 @@ export class MedicalClaimsBatchesListComponent implements OnInit, OnChanges{
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   
-  
   /** Constructor **/
   constructor(private route: Router, ) {}
 
