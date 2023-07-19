@@ -1,1 +1,4 @@
-<cms-medical-claims-batch-list-detail-items></cms-medical-claims-batch-list-detail-items>
+<cms-medical-claims-batch-list-detail-items [batchLogGridLists$]="batchLogGridLists$"
+[pageSizes]="pageSizes" [sortValue]="sortValue"
+[sortType]="sortType" [sort]="sort" 
+(loadBatchLogListEvent)="loadBatchLogListGrid($event)"></cms-medical-claims-batch-list-detail-items>
