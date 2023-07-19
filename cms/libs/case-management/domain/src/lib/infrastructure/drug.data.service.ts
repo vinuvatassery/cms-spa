@@ -237,8 +237,8 @@ export class DrugDataService {
     return this.http.get<ClientPharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs/${clientId}/pharmacies/${isShowHistoricalData}`);
   }
 
-  getDrugPurchasedList(clientId:number, skip: any, pageSize: any, sortBy: any, sortType: any,isPermiumWithinLasttwelveMonthsData:boolean) {
-    return this.http.get<Pharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/drugpurchased?SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}&isPermiumWithinLasttwelveMonthsData=${isPermiumWithinLasttwelveMonthsData}`);
+  getDrugPurchasedList(clientId:number, skip: any, pageSize: any, sortBy: any, sortType: any,isPermiumWithinLastTwelveMonthsData:boolean) {
+    return this.http.get<Pharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/drugpurchased?SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}&isPermiumWithinLastTwelveMonthsData=${isPermiumWithinLastTwelveMonthsData}`);
   }
   removeDrugPharmacy(clientId: number, clientPharmacyId: string) {
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drug/clients/${clientId}/pharmacies/${clientPharmacyId}`);
