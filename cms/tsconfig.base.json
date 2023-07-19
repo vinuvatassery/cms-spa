@@ -60,6 +60,9 @@
       "@cms/case-management/feature-financial-dental-premiums": [
         "libs/case-management/feature-financial-dental-premiums/src/index.ts"
       ],
+      "@cms/case-management/feature-financial-funding-sources": [
+        "libs/case-management/feature-financial-funding-sources/src/index.ts"
+      ],
       "@cms/case-management/feature-financial-insurance-premiums": [
         "libs/case-management/feature-financial-insurance-premiums/src/index.ts"
       ],
@@ -68,6 +71,9 @@
       ],
       "@cms/case-management/feature-financial-medical-claims": [
         "libs/case-management/feature-financial-medical-claims/src/index.ts"
+      ],
+      "@cms/case-management/feature-financial-pcas": [
+        "libs/case-management/feature-financial-pcas/src/index.ts"
       ],
       "@cms/case-management/feature-financial-pharmacy-claims": [
         "libs/case-management/feature-financial-pharmacy-claims/src/index.ts"

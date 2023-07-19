@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import {  Subject } from 'rxjs'; 
 /** Entities **/
 import { Event } from '../entities/event';
 /** Data services **/

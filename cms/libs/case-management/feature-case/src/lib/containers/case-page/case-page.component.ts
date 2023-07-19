@@ -6,7 +6,9 @@ import { Router } from '@angular/router';
 
 /** Internal Libraries **/
 import { CaseFacade, CaseScreenTab, WorkflowFacade,  UserDefaultRoles, SearchHeaderType,ModuleCode  } from '@cms/case-management/domain';
+import { ReminderFacade } from '@cms/productivity-tools/domain';
 import {UITabStripScroll} from '@cms/shared/ui-tpa'
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade , UserManagementFacade} from '@cms/system-config/domain'
 
 
@@ -50,7 +52,8 @@ export class CasePageComponent implements OnInit {
       private readonly workflowFacade :WorkflowFacade,
       private readonly loginUserFacade : UserManagementFacade,
       private readonly lovFacade : LovFacade,
-      private readonly  cdr :ChangeDetectorRef
+      private readonly  cdr :ChangeDetectorRef,
+      private reminderFacade: ReminderFacade
     ) {}
 
   /** Lifecycle hooks **/
@@ -167,4 +170,11 @@ export class CasePageComponent implements OnInit {
       this.cdr.detectChanges();
     }
 
-}
+    onReminderDoneClicked(event:any) {
+      debugger
+      this.reminderFacade.showHideSnackBar(
+        SnackBarNotificationType.SUCCESS,
+        'Item  updated to Done successfully'
+      );
+    }
+  }

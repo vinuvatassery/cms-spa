@@ -90,8 +90,9 @@
 
 .client-profile-outlet {
   padding: 16px;
+
   .TableActionPopup {
-    .k-animation-container{
+    .k-animation-container {
       z-index: 4;
     }
   }
@@ -676,12 +677,14 @@ color: $app-primary-font-color;
     grid-gap: 0px;
     align-items: center;
   }
+
   .template-list-wrapper-two-column {
-   display: block;
-   width: 100%;
-   > span{
-    width: 50%;
-   }
+    display: block;
+    width: 100%;
+
+    >span {
+      width: 50%;
+    }
   }
 }
 
@@ -748,6 +751,7 @@ color: $app-primary-font-color;
   overflow-y: hidden;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
+
   .k-scrollview {
     border: 0px !important;
   }
@@ -909,6 +913,7 @@ color: $app-primary-font-color;
   >.k-button-solid {
     padding: 8px;
     background: transparent;
+
     .k-button-text {
       display: none;
     }
@@ -930,9 +935,9 @@ color: $app-primary-font-color;
   }
 }
 
-.bottom-fixed-wrapper{
+.bottom-fixed-wrapper {
   position: fixed;
-  padding:8px 16px;
+  padding: 8px 16px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   box-shadow: 0px -3px 6px #0000003D;
   bottom: 0;
@@ -940,13 +945,16 @@ color: $app-primary-font-color;
   width: auto;
   left: 0;
   z-index: 2;
-  .k-button-solid-primary{
+
+  .k-button-solid-primary {
     box-shadow: none;
   }
-  > .k-button{
+
+  >.k-button {
     padding: 8px 16px;
   }
-  &.flex-gap{
+
+  &.flex-gap {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -954,38 +962,40 @@ color: $app-primary-font-color;
   }
 }
 
-.add_main_popup_screen{
-padding-bottom: 20rem;
+.add_main_popup_screen {
+  padding-bottom: 20rem;
 
-.add_new_top_section{
-  border-bottom: 1px solid #0000001F;
-  padding: 1.5rem;
-  padding-top: 0;
-}
+  .add_new_top_section {
+    border-bottom: 1px solid #0000001F;
+    padding: 1.5rem;
+    padding-top: 0;
+  }
 
-.new_refund_Search{
-  position: relative;
-  .global-search-icon{
+  .new_refund_Search {
+    position: relative;
+
+    .global-search-icon {
       position: absolute;
       top: 8px;
       left: 10px;
-  }
-  .input-inline-loader{
+    }
+
+    .input-inline-loader {
       top: 10px;
-  }
+    }
 
-  .k-combobox.k-input{
+    .k-combobox.k-input {
       padding-left: 1.4rem;
+    }
+  }
+
+  .add_new_bottom_section {
+    padding: 1.5rem;
   }
 }
 
-.add_new_bottom_section{
-  padding: 1.5rem;  
-}
-}
-
-.add_new_fixed_bottom{
-  background-color: #ffffff;
+.add_new_fixed_bottom {
+  background-color: $white;
   position: fixed;
   bottom: 0;
   padding: 1.5rem;
@@ -995,9 +1005,102 @@ padding-bottom: 20rem;
   box-shadow: 0px 0px 6px #00000029;
   border-top: 1px solid #0000001F;
   width: 100%;
-  .add_new_fixed_bottom_grid_section{
-      .k-grid-container {
-          height: 120px;
-      } 
+
+  .add_new_fixed_bottom_grid_section {
+    .k-grid-container {
+      height: 120px;
+    }
+  }
+}
+
+.tab-batch-notify {
+  display: inline-block;
+  padding: 0px 6px;
+  margin: 0px 4px 0px 10px;
+  border-radius: 4px;
+  font-size: $font-size-s;
+  background-color: material-color($hive-primary-palette, 500);
+  color: $white;
+}
+
+.fill_width_group_btn {
+  width: 100%;
+
+  button {
+    width: 100%;
+  }
+}
+
+.approval_container {
+  background: $light-blue-one;
+  padding: 20px;
+  min-height: calc(100vh - 200px);
+  padding-bottom: 4rem;
+
+  .bg-white {
+
+    .k-picker,
+    .k-input {
+      background: $white !important;
+    }
+  }
+
+}
+
+.field_with_info {
+  display: flex;
+  align-items: end;
+
+  >span.material-icons {
+    margin-bottom: 10px;
+    margin-left: 10px;
+    color: rgba($black, 0.6);
+    font-size: 16px;
+  }
+}
+
+
+.custom_scroll_view {
+  .k-scrollview {
+    min-height: 340px;
+    max-height: 500px;
+  }
+
+  .slidertitle-bar {
+    padding: 10px;
+    text-align: center;
+    background: $light-blue-one ;
+    border-radius: 4px;
+  }
+
+  .k-scrollview-prev {
+    left: 10px;
+  }
+
+  .k-scrollview-next {
+    right: 10px;
+  }
+
+  .k-scrollview-next,
+  .k-scrollview-prev {
+    height: 40px;
+    top: -2px;
+
+    .k-icon,
+    .k-svg-icon {
+      font-size: 26px;
+      font-weight: normal;
+      color: $black-3;
+    }
+  }
+
+  kendo-scrollview {
+
+    &.k-scrollview-wrap,
+    &.k-scrollview,
+    .k-scrollview {
+      border-width: 0px;
+    }
+
   }
 }

@@ -29,7 +29,7 @@ export class TodoDataService {
     ]);
   }
 
-  loadTodosearch() {
+  loadToDoSearch() {
     return of([
       { name: 'Donna Summer', id: 'XXXX', urn: 'XXX-XX-XXXX' },
       { name: 'David Miller', id: 'XXXX', urn: 'XXX-XX-XXXX' },
@@ -75,6 +75,41 @@ export class TodoDataService {
         Type: 'Client',
         Description:
           'Lorem With Custom Template. Editor Preview Both. Project.',
+        DueDate: '01-03-2022',
+      },
+      {
+        Title: 'Housing Search',
+        TodoItemFor: 'Sakariya Pothen',
+        Type: 'Service Provider',
+        Description: 'Custom Template. Editor Preview Both. Project.',
+        DueDate: '01-03-2022',
+      },
+      {
+        Title: 'Housing Search',
+        TodoItemFor: 'Sakariya Pothen',
+        Type: 'Service Provider',
+        Description: 'Custom Template. Editor Preview Both. Project.',
+        DueDate: '01-03-2022',
+      },
+      {
+        Title: 'Housing Search',
+        TodoItemFor: 'Sakariya Pothen',
+        Type: 'Service Provider',
+        Description: 'Custom Template. Editor Preview Both. Project.',
+        DueDate: '01-03-2022',
+      },
+      {
+        Title: 'Housing Search',
+        TodoItemFor: 'Sakariya Pothen',
+        Type: 'Service Provider',
+        Description: 'Custom Template. Editor Preview Both. Project.',
+        DueDate: '01-03-2022',
+      },
+      {
+        Title: 'Housing Search',
+        TodoItemFor: 'Sakariya Pothen',
+        Type: 'Service Provider',
+        Description: 'Custom Template. Editor Preview Both. Project.',
         DueDate: '01-03-2022',
       },
     ]);
