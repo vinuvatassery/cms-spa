@@ -16,6 +16,7 @@
           aria-hidden="true"
           >add</span
         >
+
       </button>
     </div>
     <div class="sidePanel_header-right">
@@ -76,9 +77,9 @@
       *ngFor="let eventLog of eventLogs$ | async; let i = index">
         <section>
           <div class="items-head">
-            <p class="items-head_label">Letter Sent</p>
+            <p class="items-head_label">Comment</p>
             <p class="items-head_info">
-              09-01-2022 by <span class="items-head_info-user">Sara Lisa</span>
+              {{eventLog.createdTime}} by <span class="items-head_info-user">{{eventLog.createdBy}}</span>
             </p>
           </div>
           <div class="items-body">
@@ -116,8 +117,8 @@
               <div class="items-head">
                 <p class="items-head_label">Sub Event One</p>
                 <p class="items-head_info">
-                  09-01-2022 by
-                  <span class="items-head_info-user">Lorem jocks</span>
+                  {{subLog.createdTime}} by
+                  <span class="items-head_info-user">{{subLog.createdBy}}</span>
                 </p>
               </div>
               <div class="items-body">

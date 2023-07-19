@@ -64,7 +64,7 @@ export class EventLogComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit() {    
     this.getQuery();
-    this.loadEvents();
+    this.updateEvents();
   }
 
   /** Private methods **/
@@ -73,10 +73,12 @@ export class EventLogComponent implements OnInit {
     this.vendorId = this.route.snapshot.queryParams['v_id'];
     this.eventTypeCode = this.route.snapshot.queryParams['vendor_type_code'];
   }
+  private updateEvents(): void {
+    this.eventLogFacade.updateEventLog(this.eventTypeCode);
+  }
   private loadEvents(): void {
     this.eventLogFacade.loadEventLog(this.eventTypeCode);
   }
-
   /** Internal event methods **/
   onCloseEventDetailsClicked() {
     this.isOpenEventLogDetails = false;
@@ -90,6 +92,7 @@ export class EventLogComponent implements OnInit {
   }
 
   onCloseEventLogClicked() {
+    this.loadEvents();
     this.closeAction.emit();
     this.isShowEventLog = !this.isShowEventLog;
   }

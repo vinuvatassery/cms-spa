@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FinancialVendorFacade, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { EventLogFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 
 
@@ -22,10 +23,13 @@ export class FinancialVendorProfileComponent implements OnInit {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   vendorProfile$ = this.financialVendorFacade.vendorProfile$
   vendorProfileSpecialHandling$ = this.financialVendorFacade.vendorProfileSpecialHandling$
-  constructor(private activeRoute: ActivatedRoute, private financialVendorFacade : FinancialVendorFacade) {}
+  eventLogsCount$ = this.eventLogFacade.eventLogsCount$;
+
+  constructor(private activeRoute: ActivatedRoute, private financialVendorFacade : FinancialVendorFacade,private readonly eventLogFacade: EventLogFacade) {}
 
   ngOnInit(): void {
     this.loadQueryParams();
+    this.loadEvents();
   }
 
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
@@ -60,7 +64,9 @@ export class FinancialVendorProfileComponent implements OnInit {
     }
   }
 
-
+  private loadEvents(): void {
+    this.eventLogFacade.loadEventLog(this.vendorTypeCode);
+  }
   handleShowEventLogClicked() {
     this.isShownEventLog = !this.isShownEventLog;
 

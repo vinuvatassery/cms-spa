@@ -15,11 +15,13 @@ export class EventLogFacade {
   private eventsSubject = new BehaviorSubject<Event[]>([]);
   private ddlEventsSubject = new BehaviorSubject<any[]>([]);
   private eventLogsSubject = new BehaviorSubject<EventLog[]>([]);
+  private eventLogsCountSubject = new BehaviorSubject<any>(null);
 
   /** Public properties **/
   events$ = this.eventsSubject.asObservable();
   ddlEvents$ = this.ddlEventsSubject.asObservable();
   eventLogs$ = this.eventLogsSubject.asObservable();
+  eventLogsCount$ = this.eventLogsCountSubject.asObservable();
 
   /** Constructor **/
   constructor(private readonly eventDataService: EventDataService, private loggingService: LoggingService,
@@ -60,12 +62,23 @@ export class EventLogFacade {
     loadEventLog(eventTypeCode:any){
         this.eventDataService.loadEventLog(eventTypeCode).subscribe({
             next: (data:EventLog[]) => { 
+              if(data != null){
+                this.eventLogsCountSubject.next(data.length);
                 this.generateEventLogList(data);
+              }
             },
             error: (err: any) => {
                 this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
             },
           });
+    }
+
+    updateEventLog(eventTypeCode:any){
+       this.eventDataService.updateEventLog(eventTypeCode).subscribe({
+          error: (err: any) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+       })
     }
 
     generateEventLogList(eventLog:EventLog[]){
@@ -74,6 +87,5 @@ export class EventLogFacade {
       parentItem.forEach(x=>x.subLogs= childItems.filter(y=>y.eventLogParentId===x.eventLogId));
       this.eventLogsSubject.next(parentItem);
     }
-
 
 }

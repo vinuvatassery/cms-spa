@@ -37,7 +37,11 @@ export class EventDataService {
 
   loadEventLog(eventTypeCode:any):Observable<any> {
     return this.http.get(
-        `${this.configurationProvider.appSettings.productivityToolApiUrl}/productivity-tools/events/by-type-code/${eventTypeCode}`
+        `${this.configurationProvider.appSettings.productivityToolApiUrl}/productivity-tools/events/${eventTypeCode}/by-type-code`
       );
+  }
+
+  updateEventLog(eventTypeCode:any):Observable<any> {   
+      return this.http.put(`${this.configurationProvider.appSettings.productivityToolApiUrl}/productivity-tools/events/${eventTypeCode}/by-type-code`, {});
   }
 }
