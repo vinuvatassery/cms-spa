@@ -131,7 +131,7 @@
     </div>
     <div class="flex-row">
       <div class="flex-col mt-1">
-        <button kendoButton [primary]="true" icon="add" (click)="onOpenProviderSearchClicked('',false)" 
+        <button kendoButton [primary]="true" icon="add" (click)="onOpenProviderSearchClicked('',false)"  *ngIf="showAddNewProvider$ | async"
           aria-label="add healthcare provider" [disabled]="(isReadOnly$ | async) ? true : false">
           Provider
         </button>
