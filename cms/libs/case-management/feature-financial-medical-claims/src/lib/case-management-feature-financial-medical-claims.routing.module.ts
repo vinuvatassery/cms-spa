@@ -7,6 +7,7 @@ import { MedicalClaimsBatchItemsPageComponent } from './containers/medical-claim
 import { MedicalClaimsReconcilePageComponent } from './containers/medical-claims-reconcile-page/medical-claims-reconcile-page.component';
 import { MedicalClaimsBatchesLogListsComponent } from './components/medical-claims-batches-log-lists/medical-claims-batches-log-lists.component';
 import { MedicalClaimsRouterBatchPageComponent } from './containers/medical-claims-batch-router-page/medical-claims-router-batch-page.component';
+import { MedicalClaimsPaymentsRouterPageComponent } from './containers/medical-claims-payments-router-page/medical-claims-payments-router-page.component';
 const routes = [
   {
     path: '',
@@ -45,6 +46,22 @@ const routes = [
           title: 'Items'
         },
       }, 
+      {
+        path: 'reconcile-payments',
+        component: MedicalClaimsReconcilePageComponent,
+        data: {
+          title: 'Reconcile Payments' 
+        },
+      }, 
+    ]
+  }, 
+  {
+    path: 'payments',
+    component: MedicalClaimsPaymentsRouterPageComponent,
+    data: {
+      title: 'Payments',
+    },
+    children: [       
       {
         path: 'reconcile-payments',
         component: MedicalClaimsReconcilePageComponent,

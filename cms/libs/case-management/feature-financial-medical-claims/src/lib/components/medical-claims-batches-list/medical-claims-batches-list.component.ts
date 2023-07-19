@@ -94,16 +94,7 @@ export class MedicalClaimsBatchesListComponent implements OnInit, OnChanges{
     this.gridDataHandle();
   }
 
-  onCellClick(event : any){ 
-    const query = {
-      queryParams: {
-        b_id: event.dataItem.id ,         
-      },
-    };
-    this.route.navigate(['/financial-management/vendor-refund/batch/batch-log-list'], query );
-  }
-
-  
+ 
   onChange(data: any) {
     this.defaultGridState();
 

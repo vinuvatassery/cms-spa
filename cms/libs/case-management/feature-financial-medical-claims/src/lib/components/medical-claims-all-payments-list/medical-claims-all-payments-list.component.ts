@@ -84,7 +84,7 @@ export class MedicalClaimsAllPaymentsListComponent implements OnInit, OnChanges{
       text: 'Reconcile Payments',
       icon: 'edit',
       click: (data: any): void => {
-       
+        this.navToReconcilePayments(data);
       },
     },
     {
@@ -211,7 +211,9 @@ export class MedicalClaimsAllPaymentsListComponent implements OnInit, OnChanges{
     });
     this.isMedicalClaimsAllPaymentsGridLoaderShow = false;
   }
- 
+  navToReconcilePayments(event : any){  
+    this.route.navigate(['/financial-management/medical-claims/payments/reconcile-payments'] );
+  }
 }
 
  
