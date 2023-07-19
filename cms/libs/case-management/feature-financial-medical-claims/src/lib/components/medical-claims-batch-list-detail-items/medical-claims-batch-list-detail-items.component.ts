@@ -27,14 +27,14 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
  
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  isBatchLogGridLoaderShow = false;
+  isBatchLogItemsGridLoaderShow = false;
 
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
-  @Input() batchLogGridLists$: any;
-  @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
+  @Input() batchItemsGridLists$: any;
+  @Output() loadBatchItemsListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -46,8 +46,8 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
-  gridClaimsBatchLogDataSubject = new Subject<any>();
-  gridClaimsBatchLogData$ = this.gridClaimsBatchLogDataSubject.asObservable();
+  gridClaimsBatchLogItemsDataSubject = new Subject<any>();
+  gridClaimsBatchLogItemsData$ = this.gridClaimsBatchLogItemsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -57,7 +57,7 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
   constructor(private route: Router, ) {}
   
   ngOnInit(): void {
-    this.loadBatchLogListGrid();
+    this.loadBatchLogItemsListGrid();
   }
   ngOnChanges(): void {
     this.state = {
@@ -66,32 +66,32 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
       sort: this.sort,
     };
 
-    this.loadBatchLogListGrid();
+    this.loadBatchLogItemsListGrid();
   }
 
 
-  private loadBatchLogListGrid(): void {
-    this.loadBatchLog(
+  private loadBatchLogItemsListGrid(): void {
+    this.loadBatchLogItems(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType
     );
   }
-  loadBatchLog(
+  loadBatchLogItems(
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isBatchLogGridLoaderShow = true;
+    this.isBatchLogItemsGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
     };
-    this.loadVendorRefundBatchListEvent.emit(gridDataRefinerValue);
+    this.loadBatchItemsListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
  
@@ -114,7 +114,7 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
         },
       ],
     };
-    let stateData = this.state;
+    const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
@@ -138,14 +138,14 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadBatchLogListGrid();
+    this.loadBatchLogItemsListGrid();
   }
 
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
-    this.loadBatchLogListGrid();
+    this.loadBatchLogItemsListGrid();
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -153,18 +153,18 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
   }
 
   gridDataHandle() {
-    this.batchLogGridLists$.subscribe((data: GridDataResult) => {
+    this.batchItemsGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
         this.filterData
       );
-      this.gridClaimsBatchLogDataSubject.next(this.gridDataResult);
+      this.gridClaimsBatchLogItemsDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) { 
-        this.isBatchLogGridLoaderShow = false;
+        this.isBatchLogItemsGridLoaderShow = false;
       }
     });
-    this.isBatchLogGridLoaderShow = false;
+    this.isBatchLogItemsGridLoaderShow = false;
   }
 
   backToBatchLog(event : any){  

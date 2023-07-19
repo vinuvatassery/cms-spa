@@ -41,6 +41,18 @@ export class FinancialMedicalClaimsFacade {
     field: this.sortValueClaims,
   }];
 
+
+  public sortValueBatchItem = 'vendorName';
+  public sortBatchItemList: SortDescriptor[] = [{
+    field: this.sortValueBatchItem,
+  }];
+
+
+  public sortValueReconcile = 'vendorName';
+  public sortReconcileList: SortDescriptor[] = [{
+    field: this.sortValueReconcile,
+  }];
+
   private medicalClaimsProcessDataSubject = new Subject<any>();
   medicalClaimsProcessData$ = this.medicalClaimsProcessDataSubject.asObservable();
 
@@ -52,6 +64,12 @@ export class FinancialMedicalClaimsFacade {
 
   private batchLogDataSubject =  new Subject<any>();
   batchLogData$ = this.batchLogDataSubject.asObservable();
+
+  private batchReconcileDataSubject =  new Subject<any>();
+  reconcileDataList$ = this.batchReconcileDataSubject.asObservable();
+
+  private batchItemsDataSubject =  new Subject<any>();
+  batchItemsData$ = this.batchItemsDataSubject.asObservable();
 
   private claimsListDataSubject =  new Subject<any>();
   claimsListData$ = this.claimsListDataSubject.asObservable();
@@ -143,7 +161,31 @@ export class FinancialMedicalClaimsFacade {
       },
     });  
   }
-
+  loadBatchItemsListGrid(){
+    this.financialMedicalClaimsDataService.loadBatchItemsListService().subscribe({
+      next: (dataResponse) => {
+        this.batchItemsDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  }
+  loadReconcileListGrid(){
+    this.financialMedicalClaimsDataService.loadReconcileListService().subscribe({
+      next: (dataResponse) => {
+        this.batchReconcileDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  }
+  
   loadClaimsListGrid(){
     this.financialMedicalClaimsDataService.loadClaimsListService().subscribe({
       next: (dataResponse) => {

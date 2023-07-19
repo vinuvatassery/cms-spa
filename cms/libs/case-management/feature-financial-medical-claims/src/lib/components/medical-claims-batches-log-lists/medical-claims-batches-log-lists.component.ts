@@ -33,9 +33,7 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
       buttonType: 'btn-h-primary',
       text: 'Request Payments',
       icon: 'local_atm',
-      click: (data: any): void => {
-      
-      },
+   
     },
     
     {
@@ -51,9 +49,7 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
       buttonType: 'btn-h-primary',
       text: 'Print Authorizations',
       icon: 'print',
-      click: (data: any): void => {
-      
-      },
+    
     },
   ];
  
