@@ -27,8 +27,8 @@ import { DialogService } from '@progress/kendo-angular-dialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, OnChanges{
-  @ViewChild('batchClaimsConfirmationDialog', { read: TemplateRef })
-  printAuthorizationDialogComponent!: TemplateRef<any>;
+  @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
+  PrintAuthorizationDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReconcileGridLoaderShow = false;

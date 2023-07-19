@@ -7,9 +7,12 @@ import {
   OnInit,
   OnChanges,
   Output,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {  GridDataResult } from '@progress/kendo-angular-grid';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   CompositeFilterDescriptor,
   State,
@@ -24,16 +27,23 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges {
-
+  @ViewChild('previewSubmitPaymentDialog', { read: TemplateRef })
+  previewSubmitPaymentDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
+  isRequestPaymentClicked = false;
+  isPrintAuthorizationClicked = false;
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
       text: 'Request Payments',
       icon: 'local_atm',
-   
+      click: (data: any): void => {
+      this.isRequestPaymentClicked = true;
+      this.isPrintAuthorizationClicked = false;
+        
+      },  
     },
     
     {
@@ -49,10 +59,15 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
       buttonType: 'btn-h-primary',
       text: 'Print Authorizations',
       icon: 'print',
-    
+      click: (data: any): void => {
+        this.isRequestPaymentClicked = false;
+        this.isPrintAuthorizationClicked = true;
+          
+        },
     },
   ];
- 
+  PreviewSubmitPaymentDialog: any;
+  printAuthorizationDialog: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -78,7 +93,7 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
   
   
   /** Constructor **/
-  constructor(private route: Router, ) {}
+  constructor(private route: Router,private dialogService: DialogService ) {}
   
   ngOnInit(): void {
     this.loadBatchLogListGrid();
@@ -201,6 +216,37 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
 
   navToReconcilePayments(event : any){  
     this.route.navigate(['/financial-management/medical-claims/batch/reconcile-payments'] );
+  }
+  public onPreviewSubmitPaymentOpenClicked(template: TemplateRef<unknown>): void {
+    this.PreviewSubmitPaymentDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+    });
+  }
+
+  onPreviewSubmitPaymentCloseClicked(result: any) {
+    if (result) { 
+      this.PreviewSubmitPaymentDialog.close();
+    }
+  }
+
+  onBulkOptionCancelClicked(){
+    this.isRequestPaymentClicked = false;
+    this.isPrintAuthorizationClicked = false;
+  }
+
+  public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+    this.printAuthorizationDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+    });
+  }
+
+ 
+  onPrintAuthorizationCloseClicked(result: any) {
+    if (result) { 
+      this.printAuthorizationDialog.close();
+    }
   }
  
 }
