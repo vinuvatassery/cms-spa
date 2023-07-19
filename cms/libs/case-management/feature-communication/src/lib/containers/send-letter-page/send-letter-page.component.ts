@@ -27,6 +27,9 @@ export class SendLetterPageComponent implements OnInit , OnDestroy{
   isOpenedPrintPreview = false;
   isCERForm = false;
   title= "Send Approval Letter"
+  printModelTitle = "Print approval letter?";
+  printModelText = "";
+  isDisenrollmentPage = false;
   sessionId! : string
   clientId: any;
   private disenrollLaterDialog: any;
@@ -49,6 +52,11 @@ export class SendLetterPageComponent implements OnInit , OnDestroy{
     if(this.isCERForm)
     {
      this.title =  this.route?.snapshot?.data['title']
+     if(this.title.toLowerCase().includes("disenrollment")){
+      this.isDisenrollmentPage = true;
+      this.printModelTitle = "Send Disenrollment Letter to print?"
+      this.printModelText = "This action cannot be undone, If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal."
+     }
     }
     this.loadCase()   
     this.addSaveForLaterValidationsSubscription();
