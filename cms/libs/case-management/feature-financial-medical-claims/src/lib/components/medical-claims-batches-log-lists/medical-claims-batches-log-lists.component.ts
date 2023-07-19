@@ -22,8 +22,7 @@ import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 @Component({
   selector: 'cms-medical-claims-batches-log-lists',
-  templateUrl: './medical-claims-batches-log-lists.component.html',
-  styleUrls: ['./medical-claims-batches-log-lists.component.scss'],
+  templateUrl: './medical-claims-batches-log-lists.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges {

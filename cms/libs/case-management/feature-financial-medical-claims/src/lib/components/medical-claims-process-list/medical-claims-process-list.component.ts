@@ -22,8 +22,7 @@ import {
 import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-medical-claims-process-list',
-  templateUrl: './medical-claims-process-list.component.html',
-  styleUrls: ['./medical-claims-process-list.component.scss'],
+  templateUrl: './medical-claims-process-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {

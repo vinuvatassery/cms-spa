@@ -211,7 +211,8 @@ export class FinancialMedicalClaimsDataService {
   loadBatchItemsListService(){
     return of([
       {
-        vendorName: 'Address `',
+        id:101,
+        vendorName: 'vendorName',
         type:'address2', 
         clientName:'address2', 
         refundWarrant:'address2', 
@@ -227,7 +228,8 @@ export class FinancialMedicalClaimsDataService {
         by: 'by',
       },
       {
-        vendorName: 'Address `',
+        id:102,
+        vendorName: 'vendorName',
         type:'address2', 
         clientName:'address2', 
         refundWarrant:'address2', 
@@ -249,7 +251,8 @@ export class FinancialMedicalClaimsDataService {
   loadReconcileListService(){
     return of([
       {
-        vendorName: 'Address `',
+        id:1,
+        vendorName: 'Vendor Name',
         type:'address2', 
         clientName:'address2', 
         refundWarrant:'address2', 
@@ -265,6 +268,7 @@ export class FinancialMedicalClaimsDataService {
         by: 'by',
       },
       {
+        id:2,
         vendorName: 'Address `',
         type:'address2', 
         clientName:'address2', 

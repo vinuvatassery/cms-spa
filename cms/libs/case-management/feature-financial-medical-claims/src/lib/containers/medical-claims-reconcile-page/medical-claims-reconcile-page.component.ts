@@ -5,8 +5,7 @@ import { FinancialMedicalClaimsFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-medical-claims-reconcile-page',
-  templateUrl: './medical-claims-reconcile-page.component.html',
-  styleUrls: ['./medical-claims-reconcile-page.component.scss'],
+  templateUrl: './medical-claims-reconcile-page.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsReconcilePageComponent {

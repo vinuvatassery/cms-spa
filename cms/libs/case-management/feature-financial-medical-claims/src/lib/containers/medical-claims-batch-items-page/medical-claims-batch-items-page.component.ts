@@ -5,8 +5,7 @@ import { FinancialMedicalClaimsFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-medical-claims-batch-items-page',
-  templateUrl: './medical-claims-batch-items-page.component.html',
-  styleUrls: ['./medical-claims-batch-items-page.component.scss'],
+  templateUrl: './medical-claims-batch-items-page.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsBatchItemsPageComponent {

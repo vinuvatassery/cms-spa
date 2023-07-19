@@ -21,8 +21,8 @@ import {
 import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-medical-claims-batches-list',
-  templateUrl: './medical-claims-batches-list.component.html',
-  styleUrls: ['./medical-claims-batches-list.component.scss'],
+  templateUrl: './medical-claims-batches-list.component.html', 
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsBatchesListComponent implements OnInit, OnChanges{
   public formUiStyle: UIFormStyle = new UIFormStyle();

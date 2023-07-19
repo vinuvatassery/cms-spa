@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, Output , EventEmitter, Component } from '@angu
 
 @Component({
   selector: 'cms-medical-claims-batch-claims',
-  templateUrl: './medical-claims-batch-claims.component.html',
-  styleUrls: ['./medical-claims-batch-claims.component.scss'],
+  templateUrl: './medical-claims-batch-claims.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsBatchClaimsComponent {

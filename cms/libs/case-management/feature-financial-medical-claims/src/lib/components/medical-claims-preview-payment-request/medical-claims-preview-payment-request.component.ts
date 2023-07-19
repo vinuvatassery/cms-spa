@@ -3,8 +3,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
   selector: 'cms-medical-claims-preview-payment-request',
-  templateUrl: './medical-claims-preview-payment-request.component.html',
-  styleUrls: ['./medical-claims-preview-payment-request.component.scss'],
+  templateUrl: './medical-claims-preview-payment-request.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsPreviewPaymentRequestComponent {

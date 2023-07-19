@@ -1,10 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core'; 
 
 @Component({
   selector: 'cms-medical-claims-provider-info',
-  templateUrl: './medical-claims-provider-info.component.html',
-  styleUrls: ['./medical-claims-provider-info.component.scss'],
+  templateUrl: './medical-claims-provider-info.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsProviderInfoComponent {}

@@ -20,8 +20,7 @@ import { Subject } from 'rxjs';
 
 @Component({
   selector: 'cms-medical-claims-all-payments-list',
-  templateUrl: './medical-claims-all-payments-list.component.html',
-  styleUrls: ['./medical-claims-all-payments-list.component.scss'],
+  templateUrl: './medical-claims-all-payments-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsAllPaymentsListComponent implements OnInit, OnChanges{
@@ -74,9 +73,6 @@ export class MedicalClaimsAllPaymentsListComponent implements OnInit, OnChanges{
       buttonType: 'btn-h-primary',
       text: 'Request Payments',
       icon: 'local_atm',
-      click: (data: any): void => {
-         
-      },
     },
 
     {
@@ -91,9 +87,6 @@ export class MedicalClaimsAllPaymentsListComponent implements OnInit, OnChanges{
       buttonType: 'btn-h-primary',
       text: 'Print Authorizations',
       icon: 'print',
-      click: (data: any): void => {
-       
-      },
     },
   ];
   

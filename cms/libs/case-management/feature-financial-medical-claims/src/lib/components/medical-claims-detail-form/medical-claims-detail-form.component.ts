@@ -9,8 +9,7 @@ import { State } from '@progress/kendo-data-query';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-medical-claims-detail-form',
-  templateUrl: './medical-claims-detail-form.component.html',
-  styleUrls: ['./medical-claims-detail-form.component.scss'],
+  templateUrl: './medical-claims-detail-form.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsDetailFormComponent {
