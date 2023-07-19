@@ -181,7 +181,7 @@
             </div>
             <div class="text-right flex-gap">
                   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Close </button>
-                  <button kendoButton [primary]="true" aria-label="Receipting Log" class=""> Save </button>
+                  <button kendoButton [primary]="true" aria-label="Receipting Log" class="" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
             </div>
       
       
@@ -189,3 +189,7 @@
 </div>
 
 
+<ng-template #PrintAuthorizationDialog>
+      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Authorization(s)</kendo-dialog-titlebar>
+    <cms-medical-claims-print-authorization></cms-medical-claims-print-authorization>
+    </ng-template>

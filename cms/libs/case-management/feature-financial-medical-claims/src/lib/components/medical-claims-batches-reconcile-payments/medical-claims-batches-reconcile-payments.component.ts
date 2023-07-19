@@ -7,6 +7,8 @@ import {
   OnInit,
   OnChanges,
   Output,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {  GridDataResult } from '@progress/kendo-angular-grid';
@@ -17,18 +19,20 @@ import {
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'cms-medical-claims-batches-reconcile-payments',
   templateUrl: './medical-claims-batches-reconcile-payments.component.html',
   styleUrls: ['./medical-claims-batches-reconcile-payments.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MedicalClaimsBatchesReconcilePaymentsComponent {
-
+export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, OnChanges{
+  @ViewChild('batchClaimsConfirmationDialog', { read: TemplateRef })
+  printAuthorizationDialogComponent!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReconcileGridLoaderShow = false;
-
+  printAuthorizationDialog : any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -54,7 +58,7 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent {
   
   
   /** Constructor **/
-  constructor(private route: Router, ) {}
+  constructor(private route: Router,   private dialogService: DialogService ) {}
   
   ngOnInit(): void {
     this.loadReconcileListGrid();
@@ -167,6 +171,19 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent {
     this.isReconcileGridLoaderShow = false;
   }
 
+  public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+    this.printAuthorizationDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+    });
+  }
+
+ 
+  onPrintAuthorizationCloseClicked(result: any) {
+    if (result) { 
+      this.printAuthorizationDialog.close();
+    }
+  }
      navToBatchDetails(event : any){  
        this.route.navigate(['/financial-management/medical-claims'] );
      }
