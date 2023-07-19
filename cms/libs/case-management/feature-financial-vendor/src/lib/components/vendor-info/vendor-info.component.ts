@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FinancialVendorFacade, FinancialVendorTypeCode } from '@cms/case-management/domain';
+import { FinancialVendorFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
@@ -13,9 +13,11 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class VendorInfoComponent implements OnInit {
 
   @Input() profileInfoTitle!: string;
+  @Input() selectedVendorInfo$: any;
+  @Input() vendorTypes!: any;
+  @Input() vendorProfile$: any;
+  @Output() onVendorEditSuccessStatus = new EventEmitter<boolean>();
   medicalProviderForm: FormGroup;
-  selectedVendorInfo$ = this.financialVendorFacade.selectedVendor$;
-  vendorProfile$ = this.financialVendorFacade.vendorProfile$;
   SpecialHandlingLength = 100;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   vendorDetail!: any;
@@ -53,12 +55,7 @@ export class VendorInfoComponent implements OnInit {
     },
   ];
 
-  public get vendorTypes(): typeof FinancialVendorTypeCode {
-    return FinancialVendorTypeCode;
-  }
-
-  constructor(private financialVendorFacade: FinancialVendorFacade,
-    private readonly formBuilder: FormBuilder,
+  constructor(private readonly formBuilder: FormBuilder,
     private activeRoute: ActivatedRoute) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
@@ -67,24 +64,12 @@ export class VendorInfoComponent implements OnInit {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
     this.providerType = this.activeRoute.snapshot.queryParams['vendor_type_code'];
     this.tabCode = this.activeRoute.snapshot.queryParams['tab_code'];
-    this.loadVendorInfo();
     if (this.providerType == this.vendorTypes.DentalProviders) {
       this.editTitlePrefix = 'Dental ';
     }
     else if (this.providerType == this.vendorTypes.MedicalProviders) {
       this.editTitlePrefix = 'Medical ';
     }
-  }
-
-  loadVendorInfo() {
-    this.financialVendorFacade.getVendorDetails(this.vendorId);
-    this.financialVendorFacade.selectedVendor$.subscribe((details: any) => {
-      this.vendorDetail = details;
-    });
-  }
-
-  loadVendorProfileHeader() {
-    this.financialVendorFacade.getVendorProfile(this.vendorId, this.tabCode)
   }
 
   openEditInfoDialog() {
@@ -107,8 +92,7 @@ export class VendorInfoComponent implements OnInit {
   closeEditModal(isEditSuccessfull: boolean) {
     this.openEditDailog = false;
     if (isEditSuccessfull) {
-      this.loadVendorInfo();
-      this.loadVendorProfileHeader();
+      this.onVendorEditSuccessStatus.emit(true);
     }
   }
 
