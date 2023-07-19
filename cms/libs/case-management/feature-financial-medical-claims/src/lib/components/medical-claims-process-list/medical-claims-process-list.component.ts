@@ -35,6 +35,7 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
   private deleteClaimsDialog: any;
   private batchConfirmClaimsDialog: any;
   private addEditClaimsFormDialog: any;
+  private addClientRecentClaimsDialog: any;
   isDeleteBatchClosed = false;
   isBatchClaimsOption = false;
   isDeleteClaimsOption = false;
@@ -72,7 +73,7 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
       icon: 'check',
       click: (data: any): void => {
         if (!this.isProcessBatchClosed) {
-          this.isProcessBatchClosed = true;
+          this.isProcessBatchClosed = true; 
           this.onBatchClaimsGridSelectedClicked();
         }
       },
@@ -84,7 +85,7 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isDeleteBatchClosed) {
-          this.isDeleteBatchClosed = true;
+          this.isDeleteBatchClosed = true; 
           this.onBatchClaimsGridSelectedClicked();
         }
       },
@@ -102,6 +103,8 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
       icon: 'delete',
     },
   ];
+
+
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -224,7 +227,7 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
     });
   }
   onModalBatchClaimsModalClose(result: any) {
-    if (result) {
+    if (result) { 
       this.batchConfirmClaimsDialog.close();
     }
   }
@@ -236,7 +239,7 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
     });
   }
   onModalDeleteClaimsModalClose(result: any) {
-    if (result) {
+    if (result) { 
       this.deleteClaimsDialog.close();
     }
   }
@@ -261,5 +264,25 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
     this.isProcessGridExpand = true;
     this.isDeleteBatchClosed = false;
     this.isProcessBatchClosed = false;
+  
   }
+
+  clientRecentClaimsModalClicked (template: TemplateRef<unknown>, data:any): void {
+    this.addClientRecentClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+      animation:{
+        direction: 'up',
+        type:'slide',
+        duration: 200
+      }
+    });
+  }
+
+  closeRecentClaimsModal(result: any){
+    if (result) { 
+      this.addClientRecentClaimsDialog.close();
+    }
+  }
+ 
 }
