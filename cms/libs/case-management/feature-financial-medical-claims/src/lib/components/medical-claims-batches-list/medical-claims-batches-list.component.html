@@ -1,8 +1,8 @@
-<p>medical-claims-batches-list works!</p>
-<button (click)="navToBatchDetails($event)">Batch Details List</button>
+ 
+
 <!-- Table Top Filter, Search and Export -->
  
-<p class="mt-2"> Click “Bulk” to execute actions for one or more claims. Click on a row to view that claim.</p>
+<p class="mt-2"> Select a batch to manage claims for.</p>
 <section class="table-filter-section mat-form-no-b-space">
     <span class="filter-section_items filter--select">
       <kendo-floatinglabel>
@@ -80,3 +80,5 @@
   
     </kendo-grid>
   </div>
+
+  <button (click)="navToBatchDetails($event)">Batch Details List</button>

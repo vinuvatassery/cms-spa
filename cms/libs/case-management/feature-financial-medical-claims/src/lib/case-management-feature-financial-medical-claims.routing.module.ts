@@ -6,7 +6,7 @@ import { MedicalClaimsBatchPageComponent } from './containers/medical-claims-bat
 import { MedicalClaimsBatchItemsPageComponent } from './containers/medical-claims-batch-items-page/medical-claims-batch-items-page.component';
 import { MedicalClaimsReconcilePageComponent } from './containers/medical-claims-reconcile-page/medical-claims-reconcile-page.component';
 import { MedicalClaimsBatchesLogListsComponent } from './components/medical-claims-batches-log-lists/medical-claims-batches-log-lists.component';
-import { MedicalClaimsRouterPageComponent } from './containers/medical-claims-router-page/medical-claims-router-page.component';
+import { MedicalClaimsRouterBatchPageComponent } from './containers/medical-claims-batch-router-page/medical-claims-router-batch-page.component';
 const routes = [
   {
     path: '',
@@ -17,7 +17,7 @@ const routes = [
   },
   {
     path: 'batch',
-    component: MedicalClaimsRouterPageComponent,
+    component: MedicalClaimsRouterBatchPageComponent,
     data: {
       title: 'Batch',
     },
@@ -25,14 +25,14 @@ const routes = [
      
       {
         path: '',
-        component: MedicalClaimsBatchesLogListsComponent,
+        component: MedicalClaimsBatchPageComponent,
         data: {
           title: 'Batch Log'
         },
       },
       {
         path: 'batch-log',
-        component: MedicalClaimsBatchesLogListsComponent,
+        component: MedicalClaimsBatchPageComponent,
         data: {
           title: 'batch-log'
         },

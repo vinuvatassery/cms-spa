@@ -19,4 +19,4 @@ export * from './lib/components/medical-claims-batches-log-lists/medical-claims-
 export * from './lib/containers/medical-claims-batch-page/medical-claims-batch-page.component';
 export * from './lib/containers/medical-claims-batch-items-page/medical-claims-batch-items-page.component';
 export * from './lib/containers/medical-claims-reconcile-page/medical-claims-reconcile-page.component';
-export * from './lib/containers/medical-claims-router-page/medical-claims-router-page.component';
+export * from './lib/containers/medical-claims-batch-router-page/medical-claims-router-batch-page.component';
