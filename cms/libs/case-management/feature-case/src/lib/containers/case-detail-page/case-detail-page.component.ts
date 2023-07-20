@@ -210,7 +210,10 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
         this.caseFacade.loadCasesById(this.clientCaseId);
         this.prevClientCaseEligibilityId =  JSON.parse( session.sessionData)?.prevClientCaseEligibilityId
         if (this.prevClientCaseEligibilityId) { this.isCerForm = true; }
+        if(this.clientId && this.clientCaseEligibilityId)
+        {
         this.loadClientPaperLessStatusHandle();
+        }
       });
   }
   hideButton(type: any) {
