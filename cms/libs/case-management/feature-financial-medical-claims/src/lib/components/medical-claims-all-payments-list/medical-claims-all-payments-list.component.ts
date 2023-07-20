@@ -7,6 +7,8 @@ import {
   OnChanges,
   OnInit,
   Output,
+  TemplateRef,
+  ViewChild
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import { Router } from '@angular/router';
@@ -17,6 +19,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
   selector: 'cms-medical-claims-all-payments-list',
@@ -24,9 +27,12 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsAllPaymentsListComponent implements OnInit, OnChanges{
+  @ViewChild('previewSubmitPaymentDialog', { read: TemplateRef })
+  previewSubmitPaymentDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isMedicalClaimsAllPaymentsGridLoaderShow = false;
+  
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -49,8 +55,10 @@ export class MedicalClaimsAllPaymentsListComponent implements OnInit, OnChanges{
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
-  
+  PreviewSubmitPaymentDialog: any;
+  printAuthorizationDialog: any;
+  isRequestPaymentClicked = false;
+  isPrintAuthorizationClicked = false;
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -68,30 +76,42 @@ export class MedicalClaimsAllPaymentsListComponent implements OnInit, OnChanges{
       icon: 'delete', 
     },
   ];
-  public claimsProcessMore = [
+
+
+  public bulkMore = [
     {
       buttonType: 'btn-h-primary',
       text: 'Request Payments',
       icon: 'local_atm',
+      click: (data: any): void => {
+      this.isRequestPaymentClicked = true;
+      this.isPrintAuthorizationClicked = false;
+        
+      },  
     },
-
+    
     {
       buttonType: 'btn-h-primary',
       text: 'Reconcile Payments',
       icon: 'edit',
       click: (data: any): void => {
         this.navToReconcilePayments(data);
-      },
+      },  
     },
+
     {
       buttonType: 'btn-h-primary',
       text: 'Print Authorizations',
       icon: 'print',
+      click: (data: any): void => {
+        this.isRequestPaymentClicked = false;
+        this.isPrintAuthorizationClicked = true;
+          
+        },
     },
   ];
   
-  /** Constructor **/
-  constructor(private route: Router, ) {}
+  constructor(private route: Router,private dialogService: DialogService ) {}
 
   ngOnInit(): void {
     this.loadMedicalClaimsAllPaymentsListGrid();
@@ -207,6 +227,38 @@ export class MedicalClaimsAllPaymentsListComponent implements OnInit, OnChanges{
   navToReconcilePayments(event : any){  
     this.route.navigate(['/financial-management/medical-claims/payments/reconcile-payments'] );
   }
-}
+  
+ 
+  public onPreviewSubmitPaymentOpenClicked(template: TemplateRef<unknown>): void {
+    this.PreviewSubmitPaymentDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+    });
+  }
+
+  onPreviewSubmitPaymentCloseClicked(result: any) {
+    if (result) { 
+      this.PreviewSubmitPaymentDialog.close();
+    }
+  }
+
+  onBulkOptionCancelClicked(){
+    this.isRequestPaymentClicked = false;
+    this.isPrintAuthorizationClicked = false;
+  }
+
+  public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+    this.printAuthorizationDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+    });
+  }
 
  
+  onPrintAuthorizationCloseClicked(result: any) {
+    if (result) { 
+      this.printAuthorizationDialog.close();
+    }
+  }
+
+}
