@@ -1,5 +1,5 @@
 /** Angular **/
-import { AfterViewInit, OnDestroy,ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AfterViewInit, OnDestroy,ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 /** External libraries **/
@@ -43,6 +43,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   private checkBoxSubscription !: Subscription;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
+  private discardChangesSubscription !: Subscription;
   clientId ! : number
   clientCaseEligibilityId ! : string
   familyStatus! : StatusFlag
@@ -53,6 +54,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   previousRelationsList: any = [];
   isCerFormValid: Subject<boolean> = new Subject();
   updatedDependentsStatus: any = [];
+  
+
   /** Constructor **/
   constructor(
     private familyAndDependentFacade: FamilyAndDependentFacade,
@@ -62,7 +65,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     private readonly workFlowFacade : WorkflowFacade,
     private route: ActivatedRoute,
     private readonly lovFacade : LovFacade,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly cd: ChangeDetectorRef
   ) { }
 
 
@@ -75,6 +79,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     this.addSaveSubscription();
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
+    this.addDiscardChangesSubscription();
    
   }
 
@@ -82,6 +87,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     this.saveClickSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -163,6 +169,16 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
         this.workflowFacade.navigate(navigationType);
       } else {
         this.workflowFacade.enableSaveButton();
+      }
+    });
+  }
+
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
+      if (response) { 
+        this.haveTheyHaveAdditionalFamilyMember ='';
+        this.haveTheyHaveFamilyMember = '';
+        this.cd.detectChanges();
       }
     });
   }
@@ -341,6 +357,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       });
 
       this.updateDynamicDtPoints(prevDependentsDtPoints, value);
+     
     }
 
     if(dataPointName === 'additionalFamilyMembers'){

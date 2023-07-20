@@ -39,7 +39,7 @@
 <kendo-dialog
   *ngIf="isOpenedPrintPreview"
   (close)="onClosePrintPreviewClicked()"
-  class="app-c-modal app-c-modal-lg app-c-modal-np no-title-actions"
+  class="app-c-modal app-c-modal-lg app-c-modal-np"
   title="Preview Letter"
 >
   <case-management-preview-letter></case-management-preview-letter>
@@ -53,7 +53,7 @@
           (click)="onClosePrintPreviewClicked()"
           aria-label="cancel print preview"
         >
-          Cancel
+        CLOSE 
         </button>
         <button
           kendoButton
@@ -61,7 +61,7 @@
           (click)="onOpenPrintClicked()"
           aria-label="send to print"
         >
-          Send to Print
+        SEND EMAIL
         </button>
       </div>
     </div>
@@ -72,9 +72,16 @@
 <kendo-dialog
   *ngIf="isOpenedPrint"
   (close)="onClosePrintClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Print approval letter?"
+  class="app-c-modal app-c-modal-np"
+  [class.app-c-modal-md] = "isDisenrollmentPage"
+  [class.app-c-modal-sm] = "!isDisenrollmentPage"
+  title= {{printModelTitle}}
 >
+<section class="k-dialog-body">
+  <p *ngIf="isDisenrollmentPage" class="text-muted mb-2">
+    {{printModelText}}
+  </p>
+</section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
