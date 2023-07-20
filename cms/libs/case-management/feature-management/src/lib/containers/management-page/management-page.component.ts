@@ -59,7 +59,6 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   private saveClickSubscription !: Subscription;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
-  private discardChangesSubscription !: Subscription;
   private caseListStatusSubscription !: Subscription
 
   /** Constructor **/
@@ -84,7 +83,6 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.saveClickSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
-    this.discardChangesSubscription.unsubscribe();
     this.caseListStatusSubscription.unsubscribe();
   }
 
