@@ -110,7 +110,7 @@ export class DrugsPurchasedListComponent implements OnInit {
     this.state = stateData;
    this.loadDrugsPurchased();
   }
-  public onClieckloadDrugsPurchased()
+  public onClieckLoadDrugsPurchasedData()
   {
     this.loadDrugsPurchased();
   }
