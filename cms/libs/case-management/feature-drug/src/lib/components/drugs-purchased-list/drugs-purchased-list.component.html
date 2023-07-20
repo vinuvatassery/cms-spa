@@ -1,5 +1,5 @@
 <div class="flex-row">
-    <div class="flex-col flex-space-bw align-items-center"> 
+    <div class="flex-col flex-space-bw align-items-center">
         <h2 class="title-md mb-0 text-bold">Drugs Purchased</h2>
         <span>
           <input type="checkbox"  Checked="isOnlyPremiumsWith12Months" kendoCheckBox aria-labelledby="drugspremiumsWithinLast12Months" [(ngModel)]="isPermiumWithinLastTwelveMonthsData" (ngModelChange)="onClickLoadDrugsPurchasedData()"  id="DrugspremiumsWithinLast12Months" />
@@ -10,8 +10,8 @@
         <div class="app-c-table">
             <kendo-grid [resizable]="true"[pageSize]="state.take" [pageable]="true"
              [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-            [columnMenu]="{ filter: true }" [sort]="state.sort" [pageable]="true" [data]="drugPurchases$ | async"  (dataStateChange)="dataStateChange($event)">               
-                <kendo-grid-column field="prescriptionFillDate" title="Fill Date" [width]="160" [format]="{ date: 'MM-dd-yyyy' }"  filter="date">
+            [columnMenu]="{ filter: true }" [sort]="state.sort" [pageable]="true" [data]="drugPurchases$ | async"  (dataStateChange)="dataStateChange($event)">
+                <kendo-grid-column field="prescriptionFillDate" title="Fill Date" [sticky]="true" [width]="160" [format]="{ date: 'MM-dd-yyyy' }"  filter="date">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     {{dataItem.prescriptionFillDate | date:'MM/dd/yyyy'}}
                   </ng-template>
@@ -68,7 +68,7 @@
                       </kendo-popover>
                     </ng-template>
                   </kendo-grid-column>
-                
+
         <!-- Pagination Template -->
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
         let-currentPage="currentPage">
@@ -88,11 +88,11 @@
           </div>
         </div>
       </ng-template>
-        <!-- grid Loader Template -->  
+        <!-- grid Loader Template -->
        <ng-template kendoGridLoadingTemplate>
          <common-grid-loader-component></common-grid-loader-component>
         </ng-template>
-        <!-- grid No data Template -->  
+        <!-- grid No data Template -->
         <ng-template kendoGridNoRecordsTemplate>
           <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
           </div>
@@ -102,7 +102,7 @@
         </div>
         <div class="flex-row">
             <div class="flex-col mt-1">
-                <button kendoButton [primary]="true" icon="add"  
+                <button kendoButton [primary]="true" icon="add"
                     aria-label="add pharmacy" [disabled]="(isReadOnly$ | async) ? true : false">
                     Pharmacy Claim
                 </button>
