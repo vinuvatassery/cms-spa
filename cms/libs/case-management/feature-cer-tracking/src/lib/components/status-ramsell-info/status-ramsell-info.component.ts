@@ -9,6 +9,7 @@ import { SnackBarNotificationType } from '@cms/shared/util-core';
 export class StatusRamsellInfoComponent implements OnInit {
 
   @Input() clientId!: string;
+  @Input() clientCaseEligibilityId!: any;
   ramSellInfo: any;
 
   constructor(
@@ -21,7 +22,7 @@ export class StatusRamsellInfoComponent implements OnInit {
   }
 
   loadRamSellInfo() {
-    this.statusPeriodFacade.loadRamSellInfo(this.clientId).subscribe({
+    this.statusPeriodFacade.loadRamSellInfo(this.clientId,this.clientCaseEligibilityId).subscribe({
       next: (data) => {
         this.ramSellInfo = data;
       },
