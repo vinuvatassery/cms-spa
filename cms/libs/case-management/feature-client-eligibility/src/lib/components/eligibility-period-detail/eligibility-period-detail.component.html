@@ -39,12 +39,13 @@
          format="MM-dd-yyyy"
         formatPlaceholder="formatPattern"
         formControlName ="statusStartDate"
+        (blur)="onStartDateChange()"
         (valueChange)="startDateOnChange()"
         aria-label="Status Start Date"
         placeholder="">
         </kendo-datepicker>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['statusStartDate'].valid && !eligibilityPeriodForm.controls['statusStartDate'].disabled"> Start Date is
+      <kendo-formerror *ngIf="!eligibilityPeriodForm.controls['statusStartDate'].valid && !eligibilityPeriodForm.controls['statusStartDate'].disabled && !eligibilityPeriodForm.controls['statusStartDate'].hasError('incorrect')"> Start Date is
         required.</kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
