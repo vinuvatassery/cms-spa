@@ -205,18 +205,16 @@
 
   &-right-side{
     align-items: flex-end; 
-    .k-overlay{
-      background: transparent;
-    }
+    justify-content: flex-start;
     .k-dialog {
       width: 100%;
       max-width: 400px;
-      height: 100% ;
-      top: 62px;
-      right: 0;
-      box-shadow: 0px 3px 6px rgba($black,0.2);
+      top: 0px; 
+      height: 100%;
+      box-shadow: 0px 3px 6px rgba($black,0.2);      
       .k-dialog-body{
-        max-height: 70vh;
+        height: 80vh;
+        max-height: 100%;
       }
       @media (max-width: $breakpoint-lg) {
         width: calc(100% - 1rem);

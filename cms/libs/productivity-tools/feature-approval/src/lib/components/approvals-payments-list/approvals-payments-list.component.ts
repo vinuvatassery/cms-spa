@@ -184,9 +184,9 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       content: template,
       animation:{
         direction: 'left',
-        type: 'slide', 
+        type: 'slide',  
       }, 
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np app-c-modal-right-side',
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
   }
   onCloseDepositDetailClicked(){

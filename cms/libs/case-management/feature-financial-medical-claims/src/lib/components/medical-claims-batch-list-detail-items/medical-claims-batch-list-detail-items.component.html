@@ -1,4 +1,3 @@
-
 <div class=" pt-0">
       <section class="app-l-mainTittle">
             <div class="d-flex">
@@ -10,8 +9,40 @@
       </section>
       <section class="app-l-client-wrapper ">
             <section class="app-l-wrapper">
-                  <p> <a class="mr-3">Very Nice Provider</a> <span class="mr-3">Pmt. Requested XX/XX/XXXX</span> <span
-                        class="mr-3">$550.00 Due</span> <span class="mr-3">Status Requested</span></p>
+                  <div>
+                  <p> <button aria-label="view Profile Profile"
+                              (click)="onViewProviderDetailClicked(providerDetailsTemplate)" kendoButton look="flat"
+                              class="mr-3 card-link-button">
+                              Very Nice Provider
+                        </button> 
+                        <span class="mr-3">Pmt. Requested XX/XX/XXXX</span> <span class="mr-3">$550.00 Due</span>
+                        <span class="mr-3">Status Requested</span></p>
+                  </div>
+                  <div class="grey-banner-section mt-2">
+                        <div class="flex-row">
+                              <button aria-label="edit" kendoButton look="flat" class="edit-btn card-link-button" (click)="onPaymentDetailFormClicked(paymentDetailsFromTemplate)" > Edit </button>
+                        <div class="flex-col flex-col-2">
+                              <small>Date Payment Reconciled</small>
+                              <p>XX/XX/XXXX</p>
+                        </div>
+                        <div class="flex-col flex-col-2">
+                              <small>Date Payment Sent</small>
+                              <p>XX/XX/XXXX</p>
+                        </div>
+                        <div class="flex-col flex-col-2">
+                              <small>Payment Amount</small>
+                              <p>$X,XXX.XX</p>
+                        </div>
+                        <div class="flex-col flex-col-2">
+                              <small>Warrant Number</small>
+                              <p>XXXXXXXXXX</p>
+                        </div>
+                        <div class="flex-col flex-col-4">
+                              <small>Note</small> 
+                              <p>Lorem ipsum dolor set icus unum omg hello</p>
+                        </div>
+                  </div>
+                  </div>
                   <section class="table-filter-section mat-form-no-b-space">
                         <span class="filter-section_items filter--select">
                               <kendo-floatinglabel>
@@ -139,3 +170,14 @@
             </section>
       </section>
 </div>
+
+<ng-template #providerDetailsTemplate>
+      <cms-medical-claims-provider-info
+            (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"></cms-medical-claims-provider-info>
+</ng-template>
+
+
+<ng-template #paymentDetailsFromTemplate>
+      <cms-medical-claims-payment-details-form
+            (closePaymentDetailFormClickedEvent)="onClosePaymentDetailFormClicked($event)"></cms-medical-claims-payment-details-form>
+</ng-template>

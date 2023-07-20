@@ -7,6 +7,7 @@ import {
   OnInit,
   OnChanges,
   Output,
+  TemplateRef
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {  GridDataResult } from '@progress/kendo-angular-grid';
@@ -17,6 +18,7 @@ import {
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'cms-medical-claims-batch-list-detail-items',
   templateUrl: './medical-claims-batch-list-detail-items.component.html', 
@@ -44,7 +46,8 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  providerDetailsDialog: any;
+  paymentDetailsDialog: any;
   gridClaimsBatchLogItemsDataSubject = new Subject<any>();
   gridClaimsBatchLogItemsData$ = this.gridClaimsBatchLogItemsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
@@ -53,7 +56,7 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
   
   
   /** Constructor **/
-  constructor(private route: Router, ) {}
+  constructor(private route: Router, private dialogService: DialogService) {}
   
   ngOnInit(): void {
     this.loadBatchLogItemsListGrid();
@@ -168,5 +171,37 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
 
   backToBatchLog(event : any){  
     this.route.navigate(['/financial-management/medical-claims/batch'] );
+  }
+
+
+  onViewProviderDetailClicked(  template: TemplateRef<unknown>): void {   
+    this.providerDetailsDialog = this.dialogService.open({
+      content: template,
+      animation:{
+        direction: 'left',
+        type: 'slide',  
+      }, 
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+  }
+
+  onCloseViewProviderDetailClicked(result: any){
+    if(result){
+      this.providerDetailsDialog.close();
+    }
+  }
+
+
+  onPaymentDetailFormClicked(  template: TemplateRef<unknown>): void {   
+    this.paymentDetailsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-sm',
+    });
+  }
+
+  onClosePaymentDetailFormClicked(result: any){
+    if(result){
+      this.paymentDetailsDialog.close();
+    }
   }
 }
