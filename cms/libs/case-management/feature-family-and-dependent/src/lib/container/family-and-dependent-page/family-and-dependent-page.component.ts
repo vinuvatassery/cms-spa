@@ -141,8 +141,9 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       this.dependentStatus$.subscribe((x: any)=>
     {
       this.isFamilyGridDisplay = x.noDependentFlag == StatusFlag.Yes ? true : false;
-      this.haveTheyHaveFamilyMember = x.friendFamilyChangedFlag;
-      this.haveTheyHaveAdditionalFamilyMember = x.hasAdditionalFamilyFlag;
+      this.haveTheyHaveFamilyMember = x.friendFamilyChangedFlag === null?'':x.friendFamilyChangedFlag;
+      this.haveTheyHaveAdditionalFamilyMember = x.hasAdditionalFamilyFlag ===null?'':x.hasAdditionalFamilyFlag;
+      this.cd.detectChanges();
     });
     this.dependentList$.subscribe(dependents=>{
       if(dependents.total > 0){
@@ -176,9 +177,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   private addDiscardChangesSubscription(): void {
     this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
       if (response) { 
-        this.haveTheyHaveAdditionalFamilyMember ='';
-        this.haveTheyHaveFamilyMember = '';
-        this.cd.detectChanges();
+       this.loadDependentsStatus();
       }
     });
   }
