@@ -26,13 +26,23 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges {
-  @ViewChild('previewSubmitPaymentDialog', { read: TemplateRef })
-  previewSubmitPaymentDialog!: TemplateRef<any>;
+  @ViewChild('previewSubmitPaymentDialogTemplate', { read: TemplateRef })
+  previewSubmitPaymentDialogTemplate!: TemplateRef<any>;
+  @ViewChild('unBatchClaimsDialogTemplate', { read: TemplateRef })
+  unBatchClaimsDialogTemplate!: TemplateRef<any>;
+  @ViewChild('deleteClaimsConfirmationDialogTemplate', { read: TemplateRef })
+  deleteClaimsConfirmationDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
   isRequestPaymentClicked = false;
   isPrintAuthorizationClicked = false;
+  isUnBatchClaimsClosed = false;
+  isDeleteClaimClosed = false;
+  PreviewSubmitPaymentDialog: any;
+  printAuthorizationDialog: any;
+  UnBatchDialog: any;
+  deleteClaimsDialog: any;
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -65,8 +75,41 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
         },
     },
   ];
-  PreviewSubmitPaymentDialog: any;
-  printAuthorizationDialog: any;
+
+  public batchLogGridActions = [
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Edit Claims',
+      icon: 'edit',
+      
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Unbatch Claims',
+      icon: 'undo',
+      click: (data: any): void => {
+        if (!this.isUnBatchClaimsClosed) {
+          this.isUnBatchClaimsClosed = true;
+          this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+        }
+       
+      }      
+    },
+    {
+      buttonType: 'btn-h-danger',
+      text: 'Delete Claims',
+      icon: 'delete',
+      click: (data: any): void => {
+        if (!this.isDeleteClaimClosed) {
+          this.isDeleteClaimClosed = true;
+          this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialogTemplate);
+        }
+       
+      }
+
+      
+    },
+  ];
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -83,14 +126,30 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
   gridClaimsBatchLogDataSubject = new Subject<any>();
   gridClaimsBatchLogData$ = this.gridClaimsBatchLogDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   
-  
+  testttt =[
+    {
+      vendorName: 'Address `',
+      type:'address2', 
+      clientName:'address2', 
+      refundWarrant:'address2', 
+      refundAmount:'address2', 
+      depositDate:'address2', 
+      depositMethod:'address2', 
+      indexCode:'address2', 
+      pca:'address2', 
+      grant:'address2', 
+      vp:'address2', 
+      refundNote:'address2', 
+      entryDate:'address2',  
+      by: 'by',
+    },
+  ]
   /** Constructor **/
   constructor(private route: Router,private dialogService: DialogService ) {}
   
@@ -152,7 +211,7 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
         },
       ],
     };
-    let stateData = this.state;
+    const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
@@ -234,7 +293,7 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
     this.isPrintAuthorizationClicked = false;
   }
 
-  public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+  onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
     this.printAuthorizationDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
@@ -245,6 +304,34 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
   onPrintAuthorizationCloseClicked(result: any) {
     if (result) { 
       this.printAuthorizationDialog.close();
+    }
+  }
+
+
+  onUnBatchOpenClicked(template: TemplateRef<unknown>): void {
+    this.UnBatchDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+ 
+  onUnBatchCloseClicked(result: any) {
+    if (result) { 
+      this.isUnBatchClaimsClosed = false;
+      this.UnBatchDialog.close();
+    }
+  }
+
+  public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
+    this.deleteClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onModalDeleteClaimsModalClose(result: any) {
+    if (result) { 
+      this.deleteClaimsDialog.close();
     }
   }
  

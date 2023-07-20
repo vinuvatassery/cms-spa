@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar > Unbatch claim?</kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeUnBatchClicked()"> Unbatch claim?</kendo-dialog-titlebar>
 
 <section class="k-dialog-body">
     <p class="text-muted mb-1">  This action cannot be undone, but you may add this claim to a new batch at any time.    </p>
@@ -13,7 +13,7 @@
           [primary]="true"
           look="outline"
           aria-label="cancel"
-         
+         (click)="closeUnBatchClicked()"
         >
           Cancel
         </button>

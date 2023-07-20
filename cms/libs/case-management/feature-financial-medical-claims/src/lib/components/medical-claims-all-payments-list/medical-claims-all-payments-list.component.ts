@@ -27,8 +27,8 @@ import { DialogService } from '@progress/kendo-angular-dialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsAllPaymentsListComponent implements OnInit, OnChanges{
-  @ViewChild('previewSubmitPaymentDialog', { read: TemplateRef })
-  previewSubmitPaymentDialog!: TemplateRef<any>;
+  @ViewChild('previewSubmitPaymentDialogTemplate', { read: TemplateRef })
+  previewSubmitPaymentDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isMedicalClaimsAllPaymentsGridLoaderShow = false;
