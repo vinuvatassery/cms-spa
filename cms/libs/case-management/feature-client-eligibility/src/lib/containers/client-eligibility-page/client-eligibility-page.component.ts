@@ -47,6 +47,7 @@ export class ClientEligibilityPageComponent
   clientCaseId: any;
 
   private saveForLaterValidationSubscription!: Subscription;
+  private saveForLaterClickSubscription!: Subscription;
   /** Constructor **/
   constructor(
     private readonly workflowFacade: WorkflowFacade,
@@ -65,12 +66,14 @@ export class ClientEligibilityPageComponent
     this.loadSessionData()
     this.buildForm();
     this.addSaveSubscription();
+    this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription?.unsubscribe();
+    this.saveForLaterClickSubscription?.unsubscribe();
   }
   private buildForm() {
     this.eligibilityForm = this.formBuilder.group({
@@ -114,8 +117,16 @@ export class ClientEligibilityPageComponent
             delete parent.answers;
           });
           this.saveAndUpdate(questions, this.cerNote);
-          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+          this.workflowFacade.showSaveForLaterConfirmationPopup(true);         
         }
+      });
+  }
+
+  private addSaveForLaterSubscription(): void {
+    this.saveForLaterClickSubscription =
+      this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {  
+              this.loaderService.hide();
+              this.workflowFacade.handleSendNewsLetterpopup(statusResponse)        
       });
   }
 

@@ -152,6 +152,12 @@ export class EligibilityPeriodDetailComponent implements OnInit {
               SnackBarNotificationType.SUCCESS,
               'Eligibility period updated!'
             );
+            let periodDates = {
+              eilgibilityStartDate:editEligibilityData.eligibilityStartDate,
+              eligibilityEndDate:editEligibilityData.eligibilityEndDate
+            }
+           
+           this.clientEligibilityFacade.eligibilityDateSubject.next(periodDates);
             this.isModalSavedClicked.emit(true);
           }
           else{
@@ -184,6 +190,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     if (this.eligibilityPeriodForm.controls['statusEndDate'].value !== null) {
       this.endDateOnChange();
     }
+    
   }
   endDateOnChange() {
     this.statusEndDateIsGreaterThanStartDate = true;

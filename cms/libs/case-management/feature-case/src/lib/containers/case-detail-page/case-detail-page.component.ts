@@ -11,6 +11,7 @@ import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFa
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { ContactFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'case-management-case-detail-page',
   templateUrl: './case-detail-page.component.html',
@@ -21,6 +22,8 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   /**Private properties**/
   @ViewChild('sendNewEmailModalDialog', { read: TemplateRef })
   sendNewEmailModalDialog!: TemplateRef<any>;  
+  @ViewChild('sendNewLetterModalDialog', { read: TemplateRef })
+  sendNewLetterModalDialog!: TemplateRef<any>;  
   private navigationSubscription !: Subscription;
   private loadSessionSubscription !: Subscription;
   private showSendNewsLetterSubscription !: Subscription;
@@ -59,6 +62,8 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   cancelApplicationFlag!: boolean;
   workflowType! :string
   sendNewEmailModalDialogService : any;
+  paperless$ = this.contactFacade.paperless$;
+  paperlessFlag!: any;
   data: Array<any> = [
     {
       text: '',
@@ -107,7 +112,8 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly contactFacade: ContactFacade,
   ) {
   }
 
@@ -204,6 +210,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
         this.caseFacade.loadCasesById(this.clientCaseId);
         this.prevClientCaseEligibilityId =  JSON.parse( session.sessionData)?.prevClientCaseEligibilityId
         if (this.prevClientCaseEligibilityId) { this.isCerForm = true; }
+        this.loadClientPaperLessStatusHandle();
       });
   }
   hideButton(type: any) {
@@ -450,7 +457,11 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   showSendNewsLetterPopup() {
     this.showSendNewsLetterSubscription = this.workflowFacade.sendEmailLetterClicked$.subscribe((response: any) => {
       if (response) {
-        this.onSendNewLetterClicked(this.sendNewEmailModalDialog);
+        if(this.paperlessFlag == 'Y'){
+          this.onSendNewLetterClicked(this.sendNewEmailModalDialog);
+        }else{
+          this.onSendNewLetterClicked(this.sendNewLetterModalDialog);
+        }        
         this.cdr.detectChanges();
       }
     })
@@ -477,5 +488,23 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
 
   resetReadOnlyView(){
     this.caseFacade.setCaseReadOnly(false);
+  }
+
+  loadClientPaperLessStatusHandle(): void {
+    this.contactFacade.loadClientPaperLessStatus(
+      this.clientId,
+      this.clientCaseEligibilityId
+    );
+    this.loadPeperLessStatus();
+  }
+  
+  loadPeperLessStatus() {    
+    this.paperless$
+      ?.pipe(first((emailData: any) => emailData?.paperlessFlag != null))
+      .subscribe((emailData: any) => {
+        if (emailData?.paperlessFlag) {
+          this.paperlessFlag = emailData?.paperlessFlag;
+        }
+      });
   }
 }

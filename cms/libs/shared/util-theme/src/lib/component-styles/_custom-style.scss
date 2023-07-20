@@ -58,7 +58,9 @@
   background: $white;
   position: sticky;
   top: 0;
-
+  @media (max-height:400px) {
+    position: relative;
+  }
   .k-breadcrumb {
     background: transparent;
   }
@@ -90,7 +92,7 @@
 
 .client-profile-outlet {
   padding: 16px;
-
+  padding-bottom: 4rem;
   .TableActionPopup {
     .k-animation-container {
       z-index: 4;
@@ -1103,4 +1105,7 @@ color: $app-primary-font-color;
     }
 
   }
+}
+.grid-list-options-menu{
+  text-transform: none;
 }

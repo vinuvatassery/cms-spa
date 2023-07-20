@@ -486,11 +486,12 @@
   }
   .k-menu-item {
     background: transparent;
+    margin: 4px;
     &:hover {
       background: transparent;
     }
     .k-menu-link {
-      padding: 4px;
+      padding: 0px;
       padding-inline-end: 0;
       background: transparent;
       text-transform: capitalize;
@@ -501,6 +502,7 @@
         width: 100%;
         text-transform: capitalize;
         justify-content: flex-start;
+        padding: 8px 14px;
         .k-menu-group {
           padding: 8px;
         }

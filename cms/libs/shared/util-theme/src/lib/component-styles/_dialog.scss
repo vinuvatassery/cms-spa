@@ -8,6 +8,7 @@
     .k-window-titlebar {
       padding: $size-xxxl $size-xxx $size-l $size-xxx; 
       white-space: normal;
+      max-width: 90%;
       .k-window-title { 
         font-size: $font-size-xx; 
         align-items: center;
