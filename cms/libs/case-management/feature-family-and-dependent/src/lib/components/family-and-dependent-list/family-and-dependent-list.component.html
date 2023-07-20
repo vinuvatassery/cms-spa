@@ -78,7 +78,7 @@
       {{ dataItem.enrolledInInsuranceFlag === 'Y' ? 'YES' : 'NO'}}
     </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column  *ngIf="!isAddOrEditFamilyDependentDisplay" field="by" title="By" [width]="50">
+    <kendo-grid-column  *ngIf="!isAddOrEditFamilyDependentDisplay" field="by" [sortable]="false" title="By" [width]="50">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button
           kendoButton
