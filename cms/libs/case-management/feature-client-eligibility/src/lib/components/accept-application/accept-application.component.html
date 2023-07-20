@@ -4,7 +4,8 @@
     {{
       isEdit
         ? 'Edit Status, Group, and Eligibility Period as needed. Click “Update” to commit the changes.'
-        : 'Set Status, Group, and Eligibility Period. You’ll be prompted to send an approval or pending notice after you click “Initiate Benefits.”'
+        : 'Set the status ,group and eligibility dates. You'll be prompted to send an eligibility or pending notice after you click "Renew Eligibility"'
+
     }}
   </p>
   <div class="flex-row">
@@ -46,7 +47,7 @@
           (valueChange)="startDateOnChange($event)">
         </kendo-datepicker>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="!eligibilityForm.controls['eligibilityStartDate'].valid">Eligibility start is required.</kendo-formerror>
+      <kendo-formerror *ngIf="!eligibilityForm.controls['eligibilityStartDate'].valid">Eligibility Start Date is required.</kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Eligibility End">
