@@ -188,3 +188,4 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
        this.route.navigate(['/financial-management/medical-claims'] );
      }
 }
+
