@@ -5,9 +5,13 @@
     <div class="flex-row">
       <div class="flex-col ">
         <kendo-floatinglabel text="Date Payment Reconciled">
-          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+          <!-- <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
             formatPlaceholder="formatPattern" aria-label="Date Payment Reconciled"    placeholder="" >
-          </kendo-datepicker>
+          </kendo-datepicker> -->
+          <kendo-datepicker aria-label="Date Payment Reconciled" [fillMode]="formUiStyle.dateInputFillMode" [max]="currentDate"
+          formControlName="datePaymentReconciled"  format="MM-dd-yyyy"
+          formatPlaceholder="formatPattern" (select)="dateValidate($event)" (keyup)="dateValidate($event)"
+          placeholder=""></kendo-datepicker>
         </kendo-floatinglabel>
    
 
@@ -58,12 +62,11 @@
           [primary]="true"
           look="outline"
           aria-label="cancel"
-         (click)="closePaymentDetailClicked()"
-        >
+         (click)="closePaymentDetailClicked()">
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="Batch"  >
-          Batch
+        <button kendoButton [primary]="true" aria-label="Update" (click)="save()" >
+          Update
         </button>
       </div>
     </div>
