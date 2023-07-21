@@ -140,6 +140,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       this.checkBoxSubscription=
       this.dependentStatus$.subscribe((x: any)=>
     {
+      this.cerDataPointAdjustmentChange('additionalFamilyMembers', x.hasAdditionalFamilyFlag ?? StatusFlag.No);
+      this.cerDataPointAdjustmentChange('haveFamilyMembersChanged', x.friendFamilyChangedFlag ?? StatusFlag.No);
       this.isFamilyGridDisplay = x.noDependentFlag == StatusFlag.Yes ? true : false;
       this.haveTheyHaveFamilyMember = x.friendFamilyChangedFlag === null?'':x.friendFamilyChangedFlag;
       this.haveTheyHaveAdditionalFamilyMember = x.hasAdditionalFamilyFlag ===null?'':x.hasAdditionalFamilyFlag;
