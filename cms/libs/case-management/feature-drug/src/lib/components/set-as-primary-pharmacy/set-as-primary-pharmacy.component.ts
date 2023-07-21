@@ -70,7 +70,6 @@ export class SetAsPrimaryPharmacyComponent implements OnInit {
   searchPharmacies(searchText: string) {
     this.drugPharmacyFacade.searchPharmacies(searchText);
   }
-
   onChangePharmacy(selectedPharmacy: any) {
     this.IsDeactivateSelectPrimaryPharmacies = true;
     this.isPharmacyError = false;

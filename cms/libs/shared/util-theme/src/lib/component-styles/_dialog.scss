@@ -195,8 +195,70 @@
         }
       }
     }
+    &.reminder_modal{
+      .k-window-content{
+        overflow: hidden;
+        height: auto;
+      }
+    }
   }
 
+  &-right-side{
+    align-items: flex-end; 
+    justify-content: flex-start;
+    .k-dialog {
+      width: 100%;
+      max-width: 400px;
+      top: 0px; 
+      height: 100%;
+      box-shadow: 0px 3px 6px rgba($black,0.2);      
+      .k-dialog-body{
+        height: 80vh;
+        max-height: 100%;
+      }
+      @media (max-width: $breakpoint-lg) {
+        width: calc(100% - 1rem);
+      }
+      .k-content,
+      .k-window-content {
+        padding: $size-0 !important;
+        max-height: inherit;
+      }
+      .app-c-tab {
+        height: 100%;
+        .k-content {
+           padding: $size-0 $size-xxx !important;
+          &.k-state-active {
+            background: material-color($hive-neutral-palette, 50) !important;
+            padding: $size-0 $size-xxx !important;
+            height: 100%;
+          }
+        }
+      }
+    }
+ 
+  }
+  &-bottom-up-modal {
+    justify-content: end;
+    .k-dialog {
+      width: 100%;
+      max-height: 50vh;
+      min-height: 30vh;
+      height: 100%;
+      top: auto;
+      border: 0;
+      @media (max-width: $breakpoint-lg) {
+        width: calc(100% - 1rem);
+      }
+    }
+    .k-window-content,
+    .k-prompt-container {
+      max-height: inherit;
+      padding: 0px;
+    }
+  }
+
+  
   &.add_refund_modal{
    .k-dialog-content{
     padding: 0px;

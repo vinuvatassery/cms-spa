@@ -38,7 +38,7 @@
       <div class="flex-col"
         *ngIf="providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders">
         <div class="flex-row">
-          <div class="flex-col flex-col-8 inlineloaderwrapper">
+          <div class="flex-col flex-col-8 inlineloaderwrapper" *ngIf="!editVendorInfo">
             <span *ngIf="clinicVendorLoader$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
             <kendo-floatinglabel text="Clinic Name">
               <kendo-autocomplete
@@ -62,7 +62,18 @@
               </kendo-formerror>
             </kendo-floatinglabel>
           </div>
-          <div class="flex-col flex-col-4 mt-checkbox">
+          <div class="flex-col" *ngIf="editVendorInfo">
+            <kendo-floatinglabel text="Provider Name">
+              <kendo-textbox aria-label="Provider Name" [fillMode]="formUiStyle.inputFillMode"
+               formControlName="providerName">
+              </kendo-textbox>
+              <kendo-formerror
+                *ngIf="!medicalProviderForm.controls['providerName'].valid && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
+                Provider name is required
+              </kendo-formerror>
+            </kendo-floatinglabel>
+          </div>
+          <div class="flex-col flex-col-4 mt-checkbox" *ngIf="!editVendorInfo">
             <span class="app-checkboxwidtext-wrapper">
               <input class="adjust-attr" type="checkbox" id="Applicable" name="Applicable" aria-labelledby="Applicable"
                 [(ngModel)]="clinicNameNotApplicable" [ngModelOptions]="{standalone: true}" kendoCheckBox
@@ -70,7 +81,7 @@
               <label class="k-checkbox-label" for="Applicable">Not Applicable</label>
             </span>
           </div>
-          <div class="flex-col flex-col-4">
+          <div class="flex-col" [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
             <kendo-floatinglabel text="Provider First Name">
               <kendo-textbox aria-label="Provider First Name" [fillMode]="formUiStyle.inputFillMode"
                 formControlName="firstName">
@@ -81,7 +92,7 @@
               </kendo-formerror>
             </kendo-floatinglabel>
           </div>
-          <div class="flex-col flex-col-4">
+          <div class="flex-col" [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
             <kendo-floatinglabel text="Provider Last Name">
               <kendo-textbox aria-label="Provider Last Name" [fillMode]="formUiStyle.inputFillMode"
                 formControlName="lastName">
@@ -92,7 +103,7 @@
               </kendo-formerror>
             </kendo-floatinglabel>
           </div>
-          <div class="flex-col flex-col-4 mt-checkbox">
+          <div class="flex-col flex-col-4 mt-checkbox" *ngIf="!editVendorInfo">
             <span class="app-checkboxwidtext-wrapper">
               <input class="adjust-attr" type="checkbox" id="Applicable" name="Applicable" aria-labelledby="Applicable"
                 [(ngModel)]="firstLastNameNotApplicable" [ngModelOptions]="{standalone: true}" kendoCheckBox
@@ -112,6 +123,13 @@
           </kendo-textbox>
         </kendo-floatinglabel>
       </div>
+      <div class="flex-col mt-1" *ngIf="providerType == vendorTypes.Pharmacy && editVendorInfo">
+        <kendo-floatinglabel text="NPI (optional)">
+            <kendo-textbox aria-label="NPI" [fillMode]="formUiStyle.inputFillMode" 
+            formControlName="npiNbr">
+            </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
       <div *ngIf="providerType == vendorTypes.Pharmacy" class="flex-col mt-1">
         <div class="component-list-h">
           <span class="app-checkboxwidtext-wrapper">
@@ -123,7 +141,7 @@
       </div>
     </div>
     <!-- Payment address  -->
-    <div class="flex-row mt-1" *ngIf="providerType != vendorTypes.Manufacturers">
+    <div class="flex-row mt-1" *ngIf="!editVendorInfo || providerType != vendorTypes.Manufacturers">
       <div class="flex-col">
         <h4 class="mb-1">PAYMENT ADDRESS</h4>
         <p *ngIf="providerType == vendorTypes.MedicalProviders">Add a payment address and contacts for that address.
@@ -358,7 +376,7 @@
 
     <!-- Contacts -->
 
-    <div formArrayName="newAddContactForm" *ngIf="providerType != vendorTypes.Manufacturers">
+    <div formArrayName="newAddContactForm" *ngIf="!editVendorInfo || providerType != vendorTypes.Manufacturers">
       <div *ngFor="let contact of AddContactForm.controls; let i=index">
         <div [formGroupName]="i" class="flex-row mt-2">
 
@@ -434,11 +452,18 @@
 </section>
 
 <kendo-dialog-actions>
-  <div class="justify-content-between">
+  <div class="justify-content-between" *ngIf="!editVendorInfo">
     <div class="justify-content-end">
       <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail" (click)="closeVedorModal()"> Cancel
       </button>
       <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="save()"> Save </button>
+    </div>
+  </div>
+  <div class="justify-content-between" *ngIf="editVendorInfo">
+    <div class="justify-content-end">
+      <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail" (click)="closeVedorModal()"> Cancel
+      </button>
+      <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="updateVendorDetails()"> Update </button>
     </div>
   </div>
 </kendo-dialog-actions>

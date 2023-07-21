@@ -11,7 +11,9 @@
   border-radius: $border-radius-sm;
   letter-spacing: 0.56px;
   //  height: 32px;
-
+&.noshadow-btn{
+  box-shadow: none;
+}
   &.k-button-outline-primary {
     border: 1px solid;
     color: $app-primary;
@@ -71,6 +73,14 @@
     }
   }
 
+  &.k-button-solid-error{
+    background-color: material-color($hive-error-palette, 800) !important;
+    border-color:material-color($hive-error-palette, 800) !important;
+    color: $white;
+  }
+  &.k-button-flat-error{
+    color:material-color($hive-error-palette, 800) !important;
+  }
   &.k-danger-link {
     color: material-color($hive-error-palette, 800) !important;
     background: transparent;
@@ -169,6 +179,27 @@
         }
       }
     }
+  }
+  &.clear-icon-btn{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    padding: $size-l;
+ 
+    &.k-button-flat-primary{
+      color: rgba($color: $black-30, $alpha: 0.5);
+      &:hover{
+        color:  $app-primary;
+      }
+      
+    }
+    &.k-button-flat-error{
+      color: rgba($color: $black-30, $alpha: 0.5) !important;
+      &:hover{
+      color:material-color($hive-error-palette, 800) !important;
+      }
+    }
+  
   }
 
   &.avatar-sm-btn {
@@ -289,6 +320,9 @@
       &::before {
         opacity: 0;
       }
+      &.select-error{
+        background: material-color($hive-error-palette, 800) !important;
+      }
     }
   }
 
@@ -300,7 +334,21 @@
     }
   }
 }
-
+.k-selected{
+  &.select-error{
+    background: material-color($hive-error-palette, 800) !important;
+    color: $white;
+  }
+  &.select-primary{
+    background: $app-primary !important;
+    color: $white;
+  }
+}
+.cc-fwc{
+  text-transform: capitalize;
+  min-width: 120px;
+  text-align: center;
+}
 .btn-ico-spacer {
   height: 5px;
   width: 5px;
