@@ -9,7 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { WorkflowFacade } from '@cms/case-management/domain';
+import { ContactFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subscription, first } from 'rxjs';
 
@@ -32,16 +32,20 @@ export class SendLetterPageComponent implements OnInit , OnDestroy{
   isDisenrollmentPage = false;
   sessionId! : string
   clientId: any;
+  clientCaseEligibilityId: any
   private disenrollLaterDialog: any;
   private saveForLaterValidationSubscription !: Subscription;
   @ViewChild('disenrollment_letter_later', { read: TemplateRef })
   disenrollment_letter_later!: TemplateRef<any>;
+  paperless$ = this.contactFacade.paperless$;
+  paperlessFlag = 'N'
 
     /** Constructor**/
     constructor(    
       private route: ActivatedRoute,
       private workflowFacade: WorkflowFacade,
-      private dialogService: DialogService
+      private dialogService: DialogService, 
+      private readonly contactFacade: ContactFacade,
     ) {
     }
 
@@ -110,12 +114,36 @@ export class SendLetterPageComponent implements OnInit , OnDestroy{
       .pipe(first((sessionData) => sessionData.sessionData != null))
       .subscribe((session: any) => {      
         this.clientId = JSON.parse(session.sessionData).clientId;       
+        this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
+         
+        if(this.clientId && this.clientCaseEligibilityId )
+        {
+        this.loadClientPaperLessStatusHandle()
+        }
   })
   }
 
   closeLetterModalEvent()
   {
     this.disenrollLaterDialog.close();
+  }
+
+  loadClientPaperLessStatusHandle(): void {
+    this.contactFacade.loadClientPaperLessStatus(
+      this.clientId,
+      this.clientCaseEligibilityId
+    );
+   this.loadPeperLessStatus();
+  }
+  
+  loadPeperLessStatus() {    
+    this.paperless$
+      ?.pipe(first((emailData: any) => emailData?.paperlessFlag != null))
+      .subscribe((emailData: any) => {
+        if (emailData?.paperlessFlag) {
+          this.paperlessFlag = emailData?.paperlessFlag;
+        }
+      });
   }
 
 }

@@ -20,7 +20,7 @@
         (click)="onOpenPrintPreviewClicked()"
         aria-label="preview letter"
       >
-        Preview Letter
+        Preview  {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'EMAIL' : 'LETTER'}}
       </button>
       <button
         kendoButton
@@ -29,7 +29,7 @@
         (click)="onOpenPrintClicked()"
         aria-label="print letter"
       >
-        Send To Print
+       {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'SEND EMAIL' : 'SEND TO PRINT'}}
       </button>
     </div>
   </div>
@@ -61,7 +61,7 @@
           (click)="onOpenPrintClicked()"
           aria-label="send to print"
         >
-        SEND EMAIL
+        {{paperlessFlag === 'Y' ? 'SEND EMAIL' : 'SEND TO PRINT'}}
         </button>
       </div>
     </div>
