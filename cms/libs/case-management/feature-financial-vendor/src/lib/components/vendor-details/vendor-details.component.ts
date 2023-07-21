@@ -59,7 +59,6 @@ export class VendorDetailsComponent implements OnInit {
     this.getPaymentMethods();
     this.getPaymentRunDate();
     this.fillFormData();
-    console.log("providerType",this.providerType)
   }
 
   get AddContactForm(): FormArray {

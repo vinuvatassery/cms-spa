@@ -89,7 +89,7 @@ export class FinancialVendorDataService {
   updateManufacturerProfile(vendorProfile:any) {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/financial-management/vendors/manufacturer/profile`,
+      `/financial-management/vendors/manufacturers/profile`,
       vendorProfile
     );
   }
