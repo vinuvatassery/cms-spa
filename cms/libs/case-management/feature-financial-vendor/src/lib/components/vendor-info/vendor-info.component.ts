@@ -20,7 +20,6 @@ export class VendorInfoComponent implements OnInit {
   medicalProviderForm: FormGroup;
   SpecialHandlingLength = 100;
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  medicalProviderForm: FormGroup;
   vendorDetail!: any;
   vendorId!: string;
   openEditDailog: boolean = false;
@@ -65,7 +64,6 @@ export class VendorInfoComponent implements OnInit {
 
   ngOnInit() {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
-    this.loadVendorInfo();
     this.buildVendorForm();
     this.providerType = this.activeRoute.snapshot.queryParams['vendor_type_code'];
     this.tabCode = this.activeRoute.snapshot.queryParams['tab_code'];
@@ -80,18 +78,6 @@ export class VendorInfoComponent implements OnInit {
   openEditInfoDialog() {
     this.buildVendorForm();
     this.openEditDailog = true;
-  }
-
-  buildVendorForm() {
-    this.medicalProviderForm.reset();
-    this.medicalProviderForm = this.formBuilder.group({
-      providerName: [''],
-      firstName: [''],
-      lastName: [''],
-      tinNumber: [''],
-      npiNbr: [],
-      isPreferedPharmacy: ['']
-    });
   }
 
   closeEditModal(isEditSuccessfull: boolean) {
@@ -149,6 +135,7 @@ export class VendorInfoComponent implements OnInit {
       paymentRunDate:[''],
       isAcceptCombinedPayment:[''],
       isAcceptReports: [''],
+      npiNbr: [],
       newAddContactForm: this.formBuilder.array([
       ]),
     });
