@@ -323,9 +323,9 @@ export class DrugPharmacyFacade {
   }
 
  
-  getDrugPurchasedList(clientId: number, skip: any, pageSize: any, sortBy: any, sortType: any,isPermiumWithinLastTwelveMonthsData:boolean) {
+  getDrugPurchasedList(clientId: number, skip: any, pageSize: any, sortBy: any, sortType: any, filters:any,isPermiumWithinLastTwelveMonthsData:boolean) {
     this.loaderService.show();
-    return this.drugDataService.getDrugPurchasedList(clientId,skip,pageSize, sortBy, sortType,isPermiumWithinLastTwelveMonthsData).subscribe({
+    this.drugDataService.getDrugPurchasedList(clientId,skip,pageSize, sortBy, sortType, filters ,isPermiumWithinLastTwelveMonthsData).subscribe({
       next: (response:any) => {
         const gridView: any = {
           data: response.items,
