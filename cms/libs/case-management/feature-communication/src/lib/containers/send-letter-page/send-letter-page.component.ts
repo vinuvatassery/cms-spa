@@ -7,6 +7,7 @@ import {
   TemplateRef,
   OnDestroy,
   ViewChild,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ContactFacade, WorkflowFacade } from '@cms/case-management/domain';
@@ -28,6 +29,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy{
   isCERForm = false;
   title= "Send Approval Letter"
   printModelTitle = "Print approval letter?";
+  sendType=""
   printModelText = "";
   isDisenrollmentPage = false;
   sessionId! : string
@@ -46,6 +48,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy{
       private workflowFacade: WorkflowFacade,
       private dialogService: DialogService, 
       private readonly contactFacade: ContactFacade,
+      private readonly cdr: ChangeDetectorRef
     ) {
     }
 
@@ -58,7 +61,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy{
      this.title =  this.route?.snapshot?.data['title']
      if(this.title.toLowerCase().includes("disenrollment")){
       this.isDisenrollmentPage = true;
-      this.printModelTitle = "Send Disenrollment Letter to print?"
+      this.printModelTitle = "Send Disenrollment Letter to "
       this.printModelText = "This action cannot be undone, If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal."
      }
     }
@@ -142,6 +145,8 @@ export class SendLetterPageComponent implements OnInit , OnDestroy{
       .subscribe((emailData: any) => {
         if (emailData?.paperlessFlag) {
           this.paperlessFlag = emailData?.paperlessFlag;
+          this.printModelTitle = this.printModelTitle + (this.paperlessFlag === 'Y' ? 'email?' : 'print?')
+          this.cdr.detectChanges();
         }
       });
   }
