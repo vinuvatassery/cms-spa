@@ -1441,10 +1441,18 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (isChecked) {
       this.showAddressProofRequiredValidation = false;
       this.showAddressProofSizeValidation = false;
+
+      if(container[0])
+      {
       container[0].hidden=true
+      }
     }
     else{
+
+      if(container[0])
+      {
         container[0].hidden=false
+      }
     }
     this.updateHomeAddressProofCount(this.homeAddressProofFile?.length > 0);
   }
