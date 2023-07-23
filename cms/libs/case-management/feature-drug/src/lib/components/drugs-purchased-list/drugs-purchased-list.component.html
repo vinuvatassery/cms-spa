@@ -1,17 +1,17 @@
 <div class="flex-row">
-    <div class="flex-col flex-space-bw align-items-center">
+    <div class="flex-col flex-space-bw align-items-center"> 
         <h2 class="title-md mb-0 text-bold">Drugs Purchased</h2>
         <span>
           <input type="checkbox"  Checked="isOnlyPremiumsWith12Months" kendoCheckBox aria-labelledby="drugspremiumsWithinLast12Months" [(ngModel)]="isPermiumWithinLastTwelveMonthsData" (ngModelChange)="onClickLoadDrugsPurchasedData()"  id="DrugspremiumsWithinLast12Months" />
-          <label class="k-checkbox-label" for="DrugspremiumsWithinLast12Months">Show only premiums within the last 12 months</label>
+            <label class="k-checkbox-label" for="DrugspremiumsWithinLast12Months">Show only premiums within the last 12 months</label>
         </span>
     </div>
     <div class="flex-col mt-1">
         <div class="app-c-table">
             <kendo-grid [resizable]="true"[pageSize]="state.take" [pageable]="true"
              [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-            [columnMenu]="{ filter: true }" [sort]="state.sort" [pageable]="true" [data]="drugPurchases$ | async"  (dataStateChange)="dataStateChange($event)">
-                <kendo-grid-column field="prescriptionFillDate" title="Fill Date" [sticky]="true" [width]="160" [format]="{ date: 'MM-dd-yyyy' }"  filter="date">
+            [columnMenu]="{ filter: true }" [sort]="state.sort" [pageable]="true" [data]="drugPurchases$ | async"  (dataStateChange)="dataStateChange($event)">               
+                <kendo-grid-column field="prescriptionFillDate" title="Fill Date" [width]="160" [format]="{ date: 'MM-dd-yyyy' }"  filter="date">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     {{dataItem.prescriptionFillDate | date:'MM/dd/yyyy'}}
                   </ng-template>
@@ -68,63 +68,64 @@
                       </kendo-popover>
                     </ng-template>
                   </kendo-grid-column>
-
+                
         <!-- Pagination Template -->
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
-        let-currentPage="currentPage">
-        <div class="grid-custom-paginationtemplates d-flex">
-          <div class="d-flex align-items-center">
-            <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
-            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-              [valueField]="'value'" #RowsPerPage id="RowsPerPage" aria-label ="Rows Per Page" [valuePrimitive]="true" [(value)]="state.take"
-              (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
-            <kendo-pager-info> </kendo-pager-info>
-            <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+          let-currentPage="currentPage">
+          <div class="grid-custom-paginationtemplates d-flex">
+            <div class="d-flex align-items-center">
+              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
+                [valueField]="'value'" #RowsPerPage id="RowsPerPage" aria-label="Rows Per Page" [valuePrimitive]="true"
+                [(value)]="state.take" (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
+              <kendo-pager-info> </kendo-pager-info>
+              <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+            </div>
+            <div class="d-flex">
+              <kendo-pager-input></kendo-pager-input>
+              <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+              <kendo-pager-next-buttons></kendo-pager-next-buttons>
+            </div>
           </div>
-          <div class="d-flex">
-            <kendo-pager-input></kendo-pager-input>
-            <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
-            <kendo-pager-next-buttons></kendo-pager-next-buttons>
-          </div>
-        </div>
-      </ng-template>
+        </ng-template>
+
         <!-- grid Loader Template -->
-       <ng-template kendoGridLoadingTemplate>
-         <common-grid-loader-component></common-grid-loader-component>
+        <ng-template kendoGridLoadingTemplate>
+          <common-grid-loader-component></common-grid-loader-component>
         </ng-template>
         <!-- grid No data Template -->
         <ng-template kendoGridNoRecordsTemplate>
-          <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+          <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
           </div>
           <p>There is no data to display.</p>
         </ng-template>
-            </kendo-grid>
-        </div>
-        <div class="flex-row">
-            <div class="flex-col mt-1">
-                <button kendoButton [primary]="true" icon="add"
-                    aria-label="add pharmacy" [disabled]="(isReadOnly$ | async) ? true : false">
-                    Pharmacy Claim
-                </button>
-            </div>
-        </div>
+      </kendo-grid>
     </div>
+    <div class="flex-row">
+      <div class="flex-col mt-1">
+        <button kendoButton [primary]="true" icon="add" aria-label="add pharmacy"
+          [disabled]="(isReadOnly$ | async) ? true : false">
+          Pharmacy Claim
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Add Pharmacy  Modal -->
 <kendo-dialog *ngIf="isOpenPharmacyClicked" (close)="handleClosePharmacyClicked()"
-    class="app-c-modal app-c-modal-sm app-c-modal-np">
-    <kendo-dialog-titlebar>
-        {{ isEditPharmacyListClicked ? 'Edit Pharmacy' : 'Add Pharmacy' }}
-    </kendo-dialog-titlebar>
-    <case-management-pharmacy-detail [isEditPharmacy]="isEditPharmacyListClicked" [selectedPharmacy]="selectedPharmacy"
-        (closePharmacyEvent)="handleClosePharmacyClicked()"></case-management-pharmacy-detail>
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar>
+    {{ isEditPharmacyListClicked ? 'Edit Pharmacy' : 'Add Pharmacy' }}
+  </kendo-dialog-titlebar>
+  <case-management-pharmacy-detail [isEditPharmacy]="isEditPharmacyListClicked" [selectedPharmacy]="selectedPharmacy"
+    (closePharmacyEvent)="handleClosePharmacyClicked()"></case-management-pharmacy-detail>
 </kendo-dialog>
 
 <!-- Change Pharmacy Priority Modal -->
 <kendo-dialog *ngIf="isOpenChangePriorityClicked" (close)="handleCloseChangePriorityClikced()"
-    class="app-c-modal app-c-modal-md app-c-modal-np">
-    <kendo-dialog-titlebar> Select Pharmacy Priority </kendo-dialog-titlebar>
-    <case-management-set-pharmacy-priority (closeChangePriority)="handleCloseChangePriorityClikced()">
-    </case-management-set-pharmacy-priority>
+  class="app-c-modal app-c-modal-md app-c-modal-np">
+  <kendo-dialog-titlebar> Select Pharmacy Priority </kendo-dialog-titlebar>
+  <case-management-set-pharmacy-priority (closeChangePriority)="handleCloseChangePriorityClikced()">
+  </case-management-set-pharmacy-priority>
 </kendo-dialog>
