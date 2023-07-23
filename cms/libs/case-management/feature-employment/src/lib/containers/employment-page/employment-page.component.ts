@@ -200,10 +200,11 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
     let oldEmployerStatuses: any[] = [];
     if (this.isCerForm) {
       this.prvEmployers.forEach((emp: any) => {
+        const endDate = emp.endDate ? this.intl.formatDate(emp.endDate, this.configProvider.appSettings.dateFormat) : null;
         const oldEmployer = {
           clientEmployerId: emp.clientEmployerId,
           cerReviewStatusCode: emp.cerReviewStatusCode,
-          endDate: emp.endDate ? this.intl.formatDate(emp.endDate, this.configProvider.appSettings.dateFormat) : null,
+          endDate: emp.cerReviewStatusCode =="ACTIVE"? null : endDate,
           concurrencyStamp: emp.concurrencyStamp,
         };
 
