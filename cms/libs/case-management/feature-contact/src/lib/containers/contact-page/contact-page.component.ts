@@ -734,6 +734,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private save() {
+   if (this.isNoProofOfHomeChecked){
+      this.handleFileRemoved(null);
+    }
     this.setValidation();
     this.contactInfoForm.markAllAsTouched();
     const isLargeFile = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof?.size ?? 0) > (this.configurationProvider?.appSettings.uploadFileSizeLimit ?? 0);
@@ -1434,10 +1437,14 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setVisibilityByNoHomeAddressProofFlag(isChecked: boolean) {
     this.isNoProofOfHomeChecked = isChecked;
+    const container = this.elementRef.nativeElement.querySelectorAll('.k-upload-files');
     if (isChecked) {
       this.showAddressProofRequiredValidation = false;
       this.showAddressProofSizeValidation = false;
-      this.elementRef.nativeElement.querySelectorAll('.k-delete');
+      container[0].hidden=true
+    }
+    else{
+        container[0].hidden=false
     }
     this.updateHomeAddressProofCount(this.homeAddressProofFile?.length > 0);
   }
@@ -1748,7 +1755,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.updateHomeAddressProofCount(true);
   }
 
-  handleFileRemoved(e: SelectEvent) {
+  handleFileRemoved(e: SelectEvent | null) {
     this.showAddressProofSizeValidation = false;
     if (this.homeAddressProofFile !== undefined && this.homeAddressProofFile[0]?.uid) {
       this.loaderService.show();
