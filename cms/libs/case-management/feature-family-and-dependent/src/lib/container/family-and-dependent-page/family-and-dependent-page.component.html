@@ -4,11 +4,12 @@
   <h3>Family & Dependents</h3>
   <section>
     <div class="block-section pt-1">
+      <div *ngIf="(previousRelationList$ | async) as prvRelations">
       <div class="flex-row" *ngIf="isCerForm">
         <div class="flex-col">
           <fieldset class="k-form-fieldset">
             <legend class="k-form-legend"><h5>Have their family size or family members changed?</h5></legend>
-
+          
           <div class="component-list-h comp-list-horizontal">
             <span class="app-radiobtnwidtext-wrapper">
               <input type="radio" kendoRadioButton   aria-labelledby="havetheyhavefamilymemberYes"
@@ -17,7 +18,7 @@
                 value="Y"
                 name="havetheyhavefamilymember"
                 [(ngModel)]="haveTheyHaveFamilyMember"
-                (change)="cerDataPointAdjustmentChange('haveFamilyMembersChanged', 'Y')"
+                (change)="onFamilyChangeClicked('haveFamilyMembersChanged', 'Y')"
               />
               <kendo-label
                 class="k-radio-label"
@@ -34,7 +35,7 @@
                 value="N" 
                 name="havetheyhavefamilymember"
                 [(ngModel)]="haveTheyHaveFamilyMember"
-                (change)="cerDataPointAdjustmentChange('haveFamilyMembersChanged', 'N')"
+                (change)="onFamilyChangeClicked('haveFamilyMembersChanged', 'N')"
               />
               <kendo-label
                 class="k-radio-label"
@@ -46,8 +47,8 @@
           <kendo-formerror *ngIf="!haveTheyHaveFamilyMember && (isCerFormValid | async) == false"> A Response is required.</kendo-formerror>
           </fieldset> 
         </div>
-        <div [hidden]="haveTheyHaveFamilyMember != 'Y'">
-          <div class="flex-col" *ngFor="let dependent of previousRelationsList; let i=index">
+        <div *ngIf="showPrevRelations$ | async">          
+          <div class="flex-col" *ngFor="let dependent of prvRelations; let i=index">
             <fieldset class="k-form-fieldset">
               <legend class="k-form-legend"><h5>Is “{{dependent.fullName}} ({{dependent.relationshipDescription}})” still in their family?</h5></legend>
 
@@ -56,10 +57,10 @@
                 <input type="radio" kendoRadioButton   aria-labelledby="dependent"
                   id="dependent{{i}}y"
                   class="form-control" 
-                  value="Y"
+                  value="ACTIVE"
                   name="dependent_{{i}}"
-                  [(ngModel)]="dependent.activeFlag"
-                  (click)="onDependentStatusChange(dependent, 'Y')"
+                  [(ngModel)]="dependent.cerReviewStatusCode"
+                  (click)="onDependentStatusChange(dependent, 'ACTIVE')"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -73,10 +74,10 @@
                   kendoRadioButton
                   aria-labelledby="dependent" 
                   id="dependent{{i}}n"
-                  value="N" 
+                  value="INACTIVE" 
                   name="dependent_{{i}}"
-                  [(ngModel)]="dependent.activeFlag"
-                  (click)="onDependentStatusChange(dependent, 'N')"
+                  [(ngModel)]="dependent.cerReviewStatusCode"
+                  (click)="onDependentStatusChange(dependent, 'INACTIVE')"
                 />
                 <kendo-label
                   class="k-radio-label"
@@ -85,6 +86,7 @@
                 ></kendo-label>
               </span>
             </div>
+            <kendo-formerror *ngIf="dependent.cerReviewStatusCodeRequired"> A Response is required.</kendo-formerror>
             </fieldset> 
           </div>
         </div>
@@ -129,6 +131,7 @@
           <kendo-formerror *ngIf="!haveTheyHaveAdditionalFamilyMember && (isCerFormValid | async) == false"> A Response is required.</kendo-formerror>
           </fieldset> 
         </div>
+      </div>
       </div>
       <div class="flex-row">
         <div class="flex-col mb-2" *ngIf="isCerForm && haveTheyHaveAdditionalFamilyMember=='Y'">

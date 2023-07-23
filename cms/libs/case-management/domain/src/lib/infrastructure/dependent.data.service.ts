@@ -24,10 +24,10 @@ export class DependentDataService {
   /** Public methods **/
 
   ///1load dependents for grid
-  loadDependents(eligibilityId: string, clientId: number, skipcount: number, maxResultCount: number, sort: string, sortType: string) {
+  loadDependents(eligibilityId: string, clientId: number, skipcount: number, maxResultCount: number, sort: string, sortType: string, type: string = 'All') {
     return this.http.get<Dependent[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` + this.baseUrl +
-      `/eligibility-periods/${eligibilityId}/dependents?ClientId=${clientId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&LovTypeCode=${LovType.RelationshipCode}`
+      `/eligibility-periods/${eligibilityId}/dependents?ClientId=${clientId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&LovTypeCode=${LovType.RelationshipCode}&Type=${type}`
     );
 
   }
@@ -180,9 +180,10 @@ export class DependentDataService {
     );
   }
 
-  saveAndContinueDependents(clientId: number, clientCaseEligibilityId: string, hasDependentsStatus: string) {
-    return this.http.patch(
-      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/clients/${clientId}/eligibility-periods/${clientCaseEligibilityId}?hasDependentsStatus=${hasDependentsStatus}`, null
+  saveAndContinueDependents(clientId: number, clientCaseEligibilityId: string, request: any) {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}${this.baseUrl}/clients/${clientId}/eligibility-periods/${clientCaseEligibilityId} `, 
+      request
     );
   }
 }
