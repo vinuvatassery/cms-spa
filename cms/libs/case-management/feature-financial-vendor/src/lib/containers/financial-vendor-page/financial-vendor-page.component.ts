@@ -156,6 +156,7 @@ export class FinancialVendorPageComponent implements OnInit {
       next:(response:any)=>{
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal();
+        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Vendor profile added successfully");
         this.cdr.detectChanges();
       },
       error:(err:any)=>{

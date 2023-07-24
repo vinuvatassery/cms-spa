@@ -439,9 +439,9 @@
           <div *ngIf="providerType === vendorTypes.Manufacturers" class="flex-col mt-1">
             <div class="component-list-h">
               <span class="app-checkboxwidtext-wrapper">
-                <input type="checkbox" kendoCheckBox aria-labelledby="Rebate" id="isPreferedContact"
+                <input type="checkbox" kendoCheckBox aria-labelledby="Rebate" id="isPreferedContact{{i}}"
                   formControlName="isPreferedContact" (click)="checkContactPreference(i)"/>
-                <label class="k-checkbox-label" for="isPreferedContact"> This is a preferred contact </label>
+                <label class="k-checkbox-label" for="isPreferedContact{{i}}"> This is a preferred contact </label>
               </span>
             </div>
           </div>
