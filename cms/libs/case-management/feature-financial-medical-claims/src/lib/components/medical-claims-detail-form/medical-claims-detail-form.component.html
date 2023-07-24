@@ -145,7 +145,7 @@
                     <div class="flex-row">
                         <div class="flex-col">
                             <kendo-floatinglabel text="Service Description">
-                                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #tareaCaseWorkerNote
+                                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" 
                                     resizable="auto" aria-label="Service Description">
                                     <kendo-textarea-suffix class="justify-content-end">
                                         <span class="tareacounter"> 10/300</span>
@@ -156,7 +156,9 @@
                     </div>
                     <div class="flex-row">
                         <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Service Cost">
+                          
+                            <kendo-floatinglabel text="Service Cost" class="amount-with-symbol">
+                                <span class="k-input-prefix custom-currencysymbol"> $ </span>  
                                 <kendo-textbox aria-label="CTP Code"  
                                     [fillMode]="formUiStyle.inputFillMode">
                                 </kendo-textbox>
@@ -165,7 +167,8 @@
 
                         </div>
                         <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Amount Due">
+                            <kendo-floatinglabel text="Amount Due" class="amount-with-symbol">
+                                <span class="k-input-prefix custom-currencysymbol"> $ </span>
                                 <kendo-textbox aria-label="PCA Code" 
                                     [fillMode]="formUiStyle.inputFillMode">
                                 </kendo-textbox>
@@ -175,6 +178,21 @@
                         <kendo-formerror class="align-items-center"> <span class="material-icons mr-1"  aria-hidden="false" >info</span>  Client exceeded maximum benefits. <a kendoButton class="ml-1 card-link-button">Make Exception</a></kendo-formerror>
                   </div>
                     </div>
+                    <div class="flex-row"> 
+                        <div class="flex-col  ">
+                            <kendo-floatinglabel text="Reason For Exception">
+                                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" 
+                                    resizable="auto" aria-label="Reason For Exception">
+                                    <kendo-textarea-suffix class="justify-content-end">
+                                        <span class="tareacounter"> 10/300</span>
+                                    </kendo-textarea-suffix>
+                                </kendo-textarea>
+                            </kendo-floatinglabel>
+                           
+
+                        </div>
+                    </div>
+                    <hr class="row-border"/>
                     <div class="mt-2">
                     <button class="" kendoButton fillMode="flat" themeColor="primary">  <span class="material-icons" aria-label="New Claims" aria-hidden="false">add</span> New Service</button>
 

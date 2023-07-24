@@ -5,4 +5,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   templateUrl: './medical-claims-recent-claims-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MedicalClaimsRecentClaimsListComponent {}
+export class MedicalClaimsRecentClaimsListComponent {
+  recentClaimsGridLists$: any;
+}
