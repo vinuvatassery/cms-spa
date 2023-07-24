@@ -206,6 +206,7 @@
 /* Tooltip */
 .k-tooltip-wrapper{
 z-index: 105;
+max-width: 250px;
 }
 .k-tooltip {
   background: material-color($hive-neutral-palette, 900);

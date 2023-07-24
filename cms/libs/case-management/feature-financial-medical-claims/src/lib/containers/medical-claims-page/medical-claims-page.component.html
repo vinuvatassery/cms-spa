@@ -1,8 +1,46 @@
-<div class="app-l-inner-rapper pt-0" kendoRippleContainer>
+<div class="app-l-inner-rapper pb-8rem pt-0">
     <common-bread-crumb></common-bread-crumb>
-    <section class="app-l-mainTittle">
-        <h1 class="maintitle_withicon text-bold"> 
-            medical-claims-page works!
-        </h1>
-      </section>
+    <div class=" pt-0">
+        <section class="app-l-mainTittle">
+            <h1 class="maintitle_withicon text-bold"> Medical Claims </h1>
+        </section>
+        <section class="app-l-client-wrapper">
+            <section class="app-l-wrapper">
+                <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+                    class="app-c-tab case-360-tab">
+                    <kendo-tabstrip-tab title="Process" [selected]="true">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-medical-claims-process-list      [medicalClaimsProcessGridLists$]="medicalClaimsProcessGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueMedicalClaimsProcess"
+                                [sortType]="sortType" [sort]="sortProcessList" 
+                                (loadMedicalClaimsProcessListEvent)="loadMedicalClaimsProcessListGrid($event)"></cms-medical-claims-process-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+
+                    <kendo-tabstrip-tab title="Batches">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-medical-claims-batches-list   [medicalClaimsBatchGridLists$]="medicalClaimsBatchGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueMedicalClaimsBatch"
+                                [sortType]="sortType" [sort]="sortBatchList" 
+                                (loadMedicalClaimsBatchListEvent)="loadMedicalClaimsBatchListGrid($event)"></cms-medical-claims-batches-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+                    <kendo-tabstrip-tab title="All Payments">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-medical-claims-all-payments-list  [medicalClaimsAllPaymentsGridLists$]="medicalClaimsAllPaymentsGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueMedicalClaimsPayments"
+                                [sortType]="sortType" [sort]="sortPaymentsList" 
+                                (loadMedicalClaimsAllPaymentsListEvent)="loadMedicalClaimsAllPaymentsListGrid($event)"></cms-medical-claims-all-payments-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+                </kendo-tabstrip>
+            </section>
+        </section>
+    </div>
 </div>
