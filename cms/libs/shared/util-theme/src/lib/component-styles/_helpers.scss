@@ -195,6 +195,9 @@ section {
   &-5 {
     padding-bottom: $size-xxx + $size-xx  + $size-xx +  $size-xxx !important;
   }
+  &-12rem{
+    padding-bottom: 12rem;
+  }
 }
 .pl {
   &-0 {
@@ -230,6 +233,7 @@ section {
     padding-right: $size-xxx + $size-xx !important;
   }
 }
+ 
 .gap-m {
   gap: $size-xx;
 }
