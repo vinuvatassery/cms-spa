@@ -20,8 +20,11 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
   medicalClaimPaymentForm!: FormGroup;
   dateReconciledValidator: boolean = false;
   datePaymentSentValidator: boolean = false;
-  insuranceEndDateIsGreaterThanStartDate: boolean = false;
+  paymentDateIsGreaterThanReconciledDate: boolean = true;
   endDateMin!: Date;
+  tAreaCessationCharactersCount!: number;
+  tAreaCessationCounter!: string;
+  tAreaCessationMaxLength = 300;
 
   @Output() closePaymentDetailFormClickedEvent = new EventEmitter();
 
@@ -68,13 +71,13 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
     }
   }
   endDateOnChange() {
-    this.insuranceEndDateIsGreaterThanStartDate = true;
+    this.paymentDateIsGreaterThanReconciledDate = true;
     if (this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value === null) {
       this.medicalClaimPaymentForm.controls['datePaymentReconciled'].markAllAsTouched();
       this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValidators([Validators.required]);
       this.medicalClaimPaymentForm.controls['datePaymentReconciled'].updateValueAndValidity();
       this.medicalClaimPaymentForm.controls['datePaymentSent'].setErrors({ 'incorrect': true });
-      this.insuranceEndDateIsGreaterThanStartDate = false;
+      this.paymentDateIsGreaterThanReconciledDate = false;
     }
     else if (this.medicalClaimPaymentForm.controls['datePaymentSent'].value !== null) {
       const startDate = this.intl.parseDate(
@@ -90,10 +93,10 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
 
       if (startDate > endDate) {
         this.medicalClaimPaymentForm.controls['datePaymentSent'].setErrors({ 'incorrect': true });
-        this.insuranceEndDateIsGreaterThanStartDate = false;
+        this.paymentDateIsGreaterThanReconciledDate = false;
       }
       else {
-        this.insuranceEndDateIsGreaterThanStartDate = true;
+        this.paymentDateIsGreaterThanReconciledDate = true;
         this.medicalClaimPaymentForm.controls['datePaymentSent'].setErrors(null);
         this.endDateMin = this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value;
       }
@@ -111,6 +114,14 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
       Validators.required,
     ]);
     this.medicalClaimPaymentForm.controls['datePaymentSent'].updateValueAndValidity();
+    this.medicalClaimPaymentForm.controls['paymentAmount'].setValidators([
+      Validators.required,
+    ]);
+    this.medicalClaimPaymentForm.controls['paymentAmount'].updateValueAndValidity();
+    this.medicalClaimPaymentForm.controls['warrantNumber'].setValidators([
+      Validators.required,
+    ]);
+    this.medicalClaimPaymentForm.controls['warrantNumber'].updateValueAndValidity();
   }
   buildPremiumPaymentForm(){
     this.medicalClaimPaymentForm = this.formBuilder.group({
@@ -125,4 +136,10 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
   save(){
     this.validateModel();
   }
+
+  onTAreaCessationValueChange(event: any): void {
+    this.tAreaCessationCharactersCount = event.length;
+    this.tAreaCessationCounter = `${this.tAreaCessationCharactersCount}/${this.tAreaCessationMaxLength}`;
+  }
+
 }

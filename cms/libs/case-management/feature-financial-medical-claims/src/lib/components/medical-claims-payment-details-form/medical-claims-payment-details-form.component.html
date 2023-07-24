@@ -22,9 +22,9 @@
           (blur)="endDateOnChange()" [min]="endDateMin" (focus)="changeMinDate()"
           placeholder=""></kendo-datepicker>
           <kendo-formerror *ngIf="datePaymentSentValidator">Future dates not allowed.</kendo-formerror>
-          <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].valid && !datePaymentSentValidator && insuranceEndDateIsGreaterThanStartDate ">Date payment sent is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].valid && !datePaymentSentValidator && paymentDateIsGreaterThanReconciledDate ">Date payment sent is required.</kendo-formerror>
           <kendo-formerror
-            *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].valid && !insuranceEndDateIsGreaterThanStartDate ">End date cannot be prior to the Start Date.</kendo-formerror>
+            *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].valid && !paymentDateIsGreaterThanReconciledDate ">End date cannot be prior to the Start Date.</kendo-formerror>
         </kendo-floatinglabel>   
 
       </div>
@@ -32,23 +32,30 @@
         <kendo-floatinglabel text="Payment Amount" class="amount-with-symbol">
           <span class="k-input-prefix custom-currencysymbol"> $ </span>
           <kendo-numerictextbox placeholder="Payment Amount" aria-label="Payment Amount" [spinners]="false" class="input-icon-right" placeholder="00.00"
-            [fillMode]="formUiStyle.inputFillMode" > 
+            [fillMode]="formUiStyle.inputFillMode" formControlName="paymentAmount" > 
           </kendo-numerictextbox>
+          <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['paymentAmount'].valid ">Payment amount is required.</kendo-formerror>
         </kendo-floatinglabel> 
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Warrant Number">
-          <kendo-textbox  placeholder="Warrant Number" [fillMode]="formUiStyle.dropDownFillMode" aria-label="Warrant Number" >
+          <kendo-textbox  placeholder="Warrant Number" [fillMode]="formUiStyle.dropDownFillMode" aria-label="Warrant Number"
+          formControlName="warrantNumber">
           </kendo-textbox>
+          <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['warrantNumber'].valid ">Warrant number is required.</kendo-formerror>
         </kendo-floatinglabel>
    
 
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Note">
-          <kendo-textarea [fillMode]="formUiStyle.inputFillMode"  aria-label="Note" [rows]="1" >
-          </kendo-textarea>
-          <kendo-formhint class="justify-content-end">6/100</kendo-formhint>
+          <kendo-textarea [fillMode]="formUiStyle.inputFillMode"  aria-label="Note" [rows]="1" 
+          [maxlength]="tAreaCessationMaxLength"  (valueChange)="onTAreaCessationValueChange($event)"
+          resizable="auto" formControlName="note">
+          </kendo-textarea>  
+          <kendo-textarea-suffix class="justify-content-end">
+            <span class="counter">{{ tAreaCessationCounter }}</span>
+          </kendo-textarea-suffix>
         </kendo-floatinglabel>
       </div>
  
