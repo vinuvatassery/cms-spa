@@ -5,8 +5,9 @@ import {
   EventEmitter,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'cms-medical-claims-payment-details-form',
   templateUrl: './medical-claims-payment-details-form.component.html', 
@@ -17,11 +18,14 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle()
   public currentDate = new Date();
   medicalClaimPaymentForm!: FormGroup;
-  dateValidator: boolean = false;
-  
+  dateReconciledValidator: boolean = false;
+  datePaymentSentValidator: boolean = false;
+  insuranceEndDateIsGreaterThanStartDate: boolean = false;
+  endDateMin!: Date;
+
   @Output() closePaymentDetailFormClickedEvent = new EventEmitter();
 
-  constructor(private formBuilder: FormBuilder){
+  constructor(private formBuilder: FormBuilder, public intl: IntlService,){
     
   }
  
@@ -31,25 +35,90 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
   closePaymentDetailClicked() {
     this.closePaymentDetailFormClickedEvent.emit(true);
   }
-  dateValidate(event: Event) {
-    this.dateValidator = false;
-    const signedDate = this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value;
+  changeMinDate() {
+    this.endDateMin = this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value;
+  }
+
+  dateValidate(event: Event, type: any) {
     const todayDate = new Date();
-    if (signedDate > todayDate) {
-      this.dateValidator = true;
+
+    switch (type.toUpperCase()) {
+      case "RECONCILED":
+        this.dateReconciledValidator = false;
+        const datePaymentReconciled = this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value;
+        if (datePaymentReconciled > todayDate) {
+          this.dateReconciledValidator = true;
+          this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setErrors({ 'incorrect': true });
+        }
+        break;
+      case "PAYMENT_SENT":
+        this.datePaymentSentValidator = false;
+        const datePaymentSent = this.medicalClaimPaymentForm.controls['datePaymentSent'].value;
+        if (datePaymentSent > todayDate) {
+          this.datePaymentSentValidator = true;
+          this.medicalClaimPaymentForm.controls['datePaymentSent'].setErrors({ 'incorrect': true });
+        }
+        break
+
+    }
+  }
+  startDateOnChange() {
+    if (this.medicalClaimPaymentForm.controls['datePaymentSent'].value !== null) {
+      this.endDateOnChange();
+    }
+  }
+  endDateOnChange() {
+    this.insuranceEndDateIsGreaterThanStartDate = true;
+    if (this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value === null) {
+      this.medicalClaimPaymentForm.controls['datePaymentReconciled'].markAllAsTouched();
+      this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValidators([Validators.required]);
+      this.medicalClaimPaymentForm.controls['datePaymentReconciled'].updateValueAndValidity();
+      this.medicalClaimPaymentForm.controls['datePaymentSent'].setErrors({ 'incorrect': true });
+      this.insuranceEndDateIsGreaterThanStartDate = false;
+    }
+    else if (this.medicalClaimPaymentForm.controls['datePaymentSent'].value !== null) {
+      const startDate = this.intl.parseDate(
+        Intl.DateTimeFormat('en-US').format(
+          this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value
+        )
+      );
+      const endDate = this.intl.parseDate(
+        Intl.DateTimeFormat('en-US').format(
+          this.medicalClaimPaymentForm.controls['datePaymentSent'].value
+        )
+      );
+
+      if (startDate > endDate) {
+        this.medicalClaimPaymentForm.controls['datePaymentSent'].setErrors({ 'incorrect': true });
+        this.insuranceEndDateIsGreaterThanStartDate = false;
+      }
+      else {
+        this.insuranceEndDateIsGreaterThanStartDate = true;
+        this.medicalClaimPaymentForm.controls['datePaymentSent'].setErrors(null);
+        this.endDateMin = this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value;
+      }
     }
   }
 
-  validateModel(){
 
+  validateModel(){
+    this.medicalClaimPaymentForm.markAllAsTouched();
+    this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValidators([
+      Validators.required,
+    ]);
+    this.medicalClaimPaymentForm.controls['datePaymentReconciled'].updateValueAndValidity();
+    this.medicalClaimPaymentForm.controls['datePaymentSent'].setValidators([
+      Validators.required,
+    ]);
+    this.medicalClaimPaymentForm.controls['datePaymentSent'].updateValueAndValidity();
   }
   buildPremiumPaymentForm(){
     this.medicalClaimPaymentForm = this.formBuilder.group({
-      datePaymentReconciled: [''],
-      datePaymentSent: [''],
-      paymentAmount: [''],
-      warrantNumber: [''],      
-      note: [''],
+      datePaymentReconciled: [null],
+      datePaymentSent: [null],
+      paymentAmount: [null],
+      warrantNumber: [null],      
+      note: [null],
     });
     
   }
