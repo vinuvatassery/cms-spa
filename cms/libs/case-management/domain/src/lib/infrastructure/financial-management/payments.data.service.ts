@@ -36,6 +36,9 @@ export class PaymentsDataService {
     return sorting;
   }
 
+  loadPaymentPanel(vendorId:any,batchId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/batches/${batchId}`);
+  }
 
 
   loadPaymentsAddressListService() {

@@ -3,9 +3,11 @@ import {
   ChangeDetectionStrategy,
   Output, 
   EventEmitter,
-  OnInit
+  OnInit,
+  Input
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PaymentsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
@@ -25,10 +27,9 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
   tAreaCessationCharactersCount!: number;
   tAreaCessationCounter!: string;
   tAreaCessationMaxLength = 300;
-
   @Output() closePaymentDetailFormClickedEvent = new EventEmitter();
 
-  constructor(private formBuilder: FormBuilder, public intl: IntlService,){
+  constructor(private formBuilder: FormBuilder, public intl: IntlService){
     
   }
  
@@ -130,6 +131,7 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
       paymentAmount: [null],
       warrantNumber: [null],      
       note: [null],
+
     });
     
   }
@@ -141,5 +143,6 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
     this.tAreaCessationCharactersCount = event.length;
     this.tAreaCessationCounter = `${this.tAreaCessationCharactersCount}/${this.tAreaCessationMaxLength}`;
   }
+
 
 }

@@ -19,6 +19,7 @@ import {
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { PaymentsFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-medical-claims-batch-list-detail-items',
   templateUrl: './medical-claims-batch-list-detail-items.component.html', 
@@ -36,6 +37,9 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
   @Input() sort: any;
   @Input() batchItemsGridLists$: any;
   @Output() loadBatchItemsListEvent = new EventEmitter<any>();
+  @Input() vendorId:any='8CD495BE-3296-43B3-A9C4-EF7829D2D026'
+  @Input() batchId:any ='652C706E-5FD4-4C50-8AC3-0FA806949E86'
+  paymentPanelData$ =this.paymentFacade.paymentPanelData$;
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -56,10 +60,11 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
   
   
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService) {}
+  constructor(private route: Router, private dialogService: DialogService,private paymentFacade:PaymentsFacade) {}
   
   ngOnInit(): void {
     this.loadBatchLogItemsListGrid();
+    this.loadPaymentPanel();
   }
   ngOnChanges(): void {
     this.state = {
@@ -204,4 +209,8 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
       this.paymentDetailsDialog.close();
     }
   }
+  loadPaymentPanel(){
+    this.paymentFacade.loadPaymentPanel(this.vendorId,this.batchId);
+  }
+
 }
