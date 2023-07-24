@@ -50,6 +50,28 @@ export class MedicalClaimsBatchesListComponent implements OnInit, OnChanges{
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  batchClaimGridData=[
+    {
+      id:1,
+      batch: '05012021_001 `',
+      ofProviders:'XX', 
+      ofClaims:'XX', 
+      pmtsRequested:'XX', 
+      pmtsReconciled:'XX', 
+      totalAmountDue:'XX,XXX.XX', 
+      totalAmountReconciled:'XX,XXX.XX',  
+    },
+    {
+      id:2,
+      batch: '05012021_001 `',
+      ofProviders:'XX', 
+      ofClaims:'XX', 
+      pmtsRequested:'XX', 
+      pmtsReconciled:'XX', 
+      totalAmountDue:'XX,XXX.XX', 
+      totalAmountReconciled:'XX,XXX.XX',
+    }
+  ];
   
   /** Constructor **/
   constructor(private route: Router, ) {}

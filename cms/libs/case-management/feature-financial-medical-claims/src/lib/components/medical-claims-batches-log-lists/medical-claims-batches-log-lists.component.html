@@ -48,30 +48,30 @@
       <kendo-grid [resizable]="true" [loading]="isBatchLogGridLoaderShow" [pageSize]="state.take"
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
         [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
-        [data]="batchLogGridLists$ | async">
-        <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
+        [data]="bathcLogGridDataLst" (selectionChange)="onSelectionChange($event)">
+        <kendo-grid-checkbox-column *ngIf="isPrintAdviceLetterClicked" [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
           [width]="40"></kendo-grid-checkbox-column>
-        <kendo-grid-column field="vendorName" title="Item #" [width]="160">
+        <kendo-grid-column field="item" title="Item #" [width]="160">
          
         </kendo-grid-column>
-        <kendo-grid-column field="type" title="Invoice ID" [width]="160"> </kendo-grid-column>
+        <kendo-grid-column field="invoiceID" title="Invoice ID" [width]="160"> </kendo-grid-column>
     
-        <kendo-grid-column field="clientName" title="Provider Name" [width]="160"> 
+        <kendo-grid-column field="providerName" title="Provider Name" [width]="160"> 
           <ng-template kendoGridCellTemplate let-dataItem>
             <button aria-label="Provider Name" kendoButton look="flat" class="card-link-button">
               {{ dataItem.clientName }}
             </button>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="refundWarrant" title="Tax ID" [width]="100"> </kendo-grid-column>
-        <kendo-grid-column field="refundAmount" title="Payment Method" [width]="100"> </kendo-grid-column>
-        <kendo-grid-column field="depositDate" title="Client Name" [width]="100"> </kendo-grid-column>
-        <kendo-grid-column field="depositMethod" title="Name on Primary Insurance Card" [width]="200"> </kendo-grid-column>
-        <kendo-grid-column field="indexCode" title="Member ID" [width]="100"> </kendo-grid-column>
-        <kendo-grid-column field="pca" title="Service Count" [width]="100"> </kendo-grid-column>
-        <kendo-grid-column field="grant" title="Total Cost" [width]="100"> </kendo-grid-column>
-        <kendo-grid-column field="vp" title="Total Due" [width]="100"> </kendo-grid-column>
-        <kendo-grid-column field="refundNote" title="Payment Status" [width]="150">  </kendo-grid-column>
+        <kendo-grid-column field="taxID" title="Tax ID" [width]="100"> </kendo-grid-column>
+        <kendo-grid-column field="paymentMethod" title="Payment Method" [width]="100"> </kendo-grid-column>
+        <kendo-grid-column field="clientName" title="Client Name" [width]="100"> </kendo-grid-column>
+        <kendo-grid-column field="nameOnPrimaryInsuranceCard" title="Name on Primary Insurance Card" [width]="200"> </kendo-grid-column>
+        <kendo-grid-column field="memberID" title="Member ID" [width]="100"> </kendo-grid-column>
+        <kendo-grid-column field="serviceCount" title="Service Count" [width]="100"> </kendo-grid-column>
+        <kendo-grid-column field="totalCost" title="Total Cost" [width]="100"> </kendo-grid-column>
+        <kendo-grid-column field="totalDue" title="Total Due" [width]="100"> </kendo-grid-column>
+        <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="150">  </kendo-grid-column>
          
         <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
@@ -145,13 +145,13 @@
           </section>
       </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
-    <span class="">0 claims(s) to be deleted</span>
+    <span *ngIf="isPrintAdviceLetterClicked" class="">{{selectedCount}} advice letter(s) to be previewed</span>
     <button (click)="goToBatchItems($event)">Batch Log items</button> 
-    <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button> 
+    <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAdviceLetterClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button> 
     <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
-    <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
+    <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isPrintAdviceLetterClicked" [disabled]="selectedCount === 0" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
     <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action"
-      buttonClass="k-split-button" [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isPrintAuthorizationClicked"
+      buttonClass="k-split-button" [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isPrintAdviceLetterClicked"
       [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
       <div class="btn-inner-block" > 
         Bulk
@@ -175,7 +175,11 @@
 
   <ng-template #PrintAuthorizationDialogTemplate>
     <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Authorization(s)</kendo-dialog-titlebar>
-  <cms-medical-claims-print-authorization></cms-medical-claims-print-authorization>
+  <cms-medical-claims-print-authorization
+  [printOption]="onlyPrintAdviceLetter"
+  [items]="selectedDataRows"
+  (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+  ></cms-medical-claims-print-authorization>
   </ng-template>
 
   <ng-template #unBatchClaimsDialogTemplate>
