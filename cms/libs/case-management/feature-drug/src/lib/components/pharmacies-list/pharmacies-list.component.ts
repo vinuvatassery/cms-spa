@@ -174,7 +174,7 @@ export class PharmaciesListComponent implements OnInit {
           this.pharmacyId = clientPharmacy.clientPharmacyId;
           this.vendorId = clientPharmacy.clientPharmacyId;
           if (
-            clientPharmacy.priorityCode === PriorityCode.Primary ||
+            clientPharmacy.priorityCode === PriorityCode.Primary    && clientPharmacy.activeFlag=== StatusFlag.Yes||
             this.pharmacies.length === 1
           ) {
             this.OpenSelectNewPrimaryPharmaciesClicked(

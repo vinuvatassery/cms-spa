@@ -49,6 +49,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   maxLengthTen:number=10;
   groupList!: any;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  isStartDateChange = true;
 
   /** Constructor **/
   constructor(
@@ -140,7 +141,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   }
   updateCurrentEligibility() {
     this.setUpdateEligibilityValidations();
-    if (this.eligibilityPeriodForm.valid) {
+    if (this.eligibilityPeriodForm.valid && this.isStartDateChange) {
       let editEligibilityData = this.currentEligibility;
       editEligibilityData.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusStartDate'].value, this.dateFormat));
       editEligibilityData.eligibilityEndDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusEndDate'].value, this.dateFormat));
@@ -180,7 +181,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
         },
       });
     }
-
+    this.isStartDateChange = true;
   }
   endDateValueChange(date: Date) {
     this.statusEndDateIsGreaterThanStartDate = false;
@@ -544,4 +545,29 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       }
     })
   }
+  onStartDateChange()
+  {
+    if(this.isEdit && this.currentEligibility.previousEligibilityEndDate)
+    {
+      let currentEligibilityStartDate =new Date(this.eligibilityPeriodForm.controls['statusStartDate'].value);
+      let previousEndDate =new Date(this.currentEligibility.previousEligibilityEndDate);
+      previousEndDate.setDate(previousEndDate.getDate() + 1);
+      let cuStartDate =this.intl.formatDate(currentEligibilityStartDate, this.dateFormat) ;
+      let preEndDate = this.intl.formatDate(previousEndDate,  this.dateFormat ) ;
+      if(cuStartDate !== preEndDate)
+      {
+        this.clientEligibilityFacade.showHideSnackBar(
+          SnackBarNotificationType.WARNING,
+          'Eligibility Start date cannot be changed.'
+        );
+        this.eligibilityPeriodForm.controls['statusStartDate'].setValue(new Date(this.currentEligibility.eligibilityStartDate));
+        this.isStartDateChange = false;
+
+      }
+      else{
+        this.isStartDateChange = true;
+      }
+    }
+  }
+  
 }

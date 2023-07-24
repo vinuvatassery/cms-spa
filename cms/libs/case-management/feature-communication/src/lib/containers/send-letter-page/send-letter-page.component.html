@@ -1,5 +1,5 @@
 <section class="app-l-mainTittle" kendoTooltip>
-  <h2>{{title}}</h2>
+  <h2>{{title}}  {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'Email' : 'Letter'}}</h2>
   <p class="mt-1 mb-3">
     If there is an issue with this letter template, please contact your
     Administrator. Make edits as needed, then click “Send to Print” once the
@@ -20,7 +20,7 @@
         (click)="onOpenPrintPreviewClicked()"
         aria-label="preview letter"
       >
-        Preview Letter
+        Preview  {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'EMAIL' : 'LETTER'}}
       </button>
       <button
         kendoButton
@@ -29,7 +29,7 @@
         (click)="onOpenPrintClicked()"
         aria-label="print letter"
       >
-        Print
+       {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'SEND EMAIL' : 'SEND TO PRINT'}}
       </button>
     </div>
   </div>
@@ -61,7 +61,7 @@
           (click)="onOpenPrintClicked()"
           aria-label="send to print"
         >
-        SEND EMAIL
+        {{paperlessFlag === 'Y' ? 'SEND EMAIL' : 'SEND TO PRINT'}}
         </button>
       </div>
     </div>
@@ -75,7 +75,7 @@
   class="app-c-modal app-c-modal-np"
   [class.app-c-modal-md] = "isDisenrollmentPage"
   [class.app-c-modal-sm] = "!isDisenrollmentPage"
-  title= {{printModelTitle}}
+  title= {{printModelTitle}} 
 >
 <section class="k-dialog-body">
   <p *ngIf="isDisenrollmentPage" class="text-muted mb-2">
@@ -95,7 +95,7 @@
           Cancel
         </button>
         <button kendoButton [primary]="true" aria-label="print letter">
-          Print
+          {{paperlessFlag === 'Y' ? 'EMAIL' : 'PRINT'}}
         </button>
       </div>
     </div>
