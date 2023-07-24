@@ -76,39 +76,6 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
     },
   ];
 
-  bathcLogGridDataLst =[
-    {
-      item: 1,
-      invoiceID:1,
-      providerName: 'Very Nice Provider',
-      taxID:'1234', 
-      paymentMethod:'ACH', 
-      clientName:'Client 1', 
-      nameOnPrimaryInsuranceCard:'Test User', 
-      memberID:'12', 
-      serviceCount:'1', 
-      totalCost:'1000', 
-      totalDue:'500', 
-      paymentStatus:'InProgress', 
-      by: 'by',
-    },
-    {
-      item: 2,
-      invoiceID:2,
-      providerName: 'Test Provider',
-      taxID:'4321', 
-      paymentMethod:'Check', 
-      clientName:'Client Client', 
-      nameOnPrimaryInsuranceCard:'John Deo', 
-      memberID:'21', 
-      serviceCount:'2', 
-      totalCost:'2000', 
-      totalDue:'800', 
-      paymentStatus:'InProgress', 
-      by: 'by',
-    }
-  ];
-
   public batchLogGridActions = [
     {
       buttonType: 'btn-h-primary',
