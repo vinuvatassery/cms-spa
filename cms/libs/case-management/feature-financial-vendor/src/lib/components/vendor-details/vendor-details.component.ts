@@ -245,49 +245,8 @@ export class VendorDetailsComponent implements OnInit {
 
   mappVendorProfileData() {
     let formValues = this.medicalProviderForm.value;
-    this.vendorContactList = [];
-    if (formValues.newAddContactForm.length > 0) {
-      formValues.newAddContactForm.forEach((contact: any) => {
-        if (contact.contactName != '' || contact.description != '' || contact.phoneNumber != '' || contact.email != '') {
-          let vendorContact = {
-            contactName: contact.contactName,
-            contactDesc: contact.description,
-            phoneNbr: contact.phoneNumber,
-            emailAddress: contact.email,
-            emailAddressTypeCode: AddressType.Email,
-            faxNbr: contact.fax,
-            isPreferedContact : contact.isPreferedContact ? 'Y' : 'N'
-          }
-          this.vendorContactList.push(vendorContact);
-        }
-      })
-    }
-    let vendorProfileData = {
-      vendorId: this.selectedClinicVendorId,
-      vendorName: formValues.providerName,
-      firstName: formValues.firstName,
-      lastName: formValues.lastName,
-      vendorTypeCode: this.providerType,
-      tin: formValues.tinNumber,
-      mailCode: formValues.mailCode,
-      addressTypeCode: AddressType.Mailing,
-      address1: formValues.addressLine1,
-      address2: formValues.addressLine2,
-      cityCode: formValues.city,
-      stateCode: formValues.state,
-      zip: formValues.zip,
-      nameOnCheck: formValues.nameOnCheck,
-      nameOnEnvelope: formValues.nameOnEnvolop,
-      paymentMethodCode: formValues.paymentMethod,
-      specialHandling: formValues.specialHandling,
-      phoneTypeCode: AddressType.Mailing,
-      vendorContacts: this.vendorContactList,
-      AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,
-      AcceptsCombinedPaymentsFlag: (formValues.isAcceptCombinedPayment != null && formValues.isAcceptCombinedPayment != '') ? formValues.isAcceptCombinedPayment : null,
-      PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? Number(formValues.paymentRunDate) : null,
-      PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes,
-      emailAddressTypeCode: AddressType.Mailing
-    }
+    this.mapAddressContact(formValues);
+    let vendorProfileData = this.createVendorProfileData(formValues)
     return vendorProfileData;
   }
 
@@ -357,21 +316,23 @@ export class VendorDetailsComponent implements OnInit {
       if (this.medicalProviderForm.controls['isPreferedPharmacy']?.value != null && this.providerType == this.vendorTypes.Pharmacy) {
         vendorValues['preferredFlag'] = this.medicalProviderForm.controls['isPreferedPharmacy'].value ? 'Y' : 'N';
       }
-      this.financialVendorDataService.updateVendorDetails(vendorValues).subscribe((resp: any) => {
-        if (resp) {
-          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, this.profileInfoTitle.split(' ')[0] + ' information updated.');
-          this.closeModalEventClicked.emit(true);
-        }
-        else {
-          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.WARNING, this.profileInfoTitle.split(' ')[0] + ' information not updated.');
-        }
-        this.financialVendorFacade.hideLoader();
-      },
-        (error: any) => {
+      this.financialVendorDataService.updateVendorDetails(vendorValues).subscribe({
+        next: (resp) => {
+          if (resp) {
+            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, this.profileInfoTitle.split(' ')[0] + ' information updated.');
+            this.closeModalEventClicked.emit(true);
+          }
+          else {
+            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.WARNING, this.profileInfoTitle.split(' ')[0] + ' information not updated.');
+          }
           this.financialVendorFacade.hideLoader();
-          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error);
-        });
-    }
+       },
+         error: (err) => {
+          this.financialVendorFacade.hideLoader();
+          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);  
+         },
+       });
+      }
   }
 
   validateEditForm() {
@@ -392,5 +353,55 @@ export class VendorDetailsComponent implements OnInit {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
+  }
+
+  mapAddressContact(formValues :any){
+    this.vendorContactList = [];
+    if (formValues.newAddContactForm.length > 0) {
+      formValues.newAddContactForm.forEach((contact: any) => {
+        if (contact.contactName != '' || contact.description != '' || contact.phoneNumber != '' || contact.email != '') {
+          let vendorContact = {
+            contactName: contact.contactName,
+            contactDesc: contact.description,
+            phoneNbr: contact.phoneNumber,
+            emailAddress: contact.email,
+            emailAddressTypeCode: AddressType.Email,
+            faxNbr: contact.fax,
+            isPreferedContact : contact.isPreferedContact ? 'Y' : 'N'
+          }
+          this.vendorContactList.push(vendorContact);
+        }
+      })
+    }
+  }
+
+  createVendorProfileData(formValues :any){
+    let vendorProfileData = {
+      vendorId: this.selectedClinicVendorId,
+      vendorName: formValues.providerName,
+      firstName: formValues.firstName,
+      lastName: formValues.lastName,
+      vendorTypeCode: this.providerType,
+      tin: formValues.tinNumber,
+      mailCode: formValues.mailCode,
+      addressTypeCode: AddressType.Mailing,
+      address1: formValues.addressLine1,
+      address2: formValues.addressLine2,
+      cityCode: formValues.city,
+      stateCode: formValues.state,
+      zip: formValues.zip,
+      nameOnCheck: formValues.nameOnCheck,
+      nameOnEnvelope: formValues.nameOnEnvolop,
+      paymentMethodCode: formValues.paymentMethod,
+      specialHandling: formValues.specialHandling,
+      phoneTypeCode: AddressType.Mailing,
+      vendorContacts: this.vendorContactList,
+      AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,
+      AcceptsCombinedPaymentsFlag: (formValues.isAcceptCombinedPayment != null && formValues.isAcceptCombinedPayment != '') ? formValues.isAcceptCombinedPayment : null,
+      PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? Number(formValues.paymentRunDate) : null,
+      PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes,
+      emailAddressTypeCode: AddressType.Mailing
+    }
+    return vendorProfileData;
   }
 }
