@@ -27,7 +27,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy{
   isOpenedPrint = false;
   isOpenedPrintPreview = false;
   isCERForm = false;
-  title= "Send Approval Letter"
+  title= "Send Approval"
   printModelTitle = "Print approval letter?";
   sendType=""
   printModelText = "";
