@@ -256,6 +256,20 @@
       max-height: inherit;
       padding: 0px;
     }
+
+    &.no-overlay{
+        .k-overlay{
+          display: none;
+        }
+    }
+
+    &.thirty-height{
+      .k-dialog { 
+        max-height: 30vh;
+        min-height: 30vh;
+        height: 100%;
+      }
+    }
   }
 
   

@@ -85,37 +85,19 @@
                               [data]="batchItemsGridLists$ | async">
                               <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
                                     [width]="40"></kendo-grid-checkbox-column>
-                              <kendo-grid-column field="vendorName" title="Vendor Name" [width]="160">
-                                    <ng-template kendoGridCellTemplate let-dataItem>
-                                          <button aria-label="Vendor Name" kendoButton look="flat"
-                                                class="card-link-button">
-                                                {{ dataItem.vendorName }}
-                                          </button>
-                                    </ng-template>
-                              </kendo-grid-column>
-                              <kendo-grid-column field="type" title="Type" [width]="160"> </kendo-grid-column>
-
-                              <kendo-grid-column field="clientName" title="Client Name" [width]="160">
-                              </kendo-grid-column>
-                              <kendo-grid-column field="refundWarrant" title="Refund Warrant #" [width]="100">
-                              </kendo-grid-column>
-                              <kendo-grid-column field="refundAmount" title="Refund Amount" [width]="100">
-                              </kendo-grid-column>
-                              <kendo-grid-column field="depositDate" title="Deposit Date" [width]="100">
-                              </kendo-grid-column>
-                              <kendo-grid-column field="depositMethod" title="Deposit Method" [width]="120">
-                              </kendo-grid-column>
-                              <kendo-grid-column field="indexCode" title="Index Code" [width]="100">
-                              </kendo-grid-column>
-                              <kendo-grid-column field="pca" title="PCA" [width]="100"> </kendo-grid-column>
-                              <kendo-grid-column field="grant" title="Grant #" [width]="100"> </kendo-grid-column>
-                              <kendo-grid-column field="vp" title="VP" [width]="100"> </kendo-grid-column>
-                              <kendo-grid-column field="refundNote" title="Refund Note" [width]="150"> <ng-template
-                                          kendoGridCellTemplate let-dataItem>
-                                          <span class="grid-line-clip"> {{ dataItem.refundNote }}</span>
-                                    </ng-template> </kendo-grid-column>
-                              <kendo-grid-column field="entryDate" title="Entry Date" [width]="100">
-                              </kendo-grid-column>
+                                    <kendo-grid-column field="batch" title="Client Name" [width]="160"> </kendo-grid-column>
+                                    <kendo-grid-column field="ofProviders" title="Name on Primary Insurance Card" [width]="200"> </kendo-grid-column> 
+                                    <kendo-grid-column field="ofClaims" title="Member ID" [width]="160"> </kendo-grid-column>
+                                    <kendo-grid-column field="pmtsRequested" title="Service Date" [width]="140"> </kendo-grid-column>
+                                    <kendo-grid-column field="pmtsReconciled" title="Invoice ID" [width]="140"> </kendo-grid-column>
+                                    <kendo-grid-column field="totalAmountDue" title="CPT Code" [width]="140"> </kendo-grid-column>
+                                    <kendo-grid-column field="totalAmountReconciled" title="Medical Service" [width]="160"> </kendo-grid-column>  
+                                    <kendo-grid-column field="totalAmountReconciled" title="Service Cost" [width]="140"> </kendo-grid-column>  
+                                    <kendo-grid-column field="totalAmountReconciled" title="Client Co-Pay" [width]="160"> </kendo-grid-column>  
+                                    <kendo-grid-column field="totalAmountReconciled" title="Client Annual Total" [width]="180"> </kendo-grid-column>  
+                                    <kendo-grid-column field="totalAmountReconciled" title="Client Balance" [width]="160"> </kendo-grid-column>  
+                                    <kendo-grid-column field="totalAmountReconciled" title="Payment Status" [width]="160"> </kendo-grid-column>  
+                                    <kendo-grid-column field="totalAmountReconciled" title="Entry Date" [width]="120"> </kendo-grid-column>  
                               <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true">
                                     <ng-template kendoGridCellTemplate let-dataItem>
                                           <button kendoButton [primary]="true" class="avatar-sm-btn c-default"

@@ -21,3 +21,6 @@ export * from './lib/containers/medical-claims-batch-items-page/medical-claims-b
 export * from './lib/containers/medical-claims-reconcile-page/medical-claims-reconcile-page.component';
 export * from './lib/containers/medical-claims-batch-router-page/medical-claims-router-batch-page.component';
 export * from './lib/containers/medical-claims-payments-router-page/medical-claims-payments-router-page.component';
+
+ 
+export * from './lib/components/medical-claims-batches-reconcile-payments-breakout/medical-claims-batches-reconcile-payments-breakout.component';

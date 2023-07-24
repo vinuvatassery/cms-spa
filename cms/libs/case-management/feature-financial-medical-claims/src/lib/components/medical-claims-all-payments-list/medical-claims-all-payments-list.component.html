@@ -42,44 +42,40 @@
     [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true" [data]="medicalClaimsAllPaymentsGridLists$ | async">
     <kendo-grid-checkbox-column  [sticky]="true"  [columnMenu]="false" [showSelectAll]="true"  [width]="40"></kendo-grid-checkbox-column>
       
-    <kendo-grid-column field="batch" title="Batch #" [width]="160">
+    <kendo-grid-column field="batch" title="Item #" [width]="160">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button aria-label="batch" kendoButton look="flat" class="card-link-button" >
             {{ dataItem.batch }}
           </button>
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column field="vendor" title="Vendor" [width]="160">     
-        <ng-template kendoGridCellTemplate let-dataItem>
-            <button aria-label="vendor" kendoButton look="flat" class="card-link-button" >
-              {{ dataItem.vendor }}
-            </button>
-          </ng-template>
+      <kendo-grid-column field="vendor" title="Batch #" [width]="160">     
+       
      </kendo-grid-column>
 
-      <kendo-grid-column field="type" title="Type" [width]="160">    </kendo-grid-column> 
-      <kendo-grid-column field="primaryInsurance" title="Name on Primary Insurance Card" [width]="160">   </kendo-grid-column>
-
-      <kendo-grid-column field="clientName" title="Client Name" [width]="160">  <ng-template kendoGridCellTemplate let-dataItem>
-        <button aria-label="Client Name" kendoButton look="flat" class="card-link-button" >
-          {{ dataItem.clientName }}
+ 
+    
+      <kendo-grid-column field="memberID" title="Invoice ID" [width]="100">   </kendo-grid-column>
+      <kendo-grid-column field="refundWarrant" title="Provider Name" [width]="100">  <ng-template kendoGridCellTemplate let-dataItem>
+        <button aria-label="vendor" kendoButton look="flat" class="card-link-button" >
+          {{ dataItem.refundWarrant }}
         </button>
       </ng-template>  </kendo-grid-column>
-      <kendo-grid-column field="memberID" title="Member ID" [width]="100">   </kendo-grid-column>
-      <kendo-grid-column field="refundWarrant" title="Refund Warrant #" [width]="100">   </kendo-grid-column>
-      <kendo-grid-column field="refundAmount" title="Refund Amount" [width]="100">   </kendo-grid-column>
-      <kendo-grid-column field="depositDate" title="Deposit Date" [width]="120">   </kendo-grid-column>
-      <kendo-grid-column field="depositMethod" title="Deposit Method" [width]="120">   </kendo-grid-column>
-      <kendo-grid-column field="originalWarranty" title="Original Warranty #" [width]="120">   </kendo-grid-column>
-      <kendo-grid-column field="originalAmount" title="Original Amount" [width]="120">   </kendo-grid-column>
-      <kendo-grid-column field="indexCode" title="Index Code" [width]="100">   </kendo-grid-column>
-      <kendo-grid-column field="pca" title="PCA" [width]="100">   </kendo-grid-column>
+      <kendo-grid-column field="refundAmount" title="Tax ID" [width]="100">   </kendo-grid-column>
+      <kendo-grid-column field="depositDate" title="Payment Method" [width]="160">   </kendo-grid-column>
+      <kendo-grid-column field="depositMethod" title="Client Name" [width]="120">  
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button aria-label="vendor" kendoButton look="flat" class="card-link-button" >
+            {{ dataItem.depositMethod }}
+          </button>
+        </ng-template> </kendo-grid-column>
+      <kendo-grid-column field="originalWarranty" title="Name on Primary Insurance Card" [width]="200">   </kendo-grid-column>
+      <kendo-grid-column field="originalAmount" title="Member ID" [width]="120">   </kendo-grid-column>
+      <kendo-grid-column field="indexCode" title="Total Cost" [width]="100">   </kendo-grid-column>
+      <kendo-grid-column field="pca" title="Total Due" [width]="100">   </kendo-grid-column>
       <kendo-grid-column field="grant" title="Grant #" [width]="100">   </kendo-grid-column>
-      <kendo-grid-column field="vp" title="VP" [width]="100">   </kendo-grid-column>
-      <kendo-grid-column field="refundNote" title="Refund Note" [width]="150">   <ng-template kendoGridCellTemplate let-dataItem> 
-        <span class="grid-line-clip"> {{ dataItem.refundNote }}</span>
-      </ng-template>  </kendo-grid-column>
-      <kendo-grid-column field="entryDate" title="Entry Date" [width]="100">   </kendo-grid-column>
+      <kendo-grid-column field="vp" title="Payment Status" [width]="100">   </kendo-grid-column>
+  
       <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
