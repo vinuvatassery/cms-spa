@@ -6,7 +6,7 @@
 }
 .sidePanel-event-log {
   .sidePanel_body {
-    max-height: 360px;
+    max-height: calc(100vh - 32vh);
     overflow: auto;
   }
 }

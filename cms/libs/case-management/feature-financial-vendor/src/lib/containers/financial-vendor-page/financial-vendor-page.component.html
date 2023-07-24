@@ -13,8 +13,8 @@
       Financial Management
     </h1>
   </section>
-  <section class="app-l-client-wrapper ">
-    <div class="app-l-client-left">
+  <section class="app-l-client-wrapper" [ngClass]="{'due-notification-on': reminderTabOn}">
+    <div class="app-l-client-left"  >
       <section class="app-l-wrapper">
 
         <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
@@ -99,7 +99,8 @@
     </div>
     <!-- Right Reminders-->
     <div class="app-l-client-right todo-list">
-      <productivity-tools-reminder-list class="reminder-list-case-wrap"></productivity-tools-reminder-list> 
+      <productivity-tools-reminder-list class="reminder-list-case-wrap"
+      (ReminderEventClicked)="onReminderDoneClicked($event)"></productivity-tools-reminder-list> 
     </div>
   </section>
 </div>

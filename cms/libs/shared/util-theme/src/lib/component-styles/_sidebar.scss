@@ -259,7 +259,7 @@ cms-sidenav {
     >.secondary_submenu {
       display: none;
       position: fixed;
-      left: $app-left_menu-width;
+      left: $app-left_menu-width - 6;
       top: $header-height;
       background: $white;
       height: 100%;

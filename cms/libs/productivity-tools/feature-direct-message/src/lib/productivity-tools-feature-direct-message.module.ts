@@ -8,6 +8,8 @@ import { ProductivityToolsFeatureDirectMessageRoutingModule } from './productivi
 /** Components **/
 import { DirectMessagePageComponent } from './containers/direct-message-page/direct-message-page.component';
 import { DirectMessageComponent } from './components/direct-message/direct-message.component';
+import { DirectMessageListComponent } from './components/direct-message-list/direct-message-list.component';
+import { SharedUiCommonModule } from '@cms/shared/ui-common';
 
 @NgModule({
   imports: [
@@ -15,8 +17,17 @@ import { DirectMessageComponent } from './components/direct-message/direct-messa
     ProductivityToolsDomainModule,
     ProductivityToolsFeatureDirectMessageRoutingModule,
     SharedUiTpaModule,
+    SharedUiCommonModule
   ],
-  declarations: [DirectMessagePageComponent, DirectMessageComponent],
-  exports: [DirectMessagePageComponent, DirectMessageComponent],
+  declarations: [
+    DirectMessagePageComponent,
+    DirectMessageComponent,
+    DirectMessageListComponent,
+  ],
+  exports: [
+    DirectMessagePageComponent,
+    DirectMessageComponent,
+    DirectMessageListComponent,
+  ],
 })
 export class ProductivityToolsFeatureDirectMessageModule {}

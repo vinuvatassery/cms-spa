@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FinancialVendorFacade, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 
 
@@ -20,6 +20,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   profileInfoTitle = "info";
   addressGridView = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  selectedVendorInfo$ = this.financialVendorFacade.selectedVendor$;
   vendorProfile$ = this.financialVendorFacade.vendorProfile$
   vendorProfileSpecialHandling$ = this.financialVendorFacade.vendorProfileSpecialHandling$
   constructor(private activeRoute: ActivatedRoute, private financialVendorFacade : FinancialVendorFacade) {}
@@ -32,15 +33,20 @@ export class FinancialVendorProfileComponent implements OnInit {
     return FinancialVendorProviderTabCode;
   }
 
+  public get vendorTypes(): typeof FinancialVendorTypeCode {
+    return FinancialVendorTypeCode;
+  }
+
   /** Private properties **/
   loadQueryParams() {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
     this.providerId = this.activeRoute.snapshot.queryParams['prv_id'];
     this.tabCode = this.activeRoute.snapshot.queryParams['tab_code'];
     this.vendorTypeCode = this.activeRoute.snapshot.queryParams['vendor_type_code'];
+    this.loadVendorInfo();
     if(this.vendorId && this.tabCode)
     {
-    this.loadFinancialVendorProfile(this.vendorId)
+      this.loadFinancialVendorProfile(this.vendorId)
     }
 
     switch (this.tabCode) {
@@ -48,7 +54,7 @@ export class FinancialVendorProfileComponent implements OnInit {
         this.profileInfoTitle = 'Manufacture Info';
         break;
       case FinancialVendorProviderTabCode.InsuranceVendors:
-        this.profileInfoTitle = 'Vendor Info';
+        this.profileInfoTitle = 'Insurance Vendor Info';
         break;
       case FinancialVendorProviderTabCode.MedicalProvider:
       case FinancialVendorProviderTabCode.DentalProvider:
@@ -60,6 +66,9 @@ export class FinancialVendorProfileComponent implements OnInit {
     }
   }
 
+  loadVendorInfo() {
+    this.financialVendorFacade.getVendorDetails(this.vendorId);
+  }
 
   handleShowEventLogClicked() {
     this.isShownEventLog = !this.isShownEventLog;
@@ -71,5 +80,12 @@ export class FinancialVendorProfileComponent implements OnInit {
   loadFinancialVendorProfile(vendorId : string)
   {
     this.financialVendorFacade.getVendorProfile(vendorId,this.tabCode)
+  }
+
+  onVendorEditSuccess(status: boolean) {
+    if (status) {
+      this.loadVendorInfo();
+      this.loadFinancialVendorProfile(this.vendorId);
+    }
   }
 }

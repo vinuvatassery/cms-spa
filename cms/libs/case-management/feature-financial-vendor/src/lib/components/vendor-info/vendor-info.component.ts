@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FinancialVendorFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { FormBuilder, FormGroup } from '@angular/forms';
+
 @Component({
   selector: 'cms-vendor-info',
   templateUrl: './vendor-info.component.html',
@@ -10,7 +11,12 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class VendorInfoComponent implements OnInit {
 
-  selectedVendorInfo$ = this.financialVendorFacade.selectedVendor$;
+  @Input() profileInfoTitle!: string;
+  @Input() selectedVendorInfo$: any;
+  @Input() vendorTypes!: any;
+  @Input() vendorProfile$: any;
+  @Output() onVendorEditSuccessStatus = new EventEmitter<boolean>();
+  medicalProviderForm: FormGroup;
   SpecialHandlingLength = 100;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   vendorDetail!: any;
@@ -18,6 +24,9 @@ export class VendorInfoComponent implements OnInit {
   openEditDailog: boolean = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   addressGridView = [];
+  providerType!: string;
+  editTitlePrefix: string = "";
+  tabCode!: string;
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -45,27 +54,44 @@ export class VendorInfoComponent implements OnInit {
     },
   ];
 
-  constructor(private financialVendorFacade: FinancialVendorFacade,
+  constructor(private readonly formBuilder: FormBuilder,
     private activeRoute: ActivatedRoute) {
+    this.medicalProviderForm = this.formBuilder.group({});
   }
 
   ngOnInit() {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
-    this.loadVendorInfo();
+    this.providerType = this.activeRoute.snapshot.queryParams['vendor_type_code'];
+    this.tabCode = this.activeRoute.snapshot.queryParams['tab_code'];
+    if (this.providerType == this.vendorTypes.DentalProviders) {
+      this.editTitlePrefix = 'Dental ';
+    }
+    else if (this.providerType == this.vendorTypes.MedicalProviders) {
+      this.editTitlePrefix = 'Medical ';
+    }
   }
 
-  loadVendorInfo() {
-    this.financialVendorFacade.getVendorDetails(this.vendorId);
-    this.financialVendorFacade.selectedVendor$.subscribe((details: any) => {
-      this.vendorDetail = details;
+  openEditInfoDialog() {
+    this.buildVendorForm();
+    this.openEditDailog = true;
+  }
+
+  buildVendorForm() {
+    this.medicalProviderForm.reset();
+    this.medicalProviderForm = this.formBuilder.group({
+      providerName: [''],
+      firstName: [''],
+      lastName: [''],
+      tinNumber: [''],
+      npiNbr: [],
+      isPreferedPharmacy: ['']
     });
   }
 
-
   closeEditModal(isEditSuccessfull: boolean) {
     this.openEditDailog = false;
-    if(isEditSuccessfull){
-      this.loadVendorInfo();
+    if (isEditSuccessfull) {
+      this.onVendorEditSuccessStatus.emit(true);
     }
   }
 
