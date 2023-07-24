@@ -130,6 +130,7 @@
       [data]="caseStatusTypes"
       textField="lovDesc"
       valueField="lovDesc"
+      [value]="statusValue"
       (valueChange)="dropdownFilterChange('caseStatus',$event, filterService)"
     >
     </kendo-dropdownlist>
@@ -146,7 +147,8 @@
         [data]="groupData"
         textField="lovDesc"
         valueField="lovDesc"
-        (valueChange)="dropdownFilterChange('group',$event, filterService)"
+        [value]="groupValue"
+        (valueChange)="dropdownFilterChange('group', $event, filterService)"
       >
       </kendo-dropdownlist>
    </ng-template>
