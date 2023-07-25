@@ -27,6 +27,9 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
   tAreaCessationCharactersCount!: number;
   tAreaCessationCounter!: string;
   tAreaCessationMaxLength = 300;
+  @Input() vendorId:any;
+  @Input() batchId:any ;
+  @Input() paymentPanelData:any;
   @Output() closePaymentDetailFormClickedEvent = new EventEmitter();
 
   constructor(private formBuilder: FormBuilder, public intl: IntlService){
@@ -35,6 +38,7 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
  
   ngOnInit():void{
     this.buildPremiumPaymentForm();
+    this.setPaymentPanelFormData();
   }
   closePaymentDetailClicked() {
     this.closePaymentDetailFormClickedEvent.emit(true);
@@ -43,6 +47,9 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
     this.endDateMin = this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value;
   }
 
+  setPaymentPanelFormData(){
+
+  }
   dateValidate(event: Event, type: any) {
     const todayDate = new Date();
 

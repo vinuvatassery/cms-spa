@@ -197,7 +197,7 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
   }
 
 
-  onPaymentDetailFormClicked(  template: TemplateRef<unknown>): void {   
+  onPaymentDetailFormClicked(template: TemplateRef<unknown>): void {   
     this.paymentDetailsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-sm',
