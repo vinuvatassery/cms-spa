@@ -10,7 +10,7 @@ export class MedicalClaimsPrintAuthorizationComponent {
   public height = "100%";
   public formUiStyle: UIFormStyle = new UIFormStyle();
   finalPrintList!: any[];
-  isChecked: boolean = true;
+  printCount: number = 0;
 
     /** Input properties **/
   @Input() items!: any[];
@@ -19,16 +19,39 @@ export class MedicalClaimsPrintAuthorizationComponent {
   /** Output properties  **/
   @Output() onClosePrintAdviceLetterEvent = new EventEmitter<any>();
 
+  // printLetterCount: number = this.items.length;
+  ngOnInit(): void {
+    this.finalPrintList = this.items;
+    this.getPrintLetterCount();
+  }
+
   onClosePrintAdviceLetterClicked() {
     this.onClosePrintAdviceLetterEvent.emit('Close');
   }
 
-  toggleCheckbox(selectedKeys: any): void {
-    this.finalPrintList = this.items;
-
+  onCheckboxChange(event: any, item: any): void {
+    item.isChecked = event.target.checked;
+    if(this.printOption){
+      if(item.isChecked)
+      {
+      this.finalPrintList.push(item);
+      }
+      else{
+        this.finalPrintList = this.finalPrintList.filter(element => element.item !== item.item);
+      }
+    }else{
+      if(item.isChecked)
+      {
+      this.finalPrintList.push(item);
+      }
+      else{
+        this.finalPrintList = this.finalPrintList.filter(element => element.warrantNumber !== item.warrantNumber);
+      }
+    }
+    this.printCount = this.finalPrintList.length;
   }
 
-  onCheckboxChange(event: any): void {
-    this.isChecked = event.target.checked;
+  getPrintLetterCount(){
+    this.printCount = this.items.length;
   }
 }
