@@ -94,13 +94,13 @@ export class PaymentAddressDetailsComponent implements OnInit {
       this.paymentAddressForm.addControl('acceptsReportsFlag', new FormControl('', [Validators.required]))
       this.paymentAddressForm.addControl('acceptsCombinedPaymentsFlag', new FormControl('', [Validators.required]))
     }
-    // if(this.tabCode === FinancialVendorProviderTabCode.Manufacturers)
-    // {
+    if(this.tabCode === FinancialVendorProviderTabCode.Manufacturers)
+    {
       this.paymentAddressForm.controls['paymentMethodCode'].removeValidators([Validators.required]);
       this.paymentAddressForm.controls['paymentRunDateMonthly'].removeValidators([Validators.required]);
       this.paymentAddressForm.controls['paymentRunDateMonthly'].setValue(null);
 
-    //}
+    }
   }
   private setAddressTypeCode() {
     switch (this.tabCode) {
