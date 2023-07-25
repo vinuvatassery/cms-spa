@@ -210,7 +210,7 @@
         </kendo-grid-string-filter-menu>
          </ng-template> 
     </kendo-grid-column>
-    <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="160"  [sticky]="(selectedTab == tabOptions.MY_CASES)"
+    <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="160" 
       [format]="{ date: 'MM-dd-yyyy' }" filter="date">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.eligibilityEndDate | date:'MM/dd/yyyy'}}
