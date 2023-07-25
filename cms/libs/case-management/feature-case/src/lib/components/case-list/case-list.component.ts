@@ -90,7 +90,7 @@ public state!: any;
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
   groupLov$ = this.lovFacade.groupLov$;
   caseStatusType$ = this.lovFacade.caseStatusType$;
-  selectedColumn!: any;
+    selectedColumn!: any;
   filter : any = "";
   afterDate: any;
   beforeDate: any;
@@ -163,6 +163,7 @@ public state!: any;
  filterChange(filter: CompositeFilterDescriptor): void {
     this.gridFilter = filter;
   }
+
  groupFilterChange(value: any, filterService: FilterService): void {
     filterService.filter({
         filters: [{
@@ -220,6 +221,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   }
 
   private loadProfileCasesList(): void {
+    debugger
     const gridDataRefinerValue =
     {
       skipCount: this.state.skip ?? 0,

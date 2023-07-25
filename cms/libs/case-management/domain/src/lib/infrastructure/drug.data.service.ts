@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { ClientPharmacy, Pharmacy } from '../entities/client-pharmacy';
+import { ClientPharmacy, DrugPurchased, Pharmacy } from '../entities/client-pharmacy';
 @Injectable({ providedIn: 'root' })
 export class DrugDataService {
   /** Constructor**/
@@ -236,13 +236,37 @@ export class DrugDataService {
   loadDrugPharmacyList(clientId: number,isShowHistoricalData:boolean) {
     return this.http.get<ClientPharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs/${clientId}/pharmacies/${isShowHistoricalData}`);
   }
-  getDrugPurchasedList(clientId:number, skip: any, pageSize: any, sortBy: any, sortType: any) {
-    return this.http.get<Pharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/drugpurchased?SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}`);
+  getDrugPurchasedList(clientId:number, skip: any, pageSize: any, sortBy: any, sortType: any, filter :any ) {
+    debugger
+    return this.http.get<Pharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/drugpurchased?SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}&filter=${filter}`);
   }
   removeDrugPharmacy(clientId: number, clientPharmacyId: string) {
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drug/clients/${clientId}/pharmacies/${clientPharmacyId}`);
   }
   activeDrugPharmacy(clientPharmacyId: string, pharmacy: any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs/pharmacies/${clientPharmacyId}`, pharmacy);
+  }
+  loadDrugPurchasedlist(drugpurchasedParam:any) {
+    debugger
+    const DrugPurchasedPagedResultRequest=
+      {
+        CaseScreenType : drugpurchasedParam.caseScreenType,
+        SortType : drugpurchasedParam.sortType,
+        Sorting : drugpurchasedParam.sort,
+        SkipCount : drugpurchasedParam.skipcount,
+        MaxResultCount : drugpurchasedParam.maxResultCount,
+        columnName: drugpurchasedParam.columnName,
+        Filter: drugpurchasedParam.filter,
+        TotalCount: drugpurchasedParam.totalClientsCount,
+        AfterDate: drugpurchasedParam.afterDate,
+        BeforeDate: drugpurchasedParam.beforeDate
+      }
+      return this.http.post<DrugPurchased[]>(
+
+        `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/case-management/clients/cases`,
+        DrugPurchasedPagedResultRequest
+      );
+   
   }
 }

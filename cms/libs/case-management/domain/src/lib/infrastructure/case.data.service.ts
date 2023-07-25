@@ -24,6 +24,7 @@ export class CaseDataService {
 
   /** Public methods **/
   loadCases(caseParams:any) {
+    debugger
     const ClientCasesPagedResultRequest=
       {
         CaseScreenType : caseParams.caseScreenType,

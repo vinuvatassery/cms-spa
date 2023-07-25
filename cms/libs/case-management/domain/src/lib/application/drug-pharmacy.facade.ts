@@ -2,12 +2,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 /** External libraries **/
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
+import {Subject } from 'rxjs';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Data services **/
 import { DrugDataService } from '../infrastructure/drug.data.service';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ClientPharmacy, Pharmacy} from '../entities/client-pharmacy';
+import { GridColumnFilter} from '../enums/grid-column-filter.enum';
 
 @Injectable({ providedIn: 'root' })
 export class DrugPharmacyFacade {
@@ -45,6 +47,7 @@ export class DrugPharmacyFacade {
   private searchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
   public durgPharmacyPrioritySubject = new BehaviorSubject<string>("");
   private deActivePharmacySubject = new BehaviorSubject<boolean>(false);
+  private drugSubject = new Subject<any>();
   /** Public properties **/
   pharmacies$ = this.pharmaciesSubject.asObservable();
   selectedPharmacy$ = this.selectedPharmacySubject.asObservable();
@@ -65,6 +68,7 @@ export class DrugPharmacyFacade {
   public newAddedPharmacyObs = this.newAddedPharmacySubject.asObservable();
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  drug$ = this.drugSubject.asObservable();
   public sortValue = ' '
   public sortType = 'asc'
   public sort: SortDescriptor[] = [{
@@ -323,9 +327,9 @@ export class DrugPharmacyFacade {
   }
 
  
-  getDrugPurchasedList(clientId: number, skip: any, pageSize: any, sortBy: any, sortType: any) {
+  getDrugPurchasedList(clientId: number, skip: any, pageSize: any, sortBy: any, sortType: any, filter: any) {
     this.loaderService.show();
-    return this.drugDataService.getDrugPurchasedList(clientId,skip,pageSize, sortBy, sortType).subscribe({
+    return this.drugDataService.getDrugPurchasedList(clientId,skip,pageSize, sortBy, sortType, filter).subscribe({
       next: (response:any) => {
         const gridView: any = {
           data: response.items,
@@ -384,4 +388,48 @@ export class DrugPharmacyFacade {
     })
     
   }
+  loadDrugPurchasedlist(drugpurchasedParam:any): void {
+    this.searchLoaderVisibilitySubject.next(true);
+    let isGridFilter = this.isGridFilter(drugpurchasedParam.filter);
+    if(!isGridFilter && drugpurchasedParam.columnName !== GridColumnFilter.AllColumns){
+      let _filter=
+        [{
+            filters:[{
+              field: drugpurchasedParam.columnName,
+              value: drugpurchasedParam.filter,
+              operator: "contains"
+            }]
+        }]
+        drugpurchasedParam.filter = JSON.stringify(_filter);
+    }
+    this.drugDataService
+      .loadDrugPurchasedlist(
+        drugpurchasedParam
+      )
+      .subscribe({
+        next: (drugResponse: any) => {
+          this.drugSubject.next(drugResponse);
+          if (drugResponse) {
+            const gridView = {
+              data: drugResponse['items'],
+              total: drugResponse['totalCount'],
+            };
+            this.drugSubject.next(gridView);
+          }
+          this.searchLoaderVisibilitySubject.next(false);
+        },
+        error: (err) => {
+          this.searchLoaderVisibilitySubject.next(false);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  isGridFilter(str: string) {
+    try {
+        return (JSON.parse(str) && !!str);
+    } catch (e) {
+        return false;
+    }
+}
 }

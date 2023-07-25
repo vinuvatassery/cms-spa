@@ -1,5 +1,5 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ClientProfileTabs, DrugPharmacyFacade } from '@cms/case-management/domain';
 import { filter, Subject, Subscription } from 'rxjs';
@@ -19,7 +19,8 @@ export class ProfileDrugPageComponent  implements OnInit , OnDestroy {
   constructor(  
     private drugPharmacyFacade: DrugPharmacyFacade,
     private route: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly  cdr :ChangeDetectorRef
   ) { }
 
   tabChangeSubscription$ = new Subscription();
@@ -93,5 +94,28 @@ export class ProfileDrugPageComponent  implements OnInit , OnDestroy {
       data.isShowHistoricalData
     );
   }
+  loadDrugPurchaseListEventHandler(gridDataRefinerValue : any)
+  {
+    const gridDataRefiner =
+    {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount : gridDataRefinerValue.pagesize,
+      sort : gridDataRefinerValue.sortColumn,
+      sortType : gridDataRefinerValue.sortType,
+      columnName : gridDataRefinerValue.columnName,
+      filter : gridDataRefinerValue.filter,
+      beforeDate: gridDataRefinerValue.beforeDate,
+      afterDate: gridDataRefinerValue.afterDate
+    }
+    this.loadDrugPurchaseList(gridDataRefiner);
+  }
+      /** grid event methods **/
+
+    loadDrugPurchaseList(gridDataRefiner:any)
+    {
+      this.drugPharmacyFacade.loadDrugPurchasedlist(gridDataRefiner);
+      this.cdr.detectChanges();
+    }
+
 }
 

@@ -1,11 +1,17 @@
 import {
   Component,
   OnInit,
-  ViewEncapsulation,Input
+  ViewEncapsulation,Input,
+  ChangeDetectorRef,
+  EventEmitter,
+  Output
 } from '@angular/core';
 import { DrugPharmacyFacade, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
+import { FilterService} from '@progress/kendo-angular-grid';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
+import { fileAddIcon } from '@progress/kendo-svg-icons';
 @Component({
   selector: 'case-management-drugs-purchased-list',
   templateUrl: './drugs-purchased-list.component.html',
@@ -56,9 +62,18 @@ export class DrugsPurchasedListComponent implements OnInit {
       },
     },
   ];
-
+  filteredBy = "";
+  searchValue = "";
+  isFiltered = false;
+  public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
+  selectedColumn!: any;
+  filter : any = "";
+  afterDate: any;
+  beforeDate: any;
+  columnName: any = "";
+  @Output() loadDrugsPurchasedListEvent = new EventEmitter<any>();
   /** Constructor **/
-  constructor(private readonly drugPharmacyFacade: DrugPharmacyFacade, private caseFacade: CaseFacade) {}
+  constructor(private readonly drugPharmacyFacade: DrugPharmacyFacade, private caseFacade: CaseFacade,private readonly  cdr :ChangeDetectorRef) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -66,14 +81,18 @@ export class DrugsPurchasedListComponent implements OnInit {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
+      filter : this.filter,
     };
     this.loadDrugsPurchased();
+    
   }
   
   /** Private methods **/
   private loadDrugsPurchased(  
   ) { 
-    this.drugPharmacyFacade.getDrugPurchasedList(this.clientId,this.state.skip,this.state.take,this.sortValue,this.sortType);
+    this.drugPharmacyFacade.getDrugPurchasedList(this.clientId,this.state.skip,this.state.take,this.sortValue,this.sortType, this.filter);
+    debugger
+    this.loadDrugsPurchasedList(null);
   }
 
   /** Internal event methods **/
@@ -107,7 +126,53 @@ export class DrugsPurchasedListComponent implements OnInit {
   }
 
   public dataStateChange(stateData: any): void {
-    this.state = stateData;
+    debugger
+    if(stateData.filter?.filters.length > 0)
+    {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.columnName = stateFilter.field;
+
+        this.filter =stateFilter.value
+      this.isFiltered = true;
+    }
+    this.state=stateData;
    this.loadDrugsPurchased();
   }
+  filterChange(filter: CompositeFilterDescriptor): void {
+    this.gridFilter = filter;
+  }
+  
+ groupFilterChange(value: any, filterService: FilterService): void {
+    filterService.filter({
+        filters: [{
+          field: "group",
+          operator: "eq",
+          value:value.lovTypeCode
+      }],
+        logic: "or"
+    });
+}
+private loadDrugsPurchasedList(event: any ): void {
+  debugger
+  const gridDataRefinerValue =
+  {
+    skipCount: this.state.skip ?? 0,
+    pagesize : this.state.take ?? 0,
+    sortColumn : this.sortValue,
+    sortType : this.sortType,
+    columnName : this.columnName,
+    filter : this.filter,
+    afterDate: this.afterDate,
+    beforeDate: this.beforeDate
+  }
+
+  this.loadPurchased(gridDataRefinerValue)
+}
+
+loadPurchased(gridDataRefinerValue:any)
+ {
+   this.loadDrugsPurchasedListEvent.next(gridDataRefinerValue);
+   this.cdr.detectChanges();
+ }
+
 }

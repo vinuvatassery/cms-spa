@@ -11,7 +11,9 @@
 
 <div class="block-section mt-1"  *ngIf="((tabId$ | async)===clientProfileTabs.DRUGS_PURCHASED) || tabId === clientProfileTabs.DRUGS_PURCHASED">
   <case-management-drugs-purchased-list
-    [clientId]="profileClientId"></case-management-drugs-purchased-list>
+    [clientId]="profileClientId">
+    (loadDrugsPurchasedListEvent)="loadDrugPurchaseListEventHandler($event)"
+  </case-management-drugs-purchased-list>
 </div>
 
 
