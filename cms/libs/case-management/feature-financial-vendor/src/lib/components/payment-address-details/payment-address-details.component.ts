@@ -39,6 +39,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    debugger;
     this.vendorId = this.activatedRoute.snapshot.queryParams['v_id'];
     this.tabCode = this.activatedRoute.snapshot.queryParams['tab_code'];
     this.setAddressTypeCode();
@@ -93,6 +94,13 @@ export class PaymentAddressDetailsComponent implements OnInit {
       this.paymentAddressForm.addControl('acceptsReportsFlag', new FormControl('', [Validators.required]))
       this.paymentAddressForm.addControl('acceptsCombinedPaymentsFlag', new FormControl('', [Validators.required]))
     }
+    // if(this.tabCode === FinancialVendorProviderTabCode.Manufacturers)
+    // {
+      this.paymentAddressForm.controls['paymentMethodCode'].removeValidators([Validators.required]);
+      this.paymentAddressForm.controls['paymentRunDateMonthly'].removeValidators([Validators.required]);
+      this.paymentAddressForm.controls['paymentRunDateMonthly'].setValue(null);
+
+    //}
   }
   private setAddressTypeCode() {
     switch (this.tabCode) {
@@ -130,6 +138,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
   }
 
   submit() {
+    debugger;
     this.formIsSubmitted = true;
     if (!this.paymentAddressForm.valid) return;
 
