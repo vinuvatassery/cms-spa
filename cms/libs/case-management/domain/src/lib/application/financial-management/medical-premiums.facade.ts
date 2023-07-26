@@ -36,9 +36,9 @@ export class FinancialMedicalPremiumsFacade {
     field: this.sortValueBatchLog,
   }];
 
-  public sortValueClaims = 'batch';
-  public sortClaimsList: SortDescriptor[] = [{
-    field: this.sortValueClaims,
+  public sortValuePremiums = 'batch';
+  public sortPremiumsList: SortDescriptor[] = [{
+    field: this.sortValuePremiums,
   }];
 
 
@@ -71,8 +71,8 @@ export class FinancialMedicalPremiumsFacade {
   private batchItemsDataSubject =  new Subject<any>();
   batchItemsData$ = this.batchItemsDataSubject.asObservable();
 
-  private claimsListDataSubject =  new Subject<any>();
-  claimsListData$ = this.claimsListDataSubject.asObservable();
+  private premiumsListDataSubject =  new Subject<any>();
+  premiumsListData$ = this.premiumsListDataSubject.asObservable();
   /** Private properties **/
  
   /** Public properties **/
@@ -186,10 +186,10 @@ export class FinancialMedicalPremiumsFacade {
     });  
   }
   
-  loadClaimsListGrid(){
-    this.financialMedicalPremiumsDataService.loadClaimsListService().subscribe({
+  loadPremiumsListGrid(){
+    this.financialMedicalPremiumsDataService.loadPremiumsListService().subscribe({
       next: (dataResponse) => {
-        this.claimsListDataSubject.next(dataResponse);
+        this.premiumsListDataSubject.next(dataResponse);
         this.hideLoader();
       },
       error: (err) => {

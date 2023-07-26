@@ -28,21 +28,21 @@ import { Router } from '@angular/router';
 export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChanges {
   @ViewChild('previewSubmitPaymentDialogTemplate', { read: TemplateRef })
   previewSubmitPaymentDialogTemplate!: TemplateRef<any>;
-  @ViewChild('unBatchClaimsDialogTemplate', { read: TemplateRef })
-  unBatchClaimsDialogTemplate!: TemplateRef<any>;
-  @ViewChild('deleteClaimsConfirmationDialogTemplate', { read: TemplateRef })
-  deleteClaimsConfirmationDialogTemplate!: TemplateRef<any>;
+  @ViewChild('unBatchPremiumsDialogTemplate', { read: TemplateRef })
+  unBatchPremiumsDialogTemplate!: TemplateRef<any>;
+  @ViewChild('deletePremiumsConfirmationDialogTemplate', { read: TemplateRef })
+  deletePremiumsConfirmationDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
   isRequestPaymentClicked = false;
   isPrintAuthorizationClicked = false;
-  isUnBatchClaimsClosed = false;
+  isUnBatchPremiumsClosed = false;
   isDeleteClaimClosed = false;
   PreviewSubmitPaymentDialog: any;
   printAuthorizationDialog: any;
   UnBatchDialog: any;
-  deleteClaimsDialog: any;
+  deletePremiumsDialog: any;
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -79,30 +79,30 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
   public batchLogGridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Claims',
+      text: 'Edit Premiums',
       icon: 'edit',
       
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Unbatch Claims',
+      text: 'Unbatch Premiums',
       icon: 'undo',
       click: (data: any): void => {
-        if (!this.isUnBatchClaimsClosed) {
-          this.isUnBatchClaimsClosed = true;
-          this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+        if (!this.isUnBatchPremiumsClosed) {
+          this.isUnBatchPremiumsClosed = true;
+          this.onUnBatchOpenClicked(this.unBatchPremiumsDialogTemplate);
         }
        
       }      
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Claims',
+      text: 'Delete Premiums',
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isDeleteClaimClosed) {
           this.isDeleteClaimClosed = true;
-          this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialogTemplate);
+          this.onDeletePremiumsOpenClicked(this.deletePremiumsConfirmationDialogTemplate);
         }
        
       }
@@ -126,8 +126,8 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-  gridClaimsBatchLogDataSubject = new Subject<any>();
-  gridClaimsBatchLogData$ = this.gridClaimsBatchLogDataSubject.asObservable();
+  gridPremiumsBatchLogDataSubject = new Subject<any>();
+  gridPremiumsBatchLogData$ = this.gridPremiumsBatchLogDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -238,7 +238,7 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
         this.gridDataResult.data,
         this.filterData
       );
-      this.gridClaimsBatchLogDataSubject.next(this.gridDataResult);
+      this.gridPremiumsBatchLogDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) { 
         this.isBatchLogGridLoaderShow = false;
       }
@@ -300,20 +300,20 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
  
   onUnBatchCloseClicked(result: any) {
     if (result) { 
-      this.isUnBatchClaimsClosed = false;
+      this.isUnBatchPremiumsClosed = false;
       this.UnBatchDialog.close();
     }
   }
 
-  public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
-    this.deleteClaimsDialog = this.dialogService.open({
+  public onDeletePremiumsOpenClicked(template: TemplateRef<unknown>): void {
+    this.deletePremiumsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
-  onModalDeleteClaimsModalClose(result: any) {
+  onModalDeletePremiumsModalClose(result: any) {
     if (result) { 
-      this.deleteClaimsDialog.close();
+      this.deletePremiumsDialog.close();
     }
   }
  

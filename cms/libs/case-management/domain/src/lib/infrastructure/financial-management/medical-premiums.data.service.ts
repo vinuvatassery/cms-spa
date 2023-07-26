@@ -53,7 +53,7 @@ export class FinancialMedicalPremiumsDataService {
         id:1,
         batch: '05012021_001 `',
         ofProviders:'XX', 
-        ofClaims:'XX', 
+        ofPremiums:'XX', 
         pmtsRequested:'XX', 
         pmtsReconciled:'XX', 
         totalAmountDue:'XX,XXX.XX', 
@@ -63,7 +63,7 @@ export class FinancialMedicalPremiumsDataService {
         id:2,
         batch: '05012021_001 `',
         ofProviders:'XX', 
-        ofClaims:'XX', 
+        ofPremiums:'XX', 
         pmtsRequested:'XX', 
         pmtsReconciled:'XX', 
         totalAmountDue:'XX,XXX.XX', 
@@ -73,7 +73,7 @@ export class FinancialMedicalPremiumsDataService {
         id:3,
         batch: '05012021_001 `',
         ofProviders:'XX', 
-        ofClaims:'XX', 
+        ofPremiums:'XX', 
         pmtsRequested:'XX', 
         pmtsReconciled:'XX', 
         totalAmountDue:'XX,XXX.XX', 
@@ -287,7 +287,7 @@ export class FinancialMedicalPremiumsDataService {
      
     ]);
   }
-  loadClaimsListService( ) {
+  loadPremiumsListService( ) {
     return of([
       {
         insuranceCarrier: 'Carrier Name',

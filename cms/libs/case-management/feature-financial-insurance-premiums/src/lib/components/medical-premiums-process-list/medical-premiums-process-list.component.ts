@@ -26,18 +26,18 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalPremiumsProcessListComponent implements OnInit, OnChanges {
-  @ViewChild('batchClaimsConfirmationDialog', { read: TemplateRef })
-  batchClaimsConfirmationDialog!: TemplateRef<any>;
-  @ViewChild('deleteClaimsConfirmationDialog', { read: TemplateRef })
-  deleteClaimsConfirmationDialog!: TemplateRef<any>;
+  @ViewChild('batchPremiumsConfirmationDialog', { read: TemplateRef })
+  batchPremiumsConfirmationDialog!: TemplateRef<any>;
+  @ViewChild('deletePremiumsConfirmationDialog', { read: TemplateRef })
+  deletePremiumsConfirmationDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  private deleteClaimsDialog: any;
-  private batchConfirmClaimsDialog: any;
-  private addEditClaimsFormDialog: any;
-  private addClientRecentClaimsDialog: any;
+  private deletePremiumsDialog: any;
+  private batchConfirmPremiumsDialog: any;
+  private addEditPremiumsFormDialog: any;
+  private addClientRecentPremiumsDialog: any;
   isDeleteBatchClosed = false;
-  isBatchClaimsOption = false;
-  isDeleteClaimsOption = false;
+  isBatchPremiumsOption = false;
+  isDeletePremiumsOption = false;
   isProcessBatchClosed = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isProcessGridExpand = true;
@@ -65,27 +65,27 @@ export class MedicalPremiumsProcessListComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  public claimsProcessMore = [
+  public premiumsProcessMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Batch Claims',
+      text: 'Batch Premiums',
       icon: 'check',
       click: (data: any): void => {
         if (!this.isProcessBatchClosed) {
           this.isProcessBatchClosed = true; 
-          this.onBatchClaimsGridSelectedClicked();
+          this.onBatchPremiumsGridSelectedClicked();
         }
       },
     },
 
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Claims',
+      text: 'Delete Premiums',
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isDeleteBatchClosed) {
           this.isDeleteBatchClosed = true; 
-          this.onBatchClaimsGridSelectedClicked();
+          this.onBatchPremiumsGridSelectedClicked();
         }
       },
     },
@@ -93,12 +93,12 @@ export class MedicalPremiumsProcessListComponent implements OnInit, OnChanges {
   public processGridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Claims',
+      text: 'Edit Premiums',
       icon: 'edit',
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Claims',
+      text: 'Delete Premiums',
       icon: 'delete',
     },
   ];
@@ -124,14 +124,14 @@ export class MedicalPremiumsProcessListComponent implements OnInit, OnChanges {
   }
 
   private loadMedicalPremiumsProcessListGrid(): void {
-    this.loadClaimsProcess(
+    this.loadPremiumsProcess(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType
     );
   }
-  loadClaimsProcess(
+  loadPremiumsProcess(
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
@@ -219,55 +219,55 @@ export class MedicalPremiumsProcessListComponent implements OnInit, OnChanges {
     this.isMedicalPremiumsProcessGridLoaderShow = false;
   }
 
-  public onBatchClaimsClicked(template: TemplateRef<unknown>): void {
-    this.batchConfirmClaimsDialog = this.dialogService.open({
+  public onBatchPremiumsClicked(template: TemplateRef<unknown>): void {
+    this.batchConfirmPremiumsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
-  onModalBatchClaimsModalClose(result: any) {
+  onModalBatchPremiumsModalClose(result: any) {
     if (result) { 
-      this.batchConfirmClaimsDialog.close();
+      this.batchConfirmPremiumsDialog.close();
     }
   }
 
-  public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
-    this.deleteClaimsDialog = this.dialogService.open({
+  public onDeletePremiumsOpenClicked(template: TemplateRef<unknown>): void {
+    this.deletePremiumsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
-  onModalDeleteClaimsModalClose(result: any) {
+  onModalDeletePremiumsModalClose(result: any) {
     if (result) { 
-      this.deleteClaimsDialog.close();
+      this.deletePremiumsDialog.close();
     }
   }
 
-  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>): void {
-    this.addEditClaimsFormDialog = this.dialogService.open({
+  onClickOpenAddEditPremiumsFromModal(template: TemplateRef<unknown>): void {
+    this.addEditPremiumsFormDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-full add_claims_modal',
+      cssClass: 'app-c-modal app-c-modal-full add_premiums_modal',
     });
   }
-  modalCloseAddEditClaimsFormModal(result: any) {
+  modalCloseAddEditPremiumsFormModal(result: any) {
     if (result) {
-      this.addEditClaimsFormDialog.close();
+      this.addEditPremiumsFormDialog.close();
     }
   }
 
-  onBatchClaimsGridSelectedClicked() {
+  onBatchPremiumsGridSelectedClicked() {
     this.isProcessGridExpand = false;
   }
 
-  onBatchClaimsGridSelectedCancelClicked() {
+  onBatchPremiumsGridSelectedCancelClicked() {
     this.isProcessGridExpand = true;
     this.isDeleteBatchClosed = false;
     this.isProcessBatchClosed = false;
   
   }
 
-  clientRecentClaimsModalClicked (template: TemplateRef<unknown>, data:any): void {
-    this.addClientRecentClaimsDialog = this.dialogService.open({
+  clientRecentPremiumsModalClicked (template: TemplateRef<unknown>, data:any): void {
+    this.addClientRecentPremiumsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
       animation:{
@@ -278,9 +278,9 @@ export class MedicalPremiumsProcessListComponent implements OnInit, OnChanges {
     });
   }
 
-  closeRecentClaimsModal(result: any){
+  closeRecentPremiumsModal(result: any){
     if (result) { 
-      this.addClientRecentClaimsDialog.close();
+      this.addClientRecentPremiumsDialog.close();
     }
   }
  

@@ -9,7 +9,7 @@
           </section>
           <section class="app-l-client-wrapper ">
               <section class="app-l-wrapper"> 
-                  <p> Click “Bulk” to execute actions for one or more claims. Click on a row to view that claim.</p>
+                  <p> Click “Bulk” to execute actions for one or more premiums. Click on a row to view that claim.</p>
                   <section class="table-filter-section mat-form-no-b-space">
                       <span class="filter-section_items filter--select">
                         <kendo-floatinglabel>
@@ -145,7 +145,7 @@
           </section>
       </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
-    <span class="">0 claims(s) to be deleted</span>
+    <span class="">0 premiums(s) to be deleted</span>
     <button (click)="goToBatchItems($event)">Batch Log items</button> 
     <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button> 
     <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
@@ -178,11 +178,11 @@
   <cms-medical-premiums-print-authorization></cms-medical-premiums-print-authorization>
   </ng-template>
 
-  <ng-template #unBatchClaimsDialogTemplate>
+  <ng-template #unBatchPremiumsDialogTemplate>
   <cms-medical-premiums-unbatch (UnBatchCloseClickedEvent)="onUnBatchCloseClicked($event)"></cms-medical-premiums-unbatch>
 </ng-template>
 
-<ng-template #deleteClaimsConfirmationDialogTemplate>
-  <cms-medical-premiums-delete-claims
-    (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)"></cms-medical-premiums-delete-claims>
+<ng-template #deletePremiumsConfirmationDialogTemplate>
+  <cms-medical-premiums-delete-premiums
+    (isModalDeletePremiumsCloseClicked)="onModalDeletePremiumsModalClose($event)"></cms-medical-premiums-delete-premiums>
 </ng-template>

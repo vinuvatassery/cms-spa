@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FinancialMedicalPremiumsFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-medical-premiums-detail-form',
   templateUrl: './medical-premiums-detail-form.component.html', 
@@ -15,12 +15,12 @@ import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 export class MedicalPremiumsDetailFormComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
-  claimsListData$ = this.financialVendorRefundFacade.claimsListData$;
-  sortValue = this.financialVendorRefundFacade.sortValueClaims;
-  sortType = this.financialVendorRefundFacade.sortType;
-  pageSizes = this.financialVendorRefundFacade.gridPageSizes;
-  gridSkipCount = this.financialVendorRefundFacade.skipCount;
-  sort = this.financialVendorRefundFacade.sortClaimsList;
+  premiumsListData$ = this.financialMedicalPremiumsFacade.premiumsListData$;
+  sortValue = this.financialMedicalPremiumsFacade.sortValuePremiums;
+  sortType = this.financialMedicalPremiumsFacade.sortType;
+  pageSizes = this.financialMedicalPremiumsFacade.gridPageSizes;
+  gridSkipCount = this.financialMedicalPremiumsFacade.skipCount;
+  sort = this.financialMedicalPremiumsFacade.sortPremiumsList;
   state!: State;
   clientSearchResult = [
     {
@@ -77,17 +77,17 @@ export class MedicalPremiumsDetailFormComponent {
     },
   ];
 
-  @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
+  @Output() modalCloseAddEditPremiumsFormModal = new EventEmitter();
 
   constructor(
-    private readonly financialVendorRefundFacade: FinancialVendorRefundFacade
+    private readonly financialMedicalPremiumsFacade: FinancialMedicalPremiumsFacade
   ) {}
 
-  closeAddEditClaimsFormModalClicked() {
-    this.modalCloseAddEditClaimsFormModal.emit(true);
+  closeAddEditPremiumsFormModalClicked() {
+    this.modalCloseAddEditPremiumsFormModal.emit(true);
   }
 
-  loadClaimsListGrid() {
-    this.financialVendorRefundFacade.loadClaimsListGrid();
+  loadPremiumsListGrid() {
+    this.financialMedicalPremiumsFacade.loadPremiumsListGrid();
   }
 }
