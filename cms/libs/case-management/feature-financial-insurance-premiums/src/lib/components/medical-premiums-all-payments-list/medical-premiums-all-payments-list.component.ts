@@ -29,6 +29,11 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 export class MedicalPremiumsAllPaymentsListComponent implements OnInit, OnChanges{
   @ViewChild('previewSubmitPaymentDialogTemplate', { read: TemplateRef })
   previewSubmitPaymentDialogTemplate!: TemplateRef<any>;
+  @ViewChild('unBatchPaymentDialogTemplate', { read: TemplateRef })
+  unBatchPaymentDialogTemplate!: TemplateRef<any>;
+  @ViewChild('deletePaymentDialogTemplate', { read: TemplateRef })
+  deletePaymentDialogTemplate!: TemplateRef<any>;
+
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isMedicalPremiumsAllPaymentsGridLoaderShow = false;
@@ -39,6 +44,7 @@ export class MedicalPremiumsAllPaymentsListComponent implements OnInit, OnChange
   @Input() sort: any;
   @Input() medicalPremiumsAllPaymentsGridLists$: any;
   @Output() loadMedicalPremiumsAllPaymentsListEvent = new EventEmitter<any>();
+
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -57,23 +63,38 @@ export class MedicalPremiumsAllPaymentsListComponent implements OnInit, OnChange
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   PreviewSubmitPaymentDialog: any;
   printAuthorizationDialog: any;
+  deletePaymentDialog: any;
+  unBatchPaymentDialog: any;
   isRequestPaymentClicked = false;
   isPrintAuthorizationClicked = false;
+  isUnBatchPaymentOpen = false;
+  isDeletePaymentOpen = false;
+
   public allPaymentsGridActions = [
+ 
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Refund',
-      icon: 'edit', 
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'UnAllPayments Refund',
+      text: 'Unbatch Payment',
       icon: 'undo', 
+      click: (data: any): void => {
+            if(!this.isUnBatchPaymentOpen){
+              this.isUnBatchPaymentOpen = true;
+              this.onUnBatchPaymentOpenClicked(this.unBatchPaymentDialogTemplate);
+            }
+       
+      }
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Refund',
+      text: 'Delete Payment',
       icon: 'delete', 
+      click: (data: any): void => {
+        if(!this.isDeletePaymentOpen){
+          this.isDeletePaymentOpen = true;
+          this.onDeletePaymentOpenClicked(this.deletePaymentDialogTemplate);
+        }
+       
+      }
     },
   ];
 
@@ -261,4 +282,32 @@ export class MedicalPremiumsAllPaymentsListComponent implements OnInit, OnChange
     }
   }
 
+  onUnBatchPaymentOpenClicked(template: TemplateRef<unknown>): void {
+    this.unBatchPaymentDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  onUnBatchPaymentCloseClicked(result: any){
+    if (result) { 
+      this.isUnBatchPaymentOpen = false;
+      this.unBatchPaymentDialog.close();
+    }
+  }
+  onDeletePaymentOpenClicked(template: TemplateRef<unknown>): void {
+    this.deletePaymentDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onDeletePaymentCloseClicked(result: any){
+
+    if (result) { 
+      this.isDeletePaymentOpen = false;
+      this.deletePaymentDialog.close();
+    }
+  }
+
+  
 }

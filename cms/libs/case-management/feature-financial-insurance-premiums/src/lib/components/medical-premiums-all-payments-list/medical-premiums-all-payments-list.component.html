@@ -186,3 +186,16 @@
     <cms-medical-premiums-print-authorization></cms-medical-premiums-print-authorization>
     </ng-template>
     
+
+
+    <ng-template #unBatchPaymentDialogTemplate>
+      
+    <cms-medical-premiums-unbatch-payment (unBatchPaymentCloseClickedEvent)="onUnBatchPaymentCloseClicked($event)"></cms-medical-premiums-unbatch-payment>
+    </ng-template>
+
+    <ng-template #deletePaymentDialogTemplate>
+      
+      <cms-medical-premiums-delete-payment (deletePaymentCloseClickedEvent)="onDeletePaymentCloseClicked($event)"></cms-medical-premiums-delete-payment>
+      </ng-template>
+      
+    
