@@ -153,6 +153,7 @@ export * from './lib/infrastructure/financial-management/vendor-insurance-plan.d
 export * from './lib/infrastructure/financial-management/vendor.data.service';
 export * from './lib/infrastructure/financial-management/vendor-refund.data.service';
 export * from './lib/infrastructure/financial-management/medical-claims.data.service';
+export * from './lib/infrastructure/financial-management/dental-claims.data.service';
 export * from './lib/infrastructure/esign-data.service';
 
 
@@ -204,6 +205,7 @@ export * from './lib/application/financial-management/insurance-provider.facade'
 export * from './lib/application/financial-management/vendor-insurance-plan.facade';
 export * from './lib/application/financial-management/vendor-refund.facade';
 export * from './lib/application/financial-management/medical-claims.facade';
+export * from './lib/application/financial-management/dental-claims.facade';
 export * from './lib/application/esign.facade';
 
 

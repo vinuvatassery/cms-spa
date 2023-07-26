@@ -379,7 +379,12 @@
   padding: $size-m $size-l;
 }
  
-
+.k-form-error{
+  .material-icons{
+    font-size: $font-size-xl;
+    line-height: normal;
+  }
+}
 /*Floating Outline Dropdown*/
 .k-dropdown .k-dropdown-wrap,
 .k-dropdowntree .k-dropdown-wrap {

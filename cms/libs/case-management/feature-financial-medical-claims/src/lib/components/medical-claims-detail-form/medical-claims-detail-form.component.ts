@@ -54,6 +54,28 @@ export class MedicalClaimsDetailFormComponent {
       dob: '23/12/2023',
     },
   ];
+  providerSearchResult = [
+    {
+      providerId: '12',
+      providerFullName: 'Fname Lname',
+      tin: '2434324324234', 
+    },
+    {
+      providerId: '12',
+      providerFullName: 'Fname Lname',
+      tin: '2434324324234', 
+    },
+    {
+      providerId: '12',
+      providerFullName: 'Fname Lname',
+      tin: '2434324324234', 
+    },
+    {
+      providerId: '12',
+      providerFullName: 'Fname Lname',
+      tin: '2434324324234', 
+    },
+  ];
 
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
 
