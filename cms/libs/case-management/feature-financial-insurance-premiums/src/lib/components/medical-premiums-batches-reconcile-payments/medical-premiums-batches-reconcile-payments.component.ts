@@ -185,7 +185,7 @@ export class MedicalPremiumsBatchesReconcilePaymentsComponent implements OnInit,
     }
   }
      navToBatchDetails(event : any){  
-       this.route.navigate(['/financial-management/medical-premiums'] );
+       this.route.navigate(['/financial-management/insurance-premiums'] );
      }
 }
 

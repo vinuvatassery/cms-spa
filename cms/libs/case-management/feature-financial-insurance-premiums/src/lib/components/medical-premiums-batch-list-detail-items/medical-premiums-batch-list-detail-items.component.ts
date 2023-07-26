@@ -170,7 +170,7 @@ export class MedicalPremiumsBatchListDetailItemsComponent implements OnInit, OnC
   }
 
   backToBatchLog(event : any){  
-    this.route.navigate(['/financial-management/medical-premiums/batch'] );
+    this.route.navigate(['/financial-management/insurance-premiums/batch'] );
   }
 
 

@@ -165,7 +165,7 @@ export class MedicalPremiumsBatchesListComponent implements OnInit, OnChanges{
     this.isMedicalPremiumsBatchGridLoaderShow = false;
   }
   navToBatchDetails(event : any){  
-    this.route.navigate(['/financial-management/medical-premiums/batch'] );
+    this.route.navigate(['/financial-management/insurance-premiums/batch'] );
   }
 
 }

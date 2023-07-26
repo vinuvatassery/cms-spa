@@ -225,7 +225,7 @@ export class MedicalPremiumsAllPaymentsListComponent implements OnInit, OnChange
     this.isMedicalPremiumsAllPaymentsGridLoaderShow = false;
   }
   navToReconcilePayments(event : any){  
-    this.route.navigate(['/financial-management/medical-premiums/payments/reconcile-payments'] );
+    this.route.navigate(['/financial-management/insurance-premiums/payments/reconcile-payments'] );
   }
   
  

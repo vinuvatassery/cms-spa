@@ -247,15 +247,15 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
   }
 
    backToBatch(event : any){  
-    this.route.navigate(['/financial-management/medical-premiums'] );
+    this.route.navigate(['/financial-management/insurance-premiums'] );
   }
 
   goToBatchItems(event : any){  
-    this.route.navigate(['/financial-management/medical-premiums/batch/items'] );
+    this.route.navigate(['/financial-management/insurance-premiums/batch/items'] );
   }
 
   navToReconcilePayments(event : any){  
-    this.route.navigate(['/financial-management/medical-premiums/batch/reconcile-payments'] );
+    this.route.navigate(['/financial-management/insurance-premiums/batch/reconcile-payments'] );
   }
   public onPreviewSubmitPaymentOpenClicked(template: TemplateRef<unknown>): void {
     this.PreviewSubmitPaymentDialog = this.dialogService.open({
