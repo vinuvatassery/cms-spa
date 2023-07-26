@@ -1010,6 +1010,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       previousClientEligibilityId: this.prevClientCaseEligibilityId
     };
 
+    if(this.isCerForm && clientCaseEligibility?.emailAddressChangedFlag === StatusFlag.No){
+      clientCaseEligibility.paperlessFlag = this.oldContactInfo?.clientCaseEligibility?.paperlessFlag;
+    }
+
     let addressProofDoc: HomeAddressProof | undefined = undefined;
     if (this.uploadedHomeAddressProof != null && !homeAddressGroup?.get('noHomeAddressProofFlag')?.value) {
       addressProofDoc = {
