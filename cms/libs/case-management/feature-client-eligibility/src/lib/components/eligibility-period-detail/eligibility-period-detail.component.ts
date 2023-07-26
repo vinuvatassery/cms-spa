@@ -21,6 +21,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
 
    /** InPut properties **/
   @Input() clientCaseEligibilityId : any
+  @Input() currentActiveClientCaseEligibilityId : any
   @Input() clientId : any
   @Input() clientCaseId : any
   @Input() isEdit : any
@@ -50,6 +51,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   groupList!: any;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   isStartDateChange = true;
+  isEndDateChange = true;
 
   /** Constructor **/
   constructor(
@@ -141,7 +143,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   }
   updateCurrentEligibility() {
     this.setUpdateEligibilityValidations();
-    if (this.eligibilityPeriodForm.valid && this.isStartDateChange) {
+    if (this.eligibilityPeriodForm.valid && this.isStartDateChange && this.isEndDateChange) {
       let editEligibilityData = this.currentEligibility;
       editEligibilityData.eligibilityStartDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusStartDate'].value, this.dateFormat));
       editEligibilityData.eligibilityEndDate = new Date(this.intl.formatDate(this.eligibilityPeriodForm.controls['statusEndDate'].value, this.dateFormat));
@@ -157,8 +159,10 @@ export class EligibilityPeriodDetailComponent implements OnInit {
               eilgibilityStartDate:editEligibilityData.eligibilityStartDate,
               eligibilityEndDate:editEligibilityData.eligibilityEndDate
             }
-           
-           this.clientEligibilityFacade.eligibilityDateSubject.next(periodDates);
+            if(this.currentActiveClientCaseEligibilityId === this.currentEligibility?.clientCaseEligibilityId)
+            {
+              this.clientEligibilityFacade.eligibilityDateSubject.next(periodDates);
+            }
             this.isModalSavedClicked.emit(true);
           }
           else{
@@ -182,6 +186,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       });
     }
     this.isStartDateChange = true;
+    this.isEndDateChange = true;
   }
   endDateValueChange(date: Date) {
     this.statusEndDateIsGreaterThanStartDate = false;
@@ -194,6 +199,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     
   }
   endDateOnChange() {
+    this.canChangeEndDate();
     this.statusEndDateIsGreaterThanStartDate = true;
     if (this.eligibilityPeriodForm.controls['statusStartDate'].value === null) {
       this.eligibilityPeriodForm.controls['statusStartDate'].markAllAsTouched();
@@ -547,7 +553,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   }
   onStartDateChange()
   {
-    if(this.isEdit && this.currentEligibility.previousEligibilityEndDate)
+    if((this.isEdit || this.isStatusPeriodEdit) && this.currentEligibility.previousEligibilityEndDate)
     {
       let currentEligibilityStartDate =new Date(this.eligibilityPeriodForm.controls['statusStartDate'].value);
       let previousEndDate =new Date(this.currentEligibility.previousEligibilityEndDate);
@@ -566,6 +572,30 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       }
       else{
         this.isStartDateChange = true;
+      }
+    }
+  }
+  canChangeEndDate()
+  {
+    if((this.isEdit || this.isStatusPeriodEdit) && this.currentEligibility.nextEligibilityStartDate )
+    {
+      let currentEligibilityEndDate =new Date(this.eligibilityPeriodForm.controls['statusEndDate'].value);
+      let nextStartDate =new Date(this.currentEligibility.nextEligibilityStartDate);
+      nextStartDate.setDate(nextStartDate.getDate() - 1);
+      let cuEndDate =this.intl.formatDate(currentEligibilityEndDate, this.dateFormat) ;
+      let nexStartDate = this.intl.formatDate(nextStartDate,  this.dateFormat ) ;
+      if(cuEndDate !== nexStartDate)
+      {
+        this.clientEligibilityFacade.showHideSnackBar(
+          SnackBarNotificationType.WARNING,
+          'Eligibility End date cannot be changed.'
+        );
+        this.eligibilityPeriodForm.controls['statusEndDate'].setValue(new Date(this.currentEligibility.eligibilityEndDate));
+        this.isEndDateChange = false;
+
+      }
+      else{
+        this.isEndDateChange = true;
       }
     }
   }

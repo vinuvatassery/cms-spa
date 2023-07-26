@@ -120,6 +120,7 @@
 <!-- Status Period Detail Modal -->
 <ng-template #eligibilityStatusPeriodDetail>
     <case-management-eligibility-period-detail
+    [currentActiveClientCaseEligibilityId]="clientCaseEligibilityId"
     [clientId]="clientId"
     [clientCaseEligibilityId]="selectedEligibilityId"
     [clientCaseId]="selectedCaseId"
