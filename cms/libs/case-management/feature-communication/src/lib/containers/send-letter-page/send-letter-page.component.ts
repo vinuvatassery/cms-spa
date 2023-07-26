@@ -8,6 +8,8 @@ import {
   OnDestroy,
   ViewChild,
   ChangeDetectorRef,
+  AfterViewInit, 
+  AfterContentChecked,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ContactFacade, WorkflowFacade } from '@cms/case-management/domain';
@@ -20,7 +22,7 @@ import { Subscription, first } from 'rxjs';
   styleUrls: ['./send-letter-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SendLetterPageComponent implements OnInit , OnDestroy{
+export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewInit, AfterContentChecked  {
   /** Public properties **/
   getLetterEditorValue = new EventEmitter<boolean>();
   letterContentValue!: any;
@@ -28,7 +30,8 @@ export class SendLetterPageComponent implements OnInit , OnDestroy{
   isOpenedPrintPreview = false;
   isCERForm = false;
   title= "Send Approval"
-  printModelTitle = "Print approval letter?";
+  printModelTitle = "";
+  confirmTitle="approval letter?"
   sendType=""
   printModelText = "";
   isDisenrollmentPage = false;
@@ -36,11 +39,14 @@ export class SendLetterPageComponent implements OnInit , OnDestroy{
   clientId: any;
   clientCaseEligibilityId: any
   private disenrollLaterDialog: any;
+  private approvalLaterDialog: any;
   private saveForLaterValidationSubscription !: Subscription;
-  @ViewChild('disenrollment_letter_later', { read: TemplateRef })
-  disenrollment_letter_later!: TemplateRef<any>;
+  @ViewChild('disenrollment_letter_later', { read: TemplateRef })  disenrollment_letter_later!: TemplateRef<any>;
+
+  @ViewChild('approval_letter_later', { read: TemplateRef })  approval_letter_later!: TemplateRef<any>;
   paperless$ = this.contactFacade.paperless$;
   paperlessFlag = 'N'
+ 
 
     /** Constructor**/
     constructor(    
@@ -73,16 +79,35 @@ export class SendLetterPageComponent implements OnInit , OnDestroy{
     this.saveForLaterValidationSubscription.unsubscribe();
   }
 
+  ngAfterViewInit() {   
+    this.workflowFacade.enableSaveButton();     
+  }
 
+  ngAfterContentChecked() {
+    this.cdr.detectChanges();     
+  }
 
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      
+      if(this.isDisenrollmentPage)
+      {
       this.disenrollLaterDialog = this.dialogService.open({
-        title: 'Send Disenrollment Letter later?',
+        title: "Send Disenrollment "+this.sendType+" later?",
         content: this.disenrollment_letter_later,
         cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
       });
+     }
+     else
+     {
+      this.approvalLaterDialog = this.dialogService.open({
+        title: "Send Approval "+this.sendType+" later?",
+        content: this.approval_letter_later,
+        cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      });
+     }
     });
+    
   }
 
   /** Internal event methods **/
@@ -131,6 +156,11 @@ export class SendLetterPageComponent implements OnInit , OnDestroy{
     this.disenrollLaterDialog.close();
   }
 
+  closeApprovalLetterModal()
+  {
+    this.approvalLaterDialog.close();
+  }
+
   loadClientPaperLessStatusHandle(): void {
     this.contactFacade.loadClientPaperLessStatus(
       this.clientId,
@@ -144,9 +174,12 @@ export class SendLetterPageComponent implements OnInit , OnDestroy{
       ?.pipe(first((emailData: any) => emailData?.paperlessFlag != null))
       .subscribe((emailData: any) => {
         if (emailData?.paperlessFlag) {
+          let pageType= this.isDisenrollmentPage === true? "Disenrollment" : "Approval"
           this.paperlessFlag = emailData?.paperlessFlag;
           this.printModelTitle = this.printModelTitle + (this.paperlessFlag === 'Y' ? 'email?' : 'print?')
-          this.cdr.detectChanges();
+          this.confirmTitle =  (this.paperlessFlag === 'Y' ? "Send "+pageType+" Email?" : "Send "+pageType+" Letter to Print?")
+          this.sendType =  this.paperlessFlag === 'Y' ? 'Email' : 'Letter'       
+          this.cdr.detectChanges();     
         }
       });
   }
