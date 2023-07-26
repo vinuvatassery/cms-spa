@@ -122,7 +122,6 @@ export class MedicalPremiumPaymentDetailComponent {
   }
 
   validateForm() {
-    debugger;
     this.premiumPaymentForm.markAllAsTouched();
     this.premiumPaymentForm.controls['vendorId'].setValidators([Validators.required,]);
     this.premiumPaymentForm.controls['clientInsurancePolicyId'].setValidators([Validators.required,]);
