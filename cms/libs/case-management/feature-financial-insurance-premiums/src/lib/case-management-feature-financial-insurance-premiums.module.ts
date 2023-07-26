@@ -29,6 +29,11 @@ import { MedicalPremiumsPrintDenialLetterComponent } from './components/medical-
 import { CaseManagementFeatureFinancialInsurancePremiumsRoutingModule } from './case-management-feature-financial-insurance-premiums.routing.module';
 import { MedicalPremiumsPageComponent } from './containers/medical-premiums/medical-premiums-page.component';
 import { MedicalPremiumsAddDetailsFormComponent } from './components/medical-premiums-add-details-form/medical-premiums-add-details-form.component';
+import { MedicalPremiumsSendReportComponent } from './components/medical-premiums-send-report/medical-premiums-send-report.component';
+import { MedicalPremiumsDeletePaymentComponent } from './components/medical-premiums-delete-payment/medical-premiums-delete-payment.component';
+import { MedicalPremiumsLeavePageComponent } from './components/medical-premiums-leave-page/medical-premiums-leave-page.component';
+import { MedicalPremiumsSendNoticeComponent } from './components/medical-premiums-send-notice/medical-premiums-send-notice.component';
+import { MedicalPremiumsUnbatchPaymentComponent } from './components/medical-premiums-unbatch-payment/medical-premiums-unbatch-payment.component';
 
 @NgModule({
   imports: [
@@ -62,6 +67,11 @@ import { MedicalPremiumsAddDetailsFormComponent } from './components/medical-pre
     MedicalPremiumsBatchesReconcilePaymentsBreakoutComponent,
     MedicalPremiumsPrintDenialLetterComponent,
     MedicalPremiumsAddDetailsFormComponent,
+    MedicalPremiumsSendReportComponent,
+    MedicalPremiumsDeletePaymentComponent,
+    MedicalPremiumsLeavePageComponent,
+    MedicalPremiumsSendNoticeComponent,
+    MedicalPremiumsUnbatchPaymentComponent,
   ],
   exports: [
     MedicalPremiumsProcessListComponent,
@@ -86,6 +96,11 @@ import { MedicalPremiumsAddDetailsFormComponent } from './components/medical-pre
     MedicalPremiumsPaymentsRouterPageComponent,
     MedicalPremiumsBatchesReconcilePaymentsBreakoutComponent,
     MedicalPremiumsPrintDenialLetterComponent,
+    MedicalPremiumsSendReportComponent,
+    MedicalPremiumsDeletePaymentComponent,
+    MedicalPremiumsLeavePageComponent,
+    MedicalPremiumsSendNoticeComponent,
+    MedicalPremiumsUnbatchPaymentComponent,
   ],
 })
 export class CaseManagementFeatureFinancialInsurancePremiumsModule {}
