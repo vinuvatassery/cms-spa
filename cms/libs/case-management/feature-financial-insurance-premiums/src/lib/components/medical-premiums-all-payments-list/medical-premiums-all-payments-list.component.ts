@@ -1,4 +1,3 @@
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,11 +7,11 @@ import {
   OnInit,
   Output,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
-import {  GridDataResult } from '@progress/kendo-angular-grid';
+import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -23,10 +22,12 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
   selector: 'cms-medical-premiums-all-payments-list',
-  templateUrl: './medical-premiums-all-payments-list.component.html', 
+  templateUrl: './medical-premiums-all-payments-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MedicalPremiumsAllPaymentsListComponent implements OnInit, OnChanges{
+export class MedicalPremiumsAllPaymentsListComponent
+  implements OnInit, OnChanges
+{
   @ViewChild('previewSubmitPaymentDialogTemplate', { read: TemplateRef })
   previewSubmitPaymentDialogTemplate!: TemplateRef<any>;
   @ViewChild('unBatchPaymentDialogTemplate', { read: TemplateRef })
@@ -37,7 +38,7 @@ export class MedicalPremiumsAllPaymentsListComponent implements OnInit, OnChange
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isMedicalPremiumsAllPaymentsGridLoaderShow = false;
-  
+
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -55,84 +56,77 @@ export class MedicalPremiumsAllPaymentsListComponent implements OnInit, OnChange
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
   gridMedicalPremiumsAllPaymentsDataSubject = new Subject<any>();
-  gridMedicalPremiumsAllPaymentsData$ = this.gridMedicalPremiumsAllPaymentsDataSubject.asObservable();
+  gridMedicalPremiumsAllPaymentsData$ =
+    this.gridMedicalPremiumsAllPaymentsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   PreviewSubmitPaymentDialog: any;
-  printAuthorizationDialog: any;
   deletePaymentDialog: any;
   unBatchPaymentDialog: any;
+  sendReportDialog: any;
   isRequestPaymentClicked = false;
-  isPrintAuthorizationClicked = false;
+  isSendReportOpened = false;
   isUnBatchPaymentOpen = false;
   isDeletePaymentOpen = false;
 
   public allPaymentsGridActions = [
- 
     {
       buttonType: 'btn-h-primary',
       text: 'Unbatch Payment',
-      icon: 'undo', 
+      icon: 'undo',
       click: (data: any): void => {
-            if(!this.isUnBatchPaymentOpen){
-              this.isUnBatchPaymentOpen = true;
-              this.onUnBatchPaymentOpenClicked(this.unBatchPaymentDialogTemplate);
-            }
-       
-      }
+        if (!this.isUnBatchPaymentOpen) {
+          this.isUnBatchPaymentOpen = true;
+          this.onUnBatchPaymentOpenClicked(this.unBatchPaymentDialogTemplate);
+        }
+      },
     },
     {
       buttonType: 'btn-h-danger',
       text: 'Delete Payment',
-      icon: 'delete', 
+      icon: 'delete',
       click: (data: any): void => {
-        if(!this.isDeletePaymentOpen){
+        if (!this.isDeletePaymentOpen) {
           this.isDeletePaymentOpen = true;
           this.onDeletePaymentOpenClicked(this.deletePaymentDialogTemplate);
         }
-       
-      }
+      },
     },
   ];
 
-
   public bulkMore = [
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Send Report',
+      icon: 'mail',
+      click: (data: any): void => {
+        this.isRequestPaymentClicked = false;
+        this.isSendReportOpened = true;
+      },
+    },
     {
       buttonType: 'btn-h-primary',
       text: 'Request Payments',
       icon: 'local_atm',
       click: (data: any): void => {
-      this.isRequestPaymentClicked = true;
-      this.isPrintAuthorizationClicked = false;
-        
-      },  
+        this.isRequestPaymentClicked = true;
+        this.isSendReportOpened = false;
+      },
     },
-    
+
     {
       buttonType: 'btn-h-primary',
       text: 'Reconcile Payments',
       icon: 'edit',
       click: (data: any): void => {
         this.navToReconcilePayments(data);
-      },  
-    },
-
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Print Authorizations',
-      icon: 'print',
-      click: (data: any): void => {
-        this.isRequestPaymentClicked = false;
-        this.isPrintAuthorizationClicked = true;
-          
-        },
+      },
     },
   ];
-  
-  constructor(private route: Router,private dialogService: DialogService ) {}
+
+  constructor(private route: Router, private dialogService: DialogService) {}
 
   ngOnInit(): void {
     this.loadMedicalPremiumsAllPaymentsListGrid();
@@ -146,7 +140,6 @@ export class MedicalPremiumsAllPaymentsListComponent implements OnInit, OnChange
 
     this.loadMedicalPremiumsAllPaymentsListGrid();
   }
-
 
   private loadMedicalPremiumsAllPaymentsListGrid(): void {
     this.loadRefundAllPayments(
@@ -173,8 +166,6 @@ export class MedicalPremiumsAllPaymentsListComponent implements OnInit, OnChange
     this.gridDataHandle();
   }
 
-  
-  
   onChange(data: any) {
     this.defaultGridState();
 
@@ -232,25 +223,32 @@ export class MedicalPremiumsAllPaymentsListComponent implements OnInit, OnChange
   }
 
   gridDataHandle() {
-    this.medicalPremiumsAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridMedicalPremiumsAllPaymentsDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
-        this.isMedicalPremiumsAllPaymentsGridLoaderShow = false;
+    this.medicalPremiumsAllPaymentsGridLists$.subscribe(
+      (data: GridDataResult) => {
+        this.gridDataResult = data;
+        this.gridDataResult.data = filterBy(
+          this.gridDataResult.data,
+          this.filterData
+        );
+        this.gridMedicalPremiumsAllPaymentsDataSubject.next(
+          this.gridDataResult
+        );
+        if (data?.total >= 0 || data?.total === -1) {
+          this.isMedicalPremiumsAllPaymentsGridLoaderShow = false;
+        }
       }
-    });
+    );
     this.isMedicalPremiumsAllPaymentsGridLoaderShow = false;
   }
-  navToReconcilePayments(event : any){  
-    this.route.navigate(['/financial-management/insurance-premiums/payments/reconcile-payments'] );
+  navToReconcilePayments(event: any) {
+    this.route.navigate([
+      '/financial-management/insurance-premiums/payments/reconcile-payments',
+    ]);
   }
-  
- 
-  public onPreviewSubmitPaymentOpenClicked(template: TemplateRef<unknown>): void {
+
+  public onPreviewSubmitPaymentOpenClicked(
+    template: TemplateRef<unknown>
+  ): void {
     this.PreviewSubmitPaymentDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
@@ -258,27 +256,26 @@ export class MedicalPremiumsAllPaymentsListComponent implements OnInit, OnChange
   }
 
   onPreviewSubmitPaymentCloseClicked(result: any) {
-    if (result) { 
+    if (result) {
       this.PreviewSubmitPaymentDialog.close();
     }
   }
 
-  onBulkOptionCancelClicked(){
+  onBulkOptionCancelClicked() {
     this.isRequestPaymentClicked = false;
-    this.isPrintAuthorizationClicked = false;
+    this.isSendReportOpened = false;
   }
 
-  public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
-    this.printAuthorizationDialog = this.dialogService.open({
+  public onSendReportOpenClicked(template: TemplateRef<unknown>): void {
+    this.sendReportDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
 
- 
-  onPrintAuthorizationCloseClicked(result: any) {
-    if (result) { 
-      this.printAuthorizationDialog.close();
+  onSendReportCloseClicked(result: any) {
+    if (result) {
+      this.sendReportDialog.close();
     }
   }
 
@@ -289,8 +286,8 @@ export class MedicalPremiumsAllPaymentsListComponent implements OnInit, OnChange
     });
   }
 
-  onUnBatchPaymentCloseClicked(result: any){
-    if (result) { 
+  onUnBatchPaymentCloseClicked(result: any) {
+    if (result) {
       this.isUnBatchPaymentOpen = false;
       this.unBatchPaymentDialog.close();
     }
@@ -301,13 +298,10 @@ export class MedicalPremiumsAllPaymentsListComponent implements OnInit, OnChange
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
-  onDeletePaymentCloseClicked(result: any){
-
-    if (result) { 
+  onDeletePaymentCloseClicked(result: any) {
+    if (result) {
       this.isDeletePaymentOpen = false;
       this.deletePaymentDialog.close();
     }
   }
-
-  
 }

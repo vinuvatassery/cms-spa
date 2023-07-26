@@ -10,8 +10,8 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
-import {  GridDataResult } from '@progress/kendo-angular-grid';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { GridDataResult } from '@progress/kendo-angular-grid';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   CompositeFilterDescriptor,
@@ -22,10 +22,12 @@ import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 @Component({
   selector: 'cms-medical-premiums-batches-log-lists',
-  templateUrl: './medical-premiums-batches-log-lists.component.html', 
+  templateUrl: './medical-premiums-batches-log-lists.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChanges {
+export class MedicalPremiumsBatchesLogListsComponent
+  implements OnInit, OnChanges
+{
   @ViewChild('previewSubmitPaymentDialogTemplate', { read: TemplateRef })
   previewSubmitPaymentDialogTemplate!: TemplateRef<any>;
   @ViewChild('unBatchPremiumsDialogTemplate', { read: TemplateRef })
@@ -36,43 +38,39 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
   isRequestPaymentClicked = false;
-  isPrintAuthorizationClicked = false;
+  isSendReportOpened = false;
   isUnBatchPremiumsClosed = false;
   isRemoveClaimClosed = false;
   PreviewSubmitPaymentDialog: any;
-  printAuthorizationDialog: any;
   UnBatchDialog: any;
   removePremiumsDialog: any;
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
+      text: 'Send Report',
+      icon: 'mail',
+      click: (data: any): void => {
+        this.isRequestPaymentClicked = false;
+        this.isSendReportOpened = true;
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
       text: 'Request Payments',
       icon: 'local_atm',
       click: (data: any): void => {
-      this.isRequestPaymentClicked = true;
-      this.isPrintAuthorizationClicked = false;
-        
-      },  
+        this.isRequestPaymentClicked = true;
+        this.isSendReportOpened = false;
+      },
     },
-    
+
     {
       buttonType: 'btn-h-primary',
       text: 'Reconcile Payments',
       icon: 'edit',
       click: (data: any): void => {
         this.navToReconcilePayments(data);
-      },  
-    },
-
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Print Authorizations',
-      icon: 'print',
-      click: (data: any): void => {
-        this.isRequestPaymentClicked = false;
-        this.isPrintAuthorizationClicked = true;
-          
-        },
+      },
     },
   ];
 
@@ -81,7 +79,6 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
       buttonType: 'btn-h-primary',
       text: 'Edit Premiums',
       icon: 'edit',
-      
     },
     {
       buttonType: 'btn-h-primary',
@@ -92,8 +89,7 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
           this.isUnBatchPremiumsClosed = true;
           this.onUnBatchOpenClicked(this.unBatchPremiumsDialogTemplate);
         }
-       
-      }      
+      },
     },
     {
       buttonType: 'btn-h-danger',
@@ -102,12 +98,11 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
       click: (data: any): void => {
         if (!this.isRemoveClaimClosed) {
           this.isRemoveClaimClosed = true;
-          this.onRemovePremiumsOpenClicked(this.removePremiumsConfirmationDialogTemplate);
+          this.onRemovePremiumsOpenClicked(
+            this.removePremiumsConfirmationDialogTemplate
+          );
         }
-       
-      }
-
-      
+      },
     },
   ];
   @Input() pageSizes: any;
@@ -127,14 +122,16 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   gridPremiumsBatchLogDataSubject = new Subject<any>();
-  gridPremiumsBatchLogData$ = this.gridPremiumsBatchLogDataSubject.asObservable();
+  gridPremiumsBatchLogData$ =
+    this.gridPremiumsBatchLogDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-   
+  sendReportDialog: any;
+
   /** Constructor **/
-  constructor(private route: Router,private dialogService: DialogService ) {}
-  
+  constructor(private route: Router, private dialogService: DialogService) {}
+
   ngOnInit(): void {
     this.loadBatchLogListGrid();
   }
@@ -147,7 +144,6 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
 
     this.loadBatchLogListGrid();
   }
-
 
   private loadBatchLogListGrid(): void {
     this.loadBatchLog(
@@ -173,8 +169,7 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
     this.loadVendorRefundBatchListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
- 
-  
+
   onChange(data: any) {
     this.defaultGridState();
 
@@ -239,25 +234,31 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
         this.filterData
       );
       this.gridPremiumsBatchLogDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
+      if (data?.total >= 0 || data?.total === -1) {
         this.isBatchLogGridLoaderShow = false;
       }
     });
     this.isBatchLogGridLoaderShow = false;
   }
 
-   backToBatch(event : any){  
-    this.route.navigate(['/financial-management/insurance-premiums'] );
+  backToBatch(event: any) {
+    this.route.navigate(['/financial-management/insurance-premiums']);
   }
 
-  goToBatchItems(event : any){  
-    this.route.navigate(['/financial-management/insurance-premiums/batch/items'] );
+  goToBatchItems(event: any) {
+    this.route.navigate([
+      '/financial-management/insurance-premiums/batch/items',
+    ]);
   }
 
-  navToReconcilePayments(event : any){  
-    this.route.navigate(['/financial-management/insurance-premiums/batch/reconcile-payments'] );
+  navToReconcilePayments(event: any) {
+    this.route.navigate([
+      '/financial-management/insurance-premiums/batch/reconcile-payments',
+    ]);
   }
-  public onPreviewSubmitPaymentOpenClicked(template: TemplateRef<unknown>): void {
+  public onPreviewSubmitPaymentOpenClicked(
+    template: TemplateRef<unknown>
+  ): void {
     this.PreviewSubmitPaymentDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
@@ -265,30 +266,28 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
   }
 
   onPreviewSubmitPaymentCloseClicked(result: any) {
-    if (result) { 
+    if (result) {
       this.PreviewSubmitPaymentDialog.close();
     }
   }
 
-  onBulkOptionCancelClicked(){
+  onBulkOptionCancelClicked() {
     this.isRequestPaymentClicked = false;
-    this.isPrintAuthorizationClicked = false;
+    this.isSendReportOpened = false;
   }
 
-  onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
-    this.printAuthorizationDialog = this.dialogService.open({
+  public onSendReportOpenClicked(template: TemplateRef<unknown>): void {
+    this.sendReportDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
 
- 
-  onPrintAuthorizationCloseClicked(result: any) {
-    if (result) { 
-      this.printAuthorizationDialog.close();
+  onSendReportCloseClicked(result: any) {
+    if (result) {
+      this.sendReportDialog.close();
     }
   }
-
 
   onUnBatchOpenClicked(template: TemplateRef<unknown>): void {
     this.UnBatchDialog = this.dialogService.open({
@@ -297,9 +296,8 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
     });
   }
 
- 
   onUnBatchCloseClicked(result: any) {
-    if (result) { 
+    if (result) {
       this.isUnBatchPremiumsClosed = false;
       this.UnBatchDialog.close();
     }
@@ -312,9 +310,8 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
     });
   }
   onModalRemovePremiumsModalClose(result: any) {
-    if (result) { 
+    if (result) {
       this.removePremiumsDialog.close();
     }
   }
- 
 }
