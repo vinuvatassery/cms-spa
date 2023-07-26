@@ -67,7 +67,6 @@ export class EligibilityPeriodDetailComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    console.log(this.clientCaseEligibilityId);
     this.buildEligibilityPeriodForm();
     if(!this.isCopyPeriod)
     {
