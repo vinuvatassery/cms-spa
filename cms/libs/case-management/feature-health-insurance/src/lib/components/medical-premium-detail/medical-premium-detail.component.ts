@@ -593,7 +593,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   }
 
   private validateReview() {
-    if (this.isReviewPopup) {
+    if (this.isReviewPopup && this.ddlInsuranceType != HealthInsurancePlan.Veterans) {
       this.healthInsuranceForm.controls['insuranceEndDate'].setValidators([Validators.required]);
       this.healthInsuranceForm.controls['insuranceEndDate'].updateValueAndValidity();
     }
@@ -926,7 +926,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsurancePolicy.clientMaximumId = '';
       /* End for default values */
 
-      if (this.ddlInsuranceType === HealthInsurancePlan.Veterans) return;
+      if (this.ddlInsuranceType === HealthInsurancePlan.Veterans) {
+        this.healthInsurancePolicy.isCerReview = this.isReviewPopup;
+        return;
+      }
       this.healthInsurancePolicy.insuranceVendorId = this.healthInsuranceForm.controls['insuranceCarrierName'].value;
       this.healthInsurancePolicy.insurancePlanId =
         this.healthInsuranceForm.controls['insurancePlanName'].value;

@@ -130,6 +130,12 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
     }
   }
   
+  deleteButtonClicked(deleteButtonClicked: any) {
+    if (deleteButtonClicked) {
+      this.onDeleteConfirmOpenClicked();
+    }
+  }
+
   ngOnDestroy(): void {
     this.dentalInsuranceListSubscription.unsubscribe();
   }
