@@ -195,6 +195,14 @@ section {
   &-5 {
     padding-bottom: $size-xxx + $size-xx  + $size-xx +  $size-xxx !important;
   }
+  &-12rem{
+    padding-bottom: 12rem;
+  }
+}
+.mar{
+  &-0{
+    margin: 0;
+  }
 }
 .pl {
   &-0 {
@@ -230,6 +238,7 @@ section {
     padding-right: $size-xxx + $size-xx !important;
   }
 }
+ 
 .gap-m {
   gap: $size-xx;
 }
@@ -244,4 +253,14 @@ section {
 
 .rw-100{
   width: 100%;
+}
+
+.border-top-line{
+  border-top: 1px solid $grey-c;
+}
+
+.row-border{
+  border-top-color: $grey-c;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
