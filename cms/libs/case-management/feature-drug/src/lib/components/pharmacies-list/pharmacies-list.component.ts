@@ -124,7 +124,7 @@ export class PharmaciesListComponent implements OnInit {
     },
     {
       buttonType: 'btn-h-warn',
-      text: 'Mark Primary',
+      text: 'Make Primary',
       icon: 'star',
       type: 'MarkAsPrimary',
       click: (clientPharmacy: any): void => {
