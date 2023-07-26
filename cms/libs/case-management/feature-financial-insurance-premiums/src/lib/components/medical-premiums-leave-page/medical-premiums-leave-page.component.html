@@ -1,1 +1,15 @@
-<p>medical-premiums-leave-page works!</p>
+<kendo-dialog-titlebar > Leave page?</kendo-dialog-titlebar>
+
+<section class="k-dialog-body">
+    <p class="text-muted mb-1"> All unsaved payments will be lost.</p> 
+  </section>
+  
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+            <button kendoButton class="k-error-button" aria-label="Leave">Leave  </button>
+        <button kendoButton [primary]="true" aria-label="Stay"> Stay </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+  
