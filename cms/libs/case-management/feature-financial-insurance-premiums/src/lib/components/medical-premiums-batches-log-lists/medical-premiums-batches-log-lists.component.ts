@@ -30,8 +30,8 @@ export class MedicalPremiumsBatchesLogListsComponent
 {
   @ViewChild('previewSubmitPaymentDialogTemplate', { read: TemplateRef })
   previewSubmitPaymentDialogTemplate!: TemplateRef<any>;
-  @ViewChild('unBatchPremiumsDialogTemplate', { read: TemplateRef })
-  unBatchPremiumsDialogTemplate!: TemplateRef<any>;
+  @ViewChild('unBatchPaymentPremiumsDialogTemplate', { read: TemplateRef })
+  unBatchPaymentPremiumsDialogTemplate!: TemplateRef<any>;
   @ViewChild('removePremiumsConfirmationDialogTemplate', { read: TemplateRef })
   removePremiumsConfirmationDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -39,10 +39,10 @@ export class MedicalPremiumsBatchesLogListsComponent
   isBatchLogGridLoaderShow = false;
   isRequestPaymentClicked = false;
   isSendReportOpened = false;
-  isUnBatchPremiumsClosed = false;
+  isUnBatchPaymentPremiumsClosed = false;
   isRemoveClaimClosed = false;
   PreviewSubmitPaymentDialog: any;
-  UnBatchDialog: any;
+  UnBatchPaymentDialog: any;
   removePremiumsDialog: any;
   public bulkMore = [
     {
@@ -75,25 +75,21 @@ export class MedicalPremiumsBatchesLogListsComponent
   ];
 
   public batchLogGridActions = [
+  
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Premiums',
-      icon: 'edit',
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Unbatch Premiums',
+      text: 'UnBatch Payment',
       icon: 'undo',
       click: (data: any): void => {
-        if (!this.isUnBatchPremiumsClosed) {
-          this.isUnBatchPremiumsClosed = true;
-          this.onUnBatchOpenClicked(this.unBatchPremiumsDialogTemplate);
+        if (!this.isUnBatchPaymentPremiumsClosed) {
+          this.isUnBatchPaymentPremiumsClosed = true;
+          this.onUnBatchPaymentOpenClicked(this.unBatchPaymentPremiumsDialogTemplate);
         }
       },
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Remove Premiums',
+      text: 'Delete Payment',
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isRemoveClaimClosed) {
@@ -128,7 +124,8 @@ export class MedicalPremiumsBatchesLogListsComponent
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   sendReportDialog: any;
-
+  
+ 
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService) {}
 
@@ -289,17 +286,17 @@ export class MedicalPremiumsBatchesLogListsComponent
     }
   }
 
-  onUnBatchOpenClicked(template: TemplateRef<unknown>): void {
-    this.UnBatchDialog = this.dialogService.open({
+  onUnBatchPaymentOpenClicked(template: TemplateRef<unknown>): void {
+    this.UnBatchPaymentDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
 
-  onUnBatchCloseClicked(result: any) {
+  onUnBatchPaymentCloseClicked(result: any) {
     if (result) {
-      this.isUnBatchPremiumsClosed = false;
-      this.UnBatchDialog.close();
+      this.isUnBatchPaymentPremiumsClosed = false;
+      this.UnBatchPaymentDialog.close();
     }
   }
 

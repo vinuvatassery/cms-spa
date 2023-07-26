@@ -183,12 +183,12 @@
   <cms-medical-premiums-preview-payment-request></cms-medical-premiums-preview-payment-request>
 </ng-template>
 
-<ng-template #unBatchPremiumsDialogTemplate>
-  <cms-medical-premiums-unbatch
-    (UnBatchCloseClickedEvent)="onUnBatchCloseClicked($event)"></cms-medical-premiums-unbatch>
+<ng-template #unBatchPaymentPremiumsDialogTemplate>
+  <cms-medical-premiums-unbatch-payment
+    (unBatchPaymentCloseClickedEvent)="onUnBatchPaymentCloseClicked($event)"></cms-medical-premiums-unbatch-payment>
 </ng-template>
 
 <ng-template #removePremiumsConfirmationDialogTemplate>
-  <cms-medical-premiums-remove-premiums
-    (isModalRemovePremiumsCloseClicked)="onModalRemovePremiumsModalClose($event)"></cms-medical-premiums-remove-premiums>
+  <cms-medical-premiums-delete-payment
+    (deletePaymentCloseClickedEvent)="onModalRemovePremiumsModalClose($event)"></cms-medical-premiums-delete-payment>
 </ng-template>
