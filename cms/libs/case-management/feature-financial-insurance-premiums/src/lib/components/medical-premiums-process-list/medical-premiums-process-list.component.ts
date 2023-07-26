@@ -26,19 +26,25 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalPremiumsProcessListComponent implements OnInit, OnChanges {
-  @ViewChild('batchPremiumsConfirmationDialog', { read: TemplateRef })
-  batchPremiumsConfirmationDialog!: TemplateRef<any>;
-  @ViewChild('deletePremiumsConfirmationDialog', { read: TemplateRef })
-  deletePremiumsConfirmationDialog!: TemplateRef<any>;
+  @ViewChild('batchPremiumsConfirmationDialogTemplate', { read: TemplateRef })
+  batchPremiumsConfirmationDialogTemplate!: TemplateRef<any>;
+  @ViewChild('removePremiumsConfirmationDialogTemplate', { read: TemplateRef })
+  removePremiumsConfirmationDialogTemplate!: TemplateRef<any>;
+  @ViewChild('editPremiumsDialogTemplate', { read: TemplateRef })
+  editPremiumsDialogTemplate!: TemplateRef<any>;
+  @ViewChild('addPremiumsDialogTemplate', { read: TemplateRef })
+  addPremiumsDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  private deletePremiumsDialog: any;
+  private removePremiumsDialog: any;
   private batchConfirmPremiumsDialog: any;
-  private addEditPremiumsFormDialog: any;
+  private editPremiumsFormDialog: any;
+  private addPremiumsFormDialog: any;
   private addClientRecentPremiumsDialog: any;
-  isDeleteBatchClosed = false;
-  isBatchPremiumsOption = false;
-  isDeletePremiumsOption = false;
-  isProcessBatchClosed = false;
+  isRemoveBatchClosed = false;
+  isBatchPremiumsClicked = false;
+  isRemovePremiumsOption = false;
+  isEditBatchClosed = false; 
+  isAddPremiumClosed = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isProcessGridExpand = true;
   isMedicalPremiumsProcessGridLoaderShow = false;
@@ -68,23 +74,23 @@ export class MedicalPremiumsProcessListComponent implements OnInit, OnChanges {
   public premiumsProcessMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Batch Premiums',
-      icon: 'check',
+      text: 'Add Premiums',
+      icon: 'add',
       click: (data: any): void => {
-        if (!this.isProcessBatchClosed) {
-          this.isProcessBatchClosed = true; 
-          this.onBatchPremiumsGridSelectedClicked();
+        if (!this.isAddPremiumClosed) {
+          this.isAddPremiumClosed = true; 
+          this.onClickOpenAddPremiumsFromModal(this.addPremiumsDialogTemplate);
         }
       },
     },
 
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Premiums',
+      text: 'Remove Premiums',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.isDeleteBatchClosed) {
-          this.isDeleteBatchClosed = true; 
+        if (!this.isRemoveBatchClosed) {
+          this.isRemoveBatchClosed = true; 
           this.onBatchPremiumsGridSelectedClicked();
         }
       },
@@ -95,10 +101,16 @@ export class MedicalPremiumsProcessListComponent implements OnInit, OnChanges {
       buttonType: 'btn-h-primary',
       text: 'Edit Premiums',
       icon: 'edit',
+      click: (data: any): void => {
+        if (!this.isEditBatchClosed) {
+          this.isEditBatchClosed = true; 
+          this.onClickOpenEditPremiumsFromModal(this.editPremiumsDialogTemplate);
+        }
+      },
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Premiums',
+      text: 'Remove Premiums',
       icon: 'delete',
     },
   ];
@@ -231,38 +243,56 @@ export class MedicalPremiumsProcessListComponent implements OnInit, OnChanges {
     }
   }
 
-  public onDeletePremiumsOpenClicked(template: TemplateRef<unknown>): void {
-    this.deletePremiumsDialog = this.dialogService.open({
+  public onRemovePremiumsOpenClicked(template: TemplateRef<unknown>): void {
+    this.removePremiumsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
-  onModalDeletePremiumsModalClose(result: any) {
+  onModalRemovePremiumsModalClose(result: any) {
     if (result) { 
-      this.deletePremiumsDialog.close();
+      this.removePremiumsDialog.close();
     }
   }
 
-  onClickOpenAddEditPremiumsFromModal(template: TemplateRef<unknown>): void {
-    this.addEditPremiumsFormDialog = this.dialogService.open({
+  onClickOpenEditPremiumsFromModal(template: TemplateRef<unknown>): void {
+    this.editPremiumsFormDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-full add_premiums_modal',
     });
   }
-  modalCloseAddEditPremiumsFormModal(result: any) {
+  modalCloseEditPremiumsFormModal(result: any) {
     if (result) {
-      this.addEditPremiumsFormDialog.close();
+      this.editPremiumsFormDialog.close();
     }
   }
 
+
+  onClickOpenAddPremiumsFromModal(template: TemplateRef<unknown>): void {
+    this.addPremiumsFormDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-full add_premiums_modal',
+    });
+  }
+  modalCloseAddPremiumsFormModal(result: any) {
+    if (result) {
+      this.isAddPremiumClosed = false;
+      this.addPremiumsFormDialog.close();
+    }
+  }
+  onSplitBatchPremiumsClicked(){
+        this.isBatchPremiumsClicked = true;
+        this.onBatchPremiumsGridSelectedClicked();
+  }
   onBatchPremiumsGridSelectedClicked() {
     this.isProcessGridExpand = false;
   }
 
   onBatchPremiumsGridSelectedCancelClicked() {
     this.isProcessGridExpand = true;
-    this.isDeleteBatchClosed = false;
-    this.isProcessBatchClosed = false;
+    this.isRemoveBatchClosed = false;
+    this.isAddPremiumClosed = false; 
+    this.isBatchPremiumsClicked = false;
   
   }
 

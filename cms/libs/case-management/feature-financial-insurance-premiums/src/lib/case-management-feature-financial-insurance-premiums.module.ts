@@ -8,8 +8,8 @@ import { MedicalPremiumsBatchesListComponent } from './components/medical-premiu
 import { MedicalPremiumsAllPaymentsListComponent } from './components/medical-premiums-all-payments-list/medical-premiums-all-payments-list.component';
 import { MedicalPremiumsBatchPremiumsComponent } from './components/medical-premiums-batch-premiums/medical-premiums-batch-premiums.component';
 import { MedicalPremiumsBatchListDetailItemsComponent } from './components/medical-premiums-batch-list-detail-items/medical-premiums-batch-list-detail-items.component';
-import { MedicalPremiumsDeletePremiumsComponent } from './components/medical-premiums-delete-premiums/medical-premiums-delete-premiums.component';
-import { MedicalPremiumsDetailFormComponent } from './components/medical-premiums-detail-form/medical-premiums-detail-form.component';
+import { MedicalPremiumsRemovePremiumsComponent } from './components/medical-premiums-remove-premiums/medical-premiums-remove-premiums.component';
+import { MedicalPremiumsEditDetailFormComponent } from './components/medical-premiums-edit-detail-form/medical-premiums-edit-detail-form.component';
 import { MedicalPremiumsPaymentDetailsFormComponent } from './components/medical-premiums-payment-details-form/medical-premiums-payment-details-form.component';
 import { MedicalPremiumsPreviewPaymentRequestComponent } from './components/medical-premiums-preview-payment-request/medical-premiums-preview-payment-request.component';
 import { MedicalPremiumsPrintAuthorizationComponent } from './components/medical-premiums-print-authorization/medical-premiums-print-authorization.component';
@@ -44,8 +44,8 @@ import { MedicalPremiumsAddDetailsFormComponent } from './components/medical-pre
     MedicalPremiumsAllPaymentsListComponent,
     MedicalPremiumsBatchPremiumsComponent,
     MedicalPremiumsBatchListDetailItemsComponent,
-    MedicalPremiumsDeletePremiumsComponent,
-    MedicalPremiumsDetailFormComponent,
+    MedicalPremiumsRemovePremiumsComponent,
+    MedicalPremiumsEditDetailFormComponent,
     MedicalPremiumsPaymentDetailsFormComponent,
     MedicalPremiumsPreviewPaymentRequestComponent,
     MedicalPremiumsPrintAuthorizationComponent,
@@ -69,8 +69,8 @@ import { MedicalPremiumsAddDetailsFormComponent } from './components/medical-pre
     MedicalPremiumsAllPaymentsListComponent,
     MedicalPremiumsBatchPremiumsComponent,
     MedicalPremiumsBatchListDetailItemsComponent,
-    MedicalPremiumsDeletePremiumsComponent,
-    MedicalPremiumsDetailFormComponent,
+    MedicalPremiumsRemovePremiumsComponent,
+    MedicalPremiumsEditDetailFormComponent,
     MedicalPremiumsPaymentDetailsFormComponent,
     MedicalPremiumsPreviewPaymentRequestComponent,
     MedicalPremiumsPrintAuthorizationComponent,

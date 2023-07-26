@@ -30,19 +30,19 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
   previewSubmitPaymentDialogTemplate!: TemplateRef<any>;
   @ViewChild('unBatchPremiumsDialogTemplate', { read: TemplateRef })
   unBatchPremiumsDialogTemplate!: TemplateRef<any>;
-  @ViewChild('deletePremiumsConfirmationDialogTemplate', { read: TemplateRef })
-  deletePremiumsConfirmationDialogTemplate!: TemplateRef<any>;
+  @ViewChild('removePremiumsConfirmationDialogTemplate', { read: TemplateRef })
+  removePremiumsConfirmationDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
   isRequestPaymentClicked = false;
   isPrintAuthorizationClicked = false;
   isUnBatchPremiumsClosed = false;
-  isDeleteClaimClosed = false;
+  isRemoveClaimClosed = false;
   PreviewSubmitPaymentDialog: any;
   printAuthorizationDialog: any;
   UnBatchDialog: any;
-  deletePremiumsDialog: any;
+  removePremiumsDialog: any;
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -97,12 +97,12 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Premiums',
+      text: 'Remove Premiums',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.isDeleteClaimClosed) {
-          this.isDeleteClaimClosed = true;
-          this.onDeletePremiumsOpenClicked(this.deletePremiumsConfirmationDialogTemplate);
+        if (!this.isRemoveClaimClosed) {
+          this.isRemoveClaimClosed = true;
+          this.onRemovePremiumsOpenClicked(this.removePremiumsConfirmationDialogTemplate);
         }
        
       }
@@ -305,15 +305,15 @@ export class MedicalPremiumsBatchesLogListsComponent implements OnInit, OnChange
     }
   }
 
-  public onDeletePremiumsOpenClicked(template: TemplateRef<unknown>): void {
-    this.deletePremiumsDialog = this.dialogService.open({
+  public onRemovePremiumsOpenClicked(template: TemplateRef<unknown>): void {
+    this.removePremiumsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
-  onModalDeletePremiumsModalClose(result: any) {
+  onModalRemovePremiumsModalClose(result: any) {
     if (result) { 
-      this.deletePremiumsDialog.close();
+      this.removePremiumsDialog.close();
     }
   }
  

@@ -8,11 +8,11 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialMedicalPremiumsFacade } from '@cms/case-management/domain';
 @Component({
-  selector: 'cms-medical-premiums-detail-form',
-  templateUrl: './medical-premiums-detail-form.component.html', 
+  selector: 'cms-medical-premiums-edit-detail-form',
+  templateUrl: './medical-premiums-edit-detail-form.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MedicalPremiumsDetailFormComponent {
+export class MedicalPremiumsEditDetailFormComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
   premiumsListData$ = this.financialMedicalPremiumsFacade.premiumsListData$;
@@ -77,14 +77,14 @@ export class MedicalPremiumsDetailFormComponent {
     },
   ];
 
-  @Output() modalCloseAddEditPremiumsFormModal = new EventEmitter();
+  @Output() modalCloseEditPremiumsFormModal = new EventEmitter();
 
   constructor(
     private readonly financialMedicalPremiumsFacade: FinancialMedicalPremiumsFacade
   ) {}
 
   closeAddEditPremiumsFormModalClicked() {
-    this.modalCloseAddEditPremiumsFormModal.emit(true);
+    this.modalCloseEditPremiumsFormModal.emit(true);
   }
 
   loadPremiumsListGrid() {

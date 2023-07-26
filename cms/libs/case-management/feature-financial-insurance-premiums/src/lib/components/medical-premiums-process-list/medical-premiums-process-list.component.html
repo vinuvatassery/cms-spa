@@ -55,7 +55,7 @@
     <kendo-grid-column field="clientName" title="Client Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="clientName" kendoButton look="flat" class="card-link-button"
-          (click)="clientRecentPremiumsModalClicked(clientRecentPremiumsDialog, dataItem)">
+          (click)="clientRecentPremiumsModalClicked(clientRecentPremiumsDialogTemplate, dataItem)">
           {{ dataItem.clientName }}
         </button>
       </ng-template> </kendo-grid-column>
@@ -183,24 +183,24 @@
 
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span class="">0 premiums(s) to be deleted</span>
+  <span class="">0 premiums(s) to be remove</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
-    (click)="onBatchPremiumsGridSelectedCancelClicked()" *ngIf="isDeleteBatchClosed || isProcessBatchClosed"> Cancel
+    (click)="onBatchPremiumsGridSelectedCancelClicked()"   *ngIf="isBatchPremiumsClicked || isRemoveBatchClosed"> Cancel
   </button>
 
-  <button kendoButton kendoButton class="k-error-button" aria-label="Delete" *ngIf="isDeleteBatchClosed"
-    (click)="onDeletePremiumsOpenClicked(deletePremiumsConfirmationDialog)"> <span class="material-icons mr-1"
-      aria-label="Delete"> delete</span> Delete </button>
+  <button kendoButton kendoButton class="k-error-button" aria-label="Remove" 
+    (click)="onRemovePremiumsOpenClicked(removePremiumsConfirmationDialogTemplate)"  *ngIf="isRemoveBatchClosed"> <span class="material-icons mr-1"
+      aria-label="Remove"> delete</span> Remove </button>
 
   <button kendoButton [primary]="true" aria-label="Receipting Log" class=""
-    (click)="onBatchPremiumsClicked(batchPremiumsConfirmationDialog)" *ngIf="isProcessBatchClosed"> Batch </button>
+    (click)="onBatchPremiumsClicked(batchPremiumsConfirmationDialogTemplate)"   *ngIf="isBatchPremiumsClicked"> Batch </button>
 
-  <kendo-splitbutton *ngIf="!isDeleteBatchClosed && !isProcessBatchClosed" [data]="premiumsProcessMore"
+  <kendo-splitbutton  [data]="premiumsProcessMore" *ngIf="!isBatchPremiumsClicked && !isRemoveBatchClosed"
     class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
-    <div class="btn-inner-block" (click)="onClickOpenAddEditPremiumsFromModal(addEditPremiumsDialog)">
-      <span class="material-icons" aria-label="New Premiums" aria-hidden="false">add</span>
-      New Premiums
+    <div class="btn-inner-block" (click)="onSplitBatchPremiumsClicked()">
+      <span class="material-icons" aria-label="New Premiums" aria-hidden="false">check</span>
+      Batch Premiums
     </div>
     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
@@ -212,20 +212,24 @@
   </kendo-splitbutton>
 </div>
 
-<ng-template #batchPremiumsConfirmationDialog>
+<ng-template #batchPremiumsConfirmationDialogTemplate>
   <cms-medical-premiums-batch-premiums
     (isModalBatchPremiumsCloseClicked)="onModalBatchPremiumsModalClose($event)"></cms-medical-premiums-batch-premiums>
 </ng-template>
-<ng-template #deletePremiumsConfirmationDialog>
-  <cms-medical-premiums-delete-premiums
-    (isModalDeletePremiumsCloseClicked)="onModalDeletePremiumsModalClose($event)"></cms-medical-premiums-delete-premiums>
+<ng-template #removePremiumsConfirmationDialogTemplate>
+  <cms-medical-premiums-remove-premiums
+    (isModalRemovePremiumsCloseClicked)="onModalRemovePremiumsModalClose($event)"></cms-medical-premiums-remove-premiums>
 </ng-template>
-<ng-template #addEditPremiumsDialog>
-  <cms-medical-premiums-detail-form
-    (modalCloseAddEditPremiumsFormModal)="modalCloseAddEditPremiumsFormModal($event)"></cms-medical-premiums-detail-form>
+<ng-template #AddPremiumsDialogTemplate>
+  <cms-medical-premiums-add-details-form
+    (modalCloseAddPremiumsFormModal)="modalCloseAddPremiumsFormModal($event)"></cms-medical-premiums-add-details-form>
+</ng-template>
+<ng-template #editPremiumsDialogTemplate>
+  <cms-medical-premiums-edit-detail-form
+    (modalCloseEditPremiumsFormModal)="modalCloseEditPremiumsFormModal($event)"></cms-medical-premiums-edit-detail-form>
 </ng-template>
 
-<ng-template #clientRecentPremiumsDialog>
+<ng-template #clientRecentPremiumsDialogTemplate>
   <kendo-dialog-titlebar (close)="closeRecentPremiumsModal($event)">Recent Premiums for Donna Summer</kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-medical-premiums-recent-premiums-list
