@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { FinancialVendorFacade } from '@cms/case-management/domain'
 @Component({
   selector: 'cms-vendor-info',
   templateUrl: './vendor-info.component.html',

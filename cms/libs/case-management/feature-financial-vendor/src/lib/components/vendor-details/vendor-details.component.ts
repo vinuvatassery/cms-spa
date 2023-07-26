@@ -294,7 +294,7 @@ fillFormData(){
       emailAddressTypeCode: AddressType.Mailing
     }
     this.mapAddressContact(formValues);
-    let vendorProfileData = this.createVendorProfileData(formValues)
+    vendorProfileData = this.createVendorProfileData(formValues)
     return vendorProfileData;
   }
 
