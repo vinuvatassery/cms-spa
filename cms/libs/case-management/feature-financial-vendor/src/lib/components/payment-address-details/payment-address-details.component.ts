@@ -16,7 +16,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
   @Output() closeEvent = new EventEmitter<any>();
   @Input() isEdit!: any
   @Input() billingAddress!: any
-  SpecialHandlingLength = 100;
+  specialHandlingLength = 100;
   ddlStates$ = this.contactFacade.ddlStates$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   paymentAddressForm!: FormGroup;
@@ -28,6 +28,10 @@ export class PaymentAddressDetailsComponent implements OnInit {
   paymentRunDatelov$ = this.lovFacade.paymentRunDatelov$;
   financialVendorProviderTabCode: any = FinancialVendorProviderTabCode;
   vendorAddressId: string = '';
+  specialHandling = '';
+  specialHandlingCharachtersCount!: number;
+  specialHandlingCounter!: string;
+
   /** Constructor**/
   constructor(
     private readonly billingAddressFacade: BillingAddressFacade,
@@ -42,6 +46,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
     debugger;
     this.vendorId = this.activatedRoute.snapshot.queryParams['v_id'];
     this.tabCode = this.activatedRoute.snapshot.queryParams['tab_code'];
+    this.specialHandlingWordCount();
     this.setAddressTypeCode();
     this.loadDdlStates();
     this.loadVenderPaymentMethos();
@@ -70,6 +75,13 @@ export class PaymentAddressDetailsComponent implements OnInit {
       this.paymentAddressForm.controls['acceptsCombinedPaymentsFlag'].setValue(this.billingAddress.acceptsCombinedPaymentsFlag);
     }
     this.cdr.detectChanges();
+  }
+
+  private specialHandlingWordCount() {
+    this.specialHandlingCharachtersCount = this.specialHandling
+      ? this.specialHandling.length
+      : 0;
+    this.specialHandlingCounter = `${this.specialHandlingCharachtersCount}/${this.specialHandlingLength}`;
   }
 
   private buildForm() {
@@ -138,7 +150,6 @@ export class PaymentAddressDetailsComponent implements OnInit {
   }
 
   submit() {
-    debugger;
     this.formIsSubmitted = true;
     if (!this.paymentAddressForm.valid) return;
 
@@ -177,6 +188,10 @@ export class PaymentAddressDetailsComponent implements OnInit {
       return this.billingAddressFacade.updateBillingAddress(this.vendorId, formValues);
     }
     return this.billingAddressFacade.saveBillingAddress(this.vendorId, formValues);
+  }
+  onSpecialHandlingValueChange(event: any): void {
+    this.specialHandlingCharachtersCount = event.length;
+    this.specialHandlingCounter = `${this.specialHandlingCharachtersCount}/${this.specialHandlingLength}`;
   }
 
 }

@@ -7,7 +7,7 @@
         <div class="flex-row">
             <div class="flex-col">
                 <kendo-floatinglabel text="Mail Code">
-                    <kendo-textbox aria-label="Mail Code" formControlName="mailCode"
+                    <kendo-textbox [maxlength]="3" aria-label="Mail Code" formControlName="mailCode"
                         [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textbox>
                 </kendo-floatinglabel>
@@ -69,7 +69,7 @@
             </div>
             <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Zip">
-                    <kendo-textbox aria-label="Zip" formControlName="zip" [fillMode]="formUiStyle.inputFillMode">
+                    <kendo-textbox [maxlength]="10" aria-label="Zip" formControlName="zip" [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['zip'].valid">Zip Code is
@@ -156,8 +156,14 @@
             <div class="flex-col flex-col-12">
                 <kendo-floatinglabel text="Special Handling (optional)">
                     <kendo-textarea formControlName="specialHandlingDesc" [fillMode]="formUiStyle.inputFillMode"
-                        resizable="auto" id="SpecialHandling" [maxlength]="SpecialHandlingLength"
+                        resizable="auto" id="SpecialHandling" [maxlength]="specialHandlingLength"
+                        [value]="specialHandling" (valueChange)="onSpecialHandlingValueChange($event)"
                         aria-label="Special Handling">
+                        <kendo-textarea-suffix class="justify-content-end">
+                          <span class="tareajustificationcounter">{{
+                            specialHandlingCounter
+                            }}</span>
+                        </kendo-textarea-suffix>
                     </kendo-textarea>
                 </kendo-floatinglabel>
             </div>
