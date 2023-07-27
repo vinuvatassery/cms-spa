@@ -43,7 +43,6 @@ export class PaymentAddressDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    debugger;
     this.vendorId = this.activatedRoute.snapshot.queryParams['v_id'];
     this.tabCode = this.activatedRoute.snapshot.queryParams['tab_code'];
     this.specialHandlingWordCount();
