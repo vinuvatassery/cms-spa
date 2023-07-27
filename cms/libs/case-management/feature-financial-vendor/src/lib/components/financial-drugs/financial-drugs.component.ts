@@ -1,18 +1,21 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { DrugsFacade } from '@cms/case-management/domain';
+import { DrugCategoryCode, DrugsFacade } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'cms-financial-drugs',
   templateUrl: './financial-drugs.component.html',
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialDrugsComponent { 
+export class FinancialDrugsComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isFinancialDrugsDetailShow = false;
-  isFinancialDrugsDeactivateShow = false; 
+  isFinancialDrugsDeactivateShow = false;
   isFinancialDrugsReassignShow  = false;
+  vendorId: any;
+  DrugCategoryCode = DrugCategoryCode;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isDrugsGridLoaderShow = false;
   public sortValue = this.drugsFacade.sortValue;
@@ -22,15 +25,16 @@ export class FinancialDrugsComponent {
   public sort = this.drugsFacade.sort;
   public state!: State;
   drugsGridView$ = this.drugsFacade.drugsData$;
- 
+  dialogTitle = "Add";
+
   public emailBillingAddressActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Drug',
       icon: 'edit',
-      click: (data: any): void => {        
+      click: (data: any): void => {
         console.log(data);
-        this.clickOpenAddEditFinancialDrugsDetails();
+        this.clickOpenAddEditFinancialDrugsDetails("Edit");
       },
     },
     {
@@ -54,13 +58,19 @@ export class FinancialDrugsComponent {
   ];
 
 
-  
+
    /** Constructor **/
-   constructor(private readonly drugsFacade: DrugsFacade) {}
+   constructor(private readonly drugsFacade: DrugsFacade, private route: ActivatedRoute) {}
 
 
-   
+
   ngOnInit(): void {
+    this.vendorId = this.route.snapshot.queryParams['v_id'];
+
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value
+    };
     this.loadDrugsListGrid();
   }
   ngOnChanges(): void {
@@ -75,6 +85,7 @@ export class FinancialDrugsComponent {
   pageSelectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
+    this.loadDrugsListGrid();
   }
 
   public dataStateChange(stateData: any): void {
@@ -82,16 +93,23 @@ export class FinancialDrugsComponent {
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.state = stateData;
+    this.loadDrugsListGrid();
   }
   loadDrugsListGrid() {
-    this.state = {
-      skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
-    this.drugsFacade.loadDrugsListGrid();
+    this.drugsFacade.loadDrugsListGrid(
+      this.vendorId ?? "",
+      this.state.skip ?? 0,
+      this.state.take ?? 0,
+      this.sortValue,
+      this.sortType
+    );
   }
-  clickOpenAddEditFinancialDrugsDetails() {
+  clickOpenAddEditFinancialDrugsDetails(title:string) {
+    this.dialogTitle = title;
     this.isFinancialDrugsDetailShow = true;
   }
 

@@ -15,7 +15,7 @@ export class DrugsFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'address1';
+  public sortValue = 'brandName';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
@@ -23,15 +23,16 @@ export class DrugsFacade {
 
   private drugsDataSubject = new BehaviorSubject<any>([]);
   drugsData$ = this.drugsDataSubject.asObservable();
+  private manufacturerSubject = new Subject<any>();
+  manufacturerList$ = this.manufacturerSubject.asObservable();
 
-  
   /** Private properties **/
- 
+
   /** Public properties **/
- 
+
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>(); 
+  snackbarSubject = new Subject<SnackBar>();
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
@@ -59,19 +60,43 @@ export class DrugsFacade {
   ) { }
 
   /** Public methods **/
-  loadDrugsListGrid(){
-    this.drugsDataService.loadDrugsListService().subscribe({
+  loadDrugsListGrid(vendorId:string, skipCount: number, maxResultCount: number, sort: string, sortType: string) {
+    this.showLoader();
+    this.drugsDataService.loadDrugsListService(vendorId,skipCount,maxResultCount,sort,sortType).subscribe({
       next: (dataResponse) => {
         this.drugsDataSubject.next(dataResponse);
+
+        if (dataResponse) {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.drugsDataSubject.next(gridView);
+        }
         this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.drugsDataSubject.next(false);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.hideLoader();
       },
     });
-   
-  
+
+
   }
- 
+
+  loadManufacturerList(): void {
+    this.showLoader();
+    this.drugsDataService.loadManufacturerList().subscribe({
+      next: (reponse: any) => {
+        if (reponse) {
+          this.hideLoader();
+          this.manufacturerSubject.next(reponse);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
 }
