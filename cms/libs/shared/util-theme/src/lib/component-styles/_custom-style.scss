@@ -1139,3 +1139,12 @@ color: $app-primary-font-color;
     top: 10px;
   }
 }
+.counter-buttons{ 
+  align-items: flex-end;
+}
+
+.height-btn{
+  .k-button{
+    min-height: 38px;
+  }
+}

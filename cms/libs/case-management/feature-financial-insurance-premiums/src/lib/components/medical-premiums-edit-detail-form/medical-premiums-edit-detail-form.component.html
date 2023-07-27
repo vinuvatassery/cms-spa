@@ -1,86 +1,82 @@
 <kendo-dialog-titlebar (close)="closeAddEditPremiumsFormModalClicked()">
     <section class="app-l-mainTittle">
-        <h1 class="maintitle_withicon text-bold">Add New Premiums </h1>
+        <h1 class="maintitle_withicon text-bold">Edit Premium </h1>
     </section>
 </kendo-dialog-titlebar>
 <section class="add_main_popup_screen">
 
 
     <div class="add_new_top_section">
-        <p class="mb-3"> Select a Dental Provider to bulk add services for this claim.</p>
+        <p class="mb-3"> Update the premium amount and add adjustments if needed.</p>
         <div class="flex-row">
             <div class="flex-col flex-col-6">
-                <div class="combotable_search_list new_refund_Search new_premiums_Search mb-3">
-                    <span class="material-icons global-search-icon" aria-label="search" aria-hidden="true">search</span>
-                    <span *ngIf="isShownSearchLoader"
-                        class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                  
-                        <kendo-multicolumncombobox [data]="providerSearchResult" textField="providerFullName"
-                        valueField="providerId" [fillMode]="formUiStyle.dropDownFillMode"
-                        placeholder="Search Dental Providers by name or TIN"
-                        [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-                        formControlName="itemSelected">
-                        <button kendoButton fillMode="clear" icon="image"></button>
+                <div class="detail-items-with-border mt-2">
+                    <table>
+                        <caption hidden> Provider Details</caption>
+                        <tr hidden>
+                            <th>Field</th>
+                            <th> details</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Client Name:</strong></td>
+                            <td> Donna Summer</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Member ID:</strong></td>
+                            <td>000000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Insurance Vendor:</strong></td>
+                            <td> Aetna</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Plan Name:</strong></td>
+                            <td>Super Duper Plan I</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Insurance Type:</strong></td>
+                            <td>Off-Exchange Plan</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Coverage Start Date:</strong></td>
+                            <td>02/01/2021</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Coverage End Date:</strong></td>
+                            <td> 02/28/2021 </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Last Premium Due Date:</strong></td>
+                            <td> 02/14/2021 </td>
+                        </tr>
 
-                        <kendo-combobox-column>
-                            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                <span>{{ dataItem.providerFullName }}</span>
-                            </ng-template>
-                        </kendo-combobox-column>
 
-                        <kendo-combobox-column>
-                            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                <span class="text-muted"><em> TIN:</em> {{ dataItem.tin }}</span>
-                            </ng-template>
-                        </kendo-combobox-column>
+                    </table>
 
-                    </kendo-multicolumncombobox>
                 </div>
+
             </div>
         </div>
-        <div class="flex-row">
-            <div class="flex-col flex-col-6">
-                <div class="combotable_search_list new_refund_Search new_premiums_Search">
-                    <span class="material-icons global-search-icon" aria-label="search" aria-hidden="true">search</span>
-                    <span *ngIf="isShownSearchLoader"
-                        class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                    <kendo-multicolumncombobox [data]="clientSearchResult" textField="clientFullName"
-                        valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
-                        placeholder="Search Client Name, ID, or SSN"
-                        [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-                        formControlName="itemSelected">
-                        <button kendoButton fillMode="clear" icon="image"></button>
 
-                        <kendo-combobox-column>
-                            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                <span>{{ dataItem.clientFullName }}</span>
-                            </ng-template>
-                        </kendo-combobox-column>
-                        <kendo-combobox-column [width]="100">
-                            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                <span class=" text-muted"> <em>ID:</em> {{dataItem.clientId}}</span>
-                            </ng-template>
-                        </kendo-combobox-column>
-                        <kendo-combobox-column [width]="150">
-                            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                <span class="text-muted"><em> SSN:</em> {{ dataItem.ssn }}</span>
-                            </ng-template>
-                        </kendo-combobox-column>
-                        <kendo-combobox-column [width]="125">
-                            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                <span class=" text-muted"> <em>DOB:</em> {{ dataItem.dob}}</span>
-                            </ng-template>
-                        </kendo-combobox-column>
-                    </kendo-multicolumncombobox>
-                </div>
-            </div>
-        </div>
         <div class="flex-row">
-            <div class="flex-col flex-col-6">
-                <kendo-floatinglabel text="Invoice ID">
-                    <kendo-textbox aria-label="Invoice ID" [fillMode]="formUiStyle.inputFillMode">
-                    </kendo-textbox>
+            <div class="flex-col flex-col-3">
+                <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
+                    <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                    <kendo-numerictextbox placeholder="Premium Amount" aria-label="Payment Amount" [spinners]="false"
+                        class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
+                    </kendo-numerictextbox>
                 </kendo-floatinglabel>
+
+            </div>
+            <div class="flex-col flex-col-3">
+                <span class="app-checkboxwidtext-wrapper mt-4">
+                    <input class="adjust-attr" type="checkbox" id="SPOTSpayment" name="chkmiddleName"
+                        aria-labelledby="SPOTSpayment" kendoCheckBox />
+                    <label class="k-checkbox-label" for="SPOTSpayment">This is a SPOTS payment</label>
+                </span>
+            </div>
+            <div class="flex-col mt-1">
+                <p>This will update the premium amount going forward</p>
             </div>
         </div>
 
@@ -94,120 +90,53 @@
             <div class="flex-col flex-col-6">
                 <div class=" mb-3">
                     <div class="flex-space-bw align-items-center">
-                        <h4 class="mar-0">SERVICE 1</h4>
+                        <h4 class="mar-0">ADJUSTMENT 1</h4>
                         <button class="" kendoButton fillMode="flat" themeColor="error">DELETE</button>
                     </div>
-                    <div class="flex-row">
-                        <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Service Start Date">
-                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
-                                    aria-label="Service Start Date" format="MM/dd/yyyy"
-                                    formatPlaceholder="formatPattern">
-                                </kendo-datepicker>
-                            </kendo-floatinglabel>
+                    <div class="flex-row counter-buttons">
+                        <div class="flex-col flex-col-2">
+                            <kendo-buttongroup selection="single" class="height-btn">
+                                <button kendoButton [toggleable]="false" aria-label="accept hiv verification"
+                                    themeColor="primary">
+                                    <span class="material-icons" aria-hidden="false">add</span> 
+                                </button>
+                                <button kendoButton [toggleable]="false"  themeColor="light" aria-label="reject hiv verification">
+                                    <span class="material-icons" aria-hidden="false">remove</span> 
+                                </button>
+                            </kendo-buttongroup>
                         </div>
-                        <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Service End Date">
-                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
-                                    aria-label="Service End Date" format="MM/dd/yyyy" formatPlaceholder="formatPattern">
-                                </kendo-datepicker>
-                            </kendo-floatinglabel>
-                        </div>
-                        <div class="ml-2">
-                        <kendo-formerror class="d-flex align-items-center"> <span class="material-icons mr-1"  aria-hidden="false" >info</span>  Invoice is over 1 year old. <a kendoButton class="ml-1 card-link-button">Make Exception</a></kendo-formerror>
-
-                        </div>
-
-                    </div>
-                    <div class="flex-row">
-                        <div class="flex-col flex-col-4">
-                            <kendo-floatinglabel text="Payment Type">
-                                <kendo-dropdownlist aria-label="Payment Type" 
-                                    [fillMode]="formUiStyle.dropDownFillMode">
-                                </kendo-dropdownlist>
-                            </kendo-floatinglabel>
-                        </div>
-                        <div class="flex-col flex-col-4">
-                            <kendo-floatinglabel text="CTP Code">
-                                <kendo-textbox aria-label="CTP Code" 
-                                    [fillMode]="formUiStyle.inputFillMode">
-                                </kendo-textbox>
-                            </kendo-floatinglabel>
-                        </div>
-                        <div class="flex-col flex-col-4">
-                            <kendo-floatinglabel text="PCA Code">
-                                <kendo-textbox aria-label="PCA Code" 
-                                    [fillMode]="formUiStyle.inputFillMode">
-                                </kendo-textbox>
-                            </kendo-floatinglabel>
-                        </div>
-                    </div>
-                    <div class="flex-row">
-                        <div class="flex-col">
-                            <kendo-floatinglabel text="Service Description">
-                                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" 
-                                    resizable="auto" aria-label="Service Description">
-                                    <kendo-textarea-suffix class="justify-content-end">
-                                        <span class="tareacounter"> 10/300</span>
-                                    </kendo-textarea-suffix>
-                                </kendo-textarea>
-                            </kendo-floatinglabel>
-                        </div>
-                    </div>
-                    <div class="flex-row">
-                        <div class="flex-col flex-col-6">
-                          
-                            <kendo-floatinglabel text="Service Cost" class="amount-with-symbol">
-                                <span class="k-input-prefix custom-currencysymbol"> $ </span>  
-                                <kendo-textbox aria-label="CTP Code"  
-                                    [fillMode]="formUiStyle.inputFillMode">
-                                </kendo-textbox>
-                            </kendo-floatinglabel>
-                           
-
-                        </div>
-                        <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Amount Due" class="amount-with-symbol">
+                        <div class="flex-col flex-col-5">
+                            <kendo-floatinglabel text="Amount" class="amount-with-symbol">
                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                                <kendo-textbox aria-label="PCA Code" 
-                                    [fillMode]="formUiStyle.inputFillMode">
-                                </kendo-textbox>
-                            </kendo-floatinglabel>
+                                <kendo-numerictextbox placeholder="Amount" aria-label="Amount" [spinners]="false"
+                                    class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
+                                </kendo-numerictextbox>
+                            </kendo-floatinglabel> 
                         </div>
-                        <div class="ml-2">
-                        <kendo-formerror class="align-items-center"> <span class="material-icons mr-1"  aria-hidden="false" >info</span>  Client exceeded maximum benefits. <a kendoButton class="ml-1 card-link-button">Make Exception</a></kendo-formerror>
-                  </div>
-                    </div>
-                    <div class="flex-row"> 
-                        <div class="flex-col  ">
-                            <kendo-floatinglabel text="Reason For Exception">
-                                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" 
-                                    resizable="auto" aria-label="Reason For Exception">
-                                    <kendo-textarea-suffix class="justify-content-end">
-                                        <span class="tareacounter"> 10/300</span>
-                                    </kendo-textarea-suffix>
-                                </kendo-textarea>
-                            </kendo-floatinglabel>
-                           
-
+                        <div class="flex-col flex-col-5">
+                            <kendo-floatinglabel text="Coverage Dates">
+                                <kendo-dropdownlist aria-label="Coverage Dates"  
+                                      [fillMode]="formUiStyle.dropDownFillMode"  >
+                                </kendo-dropdownlist>
+                          </kendo-floatinglabel>
                         </div>
                     </div>
-                    <hr class="row-border"/>
                     <div class="mt-2">
-                    <button class="" kendoButton fillMode="flat" themeColor="primary">  <span class="material-icons" aria-label="New Premiums" aria-hidden="false">add</span> New Service</button>
+                        <button class="" kendoButton fillMode="flat" themeColor="primary"> <span class="material-icons"
+                                aria-label="New Premiums" aria-hidden="false">add</span> ADJUSTMENT</button>
 
                     </div>
                 </div>
             </div>
         </div>
 
-    </div> 
+    </div>
 
 
 </section>
 <div class="add_new_fixed_bottom">
     <div>
-        <h5>Recent Premiums for this client and Provider</h5>
+        <h5>Recent Premiums for this client</h5>
         <div class="add_new_fixed_bottom_grid_section">
             <cms-medical-premiums-recent-premiums-list></cms-medical-premiums-recent-premiums-list>
         </div>
