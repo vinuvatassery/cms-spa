@@ -90,29 +90,23 @@
                                     <kendo-grid-column field="ofProviders" title="Name on Primary Insurance Card" [width]="200"> </kendo-grid-column> 
                                     <kendo-grid-column field="ofClaims" title="Member ID" [width]="160"> </kendo-grid-column>
                                     <kendo-grid-column field="pmtsRequested" title="Service Date" [width]="140"> </kendo-grid-column>
-                                    <kendo-grid-column field="pmtsReconciled" title="Invoice ID" [width]="140"> </kendo-grid-column>
-                                    <kendo-grid-column field="totalAmountDue" title="CPT Code" [width]="140"> </kendo-grid-column>
-                                    <kendo-grid-column field="totalAmountReconciled" title="Dental Service" [width]="160"> </kendo-grid-column>  
-                                    <kendo-grid-column field="totalAmountReconciled" title="Service Cost" [width]="140"> </kendo-grid-column>  
-                                    <kendo-grid-column field="totalAmountReconciled" title="Client Co-Pay" [width]="160"> </kendo-grid-column>  
-                                    <kendo-grid-column field="totalAmountReconciled" title="Client Annual Total" [width]="180"> </kendo-grid-column>  
-                                    <kendo-grid-column field="totalAmountReconciled" title="Client Balance" [width]="160"> </kendo-grid-column>  
-                                    <kendo-grid-column field="totalAmountReconciled" title="Payment Status" [width]="160"> </kendo-grid-column>  
-                                    <kendo-grid-column field="totalAmountReconciled" title="Entry Date" [width]="120"> </kendo-grid-column>  
-                              <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true">
-                                    <ng-template kendoGridCellTemplate let-dataItem>
-                                          <button kendoButton [primary]="true" class="avatar-sm-btn c-default"
-                                                kendoPopoverAnchor [popover]="onUserProfileDetailsHovered"
-                                                showOn="hover" aria-label="profile avatar">
-                                                <common-user-photo-icon></common-user-photo-icon>
-                                          </button>
-                                          <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-                                                <ng-template kendoPopoverBodyTemplate>
-                                                      <common-user-profile-card></common-user-profile-card>
-                                                </ng-template>
-                                          </kendo-popover>
-                                    </ng-template>
-                              </kendo-grid-column>
+                                    <kendo-grid-column field="pmtsReconciled" title="Insurance Type" [width]="180"> </kendo-grid-column>
+                                    <kendo-grid-column field="totalAmountDue" title="Policy ID" [width]="140"> </kendo-grid-column>
+                                    <kendo-grid-column field="totalAmountReconciled" title="Group ID" [width]="160"> </kendo-grid-column>  
+                                    <kendo-grid-column field="totalAmountReconciled" title="Payment ID" [width]="140"> </kendo-grid-column>  
+                                    <kendo-grid-column field="totalAmountReconciled" title="Coverage Dates" [width]="160" [sticky]="true" > 
+                                          <ng-template kendoGridCellTemplate let-dataItem>
+                                        <p> {{dataItem.totalAmount}} </p>
+                                        <p class="text-muted">  <i>01/01/22 - 01/02/39</i> </p>
+                                              </ng-template> 
+                                    </kendo-grid-column>  
+                                    <kendo-grid-column field="totalAmountReconciled" title="Premium Amount" [width]="180" [sticky]="true" > 
+                                          <ng-template kendoGridCellTemplate let-dataItem>
+                                              <p><span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmount}}</span></p>  
+                                              <p><span class="tableamountview text-muted"> <strong>+</strong> <i>50.00</i></span></p>  
+                                              </ng-template> 
+                                    </kendo-grid-column>  
+                            
 
                               <kendo-grid-column field="Option" title=" " [sticky]="true" [columnMenu]="false" [width]="50"
                               class="text-center">

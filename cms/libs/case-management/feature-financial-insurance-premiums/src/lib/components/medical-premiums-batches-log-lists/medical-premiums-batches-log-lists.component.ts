@@ -124,8 +124,6 @@ export class MedicalPremiumsBatchesLogListsComponent
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   sendReportDialog: any;
-  
- 
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService) {}
 
