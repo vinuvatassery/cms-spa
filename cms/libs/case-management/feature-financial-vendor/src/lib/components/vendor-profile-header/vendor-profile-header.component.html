@@ -10,20 +10,20 @@
         <h1 class="title_with_bld">
           <span class="bold-text pl-1"> {{vendorProfile$?.vendorName}}</span>
           <span class="title-star-icon icon-filled" aria-label="special Handling Details" aria-hidden="true">
-            <span kendoPopoverAnchor showOn="hover" [popover]="specialHandlingDetails" class="material-icons"
-              aria-label="user information star" aria-hidden="true">star</span>
+            <span kendoPopoverAnchor showOn="hover"  [popover]="specialHandlingDetails" class="material-icons" aria-label="user information star"
+              aria-hidden="true">star</span>
           </span>
 
         </h1>
         <div class="title-client-info-block ml-2">
-          <span *ngIf="vendorProfile$?.tin" class="title-client-info">TIN {{vendorProfile$?.tin}} </span>
+          <span *ngIf="vendorProfile$?.tin" class="title-client-info">TIN {{vendorProfile$?.tin}} </span>          
           <span class="title-client-info">{{vendorProfile$?.unReconciledPayments}} Unreconciled Claim(s) </span>
         </div>
       </div>
     </section>
   </div>
   <section>
-
+  
     <div class="flex-row align-items-end">
       <div class="flex-col flex-col-10">
         <div class="info-banners red-banner hover-link ">
@@ -34,7 +34,7 @@
             <span class="text-normal">(Due today)</span>
           </div>
 
-          <div class="">
+          <div class=""> 
             <kendo-dropdownbutton icon="more-vertical" title="More option" [data]="reminderActions" look="bare"
               aria-label="more actions" class="small-i-btn app-dropdown-action cvp_three_dot_drop_btn" [popupSettings]="{
             popupClass: reminderActionPopupClass, 
@@ -59,7 +59,7 @@
             <span class="text-normal">(Due today)</span>
           </div>
 
-          <div class="">
+          <div class=""> 
             <kendo-dropdownbutton icon="more-vertical" title="More option" [data]="reminderActions" look="bare"
               aria-label="more actions" class="small-i-btn app-dropdown-action cvp_three_dot_drop_btn" [popupSettings]="{
             popupClass: reminderActionPopupClass, 
@@ -84,7 +84,7 @@
             <span class="text-normal">(Due today)</span>
           </div>
 
-          <div class="">
+          <div class=""> 
             <kendo-dropdownbutton icon="more-vertical" title="More option" [data]="reminderActions" look="bare"
               aria-label="more actions" class="small-i-btn app-dropdown-action cvp_three_dot_drop_btn" [popupSettings]="{
             popupClass: reminderActionPopupClass, 
@@ -105,21 +105,25 @@
       </div>
       <div class="flex-col flex-col-2">
         <button aria-label="" kendoButton look="flat" class="card-link-button" (click)="showMoreAlert = !showMoreAlert">
+         
+
           {{ showMoreAlert ? 'Hide Items' : ' 2+ More Items ' }}
         </button>
       </div>
     </div>
+
   </section>
 </div>
 
-<!-- vendor-header-tools -->
-<cms-vendor-header-tools></cms-vendor-header-tools>
+<cms-vendor-header-tools [vendorProfile$]="vendorProfile$"></cms-vendor-header-tools>
 
-<!-- special handling Details Popover -->
-<kendo-popover #specialHandlingDetails [width]="380" position="bottom">
-  <ng-template kendoPopoverBodyTemplate>
-    <cms-vendor-special-handling [vendorProfileSpecialHandling$]="vendorProfileSpecialHandling$ | async"
+
+  <!-- special handling Details Popover -->
+  <kendo-popover #specialHandlingDetails [width]="380" position="bottom">
+    <ng-template kendoPopoverBodyTemplate>
+      <cms-vendor-special-handling     
+      [vendorProfileSpecialHandling$] ="vendorProfileSpecialHandling$ | async"
       (loadSpecialHandlingEvent)="loadSpecialHandling()">
     </cms-vendor-special-handling>
-  </ng-template>
-</kendo-popover>
+    </ng-template>
+   </kendo-popover>

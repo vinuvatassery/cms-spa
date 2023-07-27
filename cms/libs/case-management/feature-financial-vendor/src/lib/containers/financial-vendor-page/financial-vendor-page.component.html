@@ -13,8 +13,8 @@
       Financial Management
     </h1>
   </section>
-  <section class="app-l-client-wrapper ">
-    <div class="app-l-client-left">
+  <section class="app-l-client-wrapper" [ngClass]="{'due-notification-on': reminderTabOn}">
+    <div class="app-l-client-left"  >
       <section class="app-l-wrapper">
 
         <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
@@ -99,7 +99,8 @@
     </div>
     <!-- Right Reminders-->
     <div class="app-l-client-right todo-list">
-      <productivity-tools-reminder-list class="reminder-list-case-wrap"></productivity-tools-reminder-list> 
+      <productivity-tools-reminder-list class="reminder-list-case-wrap"
+      (ReminderEventClicked)="onReminderDoneClicked($event)"></productivity-tools-reminder-list> 
     </div>
   </section>
 </div>
@@ -118,9 +119,13 @@
   class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Insurance Vendor" kendoTooltip>
   <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.InsuranceVendors" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"></cms-vendor-details>
 </kendo-dialog>
+
 <kendo-dialog kendoRippleContainer *ngIf="isShowPharmacyProvider" (close)="closeVendorDetailModal()"
   class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Pharmacy" kendoTooltip>
   <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.Pharmacy" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"></cms-vendor-details>
 </kendo-dialog>
 
-
+<kendo-dialog kendoRippleContainer *ngIf="isShowManufacturers" (close)="closeVendorDetailModal()"
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Manufacture" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.Manufacturers" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"></cms-vendor-details>
+</kendo-dialog>

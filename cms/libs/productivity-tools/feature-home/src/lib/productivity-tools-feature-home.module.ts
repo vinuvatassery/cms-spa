@@ -11,6 +11,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'direct-message',
+    loadChildren: () =>
+      import('@cms/productivity-tools/feature-direct-message').then(
+        (m) => m.ProductivityToolsFeatureDirectMessageModule
+      ),
+  },
+  {
     path: 'approval',
     loadChildren: () =>
       import('@cms/productivity-tools/feature-approval').then(

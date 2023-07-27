@@ -1,8 +1,46 @@
-<div class="app-l-inner-rapper pt-0" kendoRippleContainer>
+<div class="app-l-inner-rapper pb-8rem pt-0">
     <common-bread-crumb></common-bread-crumb>
-    <section class="app-l-mainTittle">
-        <h1 class="maintitle_withicon text-bold"> 
-            dental-claims-page works!
-        </h1>
-      </section>
+    <div class=" pt-0">
+        <section class="app-l-mainTittle">
+            <h1 class="maintitle_withicon text-bold"> Dental Claims </h1>
+        </section>
+        <section class="app-l-client-wrapper">
+            <section class="app-l-wrapper">
+                <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+                    class="app-c-tab case-360-tab">
+                    <kendo-tabstrip-tab title="Process" [selected]="true">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-dental-claims-process-list      [dentalClaimsProcessGridLists$]="dentalClaimsProcessGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueDentalClaimsProcess"
+                                [sortType]="sortType" [sort]="sortProcessList" 
+                                (loadDentalClaimsProcessListEvent)="loadDentalClaimsProcessListGrid($event)"></cms-dental-claims-process-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+
+                    <kendo-tabstrip-tab title="Batches">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-dental-claims-batches-list   [dentalClaimsBatchGridLists$]="dentalClaimsBatchGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueDentalClaimsBatch"
+                                [sortType]="sortType" [sort]="sortBatchList" 
+                                (loadDentalClaimsBatchListEvent)="loadDentalClaimsBatchListGrid($event)"></cms-dental-claims-batches-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+                    <kendo-tabstrip-tab title="All Payments">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-dental-claims-all-payments-list  [dentalClaimsAllPaymentsGridLists$]="dentalClaimsAllPaymentsGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueDentalClaimsPayments"
+                                [sortType]="sortType" [sort]="sortPaymentsList" 
+                                (loadDentalClaimsAllPaymentsListEvent)="loadDentalClaimsAllPaymentsListGrid($event)"></cms-dental-claims-all-payments-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+                </kendo-tabstrip>
+            </section>
+        </section>
+    </div>
 </div>
