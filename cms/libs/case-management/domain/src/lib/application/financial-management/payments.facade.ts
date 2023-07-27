@@ -9,6 +9,7 @@ import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { PaymentsDataService } from '../../infrastructure/financial-management/payments.data.service';
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { PaymentPanel } from '@cms/case-management/domain';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentsFacade {
@@ -100,7 +101,7 @@ export class PaymentsFacade {
     });
   }
 
-  loadPaymentPanel(vendorId:any,batchId:any){
+  loadPaymentPanel(vendorId:any,batchId:any):any{
     this.paymentsDataService.loadPaymentPanel(vendorId,batchId).subscribe({
       next: (dataResponse) => {
         this.paymentPanelSubject.next(dataResponse);
@@ -111,6 +112,9 @@ export class PaymentsFacade {
         this.hideLoader();
       },
     });
+  }
+  updatePaymentPanel(vendorId:any,batchId:any,paymentPanel:any){
+    return this.paymentsDataService.updatePaymentPanel(vendorId,batchId,paymentPanel)
   }
 
 }

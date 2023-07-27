@@ -7,7 +7,7 @@ import {
   Input
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PaymentsFacade } from '@cms/case-management/domain';
+import { PaymentPanel, PaymentsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
@@ -26,19 +26,31 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
   endDateMin!: Date;
   tAreaCessationCharactersCount!: number;
   tAreaCessationCounter!: string;
-  tAreaCessationMaxLength = 300;
+  tAreaCessationMaxLength = 100;
+  paymentPanel!:PaymentPanel;
   @Input() vendorId:any;
   @Input() batchId:any ;
   @Input() paymentPanelData:any;
   @Output() closePaymentDetailFormClickedEvent = new EventEmitter();
 
-  constructor(private formBuilder: FormBuilder, public intl: IntlService){
+  constructor(private formBuilder: FormBuilder, public intl: IntlService,
+    private paymentFacade:PaymentsFacade){
     
   }
  
   ngOnInit():void{
     this.buildPremiumPaymentForm();
     this.setPaymentPanelFormData();
+    this.paymentPanelData.subscribe((response:PaymentPanel)=>{
+      this.paymentPanel = response;
+      //healthInsurancePolicy.insuranceStartDate != null ? new Date(healthInsurancePolicy.insuranceStartDate) : null
+      this.medicalClaimPaymentForm.controls['datePaymentSent'].setValue(this.paymentPanel.datePaymentSent != null?new Date(this.paymentPanel.datePaymentSent):null);
+      this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValue(this.paymentPanel.datePaymentReconciled != null? new Date(this.paymentPanel.datePaymentReconciled):null);
+      this.medicalClaimPaymentForm.controls['paymentAmount'].setValue(this.paymentPanel.paymentAmount);
+      this.medicalClaimPaymentForm.controls['warrantNumber'].setValue(this.paymentPanel.warrantNumber);
+      this.medicalClaimPaymentForm.controls['note'].setValue(this.paymentPanel.note);
+
+    })
   }
   closePaymentDetailClicked() {
     this.closePaymentDetailFormClickedEvent.emit(true);
@@ -131,6 +143,27 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
     ]);
     this.medicalClaimPaymentForm.controls['warrantNumber'].updateValueAndValidity();
   }
+
+  populatePaymentPanelModel(){
+
+    this.paymentPanel.datePaymentReconciled = 
+    this.intl.parseDate(
+      Intl.DateTimeFormat('en-US').format(
+        this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value
+      )
+    );
+    this.paymentPanel.datePaymentSent = 
+    this.intl.parseDate(
+      Intl.DateTimeFormat('en-US').format(
+        this.medicalClaimPaymentForm.controls['datePaymentSent'].value
+      )
+    );
+    this.paymentPanel.paymentAmount = this.medicalClaimPaymentForm.controls['paymentAmount'].value
+    this.paymentPanel.warrantNumber = this.medicalClaimPaymentForm.controls['warrantNumber'].value
+    this.paymentPanel.note = this.medicalClaimPaymentForm.controls['note'].value
+
+  }
+
   buildPremiumPaymentForm(){
     this.medicalClaimPaymentForm = this.formBuilder.group({
       datePaymentReconciled: [null],
@@ -144,6 +177,13 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
   }
   save(){
     this.validateModel();
+    if(this.medicalClaimPaymentForm.valid){
+      this.populatePaymentPanelModel();
+      this.paymentFacade.updatePaymentPanel(this.vendorId,this.batchId, this.paymentPanel).subscribe(response=>{
+   
+      });
+
+    }
   }
 
   onTAreaCessationValueChange(event: any): void {
