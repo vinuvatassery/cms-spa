@@ -62,6 +62,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   @Input() clientId: any;
   @Input() medicalHealthPlansCount: any;
   @Input() insuranceStatus: any;
+  @Input() isPaymentDone: any;
 
   /** Output properties **/
   @Output() isCloseInsuranceModal = new EventEmitter();
