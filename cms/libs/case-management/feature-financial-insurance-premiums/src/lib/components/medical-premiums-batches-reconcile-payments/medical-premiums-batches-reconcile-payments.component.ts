@@ -33,6 +33,7 @@ export class MedicalPremiumsBatchesReconcilePaymentsComponent implements OnInit,
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReconcileGridLoaderShow = false;
   printAuthorizationDialog : any;
+  LeavePageDialog: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -184,8 +185,21 @@ export class MedicalPremiumsBatchesReconcilePaymentsComponent implements OnInit,
       this.printAuthorizationDialog.close();
     }
   }
-     navToBatchDetails(event : any){  
-       this.route.navigate(['/financial-management/insurance-premiums'] );
-     }
+
+
+  public onLeavePageOpenClicked(template: TemplateRef<unknown>): void {
+    this.LeavePageDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+ 
+  onLeavePageCloseClicked(result: any) {
+    if (result) { 
+      this.LeavePageDialog.close();
+    }
+  }
+ 
 }
 
