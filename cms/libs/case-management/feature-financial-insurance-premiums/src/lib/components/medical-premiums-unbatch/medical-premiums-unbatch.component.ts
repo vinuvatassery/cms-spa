@@ -10,10 +10,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalPremiumsUnbatchComponent { 
-  @Output() UnBatchCloseClickedEvent = new EventEmitter();
+  @Output() modalCloseUnbatchPremiumModal = new EventEmitter();
 
  
   closeUnBatchClicked() {
-    this.UnBatchCloseClickedEvent.emit(true);
+    this.modalCloseUnbatchPremiumModal.emit(true);
   }
 }

@@ -7,7 +7,8 @@ import {
   OnInit,
   OnChanges,
   Output,
-  TemplateRef
+  TemplateRef,
+  ViewChild
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {  GridDataResult } from '@progress/kendo-angular-grid';
@@ -27,6 +28,12 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 export class MedicalPremiumsBatchListDetailItemsComponent implements OnInit, OnChanges {
  
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  @ViewChild('editPremiumsDialogTemplate', { read: TemplateRef })
+  editPremiumsDialogTemplate!: TemplateRef<any>;
+  @ViewChild('unbatchPremiumFromTemplate', { read: TemplateRef })
+  unbatchPremiumFromTemplate!: TemplateRef<any>;
+  @ViewChild('removePremiumFromTemplate', { read: TemplateRef })
+  removePremiumFromTemplate!: TemplateRef<any>;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogItemsGridLoaderShow = false;
 
@@ -48,13 +55,73 @@ export class MedicalPremiumsBatchListDetailItemsComponent implements OnInit, OnC
   gridDataResult!: GridDataResult;
   providerDetailsDialog: any;
   paymentDetailsDialog: any;
+  editPremiumsFormDialog: any;
+  unBatchPremiumDialog: any;
+  removePremiumDialog: any;
+  isEditPremiumsOpened = false;
+  unBatchPremiumsOpened = false;
+  removePremiumsOpened = false;
   gridClaimsBatchLogItemsDataSubject = new Subject<any>();
   gridClaimsBatchLogItemsData$ = this.gridClaimsBatchLogItemsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   
-  
+  public batchItemGridActions = [
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Edit Premium',
+      icon: 'edit',
+      click: (data: any): void => {
+        
+        if (!this.isEditPremiumsOpened) {
+          this.isEditPremiumsOpened = true;
+          this.onClickOpenEditPremiumsFromModal(this.editPremiumsDialogTemplate);
+        }
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Unbatch Premium',
+      icon: 'undo',
+      click: (data: any): void => {
+        if (!this.unBatchPremiumsOpened) {
+          this.unBatchPremiumsOpened = true;
+          this.onClickOpenUnbatchPremiumModal(this.unbatchPremiumFromTemplate);
+        }
+      },
+    },
+    {
+      buttonType: 'btn-h-danger',
+      text: 'Remove Premium',
+      icon: 'delete',
+      click: (data: any): void => {
+        if (!this.removePremiumsOpened) {
+          this.removePremiumsOpened = true;
+          this.onClickOpenRemovePremiumModal(this.removePremiumFromTemplate);
+        }
+      },
+    },
+  ];
+  aaaaa =[
+    {
+      id:101,
+      vendorName: 'vendorName',
+      type:'address2', 
+      clientName:'address2', 
+      refundWarrant:'address2', 
+      refundAmount:'address2', 
+      depositDate:'address2', 
+      depositMethod:'address2', 
+      indexCode:'address2', 
+      pca:'address2', 
+      grant:'address2', 
+      vp:'address2', 
+      refundNote:'address2', 
+      entryDate:'address2',  
+      by: 'by',
+    },
+  ]
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService) {}
   
@@ -204,4 +271,47 @@ export class MedicalPremiumsBatchListDetailItemsComponent implements OnInit, OnC
       this.paymentDetailsDialog.close();
     }
   }
+
+
+  onClickOpenEditPremiumsFromModal(template: TemplateRef<unknown>): void {
+    this.editPremiumsFormDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-full add_premiums_modal',
+    });
+  }
+  modalCloseEditPremiumsFormModal(result: any) {
+    if (result) {
+      this.isEditPremiumsOpened = false;
+      this.editPremiumsFormDialog.close();
+    }
+  }
+
+
+  onClickOpenUnbatchPremiumModal(template: TemplateRef<unknown>): void {
+    this.unBatchPremiumDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  modalCloseUnbatchPremiumModal(result: any) {
+    if (result) {
+      this.unBatchPremiumsOpened = false;
+      this.unBatchPremiumDialog.close();
+    }
+  }
+
+
+  onClickOpenRemovePremiumModal(template: TemplateRef<unknown>): void {
+    this.removePremiumDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  modalCloseRemovePremiumModal(result: any) {
+    if (result) {
+      this.removePremiumsOpened = false;
+      this.removePremiumDialog.close();
+    }
+  }
+
 }

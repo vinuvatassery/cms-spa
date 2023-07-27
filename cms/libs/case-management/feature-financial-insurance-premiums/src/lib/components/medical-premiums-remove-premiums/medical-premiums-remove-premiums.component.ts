@@ -10,10 +10,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalPremiumsRemovePremiumsComponent {
-  @Output() isModalRemovePremiumsCloseClicked = new EventEmitter();
+  @Output() modalCloseRemovePremiumModal = new EventEmitter();
 
  
   closeRemovePremiumsClicked() {
-    this.isModalRemovePremiumsCloseClicked.emit(true);
+    this.modalCloseRemovePremiumModal.emit(true);
   }
 }
