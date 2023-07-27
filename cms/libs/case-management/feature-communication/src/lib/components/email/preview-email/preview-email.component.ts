@@ -10,4 +10,5 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 export class PreviewEmailComponent {
   /** Input properties **/
   @Input() emailContent!: any;
+  @Input() paperlessFlag! : any
 }

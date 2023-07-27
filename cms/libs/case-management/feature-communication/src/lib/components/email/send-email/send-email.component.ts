@@ -21,6 +21,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 })
 export class SendEmailComponent implements OnInit, OnDestroy {
   /** Input properties **/
+  @Input() paperlessFlag! : any
   @Input() data!: any;
   @Input() ddlEmails$!: Observable<any>;
 
