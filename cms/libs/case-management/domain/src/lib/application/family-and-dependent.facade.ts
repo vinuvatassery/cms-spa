@@ -175,9 +175,9 @@ export class FamilyAndDependentFacade {
     });
   }
 
-  loadDependents(eligibilityId: string, clientId: number, skipcount: number, maxResultCount: number, sort: string, sortType: string): void {
+  loadDependents(eligibilityId: string, clientId: number, skipcount: number, maxResultCount: number, sort: string, sortType: string, type: string = 'All'): void {
     this.showLoader();
-    this.dependentDataService.loadDependents(eligibilityId, clientId, skipcount, maxResultCount, sort, sortType).subscribe({
+    this.dependentDataService.loadDependents(eligibilityId, clientId, skipcount, maxResultCount, sort, sortType, type).subscribe({
       next: (dependentsResponse: any) => {
         if (dependentsResponse) {
           const gridView = {
@@ -209,10 +209,7 @@ export class FamilyAndDependentFacade {
     this.dependentDataService.loadPreviousRelations(previousEligibilityId, clientId).subscribe({
       next: (relationResponse: any) => {
         if (relationResponse) {
-          let dataView: any = {
-            data : relationResponse
-          };
-          this.previousRelationsSubject.next(dataView);
+          this.previousRelationsSubject.next(relationResponse);
         }
         this.hideLoader();
       },
@@ -322,9 +319,37 @@ export class FamilyAndDependentFacade {
     return this.dependentDataService.uploadDependentProofOfSchool(eligibilityId, dependentId, dependentProof);
   }
 
-  saveAndContinueDependents(clientId: number, clientCaseEligibilityId: string, hasDependentsStatus: string) {
+  saveAndContinueDependents(clientId: number, clientCaseEligibilityId: string, request: any) {
     this.showLoader();
-    return this.dependentDataService.saveAndContinueDependents(clientId, clientCaseEligibilityId, hasDependentsStatus)
+    return this.dependentDataService.saveAndContinueDependents(clientId, clientCaseEligibilityId, request)
 
+  }
+
+  validateCer(isStillFamilyMember: string, haveAdditionalFamilyMember: string, previousRelationsList:any){
+    let isValid = true;
+    if(!isStillFamilyMember || !haveAdditionalFamilyMember){
+      isValid = false;
+    }
+    if(isStillFamilyMember === StatusFlag.Yes && previousRelationsList){
+      previousRelationsList?.forEach((dep:any) => {
+          const isSelected = dep?.cerReviewStatusCode === 'ACTIVE' || dep?.cerReviewStatusCode === 'INACTIVE';
+          if(!isSelected){
+            dep.cerReviewStatusCodeRequired = true;
+            isValid = false;
+          }
+        });
+
+        this.previousRelationsSubject.next(previousRelationsList);
+    }
+
+    return isValid;
+  }
+
+  reloadPreviousRelations(previousRelationsList:any){
+    previousRelationsList?.forEach((dep:any) => {
+      dep.cerReviewStatusCodeRequired = false;
+    });
+
+    this.previousRelationsSubject.next(previousRelationsList);
   }
 }

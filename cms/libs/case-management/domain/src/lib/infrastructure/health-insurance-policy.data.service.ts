@@ -291,7 +291,7 @@ export class HealthInsurancePolicyDataService {
     params = params.append('sorting',gridDataRefinerValue.sortColumn);
     params = params.append('sortType',gridDataRefinerValue.sortType);
      return this.http.get(    
-    `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments?statusType=${gridDataRefinerValue.type}&clientId=${clientId}&skipCount=
+    `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments?statusType=${gridDataRefinerValue.type}&clientId=${clientId}&eligibilityId=${clientCaseEligibilityId}&skipCount=
     ${gridDataRefinerValue.skipCount}&maxResultCount=${gridDataRefinerValue.maxResultCount}&dentalPlanFlag=${gridDataRefinerValue.dentalPlanFlag}&showTwelveMonthRecord=${gridDataRefinerValue.twelveMonthsRecords}`,{params:params});
     }
   savePaymentRequest(paymentRequest:any){

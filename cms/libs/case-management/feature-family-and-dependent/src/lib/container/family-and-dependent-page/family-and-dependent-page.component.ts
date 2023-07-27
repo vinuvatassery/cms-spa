@@ -1,9 +1,9 @@
 /** Angular **/
-import { AfterViewInit, OnDestroy,ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AfterViewInit, OnDestroy,ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 /** External libraries **/
-import { catchError, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';
+import { BehaviorSubject, catchError, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';
 
 /** Internal libraries **/
 import { WorkflowFacade, CompletionStatusFacade, FamilyAndDependentFacade, StatusFlag, Dependent, CompletionChecklist, NavigationType } from '@cms/case-management/domain';
@@ -43,6 +43,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   private checkBoxSubscription !: Subscription;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
+  private discardChangesSubscription !: Subscription;
   clientId ! : number
   clientCaseEligibilityId ! : string
   familyStatus! : StatusFlag
@@ -53,6 +54,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   previousRelationsList: any = [];
   isCerFormValid: Subject<boolean> = new Subject();
   updatedDependentsStatus: any = [];
+  showPrevRelations$ = new BehaviorSubject<boolean>(false);
+
   /** Constructor **/
   constructor(
     private familyAndDependentFacade: FamilyAndDependentFacade,
@@ -62,7 +65,8 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     private readonly workFlowFacade : WorkflowFacade,
     private route: ActivatedRoute,
     private readonly lovFacade : LovFacade,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly cd: ChangeDetectorRef
   ) { }
 
 
@@ -75,6 +79,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     this.addSaveSubscription();
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
+    this.addDiscardChangesSubscription();
    
   }
 
@@ -82,6 +87,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     this.saveClickSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
+    this.discardChangesSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -120,23 +126,24 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     {
       this.pageSizes = this.familyAndDependentFacade.gridPageSizes;
     this.familyAndDependentFacade.loadDependents(this.clientCaseEligibilityId, this.clientId
-      , gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType);
+      , gridDataRefiner.skipcount ,gridDataRefiner.maxResultCount  ,gridDataRefiner.sort , gridDataRefiner.sortType, 'New');
     }
   }
 
   private loadDependentsStatus() : void {
-    if(this.isCerForm) {
-      this.familyAndDependentFacade.loadDependentsStatus(this.prevClientCaseEligibilityId);
-    }
-    else {
       this.familyAndDependentFacade.loadDependentsStatus(this.clientCaseEligibilityId);
-    }
       this.checkBoxSubscription=
       this.dependentStatus$.subscribe((x: any)=>
     {
+      if(this.isCerForm){
+        this.cerDataPointAdjustmentChange('additionalFamilyMembers', x.hasAdditionalFamilyFlag);
+        this.cerDataPointAdjustmentChange('haveFamilyMembersChanged', x.friendFamilyChangedFlag);
+      }
+      this.showPrevRelations$.next(x.friendFamilyChangedFlag === StatusFlag.Yes);
       this.isFamilyGridDisplay = x.noDependentFlag == StatusFlag.Yes ? true : false;
-      this.haveTheyHaveFamilyMember = x.friendFamilyChangedFlag;
-      this.haveTheyHaveAdditionalFamilyMember = x.hasAdditionalFamilyFlag;
+      this.haveTheyHaveFamilyMember = x.friendFamilyChangedFlag === null?'':x.friendFamilyChangedFlag;
+      this.haveTheyHaveAdditionalFamilyMember = x.hasAdditionalFamilyFlag ===null?'':x.hasAdditionalFamilyFlag;
+      this.cd.detectChanges();
     });
     this.dependentList$.subscribe(dependents=>{
       if(dependents.total > 0){
@@ -147,9 +154,11 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       }
     });
     this.previousRelationList$.subscribe((resp: any)=> {
-      this.previousRelationsList = resp.data;
+      this.previousRelationsList = resp;
+      this.cerDataPointAdjustmentChange('haveFamilyMembersChanged', this.haveTheyHaveFamilyMember);
     });
   }
+
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
       tap(() => this.workflowFacade.disableSaveButton()),
@@ -167,6 +176,14 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     });
   }
 
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
+      if (response) { 
+       this.loadDependentsStatus();
+      }
+    });
+  }
+
   onDependentStatusChange(dependent: any, status: string) {
     if(this.updatedDependentsStatus.length > 0){
       let checkDependentIndex = this.updatedDependentsStatus.findIndex((x: any)=>x.dependentId == dependent.clientRelationshipId);
@@ -180,16 +197,17 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       this.updatedDependentsStatus.push({'dependentId': dependent.clientRelationshipId, 'status': status});
     }
 
-    this.updateWorkFlowStatus(dependent.clientRelationshipId, dependent.activeFlag ? StatusFlag.Yes: StatusFlag.No);
+    this.updateWorkFlowStatus(dependent.clientRelationshipId, dependent.cerReviewStatusCode ? StatusFlag.Yes: StatusFlag.No);
   }
 
   updateEligibilityStatusDetails() {
     let request = {
       'friendFamilyChangedFlag': this.haveTheyHaveFamilyMember,
       'hasAdditionalFamilyFlag': this.haveTheyHaveAdditionalFamilyMember,
-      'dependentsDetails': this.updatedDependentsStatus
+      'dependentsDetails': this.updatedDependentsStatus,
+      prvEligibilityId : this.prevClientCaseEligibilityId
     }
-    this.familyAndDependentFacade.updateEligibilityStatusDetails(this.prevClientCaseEligibilityId, request).subscribe((isSaved: any) => {
+    this.familyAndDependentFacade.updateEligibilityStatusDetails(this.clientCaseEligibilityId, request).subscribe((isSaved: any) => {
       if (isSaved ?? false) {
         this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Eligibility details updated.');
       }
@@ -198,21 +216,33 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
 
   private save() {
     this.familyStatus = this.isFamilyGridDisplay === true ? StatusFlag.Yes : StatusFlag.No;
-    if(this.isCerForm && (!this.haveTheyHaveAdditionalFamilyMember || !this.haveTheyHaveFamilyMember)) {
-      this.isCerFormValid.next(false);
-      return of(false);
+    if(this.isCerForm) {
+      const isValid = this.familyAndDependentFacade.validateCer(this.haveTheyHaveFamilyMember, this.haveTheyHaveAdditionalFamilyMember, this.previousRelationsList);
+      if(!isValid){
+        this.isCerFormValid.next(isValid);
+        return of(false);
+      }
     }
     if((!this.isDependentAvailable && (this.familyStatus === StatusFlag.No) && !this.isCerForm) || (!this.isDependentAvailable && (this.haveTheyHaveAdditionalFamilyMember === StatusFlag.Yes))){
       this.familyAndDependentFacade.dependentValidSubject.next(false);
       return of(false);
     }
     else{
+      let request: any = {
+        noDependentFlag : this.familyStatus
+      };
       if(this.isCerForm){
-        this.updateEligibilityStatusDetails();
+        request = {
+          prvEligibilityId : this.prevClientCaseEligibilityId,
+          isCer: this.isCerForm,
+          friendFamilyChangedFlag: this.haveTheyHaveFamilyMember,
+          hasAdditionalFamilyFlag: this.haveTheyHaveAdditionalFamilyMember,
+          dependentsDetails: this.updatedDependentsStatus,
+        };
       }
       this.familyAndDependentFacade.dependentValidSubject.next(true);
       return  this.familyAndDependentFacade.saveAndContinueDependents
-        (this.clientId, this.clientCaseEligibilityId, this.familyStatus)
+        (this.clientId, this.clientCaseEligibilityId, request)
       .pipe(catchError((err: any) => {
         this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         return  of(false);
@@ -330,17 +360,30 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
     return true;
   }
 
+  onFamilyChangeClicked(dataPointName: string, value:string){
+    if(this.previousRelationsList && this.haveTheyHaveFamilyMember === StatusFlag.Yes){
+      this.showPrevRelations$.next(true);
+      this.familyAndDependentFacade.reloadPreviousRelations(this.previousRelationsList);
+    }else{
+      this.showPrevRelations$.next(false);
+    }
+
+    this.cerDataPointAdjustmentChange(dataPointName, value);
+  }
+
   cerDataPointAdjustmentChange(dataPointName: string, value:string){
     let prevDependentsDtPoints: CompletionChecklist[]  = [];
     if(dataPointName === 'haveFamilyMembersChanged'){
-      prevDependentsDtPoints = this.previousRelationsList.map((dependent:any)=>{      
+      prevDependentsDtPoints = this.previousRelationsList.map((dependent:any)=>{  
+        const reviewStatus = dependent?.cerReviewStatusCode ? StatusFlag.Yes : StatusFlag.No;    
         return {
           dataPointName: dependent.clientRelationshipId,
-          status: value === StatusFlag.Yes ? dependent.activeFlag : StatusFlag.No
+          status: value === StatusFlag.Yes ? reviewStatus : StatusFlag.No
         }
       });
 
       this.updateDynamicDtPoints(prevDependentsDtPoints, value);
+     
     }
 
     if(dataPointName === 'additionalFamilyMembers'){
