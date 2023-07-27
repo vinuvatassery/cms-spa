@@ -51,31 +51,29 @@
     <kendo-grid-column field="vendor" title="Batch #" [width]="160">
 
     </kendo-grid-column>
-
-
-
-    <kendo-grid-column field="memberID" title="Invoice ID" [width]="100"> </kendo-grid-column>
-    <kendo-grid-column field="refundWarrant" title="Provider Name" [width]="100"> <ng-template kendoGridCellTemplate
+ 
+    <kendo-grid-column field="insuranceVendor" title="Insurance Vendor" [width]="100"> <ng-template kendoGridCellTemplate
         let-dataItem>
-        <button aria-label="vendor" kendoButton look="flat" class="card-link-button">
-          {{ dataItem.refundWarrant }}
+        <button aria-label="Insurance Vendor" kendoButton look="flat" class="card-link-button">
+          {{ dataItem.insuranceVendor }}
         </button>
       </ng-template> </kendo-grid-column>
-    <kendo-grid-column field="refundAmount" title="Tax ID" [width]="100"> </kendo-grid-column>
-    <kendo-grid-column field="depositDate" title="Payment Method" [width]="160"> </kendo-grid-column>
-    <kendo-grid-column field="depositMethod" title="Client Name" [width]="120">
+    <kendo-grid-column field="refundAmount" title="Item Count" [width]="100"> </kendo-grid-column>
+    <kendo-grid-column field="totalAmount" title="Total Amount" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button aria-label="vendor" kendoButton look="flat" class="card-link-button">
-          {{ dataItem.depositMethod }}
-        </button>
-      </ng-template> </kendo-grid-column>
-    <kendo-grid-column field="originalWarranty" title="Name on Primary Insurance Card" [width]="200">
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmount}}</span>   
+    
+        </ng-template> 
+       </kendo-grid-column>
+    <kendo-grid-column field="depositMethod" title="Accepts reports?" [width]="120">
+      </kendo-grid-column>
+    <kendo-grid-column field="originalWarranty" title="Date Pmt. Requested" [width]="200">
     </kendo-grid-column>
-    <kendo-grid-column field="originalAmount" title="Member ID" [width]="120"> </kendo-grid-column>
-    <kendo-grid-column field="indexCode" title="Total Cost" [width]="100"> </kendo-grid-column>
-    <kendo-grid-column field="pca" title="Total Due" [width]="100"> </kendo-grid-column>
-    <kendo-grid-column field="grant" title="Grant #" [width]="100"> </kendo-grid-column>
-    <kendo-grid-column field="vp" title="Payment Status" [width]="100"> </kendo-grid-column>
+    <kendo-grid-column field="originalAmount" title="Date Pmt. Send" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="indexCode" title="Pmt. Method" [width]="100"> </kendo-grid-column>
+    <kendo-grid-column field="pca" title="Pmt. Status" [width]="100"> </kendo-grid-column>
+    <kendo-grid-column field="grant" title="PCA" [width]="100"> </kendo-grid-column>
+    <kendo-grid-column field="vp" title="Mail Code" [width]="100"> </kendo-grid-column>
 
     <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
