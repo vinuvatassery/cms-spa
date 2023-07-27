@@ -34,6 +34,7 @@ export class MedicalPremiumsProcessListComponent implements OnInit, OnChanges {
   editPremiumsDialogTemplate!: TemplateRef<any>;
   @ViewChild('addPremiumsDialogTemplate', { read: TemplateRef })
   addPremiumsDialogTemplate!: TemplateRef<any>;
+  
   public formUiStyle: UIFormStyle = new UIFormStyle();
   private removePremiumsDialog: any;
   private batchConfirmPremiumsDialog: any;
@@ -271,7 +272,7 @@ export class MedicalPremiumsProcessListComponent implements OnInit, OnChanges {
   onClickOpenAddPremiumsFromModal(template: TemplateRef<unknown>): void {
     this.addPremiumsFormDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-full add_premiums_modal',
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
     });
   }
   modalCloseAddPremiumsFormModal(result: any) {

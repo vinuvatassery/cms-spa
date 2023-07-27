@@ -7,9 +7,9 @@ import { ChangeDetectionStrategy, Output , EventEmitter, Component } from '@angu
 })
 export class MedicalPremiumsBatchPremiumsComponent {
   
-  @Output() isModalBatchPremiumsCloseClicked = new EventEmitter();
+  @Output() modalBatchPremiumsCloseClicked = new EventEmitter();
 
   closeBatchPremiumsClicked(){
-    this.isModalBatchPremiumsCloseClicked.emit(true);  
+    this.modalBatchPremiumsCloseClicked.emit(true);  
   }
 }

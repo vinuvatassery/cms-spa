@@ -214,13 +214,13 @@
 
 <ng-template #batchPremiumsConfirmationDialogTemplate>
   <cms-medical-premiums-batch-premiums
-    (isModalBatchPremiumsCloseClicked)="onModalBatchPremiumsModalClose($event)"></cms-medical-premiums-batch-premiums>
+    (modalBatchPremiumsCloseClicked)="onModalBatchPremiumsModalClose($event)"></cms-medical-premiums-batch-premiums>
 </ng-template>
 <ng-template #removePremiumsConfirmationDialogTemplate>
   <cms-medical-premiums-remove-premiums
-    (isModalRemovePremiumsCloseClicked)="onModalRemovePremiumsModalClose($event)"></cms-medical-premiums-remove-premiums>
+    (modalCloseRemovePremiumModal)="onModalRemovePremiumsModalClose($event)"></cms-medical-premiums-remove-premiums>
 </ng-template>
-<ng-template #AddPremiumsDialogTemplate>
+<ng-template #addPremiumsDialogTemplate>
   <cms-medical-premiums-add-details-form
     (modalCloseAddPremiumsFormModal)="modalCloseAddPremiumsFormModal($event)"></cms-medical-premiums-add-details-form>
 </ng-template>
