@@ -44,6 +44,7 @@ export class MedicalPremiumsBatchesLogListsComponent
   PreviewSubmitPaymentDialog: any;
   UnBatchPaymentDialog: any;
   removePremiumsDialog: any;
+  addClientRecentPremiumsDialog: any;
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -307,6 +308,26 @@ export class MedicalPremiumsBatchesLogListsComponent
   onModalRemovePremiumsModalClose(result: any) {
     if (result) {
       this.removePremiumsDialog.close();
+    }
+  }
+
+
+
+  clientRecentPremiumsModalClicked (template: TemplateRef<unknown>): void {
+    this.addClientRecentPremiumsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+      animation:{
+        direction: 'up',
+        type:'slide',
+        duration: 200
+      }
+    });
+  }
+
+  closeRecentPremiumsModal(result: any){
+    if (result) { 
+      this.addClientRecentPremiumsDialog.close();
     }
   }
 }
