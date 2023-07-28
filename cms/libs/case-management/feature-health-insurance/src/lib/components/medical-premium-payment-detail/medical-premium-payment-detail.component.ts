@@ -129,12 +129,7 @@ export class MedicalPremiumPaymentDetailComponent {
     this.premiumPaymentForm.controls['serviceTypeCode'].setValidators([Validators.required,]);
     this.premiumPaymentForm.controls['amountRequested'].setValidators([Validators.required,]);
     this.premiumPaymentForm.controls['paymentTypeCode'].setValidators([Validators.required,]);   
-    if(this.premiumPaymentForm.controls['paymentTypeCode'].value === PaymentTypeCode.Refund){       
-      this.premiumPaymentForm.controls['reversalTypeCode'].setValidators([Validators.required,]);
-    }
-    else{
-      this.premiumPaymentForm.controls['reversalTypeCode'].removeValidators([Validators.required,]);  
-    }    
+       
     this.premiumPaymentForm.controls['serviceStartDate'].setValidators([Validators.required,]);
     this.premiumPaymentForm.controls['entryDate'].setValidators([Validators.required,]); 
 
