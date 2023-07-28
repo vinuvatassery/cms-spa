@@ -52,7 +52,7 @@ export class WorkflowFacade {
     WorkflowProcessCompletionStatus[]
   >([]);
   private routesSubject = new BehaviorSubject<any>([]);
-  private routesDataSubject = new BehaviorSubject<any>([]);
+  private routesDataSubject = new Subject<any>();
   private sessionSubject = new BehaviorSubject<any>([]);
   private sessionDataSubject = new Subject<any>();
   private workflowReadySubject = new Subject<boolean>();
@@ -324,7 +324,7 @@ export class WorkflowFacade {
     );
   }
 
-  updateNonequenceNavigation(currentWorkflow: WorkFlowProgress) {
+  updateNonequenceNavigation(currentWorkflow: WorkFlowProgress) {    
     const previousRoute = this.deepCopy(
       this.currentSession?.workFlowProgress
     )?.filter((wf: WorkFlowProgress) => wf?.currentFlag == StatusFlag.Yes)[0];
