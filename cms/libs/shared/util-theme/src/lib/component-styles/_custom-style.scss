@@ -953,7 +953,10 @@ color: $app-primary-font-color;
   width: auto;
   left: $app-left_menu-width;
   z-index: 2;
-
+  min-height: 40px;
+&.content-start{
+  justify-content: flex-start !important;
+}
   .k-button-solid-primary {
     box-shadow: none;
   }
@@ -1139,5 +1142,14 @@ color: $app-primary-font-color;
     position: absolute;
     right: 10px;
     top: 10px;
+  }
+}
+.counter-buttons{ 
+  align-items: flex-end;
+}
+
+.height-btn{
+  .k-button{
+    min-height: 38px;
   }
 }
