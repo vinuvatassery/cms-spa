@@ -25,4 +25,5 @@ export interface Dependent {
     fullCustomName :string,
     dependentClientId : string,
     clientCaseEligibilityId: string,
+    cerReviewStatusCode:string;
 }

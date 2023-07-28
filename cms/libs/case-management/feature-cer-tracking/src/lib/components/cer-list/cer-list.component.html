@@ -205,7 +205,7 @@
       [sticky]="true" [columnMenu]="false">
       <ng-template kendoGridCellTemplate let-dataItem>
         <kendo-dropdownbutton [data]="gridActions" icon="more-vertical" title="More Options"
-          *ngIf="dataItem.eligibilityEndDate > todayDate && dataItem.eligibilityEndDate !== 'DISENROLLED' && dataItem.clientCaseEligibilityCerId !== null && dataItem.clientCaseEligibilityId"
+          *ngIf="dataItem.eligibilityEndDate > todayDate && dataItem.eligibilityStatus !== 'DISENROLLED' && dataItem.clientCaseEligibilityCerId !== null && dataItem.clientCaseEligibilityId"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
           aria-label="more actions" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
