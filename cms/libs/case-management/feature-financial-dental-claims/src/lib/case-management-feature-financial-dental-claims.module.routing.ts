@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { DentalClaimsPageComponent } from './containers/dental-claims/dental-claims-page.component';
 import { DentalClaimsBatchItemsPageComponent } from './containers/dental-claims-batch-items-page/dental-claims-batch-items-page.component';
 import { DentalClaimsBatchPageComponent } from './containers/dental-claims-batch-page/dental-claims-batch-page.component';
