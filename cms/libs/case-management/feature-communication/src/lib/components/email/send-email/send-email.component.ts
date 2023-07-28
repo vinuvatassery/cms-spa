@@ -260,7 +260,7 @@ onClosePreviewEmail(){
   private initiateAdobeEsignProcess(emailData: any, requestType: string){
     this.loaderService.show();
     let formData = this.esignFacade.prepareAdobeEsingData(emailData, this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater, this.cerEmailAttachedFiles);
-    this.esignFacade.initiateAdobeesignRequest(formData)
+    this.esignFacade.initiateAdobeesignRequest(formData, emailData)
         .subscribe({
           next: (data: any) =>{
           if (data) {

@@ -14,8 +14,12 @@ export class EsignFacade {
   constructor(private readonly esignDataService: EsignDataService) {}
 
   /** Public methods **/
-  initiateAdobeesignRequest(adobeEsignData: any) {
-    return this.esignDataService.initiateAdobeEsignRequest(adobeEsignData);
+  initiateAdobeesignRequest(adobeEsignData: any, emailData: any) {
+    if(emailData.esignRequestId == undefined || emailData.esignRequestId === null){
+      return this.esignDataService.initiateAdobeEsignRequest(adobeEsignData);
+    }else{
+      return this.esignDataService.updateEsignRequestTemplate(adobeEsignData);
+    }
   }
 
   saveDraftEsignRequest(formData: any) {
