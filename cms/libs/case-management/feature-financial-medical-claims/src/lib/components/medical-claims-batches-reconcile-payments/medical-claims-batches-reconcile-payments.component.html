@@ -154,14 +154,7 @@
 
       <div class="bottom-fixed-wrapper">
             <div class="sub-fix-bar">
-                  <div class="flex-sp-btn">
-                        <div> <span><strong>Amount Total:</strong> $13,000.00</span> <span class="ml-2"><strong>Warrant Total:</strong> $13,000.00</span></div>
-                        <div>0 payment(s) to reconcile</div>
-                  </div>
-                 
-                  <div>
-                        <cms-medical-claims-batches-reconcile-payments-breakout></cms-medical-claims-batches-reconcile-payments-breakout>
-                  </div>
+                  <cms-medical-claims-batches-reconcile-payments-breakout [batchId]="batchId" [entityId]="entityId" [reconcileBreakoutSummary$]="reconcileBreakoutSummary$ | async" [isBreakoutPanelShow]="isBreakoutPanelShow"></cms-medical-claims-batches-reconcile-payments-breakout>
             </div>
             <div class="text-right flex-gap">
                   

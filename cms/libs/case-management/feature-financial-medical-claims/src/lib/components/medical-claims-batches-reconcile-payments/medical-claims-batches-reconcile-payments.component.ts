@@ -10,8 +10,8 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
-import {  GridDataResult } from '@progress/kendo-angular-grid';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -20,19 +20,20 @@ import {
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { FinancialMedicalClaimsFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-medical-claims-batches-reconcile-payments',
   templateUrl: './medical-claims-batches-reconcile-payments.component.html',
   styleUrls: ['./medical-claims-batches-reconcile-payments.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, OnChanges{
+export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, OnChanges {
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
   PrintAuthorizationDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReconcileGridLoaderShow = false;
-  printAuthorizationDialog : any;
+  printAuthorizationDialog: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -55,14 +56,21 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
-  
+  reconcileBreakoutSummary$ = this.financialMedicalClaimsFacade.reconcileBreakoutSummary$
+  public isBreakoutPanelShow:boolean=true;
   /** Constructor **/
-  constructor(private route: Router,   private dialogService: DialogService ) {}
-  
+  constructor(private route: Router, private financialMedicalClaimsFacade: FinancialMedicalClaimsFacade, private dialogService: DialogService) { }
+  batchId:any='587B0312-1324-49F8-A91D-0657C93D19B2';
+  entityId:any='823E2464-0649-49DA-91E7-26DCC76A2A6B';
   ngOnInit(): void {
     this.loadReconcileListGrid();
+    this.loadQueryParams();
   }
+
+  loadQueryParams() {
+    this.loadPaymentBreakoutSummary(this.batchId, this.entityId);    
+  }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -98,8 +106,8 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
     this.loadReconcileListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
- 
-  
+
+
   onChange(data: any) {
     this.defaultGridState();
 
@@ -164,7 +172,7 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
         this.filterData
       );
       this.gridClaimsReconcileDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
+      if (data?.total >= 0 || data?.total === -1) {
         this.isReconcileGridLoaderShow = false;
       }
     });
@@ -178,14 +186,18 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
     });
   }
 
- 
+
   onPrintAuthorizationCloseClicked(result: any) {
-    if (result) { 
+    if (result) {
       this.printAuthorizationDialog.close();
     }
   }
-     navToBatchDetails(event : any){  
-       this.route.navigate(['/financial-management/medical-claims'] );
-     }
+  navToBatchDetails(event: any) {
+    this.route.navigate(['/financial-management/medical-claims']);
+  }
+  loadPaymentBreakoutSummary(batchId: string, vendorId: string) {
+    this.financialMedicalClaimsFacade.loadReconcilePaymentBreakoutSummary(batchId, vendorId)
+  } 
+  
 }
 

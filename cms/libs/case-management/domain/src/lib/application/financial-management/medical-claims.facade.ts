@@ -53,6 +53,11 @@ export class FinancialMedicalClaimsFacade {
     field: this.sortValueReconcile,
   }];
 
+  public sortValue = 'clientName';
+  public sortList: SortDescriptor[] = [{
+    field: this.sortValue,
+  }];
+
   private medicalClaimsProcessDataSubject = new Subject<any>();
   medicalClaimsProcessData$ = this.medicalClaimsProcessDataSubject.asObservable();
 
@@ -73,6 +78,14 @@ export class FinancialMedicalClaimsFacade {
 
   private claimsListDataSubject =  new Subject<any>();
   claimsListData$ = this.claimsListDataSubject.asObservable();
+
+  
+  private reconcileBreakoutSummaryDataSubject =  new Subject<any>();
+  reconcileBreakoutSummary$ = this.reconcileBreakoutSummaryDataSubject.asObservable();
+  
+  private reconcilePaymentBreakoutListDataSubject =  new Subject<any>();
+  reconcilePaymentBreakoutList$ = this.reconcilePaymentBreakoutListDataSubject.asObservable();
+  
   /** Private properties **/
  
   /** Public properties **/
@@ -198,4 +211,39 @@ export class FinancialMedicalClaimsFacade {
       },
     });  
   }
+
+  loadReconcilePaymentBreakoutSummary(batchId: string, vendorId: string){    
+    this.showLoader();
+    this.financialMedicalClaimsDataService.loadReconcilePaymentBreakoutSummaryService(batchId,vendorId).subscribe({
+      next: (dataResponse) => {
+        this.reconcileBreakoutSummaryDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  } 
+
+  loadReconcilePaymentBreakoutListGrid(batchId: string, vendorId: string,skipcount: number, maxResultCount: number, sort: any, sortType: any){
+    this.showLoader();
+    this.financialMedicalClaimsDataService.loadReconcilePaymentBreakoutListService(batchId,vendorId,skipcount,maxResultCount,sort,sortType).subscribe({
+      next: (dataResponse) => {
+        this.reconcilePaymentBreakoutListDataSubject.next(dataResponse);
+        if (dataResponse) {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.reconcilePaymentBreakoutListDataSubject.next(gridView);
+        }
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  } 
 }
