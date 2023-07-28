@@ -9,6 +9,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PaymentPanel, PaymentsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'cms-medical-claims-payment-details-form',
@@ -176,11 +177,19 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
     
   }
   save(){
+    this.paymentFacade.showLoader();
     this.validateModel();
     if(this.medicalClaimPaymentForm.valid){
       this.populatePaymentPanelModel();
-      this.paymentFacade.updatePaymentPanel(this.vendorId,this.batchId, this.paymentPanel).subscribe(response=>{
-   
+      this.paymentFacade.updatePaymentPanel(this.vendorId,this.batchId, this.paymentPanel).subscribe({
+        next: (data: any) => {         
+          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment panel updated successfully.');
+          this.paymentFacade.hideLoader();
+        },
+        error: (err) => {       
+          this.paymentFacade.hideLoader();
+          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        }
       });
 
     }
