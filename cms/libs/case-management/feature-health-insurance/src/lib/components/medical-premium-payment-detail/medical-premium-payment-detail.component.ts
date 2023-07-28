@@ -17,7 +17,6 @@ import {
   ClientProfileTabs,
   EntityTypeCode,
   ServiceSubTypeCode,
-  PaymentTypeCode,
 } from '@cms/case-management/domain';
 import { SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
