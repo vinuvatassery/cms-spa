@@ -65,7 +65,7 @@ export class MedicalPremiumsProcessListComponent implements OnInit, OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  isRemovePremiumGridOptionClosed = false;
   gridMedicalPremiumsProcessDataSubject = new Subject<any>();
   gridMedicalPremiumsProcessData$ =
     this.gridMedicalPremiumsProcessDataSubject.asObservable();
@@ -113,6 +113,12 @@ export class MedicalPremiumsProcessListComponent implements OnInit, OnChanges {
       buttonType: 'btn-h-danger',
       text: 'Remove Premiums',
       icon: 'delete',
+      click: (data: any): void => {
+        if (!this.isRemovePremiumGridOptionClosed) {
+          this.isRemovePremiumGridOptionClosed = true; 
+          this.onRemovePremiumsOpenClicked(this.removePremiumsConfirmationDialogTemplate);
+        }
+      },
     },
   ];
 
@@ -252,6 +258,7 @@ export class MedicalPremiumsProcessListComponent implements OnInit, OnChanges {
   }
   onModalRemovePremiumsModalClose(result: any) {
     if (result) { 
+      this.isRemovePremiumGridOptionClosed = false;
       this.removePremiumsDialog.close();
     }
   }
