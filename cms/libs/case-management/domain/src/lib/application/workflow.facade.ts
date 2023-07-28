@@ -325,9 +325,17 @@ export class WorkflowFacade {
   }
 
   updateNonequenceNavigation(currentWorkflow: WorkFlowProgress) {    
-    const previousRoute = this.deepCopy(
+    let previousRoute = this.deepCopy(
       this.currentSession?.workFlowProgress
     )?.filter((wf: WorkFlowProgress) => wf?.currentFlag == StatusFlag.Yes)[0];
+
+    if(!previousRoute){
+      const processId = this.actRoute.snapshot.queryParams['pid'];
+      previousRoute = this.deepCopy(
+          this.currentSession?.workFlowProgress
+        )?.find((wf: WorkFlowProgress) => wf?.processId == processId)
+    }
+
     this.updateRoutes(previousRoute, currentWorkflow);
   }
 
