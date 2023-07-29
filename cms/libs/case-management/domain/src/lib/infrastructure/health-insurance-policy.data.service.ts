@@ -308,7 +308,7 @@ export class HealthInsurancePolicyDataService {
   
   validateCerReviewStatus(eligibilityId: any,): Observable<boolean> {
     return this.http.get<boolean>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/eligibility/${eligibilityId}/cer-review/validate`);
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/eligibility/${eligibilityId}/cer-review-state`);
   }
 
 }
