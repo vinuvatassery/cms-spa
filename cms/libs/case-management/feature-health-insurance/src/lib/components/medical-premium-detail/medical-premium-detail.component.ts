@@ -594,7 +594,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   }
 
   private validateReview() {
-    if (this.isReviewPopup && this.ddlInsuranceType != HealthInsurancePlan.Veterans) {
+    if (this.isReviewPopup && this.ddlInsuranceType != HealthInsurancePlan.Veterans && this.ddlInsuranceType != HealthInsurancePlan.Medicare) {
       this.healthInsuranceForm.controls['insuranceEndDate'].setValidators([Validators.required]);
       this.healthInsuranceForm.controls['insuranceEndDate'].updateValueAndValidity();
     }

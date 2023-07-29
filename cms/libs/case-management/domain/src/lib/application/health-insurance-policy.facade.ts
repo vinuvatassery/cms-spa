@@ -1,10 +1,10 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, catchError, of } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Data services **/
 import { SnackBar } from '@cms/shared/ui-common';
-import { NotificationSnackbarService, SnackBarNotificationType, LoggingService, LoaderService,ConfigurationProvider } from '@cms/shared/util-core';
+import { NotificationSnackbarService, SnackBarNotificationType, LoggingService, LoaderService,ConfigurationProvider, NotificationSource } from '@cms/shared/util-core';
 import { HealthInsurancePolicy } from '../entities/health-insurance-policy';
 import { HealthInsurancePolicyDataService } from '../infrastructure/health-insurance-policy.data.service';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
@@ -298,5 +298,14 @@ export class HealthInsurancePolicyFacade {
 
   loadInsurancePoliciesByProviderId(insurancePlanId: any, clientId: any, clientCaseEligibilityId: any, isDental: any) {
    return this.healthInsurancePolicyService.loadInsurancePoliciesByProviderId(insurancePlanId, clientId, clientCaseEligibilityId, isDental);
+  }
+
+  validateCerReviewStatus(eligibilityId: any,) : Observable<boolean>{
+    return this.healthInsurancePolicyService.validateCerReviewStatus(eligibilityId).pipe(
+      catchError((err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        return of(false);
+      })
+    );
   }
 }
