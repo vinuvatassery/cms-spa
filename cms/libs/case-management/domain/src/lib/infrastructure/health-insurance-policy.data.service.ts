@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { HealthInsurancePolicy } from '../entities/health-insurance-policy';
 import { CarrierContactInfo } from '../entities/carrier-contact-info';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class HealthInsurancePolicyDataService {
@@ -306,5 +306,9 @@ export class HealthInsurancePolicyDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/vendors/${providerId}/insurance-policies?clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}&dentalPlan=${isDental}`);
   }
   
+  validateCerReviewStatus(eligibilityId: any,): Observable<boolean> {
+    return this.http.get<boolean>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/eligibility/${eligibilityId}/cer-review/validate`);
+  }
 
 }
