@@ -126,7 +126,8 @@
                                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
                                                     aria-label="Service Start Date" format="MM/dd/yyyy"
                                                     formatPlaceholder="formatPattern"
-                                                    formControlName="serviceStartDate">
+                                                    formControlName="serviceStartDate"
+                                                    (valueChange)="onDateChange(i)">
                                                 </kendo-datepicker>
                                             </kendo-floatinglabel>
                                             <kendo-formerror
@@ -139,7 +140,8 @@
                                             <kendo-floatinglabel text="Service End Date">
                                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
                                                     aria-label="Service End Date" format="MM/dd/yyyy"
-                                                    formatPlaceholder="formatPattern" formControlName="serviceEndDate">
+                                                    formatPlaceholder="formatPattern" formControlName="serviceEndDate"
+                                                    (valueChange)="onDateChange(i)">
                                                 </kendo-datepicker>
                                             </kendo-floatinglabel>
                                             <kendo-formerror

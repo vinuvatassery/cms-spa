@@ -95,7 +95,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private readonly loaderService: LoaderService,
     private workflowFacade: WorkflowFacade,
-    private lovFacade: LovFacade,
+    private lovFacade: LovFacade
   ) {
     this.initClaimForm();
     this.lovFacade.getCoPaymentRequestTypeLov();
@@ -161,13 +161,13 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
       ]),
       reasonForException: new FormControl(
         this.medicalClaimServices.reasonForException
-      )
+      ),
     });
     this.AddClaimServicesForm.push(claimForm);
     this.cd.detectChanges();
   }
 
-  onClientValueChange(event: any){
+  onClientValueChange(event: any) {
     this.clientCaseEligibilityId = event.clientCaseEligibilityId;
   }
 
@@ -185,9 +185,22 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
     return control.controls[controlName].status == 'INVALID';
   }
 
-  isServiceCostValisd(index: any) {
-    let serviceConstIsValid = this.AddClaimServicesForm.at(index) as FormGroup;
-    return serviceConstIsValid.controls['serviceCost'].status == 'INVALID';
+  onDateChange(index: any) {
+    let serviceFormData = this.AddClaimServicesForm.at(index) as FormGroup;
+    let startDate = serviceFormData.controls['serviceStartDate'].value;
+    let endDate = serviceFormData.controls['serviceEndDate'].value;
+    this.isStartEndDateValid(startDate, endDate);
+  }
+
+  isStartEndDateValid(startDate: any, endDate:any): boolean {
+    if (startDate > endDate) {
+      this.financialVendorRefundFacade.showHideSnackBar(
+        SnackBarNotificationType.ERROR,
+        'Start date must less than end date'
+      );
+      return false;
+    }
+    return true;
   }
 
   save() {
@@ -201,23 +214,26 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       tpainvoice: [{}],
     };
-    for(let i = 0; i < formValues.claimService.length; i ++){
+    for (let i = 0; i < formValues.claimService.length; i++) {
       let element = formValues.claimService[i];
-      
+
       let service = {
         vendorId: bodyData.vendorId,
         clientId: bodyData.clientId,
-        claimNbr: '0',
+        claimNbr: element.invoiceId,
         clientCaseEligibilityId: this.clientCaseEligibilityId,
         ctpCode: element.ctpCode,
         serviceStartDate: element.serviceStartDate,
         serviceEndDate: element.serviceEndDate,
         paymentType: element.paymentType,
-        serviceCost : element.serviceCost,
+        serviceCost: element.serviceCost,
         entityTypeCode: EntityTypeCode.Vendor,
-        amountDue: element.amountDue,        
+        amountDue: element.amountDue,
         ServiceDesc: element.serviceDescription,
-        reasonForException: element.reasonForException
+        reasonForException: element.reasonForException,
+      };
+      if(!this.isStartEndDateValid(service.serviceStartDate, service.serviceEndDate)){
+        return;
       }
       bodyData.tpainvoice.push(service);
     }
@@ -225,31 +241,34 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
     this.saveData(bodyData);
   }
 
-  public saveData(data: any){
+  public saveData(data: any) {
     this.loaderService.show();
     this.financialVendorRefundFacade.saveMedicalClaim(data).subscribe({
-      next: (response: any)=>{
+      next: (response: any) => {
         this.loaderService.hide();
+        this.financialVendorRefundFacade.showHideSnackBar(
+          SnackBarNotificationType.SUCCESS,
+          'Claim added successfully'
+        );
       },
-      error: (error: any) =>{
+      error: (error: any) => {
         this.loaderService.hide();
         this.financialVendorRefundFacade.showHideSnackBar(
           SnackBarNotificationType.ERROR,
           error
         );
-      }
+      },
     });
   }
 
   update() {
     this.isSubmitted = true;
   }
-
 }
 
- export class MedicalClaims {
-  vendorId: string='';
-  serviceStartDate: string='' ;
+export class MedicalClaims {
+  vendorId: string = '';
+  serviceStartDate: string = '';
   serviceEndDate: string = '';
   paymentType: string = '';
   ctpCode: string = '';
@@ -258,5 +277,5 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   serviceCost: number = 0;
   amoundDue: string = '';
   reasonForException: string = '';
-  amountDue: number = 0
+  amountDue: number = 0;
 }
