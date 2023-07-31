@@ -7,7 +7,7 @@ const routes: Routes = [
     path: 'disenroll',
     component: SendLetterPageComponent,
     data: {
-      title: 'Send Disenrollment Letter',
+      title: 'Send Disenrollment',
     },
   },
   {

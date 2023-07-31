@@ -7,6 +7,7 @@ import {
   OnInit,
   Input,
   TemplateRef,
+  ChangeDetectorRef,
 } from '@angular/core';
 /** External libraries **/
 import { DialItemAnimation } from '@progress/kendo-angular-buttons';
@@ -49,7 +50,8 @@ export class Case360HeaderComponent implements OnInit {
   constructor(
     private readonly clientEligibilityFacade: ClientEligibilityFacade,
     private readonly caseFacade: CaseFacade,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   /** Lifecycle hooks **/
@@ -124,6 +126,14 @@ export class Case360HeaderComponent implements OnInit {
         this.groupChangeTitle = '';
       }
     });
+    this.clientEligibilityFacade.eligibilityDate$.subscribe((eligibilityDate) =>{
+      if(eligibilityDate){
+        this.loadedClientHeader.eilgibilityStartDate = eligibilityDate?.eilgibilityStartDate;
+        this.loadedClientHeader.eligibilityEndDate = eligibilityDate?.eligibilityEndDate;
+        this.cdr.detectChanges();
+      }
+      
+    })
   }
 
   checkIfSCheduledGroup(isScheduled: boolean) {

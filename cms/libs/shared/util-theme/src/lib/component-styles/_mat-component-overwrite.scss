@@ -309,6 +309,17 @@ max-width: 250px;
   }
 }
 
+.combo-search-wrapper{
+  position: relative;
+  .global-search-icon{
+    position: absolute;
+    top: 8px;
+    left: 10px; 
+  }
+  .k-input-inner{
+    padding-left: 40px;
+  }
+}
 .k-no-data,
 .k-nodata {
   min-height: 40px;

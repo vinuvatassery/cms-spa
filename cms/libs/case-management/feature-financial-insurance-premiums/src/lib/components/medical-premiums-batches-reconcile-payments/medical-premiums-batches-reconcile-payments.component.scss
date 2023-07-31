@@ -1,0 +1,12 @@
+.field-with-btn{
+      display: flex;
+      align-items: baseline;
+      .k-rounded-md {
+            border-radius: 4px 0px 0px 4px;
+        }
+     > .k-button{
+            min-height: 39.5px;
+            top: -1px;
+            border-radius: 0px 4px 4px 0px !important;
+      }
+}

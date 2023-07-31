@@ -16,14 +16,14 @@ export class ClientEligibilityFacade {
   private ddlStatusSubject = new BehaviorSubject<any>([]);
   eligibilityPeriodPopupOpenSubject = new Subject<boolean>();
   private disEnrollResultSubject =  new Subject<any>();
-
+  public eligibilityDateSubject =  new Subject<any>();
   /** Public properties **/
   ddlAcceptApplications$ = this.ddlAcceptApplicationsSubject.asObservable();
   ddlGroups$ = this.ddlGroupsSubject.asObservable();
   ddlStatus$ = this.ddlStatusSubject.asObservable();
   eligibilityPeriodPopupOpen$ = this.eligibilityPeriodPopupOpenSubject.asObservable();
   disEnrollResult$ = this.disEnrollResultSubject.asObservable();
-
+  eligibilityDate$ = this.eligibilityDateSubject.asObservable();
   /** Constructor**/
   constructor(
     private readonly clientEligibilityDataService: ClientEligibilityDataService,
