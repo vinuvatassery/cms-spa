@@ -44,8 +44,18 @@ const routes: Routes = [
   {
     path: 'medical-claims',
     loadChildren: () =>
-      import('@cms/case-management/feature-financial-medical-claims').then(
-        (m) => m.CaseManagementFeatureFinancialMedicalClaimsModule
+      import('@cms/case-management/feature-financial-claims').then(
+        (m) => m.CaseManagementFeatureFinancialClaimsModule
+      ),
+    data: {
+      title: null,
+    },
+  },
+  {
+    path: 'dental-claims',
+    loadChildren: () =>
+      import('@cms/case-management/feature-financial-claims').then(
+        (m) => m.CaseManagementFeatureFinancialClaimsModule
       ),
     data: {
       title: null,

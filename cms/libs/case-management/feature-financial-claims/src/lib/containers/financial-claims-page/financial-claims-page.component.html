@@ -1,0 +1,46 @@
+<div class="app-l-inner-rapper pb-8rem pt-0">
+    <common-bread-crumb></common-bread-crumb>
+    <div class=" pt-0">
+        <section class="app-l-mainTittle">
+            <h1 class="maintitle_withicon text-bold"> Medical Claims </h1>
+        </section>
+        <section class="app-l-client-wrapper">
+            <section class="app-l-wrapper">
+                <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+                    class="app-c-tab case-360-tab">
+                    <kendo-tabstrip-tab title="Process" [selected]="true">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-financial-claims-process-list      [financialClaimsProcessGridLists$]="financialClaimsProcessGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsProcess"
+                                [sortType]="sortType" [sort]="sortProcessList" 
+                                (loadFinancialClaimsProcessListEvent)="loadFinancialClaimsProcessListGrid($event)"></cms-financial-claims-process-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+
+                    <kendo-tabstrip-tab title="Batches">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-financial-claims-batches-list   [financialClaimsBatchGridLists$]="financialClaimsBatchGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsBatch"
+                                [sortType]="sortType" [sort]="sortBatchList" 
+                                (loadFinancialClaimsBatchListEvent)="loadFinancialClaimsBatchListGrid($event)"></cms-financial-claims-batches-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+                    <kendo-tabstrip-tab title="All Payments">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-financial-claims-all-payments-list  [financialClaimsAllPaymentsGridLists$]="financialClaimsAllPaymentsGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsPayments"
+                                [sortType]="sortType" [sort]="sortPaymentsList" 
+                                (loadFinancialClaimsAllPaymentsListEvent)="loadFinancialClaimsAllPaymentsListGrid($event)"></cms-financial-claims-all-payments-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+                </kendo-tabstrip>
+            </section>
+        </section>
+    </div>
+</div>

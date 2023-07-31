@@ -54,6 +54,9 @@
       "@cms/case-management/feature-family-and-dependent": [
         "libs/case-management/feature-family-and-dependent/src/index.ts"
       ],
+      "@cms/case-management/feature-financial-claims": [
+        "libs/case-management/feature-financial-claims/src/index.ts"
+      ],
       "@cms/case-management/feature-financial-dental-claims": [
         "libs/case-management/feature-financial-dental-claims/src/index.ts"
       ],
