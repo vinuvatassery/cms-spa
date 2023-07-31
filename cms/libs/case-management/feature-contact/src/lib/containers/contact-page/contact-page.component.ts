@@ -1010,6 +1010,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       previousClientEligibilityId: this.prevClientCaseEligibilityId
     };
 
+    if(this.isCerForm && clientCaseEligibility?.emailAddressChangedFlag === StatusFlag.No){
+      clientCaseEligibility.paperlessFlag = this.oldContactInfo?.clientCaseEligibility?.paperlessFlag;
+    }
+
     let addressProofDoc: HomeAddressProof | undefined = undefined;
     if (this.uploadedHomeAddressProof != null && !homeAddressGroup?.get('noHomeAddressProofFlag')?.value) {
       addressProofDoc = {
@@ -1533,10 +1537,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm?.get('homeAddress.address1')?.enable();
       this.contactInfoForm?.get('homeAddress.address2')?.enable();
       this.contactInfoForm?.get('homeAddress.zip')?.enable();
-      if (this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.value ?? false) {
-        this.setSameAsMailingAddressFlagChanges(true);
-      }
     }
+
+    const isSameAsEmailSelected =  this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.value ?? false;
+    this.setSameAsMailingAddressFlagChanges(isSameAsEmailSelected);
     this.isNoMailAddressValidationRequired = false;
   }
 
@@ -1650,12 +1654,15 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       }
 
       this.setHomeAddress(address);
+      homeAddressGroup?.controls['city']?.disable();
       if (!(homeAddressGroup?.controls['homelessFlag']?.value ?? false)) {
         this.homeAddressIsNotValid = this.mailingAddressIsNotValid;
       }
+      else{
+        homeAddressGroup?.controls['city']?.enable();
+      }
       homeAddressGroup?.controls['address1']?.disable();
       homeAddressGroup?.controls['address2']?.disable();
-      homeAddressGroup?.controls['city']?.enable();
       homeAddressGroup?.controls['state']?.disable();
       homeAddressGroup?.controls['zip']?.disable();
       this.isHomeAddressStateOregon$.next(address?.state === StatesInUSA.Oregon);

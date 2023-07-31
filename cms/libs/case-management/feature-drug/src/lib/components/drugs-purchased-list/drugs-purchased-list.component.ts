@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { DrugPharmacyFacade, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
 import {ConfigurationProvider} from '@cms/shared/util-core';
 
