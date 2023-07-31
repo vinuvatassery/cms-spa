@@ -1,8 +1,46 @@
-<div class="app-l-inner-rapper pt-0" kendoRippleContainer>
+<div class="app-l-inner-rapper pb-8rem pt-0">
     <common-bread-crumb></common-bread-crumb>
-    <section class="app-l-mainTittle">
-        <h1 class="maintitle_withicon text-bold"> 
-            dental-premiums-page works!
-        </h1>
-      </section>
+    <div class=" pt-0">
+        <section class="app-l-mainTittle">
+            <h1 class="maintitle_withicon text-bold"> Dental Premiums </h1>
+        </section>
+        <section class="app-l-client-wrapper">
+            <section class="app-l-wrapper">
+                <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+                    class="app-c-tab case-360-tab">
+                    <kendo-tabstrip-tab title="Process" [selected]="true">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-dental-premiums-process-list      [dentalPremiumsProcessGridLists$]="dentalPremiumsProcessGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueDentalPremiumsProcess"
+                                [sortType]="sortType" [sort]="sortProcessList" 
+                                (loadDentalPremiumsProcessListEvent)="loadDentalPremiumsProcessListGrid($event)"></cms-dental-premiums-process-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+
+                    <kendo-tabstrip-tab title="Batches">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-dental-premiums-batches-list   [dentalPremiumsBatchGridLists$]="dentalPremiumsBatchGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueDentalPremiumsBatch"
+                                [sortType]="sortType" [sort]="sortBatchList" 
+                                (loadDentalPremiumsBatchListEvent)="loadDentalPremiumsBatchListGrid($event)"></cms-dental-premiums-batches-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+                    <kendo-tabstrip-tab title="All Payments">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-dental-premiums-all-payments-list  [dentalPremiumsAllPaymentsGridLists$]="dentalPremiumsAllPaymentsGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueDentalPremiumsPayments"
+                                [sortType]="sortType" [sort]="sortPaymentsList" 
+                                (loadDentalPremiumsAllPaymentsListEvent)="loadDentalPremiumsAllPaymentsListGrid($event)"></cms-dental-premiums-all-payments-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+                </kendo-tabstrip>
+            </section>
+        </section>
+    </div>
 </div>

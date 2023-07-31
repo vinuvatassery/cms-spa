@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MedicalPremiumsDeletePremiumsComponent } from./medical-premiums-delete-premiums.componentnent';
+import { MedicalPremiumsRemovePremiumsComponent } from'./medical-premiums-remove-premiums.component';
 
-describe('MedicalPremiumsDeletePremiumsComponent', () => {
-  let component: MedicalPremiumsDeletePremiumsComponent;
-  let fixture: ComponentFixture<MedicalPremiumsDeletePremiumsComponent>;
+describe('MedicalPremiumsRemovePremiumsComponent', () => {
+  let component: MedicalPremiumsRemovePremiumsComponent;
+  let fixture: ComponentFixture<MedicalPremiumsRemovePremiumsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MedicalPremiumsDeletePremiumsComponent],
+      imports: [MedicalPremiumsRemovePremiumsComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(MedicalPremiumsDeletePremiumsComponent);
+    fixture = TestBed.createComponent(MedicalPremiumsRemovePremiumsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
