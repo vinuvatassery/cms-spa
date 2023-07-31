@@ -29,6 +29,10 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges{
   @ViewChild('previewSubmitPaymentDialogTemplate', { read: TemplateRef })
   previewSubmitPaymentDialogTemplate!: TemplateRef<any>;
+  @ViewChild('deleteClaimsConfirmationDialog', { read: TemplateRef })
+  deleteClaimsConfirmationDialog!: TemplateRef<any>;
+  @ViewChild('addEditClaimsDialog', { read: TemplateRef })
+  addEditClaimsDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isPharmacyClaimsAllPaymentsGridLoaderShow = false;
@@ -49,7 +53,8 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  addClientRecentClaimsDialog:any;
+  providerDetailsDialog: any;
   gridPharmacyClaimsAllPaymentsDataSubject = new Subject<any>();
   gridPharmacyClaimsAllPaymentsData$ = this.gridPharmacyClaimsAllPaymentsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
@@ -59,17 +64,62 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   printAuthorizationDialog: any;
   isRequestPaymentClicked = false;
   isPrintAuthorizationClicked = false;
+  isAddEditClaimMoreClose = false;
+  isDeleteBatchMoreOptionClosed = false;
+  addEditClaimsFormDialog: any;
+  deleteClaimsDialog: any;
+  aaaa =[
+    {
+      id:1,
+      Item: '123213',
+      batch:'23213123',
+      PharmacyName: 'XXXXXX',  
+      clientName:'XXXXXX', 
+      paymentMethod:'XXXXXX', 
+      nameOnPrimaryInsuranceCard:'address2', 
+      memberID:'XXXXXX', 
+      RXNumber:'XXXXXX', 
+      FillDate:'XX/XX/XXXX', 
+      ndcCode:'XXXXXX', 
+      brandName:'XXXXXX', 
+      drugName: 'XXXXXX',
+      paymentType: 'XXXXXX',
+      amountPaid: 'xx.xx',
+      rxQty: 'XX',
+      rxType: 'XX',
+      rxDaysSupply: 'XX',
+      indexCode: 'XXXX',
+      pcaCode: 'XXXX',
+      objectCode: 'XXXX',
+      paymentStatus: 'XXXX',
+      warrantNumber: 'XXXXXX',
+      entryDate: 'XX/XX/XXXX',
+      by: 'by',
+    },
+  ]
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Claims',
       icon: 'edit', 
+      click: (data: any): void => {
+        if (!this.isAddEditClaimMoreClose) {
+          this.isAddEditClaimMoreClose = true;
+          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog);
+        }
+      },
     },
  
     {
       buttonType: 'btn-h-danger',
       text: 'Delete Claims',
       icon: 'delete', 
+      click: (data: any): void => {
+        if (!this.isDeleteBatchMoreOptionClosed) {
+          this.isDeleteBatchMoreOptionClosed = true;
+          this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog);
+        }
+      },
     },
   ];
 
@@ -254,6 +304,73 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   onPrintAuthorizationCloseClicked(result: any) {
     if (result) { 
       this.printAuthorizationDialog.close();
+    }
+  }
+
+
+  
+  clientRecentClaimsModalClicked(
+    template: TemplateRef<unknown> 
+  ): void {
+    this.addClientRecentClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+      animation: {
+        direction: 'up',
+        type: 'slide',
+        duration: 200,
+      },
+    });
+  }
+
+  closeRecentClaimsModal(result: any) {
+    if (result) {
+      this.addClientRecentClaimsDialog.close();
+    }
+  }
+
+  
+  onViewProviderDetailClicked(template: TemplateRef<unknown>): void {
+    this.providerDetailsDialog = this.dialogService.open({
+      content: template,
+      animation: {
+        direction: 'left',
+        type: 'slide',
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+  }
+
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
+      this.providerDetailsDialog.close();
+    }
+  }
+
+  
+  public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
+    this.deleteClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onModalDeleteClaimsModalClose(result: any) {
+    if (result) {
+      this.isDeleteBatchMoreOptionClosed = false;
+      this.deleteClaimsDialog.close();
+    }
+  }
+
+  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>): void {
+    this.addEditClaimsFormDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-full add_claims_modal',
+    });
+  }
+  modalCloseAddEditClaimsFormModal(result: any) {
+    if (result) {
+      this.isAddEditClaimMoreClose = false;
+      this.addEditClaimsFormDialog.close();
     }
   }
 
