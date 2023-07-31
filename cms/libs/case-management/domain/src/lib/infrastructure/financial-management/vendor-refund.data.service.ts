@@ -4,6 +4,9 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { Pharmacy } from '../../entities/client-pharmacy';
+import { ClientCase } from '../../entities/client-case';
+
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorRefundDataService {
@@ -417,5 +420,20 @@ export class FinancialVendorRefundDataService {
       
       
     ]);
+  }
+
+  searchPharmacies(searchText: string) {
+    return this.http.get<Pharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/pharmacies?searchText=${searchText}`);
+  }
+
+  loadClientBySearchText(text: string) {
+    return this.http.get<ClientCase[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/case-management/clients/SearchText=${text}`
+    );
+  }
+
+  saveMedicalClaim(claim: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/MedicalClaim`, claim)
   }
 }

@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  Subject } from 'rxjs';
+import {  BehaviorSubject, Subject, catchError, of } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FinancialVendorRefundDataService } from '../../infrastructure/financial-management/vendor-refund.data.service';
+import { Pharmacy } from '@cms/case-management/domain';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorRefundFacade {
@@ -55,10 +56,21 @@ export class FinancialVendorRefundFacade {
 
   private claimsListDataSubject =  new Subject<any>();
   claimsListData$ = this.claimsListDataSubject.asObservable();
+  
   /** Private properties **/
+  private medicalProviderSearchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
+  private pharmaciesSubject = new BehaviorSubject<any>([]);
+  
+  private clientSearchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
+  private clientSubject = new BehaviorSubject<any>([]);
  
   /** Public properties **/
- 
+  medicalProviderSearchLoaderVisibility$= this.medicalProviderSearchLoaderVisibilitySubject.asObservable();
+  pharmacies$ = this.pharmaciesSubject.asObservable();
+
+  clientSearchLoaderVisibility$= this.clientSearchLoaderVisibilitySubject.asObservable();
+  clients$ = this.clientSubject.asObservable();
+
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>(); 
@@ -85,7 +97,8 @@ export class FinancialVendorRefundFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly snackbarService: NotificationSnackbarService,
   ) { }
 
   /** Public methods **/
@@ -156,4 +169,57 @@ export class FinancialVendorRefundFacade {
       },
     });  
   }
+
+  searchPharmacies(searchText: string) {
+    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
+    return this.financialVendorRefundDataService.searchPharmacies(searchText).subscribe({
+      next: (response: Pharmacy[]) => {
+        response?.forEach((vendor:any) => {
+          vendor.providerFullName = `${vendor.vendorName ?? ''} #${vendor.vendorNbr ?? ''} ${vendor.address1 ?? ''} ${vendor.address2 ?? ''} ${vendor.cityCode ?? ''} ${vendor.stateCode ?? ''} ${vendor.zip ?? ''}`;
+        });
+        this.pharmaciesSubject.next(response);
+        this.medicalProviderSearchLoaderVisibilitySubject.next(false);
+      },
+      error: (err) => {  
+        this.medicalProviderSearchLoaderVisibilitySubject.next(false);
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
+    });
+  }
+
+  loadClientBySearchText(text : string): void {
+    this.clientSearchLoaderVisibilitySubject.next(true);
+    if(text){
+      this.financialVendorRefundDataService.loadClientBySearchText(text).subscribe({
+      
+        next: (caseBySearchTextResponse) => {
+          this.clientSubject.next(caseBySearchTextResponse);
+          this.clientSearchLoaderVisibilitySubject.next(false);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        },
+      });
+    }
+    else{
+      this.clientSubject.next(null);
+      this.clientSearchLoaderVisibilitySubject.next(false);
+    }
+  }
+
+  public saveMedicalClaim(data: any){
+    return this.financialVendorRefundDataService.saveMedicalClaim(data).pipe(
+      catchError((err: any) => {
+        this.loaderService.hide();
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        if (!(err?.error ?? false)) {
+          this.loggingService.logException(err);
+          this.hideLoader();
+        }
+        return of(false);
+      })
+    );
+  }
+
 }
