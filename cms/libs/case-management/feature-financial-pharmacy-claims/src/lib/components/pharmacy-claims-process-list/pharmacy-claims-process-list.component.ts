@@ -311,8 +311,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
   }
 
   clientRecentClaimsModalClicked(
-    template: TemplateRef<unknown>,
-    data: any
+    template: TemplateRef<unknown> 
   ): void {
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,

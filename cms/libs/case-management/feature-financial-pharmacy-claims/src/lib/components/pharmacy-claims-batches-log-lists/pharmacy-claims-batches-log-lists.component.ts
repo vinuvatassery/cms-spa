@@ -32,6 +32,10 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   unBatchClaimsDialogTemplate!: TemplateRef<any>;
   @ViewChild('deleteClaimsConfirmationDialogTemplate', { read: TemplateRef })
   deleteClaimsConfirmationDialogTemplate!: TemplateRef<any>;
+  @ViewChild('reverseClaimsDialogTemplate', { read: TemplateRef })
+  reverseClaimsDialogTemplate!: TemplateRef<any>;
+  @ViewChild('addEditClaimsDialog', { read: TemplateRef })
+  addEditClaimsDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
@@ -39,10 +43,16 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   isPrintAuthorizationClicked = false;
   isUnBatchClaimsClosed = false;
   isDeleteClaimClosed = false;
+  reverseClaimsDialogClosed = false;
+  isAddEditClaimMoreClose = false;
+  providerDetailsDialog : any;
   PreviewSubmitPaymentDialog: any;
   printAuthorizationDialog: any;
   UnBatchDialog: any;
   deleteClaimsDialog: any;
+reverseClaimsDialog: any;
+  addClientRecentClaimsDialog: any;
+  addEditClaimsFormDialog: any;
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -81,6 +91,13 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       buttonType: 'btn-h-primary',
       text: 'Edit Claim',
       icon: 'edit',
+      click: (data: any): void => {
+        if (!this.isAddEditClaimMoreClose) {
+          this.isAddEditClaimMoreClose = true;
+          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog);
+        }
+       
+      } 
       
     },
     {
@@ -98,11 +115,11 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     {
       buttonType: 'btn-h-primary',
       text: 'Reverse claim',
-      icon: 'undo',
+      icon: 'fast_rewind',
       click: (data: any): void => {
-        if (!this.isUnBatchClaimsClosed) {
-          this.isUnBatchClaimsClosed = true;
-          this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+        if (!this.reverseClaimsDialogClosed) {
+          this.reverseClaimsDialogClosed = true;
+          this.onReverseClaimsOpenClicked(this.reverseClaimsDialogTemplate);
         }
        
       }      
@@ -143,7 +160,34 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-   
+   aaaaaa = [
+    {
+      id:1,
+      item:1,
+      PharmacyName: 'XXXXXX XXXXXX',  
+      paymentMethod: 'paymentMethod',
+      clientName:'XXXXXX XXXXXX', 
+      nameOnPrimaryInsuranceCard:'XXXXXXX XXXXXXXXXXX', 
+      memberID:'XXXXXX', 
+      RXNumber:'XXXXXX', 
+      FillDate:'XX/XX/XXXX', 
+      ndcCode:'XXXXXX', 
+      brandName:'XXXXXX', 
+      drugName: 'XXXXXX',
+      paymentType: 'XXXXXX',
+      amountPaid: 'xx.xx',
+      rxQty: 'XX',
+      rxType: 'XX',
+      rxDaysSupply: 'XX',
+      indexCode: 'XXXX',
+      pcaCode: 'XXXX',
+      objectCode: 'XXXX',
+      paymentStatus: 'XXXX',
+      warrantNumber: 'XXXXXX',
+      entryDate: 'XX/XX/XXXX',
+      by: 'by',
+    },
+   ]
   /** Constructor **/
   constructor(private route: Router,private dialogService: DialogService ) {}
   
@@ -257,7 +301,9 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     });
     this.isBatchLogGridLoaderShow = false;
   }
-
+  public rowClass = (args:any) => ({
+    "table-row-orange": (args.dataItem.item === 1),
+  });
    backToBatch(event : any){  
     this.route.navigate(['/financial-management/pharmacy-claims'] );
   }
@@ -328,5 +374,69 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       this.deleteClaimsDialog.close();
     }
   }
- 
+
+  
+  clientRecentClaimsModalClicked(
+    template: TemplateRef<unknown> 
+  ): void {
+    this.addClientRecentClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+      animation: {
+        direction: 'up',
+        type: 'slide',
+        duration: 200,
+      },
+    });
+  }
+
+  closeRecentClaimsModal(result: any) {
+    if (result) {
+      this.addClientRecentClaimsDialog.close();
+    }
+  }
+
+  onViewProviderDetailClicked(template: TemplateRef<unknown>): void {
+    this.providerDetailsDialog = this.dialogService.open({
+      content: template,
+      animation: {
+        direction: 'left',
+        type: 'slide',
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+  }
+
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
+      this.providerDetailsDialog.close();
+    }
+  }
+
+
+  public onReverseClaimsOpenClicked(template: TemplateRef<unknown>): void {
+    this.reverseClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onCloseReverseClaimsClickedEventClicked(result: any) {
+    if (result) { 
+      this.reverseClaimsDialogClosed = false;
+      this.reverseClaimsDialog.close();
+    }
+  }
+
+  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>): void {
+    this.addEditClaimsFormDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-full add_claims_modal',
+    });
+  }
+  modalCloseAddEditClaimsFormModal(result: any) {
+    if (result) {
+      this.isAddEditClaimMoreClose = false;
+      this.addEditClaimsFormDialog.close();
+    }
+  }
 }
