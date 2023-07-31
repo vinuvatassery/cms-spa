@@ -246,38 +246,16 @@ export class FinancialPharmacyClaimsDataService {
     return of([
       {
         id:1,
-        vendorName: 'Vendor Name',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
+        pharmacyName: 'Vendor Name',
+        TIN:'XXXXXX', 
+        pmtMethod:'pmtMethod', 
+        datePmtReconciled:'XX/XX/XXXX', 
+        datePmtSend:'XX/XX/XXXX', 
+        pmtAmount:'XX.XX', 
+        note:'XXXX XXXXXX XXXXXX', 
+        
       },
-      {
-        id:2,
-        vendorName: 'Address `',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
-      },
+      
      
     ]);
   }

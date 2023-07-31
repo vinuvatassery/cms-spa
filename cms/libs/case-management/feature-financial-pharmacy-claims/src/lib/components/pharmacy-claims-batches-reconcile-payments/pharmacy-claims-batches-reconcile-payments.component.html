@@ -86,30 +86,30 @@
                               [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
                               [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
                               [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
-                              [data]="reconcileGridLists$ | async">
+                              [data]="aaaa">
                               <kendo-grid-checkbox-column [sticky]="true" title="Print Notice" [columnMenu]="false" [showSelectAll]="false"
                                     [width]="80"></kendo-grid-checkbox-column>
-                              <kendo-grid-column field="vendorName" title="Pharmacy Name" [width]="160">
+                              <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="160">
                                     <ng-template kendoGridCellTemplate let-dataItem>
-                                          <button aria-label="Pharmacy Name" kendoButton look="flat"
+                                          <button aria-label="Pharmacy Name" kendoButton look="flat" (click)="onViewProviderDetailClicked(providerDetailsTemplate)"
                                                 class="card-link-button">
-                                                {{ dataItem.vendorName }}
+                                                {{ dataItem.pharmacyName }}
                                           </button>
                                     </ng-template>
                               </kendo-grid-column>
-                              <kendo-grid-column field="type" title="TIN" [width]="160"> </kendo-grid-column>
+                              <kendo-grid-column field="TIN" title="TIN" [width]="160"> </kendo-grid-column>
 
-                              <kendo-grid-column field="clientName" title="Pmt. Method" [width]="160">
+                              <kendo-grid-column field="pmtMethod" title="Pmt. Method" [width]="160">
                               </kendo-grid-column>
-                              <kendo-grid-column field="refundWarrant" title="Date Pmt. Reconciled" [width]="200">
+                              <kendo-grid-column field="datePmtReconciled" title="Date Pmt. Reconciled" [width]="200">
                               </kendo-grid-column>
-                              <kendo-grid-column field="refundAmount" title="Date Pmt. Sent" [width]="160">
+                              <kendo-grid-column field="datePmtSend" title="Date Pmt. Sent" [width]="160">
                               </kendo-grid-column>
-                              <kendo-grid-column field="depositDate" title="Pmt. Amount" [width]="180">
+                              <kendo-grid-column field="pmtAmount" title="Pmt. Amount" [width]="180">
                               </kendo-grid-column>
-                              <kendo-grid-column field="depositMethod" title="Warrant Number" [width]="180">
+                              <kendo-grid-column field="warrantNumber" title="Warrant Number" [width]="180">
                               </kendo-grid-column>
-                              <kendo-grid-column field="indexCode" title="Note (Optional)" [width]="180">
+                              <kendo-grid-column field="note" title="Note (Optional)" [width]="180">
                               </kendo-grid-column>
                               
                    
@@ -180,4 +180,7 @@
     </ng-template>
 
 
-  
+    <ng-template #providerDetailsTemplate>
+      <cms-pharmacy-claims-provider-info
+        (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"></cms-pharmacy-claims-provider-info>
+    </ng-template>

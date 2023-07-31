@@ -49,14 +49,26 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit, 
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  providerDetailsDialog: any;
   gridClaimsReconcileDataSubject = new Subject<any>();
   gridClaimsReconcileData$ = this.gridClaimsReconcileDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   
-  
+  aaaa = [
+    {
+      id:1,
+      pharmacyName: 'Vendor Name',
+      TIN:'XXXXXX', 
+      pmtMethod:'pmtMethod', 
+      datePmtReconciled:'XX/XX/XXXX', 
+      datePmtSend:'XX/XX/XXXX', 
+      pmtAmount:'XX.XX', 
+      note:'XXXX XXXXXX XXXXXX', 
+      
+    },
+  ]
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService ) {}
   
@@ -187,5 +199,22 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit, 
      navToBatchDetails(event : any){  
        this.route.navigate(['/financial-management/pharmacy-claims'] );
      }
-}
+     
+     onViewProviderDetailClicked(template: TemplateRef<unknown>): void {
+      this.providerDetailsDialog = this.dialogService.open({
+        content: template,
+        animation: {
+          direction: 'left',
+          type: 'slide',
+        },
+        cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+      });
+    }
+  
+    onCloseViewProviderDetailClicked(result: any) {
+      if (result) {
+        this.providerDetailsDialog.close();
+      }
+    }
 
+  }
