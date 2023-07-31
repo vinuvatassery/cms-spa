@@ -9,7 +9,7 @@ import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { PaymentsDataService } from '../../infrastructure/financial-management/payments.data.service';
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
-import { PaymentPanel } from '@cms/case-management/domain';
+
 
 @Injectable({ providedIn: 'root' })
 export class PaymentsFacade {
