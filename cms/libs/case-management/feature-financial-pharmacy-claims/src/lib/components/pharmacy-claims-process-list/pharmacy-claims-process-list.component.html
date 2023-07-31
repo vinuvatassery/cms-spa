@@ -33,54 +33,50 @@
     [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
     [columnMenu]="{ filter: true }" [sort]="state.sort" [navigable]="isProcessGridExpand"
     (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
-    [data]="pharmacyClaimsProcessGridLists$ | async">
+    [data]="aaaaaa">
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"></kendo-grid-checkbox-column>
-      <kendo-grid-column field="providerName" title="Pharmacy Name" [width]="160">
-        <ng-template kendoGridCellTemplate let-dataItem>
-          <button aria-label="Pharmacy Name" kendoButton look="flat" class="card-link-button" >
-            {{ dataItem.providerName }}
-          </button>
-          
-        </ng-template>
-      </kendo-grid-column>
-    <kendo-grid-column field="invoiceID" title="Client Name" [width]="160">
+    <kendo-grid-column field="PharmacyName" title="Pharmacy Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button aria-label="Client Name" kendoButton look="flat" class="card-link-button" >
-          {{ dataItem.invoiceID }}
+        <button aria-label="Pharmacy Name" kendoButton look="flat" class="card-link-button"
+          (click)="onViewProviderDetailClicked(providerDetailsTemplate)">
+          {{ dataItem.PharmacyName }}
         </button>
-        
+
       </ng-template>
-       </kendo-grid-column>
- 
- 
+    </kendo-grid-column>
+    <kendo-grid-column field="clientName" title="Client Name" [width]="160">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button aria-label="Client Name" kendoButton look="flat" class="card-link-button">
+          {{ dataItem.clientName }}
+        </button>
+
+      </ng-template>
+    </kendo-grid-column>
+
     <kendo-grid-column field="nameOnPrimaryInsuranceCard" title="Name on Primary Insurance Card" [width]="200">
     </kendo-grid-column>
     <kendo-grid-column field="memberID" title="Member ID" [width]="120"> </kendo-grid-column>
-    <kendo-grid-column field="serviceCount" title="RX Number" [width]="160"> </kendo-grid-column>
-    <kendo-grid-column field="totalCost" title="Fill Date" [width]="120"> </kendo-grid-column>
-    <kendo-grid-column field="totalDue" title="NDC Code" [width]="120"> </kendo-grid-column>
-
-    <kendo-grid-column field="paymentStatus" title="Brand Name" [width]="160"> </kendo-grid-column>
-    <kendo-grid-column field="totalDue" title="Drug Name" [width]="120"> </kendo-grid-column>
-
-    <kendo-grid-column field="totalDue" title="Payment Type" [width]="120"> </kendo-grid-column>
-
-    <kendo-grid-column field="totalDue" title="Amount Paid" [width]="120"> </kendo-grid-column>
-
-    <kendo-grid-column field="totalDue" title="RX Qty." [width]="120"> </kendo-grid-column>
-
-    <kendo-grid-column field="totalDue" title="RX Type" [width]="120"> </kendo-grid-column>
-    <kendo-grid-column field="totalDue" title="RX Days Supply" [width]="120"> </kendo-grid-column>
-    <kendo-grid-column field="totalDue" title="Index Code" [width]="120"> </kendo-grid-column>
-    <kendo-grid-column field="totalDue" title="PCA Code" [width]="120"> </kendo-grid-column>
-    <kendo-grid-column field="totalDue" title="Object Code" [width]="120"> </kendo-grid-column>
-    <kendo-grid-column field="totalDue" title="Payment Status" [width]="120"> </kendo-grid-column>
-    <kendo-grid-column field="totalDue" title="Warrant Number" [width]="120"> </kendo-grid-column>
-    <kendo-grid-column field="totalDue" title="Entry Date" [width]="120"> </kendo-grid-column>
-
-
-    <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true">
+    <kendo-grid-column field="RXNumber" title="RX Number" [width]="160"> </kendo-grid-column>
+    <kendo-grid-column field="FillDate" title="Fill Date" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="ndcCode" title="NDC Code" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="brandName" title="Brand Name" [width]="160"> </kendo-grid-column>
+    <kendo-grid-column field="drugName" title="Drug Name" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="paymentType" title="Payment Type" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="amountPaid" title="Amount Paid" [width]="120"> <ng-template kendoGridCellTemplate
+        let-dataItem>
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountPaid}}</span>
+      </ng-template></kendo-grid-column>
+    <kendo-grid-column field="rxQty" title="RX Qty." [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="rxType" title="RX Type" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="rxDaysSupply" title="RX Days Supply" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="indexCode" title="Index Code" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="pcaCode" title="PCA Code" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="objectCode" title="Object Code" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="warrantNumber" title="Warrant Number" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="entryDate" title="Entry Date" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="by" title="By" [width]="70">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
           [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
@@ -94,7 +90,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="Option" title=" " [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
+    <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="50" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
         <kendo-dropdownbutton [data]="processGridActions" icon="more-vertical"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -108,17 +104,39 @@
                 <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                 <label> {{ buttondataItem.text }} </label>
               </button>
-            </ng-container>
-
-
-
-
-          </ng-template>
+            </ng-container> </ng-template>
         </kendo-dropdownbutton>
       </ng-template>
     </kendo-grid-column>
 
- 
+    <div *kendoGridDetailTemplate="let dataItem">
+      <kendo-grid [resizable]="true" [navigable]="true" [data]="dataItem.invoiceServices"
+        [loading]="dataItem.IsInvoiceServiceLoader">
+
+        <kendo-grid-column field="RXNumber" title="RX Number" [width]="160"> </kendo-grid-column>
+        <kendo-grid-column field="FillDate" title="Fill Date" [width]="120"> </kendo-grid-column>
+        <kendo-grid-column field="ndcCode" title="NDC Code" [width]="120"> </kendo-grid-column>
+        <kendo-grid-column field="brandName" title="Brand Name" [width]="160"> </kendo-grid-column>
+        <kendo-grid-column field="drugName" title="Drug Name" [width]="120"> </kendo-grid-column>
+        <kendo-grid-column field="paymentType" title="Payment Type" [width]="120"> </kendo-grid-column>
+        <kendo-grid-column field="amountPaid" title="Amount Paid" [width]="120"> <ng-template kendoGridCellTemplate
+            let-dataItem>
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.amountPaid}}</span>
+          </ng-template> </kendo-grid-column>
+        <kendo-grid-column field="rxQty" title="RX Qty." [width]="120"> </kendo-grid-column>
+        <kendo-grid-column field="rxType" title="RX Type" [width]="120"> </kendo-grid-column>
+        <kendo-grid-column field="rxDaysSupply" title="RX Days Supply" [width]="120"> </kendo-grid-column>
+        <kendo-grid-column field="indexCode" title="Index Code" [width]="120"> </kendo-grid-column>
+        <kendo-grid-column field="pcaCode" title="PCA Code" [width]="120"> </kendo-grid-column>
+        <kendo-grid-column field="objectCode" title="Object Code" [width]="120"> </kendo-grid-column>
+        <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="120"> </kendo-grid-column>
+        <kendo-grid-column field="warrantNumber" title="Warrant Number" [width]="120"> </kendo-grid-column>
+        <kendo-grid-column field="entryDate" title="Entry Date" [width]="120"> </kendo-grid-column>
+
+
+
+      </kendo-grid>
+    </div>
 
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">
@@ -214,4 +232,9 @@
       </div>
     </div>
   </kendo-dialog-actions>
+</ng-template>
+
+<ng-template #providerDetailsTemplate>
+  <cms-pharmacy-claims-provider-info
+    (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"></cms-pharmacy-claims-provider-info>
 </ng-template>

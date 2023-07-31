@@ -22,7 +22,7 @@ import {
 import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-pharmacy-claims-process-list',
-  templateUrl: './pharmacy-claims-process-list.component.html', 
+  templateUrl: './pharmacy-claims-process-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
@@ -30,12 +30,18 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
   batchClaimsConfirmationDialog!: TemplateRef<any>;
   @ViewChild('deleteClaimsConfirmationDialog', { read: TemplateRef })
   deleteClaimsConfirmationDialog!: TemplateRef<any>;
+  @ViewChild('addEditClaimsDialog', { read: TemplateRef })
+  addEditClaimsDialog!: TemplateRef<any>;
+
   public formUiStyle: UIFormStyle = new UIFormStyle();
   private deleteClaimsDialog: any;
   private batchConfirmClaimsDialog: any;
   private addEditClaimsFormDialog: any;
   private addClientRecentClaimsDialog: any;
+  providerDetailsDialog: any;
   isDeleteBatchClosed = false;
+  isDeleteBatchMoreOptionClosed = false;
+  isAddEditClaimMoreClose = false;
   isBatchClaimsOption = false;
   isDeleteClaimsOption = false;
   isProcessBatchClosed = false;
@@ -68,11 +74,11 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
   public claimsProcessMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Claims',
-      icon: 'edit',
+      text: 'Batch Claims',
+      icon: 'check',
       click: (data: any): void => {
         if (!this.isProcessBatchClosed) {
-          this.isProcessBatchClosed = true; 
+          this.isProcessBatchClosed = true;
           this.onBatchClaimsGridSelectedClicked();
         }
       },
@@ -84,7 +90,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isDeleteBatchClosed) {
-          this.isDeleteBatchClosed = true; 
+          this.isDeleteBatchClosed = true;
           this.onBatchClaimsGridSelectedClicked();
         }
       },
@@ -95,14 +101,51 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
       buttonType: 'btn-h-primary',
       text: 'Edit Claims',
       icon: 'edit',
+      click: (data: any): void => {
+        if (!this.isAddEditClaimMoreClose) {
+          this.isAddEditClaimMoreClose = true;
+          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog);
+        }
+      },
     },
     {
       buttonType: 'btn-h-danger',
       text: 'Delete Claims',
       icon: 'delete',
+      click: (data: any): void => {
+        if (!this.isDeleteBatchMoreOptionClosed) {
+          this.isDeleteBatchMoreOptionClosed = true;
+          this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog);
+        }
+      },
     },
   ];
-
+  aaaaaa = [
+    {
+      id: 1,
+      PharmacyName: 'PharmacyName',
+      clientName: 'CLient Name',
+      nameOnPrimaryInsuranceCard: 'CLient Name',
+      memberID: 'XXXXXX',
+      RXNumber: 'XXXXXX',
+      FillDate: 'XX/XX/XXXX',
+      ndcCode: 'XXXXXX',
+      brandName: 'XXXXXX',
+      drugName: 'XXXXXX',
+      paymentType: 'XXXXXX',
+      amountPaid: 'xx.xx',
+      rxQty: 'XX',
+      rxType: 'XX',
+      rxDaysSupply: 'XX',
+      indexCode: 'XXXX',
+      pcaCode: 'XXXX',
+      objectCode: 'XXXX',
+      paymentStatus: 'XXXX',
+      warrantNumber: 'XXXXXX',
+      entryDate: 'XX/XX/XXXX',
+      by: 'by',
+    },
+  ];
 
   /** Constructor **/
   constructor(
@@ -226,7 +269,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
     });
   }
   onModalBatchClaimsModalClose(result: any) {
-    if (result) { 
+    if (result) {
       this.batchConfirmClaimsDialog.close();
     }
   }
@@ -238,7 +281,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
     });
   }
   onModalDeleteClaimsModalClose(result: any) {
-    if (result) { 
+    if (result) {
+      this.isDeleteBatchMoreOptionClosed = false;
       this.deleteClaimsDialog.close();
     }
   }
@@ -251,6 +295,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
   }
   modalCloseAddEditClaimsFormModal(result: any) {
     if (result) {
+      this.isAddEditClaimMoreClose = false;
       this.addEditClaimsFormDialog.close();
     }
   }
@@ -263,25 +308,43 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
     this.isProcessGridExpand = true;
     this.isDeleteBatchClosed = false;
     this.isProcessBatchClosed = false;
-  
   }
 
-  clientRecentClaimsModalClicked (template: TemplateRef<unknown>, data:any): void {
+  clientRecentClaimsModalClicked(
+    template: TemplateRef<unknown>,
+    data: any
+  ): void {
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
-      animation:{
+      animation: {
         direction: 'up',
-        type:'slide',
-        duration: 200
-      }
+        type: 'slide',
+        duration: 200,
+      },
     });
   }
 
-  closeRecentClaimsModal(result: any){
-    if (result) { 
+  closeRecentClaimsModal(result: any) {
+    if (result) {
       this.addClientRecentClaimsDialog.close();
     }
   }
- 
+
+  onViewProviderDetailClicked(template: TemplateRef<unknown>): void {
+    this.providerDetailsDialog = this.dialogService.open({
+      content: template,
+      animation: {
+        direction: 'left',
+        type: 'slide',
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+  }
+
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
+      this.providerDetailsDialog.close();
+    }
+  }
 }
