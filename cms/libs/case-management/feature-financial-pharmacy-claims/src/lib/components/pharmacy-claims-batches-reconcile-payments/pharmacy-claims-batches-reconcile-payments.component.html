@@ -89,9 +89,9 @@
                               [data]="reconcileGridLists$ | async">
                               <kendo-grid-checkbox-column [sticky]="true" title="Print Notice" [columnMenu]="false" [showSelectAll]="false"
                                     [width]="80"></kendo-grid-checkbox-column>
-                              <kendo-grid-column field="vendorName" title="Pharmacy Provider" [width]="160">
+                              <kendo-grid-column field="vendorName" title="Pharmacy Name" [width]="160">
                                     <ng-template kendoGridCellTemplate let-dataItem>
-                                          <button aria-label="Pharmacy Provider" kendoButton look="flat"
+                                          <button aria-label="Pharmacy Name" kendoButton look="flat"
                                                 class="card-link-button">
                                                 {{ dataItem.vendorName }}
                                           </button>

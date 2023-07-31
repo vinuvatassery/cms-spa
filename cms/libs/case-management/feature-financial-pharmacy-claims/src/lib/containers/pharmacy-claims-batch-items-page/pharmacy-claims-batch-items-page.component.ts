@@ -1,29 +1,29 @@
 import {  ChangeDetectionStrategy,  Component, } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialMedicalClaimsFacade } from '@cms/case-management/domain'; 
+import { FinancialPharmacyClaimsFacade } from '@cms/case-management/domain'; 
 
 @Component({
-  selector: 'cms-medical-claims-batch-items-page',
-  templateUrl: './medical-claims-batch-items-page.component.html', 
+  selector: 'cms-pharmacy-claims-batch-items-page',
+  templateUrl: './pharmacy-claims-batch-items-page.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MedicalClaimsBatchItemsPageComponent {
+export class PharmacyClaimsBatchItemsPageComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
-   sortValue = this.financialMedicalClaimsFacade.sortValueBatchItem;
-   sortType = this.financialMedicalClaimsFacade.sortType;
-   pageSizes = this.financialMedicalClaimsFacade.gridPageSizes;
-   gridSkipCount = this.financialMedicalClaimsFacade.skipCount;
-   sort = this.financialMedicalClaimsFacade.sortBatchItemList;
+   sortValue = this.financialPharmacyClaimsFacade.sortValueBatchItem;
+   sortType = this.financialPharmacyClaimsFacade.sortType;
+   pageSizes = this.financialPharmacyClaimsFacade.gridPageSizes;
+   gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
+   sort = this.financialPharmacyClaimsFacade.sortBatchItemList;
    state!: State;
-   batchItemsGridLists$ = this.financialMedicalClaimsFacade.batchItemsData$;
+   batchItemsGridLists$ = this.financialPharmacyClaimsFacade.batchItemsData$;
   constructor( 
-    private readonly financialMedicalClaimsFacade: FinancialMedicalClaimsFacade 
+    private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade 
   ) {}
 
   loadBatchItemListGrid(event: any) { 
-    this.financialMedicalClaimsFacade.loadBatchItemsListGrid();
+    this.financialPharmacyClaimsFacade.loadBatchItemsListGrid();
   }
 }

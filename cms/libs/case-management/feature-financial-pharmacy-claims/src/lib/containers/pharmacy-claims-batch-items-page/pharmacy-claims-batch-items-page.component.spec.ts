@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MedicalClaimsBatchItemsPageComponent } from './medical-claims-batch-items-page.component';
+import { PharmacyClaimsBatchItemsPageComponent } from './pharmacy-claims-batch-items-page.component';
 
-describe('MedicalClaimsBatchItemsPageComponent', () => {
-  let component: MedicalClaimsBatchItemsPageComponent;
-  let fixture: ComponentFixture<MedicalClaimsBatchItemsPageComponent>;
+describe('PharmacyClaimsBatchItemsPageComponent', () => {
+  let component: PharmacyClaimsBatchItemsPageComponent;
+  let fixture: ComponentFixture<PharmacyClaimsBatchItemsPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MedicalClaimsBatchItemsPageComponent],
+      declarations: [PharmacyClaimsBatchItemsPageComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(MedicalClaimsBatchItemsPageComponent);
+    fixture = TestBed.createComponent(PharmacyClaimsBatchItemsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

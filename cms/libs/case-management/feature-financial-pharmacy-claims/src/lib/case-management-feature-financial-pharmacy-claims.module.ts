@@ -25,6 +25,7 @@ import { PharmacyClaimsBatchRouterPageComponent } from './containers/pharmacy-cl
 import { PharmacyClaimsPaymentsRouterPageComponent } from './containers/pharmacy-claims-payments-router-page/pharmacy-claims-payments-router-page.component';
 import { PharmacyClaimsReconcilePageComponent } from './containers/pharmacy-claims-reconcile-page/pharmacy-claims-reconcile-page.component';
 import { PharmacyClaimsAllPaymentsListComponent } from './components/pharmacy-claims-all-payments-list/pharmacy-claims-all-payments-list.component';
+import { PharmacyClaimsBatchItemsPageComponent } from './containers/pharmacy-claims-batch-items-page/pharmacy-claims-batch-items-page.component';
 
 @NgModule({
   imports: [
@@ -58,6 +59,7 @@ import { PharmacyClaimsAllPaymentsListComponent } from './components/pharmacy-cl
     PharmacyClaimsPaymentsRouterPageComponent,
     PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent,
     PharmacyClaimsPrintDenialLetterComponent,
+    PharmacyClaimsBatchItemsPageComponent
   ],
   exports: [
     PharmacyClaimsProcessListComponent,
@@ -82,6 +84,7 @@ import { PharmacyClaimsAllPaymentsListComponent } from './components/pharmacy-cl
     PharmacyClaimsPaymentsRouterPageComponent,
     PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent,
     PharmacyClaimsPrintDenialLetterComponent,
+    PharmacyClaimsBatchItemsPageComponent
   ],
 })
 export class CaseManagementFeatureFinancialPharmacyClaimsModule {}

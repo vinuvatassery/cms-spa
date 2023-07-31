@@ -54,24 +54,34 @@
         <kendo-grid-column field="vendorName" title="Item #" [width]="160">
          
         </kendo-grid-column>
-        <kendo-grid-column field="type" title="Invoice ID" [width]="160"> </kendo-grid-column>
+        
     
-        <kendo-grid-column field="clientName" title="Provider Name" [width]="160"> 
+        <kendo-grid-column field="clientName" title="Pharmacy Name" [width]="160"> 
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button aria-label="Provider Name" kendoButton look="flat" class="card-link-button">
+            <button aria-label="Pharmacy Name" kendoButton look="flat" class="card-link-button">
               {{ dataItem.clientName }}
             </button>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="refundWarrant" title="Tax ID" [width]="100"> </kendo-grid-column>
-        <kendo-grid-column field="refundAmount" title="Payment Method" [width]="100"> </kendo-grid-column>
-        <kendo-grid-column field="depositDate" title="Client Name" [width]="100"> </kendo-grid-column>
+  
         <kendo-grid-column field="depositMethod" title="Name on Primary Insurance Card" [width]="200"> </kendo-grid-column>
         <kendo-grid-column field="indexCode" title="Member ID" [width]="100"> </kendo-grid-column>
-        <kendo-grid-column field="pca" title="Service Count" [width]="100"> </kendo-grid-column>
-        <kendo-grid-column field="grant" title="Total Cost" [width]="100"> </kendo-grid-column>
-        <kendo-grid-column field="vp" title="Total Due" [width]="100"> </kendo-grid-column>
-        <kendo-grid-column field="refundNote" title="Payment Status" [width]="150">  </kendo-grid-column>
+        <kendo-grid-column field="indexCode" title="RX Number" [width]="140">   </kendo-grid-column>
+        <kendo-grid-column field="pca" title="Fill Date" [width]="140">   </kendo-grid-column>
+        <kendo-grid-column field="pca" title="NDC Code" [width]="140">   </kendo-grid-column>
+        <kendo-grid-column field="pca" title="Brand Name" [width]="180">   </kendo-grid-column>
+        <kendo-grid-column field="pca" title="Drug Name" [width]="140">   </kendo-grid-column>
+        <kendo-grid-column field="grant" title="Payment Type" [width]="140">   </kendo-grid-column>
+        <kendo-grid-column field="grant" title="Amount Paid" [width]="140">   </kendo-grid-column>
+        <kendo-grid-column field="grant" title="RX Qty." [width]="140">   </kendo-grid-column>
+        <kendo-grid-column field="grant" title="RX Type" [width]="140">   </kendo-grid-column>
+        <kendo-grid-column field="grant" title="RX Days Supply" [width]="160">   </kendo-grid-column>
+        <kendo-grid-column field="vp" title="Index Code" [width]="140">   </kendo-grid-column>
+        <kendo-grid-column field="vp" title="PCA Code" [width]="140">   </kendo-grid-column>
+        <kendo-grid-column field="vp" title="Object Code" [width]="140">   </kendo-grid-column>
+        <kendo-grid-column field="vp" title="Payment Status" [width]="160">   </kendo-grid-column>
+        <kendo-grid-column field="vp" title="Warrant Number" [width]="160">   </kendo-grid-column>
+        <kendo-grid-column field="vp" title="Entry Date" [width]="140">   </kendo-grid-column>
          
         <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>

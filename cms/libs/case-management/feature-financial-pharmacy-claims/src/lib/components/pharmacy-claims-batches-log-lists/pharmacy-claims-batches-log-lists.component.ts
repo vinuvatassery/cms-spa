@@ -79,13 +79,25 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   public batchLogGridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Claims',
+      text: 'Edit Claim',
       icon: 'edit',
       
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Unbatch Claims',
+      text: 'Unbatch Claim',
+      icon: 'undo',
+      click: (data: any): void => {
+        if (!this.isUnBatchClaimsClosed) {
+          this.isUnBatchClaimsClosed = true;
+          this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+        }
+       
+      }      
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Reverse claim',
       icon: 'undo',
       click: (data: any): void => {
         if (!this.isUnBatchClaimsClosed) {
@@ -97,7 +109,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Claims',
+      text: 'Delete Claim',
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isDeleteClaimClosed) {

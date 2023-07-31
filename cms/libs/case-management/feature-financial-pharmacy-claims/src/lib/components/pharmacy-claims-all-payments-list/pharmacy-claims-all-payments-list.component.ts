@@ -62,17 +62,13 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Refund',
+      text: 'Edit Claims',
       icon: 'edit', 
     },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'UnAllPayments Refund',
-      icon: 'undo', 
-    },
+ 
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Refund',
+      text: 'Delete Claims',
       icon: 'delete', 
     },
   ];
@@ -128,14 +124,14 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
 
 
   private loadPharmacyClaimsAllPaymentsListGrid(): void {
-    this.loadRefundAllPayments(
+    this.loadClaimsAllPayments(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType
     );
   }
-  loadRefundAllPayments(
+  loadClaimsAllPayments(
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,

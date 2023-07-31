@@ -36,6 +36,9 @@ section {
 .text-upper{
   text-transform: uppercase;
 }
+.text-normal{
+  text-transform: none;
+}
 .text {
   &-noWrap {
     white-space: nowrap;

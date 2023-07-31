@@ -68,8 +68,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
   public claimsProcessMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Batch Claims',
-      icon: 'check',
+      text: 'Edit Claims',
+      icon: 'edit',
       click: (data: any): void => {
         if (!this.isProcessBatchClosed) {
           this.isProcessBatchClosed = true; 
