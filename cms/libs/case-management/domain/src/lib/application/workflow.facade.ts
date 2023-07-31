@@ -194,19 +194,26 @@ export class WorkflowFacade {
     }
 
     this.workflowService.createNewSession(this.sessionData).subscribe({
-      next: (sessionResp: any) => {
-        if (sessionResp && sessionResp?.workflowSessionId) {
-          this.router.navigate(['case-management/' + navigationPath], {
-            queryParams: {
-              sid: sessionResp?.workflowSessionId,
-              eid: sessionResp?.sessionData?.entityID,
-              wtc: sessionResp?.workflowTypeCode,
-            },
-          });
+      next: (sessionResp: any) => {        
+        if(sessionResp?.statusCode === "ACCEPT")
+        {
+          this.showHideSnackBar(SnackBarNotificationType.WARNING, "CER Complete");
         }
-        if (!sessionResp?.sessionData?.prevClientCaseEligibilityId) {
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, successMessage);
-        }
+        else
+        {
+            if (sessionResp && sessionResp?.workflowSessionId) {
+              this.router.navigate(['case-management/' + navigationPath], {
+                queryParams: {
+                  sid: sessionResp?.workflowSessionId,
+                  eid: sessionResp?.sessionData?.entityID,
+                  wtc: sessionResp?.workflowTypeCode,
+                },
+              });
+            }
+            if (!sessionResp?.sessionData?.prevClientCaseEligibilityId) {
+              this.showHideSnackBar(SnackBarNotificationType.SUCCESS, successMessage);
+            }
+      }
         this.hideLoader();
       },
       error: (err: any) => {

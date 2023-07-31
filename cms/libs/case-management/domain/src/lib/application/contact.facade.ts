@@ -419,7 +419,7 @@ export class ContactFacade {
       .loadClientPaperLessStatus(clientId, clientCaseEligibilityId)
       .subscribe({
         next: (clientEmailReponse: any) => {
-          if (clientEmailReponse) {
+          if (clientEmailReponse) {            
             this.hideLoader();
             this.paperlessSubject.next(clientEmailReponse);
           }

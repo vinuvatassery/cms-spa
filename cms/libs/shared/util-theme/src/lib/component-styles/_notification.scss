@@ -67,10 +67,14 @@
     width: 100%;
     max-width: 100%;
     box-shadow: none;
+    align-items: flex-start;
     @media (max-width: $breakpoint-sm) {
       min-width: 280px;
       max-width: 10%;
       margin: auto;
+    }
+    .k-notification-status{
+      margin-top: 4px;
     }
     .k-notification-content {
       margin-top: $size-m;
@@ -226,9 +230,8 @@
 }
 .snack-barwrapper{
   display: grid;
-  grid-template-columns: 40px auto auto;
   align-items: center;
-  grid-gap: 10px;
+  grid-gap: 4px;
   .snakbar-close-btn{
   width: 30px;
   height: 30px;
