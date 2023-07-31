@@ -9,6 +9,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import {
+  EntityTypeCode,
   FinancialMedicalClaimsFacade,
   FinancialVendorRefundFacade,
   WorkflowFacade,
@@ -22,6 +23,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LovFacade } from 'libs/system-config/domain/src/lib/application/lov.facade';
 
 @Component({
   selector: 'cms-medical-claims-detail-form',
@@ -39,6 +41,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   sort = this.financialMedicalClaimsFacade.sortClaimsList;
   state!: State;
 
+  paymentRequestType$ = this.lovFacade.paymentRequestType$;
   medicalProvidersearchLoaderVisibility$ =
     this.financialVendorRefundFacade.medicalProviderSearchLoaderVisibility$;
   pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
@@ -92,8 +95,10 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private readonly loaderService: LoaderService,
     private workflowFacade: WorkflowFacade,
+    private lovFacade: LovFacade,
   ) {
     this.initClaimForm();
+    this.lovFacade.getCoPaymentRequestTypeLov();
   }
 
   ngOnInit(): void {
@@ -151,12 +156,12 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
         [Validators.required]
       ),
       serviceCost: new FormControl(this.medicalClaimServices.serviceCost),
-      amoundDue: new FormControl(this.medicalClaimServices.amoundDue, [
+      amountDue: new FormControl(this.medicalClaimServices.amountDue, [
         Validators.required,
       ]),
       reasonForException: new FormControl(
         this.medicalClaimServices.reasonForException
-      ),
+      )
     });
     this.AddClaimServicesForm.push(claimForm);
     this.cd.detectChanges();
@@ -202,21 +207,21 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
       let service = {
         vendorId: bodyData.vendorId,
         clientId: bodyData.clientId,
-        ClaimNbr: '0',
-        ClientCaseEligibilityId: this.clientCaseEligibilityId,
+        claimNbr: '0',
+        clientCaseEligibilityId: this.clientCaseEligibilityId,
         ctpCode: element.ctpCode,
         serviceStartDate: element.serviceStartDate,
         serviceEndDate: element.serviceEndDate,
-        paymentRequestId: '00000000-0000-0000-0000-000000000000',
-        serviceCost : element.serviceCont,
-        entityTypeCode: element.entityTypeCode,
+        paymentType: element.paymentType,
+        serviceCost : element.serviceCost,
+        entityTypeCode: EntityTypeCode.Vendor,
         amountDue: element.amountDue,        
         ServiceDesc: element.serviceDescription,
         reasonForException: element.reasonForException
       }
       bodyData.tpainvoice.push(service);
     }
-    bodyData.tpainvoice.splice(0,1);
+    bodyData.tpainvoice.splice(0, 1);
     this.saveData(bodyData);
   }
 
@@ -250,7 +255,8 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   ctpCode: string = '';
   pcaCode: string = '';
   serviceDescription: string = '';
-  serviceCost: string = '';
+  serviceCost: number = 0;
   amoundDue: string = '';
   reasonForException: string = '';
+  amountDue: number = 0
 }

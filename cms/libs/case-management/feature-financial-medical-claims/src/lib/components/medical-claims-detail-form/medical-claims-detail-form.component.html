@@ -160,9 +160,12 @@
                                     <div class="flex-row">
                                         <div class="flex-col flex-col-4">
                                             <kendo-floatinglabel text="Payment Type">
-                                                <kendo-dropdownlist aria-label="Payment Type"
+                                                <kendo-dropdownlist formControlName="paymentType" aria-label="Type"
                                                     [fillMode]="formUiStyle.dropDownFillMode"
-                                                    formControlName="paymentType">
+                                                    [data]="paymentRequestType$ | async" valueField="id"
+                                                    textField="lovDesc" [valuePrimitive]="true"
+                                                    [loading]="(paymentRequestType$ | async)?.length===0">
+
                                                 </kendo-dropdownlist>
                                             </kendo-floatinglabel>
                                             <kendo-formerror *ngIf="(isControlValid('paymentType', i) && isSubmitted)"
@@ -212,19 +215,21 @@
 
                                             <kendo-floatinglabel text="Service Cost" class="amount-with-symbol">
                                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                                                <kendo-textbox aria-label="CTP Code"
+                                                <kendo-numerictextbox aria-label="CTP Code"
                                                     [fillMode]="formUiStyle.inputFillMode"
+                                                    format="#.000"
                                                     formControlName="serviceCost">
-                                                </kendo-textbox>
+                                                </kendo-numerictextbox>
                                             </kendo-floatinglabel>
 
                                         </div>
                                         <div class="flex-col flex-col-6">
                                             <kendo-floatinglabel text="Amount Due" class="amount-with-symbol">
                                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                                                <kendo-textbox aria-label="PCA Code"
-                                                    [fillMode]="formUiStyle.inputFillMode" formControlName="amountDue">
-                                                </kendo-textbox>
+                                                <kendo-numerictextbox aria-label="PCA Code"
+                                                    [fillMode]="formUiStyle.inputFillMode" formControlName="amountDue"
+                                                    format="#.000">
+                                                </kendo-numerictextbox>
                                             </kendo-floatinglabel>
                                         </div>
                                         <div class="ml-2">
