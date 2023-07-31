@@ -29,6 +29,7 @@ export class SetPharmacyPriorityComponent implements OnInit {
   /** Input properties  **/
   @Input() clientpharmacies:any[] = [];
   @Input() pharmacyPriorityModalButtonText: any;
+  @Input() isEditPharmacyPriorityTitle: any;
   @Input() clientId: any;
   @Input() isShowHistoricalData: any;
   /** Output properties  **/

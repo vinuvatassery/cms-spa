@@ -1,0 +1,56 @@
+<div class="app-c-table">
+      <kendo-grid [resizable]="true"  
+             [sortable]="true"   
+           [resizable]="true" [columnMenu]="{ filter: true }"
+              
+            [data]="recentClaimsGridLists$ | async">
+           
+            <kendo-grid-column field="invoiceID" title="Invoice ID" [width]="120">
+                
+            </kendo-grid-column>
+            <kendo-grid-column field="serviceStartDate" title="Service Start Date" [width]="180">            </kendo-grid-column> 
+          
+            <kendo-grid-column field="refundWarrant" title="Service End Date" [width]="160">
+            </kendo-grid-column>
+
+            <kendo-grid-column field="cptCode" title="CPT Code" [width]="160">            </kendo-grid-column> 
+            <kendo-grid-column field="medicalService" title="Medical Service" [width]="160">            </kendo-grid-column> 
+            <kendo-grid-column field="serviceCost" title="Service Cost" [width]="160">            </kendo-grid-column> 
+
+            <kendo-grid-column field="refundAmount" title="Amount Due" [width]="140">
+            </kendo-grid-column>
+            <kendo-grid-column field="paymentType" title="Payment Type" [width]="160">
+            </kendo-grid-column>
+            <kendo-grid-column field="clientAnnual Total" title="Client Annual Total" [width]="180">
+            </kendo-grid-column>
+            <kendo-grid-column field="clientBalance" title="Client Balance" [width]="160">
+            </kendo-grid-column>
+            <kendo-grid-column field="indexCode" title="Entry Date" [width]="140">   </kendo-grid-column> 
+            <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="180">   </kendo-grid-column> 
+
+            <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true">
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                    <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
+                      [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
+                      <common-user-photo-icon></common-user-photo-icon>
+                    </button>
+                    <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+                      <ng-template kendoPopoverBodyTemplate>
+                        <common-user-profile-card></common-user-profile-card>
+                      </ng-template>
+                    </kendo-popover>
+                  </ng-template>
+                </kendo-grid-column>
+             <ng-template kendoGridLoadingTemplate>
+                  <common-grid-loader-component></common-grid-loader-component>
+            </ng-template>
+            <!-- grid No data Template -->
+            <ng-template kendoGridNoRecordsTemplate>
+                  <div> <kendo-badge-container> <span class="material-icons"> info </span>
+                        </kendo-badge-container>
+                  </div>
+                  <p>There is no data to display.</p>
+            </ng-template>
+
+      </kendo-grid>
+</div>

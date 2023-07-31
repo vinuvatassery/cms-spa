@@ -111,6 +111,7 @@ export * from './lib/enums/financial-vendor-provider-tab-code';
 export * from './lib/enums/financial-vendor-type-code';
 export * from './lib/enums/service-sub-type-code';
 export * from './lib/enums/grid-column-filter.enum';
+export * from './lib/enums/payment-type-code.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
@@ -152,6 +153,9 @@ export * from './lib/infrastructure/financial-management/insurance-provider.data
 export * from './lib/infrastructure/financial-management/vendor-insurance-plan.data.service';
 export * from './lib/infrastructure/financial-management/vendor.data.service';
 export * from './lib/infrastructure/financial-management/vendor-refund.data.service';
+export * from './lib/infrastructure/financial-management/medical-claims.data.service';
+export * from './lib/infrastructure/financial-management/dental-claims.data.service';
+export * from './lib/infrastructure/financial-management/medical-premiums.data.service';
 
 
 
@@ -201,6 +205,9 @@ export * from './lib/application/financial-management/claims.facade';
 export * from './lib/application/financial-management/insurance-provider.facade';
 export * from './lib/application/financial-management/vendor-insurance-plan.facade';
 export * from './lib/application/financial-management/vendor-refund.facade';
+export * from './lib/application/financial-management/medical-claims.facade';
+export * from './lib/application/financial-management/dental-claims.facade';
+export * from './lib/application/financial-management/medical-premiums.facade';
 
 
 

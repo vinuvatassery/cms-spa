@@ -39,6 +39,7 @@
          format="MM-dd-yyyy"
         formatPlaceholder="formatPattern"
         formControlName ="statusStartDate"
+        (blur)="onStartDateChange()"
         (valueChange)="startDateOnChange()"
         aria-label="Status Start Date"
         placeholder="">
