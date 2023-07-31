@@ -87,7 +87,7 @@ export class SendLetterProfileComponent implements OnInit {
   }
   loadEligibilityInfo()
   {
-    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.clientEligibilityInfo).subscribe({
+    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.clientEligibilityInfoProfile).subscribe({
       next: (data:any) => {
         this.clientEligibilityInfo = data;
         this.changeDetector.detectChanges();
