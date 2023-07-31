@@ -209,8 +209,9 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
       this.paymentDetailsDialog.close();
     }
   }
-  loadPaymentPanel(){
+  loadPaymentPanel(event:any=null){
     this.paymentFacade.loadPaymentPanel(this.vendorId,this.batchId);
+    this.onClosePaymentDetailFormClicked(event);
   }
 
 }

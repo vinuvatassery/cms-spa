@@ -33,6 +33,7 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
   @Input() batchId:any ;
   @Input() paymentPanelData:any;
   @Output() closePaymentDetailFormClickedEvent = new EventEmitter();
+  @Output() loadPaymentPanelDataEvent = new EventEmitter();
 
   constructor(private formBuilder: FormBuilder, public intl: IntlService,
     private paymentFacade:PaymentsFacade){
@@ -44,7 +45,6 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
     this.setPaymentPanelFormData();
     this.paymentPanelData.subscribe((response:PaymentPanel)=>{
       this.paymentPanel = response;
-      //healthInsurancePolicy.insuranceStartDate != null ? new Date(healthInsurancePolicy.insuranceStartDate) : null
       this.medicalClaimPaymentForm.controls['datePaymentSent'].setValue(this.paymentPanel.datePaymentSent != null?new Date(this.paymentPanel.datePaymentSent):null);
       this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValue(this.paymentPanel.datePaymentReconciled != null? new Date(this.paymentPanel.datePaymentReconciled):null);
       this.medicalClaimPaymentForm.controls['paymentAmount'].setValue(this.paymentPanel.paymentAmount);
@@ -185,10 +185,13 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit {
         next: (data: any) => {         
           this.paymentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment panel updated successfully.');
           this.paymentFacade.hideLoader();
+          this.loadPaymentPanelDataEvent.emit(true);
+          
         },
         error: (err) => {       
           this.paymentFacade.hideLoader();
           this.paymentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.closePaymentDetailClicked();
         }
       });
 
