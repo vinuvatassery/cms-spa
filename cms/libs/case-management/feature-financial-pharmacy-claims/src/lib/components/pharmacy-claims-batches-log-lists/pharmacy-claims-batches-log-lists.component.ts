@@ -160,34 +160,7 @@ reverseClaimsDialog: any;
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-   aaaaaa = [
-    {
-      id:1,
-      item:1,
-      PharmacyName: 'XXXXXX XXXXXX',  
-      paymentMethod: 'paymentMethod',
-      clientName:'XXXXXX XXXXXX', 
-      nameOnPrimaryInsuranceCard:'XXXXXXX XXXXXXXXXXX', 
-      memberID:'XXXXXX', 
-      RXNumber:'XXXXXX', 
-      FillDate:'XX/XX/XXXX', 
-      ndcCode:'XXXXXX', 
-      brandName:'XXXXXX', 
-      drugName: 'XXXXXX',
-      paymentType: 'XXXXXX',
-      amountPaid: 'xx.xx',
-      rxQty: 'XX',
-      rxType: 'XX',
-      rxDaysSupply: 'XX',
-      indexCode: 'XXXX',
-      pcaCode: 'XXXX',
-      objectCode: 'XXXX',
-      paymentStatus: 'XXXX',
-      warrantNumber: 'XXXXXX',
-      entryDate: 'XX/XX/XXXX',
-      by: 'by',
-    },
-   ]
+    
   /** Constructor **/
   constructor(private route: Router,private dialogService: DialogService ) {}
   
