@@ -4,6 +4,7 @@ import {
   Output, 
   EventEmitter,
 } from '@angular/core';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
   selector: 'cms-pharmacy-claims-provider-info',
@@ -12,9 +13,14 @@ import {
 })
 export class PharmacyClaimsProviderInfoComponent {
   @Output() closeViewProviderDetailClickedEvent = new EventEmitter();
-
+  isEditProvider = false;
  
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   closeViewProviderClicked() {
     this.closeViewProviderDetailClickedEvent.emit(true);
+  }
+
+  editProviderClicked(){
+    this.isEditProvider = !this.isEditProvider
   }
 }

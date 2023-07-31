@@ -931,3 +931,20 @@ kendo-timepicker {
     width: auto;
   }
 }
+
+.small-input-only-field{
+  .k-textbox, 
+ .k-picker-wrap, 
+.k-dropdownlist{
+    height: 36px;
+    .k-input-inner{
+      padding: 8px 10px;
+    }
+  }
+  .fiel-column-label{
+    height: 36px;
+    padding-left: 1rem;
+    align-items: center; 
+    margin-top: 10px !important;
+  }
+}
