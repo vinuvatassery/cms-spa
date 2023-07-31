@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { DrugsFacade, ManufacturerDrugs } from '@cms/case-management/domain';
+import { ManufacturerDrugs } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService } from '@cms/shared/util-core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-drugs-details',
@@ -14,13 +15,14 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
 
   @Input() vendorId: any;
   @Input() dialogTitle: any;
+  @Input() manufacturersList$!: Observable<any>;
   @Output() cancelClick = new EventEmitter<any>();
 
   drug= new ManufacturerDrugs();
   drugForm!: FormGroup;
   isSubmitted: boolean = false;
-  manufacturerList: any[] = [];
   deliveryMethodCodes: any[] = ["Tablet", "Capsule", "Liquid", "Injection"];
+
   showLoader() {
     this.loaderService.show();
   }
@@ -31,22 +33,11 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
   constructor(
     private formBuilder: FormBuilder,
     private readonly loaderService: LoaderService,
-    private cd: ChangeDetectorRef,
-    private readonly drugsFacade: DrugsFacade) {
+    private cd: ChangeDetectorRef) {
       this.createDrugForm();
   }
 
   ngOnInit(): void {
-    this.drugsFacade.loadManufacturerList();
-
-    this.drugsFacade.manufacturerList$.subscribe((vendorName: any) => {
-      this.manufacturerList = vendorName.map((x:any) => ({
-        vendorName: x.vendorName,
-        vendorId: x.vendorId
-      }));
-      this.cd.detectChanges();
-    })
-
     this.drugForm.get('manufacturer')?.patchValue(this.vendorId);
   }
 

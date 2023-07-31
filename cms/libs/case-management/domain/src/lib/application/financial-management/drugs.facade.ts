@@ -23,7 +23,7 @@ export class DrugsFacade {
 
   private drugsDataSubject = new BehaviorSubject<any>([]);
   drugsData$ = this.drugsDataSubject.asObservable();
-  private manufacturerSubject = new Subject<any>();
+  private manufacturerSubject = new BehaviorSubject<any>([]);
   manufacturerList$ = this.manufacturerSubject.asObservable();
 
   /** Private properties **/
@@ -62,7 +62,7 @@ export class DrugsFacade {
   /** Public methods **/
   loadDrugsListGrid(vendorId:string, skipCount: number, maxResultCount: number, sort: string, sortType: string) {
     this.showLoader();
-    this.drugsDataService.loadDrugsListService(vendorId,skipCount,maxResultCount,sort,sortType).subscribe({
+    this.drugsDataService.loadDrugList(vendorId,skipCount,maxResultCount,sort,sortType).subscribe({
       next: (dataResponse) => {
         this.drugsDataSubject.next(dataResponse);
 
