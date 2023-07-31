@@ -120,33 +120,6 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
       },
     },
   ];
-  aaaaaa = [
-    {
-      id: 1,
-      PharmacyName: 'PharmacyName',
-      clientName: 'CLient Name',
-      nameOnPrimaryInsuranceCard: 'CLient Name',
-      memberID: 'XXXXXX',
-      RXNumber: 'XXXXXX',
-      FillDate: 'XX/XX/XXXX',
-      ndcCode: 'XXXXXX',
-      brandName: 'XXXXXX',
-      drugName: 'XXXXXX',
-      paymentType: 'XXXXXX',
-      amountPaid: 'xx.xx',
-      rxQty: 'XX',
-      rxType: 'XX',
-      rxDaysSupply: 'XX',
-      indexCode: 'XXXX',
-      pcaCode: 'XXXX',
-      objectCode: 'XXXX',
-      paymentStatus: 'XXXX',
-      warrantNumber: 'XXXXXX',
-      entryDate: 'XX/XX/XXXX',
-      by: 'by',
-    },
-  ];
-
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,

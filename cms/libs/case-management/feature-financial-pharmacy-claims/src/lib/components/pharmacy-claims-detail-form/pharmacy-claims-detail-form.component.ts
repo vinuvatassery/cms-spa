@@ -86,8 +86,5 @@ export class PharmacyClaimsDetailFormComponent {
   closeAddEditClaimsFormModalClicked() {
     this.modalCloseAddEditClaimsFormModal.emit(true);
   }
-
-  loadClaimsListGrid() {
-    this.financialPharmacyClaimsFacade.loadClaimsListGrid();
-  }
+ 
 }

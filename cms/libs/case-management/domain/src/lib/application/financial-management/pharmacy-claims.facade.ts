@@ -186,16 +186,5 @@ export class FinancialPharmacyClaimsFacade {
     });  
   }
   
-  loadClaimsListGrid(){
-    this.financialPharmacyClaimsDataService.loadClaimsListService().subscribe({
-      next: (dataResponse) => {
-        this.claimsListDataSubject.next(dataResponse);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
-      },
-    });  
-  }
+ 
 }

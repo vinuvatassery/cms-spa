@@ -68,35 +68,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   isDeleteBatchMoreOptionClosed = false;
   addEditClaimsFormDialog: any;
   deleteClaimsDialog: any;
-  aaaa =[
-    {
-      id:1,
-      Item: '123213',
-      batch:'23213123',
-      PharmacyName: 'XXXXXX',  
-      clientName:'XXXXXX', 
-      paymentMethod:'XXXXXX', 
-      nameOnPrimaryInsuranceCard:'address2', 
-      memberID:'XXXXXX', 
-      RXNumber:'XXXXXX', 
-      FillDate:'XX/XX/XXXX', 
-      ndcCode:'XXXXXX', 
-      brandName:'XXXXXX', 
-      drugName: 'XXXXXX',
-      paymentType: 'XXXXXX',
-      amountPaid: 'xx.xx',
-      rxQty: 'XX',
-      rxType: 'XX',
-      rxDaysSupply: 'XX',
-      indexCode: 'XXXX',
-      pcaCode: 'XXXX',
-      objectCode: 'XXXX',
-      paymentStatus: 'XXXX',
-      warrantNumber: 'XXXXXX',
-      entryDate: 'XX/XX/XXXX',
-      by: 'by',
-    },
-  ]
+   
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',

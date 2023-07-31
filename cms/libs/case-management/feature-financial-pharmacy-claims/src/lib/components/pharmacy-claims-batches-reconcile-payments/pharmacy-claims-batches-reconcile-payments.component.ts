@@ -55,20 +55,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit, 
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
-  aaaa = [
-    {
-      id:1,
-      pharmacyName: 'Vendor Name',
-      TIN:'XXXXXX', 
-      pmtMethod:'pmtMethod', 
-      datePmtReconciled:'XX/XX/XXXX', 
-      datePmtSend:'XX/XX/XXXX', 
-      pmtAmount:'XX.XX', 
-      note:'XXXX XXXXXX XXXXXX', 
-      
-    },
-  ]
+   
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService ) {}
   
