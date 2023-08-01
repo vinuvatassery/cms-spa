@@ -19,7 +19,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'cms-financial-claims-batches-log-lists',
   templateUrl: './financial-claims-batches-log-lists.component.html', 
@@ -110,6 +110,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
       
     },
   ];
+  @Input() claimsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -131,11 +132,12 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+
    
   /** Constructor **/
-  constructor(private route: Router,private dialogService: DialogService ) {}
+  constructor(private route: Router,private dialogService: DialogService, public activeRoute: ActivatedRoute ) {}
   
-  ngOnInit(): void {
+  ngOnInit(): void { 
     this.loadBatchLogListGrid();
   }
   ngOnChanges(): void {
@@ -247,15 +249,15 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   }
 
    backToBatch(event : any){  
-    this.route.navigate(['/financial-management/financial-claims'] );
+    this.route.navigate(['/financial-management/claims/' + this.claimsType ] ); 
   }
 
-  goToBatchItems(event : any){  
-    this.route.navigate(['/financial-management/financial-claims/batch/items'] );
+  goToBatchItems(event : any){   
+    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch/items'] ); 
   }
 
   navToReconcilePayments(event : any){  
-    this.route.navigate(['/financial-management/financial-claims/batch/reconcile-payments'] );
+    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch/reconcile-payments'] ); 
   }
   public onPreviewSubmitPaymentOpenClicked(template: TemplateRef<unknown>): void {
     this.PreviewSubmitPaymentDialog = this.dialogService.open({

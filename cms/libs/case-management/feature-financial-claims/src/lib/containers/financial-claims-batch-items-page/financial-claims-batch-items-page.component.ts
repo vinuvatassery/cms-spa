@@ -1,29 +1,55 @@
-import {  ChangeDetectionStrategy,  Component, } from '@angular/core';
+import { ChangeDetectionStrategy, OnInit, Component, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade } from '@cms/case-management/domain'; 
+import { FinancialClaimsFacade } from '@cms/case-management/domain';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import {  filter } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-claims-batch-items-page',
-  templateUrl: './financial-claims-batch-items-page.component.html', 
+  templateUrl: './financial-claims-batch-items-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsBatchItemsPageComponent {
+export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
-   sortValue = this.financialClaimsFacade.sortValueBatchItem;
-   sortType = this.financialClaimsFacade.sortType;
-   pageSizes = this.financialClaimsFacade.gridPageSizes;
-   gridSkipCount = this.financialClaimsFacade.skipCount;
-   sort = this.financialClaimsFacade.sortBatchItemList;
-   state!: State;
-   batchItemsGridLists$ = this.financialClaimsFacade.batchItemsData$;
-  constructor( 
-    private readonly financialClaimsFacade: FinancialClaimsFacade 
+  sortValue = this.financialClaimsFacade.sortValueBatchItem;
+  sortType = this.financialClaimsFacade.sortType;
+  pageSizes = this.financialClaimsFacade.gridPageSizes;
+  gridSkipCount = this.financialClaimsFacade.skipCount;
+  sort = this.financialClaimsFacade.sortBatchItemList;
+  state!: State;
+  batchItemsGridLists$ = this.financialClaimsFacade.batchItemsData$;
+  claimsType: any;
+
+  constructor(
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute, 
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
-  loadBatchItemListGrid(event: any) { 
+  ngOnInit(): void {
+    this.claimsType = this.activatedRoute.snapshot.params['type'];
+    this.addNavigationSubscription();
+  }
+
+  private addNavigationSubscription() {
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd)) 
+      .subscribe({
+        next: () => {
+          this.claimsType = this.activatedRoute.snapshot.params['type'];
+          this.cdr.detectChanges();
+        },
+
+        error: (err: any) => {
+          // this.loggingService.logException(err);
+        },
+      });
+  }
+  loadBatchItemListGrid(event: any) {
     this.financialClaimsFacade.loadBatchItemsListGrid();
   }
 }

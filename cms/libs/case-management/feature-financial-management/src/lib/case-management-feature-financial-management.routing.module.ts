@@ -42,45 +42,27 @@ const routes: Routes = [
     },
   },
   {
-    path: 'medical-claims',
+    path: 'claims/:type',
     loadChildren: () =>
       import('@cms/case-management/feature-financial-claims').then(
         (m) => m.CaseManagementFeatureFinancialClaimsModule
       ),
     data: {
-      title: null,
+      title: null, 
     },
   },
+
   {
-    path: 'dental-claims',
-    loadChildren: () =>
-      import('@cms/case-management/feature-financial-claims').then(
-        (m) => m.CaseManagementFeatureFinancialClaimsModule
-      ),
-    data: {
-      title: null,
-    },
-  },
-  {
-    path: 'insurance-premiums',
+    path: 'premiums/:type',
     loadChildren: () =>
       import('@cms/case-management/feature-financial-premiums').then(
         (m) => m.CaseManagementFeatureFinancialPremiumsModule
       ),
     data: {
-      title: null,
+      title: null, 
     },
   },
-  {
-    path: 'dental-premiums',
-    loadChildren: () =>
-      import('@cms/case-management/feature-financial-premiums').then(
-        (m) => m.CaseManagementFeatureFinancialPremiumsModule
-      ),
-    data: {
-      title: null,
-    },
-  },
+ 
   {
     path: 'pharmacy-claims',
     loadChildren: () =>

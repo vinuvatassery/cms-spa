@@ -2,7 +2,7 @@
     <common-bread-crumb></common-bread-crumb>
     <div class=" pt-0">
         <section class="app-l-mainTittle">
-            <h1 class="maintitle_withicon text-bold"> Medical Claims </h1>
+            <h1 class="maintitle_withicon text-bold"> Medical Claims  {{claimsType}}</h1>
         </section>
         <section class="app-l-client-wrapper">
             <section class="app-l-wrapper">
@@ -11,7 +11,7 @@
                     <kendo-tabstrip-tab title="Process" [selected]="true">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-claims-process-list      [financialClaimsProcessGridLists$]="financialClaimsProcessGridLists$"
+                                <cms-financial-claims-process-list   [claimsType]="claimsType"   [financialClaimsProcessGridLists$]="financialClaimsProcessGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsProcess"
                                 [sortType]="sortType" [sort]="sortProcessList" 
                                 (loadFinancialClaimsProcessListEvent)="loadFinancialClaimsProcessListGrid($event)"></cms-financial-claims-process-list>
@@ -22,7 +22,7 @@
                     <kendo-tabstrip-tab title="Batches">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-claims-batches-list   [financialClaimsBatchGridLists$]="financialClaimsBatchGridLists$"
+                                <cms-financial-claims-batches-list  [claimsType]="claimsType" [financialClaimsBatchGridLists$]="financialClaimsBatchGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsBatch"
                                 [sortType]="sortType" [sort]="sortBatchList" 
                                 (loadFinancialClaimsBatchListEvent)="loadFinancialClaimsBatchListGrid($event)"></cms-financial-claims-batches-list>
@@ -32,7 +32,7 @@
                     <kendo-tabstrip-tab title="All Payments">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-claims-all-payments-list  [financialClaimsAllPaymentsGridLists$]="financialClaimsAllPaymentsGridLists$"
+                                <cms-financial-claims-all-payments-list [claimsType]="claimsType" [financialClaimsAllPaymentsGridLists$]="financialClaimsAllPaymentsGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList" 
                                 (loadFinancialClaimsAllPaymentsListEvent)="loadFinancialClaimsAllPaymentsListGrid($event)"></cms-financial-claims-all-payments-list>

@@ -55,20 +55,11 @@ const routes = [
     ]
   }, 
   {
-    path: 'payments',
-    component: FinancialClaimsPaymentsRouterPageComponent,
+    path: 'reconcile-payments',
+    component: FinancialClaimsReconcilePageComponent,
     data: {
-      title: 'Payments',
+      title: '',
     },
-    children: [       
-      {
-        path: 'reconcile-payments',
-        component: FinancialClaimsReconcilePageComponent,
-        data: {
-          title: 'Reconcile Payments' 
-        },
-      }, 
-    ]
   }, 
  
 ]

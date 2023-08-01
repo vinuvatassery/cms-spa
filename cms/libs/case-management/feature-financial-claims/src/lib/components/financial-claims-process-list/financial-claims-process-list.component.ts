@@ -42,6 +42,7 @@ export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isProcessGridExpand = true;
   isFinancialClaimsProcessGridLoaderShow = false;
+  @Input() claimsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;

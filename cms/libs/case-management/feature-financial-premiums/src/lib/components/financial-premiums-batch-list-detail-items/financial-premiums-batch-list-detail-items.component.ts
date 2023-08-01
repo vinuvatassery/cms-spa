@@ -18,7 +18,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'cms-financial-premiums-batch-list-detail-items',
@@ -66,7 +66,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
+  premiumsType: any;
   public batchItemGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -104,9 +104,10 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
     },
   ];
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService) {}
+  constructor(private route: Router, private dialogService: DialogService, public activeRoute: ActivatedRoute) {}
   
   ngOnInit(): void {
+    this.activeRoute.data.subscribe(value =>{ this.premiumsType = value['type'] })
     this.loadBatchLogItemsListGrid();
   }
   ngOnChanges(): void {
@@ -218,7 +219,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   }
 
   backToBatchLog(event : any){  
-    this.route.navigate(['/financial-management/insurance-premiums/batch'] );
+    this.route.navigate(['/financial-management/' + this.premiumsType +'/batch'] ); 
   }
 
 

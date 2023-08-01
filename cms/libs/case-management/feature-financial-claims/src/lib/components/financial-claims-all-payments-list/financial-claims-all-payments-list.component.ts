@@ -11,7 +11,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
@@ -32,7 +32,7 @@ export class FinancialClaimsAllPaymentsListComponent implements OnInit, OnChange
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isFinancialClaimsAllPaymentsGridLoaderShow = false;
-  
+  @Input() claimsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -59,6 +59,7 @@ export class FinancialClaimsAllPaymentsListComponent implements OnInit, OnChange
   printAuthorizationDialog: any;
   isRequestPaymentClicked = false;
   isPrintAuthorizationClicked = false;
+  
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -111,9 +112,9 @@ export class FinancialClaimsAllPaymentsListComponent implements OnInit, OnChange
     },
   ];
   
-  constructor(private route: Router,private dialogService: DialogService ) {}
+  constructor(private route: Router,private dialogService: DialogService, public activeRoute: ActivatedRoute ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
     this.loadFinancialClaimsAllPaymentsListGrid();
   }
   ngOnChanges(): void {
@@ -225,7 +226,8 @@ export class FinancialClaimsAllPaymentsListComponent implements OnInit, OnChange
     this.isFinancialClaimsAllPaymentsGridLoaderShow = false;
   }
   navToReconcilePayments(event : any){  
-    this.route.navigate(['/financial-management/financial-claims/payments/reconcile-payments'] );
+ 
+    this.route.navigate(['/financial-management/claim/' + this.claimsType +'/reconcile-payments'] );
   }
   
  

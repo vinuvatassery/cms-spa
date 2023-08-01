@@ -11,7 +11,7 @@ import {
   Output,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
@@ -28,6 +28,7 @@ export class FinancialClaimsBatchesListComponent implements OnInit, OnChanges{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isFinancialClaimsBatchGridLoaderShow = false;
+  @Input() claimsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -42,6 +43,7 @@ export class FinancialClaimsBatchesListComponent implements OnInit, OnChanges{
   searchValue = '';
   isFiltered = false;
   filter!: any;
+  claimType: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
@@ -52,9 +54,10 @@ export class FinancialClaimsBatchesListComponent implements OnInit, OnChanges{
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   
   /** Constructor **/
-  constructor(private route: Router, ) {}
+  constructor(private route: Router, public activeRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
+  
     this.loadFinancialClaimsBatchListGrid();
   }
   ngOnChanges(): void {
@@ -164,8 +167,8 @@ export class FinancialClaimsBatchesListComponent implements OnInit, OnChanges{
     });
     this.isFinancialClaimsBatchGridLoaderShow = false;
   }
-  navToBatchDetails(event : any){  
-    this.route.navigate(['/financial-management/financial-claims/batch'] );
+  navToBatchDetails(event : any){   
+    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch'] );
   }
 
 }

@@ -17,7 +17,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'cms-financial-claims-batch-list-detail-items',
@@ -29,7 +29,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogItemsGridLoaderShow = false;
-
+  @Input() claimsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -53,12 +53,13 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
+
   
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService) {}
+  constructor(private route: Router, private dialogService: DialogService, 
+    public activeRoute: ActivatedRoute) {}
   
-  ngOnInit(): void {
+  ngOnInit(): void { 
     this.loadBatchLogItemsListGrid();
   }
   ngOnChanges(): void {
@@ -170,7 +171,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   }
 
   backToBatchLog(event : any){  
-    this.route.navigate(['/financial-management/financial-claims/batch'] );
+    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch'] );
   }
 
 

@@ -19,7 +19,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'cms-financial-premiums-batches-log-lists',
   templateUrl: './financial-premiums-batches-log-lists.component.html',
@@ -45,6 +45,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   UnBatchPaymentDialog: any;
   removePremiumsDialog: any;
   addClientRecentPremiumsDialog: any;
+  premiumsType: any;
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -126,7 +127,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   sendReportDialog: any;
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService) {}
+  constructor(private route: Router, private dialogService: DialogService, public activeRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.loadBatchLogListGrid();
@@ -238,13 +239,11 @@ export class FinancialPremiumsBatchesLogListsComponent
   }
 
   backToBatch(event: any) {
-    this.route.navigate(['/financial-management/insurance-premiums']);
+    this.route.navigate(['/financial-management/' + this.premiumsType] );  
   }
 
   goToBatchItems(event: any) {
-    this.route.navigate([
-      '/financial-management/insurance-premiums/batch/items',
-    ]);
+    this.route.navigate(['/financial-management/' + this.premiumsType +'/batch/items'] ); 
   }
 
   navToReconcilePayments(event: any) {

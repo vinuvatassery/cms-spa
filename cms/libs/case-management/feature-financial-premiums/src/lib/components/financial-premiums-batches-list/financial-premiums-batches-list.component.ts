@@ -11,7 +11,7 @@ import {
   Output,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
@@ -50,9 +50,9 @@ export class FinancialPremiumsBatchesListComponent implements OnInit, OnChanges{
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
+  premiumsType: any;
   /** Constructor **/
-  constructor(private route: Router, ) {}
+  constructor(private route: Router,public activeRoute: ActivatedRoute ) {}
 
   ngOnInit(): void {
     this.loadFinancialPremiumsBatchListGrid();
@@ -165,7 +165,7 @@ export class FinancialPremiumsBatchesListComponent implements OnInit, OnChanges{
     this.isFinancialPremiumsBatchGridLoaderShow = false;
   }
   navToBatchDetails(event : any){  
-    this.route.navigate(['/financial-management/insurance-premiums/batch'] );
+    this.route.navigate(['/financial-management/' + this.premiumsType +'/batch'] ); 
   }
 
 }
