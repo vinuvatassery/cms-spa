@@ -83,7 +83,7 @@ export class StatusPeriodFacade {
     return this.statusPeriodDataService.loadStatusFplHistory(eligibilityId);
   }
 
-  loadRamSellInfo(clientId: string) {
-    return this.statusPeriodDataService.loadRamSellInfo(clientId);
+  loadRamSellInfo(clientId: string,clientCaseEligibilityId:any=null) {
+    return this.statusPeriodDataService.loadRamSellInfo(clientId,clientCaseEligibilityId);
   }
 }

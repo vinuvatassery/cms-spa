@@ -25,6 +25,7 @@ import { MedicalClaimsReconcilePageComponent } from './containers/medical-claims
 import { MedicalClaimsBatchRouterPageComponent } from './containers/medical-claims-batch-router-page/medical-claims-router-batch-page.component';
 import { MedicalClaimsPaymentsRouterPageComponent } from './containers/medical-claims-payments-router-page/medical-claims-payments-router-page.component';
 import { MedicalClaimsBatchesReconcilePaymentsBreakoutComponent } from './components/medical-claims-batches-reconcile-payments-breakout/medical-claims-batches-reconcile-payments-breakout.component';
+import { MedicalClaimsPrintDenialLetterComponent } from './components/medical-claims-print-denial-letter/medical-claims-print-denial-letter.component';
 
 @NgModule({
   imports: [
@@ -54,8 +55,9 @@ import { MedicalClaimsBatchesReconcilePaymentsBreakoutComponent } from './compon
     MedicalClaimsBatchItemsPageComponent,
     MedicalClaimsReconcilePageComponent,
     MedicalClaimsBatchRouterPageComponent,
-    MedicalClaimsPaymentsRouterPageComponent, 
+    MedicalClaimsPaymentsRouterPageComponent,
     MedicalClaimsBatchesReconcilePaymentsBreakoutComponent,
+    MedicalClaimsPrintDenialLetterComponent,
   ],
   exports: [
     MedicalClaimsProcessListComponent,
@@ -77,8 +79,9 @@ import { MedicalClaimsBatchesReconcilePaymentsBreakoutComponent } from './compon
     MedicalClaimsBatchItemsPageComponent,
     MedicalClaimsReconcilePageComponent,
     MedicalClaimsBatchRouterPageComponent,
-    MedicalClaimsPaymentsRouterPageComponent, 
+    MedicalClaimsPaymentsRouterPageComponent,
     MedicalClaimsBatchesReconcilePaymentsBreakoutComponent,
+    MedicalClaimsPrintDenialLetterComponent,
   ],
 })
 export class CaseManagementFeatureFinancialMedicalClaimsModule {}

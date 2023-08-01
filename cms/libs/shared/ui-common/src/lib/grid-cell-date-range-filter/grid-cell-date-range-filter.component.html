@@ -5,6 +5,7 @@
         (valueChange)="onStartChange($event)"
         [(ngModel)]="start"
         [popupSettings]="popupSettings"
+        format="MM/dd/yyyy" formatPlaceholder="formatPattern"
       >
       </kendo-datepicker>
     </label>
@@ -14,6 +15,7 @@
         (valueChange)="onEndChange($event)"
         [(ngModel)]="end"
         [popupSettings]="popupSettings"
+        format="MM/dd/yyyy" formatPlaceholder="formatPattern"
       >
       </kendo-datepicker>
     </label>
