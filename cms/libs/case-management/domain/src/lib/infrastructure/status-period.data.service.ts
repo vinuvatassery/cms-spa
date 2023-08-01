@@ -32,10 +32,10 @@ export class StatusPeriodDataService {
     );
   }
 
-  loadRamSellInfo(clientId: string) {
+  loadRamSellInfo(clientId: string,clientCaseEligibilityId:any=null) {
     return this.http.get<any[]>(
       `${this.configurationProvider.appSettings.sysInterfaceApiUrl}` 
-      + `/system-interface/ramsell/clients/${clientId}`
+      + `/system-interface/ramsell/clients/${clientId}?clientCaseEligibilityId=${clientCaseEligibilityId}`
     );
   }
 }

@@ -9,4 +9,5 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 export class PreviewLetterComponent {
   /** Input properties **/
   @Input() letterContent!: any;
+  @Input() paperlessFlag! : any
 }

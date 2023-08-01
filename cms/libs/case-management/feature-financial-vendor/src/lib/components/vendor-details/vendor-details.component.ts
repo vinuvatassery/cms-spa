@@ -61,7 +61,8 @@ export class VendorDetailsComponent implements OnInit {
     else {
       this.contactFacade.loadDdlStates();
       this.getPaymentMethods();
-      this.getPaymentRunDate();
+        this.getPaymentRunDate();
+        this.fillFormData();
     }
   }
 
@@ -99,13 +100,19 @@ export class VendorDetailsComponent implements OnInit {
     }
   }
 
+fillFormData(){
+  this.medicalProviderForm.controls['tinNumber'].setValue(this.vendorDetails.tin);
+  this.medicalProviderForm.controls['providerName'].setValue(this.vendorDetails.vendorName);
+  this.medicalProviderForm.controls['vendorId'].setValue(this.vendorDetails.vendorId);
+}
   onToggleAddNewContactClick() {
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl('', Validators.required),
       description: new FormControl(),
       phoneNumber: new FormControl(),
       fax: new FormControl(),
-      email: new FormControl()
+      email: new FormControl(),
+      isPreferedContact : new FormControl()
     });
     this.AddContactForm.push(addContactForm);
     this.cdr.detectChanges();
@@ -117,6 +124,16 @@ export class VendorDetailsComponent implements OnInit {
 
   getContactControl(index: number, fieldName: string) {
     return (<FormArray>this.medicalProviderForm.get('newAddContactForm')).at(index).get(fieldName);
+  }
+
+  checkContactPreference(i : number){
+    for (let index = 0; index < this.AddContactForm.length; index++) {
+      if(index != i)
+      {
+        (this.AddContactForm.controls[index] as FormGroup).controls['isPreferedContact'].setValue(false)
+      }
+    }
+
   }
 
   save() {
@@ -174,11 +191,14 @@ export class VendorDetailsComponent implements OnInit {
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();
     }
 
-    this.medicalProviderForm.controls['paymentMethod']
-      .setValidators([
-        Validators.required,
-      ]);
-    this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();
+    if(this.providerType != this.vendorTypes.Manufacturers)
+    {
+      this.medicalProviderForm.controls['paymentMethod']
+        .setValidators([
+          Validators.required,
+        ]);
+      this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();
+    }
 
     if (this.providerType == this.vendorTypes.InsuranceVendors) {
 
@@ -248,7 +268,7 @@ export class VendorDetailsComponent implements OnInit {
       })
     }
     let vendorProfileData = {
-      vendorId: this.selectedClinicVendorId,
+      vendorId: formValues.vendorId,
       vendorName: formValues.providerName,
       firstName: formValues.firstName,
       lastName: formValues.lastName,
@@ -273,6 +293,8 @@ export class VendorDetailsComponent implements OnInit {
       PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes,
       emailAddressTypeCode: AddressType.Mailing
     }
+    this.mapAddressContact(formValues);
+    vendorProfileData = this.createVendorProfileData(formValues)
     return vendorProfileData;
   }
 
@@ -342,21 +364,23 @@ export class VendorDetailsComponent implements OnInit {
       if (this.medicalProviderForm.controls['isPreferedPharmacy']?.value != null && this.providerType == this.vendorTypes.Pharmacy) {
         vendorValues['preferredFlag'] = this.medicalProviderForm.controls['isPreferedPharmacy'].value ? 'Y' : 'N';
       }
-      this.financialVendorDataService.updateVendorDetails(vendorValues).subscribe((resp: any) => {
-        if (resp) {
-          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, this.profileInfoTitle.split(' ')[0] + ' information updated.');
-          this.closeModalEventClicked.emit(true);
-        }
-        else {
-          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.WARNING, this.profileInfoTitle.split(' ')[0] + ' information not updated.');
-        }
-        this.financialVendorFacade.hideLoader();
-      },
-        (error: any) => {
+      this.financialVendorDataService.updateVendorDetails(vendorValues).subscribe({
+        next: (resp) => {
+          if (resp) {
+            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, this.profileInfoTitle.split(' ')[0] + ' information updated.');
+            this.closeModalEventClicked.emit(true);
+          }
+          else {
+            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.WARNING, this.profileInfoTitle.split(' ')[0] + ' information not updated.');
+          }
           this.financialVendorFacade.hideLoader();
-          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error);
-        });
-    }
+       },
+         error: (err) => {
+          this.financialVendorFacade.hideLoader();
+          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);  
+         },
+       });
+      }
   }
 
   validateEditForm() {
@@ -377,5 +401,55 @@ export class VendorDetailsComponent implements OnInit {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
+  }
+
+  mapAddressContact(formValues :any){
+    this.vendorContactList = [];
+    if (formValues.newAddContactForm.length > 0) {
+      formValues.newAddContactForm.forEach((contact: any) => {
+        if (contact.contactName != '' || contact.description != '' || contact.phoneNumber != '' || contact.email != '') {
+          let vendorContact = {
+            contactName: contact.contactName,
+            contactDesc: contact.description,
+            phoneNbr: contact.phoneNumber,
+            emailAddress: contact.email,
+            emailAddressTypeCode: AddressType.Email,
+            faxNbr: contact.fax,
+            isPreferedContact : contact.isPreferedContact ? 'Y' : 'N'
+          }
+          this.vendorContactList.push(vendorContact);
+        }
+      })
+    }
+  }
+
+  createVendorProfileData(formValues :any){
+    let vendorProfileData = {
+      vendorId: this.selectedClinicVendorId,
+      vendorName: formValues.providerName,
+      firstName: formValues.firstName,
+      lastName: formValues.lastName,
+      vendorTypeCode: this.providerType,
+      tin: formValues.tinNumber,
+      mailCode: formValues.mailCode,
+      addressTypeCode: AddressType.Mailing,
+      address1: formValues.addressLine1,
+      address2: formValues.addressLine2,
+      cityCode: formValues.city,
+      stateCode: formValues.state,
+      zip: formValues.zip,
+      nameOnCheck: formValues.nameOnCheck,
+      nameOnEnvelope: formValues.nameOnEnvolop,
+      paymentMethodCode: formValues.paymentMethod,
+      specialHandling: formValues.specialHandling,
+      phoneTypeCode: AddressType.Mailing,
+      vendorContacts: this.vendorContactList,
+      AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,
+      AcceptsCombinedPaymentsFlag: (formValues.isAcceptCombinedPayment != null && formValues.isAcceptCombinedPayment != '') ? formValues.isAcceptCombinedPayment : null,
+      PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? Number(formValues.paymentRunDate) : null,
+      PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes,
+      emailAddressTypeCode: AddressType.Mailing
+    }
+    return vendorProfileData;
   }
 }

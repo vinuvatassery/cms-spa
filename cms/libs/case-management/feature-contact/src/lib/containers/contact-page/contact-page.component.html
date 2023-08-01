@@ -322,7 +322,7 @@
               (blur)="validateHomeAddress()"  placeholder="City"
               > </kendo-textbox>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old City:</b> {{  oldHomeAddress?.city }} <button *ngIf="!(homeAddress?.sameAsMailingAddressFlag?.value ?? false)" aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('homeAddress.city',oldHomeAddress?.city??'')">Use Old  </button></p>        
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old City:</b> {{  oldHomeAddress?.city }} <button *ngIf="!(homeAddress?.sameAsMailingAddressFlag?.value ?? false) || (homeAddress?.homelessFlag?.value ?? false)" aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('homeAddress.city',oldHomeAddress?.city??'')">Use Old  </button></p>        
 
             <kendo-formerror *ngIf="homeAddress?.city?.errors?.required">
               Home City is required

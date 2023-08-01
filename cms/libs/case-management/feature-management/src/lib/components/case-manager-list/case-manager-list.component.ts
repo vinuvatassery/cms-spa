@@ -42,6 +42,7 @@ export class CaseManagerListComponent implements OnChanges {
   @Input() sort: any;
   @Input() updateDatesCaseManager$: any;
   @Input() isCerForm: any;
+  @Input() showCaseListRequired$: any;
 
   /** Public properties **/
   public formUiStyle: UIFormStyle = new UIFormStyle();
