@@ -34,7 +34,7 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit, OnDestr
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   paymentPanelDataSubscription!: Subscription;
   @Input() vendorId:any;
-  @Input() batchId:any ;
+  @Input() batchId:any;
   @Input() paymentPanelData:any;
   @Output() closePaymentDetailFormClickedEvent = new EventEmitter();
   @Output() loadPaymentPanelDataEvent = new EventEmitter();
@@ -63,11 +63,11 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit, OnDestr
   paymentPanelLoadSubscription(){
     this.paymentPanelDataSubscription = this.paymentPanelData.subscribe((response:PaymentPanel)=>{
       this.paymentPanel = response;
-      this.medicalClaimPaymentForm.controls['datePaymentSent'].setValue(this.paymentPanel.datePaymentSent != null?new Date(this.paymentPanel.datePaymentSent):null);
-      this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValue(this.paymentPanel.datePaymentReconciled != null? new Date(this.paymentPanel.datePaymentReconciled):null);
-      this.medicalClaimPaymentForm.controls['paymentAmount'].setValue(this.paymentPanel.paymentAmount);
-      this.medicalClaimPaymentForm.controls['warrantNumber'].setValue(this.paymentPanel.warrantNumber);
-      this.medicalClaimPaymentForm.controls['note'].setValue(this.paymentPanel.note);
+      this.medicalClaimPaymentForm.controls['datePaymentSent'].setValue(this.paymentPanel.sentDate != null?new Date(this.paymentPanel.sentDate):null);
+      this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValue(this.paymentPanel.paymentStatusDate != null? new Date(this.paymentPanel.paymentStatusDate):null);
+      this.medicalClaimPaymentForm.controls['paymentAmount'].setValue(this.paymentPanel.amountPaid);
+      this.medicalClaimPaymentForm.controls['warrantNumber'].setValue(this.paymentPanel.checkNbr);
+      this.medicalClaimPaymentForm.controls['note'].setValue(this.paymentPanel.notes);
 
     })
   }
@@ -155,11 +155,11 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit, OnDestr
   }
 
   populatePaymentPanelModel(){
-    this.paymentPanel.datePaymentReconciled = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value, this.dateFormat); 
-    this.paymentPanel.datePaymentSent = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentSent'].value, this.dateFormat); 
-    this.paymentPanel.paymentAmount = this.medicalClaimPaymentForm.controls['paymentAmount'].value
-    this.paymentPanel.warrantNumber = this.medicalClaimPaymentForm.controls['warrantNumber'].value
-    this.paymentPanel.note = this.medicalClaimPaymentForm.controls['note'].value
+    this.paymentPanel.paymentStatusDate = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value, this.dateFormat); 
+    this.paymentPanel.sentDate = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentSent'].value, this.dateFormat); 
+    this.paymentPanel.amountPaid = this.medicalClaimPaymentForm.controls['paymentAmount'].value
+    this.paymentPanel.checkNbr = this.medicalClaimPaymentForm.controls['warrantNumber'].value
+    this.paymentPanel.notes = this.medicalClaimPaymentForm.controls['note'].value
 
   }
 
@@ -180,10 +180,12 @@ export class MedicalClaimsPaymentDetailsFormComponent implements OnInit, OnDestr
     if(this.medicalClaimPaymentForm.valid){
       this.populatePaymentPanelModel();
       this.paymentFacade.updatePaymentPanel(this.vendorId,this.batchId, this.paymentPanel).subscribe({
-        next: (data: any) => {         
+        next: (data: any) => {  
+          if(data){       
           this.paymentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment panel updated successfully.');
           this.paymentFacade.hideLoader();
           this.loadPaymentPanelDataEvent.emit(true);
+          }
           
         },
         error: (err) => {       

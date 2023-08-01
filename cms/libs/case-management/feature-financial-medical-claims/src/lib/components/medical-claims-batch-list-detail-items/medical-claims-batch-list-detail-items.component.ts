@@ -38,7 +38,7 @@ export class MedicalClaimsBatchListDetailItemsComponent implements OnInit, OnCha
   @Input() batchItemsGridLists$: any;
   @Output() loadBatchItemsListEvent = new EventEmitter<any>();
   @Input() vendorId:any;
-  @Input() batchId:any ;
+  @Input() batchId:any;
   paymentPanelData$ =this.paymentFacade.paymentPanelData$;
   public state!: State;
   sortColumn = 'batch';

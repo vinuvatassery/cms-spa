@@ -18,28 +18,28 @@
                         <span class="mr-3">Pmt. Requested XX/XX/XXXX</span> <span class="mr-3">$550.00 Due</span>
                         <span class="mr-3">Status Requested</span></p>
                   </div>
-                  <div class="grey-banner-section mt-2" *ngIf ="(paymentPanelData$ |async).datePaymentReconciled != null">
+                  <div class="grey-banner-section mt-2" *ngIf ="(paymentPanelData$ |async).paymentStatusDate != null">
                         <div class="flex-row">
                               <button aria-label="edit" kendoButton look="flat" class="edit-btn card-link-button" (click)="onPaymentDetailFormClicked(paymentDetailsFromTemplate)" > Edit </button>
                         <div class="flex-col flex-col-2">
                               <small>Date Payment Reconciled</small>
-                              <p>{{(paymentPanelData$ |async).datePaymentReconciled | date:'dd/MM/yyyy'}}</p>
+                              <p>{{(paymentPanelData$ |async).paymentStatusDate | date:'dd/MM/yyyy'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Date Payment Sent</small>
-                              <p>{{(paymentPanelData$ |async).datePaymentSent | date:'dd/MM/yyyy'}}</p>
+                              <p>{{(paymentPanelData$ |async).sentDate | date:'dd/MM/yyyy'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Payment Amount</small>
-                              <p>{{(paymentPanelData$ |async).paymentAmount | currency:'USD':'$'}}</p>
+                              <p>{{(paymentPanelData$ |async).amountPaid | currency:'USD':'$'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Warrant Number</small>
-                              <p>{{(paymentPanelData$ |async).warrantNumber}}</p>
+                              <p>{{(paymentPanelData$ |async).checkNbr}}</p>
                         </div>
                         <div class="flex-col flex-col-4">
                               <small>Note</small> 
-                              <p>{{(paymentPanelData$ |async).note}}</p>
+                              <p>{{(paymentPanelData$ |async).notes}}</p>
                         </div>
                   </div>
                   </div>
