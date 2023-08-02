@@ -106,8 +106,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService, public activeRoute: ActivatedRoute) {}
   
-  ngOnInit(): void {
-    this.activeRoute.data.subscribe(value =>{ this.premiumsType = value['type'] })
+  ngOnInit(): void {   
     this.loadBatchLogItemsListGrid();
   }
   ngOnChanges(): void {

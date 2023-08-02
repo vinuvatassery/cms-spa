@@ -1,7 +1,7 @@
 import {  ChangeDetectionStrategy,  ChangeDetectorRef,  Component, OnInit, } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialPremiumTypeCode, FinancialPremiumsFacade } from '@cms/case-management/domain'; 
+import {FinancialPremiumsFacade } from '@cms/case-management/domain'; 
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 import { LoggingService } from '@cms/shared/util-core';
@@ -31,7 +31,7 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
      private loggingService: LoggingService,
    ) {}
    ngOnInit(): void {
-    this.premiumType =this.router.url.split('/')?.filter(element => element === FinancialPremiumTypeCode.Dental || element ===FinancialPremiumTypeCode.Medical)[0]
+    this.premiumType =this.financialPremiumsFacade.getPremiumType(this.router)
      this.addNavigationSubscription();
    }
    private addNavigationSubscription() {
@@ -39,7 +39,7 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
        .pipe(filter((event) => event instanceof NavigationEnd))
        .subscribe({
          next: () => {
-          this.premiumType =this.router.url.split('/')?.filter(element => element === FinancialPremiumTypeCode.Dental || element ===FinancialPremiumTypeCode.Medical)[0]
+          this.premiumType =this.financialPremiumsFacade.getPremiumType(this.router)
            this.cdr.detectChanges();
          },
  

@@ -7,6 +7,8 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FinancialPremiumsDataService } from '../../infrastructure/financial-management/financial-premiums.data.service';
+import { Router } from '@angular/router';
+import { FinancialPremiumTypeCode } from '@cms/case-management/domain';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsFacade {
@@ -107,6 +109,12 @@ export class FinancialPremiumsFacade {
   ) { }
 
   /** Public methods **/
+
+  getPremiumType(router : Router)
+  {
+    return router.url.split('/')?.filter(element => element === FinancialPremiumTypeCode.Dental || element ===FinancialPremiumTypeCode.Medical)[0]
+  }
+
   loadFinancialPremiumsProcessListGrid(){
     this.financialPremiumsDataService.loadFinancialPremiumsProcessListService().subscribe({
       next: (dataResponse) => {

@@ -7,6 +7,8 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FinancialClaimsDataService } from '../../infrastructure/financial-management/financial-claims.data.service';
+import { FinancialClaimTypeCode } from '@cms/case-management/domain';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
@@ -107,6 +109,12 @@ export class FinancialClaimsFacade {
   ) { }
 
   /** Public methods **/
+
+  getClaimsType(router : Router)
+  {
+    return router.url.split('/')?.filter(element => element === FinancialClaimTypeCode.Dental || element ===FinancialClaimTypeCode.Medical)[0];    
+  }
+
   loadFinancialClaimsProcessListGrid(){
     this.financialClaimsDataService.loadFinancialClaimsProcessListService().subscribe({
       next: (dataResponse) => {
