@@ -57,7 +57,9 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService, 
-    public activeRoute: ActivatedRoute) {}
+    public activeRoute: ActivatedRoute) {
+      alert(this.claimsType);
+    }
   
   ngOnInit(): void { 
     this.loadBatchLogItemsListGrid();
