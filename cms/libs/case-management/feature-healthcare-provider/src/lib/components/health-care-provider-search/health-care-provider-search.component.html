@@ -35,9 +35,10 @@
             (filterChange)="onsearchTextChange($event)"  
           >          
             <ng-template kendoAutoCompleteItemTemplate let-dataItem >   
-              <div class="template-list-wrapper-two-column" (click)="onSearchTemplateClick(dataItem)">  
-              <span class="pr-1"> {{ dataItem.clinicName }} {{ dataItem.fullName}}</span>
-              <span class="pr-1" > {{ dataItem.address }}</span>  
+              <div class="template-list-wrapper-three-column" (click)="onSearchTemplateClick(dataItem)">  
+              <span class="pr-3"> {{ dataItem.clinicName }}</span>
+              <span class="pr-3" > {{ dataItem.fullName}}</span> 
+              <span class="pr-3" > {{ dataItem.address }}</span>  
             </div>   
             </ng-template>    
            

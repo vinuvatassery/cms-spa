@@ -688,6 +688,15 @@ color: $app-primary-font-color;
       width: 50%;
     }
   }
+
+  .template-list-wrapper-three-column {
+    display: block;
+    width: 100%;
+
+    >span {
+      width: 33%;
+    }
+  }
 }
 
 .no-data-available {
