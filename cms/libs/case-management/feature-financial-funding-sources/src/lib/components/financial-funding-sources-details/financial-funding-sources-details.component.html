@@ -1,1 +1,36 @@
-<p>financial-funding-sources-details works!</p>
+<kendo-dialog-titlebar (close)="closeDetailsFundingSourcesClicked()">   {{ isAdd ? 'Add' : 'Edit ' }} Funding Source</kendo-dialog-titlebar>
+<section class="k-dialog-body">
+      <p class="text-muted mb-2">
+            All fields are required unless otherwise stated.
+      </p>
+      <div class="flex-row">
+        <div class="flex-col">
+          <kendo-floatinglabel text="Funding Source">
+            <kendo-textbox    #empName aria-label="Funding Source" 
+              [fillMode]="formUiStyle.inputFillMode" > </kendo-textbox>
+          </kendo-floatinglabel>
+          
+        </div>
+        <div class="flex-col mb-1">
+          <kendo-floatinglabel  text="Funding Source Name">
+            <kendo-datepicker    [fillMode]="formUiStyle.dateInputFillMode"
+              format="MM-dd-yyyy" formatPlaceholder="formatPattern"   placeholder="" >
+            </kendo-datepicker>
+          </kendo-floatinglabel>
+           
+        </div>
+      </div>
+    </section>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+     
+        <div class="justify-content-end">
+          <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="closeDetailsFundingSourcesClicked()">
+            Cancel
+          </button>
+          <button kendoButton [primary]="true" aria-label="Save" >
+               {{ isAdd ? 'Add' : 'Update ' }}
+          </button>
+        </div>
+      </div>
+    </kendo-dialog-actions>

@@ -1,1 +1,15 @@
-<p>financial-funding-sources-remove works!</p>
+<kendo-dialog-titlebar (close)="closeDeleteFundingSourcesClicked()"> Remove Funding Source </kendo-dialog-titlebar>
+<section class="k-dialog-body mb-2">
+   
+        <p class="text-muted mb-1">  Are you want to remove <strong>Test_FUNDING</strong> from Funding Sources </p>
+ 
+     
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="closeDeleteFundingSourcesClicked()"> Cancel  </button>
+        <button kendoButton class="k-error-button" aria-label="delete">Remove  </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
