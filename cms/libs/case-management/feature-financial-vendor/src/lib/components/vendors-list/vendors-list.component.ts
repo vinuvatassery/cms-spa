@@ -79,12 +79,6 @@ dropDowncolumns : any = [
   }
   ,
   {
-    "columnCode": "paymentMethod",
-    "columnDesc": "Payment Method"   ,
-    "vendorTypeCode": "INSURANCE_PROVIDER",
-  }
-  ,
-  {
     "columnCode": "totalPayments",
     "columnDesc": "Total Payments"   ,
     "vendorTypeCode": "INSURANCE_PROVIDER",
@@ -136,13 +130,7 @@ dropDowncolumns : any = [
     "columnCode": "emails",
     "columnDesc": "Emails"   ,
     "vendorTypeCode": "MANUFACTURERS",
-  }
-  ,
-  {
-    "columnCode": "mailCode",
-    "columnDesc": "Mail Code"   ,
-    "vendorTypeCode": "MANUFACTURERS",
-  }
+  } 
   ,
   {
     "columnCode": "address",
@@ -233,8 +221,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
      vendorTypeCode : this.vendorTypeCode,
      filter : this.state?.["filter"]?.["filters"] ?? []
    }   
-
-   debugger
+   
    this.loadFinancialVendorsListEvent.emit(gridDataRefinerValue)
    this.gridDataHandle()
  }
