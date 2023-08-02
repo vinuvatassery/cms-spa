@@ -142,6 +142,9 @@
   gap: $size-xx;
   border-radius: $border-radius-sm;
   transition: ease all 0.4s;
+  .material-icons{
+    font-size: $font-size-xl;
+  }
   &.blue-banner {
     background: $app-primary;
     color: $white;
@@ -154,6 +157,14 @@
   &.red-banner {
     background: material-color($hive-error-palette, 100);
     color: material-color($hive-error-palette, 900);
+    a {
+      color: $white;
+      word-break: break-word;
+    }
+  }
+  &.red-bg-banner {
+    background: material-color($hive-error-palette, 800);
+    color: material-color($hive-error-palette, A100);
     a {
       color: $white;
       word-break: break-word;
@@ -173,6 +184,15 @@
     color: material-color($hive-canyon-palette, 900);
     a {
       color: $white;
+      word-break: break-word;
+    }
+  }
+  &.canyon-banner-with-black {
+    background: rgba($color: $lightWarm, $alpha: 0.5);
+    color:  rgba($color: $black, $alpha: 1) ;
+    
+    a {
+      color: $black-3;
       word-break: break-word;
     }
   }

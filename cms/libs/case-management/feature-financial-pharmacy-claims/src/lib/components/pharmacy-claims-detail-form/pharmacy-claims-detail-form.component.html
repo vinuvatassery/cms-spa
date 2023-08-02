@@ -7,19 +7,18 @@
 
 
     <div class="add_new_top_section">
-        <p class="mb-3"> Select a Pharmacy Provider to bulk add services for this claim.</p>
+        <p class="mb-3"> Select a pharmacy and client to bulk add prescriptions.</p>
         <div class="flex-row">
             <div class="flex-col flex-col-6">
                 <div class="combotable_search_list new_refund_Search new_claims_Search mb-3">
                     <span class="material-icons global-search-icon" aria-label="search" aria-hidden="true">search</span>
                     <span *ngIf="isShownSearchLoader"
                         class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                  
-                        <kendo-multicolumncombobox [data]="providerSearchResult" textField="providerFullName"
+
+                    <kendo-multicolumncombobox [data]="providerSearchResult" textField="providerFullName"
                         valueField="providerId" [fillMode]="formUiStyle.dropDownFillMode"
-                        placeholder="Search Pharmacy Providers by name or TIN"
-                        [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-                       >
+                        placeholder="Search Pharmacy name or TIN"
+                        [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true">
                         <button kendoButton fillMode="clear" icon="image"></button>
 
                         <kendo-combobox-column>
@@ -47,8 +46,7 @@
                     <kendo-multicolumncombobox [data]="clientSearchResult" textField="clientFullName"
                         valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
                         placeholder="Search Client Name, ID, or SSN"
-                        [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-                        >
+                        [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true">
                         <button kendoButton fillMode="clear" icon="image"></button>
 
                         <kendo-combobox-column>
@@ -75,133 +73,161 @@
                 </div>
             </div>
         </div>
-        <div class="flex-row">
+        <div class="flex-row mt-2">
             <div class="flex-col flex-col-6">
-                <kendo-floatinglabel text="Invoice ID">
-                    <kendo-textbox aria-label="Invoice ID" [fillMode]="formUiStyle.inputFillMode">
-                    </kendo-textbox>
-                </kendo-floatinglabel>
+                <div class="flex-space-bw">
+                    <div class="component-list-h">
+                        <span class="app-checkboxwidtext-wrapper">
+                            <input type="checkbox" kendoCheckBox id="SPOTSpayment" aria-labelledby="SPOTSpayment" />
+                            <label class="k-checkbox-label" for="SPOTSpayment">This is a SPOTS payment</label>
+                        </span>
+                    </div>
+                    <div>
+                        <p><strong>Client YTD Paid:</strong>$X,XXX.XX</p>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 
-
     <div class="add_new_bottom_section">
+        <div class="flex-row mb-2" >
+            <div class="flex-col flex-col-10">
+                <div class="info-banners canyon-banner-with-black d-inline-flex mb-1">
+                    <span class="material-icons" aria-label="info" aria-hidden="true">info</span>
+                    <div>
+                        <p>Client status is RESTRICTED. Only HIV, Opportunistic Infection, and Hepatitis drugs may be
+                            added to this claim.</p> 
+                    </div>
+                </div>
+                <div class="info-banners red-bg-banner d-inline-flex">
+                    <span class="material-icons" aria-label="info" aria-hidden="true">info</span>
+                    <div>
+                        <p>Client status is INELIGIBLE. CAREAssist cannot pay for prescriptions.</p> 
+                    </div>
+                </div>
+            </div>
 
-
+        </div>
         <div class="flex-row">
             <div class="flex-col flex-col-6">
                 <div class=" mb-3">
                     <div class="flex-space-bw align-items-center">
-                        <h4 class="mar-0">SERVICE 1</h4>
+                        <h4 class="mar-0">Prescription 1</h4>
                         <button class="" kendoButton fillMode="flat" themeColor="error">DELETE</button>
                     </div>
                     <div class="flex-row">
                         <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Service Start Date">
-                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
-                                    aria-label="Service Start Date" format="MM/dd/yyyy"
-                                    formatPlaceholder="formatPattern">
-                                </kendo-datepicker>
+                            <kendo-floatinglabel text="Prescription Number">
+                                <kendo-textbox aria-label="Prescription Number" [fillMode]="formUiStyle.inputFillMode">
+                                </kendo-textbox>
                             </kendo-floatinglabel>
                         </div>
                         <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Service End Date">
-                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
-                                    aria-label="Service End Date" format="MM/dd/yyyy" formatPlaceholder="formatPattern">
+                            <kendo-floatinglabel text="Fill Date">
+                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Fill Date"
+                                    format="MM/dd/yyyy" formatPlaceholder="formatPattern">
                                 </kendo-datepicker>
                             </kendo-floatinglabel>
                         </div>
-                        <div class="ml-2">
-                        <kendo-formerror class="d-flex align-items-center"> <span class="material-icons mr-1"  aria-hidden="false" >info</span>  Invoice is over 1 year old. <a kendoButton class="ml-1 card-link-button">Make Exception</a></kendo-formerror>
 
+                    </div>
+                    <div class="flex-row">
+                        <div class="flex-col flex-col-6">
+                            <kendo-floatinglabel text="Payment Type">
+                                <kendo-dropdownlist aria-label="Payment Type" [fillMode]="formUiStyle.dropDownFillMode">
+                                </kendo-dropdownlist>
+                            </kendo-floatinglabel>
+                        </div>
+                        <div class="flex-col flex-col-6">
+                            <kendo-floatinglabel text="Amount Paid" class="amount-with-symbol">
+                                <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                                <kendo-numerictextbox aria-label="Amount Paid" [fillMode]="formUiStyle.inputFillMode">
+                                </kendo-numerictextbox>
+                            </kendo-floatinglabel>
+                        </div>
+
+                    </div>
+                    <div class="flex-row">
+                        <div class="flex-col flex-col-6">
+                            <kendo-floatinglabel text="NDC Code">
+                                <kendo-textbox aria-label="NDC Code" [fillMode]="formUiStyle.inputFillMode">
+                                </kendo-textbox>
+                            </kendo-floatinglabel>
+                        </div>
+                        <div class="flex-col flex-col-6">
+                            <kendo-floatinglabel text="RX Type">
+                                <kendo-dropdownlist aria-label="RX Type" [fillMode]="formUiStyle.dropDownFillMode">
+                                </kendo-dropdownlist>
+                            </kendo-floatinglabel>
+                        </div>
+                    </div>
+                    <div class="flex-row">
+                        <div class="flex-col flex-col-6">
+                            <kendo-floatinglabel text="Brand name">
+                                <kendo-textbox aria-label="Brand name" [disabled]="true"
+                                    [fillMode]="formUiStyle.inputFillMode">
+                                </kendo-textbox>
+                            </kendo-floatinglabel>
+                        </div>
+                        <div class="flex-col flex-col-6">
+                            <kendo-floatinglabel text="Drug Name">
+                                <kendo-textbox aria-label="Drug Name" [disabled]="true"
+                                    [fillMode]="formUiStyle.inputFillMode">
+                                </kendo-textbox>
+                            </kendo-floatinglabel>
+                        </div>
+                    </div>
+                    <div class="flex-row">
+                        <div class="flex-col flex-col-6">
+
+                            <kendo-floatinglabel text="RX Quantity">
+                                <kendo-textbox aria-label="RX Quantity" [fillMode]="formUiStyle.inputFillMode">
+                                </kendo-textbox>
+                            </kendo-floatinglabel>
+
+
+                        </div>
+                        <div class="flex-col flex-col-6">
+                            <kendo-floatinglabel text="RX Days Supply">
+                                <kendo-textbox aria-label="RX Days Supply" [fillMode]="formUiStyle.inputFillMode">
+                                </kendo-textbox>
+                            </kendo-floatinglabel>
                         </div>
 
                     </div>
                     <div class="flex-row">
                         <div class="flex-col flex-col-4">
-                            <kendo-floatinglabel text="Payment Type">
-                                <kendo-dropdownlist aria-label="Payment Type" 
-                                    [fillMode]="formUiStyle.dropDownFillMode">
-                                </kendo-dropdownlist>
-                            </kendo-floatinglabel>
-                        </div>
-                        <div class="flex-col flex-col-4">
-                            <kendo-floatinglabel text="CTP Code">
-                                <kendo-textbox aria-label="CTP Code" 
-                                    [fillMode]="formUiStyle.inputFillMode">
+                            <kendo-floatinglabel text="Index Code">
+                                <kendo-textbox aria-label="Index Code" [fillMode]="formUiStyle.inputFillMode">
                                 </kendo-textbox>
                             </kendo-floatinglabel>
                         </div>
                         <div class="flex-col flex-col-4">
                             <kendo-floatinglabel text="PCA Code">
-                                <kendo-textbox aria-label="PCA Code" 
-                                    [fillMode]="formUiStyle.inputFillMode">
+                                <kendo-textbox aria-label="PCA Code" [fillMode]="formUiStyle.inputFillMode">
+                                </kendo-textbox>
+                            </kendo-floatinglabel>
+                        </div>
+                        <div class="flex-col flex-col-4">
+                            <kendo-floatinglabel text="Object Code">
+                                <kendo-textbox aria-label="Object Code" [fillMode]="formUiStyle.inputFillMode">
                                 </kendo-textbox>
                             </kendo-floatinglabel>
                         </div>
                     </div>
-                    <div class="flex-row">
-                        <div class="flex-col">
-                            <kendo-floatinglabel text="Service Description">
-                                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" 
-                                    resizable="auto" aria-label="Service Description">
-                                    <kendo-textarea-suffix class="justify-content-end">
-                                        <span class="tareacounter"> 10/300</span>
-                                    </kendo-textarea-suffix>
-                                </kendo-textarea>
-                            </kendo-floatinglabel>
-                        </div>
-                    </div>
-                    <div class="flex-row">
-                        <div class="flex-col flex-col-6">
-                          
-                            <kendo-floatinglabel text="Service Cost" class="amount-with-symbol">
-                                <span class="k-input-prefix custom-currencysymbol"> $ </span>  
-                                <kendo-textbox aria-label="CTP Code"  
-                                    [fillMode]="formUiStyle.inputFillMode">
-                                </kendo-textbox>
-                            </kendo-floatinglabel>
-                           
 
-                        </div>
-                        <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Amount Due" class="amount-with-symbol">
-                                <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                                <kendo-textbox aria-label="PCA Code" 
-                                    [fillMode]="formUiStyle.inputFillMode">
-                                </kendo-textbox>
-                            </kendo-floatinglabel>
-                        </div>
-                        <div class="ml-2">
-                        <kendo-formerror class="align-items-center"> <span class="material-icons mr-1"  aria-hidden="false" >info</span>  Client exceeded maximum benefits. <a kendoButton class="ml-1 card-link-button">Make Exception</a></kendo-formerror>
-                  </div>
-                    </div>
-                    <div class="flex-row"> 
-                        <div class="flex-col  ">
-                            <kendo-floatinglabel text="Reason For Exception">
-                                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" 
-                                    resizable="auto" aria-label="Reason For Exception">
-                                    <kendo-textarea-suffix class="justify-content-end">
-                                        <span class="tareacounter"> 10/300</span>
-                                    </kendo-textarea-suffix>
-                                </kendo-textarea>
-                            </kendo-floatinglabel>
-                           
-
-                        </div>
-                    </div>
-                    <hr class="row-border"/>
+                    <hr class="row-border" />
                     <div class="mt-2">
-                    <button class="" kendoButton fillMode="flat" themeColor="primary">  <span class="material-icons" aria-label="New Claims" aria-hidden="false">add</span> New Service</button>
+                        <button class="" kendoButton fillMode="flat" themeColor="primary"> <span class="material-icons"
+                                aria-label="New Claims" aria-hidden="false">add</span> New Prescription</button>
 
                     </div>
                 </div>
             </div>
         </div>
 
-    </div> 
+    </div>
 
 
 </section>
