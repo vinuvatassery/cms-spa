@@ -9,9 +9,10 @@ import {
   Output,
   TemplateRef,
   ViewChild,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
-import {  GridDataResult } from '@progress/kendo-angular-grid';
+import {  GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -20,6 +21,8 @@ import {
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { FinancialMedicalClaimsFacade } from '@cms/case-management/domain';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'cms-medical-claims-batches-reconcile-payments',
   templateUrl: './medical-claims-batches-reconcile-payments.component.html',
@@ -48,8 +51,10 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
   isFiltered = false;
   filter!: any;
   selectedColumn!: any;
-  gridDataResult!: GridDataResult;
-
+  gridDataResult!: any;
+  reconcilePaymentMainForm!: FormGroup;
+  reconcilePaymentGridForm!: FormGroup;
+  reconcilePaymentGridArray!:FormArray;
   gridClaimsReconcileDataSubject = new Subject<any>();
   gridClaimsReconcileData$ = this.gridClaimsReconcileDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
@@ -58,10 +63,11 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
   
   
   /** Constructor **/
-  constructor(private route: Router,   private dialogService: DialogService ) {}
+  constructor(private route: Router,   private dialogService: DialogService,
+     private readonly cd: ChangeDetectorRef,private formBuilder: FormBuilder,) {}
   
   ngOnInit(): void {
-    this.loadReconcileListGrid();
+    
   }
   ngOnChanges(): void {
     this.state = {
@@ -69,7 +75,7 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
+    this.gridDataHandle();
     this.loadReconcileListGrid();
   }
 
@@ -96,7 +102,7 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
       sortType: sortTypeValue,
     };
     this.loadReconcileListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
+    
   }
  
   
@@ -157,28 +163,33 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
   }
 
   gridDataHandle() {
-    this.reconcileGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
+    this.reconcileGridLists$.subscribe((data: any) => {
+      this.gridDataResult = data;     
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
         this.filterData
       );
+      this.isReconcileGridLoaderShow = false;
       this.gridClaimsReconcileDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) { 
         this.isReconcileGridLoaderShow = false;
       }
     });
     this.isReconcileGridLoaderShow = false;
+    this.cd.detectChanges()
   }
 
-  public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+  get reconcilePayments(): FormArray {
+    return this.reconcilePaymentMainForm.get("reconcilePayments") as FormArray;
+  }
+
+  public onPrintAuthorizationOpenClicked( grid: GridComponent,template: TemplateRef<unknown>): void {
     this.printAuthorizationDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
     });
   }
 
- 
   onPrintAuthorizationCloseClicked(result: any) {
     if (result) { 
       this.printAuthorizationDialog.close();

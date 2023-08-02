@@ -1,4 +1,4 @@
-<div class="pb-12rem pt-0">
+<div class="pb-12rem pt-0" >
       <section class="app-l-mainTittle">
             <div class="d-flex">
                   <button aria-label="back to vendor refund" kendoButton look="flat" class="mr-1"
@@ -81,37 +81,52 @@
                   </div>
 
 
-                  <div class="app-c-table">
-                        <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take"
+                  <div class="app-c-table" >
+                        <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take" #grid
                               [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
                               [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
                               [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
-                              [data]="reconcileGridLists$ | async">
-                              <kendo-grid-checkbox-column [sticky]="true" title="Print Notice" [columnMenu]="false" [showSelectAll]="false"
+                              [data]="gridDataResult" >
+                              <kendo-grid-checkbox-column [sticky]="true" title="Print Advice Ltr" [columnMenu]="false" [showSelectAll]="false"
                                     [width]="80"></kendo-grid-checkbox-column>
                               <kendo-grid-column field="vendorName" title="Medical Provider" [width]="160">
-                                    <ng-template kendoGridCellTemplate let-dataItem>
+                                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex" 
+                                    let-formArray >
                                           <button aria-label="Medical Provider" kendoButton look="flat"
-                                                class="card-link-button">
-                                                {{ dataItem.vendorName }}
+                                                class="card-link-button"  >
+                                                {{dataItem?.vendorName}} 
                                           </button>
                                     </ng-template>
                               </kendo-grid-column>
-                              <kendo-grid-column field="type" title="TIN" [width]="160"> </kendo-grid-column>
-
+                              <kendo-grid-column field="type" title="TIN" [width]="160"> 
+                              </kendo-grid-column>
                               <kendo-grid-column field="clientName" title="Pmt. Method" [width]="160">
                               </kendo-grid-column>
-                              <kendo-grid-column field="refundWarrant" title="Date Pmt. Reconciled" [width]="200">
+                              <kendo-grid-column  title="Date Pmt. Reconciled" [width]="200">
+                                    <ng-template kendoGridCellTemplate let-dataItem  let-rowIndex="rowIndex">                  
+                                          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                                          aria-label="Date Pmt. Reconciled"  
+                                          [(ngModel)]="dataItem.datePmtReconciled"                                         
+                                           formatPlaceholder="formatPattern"  placeholder="" >                                          
+                                        </kendo-datepicker>
+                                    </ng-template>
                               </kendo-grid-column>
-                              <kendo-grid-column field="refundAmount" title="Date Pmt. Sent" [width]="160">
-                              </kendo-grid-column>
+                                <kendo-grid-column field="refundAmount" title="Date Pmt. Sent" [width]="160">
+                                    <ng-template kendoGridCellTemplate let-dataItem>
+                                          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                                          aria-label="Date Pmt. Reconciled"  
+                                          [(ngModel)]="dataItem.datePmtDent"                                         
+                                           formatPlaceholder="formatPattern"  placeholder="" >                                          
+                                        </kendo-datepicker>
+                                    </ng-template>
+                              </kendo-grid-column>                   
+
                               <kendo-grid-column field="depositDate" title="Pmt. Amount" [width]="180">
                               </kendo-grid-column>
                               <kendo-grid-column field="depositMethod" title="Warrant Number" [width]="180">
                               </kendo-grid-column>
-                              <kendo-grid-column field="indexCode" title="Note (Optional)" [width]="180">
-                              </kendo-grid-column>
-                              
+                              <kendo-grid-column field="indexCode" title="Note (optional)" [width]="180">
+                              </kendo-grid-column>                             
                    
 
                               <ng-template kendoPagerTemplate let-totalPages="totalPages"
@@ -166,7 +181,7 @@
             <div class="text-right flex-gap">
                   
                   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Close </button>
-                  <button kendoButton [primary]="true" aria-label="Receipting Log" class="" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
+                  <button kendoButton [primary]="true" aria-label="Receipting Log" class="" (click)="onPrintAuthorizationOpenClicked(grid,PrintAuthorizationDialog)"> Save </button>
             </div>
       
       

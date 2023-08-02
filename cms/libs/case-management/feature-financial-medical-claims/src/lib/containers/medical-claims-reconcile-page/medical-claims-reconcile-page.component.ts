@@ -23,7 +23,7 @@ export class MedicalClaimsReconcilePageComponent {
     private readonly financialMedicalClaimsFacade: FinancialMedicalClaimsFacade 
   ) {}
 
-  loadReconcileListGrid(event: any) { 
+  loadReconcileListGrid(event: any) {
     this.financialMedicalClaimsFacade.loadReconcileListGrid();
   }
 }
