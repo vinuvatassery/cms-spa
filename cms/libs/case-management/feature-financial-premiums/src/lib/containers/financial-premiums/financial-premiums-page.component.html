@@ -2,7 +2,7 @@
     <common-bread-crumb></common-bread-crumb>
     <div class=" pt-0">
         <section class="app-l-mainTittle">
-            <h1 class="maintitle_withicon text-bold"> Medical Premiums </h1>
+            <h1 class="maintitle_withicon text-bold text-capitalize"> {{premiumType}} Premiums </h1>
         </section>
         <section class="app-l-client-wrapper">
             <section class="app-l-wrapper">
@@ -11,7 +11,7 @@
                     <kendo-tabstrip-tab title="Process" [selected]="true">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-premiums-process-list      [financialPremiumsProcessGridLists$]="financialPremiumsProcessGridLists$"
+                                <cms-financial-premiums-process-list   [premiumsType]="premiumType"   [financialPremiumsProcessGridLists$]="financialPremiumsProcessGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPremiumsProcess"
                                 [sortType]="sortType" [sort]="sortProcessList" 
                                 (loadFinancialPremiumsProcessListEvent)="loadFinancialPremiumsProcessListGrid($event)"></cms-financial-premiums-process-list>
@@ -22,7 +22,7 @@
                     <kendo-tabstrip-tab title="Batches">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-premiums-batches-list   [financialPremiumsBatchGridLists$]="financialPremiumsBatchGridLists$"
+                                <cms-financial-premiums-batches-list [premiumsType]="premiumType"  [financialPremiumsBatchGridLists$]="financialPremiumsBatchGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPremiumsBatch"
                                 [sortType]="sortType" [sort]="sortBatchList" 
                                 (loadFinancialPremiumsBatchListEvent)="loadFinancialPremiumsBatchListGrid($event)"></cms-financial-premiums-batches-list>
@@ -32,7 +32,7 @@
                     <kendo-tabstrip-tab title="All Payments">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-premiums-all-payments-list  [financialPremiumsAllPaymentsGridLists$]="financialPremiumsAllPaymentsGridLists$"
+                                <cms-financial-premiums-all-payments-list [premiumsType]="premiumType" [financialPremiumsAllPaymentsGridLists$]="financialPremiumsAllPaymentsGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPremiumsPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList" 
                                 (loadFinancialPremiumsAllPaymentsListEvent)="loadFinancialPremiumsAllPaymentsListGrid($event)"></cms-financial-premiums-all-payments-list>

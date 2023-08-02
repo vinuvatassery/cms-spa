@@ -32,6 +32,7 @@ export class FinancialClaimsAllPaymentsListComponent implements OnInit, OnChange
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isFinancialClaimsAllPaymentsGridLoaderShow = false;
+
   @Input() claimsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;

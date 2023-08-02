@@ -49,6 +49,7 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isProcessGridExpand = true;
   isFinancialPremiumsProcessGridLoaderShow = false;
+  @Input() premiumsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;

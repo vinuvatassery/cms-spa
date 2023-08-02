@@ -36,7 +36,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   removePremiumFromTemplate!: TemplateRef<any>;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogItemsGridLoaderShow = false;
-
+  @Input() premiumsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -66,7 +66,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  premiumsType: any;
+ 
   public batchItemGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -219,7 +219,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   }
 
   backToBatchLog(event : any){  
-    this.route.navigate(['/financial-management/' + this.premiumsType +'/batch'] ); 
+    this.route.navigate(['/financial-management/premiums/' + this.premiumsType +'/batch'] ); 
   }
 
 

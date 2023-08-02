@@ -23,8 +23,7 @@ const routes = [
     data: {
       title: 'Batch',
     },
-    children: [ 
-     
+    children: [     
       {
         path: '',
         component: FinancialPremiumsBatchPageComponent,
@@ -57,20 +56,11 @@ const routes = [
     ]
   }, 
   {
-    path: 'payments',
-    component: FinancialPremiumsPaymentsRouterPageComponent,
+    path: 'reconcile-payments',
+    component: FinancialPremiumsReconcilePageComponent,
     data: {
-      title: 'Payments',
+      title: '',
     },
-    children: [       
-      {
-        path: 'reconcile-payments',
-        component: FinancialPremiumsReconcilePageComponent,
-        data: {
-          title: 'Reconcile Payments' 
-        },
-      }, 
-    ]
   }, 
  
 ]

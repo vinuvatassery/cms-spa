@@ -44,8 +44,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   PreviewSubmitPaymentDialog: any;
   UnBatchPaymentDialog: any;
   removePremiumsDialog: any;
-  addClientRecentPremiumsDialog: any;
-  premiumsType: any;
+  addClientRecentPremiumsDialog: any; 
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -103,6 +102,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       },
     },
   ];
+  @Input() premiumsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -239,16 +239,16 @@ export class FinancialPremiumsBatchesLogListsComponent
   }
 
   backToBatch(event: any) {
-    this.route.navigate(['/financial-management/' + this.premiumsType] );  
+    this.route.navigate(['/financial-management/premiums/' + this.premiumsType] );  
   }
 
   goToBatchItems(event: any) {
-    this.route.navigate(['/financial-management/' + this.premiumsType +'/batch/items'] ); 
+    this.route.navigate(['/financial-management/premiums/' + this.premiumsType +'/batch/items'] ); 
   }
 
   navToReconcilePayments(event: any) {
     this.route.navigate([
-      '/financial-management/insurance-premiums/batch/reconcile-payments',
+      '/financial-management/premiums/'+ this.premiumsType +'batch/reconcile-payments',
     ]);
   }
   public onPreviewSubmitPaymentOpenClicked(

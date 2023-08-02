@@ -28,6 +28,7 @@ export class FinancialPremiumsBatchesListComponent implements OnInit, OnChanges{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isFinancialPremiumsBatchGridLoaderShow = false;
+  @Input() premiumsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -50,7 +51,7 @@ export class FinancialPremiumsBatchesListComponent implements OnInit, OnChanges{
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  premiumsType: any;
+ 
   /** Constructor **/
   constructor(private route: Router,public activeRoute: ActivatedRoute ) {}
 
@@ -165,7 +166,7 @@ export class FinancialPremiumsBatchesListComponent implements OnInit, OnChanges{
     this.isFinancialPremiumsBatchGridLoaderShow = false;
   }
   navToBatchDetails(event : any){  
-    this.route.navigate(['/financial-management/' + this.premiumsType +'/batch'] ); 
+    this.route.navigate(['/financial-management/premiums/' + this.premiumsType +'/batch'] ); 
   }
 
 }

@@ -38,7 +38,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isFinancialPremiumsAllPaymentsGridLoaderShow = false;
-
+  @Input() premiumsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -242,7 +242,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   }
   navToReconcilePayments(event: any) {
     this.route.navigate([
-      '/financial-management/insurance-premiums/payments/reconcile-payments',
+      '/financial-management/premiums/'+ this.premiumsType +'/reconcile-payments',
     ]);
   }
 

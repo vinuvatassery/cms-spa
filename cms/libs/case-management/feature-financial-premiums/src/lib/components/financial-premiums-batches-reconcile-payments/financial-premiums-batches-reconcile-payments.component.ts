@@ -34,6 +34,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   isReconcileGridLoaderShow = false;
   printAuthorizationDialog : any;
   LeavePageDialog: any;
+  @Input() premiumsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
