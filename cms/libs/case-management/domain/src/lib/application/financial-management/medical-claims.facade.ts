@@ -173,8 +173,8 @@ export class FinancialMedicalClaimsFacade {
       },
     });  
   }
-  loadReconcileListGrid(){
-    this.financialMedicalClaimsDataService.loadReconcileListService().subscribe({
+  loadReconcileListGrid(event:any){
+    this.financialMedicalClaimsDataService.loadReconcileListService(event).subscribe({
       next: (dataResponse) => {
         this.batchReconcileDataSubject.next(dataResponse);
         this.hideLoader();

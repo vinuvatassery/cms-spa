@@ -24,6 +24,6 @@ export class MedicalClaimsReconcilePageComponent {
   ) {}
 
   loadReconcileListGrid(event: any) {
-    this.financialMedicalClaimsFacade.loadReconcileListGrid();
+    this.financialMedicalClaimsFacade.loadReconcileListGrid(event);
   }
 }

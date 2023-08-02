@@ -33,6 +33,8 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
   PrintAuthorizationDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  public currentDate =  new Date(); 
+  public state!: State;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReconcileGridLoaderShow = false;
   printAuthorizationDialog : any;
@@ -42,7 +44,6 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
   @Input() sort: any;
   @Input() reconcileGridLists$: any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
-  public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
   columnsReordered = false;
@@ -51,20 +52,18 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
   isFiltered = false;
   filter!: any;
   selectedColumn!: any;
-  gridDataResult!: any;
-  reconcilePaymentMainForm!: FormGroup;
-  reconcilePaymentGridForm!: FormGroup;
-  reconcilePaymentGridArray!:FormArray;
+  reconcilePaymentGridPagedResult!: any;
+  reconcilePaymentGridUpdatedResult!: any;
   gridClaimsReconcileDataSubject = new Subject<any>();
   gridClaimsReconcileData$ = this.gridClaimsReconcileDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
+  datePaymentReconciled:any;
   
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService,
-     private readonly cd: ChangeDetectorRef,private formBuilder: FormBuilder,) {}
+     private readonly cd: ChangeDetectorRef) {}
   
   ngOnInit(): void {
     
@@ -153,24 +152,31 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
 
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
+    this.assignGridDataToMainListToSave();
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadReconcileListGrid();
   }
 
+  assignGridDataToMainListToSave(){
+  if(this.reconcilePaymentGridUpdatedResult === null || this.reconcilePaymentGridUpdatedResult === undefined){
+    this.reconcilePaymentGridUpdatedResult = this.reconcilePaymentGridPagedResult.filter((x:any)=>x.datePmtReconciled !==null
+    || x.datePmtSent !== null || x.warrantNumber !== null)
+  }
+  }
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
 
   gridDataHandle() {
     this.reconcileGridLists$.subscribe((data: any) => {
-      this.gridDataResult = data;     
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
+      this.reconcilePaymentGridPagedResult = data;     
+      this.reconcilePaymentGridPagedResult.data = filterBy(
+        this.reconcilePaymentGridPagedResult.data,
         this.filterData
       );
       this.isReconcileGridLoaderShow = false;
-      this.gridClaimsReconcileDataSubject.next(this.gridDataResult);
+      this.gridClaimsReconcileDataSubject.next(this.reconcilePaymentGridPagedResult);
       if (data?.total >= 0 || data?.total === -1) { 
         this.isReconcileGridLoaderShow = false;
       }
@@ -179,17 +185,45 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
     this.cd.detectChanges()
   }
 
-  get reconcilePayments(): FormArray {
-    return this.reconcilePaymentMainForm.get("reconcilePayments") as FormArray;
-  }
-
-  public onPrintAuthorizationOpenClicked( grid: GridComponent,template: TemplateRef<unknown>): void {
+  public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
     this.printAuthorizationDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
     });
   }
 
+  validateGridRecord(){
+
+  }
+
+  dateChange(enteredDate: Date,dataItem:any,type:any) {
+    const todayDate = new Date(); 
+    switch (type.toUpperCase()) {
+      case "DATE_PAYMENT_RECONCILED":
+        if (enteredDate > todayDate) {  
+          dataItem.datePaymentRecInValid = true;
+        }     
+        else{
+          dataItem.datePaymentRecInValid = false;
+        }
+        break;
+      case "DATE_PAYMENT_SENT":
+        if (enteredDate > todayDate) {  
+          dataItem.datePaymentSentInValid = true;
+        }     
+        else{
+          dataItem.datePaymentSentInValid = false;
+        }
+        break;        
+    }   
+  }
+  
+  warrantNumberChange(dataItem:any){
+    if(this.datePaymentReconciled === null || this.datePaymentReconciled === undefined){
+      dataItem.datePmtReconciled = this.currentDate;
+    }
+
+  }
   onPrintAuthorizationCloseClicked(result: any) {
     if (result) { 
       this.printAuthorizationDialog.close();
