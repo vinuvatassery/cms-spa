@@ -228,7 +228,7 @@ export class FinancialClaimsAllPaymentsListComponent implements OnInit, OnChange
   }
   navToReconcilePayments(event : any){  
  
-    this.route.navigate(['/financial-management/claim/' + this.claimsType +'/reconcile-payments'] );
+    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/reconcile-payments'] );
   }
   
  

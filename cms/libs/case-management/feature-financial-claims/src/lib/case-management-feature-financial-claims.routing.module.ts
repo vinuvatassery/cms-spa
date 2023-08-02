@@ -6,7 +6,7 @@ import { FinancialClaimsBatchPageComponent } from './containers/financial-claims
 import { FinancialClaimsBatchItemsPageComponent } from './containers/financial-claims-batch-items-page/financial-claims-batch-items-page.component';
 import { FinancialClaimsReconcilePageComponent } from './containers/financial-claims-reconcile-page/financial-claims-reconcile-page.component';
 import { FinancialClaimsBatchRouterPageComponent } from './containers/financial-claims-batch-router-page/financial-claims-router-batch-page.component';
-import { FinancialClaimsPaymentsRouterPageComponent } from './containers/financial-claims-payments-router-page/financial-claims-payments-router-page.component';
+
 const routes = [
   {
     path: '',

@@ -6,9 +6,10 @@ import {
 } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade, ScreenType } from '@cms/case-management/domain';
+import { FinancialClaimsFacade } from '@cms/case-management/domain';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { Subject, filter } from 'rxjs';
+import {  filter } from 'rxjs';
+import { LoggingService } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-financial-claims-page',
   templateUrl: './financial-claims-page.component.html',
@@ -47,11 +48,12 @@ export class FinancialClaimsPageComponent implements OnInit {
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private loggingService: LoggingService,
   ) {}
 
-  ngOnInit(): void {
-    this.claimsType = this.activatedRoute.snapshot.params['type'];
+  ngOnInit(): void {  
+    this.activatedRoute.params.subscribe(data => this.claimsType = data['type'])
     this.addNavigationSubscription();
   }
 
@@ -61,12 +63,12 @@ export class FinancialClaimsPageComponent implements OnInit {
 
       .subscribe({
         next: () => {
-          this.claimsType = this.activatedRoute.snapshot.params['type']; 
+          this.activatedRoute.params.subscribe(data => this.claimsType = data['type'])
           this.cdr.detectChanges();
         },
 
         error: (err: any) => {
-          // this.loggingService.logException(err);
+          this.loggingService.logException(err);
         },
       });
   }

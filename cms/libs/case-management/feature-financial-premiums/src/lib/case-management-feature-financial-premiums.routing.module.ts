@@ -6,8 +6,7 @@ import { FinancialPremiumsBatchPageComponent } from './containers/financial-prem
 import { FinancialPremiumsBatchItemsPageComponent } from './containers/financial-premiums-batch-items-page/financial-premiums-batch-items-page.component';
 import { FinancialPremiumsReconcilePageComponent } from './containers/financial-premiums-reconcile-page/financial-premiums-reconcile-page.component';
 import { FinancialPremiumsBatchRouterPageComponent } from './containers/financial-premiums-batch-router-page/financial-premiums-router-batch-page.component';
-import { FinancialPremiumsPaymentsRouterPageComponent } from './containers/financial-premiums-payments-router-page/financial-premiums-payments-router-page.component';
- 
+
 
 const routes = [
   {

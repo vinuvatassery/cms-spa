@@ -9,6 +9,7 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
+import { LoggingService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'cms-financial-premiums-page',
@@ -43,10 +44,11 @@ export class FinancialPremiumsPageComponent implements OnInit {
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private loggingService: LoggingService,
   ) {}
   ngOnInit(): void {
-    this.premiumType = this.activatedRoute.snapshot.params['type'];
+    this.activatedRoute.params.subscribe(data => this.premiumType = data['type'])
     this.addNavigationSubscription();
   }
   private addNavigationSubscription() {
@@ -54,12 +56,12 @@ export class FinancialPremiumsPageComponent implements OnInit {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe({
         next: () => {
-          this.premiumType = this.activatedRoute.snapshot.params['type'];
+          this.activatedRoute.params.subscribe(data => this.premiumType = data['type'])
           this.cdr.detectChanges();
         },
 
         error: (err: any) => {
-          // this.loggingService.logException(err);
+           this.loggingService.logException(err);
         },
       });
   }

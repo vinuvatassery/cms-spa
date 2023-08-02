@@ -253,7 +253,8 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   }
 
   goToBatchItems(event : any){   
-    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch/items'] ); 
+    debugger
+    this.route.navigate([this.route.url, 'items'] ); 
   }
 
   navToReconcilePayments(event : any){  
