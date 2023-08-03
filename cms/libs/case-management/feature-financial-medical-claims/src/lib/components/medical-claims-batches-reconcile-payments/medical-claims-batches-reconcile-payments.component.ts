@@ -60,6 +60,7 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   datePaymentReconciled:any;
+  tareaCessationCounter: string="200";
   
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService,
@@ -217,10 +218,17 @@ export class MedicalClaimsBatchesReconcilePaymentsComponent implements OnInit, O
         break;        
     }   
   }
+
+  noteChange(note:any,dataIem:any){
+    debugger;
+
+  }
   
   warrantNumberChange(dataItem:any){
     if(this.datePaymentReconciled === null || this.datePaymentReconciled === undefined){
       dataItem.datePmtReconciled = this.currentDate;
+      dataItem.datePaymentRecInValid = false;
+      dataItem.datePaymentSentInValid = false;
     }
 
   }

@@ -138,12 +138,24 @@
                               </kendo-grid-column>
                               <kendo-grid-column field="note" title="Note (optional)" [width]="180">
                                     <ng-template kendoGridCellTemplate let-dataItem>
-                                          <div kendoTooltip>
-                                                <kendo-textbox  aria-label="Note (optional)" title ="{{dataItem.note}}"
-                                                placeholder="Note (optional)"  [maxlength]="200"
-                                                [fillMode]="formUiStyle.inputFillMode" 
-                                                [(ngModel)]="dataItem.note">
-                                                </kendo-textbox>                                               
+                                          <div kendoTooltip>                                             
+                                                <kendo-textarea
+                                                #tareaCessation
+                                                [fillMode]="formUiStyle.inputFillMode"
+                                                [maxlength]="200"
+                                                [rows]="2"
+                                                
+                                                resizable ="none"
+                                                [(ngModel)]="dataItem.note"
+                                                (valueChange)="noteChange($event,dataItem)"
+                                                aria-label="smoking cessation note"
+                                                class="form-control table-text-area"
+                                                title ="{{dataItem.note}}">
+                                             
+                                              </kendo-textarea>
+                                              <kendo-textarea-suffix class="justify-content-end">
+                                                <span class="counter">{{ tareaCessationCounter }}</span>
+                                              </kendo-textarea-suffix>
                                           </div>
                               </ng-template>
                               </kendo-grid-column>
