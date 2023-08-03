@@ -8,7 +8,8 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FinancialPremiumsDataService } from '../../infrastructure/financial-management/financial-premiums.data.service';
 import { Router } from '@angular/router';
-import { FinancialPremiumTypeCode } from '@cms/case-management/domain';
+import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
+
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsFacade {
