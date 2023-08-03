@@ -22,6 +22,8 @@ export class FinancialClaimsDetailFormComponent {
   gridSkipCount = this.financialClaimsFacade.skipCount;
   sort = this.financialClaimsFacade.sortClaimsList;
   state!: State;
+  isExceptionVisible = false;
+  buttonText = 'Make Exception';
   clientSearchResult = [
     {
       clientId: '12',
@@ -89,5 +91,13 @@ export class FinancialClaimsDetailFormComponent {
 
   loadClaimsListGrid() {
     this.financialClaimsFacade.loadClaimsListGrid();
+  }
+  onMakeExceptionClick() {
+    this.isExceptionVisible = !this.isExceptionVisible;
+    if (this.isExceptionVisible) {
+      this.buttonText = "Don't Make Exception";
+    } else {
+      this.buttonText = "Make Exception";
+    }
   }
 }
