@@ -36,7 +36,6 @@
               (close)="searchCloseEvent();"
               (filterChange)="onsearchTextChange($event)"           
             >    
-            <!-- (close)="searchCloseEvent();"       -->
               <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
                 <span class="pr-1 namecolumn" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.fullName}}</span>
                 <span class="pr-1 dobcolumn" (click)="onSearchTemplateClick(dataItem)">DOB {{ dataItem.dob }}</span>
@@ -119,7 +118,7 @@
 </form>
 </div>
 <!-- Add Family Member Modal -->
-<kendo-dialog
+<div
   *ngIf="isOpenedNewFamilyMember"
   
   class="app-c-modal app-c-modal-md app-c-modal-np"
@@ -261,4 +260,4 @@
     </div>
   </kendo-dialog-actions>
   </form>
-</kendo-dialog>
+</div>

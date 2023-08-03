@@ -34,12 +34,18 @@ export class EmailDataService {
       { key: 1, value: 'Draft Custom Letter', screenName: 'Authorization' },
       { key: 2, value: 'Template Name 1', screenName: 'Authorization' },
       { key: 3, value: 'Template Name 2', screenName: 'Authorization' },
-      { key: 4, value: 'Draft Custom Letter', screenName: 'Case360Page' },
-      { key: 5, value: 'Draft Name 1', screenName: 'Case360Page' },
-      { key: 6, value: 'Draft Name 2', screenName: 'Case360Page' },
-      { key: 7, value: 'Draft Custom Letter', screenName: 'case-detail' },
-      { key: 8, value: 'Draft Name 1', screenName: 'case-detail' },
-      { key: 9, value: 'Draft Name 2', screenName: 'case-detail' },
+      { key: 4, value: 'Draft Custom Email', screenName: 'Case360PageEmail' },
+      { key: 5, value: 'Draft Name 1', screenName: 'Case360PageEmail' },
+      { key: 6, value: 'Draft Name 2', screenName: 'Case360PageEmail' },
+      { key: 7, value: 'Draft Custom Letter', screenName: 'Case360PageLetter' },
+      { key: 8, value: 'Draft Name 1', screenName: 'Case360PageLetter' },
+      { key: 9, value: 'Draft Name 2', screenName: 'Case360PageLetter' },
+      { key: 10, value: 'Draft Custom SMS', screenName: 'Case360PageSMS' },
+      { key: 11, value: 'Draft Name 1', screenName: 'Case360PageSMS' },
+      { key: 12, value: 'Draft Name 2', screenName: 'Case360PageSMS' },
+      { key: 13, value: 'Draft Custom Email', screenName: 'case-detail' },
+      { key: 14, value: 'Draft Name 1', screenName: 'case-detail' },
+      { key: 15, value: 'Draft Name 2', screenName: 'case-detail' },
     ]);
   }
 
@@ -75,10 +81,6 @@ export class EmailDataService {
         text: "Attach from Client's Attachments",
       },
     ]);
-  }
-
-  loadDdlMessageRecipients() {
-    return of(['(000)000-0000', '(123)456-7890']);
   }
 }
  

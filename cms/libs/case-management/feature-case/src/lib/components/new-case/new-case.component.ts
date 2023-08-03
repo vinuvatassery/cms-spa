@@ -1,8 +1,7 @@
 /** Angular **/
 import {
   Component, OnInit, ChangeDetectionStrategy,
-  ChangeDetectorRef, Output, EventEmitter, Input, ViewChild, AfterViewInit
-} from '@angular/core';
+  ChangeDetectorRef, Output, EventEmitter, Input, ViewChild} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProgramCode, CaseFacade, CaseStatusCode } from '@cms/case-management/domain';
 
@@ -15,7 +14,6 @@ import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'case-management-new-case',
   templateUrl: './new-case.component.html',
-  styleUrls: ['./new-case.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewCaseComponent implements OnInit  {
@@ -137,19 +135,20 @@ export class NewCaseComponent implements OnInit  {
 
   onClientSelected(event: any) {
     if (event) {
-      if (event.caseStatus == CaseStatusCode.accept) {
+      if (event.caseStatus !== CaseStatusCode.incomplete) {
         this.router.navigate([`/case-management/cases/case360/${event.clientId}`]);
       }
       else {
         this.loaderService.show();
-        this.caseFacade.getSessionInfoByCaseId(event.clientCaseId).subscribe({
-          next: (response: any) => {
+        this.caseFacade.getSessionInfoByCaseEligibilityId(event.clientCaseEligibilityId).subscribe({
+          next: (response: any) => {            
             if (response) {
               this.loaderService.hide();
               this.router.navigate(['case-management/case-detail'], {
                 queryParams: {
                   sid: response.sessionId,
-                  eid: response.entityID
+                  eid: response.entityID,                   
+                  wtc: response?.workflowTypeCode
                 },
               });
             }

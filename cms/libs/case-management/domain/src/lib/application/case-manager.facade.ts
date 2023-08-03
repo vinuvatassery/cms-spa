@@ -1,15 +1,15 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserDataService } from '@cms/system-config/domain';
-import { Observable, of, Subject } from 'rxjs';
-import { CaseManager } from '../entities/case-manager';
+import { Subject } from 'rxjs';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { StatusFlag } from '../enums/status-flag.enum';
 import { UserDefaultRoles } from '../enums/user-default-roles.enum';
-import { YesNoFlag } from '../enums/yes-no-flag.enum';
 import { CaseManagerDataService } from '../infrastructure/case-manager.data.service';
 import { WorkflowFacade } from './workflow.facade';
+import { SortDescriptor } from '@progress/kendo-data-query';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Injectable({ providedIn: 'root' })
 export class CaseManagerFacade {
@@ -24,6 +24,9 @@ private removeCaseManagerSubject = new Subject<any>();
 private selectedCaseManagerDetailsSubject = new Subject<any>();
 private assignCaseManagerSubject = new Subject<any>();
 private genericCaseManagerSubject = new Subject<any>();
+private updateDatesCaseManagerSubject = new Subject<any>();
+public showCaseListRequiredSubject  = new BehaviorSubject<boolean>(false);
+
 
 
 /** Public properties **/
@@ -37,6 +40,16 @@ removeCaseManager$ = this.removeCaseManagerSubject.asObservable();
 selectedCaseManagerDetails$ = this.selectedCaseManagerDetailsSubject.asObservable();
 assignCaseManagerStatus$ = this.assignCaseManagerSubject.asObservable();
 genericCaseManager$ = this.genericCaseManagerSubject.asObservable();
+updateDatesCaseManager$ = this.updateDatesCaseManagerSubject.asObservable();
+public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
+  public sortValue = ' '
+  public sortType = 'asc'
+
+  public sort: SortDescriptor[] = [{
+    field: this.sortValue,
+    dir: 'asc' 
+  }];
+showCaseListRequired$ = this.showCaseListRequiredSubject.asObservable();
     
     /** Constructor **/
  constructor(private readonly userDataService: UserDataService,
@@ -44,7 +57,8 @@ genericCaseManager$ = this.genericCaseManagerSubject.asObservable();
       private readonly loaderService: LoaderService,
       private readonly loggingService : LoggingService ,
       private readonly notificationSnackbarService : NotificationSnackbarService,
-      private readonly workflowFacade: WorkflowFacade ) {}
+      private readonly workflowFacade: WorkflowFacade 
+      ,private configurationProvider : ConfigurationProvider ) {}
 
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -82,11 +96,10 @@ genericCaseManager$ = this.genericCaseManagerSubject.asObservable();
       });
   }
 
-  loadCaseManagers(clientCaseId : string): void {
+  loadCaseManagers(caseId : string  , skipcount : number,maxResultCount : number ,sort : string, sortType : string, showDeactivated :boolean): void {
     this.showLoader()
-    this.caseManagerDataService.loadCaseManagers(clientCaseId).subscribe({
-      next: (getCaseManagersResponse : any) => {
-       
+    this.caseManagerDataService.loadCaseManagersGrid(caseId  ,skipcount ,maxResultCount  ,sort , sortType , showDeactivated ).subscribe({
+      next: (getCaseManagersResponse : any) => {        
         if(getCaseManagersResponse)
         {
           const gridView = {
@@ -97,7 +110,10 @@ genericCaseManager$ = this.genericCaseManagerSubject.asObservable();
           dataPointName: 'caseManager',
           status: (parseInt(getCaseManagersResponse["totalCount"]) > 0) ? StatusFlag.Yes : StatusFlag.No
         }]; 
-        if(parseInt(getCaseManagersResponse["totalCount"]) > 0)
+        
+        if(parseInt(getCaseManagersResponse["items"].filter(function(item : any){
+          return item?.activeFlag === 'Y';
+        }).length) > 0)
         {          
         this.showAddNewManagerButtonSubject.next(false);
         }
@@ -156,12 +172,32 @@ genericCaseManager$ = this.genericCaseManagerSubject.asObservable();
       {
         needManager ='NULL'
       }
+      this.hideLoader()
         return  this.caseManagerDataService.updateCaseManagerStatus(clientCaseId , hasManager ?? 'NULL', needManager ?? 'NULL')
     }
 
-    removeCaseManager(clientCaseId : string): void {
+    updateCaseManagerDates( clientCaseManagerId: string,
+      userId: string,
+      startDate: Date,
+      endDate: Date): void {
       this.showLoader()
-      this.caseManagerDataService.removeCaseManager(clientCaseId).subscribe({
+      this.caseManagerDataService.updateCaseManagerDates( clientCaseManagerId,
+        userId,
+        startDate,
+        endDate).subscribe({
+        next: (updateDateManagerResponse) => {
+         this.updateDatesCaseManagerSubject.next(updateDateManagerResponse);
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Dates Updated')    
+       },
+         error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+         },
+       });
+   }
+
+    removeCaseManager(clientCaseId : string, endDate : Date, userId : string): void {
+      this.showLoader()
+      this.caseManagerDataService.removeCaseManager(clientCaseId, endDate,userId).subscribe({
         next: (removeManagerResponse) => {
          this.removeCaseManagerSubject.next(removeManagerResponse);
          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case Manager Removed')    

@@ -5,7 +5,6 @@
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="Title">
-        <!-- <input kendoTextBox aria-label="todo title" /> -->
         <kendo-textbox aria-label="todo title"    [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
       </kendo-floatinglabel>
     </div>
@@ -125,6 +124,7 @@
         [primary]="true"
         look="outline"
         aria-label="cancel todo"
+        (click)="closeTodoDetailsClicked()"
       >
         Cancel
       </button>

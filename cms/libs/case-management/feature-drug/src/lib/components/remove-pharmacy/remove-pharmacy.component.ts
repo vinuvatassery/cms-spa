@@ -4,13 +4,13 @@ import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from 
 @Component({
   selector: 'case-management-remove-pharmacy',
   templateUrl: './remove-pharmacy.component.html',
-  styleUrls: ['./remove-pharmacy.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RemovePharmacyComponent {
   /** Input properties **/
   @Input() clientPharmacyId!: string;
-
+  @Input() isShowHistoricalData: any;
+  @Input() isClientProfile:any = false;
   /** Output properties **/
   @Output() removeConfirmEvent = new EventEmitter<any>();
 

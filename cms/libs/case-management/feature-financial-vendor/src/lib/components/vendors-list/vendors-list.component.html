@@ -1,0 +1,143 @@
+<!-- Table Top Filter, Search and Export -->
+<section class="table-filter-section mat-form-no-b-space">
+  <span class="filter-section_items filter--select">
+    <kendo-floatinglabel>
+      <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
+      textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
+      </kendo-dropdownlist>
+    </kendo-floatinglabel>
+  </span>
+  <span class="filter-section_items filter--search">
+    <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
+    <kendo-floatinglabel text="Search">
+      <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)" aria-label="Search case"
+        rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+
+    </kendo-floatinglabel>
+  </span>
+</section>
+
+<!-- Sorted Info -->
+<div class="table-sorted-info">
+  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
+  <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
+  <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
+  <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
+  <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
+</div>
+
+<!-- Case List table -->
+<div class="app-c-table">
+  <kendo-grid (columnReorder)="onColumnReorder($event)" 
+    [filter]="state.filter" [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
+    [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{filter: true }" [sort]="state.sort"
+    (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [loading]="loader"
+    [data]="gridVendorsData$ | async">
+    <kendo-grid-column field="vendorName" title="Vendor Name" [width]="160">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button aria-label="Vendor Name" kendoButton look="flat" class="card-link-button"
+          (click)="onVendorClicked(dataItem.vendorId)">
+          {{ dataItem.vendorName }}
+        </button>
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="tin" title="Tin"  [width]="80">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="paymentMethod" title="Payment Method"  [width]="100"
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="totalClaims" title="Total Claims" [width]="100"
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="unreconciledClaims" title="Unreconciled Claims" [width]="100"
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="totalPayments" title="Total Payments" [width]="100"
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="unreconciledPayments" title="Unreconciled Payments" [width]="100"
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors || vendorTypeCode===financeVendorTypeCodes.Pharmacy">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="insurancePlans" title="Insurance Plans" [width]="120"
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="clients" title="clients" [width]="100" *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="invoiceDelivery" title="InvoiceDelivery" [width]="120"
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers">
+    </kendo-grid-column>
+    <kendo-grid-column field="totalDrugs" title="Total Drugs" [width]="100"
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers">
+    </kendo-grid-column>
+    <kendo-grid-column field="openInvoices" title="Open Invoices" [width]="100"
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers">
+    </kendo-grid-column>
+    <kendo-grid-column field="phones" title="Phones"  [width]="120"
+    *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="emails" title="Emails" [width]="130"
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.Pharmacy || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="mailCode" title="Mail Codes" [width]="100"
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="address" title="Address"  [width]="120"
+    *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="preferredFlag" title="Preferred" [width]="100" *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="nabp" title="Nabp"  [width]="100" *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="ncpdp" title="Ncpdp" [width]="100" *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy">
+    </kendo-grid-column>
+
+    <kendo-grid-column field="physicalAddress" title="Physical Address" [width]="120"
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy">
+    </kendo-grid-column>
+
+    <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+      let-currentPage="currentPage">
+      <div class="grid-custom-paginationtemplates d-flex">
+        <div class="d-flex align-items-center">
+          <label class="mr-1" for="RowsPerPage">Vendors Per Page</label>
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
+            [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
+            [(value)]="state.take" (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
+          <kendo-pager-info> </kendo-pager-info>
+          <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Vendors'" [pagerPage]="'Page'"> </kendo-grid-messages>
+
+        </div>
+        <div class="d-flex">
+          <kendo-pager-input></kendo-pager-input>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-next-buttons></kendo-pager-next-buttons>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template kendoGridLoadingTemplate>
+      <common-grid-loader-component></common-grid-loader-component>
+    </ng-template>
+    <!-- grid No data Template -->
+    <ng-template kendoGridNoRecordsTemplate>
+      <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+      </div>
+      <p>There is no data to display.</p>
+    </ng-template>
+
+  </kendo-grid>
+</div>

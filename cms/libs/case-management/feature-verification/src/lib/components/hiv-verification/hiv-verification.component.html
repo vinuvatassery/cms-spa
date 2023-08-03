@@ -1,74 +1,47 @@
+<form [formGroup]="hivVerificationForm" *ngIf="hivVerificationForm">
 <div class="client-data-block">
+  <h2 hidden>Application</h2>
   <h3>HIV Verification</h3>
+  <h4 hidden>Verification</h4>
+
   <section>
- 
+
     <fieldset class="k-form-fieldset">
       <legend class="k-form-legend">    <h5 class="mt-1">Verification method</h5> </legend>
     <div class="component-list-h">
-      <span class="app-radiobtnwidtext-wrapper">
-        <input
-          type="radio"
-          kendoRadioButton
-          name="verificationMethod"
-          value="Request from Case Manager"
-          aria-labelledby="RequestfromCaseManager"
-          [(ngModel)]="rdoVerificationMethod"
-          [disabled]="
-            rdoVerificationMethod ===
-              'Request from Healthcare Provider via email' ||
-            rdoVerificationMethod === 'Upload an attachment'
-          "
-          
-          id="RequestfromCaseManager"
-          
-        />
-        <kendo-label
-          class="k-radio-label"
-          text="Request from Case Manager"
-          for="RequestfromCaseManager"
-        ></kendo-label>
-      </span>
+      <span class="app-checkboxwidtext-wrapper"
+      *ngFor="let material of verificationMethod$ | async; let i = index" >
+              <input
+              type="radio"
+              kendoRadioButton
+              id="{{OptionControllerName + material.lovCode}}"
+              [value]="material.lovCode"
+              name="providerOption"
+              attr.aria-labelledby="{{OptionControllerName + material.lovCode}}"
+              formControlName="providerOption"
+              (change)="providerChange($event)"/>
 
-      <span class="app-radiobtnwidtext-wrapper">
-        <input
-          type="radio"
-          kendoRadioButton
-          name="verificationMethod"
-          value="Request from Healthcare Provider via email"
-          [(ngModel)]="rdoVerificationMethod"
-          aria-labelledby="fromHealthcareProviderviaemail"
-          id="fromHealthcareProviderviaemail"
-          
-        />
-        <kendo-label
-          class="k-radio-label"
-          text="Request from Healthcare Provider via email"
-          for="fromHealthcareProviderviaemail"
-        ></kendo-label>
-      </span>
+            <kendo-label
+              class="k-radio-label"
+              for="{{OptionControllerName + material.lovCode}}"
+              text="{{material.lovDesc}}"
+            ></kendo-label>
 
-      <span class="app-radiobtnwidtext-wrapper">
-        <input
-          type="radio"
-          kendoRadioButton
-          name="verificationMethod"
-          value="Upload an attachment"
-          [(ngModel)]="rdoVerificationMethod" 
-          id="verificationMethodUploadanattachment"
-          aria-labelledby="verificationMethodUploadanattachment"
-        />
-        <kendo-label
-          class="k-radio-label"
-          text="Upload an attachment"
-          for="verificationMethodUploadanattachment"
-        ></kendo-label>
-      </span>
+        </span>
     </div>
+    <kendo-formerror *ngIf="!hivVerificationForm.controls['providerOption'].valid">A response is required.</kendo-formerror>
     </fieldset>
   </section>
-  <div *ngIf="rdoVerificationMethod">
+  <div >
     <case-management-hiv-verification-request
-      [data]="rdoVerificationMethod"
-    ></case-management-hiv-verification-request>
+      [hivVerificationForm]="hivVerificationForm"  [clientId]="clientId"  [clientCaseId]="clientCaseId" [clientCaseEligibilityId]="clientCaseEligibilityId" (openRemoveAttachmentConfirmationEvent)="onHivRemoveConfirmationOpen($event)" (onAttachmentConfirmationEvent)="onAttachmentConfirmation($event)"></case-management-hiv-verification-request>
   </div>
 </div>
+</form>
+<kendo-dialog *ngIf="isHivVerificationRemovalConfirmationOpened" (close)="onHivRemoveConfirmationClosed()" class="app-c-modal app-c-modal-md app-c-modal-np"
+  title="Remove HIV Verification?" kendoTooltip>
+  <case-management-hiv-verification-attachment-removal-confirmation
+  (closeRemoveAttachmentConfirmationEvent)="onHivRemoveConfirmationClosed()"
+  (removeAttachmentConfirmationEvent)="onHivRemoveConfirmation()"
+    ></case-management-hiv-verification-attachment-removal-confirmation>
+</kendo-dialog>

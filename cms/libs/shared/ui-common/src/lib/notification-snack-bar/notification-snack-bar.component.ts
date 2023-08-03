@@ -20,7 +20,6 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 @Component({
   selector: 'common-notification-snack-bar',
   templateUrl: './notification-snack-bar.component.html',
-   styleUrls: ['./notification-snack-bar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationSnackBarComponent implements OnInit {
@@ -61,7 +60,7 @@ export class NotificationSnackBarComponent implements OnInit {
     });
   }   
 
-  private removePreviousMessage()
+  public removePreviousMessage()
   {      
    const divMessage = document.getElementsByClassName("k-notification-container ng-star-inserted");
    if(divMessage.length > 0)

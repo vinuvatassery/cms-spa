@@ -4,7 +4,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-medical-premium-detail-client-policy-holder',
   templateUrl: './medical-premium-detail-client-policy-holder.component.html',
-  styleUrls: ['./medical-premium-detail-client-policy-holder.component.scss'],
 })
 export class MedicalPremiumDetailClientPolicyHolderComponent {
   @Input() healthInsuranceForm: FormGroup;

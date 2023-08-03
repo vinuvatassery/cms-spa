@@ -1,10 +1,17 @@
 <section class="k-dialog-body">
-  <p class="text-muted mb-2">
+  <p class="text-muted mb-2" *ngIf="dialogTitle === 'View' || dialogTitle === 'Add' || dialogTitle === 'Edit'">
     {{
     isEditViewPopup
     ? 'Click "Edit" to make changes to the insurance '
     : 'All fields are required unless otherwise stated.'
     }}
+  </p>
+  <p class="text-muted mb-2" *ngIf="isCopyPopup">
+    Review and update the fields below if needed. The prior insurance will end the day before this insurance begins.
+  </p>
+  <p class="text-muted mb-2" *ngIf="isReviewPopup">
+    Review and update the fields below if needed, specify whether this should update the existing insurance status
+    or create new one, then click "Save".
   </p>
   <div [formGroup]="healthInsuranceForm">
 
@@ -15,7 +22,7 @@
           <kendo-dropdownlist dropdownFieldautofocus aria-label="Health Insurance Type"
             [fillMode]="formUiStyle.dropDownFillMode" [data]="insuranceTypeList$ | async"
             (valueChange)="onHealthInsuranceTypeChanged()" formControlName="insuranceType" textField="lovDesc"
-            valueField="lovCode" [disabled]="isViewContentEditable || isEdit" [valuePrimitive]="true"
+            valueField="lovCode"  [valuePrimitive]="true"
             [loading] = "(insuranceTypeList$ | async)?.length===0" >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
@@ -29,12 +36,12 @@
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Medicare Benificiary ID Number">
-            <kendo-textbox [disabled]="isViewContentEditable" aria-label="Medicare Benificiary ID Number"
+            <kendo-textbox  aria-label="Medicare Benificiary ID Number"
               placeholder="Medicare Benificiary ID Number" formControlName="medicareBeneficiaryIdNbr" [maxlength]="20"
               [fillMode]="formUiStyle.inputFillMode">
             </kendo-textbox>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].valid">Medicare Benificiary
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].valid && !healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].disabled">Medicare Benificiary
             ID Number is required.</kendo-formerror>
         </div>
         <div class="flex-col">
@@ -42,35 +49,35 @@
             <kendo-dropdownlist aria-label="Medicare Coverage Type" [fillMode]="formUiStyle.dropDownFillMode"
               [data]="medicareCoverageTypeList$ | async" (valueChange)="onMedicareCoverageTypeChanged()"
               formControlName="medicareCoverageTypeCode" textField="lovDesc" valueField="lovCode"
-              [disabled]="isViewContentEditable" [valuePrimitive]="true">
+              [valuePrimitive]="true">
             </kendo-dropdownlist>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareCoverageTypeCode'].valid">Medicare Coverage
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareCoverageTypeCode'].valid && !healthInsuranceForm.controls['medicareCoverageTypeCode'].disabled">Medicare Coverage
             Type is required.</kendo-formerror>
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Medicare Part A Start Date">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
               aria-label="Medicare Part A Start Date" formControlName="medicarePartAStartDate"
-              [disabled]="isViewContentEditable" formatPlaceholder="formatPattern" placeholder="">
+               formatPlaceholder="formatPattern" placeholder="">
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartAStartDate'].valid">Medicare Part A Start
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartAStartDate'].valid && !healthInsuranceForm.controls['medicarePartAStartDate'].disabled">Medicare Part A Start
             Date is required.</kendo-formerror>
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Medicare Part B Start Date">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
               aria-label="Medicare Part B Start Date" formControlName="medicarePartBStartDate"
-              [disabled]="isViewContentEditable" formatPlaceholder="formatPattern" placeholder="">
+               formatPlaceholder="formatPattern" placeholder="">
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartBStartDate'].valid">Medicare Part B Start
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartBStartDate'].valid && !healthInsuranceForm.controls['medicarePartBStartDate'].disabled">Medicare Part B Start
             Date is required.</kendo-formerror>
         </div>
         <div class="flex-col mt-2">
           <span class="app-checkboxwidtext-wrapper">
-            <input [disabled]="isViewContentEditable" type="checkbox" kendoCheckBox aria-labelledby="qmb" id="qmb"
+            <input  type="checkbox" kendoCheckBox aria-labelledby="qmb" id="qmb"
               formControlName="onQmbFlag" />
             <label class="k-checkbox-label" for="qmb">On Qualified Medicare Beneficiary (QMB)</label>
           </span>
@@ -83,12 +90,12 @@
             </legend>
             <div class="component-list-h">
               <span class="app-radiobtnwidtext-wrapper">
-                <input type="radio" [disabled]="isViewContentEditable" kendoRadioButton name="onLisFlag"
+                <input type="radio" kendoRadioButton name="onLisFlag"
                   aria-labelledby="LowIncomeSusidyYes" formControlName="onLisFlag" id="LowIncomeSusidyYes" value="Y" />
                 <kendo-label class="k-radio-label" for="LowIncomeSusidyYes" text="Yes"></kendo-label>
               </span>
               <span class="app-radiobtnwidtext-wrapper">
-                <input type="radio" [disabled]="isViewContentEditable" kendoRadioButton name="onLisFlag"
+                <input type="radio"  kendoRadioButton name="onLisFlag"
                   aria-labelledby="LowIncomeSusidyNo" formControlName="onLisFlag" id="LowIncomeSusidyNo" value="N" />
                 <kendo-label class="k-radio-label" for="LowIncomeSusidyNo" text="No"></kendo-label>
               </span>
@@ -100,23 +107,14 @@
         </div>
         <div class="flex-col mb-2 mt-2 file-uploads" *ngIf="healthInsuranceForm.controls['onLisFlag'].value==='Y'">
           <h5 class="text-capital">Copy of Medicare Card</h5>
-          <kendo-upload aria-label="copy of insurance" name="copyOfMediacreCard" [disabled]="isViewContentEditable"
-            [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'medicareCard')"
-            (remove)="handleFileRemoved(copyOfMedicareCardFiles, 'medicareCard')" #copyOfInsurance
-            [removeUrl]="uploadRemoveUrl" [ngModel]="copyOfMedicareCardFiles" [ngModelOptions]="{standalone: true}"
-            [restrictions]="uploadFileRestrictions.fileRestrictions">
-            <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-              <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-                <span *ngIf="!files[0].documentId">{{files[0].name}} </span>
-                <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat"
-                  class="card-link-button">
-                  <a>{{ files[0].name }} </a>
-                </button>
-                <br>
-                <span>{{files[0].size | fileSize}}</span>
-              </span>
-            </ng-template>
-          </kendo-upload>
+          <common-document-upload
+          [file]="copyOfMedicareCardFiles"
+          [isFileViewable]="true"
+          [typeCode]="'COPY_OF_MEDICARE_CARD'"
+          (handleFileSelectEvent)="handleFileSelected($event,'medicareCard')"
+          (handleFileRemoveEvent)="handleFileRemoved($event,'medicareCard')"
+          (handleTypeCodeEvent)="handleMedicareTypeCodeEvent($event)">
+          </common-document-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
           <kendo-formerror *ngIf="medicareCardFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a
             smaller file. </kendo-formerror>
@@ -135,44 +133,45 @@
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Insurance Start Date">
             <kendo-datepicker aria-label="Insurance Start Date" [fillMode]="formUiStyle.dateInputFillMode"
-              format="MM-dd-yyyy" formControlName="insuranceStartDate" [disabled]="isViewContentEditable"
+              format="MM-dd-yyyy" formControlName="insuranceStartDate" 
               formatPlaceholder="formatPattern" placeholder="" (valueChange)="startDateOnChange()">
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceStartDate'].valid ">Insurance Start Date is
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceStartDate'].valid && !healthInsuranceForm.controls['insuranceStartDate'].disabled">Insurance Start Date is
             required.</kendo-formerror>
         </div>
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Insurance End Date">
             <kendo-datepicker aria-label="Insurance End Date" [fillMode]="formUiStyle.dateInputFillMode"
               format="MM-dd-yyyy" [min]="endDateMin" (focus)="changeMinDate()" (blur)="endDateOnChange()"
-              (valueChange)="endDateValueChange($event)" [disabled]="isViewContentEditable"
+              (valueChange)="endDateValueChange($event)" 
               formControlName="insuranceEndDate" formatPlaceholder="formatPattern" placeholder="">
             </kendo-datepicker>
           </kendo-floatinglabel>
           <kendo-formerror
-            *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && insuranceEndDateIsgreaterthanStartDate">Insurance
+            *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && insuranceEndDateIsgreaterthanStartDate && !healthInsuranceForm.controls['insuranceEndDate'].disabled">Insurance
             End Date is required.</kendo-formerror>
           <kendo-formerror
-            *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && !insuranceEndDateIsgreaterthanStartDate">End Date must be after Start Date.</kendo-formerror>
+            *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && !insuranceEndDateIsgreaterthanStartDate && !healthInsuranceForm.controls['insuranceEndDate'].disabled">End date cannot be prior to the Start Date.</kendo-formerror>
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Insurance ID Number">
-            <kendo-textbox [disabled]="isViewContentEditable" aria-label="lainsurance id number"
+            <kendo-textbox  aria-label="insurance id number"
               placeholder="Insurance ID Number" formControlName="insuranceIdNumber" [maxlength]="20"
               [fillMode]="formUiStyle.inputFillMode" (keypress)="restrictSpecialChar($event)">
             </kendo-textbox>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && !specialCharAdded">
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && !specialCharAdded && !healthInsuranceForm.controls['insuranceIdNumber'].disabled">
             Insurance ID Number is required.</kendo-formerror>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && specialCharAdded">
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && specialCharAdded && !healthInsuranceForm.controls['insuranceIdNumber'].disabled">
             Special characters not allowed.</kendo-formerror>
         </div>
         <div class="flex-col mat-form-sm-b-space">
           <case-management-medical-premium-detail-insurance-carrier-name [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable"
             (insuranceCarrierNameChange)="insuranceCarrierNameChange($event)"
-            (insuranceCarrierNameData)="insuranceCarrierNameData($event)"></case-management-medical-premium-detail-insurance-carrier-name>
+            (insuranceCarrierNameData)="insuranceCarrierNameData($event)"
+            [insuranceStatus]="insuranceStatus"></case-management-medical-premium-detail-insurance-carrier-name>
         </div>
 
         <div class="flex-col mat-form-sm-b-space ">
@@ -187,7 +186,7 @@
             [defaultValue]="metalLevelDefaultValue"></case-management-medical-premium-detail-metal-level>
         </div>
         <div
-          *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && healthInsuranceForm.controls['insuranceCarrierName'].value">
+          *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.DentalInsurance  && healthInsuranceForm.controls['insuranceCarrierName'].value">
           <case-management-medical-carrier-contact-info [carrierContactInfo]="carrierContactInfo"></case-management-medical-carrier-contact-info>
         </div>
         <div class="flex-col mt-3" *ngIf="ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan">
@@ -200,36 +199,27 @@
             [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-aptc>
         </div>
         <div class="flex-col mt-3"
-          *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare">
+          *ngIf="ddlInsuranceType === InsurancePlanTypes.DentalInsurance || ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare">
           <case-management-medical-premium-detail-careassist-pay [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable" [sameAsInsuranceIdFlag]="sameAsInsuranceIdFlag"
             [ddlInsuranceType]="ddlInsuranceType"
-            [clientId]="clientId"></case-management-medical-premium-detail-careassist-pay>
+            [clientId]="clientId" [caseEligibilityId]="caseEligibilityId"></case-management-medical-premium-detail-careassist-pay>
         </div>
 
       </div>
 
 
-      <div class="flex-col mb-2 mt-2  file-uploads" *ngIf="(ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare)
+      <div class="flex-col mb-2 mt-2  file-uploads" *ngIf="(ddlInsuranceType === InsurancePlanTypes.DentalInsurance || ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || ddlInsuranceType === InsurancePlanTypes.Medicare)
           && healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
         <h5 class="text-capital">Proof of premium amount</h5>
-        <kendo-upload aria-label="proof of premium" name="proofOfPremium" [disabled]="isViewContentEditable"
-          [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'proof')"
-          (remove)="handleFileRemoved(proofOfPremiumFiles, 'proof')" #proofOfPremium [removeUrl]="uploadRemoveUrl"
-          [ngModel]="proofOfPremiumFiles" [ngModelOptions]="{standalone: true}"
-          [restrictions]="uploadFileRestrictions.fileRestrictions">
-          <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-            <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-              <span *ngIf="!files[0].documentId">{{files[0].name}} </span>
-              <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat"
-                class="card-link-button">
-                <a>{{ files[0].name }} </a>
-              </button>
-              <br>
-              <span>{{files[0].size | fileSize}}</span>
-            </span>
-          </ng-template>
-        </kendo-upload>
+        <common-document-upload
+          [file]="proofOfPremiumFiles"
+          [isFileViewable]="true"
+          [typeCode]="'PROOF_OF_PREMIUM'"
+          (handleFileSelectEvent)="handleFileSelected($event,'proof')"
+          (handleFileRemoveEvent)="handleFileRemoved($event,'proof')"
+          (handleTypeCodeEvent)="handleProofTypeCodeEvent($event)">
+          </common-document-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror
           *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag === 'Y' && !isProofFileUploaded && !isViewContentEditable && !proofOfPremiumExceedsFileSizeLimit">Proof
@@ -243,23 +233,14 @@
       <div class="flex-col mb-2  file-uploads"
         *ngIf="ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra">
         <h5 class="text-capital">Copy of Summary of Benefits</h5>
-        <kendo-upload aria-label="copy Of Summary" name="copyOfSummary" [disabled]="isViewContentEditable"
-          [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'summary')"
-          (remove)="handleFileRemoved(copyOfSummaryFiles, 'summary')" #copyOfSummary [removeUrl]="uploadRemoveUrl"
-          [ngModel]="copyOfSummaryFiles" [ngModelOptions]="{standalone: true}"
-          [restrictions]="uploadFileRestrictions.fileRestrictions">
-          <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-            <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-              <span *ngIf="!files[0].documentId">{{files[0].name}} </span>
-              <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat"
-                class="card-link-button">
-                <a>{{ files[0].name }} </a>
-              </button>
-              <br>
-              <span>{{files[0].size | fileSize}}</span>
-            </span>
-          </ng-template>
-        </kendo-upload>
+        <common-document-upload
+          [file]="copyOfSummaryFiles"
+          [isFileViewable]="true"
+          [typeCode]="'COPY_OF_SUMMARY_Of_BENEFITS_AND_COVERAGE'"
+          (handleFileSelectEvent)="handleFileSelected($event,'summary')"
+          (handleFileRemoveEvent)="handleFileRemoved($event, 'summary')"
+          (handleTypeCodeEvent)="handleSummaryTypeCodeEvent($event)">
+          </common-document-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror *ngIf="summaryFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a smaller
           file. </kendo-formerror>
@@ -270,25 +251,16 @@
     </div>
     <div *ngIf="isOpenDdl">
       <div class="flex-col mb-2 mt-2 file-uploads"
-        *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || (medicareInsuranceInfoCheck && ddlInsuranceType === InsurancePlanTypes.Medicare)">
+        *ngIf="ddlInsuranceType === InsurancePlanTypes.DentalInsurance || ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan || ddlInsuranceType === InsurancePlanTypes.OffExchangePlan || ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan || ddlInsuranceType === InsurancePlanTypes.Cobra || (medicareInsuranceInfoCheck && ddlInsuranceType === InsurancePlanTypes.Medicare)">
         <h5 class="text-capital">Copy of Insurance Card</h5>
-        <kendo-upload aria-label="copy of insurance" name="copyOfInsuranceCard" [disabled]="isViewContentEditable"
-          [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event, 'copyInsurance')"
-          (remove)="handleFileRemoved(copyOfInsuranceCardFiles, 'copyInsurance');" #copyOfInsurance
-          [removeUrl]="uploadRemoveUrl" [ngModel]="copyOfInsuranceCardFiles" [ngModelOptions]="{standalone: true}"
-          [restrictions]="uploadFileRestrictions.fileRestrictions">
-          <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-            <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
-              <span *ngIf="!files[0].documentId">{{files[0].name}} </span>
-              <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat"
-                class="card-link-button">
-                <a>{{ files[0].name }} </a>
-              </button>
-              <br>
-              <span>{{files[0].size | fileSize}}</span>
-            </span>
-          </ng-template>
-        </kendo-upload>
+        <common-document-upload
+          [file]="copyOfInsuranceCardFiles"
+          [isFileViewable]="true"
+          [typeCode]="'COPY_OF_INSURANCE_CARD'"
+          (handleFileSelectEvent)="handleFileSelected($event,'copyInsurance')"
+          (handleFileRemoveEvent)="handleFileRemoved($event,'copyInsurance')"
+          (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
+          </common-document-upload>
         <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror *ngIf="insuranceCardFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a
           smaller file. </kendo-formerror>
@@ -303,7 +275,7 @@
 <kendo-dialog-actions>
   <div class="justify-content-between">
     <div>
-      <button kendoButton class="k-danger-link" *ngIf="isDeleteEnabled" (click)="onDeleteClick()"
+      <button kendoButton class="k-danger-link" *ngIf="isDeleteEnabled && !isPaymentDone" (click)="onDeleteClick()"
         aria-label="delete medical premium">
         Delete
       </button>

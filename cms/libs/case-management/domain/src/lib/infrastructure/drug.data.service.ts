@@ -4,9 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { PriorityCode } from '../enums/priority-code.enum';
 import { ClientPharmacy, Pharmacy } from '../entities/client-pharmacy';
-import { PharmacyPriority } from '../entities/pharmacy-priority';
 @Injectable({ providedIn: 'root' })
 export class DrugDataService {
   /** Constructor**/
@@ -205,33 +203,46 @@ export class DrugDataService {
     ]);
   }
 
-  loadClientPharmacyList(clientId: number) {
-    return this.http.get<ClientPharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy`);
+  loadClientPharmacyList(clientId: number,isShowHistoricalData:boolean=false) {
+    return this.http.get<ClientPharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacies?isShowHistoricalData=${isShowHistoricalData}`);
   }
 
   searchPharmacies(searchText: string) {
-    return this.http.get<Pharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/pharmacy/search?searchText=${searchText}`);
+    return this.http.get<Pharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/pharmacies?searchText=${searchText}`);
   }
 
   getPharmacyById(vendorId: string) {
     return this.http.get<Pharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/pharmacies/${vendorId}`);
   }
-
+  
   addClientPharmacy(clientId: number, pharmacy: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy`, pharmacy);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacies`, pharmacy);
   }
 
   editClientPharmacy(clientId: number, clientPharmacyId: string, pharmacy: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy/${clientPharmacyId}`, pharmacy);
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacies/${clientPharmacyId}`, pharmacy);
   }
 
   removeClientPharmacy(clientId: number, clientPharmacyId: string) {
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacy/${clientPharmacyId}`);
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/pharmacies/${clientPharmacyId}`);
   }
  savePharmacyPriorityService(pharmacyPriority: any) {
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
         `/case-management/pharmacies/priority`, pharmacyPriority
     );
+  }
+  
+  loadDrugPharmacyList(clientId: number,isShowHistoricalData:boolean) {
+    return this.http.get<ClientPharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs/${clientId}/pharmacies/${isShowHistoricalData}`);
+  }
+  getDrugPurchasedList(clientId:number, skip: any, pageSize: any, sortBy: any, sortType: any, filters:any,isPermiumWithinLastTwelveMonthsData:boolean) { 
+    return this.http.get<Pharmacy>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/drugpurchased?SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}&Filter=${filters}&isPermiumWithinLastTwelveMonthsData=${isPermiumWithinLastTwelveMonthsData}`);
+  }
+  removeDrugPharmacy(clientId: number, clientPharmacyId: string) {
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drug/clients/${clientId}/pharmacies/${clientPharmacyId}`);
+  }
+  activeDrugPharmacy(clientPharmacyId: string, pharmacy: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs/pharmacies/${clientPharmacyId}`, pharmacy);
   }
 }

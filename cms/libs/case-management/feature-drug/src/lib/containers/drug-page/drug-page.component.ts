@@ -1,17 +1,16 @@
 /** Angular **/
-import { AfterViewInit, ChangeDetectorRef, ElementRef, OnInit } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, OnInit, OnDestroy, ChangeDetectionStrategy, Component } from '@angular/core';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, pairwise, startWith, first, forkJoin, mergeMap, of, Subscription, tap, BehaviorSubject } from 'rxjs';
 /** Facades **/
-import { UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { DrugPharmacyFacade, WorkflowFacade, IncomeFacade, PrescriptionDrugFacade, PrescriptionDrug, StatusFlag, CompletionChecklist, PrescriptionDrugDocument, ClientDocumentFacade, YesNoFlag } from '@cms/case-management/domain';
+import {
+  DrugPharmacyFacade, WorkflowFacade, PrescriptionDrugFacade, PrescriptionDrug,
+  StatusFlag, CompletionChecklist, NavigationType, YesNoFlag
+} from '@cms/case-management/domain';
 import { FormGroup, FormControl, Validators, } from '@angular/forms';
 /** Enums **/
-import { NavigationType } from '@cms/case-management/domain';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'case-management-drug-page',
@@ -21,14 +20,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   /** Public properties **/
-  public uploadRemoveUrl = 'removeUrl';
-  uploadedBenefitSummaryFile: any[] = [];
-  summaryBenefitFiles: any;
-  uploadFileRestrictions: UploadFileRistrictionOptions =
-    new UploadFileRistrictionOptions();
   prescriptionDrugForm!: FormGroup;
   prescriptionDrug!: PrescriptionDrug;
-  isBenefitsChanged = true;
   clientpharmacies$ = this.drugPharmacyFacade.clientPharmacies$;
   pharmacysearchResult$ = this.drugPharmacyFacade.pharmacies$;
   searchLoaderVisibility$ = this.drugPharmacyFacade.searchLoaderVisibility$;
@@ -41,36 +34,33 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   sessionId: any = '';
   clientId: any;
   clientCaseId: any;
-  summaryBenefitsValidator: boolean = false;
-  isSummaryOfBenefitsRequired$ = new BehaviorSubject<boolean>(false);
-  showDocRequiredValidation = false;
   nonPreferredFlagValidation = false;
   prescriptionInfo = {} as PrescriptionDrug;
-
+  isPharmacyAdded = false;
+  showPharmacyRequiredValidation$ = new BehaviorSubject(false);
+  isCerForm :any;
+  showPharmacySection = true;
+  isCerText=false;
+  prevClientCaseEligibilityId:any;
   /** Private properties **/
   private saveClickSubscription!: Subscription;
   private loadSessionSubscription!: Subscription;
   private saveForLaterClickSubscription!: Subscription;
   private saveForLaterValidationSubscription!: Subscription;
-  private discardChangesSubscription !: Subscription;
+  private hivCodeValueSubscription !: Subscription;
 
   /** Constructor **/
   constructor(
     private workflowFacade: WorkflowFacade,
     private route: ActivatedRoute,
-    private readonly incomeFacade: IncomeFacade,
     private drugPharmacyFacade: DrugPharmacyFacade,
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
-    private readonly elementRef: ElementRef,
     private readonly prescriptionDrugFacade: PrescriptionDrugFacade,
-    private readonly router: Router,
     private changeDetector: ChangeDetectorRef,
-    private readonly configurationProvider: ConfigurationProvider,
-    public readonly clientDocumentFacade: ClientDocumentFacade
   ) {
-    this.isSummaryOfBenefitsRequired$.next(false);
+
   }
 
   /** Lifecycle Hooks **/
@@ -81,7 +71,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.addSaveForLaterValidationsSubscription();
     this.loadSessionData();
     this.prescriptionDrugFormChanged();
-    this.addDiscardChangesSubscription();
+    this.addHivCodeChangeSubscription();
   }
 
   ngOnDestroy(): void {
@@ -89,9 +79,9 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadSessionSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
-    this.discardChangesSubscription.unsubscribe();
+    this.hivCodeValueSubscription.unsubscribe();
   }
-  
+
 
   ngAfterViewInit() {
     this.workflowFacade.enableSaveButton();
@@ -104,6 +94,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
         validators: Validators.required,
       }),
       nonPreferredPharmacyCode: new FormControl(''),
+      isClientNotUsingAnyPharmacy:new FormControl(false)
     });
   }
 
@@ -117,7 +108,15 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
           if (response !== null) {
             this.prescriptionDrug = response;
             this.prescriptionDrugForm.patchValue(response);
+            if(response?.prescriptionDrugsForHivCode === 'YES'){
+              this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].setValue(false);
+              this.showPharmacySection = true;
+            }else {
+              this.showPharmacySection = false;
+              this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].setValue(true);
+            }
             this.adjustAttributeChanged(response?.prescriptionDrugsForHivCode === 'YES');
+            this.changeDetector.detectChanges();
             this.loaderService.hide();
           } else {
             this.loaderService.hide();
@@ -168,24 +167,23 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private adjustAttributeChanged(isRequired: boolean) {
-      const data: CompletionChecklist = {
-        dataPointName: 'nonPreferredPharmacyCode_ adjusted',
-        status: isRequired ? StatusFlag.Yes : StatusFlag.No,
-      };
-
-      this.workflowFacade.updateBasedOnDtAttrChecklist([data]);
-      this.updateInitialCompletionCheckList();
+    const data: CompletionChecklist = {
+      dataPointName: 'nonPreferredPharmacyCode_ adjusted',
+      status: isRequired ? StatusFlag.Yes : StatusFlag.No,
+    };  
+    this.workflowFacade.updateBasedOnDtAttrChecklist([data]);
+    this.updateInitialCompletionCheckList();
   }
 
   private updateInitialCompletionCheckList() {
     let completedDataPoints: CompletionChecklist[] = [];
     Object.keys(this.prescriptionDrugForm.controls).forEach((key) => {
-        let item: CompletionChecklist = {
-          dataPointName: key,
-          status: this.prescriptionDrugForm?.get(key)?.value ? StatusFlag.Yes:  StatusFlag.No,
-        };
+      let item: CompletionChecklist = {
+        dataPointName: key,
+        status: this.prescriptionDrugForm?.get(key)?.value ? StatusFlag.Yes : StatusFlag.No,
+      };
 
-        completedDataPoints.push(item);     
+      completedDataPoints.push(item);
     });
 
     if (completedDataPoints.length > 0) {
@@ -196,10 +194,10 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$
       .pipe(
-        tap(() => { 
-          this.loaderService.show(); 
+        tap(() => {
+          this.loaderService.show();
           this.workflowFacade.disableSaveButton();
-         }),
+        }),
         mergeMap((navigationType: NavigationType) =>
           forkJoin([of(navigationType), this.save()])
         )
@@ -214,7 +212,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
           this.workflowFacade.enableSaveButton();
         }
-        
+
         this.loaderService.hide();
       });
   }
@@ -240,39 +238,56 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.loadClientPharmacies(this.clientId);
           this.loaderService.hide();
         }
+        this.prevClientCaseEligibilityId = JSON.parse(
+          session.sessionData
+        )?.prevClientCaseEligibilityId;
+        if (this.prevClientCaseEligibilityId) {
+          this.isCerForm = true;
+        }else {
+          this.isCerForm = false;
+        }
       });
   }
 
   private save() {
     this.prescriptionDrugForm.markAllAsTouched();
-   
-     this.changeDetector.detectChanges();
-    if (
-      this.prescriptionDrugForm.valid 
-     
-    ) {
-      const drugs = this.workflowFacade.deepCopy(
-        this.prescriptionDrugForm.value
-      );
+    if(this.isCerForm && !this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy']?.value){
+      this.prescriptionDrugForm.controls['prescriptionDrugsForHivCode'].setValue('YES');
+    } else if(this.isCerForm && this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy']?.value)
+    {
+    this.prescriptionDrugForm.controls['prescriptionDrugsForHivCode'].setValue('NO');
+    }
+    this.changeDetector.detectChanges();
+    const isHivCodeYes = this.prescriptionDrugForm.controls['prescriptionDrugsForHivCode'].value?.toUpperCase() == YesNoFlag.Yes.toUpperCase();
+    if (!this.isPharmacyAdded && isHivCodeYes) {
+      this.showPharmacyRequiredValidation$.next(true);
+      return of(false);;
+    }
+
+    if (!isHivCodeYes) {
+      this.prescriptionDrugForm.controls['nonPreferredPharmacyCode'].setValue(null);
+    }
+
+    if (this.prescriptionDrugForm.valid) {
+      const drugs = this.workflowFacade.deepCopy(this.prescriptionDrugForm.value);
       drugs.clientCaseEligibilityId = this.clientCaseEligibilityId;
       drugs.clientId = this.clientId;
       drugs.clientCaseId = this.clientCaseId;
       drugs.concurrencyStamp = this.prescriptionDrug?.concurrencyStamp;
-     
-
-       return this.prescriptionDrugFacade.updatePrescriptionDrug(
-         drugs
-       );
+       drugs.IsCerForm=this.isCerForm
+      return this.prescriptionDrugFacade.updatePrescriptionDrug(
+        drugs
+      );
     }
 
     return of(false);
   }
 
- 
-  /** Internal event methods **/
- 
 
-  
+  /** Internal event methods **/
+
+
+
 
   /* Pharmacy */
   private loadClientPharmacies(clientId: number) {
@@ -282,12 +297,28 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       next: (pharmacies) => {
         if (pharmacies?.length > 0) {
           pharmacies?.forEach((pharmacyData: any) => {
-            pharmacyData.PharmacyNameAndNumber =
-              pharmacyData.PharmacyName + ' #' + pharmacyData.PharmcayId;
+            const pharmacyNumber = pharmacyData?.pharmacyNumber ? `#${pharmacyData.pharmacyNumber}` : '';
+            pharmacyData.PharmacyNameAndNumber = `${pharmacyData.PharmacyName} ${pharmacyNumber}`;
           });
+          this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].setValue(false);
+          this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].updateValueAndValidity();
+        this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy']?.disable();
+        this.showPharmacySection = true;
+        this.isCerText=true;
+        }else {
+          this.isCerText=false;
+          this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].setValue(true);
+          this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].updateValueAndValidity();
+          this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy']?.enable();
+          this.showPharmacySection = false;
         }
-
-        this.updateWorkflowCount('pharmacy', pharmacies?.length > 0);
+        this.changeDetector.detectChanges();
+        const pharmacyFound = pharmacies?.length > 0;
+        if (pharmacyFound) {
+          this.showPharmacyRequiredValidation$.next(false);
+        }
+        this.isPharmacyAdded = pharmacyFound;
+        this.updateWorkflowCount('pharmacy', pharmacyFound);
         this.loaderService.hide();
       },
       error: (err) => {
@@ -339,7 +370,15 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.drugPharmacyFacade.removeClientPharmacy(
       this.workflowFacade.clientId ?? 0,
       clientPharmacyId
-    );
+    ).then((isRemoved) =>{
+      if(isRemoved){
+        this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].setValue(false);
+        this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].updateValueAndValidity();
+      }
+     
+    })
+
+    
   }
 
   private addSaveForLaterSubscription(): void {
@@ -349,12 +388,12 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.save().subscribe((response: any) => {
             if (response) {
               this.loaderService.hide();
-              this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+              this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
             }
           })
         }
         else {
-          this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+          this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
         }
       });
   }
@@ -368,7 +407,17 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       });
   }
+onCheckClientPharmacies(event:any){
 
+   this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy']?.valueChanges
+      .subscribe((value: any) => {
+
+        this.showPharmacySection = value ? false : true;
+        if(value){
+          this.showPharmacyRequiredValidation$.next(false);
+        }
+      });
+}
   checkValidations() {
     return this.prescriptionDrugForm.valid;
   }
@@ -378,6 +427,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
         'prescriptionDrugsForHivCode'
       ].value?.toUpperCase() == YesNoFlag.Yes.toUpperCase()
     ) {
+      this.showPharmacySection=true;
       this.nonPreferredFlagValidation = true;
       this.prescriptionDrugForm
         .get('nonPreferredPharmacyCode')
@@ -385,16 +435,15 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.prescriptionDrugForm
         .get('nonPreferredPharmacyCode')
         ?.updateValueAndValidity();
-        if(
-          this.prescriptionDrugForm.controls[
-            'nonPreferredPharmacyCode'
-          ].value?.toUpperCase()!=YesNoFlag.Yes.toUpperCase() &&
-        this.prescriptionDrugForm.controls['nonPreferredPharmacyCode'].value?.toUpperCase()!=YesNoFlag.No.toUpperCase() )
-        {
-          this.prescriptionDrugForm.controls['nonPreferredPharmacyCode'].setValue(null);
-        }
-        this.adjustAttributeChanged(true);
-        
+      if (
+        this.prescriptionDrugForm.controls[
+          'nonPreferredPharmacyCode'
+        ].value?.toUpperCase() != YesNoFlag.Yes.toUpperCase() &&
+        this.prescriptionDrugForm.controls['nonPreferredPharmacyCode'].value?.toUpperCase() != YesNoFlag.No.toUpperCase()) {
+        this.prescriptionDrugForm.controls['nonPreferredPharmacyCode'].setValue(null);
+      }
+      this.adjustAttributeChanged(true);
+      this.updateWorkflowCount('pharmacy', this.isPharmacyAdded);
     } else {
       this.prescriptionDrugForm
         .get('nonPreferredPharmacyCode')
@@ -405,17 +454,22 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.prescriptionDrugForm
         .get('nonPreferredPharmacyCode')
         ?.updateValueAndValidity();
+      this.showPharmacySection=false;
       this.nonPreferredFlagValidation = false;
       this.adjustAttributeChanged(false);
+      this.showPharmacyRequiredValidation$.next(false);
     }
   }
 
-  private addDiscardChangesSubscription(): void {
-    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
-     if(response){
-     this.loadPrescriptionDrug();
-     }
-    });
+  private addHivCodeChangeSubscription(): void {
+    this.hivCodeValueSubscription = this.prescriptionDrugForm.controls['prescriptionDrugsForHivCode']?.valueChanges
+      .subscribe((value: any) => {
+        if(value === YesNoFlag.Yes.toUpperCase())
+        {
+          this.showPharmacySection = true;
+        }
+        
+      });
   }
 }
 

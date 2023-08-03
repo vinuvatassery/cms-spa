@@ -7,12 +7,11 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-reject-application',
   templateUrl: './reject-application.component.html',
-  styleUrls: ['./reject-application.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RejectApplicationComponent {
 
-
+  @Input() clientCaseEligibilityId: string = '';
   @Input() clientCaseId: string = '';
   @Output() isCloseDenyModal: EventEmitter<boolean> = new EventEmitter();
   
@@ -21,7 +20,7 @@ export class RejectApplicationComponent {
   updateCaseStatus()
   {
     this.loaderService.show();
-    this.caseFacade.updateCaseStatus(this.clientCaseId,CaseStatusCode.reject).subscribe({
+    this.caseFacade.updateCaseStatus(this.clientCaseId,CaseStatusCode.reject,this.clientCaseEligibilityId).subscribe({
       next: (data) => {
         this.caseFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,

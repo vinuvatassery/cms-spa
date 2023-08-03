@@ -24,6 +24,8 @@ import { SendLetterConfirmationComponent } from './components/letter/send-letter
 import { SendIdCardComponent } from './components/id-card/send-id-card/send-id-card.component';
 import { CommunicationPageComponent } from './containers/communication-page/communication-page.component';
 import { SendLetterPageComponent } from './containers/send-letter-page/send-letter-page.component';
+import { DisEnrollmentLaterComponent } from './components/disenrollment-letter-later/disenrollment-letter-later.component';
+import { ApprovalLaterComponent } from './components/approval-letter-later/approval-letter-later.component';
 
 @NgModule({
   imports: [
@@ -51,6 +53,8 @@ import { SendLetterPageComponent } from './containers/send-letter-page/send-lett
     SendIdCardComponent,
     CommunicationPageComponent,
     SendLetterPageComponent,
+    DisEnrollmentLaterComponent,
+    ApprovalLaterComponent
   ],
   exports: [
     SendTextMessageComponent,
@@ -71,6 +75,8 @@ import { SendLetterPageComponent } from './containers/send-letter-page/send-lett
     SendIdCardComponent,
     CommunicationPageComponent,
     SendLetterPageComponent,
+    DisEnrollmentLaterComponent,
+    ApprovalLaterComponent
   ],
 })
 export class CaseManagementFeatureCommunicationModule {}

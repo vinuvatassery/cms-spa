@@ -11,7 +11,7 @@ export class EmployersDataService {
   constructor(
     private readonly http: HttpClient,
     private readonly configurationProvider: ConfigurationProvider
-  ) {}
+  ) { }
 
   /** Public methods **/
 
@@ -19,73 +19,67 @@ export class EmployersDataService {
   loadEmploymentStatusService(clientCaseEligibilityId: string) {
     return this.http.get<ClientEmployer[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/case-management/client-employers/${clientCaseEligibilityId}/employer-status`
+      `/case-management/eligibility-periods/${clientCaseEligibilityId}/employers`
     );
   }
 
   // geting the list of employer
   loadEmploymentService(
+    clientId: any,
     clientCaseEligibilityId: string,
     skipcount: number,
     maxResultCount: number,
     sort: string,
-    sortType: string
+    sortType: string,
+    type: string = 'All'
   ) {
     return this.http.get<ClientEmployer>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        // `/case-management/client-employers/${clientCaseEligibilityId}`
-        `/case-management/client-employers?clientCaseEligibilityId=${clientCaseEligibilityId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+      `/case-management/clients/${clientId}/employers?clientCaseEligibilityId=${clientCaseEligibilityId}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&EmployerType=${type}`
     );
   }
   // geting the  employer details
   loadEmployersDetailsService(
-    clientCaseEligibilityId: string,
+    clientId: any,
     clientEmployerId: string
   ) {
     return this.http.get<ClientEmployer>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/case-management/client-employers/${clientCaseEligibilityId}/${clientEmployerId}`
+      `/case-management/clients/${clientId}/employers/${clientEmployerId}`
     );
   }
 
   // Adding new employer
-  createClientNewEmployerService(clientEmployer: ClientEmployer) {
+  createClientNewEmployerService(clientId: any, clientEmployer: ClientEmployer) {
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/case-management/client-employers`,
+      `/case-management/clients/${clientId}/employers`,
       clientEmployer
     );
   }
-  
+
   // updating the employer
-  updateClientEmployerService(clientEmployer: ClientEmployer) {
+  updateClientEmployerService(clientId: any, clientEmployer: ClientEmployer, clientEmployerId: string) {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/case-management/client-employers`,
+      `/case-management/clients/${clientId}/employers/${clientEmployerId}`,
       clientEmployer
     );
   }
-  
+
   // removing the employer
   removeClientEmployerService(
-    clientCaseEligibilityId: string,
+    clientId: any,
     clientEmployerId: string
   ) {
     return this.http.delete(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/case-management/client-employers/${clientCaseEligibilityId}/${clientEmployerId}`
+      `/case-management/clients/${clientId}/employers/${clientEmployerId}`
     );
   }
-  
-  // updating the unemployment status
-  employmentStatusUpdateService(
-    clientCaseEligibilityId: string,
-    isEmployed: string
-  ) {
-    return this.http.patch(
-      `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/case-management/client-employers/${clientCaseEligibilityId}/${isEmployed}`,
-      ''
-    );
+
+  // updating the employment data.
+  employmentUpdateService(clientCaseEligibilityId: string, employmentData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/eligibility-periods/${clientCaseEligibilityId}/employers`, employmentData);
   }
 }

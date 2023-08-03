@@ -3,6 +3,7 @@ export * from './lib/case-management-feature-health-insurance.module';
 
 /** Components **/
 export * from './lib/containers/health-insurance-page/health-insurance-page.component';
+export * from './lib/containers/profile-healthe-insurance/profile-health-insurance-page.component';
 export * from './lib/components/medical-insurance-status-detail/medical-insurance-status-detail.component';
 export * from './lib/components/medical-insurance-status-list/medical-insurance-status-list.component';
 export * from './lib/components/medical-payment-detail/medical-payment-detail.component';
@@ -12,3 +13,5 @@ export * from './lib/components/medical-premium-list/medical-premium-list.compon
 export * from './lib/components/set-health-insurance-priority/set-health-insurance-priority.component';
 export * from './lib/components/co-pays-and-deductibles-list/co-pays-and-deductibles-list.component';
 export * from './lib/components/co-pays-and-deductibles-detail/co-pays-and-deductibles-detail.component';
+export * from './lib/components/medical-premium-payment-detail/medical-premium-payment-detail.component';
+export * from './lib/components/deactivate-medical-premium-confirmation/deactivate-medical-premium.component';

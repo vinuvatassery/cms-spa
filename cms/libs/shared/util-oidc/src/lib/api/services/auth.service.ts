@@ -9,7 +9,8 @@ import {
   PublicEventsService,
 } from 'angular-auth-oidc-client';
 import { filter } from 'rxjs/operators';
-import { UserProfileService } from '@cms/shared/util-core';
+import { LoaderService } from '@cms/shared/util-core';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
@@ -17,32 +18,29 @@ export class AuthService {
   /** Private properties **/
   private user: any;
   private authenticated!: boolean;
+  
+  userSubject!: BehaviorSubject<any>;
 
   /** Constructor **/
   constructor(
     public readonly oidcSecurityService: OidcSecurityService,
     public readonly eventService: PublicEventsService,
-    public readonly userProfileService: UserProfileService
+    private readonly loaderService: LoaderService
   ) {
     this.oidcSecurityService.isAuthenticated$.subscribe(
       ({ isAuthenticated, allConfigsAuthenticated }) => {
         this.authenticated = isAuthenticated;
-        if(this.authenticated){
-          this.userProfileService.getUserProfile();
-        }
-        //console.warn('authenticated: ', isAuthenticated);
+        
       }
     );
 
     this.oidcSecurityService.userData$.subscribe(({ userData }) => {
       this.user = userData;
-      //console.warn('user: ', JSON.stringify(userData));
     });
 
     this.eventService
       .registerForEvents()
       .subscribe((result: OidcClientNotification<AuthStateResult>) => {
-        //console.warn('Event Received, ', JSON.stringify(result));
       });
 
     this.eventService
@@ -55,12 +53,21 @@ export class AuthService {
       )
       .subscribe((result) => {
         console.warn('Token Expired, ', JSON.stringify(result));
-        // if (result?.type === 4 && result?.value?.isAuthenticated === false)
-        //   this.logoffAndRevokeTokens();
       });
   }
 
+
+  
+  showLoader() {
+    this.loaderService.show();
+  }
+
+  hideLoader() {
+    this.loaderService.hide();
+  }
   /** Public methods **/
+ 
+
   get isAuthenticated() {
     return this.authenticated;
   }
@@ -69,8 +76,10 @@ export class AuthService {
     this.oidcSecurityService.authorize();
   }
 
-  logOut(): void {
-    this.oidcSecurityService.logoff();
+  logOut(): void {   
+    this.oidcSecurityService.logoff().subscribe((result) => {      
+    });
+
   }
 
   logoffAndRevokeTokens(): void {
@@ -89,7 +98,6 @@ export class AuthService {
 
   checkAuth() {
     this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {
-      //console.warn('CheckAuth(): ' + JSON.stringify(isAuthenticated));
     });
   }
 }

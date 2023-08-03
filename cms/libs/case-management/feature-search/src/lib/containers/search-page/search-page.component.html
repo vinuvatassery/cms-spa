@@ -1,4 +1,6 @@
-<div class="global-search header-search field-label-hide combotable_search_list" [ngClass]="{'mobileheader-searchshow': mobileHeaderSearchOpen}">
+<div *ngIf="(searchHeaderType$ | async) === 'Case_Search'"
+class="global-search header-search field-label-hide combotable_search_list" [ngClass]="{'mobile_header-search_show': mobileHeaderSearchOpen}"
+[formGroup]="searchForm">
   <span
     class="material-icons global-search-icon"
     aria-label="search"
@@ -12,11 +14,12 @@
     valueField="clientId"
     [loading] = "showHeaderSearchInputLoader"
     [fillMode]="formUiStyle.dropDownFillMode"
-    placeholder="Search client Name, Member ID, or SSN"
+    placeholder="Search Client Name, Member ID, or SSN"
     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
     [filterable]="true"
     (filterChange)="onSearchTextChange($event)"
-    (selectionChange)="onSelectChange($event)"> 
+    (selectionChange)="onSelectChange($event)"
+    formControlName="itemSelected"> 
     <button kendoButton fillMode="clear" icon="image"></button>   
 
     <kendo-combobox-column>
@@ -43,7 +46,43 @@
 </kendo-label>
 </div>
 
-<button kendoButton (click)="clickMobileHeaderSearchOpen()" title="Global Case search" class="header-mobilesearchbutton">  <span
+
+<div *ngIf="(searchHeaderType$ | async) === 'Vendor_Search'"
+ class="global-search header-search field-label-hide combotable_search_list" [ngClass]="{'mobile_header-search_show': mobileHeaderSearchOpen}">
+  <span
+    class="material-icons global-search-icon"
+    aria-label="search"
+    aria-hidden="true"
+    >search</span>
+    <span *ngIf="showHeaderSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+    <kendo-label text="Search Vendor">
+  <kendo-multicolumncombobox
+    [data]="vendorList"
+    textField="address"
+    valueField="id"
+    [loading] = "showHeaderSearchInputLoader"
+    [fillMode]="formUiStyle.dropDownFillMode"
+    placeholder="Search Vendor"
+    [popupSettings]="{popupClass: 'combotable_search_list vendor_head_search_list', animate: true }"
+    [filterable]="true"
+    (filterChange)="onSearchTextChange($event)"
+    (selectionChange)="onSelectChange($event)"> 
+    <button kendoButton fillMode="clear" icon="image"></button>   
+    <kendo-combobox-column>
+      <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
+        <span  >{{ dataItem.address }} {{ dataItem.city }} {{ dataItem.state }} {{ dataItem.zip }}</span>
+      </ng-template>
+    </kendo-combobox-column>
+     
+    <ng-template kendoMultiColumnComboBoxGroupTemplate let-groupName>
+       {{ groupName }} 
+    </ng-template>
+  </kendo-multicolumncombobox>
+</kendo-label>
+</div>
+
+
+<button kendoButton (click)="clickMobileHeaderSearchOpen()" title="Global Case search" class="header-mobile_search_button">  <span
   class="material-icons"
   aria-label="search"
   aria-hidden="true"

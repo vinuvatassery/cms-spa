@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 /** Enums **/
 import { CommunicationEvents } from '@cms/case-management/domain';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'case-management-send-letter',
@@ -19,9 +20,11 @@ import { CommunicationEvents } from '@cms/case-management/domain';
 export class SendLetterComponent implements OnInit {
   /** Input properties **/
   @Input() data!: any;
+  @Input() mailingAddress$!: Observable<any>;
 
   /** Output properties  **/
   @Output() closeSendLetterEvent = new EventEmitter<CommunicationEvents>();
+  @Output() loadInitialData = new EventEmitter();
 
   /** Public properties **/
   letterEditorValueEvent = new EventEmitter<boolean>();
@@ -44,7 +47,7 @@ export class SendLetterComponent implements OnInit {
       this.isNewLetterClicked = true;
     } else {
       this.isNewLetterClicked = false;
-    }
+    }    
   }
 
   /** Internal event methods **/
@@ -57,7 +60,7 @@ export class SendLetterComponent implements OnInit {
 
   onCloseSaveForLaterClicked() {
     this.isShowSaveForLaterPopupClicked = false;
-    this.onCloseNewLetterClicked();
+ 
   }
 
   onSaveForLaterClicked() {
@@ -70,7 +73,7 @@ export class SendLetterComponent implements OnInit {
     if (event === CommunicationEvents.Print) {
       this.closeSendLetterEvent.emit(CommunicationEvents.Print);
     } else if (event === CommunicationEvents.Close) {
-      this.closeSendLetterEvent.emit(CommunicationEvents.Close);
+      this.isShowSendLetterToPrintPopupClicked = false;
     }
   }
 
@@ -91,6 +94,9 @@ export class SendLetterComponent implements OnInit {
   onCloseNewLetterClicked() {
     this.closeSendLetterEvent.emit(CommunicationEvents.Close);
   }
+  onPreviewLetterClose(){
+    this.isShowPreviewLetterPopupClicked = false;
+  }
 
   /** External event methods **/
   handleLetterEditor(event: any) {
@@ -99,5 +105,6 @@ export class SendLetterComponent implements OnInit {
 
   handleOpenTemplateClicked() {
     this.isOpenLetterTemplate = true;
+    this.loadInitialData.emit();
   }
 }

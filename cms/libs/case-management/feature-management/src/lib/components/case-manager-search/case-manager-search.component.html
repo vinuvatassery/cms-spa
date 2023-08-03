@@ -3,7 +3,7 @@
 
 <section class="k-dialog-body">
     <p class="text-muted mb-2">
-      To select a Case Manager, start typing their name or PNumber.
+    {{ managementTab === true ? 'Search for and select a Case Manager to assign this client to.' : 'To select a Case Manager, start typing their name or PNumber.'}}
     </p>
     <div class="flex-row">
       <div class="flex-col">
@@ -62,7 +62,7 @@
         </button>
         <button kendoButton [primary]="true" aria-label="add or update case manager"
         [disabled]="btnDisabled">
-          {{ isEditSearchCaseManagerValue ? 'Update' : 'Add' }}
+          {{ isEditSearchCaseManagerValue ? 'Update' : managementTab? 'ASSIGN' : 'Add' }}
         </button>
       </div>
     </div>

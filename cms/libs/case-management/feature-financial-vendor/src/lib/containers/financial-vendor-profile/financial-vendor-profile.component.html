@@ -1,0 +1,127 @@
+<cms-vendor-profile-header
+[vendorProfile$]="vendorProfile$ | async"
+[vendorProfileSpecialHandling$]="vendorProfileSpecialHandling$"
+(loadSpecialHandlingEvent)="loadSpecialHandling()"></cms-vendor-profile-header>
+
+<section class="vendor-profile-tabs">
+  <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab">
+    <kendo-tabstrip-tab title="{{profileInfoTitle}}" [selected]="true">
+      <ng-template kendoTabContent>
+        <div class="block-section">
+          <div class="client-profile-outlet">
+            <cms-vendor-info></cms-vendor-info>
+          </div>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="Payment Addresses">
+      <ng-template kendoTabContent>
+        <div class="block-section">
+
+          <div class="client-profile-outlet">
+            <cms-payment-addresses [vendorId]="vendorId"></cms-payment-addresses>
+          </div>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
+
+    <kendo-tabstrip-tab title="Drugs" *ngIf="tabCode === financeManagementTabs.Manufacturers">
+
+      <ng-template kendoTabContent>
+        <div class="block-section">
+
+          <div class="client-profile-outlet">
+            <cms-financial-drugs></cms-financial-drugs>
+          </div>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
+
+    <kendo-tabstrip-tab title="Payments" *ngIf="tabCode === financeManagementTabs.InsuranceVendors">
+
+      <ng-template kendoTabContent>
+        <div class="block-section">
+
+          <div class="client-profile-outlet">
+            <cms-financial-payments *ngIf="vendorId" [vendorId]="vendorId"></cms-financial-payments>
+          </div>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
+
+    <kendo-tabstrip-tab title="Insurance Provider" *ngIf="tabCode === financeManagementTabs.InsuranceVendors">
+
+      <ng-template kendoTabContent>
+        <div class="block-section">
+
+          <div class="client-profile-outlet">
+            <cms-financial-insurance-provider-list  [vendorId]="vendorId"></cms-financial-insurance-provider-list>
+          </div>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
+
+    
+
+    <kendo-tabstrip-tab title="Claims" *ngIf="tabCode === financeManagementTabs.Pharmacy">
+
+      <ng-template kendoTabContent>
+        <div class="block-section">
+
+          <div class="client-profile-outlet">
+            <cms-financial-pharmacy-claims [vendorId]="vendorId"></cms-financial-pharmacy-claims>
+          </div>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
+
+    <kendo-tabstrip-tab title="Invoices" *ngIf="tabCode === financeManagementTabs.Manufacturers || tabCode === financeManagementTabs.MedicalProvider || tabCode === financeManagementTabs.DentalProvider">
+
+      <ng-template kendoTabContent>
+        <div class="block-section">
+
+          <div class="client-profile-outlet">
+            <cms-invoices [tabCode]="tabCode" [vendorId]="vendorId"></cms-invoices>
+          </div>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
+
+    <kendo-tabstrip-tab title="Clients" *ngIf="tabCode !== financeManagementTabs.Manufacturers">
+
+      <ng-template kendoTabContent>
+        <div class="block-section ">
+
+          <div class="client-profile-outlet">
+            <cms-clients [vendorTypeCode]="vendorTypeCode" [providerId]="vendorId"></cms-clients>
+          </div>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
+
+    <kendo-tabstrip-tab title="Contacts">
+      <ng-template kendoTabContent>
+        <div class="block-section">
+
+          <div class="client-profile-outlet">
+            <cms-contacts></cms-contacts>
+          </div>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
+  </kendo-tabstrip>
+
+</section>
+
+<div class="app-c-fab-container" kendoTooltip position="left">
+  <kendo-floatingactionbutton class="app-c-fab" title="Event Log" #myFab (click)="handleShowEventLogClicked()">
+    <ng-template kendoFloatingActionButtonTemplate>
+      <span class="material-icons" aria-label="event log assignment" aria-hidden="true">assignment</span>
+    </ng-template>
+  </kendo-floatingactionbutton>
+
+
+
+   <!-- Event Log Side Panel -->
+   <productivity-tools-event-log   *ngIf="isShownEventLog"  (closeAction)="handleShowEventLogClicked()"
+ ></productivity-tools-event-log>

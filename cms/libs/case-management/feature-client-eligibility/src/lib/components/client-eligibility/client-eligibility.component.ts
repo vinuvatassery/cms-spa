@@ -1,40 +1,46 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
-import { first, Observable, forkJoin, Subscription } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { first, forkJoin, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { YesNoFlag,WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionAnswer, ReviewQuestionCode, QuestionTypeCode } from '@cms/case-management/domain';
+import { YesNoFlag,WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionCode, QuestionTypeCode,EligibilityRequestType, ClientNoteTypeCode, SmokingCessationFacade } from '@cms/case-management/domain';
 import { ActivatedRoute } from '@angular/router';
 import {
   LoaderService,
   LoggingService,
   NotificationSnackbarService,
-  SnackBarNotificationType
+  SnackBarNotificationType,
+  DocumentFacade
 } from '@cms/shared/util-core';
 import { FormGroup, FormBuilder } from '@angular/forms';
+
 @Component({
   selector: 'case-management-client-eligibility',
   templateUrl: './client-eligibility.component.html',
   styleUrls: ['./client-eligibility.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ClientEligibilityComponent implements OnInit {
+export class ClientEligibilityComponent implements OnInit,OnDestroy {
   @Input() eligibilityForm: FormGroup;
   @Input() formSubmited!: boolean;
   @Input() questions: any = [];
   @Input() isSaveAndContinueAcceptance!: boolean;
+  @Input() cerNote! : string
 
   @Output() getQuestionsResponse = new EventEmitter<any>();
+  @Output() cerNoteResponse = new EventEmitter<any>();
   @Output() changeApplicationAcceptedStatus = new EventEmitter<any>();
   @Output() changeIsSaveAndContinueAcceptance = new EventEmitter<any>();
 
 
   private reviewQuestionAnswerSubscription!: Subscription;
   private reviewQuestionResponseSubscription!: Subscription;
+  private discardChangesSubscription !: Subscription;
 
   /** Public properties **/
   isShowException = false;
   isOpenAcceptance = false;
   isOpenDeny = false;
+  isOpenDisenroll = false;
   isDenialLetter = false;
   isEdit = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -52,7 +58,11 @@ export class ClientEligibilityComponent implements OnInit {
   reviewQuestionCode = ReviewQuestionCode;
   acceptedApplicationStatus = true;
   btnDisabled = false;
-
+  prevClientCaseEligibilityId: any;
+  isCerForm = false;
+  acceptanceModalTitle: string = 'Application Accepted';
+  isreviewQuestionAnswersFacadeSubscribed = false;
+ 
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -65,23 +75,38 @@ export class ClientEligibilityComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loggingService: LoggingService,
-    private readonly reviewQuestionAnswerFacade: ReviewQuestionAnswerFacade
+    private readonly reviewQuestionAnswerFacade: ReviewQuestionAnswerFacade,
+    private readonly smokingCessationFacade : SmokingCessationFacade ,   
+    public readonly documentFacade: DocumentFacade
 
   ) {
     this.eligibilityForm = this.formBuilder.group({});
   }
 
   ngOnInit(): void {
-    this.loadSessionData();
-    this.reviewQuestionAnswerFacade.getReviewQuestionAnswerByQuestionTypeCode(QuestionTypeCode.reviewChecklist);
 
+    this.addDiscardChangesSubscription();
+    this.loadSessionData();  
+   
   }
   ngOnDestroy(): void {
-    this.reviewQuestionAnswerSubscription.unsubscribe();
-    this.reviewQuestionResponseSubscription.unsubscribe();
+    this.reviewQuestionAnswerSubscription?.unsubscribe();
+    this.reviewQuestionResponseSubscription?.unsubscribe();
+
+
+  }
+ 
+  private addDiscardChangesSubscription(): void {
+    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
+      if (response) {
+        this.cerNote = ""
+        this.loadSessionData();  
+      }
+    });
   }
 
   loadReviewQuestionAnswers() {
+    this.isreviewQuestionAnswersFacadeSubscribed = true;
     this.reviewQuestionAnswerSubscription = this.reviewQuestionAnswerFacade.reviewQuestionAnswers$
       .subscribe((data: any) => {
         this.reviewQuestionAnswers = data;
@@ -127,6 +152,17 @@ export class ClientEligibilityComponent implements OnInit {
     this.getQuestionsResponse.emit(this.questions);
   }
 
+  cerNotesChanged()
+  {
+    const clientNote: any = {
+      clientCaseEligibilityId: this.clientCaseEligibilityId,
+      clientId: this.clientId,
+      note: this.cerNote,
+      NoteTypeCode:ClientNoteTypeCode.cerEligibility
+    };  
+    this.cerNoteResponse.emit(clientNote);
+  }
+
   getQuestionDocuments(questionCode: string) {
     let entityTypeCode = '';
     switch (questionCode) {
@@ -165,28 +201,48 @@ export class ClientEligibilityComponent implements OnInit {
           this.clientCaseEligibilityId = sessionData.clientCaseEligibilityId;
           this.clientId = sessionData.clientId;
           this.eligibilityForm.controls['clientCaseEligibilityId'].setValue(this.clientCaseEligibilityId);
+          this.prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;
+          if (this.prevClientCaseEligibilityId) {
+            this.isCerForm = true;
+            this.acceptanceModalTitle= this.isCerForm ? "Client Eligible" : "Application Accepted";
+          }
+
+          if(this.isCerForm)
+          {
+            this.reviewQuestionAnswerFacade.getReviewQuestionAnswerByQuestionTypeCode(QuestionTypeCode.cerReviewChecklist);
+          }
+          else
+          {
+            this.reviewQuestionAnswerFacade.getReviewQuestionAnswerByQuestionTypeCode(QuestionTypeCode.reviewChecklist);
+          }
           this.loadDocumentsAndEligibility();
+          this.prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;     
+          if(this.prevClientCaseEligibilityId) {
+            this.isCerForm =  true;
+          }
         }
       });
   }
   loadDocumentsAndEligibility() {
     let documents = this.clientDocumentFacade.getClientDocumentsByClientCaseEligibilityId(this.clientCaseEligibilityId);
-    let eligibility = this.clientEligibilityFacade.getEligibility(this.clientCaseEligibilityId, this.clientId);
+    let eligibility = this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.applicationEligibility);
     this.loaderService.show();
-    forkJoin([documents, eligibility]).subscribe(
-      (results: any) => {
+    forkJoin([documents, eligibility]).subscribe({
+      next: (results: any) => {
         if (results.length === 0) return;
         this.documents = results[0];
         this.eligibility = results[1];
         this.cdr.detectChanges();
         this.loaderService.hide();
-        this.loadReviewQuestionAnswers();
+        if(!this.isreviewQuestionAnswersFacadeSubscribed){
+          this.loadReviewQuestionAnswers();
+        }
       }
-      , (error) => {
+      , error: (error) => {
         this.showSnackBar(SnackBarNotificationType.ERROR, error);
         this.loaderService.hide();
       }
-    );
+  });
 
   }
   getSavedQuestionsResponse() {
@@ -244,9 +300,35 @@ export class ClientEligibilityComponent implements OnInit {
     this.isOpenDeny = false;
   }
 
-  isOpenDenyClicked() {
-    this.isOpenDeny = true;
+  isOpenDenyClicked() {    
+    if(this.isCerForm)
+    {
+    this.isOpenDisenroll = true;
+    }
+    else
+    {
+      this.isOpenDeny = true;
+    }
   }
+
+  isCloseDisenrollClicked() {    
+    this.isOpenDisenroll = false;   
+  }
+
+  handleClosAfterDisEnroll(event: any) {        
+    if (event.cancel === true) {
+      this.isOpenDisenroll = false;   
+    }
+    else {     
+
+      if(this.clientCaseId && this.clientCaseEligibilityId &&  event?.disenrollReasonCode)
+      {
+      this.isOpenDisenroll = false;   
+      this.clientEligibilityFacade.disEnrollCerApplication(this.clientCaseId , this.clientCaseEligibilityId, event?.disenrollReasonCode)     
+      }
+    }
+  }
+
   handleClosAfterDeny(event: boolean) {
     if (event) {
       this.isOpenDeny = false;
@@ -284,4 +366,5 @@ export class ClientEligibilityComponent implements OnInit {
     }
     return false;
   }
+  
 }

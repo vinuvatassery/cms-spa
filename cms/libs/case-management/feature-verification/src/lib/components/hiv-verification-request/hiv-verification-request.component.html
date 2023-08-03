@@ -1,98 +1,150 @@
-<section>
-  <div  *ngIf="!isSendRequest">
-    <div class="flex-row " [ngClass]="{'sendrequest-fieldwithbtn' : data === 'Request from Healthcare Provider via email'} ">
-     <div class="flex-col flex-col-6"   *ngIf="data === 'Request from Healthcare Provider via email'">
-
-   
-      <kendo-floatinglabel  text="Healthcare Provider’s Email Address">
-      <kendo-textbox aria-label="healthcare providers email address"  placeholder="Healthcare Provider’s Email Address"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-        <!-- <input kendoTextBox aria-label="healthcare providers email address" /> -->
-      </kendo-floatinglabel>
-    </div>
-      <div *ngIf="data !== 'Upload an attachment'" class="mt-2 flex-col flex-col-5">
-        <button
-          kendoButton
-          [primary]="true"
-          class="overlap_right_btn"
-          (click)="onSendRequestClicked()"
-          *ngIf="!isSendRequest"
-          aria-label="send request"
-        >
+<section [formGroup]="hivVerificationForm">
+  <div *ngIf="!isSendRequest">
+    <div class="flex-row "
+      [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'HEALTHCARE_PROVIDER'} ">
+      <div class="flex-col flex-col-6" *ngIf="isEmailFieldVisible">
+        <kendo-floatinglabel text="Healthcare Provider’s Email Address">
+          <kendo-textbox aria-label="healthcare providers email address"
+            placeholder="Healthcare Provider’s Email Address" [fillMode]="formUiStyle.inputFillMode"
+            formControlName="providerEmailAddress">
+          </kendo-textbox>
+        </kendo-floatinglabel>
+        <kendo-formerror
+          *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid && hivVerificationForm.controls['providerEmailAddress'].value !== ''">Enter
+          valid Email Address.</kendo-formerror>
+        <kendo-formerror
+          *ngIf="!hivVerificationForm.controls['providerEmailAddress'].valid && hivVerificationForm.controls['providerEmailAddress'].value === ''">Healthcare
+          Provider Email Address is required.</kendo-formerror>
+      </div>
+      <div *ngIf="providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER'"
+        class="mt-2 flex-col flex-col-5">
+        <button kendoButton [primary]="true" class="overlap_right_btn" (click)="onSendRequestClicked()"
+          *ngIf="!isSendRequest" aria-label="send request">
           Send request
         </button>
       </div>
     </div>
     <div class="flex-row ">
-      <div class="flex-col flex-col-8"> 
-      <kendo-formhint *ngIf="data === 'Request from Case Manager'"
-        >Their Case Manager will receive a notification to provide HIV
-        Verification. Once they submit the form, you will receive a notification
-        to approve or deny it.</kendo-formhint>
-      <kendo-formhint
-        *ngIf="data === 'Request from Healthcare Provider via email'"
-        >Their provider will receive an email to fill and sign an HIV
-        Verification form. Once they submit the form, you will receive a
-        notification to approve or deny it.</kendo-formhint>
+      <div class="flex-col flex-col-8">
+        <kendo-formhint *ngIf="providerOption === 'CASE_MANAGER'">Their Case Manager will receive a notification to
+          provide HIV
+          Verification. Once they submit the form, you will receive a notification
+          to approve or deny it.</kendo-formhint>
+        <kendo-formhint *ngIf="isEmailFieldVisible">Their provider will receive an email to fill and sign an HIV
+          Verification form.
+          Once they submit the form, you will receive a notification to approve or deny it.</kendo-formhint>
+      </div>
     </div>
-    </div>
-    <div class="flex-row" *ngIf="data === 'Upload an attachment'">
-      <div class="flex-col flex-col-6">  
-      <kendo-upload   #Uploadanattachment   id="Uploadanattachment" aria-label="upload proof" name="upload proof"
-      [restrictions]="uploadFileRestrictions.fileRestrictions"   [multiple]="false" [autoUpload]="false"  
-     [removeUrl]="uploadRemoveUrl"> 
-        <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
-          <span >
-            <span>{{ files[0].name }} </span> 
-            <br>
-            <span>{{   files[0].size | fileSize }}</span> 
+    <div class="flex-row ml-4" *ngIf="providerOption === 'UPLOAD_ATTACHMENT'">
+      <div class="flex-col" *ngIf="showAttachmentOptions && showHideAttachment">
+        <div class="component-list-h">
+          <span class="app-checkboxwidtext-wrapper">
+            <input type="radio" kendoRadioButton (change)="attachmentRadioChanged($event)"
+              aria-labelledby="upoadattachment" formControlName="attachmentType" value="Attach From Computer"  />
+
+            <kendo-label class="k-radio-label" for="upoadattachment" text="Attach From Computer"></kendo-label>
+
           </span>
-        </ng-template>
-      </kendo-upload>
-      <kendo-formhint>Max file size 25MB</kendo-formhint>
+          <span class="app-checkboxwidtext-wrapper">
+            <input type="radio" kendoRadioButton  (change)="attachmentRadioChanged($event)"
+              aria-labelledby="upoadattachment" formControlName="attachmentType" value="Attach From Client Attachments" />
+
+            <kendo-label class="k-radio-label" for="upoadattachment"
+              text="Attach From Client Attachments"></kendo-label>
+              <kendo-formerror *ngIf="!hivVerificationForm.controls['attachmentType'].valid">A response is required.
+              </kendo-formerror>
+          </span>
+        </div>
+      </div>
+     
+      <div *ngIf="hivVerificationForm.controls['attachmentType'].value == 'Attach From Computer'" class="flex-col flex-col-6 ml-1  mt-2">
+        <kendo-fileselect
+            aria-label="proof of home address"
+            [multiple]="false"
+            [restrictions]="fileUploadRestrictions"
+            (select)="handleFileSelected($event)"
+            (remove)="handleFileRemoved($event)"
+            formControlName="computerAttachment"
+            id="verificationAttachmentUploaded"
+            #verificationAttachmentUploaded>
+            <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+              <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
+              <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>
+                <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
+                  <a>{{ files[0].name }} </a>
+                </button>
+                <br>
+                <span>{{   files[0].size  | fileSize  }}</span>
+              </span>
+            </ng-template>
+          </kendo-fileselect>
+          <kendo-formhint>Max file size 25 MB</kendo-formhint>
+          <kendo-formerror *ngIf="!hivVerificationForm.controls['computerAttachment'].valid"> HIV Verification form is required
+          </kendo-formerror>
+          <kendo-formerror *ngIf="showHivVerificationAttachmentSizeValidation">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
+      </div>
+      <!-- Select file form client attachment -->
+      <div *ngIf="hivVerificationForm.controls['attachmentType'].value == 'Attach From Client Attachments' || !showAttachmentOptions" class="flex-col flex-col-8 mt-2 ml-1">
+        <common-clients-attachment *ngIf="showAttachmentOptions"
+        [clientAttachmentForm]="hivVerificationForm"
+        [clientDocumentList$]="clientHivDocumentsList$"
+        (clientAttachmentChangeEvent)="clientAttachmentChange($event)"
+        ></common-clients-attachment>
+      <div *ngIf="!showAttachmentOptions && showHideAttachment" class="attachment-from-client-lists-wrapper mt-2">
+
+        <div class="attachment-from-client-lists-container">
+
+          <div class="attachment-from-client-lists">
+            <span class="material-icons">
+              file_present
+            </span>
+            <div>
+              <span>{{uploadedAttachment[0]?.name}}</span>
+            </div>
+            <kendo-dropdownbutton [data]="data" icon="more-vertical" title="More option" look="bare"
+              aria-label="more actions" class="small-i-btn app-dropdown-action hide_more-text"
+              [popupSettings]="{ popupClass: popupClass1,  animate: true }">
+              <span hidden> More Option</span>
+              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+                <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+                  aria-hidden="false" (click)="dataItem.click">
+                  <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                  <label> {{ dataItem.text }} </label>
+                </button>
+              </ng-template>
+            </kendo-dropdownbutton>
+          </div>
+          <p *ngIf="uploadedDate">Uploaded by
+            <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
+            [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh aria-label="user profile">
+            {{uploadedBy}}
+          </button>
+          on {{uploadedDate | date:'MM/dd/yyyy'}}</p>
+        </div>
+      </div>
     </div>
     </div>
   </div>
 </section>
 
 <!-- Show this after send a request -->
-
 <section>
   <div *ngIf="isSendRequest || isResendRequest">
     <div class="flex-row mt-3 align-items-center">
       <div class="flex-col">
         <span class="app-c-badge badge-primary">
-          <span
-            class="material-icons"
-            aria-label="information"
-            aria-hidden="true"
-            #refresh
-            >info_outline</span
-          >
-          <span
-            >You will receive a notification once the provider submits the HIV
-            Verification</span
-          >
+          <span class="material-icons" aria-label="information" aria-hidden="true" #refresh>info_outline</span>
+          <span>You will receive a notification once the provider submits the HIV Verification</span>
         </span>
       </div>
       <div class="flex-col mt-1">
-        Sent 10-10-2021
-        <button
-          kendoButton
-          class="k-primary-link text-t-normal text-underline"
-          kendoPopoverAnchor
-          [popover]="onUserProfileDetailsHovered"
-          showOn="hover"
-          #refresh
-          aria-label="user profile"
-        >
-          Sara John
+        Sent {{sentDate | date:'MM-dd-yyyy'}}
+        <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
+          [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh aria-label="user profile">
+          {{hivVerificationForm.controls["requestedUserName"].value}}
         </button>
-        <button
-          kendoButton
-          class="k-primary-link text-t-normal ml-2 text-underline"
-          (click)="onResendRequestClicked()"
-          aria-label="re send request"
-        >
+        <button kendoButton class="k-primary-link text-t-normal ml-2 text-underline" (click)="onResendRequestClicked()"
+          aria-label="re send request">
           Re-send Request
         </button>
       </div>
@@ -104,6 +156,6 @@
 
 <kendo-popover #onUserProfileDetailsHovered width="330">
   <ng-template kendoPopoverBodyTemplate>
-    <common-user-profile-card></common-user-profile-card>
+    <common-user-profile-card [userId]="userId"></common-user-profile-card>
   </ng-template>
 </kendo-popover>

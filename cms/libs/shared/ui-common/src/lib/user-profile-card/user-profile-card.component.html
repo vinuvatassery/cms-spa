@@ -1,39 +1,129 @@
- 
+
+
+<!-- Loader content -->
+
+  <div *ngIf="(userById$ | async) === null">
+  <div class="app-popover-header use-profile-card-wrapper">
+    <div>    
+      <kendo-skeleton shape="circle" animation="pulse" [width]="40" [height]="40"></kendo-skeleton>
+    </div>  
+    <div style="width:100%">   
+      <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+      <p></p>
+      <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton> 
+    </div>
+  </div>
+  <div class="app-popover-body"  >
+    <h5 class="app-card-heading">Contact</h5>
+    <p class="app-card-details">
+      <span class="material-icons" aria-label="email" aria-hidden="true">email</span>
+      <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+    </p>
+    <p class="app-card-details">
+      <span class="material-icons" aria-label="phone" aria-hidden="true">phone</span>
+      <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+    </p>
+    <p class="app-card-details">
+      <span class="material-icons" aria-label="fax" aria-hidden="true">print</span>
+      <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+    </p>
+    <div class="app-card-details align-items-fstart">
+      <span class="material-icons" aria-label="address" aria-hidden="true">location_pin</span>
+      <div style="width:100%">
+        <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton> 
+        <kendo-skeleton shape="text" animation="pulse" width="100%"></kendo-skeleton>
+       
+      </div>
+
+    </div>
+    
+  </div>
+</div>
+
+<!-- data content -->
+<div>
 <div class="app-popover-header use-profile-card-wrapper">
- 
-  <div class="app-c-avatar avatar-lg">
-    <!-- <img src="../assets/images/avatar-1.png" alt="Profile Avatar" class="profile-avatar" hidden> -->
-    <span class="profile-text-avatar">AK</span>
-  </div>
-  <div>
-    <h5>Sara John <span class="text-muted">P567456</span></h5>
-    <p>Human Service Department HOCL(EHOCL)</p>
-  </div>
+    
+      <div  [hidden]="imageLoaderVisible" [ngClass]="imageLoaderVisible === false ? 'app-c-avatar avatar-lg' : '' ">    
+          <img [hidden]="imageLoaderVisible" [src]="userImage$ | async" alt="case manager image" class="profile-pic" (load)="onLoad()"/> 
+      </div> 
+      <div *ngIf="imageLoaderVisible">    
+        <div mat-card-avatar class="app-c-avatar avatar-lg" *ngIf="userById$ | async as userById;">
+          <span class="profile-text-avatar" >
+          {{userById.firstName.charAt(0)}}{{userById?.lastName?.charAt(0)}} 
+          </span>
+        </div>
+      </div>  
+      <div *ngIf="userById$ | async as userById;">   
+        <h5>{{userById?.fullName}}  <span class="text-muted" *ngIf="userById?.pOrNbr">({{userById?.pOrNbr}})</span></h5>
+        <p></p>
+        {{userById?.domainCode}} <span class="text-muted"></span>
+        <p></p>
+      {{userById?.assistorGroupCode}} <span class="text-muted"></span>
+        <p></p>
+        {{userById?.jobTitle}} <span class="text-muted"></span>
+      </div>
+    </div>
+    <div class="app-popover-body" *ngIf="userById$ | async as userById;">    
+      <h5 class="app-card-heading">Contact</h5>
+      <p class="app-card-details">
+        <span class="material-icons" aria-label="email" aria-hidden="true"
+          >email</span
+        >
+        <a href="mailto:aj.com"> {{userById?.email}}</a>
+      </p>
+      <p class="app-card-details">
+        <span class="material-icons" aria-label="phone" aria-hidden="true"
+          >phone</span
+        >
+        {{userById?.phoneNbr}}
+      </p>
+      <p class="app-card-details">
+        <span class="material-icons" aria-label="fax" aria-hidden="true"
+          >print</span
+        >
+        {{userById?.faxNbr}}
+      </p>
+      <div class="app-card-details align-items-fstart">
+        <span class="material-icons" aria-label="address" aria-hidden="true">location_pin</span >
+        <div> 
+          <p>  {{userById?.address1}} </p>
+
+          <p> {{userById?.address2}} </p>
+          <p> {{userById?.city}}  {{userById?.state}}  {{userById?.zip}} </p>
+        </div> 
+
+      </div>    
+    <div class="app-card-bottom-buttons" *ngIf="sendEmail"> 
+        <a href="mailto:userById?.emailAddress">      <button  kendoButton [primary]="true" look="flat" aria-label="RE-ASSIGN CASE"> Send Email    </button></a>
+    </div>
+    <div class="app-card-bottom-buttons" *ngIf="reassign"> 
+      <button  kendoButton [primary]="true" look="flat" aria-label="RE-ASSIGN CASE" (click)="openBusinessPopup()">
+        Re-assign
+      </button>
+    </div>
+    </div>
 </div>
-<div class="app-popover-body">
-  <h5 class="app-card-heading">Contact</h5>
-  <p class="app-card-details">
-    <span class="material-icons" aria-label="email" aria-hidden="true"
-      >email</span
-    >
-    <a href="mailto:aj.com">exampleemail@gmail.com</a>
-  </p>
-  <p class="app-card-details">
-    <span class="material-icons" aria-label="phone" aria-hidden="true"
-      >phone</span
-    >
-    (999)-920-2255
-  </p>
-  <p class="app-card-details">
-    <span class="material-icons" aria-label="fax" aria-hidden="true"
-      >print</span
-    >
-    (999)-920-2266
-  </p>
-  <p class="app-card-details">
-    <span class="material-icons" aria-label="address" aria-hidden="true"
-      >location_pin</span
-    >
-    455 LARKSPUR DR APT 23 BAVIERA CA 92908‑4601
-  </p>
-</div>
+
+<kendo-dialog *ngIf="businessLogicPopupOpen" (close)="businessLogicPopupClose()" class="app-c-modal app-c-modal-sm app-c-modal-np"
+  title="Re-assign Case">
+
+  <section class="k-dialog-body mb-2">
+    <p>
+      This feature is part of future scope of work for the ORCares project.
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" look="flat" aria-label="Cancel" look="outline"
+          (click)="businessLogicPopupClose()">
+          Cancel
+        </button> 
+        <button  kendoButton [primary]="true" look="flat" aria-label="Re-assign" (click)="businessLogicPopupClose()">
+          Re-assign
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+  </kendo-dialog>

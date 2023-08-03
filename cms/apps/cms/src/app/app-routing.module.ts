@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AutoLoginAllRoutesGuard } from '@cms/shared/util-oidc';
+import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 
 const routes: Routes = [
   {
@@ -17,14 +18,20 @@ const routes: Routes = [
       import('@cms/case-management/feature-home').then(
         (m) => m.CaseManagementFeatureHomeModule
       ),
+      data: {
+        title: 'Clients',
+      },
     canLoad: [AutoLoginAllRoutesGuard],
   },
   {
     path: 'financial-management',
     loadChildren: () =>
-      import('@cms/financial-management/feature-home').then(
-        (m) => m.FinancialManagementFeatureHomeModule
+      import('@cms/case-management/feature-financial-management').then(
+        (m) => m.CaseManagementFeatureFinancialManagementModule
       ),
+      data: {
+        title: 'Financial Management',
+      },
     canLoad: [AutoLoginAllRoutesGuard],
   },
   {
@@ -51,6 +58,10 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureSearchModule
       ),
     canLoad: [AutoLoginAllRoutesGuard],
+  },
+  {   
+   
+    path: 'forbidden' , component : ForbiddenComponent 
   },
   { path: '', redirectTo: 'case-management', pathMatch: 'full' },
 ];

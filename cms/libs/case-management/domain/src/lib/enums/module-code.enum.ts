@@ -1,0 +1,7 @@
+export enum ModuleCode {
+    CLIENTS = 'CLIENTS',
+    MY_CLIENTS = 'MY_CLIENTS',
+    RECENT_CLIENTS = 'RECENT_CLIENTS',
+    ALL_CLIENTS = 'ALL_CLIENTS',
+    CER_TRACKER = 'CER_TRACKER'
+}

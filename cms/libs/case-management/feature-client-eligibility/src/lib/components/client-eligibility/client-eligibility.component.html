@@ -1,30 +1,36 @@
 <section class="app-l-mainTittle case-reviewsection" kendoTooltip [formGroup]="eligibilityForm">
-  <h2>Application Review - {{eligibility?.firstName}} {{eligibility?.lastName}}</h2>
-  <p class="mt-1 mb-3">
+  <h2>{{isCerForm === true ? 'Review Eligibility' : 'Application Review'}} - {{eligibility?.firstName}} {{eligibility?.lastName}}</h2>
+  <p class="mt-1 mb-3" *ngIf="isCerForm">
+    Please indicate whether the client has met the eligibility criteria below.
+    If eligible, specify Status, Group, Eligibility Period, and initiate the
+    approval notice. If declined, specify Status and initiate the ineligible notice
+  </p>
+  <p class="mt-1 mb-3" *ngIf="!isCerForm">
     Please indicate whether the applicant meets the eligibility criteria below.
     If approved, specify Status, Group, Eligibility Period, and initiate the
     approval notice. If rejected, specify Status and initiate the rejection
     notice.
   </p>
+  <h3 hidden>Review</h3>
   <div class="app-c-card app-c-card--border-box mb-2" *ngFor="let question of questions; let i = index">
     <div class="flex-row">
-      <div class="flex-col flex-col-8">
+      <div class="flex-col flex-col-8" >
         <h4 class="mb-1 mt-0">{{question.questionDesc}}</h4>
         <span class="card-buttons-wrap mb-1" *ngIf="question.questionCode===reviewQuestionCode.income">
-          <span class="pr-3"><span class="text-bold">Family Size:</span> {{eligibility?.familySize}}</span>
+          <span class="pr-3"><span class="text-bold">Household Size:</span> {{eligibility?.familySize}}</span>
           <span class="pr-3"><span class="text-bold">Monthly Income:</span> ${{eligibility?.totalIncome}}</span>
           <span class="pr-3"><span class="text-bold">FPL:</span> {{eligibility?.fpl}}%</span>
         </span>
         <span class="card-buttons-wrap" *ngFor="let doc of getQuestionDocuments(question.questionCode);">
           <button kendoButton look="flat" aria-label="download file" class="k-icon-button" title="Download"
-            (click)="clientDocumentFacade.viewOrDownloadFile('download',doc.clientDocumentId,doc.documentName)">
+            (click)="documentFacade.viewOrDownloadFile(false,doc.clientDocumentId,doc.documentName)">
             <span class="material-icons" aria-label="download file" aria-hidden="true">file_download</span>
           </button>
           <button kendoButton look="flat" aria-label="open in new tab" class="k-icon-button" title="Open in new tab"
-            (click)="clientDocumentFacade.viewOrDownloadFile('view',doc.clientDocumentId,doc.documentName)">
+            (click)="documentFacade.viewOrDownloadFile(true,doc.clientDocumentId,doc.documentName)">
             <span class="material-icons" aria-label="open in new tab" aria-hidden="true">open_in_new</span>
           </button>
-          <a class="text-bold text-underline" aria-label="open in new tab" (click)="clientDocumentFacade.viewOrDownloadFile('download',doc.clientDocumentId,doc.documentName)">{{doc.documentName}}</a>
+          <a class="text-bold text-underline" aria-label="open in new tab" (click)="documentFacade.viewOrDownloadFile(false,doc.clientDocumentId,doc.documentName)">{{doc.documentName}}</a>
           <span class="text-muted">({{doc.documentSize | fileSize}})</span>
         </span>
         <span *ngIf="question.questionCode==reviewQuestionCode.origonResident && checkQuestionDocuments(question.questionCode)==false">
@@ -77,10 +83,26 @@
       </div>
     </div>
   </div>
+  <div class="app-c-card app-c-card--border-box mb-2" *ngIf="isCerForm">
+    <div class="flex-row">
+      <div class="flex-col flex-col-8" >        
+            <h4 class="mb-0 mt-0">Leave a note to appear on the next CER</h4>        
+          <kendo-floatinglabel text="Note">
+            <kendo-textarea [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="cerNote" [ngModelOptions]="{standalone: true}"
+            (blur)="cerNotesChanged()" [maxlength]="7500"
+              aria-label="note description" name="Note"
+              [rows]="5" [cols]="40" (blur)="notesChanged()">
+            </kendo-textarea>
+            <kendo-formhint class="justify-content-end">{{cerNote?.length}}/7500</kendo-formhint>
+          </kendo-floatinglabel>        
+        </div>
+      </div>
+  </div>
   <div class="app-c-card app-c-card--border-box top-lg-space">
     <div class="flex-row">
       <div class="flex-col flex-col-8 align-items-center">
-        <h4 class="mb-0 mt-0">Is the application accepted?</h4>
+        <h4 class="mb-0 mt-0" *ngIf="!isCerForm">Is the application accepted?</h4>
+        <h4 class="mb-0 mt-0" *ngIf="isCerForm">Is the client eligible?</h4>
       </div>
       <div class="flex-col flex-col-4 text-right">
         <button [disabled]="acceptedApplicationStatus" kendoButton aria-label="application accepted yes" [primary]="true" (click)="isOpenAcceptanceClicked()">
@@ -98,9 +120,10 @@
 <!-- Application Acceptance Modal Html-->
 <kendo-dialog *ngIf="isOpenAcceptance || isSaveAndContinueAcceptance" (close)="onCloseAcceptanceClicked()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
-  <kendo-dialog-titlebar> Application Accepted </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar> {{acceptanceModalTitle}} </kendo-dialog-titlebar>
   <case-management-accept-application (isCloseModalEvent)="onCloseAcceptanceClicked()" [isEdit]="isEdit"
-    [clientCaseId]="clientCaseId"
+    [clientId]="clientId"
+    [clientCaseId]="clientCaseId" [isCerForm]="isCerForm"
     [clientCaseEligibilityId]="clientCaseEligibilityId"></case-management-accept-application>
 </kendo-dialog>
 
@@ -108,7 +131,7 @@
 <kendo-dialog *ngIf="isOpenDeny" (close)="isCloseDenyClicked()" class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar> Deny application? </kendo-dialog-titlebar>
   <case-management-reject-application (isCloseDenyModal)="handleClosAfterDeny($event)"
-    [clientCaseId]="clientCaseId"></case-management-reject-application>
+    [clientCaseId]="clientCaseId" [clientCaseEligibilityId]="clientCaseEligibilityId"></case-management-reject-application>
 </kendo-dialog>
 
 
@@ -133,3 +156,10 @@
       </div>
     </div>
   </kendo-dialog-actions>
+</kendo-dialog>
+
+  <!-- Application Disenroll Modal Html-->
+<kendo-dialog *ngIf="isOpenDisenroll" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar (close)="isCloseDisenrollClicked()" > Disenroll client? </kendo-dialog-titlebar>
+  <case-management-disenroll-client (isCloseDisenrollModal)="handleClosAfterDisEnroll($event)"></case-management-disenroll-client>
+</kendo-dialog>

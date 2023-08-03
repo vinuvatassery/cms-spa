@@ -10,9 +10,7 @@
             style="position: absolute; right: 5px; top: 5px;cursor: pointer;"></span>
           <kendo-grid-columnmenu-sort [service]="service">
           </kendo-grid-columnmenu-sort>
-          <kendo-grid-columnmenu-chooser [service]="service"> </kendo-grid-columnmenu-chooser>
-          <kendo-grid-columnmenu-lock [service]="service">
-          </kendo-grid-columnmenu-lock>
+          <kendo-grid-columnmenu-chooser [service]="service"> </kendo-grid-columnmenu-chooser>        
         </ng-template>
         <!-- Column started -->
         <kendo-grid-column field="employerName" title="Name of Employer">
@@ -22,17 +20,46 @@
             {{dataItem.dateOfHire | date: 'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
-         <!-- grid more ation column template -->
-        <kendo-grid-column field="Option" title="Options" [width]="75" class="text-center" [filterable]="filterable" [columnMenu]="filterable" [sortable]="filterable">
+        <kendo-grid-column *ngIf="isClientProfileTab" field="effectiveDate" title="Effective Date">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <kendo-dropdownbutton [data]="actions" icon="more-vertical"    title="More Options" class="TableActionPopup app-dropdown-action"
+            {{dataItem.dateOfHire | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By"  [columnMenu]="false" [width]="80" [sortable]="false">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoButton
+              [primary]="true"
+              class="avatar-sm-btn c-default"
+              kendoPopoverAnchor
+              [popover]="onUserProfileDetailsHovered"
+              showOn="hover"
+              aria-label="profile avathar"
+            >
+            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
+            </button>
+            <kendo-popover
+              #onUserProfileDetailsHovered
+              width="330"
+              position="left"
+            >
+              <ng-template kendoPopoverBodyTemplate>
+                <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
+              </ng-template>
+            </kendo-popover>
+          </ng-template>
+        </kendo-grid-column>
+         <!-- grid more ation column template -->
+        <kendo-grid-column *ngIf="!isClientProfileTab" field="Option" title="Options" [width]="75" class="text-center" [filterable]="filterable" [columnMenu]="filterable" [sortable]="filterable">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <kendo-dropdownbutton [data]="actions" icon="more-vertical"    title="More Options" class="TableActionPopup app-dropdown-action more_action_wid"
               aria-label="more actions" buttonClass="k-icon-button"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-
+              <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                   [class]="buttondataItem.buttonType" aria-hidden="false"
-                  (click)="onEmployerActionClicked(dataItem,buttondataItem.type)">
+                  (click)="onEmployerActionClicked(dataItem,buttondataItem.type)" [disabled]="(isReadOnly$ | async) ? true : false">
                   <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                   <label> {{ buttondataItem.text }} </label>
                 </button>
@@ -60,18 +87,24 @@
             </div>
           </div>
         </ng-template>
-        <!-- grid loader template -->
-        <ng-template kendoGridLoadingTemplate>
-          <common-grid-loader-component></common-grid-loader-component>
-        </ng-template>
+       <!-- grid Loader Template -->  
+       <ng-template kendoGridLoadingTemplate>
+        <common-grid-loader-component></common-grid-loader-component>
+       </ng-template>
+       <!-- grid No data Template -->  
+       <ng-template kendoGridNoRecordsTemplate>
+         <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+         </div>
+         <p>There is no data to display.</p>
+       </ng-template> 
       </kendo-grid>
     </div>
-
+    <kendo-formerror *ngIf="!isEmployerAvailable"> A Response is required.</kendo-formerror>
     <!-- add employer button -->
     <div class="flex-row">
       <div class="flex-col mt-1">
-        <button *ngIf="isAddEmployerButtonDisplayed" kendoButton [primary]="true" icon="add" aria-label="add employer"
-          (click)="onEmployerClicked(true)">
+        <button *ngIf="enableAddButton" kendoButton [primary]="true" icon="add" aria-label="add employer"
+          (click)="onEmployerClicked(true)" [disabled]="(isReadOnly$ | async) ? true : false">
           Employer
         </button>
 
@@ -86,8 +119,12 @@
   <kendo-dialog-titlebar>
     {{ isAdd ? 'Add Employer' : 'Edit Employer ' }}
   </kendo-dialog-titlebar>
-  <case-management-employer-detail (addUpdateEmploymentEvent)="updateEmploymentHandle($event)" [isAdd]="isAdd" [selectedEmployer]="selectedEmployer"
-    (closeModal)="onEmployerClosed()">
+  <case-management-employer-detail [sessionClientId]="clientId" (addUpdateEmploymentEvent)="updateEmploymentHandle($event)" [isAdd]="isAdd"
+    [selectedEmployer]="selectedEmployer"
+    (closeModal)="onEmployerClosed()"
+    [clientCaseId]="clientCaseId"
+    [clientCaseEligibilityId]="clientCaseEligibilityId"
+    [clientId]="clientId">
   </case-management-employer-detail>
 </kendo-dialog>
 
@@ -96,5 +133,8 @@
 <kendo-dialog *ngIf="isRemoveEmployerConfirmationPopupOpened" (close)="onRemoveEmployerConfirmationClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np" title="Delete employer?">
   <case-management-remove-employer-confirmation (deleteUpdateEmploymentEvent)="updateEmploymentHandle($event)" [selectedEmployer]="selectedEmployer"
-    (closeModal)="onRemoveEmployerConfirmationClosed()"></case-management-remove-employer-confirmation>
+    (closeModal)="onRemoveEmployerConfirmationClosed()"
+    [clientCaseId]="clientCaseId"
+    [clientCaseEligibilityId]="clientCaseEligibilityId"
+    [clientId]="clientId"></case-management-remove-employer-confirmation>
 </kendo-dialog>

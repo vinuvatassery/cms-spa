@@ -7,16 +7,14 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 /** Facades **/
-import { Pharmacy } from '@cms/case-management/domain';
+import { Pharmacy,DrugPharmacyFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { Subject } from '@microsoft/signalr';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'case-management-pharmacy-detail',
   templateUrl: './pharmacy-detail.component.html',
-  styleUrls: ['./pharmacy-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PharmacyDetailComponent implements OnInit {
@@ -25,25 +23,27 @@ export class PharmacyDetailComponent implements OnInit {
   @Input() selectedPharmacy: any;
   @Input() pharmacySearchResult$!: Observable<Pharmacy>;
   @Input() searchLoaderVisibility$!: Observable<boolean>;
-
+  @Input() isNewPharmacyAdded = false;
   /** Output properties  **/
   @Output() closePharmacyEvent = new EventEmitter();
   @Output() searchPharmacyEvent = new EventEmitter<string>();
   @Output() addPharmacyEvent = new EventEmitter<string>();
   @Output() editPharmacyEvent = new EventEmitter<string>();
   @Output() removePharmacyEvent = new EventEmitter<string>();
+  @Output() setAsPrimaryEvent = new EventEmitter<any>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Public properties **/
-  // pharmacies$ = this.drugPharmacyFacade.pharmacies$;
-  // ddlStates$ = this.drugPharmacyFacade.ddlStates$;
   isOpenNewPharmacyClicked = false;
+  isSetAsPrimary = false;
   filteredSelectedPharmacy!: any;
   pharmacyForm!: FormGroup;
   selectedPharmacyForEdit!: string;
   selectedPharmacyId!: string | null;
   showSelectPharmacyRequired = false;
   btnDisabled = false; 
+  constructor(private drugPharmacyFacade:DrugPharmacyFacade){
 
+  }
   /** Lifecycle hooks **/
   ngOnInit(): void {
     if (this.isEditPharmacy) {
@@ -55,6 +55,7 @@ export class PharmacyDetailComponent implements OnInit {
   /** Private methods **/
   searchPharmacies(searchText: string) {
     this.selectedPharmacyId = null;
+    this.btnDisabled = false;
     this.searchPharmacyEvent.emit(searchText);
   }
 
@@ -63,14 +64,17 @@ export class PharmacyDetailComponent implements OnInit {
   }
 
 
-  addOrEditPharmacy() {
+  addOrEditPharmacy() {  
     if (this.selectedPharmacyId) {
       this.btnDisabled = true
       if (this.isEditPharmacy) {
+
         this.editPharmacyEvent.emit(this.selectedPharmacyId ?? '');
       }
       else {
+        this.setAsPrimaryEvent.emit(this.isSetAsPrimary);
         this.addPharmacyEvent.emit(this.selectedPharmacyId ?? '');
+        
       }
     }
     else{

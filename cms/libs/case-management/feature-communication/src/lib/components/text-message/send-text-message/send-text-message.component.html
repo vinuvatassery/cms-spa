@@ -1,9 +1,5 @@
-<kendo-dialog
-  *ngIf="isOpenSendMessageClicked"
-  (close)="onCloseSendMessageClicked()"
-  class="app-c-modal app-c-modal-md app-c-modal-np"
-  title="Send New SMS Text"
->
+ 
+<kendo-dialog-titlebar (close)="onCloseSendMessageClicked()">Send New SMS Text </kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <p class="text-muted mb-1">
       Select an existing template or draft custom text messages.
@@ -24,13 +20,14 @@
       <div class="flex-col mb-2" *ngIf="isOpenMessageTemplate">
         <kendo-floatinglabel
           text="Send Messages to"
-          aria-label="send messages to"
+          aria-label="send messages to" class="inline-search-loader"
         >
+        <span *ngIf="isShowToPhoneNumbersLoader$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
           <kendo-dropdownlist
           [fillMode]="formUiStyle.dropDownFillMode"
-            [data]="ddlMessageRecipients$ | async"
-            textField="value"
-            valueField="key"
+            [data]="phoneNumbers"
+            textField="formattedPhoneNbr"
+            valueField="phoneNbr"
           >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
@@ -74,7 +71,7 @@
       </div>
     </div>
   </kendo-dialog-actions>
-</kendo-dialog>
+ 
 
 <!-- Save for Latter (SMS Draft) Modal -->
 <kendo-dialog
@@ -94,8 +91,8 @@
       <div class="justify-content-end">
         <button
           kendoButton
-          [primary]="true"
-          (click)="onCloseSendMessageClicked()"
+          [primary]="true" 
+          (click)="onCloseSaveForLaterClicked()"
           aria-label="confirmation for close send message"
         >
           OK

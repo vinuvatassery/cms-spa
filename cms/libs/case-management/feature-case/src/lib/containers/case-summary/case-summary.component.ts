@@ -120,7 +120,7 @@ export class CaseSummaryComponent implements OnInit , OnDestroy, AfterViewInit {
           forkJoin([of(navigationType), this.updateCase()])
         ),       
       ).subscribe(([navigationType, isSaved]) => {
-        if (isSaved == true) {
+        if (isSaved) {
           this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Case data Updated')  
           this.workFlowFacade.navigate(navigationType);
         } else {
@@ -134,15 +134,11 @@ export class CaseSummaryComponent implements OnInit , OnDestroy, AfterViewInit {
       this.parentForm.updateValueAndValidity()
       if(this.parentForm.valid)
       {
-       return  this.caseFacade.UpdateCase(this.parentForm ,this.clientCaseId)
-       .pipe
-       (
+       return  this.caseFacade.UpdateCase(this.parentForm ,this.clientCaseId).pipe(
         catchError((err: any) => {      
-          this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err) 
-          
+          this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err); 
           return of(false)  
-        })
-       )     
+        }));     
       }
       else return of(false)
     }
@@ -164,30 +160,19 @@ export class CaseSummaryComponent implements OnInit , OnDestroy, AfterViewInit {
 private updateFormCompleteCount(prev: any, curr: any) {
   let completedDataPoints: CompletionChecklist[] = [];
   Object.keys(this.parentForm.controls).forEach(key => {
-    if (prev && curr) {
-      if (prev[key] !== curr[key]) {
-        let item: CompletionChecklist = {
-          dataPointName: key,
-          status: curr[key] ? StatusFlag.Yes : StatusFlag.No
-        };
-       
-        completedDataPoints.push(item);
-      }
-    }
-    else {
-      if (this.parentForm?.get(key)?.value && this.parentForm?.get(key)?.valid) {
-        let item: CompletionChecklist = {
-          dataPointName: key,
-          status: StatusFlag.Yes
-        };
+    const isValueChanged = prev && curr && prev[key] !== curr[key];
+    const isFormValidAndFilled = !prev && this.parentForm?.get(key)?.value && this.parentForm?.get(key)?.valid;
 
-        completedDataPoints.push(item);
-      }
+    if (isValueChanged) {
+      const status = curr[key] ? StatusFlag.Yes : StatusFlag.No;
+      completedDataPoints.push({ dataPointName: key, status });
+    }    
+    else if(isFormValidAndFilled) {
+      completedDataPoints.push({ dataPointName: key, status: StatusFlag.Yes });
     }
   });
 
   if (completedDataPoints.length > 0) {
-   
    this.workFlowFacade.updateChecklist(completedDataPoints);
   }
 }
@@ -198,12 +183,12 @@ private updateFormCompleteCount(prev: any, curr: any) {
         this.updateCase().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.workFlowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+            this.workFlowFacade.handleSendNewsLetterpopup(statusResponse)
           }
         })
       }
       else {
-        this.workFlowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+        this.workFlowFacade.handleSendNewsLetterpopup(statusResponse)
       }
     });
   }

@@ -4,8 +4,8 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
-import { empty } from 'rxjs';
 import { ApplicantInfo } from '../entities/applicant-info';
+import { NewIDCardRequest } from '../entities/new-Id-card-request';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
@@ -125,192 +125,60 @@ export class ClientDataService {
   }
 
   loadRdoMaterials() {
-    return of([
-      {
-        value: 'Yes',
-        id: 1,
-      },
-
-      {
-        value: 'No',
-        id: 2,
-      },
-
-      {
-        value: 'Don’t know',
-        id: 3,
-      },
-
-      {
-        value: 'Don’t want to answer',
-        id: 4,
-      },
-    ]);
+    return this.getPossibleAnswers();
   }
 
   loadRdoInterpreter() {
-    return of([
-      {
-        value: 'Yes',
-        id: 1,
-      },
-
-      {
-        value: 'No',
-        id: 2,
-      },
-
-      {
-        value: 'Don’t know',
-        id: 3,
-      },
-
-      {
-        value: 'Don’t want to answer',
-        id: 4,
-      },
-    ]);
+    return this.getPossibleAnswers();
   }
 
   loadRdoDeaf() {
-    return of([
-      {
-        value: 'Yes',
-        id: 1,
-      },
-
-      {
-        value: 'No',
-        id: 2,
-      },
-
-      {
-        value: 'Don’t know',
-        id: 3,
-      },
-
-      {
-        value: 'Don’t want to answer',
-        id: 4,
-      },
-    ]);
+    return this.getPossibleAnswers();
   }
 
   loadRdoBlind() {
-    return of([
-      {
-        value: 'Yes',
-        id: 1,
-      },
-
-      {
-        value: 'No',
-        id: 2,
-      },
-
-      {
-        value: 'Don’t know',
-        id: 3,
-      },
-
-      {
-        value: 'Don’t want to answer',
-        id: 4,
-      },
-    ]);
+    return this.getPossibleAnswers();
   }
 
   loadRdoWalking() {
-    return of([
-      {
-        value: 'Yes',
-        id: 1,
-      },
-
-      {
-        value: 'No',
-        id: 2,
-      },
-
-      {
-        value: 'Don’t know',
-        id: 3,
-      },
-
-      {
-        value: 'Don’t want to answer',
-        id: 4,
-      },
-    ]);
+    return this.getPossibleAnswers();
   }
 
   loadRdoDressingOrBathing() {
-    return of([
-      {
-        value: 'Yes',
-        id: 1,
-      },
-
-      {
-        value: 'No',
-        id: 2,
-      },
-
-      {
-        value: 'Don’t know',
-        id: 3,
-      },
-
-      {
-        value: 'Don’t want to answer',
-        id: 4,
-      },
-    ]);
+    return this.getPossibleAnswers();
   }
 
   loadRdoConcentration() {
-    return of([
-      {
-        value: 'Yes',
-        id: 1,
-      },
-
-      {
-        value: 'No',
-        id: 2,
-      },
-
-      {
-        value: 'Don’t know',
-        id: 3,
-      },
-
-      {
-        value: 'Don’t want to answer',
-        id: 4,
-      },
-    ]);
+    return this.getPossibleAnswers();
   }
 
   loadRdoErrands() {
+    return this.getPossibleAnswers();
+  }
+
+  getPossibleAnswers(){
     return of([
       {
-        value: 'Yes',
+        value: 'YES',
+        text:'Yes',
         id: 1,
       },
 
       {
-        value: 'No',
+        value: 'NO',
+        text:'No',
         id: 2,
       },
 
       {
-        value: 'Don’t know',
+        value: 'DONT_KNOW',
+        text:'Do not know',
         id: 3,
       },
 
       {
-        value: 'Don’t want to answer',
+        value: 'DONT_WANT',
+        text:'Do not want to answer',
         id: 4,
       },
     ]);
@@ -321,37 +189,105 @@ export class ClientDataService {
       return of([
         {
           id: 1,
+          key:'notes',
           specialHandling: 'Case Worker Note',
-          answer: 'Immediately transfer to Wesley Marascas',
+          answer: '',
         },
         {
           id: 2,
           specialHandling:
-            'Blind or serious difficulty seeing, even when wearing glasses?',
-          answer: 'Don’t want to answer',
+            'Needs materials in alternate format (Braille, large print, audio recordings, etc.)?',
+            key:'materialInAlternateFormatDescription',
+            otherFormatKey:'materialInAlternateFormatOther',
+            descKey :"materialInAlternateFormatCodeOtherDesccription",
+            answer: '',
         },
         {
           id: 3,
           specialHandling:
-            'Any limiting physical, mental, or emotional conditions?',
-          answer: 'Yes, since age 43',
+            'Needs interpreter?',
+            key:'interpreterDescription',
+            otherKey:'interpreterType',
+            answer: '',
+        },
+        {
+          id: 4,
+          specialHandling:
+            'Deaf or serious difficulty hearing?',
+            key:'deafOrHearingDescription',
+            otherKey:'startAgeDeafOrHearing',
+            answer: '',
+        },
+        {
+          id: 5,
+          specialHandling:
+            'Blind or serious difficulty seeing, even when wearing glasses?',
+            key:'blindSeeingDescription',
+            otherKey:'startAgeBlindSeeing',
+            answer: '',
+        },
+        {
+          id: 6,
+          specialHandling:
+            'Any limiting physical, mental or emotional conditions?',
+            key:'limitingConditionDescription',
+            otherKey:'',
+            answer: '',
+        },
+        {
+          id: 7,
+          specialHandling:
+            'Serious difficulty walking or climbing stairs?',
+            key:'walkingClimbingDifficultyDescription',
+            otherKey:'startAgeWalkingClimbingDifficulty',
+            answer: '',
+        },{
+          id: 8,
+          specialHandling:
+            'Difficulty dressing or bathing?',
+            key:'dressingBathingDifficultyDescription',
+            otherKey:'startAgeDressingBathingDifficulty',
+            answer: '',
+        },
+        {
+          id: 9,
+          specialHandling:
+            'Serious difficulty concentrating, remembering, or making decisions due to a physical, mental, or emotional conditions?',
+          answer: '',
+          key:'concentratingDifficultyDescription',
+          otherKey:'startAgeConcentratingDifficulty',
+        },
+        {
+          id: 10,
+          specialHandling:
+            'Serious difficulty doing errands alone due to physical, mental, or emotional conditions?',
+          answer: '',
+          key:'errandsDifficultyDescription',
+          otherKey:'startAgeErrandsDifficulty',
         },
       ]);
     }
   }
   save(applicantInfo: ApplicantInfo) {  
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/client`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients`,
       applicantInfo,
 
     )}
-    load(clientCaseId:any,eligibilityId:any){
+    sendNewIdCard(newIDCardRequest : NewIDCardRequest){
+      return this.http.post(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/sendidcard`,
+        newIDCardRequest,
+  
+      )
+    }
+    load(clientId:any,caseId:any,eligibilityId:any){
       return this.http.get<ApplicantInfo>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/client/${clientCaseId}/${eligibilityId}`,);
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/cases/${caseId}/eligibility-periods/${eligibilityId}`,);
        }
-    update(applicantInfo: ApplicantInfo) {  
+    update(applicantInfo: ApplicantInfo,clientId:any) {  
       return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/client`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}`,
         applicantInfo,
     
     )}
@@ -360,4 +296,7 @@ export class ClientDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/duplicate-check`,
       clientData,
     )}
+    removeClientNote(clientId: number, clientNoteId: string) {
+      return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/notes/${clientNoteId}`);
+    }
 }

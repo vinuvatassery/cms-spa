@@ -1,13 +1,15 @@
 <div class="flex-row mt-1">
   <div class="flex-col flex-space-bw align-items-center">
     <h5 class="title-md mb-0 text-capital">Addresses</h5>
-    <div>  
-    <span class="app-checkboxwidtext-wrapper"> 
+    <div>
+    <span class="app-checkboxwidtext-wrapper">
       <input
         type="checkbox"
         kendoCheckBox
         aria-labelledby="AddressesshowHistorical"
         id="AddressesshowHistorical"
+        [(ngModel)]="showHistoricalFlag"
+        (change)="handleShowHistoricalClick()"
       />
       <label class="k-checkbox-label" for="AddressesshowHistorical"
         >Show historical</label
@@ -17,8 +19,13 @@
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
-      <kendo-grid [data]="address$ | async">
-        <kendo-grid-column field="type" title="Type" [width]="80">
+      <kendo-grid 
+      [sortable]="true" 
+      [groupable]="false"
+      [reorderable]="true"
+      [columnMenu]="{ filter: true }"
+      [resizable]="true" [kendoGridBinding]="addressGridView" [rowClass]="rowClass" [loading]="addressListLoader">
+        <kendo-grid-column field="addressTypeDesc" title="Type" [width]="80">
         </kendo-grid-column>
         <kendo-grid-column field="address1" title="Address1" [width]="150">
         </kendo-grid-column>
@@ -26,19 +33,27 @@
         </kendo-grid-column>
         <kendo-grid-column field="city" title="City" [width]="100">
         </kendo-grid-column>
-        <kendo-grid-column field="state" title="State" [width]="100">
+        <kendo-grid-column field="stateDesc" title="State" [width]="100">
         </kendo-grid-column>
         <kendo-grid-column field="zip" title="ZIP" [width]="100">
         </kendo-grid-column>
         <kendo-grid-column field="county" title="County" [width]="100">
         </kendo-grid-column>
         <kendo-grid-column
-          field="effectiveDate"
+          field="startDate"
           title="Effective Date"
           [width]="100"
         >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span *ngIf="dataItem.activeFlag == 'Y' ;else endDateBlock">
+            {{dataItem.startDate | date:'MM/dd/yyyy'}}
+          </span>
+          <ng-template #endDateBlock>
+            {{dataItem.startDate | date:'MM/dd/yyyy'}} {{ (dataItem.endDate) ? ' - '+ (dataItem.endDate | date:'MM/dd/yyyy') : ''}}
+          </ng-template>
+        </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="50">
+        <kendo-grid-column field="by" title="By" [width]="70">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
@@ -47,17 +62,9 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="profile avathar"
+              aria-label="profile avatar"
             >
-              <div mat-card-avatar="" class="app-c-avatar avatar-sm">
-                <!-- <img
-                  src="../assets/images/avatar-1.png"
-                  alt="Profile Avatar"
-                  class="profile-avatar"
-                  hidden
-                /> -->
-                <span class="profile-text-avatar">AK</span>
-              </div>
+            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
             <kendo-popover
               #onUserProfileDetailsHovered
@@ -65,14 +72,15 @@
               position="left"
             >
               <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card></common-user-profile-card>
+                <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
               </ng-template>
             </kendo-popover>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
           field="Option"
-          title="Option"
+          title="Options"
+          [columnMenu]="false"
           [width]="75"
           class="text-center"
         >
@@ -80,63 +88,52 @@
             <kendo-dropdownbutton
               [data]="actions"
               icon="more-vertical"
-              class="TableActionPopup app-dropdown-action"
+              class="TableActionPopup app-dropdown-action more_action_wid"
               buttonClass="k-icon-button"
               aria-label="more actions"
               title="More option"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }"
             >
-              <!-- <span
-                class="material-icons"
-                aria-label="actions"
-                aria-hidden="true"
-                role="menuitem"
-                >more_vert</span
-              > -->
-              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-                <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-                  <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
-                  <label>   {{ dataItem.text }} </label>
-              </button>
-                <!-- <button
-                  kendoButton
-                  icon="edit"
-                  look="flat"
-                  class="btn-h-primary"
-                  (click)="onAddressDetailClicked(true)"
-                  aria-label="edit address"
-                >
-                  Edit Address
+            <span hidden> More Option</span>
+              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+                <ng-container *ngIf="buttondataItem.text === 'Deactivate Address' && dataItem.activeFlag ==='Y'; else otherButtons">
+                  <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)" [disabled]="(isReadOnly$ | async) ? true : false">
+                    <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
+                    <label>   {{ buttondataItem.text }} </label>
                 </button>
-                <button
-                  kendoButton
-                  look="flat"
-                  class="btn-h-primary"
-                  (click)="onDeactivateAddressClicked()"
-                  aria-label="deactivate address"
-                >
-                  <span
-                    class="material-icons"
-                    aria-label="deactivate address"
-                    aria-hidden="true"
-                  >
-                    block
-                  </span>
-                  Deactivate Address
+                </ng-container>
+              <ng-template #otherButtons>
+                <ng-container *ngIf="buttondataItem.text === 'Edit Address' && dataItem.activeFlag ==='Y'; else deleteButton">
+                  <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)" [disabled]="(isReadOnly$ | async) ? true : false">
+                    <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
+                    <label>   {{ buttondataItem.text }} </label>
                 </button>
-                <button
-                  kendoButton
-                  icon="delete"
-                  look="flat"
-                  class="btn-h-danger"
-                  aria-label="delete address"
-                >
-                  Delete Address
-                </button> -->
+                </ng-container>
+              </ng-template>
+
+              <ng-template #deleteButton>
+                <ng-container *ngIf="buttondataItem.text === 'Delete Address'">
+                  <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)" [disabled]="(isReadOnly$ | async) ? true : false">
+                    <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
+                    <label>   {{ buttondataItem.text }} </label>
+                </button>
+                </ng-container>
+              </ng-template>
+
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
         </kendo-grid-column>
+              <!-- grid Loader Template -->
+       <ng-template kendoGridLoadingTemplate>
+        <common-grid-loader-component></common-grid-loader-component>
+       </ng-template>
+       <!-- grid No data Template -->
+       <ng-template kendoGridNoRecordsTemplate>
+         <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+         </div>
+         <p>There is no data to display.</p>
+       </ng-template>
       </kendo-grid>
     </div>
   </div>
@@ -147,6 +144,7 @@
       icon="add"
       (click)="onAddressDetailClicked(false)"
       aria-label="add address"
+      [disabled]="(isReadOnly$ | async) ? true : false"
     >
       Address
     </button>
@@ -155,15 +153,23 @@
 
 <!-- Address Detail Popup-->
 <kendo-dialog
-  *ngIf="isAddressDetailPopup"
+  *ngIf="( showAddPopup$ |async)"
   (close)="onAddressDetailClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
   <kendo-dialog-titlebar>{{
-    isEditAddress ? 'Edit Address' : 'Add Address'
+    isEditAddress ? editAddressTypeText  : isDeactivateFlag ? 'Deactivate and Add Mailing Address' : isDeleteFlag ? 'Delete and Add Mailing Address' : 'Add Address'
   }}</kendo-dialog-titlebar>
   <case-management-address-detail
     [isEditValue]="isEditAddress"
+    [clientId]="clientId" [caseEligibilityId]="caseEligibilityId"
+    [showFormFields]="showFormFieldsFlag"
+    [deactivateFlag]="isDeactivateFlag"
+    [deleteFlag]="isDeleteFlag"
+    [clientAddressId]="clientAddressId"
+    [selectedAddress]="clientAddress"
+    (detailModalCloseEvent)="onAddressDetailCloseEvent($event)"
+    (deactivateButtonClick)="onDeactivateButtonClick($event)"
   ></case-management-address-detail>
 </kendo-dialog>
 
@@ -174,5 +180,15 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   title="Deactivate home address?"
 >
-  <case-management-deactivate-address-confirmation></case-management-deactivate-address-confirmation>
+  <case-management-deactivate-address-confirmation [clientAddress]="clientAddress" [clientId]="clientId" [caseEligibilityId]="caseEligibilityId" (deactivateModalCloseEvent)="closeDeactivateModalAndReload($event)"></case-management-deactivate-address-confirmation>
+</kendo-dialog>
+
+<!-- Delete home address Popup-->
+<kendo-dialog
+  *ngIf="isDeleteAddressPopup"
+  (close)="onDeleteAddressClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+  title="{{DialogboxTitle}}"
+>
+  <case-management-delete-address-confirmation [clientAddress]="clientAddress" [clientId]="clientId" (deleteModalCloseEvent)="closeDeleteModalAndReload($event)"></case-management-delete-address-confirmation>
 </kendo-dialog>

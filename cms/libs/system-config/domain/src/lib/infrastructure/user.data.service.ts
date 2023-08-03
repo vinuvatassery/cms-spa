@@ -9,15 +9,59 @@ import { User } from '../entities/user';
 import { LoginUser } from '../entities/login-user';
 
 /** Providers **/
-import { ConfigurationProvider } from "@cms/shared/util-core";
+import { ConfigurationProvider, LoaderService } from "@cms/shared/util-core";
+import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class UserDataService {
+  private getUserProfileData = new BehaviorSubject<any>([]);
+  getProfile$ = this.getUserProfileData.asObservable();
   /** Constructor **/
   constructor(private readonly http: HttpClient,
-    private configurationProvider : ConfigurationProvider) {}
+    private readonly router: Router,
+    private configurationProvider : ConfigurationProvider,
+    private readonly loaderService: LoaderService 
+    ) {}
 
+    showLoader()
+    {
+      this.loaderService.show();
+    }
+      
+    hideLoader()
+    {
+      this.loaderService.hide();
+    }
   /** Public methods **/
+  getUserProfileDetails()
+  {   
+    this.showLoader()
+    this.getUserProfile().subscribe({
+      next: (response: any) => {
+        if (response) {               
+          this.getUserProfileData.next(response);    
+          this.hideLoader()  
+        }        
+        this.hideLoader()
+      },
+      error: (err: any) => {    
+       this.hideLoader()
+        this.router.navigate(['/forbidden']);
+      }
+    });
+  }
+  getUserProfile() {  
+    return this.http.get(`${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/user-profile`)
+   }
+   
+  getUserById(userId : string) {
+    return this.http.get<LoginUser[]>(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
+      `/system-config/users/${userId}`
+    );  
+  }  
+
   getUsersByRole(roleCode : string) {
     return this.http.get<LoginUser[]>(
       `${this.configurationProvider.appSettings.sysConfigApiUrl}`+

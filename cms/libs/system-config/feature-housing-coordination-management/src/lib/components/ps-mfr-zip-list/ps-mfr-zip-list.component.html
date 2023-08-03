@@ -142,10 +142,11 @@
             icon="more-vertical"
             title="More option"
             aria-label="more actions"
-            class="TableActionPopup app-dropdown-action"
+            class="TableActionPopup app-dropdown-action more_action_wid"
             buttonClass="k-icon-button"
             [popupSettings]="{ popupClass: popupClassAction, animate: true }"
           >
+          <span hidden> More Option</span>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
               <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
                 <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
@@ -162,7 +163,6 @@
         <div class="grid-custom-paginationtemplates d-flex">
   
           <div class="d-flex align-items-center">
-            <!-- <kendo-pager-page-sizes [pageSizes]="sizes"></kendo-pager-page-sizes> -->
             <label class="mr-1">Rows Per Page</label> 
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
               [valuePrimitive]="true" [(value)]="pageSize"></kendo-dropdownlist>
@@ -181,13 +181,16 @@
   
         </div>
       </ng-template>
-        <!-- <kendo-grid-column
-        field="options"
-        title=""
-        [width]="50"
-        fieldType='actions'
-      > 
-      </kendo-grid-column> -->
+                        <!-- grid Loader Template -->  
+    <ng-template kendoGridLoadingTemplate>
+      <common-grid-loader-component></common-grid-loader-component>
+     </ng-template>
+     <!-- grid No data Template -->  
+     <ng-template kendoGridNoRecordsTemplate>
+       <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+       </div>
+       <p>There is no data to display.</p>
+     </ng-template> 
       </kendo-grid>
     </div>
   </section>

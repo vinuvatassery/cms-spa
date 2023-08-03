@@ -90,12 +90,6 @@
               aria-label="modified by"
             >
               <div class="app-c-avatar avatar-sm">
-                <!-- <img
-                  src="../assets/images/avatar-1.png"
-                  alt="Profile Avatar"
-                  class="profile-avatar"
-                  hidden
-                /> -->
                 <span class="profile-text-avatar">AK</span>
               </div>
             </button>
@@ -125,10 +119,11 @@
             icon="more-vertical"
             title="More option"
             aria-label="more actions"
-            class="TableActionPopup app-dropdown-action"
+            class="TableActionPopup app-dropdown-action more_action_wid"
             buttonClass="k-icon-button"
             [popupSettings]="{ popupClass: popupClassAction, animate: true }"
           >
+          <span hidden> More Option</span>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
               <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
                 <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
@@ -139,6 +134,16 @@
           </kendo-dropdownbutton>
           </ng-template>
         </kendo-grid-column>
+                          <!-- grid Loader Template -->  
+    <ng-template kendoGridLoadingTemplate>
+      <common-grid-loader-component></common-grid-loader-component>
+     </ng-template>
+     <!-- grid No data Template -->  
+     <ng-template kendoGridNoRecordsTemplate>
+       <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+       </div>
+       <p>There is no data to display.</p>
+     </ng-template> 
       </kendo-grid>
     </div>
   

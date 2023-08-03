@@ -2,7 +2,7 @@
   // Top Header responsive CSS
   .app-l-header {
     padding: $size-xx;
-    .headermenu-leftmostsection {
+    .header_menu-left_most_section {
       .mobile-menu-icon {
         display: inline-flex;
       }
@@ -17,10 +17,13 @@
       min-width: 10px;
     }
   }
+  .sidebar-hamburger{
+    display: none !important;
+  }
   .global-search {
     &.header-search {
       display: none;
-      &.mobileheader-searchshow {
+      &.mobile_header-search_show {
         position: fixed;
         display: inline-block;
         width: 100%;
@@ -39,7 +42,7 @@
       }
     }
   }
-  .header-mobilesearchbutton {
+  .header-mobile_search_button {
     display: inline-block;
   }
   // Left Menu responsive CSS
@@ -56,7 +59,7 @@
     }
   }
 
-  .mobilemenu-opened {
+  .mobile_menu-opened {
     .app-l-sidebar {
       right: auto;
       left: 0px;
@@ -172,8 +175,7 @@
             .pl-1 {
               padding-left: 0px !important;
             }
-            span {
-              // margin: 4px 0px;
+            span { 
               padding-left: 0px;
             }
           }
@@ -199,6 +201,10 @@
       }
     }
     .client-tab-section {
+      .custom-client-tab-main-wrapper{
+        width: 100%;
+        max-width: 100%;
+      }
       .tab-over-icon-btn {
         position: relative;
         right: 14px;
@@ -290,6 +296,9 @@
 }
 
 @media (max-width: $breakpoint-md) {
+  .client-header-wrapper-stickey{
+    position: unset;
+  }
   .add-client-wrapper .add-client_right {
     .flex-row {
       .flex-col-4,

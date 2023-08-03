@@ -4,13 +4,12 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter
 import { State } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
 /** Internal Libraries **/
-import { ClientPharmacy, Pharmacy } from '@cms/case-management/domain';
+import { ClientPharmacy, Pharmacy, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
   selector: 'case-management-pharmacy-list',
   templateUrl: './pharmacy-list.component.html',
-  styleUrls: ['./pharmacy-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PharmacyListComponent implements OnInit {
@@ -23,7 +22,10 @@ export class PharmacyListComponent implements OnInit {
   @Input() removePharmacyResponse$!: Observable<boolean>;
   @Input() triggerPriorityPopup$!: Observable<boolean>;
   @Input() searchLoaderVisibility$!: Observable<boolean>;
-
+  @Input() clientId: any;
+  @Input() showPharmacyRequiredValidation$!: Observable<boolean>;
+  @Input() showPharmacyGrid:any = true;
+  @Input() isCer:any = false;
   /** Output Properties **/
   @Output() searchPharmacy = new EventEmitter<string>();
   @Output() addPharmacyClick = new EventEmitter<string>();
@@ -44,7 +46,9 @@ export class PharmacyListComponent implements OnInit {
   removeButtonEmitted = false;
   editButtonEmitted = false;
   addButtonEmitted = false;
+  clientpharmacies:any[] = []
   public state!: State;
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
@@ -64,11 +68,8 @@ export class PharmacyListComponent implements OnInit {
       text: "Change Priority",
       icon: "format_line_spacing",
       click: (clientPharmacyId: string, vendorId: string): void => {
-        this.addButtonEmitted = false
-        if (this.addButtonEmitted === false) {
+        this.isEditPharmacyPriorityTitle = true;
           this.onOpenChangePriorityClicked()
-          this.addButtonEmitted = true;
-        }
       },
     },
 
@@ -90,7 +91,7 @@ export class PharmacyListComponent implements OnInit {
   clientPharmacyCount!:number;
 
   /** Constructor **/
-  constructor() {
+  constructor(private caseFacade: CaseFacade) {
     this.isOpenChangePriorityClicked$.next(false);
     this.isOpenPharmacyClicked$.next(false);
     this.isRemoveClientPharmacyClicked$.next(false);
@@ -115,11 +116,13 @@ export class PharmacyListComponent implements OnInit {
         }
         else
         {
+          this.clientpharmacies = pharmacies;
           this.isEditPharmacyPriorityTitle = true;
           this.pharmacyPriorityModalButtonText = 'Update';
         }
         pharmacies.forEach((pharmacyData: ClientPharmacy) => {
-          pharmacyData.pharmacyNameAndNumber = `${pharmacyData.pharmacyName} #${pharmacyData.pharmacyNumber}`;
+          const pharmacyNumber = pharmacyData?.pharmacyNumber ? `#${pharmacyData.pharmacyNumber}` : '';
+          pharmacyData.pharmacyNameAndNumber = `${pharmacyData?.pharmacyName ?? ''} ${pharmacyNumber}`;
         });
       },
       error: (err) => {

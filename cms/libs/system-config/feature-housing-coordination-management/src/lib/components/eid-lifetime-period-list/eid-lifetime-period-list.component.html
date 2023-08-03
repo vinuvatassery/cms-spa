@@ -104,12 +104,6 @@
               aria-label="modified by"
             >
               <div class="app-c-avatar avatar-sm">
-                <!-- <img
-                    src="../assets/images/avatar-1.png"
-                    alt="Profile Avatar"
-                    class="profile-avatar"
-                    hidden
-                  /> -->
                 <span class="profile-text-avatar">AK</span>
               </div>
             </button>
@@ -137,10 +131,11 @@
             icon="more-vertical"
             title="More option"
             aria-label="more actions"
-            class="TableActionPopup app-dropdown-action"
+            class="TableActionPopup app-dropdown-action more_action_wid"
             buttonClass="k-icon-button"
             [popupSettings]="{ popupClass: popupClassAction, animate: true }"
           >
+          <span hidden> More Option</span>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
               <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
                 <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
@@ -156,7 +151,6 @@
         <div class="grid-custom-paginationtemplates d-flex">
   
           <div class="d-flex align-items-center">
-            <!-- <kendo-pager-page-sizes [pageSizes]="sizes"></kendo-pager-page-sizes> -->
             <label class="mr-1">Rows Per Page</label> 
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
               [valuePrimitive]="true" [(value)]="pageSize"></kendo-dropdownlist>

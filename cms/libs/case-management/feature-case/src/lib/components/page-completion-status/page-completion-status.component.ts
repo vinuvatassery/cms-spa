@@ -8,7 +8,6 @@ import { WorkflowFacade, WorkflowProcessCompletionStatus } from '@cms/case-manag
 @Component({
   selector: 'page-completion-status',
   templateUrl: './page-completion-status.component.html',
-  styleUrls: ['./page-completion-status.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageCompletionStatusComponent implements OnInit, OnDestroy {

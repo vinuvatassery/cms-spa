@@ -1,9 +1,10 @@
 export interface Dependent {
-    clientDependentId  :  string  ,
+    clientRelationshipId  :  string  ,
     clientId  : number,
-    dependentTypeCode  :  string  ,
-    relationshipCode  :    string  ,
-    relationshipDescription    : string
+    relationshipTypeCode  :  string  ,
+    relationshipSubTypeCode  :    string  ,
+    relationshipSubTypeDesc : string,
+    OtherDesc    : string
     firstName  :    string  ,
     lastName  :   string  ,
     fullName  :   string  ,
@@ -22,5 +23,7 @@ export interface Dependent {
     isCareAssistFlag : string  ,
     memberType : string,
     fullCustomName :string,
-    dependentClientId : string
+    dependentClientId : string,
+    clientCaseEligibilityId: string,
+    cerReviewStatusCode:string;
 }

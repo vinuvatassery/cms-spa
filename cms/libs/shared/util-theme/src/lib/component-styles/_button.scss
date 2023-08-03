@@ -16,10 +16,14 @@
     border: 1px solid;
     color: $app-primary;
     border-color: $app-primary;
+    &.k-state-disabled,
+    &.k-disabled {
+      border-color: material-color($hive-neutral-palette, 600) !important;      
+      color: material-color($hive-neutral-palette, 600) !important;
+    }
   }
   &.k-primary,
-  &.k-button-solid-primary
-   {
+  &.k-button-solid-primary {
     background: $app-primary;
     background-color: $app-primary;
     color: $white;
@@ -70,6 +74,11 @@
   &.k-danger-link {
     color: material-color($hive-error-palette, 800) !important;
     background: transparent;
+    &.k-state-disabled,
+    &.k-disabled {
+      background: material-color($hive-neutral-palette, 50) !important;      
+      color: material-color($hive-neutral-palette, 600) !important;
+    }
   }
 
   &.k-primary-link {
@@ -100,7 +109,15 @@
     font-family: $font-family-medium;
     padding: $size-0;
     height: auto;
-
+    .material-icons {
+      margin-right: 4px;
+    }
+    &.k-button-flat-success {
+      color: material-color($hive-success-palette, 500) !important;
+    }
+    &.k-button-flat-error {
+      color: material-color($hive-error-palette, 400) !important;
+    }
     &.no-ul {
       text-decoration: none;
     }
@@ -161,6 +178,7 @@
     min-height: $size-xxx + $size-m;
     border-radius: $border-radius-xlg;
     padding: $size-0;
+    box-shadow: none;
   }
 
   &.btn-full-no-radius {
@@ -182,7 +200,6 @@
       color: $black-30 !important;
     }
   }
-
 
   &.k-split-button {
     padding: $size-0;
@@ -313,11 +330,9 @@
     &.k-disabled {
       background: material-color($hive-neutral-palette, 50) !important;
       color: $black-30 !important;
-      .k-icon{
-      color: $black-30 !important;
-
+      .k-icon {
+        color: $black-30 !important;
       }
-      
     }
     &.k-split-button-arrow {
       padding: $size-xl;
@@ -334,13 +349,11 @@
       &.k-disabled {
         background: material-color($hive-neutral-palette, 50) !important;
         color: $black-30 !important;
-        .k-icon{
-        color: $black-30 !important; 
-        } 
+        .k-icon {
+          color: $black-30 !important;
+        }
       }
     }
-
-
   }
 }
 
@@ -360,24 +373,22 @@
     }
   }
 
-
-    .k-button-solid-base{
-      transition: .2s;
-      &:hover{
+  .k-button-solid-base {
+    transition: 0.2s;
+    &:hover {
       background: material-color($hive-primary-palette, 800) !important;
       background-color: material-color($hive-primary-palette, 800) !important;
       color: $white !important;
-     
-    } 
+    }
   }
 
   .k-split-button-arrow {
-    transition: .2s;
-   &:hover{
-    background: material-color($hive-primary-palette, 800) !important;
-    background-color: material-color($hive-primary-palette, 800) !important;
-    color: $white !important;
-   }
+    transition: 0.2s;
+    &:hover {
+      background: material-color($hive-primary-palette, 800) !important;
+      background-color: material-color($hive-primary-palette, 800) !important;
+      color: $white !important;
+    }
   }
 }
 
@@ -409,7 +420,6 @@
 
 //  }
 
-
 .k-actions {
   .k-button {
     box-shadow: $button-box-shadow;
@@ -430,11 +440,12 @@
   }
   .k-menu-item {
     background: transparent;
+    margin: 4px;
     &:hover {
       background: transparent;
     }
     .k-menu-link {
-      padding: 4px;
+      padding: 0px;
       padding-inline-end: 0;
       background: transparent;
       text-transform: capitalize;
@@ -444,7 +455,8 @@
       .k-button {
         width: 100%;
         text-transform: capitalize;
-        justify-content: flex-start; 
+        justify-content: flex-start;
+        padding: 8px 14px;
         .k-menu-group {
           padding: 8px;
         }
@@ -456,3 +468,24 @@
     }
   }
 }
+.k-menu-group {
+  .k-item {
+
+    >.k-link:active,
+    >.k-link.k-active,
+    >.k-link.k-selected { color: $app-primary;}
+  }
+}
+
+.k-menu {
+  &.k-context-men {
+    .k-context-men {
+      >.k-link:active,
+      >.k-link.k-active,
+      >.k-link.k-selected {
+        color: $app-primary;
+      }
+    }
+  }
+}
+ 

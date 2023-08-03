@@ -17,6 +17,8 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
 
   /** Public properties **/  
   private showProvidervalidationboxSubject = new Subject<boolean>();
+  private showProviderFlagGridSubject = new Subject<boolean>();
+  private cerFormSubject = new Subject<boolean>();
 
   healthCareProviderSearchList$  =this.healthProvider.healthCareProviderSearchList$;
   healthCareProviders$ = this.healthProvider.healthCareProviders$;
@@ -26,7 +28,14 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
   loadExistingProvider$  =this.healthProvider.loadExistingProvider$;
   searchProviderLoaded$  =this.healthProvider.searchProviderLoaded$;
   showProvidervalidation$  =this.healthProvider.showProvidervalidation$;
+  healthCareProvideGetCerFlag$  =this.healthProvider.healthCareProvideGetCerFlag$;
+  healthCareProvideSetCerFlag$  =this.healthProvider.healthCareProvideSetCerFlag$;
+  showAddNewProvider$ = this.healthProvider.showAddNewProvider$;
+
   showProvidervalidationbox$  = this.showProvidervalidationboxSubject.asObservable();
+  showProviderFlagGrid$  = this.showProviderFlagGridSubject.asObservable();
+  cerForm$  = this.cerFormSubject.asObservable();
+
   isProvidersGridDisplay =true;
   pageSizes = this.healthProvider.gridPageSizes;
   sortValue  = this.healthProvider.sortValue;
@@ -36,6 +45,10 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
   sessionId! : string;
   providersStatus!: StatusFlag;
   showProvidervalidationbox! : boolean;
+  isCerForm = false;
+  prevClientCaseEligibilityId!: string;
+  clientCaseEligibilityId!: string;
+  treatstheirHIVchangedValue! : string
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private checkBoxSubscription !: Subscription;
@@ -77,25 +90,64 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
      .subscribe((session: any) => {      
       this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId  
       this.clientId = JSON.parse(session.sessionData).clientId  
+      this.clientCaseEligibilityId = JSON.parse(session.sessionData)?.clientCaseEligibilityId;
+      this.prevClientCaseEligibilityId = JSON.parse(session.sessionData)?.prevClientCaseEligibilityId;
+      if (this.prevClientCaseEligibilityId) 
+      {   
+         this.isCerForm = true;
+      }
       this.healthProvider.hideLoader(); 
-      this.loadProviderStatus();      
+      if(this.isCerForm === true)
+      {       
+         this.loadProviderCerStatus()
+      }
+      else
+      {
+        this.showProviderFlagGridSubject.next(true)
+        this.loadProviderStatus();      
+      }
+      this.cerFormSubject.next(this.isCerForm)
      });        
    } 
 
+   private loadProviderCerStatus()
+   {
+    this.healthProvider.loadProviderCerStatus(this.clientCaseEligibilityId)
+    this.healthCareProvideGetCerFlag$.pipe(first(x => x != null))
+    .subscribe((x: any)=>
+    {  
+     if(x === StatusFlag.Yes)
+     {
+      this.treatstheirHIVchangedValue = StatusFlag.Yes
+      this.loadProviderStatus();
+      this.showProviderFlagGridSubject.next(true)
+     }
+     else
+     {
+      this.updateWorkFlowStatus();
+      this.treatstheirHIVchangedValue = StatusFlag.No
+      this.showProviderFlagGridSubject.next(false)
+     }
+    });
+
+
+   }
+
    private loadProviderStatus() : void 
    {    
-        this.healthProvider.loadProviderStatusStatus(this.clientId);
+        this.healthProvider.loadProviderStatus(this.clientId);
         this.checkBoxSubscription= 
-        this.healthCareProvideGetFlag$.pipe(filter(x=> typeof x === 'boolean')).subscribe
-      ((x: boolean)=>
-      {  
-             
-        this.isProvidersGridDisplay = x     
-        if(this.isProvidersGridDisplay === true)
-        {
-          this.updateWorkFlowStatus();
-        }
-      });
+        this.healthCareProvideGetFlag$.pipe(
+          filter(x=> typeof x === 'boolean')
+        )
+        .subscribe((x: boolean)=>
+        {  
+          this.isProvidersGridDisplay = x ?? false     
+          if(this.isProvidersGridDisplay)
+          {
+            this.updateWorkFlowStatus();
+          }
+        });
    }
 
    loadProvidersHandle( gridDataRefinerValue : any ): void
@@ -109,7 +161,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
           sortType : gridDataRefinerValue.sortType,
         }
    
-        if((this.isProvidersGridDisplay ?? false) == false)
+        if(!(this.isProvidersGridDisplay ?? false))
         {
           this.pageSizes = this.healthProvider.gridPageSizes;
         this.healthProvider.loadHealthCareProviders(this.clientId
@@ -118,8 +170,8 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-  private removeHealthCareProvider(ProviderId : string){
-     this.healthProvider.removeHealthCareProviders(this.clientId, ProviderId);      
+  private removeHealthCareProvider(clientProviderId : string){
+     this.healthProvider.removeHealthCareProviders(clientProviderId, true);      
   }
 
   /** Private Methods **/
@@ -130,9 +182,8 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
         forkJoin([of(navigationType), this.save()])
       ),  
     ).subscribe(([navigationType, isSaved ]) => {         
-      if (isSaved == true) {    
-        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Providers Status Updated')  
-        this.checkBoxSubscription.unsubscribe();      
+      if (isSaved ) {    
+        this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Providers Status Updated Successfully')  
         this.workFlowFacade.navigate(navigationType);
         this.healthProvider.hideLoader(); 
       } else {
@@ -143,7 +194,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
 
 
   private save() {     
-    this.providersStatus = this.isProvidersGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
+    this.providersStatus = (this.isProvidersGridDisplay ?? false) ? StatusFlag.Yes : StatusFlag.No
     
         if(this.showProvidervalidationbox && !this.isProvidersGridDisplay)
         {        
@@ -154,24 +205,24 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
         {
           this.showProvidervalidationboxSubject.next(false)
           this.healthProvider.showLoader();    
-          return  this.healthProvider.updateHealthCareProvidersFlag
-            (this.clientId,this.providersStatus)
-            .pipe
-            (
+          return  this.healthProvider.updateHealthCareProvidersFlag(this.clientId,this.providersStatus)
+          .pipe(
             catchError((err: any) => { 
               this.healthProvider.hideLoader();                     
               this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)          
               return  of(false);
             })  
-            )  
+          );  
         }
      }
 
 
      showHideValidation() 
      {    
-      this.showProvidervalidation$.pipe(filter(x=> typeof x === 'boolean')).subscribe
-      ((x: boolean)=>
+      this.showProvidervalidation$.pipe(
+        filter(x=> typeof x === 'boolean')
+      )
+      .subscribe((x: boolean)=>
       {        
         this.showProvidervalidationbox = x;       
       });     
@@ -180,16 +231,16 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
   onProviderValueChanged() {   
      
     this.isProvidersGridDisplay = !this.isProvidersGridDisplay;    
-    this.providersStatus = this.isProvidersGridDisplay == true ? StatusFlag.Yes : StatusFlag.No
+    this.providersStatus = (this.isProvidersGridDisplay ?? false) ? StatusFlag.Yes : StatusFlag.No
     
     this.showProvidervalidationboxSubject.next(false)
     
     this.healthProvider.updateHealthCareProvidersFlagonCheck
       (this.clientId,this.providersStatus).subscribe((isSaved) => {  
         this.healthProvider.hideLoader();       
-        if (isSaved == true) {    
+        if (isSaved) {    
           this.workFlowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Provider Status Updated')   
-          if(this.isProvidersGridDisplay === true)
+          if(this.isProvidersGridDisplay ?? false)
             {
               this.updateWorkFlowStatus();
             }   
@@ -198,9 +249,9 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
   }
 
 /** events from child components**/
-   handlePrvRemove(prvSelectedId : string)
+   handlePrvRemove(clientProviderId : string)
    {        
-      this.removeHealthCareProvider(prvSelectedId);                  
+      this.removeHealthCareProvider(clientProviderId);                  
    }
 
    searchTextEventHandleer(text : string)
@@ -215,11 +266,11 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
       
    }
   
-   getExistingProviderEventHandler(prvSelectedId : string)
+   getExistingProviderEventHandler(clientProviderId : string)
    {        
-    if(prvSelectedId)
+    if(clientProviderId)
     {
-    this.healthProvider.loadExistingHealthCareProvider(this.clientId,prvSelectedId)
+    this.healthProvider.loadExistingHealthCareProvider(clientProviderId)
     }
    }
 
@@ -238,7 +289,7 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
        this.save().subscribe((response: any) => {
          if (response) {
            this.loaderService.hide();
-           this.workFlowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+           this.workFlowFacade.handleSendNewsLetterpopup(statusResponse)
          }
        })
      });
@@ -247,9 +298,36 @@ export class HealthcareProviderPageComponent implements OnInit, OnDestroy, After
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workFlowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
-          this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
+        this.checkValidations()
+        this.workFlowFacade.showSaveForLaterConfirmationPopup(true);
       }
     });
+  }
+
+  checkValidations() {
+    this.providersStatus = (this.isProvidersGridDisplay ?? false) ? StatusFlag.Yes : StatusFlag.No
+    if (this.showProvidervalidationbox && !this.isProvidersGridDisplay) {
+      this.showProvidervalidationboxSubject.next(true)
+      return false;
+    }
+    return true;
+  }
+
+  treatstheirHIVSelected(event: Event) {
+    const status = (event.target as HTMLInputElement).value.toUpperCase()
+    this.healthProvider.setProviderCerStatus(this.clientCaseEligibilityId , status)
+    if(status === StatusFlag.No)
+    {
+      this.updateWorkFlowStatus();
+    }
+    this.healthCareProvideSetCerFlag$.pipe(
+      filter(x=> typeof x === 'boolean')
+    )
+    .subscribe((x: boolean)=>
+    {  
+      this.loadProviderCerStatus()
+    });
+   
   }
 
 }

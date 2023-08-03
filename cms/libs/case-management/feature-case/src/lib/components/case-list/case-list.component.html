@@ -1,16 +1,16 @@
 <!-- Table Top Filter, Search and Export -->
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
-    <kendo-floatinglabel text="All Columns">
-      <kendo-dropdownlist aria-label="All Columns"  [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlGridColumns$ | async">
+    <kendo-floatinglabel>
+      <kendo-dropdownlist aria-label="All Columns"  [fillMode]="formUiStyle.dropDownFillMode" [data]="columnDroplist$ | async"
+      textField="lovDesc" valueField="lovCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
   <span class="filter-section_items filter--search">
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
-      <!-- <input kendoTextBox /> -->
-      <kendo-textbox aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+      <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)" aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
     </kendo-floatinglabel>
   </span>
@@ -18,78 +18,279 @@
 
 <!-- Sorted Info -->
 <div class="table-sorted-info">
-  Sorted by <span class="sort-items">Client Name</span>
-  <span class="sort-items">No Filters</span>
-  <span class="sort-items">Default Columns</span>
-  <!-- <button kendoButton look="flat" class="card-link-button">Set to Default</button> -->
+  Sorted {{sortDir}} by <span class="sort-items">{{sortColumn}}</span>
+  <span *ngIf="!isFiltered" class="sort-items">No Filters</span>
+  <span *ngIf="isFiltered" class="sort-items">Filtered by {{filteredBy}}</span>
+  <span class="sort-items">{{addRemoveColumns}}</span>
+  <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
+  <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+    <a>Set to Default</a>
+  </button>
 </div>
 
 <!-- Case List table -->
 <div class="app-c-table">
-  <kendo-grid 
-  [pageSize]="state.take" 
-  [pageable]="true" 
-  [sortable]="true" 
+  <kendo-grid
+  (columnReorder)="onColumnReorder($event)"
+  (columnVisibilityChange)="columnChange($event)"
+  [filter]="state.filter"
+  [pageSize]="state.take"
+  [pageable]="true"
+  [sortable]="true"
   [skip]="state.skip"
   [groupable]="false"
   [reorderable]="true"
-  [resizable]="true" 
-  [columnMenu]="{ filter: false }"
+  [resizable]="true"
+  [columnMenu]="{filter: true }"
   [sort]="state.sort"
-  (dataStateChange)="dataStateChange($event)"  
-  [loading]="isGridLoaderShow" 
-  [data]="cases | async">
-   
-  <!-- <ng-template kendoGridColumnMenuTemplate let-service="service">
-      <span class="k-icon k-i-x" (click)="service.close()"
-        style="position: absolute; right: 5px; top: 5px;cursor: pointer;"></span>
-      <kendo-grid-columnmenu-sort [service]="service">
-      </kendo-grid-columnmenu-sort>
-      <kendo-grid-columnmenu-chooser [service]="service"> </kendo-grid-columnmenu-chooser>
-      <kendo-grid-columnmenu-filter [service]="service"></kendo-grid-columnmenu-filter>
-      <kendo-grid-columnmenu-lock [service]="service">
-      </kendo-grid-columnmenu-lock>
-   </ng-template> -->
-
-    <kendo-grid-column field="clientFullName" title="Client Name" [width]="160">
+  (dataStateChange)="dataStateChange($event)"
+  (filterChange)="filterChange($event)"
+  [loading]="isGridLoaderShow"
+  [data]="cases | async"> 
+    <kendo-grid-column field="clientFullName" title="Client Name" [width]="160" [sticky]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="client name" kendoButton look="flat" class="card-link-button"
-          routerLink="case360/{{ dataItem.clientId }}">
+          (click)="onCaseClicked(dataItem)">
           {{ dataItem.clientFullName }}
         </button>
+      </ng-template>   
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+      <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                <kendo-filter-contains-operator></kendo-filter-contains-operator>
+      </kendo-grid-string-filter-menu>
+       </ng-template>   
+    </kendo-grid-column>
+    <kendo-grid-column field="officialIdFullName" title="Name on Official ID"  [width]="160" [hidden]="true">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
+    </kendo-grid-column>
+    <kendo-grid-column field="insuranceFullName" title="Name on Primary Insurance Card"  [width]="160" [hidden]="true">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
+    </kendo-grid-column>
+    <kendo-grid-column field="dateOfBirth" title="Date of Birth" [width]="160" [format]="{ date: 'MM-dd-yyyy' }" [hidden]="true" filter="date">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.dateOfBirth | date:'MM/dd/yyyy'}}
       </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <common-grid-cell-date-range-filter
+          [field]="'dateOfBirth'"
+          [filter]="filter"
+          [filterService]="filterService"
+        >
+        </common-grid-cell-date-range-filter>
+  </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="pronouns" title="Pronouns" [sortable]="false"   [width]="120">
+    <kendo-grid-column field="pronouns" title="Pronouns"   [width]="120">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">    
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="clientId" title="ID" [width]="70"></kendo-grid-column>
-    <kendo-grid-column field="urn" title="URN" [width]="70"></kendo-grid-column>
-    <kendo-grid-column field="preferredContact" title="Preferred Contact" [width]="130"></kendo-grid-column>
-    <kendo-grid-column field="caseStatus" title="Status" [width]="80"></kendo-grid-column>
-    <kendo-grid-column field="group" title="Group" [width]="80"></kendo-grid-column>
-    <kendo-grid-column field="eilgibilityStartDate" title="Eligibility Start Date" [width]="100"
-      [format]="{ date: 'MM-dd-yyyy' }"></kendo-grid-column>
-    <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="110"
-      [format]="{ date: 'MM-dd-yyyy' }"></kendo-grid-column>
-      
+    <kendo-grid-column field="clientId" title="Client ID" [width]="120"  format="0">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">                 
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>                              
+        </kendo-grid-numeric-filter-menu>
+         </ng-template> 
+    </kendo-grid-column>
+    <kendo-grid-column field="urn" title="URN" [width]="110">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="caseStatus" title="Status" [width]="120">
+      <ng-template kendoGridFilterMenuTemplate
+      let-column="column"
+      let-filter="filter"
+      let-filterService="filterService"
+      >
+      <kendo-dropdownlist
+      [data]="caseStatusTypes"
+      textField="lovDesc"
+      valueField="lovDesc"
+      [value]="statusValue"
+      (valueChange)="dropdownFilterChange('caseStatus',$event, filterService)"
+    >
+    </kendo-dropdownlist>
+ </ng-template>
+
+    </kendo-grid-column>
+    <kendo-grid-column field="group" title="Group" [width]="120">
+      <ng-template kendoGridFilterMenuTemplate
+        let-column="column"
+        let-filter="filter"
+        let-filterService="filterService"
+        >
+        <kendo-dropdownlist
+        [data]="groupData"
+        textField="lovDesc"
+        valueField="lovDesc"
+        [value]="groupValue"
+        (valueChange)="dropdownFilterChange('group', $event, filterService)"
+      >
+      </kendo-dropdownlist>
+   </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="eilgibilityStartDate" title="Eligibility Start Date" [width]="160"
+      [format]="{ date: 'MM-dd-yyyy' }" filter="date" >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.eilgibilityStartDate | date:'MM/dd/yyyy'}}
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <common-grid-cell-date-range-filter
+            [field]="'eilgibilityStartDate'"
+            [filter]="filter"
+            [filterService]="filterService"
+          >
+          </common-grid-cell-date-range-filter>
+    </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="email" title="Email" [width]="120" [hidden]="true">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
+    </kendo-grid-column>
+    <kendo-grid-column field="phone" title="Phone" [width]="120" [hidden]="true">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{ dataItem.phone | phone }}
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
+    </kendo-grid-column>
+    <kendo-grid-column field="genders" title="Gender" [width]="120" [hidden]="true"> 
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template>     
+    </kendo-grid-column>
+    <kendo-grid-column field="homeAddress" title="Home Address" [width]="120" [hidden]="true">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
+    </kendo-grid-column>
+    <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="160" 
+      [format]="{ date: 'MM-dd-yyyy' }" filter="date">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.eligibilityEndDate | date:'MM/dd/yyyy'}}
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <common-grid-cell-date-range-filter
+          [field]="'eligibilityEndDate'"
+          [filter]="filter"
+          [filterService]="filterService"
+        >
+        </common-grid-cell-date-range-filter>
+  </ng-template>
+    </kendo-grid-column>
+    
+
+    <kendo-grid-column field="caseManager" title="Case Manager"  [width]="160" [hidden]="true">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
+    </kendo-grid-column>
+    <kendo-grid-column field="assignedCw" title="Assigned to" [width]="120" [sticky]="(selectedTab != tabOptions.MY_CASES)" [hidden]="(selectedTab == tabOptions.MY_CASES)">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button aria-label="client name" kendoButton look="flat" class="card-link-button"
+        kendoPopoverAnchor
+        [popover]="userCard"
+        showOn="hover">
+          {{ dataItem.assignedCw }}
+        </button>
+
+          <kendo-popover #userCard width="330" position="left">
+            <ng-template kendoPopoverBodyTemplate>
+              <common-user-profile-card
+              [userId]="dataItem.assignedCwUserId"
+              [reassign]=true
+              ></common-user-profile-card>
+            </ng-template>
+          </kendo-popover>
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template> 
+    </kendo-grid-column>
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">
-      <div class="grid-custom-paginationtemplates d-flex"> 
-        <div class="d-flex align-items-center"> 
-          <label class="mr-1" for="RowsPerPage">Rows Per Page</label> 
+      <div class="grid-custom-paginationtemplates d-flex">
+        <div class="d-flex align-items-center">
+          <label class="mr-1" for="RowsPerPage">Clients Per Page</label>
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
                 [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
                 (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
-          <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+          <kendo-grid-messages [pagerItems]="' '"  [pagerItems]="'clients'" [pagerPage]="'Page'"> </kendo-grid-messages>
 
         </div>
-        <div class="d-flex"> 
-          <kendo-pager-input></kendo-pager-input> 
-          <kendo-pager-prev-buttons></kendo-pager-prev-buttons> 
+        <div class="d-flex">
+          <kendo-pager-input></kendo-pager-input>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
           <kendo-pager-next-buttons></kendo-pager-next-buttons>
-        </div> 
+        </div>
       </div>
-    </ng-template>  
- 
+    </ng-template>
+    <ng-template kendoGridLoadingTemplate>
+      <common-grid-loader-component></common-grid-loader-component>
+     </ng-template>
+         <!-- grid No data Template -->  
+         <ng-template kendoGridNoRecordsTemplate>
+          <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+          </div>
+          <p>There is no data to display.</p>
+        </ng-template> 
+
   </kendo-grid>
 </div>

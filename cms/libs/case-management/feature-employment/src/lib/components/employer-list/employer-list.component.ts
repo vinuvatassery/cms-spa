@@ -7,17 +7,17 @@ import {
   EventEmitter,
   Output,
   OnChanges,
+  ChangeDetectorRef
 } from '@angular/core';
-/** Enums **/
-import { ScreenType } from '@cms/case-management/domain';
-/** Facades **/
-import { ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa';
+/** External Libraries **/
 import { State } from '@progress/kendo-data-query';
+/** Internal Libraries **/
+import { ClientEmployer, EmploymentFacade, CaseFacade } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+
 @Component({
   selector: 'case-management-employer-list',
   templateUrl: './employer-list.component.html',
-  styleUrls: ['./employer-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployerListComponent implements OnInit, OnChanges {
@@ -25,15 +25,21 @@ export class EmployerListComponent implements OnInit, OnChanges {
   @Input() data!: any;
   @Input() employment$: any;
   @Input() isGridLoaderShow: any;
+  @Input() clientCaseEligibilityId: any;
+  @Input() clientId: any;
+  @Input() clientCaseId: any;
+  @Input() isClientProfileTab: boolean = false;
+  @Input() enableAddButton: boolean = true;
   @Output() loadEmploymentsEvent = new EventEmitter<any>();
   @Output() addUpdateEmploymentEvent = new EventEmitter<any>();
   /** Public properties **/
   filterable = false;
-  isAddEmployerButtonDisplayed!: boolean;
   isAdd = true;
   isRemoveEmployerConfirmationPopupOpened = false;
   isEmployerOpened = false;
   selectedEmployer: ClientEmployer = new ClientEmployer();
+  employmentValid$ = this.employmentFacade.employmentValid$;
+  isEmployerAvailable:boolean = true;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public sortValue = this.employmentFacade.sortValue;
   public sortType = this.employmentFacade.sortType;
@@ -42,7 +48,7 @@ export class EmployerListComponent implements OnInit, OnChanges {
   public sort = this.employmentFacade.sort;
   public state!: State;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public actions = [
     {
       buttonType: 'btn-h-primary',
@@ -59,21 +65,23 @@ export class EmployerListComponent implements OnInit, OnChanges {
   ];
 
   /** Constructor **/
-  constructor(private readonly employmentFacade: EmploymentFacade) {}
+  constructor(private readonly employmentFacade: EmploymentFacade,private readonly cdr: ChangeDetectorRef,private caseFacade: CaseFacade) {}
 
   /** Lifecycle hooks **/
 
   ngOnInit(): void {
-    this.addEmployerButtonDisplay();
-    this.loadEmployments();
-    
+    this.employmentValid$.subscribe(response=>{
+      this.isEmployerAvailable = response;
+      this.cdr.detectChanges();
+    })
+
   }
 
   ngOnChanges(): void {
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value,
-      sort: this.sort, 
+      sort: this.sort,
     };
     this.loadEmployments();
   }
@@ -101,8 +109,16 @@ export class EmployerListComponent implements OnInit, OnChanges {
   }
 
   public dataStateChange(stateData: any): void {
-    this.sort = stateData.sort; 
-    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sort = stateData.sort;
+    if(stateData.sort[0]?.field) {
+        if(stateData.sort[0].field == 'effectiveDate') {
+          this.sortValue = 'dateOfHire';
+        }
+        else {
+          this.sortValue = stateData.sort[0]?.field;
+        }
+    }
+    
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.loadEmployments();
@@ -135,14 +151,7 @@ export class EmployerListComponent implements OnInit, OnChanges {
   updateEmploymentHandle(employements: any) {
     this.loadEmployments();
   }
-  private addEmployerButtonDisplay() {
-    if (this.data === ScreenType.Case360Page) {
-      this.isAddEmployerButtonDisplayed = false;
-    } else {
-      this.isAddEmployerButtonDisplayed = true;
-    }
-  }
-  
+
   // employer detail popup close handler
   onEmployerClosed() {
       this.isEmployerOpened = false;

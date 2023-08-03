@@ -1,18 +1,25 @@
-<case-management-authorization></case-management-authorization>
+
+<case-management-authorization
+  [isCerForm] = "isCerForm"
+  [clientCaseEligibilityId]="clientCaseEligibilityId"
+  [templateNotice$]="templateNotice$"
+  (loadAuthorizationData)="loadAuthorization()"
+  (saveAuthorizationData)="saveAuthorization($event)"
+  (loadAuthorizationNotice)="loadAuthorizationNotice()"
+  (setStartButtonVisibility)="setStartButtonVisibility($event)"
+></case-management-authorization>
 
 <!-- Application Review -->
-<div class="client-data-block mt-4 pt-2">
-  <h3>Application Review</h3>
+<div class="client-data-block mt-4">
+  <h3>{{isCerForm ?'Eligibility Review' : 'Application Review'}}</h3>
   <section>
     <div class="flex-row">
       <div class="flex-col">
         <button
           kendoButton
-          [primary]="true"
-          routerLink="/case-detail/application-eligibility/eligibility"
-          aria-label="start application review"
-          [disabled]="btnDisabled"
-          (click)="btnDisabled = true;"
+          [primary]="true"  
+          [disabled]="!(startReviewButtonVisibility$ | async)"      
+          (click)="onStartButtonClick()"
         >
           Start
         </button>

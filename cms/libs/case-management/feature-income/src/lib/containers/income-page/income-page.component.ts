@@ -1,13 +1,13 @@
 
 
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, ElementRef, AfterViewInit, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnDestroy, OnInit, ElementRef, AfterViewInit,ChangeDetectorRef } from '@angular/core';
 /** External libraries **/
-import {catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, Observable, tap } from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, StatusFlag } from '@cms/case-management/domain';
-import { IntlDateService,UIFormStyle } from '@cms/shared/ui-tpa';
-import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms';
+import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, StatusFlag, ClientDocumentFacade, FamilyAndDependentFacade } from '@cms/case-management/domain';
+import { IntlDateService,UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
+import { Validators, FormGroup, FormControl, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute, Router } from '@angular/router';
 import {ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -55,9 +55,46 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   private loadSessionSubscription!: Subscription;
   public noIncomeDetailsForm: FormGroup = new FormGroup({
     noIncomeClientSignedDate: new FormControl('', []),
-    noIncomeSignatureNotedDate: new FormControl(this.todaysDate, []),
+    noIncomeSignatureNotedDate: new FormControl({value: this.todaysDate, disabled: true}, []),
     noIncomeNote: new FormControl('', []),
   });
+  isCerForm = false;
+  hasValidIncome = false;
+  prevClientCaseEligibilityId! : string;
+  public uploadFileRestrictions: UploadFileRistrictionOptions =
+  new UploadFileRistrictionOptions();
+  proofOfSchoolDocument!:any
+  columnOptionDisabled = false;
+  dependentsProofOfSchools:any = [];
+  popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  public actions = [
+    {
+      buttonType:"btn-h-primary",
+      text: "Attach from computer",
+      id: "proofOfSchoolUploaded",
+      click: (event: any,dataItem: any): void => {
+      },
+    },
+    {
+      buttonType:"btn-h-primary",
+      text: "Attach from client/'s attachments",
+      id: "attachFromClient",
+      click: (event: any,dataItem: any): void => {
+      },
+    },
+
+    {
+      buttonType:"btn-h-danger",
+      text: "Remove file",
+      id: "removeFile",
+      click: (event: any,dataItem: any): void => {
+      this.removeDependentsProofofSchoool(dataItem.clientDocumentId)
+      },
+    },
+
+
+  ];
+
   /** Constructor **/
   constructor(private readonly incomeFacade: IncomeFacade,
     private readonly completionStatusFacade: CompletionStatusFacade,
@@ -68,11 +105,16 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly elementRef: ElementRef,
     private readonly loaderService: LoaderService,
     private readonly configurationProvider : ConfigurationProvider,
-	  private readonly router: Router) { }
+	  private readonly router: Router,
+    private readonly clientDocumentFacade: ClientDocumentFacade,
+    private readonly dependentFacade:FamilyAndDependentFacade,
+    private readonly cdr: ChangeDetectorRef
+    ) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadSessionData();
+    this.loadDependents();
     this.loadIncomeTypes();
     this.incomeNoteWordCount();
     this.loadIncomeSources();
@@ -94,9 +136,10 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(){
     this.workflowFacade.enableSaveButton();
-  } 
+  }
 
   /** Private methods **/
+
   private incomeNoteWordCount() {
     this.incomeNoteCharachtersCount = this.incomeNote
       ? this.incomeNote.length
@@ -129,7 +172,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     ).subscribe(([navigationType, isSaved]) => {
       if (isSaved) {
         this.loaderService.hide();
-        this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income Status Updated')
+        this.incomeFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Income Status Updated Successfully')
         this.workflowFacade.navigate(navigationType);
       } else {
         this.workflowFacade.enableSaveButton();
@@ -142,33 +185,34 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       let isValid = true;
       this.submitIncomeDetailsForm();
       if (this.noIncomeDetailsForm.valid && isValid) {
+        this.noIncomeData.isCERRequest = this.isCerForm;
         this.loaderService.show();
-        return this.incomeFacade.save(this.noIncomeData);
+        return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData);
       }
     }
     else{
       if (!this.hasNoIncome && this.incomeData.clientIncomes != null)
       {
         this.loaderService.show();
+        this.incomeFacade.incomeValidSubject.next(true);
         this.noIncomeData.noIncomeFlag = StatusFlag.No;
         this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
         this.noIncomeData.clientId = this.clientId
         this.noIncomeData.noIncomeClientSignedDate = null;
         this.noIncomeData.noIncomeSignatureNotedDate = null;
         this.noIncomeData.noIncomeNote = null;
+        this.noIncomeData.isCERRequest = this.isCerForm;
         this.loaderService.show();
-        return this.incomeFacade.save(this.noIncomeData)
-        .pipe
-        (
+        return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
         catchError((err: any) => {
-          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR , err)
+          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
           return  of(false);
         })
         )
       }
       else
-      { 
-        this.incomeFacade.errorShowHideSnackBar( "Please fill the income details")
+      {
+        this.incomeFacade.incomeValidSubject.next(false);
         return  of(false);
       }
     }
@@ -210,11 +254,11 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   private adjustAttributeChanged() {
     const noIncome: CompletionChecklist = {
       dataPointName: 'incomeFlag_no',
-      status: this.hasNoIncome === true ? StatusFlag.Yes :StatusFlag.No
+      status: this.hasNoIncome  ? StatusFlag.Yes :StatusFlag.No
     };
     const yesIncome: CompletionChecklist = {
       dataPointName: 'incomeFlag_yes',
-      status: this.hasNoIncome === false ? StatusFlag.Yes :StatusFlag.No
+      status: !this.hasNoIncome  ? StatusFlag.Yes :StatusFlag.No
     };
 
     this.workflowFacade.updateBasedOnDtAttrChecklist([noIncome, yesIncome]);
@@ -258,11 +302,17 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.incomeFacade.incomesResponse$.subscribe((incomeresponse: any) => {
       this.incomeData = incomeresponse;
       this.incomeListRequiredValidation = false;
+      this.hasValidIncome=false;
+      let todayDate = new Date();
+      todayDate = new Date(`${todayDate.getFullYear()}-${todayDate.getMonth()+1}-${todayDate.getDate()}`)
+      if(this.incomeData.clientIncomes?.filter((x:any) => (x.incomeEndDate != null && new Date(x.incomeEndDate.split('T')[0]) >= todayDate) || x.incomeEndDate === null).length>0){
+        this.hasValidIncome=true;
+      }
       if (incomeresponse.noIncomeData!=null) {
         this.noIncomeFlag = true;
         this.noIncomeDetailsForm = new FormGroup({
           noIncomeClientSignedDate: new FormControl('', []),
-          noIncomeSignatureNotedDate: new FormControl(this.todaysDate, []),
+          noIncomeSignatureNotedDate: new FormControl({value: this.todaysDate, disabled: true}, []),
           noIncomeNote: new FormControl('', []),
         });
         this.noIncomeDetailsFormChangeSubscription();
@@ -293,7 +343,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.hasNoIncome) {
       this.noIncomeDetailsForm = new FormGroup({
         noIncomeClientSignedDate: new FormControl('', []),
-        noIncomeSignatureNotedDate: new FormControl(this.todaysDate, []),
+        noIncomeSignatureNotedDate: new FormControl({value: null, disabled: true}, []),
         noIncomeNote: new FormControl('', []),
       });
       this.isNodateSignatureNoted = true;
@@ -327,14 +377,14 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.noIncomeDetailsForm.controls[
         'noIncomeNote'
       ].updateValueAndValidity();
-      var signeddate=this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].value;
-      var todayDate= new Date();
-      if(signeddate>todayDate){
+      const signedDate=this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].value;
+      const todayDate= new Date();
+      if(signedDate>todayDate){
         this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setErrors({'incorrect':true})
       }
-      // this.onDoneClicked();
+
       if (this.noIncomeDetailsForm.valid) {
-        this.noIncomeData.noIncomeFlag = this.hasNoIncome == true ? "Y" : "N";
+        this.noIncomeData.noIncomeFlag = this.hasNoIncome ? StatusFlag.Yes :StatusFlag.No;
         this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
         this.noIncomeData.clientId = this.clientId
         this.noIncomeData.noIncomeClientSignedDate = new Date(this.intl.formatDate(this.noIncomeDetailsForm.get("noIncomeClientSignedDate")?.value, this.dateFormat));
@@ -364,6 +414,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
           this.clientId = JSON.parse(session.sessionData).clientId;
+          this.prevClientCaseEligibilityId =  JSON.parse( session.sessionData)?.prevClientCaseEligibilityId
+        if (this.prevClientCaseEligibilityId) { this.isCerForm = true; }
           const gridDataRefinerValue = {
             skipCount: this.incomeFacade.skipCount,
             pagesize: this.incomeFacade.gridPageSizes[0]?.value,
@@ -398,12 +450,12 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+            this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
           }
         })
       }
       else {
-        this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+        this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
       }
     });
   }
@@ -412,14 +464,21 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
       if (val) {
         this.checkValidations()
-          this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+        this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }
     });
   }
 
   checkValidations(){
-    this.submitIncomeDetailsForm();
-    return this.noIncomeDetailsForm.valid;
+    if (this.hasNoIncome) {
+      this.submitIncomeDetailsForm();
+      return this.noIncomeDetailsForm.valid;
+    }
+    if (!this.hasNoIncome && this.incomeData.clientIncomes == null) {
+      this.incomeFacade.incomeValidSubject.next(false);
+      return false;
+    }
+    return true;
   }
   private addDiscardChangesSubscription(): void {
     this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
@@ -445,5 +504,116 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].updateValueAndValidity();
       this.noIncomeDetailsForm.controls['noIncomeNote'].updateValueAndValidity();
     }
+  }
+  dateChange(date:any)
+  {
+    if(date.value)
+    {
+      this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValue(this.todaysDate);
+    }
+  }
+  viewOrDownloadFile(type: string, clientDocumentId: string, documentName: string) {
+    this.loaderService.show()
+    this.clientDocumentFacade.getClientDocumentsViewDownload(clientDocumentId)
+    .subscribe({
+      next: (data: any) => {
+        const fileUrl = window.URL.createObjectURL(data);
+        if (type === 'download') {
+          const downloadLink = document.createElement('a');
+          downloadLink.href = fileUrl;
+          downloadLink.download = documentName;
+          downloadLink.click();
+        } else {
+          window.open(fileUrl, "_blank");
+        }
+        this.loaderService.hide();
+      },
+      error: (error) => {
+        this.loaderService.hide();
+        this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+      }
+    });
+  }
+  handleFileSelected(event: any, dataItem: any) {
+    this.dependentFacade.showLoader();
+    if (event && event.files.length > 0) {
+      const formData: any = new FormData();
+      let file = event.files[0].rawFile
+      if(dataItem.clientDocumentId){
+        formData.append("clientDocumentId", dataItem.clientDocumentId);
+        formData.append("concurrencyStamp", dataItem.documentConcurrencyStamp);
+      }
+      formData.append("document", file)
+      formData.append("clientId", this.clientId)
+      formData.append("clientCaseEligibilityId", this.clientCaseEligibilityId)
+      formData.append("clientCaseId", this.clientCaseId)
+      formData.append("EntityId", dataItem.clientDependentId)
+      formData.append("documentTypeCode", "DEPENDENT_PROOF_OF_SCHOOL")
+      this.showHideImageUploadLoader(true, dataItem);
+      this.dependentFacade.uploadDependentProofOfSchool(this.clientCaseEligibilityId, dataItem.clientDependentId, formData).subscribe({
+        next: (response: any) => {
+          this.loadIncomeData();
+          this.loadDependentsProofOfSchools();
+          this.dependentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Dependent proof of school uploaded successfully.");
+          this.dependentFacade.hideLoader();
+          this.showHideImageUploadLoader(false, dataItem);
+
+        },
+        error: (err: any) => {
+          this.showHideImageUploadLoader(false, dataItem);
+          this.dependentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        }
+      })
+    }
+
+  }
+  showHideImageUploadLoader(showHide:boolean,dataItem:any){
+    this.dependentsProofOfSchools.filter((dep:any)=>dep.clientDependentId==dataItem.clientDependentId).forEach((element:any)=>{
+      element["uploaingProofDoc"]=showHide;
+      this.cdr.detectChanges();
+    })
+  }
+  removeDependentsProofofSchoool(documentid: string){
+    if (documentid) {
+      this.incomeFacade.showLoader();
+      this.clientDocumentFacade.removeDocument(documentid).subscribe({
+        next: (response: any) => {
+          this.loadIncomeData();
+          this.loadDependentsProofOfSchools();
+          this.incomeFacade.hideLoader();
+          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Proof of school attachment removed successfully') ;
+        },
+        error: (err: any) => {
+          this.incomeFacade.hideLoader();
+          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        },
+      }
+      );
+    }
+  }
+  private loadDependentsProofOfSchools() {
+    this.incomeFacade.showLoader();
+    this.incomeFacade.loadDependentsProofofSchools();
+    this.incomeFacade.hideLoader();
+  }
+  loadDependents(){
+    this.incomeFacade.dependentsProofofSchools$.subscribe((response:any)=>{
+      if(response&&response.length>0){
+        this.dependentsProofOfSchools=response;
+        this.cdr.detectChanges();
+      }
+      else{
+        this.dependentsProofOfSchools = [];
+      }
+    })
+  }
+  private loadIncomeData(): void {
+    const gridDataRefinerValue = {
+      skipCount: this.incomeFacade.skipCount,
+      pagesize: this.incomeFacade.gridPageSizes[0]?.value,
+      sortColumn : 'incomeSourceCodeDesc',
+      sortType : 'asc',
+    };
+    this.loadIncomeListHandle(gridDataRefinerValue);
   }
 }

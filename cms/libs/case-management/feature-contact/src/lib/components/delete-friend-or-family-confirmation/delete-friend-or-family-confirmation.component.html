@@ -1,0 +1,26 @@
+<section class="k-dialog-body">
+  <p class="text-muted mb-2">
+    They will be permanently deleted from the client's profile.
+  </p>
+</section>
+
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button
+        kendoButton
+        [primary]="true"
+        look="outline"
+        aria-label="cancel"
+        (click)="closeDeleteModal()"
+      >
+        Cancel
+      </button>
+      <button kendoButton
+      class="k-error-button"
+      aria-label="delete" (click)="deleteContact()">
+        Delete
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>

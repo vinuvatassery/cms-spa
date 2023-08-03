@@ -16,13 +16,27 @@ import { UserProfileCardComponent } from './user-profile-card/user-profile-card.
 import { LoaderComponent } from './loader/loader.component';
 import { GridLoaderComponent } from './loader/grid-loader.component';
 import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list.component';
+
 import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 // directive
-import {kendoFileSelectDirective, KendoFileUploadDirective, FormFieldAutoFocus, TextFieldFormFieldAutoFocus, DropDownFieldFormFieldAutoFocus } from './directives/kendo-componentsforaccessanility.directive'
-import { CaseManagerCardComponent } from './hiv-case-manager-card/case-manager-card.component';
-// import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
+import {
+  KendoFileSelectDirective,
+  FormFieldAutoFocus,
+  TextFieldFormFieldAutoFocus,
+  DropDownFieldFormFieldAutoFocus,
+} from './directives/kendo-componentsforaccessibility.directive';
+
+import { KendoFileUploadDirective } from './directives/kendo-file-upload-accessibility.directive';
+import { AfterValueChangedDirective } from './directives/after-value-changed.directive';
+import { PermissionManagerDirective } from './directives/permission-manager.directive';
+import { UserPhotoIconComponent } from './user-photo-icon/user-photo-icon.component';
+import { CaseEligibilityPeriodsComponent } from './case-eligibility-periods/case-eligibility-periods.component';
+import { GridCellDateRangeFilterComponent } from './grid-cell-date-range-filter/grid-cell-date-range-filter.component';
+import { DocumentUploadComponent } from './document-upload/document-upload.component';
+import { ClientsAttachmentComponent } from './clients-attachment/clients-attachment.component';
+import { YesOrNoPipe } from './pipes/yes-or-no.pipe';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
@@ -42,12 +56,19 @@ import { CaseManagerCardComponent } from './hiv-case-manager-card/case-manager-c
     SsnPipe,
     PhonePipe,
     FileSizePipe,
-    kendoFileSelectDirective,
+    KendoFileSelectDirective,
     KendoFileUploadDirective,
-    FormFieldAutoFocus, 
+    AfterValueChangedDirective,
+    FormFieldAutoFocus,
     TextFieldFormFieldAutoFocus,
     DropDownFieldFormFieldAutoFocus,
-    CaseManagerCardComponent
+    PermissionManagerDirective,
+    UserPhotoIconComponent,
+    CaseEligibilityPeriodsComponent,
+    GridCellDateRangeFilterComponent,
+    DocumentUploadComponent,
+    ClientsAttachmentComponent,
+    YesOrNoPipe
   ],
   exports: [
     LoginStatusComponent,
@@ -65,12 +86,19 @@ import { CaseManagerCardComponent } from './hiv-case-manager-card/case-manager-c
     SsnPipe,
     PhonePipe,
     FileSizePipe,
-    kendoFileSelectDirective,
+    KendoFileSelectDirective,
     KendoFileUploadDirective,
-    FormFieldAutoFocus, 
+    AfterValueChangedDirective,
+    FormFieldAutoFocus,
     TextFieldFormFieldAutoFocus,
     DropDownFieldFormFieldAutoFocus,
-    CaseManagerCardComponent
+    PermissionManagerDirective,
+    UserPhotoIconComponent,
+    CaseEligibilityPeriodsComponent,
+    GridCellDateRangeFilterComponent,
+    DocumentUploadComponent,
+    ClientsAttachmentComponent,
+    YesOrNoPipe
   ],
 })
 export class SharedUiCommonModule {}

@@ -1,11 +1,12 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable, Subject } from 'rxjs';
 import { SmokingCessation } from '../entities/smoking-cessation';
 import { SmokingCessationDataService } from '../infrastructure/smoking-cessation.data.service';
 import { SnackBar } from '@cms/shared/ui-common';
 import { LoaderService ,NotificationSnackbarService, SnackBarNotificationType,LoggingService} from '@cms/shared/util-core';
+
+import { ClientNote } from '../entities/client-note';
 @Injectable({ providedIn: 'root' })
 export class SmokingCessationFacade {
    
@@ -40,11 +41,22 @@ export class SmokingCessationFacade {
      {
        this.loaderService.hide();
      }
-    updateSmokingCessation(smokingCessation:SmokingCessation):Observable<any> 
+    updateSmokingCessation(smokingCessation:SmokingCessation,clientId:any):Observable<any> 
     {
-        return this.smokingCessationDataService.updateSmokingCessation(smokingCessation);
+        return this.smokingCessationDataService.updateSmokingCessation(smokingCessation,clientId);
     }
-    loadSmokingCessation(clientCaseEligibilityId:any,clientCaseId:any) {
-        return this.smokingCessationDataService.loadSmokingCessation(clientCaseEligibilityId,clientCaseId);
+    loadSmokingCessation(clientCaseEligibilityId:any,clientCaseId:any,clientId:any) {
+        return this.smokingCessationDataService.loadSmokingCessation(clientCaseEligibilityId,clientCaseId,clientId);
       }
+      loadSmokingCessationNotes(clientId:any,clientCaseId:any,clientCaseEligibilityId:any,type:any,isShowHistoricalData:boolean=false){
+        return this.smokingCessationDataService.loadSmokingCessationNotes(clientId,clientCaseId,clientCaseEligibilityId,type,isShowHistoricalData);
+      }
+      createSmokingCessationNote(clientNote: ClientNote) {
+        return this.smokingCessationDataService.createSmokingCessationNote(clientNote);
+      }
+
+      loadClientNote(clientCaseEligibilityId:any,clientId:any) {
+        return this.smokingCessationDataService.loadClientNote(clientCaseEligibilityId,clientId);
+      }
+
 }

@@ -62,7 +62,7 @@
     object-fit: cover;
     object-position: center;
     border-radius: 50%;
-    background: $light-bgcolor;
+    background: $light-bg_color;
 }
 .k-popover {
   border: 1px solid $theme-border;
@@ -92,7 +92,7 @@
     gap: 12px;
     padding: 14px;
     align-items: center;
-    border-top: 1px solid $theme-border;
+    // border-top: 1px solid $theme-border;
     background: $white;
     h5 {
       margin: $size-0;

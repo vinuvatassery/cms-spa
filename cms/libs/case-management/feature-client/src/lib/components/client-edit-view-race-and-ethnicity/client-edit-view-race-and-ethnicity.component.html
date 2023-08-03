@@ -19,23 +19,6 @@
             [textField]="'lovDesc'"
             [valueField]="'lovCode'"
           >
-            <!-- <ng-template kendoMultiSelectHeaderTemplate let-dataItem>
-              <div class="input-search">
-                <span
-                  class="material-icons"
-                  aria-label="search racial identity"
-                  aria-hidden="true"
-                  >search</span
-                >
-                <kendo-floatinglabel text="Search">
-                  <kendo-textbox
-                    aria-label="search racial identity"
-                    [fillMode]="formUiStyle.inputFillMode"
-                  >
-                  </kendo-textbox>
-                </kendo-floatinglabel>
-              </div>
-            </ng-template> -->
             <ng-template kendoMultiSelectItemTemplate let-dataItem>
               <span class="app-checkboxwidtext-wrapper">
                 <label class="k-checkbox-label" [for]="dataItem.lovDesc">{{
@@ -73,7 +56,7 @@
               [checkboxes]="{ checkOnClick: true, enabled: true }"
               formControlName="RaceAndEthnicity"
               #racialidentity
-              [autoClose]="false"
+              [autoClose]="true"
               [fillMode]="formUiStyle.dropDownFillMode"
               [data]="raceAndEthnicityData"
               [textField]="'lovDesc'"
@@ -85,24 +68,6 @@
                 animate: true
               }"
             >
-              <!-- <ng-template kendoMultiSelectHeaderTemplate let-dataItem>
-                <div class="input-search">
-                  <span
-                    class="material-icons"
-                    aria-label="search racial identity"
-                    aria-hidden="true"
-                    >search</span
-                  >
-                  <kendo-floatinglabel text="Search">
-                    <kendo-textbox
-                      aria-label="search racial identity"
-                      [fillMode]="formUiStyle.inputFillMode"
-                      placeholder="Search"
-                    >
-                    </kendo-textbox>
-                  </kendo-floatinglabel>
-                </div>
-              </ng-template> -->
               <ng-template kendoMultiSelectItemTemplate let-dataItem>
                 <span class="app-checkboxwidtext-wrapper">
                   <input
@@ -110,10 +75,11 @@
                     kendoCheckBox
                     attr.aria-labelledby="{{dataItem.lovDesc}}"
                     [id]="dataItem.lovDesc"
+                    [checked]="getCheckedItems(dataItem)"
                   />
-                  <label class="k-checkbox-label" [for]="dataItem.lovDesc">{{
+                  <span class="k-checkbox-label" attr.aria-label="{{dataItem.lovDesc}}">{{
                     dataItem.lovDesc
-                  }}</label>
+                  }}</span>
                 </span>
               </ng-template>
             </kendo-multiselect>

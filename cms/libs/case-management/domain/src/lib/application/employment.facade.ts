@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 /** External libraries **/
 import { Observable, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-/** interal libraries **/
+/** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 // entities library
@@ -15,17 +15,17 @@ import { EmployersDataService } from '../infrastructure/employers.data.service';
 import { StatusFlag } from '../enums/status-flag.enum'
 import { WorkflowFacade } from './workflow.facade'
 /** Providers **/
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class EmploymentFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'employerName'
-  public sortType = ''
+  public sortValue = 'employerName';
+  public sortType = 'asc';
   public sort: SortDescriptor[] = [{
-    field: this.sortValue, 
+    field: this.sortValue,
   }];
 
   /** Private properties **/
@@ -33,11 +33,15 @@ export class EmploymentFacade {
   private employersDetailsSubject = new BehaviorSubject<any>([]);
   private employmentStatusGetSubject = new Subject<any>();
   private employersStatusSubject = new BehaviorSubject<any>([]);
+  private prvEmployersSubject = new Subject<any>();
+  employmentValidSubject = new Subject<boolean>();
   /** Public properties **/
   employers$ = this.employersSubject.asObservable();
   employersDetails$ = this.employersDetailsSubject.asObservable();
   employmentStatusGet$ = this.employmentStatusGetSubject.asObservable();
   employersStatus$ = this.employersStatusSubject.asObservable();
+  employmentValid$ = this.employmentValidSubject.asObservable();
+  prvEmployers$ = this.prvEmployersSubject.asObservable();
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
@@ -48,7 +52,7 @@ export class EmploymentFacade {
 
   errorShowHideSnackBar( subtitle : any)
   {
-    this.notificationSnackbarService.errorSnackBar(subtitle)
+    this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR,subtitle, NotificationSource.UI)
   }
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -87,20 +91,24 @@ export class EmploymentFacade {
 
   // Loading the employmet lists
   loadEmployers(
+    clientId : any,
     clientCaseEligibilityId: string,
     skipcount: number,
     maxResultCount: number,
     sort: string,
-    sortType: string
+    sortType: string,
+    type:string
   ) {
     this.showLoader();
     this.employersDataService
       .loadEmploymentService(
+        clientId,
         clientCaseEligibilityId,
         skipcount,
         maxResultCount,
         sort,
-        sortType
+        sortType,
+        type
       )
       .subscribe({
         next: (employersResponse: any) => {
@@ -123,35 +131,61 @@ export class EmploymentFacade {
       });
   }
 
+  loadPrevEmployers(clientId : any,prvClientCaseEligibilityId: string,){
+    this.showLoader();
+    this.employersDataService
+    .loadEmploymentService(
+      clientId,
+      prvClientCaseEligibilityId,
+      0,
+      1000,
+      '',
+      '',
+      'Old'
+    )
+    .subscribe({
+      next: (employersResponse: any) => {
+        if (employersResponse) {
+          this.prvEmployersSubject.next(employersResponse['items']);
+          this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+
   // Loading the employmet details based on employerid
-  loadEmployersDetails(clientCaseEligibilityId: string, clientEmployerId: string) {
+  loadEmployersDetails(clientId : string, clientEmployerId: string) {
     return this.employersDataService.loadEmployersDetailsService(
-      clientCaseEligibilityId,
+      clientId,
       clientEmployerId
     );
   }
 
   // creating a new employer
-  createEmployer(clientEmployer: ClientEmployer): Observable<any> {
-    return this.employersDataService.createClientNewEmployerService(clientEmployer);
+  createEmployer(clientId : any, clientEmployer: ClientEmployer): Observable<any> {
+    return this.employersDataService.createClientNewEmployerService(clientId, clientEmployer);
   }
 
   // updating the employer
-  updateEmployer(clientEmployer: ClientEmployer): Observable<any> {
-    return this.employersDataService.updateClientEmployerService(clientEmployer);
+  updateEmployer(clientId : any, clientEmployer: ClientEmployer, clientEmployerId : string): Observable<any> {
+    return this.employersDataService.updateClientEmployerService(clientId, clientEmployer, clientEmployerId);
   }
 
   // removing the employer
-  deleteEmployer(clientCaseEligibilityId: string, clientEmployerId: string) {
+  deleteEmployer(clientId : any, clientEmployerId: string) {
     return this.employersDataService.removeClientEmployerService(
-      clientCaseEligibilityId,
+      clientId,
       clientEmployerId
     );
   }
 
   // updating the unemployment stats
-  unEmploymentUpdate(clientCaseEligibilityId: string, isEmployed: string) {
-    return this.employersDataService.employmentStatusUpdateService(clientCaseEligibilityId, isEmployed);
+  employmentUpdate(clientCaseEligibilityId: string, employmentData: any) {
+    return this.employersDataService.employmentUpdateService(clientCaseEligibilityId, employmentData);
   }
 
   updateWorkFlowCount(status: StatusFlag) {
@@ -161,6 +195,28 @@ export class EmploymentFacade {
     }];
 
     this.workflowFacade.updateChecklist(workFlowdata);
+  }
+
+  validateOldEmployers(prvEmployers: any){
+    let isValid = true;
+    prvEmployers.forEach((emp:any) => {
+      emp.cerReviewStatusCodeRequired = false;
+      emp.endDateRequired = false;
+      if(!emp.cerReviewStatusCode || emp.cerReviewStatusCode === 'PENDING'){
+        isValid = false;
+        emp.cerReviewStatusCodeRequired = true;
+      }
+      else if(emp.cerReviewStatusCode === 'INACTIVE' && !emp.endDate){
+        isValid = false;
+        emp.endDateRequired = true;
+      }
+      else if(emp.endDate !== null && emp.endDate<emp.dateOfHire){
+        isValid = false;
+        emp.endDateAfterHireDate = true;
+      }
+    });
+    this.prvEmployersSubject.next(prvEmployers);
+    return isValid;
   }
 
 }

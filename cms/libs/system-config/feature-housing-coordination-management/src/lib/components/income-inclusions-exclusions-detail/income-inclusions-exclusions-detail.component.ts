@@ -4,7 +4,6 @@ import { CommunicationFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'system-config-income-inclusions-exclusions-detail',
   templateUrl: './income-inclusions-exclusions-detail.component.html',
-  styleUrls: ['./income-inclusions-exclusions-detail.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

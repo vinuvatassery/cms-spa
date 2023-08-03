@@ -49,6 +49,19 @@
       </div>
     </div>
   </div>
+  <span class="app-checkboxwidtext-wrapper" *ngIf="!isNewPharmacyAdded"> 
+    <input
+      type="checkbox"
+      [disabled]="!selectedPharmacyId"
+      [(ngModel)]="isSetAsPrimary"
+      kendoCheckBox
+      aria-labelledby="Setasprimarypharmacy"
+      id="Setasprimarypharmacy"
+    />
+    <label class="k-checkbox-label" for="Setasprimarypharmacy"
+      >Set as primary pharmacy</label
+    >
+  </span>
 </section>
 <kendo-dialog-actions>
   <div class="justify-content-between">
@@ -116,7 +129,7 @@
 </kendo-dialog-actions>
 </kendo-dialog>
 
-<!-- <kendo-dialog
+<!-- //NOSONAR  <kendo-dialog
   *ngIf="isOpenNewPharmacyClicked"
   (close)="onCloseNewPharmacyClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"

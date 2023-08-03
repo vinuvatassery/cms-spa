@@ -10,7 +10,30 @@
       <kendo-grid [data]="medicalHealthPlans$ |async" #employersGrid [pageSize]="state.take" [pageable]="true"
       [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
       [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
-        <kendo-grid-column field="FullDetail" title="Full Detail" [width]="75" [sortable]="false">
+
+      <kendo-grid-column *ngIf="isCerForm" field="ReviewInsurance" title="Review Insurance" [width]="180" [sortable]="false">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button  
+            *ngIf="dataItem.cerReviewStatusCode === 'PENDING' || dataItem.cerReviewStatusCode === 'START_REVIEW'" 
+            kendoButton look="flat"  
+            themeColor="error" 
+            class="card-link-button" 
+            aria-label="Start Review"
+            (click)="handleHealthInsuranceOpenClicked('review')"
+            (click)="handleInsuranceType(dataItem)"> 
+            <span class="material-icons"> error  </span>Start Review   </button>
+          <button  
+            *ngIf="dataItem.cerReviewStatusCode === 'REVIEWED'" 
+            kendoButton look="flat"  
+            themeColor="success" 
+            class="card-link-button" 
+            aria-label="Reviewed">  
+            <span class="material-icons"> check_circle </span>  Reviewed   
+          </button>
+        
+        </ng-template>
+      </kendo-grid-column>
+        <kendo-grid-column field="FullDetail" title="Full Detail" [width]="160" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem><button kendoButton look="flat" class="card-link-button"
               (click)="handleHealthInsuranceOpenClicked('view')" (click)="handleInsuranceType(dataItem)"
               aria-label="view medical premium">
@@ -18,7 +41,7 @@
             </button></ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="healthInsuranceTypeDesc" title="Health Insurance Type"
-          [width]="140"></kendo-grid-column>
+          [width]="280"></kendo-grid-column>
         <kendo-grid-column field="priorityDesc" title="Priority" [width]="100">
         </kendo-grid-column>
         <kendo-grid-column field="insuranceCarrierName" title="Insurance Carrier Name" [width]="150">
@@ -27,7 +50,7 @@
               aria-label="carrier name"
               kendoPopoverAnchor
               [popover]="myPopover"
-              (click)="getCarrierContactInfo(dataItem.insuranceCarrierId,'')"
+              (click)="getCarrierContactInfo(dataItem.insuranceVendorId,'')"
               >
               {{ dataItem.insuranceCarrierName }}
             </button></ng-template>
@@ -37,14 +60,14 @@
               aria-label="plan name"
               kendoPopoverAnchor
               [popover]="myPopover"
-              (click)="getCarrierContactInfo(dataItem.insuranceCarrierId,dataItem.insurancePlanName)"
+              (click)="getCarrierContactInfo(dataItem.insuranceVendorId,dataItem.insurancePlanName)"
               >
               {{ dataItem.insurancePlanName }}
             </button></ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="premiumAmt" title="Premium Paid" [width]="110"></kendo-grid-column>
-        <kendo-grid-column field="premiumFrequencyDesc" title="Frequency" [width]="110"></kendo-grid-column>
-        <kendo-grid-column field="startDate" title="Start Date" [width]="110">
+        <kendo-grid-column field="premiumFrequencyDesc" title="Frequency" [width]="120"></kendo-grid-column>
+        <kendo-grid-column field="startDate" title="Start Date" [width]="120">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.startDate |date: 'MM/dd/yyyy'}}
           </ng-template>
@@ -55,56 +78,22 @@
             {{dataItem.endDate |date: 'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="careassistPayingPremiumFlag" title="CAREAssist paying premium?" [width]="150"
+        <kendo-grid-column field="careassistPayingPremiumFlag" title="CAREAssist paying premium?" [width]="200"
           class="text-center">
         </kendo-grid-column>
         <kendo-grid-column field="Option" title="Options" [width]="75" [sticky]="true" class="text-center"  [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <kendo-dropdownbutton [data]="actions" icon="more-vertical"    title="More option" class="TableActionPopup app-dropdown-action"
+            <kendo-dropdownbutton [data]="actions" icon="more-vertical"    title="More option" class="TableActionPopup app-dropdown-action more_action_wid"
               buttonClass="k-icon-button" aria-label="more actions"
-              [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-
+              [popupSettings]="{ popupClass: popupClassAction,  animate: true }">
+              <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
-                  aria-hidden="false" (click)="handleOptionClick(dataItem,buttondataItem.type)">
+                  aria-hidden="false" (click)="handleOptionClick(dataItem,buttondataItem.type)"
+                  [hidden]="dataItem.healthInsuranceTypeCode ==='VETERANS_ADMINISTRATION' && buttondataItem.btnName ==='copy'">
                   <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
-                  <label> {{ buttondataItem.text }} </label>
+                  <label> {{ buttondataItem.btnName === 'delete' && isCerForm === true ? 'Remove Insurance' : buttondataItem.text }} </label>
                 </button>
-                <!-- <button
-                  kendoButton
-                  icon="edit"
-                  look="flat"
-                  class="btn-h-primary"
-                  (click)="handleHealthInsuranceOpenClicked('edit')"
-                  (click)="handleInsuranceType(dataItem.InsuranceType)"
-                  aria-label="edit insurance"
-                >
-                  Edit Insurance
-                </button>
-                <button
-                  kendoButton
-                  look="flat"
-                  class="btn-h-primary"
-                  (click)="onChangePriorityOpenClicked()"
-                  aria-label="change priority"
-                >
-                  <span
-                    class="material-icons"
-                    aria-label="format line spacing"
-                    aria-hidden="true"
-                    >format_line_spacing</span
-                  >Change Priority
-                </button>
-                <button
-                  kendoButton
-                  icon="delete"
-                  look="flat"
-                  class="btn-h-danger"
-                  (click)="onDeleteConfirmOpenClicked()"
-                  aria-label="delete insurance"
-                >
-                  Delete Insurance
-                </button> -->
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
@@ -129,11 +118,18 @@
             </div>
           </div>
         </ng-template>
-        <!-- grid loader template -->
-        <ng-template kendoGridLoadingTemplate>
-          <common-grid-loader-component></common-grid-loader-component>
-        </ng-template>
+ <!-- grid Loader Template -->  
+ <ng-template kendoGridLoadingTemplate>
+  <common-grid-loader-component></common-grid-loader-component>
+ </ng-template>
+ <!-- grid No data Template -->  
+ <ng-template kendoGridNoRecordsTemplate>
+   <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
+   </div>
+   <p>There is no data to display.</p>
+ </ng-template> 
       </kendo-grid>
+      <kendo-formerror *ngIf="showInsuranceRequired | async"> A Response is required.</kendo-formerror>
     </div>
     <div class="flex-row">
       <div class="flex-col mt-1">
@@ -171,7 +167,7 @@
         ? 'Change Insurance Priority'
         : 'Select Insurance Priority'
     }}</kendo-dialog-titlebar>
-  <case-management-set-health-insurance-priority [insurancePriorityModalButtonText]="insurancePriorityModalButtonText" [selectedInsurance]="selectedInsurance" [gridList]="gridList" (isCloseInsuranceModal)="onChangePriorityCloseClicked()"(priorityAdded)="priorityAdded()"></case-management-set-health-insurance-priority>
+  <case-management-set-health-insurance-priority [insurancePriorityModalButtonText]="insurancePriorityModalButtonText" [selectedInsurance]="selectedInsurance"  [clientId]="clientId" [caseEligibilityId]="caseEligibilityId" (isCloseInsuranceModal)="onChangePriorityCloseClicked()"(priorityAdded)="priorityAdded()"></case-management-set-health-insurance-priority>
 </kendo-dialog>
 
 <!-- Delete Modal -->
@@ -197,4 +193,14 @@
       </div>
     </div>
   </kendo-dialog-actions>
+</kendo-dialog>
+
+
+<!-- Change Priority Modal -->
+<kendo-dialog *ngIf="isOpenedRemoveConfirm" (close)="onRemoveCloseClicked()"
+  class="app-c-modal app-c-modal-md app-c-modal-np">
+  
+  <case-management-deactivate-premium-confirmation  
+   (deactivateConfimEvent)="onRemoveConfirmCloseClicked($event)">
+  </case-management-deactivate-premium-confirmation>
 </kendo-dialog>

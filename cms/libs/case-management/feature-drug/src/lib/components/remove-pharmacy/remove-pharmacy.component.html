@@ -1,6 +1,9 @@
        <section class="k-dialog-body mb-2">
-        <p>
-            The pharmacy will be no longer associated with client
+        <p *ngIf="isClientProfile" class="text-muted mb-2">
+          The pharmacy will no longer be associated with this client's profile. You can re-add it at any time.
+        </p>
+        <p *ngIf="!isClientProfile" class="text-muted mb-2">
+          The pharmacy will no longer be associated with this client
         </p>
     </section>
     <kendo-dialog-actions>

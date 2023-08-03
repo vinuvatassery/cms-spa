@@ -47,6 +47,14 @@ export * from './lib/entities/client-eligibility-info';
 export * from './lib/entities/review-question-answer';
 export * from './lib/entities/client-profile-cases';
 export * from './lib/entities/client-profile';
+export * from './lib/entities/client-hiv-verification';
+export * from './lib/entities/active-sessions';
+export * from './lib/entities/client-note';
+export * from './lib/entities/grid-state'
+export * from './lib/entities/session-data';
+export * from './lib/entities/payment-request';
+export * from './lib/entities/vendor-contacts';
+
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';
@@ -85,7 +93,25 @@ export * from './lib/enums/states-in-usa.enum';
 export * from './lib/enums/review-question-code.enum';
 export * from './lib/enums/question-type-code.enum';
 export * from './lib/enums/trans-gender-code.enum';
-
+export * from './lib/enums/eligibility-request-type.enum';
+export * from './lib/enums/verification-status-code.enum';
+export * from './lib/enums/verification-type-code.enum';
+export * from './lib/enums/provider-option.enum';
+export * from './lib/enums/client-profile-tab-titles.enum';
+export * from './lib/enums/address-type.enum';
+export * from './lib/enums/client-profile-tabs.enum';
+export * from './lib/enums/client-note-type-code.enum';
+export * from './lib/enums/eligibility-status.enum';
+export * from './lib/enums/module-code.enum';
+export * from './lib/enums/grid-state-key.enum';
+export * from './lib/enums/insurance-status-type.enum';
+export * from './lib/enums/payment-request-type.enum';
+export * from './lib/enums/search-header-type.enum';
+export * from './lib/enums/financial-vendor-provider-tab-code';
+export * from './lib/enums/financial-vendor-type-code';
+export * from './lib/enums/service-sub-type-code';
+export * from './lib/enums/grid-column-filter.enum';
+export * from './lib/enums/payment-type-code.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
@@ -115,6 +141,18 @@ export * from './lib/infrastructure/insurance-plan.data.service';
 export * from './lib/infrastructure/health-insurance-policy.data.service';
 export * from './lib/infrastructure/review-question-answer.data.service';
 export * from './lib/infrastructure/review-question-response.data.service';
+export * from './lib/infrastructure/grid.data.service';
+export * from './lib/infrastructure/financial-management/billing-address.data.service';
+export * from './lib/infrastructure/financial-management/billing-email-address.data.service';
+export * from './lib/infrastructure/financial-management/vendor-contacts.data.service';
+export * from './lib/infrastructure/financial-management/drugs.data.service';
+export * from './lib/infrastructure/financial-management/payments.data.service';
+export * from './lib/infrastructure/financial-management/invoice.data.service';
+export * from './lib/infrastructure/financial-management/claims.data.service';
+export * from './lib/infrastructure/financial-management/insurance-provider.data.service';
+export * from './lib/infrastructure/financial-management/vendor-insurance-plan.data.service';
+export * from './lib/infrastructure/financial-management/vendor.data.service';
+export * from './lib/infrastructure/financial-management/vendor-refund.data.service';
 
 
 
@@ -151,6 +189,19 @@ export * from './lib/application/insurance-plan.facade';
 export * from './lib/application/health-insurance-policy.facade';
 export * from './lib/application/review-question-answer.facade';
 export * from './lib/application/review-question-response.facade';
+export * from './lib/application/financial-management.facade';
+export * from './lib/application/financial-management/vendor.facade';
+export * from './lib/application/grid.facade';
+export * from './lib/application/financial-management/billing-address.facade';
+export * from './lib/application/financial-management/billing-email-address.facade';
+export * from './lib/application/financial-management/vendor-contacts.facade';
+export * from './lib/application/financial-management/drugs.facade';
+export * from './lib/application/financial-management/payments.facade';
+export * from './lib/application/financial-management/invoice.facade';
+export * from './lib/application/financial-management/claims.facade';
+export * from './lib/application/financial-management/insurance-provider.facade';
+export * from './lib/application/financial-management/vendor-insurance-plan.facade';
+export * from './lib/application/financial-management/vendor-refund.facade';
 
 
 

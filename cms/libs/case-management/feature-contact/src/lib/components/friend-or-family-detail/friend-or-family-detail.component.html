@@ -1,4 +1,4 @@
-<section class="k-dialog-body">
+<section class="k-dialog-body" [formGroup]="contactForm">
   <p class="text-muted mb-2" *ngIf="!isFriendsorFamilyEditValue">
     All fields are required unless otherwise stated. Adding a new contact will
     deactivate the current one.
@@ -8,23 +8,54 @@
   </p>
   <div class="flex-row">
     <div class="flex-col">
-      <kendo-floatinglabel  text="Contact’s Name">
-        <!-- <input kendoTextBox aria-label="contacts name" /> -->
-        <kendo-textbox aria-label="contacts name"  placeholder="Contact’s Name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+      <kendo-floatinglabel  text="Contact’s First Name">
+        <kendo-textbox [maxlength]="40" aria-label="Contact’s First Name" formControlName="firstName" placeholder="Contact’s First Name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="fAfContact?.firstName.errors?.required">
+        Contact’s First Name is required
+      </kendo-formerror>
+      <kendo-formerror *ngIf="fAfContact?.firstName.errors?.pattern">
+        Special characters are not allowed except '-'
+      </kendo-formerror>
     </div>
     <div class="flex-col">
-      <kendo-floatinglabel text="Contact’s Relationship to Client">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlRelationshipToClient$ | async">
+      <kendo-floatinglabel  text="Contact’s Last Name">
+        <kendo-textbox  [maxlength]="40" aria-label="contacts name" formControlName="lastName" placeholder="Contact’s Last Name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="fAfContact?.lastName?.errors?.required">
+        Contact’s Last Name is required
+      </kendo-formerror>
+      <kendo-formerror *ngIf="fAfContact?.lastName?.errors?.pattern">
+        Special characters are not allowed except '-'
+      </kendo-formerror>
+    </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="Contact’s Relationship to Client" class="inline-search-loader">
+        <span *ngIf="showLoaderOnRelationType$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlRelationshipToClient$ | async"
+        textField="lovDesc" valueField="lovCode" formControlName="relationshipType" [valuePrimitive]="true" >
         </kendo-dropdownlist>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!contactForm.controls['relationshipType'].valid">Relationship is required.</kendo-formerror>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Contact’s Phone Number">
-        <kendo-textbox aria-label="contacts phone number" placeholder="Contact’s Relationship to Client" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-
-        <!-- <input kendoTextBox aria-label="contacts phone number" /> -->
+        <kendo-maskedtextbox
+        [maskOnFocus]="true"
+        aria-label="contacts phone number"
+        [fillMode]="formUiStyle.inputFillMode"
+        [maxlength]="10"
+        formControlName="phoneNbr"
+        mask="(999) 000-0000"
+        placeholder="Contact's Phone Number"
+        > </kendo-maskedtextbox>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="fAfContact?.phoneNbr?.errors?.required">
+        Contact's Phone Number is required
+      </kendo-formerror>
+      <kendo-formerror *ngIf="fAfContact?.phoneNbr?.errors?.pattern">
+        Not a valid phone number format
+      </kendo-formerror>
     </div>
   </div>
 </section>
@@ -38,6 +69,7 @@
         [primary]="true"
         look="flat"
         aria-label="deactivate friends or family contact"
+        (click)="deactivateContact()"
       >
         Deactivate
       </button>
@@ -48,6 +80,7 @@
         [primary]="true"
         look="outline"
         aria-label="cancel adding friend or family contact"
+        (click)="closePopup()"
       >
         Cancel
       </button>
@@ -55,9 +88,24 @@
         kendoButton
         [primary]="true"
         aria-label="add friend or family contact"
+        (click)="createContact()"
       >
-        Add
+      {{
+        isEditValue
+          ? 'Update'
+          : 'Add'
+      }}
       </button>
     </div>
   </div>
 </kendo-dialog-actions>
+
+<!-- Deactivate Popup-->
+<kendo-dialog
+  *ngIf="isDeactivateFriendOrFamilyOpened"
+  (close)="onDeactivateFriendOrFamilyClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+  title="Deactivate Alternate Contact?"
+>
+  <case-management-deactivate-friend-or-family-confirmation [isEdit]="isEditValue" [clientContact]="contact" [clientId]="clientId" (deactivateModalCloseEvent)="closeDeactivateModal($event)"></case-management-deactivate-friend-or-family-confirmation>
+</kendo-dialog>

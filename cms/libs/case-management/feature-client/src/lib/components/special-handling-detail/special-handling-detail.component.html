@@ -12,19 +12,21 @@
               resizable="auto"
               [id]="item.id"
               [maxlength]="tareaCaseWorkerNoteMaxLength"
-              [value]="item.description"
+              [value]="item.note"
+              [(ngModel)]="item.note"
               (valueChange)="onTareaCaseWorkerChanged($event, item.id)"
               aria-label="case worker note"
             >
               <kendo-textarea-suffix class="justify-content-end">
                 <span class="tareacounter"
-                  >{{ item.tareaCaseWorkerNoteCounter }}/{{
+                  >{{ item?.note.length }}/{{
                     tareaCaseWorkerNoteMaxLength
                   }}</span
                 >
               </kendo-textarea-suffix>
             </kendo-textarea>
           </kendo-floatinglabel>
+          <kendo-formerror *ngIf="item.note == '' && isEmpty ">Enter a note or remove the empty note field.</kendo-formerror>  
         </div>
         <div class="flex-col flex-col-1 py-0">
           <button
@@ -34,7 +36,7 @@
           >
             <span
               class="material-icons"
-              (click)="onDeleteCaseWorkerNote(item.id)"
+              (click)="deleteClientNote(item)"
               aria-label="delete case worker note"
               aria-hidden="true"
               >delete</span
@@ -57,13 +59,14 @@
       </button>
     </div>
   </div>
-
+<form [formGroup]="specialCaseHandlingForm" name="specialCaseHandlingForm">
   <div class="block-section mb-3">
     <h5 class="mb-0">
       Needs materials in alternate format (Braille, large print, audio
       recordings, etc.)?
     </h5>
     <div class="component-list-h">
+      
       <span>
         <div class="flex-row mb-4">
           <div class="flex-col flex-col-8">
@@ -71,32 +74,57 @@
               <span class="app-radiobtnwidtext-wrapper" *ngFor="let materials of rdoMaterials$ | async">
                 <input
                   type="radio"
+                  formControlName="materialInAlternateFormatCode"
+
                   kendoRadioButton
                   id="{{ materials.id }}"
-                  value="{{ materials.value }}"
-                  name="rdoMaterialFormat"
-                  (click)="onMaterialsRadioButtonClicked($event)"
-                  aria-labelledby="needsMaterials"
+                  [value]="materials.value"
+                  name="materialInAlternateFormatCode"
+                 
+                  (click)="detectOptionChange('materialInAlternateFormatCode','materialInAlternateFormatDesc')"
+                  attr.aria-labelledby="{{materials.value}}"
                 />
                 <kendo-label
                   class="k-radio-label"
-                  text="{{ materials.value }}"
+                  text="{{ materials.text }}"
                   for="{{ materials.id }}"
                 ></kendo-label>
-                <kendo-floatinglabel
-                  *ngIf="materials.id === 1"
-                  text="Enter formats"
-                  class="small-input-form"
-                >
-                  <!-- <input
-                    kendoTextBox
-                    [disabled]="isMaterialsTextBoxDisabled"
-                    aria-label="enter formats"
-                  /> -->
-                  <kendo-textbox aria-label="enter formats" placeholder="Enter formats" [disabled]="isMaterialsTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-                </kendo-floatinglabel>
-              </span>
+            
+                     <div class="flex-row">
+             
             </div>
+               
+              </span>
+              <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['materialInAlternateFormatCode'].valid ) ">At least one Option must be selected.</kendo-formerror>        
+              <div class="flex-col flex-col-6">
+                <kendo-floatinglabel text="Alternate Format">
+                  <kendo-dropdownlist  
+                   [data]="materialsyeslov$ | async"
+                   [fillMode]="formUiStyle.inputFillMode"
+                  textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
+                  formControlName="materialInAlternateFormatDesc" 
+                  (valueChange)="onChange($event)"              
+                   >
+               </kendo-dropdownlist>  
+                </kendo-floatinglabel>
+              </div>
+              <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['materialInAlternateFormatDesc'].valid && specialCaseHandlingForm.controls['materialInAlternateFormatCode'].valid) && !specialCaseHandlingForm.controls['materialInAlternateFormatDesc'].disabled ">An Alternate Format is Required.</kendo-formerror>  
+              <div class="flex-col flex-col-6" *ngIf ="(specialCaseHandlingForm.controls['materialInAlternateFormatDesc'].value === 'OTHER') && specialCaseHandlingForm.controls['materialInAlternateFormatCode'].value === 'YES'">
+                <kendo-floatinglabel            
+                text="Enter Other Formats" >        
+              <kendo-textbox [attr.aria-label]="'Enter Other Formats'"  
+                [fillMode]="formUiStyle.inputFillMode"    
+                formControlName="materialInAlternateFormatOther"
+                placeholder="Enter Other Formats"
+                [maxlength]="100"
+                >  
+             </kendo-textbox>
+            </kendo-floatinglabel>
+            <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['materialInAlternateFormatOther'].valid && specialCaseHandlingForm.controls['materialInAlternateFormatCode'].valid) && !specialCaseHandlingForm.controls['materialInAlternateFormatDesc'].disabled ">A response is required.</kendo-formerror>  
+              </div>
+             
+            </div>
+       
           </div>
         </div>
       </span>
@@ -112,17 +140,37 @@
               <span class="app-radiobtnwidtext-wrapper" *ngFor="let routes of rdoInterpreters$ | async">
                 <input
                   type="radio"
+                  formControlName="interpreterCode"
                   kendoRadioButton
-                  name="rdoInterpreter"
+                  name="interpreterCode"
                   id="rdoInterpreter"
+                  [value]="routes.value"
+                  (click)="detectOptionChange('interpreterCode','interpreterType')"
                   aria-labelledby="needsInterpreter"
                 />
                 <kendo-label
                   class="k-radio-label"
-                  text="{{ routes.value }}"
+                  text="{{ routes.text }}"
                   for="rdoInterpreter"
                 ></kendo-label>
+                
               </span>
+              <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['interpreterCode'].valid) ">At least one Option must be selected.</kendo-formerror>
+              <div class="flex-row">
+                <div class="flex-col flex-col-6">
+                <kendo-floatinglabel            
+                  [text]="'Type of interpreter'" >        
+                <kendo-textbox   
+                  [fillMode]="formUiStyle.inputFillMode"
+                        
+                  formControlName="interpreterType"
+                  [placeholder]="'Type of interpreter'" 
+                  [maxlength]="50">  
+               </kendo-textbox>
+              </kendo-floatinglabel>
+             <kendo-formerror *ngIf="((!specialCaseHandlingForm.controls['interpreterType'].valid) && !specialCaseHandlingForm.controls['interpreterType'].disabled) && (specialCaseHandlingForm.controls['interpreterCode'].valid) ">Type of interpreter is required.</kendo-formerror>        
+              </div>
+              </div>
             </div>
           </div>
         </div>
@@ -140,32 +188,43 @@
                 <input
                   type="radio"
                   kendoRadioButton
+                  formControlName="deafOrHearingCode"
                   id="{{ deaf.id }}"
-                  value="{{ deaf.value }}"
-                  name="rdoHearingDifficulty"
-                  (click)="onDeafRadioButtonClicked($event)"
+                  [value]="deaf.value"
+                  name="deafOrHearingCode"
+                  (click)="detectOptionChange('deafOrHearingCode','startAgeDeafOrHearing')"
                   aria-labelledby="difficultyInHearing"
                 />
                 <kendo-label
                   class="k-radio-label"
-                  text="{{ deaf.value }}"
+                  text="{{ deaf.text }}"
                   for="{{ deaf.id }}"
                 ></kendo-label>
-                <kendo-floatinglabel
-                  *ngIf="deaf.id === 1"
-                  text="Age this condition began"
-                  class="small-input-form"
-                >
-                  <!-- <input
-                    kendoTextBox
-                    [disabled]="isDeafTextBoxDisabled"
-                    aria-label="age this condition began"
-                  /> -->
-                  <kendo-textbox placeholder="Age this condition began" aria-label="age this condition began" [disabled]="isDeafTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-
-                </kendo-floatinglabel>
+             
               </span>
+              <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['deafOrHearingCode'].valid) ">At least one Option must be selected.</kendo-formerror>
             </div>
+            <div class="flex-row">
+              <div class="flex-col flex-col-6">
+            <kendo-floatinglabel            
+              [text]="'Age this condition began'" >        
+            <kendo-numerictextbox 
+              [fillMode]="formUiStyle.inputFillMode"
+                    
+              formControlName="startAgeDeafOrHearing"
+              [autoCorrect]="true"
+              [format]="'n'"
+              [min]="ageMinLimit"
+              [max]="ageMaxLimit"
+              [placeholder]="'Age this condition began'" 
+              [decimals]="0"
+              
+             >  
+           </kendo-numerictextbox>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="((!specialCaseHandlingForm.controls['startAgeDeafOrHearing'].valid) && !specialCaseHandlingForm.controls['startAgeDeafOrHearing'].disabled) && (specialCaseHandlingForm.controls['deafOrHearingCode'].valid) ">Age is required</kendo-formerror>        
+        </div>
+      </div>
           </div>
         </div>
       </span>
@@ -185,31 +244,42 @@
                   type="radio"
                   kendoRadioButton
                   id="{{ blind.id }}"
-                  value="{{ blind.value }}"
-                  name="rdoSeeingDifficulty"
-                  (click)="onBlindRadioButtonClicked($event)"
+                  formControlName="blindSeeingCode"
+                  [value]="blind.value"
+                  name="blindSeeingCode"
+                  (click)="detectOptionChange('blindSeeingCode','startAgeBlindSeeing')"
                   aria-labelledby="difficultyInSeeing"
                 />
                 <kendo-label
                   class="k-radio-label"
-                  text="{{ blind.value }}"
+                  text="{{ blind.text }}"
                   for="{{ blind.id }}"
                 ></kendo-label>
-                <kendo-floatinglabel
-                  *ngIf="blind.id === 1"
-                  text="Age this condition began"
-                  class="small-input-form"
-                >
-                  <!-- <input
-                    kendoTextBox
-                    [disabled]="isBlindTextBoxDisabled"
-                    aria-label="age this condition began"
-                  /> -->
-                  <kendo-textbox placeholder="Age this condition began" aria-label="age this condition began" [disabled]="isBlindTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-
-                </kendo-floatinglabel>
+         
               </span>
+              <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['blindSeeingCode'].valid) ">At least one Option must be selected.</kendo-formerror>
             </div>
+            <div class="flex-row">
+              <div class="flex-col flex-col-6">
+            <kendo-floatinglabel            
+              [text]="'Age this condition began'" >        
+            <kendo-numerictextbox 
+              [fillMode]="formUiStyle.inputFillMode"
+                   
+              formControlName="startAgeBlindSeeing"
+              [autoCorrect]="true"
+              [format]="'n'"
+              [min]="ageMinLimit"
+              [max]="ageMaxLimit"
+              [placeholder]="'Age this condition began'" 
+              [decimals]="0"
+              
+             >  
+           </kendo-numerictextbox>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="((!specialCaseHandlingForm.controls['startAgeBlindSeeing'].valid) && !specialCaseHandlingForm.controls['startAgeBlindSeeing'].disabled) && (specialCaseHandlingForm.controls['blindSeeingCode'].valid) ">Age is required</kendo-formerror>        
+        </div>
+      </div>
           </div>
         </div>
       </span>
@@ -226,8 +296,11 @@
                 <input
                   type="radio"
                   kendoRadioButton
+                  formControlName="limitingConditionCode"
+                  [value]="'YES'"
                   aria-labelledby="limitingPhysicalOrEmotionalConditionsYes"
-                  name="rdoEmotional"
+                 
+                  name="limitingConditionCode"
                   id="rdoEmotional1"
                 />
                 <kendo-label
@@ -240,7 +313,9 @@
                 <input
                   type="radio"
                   kendoRadioButton
-                  name="rdoEmotional"
+                  name="limitingConditionCode"
+                  [value]="'NO'"
+                  formControlName="limitingConditionCode"
                   id="rdoEmotional2"
                   aria-labelledby="limitingPhysicalOrEmotionalConditionsNo"
                 />
@@ -254,7 +329,9 @@
                 <input
                   type="radio"
                   kendoRadioButton
-                  name="rdoEmotional"
+                  name="limitingConditionCode"
+                  [value]="'DONT_KNOW'"
+                  formControlName="limitingConditionCode"
                   id="rdoEmotional3"
                   aria-labelledby="limitingPhysicalOrEmotionalConditionsDontKnow"
                 />
@@ -268,7 +345,9 @@
                 <input
                   type="radio"
                   kendoRadioButton
-                  name="rdoEmotional"
+                  name="limitingConditionCode"
+                  [value]="'DONT_WANT'"
+                  formControlName="limitingConditionCode"
                   id="rdoEmotional4"
                   aria-labelledby="limitingPhysicalOrEmotionalConditionsDontWantToAnswer"
                 />
@@ -279,9 +358,11 @@
                 ></kendo-label>
               </span>
             </div>
+            
           </div>
         </div>
       </span>
+      <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['limitingConditionCode'].valid) ">At least one Option must be selected.</kendo-formerror>
     </div>
   </div>
   <div class="block-section mb-3">
@@ -294,31 +375,42 @@
               type="radio"
               kendoRadioButton
               id="{{ walking.id }}"
-              value="{{ walking.value }}"
-              name="rdoClimbingStairs"
-              (click)="onWalkingRadioButtonClicked($event)"
+              formControlName="walkingClimbingDifficultyCode"
+              [value]="walking.value"
+              name="walkingClimbingDifficultyCode"
+              (click)="detectOptionChange('walkingClimbingDifficultyCode','startAgeWalkingClimbingDifficulty')"
               aria-labelledby="difficultyInWalking"
             />
             <kendo-label
               class="k-radio-label"
-              text="{{ walking.value }}"
+              text="{{ walking.text }}"
               for="{{ walking.id }}"
             ></kendo-label>
-            <kendo-floatinglabel
-              *ngIf="walking.id === 1"
-              text="Age this condition began"
-              class="small-input-form"
-            >
-              <!-- <input
-                kendoTextBox
-                [disabled]="isWalkingTextBoxDisabled"
-                aria-label="age this condition began"
-              /> -->
-              <kendo-textbox placeholder="Age this condition began" aria-label="age this condition began" [disabled]="isWalkingTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-
-            </kendo-floatinglabel>
+       
           </span>
+          <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['walkingClimbingDifficultyCode'].valid) ">At least one Option must be selected.</kendo-formerror>
         </div>
+        <div class="flex-row">
+          <div class="flex-col flex-col-6">
+        <kendo-floatinglabel            
+          [text]="'Age this condition began'" >        
+        <kendo-numerictextbox 
+          [fillMode]="formUiStyle.inputFillMode"
+                 
+          formControlName="startAgeWalkingClimbingDifficulty"
+          [autoCorrect]="true"
+          [format]="'n'"
+          [min]="ageMinLimit"
+          [max]="ageMaxLimit"
+          [placeholder]="'Age this condition began'" 
+          [decimals]="0"
+          
+         >  
+       </kendo-numerictextbox>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="((!specialCaseHandlingForm.controls['startAgeWalkingClimbingDifficulty'].valid) && !specialCaseHandlingForm.controls['startAgeWalkingClimbingDifficulty'].disabled) && (specialCaseHandlingForm.controls['walkingClimbingDifficultyCode'].valid) ">Age is required</kendo-formerror>        
+    </div>
+  </div>
       </div>
     </div>
   </div>
@@ -332,31 +424,42 @@
               type="radio"
               kendoRadioButton
               id="{{ dressingorbathing.id }}"
-              value="{{ dressingorbathing.value }}"
-              name="rdoDifficultyDressing"
-              (click)="onDressingorBathingRadioButtonClicked($event)"
+              formControlName="dressingBathingDifficultyCode"
+              [value]="dressingorbathing.value"
+              name="dressingBathingDifficultyCode"
+              (click)="detectOptionChange('dressingBathingDifficultyCode','startAgeDressingBathingDifficulty')"
               aria-labelledby="difficultyInDressing"
             />
             <kendo-label
               class="k-radio-label"
-              text="{{ dressingorbathing.value }}"
+              text="{{ dressingorbathing.text }}"
               for="{{ dressingorbathing.id }}"
             ></kendo-label>
-            <kendo-floatinglabel
-              *ngIf="dressingorbathing.id === 1"
-              text="Age this condition began"
-              class="small-input-form"
-            >
-              <!-- <input
-                kendoTextBox
-                [disabled]="isDressingorBathingTextBoxDisabled"
-                aria-label="age this condition began"
-              /> -->
-              <kendo-textbox placeholder="Age this condition began" aria-label="age this condition began" [disabled]="isDressingorBathingTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-
-            </kendo-floatinglabel>
+        
           </span>
+          <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['dressingBathingDifficultyCode'].valid) ">At least one Option must be selected.</kendo-formerror>
         </div>
+        <div class="flex-row">
+          <div class="flex-col flex-col-6">
+        <kendo-floatinglabel            
+          [text]="'Age this condition began'" >        
+        <kendo-numerictextbox 
+          [fillMode]="formUiStyle.inputFillMode"
+               
+          formControlName="startAgeDressingBathingDifficulty"
+          [autoCorrect]="true"
+          [format]="'n'"
+          [min]="ageMinLimit"
+          [max]="ageMaxLimit"
+          [placeholder]="'Age this condition began'" 
+          [decimals]="0"
+          
+         >  
+       </kendo-numerictextbox>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="((!specialCaseHandlingForm.controls['startAgeDressingBathingDifficulty'].valid) && !specialCaseHandlingForm.controls['startAgeDressingBathingDifficulty'].disabled) && (specialCaseHandlingForm.controls['dressingBathingDifficultyCode'].valid) ">Age is required</kendo-formerror>        
+    </div>
+  </div>
       </div>
     </div>
   </div>
@@ -373,30 +476,42 @@
               type="radio"
               kendoRadioButton
               id="{{ concentration.id }}"
-              value="{{ concentration.value }}"
-              name="rdoEmotionalCondition"
-              (click)="onConcentrationRadioButtonClicked($event)"
+              formControlName="concentratingDifficultyCode"
+              [value]="concentration.value"
+              name="concentratingDifficultyCode"
+              (click)="detectOptionChange('concentratingDifficultyCode','startAgeConcentratingDifficulty')"
               aria-labelledby="difficultyInConcentrating"
             />
             <kendo-label
               class="k-radio-label"
-              text="{{ concentration.value }}"
+              text="{{ concentration.text }}"
               for="{{ concentration.id }}"
             ></kendo-label>
-            <kendo-floatinglabel
-              *ngIf="concentration.id === 1"
-              text="Age this condition began"
-              class="small-input-form"
-            >
-            <kendo-textbox placeholder="Age this condition began" aria-label="age this condition began"   [disabled]="isConcentrationTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-              <!-- <input
-                kendoTextBox
-                [disabled]="isConcentrationTextBoxDisabled"
-                aria-label="age this condition began"
-              /> -->
-            </kendo-floatinglabel>
+     
           </span>
+          <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['concentratingDifficultyCode'].valid) ">At least one Option must be selected.</kendo-formerror>
         </div>
+        <div class="flex-row">
+          <div class="flex-col flex-col-6">
+        <kendo-floatinglabel            
+          [text]="'Age this condition began'" >        
+        <kendo-numerictextbox 
+          [fillMode]="formUiStyle.inputFillMode"
+            
+          formControlName="startAgeConcentratingDifficulty"
+          [autoCorrect]="true"
+          [format]="'n'"
+          [min]="ageMinLimit"
+          [max]="ageMaxLimit"
+          [placeholder]="'Age this condition began'" 
+          [decimals]="0"
+          
+         >  
+       </kendo-numerictextbox>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="((!specialCaseHandlingForm.controls['startAgeConcentratingDifficulty'].valid) && !specialCaseHandlingForm.controls['startAgeConcentratingDifficulty'].disabled) && (specialCaseHandlingForm.controls['concentratingDifficultyCode'].valid) ">Age is required</kendo-formerror>        
+    </div>
+  </div>
       </div>
     </div>
   </div>
@@ -413,34 +528,47 @@
               type="radio"
               kendoRadioButton
               id="{{ errands.id }}"
-              value="{{ errands.value }}"
-              name="rdoDifficultyEmotional"
-              (click)="onErrandsRadioButtonClicked($event)"
+              formControlName="errandsDifficultyCode"
+              [value]="errands.value"
+              name="errandsDifficultyCode"
+              (click)="detectOptionChange('errandsDifficultyCode','startAgeErrandsDifficulty')"
               aria-labelledby="difficultyInDoingErrands"
             />
             <kendo-label
               class="k-radio-label"
-              text="{{ errands.value }}"
+              text="{{ errands.text }}"
               for="{{ errands.id }}"
             ></kendo-label>
-            <kendo-floatinglabel
-              *ngIf="errands.id === 1"
-              text="Age this condition began"
-              class="small-input-form"
-            >
-              <!-- <input
-                kendoTextBox
-                [disabled]="isErrandsTextBoxDisabled"
-                aria-label="age this condition began"
-              /> -->
-              <kendo-textbox placeholder="Age this condition began" aria-label="age this condition began" [disabled]="isErrandsTextBoxDisabled" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-
-            </kendo-floatinglabel>
+      
           </span>
+          <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['errandsDifficultyCode'].valid) ">At least one Option must be selected.</kendo-formerror>
         </div>
+        <div class="flex-row">
+          <div class="flex-col flex-col-6">
+        <kendo-floatinglabel            
+          [text]="'Age this condition began'" >        
+        <kendo-numerictextbox 
+          [fillMode]="formUiStyle.inputFillMode"
+          [disabled]="textFieldDisable"       
+          formControlName="startAgeErrandsDifficulty"
+          [autoCorrect]="true"
+          [format]="'n'"
+          [min]="ageMinLimit"
+          [max]="ageMaxLimit"
+          [placeholder]="'Age this condition began'" 
+          [decimals]="0"
+          
+         >  
+       </kendo-numerictextbox>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="((!specialCaseHandlingForm.controls['startAgeErrandsDifficulty'].valid) && !specialCaseHandlingForm.controls['startAgeErrandsDifficulty'].disabled) && (specialCaseHandlingForm.controls['errandsDifficultyCode'].valid) ">Age is required</kendo-formerror>        
+    </div>
+  </div>
       </div>
     </div>
   </div>
+</form>
+
 </section>
 <kendo-dialog-actions>
   <div class="justify-content-between">
@@ -449,11 +577,12 @@
         kendoButton
         [primary]="true"
         look="outline"
+        (click)="onEditSpecialHandlingClosed()"
         aria-label="cancle special handling"
       >
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="update special handling">
+      <button kendoButton [primary]="true" aria-label="update special handling" [disabled]="specialCaseHandlingForm.invalid" (click)="onUpdateSpecialCaseHandlingDetail()" >
         Update
       </button>
     </div>

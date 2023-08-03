@@ -8,13 +8,13 @@
                 <input type="radio" kendoRadioButton name="othersCoveredOnPlanFlag"
                     aria-labelledby="othersCoveredOnThePlanYes" id="othersCoveredOnThePlanYes"
                     (click)="onOthersCoveredOnPlanFlagRdoClicked('Y')"
-                    formControlName="othersCoveredOnPlanFlag" value="Y" tabindex="9" />
+                    formControlName="othersCoveredOnPlanFlag" value="Y"  />
                 <kendo-label class="k-radio-label" for="othersCoveredOnThePlanYes" text="Yes"></kendo-label>
             </span>
             <span class="app-radiobtnwidtext-wrapper">
                 <input type="radio" kendoRadioButton name="othersCoveredOnPlanFlag"
                     aria-labelledby="othersCoveredOnThePlanNo" for="othersCoveredOnThePlanNo"
-                    id="othersCoveredOnThePlanNo" value="N" formControlName="othersCoveredOnPlanFlag" tabindex="10" />
+                    id="othersCoveredOnThePlanNo" value="N" formControlName="othersCoveredOnPlanFlag" />
                 <kendo-label class="k-radio-label" for="othersCoveredOnThePlanNo" text="No"></kendo-label>
             </span>
             <kendo-formerror
@@ -42,7 +42,7 @@
                                 aria-labelledby="othersCoverdSelect" id="othersCoverdSelect{{i}}"
                                  />
                             <label class="k-checkbox-label" for="othersCoverdSelect{{i}}">{{person.value.firstName}}
-                                {{person.value.lastName}} ({{person.value.relationshipDescription}})</label>
+                                {{person.value.lastName}} ({{person.value.relationshipSubTypeDesc}})</label>
                         </span>
                     </div>
                 </div>
@@ -63,12 +63,12 @@
                 <div class="flex-col">
                     <kendo-floatinglabel text="Relationship to Client">
                         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
-                            aria-label="Relationship to Client" [disabled]="isViewContentEditable"
+                            aria-label="Relationship to Client" 
                             [data]="relationshipList"  textField="lovDesc" [valuePrimitive]="true"
                             valueField="lovCode"
-                            formControlName="relationshipCode">
+                            formControlName="relationshipSubTypeCode">
                         </kendo-dropdownlist>
-                        <kendo-formerror *ngIf="!getPersonControl(i, 'relationshipCode')?.valid
+                        <kendo-formerror *ngIf="!getPersonControl(i, 'relationshipSubTypeCode')?.valid
                   && isViewContentEditable==false">Relationship description is
                             required.</kendo-formerror>
                     </kendo-floatinglabel>

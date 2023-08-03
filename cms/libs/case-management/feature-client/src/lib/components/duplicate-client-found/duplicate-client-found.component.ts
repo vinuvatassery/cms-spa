@@ -1,14 +1,16 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import {
+import { Component, 
+  ChangeDetectionStrategy,
   OnInit,
   Input,
   Output,
   EventEmitter
 } from '@angular/core';
-import { CaseFacade, CaseStatusCode } from '@cms/case-management/domain';
-import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 import { Router } from '@angular/router';
+/** Internal Libraries **/
+import { CaseFacade, CaseStatusCode } from '@cms/case-management/domain';
+import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+
 @Component({
   selector: 'case-management-duplicate-client-found',
   templateUrl: './duplicate-client-found.component.html',
@@ -19,7 +21,7 @@ export class DuplicateClientFoundComponent implements OnInit {
 
   @Input() currentClientInfo: any = {};
   @Input() matchingClientInfo: any = {};
- 
+  @Input() clientCaseEligibilityId: string = '';
   duplicateBtnDisabled = false;
 
   @Output() closeModalClick = new EventEmitter<any>();
@@ -46,7 +48,7 @@ export class DuplicateClientFoundComponent implements OnInit {
   onDuplicateFoundClick() {
     this.duplicateBtnDisabled = true;
     this.loaderService.show();
-    this.caseFacade.updateCaseStatus(this.currentClientInfo.clientCaseId, CaseStatusCode.canceled).subscribe({
+    this.caseFacade.updateCaseStatus(this.currentClientInfo.clientCaseId, CaseStatusCode.canceled,this.clientCaseEligibilityId).subscribe({
       next: (response: any) => {
         this.router.navigate([`/case-management/cases/case360/${this.matchingClientInfo.clientId}`])
         this.closeModalClick.next(true);

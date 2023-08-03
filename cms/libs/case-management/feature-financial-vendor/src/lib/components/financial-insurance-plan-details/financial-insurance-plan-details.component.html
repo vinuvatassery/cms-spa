@@ -1,0 +1,29 @@
+<!-- employer form details -->
+<form class="k-form">
+    <section class="k-dialog-body">
+        <p class="text-muted mb-1">
+            All fields are required unless otherwise stated.
+        </p>
+        <div class="flex-row">
+            <div class="flex-col">
+                <kendo-floatinglabel text="Email Address">
+                    <kendo-textbox textFieldautofocus aria-label="Email Address"
+                        [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                </kendo-floatinglabel>
+
+            </div>
+            
+        </div>
+    </section>
+    <kendo-dialog-actions>
+        <div class="justify-content-between mt-2">
+            <div>
+                <button kendoButton [primary]="true" look="flat" aria-label="delete employer"> Deactivate </button> 
+            </div>
+            <div class="justify-content-end">
+                <button kendoButton [primary]="true" aria-label="cancel employer" look="outline"> Cancel  </button>
+                <button kendoButton [primary]="true" aria-label="add new employer">  Add  </button>
+            </div>
+        </div>
+    </kendo-dialog-actions>
+</form>

@@ -4,6 +4,7 @@ $black-3: #333333;
 $black-6: #666666;
 $grey-d: #dddddd;
 $grey-c: #cccccc;
+$grey-f7:#f7f7f7;
 $black-9: #999999;
 $black-e: #eeeeee;
 $black-16: #161616;
@@ -11,9 +12,9 @@ $black-12: rgb(0 0 0 / 12%);
 $black-30: rgb(0 0 0 / 30%);
 $theme-border: $black-12;
 $app-primary-font-color: $black-3;
-$inputborder: #E0E0E0;
-$inputlabelolor: #707070;
-$gridfootercolor: #33414D;
+$input_border: #E0E0E0;
+$input_label_color: #707070;
+$grid_footer_color: #33414D;
 /* Role Identifier Color Variables*/
 $role-color-1: #f56f7b;
 $role-color-2: #0087e0;
@@ -21,6 +22,9 @@ $role-color-3: #9563b0;
 $role-color-4: #dea41d;
 $role-color-5: #fd8d5a;
 $role-color-6: #57bac3;
+$milky-green: #71BC14;
+$colored-yellow: #BD3900;
+
 
 
 /* Alert Color Variables*/
@@ -38,10 +42,10 @@ $info-snack-bar: #0071BC;
 $success-green: #0F8552;
 $warning-snack-bar: #0071BC;
 $system-red: #C3372C;
-$badge-alets: #CC411E;// #E85D3C
+$badge-alerts: #CC411E;// #E85D3C
 $success-green-dark: #057123;
 $error-color-1: $system-red;
-$light-bgcolor: #F3F3F3;
+$light-bg_color: #F3F3F3;
 
 
 

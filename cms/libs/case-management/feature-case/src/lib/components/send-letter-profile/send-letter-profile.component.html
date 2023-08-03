@@ -5,13 +5,13 @@
       <p class="text-muted pt-1">({{clientEligibilityInfo.clientPronouns}})</p>
     </div>
   </div>
-  <div class="flex-row mb-2">
+  <div class="flex-row mb-2" *ngIf="clientEligibilityInfo?.eligibilityStatusCode !== 'DISENROLLED' && !prevClientCaseEligibilityId">
     <div class="flex-col">
       <p class="text-bold">Name on Primary Insurance Card</p>
       <p>{{clientEligibilityInfo.insuranceFullName}}</p>
     </div>
   </div>
-  <div class="flex-row mb-2">
+  <div class="flex-row mb-2" *ngIf="clientEligibilityInfo?.eligibilityStatusCode !== 'DISENROLLED' && !prevClientCaseEligibilityId">
     <div class="flex-col">
       <p class="text-bold">Name on Official ID</p>
       <p>{{clientEligibilityInfo.officialIdFullName}}</p>
@@ -20,10 +20,10 @@
   <div class="flex-row mb-2">
     <div class="flex-col flex-col-8">
       <p class="text-bold">Status</p>
-      <p>{{clientEligibilityInfo.status}}</p>
+      <p>{{clientEligibilityInfo?.eligibilityStatusCode}}</p>
     </div>
     <div class="flex-col flex-col-4 text-right">
-      <button
+      <button [disabled] ="clientEligibilityInfo?.eligibilityStatusCode === 'DISENROLLED'"
         kendoButton
         class="k-primary-link text-t-normal text-underline"
         (click)="onOpenEligibilityInfoClicked()"
@@ -33,14 +33,14 @@
       </button>
     </div>
   </div>
-  <div class="flex-row mb-2">
+  <div class="flex-row mb-2" *ngIf="clientEligibilityInfo?.eligibilityStatusCode !== 'DISENROLLED'">
     <div class="flex-col flex-col-8">
       <p class="text-bold">Group</p>
       <p>{{clientEligibilityInfo.group}}</p>
     </div>
     <div class="flex-col flex-col-4 text-right">
       <button
-        kendoButton
+        kendoButton [disabled] ="clientEligibilityInfo?.eligibilityStatusCode === 'DISENROLLED'"
         class="k-primary-link text-t-normal text-underline"
         (click)="onOpenEligibilityInfoClicked()"
         aria-label="edit eligibility info"
@@ -49,14 +49,14 @@
       </button>
     </div>
   </div>
-  <div class="flex-row mb-2">
+  <div class="flex-row mb-2" *ngIf="clientEligibilityInfo?.eligibilityStatusCode !== 'DISENROLLED'">
     <div class="flex-col flex-col-8">
       <p class="text-bold">Eligibility Period</p>
       <p>{{clientEligibilityInfo.eligibilityStartDate}} - {{clientEligibilityInfo.eligibilityEndDate}}</p>
     </div>
     <div class="flex-col flex-col-4 text-right">
       <button
-        kendoButton
+        kendoButton [disabled] ="clientEligibilityInfo?.eligibilityStatusCode === 'DISENROLLED'"
         class="k-primary-link text-t-normal text-underline"
         (click)="onOpenEligibilityInfoClicked()"
         aria-label="edit eligibility info"
@@ -69,15 +69,25 @@
     <div class="flex-col">
       <p class="text-bold">Assigned Case Worker</p>
       <button
-        aria-label="assigned case worker"
-        kendoButton
-        class="k-primary-link text-t-normal text-underline"
-        kendoPopoverAnchor
-        [popover]="userCard"
-        showOn="hover"
-      >
-      {{clientEligibilityInfo.caseManagerName}}
-      </button>
+            kendoButton
+            [primary]="true"
+            class="avatar-sm-btn c-default"
+            kendoPopoverAnchor
+            [popover]="onUserProfileDetailsHovered"
+            showOn="hover"
+            aria-label="profile avathar"
+          >
+          <common-user-photo-icon  [userId]="clientEligibilityInfo.caseManagerId"></common-user-photo-icon>
+          </button>
+          <kendo-popover
+            #onUserProfileDetailsHovered
+            width="330"
+            position="right"
+          >
+            <ng-template kendoPopoverBodyTemplate>
+              <common-user-profile-card [userId]="clientEligibilityInfo.caseManagerId"></common-user-profile-card>
+            </ng-template>
+          </kendo-popover>
     </div>
   </div>
 </div>
@@ -90,7 +100,6 @@
     [userImage$]="userImage$"
     (profilePhotoEvent)="getCaseWorkerPhoto($event)"
      ></case-management-hiv-case-manager-card>
-     <!-- <common-user-profile-card></common-user-profile-card> -->
   </ng-template>
 </kendo-popover>
 
@@ -101,74 +110,6 @@
   class="app-c-modal app-c-modal-md app-c-modal-np"
 >
   <kendo-dialog-titlebar> Edit Eligibility Information </kendo-dialog-titlebar>
-  <case-management-accept-application  (isCloseModalEvent)="onCloseEligibilityInfoClicked()" [isEdit]="isEdit"  [clientCaseId]="clientCaseId" [clientCaseEligibilityId]="clientCaseEligibilityId"></case-management-accept-application>
+  <case-management-accept-application  (isCloseModalEvent)="onCloseEligibilityInfoClicked()" [isEdit]="isEdit"  
+  [clientId]="clientId" [clientCaseId]="clientCaseId" [clientCaseEligibilityId]="clientCaseEligibilityId"></case-management-accept-application>
 </kendo-dialog>
-  <!-- <kendo-dialog-titlebar> Edit Eligibility Information </kendo-dialog-titlebar>
-  <section class="k-dialog-body">
-    <p class="text-muted mb-2">
-      Edit Status, Group, and Eligibility Period as needed. Click “Update” to
-      commit the changes.
-    </p>
-    <div class="flex-row">
-      <div class="flex-col">
-        <kendo-floatinglabel text="Case Status">
-          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlSendLetters$ | async">
-          </kendo-dropdownlist>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col">
-        <kendo-floatinglabel text="Group">
-          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlSendLetters$ | async">
-          </kendo-dropdownlist>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col flex-col-6">
-        <kendo-floatinglabel text="Eligibility Start Date">
-          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
-            format="MM-DD-YYY"
-            formatPlaceholder="formatPattern"
-            [(ngModel)]="currentDate"
-          >
-          </kendo-datepicker>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col flex-col-6">
-        <kendo-floatinglabel text="Eligibility End Date">
-          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
-            format="MM-DD-YYY"
-            formatPlaceholder="formatPattern"
-            [(ngModel)]="currentDate"
-          >
-          </kendo-datepicker>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col">
-        <kendo-floatinglabel text="Assigned Case Worker">
-          <kendo-textbox aria-label="Sara John" [disabled]="true" value="Sara John"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-        </kendo-floatinglabel>
-      </div>
-    </div>
-  </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button
-          aria-label="Cancel eligibility info"
-          kendoButton
-          [primary]="true"
-          look="outline"
-          (click)="onCloseEligibilityInfoClicked()"
-        >
-          Cancel
-        </button>
-        <button
-          aria-label="Update eligibility info"
-          kendoButton
-          [primary]="true"
-        >
-          Update
-        </button>
-      </div>
-    </div>
-  </kendo-dialog-actions>
-</kendo-dialog> -->

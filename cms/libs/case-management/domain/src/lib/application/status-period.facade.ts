@@ -1,13 +1,11 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 /** Data services **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusPeriodDataService } from '../infrastructure/status-period.data.service';
-import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 
 @Injectable({ providedIn: 'root' })
@@ -17,6 +15,7 @@ export class StatusPeriodFacade {
 
   /** Public properties **/
   statusPeriod$ = this.statusPeriodSubject.asObservable();
+
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortValue = 'StatusStart'
@@ -34,20 +33,57 @@ export class StatusPeriodFacade {
     private configurationProvider : ConfigurationProvider,
     ) {}
 
+    showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+    {        
+      if(type == SnackBarNotificationType.ERROR)
+      {
+         const err= subtitle;    
+         this.loggingService.logException(err)
+      }  
+      this.notificationSnackbarService.manageSnackBar(type,subtitle)
+      this.hideLoader();
+         
+    }
+
+    showLoader()
+    {
+      this.loaderService.show();
+    }
+  
+    hideLoader()
+    {
+      this.loaderService.hide();
+    }
   /** Public methods **/
-  loadStatusPeriod(): void {
-    this.statusPeriodDataService.loadStatusPeriod().subscribe({
-      next: (statusPeriodResponse) => {
-        this.statusPeriodSubject.next(statusPeriodResponse);
+  loadStatusPeriod(caseId:any,clientId:any,showHistorical:any,gridDataRefinerValue:any): void {
+    this.showLoader();
+    this.statusPeriodDataService.loadStatusPeriod(caseId,clientId,showHistorical,gridDataRefinerValue).subscribe({
+      next: (statusPeriodResponse:any) => {
+        if (statusPeriodResponse) {
+          const gridView = {
+            data: statusPeriodResponse['items'],
+            total: statusPeriodResponse['totalCount'],
+          };
+
+          this.statusPeriodSubject.next(gridView);
+          this.hideLoader();
+        }
       },
       error: (err) => {
-        console.error('err', err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
       },
     });
   }
- 
-  save():Observable<boolean>{
-    //TODO: save api call   
-    return of(true);
+
+  loadStatusGroupHistory(eligibilityId: string) {
+    return this.statusPeriodDataService.loadStatusGroupHistory(eligibilityId);
+  }
+
+  loadStatusFplHistory(eligibilityId: string) {
+    return this.statusPeriodDataService.loadStatusFplHistory(eligibilityId);
+  }
+
+  loadRamSellInfo(clientId: string,clientCaseEligibilityId:any=null) {
+    return this.statusPeriodDataService.loadRamSellInfo(clientId,clientCaseEligibilityId);
   }
 }

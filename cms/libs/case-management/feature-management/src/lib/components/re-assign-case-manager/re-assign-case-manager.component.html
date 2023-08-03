@@ -1,1 +1,30 @@
-<p>re-assign-case-manager works!</p>
+<kendo-dialog-titlebar (click)="onReAssignConfirm(false)"> Reassign Case Manager? </kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+    <p>
+        The active Case Manager will be unassigned from the client
+   
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="cancel removing case manager"
+          (click)="onReAssignConfirm(false)"
+        >
+          CANCEL
+        </button>
+        <button
+          kendoButton
+          class="k-error-button"
+          aria-label="remove case manager"
+          (click)="onReAssignConfirm(true)"
+        >
+        RE-ASSIGN
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>

@@ -30,20 +30,20 @@
             <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Date Currently Paid Through">
                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                        formControlName="premiumPaidThruDate" [disabled]="isViewContentEditable"
+                        formControlName="premiumPaidThruDate" 
                         formatPlaceholder="formatPattern" placeholder="" aria-label="Date Currently Paid Through">
                     </kendo-datepicker>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumPaidThruDate'].valid">Date currently paid through is required.</kendo-formerror>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumPaidThruDate'].valid && !healthInsuranceForm.controls['premiumPaidThruDate'].disabled">Date currently paid through is required.</kendo-formerror>
             </div>
             <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Next Premium Payment Due Date">
                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                        formControlName="nextPremiumDueDate" [disabled]="isViewContentEditable"
+                        formControlName="nextPremiumDueDate" 
                         formatPlaceholder="formatPattern" placeholder="" aria-label="Next Premium Payment Due Date">
                     </kendo-datepicker>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['nextPremiumDueDate'].valid">	Next payment due date is required.</kendo-formerror>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['nextPremiumDueDate'].valid && !healthInsuranceForm.controls['nextPremiumDueDate'].disabled">	Next payment due date is required.</kendo-formerror>
 
             </div>
             <div class="flex-col flex-col-6">
@@ -51,33 +51,33 @@
                     <span class="k-input-prefix custom-currencysymbol"> $ </span>
                     <kendo-numerictextbox aria-label="premiumAmt" [spinners]="false" class="input-icon-right"
                         placeholder="Premium Amount" placeholder="00.00" formControlName="premiumAmt" #premiumAmt
-                        [fillMode]="formUiStyle.inputFillMode" name="premiumAmt" [disabled]="isViewContentEditable">
+                        [fillMode]="formUiStyle.inputFillMode" name="premiumAmt" >
 
                     </kendo-numerictextbox>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumAmt'].valid">Premium amount is required.</kendo-formerror>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumAmt'].valid && !healthInsuranceForm.controls['premiumAmt'].disabled">Premium amount is required.</kendo-formerror>
 
             </div>
             <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Premium Frequency">
                     <kendo-dropdownlist aria-label="Premium Frequency" [fillMode]="formUiStyle.dropDownFillMode"
-                        [disabled]="isViewContentEditable" [data]="premiumFrequencyList$ | async"
+                        [data]="premiumFrequencyList$ | async"
                         formControlName="premiumFrequencyCode" textField="lovDesc" valueField="lovCode"
                         [valuePrimitive]="true">
                     </kendo-dropdownlist>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumFrequencyCode'].valid">Premium frequency is required.</kendo-formerror>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumFrequencyCode'].valid && !healthInsuranceForm.controls['premiumFrequencyCode'].disabled">Premium frequency is required.</kendo-formerror>
             </div>
             <div class="flex-col">
                 <kendo-floatinglabel text="Payment ID Number">
-                    <kendo-textbox [disabled]="isViewContentEditable || sameAsInsuranceIdFlag"
+                    <kendo-textbox 
                         placeholder="Payment ID Number" formControlName="paymentIdNbr" [maxlength]="20"
                         [fillMode]="formUiStyle.inputFillMode" (keypress)="restrictSpecialChar($event)">
                     </kendo-textbox>
 
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['paymentIdNbr'].valid">Payment ID number is required.</kendo-formerror>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && specialCharAdded">
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['paymentIdNbr'].valid && !healthInsuranceForm.controls['paymentIdNbr'].disabled">Payment ID number is required.</kendo-formerror>
+                <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && specialCharAdded && !healthInsuranceForm.controls['paymentIdNbr'].disabled">
                     Special characters not allowed.</kendo-formerror>
             </div>
             <div class="flex-col mt-2">
@@ -98,7 +98,7 @@
             <div class="flex-col mt-3">
                 <case-management-medical-premium-detail-others-covered-plan [healthInsuranceForm]="healthInsuranceForm"
                     [isViewContentEditable]="isViewContentEditable"
-                    [clientId]="clientId"></case-management-medical-premium-detail-others-covered-plan>
+                    [clientId]="clientId" [caseEligibilityId] ="caseEligibilityId"></case-management-medical-premium-detail-others-covered-plan>
             </div>
         </div>
     </div>

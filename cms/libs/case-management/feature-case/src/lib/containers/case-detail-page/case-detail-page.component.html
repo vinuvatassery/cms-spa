@@ -1,17 +1,13 @@
-<div class="add-client-wrapper" kendoRippleContainer [ngClass]="{'innerleftmenu-opened': isInnerLeftMenuOpen}">
+<div class="add-client-wrapper" kendoRippleContainer [ngClass]="{'innerleftmenu-opened': isInnerLeftMenuOpen, 'cer-eligibility-screen': isCerForm}">
   <div class="add-client_left">
     <!-- Case Navigation -->
-    <!-- Case Navigation -->
-
-    <case-management-case-navigation [routes$]="routes$" [completeStaus$]="completeStaus$"
+    <case-management-case-navigation [routes$]="routes$" [completeStaus$]="completeStaus$" [workflowType]="workflowType"
       [navigationEvent]="workflowNavigationEvent" (workflowChange)="applyWorkflowChanges($event)" [currentSession]="currentSession">
     </case-management-case-navigation>
     <button class="createcase-mobile-menu-btn  createbtn-close" (click)="openInnerLeftMenu()"> <span class="material-icons">
       menu_open
       </span>
-  </button>
-    <!-- Send Letter Side profile -->
-    <case-management-send-letter-profile hidden></case-management-send-letter-profile>
+  </button> 
   </div>
   <div class="add-client_right">
     <!-- Breadcrumb Section -->
@@ -53,7 +49,7 @@
 
 <!-- Finish the application later Modal -->
 <kendo-dialog *ngIf="isShowSaveLaterPopup" (close)="onCloseSaveLaterClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Finish the application later?">
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="{{isCerForm ? 'Finish the CER later?' : 'Finish the application later?'}}">
   <section class="k-dialog-body">
     <p class="text-muted mb-2">
       The application status will be set to REJECT if not completed within 45
@@ -63,7 +59,6 @@
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="Assigned Case Worker">
-          <!-- <input kendoTextBox /> -->
           <kendo-textbox [disabled]="true" placeholder="Assigned Case Worker" [(ngModel)]="clientCaseStatusData.assignedCwUserName" aria-label="Assigned Case Worker" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
         </kendo-floatinglabel>
       </div>
@@ -77,7 +72,10 @@
         </kendo-formerror>
       </div>
       <div class="flex-col mb-2">
-        <h5>Do you need to send the client a letter?</h5>
+        <h5 *ngIf="paperlessFlag == 'Y'; else letterTemplate">Do you want to send the client an email?</h5>
+        <ng-template #letterTemplate>
+          <h5>Do you want to send a letter?</h5>
+        </ng-template>
         <div class="component-list-h">
           <span class="app-radiobtnwidtext-wrapper">
             <input type="radio" [(ngModel)]="sendLetterFlag" value="Y" aria-labelledby="send Letter" kendoRadioButton name="sendLetter" />
@@ -151,5 +149,27 @@
 </kendo-dialog>
 
     <!-- Send New Email Modal -->
-<case-management-send-email *ngIf="isShowSendNewLetterPopup" [data]="ScreenName"
+    <ng-template #sendNewEmailModalDialog>
+<case-management-send-email [data]="ScreenName" [paperlessFlag]="paperlessFlag"
 (closeSendEmailEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-email>
+</ng-template>
+<ng-template #sendNewLetterModalDialog>
+  <case-management-send-letter [data]="ScreenName"
+  (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-letter>
+  </ng-template>
+<!-- Cancel Application Modal -->
+<kendo-dialog *ngIf="cancelApplicationFlag" class="app-c-modal app-c-modal-md app-c-modal-np" (close)="closeCancelApplicationPopup()">
+  <kendo-dialog-titlebar> Cancel Application</kendo-dialog-titlebar>
+  <section class="k-dialog-body">
+    <p class="text-muted mb-2"> All required fields are not completed, Your Information will not be saved. Do you
+      want to continue? </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel" (click)="closeCancelApplicationPopup()"> CANCEL </button>
+        <button aria-label="add" kendoButton [primary]="true" (click)="onContinueClick()"> CONTINUE </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>

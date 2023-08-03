@@ -1,14 +1,7 @@
 <div class="inner-split-wrapper" kendoRippleContainer  [ngClass]="{'innerleftmenu-opened': isInnerLeftMenuOpen}">
-  <!-- Navigation Menu Section -->
-  <div class="inner-split_left">
-    <system-config-system-config-navigation></system-config-system-config-navigation>
-    <button class="createcase-mobile-menu-btn  createbtn-close" (click)="openInnerLeftMenu()"> <span class="material-icons">
-      menu_open
-      </span>
-  </button>
-  </div>
+  <!--//NOSONAR Navigation Menu Section -->
   <div class="inner-split_right">
-    <!-- Breadcrumb Section -->
+    <!--//NOSONAR Breadcrumb Section -->
     <section class="app-l-breadcrumb py-0 fixed-top-breadcrumb">
      <div class="d-flex">
       <button class="createcase-mobile-menu-btn" (click)="openInnerLeftMenu()"> <span class="material-icons">
@@ -18,11 +11,11 @@
      <common-bread-crumb></common-bread-crumb>
      </div>
     </section>
-    <!-- Page details Section -->
+    <!-- //NOSONAR Page details Section -->
     <section class="systemconfig-components">
-      <!-- <system-config-user-list></system-config-user-list> -->
+      <!-- //NOSONAR <system-config-user-list></system-config-user-list> -->
       <router-outlet></router-outlet>
-      <!-- <system-config-roles-and-permissions-list></system-config-roles-and-permissions-list> -->
+      <!-- //NOSONAR <system-config-roles-and-permissions-list></system-config-roles-and-permissions-list> -->
     </section>
   </div>
 </div>

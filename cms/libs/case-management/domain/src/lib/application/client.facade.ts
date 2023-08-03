@@ -1,9 +1,10 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { Observable, of,Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ApplicantInfo } from '../entities/applicant-info';
+import { NewIDCardRequest } from '../entities/new-Id-card-request';
 /** Data services **/
 import { ClientDataService } from '../infrastructure/client.data.service';
 import { SnackBar } from '@cms/shared/ui-common';
@@ -29,10 +30,14 @@ export class ClientFacade {
   private rdoDressedorBathedSubject = new BehaviorSubject<any[]>([]);
   private rdoConcentrationSubject = new BehaviorSubject<any[]>([]);
   private rdoErrandsSubject = new BehaviorSubject<any[]>([]);
-  private specialHandlingsSubject = new BehaviorSubject<any>([]);  
+  private specialHandlingsSubject = new BehaviorSubject<any>([]);
+  private sendNewIDCardSubject = new BehaviorSubject<any>([]);
   appInfoFormSubject = new BehaviorSubject<any>([]);
   applicationInfoSubject = new Subject<any>();
   pronounListSubject = new  BehaviorSubject<any>([]);
+  specialHandlingChangeDetectionSubject = new  BehaviorSubject<any>([]);
+  private clientProfileReloadSubject = new BehaviorSubject<any>([]);
+
 
   /** Public properties **/
   ddlCaseOrigins$ = this.ddlCaseOriginsSubject.asObservable();
@@ -55,21 +60,24 @@ export class ClientFacade {
   appInfoForm$ = this.appInfoFormSubject.asObservable();
   applicantInfo$ = this.applicationInfoSubject.asObservable();
   pronounList$ = this.pronounListSubject.asObservable();
+  sendNewIDCard$ = this.sendNewIDCardSubject.asObservable();
+  specialHandlingChangeDetection$ = this.specialHandlingChangeDetectionSubject.asObservable();
+  clientProfileReload$ = this.clientProfileReloadSubject.asObservable();
 
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   clientFacadesnackbar$ = this.snackbarSubject.asObservable();
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
+  {
     if(type == SnackBarNotificationType.ERROR)
     {
-       const err= subtitle;    
+       const err= subtitle;
        this.loggingService.logException(err)
-    }  
+    }
     this.notificationSnackbarService.manageSnackBar(type,subtitle)
     this.hideLoader();
-       
+
   }
 
   /** Constructor**/
@@ -280,13 +288,36 @@ export class ClientFacade {
   save(applicantInfo:ApplicantInfo) {
       return this.clientDataService.save(applicantInfo);
   }
-  load(clientCaseId:any,eligibilityId:any) {
-      return this.clientDataService.load(clientCaseId,eligibilityId);
+  load(clientId:any,clientCaseId:any,eligibilityId:any) {
+      this.clientProfileReloadSubject.next(true)
+      return this.clientDataService.load(clientId,clientCaseId,eligibilityId);
   }
-  update(applicantInfo:ApplicantInfo) {
-    return this.clientDataService.update(applicantInfo);
+  update(applicantInfo:ApplicantInfo,clientId:any) {
+    return this.clientDataService.update(applicantInfo,clientId);
   }
   searchDuplicateClient(clientData:any){
     return this.clientDataService.searchDuplicateClient(clientData);
+  }
+  deleteClientNote(clientId: any, clientNoteId: any) {
+    return this.clientDataService.removeClientNote(
+      clientId,
+      clientNoteId
+    );
+  }
+  sendNewIdCard(clientId: number):void{
+    let newIDCardRequest = new NewIDCardRequest();
+    newIDCardRequest.clientId = clientId;
+    this.showLoader();
+    this.clientDataService.sendNewIdCard(newIDCardRequest).subscribe({
+      next: (sendNewIDCardResponse) => {
+        this.sendNewIDCardSubject.next(sendNewIDCardResponse);
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'New card has sent')
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
   }
 }

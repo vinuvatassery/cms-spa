@@ -12,6 +12,7 @@ import { HivVerificationRequestComponent } from './components/hiv-verification-r
 import { VerificationPageComponent } from './containers/verification-page/verification-page.component';
 import { HivVerificationReviewComponent } from './components/hiv-verification-review/hiv-verification-review.component';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
+import { HivVerificationAttachmentRemovalConfirmationComponent } from './components/hiv-verification-attachment-removal-confirmation/hiv-verification-attachment-removal-confirmation.component';
 
 @NgModule({
   imports: [
@@ -27,11 +28,13 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     HivVerificationRequestComponent,
     VerificationPageComponent,
     HivVerificationReviewComponent,
+    HivVerificationAttachmentRemovalConfirmationComponent,
   ],
   exports: [
     HivVerificationComponent,
     HivVerificationRequestComponent,
     HivVerificationReviewComponent,
+    HivVerificationAttachmentRemovalConfirmationComponent,
   ],
 })
 export class CaseManagementFeatureVerificationModule {}

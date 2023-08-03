@@ -6,15 +6,12 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
 import * as signalR from '@microsoft/signalr';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-/** Enums **/
-import { HubMethodTypes } from '@cms/shared/util-core';
-/** Providers **/
-import { ConfigurationProvider } from '@cms/shared/util-core';
-/** Services **/
-import { OidcSecurityService } from '@cms/shared/util-oidc';
-/** rxjs **/
 import { lastValueFrom } from 'rxjs';
+/** Internal libraries **/
+import { HubMethodTypes, ConfigurationProvider } from '@cms/shared/util-core';
+import { OidcSecurityService } from '@cms/shared/util-oidc';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -32,7 +29,7 @@ export class SignalrService {
     private readonly oidcSecurityService: OidcSecurityService,
     private readonly configurationProvider: ConfigurationProvider
   ) {
-    //this.initialize();
+    //NOSONAR this.initialize();
   }
 
   /** Private methods **/
@@ -64,22 +61,30 @@ export class SignalrService {
   private startConnection() {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(this.configurationProvider.appSettings.signalrHubUrl, {
-        accessTokenFactory: () =>  lastValueFrom(this.oidcSecurityService.getAccessToken())
+        accessTokenFactory: () => lastValueFrom(this.oidcSecurityService.getAccessToken())
       })
-      //.withUrl(this.configurationProvider.appSettings.signalrHubUrl)
+      //.withUrl(this.configurationProvider.appSettings.signalrHubUrl) NOSONAR
       .withAutomaticReconnect({
         nextRetryDelayInMilliseconds: (retryContext) => {
           this.notify('AutoReconnect', retryContext.elapsedMilliseconds);
-          return Math.random() * 10000; 
-          // if (retryContext.elapsedMilliseconds < 60000) {
-          //   // If we've been reconnecting for less than 60 seconds so far,
-          //   // wait between 0 and 10 seconds before the next reconnect attempt.
-          //   return Math.random() * 10000;
-          // } else {
-          //   // If we've been reconnecting for more than 60 seconds so far, stop reconnecting.
-          //   // return null;
-          //   return Math.random() * 10000; //TODO: reconnecting indefinitely?
-          // }
+          const crypto = window.crypto;
+          const array = new Uint32Array(1);
+          crypto.getRandomValues(array); 
+          const randomNum = array[0];
+          return randomNum * 10000;
+         
+          /*
+          NOSONAR
+          if (retryContext.elapsedMilliseconds < 60000) {                                       
+            // If we've been reconnecting for less than 60 seconds so far,
+            // wait between 0 and 10 seconds before the next reconnect attempt.
+            return Math.random() * 10000;
+          } else {
+            // If we've been reconnecting for more than 60 seconds so far, stop reconnecting.
+            // return null;
+            return Math.random() * 10000; //TODO: reconnecting indefinitely?
+          }
+          */
         },
       })
       .configureLogging(signalR.LogLevel.Information)

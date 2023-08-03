@@ -7,44 +7,75 @@ import {
   Input,
   EventEmitter,
 } from '@angular/core';
-/** Enums **/
-import { CommunicationEvents, ScreenType } from '@cms/case-management/domain';
-/** Facades **/
-import { CommunicationFacade } from '@cms/case-management/domain';
+/** Internal Libraries **/
+import { CommunicationEvents, ScreenType, CommunicationFacade, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-send-text-message',
   templateUrl: './send-text-message.component.html',
-  styleUrls: ['./send-text-message.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SendTextMessageComponent implements OnInit {
   /** Input properties **/
   @Input() data!: any;
+  @Input() ddlMessageRecipients$!: Observable<any>;
 
   /** Output properties  **/
   @Output() closeSendMessageEvent = new EventEmitter<CommunicationEvents>();
-
-  /** Public properties **/
-  ddlMessageRecipients$ = this.communicationFacade.ddlMessageRecipients$;
+  @Output() loadInitialData = new EventEmitter();
+  /** Public properties **/ 
   ddlLetterTemplates$ = this.communicationFacade.ddlLetterTemplates$;
   ddlTemplates: any;
   isOpenSendMessageClicked!: boolean;
   isOpenMessageTemplate = false;
   isShowSendMessageConfirmPopupClicked = false;
   isShowSaveForLaterPopupClicked = false;
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  formUiStyle : UIFormStyle = new UIFormStyle();
+  isShowToPhoneNumbersLoader$ = new BehaviorSubject<boolean>(false);
+  phoneNumbersSubscription$ = new Subscription();
+  phoneNumbers!:any[];
+  isClearPhoneNumbers = false;
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.updateSendMessageFlag();
-    this.loadDdlMessageRecipients();
     this.loadDdlLetterTemplates();
+    this.addPhoneNumbersSubscription();
+  }
+  ngOnDestroy(): void {
+    this.phoneNumbersSubscription$.unsubscribe();
   }
 
   /** Private methods **/
+  private addPhoneNumbersSubscription() {
+    this.phoneNumbersSubscription$ = this.ddlMessageRecipients$
+    .pipe(      
+      map((ph) => ph.map((p:any) => ({...p, formattedPhoneNbr: this.formatPhoneNumber(p.phoneNbr)})))
+    )
+    .subscribe((phoneResp: any) => {
+      if(this.isClearPhoneNumbers){
+        this.phoneNumbers =[];
+      }else{
+      this.phoneNumbers = phoneResp.filter((phone: any) => phone.smsTextConsentFlag === StatusFlag.Yes);
+      this.isShowToPhoneNumbersLoader$.next(false);
+      }
+      this.isClearPhoneNumbers = false;
+    });
+  }
+
+  private formatPhoneNumber(phoneNumberString: string) {
+    const cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    const match = cleaned?.match(/^(1)?(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      const intlCode = (match[1] ? '+1 ' : '');
+      return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+    }
+    return '';
+  }
+
   private loadDdlLetterTemplates() {
     this.communicationFacade.loadDdlLetterTemplates();
     this.ddlLetterTemplates$.subscribe({
@@ -57,10 +88,6 @@ export class SendTextMessageComponent implements OnInit {
         console.log(err);
       },
     });
-  }
-
-  private loadDdlMessageRecipients() {
-    this.communicationFacade.loadDdlMessageRecipients();
   }
 
   private updateSendMessageFlag() {
@@ -87,7 +114,8 @@ export class SendTextMessageComponent implements OnInit {
     this.isShowSendMessageConfirmPopupClicked = true;
   }
 
-  onCloseSendMessageClicked() {
+  onCloseSendMessageClicked() { 
+    this.isShowSaveForLaterPopupClicked = false;
     this.closeSendMessageEvent.emit(CommunicationEvents.Close);
   }
 
@@ -95,18 +123,20 @@ export class SendTextMessageComponent implements OnInit {
     this.isShowSendMessageConfirmPopupClicked = false;
     if (this.data === ScreenType.Authorization) {
       this.closeSendMessageEvent.emit(CommunicationEvents.Print);
-    } else if (this.data === ScreenType.Case360Page) {
-      this.closeSendMessageEvent.emit(CommunicationEvents.Close);
+    } else if (this.data === ScreenType.Case360PageSMS) {
+      this.isShowSendMessageConfirmPopupClicked = false;
     }
   }
 
   onCloseSaveForLaterClicked() {
     this.isShowSaveForLaterPopupClicked = false;
-    this.closeSendMessageEvent.emit(CommunicationEvents.Close);
   }
 
   /** External event methods **/
   handleDdlTextMessageValueChange() {
-    this.isOpenMessageTemplate = true;
+    this.isOpenMessageTemplate = true;  
+    this.isClearPhoneNumbers = true;  
+    this.isShowToPhoneNumbersLoader$.next(true);
+    this.loadInitialData.emit();
   }
 }

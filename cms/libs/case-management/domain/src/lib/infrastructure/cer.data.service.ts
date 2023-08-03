@@ -6,11 +6,14 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 /** Entities **/
 import { Cer } from '../entities/cer';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class CerDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private configurationProvider: ConfigurationProvider
+    ) { }
 
   /** Public methods **/
   loadCer(): Observable<Cer[]> {
@@ -84,5 +87,38 @@ export class CerDataService {
 
   loadDdlCer() {
     return of(['Value 1', 'Value 2', 'Value 3', 'Value 4']);
+  }
+  getCerTrackingList(trackingDate: Date, skipcount: number, maxResultCount: number, sort: string, sortType: string , filter : any) {
+     
+    const ClientCerPagedResultRequest = 
+    {     
+      SortType : sortType,
+      Sorting : sort ,
+      SkipCount : skipcount ,
+      MaxResultCount : maxResultCount ,
+      Filter : JSON.stringify(filter)
+    }
+    return this.http.post<any[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cer?trackingDate=${trackingDate}`,
+      ClientCerPagedResultRequest
+    );
+
+  }
+
+  getCerTrackingDatesList() {
+    return this.http.get<any[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/case-management/cer/dates`
+    );
+  }
+  getCerTrackingDateCounts(trackingDate: Date) {
+    return this.http.get<any[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/case-management/cer/counts?trackingDate=${trackingDate}`
+    );
+  }
+
+  sendCerCounts(cerId: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cer/re-send/${cerId}`, {});
   }
 }

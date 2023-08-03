@@ -1,16 +1,19 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 /** Data services **/
 import { Template } from '../entities/template';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateDataService {
   /** Constructor **/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private readonly configurationProvider: ConfigurationProvider
+   ) { }
 
   /** Public methods **/
   loadTemplates(): Observable<Template[]> {
@@ -28,4 +31,24 @@ export class TemplateDataService {
       },
     ]);
   }
+
+  getDirectoryContent(typeCode:any ,filepath?: any) {
+    let params = new HttpParams();
+    params = params.append('templateId',filepath);
+    params = params.append('typeCode',typeCode);
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + '/case-management/templates/'+`${typeCode}`+'/forms',{params:params}
+    );
+  }
+
+  getFormsandDocumentsViewDownload(templateId: string) {
+    let roleId = "";
+    let url = `/case-management/templates/${templateId}/content`;
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + url+ `/${roleId}`
+      , {
+        responseType: 'blob'
+      });
+  }
+
 }

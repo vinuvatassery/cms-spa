@@ -1,9 +1,9 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnDestroy, OnInit, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnInit, } from '@angular/core';
 /** Facades **/
 import { IncomeFacade, StatusFlag, IncomeTypeCode,ClientDocumentFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { Validators, FormGroup, FormControl, FormBuilder, } from '@angular/forms';
+import { Validators, FormGroup, FormControl, } from '@angular/forms';
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 import { Lov, LovFacade } from '@cms/system-config/domain';
@@ -53,6 +53,7 @@ export class IncomeDetailComponent implements OnInit {
   tareaJustificationMaxLength = 300;
   startDate!:any;
   incomeTypesOther = '';
+  documentTypeCode!: string;
   public IncomeDetailsFormData: { incomeAmount: number } = {
     incomeAmount: 0,
   };
@@ -155,7 +156,7 @@ export class IncomeDetailComponent implements OnInit {
   // loading Income detail based on id service call
   loadIncomeDetails() {
     this.incomeFacade
-      .loadIncomeDetails(this.selectedIncome.clientIncomeId)
+      .loadIncomeDetails(this.clientId, this.selectedIncome.clientIncomeId)
       .subscribe({
         next: (response) => {
           if (response) {
@@ -164,8 +165,8 @@ export class IncomeDetailComponent implements OnInit {
           }
         },
         error: (err) => {
-          this.incomeFacade.HideLoader();
-          this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.incomeFacade.hideLoader();
+          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       });
   }
@@ -215,17 +216,20 @@ export class IncomeDetailComponent implements OnInit {
       }
       this.btnDisabled =true;
       if (!this.isEditValue) {
-        
-        this.incomeFacade.ShowLoader();
+
+        this.incomeFacade.showLoader();
         this.incomeFacade
           .saveClientIncome(
+            this.clientId,
             this.IncomeDetailsForm.value,
-            this.proofOfIncomeFiles
+            this.proofOfIncomeFiles,
+            this.documentTypeCode
           )
           .subscribe({
             next: (incomeResponse) => {
-              this.incomeFacade.HideLoader();
-              this.incomeFacade.ShowHideSnackBar(
+              this.incomeFacade.incomeValidSubject.next(true);
+              this.incomeFacade.hideLoader();
+              this.incomeFacade.showHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
                 'Income created successfully.'
               );
@@ -234,14 +238,14 @@ export class IncomeDetailComponent implements OnInit {
             },
             error: (err) => {
               this.btnDisabled =false;
-              this.incomeFacade.HideLoader();
-              this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, err);
+              this.incomeFacade.hideLoader();
+              this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
             },
           });
       }
 
       if (this.isEditValue) {
-        this.incomeFacade.ShowLoader();
+        this.incomeFacade.showLoader();
         incomeData['clientIncomeId'] = this.selectedIncome.clientIncomeId;
         incomeData['concurrencyStamp'] = this.selectedIncome.concurrencyStamp;
         incomeData['monthlyIncome'] = this.selectedIncome.monthlyIncome;
@@ -252,17 +256,20 @@ export class IncomeDetailComponent implements OnInit {
         }
 
         incomeData['activeFlag'] = this.selectedIncome.activeFlag;
-       
+
         this.incomeFacade
           .editClientIncome(
+            this.clientId,
+            this.selectedIncome.clientIncomeId,
             this.IncomeDetailsForm.value,
-            this.proofOfIncomeFiles
+            this.proofOfIncomeFiles,
+            this.documentTypeCode
           )
           .subscribe({
             next: (incomeResponse) => {
               this.closeIncomeDetailPoup();
-              this.incomeFacade.HideLoader();
-              this.incomeFacade.ShowHideSnackBar(
+              this.incomeFacade.hideLoader();
+              this.incomeFacade.showHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
                 'Income updated successfully.'
               );
@@ -271,8 +278,8 @@ export class IncomeDetailComponent implements OnInit {
             },
             error: (err) => {
               this.btnDisabled = false;
-              this.incomeFacade.HideLoader();
-              this.incomeFacade.ShowHideSnackBar(SnackBarNotificationType.ERROR, err);
+              this.incomeFacade.hideLoader();
+              this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
             },
           });
       }
@@ -296,6 +303,11 @@ export class IncomeDetailComponent implements OnInit {
 
   handleFileRemoved(event: any) {
     this.proofOfIncomeFiles = null;
+    this.documentTypeCode='';
+  }
+  handleTypeCodeEvent(e:any)
+  {
+    this.documentTypeCode=e;
   }
 
   // checking the validation
@@ -314,8 +326,8 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeStartDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeNote'].updateValueAndValidity();
-    var endDate=this.IncomeDetailsForm.controls['incomeEndDate'].value;
-    var startDate= this.IncomeDetailsForm.controls['incomeStartDate'].value;
+    const endDate=this.IncomeDetailsForm.controls['incomeEndDate'].value;
+    const startDate= this.IncomeDetailsForm.controls['incomeStartDate'].value;
     if(endDate<=startDate && this.IncomeDetailsForm.controls['incomeEndDate'].value ){
       this.IncomeDetailsForm.controls['incomeEndDate'].setErrors({'incorrect':true})
     }

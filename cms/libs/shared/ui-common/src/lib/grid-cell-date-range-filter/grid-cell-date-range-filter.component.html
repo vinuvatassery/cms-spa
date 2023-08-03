@@ -1,0 +1,22 @@
+<div class="k-form">
+    <label class="k-form-field">
+      
+      <kendo-datepicker
+        (valueChange)="onStartChange($event)"
+        [(ngModel)]="start"
+        [popupSettings]="popupSettings"
+        format="MM/dd/yyyy" formatPlaceholder="formatPattern"
+      >
+      </kendo-datepicker>
+    </label>
+    <label class="k-form-field">
+      <span>-</span>
+      <kendo-datepicker
+        (valueChange)="onEndChange($event)"
+        [(ngModel)]="end"
+        [popupSettings]="popupSettings"
+        format="MM/dd/yyyy" formatPlaceholder="formatPattern"
+      >
+      </kendo-datepicker>
+    </label>
+  </div>

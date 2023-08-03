@@ -2,11 +2,10 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-/** Entities **/
-import { Search } from '../entities/search';
 /** Data services **/
 import { SearchDataService } from '../infrastructure/search.data.service';
 import {  LoggingService, NotificationSnackbarService, SnackBarNotificationType,LoaderService, ConfigurationProvider } from '@cms/shared/util-core';
+import { CaseDataService } from '../infrastructure/case.data.service';
 
 @Injectable({ providedIn: 'root' })
 export class SearchFacade {
@@ -20,7 +19,8 @@ export class SearchFacade {
   /** Constructor**/
   constructor(private readonly searchDataService: SearchDataService,private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly loaderService: LoaderService , private configurationProvider : ConfigurationProvider) {}
+    private readonly loaderService: LoaderService , private configurationProvider : ConfigurationProvider,
+    private readonly caseDataService: CaseDataService) {}
 
   /** Public methods **/
   showLoader()
@@ -46,7 +46,7 @@ export class SearchFacade {
 
   loadCaseBySearchText(text : string): void {
     if(text){
-      this.searchDataService.loadCaseBySearchText(text).subscribe({
+      this.caseDataService.loadCaseBySearchText(text).subscribe({
       
         next: (caseBySearchTextResponse) => {
           this.clientSearchSubject.next(caseBySearchTextResponse);

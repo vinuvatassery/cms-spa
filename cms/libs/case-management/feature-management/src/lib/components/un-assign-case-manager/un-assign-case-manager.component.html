@@ -1,1 +1,46 @@
-<p>un-assign-case-manager works!</p>
+<kendo-dialog-titlebar  type="button" (click)="onUnAssignConfirm(false)"> Unassign Case Manager? </kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+    <p>
+        They will be unassigned from this client. You will be able to assign another one or submit a new referral.
+   
+    </p>
+
+    <div class="flex-row">
+        <div class="flex-col flex-col-9">
+          <kendo-floatinglabel text="End Date">
+            <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"  
+             format="MM-dd-yyyy" 
+            formatPlaceholder="formatPattern"   
+            [min]="startDate"        
+            aria-label="End Date"
+            placeholder=""
+            [(ngModel)]="endDate">
+            </kendo-datepicker>       
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="showError">End Date is required</kendo-formerror>
+        </div>            
+      </div>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton      
+          look="outline"
+          type="button"
+          aria-label="cancel removing case manager"
+          (click)="onUnAssignConfirm(false)"
+        >
+          CANCEL
+        </button>
+        <button
+          kendoButton  [primary]="true"        
+          aria-label="remove case manager"
+          (click)="onUnAssignConfirm(true)"
+        >
+        UNASSIGN
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+

@@ -1,14 +1,12 @@
 /** Angular **/
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute,  Router } from '@angular/router';
 /** External libraries **/
 import { catchError, filter, first, forkJoin, mergeMap, of, Subject, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
 import { WorkflowFacade,  NavigationType, CaseManagerFacade, StatusFlag, CompletionChecklist } from '@cms/case-management/domain';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
 import { UserManagementFacade } from '@cms/system-config/domain';
-
-import { ActivatedRoute,  Router } from '@angular/router';
-import { LoaderService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-management-page',
@@ -24,10 +22,13 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   sessionId! : string;
   clientId ! : number
   clientCaseEligibilityId ! : string
+  prevClientCaseEligibilityId!: string
   hasManager! :string
   needManager! : string
   hasManagerValidation =false;
   needManagerValidation =false;
+  isCerForm = false;
+  isCaseManagerAvailable = false;
 
   gridVisibleSubject = new Subject<boolean>();
   showCaseManagers$ = this.gridVisibleSubject.asObservable();
@@ -38,6 +39,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   needManagerValidationSubject = new Subject<boolean>();
   needManagerValidation$ = this.needManagerValidationSubject.asObservable();
 
+  showCaseListRequired$ = this.caseManagerFacade.showCaseListRequiredSubject.asObservable();
   getCaseManagers$ = this.caseManagerFacade.getCaseManagers$;
   getCaseManagerHasManagerStatus$=this.caseManagerFacade.getCaseManagerHasManagerStatus$;
   getCaseManagerNeedManagerStatus$=this.caseManagerFacade.getCaseManagerNeedManagerStatus$;
@@ -48,11 +50,17 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   removeCaseManager$ = this.caseManagerFacade.removeCaseManager$;
   userImage$ = this.userManagementFacade.userImage$;
 
+  pageSizes = this.caseManagerFacade.gridPageSizes;
+  sortValue = this.caseManagerFacade.sortValue;
+  sortType = this.caseManagerFacade.sortType;
+  sort = this.caseManagerFacade.sort;
+
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
-  private discardChangesSubscription !: Subscription;
+  private caseListStatusSubscription !: Subscription
+
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
     private caseManagerFacade: CaseManagerFacade,
@@ -68,14 +76,14 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.loadCase()
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
-    this.addDiscardChangesSubscription();
+    this.addCaseListRequiredSubscription();
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
     this.saveForLaterClickSubscription.unsubscribe();
     this.saveForLaterValidationSubscription.unsubscribe();
-    this.discardChangesSubscription.unsubscribe();
+    this.caseListStatusSubscription.unsubscribe();
   }
 
   ngAfterViewInit(){
@@ -92,15 +100,21 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
         .subscribe((session: any) => {      
          this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
          this.clientCaseEligibilityId =JSON.parse(session.sessionData).clientCaseEligibilityId   
-         this.clientId = JSON.parse(session.sessionData).clientId            
+         this.clientId = JSON.parse(session.sessionData).clientId       
+         this.prevClientCaseEligibilityId = JSON.parse(
+          session.sessionData
+        )?.prevClientCaseEligibilityId;
+        if (this.prevClientCaseEligibilityId) {
+          this.isCerForm = true;
+        }     
          this.getCaseManagerStatus()
         });        
       } 
   getCaseManagerStatus()
   {
     this.caseManagerFacade.getCaseManagerStatus(this.clientCaseId);
-    this.getCaseManagerHasManagerStatus$.pipe(filter(x=> typeof x === 'boolean')).subscribe
-    ((x: boolean)=>
+    this.getCaseManagerHasManagerStatus$.pipe(filter(x=> typeof x === 'boolean'))
+    .subscribe((x: boolean)=>
     {   
       //Currently has HIV Case Manager?
       this.hasManager='';
@@ -111,8 +125,8 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
       this.gridVisibleSubject.next(x);
     });
 
-    this.getCaseManagerNeedManagerStatus$.pipe(filter(x=> typeof x === 'boolean')).subscribe
-    ((x: boolean)=>
+    this.getCaseManagerNeedManagerStatus$.pipe(filter(x=> typeof x === 'boolean'))
+    .subscribe((x: boolean)=>
     {  
       //Would you like one?
       this.needManager='';
@@ -130,22 +144,57 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   handleNeedManagerRadioChange($event : any)
-  {
+  {    
     this.caseManagerFacade.updateWorkFlow(true)
     this.validate();
+   
   }
 
   hasManagerChangeEvent(status : boolean)
-  {    
-     //show hide grid
-     this.gridVisibleSubject.next(status);
-  }
-  loadCaseManagers()
-  {
-    this.caseManagerFacade.loadCaseManagers(this.clientCaseId);
+  {   
+    this.gridVisibleSubject.next(status); 
+    let needMngr 
+    if(!this.hasManager)
+    {
+      needMngr = status ===true ? 'Y' : 'N'
+    }
+    else{ needMngr = this.hasManager}   
+      this.caseManagerFacade.updateCaseManagerStatus
+    (this.clientCaseId , needMngr , 'N')
+     
+    .subscribe({
+      next: (updateDateManagerResponse) => {
+      this.workflowFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , "Case Manager status updated Successfully")
+      this.caseManagerFacade.hideLoader() 
+     },
+       error: (err) => {
+        this.workflowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+        this.caseManagerFacade.hideLoader() 
+       },
+     })    
   }
 
-  private addSaveSubscription(): void {
+  loadCaseManagers(gridDataRefinerValue: any): void {   
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sort: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+    };
+
+    this.pageSizes = this.caseManagerFacade.gridPageSizes;
+    this.caseManagerFacade.loadCaseManagers(
+      this.clientCaseId,
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sort,
+      gridDataRefiner.sortType,
+      false
+    );   
+  }
+ 
+
+  private addSaveSubscription(): void {      
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
       tap(() => this.workflowFacade.disableSaveButton()),
       mergeMap((navigationType: NavigationType) =>
@@ -161,18 +210,22 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
     });
   }
 
-  private save() {  
+  private save() { 
+      if(this.hasManager === StatusFlag.Yes && !this.isCaseManagerAvailable)
+      {
+        this.caseManagerFacade.showCaseListRequiredSubject.next(true);
+        return of(false);
+      } 
        if(this.validate() === true)
         {
         return  this.caseManagerFacade.updateCaseManagerStatus
           (this.clientCaseId , this.hasManager , this.needManager)
-          .pipe
-          (
-          catchError((err: any) => {                     
-            this.workflowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)          
-            return  of(false);
-          })  
-          )  
+          .pipe(
+            catchError((err: any) => {                     
+              this.workflowFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)          
+              return  of(false);
+            })  
+          );  
         }
         else
         {
@@ -203,16 +256,17 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
       {
         this.needManagerValidation = true;
         this.hasManagerValidation = false;
-      }
+      }      
       this.hasManagerValidationSubject.next(this.hasManagerValidation)
       this.needManagerValidationSubject.next(this.needManagerValidation)
       return status;
      }
 
- removecaseManagerHandler(deleteCaseManagerCaseId : string)
-  {    
-    this.caseManagerFacade.removeCaseManager(deleteCaseManagerCaseId)
-  }
+     removecaseManagerHandler(data : any)
+     {    
+       this.caseManagerFacade.removeCaseManager(this.clientCaseId, data?.endDate, data?.assignedcaseManagerId)
+     }
+   
 
   searchTextEventHandler(text : string)
   {
@@ -250,12 +304,12 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+            this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
           }
         })
       }
       else {
-        this.workflowFacade.handleSendNewsLetterpopup(statusResponse, this.clientCaseId)
+        this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
       }
     });
   }
@@ -316,11 +370,15 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
     return this.validate();
   }
 
-  private addDiscardChangesSubscription(): void {
-    this.discardChangesSubscription = this.workflowFacade.discardChangesClicked$.subscribe((response: any) => {
-     if(response){
-     this.getCaseManagerStatus();
-     }
+  private addCaseListRequiredSubscription(): void {
+    this.caseListStatusSubscription = this.caseManagerFacade.getCaseManagers$.subscribe((res) => {      
+      if (res?.data?.length > 0 && this.hasManager === StatusFlag.Yes) {
+        this.isCaseManagerAvailable = true;
+        this.caseManagerFacade.showCaseListRequiredSubject.next(false);
+      }
+      else {
+          this.isCaseManagerAvailable = false;          
+      }      
     });
   }
 }

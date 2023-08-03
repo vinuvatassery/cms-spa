@@ -1,8 +1,7 @@
 /** Angular **/
 import {
   Component, Input, OnInit,
-  ChangeDetectorRef, ChangeDetectionStrategy, OnChanges, SimpleChanges, OnDestroy, Output, EventEmitter
-} from '@angular/core';
+  ChangeDetectorRef, ChangeDetectionStrategy, OnChanges, SimpleChanges, OnDestroy} from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 
@@ -10,15 +9,16 @@ import { FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 /** external Libraries **/
-import { first, Subscription, tap } from 'rxjs';
+import { first, Subscription } from 'rxjs';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 import { ProgramCode, CaseOriginCode } from '@cms/case-management/domain';
-import { LoaderService, UserProfileService } from '@cms/shared/util-core';
+import { LoaderService } from '@cms/shared/util-core';
+import { AuthService } from '@cms/shared/util-oidc';
+import { UserDataService } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-case-detailed-summary',
   templateUrl: './case-details.component.html',
-  styleUrls: ['./case-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit {
@@ -55,7 +55,8 @@ export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit
   /** Constructor**/
   constructor(private readonly router: Router, private readonly ref: ChangeDetectorRef,
     private loaderService: LoaderService,
-    private userProfileService: UserProfileService
+    private authService: AuthService,
+    private readonly userDataService: UserDataService
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -150,7 +151,7 @@ export class CaseDetailsSummaryComponent implements OnChanges, OnDestroy, OnInit
   }
   
   getLoggedInUserProfile(){
-    this.userProfileSubsriction=this.userProfileService.getProfile$.subscribe((profile:any)=>{
+    this.userProfileSubsriction=this.userDataService.getProfile$.subscribe((profile:any)=>{
       if(profile){
         this.userData=profile;
         this.getLoggedInCaseWorker();

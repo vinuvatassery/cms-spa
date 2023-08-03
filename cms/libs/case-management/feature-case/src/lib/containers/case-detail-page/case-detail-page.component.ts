@@ -1,41 +1,41 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, OnDestroy, ChangeDetectorRef, TemplateRef, ViewChild } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain'
 /** External libraries **/
 import { DateInputSize, DateInputRounded, DateInputFillMode, } from '@progress/kendo-angular-dateinputs';
-import { forkJoin, mergeMap, of, Subscription, tap,first } from 'rxjs';
+import { forkJoin, mergeMap, of, Subscription, tap, first, filter } from 'rxjs';
 
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, WorkflowTypeCode, StatusFlag, ButtonType,CaseStatusCode } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, StatusFlag, ButtonType, CaseStatusCode, ContactFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { Router } from '@angular/router';
-
-
-
-
-
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'case-management-case-detail-page',
   templateUrl: './case-detail-page.component.html',
-  styleUrls: ['./case-detail-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaseDetailPageComponent implements OnInit {
+export class CaseDetailPageComponent implements OnInit, OnDestroy {
 
   /**Private properties**/
+  @ViewChild('sendNewEmailModalDialog', { read: TemplateRef })
+  sendNewEmailModalDialog!: TemplateRef<any>;  
+  @ViewChild('sendNewLetterModalDialog', { read: TemplateRef })
+  sendNewLetterModalDialog!: TemplateRef<any>;  
   private navigationSubscription !: Subscription;
-  private loadSessionSubscription !:Subscription;
+  private loadSessionSubscription !: Subscription;
   private showSendNewsLetterSubscription !: Subscription;
-  private showConfirmationPopupSubscription !: Subscription;  public size: DateInputSize = 'medium';
+  private showCancelApplicationSubscription !: Subscription;
+  private showConfirmationPopupSubscription !: Subscription; public size: DateInputSize = 'medium';
   public rounded: DateInputRounded = 'full';
   public fillMode: DateInputFillMode = 'outline';
-
-  clientCaseId:any;
-  clientId:any;
-  clientCaseStatusData:any={};
-
+  isCerForm = false;
+  clientCaseId: any;
+  clientId: any;
+  clientCaseEligibilityId: any;
+  clientCaseStatusData: any = {};
+  prevClientCaseEligibilityId! : string;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   workflowNavigationEvent = new EventEmitter<string>();
   openedSaveLater = false;
@@ -45,20 +45,24 @@ export class CaseDetailPageComponent implements OnInit {
   openedPreviewLetter = false;
   openedSaveForLater = false;
   openedSendLetterToPrint = false;
-  caseStatuses:[]=[];
+  caseStatuses: [] = [];
   ScreenName = ScreenType.CaseDetailPage;
   popupClass = 'app-c-split-button';
   isShowSaveLaterPopup = false;
   isShowDeleteConfirmPopup = false;
   isShowDiscardConfirmPopup = false;
-  isShowSendNewLetterPopup = false;
   isInnerLeftMenuOpen = false;
   sessionId!: string;
   case$ = this.caseFacade.getCase$;
-  showDelete:boolean=true;
-  currentStatusCode:string="";
-  isSubmitted:boolean=false;
-  sendLetterFlag!:any;
+  showDelete: boolean = true;
+  currentStatusCode: string = "";
+  isSubmitted: boolean = false;
+  sendLetterFlag!: any;
+  cancelApplicationFlag!: boolean;
+  workflowType! :string
+  sendNewEmailModalDialogService : any;
+  paperless$ = this.contactFacade.paperless$;
+  paperlessFlag!: any;
   data: Array<any> = [
     {
       text: '',
@@ -74,7 +78,7 @@ export class CaseDetailPageComponent implements OnInit {
       },
     },
     {
-      buttonType: "btn-h-primary",
+      buttonType: "btn-h-danger",
       text: "DISCARD CHANGES",
       icon: "do_disturb_alt",
       click: (): void => {
@@ -102,11 +106,13 @@ export class CaseDetailPageComponent implements OnInit {
     private route: ActivatedRoute,
     private workflowFacade: WorkflowFacade,
     private loaderService: LoaderService,
-    private loggingService : LoggingService,
-    private readonly snackbarService : NotificationSnackbarService,
-    private router: Router,
-	  private lovFacade:LovFacade,
+    private loggingService: LoggingService,
+    private readonly snackbarService: NotificationSnackbarService,
+    private readonly router: Router,
+    private lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
+    private dialogService: DialogService,
+    private readonly contactFacade: ContactFacade,
   ) {
   }
 
@@ -115,35 +121,53 @@ export class CaseDetailPageComponent implements OnInit {
     this.loadQueryParams();
     this.loadDdlCommonAction();
     this.addNavigationSubscription();
-    this.loadCase();   
+    this.loadCase();
     this.getCase();
- 	  this.addConfirmationPopupSubscription();
+    this.addConfirmationPopupSubscription();
     this.loadSessionData();
-    this.getCaseStatusLov(); 
+    this.getCaseStatusLov();
     this.showSendNewsLetterPopup();
+    this.addSessionChangeSubscription();
+    this.showCancelApplicationPopup();
+    this.resetReadOnlyView();
   }
 
   ngOnDestroy(): void {
     this.navigationSubscription.unsubscribe();
-    this.loadSessionSubscription .unsubscribe();
-	  this.showConfirmationPopupSubscription.unsubscribe();      
+    this.loadSessionSubscription.unsubscribe();
+    this.showConfirmationPopupSubscription.unsubscribe();
     this.workflowFacade.unloadWorkflowSession();
     this.showSendNewsLetterSubscription.unsubscribe();
-}
+    this.showCancelApplicationSubscription.unsubscribe();
+  }
 
-  cancelCase(){
-    this.loaderService.show()  
-    this.caseFacade.updateCaseStatus(this.clientCaseId,CaseStatusCode.canceled) .subscribe(
-      (response: any) => {
+  addSessionChangeSubscription() {
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+    ).subscribe(() => {
+      const newSessionId = this.route.snapshot.queryParams['sid'];
+      if (newSessionId !== this.sessionId) {
+        this.workflowFacade.unloadWorkflowSession();
+        this.loadQueryParams();
+        this.loadCase();
+        this.getCase();
+        this.loadSessionData();
+      }
+    });
+  }
+  cancelCase() {
+    this.loaderService.show()
+    this.caseFacade.updateCaseStatus(this.clientCaseId, CaseStatusCode.canceled,this.clientCaseEligibilityId).subscribe({
+      next: (response: any) => {
         this.caseFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
           'Case canceled successfully.'
-        ); 
-        this.onCloseDeleteConfirmClicked();  
-        this.loaderService.hide() 
-        this.router.navigateByUrl(`dashboard`); 
+        );
+        this.onCloseDeleteConfirmClicked();
+        this.loaderService.hide()
+        this.router.navigateByUrl(`dashboard`);
       },
-      (error: any) => {
+      error: (error: any) => {
         if (error) {
           this.caseFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,
@@ -151,63 +175,70 @@ export class CaseDetailPageComponent implements OnInit {
           );
           this.loggingService.logException(
             {
-              name:SnackBarNotificationType.ERROR,
-              message:error
+              name: SnackBarNotificationType.ERROR,
+              message: error
             });
-          this.loaderService.hide()    
+          this.loaderService.hide()
         }
       }
-    );
+    });
   }
-  getCase(){ 
-    this.case$.subscribe((caseData:any)=>{   
+  getCase() {
+    this.case$.subscribe((caseData: any) => {
       this.clientCaseId = caseData.clientCaseId;
-      if(caseData.caseStatusCode ===CaseStatusCode.new || 
-        caseData.caseStatusCode === CaseStatusCode.incomplete || 
-        caseData.caseStatusCode === CaseStatusCode.review){
+      if (
+        caseData.caseStatusCode === CaseStatusCode.incomplete ||
+        caseData.caseStatusCode === CaseStatusCode.review) {
         this.showDelete = true;
       }
-      else{
+      else {
         this.showDelete = false;
       }
     })
-     
+
   }
-  private loadCase()
-  {     
-   this.workflowFacade.disableSaveButton();
-   this.sessionId = this.route.snapshot.queryParams['sid'];    
-   this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
-    this.loadSessionSubscription =this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
-    .subscribe((session: any) => {      
-     this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId     
-     this.caseFacade.loadCasesById(this.clientCaseId);      
-    });        
-  } 
-  hideButton(type:any){
-    if(type===ButtonType.deleteApplication &&  !this.showDelete){
-    return false;
+  private loadCase() {
+    this.workflowFacade.disableSaveButton();
+    this.sessionId = this.route.snapshot.queryParams['sid'];
+    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
+    this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
+      .subscribe((session: any) => {
+        this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
+        this.clientId = JSON.parse(session.sessionData).clientId;
+        this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
+        this.caseFacade.loadCasesById(this.clientCaseId);
+        this.prevClientCaseEligibilityId =  JSON.parse( session.sessionData)?.prevClientCaseEligibilityId
+        if (this.prevClientCaseEligibilityId) { this.isCerForm = true; }
+        if(this.clientId && this.clientCaseEligibilityId)
+        {
+        this.loadClientPaperLessStatusHandle();
+        }
+      });
+  }
+  hideButton(type: any) {
+    if (type === ButtonType.deleteApplication && !this.showDelete) {
+      return false;
     }
     else {
       return true;
     }
   }
-  cancelDeletion(){
+  cancelDeletion() {
     this.isShowDeleteConfirmPopup = false;
   }
-  cancelDiscard(){
+  cancelDiscard() {
     this.isShowDiscardConfirmPopup = false;
   }
-  discardChanges(){
+  discardChanges() {
     this.isShowDiscardConfirmPopup = false;
     this.workflowFacade.discardChanges(true);
   }
   /** Private Methods */
-  private loadQueryParams() {
-    const workflowType: string = WorkflowTypeCode.NewCase;
+  private loadQueryParams() {    
+    this.workflowType  = this.route.snapshot.queryParams['wtc'];
     const entityId: string = this.route.snapshot.queryParams['eid'];
     this.sessionId = this.route.snapshot.queryParams['sid'];
-    this.workflowFacade.loadWorkflowSession(workflowType, entityId, this.sessionId);
+    this.workflowFacade.loadWorkflowSession(this.workflowType, entityId, this.sessionId);
   }
 
   private loadDdlCommonAction() {
@@ -217,7 +248,7 @@ export class CaseDetailPageComponent implements OnInit {
   private addNavigationSubscription() {
     this.navigationSubscription = this.workflowFacade.navigationTrigger$
       .pipe(
-        tap(()=> this.loaderService.show()),
+        tap(() => this.loaderService.show()),
         mergeMap((navigationType: NavigationType) =>
           forkJoin(
             [
@@ -248,7 +279,7 @@ export class CaseDetailPageComponent implements OnInit {
   }
 
   onSaveLaterClicked() {
-   
+
     this.workflowFacade.saveForLaterValidations(true);
   }
 
@@ -268,17 +299,24 @@ export class CaseDetailPageComponent implements OnInit {
     this.isShowDiscardConfirmPopup = true;
   }
 
-  onSendNewLetterClicked() {
-    this.isShowSendNewLetterPopup = true;
+  onSendNewLetterClicked(template: TemplateRef<unknown>): void {
+    this.sendNewEmailModalDialogService = this.dialogService.open({ 
+      content: template, 
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
+    }); 
+    
     this.isShowSaveLaterPopup = false;
   }
+ 
+ 
 
   /** External event methods **/
   handleCloseSendNewLetterClicked(event: CommunicationEvents) {
     if (event === CommunicationEvents.Close) {
-      this.isShowSendNewLetterPopup = false;
+      
+      this.sendNewEmailModalDialogService.close(true)
     }
-    this.router.navigateByUrl(`case-management/cases/case360/${this.clientCaseId}`); 
+    this.router.navigateByUrl(`case-management/cases`);
   }
   public onPaste(): void {
     console.log("Paste");
@@ -322,7 +360,6 @@ export class CaseDetailPageComponent implements OnInit {
     this.loaderService.show();
     if (object?.isReset ?? false) {
       this.workflowFacade.resetWorkflowNavigation();
-      //this.loaderService.hide();
     }
     else if (object?.route?.visitedFlag === StatusFlag.Yes || object?.isReview) {
       this.workflowFacade.saveNonSequenceNavigation(object?.route?.workflowProgressId, this.sessionId ?? '')
@@ -343,13 +380,12 @@ export class CaseDetailPageComponent implements OnInit {
         this.isShowSaveLaterPopup = true;
         this.sendLetterFlag = '';
         this.currentStatusCode = '';
-        this.isSubmitted=false;
+        this.isSubmitted = false;
       }
     });
   }
 
   loadSessionData() {
-    //this.loaderService.show();
     this.sessionId = this.route.snapshot.queryParams['sid'];
     this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
     this.loadSessionSubscription = this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
@@ -358,6 +394,14 @@ export class CaseDetailPageComponent implements OnInit {
           this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId;
           this.clientId = JSON.parse(session.sessionData).clientId;
           this.getCaseStatusDetails();
+          if(JSON.parse(session.sessionData).clientId){
+              const activeSession = {
+                sessionId : this.sessionId,
+                clientCaseId :this.clientCaseId,
+                clientId : this.clientId
+            };          
+            this.caseFacade.createActiveSession(activeSession);
+        }
         }
       });
   }
@@ -368,7 +412,7 @@ export class CaseDetailPageComponent implements OnInit {
       next: (response: any) => {
         this.loaderService.hide();
         this.clientCaseStatusData = response;
-        this.currentStatusCode=response.caseStatusCode
+        this.currentStatusCode = response.caseStatusCode
       },
       error: (err: any) => {
         this.loaderService.hide();
@@ -390,7 +434,7 @@ export class CaseDetailPageComponent implements OnInit {
     this.isSubmitted = true;
     if (this.currentStatusCode != "") {
       this.loaderService.show();
-      this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode).subscribe({
+      this.caseFacade.updateCaseStatus(this.clientCaseId, this.currentStatusCode,this.clientCaseEligibilityId).subscribe({
         next: (casesResponse: any) => {
           this.loaderService.hide();
           if (this.sendLetterFlag == StatusFlag.Yes) {
@@ -400,6 +444,8 @@ export class CaseDetailPageComponent implements OnInit {
             this.workflowFacade.saveForLater(false);
           }
           this.isShowSaveLaterPopup = false;
+          this.cdr.detectChanges()
+          this.caseFacade.loadActiveSession();
         },
         error: (err: any) => {
           this.loaderService.hide();
@@ -413,9 +459,54 @@ export class CaseDetailPageComponent implements OnInit {
   showSendNewsLetterPopup() {
     this.showSendNewsLetterSubscription = this.workflowFacade.sendEmailLetterClicked$.subscribe((response: any) => {
       if (response) {
-        this.onSendNewLetterClicked();
+        if(this.paperlessFlag == 'Y'){
+          this.onSendNewLetterClicked(this.sendNewEmailModalDialog);
+        }else{
+          this.onSendNewLetterClicked(this.sendNewLetterModalDialog);
+        }        
         this.cdr.detectChanges();
       }
     })
+  }
+
+  showCancelApplicationPopup(){
+    this.showCancelApplicationSubscription = this.workflowFacade.cancelApplicationClicked$.subscribe((response: any) => {
+      if (response) {
+        this.cancelApplicationFlag=true;
+        this.cdr.detectChanges();
+      }
+    })
+  }
+
+  closeCancelApplicationPopup(){
+    this.cancelApplicationFlag=false;
+    this.cdr.detectChanges();
+  }
+
+  onContinueClick(){
+    this.closeCancelApplicationPopup();
+    this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+  }
+
+  resetReadOnlyView(){
+    this.caseFacade.setCaseReadOnly(false);
+  }
+
+  loadClientPaperLessStatusHandle(): void {
+    this.contactFacade.loadClientPaperLessStatus(
+      this.clientId,
+      this.clientCaseEligibilityId
+    );
+    this.loadPeperLessStatus();
+  }
+  
+  loadPeperLessStatus() {    
+    this.paperless$
+      ?.pipe(first((emailData: any) => emailData?.paperlessFlag != null))
+      .subscribe((emailData: any) => {
+        if (emailData?.paperlessFlag) {
+          this.paperlessFlag = emailData?.paperlessFlag;
+        }
+      });
   }
 }

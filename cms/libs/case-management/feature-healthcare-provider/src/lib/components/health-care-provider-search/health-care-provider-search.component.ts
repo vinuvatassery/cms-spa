@@ -73,14 +73,13 @@ export class HealthCareProviderSearchComponent implements OnInit
       /** Lifecycle hooks **/
   ngOnInit(): void {       
     this.composexistHealthProvdeForm();
-    //this.ref.markForCheck();
   }
   composexistHealthProvdeForm()
   {    
       this.existHealthProvderForm = this.formBuilder.group({   
         providerId: ['',Validators.required]   ,
         selectedProviderId: [''] ,
-        providerAutoComplete : ['',Validators.required]    
+        providerAutoComplete : ['',Validators.required]       
       });
       
      if(this.isEditSearchHealthProviderValue === true)
@@ -91,7 +90,7 @@ export class HealthCareProviderSearchComponent implements OnInit
      {
       this.existHealthProvderForm.patchValue(
         {
-          selectedProviderId: '00000000-0000-0000-0000-000000000000'
+          selectedProviderId: '00000000-0000-0000-0000-000000000000'        
         }) 
      }
      
@@ -104,7 +103,7 @@ export class HealthCareProviderSearchComponent implements OnInit
             {
                selectedProviderId: this.existingProviderData?.providerId  ,
               providerId: this.existingProviderData?.providerId  ,
-              providerAutoComplete : this.selectedCustomProviderName
+              providerAutoComplete : this.selectedCustomProviderName             
             }) 
   }
 
@@ -124,7 +123,7 @@ export class HealthCareProviderSearchComponent implements OnInit
         const existProviderData =
         {
           providerId : this.existHealthProvderForm?.controls["providerId"].value,
-          selectedProviderId  : this.existHealthProvderForm?.controls["selectedProviderId"].value 
+          selectedProviderId  : this.existHealthProvderForm?.controls["selectedProviderId"].value         
         }        
         this.btnDisabled = true
         this.addExistingProviderEvent.emit(existProviderData);

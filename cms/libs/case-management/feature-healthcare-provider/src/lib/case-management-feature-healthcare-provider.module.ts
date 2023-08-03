@@ -13,6 +13,9 @@ import { HealthCareProviderDetailComponent } from './components/health-care-prov
 import { RemoveHealthCareProviderConfirmationComponent } from './components/remove-health-care-provider-confirmation/remove-health-care-provider-confirmation.component';
 import { HealthCareProviderSearchComponent } from './components/health-care-provider-search/health-care-provider-search.component';
 import { HealthCareProviderCardComponent } from './components/health-care-provider-card/health-care-provider-card.component';
+import { ProfileHealthcareProviderPageComponent } from './containers/profile-healthcare-provider-page/profile-healthcare-provider-page.component';
+import { ReactivateHealthCareProviderConfirmationComponent } from './components/reactivate-health-care-provider-confirmation/reactivate-health-care-provider-confirmation.component';
+import { DectiveHealthCareProviderConfirmationComponent } from './components/deactivate-health-care-provider-confirmation/deactivate-health-care-provider-confirmation.component';
 
 @NgModule({
   imports: [
@@ -28,7 +31,10 @@ import { HealthCareProviderCardComponent } from './components/health-care-provid
     HealthCareProviderDetailComponent,
     RemoveHealthCareProviderConfirmationComponent,
     HealthCareProviderSearchComponent,
-    HealthCareProviderCardComponent
+    HealthCareProviderCardComponent,
+    ProfileHealthcareProviderPageComponent,
+    ReactivateHealthCareProviderConfirmationComponent,
+    DectiveHealthCareProviderConfirmationComponent
   ],
   exports: [
     HealthcareProviderPageComponent,
@@ -36,7 +42,10 @@ import { HealthCareProviderCardComponent } from './components/health-care-provid
     HealthCareProviderDetailComponent,
     RemoveHealthCareProviderConfirmationComponent,
     HealthCareProviderSearchComponent,
-    HealthCareProviderCardComponent
+    HealthCareProviderCardComponent,
+    ProfileHealthcareProviderPageComponent,
+    ReactivateHealthCareProviderConfirmationComponent,
+    DectiveHealthCareProviderConfirmationComponent
   ],
 })
 export class CaseManagementFeatureHealthcareProviderModule {}

@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { Subject } from 'rxjs';
+import { Subject, first } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { LoginUser } from '../entities/login-user';
@@ -30,6 +30,7 @@ export class UserManagementFacade {
   private clientProfileRacialOrEthnicIdentitySubject = new BehaviorSubject<any>([]);
   private clientProfilePronounsSubject = new BehaviorSubject<any>([]);
   private clientProfileGenderSubject = new BehaviorSubject<any>([]);
+
  
   private clientProfileHousingAcuityLevelSubject = new BehaviorSubject<any>([]);
   private clientProfileIncomeInclusionsExlusionsSubject = new BehaviorSubject<any>([]);
@@ -38,6 +39,7 @@ export class UserManagementFacade {
   private clientProfileServiceProviderSubject = new BehaviorSubject<any>([]);
   private usersByRoleSubject = new BehaviorSubject<LoginUser[]>([]);
   private userImageSubject = new Subject<any>();
+  private userByIdSubject = new Subject<any>(); 
  
   /** Public properties **/
   users$ = this.userSubject.asObservable();
@@ -66,12 +68,15 @@ export class UserManagementFacade {
   clientProfilServiceProvider$ = this.clientProfileServiceProviderSubject.asObservable();
   usersByRole$ = this.usersByRoleSubject.asObservable();
   userImage$ = this.userImageSubject.asObservable();
+  usersById$ = this.userByIdSubject.asObservable();
+ 
   
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly loaderService: LoaderService ) {}
+    private readonly loaderService: LoaderService 
+    ) {}
 
 
     showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -96,6 +101,55 @@ export class UserManagementFacade {
     }
 
   /** Public methods **/
+  hasRole(roleCode : string) : any
+  {
+    this.userDataService.getProfile$
+      .pipe(first(profile => profile[0]?.permissions != null))
+      .subscribe((profile:any)=>{ 
+      return  (profile[0]?.roleCode === roleCode)
+      })
+  }
+
+  hasPermission(ifPermission : string[]) : any
+  {
+   let hasPerm =false;
+    this.userDataService.getProfile$
+      .pipe(first(profile => profile[0]?.permissions != null))
+      .subscribe((profile:any)=>{ 
+        const permission =profile[0]?.permissions 
+        if (permission?.length == 0) {
+          hasPerm = false;
+        }  
+
+        const searchPermission  = ifPermission;    
+        let hasPermissions = false;    
+        for (const perm of searchPermission)
+        {            
+            hasPermissions = permission?.some((x : any)=> x.permissionsCode   === perm)   
+        }
+
+        if (!hasPermissions) {
+          hasPerm = false;
+        } else {
+          hasPerm = true;
+        }  
+      })
+      return  hasPerm;
+  }
+
+  ///for case manager hover popup //NOSONAR 
+  getUserById(userId : string): void {
+    this.userDataService.getUserById(userId).subscribe({
+      next: (userDataResponse) => {        
+        this.userByIdSubject.next(userDataResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      },
+    });
+  } 
+
+
   getUserImage(userId : string): void {    
     this.userDataService.getUserImage(userId).subscribe({
       next: (userImageResponse : any) => {        
@@ -119,18 +173,6 @@ export class UserManagementFacade {
     });
   }
 
-
-
-  loadUsers(): void {
-    this.userDataService.loadUsers().subscribe({
-      next: (userResponse) => {
-        this.userSubject.next(userResponse);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
-      },
-    });
-  }
  
 
   loadUsersData(): void {

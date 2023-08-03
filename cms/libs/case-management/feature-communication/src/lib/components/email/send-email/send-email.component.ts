@@ -6,28 +6,31 @@ import {
   Output,
   EventEmitter,
   Input,
+  OnDestroy,
 } from '@angular/core';
-/** Enums **/
-import { CommunicationEvents } from '@cms/case-management/domain';
-/** Facades**/
-import { CommunicationFacade } from '@cms/case-management/domain';
+/** Internal Libraries **/
+import { CommunicationEvents, CommunicationFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+
 @Component({
   selector: 'case-management-send-email',
   templateUrl: './send-email.component.html',
   styleUrls: ['./send-email.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SendEmailComponent implements OnInit {
+export class SendEmailComponent implements OnInit, OnDestroy {
   /** Input properties **/
+  @Input() paperlessFlag! : any
   @Input() data!: any;
+  @Input() ddlEmails$!: Observable<any>;
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
+  @Output() loadInitialData = new EventEmitter();
 
   /** Public properties **/
   emailEditorValueEvent = new EventEmitter<any>();
-  ddlEmails$ = this.communicationFacade.ddlEmails$;
   ddlLetterTemplates$ = this.communicationFacade.ddlLetterTemplates$;
   ddlTemplates: any = [];
   emailContentValue: any;
@@ -36,18 +39,35 @@ export class SendEmailComponent implements OnInit {
   isShowSaveForLaterPopupClicked = false;
   isShowPreviewEmailPopupClicked = false;
   isShowSendEmailConfirmationPopupClicked = false;
-  public formUiStyle : UIFormStyle = new UIFormStyle()
+  isShowToEmailLoader$ = new BehaviorSubject<boolean>(false);
+  emailSubscription$ = new Subscription();
+  formUiStyle: UIFormStyle = new UIFormStyle();
+  isClearEmails=false;
+
   /** Constructor **/
-  constructor(private readonly communicationFacade: CommunicationFacade) {}
+  constructor(private readonly communicationFacade: CommunicationFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.updateOpenSendEmailFlag();
     this.loadDdlLetterTemplates();
     this.loadDdlEmails();
+    this.addEmailSubscription();
   }
 
+  ngOnDestroy(): void {
+    this.emailSubscription$.unsubscribe();
+  }
   /** Private methods **/
+  private addEmailSubscription() {
+    this.emailSubscription$ = this.ddlEmails$.subscribe(() => {
+      if(!this.isClearEmails){
+        this.isShowToEmailLoader$.next(false);
+      }
+      this.isClearEmails =false;
+    });
+  }
+
   private updateOpenSendEmailFlag() {
     if (this.data) {
       this.isOpenSendEmailClicked = true;
@@ -77,7 +97,6 @@ export class SendEmailComponent implements OnInit {
   /** Internal event methods **/
   onCloseSaveForLaterClicked() {
     this.isShowSaveForLaterPopupClicked = false;
-    this.onCloseSendEmailClicked();
   }
 
   OnEditEmailClicked() {
@@ -101,8 +120,6 @@ export class SendEmailComponent implements OnInit {
     this.isShowSendEmailConfirmationPopupClicked = false;
     if (CommunicationEvents.Print === event) {
       this.closeSendEmailEvent.emit(CommunicationEvents.Print);
-    } else if (CommunicationEvents.Close === event) {
-      this.closeSendEmailEvent.emit(CommunicationEvents.Close);
     }
   }
 
@@ -116,10 +133,15 @@ export class SendEmailComponent implements OnInit {
   onCloseSendEmailClicked() {
     this.closeSendEmailEvent.emit(CommunicationEvents.Close);
   }
-
+onClosePreviewEmail(){
+  this.isShowPreviewEmailPopupClicked = false;
+}
   /** External event methods **/
   handleDdlEmailValueChange() {
+    this.isClearEmails =true;
+    this.isShowToEmailLoader$.next(true);
     this.isOpenDdlEmailDetails = true;
+    this.loadInitialData.emit();
   }
 
   handleEmailEditor(event: any) {

@@ -44,6 +44,7 @@
 
     &.k-state-disabled, &.k-disabled {
       color: $black-3 !important;
+      opacity: 1;
     }
     &:hover,
     &:focus {
@@ -62,7 +63,7 @@
 
 // Main Title
 .app-l-mainTittle {
-  h2 {
+  h2, .title_with_bld {
     display: flex;
     align-items: center;
     font-family: $font-family-bold;
@@ -78,6 +79,9 @@
       font-family: $font-family;
       font-size: $font-size-l;
       padding-left: $size-xx;
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .title-client-info {
       font-family: $font-family;
@@ -88,7 +92,7 @@
       align-items: center;
       &.icon-filled {
         // color: material-color($hive-warn-palette, 800);
-        color: #BD3900;
+        color: $colored-yellow;
          
       }
       .material-icons {
@@ -110,11 +114,19 @@
       }
     }
   }
+  
   .title-client-info-block {
     margin: $size-xx $size-0;
     .title-client-info {
       font-family: $font-family;
       margin-right: $size-xxx;
     }
+  }
+}
+
+.breadcrumb-left{
+  .k-i-line::before{
+    content: "/";
+    color: #333333;
   }
 }

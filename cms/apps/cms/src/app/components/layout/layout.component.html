@@ -2,36 +2,35 @@
 <common-loader-component></common-loader-component>
 
 <h1 hidden>CMS</h1>
-<section class="app-l-header" role="header">
-  <div class="headermenu-leftmostsection">
-    <button class="mobile-menu-icon" (click)="openMobileMenu()"> <span class="material-icons">
+<section class="app-l-header" role="header" >
+  <div class="header_menu-left_most_section"  >
+    <button class="mobile-menu-icon" (click)="openMobileMenu()" *ifPermission='["Layout_Logo_View_Only"]'> <span class="material-icons">
       menu
       </span></button>
-    <div class="header-logo" [routerLink]="['/']">
+    <div class="header-logo" [routerLink]="['/']" *ifPermission='["Layout_Logo_View_Only"]'>
      
-      <img src="./../../../assets/images/ORCares.png"  alt="Logo of company"  class="branding-logo" />
+      <img src="./../../../assets/images/ORCares-Logo.png"  alt="ORCares Logo"  class="branding-logo" />
     </div>
   </div>
 
-  <ng-content select="[search]" kendoRippleContainer></ng-content>
+  <ng-content select="[search]" kendoRippleContainer  *ifPermission='["Layout_Search_View_Only"]'></ng-content>
   <div class="header-menu">
-    <!-- <common-signalr-status></common-signalr-status> -->
-    <system-config-forms-and-documents></system-config-forms-and-documents>
-    <productivity-tools-notification-panel></productivity-tools-notification-panel>
+    <system-config-forms-and-documents  *ifPermission='["Layout_Documents_View_Only"]'></system-config-forms-and-documents >
+    <productivity-tools-notification-panel  *ifPermission='["Layout_Notifications_View_Only"]'></productivity-tools-notification-panel>
     <common-login-status></common-login-status>
   </div>
 </section>
 
-<section class="app-l-container" [ngClass]="{'mobilemenu-opened': isOpenMobileMenu}"  kendoRippleContainer role="main">
+<section class="app-l-container" [ngClass]="{'mobile_menu-opened': isOpenMobileMenu}"  kendoRippleContainer role="main">
   <section
     mode="side"
     #sidenav
     opened
     position="start"
     class="app-l-sidebar"
-    [class.menuToggled]="isSideMenuToggled"
+    [class.menuToggled]="isSideMenuToggled"  
   >
-    <div class="drawer-inner-container" role="menuitem">
+    <div class="drawer-inner-container" role="menuitem" *ifPermission='["Layout_Menu_View_Only"]'>  
       <div class="sidebar-hamburger">
         <button
           (click)="onSideMenuToggleClicked()"
@@ -40,13 +39,6 @@
           look="flat"
           aria-label="side navigation"
         >
-          <!-- <span
-            class="material-icons sidebar-hamburger_icon-right"
-            aria-label="expand side navigation"
-            aria-hidden="true"
-          >
-            chevron_right
-          </span> -->
           <span
             class="material-icons sidebar-hamburger_icon-left"
             aria-label="collapse side navigation"
@@ -55,7 +47,7 @@
             chevron_left
           </span>
         </button>
-      </div>
+      </div>   
       <cms-side-navigation></cms-side-navigation>
 
       <!-- Selector for active sessions -->
@@ -68,3 +60,4 @@
     </section>
   </section>
 </section>
+<div kendoDialogContainer></div>

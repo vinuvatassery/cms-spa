@@ -82,6 +82,9 @@ section {
   padding-left: $size-0 !important;
   padding-right: $size-0 !important;
 }
+.p-0{
+  padding: 0 !important;
+}
 .mt {
   &-0 {
     margin-top: $size-0 !important;
@@ -102,6 +105,9 @@ section {
 .mb {
   &-0 {
     margin-bottom: $size-0 !important;
+  }
+  &-05 {
+    margin-bottom: $size-l !important;
   }
   &-1 {
     margin-bottom: $size-xx !important;
@@ -182,6 +188,9 @@ section {
   }
   &-4 {
     padding-bottom: $size-xxx + $size-xx !important;
+  }
+  &-5 {
+    padding-bottom: $size-xxx + $size-xx  + $size-xx +  $size-xxx !important;
   }
 }
 .pl {

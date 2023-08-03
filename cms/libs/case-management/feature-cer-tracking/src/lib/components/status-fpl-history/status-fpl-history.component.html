@@ -1,0 +1,59 @@
+<h4>FPL History</h4>
+
+<kendo-grid [data]="statusFplHistory$ | async" [loading]="loader" [resizable]="true">
+    <kendo-grid-column field="fplPercentage" title="FPL" [width]="100">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.fplPercentage}}%
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="fplStartDate" title="Start Date" [width]="100">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.fplStartDate |date:'MM/dd/YYYY'}}
+    </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="fplEndDate" title="End Date" [width]="100">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.fplEndDate |date:'MM/dd/YYYY'}}
+    </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="actualDayswithFpl" title="Actual Days with FPL" [width]="100"></kendo-grid-column>
+    <kendo-grid-column field="creationTime" title="Date Record Created" [width]="100">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.creationTime |date:'MM/dd/YYYY hh:mm:ss'}}
+    </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="by" title="Record Created By" [width]="80">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button
+            kendoButton
+            [primary]="true"
+            class="avatar-sm-btn c-default"
+            kendoPopoverAnchor
+            [popover]="onUserProfileDetailsHovered"
+            showOn="hover"
+            aria-label="profile avathar"
+          >
+          <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
+          </button>
+          <kendo-popover
+            #onUserProfileDetailsHovered
+            width="330"
+            position="left"
+          >
+            <ng-template kendoPopoverBodyTemplate>
+              <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
+            </ng-template>
+          </kendo-popover>
+        </ng-template>
+      </kendo-grid-column>
+    <!-- grid Loader Template -->
+    <ng-template kendoGridLoadingTemplate>
+        <common-grid-loader-component></common-grid-loader-component>
+    </ng-template>
+    <!-- grid No data Template -->
+    <ng-template kendoGridNoRecordsTemplate>
+        <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+        </div>
+        <p>There is no data to display.</p>
+    </ng-template>
+</kendo-grid>

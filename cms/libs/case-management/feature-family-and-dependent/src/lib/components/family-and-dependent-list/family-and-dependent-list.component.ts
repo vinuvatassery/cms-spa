@@ -1,18 +1,17 @@
 /** Angular **/
 import {
   Component,  OnInit,  ChangeDetectionStrategy,  Input,
-   OnChanges, EventEmitter,  Output,} from '@angular/core';
+   OnChanges, EventEmitter,  Output,ChangeDetectorRef} from '@angular/core';
 import {  Router ,ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { Subject } from 'rxjs/internal/Subject';
-import { UIFormStyle } from '@cms/shared/ui-tpa' 
+import { UIFormStyle } from '@cms/shared/ui-tpa'
 /** Enums **/
-import { DependentTypeCode, ScreenType } from '@cms/case-management/domain';
+import { DependentTypeCode, ScreenType, FamilyAndDependentFacade, CaseFacade } from '@cms/case-management/domain';
 /** Entities **/
 import { DeleteRequest } from '@cms/shared/ui-common';
 import {  State } from '@progress/kendo-data-query';
 import { first } from 'rxjs';
-
 
 @Component({
   selector: 'case-management-family-and-dependent-list',
@@ -24,7 +23,7 @@ export class FamilyAndDependentListComponent implements OnInit ,  OnChanges {
 /******enumeration Alias *****/
 Dependent = DependentTypeCode.Dependent;
 CAClient = DependentTypeCode.CAClient;
- 
+
   /** Input properties **/
   @Input() data: any;
   @Input() dependents$: any;
@@ -41,45 +40,49 @@ CAClient = DependentTypeCode.CAClient;
   @Input() sort : any;
   @Input() timeFormat : any;
   @Input()  existdependentStatus$ : any;
+  @Input() isCerForm: boolean = false;
   @Output() addUpdateDependentEvent = new EventEmitter<any>();
   @Output() GetNewDependentHandleEvent = new EventEmitter<any>();
   @Output() GetExistclientDependentEvent = new EventEmitter<any>();
-  @Output() loadDependentsEvent = new EventEmitter<any>(); 
-  @Output() deleteDependentsEvent = new EventEmitter<any>(); 
-  @Output() searchTextHandleEvent = new EventEmitter<any>(); 
-  @Output() addExistingClientEvent = new EventEmitter<any>(); 
+  @Output() loadDependentsEvent = new EventEmitter<any>();
+  @Output() deleteDependentsEvent = new EventEmitter<any>();
+  @Output() searchTextHandleEvent = new EventEmitter<any>();
+  @Output() addExistingClientEvent = new EventEmitter<any>();
   public formUiStyle : UIFormStyle = new UIFormStyle();
-
+  dependentValid$ = this.familyAndDependentFacade.dependentValid$;
+  isReadOnly$=this.caseFacade.isCaseReadOnly$;
     /**Constructor */
-    constructor( private router: Router , private activatedRoute : ActivatedRoute) { }
+    constructor( private router: Router , private activatedRoute : ActivatedRoute,
+      private familyAndDependentFacade: FamilyAndDependentFacade,private readonly cd: ChangeDetectorRef,private caseFacade: CaseFacade) { }
 
     isEditFamilyMember!: boolean;
     isAddOrEditFamilyDependentDisplay!: boolean;
     isOpenedFamilyMember = false;
     isOpenedEditFamilyMember = false;
     dependentsObject! : any
-    relationshipsObject! : any 
+    relationshipsObject! : any
     dependentTypeCodeSelected! : DependentTypeCode
     popupClassAction = 'TableActionPopup app-dropdown-action-list';
     deleteRequestSubject = new Subject<DeleteRequest>();
     deleteRqclientDependentId! : string
-    deleteRqdependentTypeCode! : string 
+    deleteRqdependentTypeCode! : string
     openDeleteConfirmation! : boolean
     deletebuttonEmitted = false
     editbuttonEmitted = false
-    deleteRequest$ = this.deleteRequestSubject.asObservable();  
+    deleteRequest$ = this.deleteRequestSubject.asObservable();
+    isDependentAvailable:boolean=true;
     public  state!: State
   public actions = [
     {
       buttonType:"btn-h-primary",
       clientText: "Edit Family Member",
       depText: "Edit Family Member",
-      icon: "edit" ,   
-      click: (clientDependentIdvalue: string, dependentTypeCodevalue : string): void => {             
+      icon: "edit" ,
+      click: (clientDependentIdvalue: string, dependentTypeCodevalue : string): void => {
         if(!this.editbuttonEmitted)
-        {   
+        {
           this.editbuttonEmitted =true;
-        this.onEditFamilyMemberClicked(clientDependentIdvalue,dependentTypeCodevalue);
+          this.onEditFamilyMemberClicked(clientDependentIdvalue,dependentTypeCodevalue);
         }
       },
     },
@@ -87,33 +90,37 @@ CAClient = DependentTypeCode.CAClient;
       buttonType:"btn-h-danger",
       clientText: "Delete Family Member",
       depText: "Remove Family Member",
-      icon: "delete",    
-      click: (clientDependentIdvalue: string, dependentTypeCodevalue : string): void => {           
-          
+      icon: "delete",
+      click: (clientDependentIdvalue: string, dependentTypeCodevalue : string): void => {
+
         if(!this.deletebuttonEmitted)
-        {      
-          this.deletebuttonEmitted = true;  
+        {
+          this.deletebuttonEmitted = true;
         this.onDeleteFamilyMemberClicked(clientDependentIdvalue,dependentTypeCodevalue);
         }
       },
-    },  
- 
-  ];  
+    },
+
+  ];
 
   /** Lifecycle hooks **/
-  ngOnChanges(): void {         
+  ngOnChanges(): void {
       this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort
-  };    
+  };
         this.loadFamilyDependents()
- } 
+ }
 
 
-  ngOnInit(): void {   
-  
-    this.addOrEditFamilyDependentDisplay();      
+  ngOnInit(): void {
+
+    this.addOrEditFamilyDependentDisplay();
+    this.dependentValid$.subscribe(response=>{
+      this.isDependentAvailable = response;
+      this.cd.detectChanges();
+    })
     }
 // updating the pagination infor based on dropdown selection
 pageselectionchange(data: any) {
@@ -122,7 +129,7 @@ pageselectionchange(data: any) {
   this.loadFamilyDependents()
 }
 
- 
+
   /** Private methods **/
 
   private addOrEditFamilyDependentDisplay() {
@@ -136,29 +143,29 @@ pageselectionchange(data: any) {
 
   /** Internal event methods **/
   onExistFamilyMemberClosed()
-  {    
+  {
     this.onFamilyMemberClosed()
   }
 
-  onFamilyMemberClosed() {        
+  onFamilyMemberClosed() {
     this.isOpenedFamilyMember = false;
     this.isOpenedEditFamilyMember = false;
   }
 
   onFamilyMemberClicked() {
-    this.isOpenedFamilyMember = true;   
+    this.isOpenedFamilyMember = true;
     this.dependentTypeCodeSelected  = DependentTypeCode.CAClient
   }
 
   onEditFamilyMemberClicked(dependentId : string ,dependentTypeCode : string) {
-    this.isOpenedEditFamilyMember = true;  
-   
-    
+    this.isOpenedEditFamilyMember = true;
+
+
     if(dependentTypeCode == DependentTypeCode.CAClient)
-    {     
+    {
       this.dependentTypeCodeSelected  = DependentTypeCode.CAClient
-     
-       //load client dependent already on system 
+
+       //load client dependent already on system
       this.GetExistclientDependentEvent.next(dependentId)
     }
     else
@@ -167,15 +174,15 @@ pageselectionchange(data: any) {
 
       //load newly adde dependent
       this.GetNewDependentHandleEvent.next(dependentId);
-    } 
-    
+    }
+
   }
 
- 
 
-  onDeleteFamilyMemberClicked(clientDependentId: string, dependentTypeCode : string) {       
+
+  onDeleteFamilyMemberClicked(clientDependentId: string, dependentTypeCode : string) {
     this.deleteRqclientDependentId = clientDependentId;
-    this.deleteRqdependentTypeCode = dependentTypeCode;   
+    this.deleteRqdependentTypeCode = dependentTypeCode;
     this.onOpenDeleteConfirmation()
   }
 
@@ -189,21 +196,21 @@ pageselectionchange(data: any) {
     this.openDeleteConfirmation =false;
   }
   handleDeleteConfirmationClicked(event: any) {
-    this.deletebuttonEmitted = false;       
-    this.openDeleteConfirmation =false;    
-    if(event?.isDelete == true)
+    this.deletebuttonEmitted = false;
+    this.openDeleteConfirmation =false;
+    if(event?.isDelete ?? false)
     {
       if(event?.clientDependentId)
       {
         this.deleteDependentsEvent.next(event?.clientDependentId)
         this.dependentdelete$.pipe(first((deleteResponse: any ) => deleteResponse != null))
         .subscribe((dependentData: any) =>
-        {  
-          if(dependentData == true)
+        {
+          if(dependentData ?? false)
           {
             this.loadFamilyDependents()
           }
-          
+
         })
       }
     }
@@ -212,8 +219,8 @@ pageselectionchange(data: any) {
 
   /** child event methods **/
   onFormDeleteclickEvent(event: any)
-  {    
-    this.onDeleteFamilyMemberClicked(event?.clientDependentId, event?.dependentTypeCode)
+  {
+    this.onDeleteFamilyMemberClicked(event?.clientRelationshipId, event?.dependentTypeCode)
   }
 
   addUpdateDependentHandle(dependent : any) {
@@ -222,26 +229,27 @@ pageselectionchange(data: any) {
 
     this.dependentAddNewGet$.pipe(first((addResponse: any ) => addResponse != null))
     .subscribe((addResponse: any) =>
-    {  
-      if(addResponse?.clientDependentId)
-      {        
+    {
+      if(addResponse?.clientRelationshipId)
+      {
+        this.familyAndDependentFacade.dependentValidSubject.next(true);
         this.loadFamilyDependents()
         this.onFamilyMemberClosed()
       }
-      
+
     })
 
-    if(dependent?.clientDependentId)
+    if(dependent?.clientRelationshipId)
       {
         this.dependentUpdateNew$.pipe(first((updateResponse: any ) => updateResponse != null))
         .subscribe((updateResponse: any) =>
-        {  
-          if(updateResponse?.clientDependentId)
+        {
+          if(updateResponse?.clientRelationshipId)
           {
             this.loadFamilyDependents()
             this.onFamilyMemberClosed()
           }
-          
+
         })
       }
 
@@ -252,10 +260,10 @@ pageselectionchange(data: any) {
     this.editbuttonEmitted =false;
     this.onFamilyMemberClosed()
   }
-  
+
   loadDependents(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string)
   {
-    const gridDataRefinerValue = 
+    const gridDataRefinerValue =
     {
       skipCount: skipcountValue,
       pagesize : maxResultCountValue,
@@ -265,37 +273,37 @@ pageselectionchange(data: any) {
     this.loadDependentsEvent.next(gridDataRefinerValue)
   }
    /** grid event methods **/
- 
-   public dataStateChange(stateData: any): void {         
+
+   public dataStateChange(stateData: any): void {
       this.sort = stateData.sort;
       this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
       this.sortType = stateData.sort[0]?.dir ?? 'asc'
       this.state=stateData;
-      this.loadFamilyDependents();   
+      this.loadFamilyDependents();
   }
 
-  private loadFamilyDependents(): void {   
-    this.loadDependents(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType)    
+  private loadFamilyDependents(): void {
+    this.loadDependents(this.state.skip ?? 0 ,this.state.take ?? 0,this.sortValue , this.sortType)
   }
   searchTextEventHandle($event : any)
-  {    
+  {
    this.searchTextHandleEvent.emit($event)
   }
 
   addExistingClientEventHandle($event : any)
   {
     this.addExistingClientEvent.emit($event)
-    this.editbuttonEmitted =false;    
-      this.existdependentStatus$.pipe(first((updateResponse: any ) => updateResponse?.clientDependentId != null))
+    this.editbuttonEmitted =false;
+      this.existdependentStatus$.pipe(first((updateResponse: any ) => updateResponse?.clientRelationshipId != null))
       .subscribe((updateResponse: any) =>
-      {  
-        if(updateResponse?.clientDependentId)
-        { 
+      {
+        if(updateResponse?.clientRelationshipId)
+        {
           this.loadFamilyDependents()
-          this.onFamilyMemberClosed()        
+          this.onFamilyMemberClosed()
         }
-        
+
       })
-    
+
   }
 }

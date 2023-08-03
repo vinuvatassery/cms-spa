@@ -1,27 +1,7 @@
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
-    To deactivate the current contact, you must add a new one.
+    It will still be viewable in the client's profile. You can add a new contact at any time
   </p>
-  <div class="flex-row">
-    <div class="flex-col">
-      <kendo-floatinglabel text="Contact’s Name">
-        <kendo-textbox aria-label="contacts name1"  placeholder="Contact’s Name"  [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-         
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col">
-      <kendo-floatinglabel text="Contact’s Relationship to Client">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"  [data]="ddlRelationshipToClient$ | async">
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col">
-      <kendo-floatinglabel text="Contact’s Phone Number">
-        <kendo-textbox aria-label="contacts phone number" placeholder="Contact’s Phone Number"   [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
-  
-      </kendo-floatinglabel>
-    </div>
-  </div>
 </section>
 
 <kendo-dialog-actions>
@@ -32,11 +12,12 @@
         [primary]="true"
         look="outline"
         aria-label="cancel deactivation of friend or family confirmation"
+        (click)="closeDeactivateModal(false)"
       >
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="deactivate and add">
-        Deactivate & Add
+      <button kendoButton [primary]="true" aria-label="deactivate and add" (click)="deactivateContact()">
+        Deactivate
       </button>
     </div>
   </div>

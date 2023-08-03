@@ -1,0 +1,54 @@
+<div class="app-l-inner-rapper pt-0 pb-5">
+    <common-bread-crumb></common-bread-crumb>
+    <div class=" pt-0"> 
+        <section class="app-l-mainTittle">
+            <h1 class="maintitle_withicon text-bold">Vendor Refunds </h1>
+        </section>
+        <section class="app-l-client-wrapper ">
+            <section class="app-l-wrapper"> 
+                <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+                    class="app-c-tab case-360-tab">
+                    <kendo-tabstrip-tab title="Process" [selected]="true">
+                        <ng-template kendoTabContent>
+                            <div class="block-section ">
+                                <cms-refund-process-list
+                                
+                                [vendorRefundProcessGridLists$]="vendorRefundProcessGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueRefundProcess"
+                                [sortType]="sortType" [sort]="sortProcessList" 
+                                (loadVendorRefundProcessListEvent)="loadVendorRefundProcessListGrid($event)"
+                                > </cms-refund-process-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+
+                    <kendo-tabstrip-tab title="Batches">
+                        <ng-template kendoTabContent>
+                            <div class="block-section ">
+                                <cms-refund-batches-list
+                                [vendorRefundBatchGridLists$]="vendorRefundBatchGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueRefundBatch"
+                                [sortType]="sortType" [sort]="sortBatchList" 
+                                (loadVendorRefundBatchListEvent)="loadVendorRefundBatchListGrid($event)"
+                                ></cms-refund-batches-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+
+                    <kendo-tabstrip-tab title="All Payments">
+                        <ng-template kendoTabContent>
+                            <div class="block-section ">
+                                <cms-refund-all-payment-list 
+                                [vendorRefundAllPaymentsGridLists$]="vendorRefundAllPaymentsGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueRefundPayments"
+                                [sortType]="sortType" [sort]="sortPaymentsList" 
+                                (loadVendorRefundAllPaymentsListEvent)="loadVendorRefundAllPaymentsListGrid($event)"></cms-refund-all-payment-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+                </kendo-tabstrip> 
+            </section> 
+        </section>
+    </div>
+</div>
+

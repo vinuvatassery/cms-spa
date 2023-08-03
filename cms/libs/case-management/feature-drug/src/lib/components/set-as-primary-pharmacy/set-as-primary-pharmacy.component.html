@@ -1,1 +1,62 @@
-<p>set-as-primary-pharmacy works!</p>
+<kendo-dialog-titlebar (close)="onCloseSelectNewPrimaryPharmaciesClicked()" *ngIf="clientPharmacyDetails.actionType ==='deactivate'"> Deactivate and Select New Primary Pharmacy </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="onCloseSelectNewPrimaryPharmaciesClicked()" *ngIf="clientPharmacyDetails.actionType ==='remove'"> Remove and Select New Primary Pharmacy </kendo-dialog-titlebar>
+ 
+<section class="k-dialog-body">
+    <p class="text-muted mb-2" *ngIf="clientPharmacyDetails.actionType ==='deactivate'"> You are deactivating the client's primary pharmacy. Please select a new primary from
+        their existing pharmacies, or search for a new one below</p>
+        <p class="text-muted mb-2" *ngIf="clientPharmacyDetails.actionType ==='remove'"> You are removing the client's primary pharmacy. Please select a new primary from
+            their existing pharmacies, or search for a new one below</p>
+    <div class="flex-row mb-2">
+        <div class="flex-col">
+            <kendo-floatinglabel text="Primary Pharmacy">
+                <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"  [valuePrimitive]="true" (valueChange)="onChangePharmacy($event)" textField="pharmacyName" valueField="vendorId" [(ngModel)]="selectedVendorId"   [data]="pharmacies"> </kendo-dropdownlist>
+            </kendo-floatinglabel>
+        </div>
+    </div>
+    <div class="flex-row" >
+        <div class="flex-col">
+            <div class="autoSelect-search mat-form-no-b-space field-label-hide">
+                <div class="global-search">
+                    <span class="material-icons global-search-icon" aria-label="search pharmacy"
+                        aria-hidden="true">search</span>
+                    <span *ngIf="searchLoaderVisibility$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+                    <kendo-formfield>
+                        <kendo-label text="Search Pharmacy Name/Number">
+                            <kendo-autocomplete autofocusfield [fillMode]="formUiStyle.dropDownFillMode" 
+                            autofocusfield
+                            #autocomplete
+                            [fillMode]="formUiStyle.dropDownFillMode" 
+                            [data]="pharmacysearchResultList"     
+                           
+                            [value]="selectedPharmacyForEdit" 
+                            valueField ="vendorFullName"    
+                            [filterable]="true"
+                            (filterChange)="searchPharmacies($event)"
+                                placeholder="Search Pharmacy Name/Number"
+                                [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }">
+                                <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
+                                    <span class="pr-1" (click)="onSearchTemplateClick(dataItem)" >{{ dataItem.vendorFullName}}</span>          
+                                  </ng-template>
+                            </kendo-autocomplete>
+                            <kendo-formerror *ngIf="isPharmacyError">Pharmacy selection required.</kendo-formerror>
+                        </kendo-label>
+                    </kendo-formfield>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<kendo-dialog-actions>
+    <div class="justify-content-between">
+        <div>
+            <button  kendoButton  [primary]="true"  look="flat"  aria-label="add new"  >    Add New  </button>
+        </div>
+        <div class="justify-content-end">
+            <button kendoButton [primary]="true" look="outline" aria-label="cancel updating priority"
+                (click)="onCloseSelectNewPrimaryPharmaciesClicked()"> Cancel </button>
+            <button kendoButton [primary]="true" aria-label="update priority"    *ngIf="clientPharmacyDetails.actionType ==='deactivate'" (click)="onAddNewPharmacy()"> DEACTIVATE & UPDATE</button>
+            <button kendoButton [primary]="true" aria-label="update priority" *ngIf="clientPharmacyDetails.actionType ==='remove'" (click)="onRemovePharmacy()"> REMOVE & UPDATE </button>
+        </div>
+    </div>
+</kendo-dialog-actions>

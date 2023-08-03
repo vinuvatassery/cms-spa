@@ -1,22 +1,150 @@
-<!-- <button class="k-button k-primary" (click)="onChangeCounterClick()">
-  Change the counter
-</button>
-<br />
-<br />
-<br /> -->
 <div class="client-data-block">
+  <h2 hidden>Application</h2>
+
   <h3>Family & Dependents</h3>
   <section>
     <div class="block-section pt-1">
+      <div *ngIf="(previousRelationList$ | async) as prvRelations">
+      <div class="flex-row" *ngIf="isCerForm">
+        <div class="flex-col">
+          <fieldset class="k-form-fieldset">
+            <legend class="k-form-legend"><h5>Have their family size or family members changed?</h5></legend>
+          
+          <div class="component-list-h comp-list-horizontal">
+            <span class="app-radiobtnwidtext-wrapper">
+              <input type="radio" kendoRadioButton   aria-labelledby="havetheyhavefamilymemberYes"
+                id="havetheyhavefamilymemberYes"
+                class="form-control" 
+                value="Y"
+                name="havetheyhavefamilymember"
+                [(ngModel)]="haveTheyHaveFamilyMember"
+                (change)="onFamilyChangeClicked('haveFamilyMembersChanged', 'Y')"
+              />
+              <kendo-label
+                class="k-radio-label"
+                for="havetheyhavefamilymemberYes"
+                text="Yes"
+              ></kendo-label>
+            </span>
+            <span class="app-radiobtnwidtext-wrapper">
+              <input
+                type="radio"
+                kendoRadioButton
+                aria-labelledby="havetheyhavefamilymemberNo" 
+                id="havetheyhavefamilymemberNo"
+                value="N" 
+                name="havetheyhavefamilymember"
+                [(ngModel)]="haveTheyHaveFamilyMember"
+                (change)="onFamilyChangeClicked('haveFamilyMembersChanged', 'N')"
+              />
+              <kendo-label
+                class="k-radio-label"
+                for="havetheyhavefamilymemberNo"
+                text="No"
+              ></kendo-label>
+            </span>
+          </div>
+          <kendo-formerror *ngIf="!haveTheyHaveFamilyMember && (isCerFormValid | async) == false"> A Response is required.</kendo-formerror>
+          </fieldset> 
+        </div>
+        <div *ngIf="showPrevRelations$ | async">          
+          <div class="flex-col" *ngFor="let dependent of prvRelations; let i=index">
+            <fieldset class="k-form-fieldset">
+              <legend class="k-form-legend"><h5>Is “{{dependent.fullName}} ({{dependent.relationshipDescription}})” still in their family?</h5></legend>
+
+            <div class="component-list-h comp-list-horizontal">
+              <span class="app-radiobtnwidtext-wrapper">
+                <input type="radio" kendoRadioButton   aria-labelledby="dependent"
+                  id="dependent{{i}}y"
+                  class="form-control" 
+                  value="ACTIVE"
+                  name="dependent_{{i}}"
+                  [(ngModel)]="dependent.cerReviewStatusCode"
+                  (click)="onDependentStatusChange(dependent, 'ACTIVE')"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  for="dependent{{i}}y"
+                  text="Yes"
+                ></kendo-label>
+              </span>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input
+                  type="radio"
+                  kendoRadioButton
+                  aria-labelledby="dependent" 
+                  id="dependent{{i}}n"
+                  value="INACTIVE" 
+                  name="dependent_{{i}}"
+                  [(ngModel)]="dependent.cerReviewStatusCode"
+                  (click)="onDependentStatusChange(dependent, 'INACTIVE')"
+                />
+                <kendo-label
+                  class="k-radio-label"
+                  for="dependent{{i}}n"
+                  text="No"
+                ></kendo-label>
+              </span>
+            </div>
+            <kendo-formerror *ngIf="dependent.cerReviewStatusCodeRequired"> A Response is required.</kendo-formerror>
+            </fieldset> 
+          </div>
+        </div>
+        <div class="flex-col">
+          <fieldset class="k-form-fieldset">
+            <legend class="k-form-legend"><h5>Are there additional people in their family?</h5></legend>
+
+          <div class="component-list-h comp-list-horizontal">
+            <span class="app-radiobtnwidtext-wrapper">
+              <input type="radio" kendoRadioButton   aria-labelledby="havetheyhaveadditionalfamilymemberYes"
+                id="havetheyhaveadditionalfamilymemberYes"
+                class="form-control" 
+                value="Y"
+                name="haveTheyHaveAdditionalFamilyMember"
+                [(ngModel)]="haveTheyHaveAdditionalFamilyMember"
+                (change)="cerDataPointAdjustmentChange('additionalFamilyMembers', 'Y')"
+              />
+              <kendo-label
+                class="k-radio-label"
+                for="havetheyhaveadditionalfamilymemberYes"
+                text="Yes"
+              ></kendo-label>
+            </span>
+            <span class="app-radiobtnwidtext-wrapper">
+              <input
+                type="radio"
+                kendoRadioButton
+                aria-labelledby="havetheyhaveadditionalfamilymemberNo" 
+                id="havetheyhaveadditionalfamilymemberNo"
+                value="N" 
+                name="haveTheyHaveAdditionalFamilyMember"
+                [(ngModel)]="haveTheyHaveAdditionalFamilyMember"
+                (change)="cerDataPointAdjustmentChange('additionalFamilyMembers', 'N')"
+              />
+              <kendo-label
+                class="k-radio-label"
+                for="havetheyhaveadditionalfamilymemberNo"
+                text="No"
+              ></kendo-label>
+            </span>
+          </div>
+          <kendo-formerror *ngIf="!haveTheyHaveAdditionalFamilyMember && (isCerFormValid | async) == false"> A Response is required.</kendo-formerror>
+          </fieldset> 
+        </div>
+      </div>
+      </div>
       <div class="flex-row">
-        <div class="flex-col mb-1">
+        <div class="flex-col mb-2" *ngIf="isCerForm && haveTheyHaveAdditionalFamilyMember=='Y'">
+        <h5 >Add new family members:</h5>
+      </div>
+        <div class="flex-col mb-1" *ngIf="!isCerForm">
           <span class="app-checkboxwidtext-wrapper">  
           <input
             type="checkbox"
             kendoCheckBox
             (click)="onNoFamilyMemberClicked()" 
             id="clientsDoesNotHaveFamilyOrDependents"
-           [checked]="dependentStatus$ | async"   
+            [checked]="(dependentStatus$ | async)?.noDependentFlag === 'Y'"   
            aria-labelledby="clientsDoesNotHaveFamilyOrDependents"        
           />
           <label
@@ -26,7 +154,7 @@
           >
           </span>
         </div>
-        <div class="flex-col" *ngIf="!isFamilyGridDisplay">
+        <div class="flex-col" *ngIf="(!isCerForm && !isFamilyGridDisplay) || (isCerForm && haveTheyHaveAdditionalFamilyMember=='Y')">
           <case-management-family-and-dependent-list       
           [dependents$]="dependentList$"
           [dependentSearch$]="dependentSearch$"
@@ -41,13 +169,14 @@
           [sortType]="sortType"
           [sort]="sort"
           [existdependentStatus$]="existdependentStatus$"
+          [isCerForm]="isCerForm"
           (addUpdateDependentEvent)="addUpdateDependentHandle($event)"
-          (GetNewDependentHandleEvent)="GetNewDependentHandle($event)"        
+          (GetNewDependentHandleEvent)="getNewDependentHandle($event)"        
           (loadDependentsEvent)="loadDependentsHandle($event)"     
           (deleteDependentsEvent)="deleteDependentParamHandle($event)"    
           (searchTextHandleEvent)="searchTextHandleEventHandle($event)"
-          (GetExistclientDependentEvent)="GetExistclientDependentEventHandle($event)"       
-          (addExistingClientEvent)="AddUpdateExistingDependentHandle($event)"
+          (GetExistclientDependentEvent)="getExistclientDependentEventHandle($event)"       
+          (addExistingClientEvent)="addUpdateExistingDependentHandle($event)"
           >         
           </case-management-family-and-dependent-list>
         </div>

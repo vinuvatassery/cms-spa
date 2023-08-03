@@ -4,7 +4,7 @@
     {{
       isEdit
         ? 'Edit Status, Group, and Eligibility Period as needed. Click “Update” to commit the changes.'
-        : 'Set Status, Group, and Eligibility Period. You’ll be prompted to send an approval or pending notice after you click “Initiate Benefits.”'
+        : isCerForm? 'Set the status ,group and eligibility dates. You’ll be prompted to send an eligibility or pending notice after you click “Renew Eligibility”':'Set Status, Group, and Eligibility Period. You’ll be prompted to send an approval or pending notice after you click “Initiate Benefits.”'
     }}
   </p>
   <div class="flex-row">
@@ -28,8 +28,8 @@
         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
         [data]="groupList$ | async"
         formControlName ="groupCode"
-        textField ="lovDesc"
-        valueField ="lovCode"
+        textField ="groupCodeDesc"
+        valueField ="groupCodeId"
         [valuePrimitive]="true"
         (valueChange)="startDateOnChange($event)">
         </kendo-dropdownlist>
@@ -65,7 +65,6 @@
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Assigned Case Worker">
-        <!-- <input kendoTextBox aria-label="assigned case worker" /> -->
         <kendo-textbox aria-label="assigned case worker" [disabled]="true"
         [fillMode]="formUiStyle.inputFillMode"
         formControlName="assignedCwUser"

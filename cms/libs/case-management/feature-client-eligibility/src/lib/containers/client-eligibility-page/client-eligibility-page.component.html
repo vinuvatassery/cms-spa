@@ -1,1 +1,9 @@
-<case-management-client-eligibility [eligibilityForm]="eligibilityForm" [questions]="questoinsResponse" [formSubmited]="formSubmited" [isSaveAndContinueAcceptance]="isSaveAndContinueAcceptance" (getQuestionsResponse)="getQuestionsResponse($event)" (changeApplicationAcceptedStatus)="changeApplicationAcceptedStatus($event)" (changeIsSaveAndContinueAcceptance)="changeIsSaveAndContinueAcceptance()"></case-management-client-eligibility>
+<case-management-client-eligibility 
+[cerNote]="cerNoteData"
+[eligibilityForm]="eligibilityForm" [questions]="questoinsResponse"
+    [formSubmited]="formSubmited" [isSaveAndContinueAcceptance]="isSaveAndContinueAcceptance"
+    (getQuestionsResponse)="getQuestionsResponse($event)"
+    (changeApplicationAcceptedStatus)="changeApplicationAcceptedStatus($event)"
+    (changeIsSaveAndContinueAcceptance)="changeIsSaveAndContinueAcceptance()"
+    (cerNoteResponse)="cerNoteResponse($event)"
+    ></case-management-client-eligibility>

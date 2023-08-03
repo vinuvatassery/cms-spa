@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy,ChangeDetectorRef,ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy,ChangeDetectorRef } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -13,11 +13,10 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-client-edit-view-sexual-identity',
   templateUrl: './client-edit-view-sexual-identity.component.html',
-  styleUrls: ['./client-edit-view-sexual-identity.component.scss'],
 })
 export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy {
   @Input() appInfoForm: FormGroup;
-
+  @Input() textboxDisable!:boolean;
   SexulaIdentityLovs$ = this.lovFacade.sexulaIdentitylov$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   ControlPrefix = ControlPrefix.sexualIdentity;
@@ -37,15 +36,14 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
   SexulaIdentities: any = [];
 
   ngOnInit(): void {
-    this.lovFacade.getSexulaIdentityLovs();
     this.loadSexulaIdentities();
     this.loadApplicantInfoSubscription();
   }
   ngOnDestroy(): void {
     this.appInfoSubscription.unsubscribe();
-  }  
+  }
   setControlValidations() {
-    let isFieldCompleted = false; 
+    let isFieldCompleted = false;
     const sexulaIdentity = Object.keys(this.appInfoForm.controls).filter(m => m.includes(this.ControlPrefix));
     sexulaIdentity.forEach((gender: any) => {
       this.appInfoForm.controls[gender].removeValidators(Validators.requiredTrue);
@@ -53,12 +51,12 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
 
       const value = this.appInfoForm.controls[gender]?.value;
       if(value === true){
-        isFieldCompleted = (isFieldCompleted || value === true) 
+        isFieldCompleted = (isFieldCompleted || value === true)
                           && (
                                 (
-                                  gender === `${ControlPrefix.sexualIdentity}${SexualIdentityCode.notListed}` 
+                                  gender === `${ControlPrefix.sexualIdentity}${SexualIdentityCode.notListed}`
                                   && this.appInfoForm.controls[this.DescriptionField]?.value
-                                ) 
+                                )
                                 || gender !== `${ControlPrefix.sexualIdentity}${SexualIdentityCode.notListed}`
                              );
       }
@@ -72,11 +70,14 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
   onCheckChange(event: any, lovCode: string) {
     this.appInfoForm.controls['SexualIdentityGroup'].removeValidators(Validators.required);
     this.appInfoForm.controls['SexualIdentityGroup'].updateValueAndValidity();
-    this.enableDisableSexualIdentity(event.target.checked, lovCode); 
+    this.enableDisableSexualIdentity(event.target.checked, lovCode);
     this.setControlValidations();
   }
-  enableDisableSexualIdentity(checked: boolean, lovCode: any) {  
+  enableDisableSexualIdentity(checked: boolean, lovCode: any) {
     switch (lovCode) {
+      case SexualIdentityCode.notListed:
+        this.textboxDisable = !checked;
+        break;
       case SexualIdentityCode.dontKnow:
       case SexualIdentityCode.dontWant:
       case SexualIdentityCode.dontKnowQustion: {
@@ -85,33 +86,19 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
             this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].setValue(false);
             this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].disable();
             this.appInfoForm.controls[this.DescriptionField].removeValidators(Validators.required);
+            this.textboxDisable = true; 
           });
           break;
         }
         else {
           if (lovCode === SexualIdentityCode.dontKnow) {
-            if (!this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontWant].value === true &&
-              !this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnowQustion].value === true) {
-              this.disableSexualIdentity.forEach((sexualIdentity: any) => {
-                this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].enable();
-              });
-            }
+            this.onDoNotKnowSelected();
           }
           if (lovCode === SexualIdentityCode.dontWant) {
-            if (!this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnow].value === true &&
-              !this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnowQustion].value === true) {
-              this.disableSexualIdentity.forEach((sexualIdentity: any) => {
-                this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].enable();
-              });
-            }
+            this.onDoNotAnswerSelected();
           }
           if (lovCode === SexualIdentityCode.dontKnowQustion) {
-            if (!this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnow].value === true &&
-              !this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontWant].value === true) {
-              this.disableSexualIdentity.forEach((sexualIdentity: any) => {
-                this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].enable();
-              });
-            }
+            this.onDoNotKnowQuestion();
           }
         }
       }
@@ -122,6 +109,34 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
       this.appInfoForm.controls[this.DescriptionField].updateValueAndValidity();
     }
   }
+
+  private onDoNotKnowSelected(){
+    if (!this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontWant].value === true &&
+      !this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnowQustion].value === true) {
+      this.disableSexualIdentity.forEach((sexualIdentity: any) => {
+        this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].enable();
+      });
+    }
+   }
+
+   private onDoNotAnswerSelected(){
+    if (!this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnow].value === true &&
+      !this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnowQustion].value === true) {
+      this.disableSexualIdentity.forEach((sexualIdentity: any) => {
+        this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].enable();
+      });
+    }
+   }
+
+   private onDoNotKnowQuestion(){
+    if (!this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontKnow].value === true &&
+      !this.appInfoForm.controls[this.ControlPrefix + SexualIdentityCode.dontWant].value === true) {
+      this.disableSexualIdentity.forEach((sexualIdentity: any) => {
+        this.appInfoForm.controls[this.ControlPrefix + sexualIdentity.lovCode].enable();
+      });
+    }
+   }
+
   private loadSexulaIdentities() {
     this.SexulaIdentityLovs$.subscribe((data) => {
       if (!Array.isArray(data)) return;
@@ -149,26 +164,29 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
     }];
 
     this.workflowFacade.updateChecklist(workFlowdata);
-  }  
+  }
   private loadApplicantInfoSubscription() {
     this.appInfoSubscription = this.applicantInfo$.subscribe((applicantInfo) => {
       if (applicantInfo !== null) {
         if (applicantInfo.clientSexualIdentityList !== null && applicantInfo.clientSexualIdentityList !== undefined
           && applicantInfo.clientSexualIdentityList.length > 0) {
           this.assignSexualIdentityToForm(applicantInfo.clientSexualIdentityList);
-          var otherSexualIdentities = applicantInfo.clientSexualIdentityList.filter((x: any) => x.clientSexualIdentityCode === SexualIdentityCode.dontKnow || x.clientSexualIdentityCode === SexualIdentityCode.dontWant || x.clientSexualIdentityCode === SexualIdentityCode.dontKnowQustion)
+          const otherSexualIdentities = applicantInfo.clientSexualIdentityList.filter((x: any) => x.clientSexualIdentityCode === SexualIdentityCode.dontKnow || x.clientSexualIdentityCode === SexualIdentityCode.dontWant || x.clientSexualIdentityCode === SexualIdentityCode.dontKnowQustion)
           if (otherSexualIdentities.length > 0) {
             this.enableDisableSexualIdentity(true, otherSexualIdentities[0].clientSexualIdentityCode);
           }
           this.updateWorkflowCount(true);
-        }  
+        }
         else{
+          this.textboxDisable=true;
           this.enableAllSexualIdentities();
-        }      
+        }
       }
       else{
+        this.textboxDisable=true;
         this.enableAllSexualIdentities();
       }
+      this.cdr.detectChanges();
     });
   }
   private assignSexualIdentityToForm(clientSexualIdentityList: any) {
@@ -177,8 +195,9 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
         this.appInfoForm.controls[this.ControlPrefix + identity.clientSexualIdentityCode]?.setValue(true);
         if (identity.clientSexualIdentityCode === SexualIdentityCode.notListed && identity.otherDesc !== null) {
           this.appInfoForm.controls['SexualIdentityDescription']?.setValue(identity.otherDesc);
+          this.textboxDisable = false;
         }
-        this.appInfoForm.controls['SexualIdentityGroup']?.setValue(identity.clientSexualIdentityCode);       
+        this.appInfoForm.controls['SexualIdentityGroup']?.setValue(identity.clientSexualIdentityCode);
       })
       this.cdr.detectChanges();
     }

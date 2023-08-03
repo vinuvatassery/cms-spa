@@ -5,16 +5,15 @@ import {
   ChangeDetectionStrategy,
   HostListener,
   ViewChild,
-  ElementRef,
+  ElementRef, TemplateRef
 } from '@angular/core';
 /** Facades **/
 import { NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { LoggingService } from '@cms/shared/util-core';
-
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-notification-panel',
   templateUrl: './notification-panel.component.html',
-  styleUrls: ['./notification-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationPanelComponent implements OnInit {
@@ -27,13 +26,14 @@ export class NotificationPanelComponent implements OnInit {
   isNotificationPopupOpened = false;
   isNewReminderOpened = false;
   isNotificationsAndRemindersOpened = false;
+  private newReminderDetailsDialog : any;
+  private notificationReminderDialog : any;
   public data = [
     {
       buttonType:"btn-h-primary",
       text: "Snooze",
       icon: "snooze",
       click: (): void => {
-        // this.onPhoneNumberDetailClicked(true);
       },
     },
  
@@ -43,7 +43,6 @@ export class NotificationPanelComponent implements OnInit {
       text: "Discard",
       icon: "notifications_off",
       click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
       },
     },
    
@@ -56,7 +55,6 @@ export class NotificationPanelComponent implements OnInit {
       text: "Edit Remainder",
       icon: "edit",
       click: (): void => {
-        // this.onPhoneNumberDetailClicked(true);
       },
     },
  
@@ -65,25 +63,15 @@ export class NotificationPanelComponent implements OnInit {
       text: "Delete Remainder",
       icon: "delete",
       click: (): void => {
-      //  this.onDeactivatePhoneNumberClicked()
       },
-    },
-    // {
-    //   buttonType:"btn-h-danger",
-    //   text: "Discard",
-    //   icon: "notifications_off",
-    //   click: (): void => {
-    //   //  this.onDeactivatePhoneNumberClicked()
-    //   },
-    // },
-   
-    
+    } 
   ];
   /** Constructor **/
   constructor(
     private readonly notificationFacade: NotificationFacade,
     private readonly todoFacade: TodoFacade,
-    private loggingService : LoggingService
+    private loggingService : LoggingService,
+    private dialogService: DialogService
   ) {}
 
   /** Lifecycle hooks **/
@@ -139,19 +127,28 @@ export class NotificationPanelComponent implements OnInit {
     this.onNotificationButtonToggleClicked(false);
   }
 
-  onNewReminderClosed() {
-    this.isNewReminderOpened = false;
-  }
+  onNewReminderClosed(result: any) {
+    if(result){
+      this.newReminderDetailsDialog.close()
+    }}
 
-  onNewReminderOpenClicked() {
-    this.isNewReminderOpened = true;
+    onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
+    this.newReminderDetailsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    }); 
   }
 
   onNotificationsAndRemindersClosed() {
     this.isNotificationsAndRemindersOpened = false;
+    this.notificationReminderDialog.close()
   }
 
-  onNotificationsAndRemindersOpenClicked() {
+  onNotificationsAndRemindersOpenClicked(template: TemplateRef<unknown>): void {
+    this.notificationReminderDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-wid-md-full no_body_padding-modal reminder_modal',
+    }); 
     this.isNotificationsAndRemindersOpened = true;
   }
 

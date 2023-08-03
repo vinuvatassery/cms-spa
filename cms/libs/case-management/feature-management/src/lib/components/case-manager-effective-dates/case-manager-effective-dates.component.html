@@ -1,0 +1,61 @@
+<kendo-dialog-titlebar (click)="onUnAssignConfirm(false)"> Edit Effective Dates </kendo-dialog-titlebar>
+  <section class="k-dialog-body mb-2">
+    <p>
+      The effective dates will be updated. If an End Date is entered, you will be able to assign another one or submit a new referral.
+   
+    </p>
+
+    <div class="flex-row">
+      <div class="flex-col flex-col-9">
+        <kendo-floatinglabel text="Start Date">
+          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"  
+           format="MM-dd-yyyy" 
+          formatPlaceholder="formatPattern"           
+          aria-label="Start Date"
+          placeholder=""
+          [(ngModel)]="startDate"
+          [min]="min"
+         >
+          </kendo-datepicker>       
+        </kendo-floatinglabel>
+        <kendo-formerror *ngIf="showstartDateError">Start date is required.</kendo-formerror>
+      </div>            
+    </div>
+    <div class="flex-row">
+        <div class="flex-col flex-col-9">
+          <kendo-floatinglabel text="End Date">
+            <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"  
+             format="MM-dd-yyyy" 
+            formatPlaceholder="formatPattern"           
+            aria-label="End Date"
+            placeholder=""
+            [(ngModel)]="endDate">
+            </kendo-datepicker>       
+          </kendo-floatinglabel>       
+        </div>            
+      </div>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton         
+          look="outline"
+          [primary]="false"
+          type='button'
+          aria-label="cancel removing case manager"
+          (click)="onUnAssignConfirm(false)"
+        >
+          CANCEL
+        </button>
+        <button
+          kendoButton  [primary]="true"        
+          aria-label="remove case manager"
+          (click)="onUnAssignConfirm(true)"
+        >
+        UPDATE
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+

@@ -1,16 +1,13 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ClientEmployer, EmploymentFacade, WorkflowFacade } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { ClientEmployer, EmploymentFacade } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Validators, FormGroup, FormControl,} from '@angular/forms';
-import { first } from 'rxjs';
 import {  SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'case-management-employer-detail',
   templateUrl: './employer-detail.component.html',
-  styleUrls: ['./employer-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployerDetailComponent implements OnInit{
@@ -18,16 +15,18 @@ export class EmployerDetailComponent implements OnInit{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   employmentList$ = this.employmentFacade.employers$;
   isRemoveEmployerConfirmationPopupOpened = false;
-  empNameMaxValue = 100; 
+  empNameMaxValue = 100;
   employerFormSubmitted = false;
   sessionId!: string;
-  clientId : any;
-  clientCaseId: any;
-  clientCaseEligibilityId: any;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   btnDisabled = false;
   /** Input properties **/
   @Input() isAdd = true;
+  @Input() sessionClientId! : any;
+  @Input() clientCaseEligibilityId: any;
+  @Input() clientId: any;
+  @Input() clientCaseId: any;
+
   @Input() selectedEmployer: ClientEmployer = new ClientEmployer();
   @Output() closeModal: EventEmitter<boolean> = new EventEmitter();
   @Output() addUpdateEmploymentEvent = new EventEmitter<any>();
@@ -36,18 +35,14 @@ export class EmployerDetailComponent implements OnInit{
     empName: new FormControl('', []),
     empHireDate: new FormControl('', []),
   });
-  
+
   // constructor
-  constructor(private readonly employmentFacade: EmploymentFacade, 
-    private workflowFacade: WorkflowFacade,
-    private readonly router: Router,
+  constructor(private readonly employmentFacade: EmploymentFacade,
     public intl: IntlService,
-    private configurationProvider : ConfigurationProvider,
-    private route: ActivatedRoute) {}
+    private configurationProvider : ConfigurationProvider) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadCase();
     this.employer.clientCaseEligibilityId = this.clientCaseEligibilityId;
     if (this.isAdd) {
       this.empDetailsForm.reset();
@@ -55,34 +50,24 @@ export class EmployerDetailComponent implements OnInit{
         empName: new FormControl( ''),
         empHireDate: new FormControl(''),
       });
- 
+
     } else{
       this.loadEmployersDetails();
     }
   }
-  // loading case details like session id, eligibility id , clientid and clientcaseid
-  loadCase(){
-    this.sessionId = this.route.snapshot.queryParams['sid'];    
-    this.workflowFacade.loadWorkFlowSessionData(this.sessionId)
-     this.workflowFacade.sessionDataSubject$.pipe(first(sessionData => sessionData.sessionData != null))
-     .subscribe((session: any) => {      
-      this.clientCaseId = JSON.parse(session.sessionData).ClientCaseId   
-      this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId   
-      this.clientId =JSON.parse(session.sessionData).clientId   
-     });        
-  }
+
   // loading employment detail based on emploerid
-  loadEmployersDetails(){ 
+  loadEmployersDetails(){
     this.employmentFacade.showLoader();
-    this.employmentFacade.loadEmployersDetails(this.selectedEmployer.clientCaseEligibilityId, this.selectedEmployer.clientEmployerId ).subscribe({
+    this.employmentFacade.loadEmployersDetails(this.sessionClientId,this.selectedEmployer.clientEmployerId).subscribe({
       next: (response) => {
-        this.selectedEmployer = response; 
+        this.selectedEmployer = response;
         if (this.selectedEmployer) {
           this.employer.clientEmployerId = this.selectedEmployer.clientEmployerId;
           this.employer.employerName = this.selectedEmployer.employerName;
           this.employer.clientCaseEligibilityId = this.selectedEmployer.clientCaseEligibilityId;
           this.employer.dateOfHire = new Date(this.selectedEmployer.dateOfHire);
-          this.employer.concurrencyStamp = this.selectedEmployer.concurrencyStamp; 
+          this.employer.concurrencyStamp = this.selectedEmployer.concurrencyStamp;
           this.empDetailsForm.controls['empName'].setValue(this.selectedEmployer.employerName);
           this.empDetailsForm.controls['empHireDate'].setValue(new Date(this.selectedEmployer.dateOfHire));
           this.empDetailsForm.controls['empName'].updateValueAndValidity();
@@ -91,8 +76,8 @@ export class EmployerDetailComponent implements OnInit{
         this.employmentFacade.hideLoader();
       },
       error: (err) => {
-        this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);    
-        this.employmentFacade.hideLoader();  
+        this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.employmentFacade.hideLoader();
       },
     }
     );
@@ -109,9 +94,9 @@ export class EmployerDetailComponent implements OnInit{
           if (this.empDetailsForm.valid) {
             this.employer.clientEmployerId = this.selectedEmployer.clientEmployerId;
             this.employer.employerName =  this.empDetailsForm.controls['empName'].value;
-            this.employer.clientCaseEligibilityId =  this.selectedEmployer.clientCaseEligibilityId; 
+            this.employer.clientCaseEligibilityId =  this.selectedEmployer.clientCaseEligibilityId;
             this.employer.dateOfHire = new Date( this.intl.formatDate(this.empDetailsForm.controls['empHireDate'].value,this.dateFormat));
-          
+
             if (this.employer) {
               this.btnDisabled = true
               this.employer.clientCaseEligibilityId = this.clientCaseEligibilityId;
@@ -119,40 +104,41 @@ export class EmployerDetailComponent implements OnInit{
               this.employerFormSubmitted = false;
 
               if (this.isAdd) {
-                this.employmentFacade.createEmployer(this.employer).subscribe({
-                  next: (response) => { 
-                    this.addUpdateEmploymentEvent.next(response);  
+                this.employmentFacade.createEmployer(this.clientId,this.employer).subscribe({
+                  next: (response) => {
+                    this.employmentFacade.employmentValidSubject.next(true);
+                    this.addUpdateEmploymentEvent.next(response);
                     this.closeModal.emit(true);
                     this.employmentFacade.hideLoader();
-                    this.employmentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer added successfully') ;  
-                  },
-                  error: (err) => { 
-                    this.btnDisabled = false
-                    this.employmentFacade.hideLoader();
-                    this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);      
-                  },
-                });
-              } else {
-         
-                this.employmentFacade.updateEmployer(this.employer).subscribe({
-                  next: (response) => { 
-                    this.addUpdateEmploymentEvent.next(response); 
-                    this.employerFormSubmitted = false; 
-                    this.closeModal.emit(true);            
-                    this.employmentFacade.hideLoader();
-                    this.employmentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer updated successfully') ;  
+                    this.employmentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer added Successfully') ;
                   },
                   error: (err) => {
                     this.btnDisabled = false
-                    this.employmentFacade.hideLoader(); 
-                    this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);      
+                    this.employmentFacade.hideLoader();
+                    this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+                  },
+                });
+              } else {
+
+                this.employmentFacade.updateEmployer(this.clientId,this.employer, this.selectedEmployer.clientEmployerId).subscribe({
+                  next: (response) => {
+                    this.addUpdateEmploymentEvent.next(response);
+                    this.employerFormSubmitted = false;
+                    this.closeModal.emit(true);
+                    this.employmentFacade.hideLoader();
+                    this.employmentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Employer updated successfully') ;
+                  },
+                  error: (err) => {
+                    this.btnDisabled = false
+                    this.employmentFacade.hideLoader();
+                    this.employmentFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);
                   },
                 });
               }
-        
+
 
             }
-          }    
+          }
   }
   // close the employer form details popup
   cancelModal() {
@@ -160,7 +146,7 @@ export class EmployerDetailComponent implements OnInit{
   }
   // updating the employment list after saving a new or updated record
   updateEmploymentHandle(response : any){
-    this.addUpdateEmploymentEvent.next(response);  
+    this.addUpdateEmploymentEvent.next(response);
   }
 
   // on clicking on the remove button in edit view
