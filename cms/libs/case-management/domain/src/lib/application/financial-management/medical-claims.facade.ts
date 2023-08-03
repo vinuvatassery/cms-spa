@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  Subject } from 'rxjs';
+import {  Subject, catchError, of } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -73,6 +73,9 @@ export class FinancialMedicalClaimsFacade {
 
   private claimsListDataSubject =  new Subject<any>();
   claimsListData$ = this.claimsListDataSubject.asObservable();
+
+  private medicalClaimByCpt = new Subject<any>();
+  medicalClaimByCpt$ = this.medicalClaimByCpt.asObservable();
   /** Private properties **/
  
   /** Public properties **/
@@ -197,5 +200,19 @@ export class FinancialMedicalClaimsFacade {
         this.hideLoader(); 
       },
     });  
+  }
+
+  getMedicalClaimByPaymentRequestId(event: any){
+    return this.financialMedicalClaimsDataService.getMedicalClaimByPaymentRequestId(event).pipe(
+      catchError((err: any) => {
+        this.loaderService.hide();
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        if (!(err?.error ?? false)) {
+          this.loggingService.logException(err);
+          this.hideLoader();
+        }
+        return of(false);
+      })
+    )
   }
 }

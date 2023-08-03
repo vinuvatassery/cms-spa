@@ -473,4 +473,12 @@ export class FinancialMedicalClaimsDataService {
       
     ]);
   }
+
+  getMedicalClaimByPaymentRequestId(event : any)
+  {
+    debugger
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/MedicalClaim/Medicalclaim/${event}`
+    )
+  }
 }

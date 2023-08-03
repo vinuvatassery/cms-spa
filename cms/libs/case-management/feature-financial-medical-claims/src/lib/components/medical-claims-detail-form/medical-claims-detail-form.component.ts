@@ -42,8 +42,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   state!: State;
 
   paymentRequestType$ = this.lovFacade.paymentRequestType$;
-  medicalProvidersearchLoaderVisibility$ =
-    this.financialVendorRefundFacade.medicalProviderSearchLoaderVisibility$;
+  medicalProvidersearchLoaderVisibility$ = this.financialVendorRefundFacade.medicalProviderSearchLoaderVisibility$;
   pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
 
   clientSearchLoaderVisibility$ =
@@ -59,35 +58,10 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   sessionId: any = '';
   clientCaseEligibilityId: any = null;
 
-  clientSearchResult = [
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-  ];
-  providerSearchResult = [
-    {
-      providerId: '12',
-      providerFullName: 'Fname Lname',
-      tin: '2434324324234',
-    },
-    {
-      providerId: '12',
-      providerFullName: 'Fname Lname',
-      tin: '2434324324234',
-    },
-  ];
+
+  isEdit = false;
 
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
-
   constructor(
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialMedicalClaimsFacade: FinancialMedicalClaimsFacade,
@@ -103,6 +77,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.addClaimServiceGroup();
+    this.getMedicalClaimByPaymentRequestId();
   }
 
   closeAddEditClaimsFormModalClicked() {
@@ -192,7 +167,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
     this.isStartEndDateValid(startDate, endDate);
   }
 
-  isStartEndDateValid(startDate: any, endDate:any): boolean {
+  isStartEndDateValid(startDate: any, endDate: any): boolean {
     if (startDate > endDate) {
       this.financialVendorRefundFacade.showHideSnackBar(
         SnackBarNotificationType.ERROR,
@@ -232,7 +207,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
         ServiceDesc: element.serviceDescription,
         reasonForException: element.reasonForException,
       };
-      if(!this.isStartEndDateValid(service.serviceStartDate, service.serviceEndDate)){
+      if (!this.isStartEndDateValid(service.serviceStartDate, service.serviceEndDate)) {
         return;
       }
       bodyData.tpainvoice.push(service);
@@ -264,6 +239,66 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   update() {
     this.isSubmitted = true;
   }
+
+  getMedicalClaimByPaymentRequestId() {
+    this.loaderService.show();
+    this.financialMedicalClaimsFacade.getMedicalClaimByPaymentRequestId('AF1338C1-A6CC-4E76-8741-B9ABA59ABC99').subscribe(
+      {
+        next: (val) => {
+          const clients = [
+            {
+              clientId: val.clientId,
+              clientFullName: val.clientName
+            }
+          ];
+          const vendors = [
+            {
+              vendorId: val.vendorId,
+              providerFullName: val.vendorName
+            }
+          ];
+          this.financialVendorRefundFacade.clientSubject.next(clients);
+          this.selectedClient = clients[0];
+
+          this.financialVendorRefundFacade.pharmaciesSubject.next(vendors)
+          this.selectedMedicalProvider = vendors[0];
+
+          this.claimForm.patchValue({
+            invoiceId: val.claimNbr
+          })
+          this.cd.detectChanges();
+          this.loaderService.hide();
+          this.setFormValues(val.tpainvoice);
+
+        },
+        error: (err) => {
+          this.loaderService.hide();
+          this.financialVendorRefundFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            err
+          );
+        }
+      }
+    );
+  }
+
+  setFormValues(services: any) {
+    const serviceFormData = this.AddClaimServicesForm as FormArray;
+    for (let i = 0; i < services.length; i++) {
+      let service = services[i];
+      let serviceForm = serviceFormData.at(i) as FormGroup
+      serviceForm.controls['ctpCode'].setValue(service.ctpCode);
+      serviceForm.controls['serviceStartDate'].setValue(new Date(service.serviceStartDate));
+      serviceForm.controls['serviceEndDate'].setValue(new Date(service.serviceEndDate));
+      serviceForm.controls['serviceDescription'].setValue(service.serviceDesc);
+      serviceForm.controls['serviceCost'].setValue(service.serviceCost);
+      serviceForm.controls['amountDue'].setValue(service.amountDue);
+    }
+
+    this.cd.detectChanges();
+  }
+
+
 }
 
 export class MedicalClaims {

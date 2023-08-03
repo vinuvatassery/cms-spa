@@ -59,10 +59,10 @@ export class FinancialVendorRefundFacade {
   
   /** Private properties **/
   private medicalProviderSearchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
-  private pharmaciesSubject = new BehaviorSubject<any>([]);
+  public pharmaciesSubject = new BehaviorSubject<any>([]);
   
   private clientSearchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
-  private clientSubject = new BehaviorSubject<any>([]);
+  public clientSubject = new BehaviorSubject<any>([]);
  
   /** Public properties **/
   medicalProviderSearchLoaderVisibility$= this.medicalProviderSearchLoaderVisibilitySubject.asObservable();

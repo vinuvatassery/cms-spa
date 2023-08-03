@@ -22,7 +22,8 @@
                             placeholder="Search Medical Providers by name or TIN"
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="medicalProvider" (filterChange)="searchMedicalProvider($event)"
-                            [data]="pharmacySearchResult$ | async">
+                            [data]="pharmacySearchResult$ | async"
+                            [(ngModel)]="selectedMedicalProvider">
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
@@ -58,7 +59,8 @@
                             placeholder="Search Client Name, ID, or SSN"
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="client" (filterChange)="loadClientBySearchText($event)"
-                            (valueChange)="onClientValueChange($event)">
+                            (valueChange)="onClientValueChange($event)"
+                            [(ngModel)]="selectedClient">
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
