@@ -121,18 +121,6 @@ dropDowncolumns : any = [
   }
   ,
   {
-    "columnCode": "phones",
-    "columnDesc": "Phones"   ,
-    "vendorTypeCode": "MANUFACTURERS",
-  }
-  ,
-  {
-    "columnCode": "emails",
-    "columnDesc": "Emails"   ,
-    "vendorTypeCode": "MANUFACTURERS",
-  } 
-  ,
-  {
     "columnCode": "address",
     "columnDesc": "Address"   ,
     "vendorTypeCode": "MANUFACTURERS",
