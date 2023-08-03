@@ -1,8 +1,20 @@
-<div class="app-l-inner-rapper pt-0" kendoRippleContainer>
+<div class="app-l-inner-rapper pb-8rem pt-0">
     <common-bread-crumb></common-bread-crumb>
-    <section class="app-l-mainTittle">
-        <h1 class="maintitle_withicon text-bold"> 
-         <cms-financial-funding-sources-list></cms-financial-funding-sources-list>
-        </h1>
-      </section>
+    <div class=" pt-0">
+        <section class="app-l-mainTittle">
+            <h1 class="maintitle_withicon text-bold text-capitalize">Funding Sources</h1>
+        </section>
+      
+          
+
+
+                <cms-financial-funding-sources-list
+                    [financialFundingSourceFacadeGridLists$]="financialFundingSourceFacadeGridLists$" [pageSizes]="pageSizes"
+                    [sortValue]="sortValueFinancialFundingSourceFacade" [sortType]="sortType" [sort]="sortProcessList"
+                    (loadFinancialFundingSourceFacadeListEvent)="loadFinancialFundingSourceFacadeListGrid($event)">
+                </cms-financial-funding-sources-list>
+
+           
+        
+    </div>
 </div>
