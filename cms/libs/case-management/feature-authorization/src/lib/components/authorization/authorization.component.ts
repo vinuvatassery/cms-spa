@@ -7,7 +7,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 /** External Libraries **/
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { UserDataService } from '@cms/system-config/domain';
-import { AuthorizationApplicationSignature, AuthorizationFacade, ClientDocumentFacade, CommunicationEvents, CompletionChecklist, NavigationType, ScreenType, StatusFlag, WorkflowFacade, ContactFacade, CommunicationFacade, EsignFacade } from '@cms/case-management/domain';
+import { AuthorizationApplicationSignature, AuthorizationFacade, ClientDocumentFacade, CommunicationEvents, CompletionChecklist, NavigationType, ScreenType, StatusFlag, WorkflowFacade, ContactFacade, CommunicationFacade, EsignFacade, EsignStatusCode, CommunicationEventTypeCode } from '@cms/case-management/domain';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService, formatDate } from '@progress/kendo-angular-intl';
 import { SelectEvent } from '@progress/kendo-angular-upload';
@@ -334,7 +334,6 @@ export class AuthorizationComponent   {
         break;
       case CommunicationEvents.Print:
         this.isPrintClicked = true;
-        // this.loadClientDocumentInfo();
         this.getLoggedInUserProfile();
         break;
       default:
@@ -447,22 +446,23 @@ updateSendEmailSuccessStatus(event:any){
 }
 
 loadPendingEsignRequestInfo(){
+  this.loaderService.show();
     this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '')
     .subscribe({
       next: (data: any) =>{
         if (data?.esignRequestId != null) {
-          if(data?.esignRequestStatusCode == 'PENDING' || data?.esignRequestStatusCode == 'INPROGRESS'){
+          if(data?.esignRequestStatusCode == EsignStatusCode.Pending || data?.esignRequestStatusCode == EsignStatusCode.InProgress){
             this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
             this.isSendEmailClicked=true;
             this.getLoggedInUserProfile();
           }
-          else if(data?.esignRequestStatusCode == 'COMPLETE'){
+          else if(data?.esignRequestStatusCode == EsignStatusCode.Complete){
             this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
             this.isSendEmailClicked=true;
             this.isCERApplicationSigned = true;
             this.loadCompletedEsignRequestInfo();
             this.getLoggedInUserProfile();
-          }else if(data?.esignRequestStatusCode == 'FAILED'){
+          }else if(data?.esignRequestStatusCode == EsignStatusCode.Failed){
             this.isSendEmailFailed = true;
             this.errorMessage = data?.errorMessage;
           }
@@ -479,7 +479,7 @@ loadPendingEsignRequestInfo(){
 }
 
 loadCompletedEsignRequestInfo(){
-  this.typeCode=CommunicationEvents.CopyOfSignedApplication;  
+  this.typeCode=CommunicationEventTypeCode.CopyOfSignedApplication;  
   this.clientDocumentFacade.getSignedDocumentInfo(this.typeCode ?? ' ', this.subTypeCode ?? ' ',this.workflowFacade.clientCaseEligibilityId ?? '')
     .subscribe({
       next: (data: any) =>{

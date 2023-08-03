@@ -13,7 +13,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 /** Facades **/
-import { CommunicationFacade, ClientDocumentFacade, CommunicationEvents, EsignFacade} from '@cms/case-management/domain';
+import { CommunicationFacade, ClientDocumentFacade, CommunicationEvents, EsignFacade, CommunicationEventTypeCode} from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { EditorComponent } from '@progress/kendo-angular-editor';
 
@@ -103,7 +103,6 @@ export class EmailEditorComponent implements OnInit {
     this.emailEditorValueEvent(this.currentValue);
     this.loadClientVariables();
     this.loadDdlEditorVariables();
-    // this.loadAllClientDocuments(this.clientCaseEligibilityId);
     this.cerAuthorizationForm = this.formBuilder.group({
       clientsAttachment:[]
     });
@@ -114,8 +113,8 @@ export class EmailEditorComponent implements OnInit {
       this.emailEditorValueEvent(this.currentValue);
       this.selectedAttachedFile = [];
       this.loadUserDraftTemplateAttachment();
-      if(this.currentValue.typeCode == CommunicationEvents.CerAuthorizationLetter){
-        this.loadLetterAttachment(this.currentValue.documentTemplateId, CommunicationEvents.CERAttachmentTypeCode);
+      if(this.currentValue.typeCode == CommunicationEventTypeCode.CerAuthorizationLetter){
+        this.loadLetterAttachment(this.currentValue.documentTemplateId, CommunicationEventTypeCode.CERAttachmentTypeCode);
       }
     }
   }
@@ -153,7 +152,7 @@ export class EmailEditorComponent implements OnInit {
 
   private loadClientVariables() {
     this.loaderService.show();
-    this.communicationFacade.loadCERAuthorizationEmailEditVariables(CommunicationEvents.TemplateVariable)
+    this.communicationFacade.loadCERAuthorizationEmailEditVariables(CommunicationEventTypeCode.TemplateVariable)
     .subscribe({
       next: (variables: any) =>{
         if (variables) {
@@ -299,7 +298,7 @@ clientAttachmentClick(item:any)
 
   private loadDefaultTemplateAttachment() {
     this.loaderService.show();
-    this.communicationFacade.loadCERAuthorizationTemplateAttachment(CommunicationEvents.TemplateAttachmentTypeCode)
+    this.communicationFacade.loadCERAuthorizationTemplateAttachment(CommunicationEventTypeCode.TemplateAttachmentTypeCode)
     .subscribe({
       next: (attachments: any) =>{
         if (attachments) {

@@ -11,7 +11,7 @@ import {
 
 
 /** Internal Libraries **/
-import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade } from '@cms/case-management/domain';
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade, CommunicationEventTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -236,7 +236,7 @@ this.isShowSendLetterToPrintPopupClicked = false;
   private loadDropdownLetterTemplates() {
     this.loaderService.show();
     const channelTypeCode = CommunicationEvents.Letter;
-    this.communicationFacade.loadEmailTemplates(CommunicationEvents.CerAuthorizationLetter, channelTypeCode)
+    this.communicationFacade.loadEmailTemplates(CommunicationEventTypeCode.CerAuthorizationLetter, channelTypeCode)
     .subscribe({
       next: (data: any) =>{
         if (data) {

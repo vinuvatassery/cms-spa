@@ -112,6 +112,8 @@ export * from './lib/enums/financial-vendor-type-code';
 export * from './lib/enums/service-sub-type-code';
 export * from './lib/enums/grid-column-filter.enum';
 export * from './lib/enums/payment-type-code.enum';
+export * from './lib/enums/esign-status-code.enum';
+export * from './lib/enums/communication-event-type-code.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';

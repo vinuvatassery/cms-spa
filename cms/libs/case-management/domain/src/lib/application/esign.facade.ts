@@ -1,12 +1,10 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-/** External libraries **/
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-/** Entities **/
-import { Email } from '../entities/email';
+
 /** Data services **/
 import { EsignDataService } from '../infrastructure/esign-data.service';
 import { CommunicationEvents } from '../enums/communication-event.enum';
+import { EsignStatusCode } from '../enums/esign-status-code.enum';
 
 @Injectable({ providedIn: 'root' })
 export class EsignFacade {
@@ -42,18 +40,10 @@ export class EsignFacade {
     return this.esignDataService.getEsignRequest(clientCaseEligibilityId);
   }
 
-prepareAdobeEsingData(emailData: any, selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, selectedCCEmail: any, isSaveFoLater: boolean, cerEmailAttachedFiles: any[]) {
-  const formData = new FormData();
+prepareAdobeEsingData(formData:FormData, emailData: any, cerEmailAttachedFiles: any[]) {
     formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('esignRequestId', emailData?.esignRequestId ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
-    formData.append('toEmailAddress', selectedToEmail ?? '');
-    formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
-    formData.append('clientId', clientId ?? '');
-    formData.append('requestSubject', emailSubject ?? ''); 
-    formData.append('loginUserId', loginUserId ?? ''); 
-    formData.append('cCEmail', selectedCCEmail ?? '');
-    formData.append('isSaveFoLater', new Boolean(isSaveFoLater).toString());
     let i = 0;
     cerEmailAttachedFiles.forEach((file) => { 
       if(file.rawFile == undefined || file.rawFile == null){
@@ -68,8 +58,7 @@ prepareAdobeEsingData(emailData: any, selectedToEmail: any, clientCaseEligibilit
     return formData;
 }
 
-prepareDraftAdobeEsignRequest(draftTemplate: any, selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, selectedCCEmail: any, isSaveFoLater: boolean, cerEmailAttachedFiles: any[]) {
-    const formData = new FormData();
+prepareDraftAdobeEsignRequest(formData:FormData, draftTemplate: any, cerEmailAttachedFiles: any[]) {
       formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
       formData.append('esignRequestId', draftTemplate?.esignRequestId ?? '');
       formData.append('systemCode', draftTemplate?.systemCode ?? '');
@@ -79,14 +68,6 @@ prepareDraftAdobeEsignRequest(draftTemplate: any, selectedToEmail: any, clientCa
       formData.append('languageCode', draftTemplate?.languageCode ?? '');
       formData.append('description', draftTemplate?.description ?? '');
       formData.append('requestBody', draftTemplate?.templateContent ?? '');
-      formData.append('toEmailAddress', selectedToEmail ?? '');
-      formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
-      formData.append('clientId', clientId ?? '');
-      formData.append('requestSubject', emailSubject ?? ''); 
-      formData.append('loginUserId', loginUserId ?? '');
-      formData.append('esignRequestStatusCode', CommunicationEvents.EsignRequestStatusCode ?? '');
-      formData.append('cCEmail', selectedCCEmail ?? ''); 
-      formData.append('isSaveForLater', new Boolean(isSaveFoLater).toString()); 
       let i = 0;
       cerEmailAttachedFiles.forEach((file) => { 
         if(file.rawFile == undefined || file.rawFile == null){
@@ -99,6 +80,21 @@ prepareDraftAdobeEsignRequest(draftTemplate: any, selectedToEmail: any, clientCa
         }
       });  
       return formData;
+}
+
+prepareDraftAdobeEsignFormData(selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, selectedCCEmail: any, isSaveFoLater: boolean) {
+  const formData = new FormData();
+    formData.append('toEmailAddress', selectedToEmail ?? '');
+    formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
+    formData.append('clientId', clientId ?? '');
+    formData.append('requestSubject', emailSubject ?? ''); 
+    formData.append('loginUserId', loginUserId ?? '');
+    if(isSaveFoLater){
+      formData.append('esignRequestStatusCode', EsignStatusCode.Draft ?? '');
+    }
+    formData.append('cCEmail', selectedCCEmail ?? ''); 
+    formData.append('isSaveForLater', Boolean(isSaveFoLater).toString()); 
+    return formData;
 }
 
 }
