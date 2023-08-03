@@ -58,7 +58,7 @@ const routes = [
     path: 'payments',
     component: PharmacyClaimsPaymentsRouterPageComponent,
     data: {
-      title: 'Payments',
+      title: '',
     },
     children: [       
       {
