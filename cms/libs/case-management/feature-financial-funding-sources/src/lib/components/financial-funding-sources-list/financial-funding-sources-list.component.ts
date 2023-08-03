@@ -38,8 +38,8 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
-  @Input() financialFundingSourceFacadeGridLists$: any;
-  @Output() loadFinancialFundingSourceFacadeListEvent = new EventEmitter<any>();
+  @Input() financialFundingSourceGridLists$: any;
+  @Output() loadFinancialFundingSourcesListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -51,9 +51,9 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
-  gridFinancialFundingSourceFacadeDataSubject = new Subject<any>();
-  gridFinancialFundingSourceFacadeData$ =
-    this.gridFinancialFundingSourceFacadeDataSubject.asObservable();
+  gridFinancialFundingSourcesDataSubject = new Subject<any>();
+  gridFinancialFundingSourceData$ =
+    this.gridFinancialFundingSourcesDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -62,21 +62,6 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   isEditFundingSource = false;
   addEditFundingDialog: any;
   removeFundingDialog: any;;
-  aaaaaa =[
-    {
-      id:1,
-      fundingSource: 'Address `',
-      fundingName:'address2', 
-      isActive: false,
-    },
-    {
-      id:1,
-      fundingSource: 'Address `',
-      fundingName:'address2', 
-      isActive: true,
-    },
-    
-  ]
   public processGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -143,7 +128,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
       sortColumn: sortValue,
       sortType: sortTypeValue,
     };
-    this.loadFinancialFundingSourceFacadeListEvent.emit(gridDataRefinerValue);
+    this.loadFinancialFundingSourcesListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
 
@@ -204,13 +189,13 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
-    this.financialFundingSourceFacadeGridLists$.subscribe((data: GridDataResult) => {
+    this.financialFundingSourceGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
         this.filterData
       );
-      this.gridFinancialFundingSourceFacadeDataSubject.next(this.gridDataResult);
+      this.gridFinancialFundingSourcesDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isFinancialFundingSourceFacadeGridLoaderShow = false;
       }
@@ -219,7 +204,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   }
 
   public rowClass = (args:any) => ({
-    "table-row-disabled": (args.dataItem.isActive == true),
+    "table-row-disabled": (args.dataItem.isActive),
   });
 
 
