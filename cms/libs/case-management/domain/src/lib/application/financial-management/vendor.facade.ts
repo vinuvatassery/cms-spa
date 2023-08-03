@@ -20,11 +20,13 @@ export class FinancialVendorFacade {
   private vendorProfileSpecialHandlingSubject = new Subject<any>();
   private clinicVendorSubject = new Subject<any>();
   private clinicVendorLoaderSubject = new Subject<any>();  /** Public properties **/
+  private providePanelSubject = new Subject<any>();
   vendorsList$ = this.vendorsSubject.asObservable();
   selectedVendor$ = this.selectedVendorSubject.asObservable();
   vendorProfile$ = this.vendorProfileSubject.asObservable();
    clinicVendorList$ = this.clinicVendorSubject.asObservable();
-  clinicVendorLoader$ = this.clinicVendorLoaderSubject.asObservable();
+  clinicVendorLoader$ = this.clinicVendorLoaderSubject.asObservable(); 
+  providePanelSubject$ = this.providePanelSubject.asObservable();
   vendorProfileSpecialHandling$ = this.vendorProfileSpecialHandlingSubject.asObservable();
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'vendorName'
@@ -110,7 +112,7 @@ export class FinancialVendorFacade {
   getVendorDetails(vendorId: string) {
     this.showLoader();
     this.financialVendorDataService.getVendorDetails(vendorId).subscribe({
-      next: (vendorDetail: any) => {
+      next: (vendorDetail: any) => {    
         this.selectedVendorSubject.next(vendorDetail);
         this.hideLoader();
       },
@@ -118,6 +120,22 @@ export class FinancialVendorFacade {
         this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       }
+    });
+  }
+
+  getProviderPanel(vendorId:string){
+    this.showLoader();
+    this.financialVendorDataService.getProviderPanel(vendorId).subscribe({
+      next: (vendorsResponse: any) => {
+        if (vendorsResponse) {
+          this.providePanelSubject.next(vendorsResponse);   
+          this.hideLoader();      
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
     });
   }
 

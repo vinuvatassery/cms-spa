@@ -53,7 +53,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+  vendorId:any;
   
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService, 

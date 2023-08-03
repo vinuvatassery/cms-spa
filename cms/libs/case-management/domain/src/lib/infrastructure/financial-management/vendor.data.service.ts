@@ -70,6 +70,13 @@ export class FinancialVendorDataService {
   }
 
   
+  getProviderPanel(vendorId:string){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors/vendor/${vendorId}`
+    );
+  }
+
   getVendorProfileSpecialHandling(vendorId: string) {  
 
     return this.http.get<any>(

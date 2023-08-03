@@ -1,8 +1,8 @@
 <kendo-dialog-titlebar (close)="closeViewProviderClicked()" >Very Nice Provider</kendo-dialog-titlebar>
 <section class="k-dialog-body newcase">
       <button aria-label="Edit Provider Profile" kendoButton look="flat" class="card-link-button">Edit </button> 
-      <div class="detail-items-with-border mt-2">
-          <table>
+      <div class="detail-items-with-border mt-2" *ngIf="vendorProfile$ | async as vendorProfile">
+          <table >
               <caption hidden> Provider Details</caption>
               <tr hidden>
                   <th>Field</th>
@@ -10,40 +10,39 @@
               </tr>
               <tr> 
                   <td><strong>TIN</strong></td>
-                  <td> XXX-XX-XXXX</td>
+                  <td> 1 {{vendorProfile.tin |ssn}}</td>
               </tr>
               <tr> 
                   <td><strong>Mail Code</strong></td>
-                  <td> XXX</td>
+                  <td>{{vendorProfile.mailCode}}</td>
               </tr>
               <tr> 
                   <td><strong>Payment Method</strong></td>
-                  <td> Check</td>
+                  <td> {{vendorProfile.paymentMethod}}</td>
               </tr>
               <tr> 
                   <td><strong>Email Address</strong></td>
-                  <td>email@email.com</td>
+                  <td>{{vendorProfile.emailAddress}}</td>
               </tr>
               <tr> 
                   <td><strong>Address</strong></td>
-                  <td>123 Okay St Suite 500 Boulder, CO 00000</td>
+                  <td> <p>{{vendorProfile.address1}} </p>  
+                       <p>{{vendorProfile.address2}} </p>
+                       <p>
+                        {{vendorProfile.city}}, {{vendorProfile.state}} {{vendorProfile.zip}}
+                      </p>
+                 </td>
               </tr>
               <tr> 
                   <td><strong>Special Handling</strong></td>
-                  <td>Lorem ipsum dolor sitadipiscing elit. Sed nec ante dolor bibendum dolor luctus</td>
+                  <td>{{vendorProfile.SpecialHandlingDesc}}</td>
               </tr>
-              <tr> 
-                  <td><strong>Contact 1</strong></td>
-                  <td> <p>Timmy Turner</p>
-                        <p>(XXX) XXX-XXXX</p> 
-                        <p>email@email.com</p>  </td>
-              </tr>
-              <tr> 
-                  <td><strong>Contact 2</strong></td>
-                  <td> <p>Timmy Turner</p>
-                        <p>(XXX) XXX-XXXX</p> 
-                        <p>email@email.com</p>  </td>
-              </tr>
+              <tr *ngFor="let contact of vendorProfile.contact;let i = index"> 
+                <td><strong>Contact {{i+1}}</strong></td>
+                <td> <p>{{contact.contactName}}</p>
+                      <p>{{contact.phoneNbr}}</p> 
+                      <p>{{contact.emailAddress}}</p>  </td>
+            </tr>
               
   
           </table>
