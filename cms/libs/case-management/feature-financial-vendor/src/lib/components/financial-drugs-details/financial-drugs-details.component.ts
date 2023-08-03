@@ -15,7 +15,7 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
 
   @Input() vendorId: any;
   @Input() dialogTitle: any;
-  @Input() manufacturersList$!: Observable<any>;
+  @Input() vendorDetails$!: Observable<any>;
   @Output() cancelClick = new EventEmitter<any>();
 
   drug= new ManufacturerDrugs();

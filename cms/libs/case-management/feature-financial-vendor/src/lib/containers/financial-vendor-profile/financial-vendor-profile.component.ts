@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
+import { DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, VendorFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 
@@ -17,7 +17,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   sortType = this.drugsFacade.sortType;
   sort = this.drugsFacade.sort;
   gridSkipCount = this.drugsFacade.skipCount;
-  manufacturersList$ = this.drugsFacade.manufacturerList$;
+  vendorDetails$ = this.financialVendorFacade.vendorDetails$;
   public state!: State;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
@@ -42,7 +42,7 @@ export class FinancialVendorProfileComponent implements OnInit {
       take: this.pageSizes[0]?.value
     };
     this.loadDrugsListGrid();
-    this.loadManufacturerList();
+    this.loadVendorDetailList();
   }
 
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
@@ -125,7 +125,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.loadDrugsListGrid();
   }
 
-  loadManufacturerList(){
-    this.drugsFacade.loadManufacturerList();
+  loadVendorDetailList(){
+    this.financialVendorFacade.loadVendorList(this.vendorTypeCode);
   }
 }

@@ -18,13 +18,8 @@ export class DrugsDataService {
 
   loadDrugList(vendorId: string, skipCount: number, maxResultCount: number, sort: string, sortType: string) : Observable<any> {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/manufacturers/${vendorId}/drugs?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/drugs?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`
     );
   }
-  loadManufacturerList() {
-    return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/financial-management/vendors/manufacturers`
-    );
-  }
+
 }

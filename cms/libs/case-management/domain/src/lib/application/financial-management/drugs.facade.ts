@@ -23,8 +23,6 @@ export class DrugsFacade {
 
   private drugsDataSubject = new BehaviorSubject<any>([]);
   drugsData$ = this.drugsDataSubject.asObservable();
-  private manufacturerSubject = new BehaviorSubject<any>([]);
-  manufacturerList$ = this.manufacturerSubject.asObservable();
 
   /** Private properties **/
 
@@ -83,20 +81,5 @@ export class DrugsFacade {
     });
 
 
-  }
-
-  loadManufacturerList(): void {
-    this.showLoader();
-    this.drugsDataService.loadManufacturerList().subscribe({
-      next: (reponse: any) => {
-        if (reponse) {
-          this.hideLoader();
-          this.manufacturerSubject.next(reponse);
-        }
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-      },
-    });
   }
 }
