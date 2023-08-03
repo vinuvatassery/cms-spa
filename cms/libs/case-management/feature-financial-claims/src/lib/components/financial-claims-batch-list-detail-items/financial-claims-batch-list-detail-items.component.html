@@ -23,23 +23,23 @@
                               <button aria-label="edit" kendoButton look="flat" class="edit-btn card-link-button" (click)="onPaymentDetailFormClicked(paymentDetailsFromTemplate)" > Edit </button>
                         <div class="flex-col flex-col-2">
                               <small>Date Payment Reconciled</small>
-                              <p>{{paymentPanelDetails.paymentStatusDate | date:'dd/MM/yyyy'}}</p>
+                              <p>{{paymentPanelDetails?.paymentStatusDate | date:'dd/MM/yyyy'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Date Payment Sent</small>
-                              <p>{{paymentPanelDetails.sentDate | date:'dd/MM/yyyy'}}</p>
+                              <p>{{paymentPanelDetails?.sentDate | date:'dd/MM/yyyy'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Payment Amount</small>
-                              <p>{{paymentPanelDetails.amountPaid | currency:'USD':'$'}}</p>
+                              <p>{{paymentPanelDetails?.amountPaid | currency:'USD':'$'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Warrant Number</small>
-                              <p>{{paymentPanelDetails.checkNbr}}</p>
+                              <p>{{paymentPanelDetails?.checkNbr}}</p>
                         </div>
                         <div class="flex-col flex-col-4">
                               <small>Note</small> 
-                              <p>{{paymentPanelDetails.notes}}</p>
+                              <p>{{paymentPanelDetails?.notes}}</p>
                         </div>
                   </div>
                   </div>

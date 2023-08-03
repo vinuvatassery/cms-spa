@@ -38,7 +38,6 @@ import { Subscription } from 'rxjs';
   @Input() batchId:any ;
   @Input() paymentPanelDetails:any;
   @Output() closePaymentDetailFormClickedEvent = new EventEmitter();
-  //@Output() loadPaymentPanelDataEvent = new EventEmitter();
 
   constructor(private formBuilder: FormBuilder, public intl: IntlService,
     private paymentFacade:PaymentsFacade, private configurationProvider: ConfigurationProvider,
@@ -47,7 +46,6 @@ import { Subscription } from 'rxjs';
   }
  
   ngOnInit():void{
-    debugger;
     this.buildPremiumPaymentForm();
     this.paymentPanelLoadSubscription();   
   }
@@ -64,11 +62,15 @@ import { Subscription } from 'rxjs';
   }
 
   paymentPanelLoadSubscription(){
-      this.medicalClaimPaymentForm.controls['datePaymentSent'].setValue(this.paymentPanelDetails.sentDate != null?new Date(this.paymentPanelDetails.sentDate):null);
-      this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValue(this.paymentPanelDetails.paymentStatusDate != null? new Date(this.paymentPanelDetails.paymentStatusDate):null);
-      this.medicalClaimPaymentForm.controls['paymentAmount'].setValue(this.paymentPanelDetails.amountPaid);
-      this.medicalClaimPaymentForm.controls['warrantNumber'].setValue(this.paymentPanelDetails.checkNbr);
-      this.medicalClaimPaymentForm.controls['note'].setValue(this.paymentPanelDetails.notes);
+      this.medicalClaimPaymentForm.controls['datePaymentSent'].setValue(this.paymentPanelDetails?.sentDate != null?new Date(this.paymentPanelDetails.sentDate):null);
+      this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValue(this.paymentPanelDetails?.paymentStatusDate != null? new Date(this.paymentPanelDetails.paymentStatusDate):null);
+      if(this.paymentPanelDetails?.amountPaid !== undefined && this.paymentPanelDetails?.amountPaid !== null){
+        this.medicalClaimPaymentForm.controls['paymentAmount'].setValue(this.paymentPanelDetails?.amountPaid);
+      }
+      this.medicalClaimPaymentForm.controls['warrantNumber'].setValue(this.paymentPanelDetails?.checkNbr);
+      if(this.paymentPanelDetails.notes !== undefined && this.paymentPanelDetails?.notes !== null){
+        this.medicalClaimPaymentForm.controls['note'].setValue(this.paymentPanelDetails.notes);
+      }
 
   }
   dateValidate(event: Event, type: any) {
@@ -179,9 +181,10 @@ import { Subscription } from 'rxjs';
     
   }
   save(){
-    this.paymentFacade.showLoader();
+   
     this.validateModel();
     if(this.medicalClaimPaymentForm.valid){
+      this.paymentFacade.showLoader();
       this.populatePaymentPanelModel();
       this.paymentFacade.updatePaymentPanel(this.vendorId,this.batchId, this.paymentPanel).subscribe({
         next: (data: any) => {         

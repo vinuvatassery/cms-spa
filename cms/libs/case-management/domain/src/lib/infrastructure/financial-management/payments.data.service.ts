@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { State } from '@progress/kendo-data-query';
-import { PaymentPanel } from '../../entities/financial-management/payment-panel';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentsDataService {
