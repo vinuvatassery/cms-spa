@@ -195,8 +195,14 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   }
 
   private validateCerReviewStatus(){
-    if(!this.isCerForm) return of(false);
+    if(!this.isCerForm)
+    {
+       return of(false);
+    }
+    else
+    {
      return this.insurancePolicyFacade.validateCerReviewStatus(this.clientCaseEligibilityId);
+    }
   }
 
   validateForm() {
