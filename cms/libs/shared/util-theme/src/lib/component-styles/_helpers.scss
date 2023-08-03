@@ -33,6 +33,9 @@ section {
   align-items: center;
   display: flex;
 }
+.text-capitalize{
+  text-transform: capitalize;
+}
 .text-upper{
   text-transform: uppercase;
 }

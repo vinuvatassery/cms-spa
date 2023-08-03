@@ -267,34 +267,8 @@ fillFormData(){
         }
       })
     }
-    let vendorProfileData = {
-      vendorId: formValues.vendorId,
-      vendorName: formValues.providerName,
-      firstName: formValues.firstName,
-      lastName: formValues.lastName,
-      vendorTypeCode: this.providerType,
-      tin: formValues.tinNumber,
-      mailCode: formValues.mailCode,
-      addressTypeCode: AddressType.Mailing,
-      address1: formValues.addressLine1,
-      address2: formValues.addressLine2,
-      cityCode: formValues.city,
-      stateCode: formValues.state,
-      zip: formValues.zip,
-      nameOnCheck: formValues.nameOnCheck,
-      nameOnEnvelope: formValues.nameOnEnvolop,
-      paymentMethodCode: formValues.paymentMethod,
-      specialHandling: formValues.specialHandling,
-      phoneTypeCode: AddressType.Mailing,
-      vendorContacts: this.vendorContactList,
-      AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,
-      AcceptsCombinedPaymentsFlag: (formValues.isAcceptCombinedPayment != null && formValues.isAcceptCombinedPayment != '') ? formValues.isAcceptCombinedPayment : null,
-      PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? Number(formValues.paymentRunDate) : null,
-      PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes,
-      emailAddressTypeCode: AddressType.Mailing
-    }
     this.mapAddressContact(formValues);
-    vendorProfileData = this.createVendorProfileData(formValues)
+    const vendorProfileData = this.createVendorProfileData(formValues)
     return vendorProfileData;
   }
 
