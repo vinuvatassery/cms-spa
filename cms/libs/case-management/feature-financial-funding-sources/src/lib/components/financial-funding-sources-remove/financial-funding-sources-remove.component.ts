@@ -11,10 +11,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialFundingSourcesRemoveComponent {
-  @Output() isModalDeleteFundingSourcesCloseClicked = new EventEmitter();
+  @Output() isModalRemoveFundingSourcesCloseClicked = new EventEmitter();
 
  
-  closeDeleteFundingSourcesClicked() {
-    this.isModalDeleteFundingSourcesCloseClicked.emit(true);
+  closeRemoveFundingSourcesClicked() {
+    this.isModalRemoveFundingSourcesCloseClicked.emit(true);
   }
 }

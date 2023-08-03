@@ -5,6 +5,7 @@ import {
   ChangeDetectionStrategy,
   Output, 
   EventEmitter,
+  Input,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
@@ -14,7 +15,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialFundingSourcesDetailsComponent {
-  isAdd = true;
+  @Input() isEditFundingSource: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Output() isModalDetailsFundingSourcesCloseClicked = new EventEmitter();
 

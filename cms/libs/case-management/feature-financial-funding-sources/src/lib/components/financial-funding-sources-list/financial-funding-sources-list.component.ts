@@ -28,10 +28,10 @@ import { Subject } from 'rxjs';
 export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
  
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  @ViewChild('addFundingSourceDialogTemplate', { read: TemplateRef })
-  addFundingSourceDialogTemplate!: TemplateRef<any>;
-  @ViewChild('deleteFundingSourceDialogTemplate', { read: TemplateRef })
-  deleteFundingSourceDialogTemplate!: TemplateRef<any>;
+  @ViewChild('addEditFundingSourceDialogTemplate', { read: TemplateRef })
+  addEditFundingSourceDialogTemplate!: TemplateRef<any>;
+  @ViewChild('removeFundingSourceDialogTemplate', { read: TemplateRef })
+  removeFundingSourceDialogTemplate!: TemplateRef<any>;
   isFinancialFundingSourceFacadeGridLoaderShow = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   @Input() pageSizes: any;
@@ -58,7 +58,10 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   editFundingOpened = false;
-  deleteFundingOpened = false;
+  removeFundingOpened = false;
+  isEditFundingSource = false;
+  addEditFundingDialog: any;
+  removeFundingDialog: any;;
   aaaaaa =[
     {
       id:1,
@@ -82,18 +85,18 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
       click: (data: any): void => {
         if (!this.editFundingOpened) {
           this.editFundingOpened = true; 
-        
+          this.onAddEditFundingSourceOpenClicked(this.addEditFundingSourceDialogTemplate, true);
         }
       },
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete',
+      text: 'Remove',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.deleteFundingOpened) {
-          this.deleteFundingOpened = true; 
-       
+        if (!this.removeFundingOpened) {
+          this.removeFundingOpened = true; 
+          this.onRemoveFundingSourceOpenClicked(this.removeFundingSourceDialogTemplate)
         }
       },
     },
@@ -218,6 +221,34 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   public rowClass = (args:any) => ({
     "table-row-disabled": (args.dataItem.isActive == true),
   });
+
+
+  public onAddEditFundingSourceOpenClicked(template: TemplateRef<unknown>, dataItem: any): void {
+    this.isEditFundingSource = dataItem;
+    this.addEditFundingDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onModalCloseAddEditFundingSourceClicked(result: any) {
+    if (result) { 
+      this.editFundingOpened =false;
+      this.addEditFundingDialog.close();
+    }
+  }
+
+  public onRemoveFundingSourceOpenClicked(template: TemplateRef<unknown>): void {
+    this.removeFundingDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onModalCloseRemoveFundingSourceClicked(result: any) {
+    if (result) { 
+      this.removeFundingOpened =false;
+      this.removeFundingDialog.close();
+    }
+  }
  
 }
 

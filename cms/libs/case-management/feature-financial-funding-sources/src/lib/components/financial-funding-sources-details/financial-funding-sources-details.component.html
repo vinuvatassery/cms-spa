@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar (close)="closeDetailsFundingSourcesClicked()">   {{ isAdd ? 'Add' : 'Edit ' }} Funding Source</kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeDetailsFundingSourcesClicked()">   {{ isEditFundingSource ? 'Add' : 'Edit ' }} Funding Source</kendo-dialog-titlebar>
 <section class="k-dialog-body">
       <p class="text-muted mb-2">
             All fields are required unless otherwise stated.
@@ -6,7 +6,7 @@
       <div class="flex-row">
         <div class="flex-col">
           <kendo-floatinglabel text="Funding Source">
-            <kendo-textbox    #empName aria-label="Funding Source" 
+            <kendo-textbox     aria-label="Funding Source" 
               [fillMode]="formUiStyle.inputFillMode" > </kendo-textbox>
           </kendo-floatinglabel>
           
@@ -29,7 +29,7 @@
             Cancel
           </button>
           <button kendoButton [primary]="true" aria-label="Save" >
-               {{ isAdd ? 'Add' : 'Update ' }}
+               {{ isEditFundingSource ? 'Add' : 'Update ' }}
           </button>
         </div>
       </div>
