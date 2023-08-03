@@ -224,11 +224,12 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
 
 
   public onAddEditFundingSourceOpenClicked(template: TemplateRef<unknown>, dataItem: any): void {
-    this.isEditFundingSource = dataItem;
+  
     this.addEditFundingDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
+    this.isEditFundingSource = dataItem;
   }
   onModalCloseAddEditFundingSourceClicked(result: any) {
     if (result) { 

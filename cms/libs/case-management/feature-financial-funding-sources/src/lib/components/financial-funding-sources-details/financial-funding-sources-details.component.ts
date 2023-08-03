@@ -15,7 +15,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialFundingSourcesDetailsComponent {
-  @Input() isEditFundingSource: any;
+  @Input() isEditFundingSource: any; 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Output() isModalDetailsFundingSourcesCloseClicked = new EventEmitter();
 

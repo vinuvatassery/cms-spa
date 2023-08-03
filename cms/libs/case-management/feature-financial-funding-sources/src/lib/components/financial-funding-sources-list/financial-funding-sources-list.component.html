@@ -1,5 +1,14 @@
 <!-- Table Top Filter, Search and Export -->
- 
+<button
+kendoButton
+icon="add"
+[primary]="true"
+class="add-new-button-common"
+(click)="onAddEditFundingSourceOpenClicked(addEditFundingSourceDialogTemplate, false)"
+aria-label="Add New"
+>
+Funding
+</button>
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>

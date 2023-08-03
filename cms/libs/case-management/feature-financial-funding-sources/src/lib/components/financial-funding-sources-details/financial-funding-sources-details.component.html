@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar (close)="closeDetailsFundingSourcesClicked()">   {{ isEditFundingSource ? 'Add' : 'Edit ' }} Funding Source</kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeDetailsFundingSourcesClicked()">   {{ isEditFundingSource ? 'Edit' : 'Add ' }} Funding Source</kendo-dialog-titlebar>
 <section class="k-dialog-body">
       <p class="text-muted mb-2">
             All fields are required unless otherwise stated.
@@ -29,7 +29,7 @@
             Cancel
           </button>
           <button kendoButton [primary]="true" aria-label="Save" >
-               {{ isEditFundingSource ? 'Add' : 'Update ' }}
+               {{ isEditFundingSource ? 'Update' : 'Add' }}
           </button>
         </div>
       </div>
