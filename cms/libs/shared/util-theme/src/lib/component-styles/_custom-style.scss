@@ -1156,6 +1156,7 @@ color: $app-primary-font-color;
 
 .add-new-button-common {
   float: right;
-  position: relative;
-  top: -35px;
+  position: absolute;
+  top: 40px;
+  right: 30px;
 }
