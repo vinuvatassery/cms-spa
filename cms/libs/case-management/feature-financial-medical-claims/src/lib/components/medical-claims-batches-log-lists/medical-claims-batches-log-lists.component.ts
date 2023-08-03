@@ -115,7 +115,7 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchLogGridLists$: any;
-  @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
+  @Output() loadBatchLogListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -152,11 +152,12 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
   private loadBatchLogListGrid(): void {
     this.loadBatchLog(
       this.state?.skip ?? 0,
-      this.state?.take ?? 0,
+      this.state?.take ?? 5,
       this.sortValue,
       this.sortType
     );
   }
+  
   loadBatchLog(
     skipCountValue: number,
     maxResultCountValue: number,
@@ -167,10 +168,10 @@ export class MedicalClaimsBatchesLogListsComponent implements OnInit, OnChanges 
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
-      sortColumn: sortValue,
+      sortColumn: 'CreationTime', //sortValue,
       sortType: sortTypeValue,
     };
-    this.loadVendorRefundBatchListEvent.emit(gridDataRefinerValue);
+    this.loadBatchLogListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
  

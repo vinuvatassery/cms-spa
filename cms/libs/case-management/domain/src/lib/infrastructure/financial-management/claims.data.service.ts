@@ -24,7 +24,6 @@ export class ClaimsDataService {
   getSortingParams(paginationParameters: State) {
     let sorting = '';
     if (paginationParameters?.sort && paginationParameters?.sort?.length > 0 && paginationParameters?.sort[0]) {
-      console.log(paginationParameters?.sort[0]);
       sorting = `&Sorting=${paginationParameters?.sort[0]?.field}&SortType=${paginationParameters?.sort[0]?.dir ?? 'asc'}`;
     }
 

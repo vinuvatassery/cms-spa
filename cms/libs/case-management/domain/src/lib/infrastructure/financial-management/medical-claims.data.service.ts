@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { GridFilterParam } from '@cms/case-management/domain';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialMedicalClaimsDataService {
@@ -170,44 +171,18 @@ export class FinancialMedicalClaimsDataService {
     ]);
   }
 
-
-  loadBatchLogListService( ) {
-    return of([
-      {
-        vendorName: 'Address `',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
-      },
-      {
-        vendorName: 'Address `',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
-      },
-     
-    ]);
+  loadPaymentsByBatch(batchId: string, params:GridFilterParam){
+    const queryString = params.convertToQueryString();
+    return this.http.get<any>(      
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/payment-batches/${batchId}/payments${queryString}`);    
   }
+
+  loadServicesByPayment(paymentId: string, params:GridFilterParam){
+    const queryString = params.convertToQueryString();
+    return this.http.get<any>(      
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/payments/${paymentId}/services${queryString}`);    
+  }
+
   loadBatchItemsListService(){
     return of([
       {

@@ -7,6 +7,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FinancialMedicalClaimsDataService } from '../../infrastructure/financial-management/medical-claims.data.service';
+import { GridFilterParam } from '@cms/case-management/domain';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialMedicalClaimsFacade {
@@ -148,11 +149,20 @@ export class FinancialMedicalClaimsFacade {
     });  
   }
 
+  loadServicesByPayment(paymentId: string, params:GridFilterParam){
+    return this.financialMedicalClaimsDataService.loadServicesByPayment(paymentId, params);
+  }
 
-  loadBatchLogListGrid(){
-    this.financialMedicalClaimsDataService.loadBatchLogListService().subscribe({
+
+  loadBatchLogListGrid(batchId: string, params:GridFilterParam){
+    this.financialMedicalClaimsDataService.loadPaymentsByBatch(batchId, params).subscribe({
       next: (dataResponse) => {
-        this.batchLogDataSubject.next(dataResponse);
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+
+        this.batchLogDataSubject.next(gridView);
         this.hideLoader();
       },
       error: (err) => {
@@ -161,6 +171,7 @@ export class FinancialMedicalClaimsFacade {
       },
     });  
   }
+
   loadBatchItemsListGrid(){
     this.financialMedicalClaimsDataService.loadBatchItemsListService().subscribe({
       next: (dataResponse) => {

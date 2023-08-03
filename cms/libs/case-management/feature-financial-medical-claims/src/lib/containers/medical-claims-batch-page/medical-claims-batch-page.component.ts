@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialMedicalClaimsFacade } from '@cms/case-management/domain';
+import { FinancialMedicalClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-medical-claims-batch-page',
@@ -24,6 +24,7 @@ export class MedicalClaimsBatchPageComponent {
   ) {}
 
   loadBatchLogListGrid(event: any) {
-    this.financialMedicalClaimsFacade.loadBatchLogListGrid();
+    const params= new GridFilterParam(this.gridSkipCount, this.pageSizes, this.sort[0]?.field, this.sortType);
+    this.financialMedicalClaimsFacade.loadBatchLogListGrid('4C8A6C59-377E-47B5-ACDF-D9CAD2E6EEBC', params);
   }
 }

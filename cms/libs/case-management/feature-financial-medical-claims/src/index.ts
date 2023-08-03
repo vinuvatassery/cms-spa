@@ -25,3 +25,4 @@ export * from './lib/containers/medical-claims-payments-router-page/medical-clai
 export * from './lib/components/medical-claims-batches-reconcile-payments-breakout/medical-claims-batches-reconcile-payments-breakout.component';
 
 export * from './lib/components/medical-claims-print-denial-letter/medical-claims-print-denial-letter.component';
+export * from './lib/components/claims-payment-service-list/claims-payment-service-list.component';
