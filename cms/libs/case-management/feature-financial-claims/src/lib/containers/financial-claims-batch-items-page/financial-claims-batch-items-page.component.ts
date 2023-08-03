@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, OnInit, Component, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, OnInit, Component, ChangeDetectorRef, Input } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, PaymentsFacade } from '@cms/case-management/domain';
 import { Router, NavigationEnd } from '@angular/router';
 import {  filter } from 'rxjs';
 import { LoggingService } from '@cms/shared/util-core';
@@ -24,12 +24,16 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   batchItemsGridLists$ = this.financialClaimsFacade.batchItemsData$;
   claimsType: any;
   currentUrl:any
+  paymentPanelData$ = this.paymentFacade.paymentPanelData$;
+  @Input() vendorId:any='8CD495BE-3296-43B3-A9C4-EF7829D2D026'
+  @Input() batchId:any ='652C706E-5FD4-4C50-8AC3-0FA806949E86'
 
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly router: Router, 
     private readonly cdr: ChangeDetectorRef,
     private loggingService: LoggingService,
+    private paymentFacade:PaymentsFacade
   ) {}
 
   ngOnInit(): void {    
@@ -53,5 +57,8 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   }
   loadBatchItemListGrid(event: any) {
     this.financialClaimsFacade.loadBatchItemsListGrid();
+  }
+  loadPaymentPanel(event:any=null){
+    this.paymentFacade.loadPaymentPanel(this.vendorId,this.batchId);    
   }
 }

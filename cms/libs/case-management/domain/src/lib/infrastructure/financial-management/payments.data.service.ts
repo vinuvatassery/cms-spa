@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { State } from '@progress/kendo-data-query';
+import { PaymentPanel } from '../../entities/financial-management/payment-panel';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentsDataService {
@@ -58,6 +59,16 @@ export class PaymentsDataService {
         by: 'No',
       },
     ]);
+  }
+
+  loadPaymentPanel(vendorId:any,batchId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/batches/${batchId}`);
+  }
+  updatePaymentPanel(vendorId:any,batchId:any,paymentPanel:any){
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/financial-management/vendors/${vendorId}/batches/${batchId}`     
+    ,paymentPanel);
   }
  
 }

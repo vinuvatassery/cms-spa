@@ -23,23 +23,23 @@
                               <button aria-label="edit" kendoButton look="flat" class="edit-btn card-link-button" (click)="onPaymentDetailFormClicked(paymentDetailsFromTemplate)" > Edit </button>
                         <div class="flex-col flex-col-2">
                               <small>Date Payment Reconciled</small>
-                              <p>XX/XX/XXXX</p>
+                              <p>{{paymentPanelDetails.paymentStatusDate | date:'dd/MM/yyyy'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Date Payment Sent</small>
-                              <p>XX/XX/XXXX</p>
+                              <p>{{paymentPanelDetails.sentDate | date:'dd/MM/yyyy'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Payment Amount</small>
-                              <p>$X,XXX.XX</p>
+                              <p>{{paymentPanelDetails.amountPaid | currency:'USD':'$'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Warrant Number</small>
-                              <p>XXXXXXXXXX</p>
+                              <p>{{paymentPanelDetails.checkNbr}}</p>
                         </div>
                         <div class="flex-col flex-col-4">
                               <small>Note</small> 
-                              <p>Lorem ipsum dolor set icus unum omg hello</p>
+                              <p>{{paymentPanelDetails.notes}}</p>
                         </div>
                   </div>
                   </div>
@@ -160,6 +160,6 @@
 
 
 <ng-template #paymentDetailsFromTemplate>
-      <cms-financial-claims-payment-details-form
-            (closePaymentDetailFormClickedEvent)="onClosePaymentDetailFormClicked($event)"></cms-financial-claims-payment-details-form>
+      <cms-financial-claims-payment-details-form [paymentPanelDetails] ="paymentPanelDetails"[vendorId]="vendorId"
+      [batchId]="batchId" (closePaymentDetailFormClickedEvent)="onClosePaymentDetailFormClicked($event)"></cms-financial-claims-payment-details-form>
 </ng-template>

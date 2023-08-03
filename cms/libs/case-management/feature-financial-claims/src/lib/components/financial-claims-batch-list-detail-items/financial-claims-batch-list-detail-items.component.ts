@@ -7,7 +7,8 @@ import {
   OnInit,
   OnChanges,
   Output,
-  TemplateRef
+  TemplateRef,
+  ChangeDetectorRef
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {  GridDataResult } from '@progress/kendo-angular-grid';
@@ -19,6 +20,7 @@ import {
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { PaymentsFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-claims-batch-list-detail-items',
   templateUrl: './financial-claims-batch-list-detail-items.component.html', 
@@ -35,7 +37,12 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchItemsGridLists$: any;
+  @Input() paymentPanelData$:any;
+  @Input() vendorId:any;
+  @Input() batchId:any;
   @Output() loadBatchItemsListEvent = new EventEmitter<any>();
+  @Output() loadPaymentPanel = new EventEmitter<any>();
+  paymentPanelDetails:any;
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -57,14 +64,21 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService, 
-    public activeRoute: ActivatedRoute) {
+    public activeRoute: ActivatedRoute,private paymentFacade:PaymentsFacade,
+    private readonly cd: ChangeDetectorRef) {
     
     }
   
   ngOnInit(): void { 
-    this.loadBatchLogItemsListGrid();
+    this.loadBatchLogItemsListGrid();   
+   
   }
   ngOnChanges(): void {
+    this.paymentPanelData$.subscribe((data: any)=>{
+      this.paymentPanelDetails = data;
+      this.cd.detectChanges();
+    })
+
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -72,6 +86,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
     };
 
     this.loadBatchLogItemsListGrid();
+    this.loadPaymentPanel.emit(true);
   }
 
 
@@ -204,6 +219,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
 
   onClosePaymentDetailFormClicked(result: any){
     if(result){
+      this.loadPaymentPanel.emit(true);
       this.paymentDetailsDialog.close();
     }
   }
