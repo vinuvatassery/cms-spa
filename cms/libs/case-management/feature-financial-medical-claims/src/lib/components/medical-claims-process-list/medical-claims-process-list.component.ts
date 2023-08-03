@@ -39,6 +39,7 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
   isBatchClaimsOption = false;
   isDeleteClaimsOption = false;
   isProcessBatchClosed = false;
+  public selectedProcessClaims: string[] = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isProcessGridExpand = true;
   isMedicalClaimsProcessGridLoaderShow = false;
@@ -58,7 +59,6 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
   gridMedicalClaimsProcessDataSubject = new Subject<any>();
   gridMedicalClaimsProcessData$ =
     this.gridMedicalClaimsProcessDataSubject.asObservable();
@@ -85,7 +85,7 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
       click: (data: any): void => {
         if (!this.isDeleteBatchClosed) {
           this.isDeleteBatchClosed = true; 
-          this.onBatchClaimsGridSelectedClicked();
+          this.onBatchClaimsDeleteGridSelectedClicked();
         }
       },
     },
@@ -206,7 +206,36 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
 
   gridDataHandle() {
     this.medicalClaimsProcessGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
+      this.gridDataResult = {"total":1,"data":[
+        {
+        "invoiceID":"invoiceID1",
+        "providerName":"providerName",
+        "taxID":"taxID",
+        "paymentMethod":"paymentMethod",
+        "clientName":"clientName",
+        "nameOnPrimaryInsuranceCard":"nameOnPrimaryInsuranceCard",
+        "memberID":"providerName",
+        "serviceCount":"serviceCount",
+        "totalCost":"totalCost",
+        "totalDue":"totalDue",
+        "paymentStatus":"paymentStatus",
+        "by":"by"
+        },
+        {
+          "invoiceID":"invoiceID2",
+          "providerName":"providerName",
+          "taxID":"taxID",
+          "paymentMethod":"paymentMethod",
+          "clientName":"clientName",
+          "nameOnPrimaryInsuranceCard":"nameOnPrimaryInsuranceCard",
+          "memberID":"providerName",
+          "serviceCount":"serviceCount",
+          "totalCost":"totalCost",
+          "totalDue":"totalDue",
+          "paymentStatus":"paymentStatus",
+          "by":"by"
+          }
+      ]};//data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
         this.filterData
@@ -226,6 +255,11 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
     });
   }
   onModalBatchClaimsModalClose(result: any) {
+    if (result) { 
+      this.batchConfirmClaimsDialog.close();
+    }
+  }
+  onModalBatchClaimsButtonClicked(result: any) {
     if (result) { 
       this.batchConfirmClaimsDialog.close();
     }
@@ -257,13 +291,19 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
 
   onBatchClaimsGridSelectedClicked() {
     this.isProcessGridExpand = false;
+    console.log("selectedProcessClaims",this.selectedProcessClaims)
   }
-
+  onBatchClaimsDeleteGridSelectedClicked(){
+    this.isProcessGridExpand = false;
+  }
+  selectedKeysChange(selection:any){
+    this.selectedProcessClaims = selection;
+  }
   onBatchClaimsGridSelectedCancelClicked() {
     this.isProcessGridExpand = true;
     this.isDeleteBatchClosed = false;
     this.isProcessBatchClosed = false;
-  
+    this.selectedProcessClaims = [];
   }
 
   clientRecentClaimsModalClicked (template: TemplateRef<unknown>, data:any): void {

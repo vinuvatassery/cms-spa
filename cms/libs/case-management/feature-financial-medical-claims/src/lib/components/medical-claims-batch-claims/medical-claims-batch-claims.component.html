@@ -1,9 +1,25 @@
-<kendo-dialog-titlebar (close)="closeBatchClaimsClicked()"> Batch Claims? </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeBatchClaimsClicked()"> Batch Claims and Submit for Review? </kendo-dialog-titlebar>
 
-<section class="k-dialog-body">
-    <p class="text-muted mb-1">  You will not be able to add claims to batches, but you will be able to remove or edit them.   </p>
-    <p class="text-muted mb-2">   Claims to be batched: 7   </p>
-  </section>
+<div class="flex-row">
+    <section class="k-dialog-body">
+      <div class="flex-col">
+        <p class="text-muted mb-1">  Once batched, you will not be able to edit claims. Select which manager to review the batch below.   </p>
+        <p class="text-muted mb-2">   Claims to be batched and reviewed: {{selectedProcessClaimsCount}}   </p>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="Select Manager">
+          
+          <kendo-dropdownlist
+          placeholder="Select Manager"
+          required [data]="ddlBatchManagers"
+            formControlName="batchManagerCode" 
+            textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
+            >
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div>
+    </section>
+</div>
   
   <kendo-dialog-actions>
     <div class="justify-content-between">
@@ -17,7 +33,8 @@
         >
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="Batch"  >
+        <button kendoButton [primary]="true" aria-label="Batch"  
+        (click)="batchClaimsClicked()">
           Batch
         </button>
       </div>
