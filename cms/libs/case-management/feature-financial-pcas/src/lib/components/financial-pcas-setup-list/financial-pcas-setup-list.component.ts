@@ -36,7 +36,7 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
   popupClassAction = 'TableActionPopup app-dropdown-action-list'; 
   isFinancialPcaSetupGridLoaderShow = false;
   isEditSetupClosed = false;
-  isDeleteSetupClosed = false;
+  isConfirmationClosed = false;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -77,8 +77,8 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
       text: 'Delete',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.isDeleteSetupClosed) {
-          this.isDeleteSetupClosed = true; 
+        if (!this.isConfirmationClosed) {
+          this.isConfirmationClosed = true; 
           this.onRemovePcaSetupClicked(this.removePcaSetupDialogTemplate);
         }
       },
@@ -237,6 +237,7 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
   }
   onCloseAddEditPcaSetupClicked(result: any) {
     if (result) { 
+      this.isEditSetupClosed = false;
       this.pcaSetupAddEditDialogService.close();
     }
   }
@@ -249,6 +250,7 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
   }
   onCloseRemovePcaSetupClicked(result: any) {
     if (result) { 
+      this.isConfirmationClosed = false;
       this.pcaSetupRemoveDialogService.close();
     }
   }

@@ -36,7 +36,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit, OnChanges {
   popupClassAction = 'TableActionPopup app-dropdown-action-list'; 
   isFinancialPcaAssignmentGridLoaderShow = false;
   isEditAssignmentClosed = false;
-  isDeleteAssignmentClosed = false;
+  isRemoveAssignmentClosed = false;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -77,8 +77,8 @@ export class FinancialPcasAssignmentListComponent implements OnInit, OnChanges {
       text: 'Delete',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.isDeleteAssignmentClosed) {
-          this.isDeleteAssignmentClosed = true; 
+        if (!this.isRemoveAssignmentClosed) {
+          this.isRemoveAssignmentClosed = true; 
           this.onRemovePcaAssignmentClicked(this.removePcaAssignmentDialogTemplate);
         }
       },
@@ -240,6 +240,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit, OnChanges {
   }
   onCloseAddEditPcaAssignmentClicked(result: any) {
     if (result) { 
+      this.isEditAssignmentClosed = false;
       this.pcaAssignmentAddEditDialogService.close();
     }
   }
@@ -252,6 +253,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit, OnChanges {
   }
   onCloseRemovePcaAssignmentClicked(result: any) {
     if (result) { 
+      this.isRemoveAssignmentClosed = false;
       this.pcaAssignmentRemoveDialogService.close();
     }
   }

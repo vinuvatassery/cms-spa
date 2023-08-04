@@ -11,7 +11,7 @@ export class FinancialPcasAssignmentFormComponent {
   @Output() closeAddEditPcaAssignmentClickedEvent = new EventEmitter();
 
  
-  closeAddEditPcaSetupClicked() {
+  closeAddEditPcaAssignmentClicked() {
     this.closeAddEditPcaAssignmentClickedEvent.emit(true);
   }
 }

@@ -10,7 +10,7 @@ export class FinancialPcasAssignmentRemoveComponent {
   @Output() closeRemovePcaAssignmentClickedEvent = new EventEmitter();
 
  
-  closeRemovePcaSetupClicked() {
+  closeRemovePcaAssignmentClicked() {
     this.closeRemovePcaAssignmentClickedEvent.emit(true);
   }
 }
