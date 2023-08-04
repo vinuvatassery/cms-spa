@@ -87,27 +87,31 @@ export class FinancialPcasAssignmentListComponent implements OnInit, OnChanges {
  aaaaaa = [
   {
     id:1,
+    priority: 1,
     pca: '123123`',
-    ay:'AY21', 
-    description:'Some Description Some Description', 
+    object:'Third Party', 
+    objectCode:'234234', 
     amount:'43324342.33',  
-    remaining:'345435.33', 
+    openDate:'MM/DD/YYYY', 
     closeDate:'MM/DD/YYYY', 
-    grantName:'Name', 
-    grantNumber:'34535345', 
-    assigned: true,  
+    totalAmount:'43324342.33', 
+    amountUsed:'43324342.33', 
+    amountLeft:'43324342.33',
+    isActive: true,  
   },
   {
     id:2,
+    priority: 2,
     pca: '123123`',
-    ay:'AY21', 
-    description:'Some Description Some Description', 
+    object:'Third Party', 
+    objectCode:'234234', 
     amount:'43324342.33',  
-    remaining:'345435.33', 
+    openDate:'MM/DD/YYYY', 
     closeDate:'MM/DD/YYYY', 
-    grantName:'Name', 
-    grantNumber:'34535345', 
-    assigned: false,  
+    totalAmount:'43324342.33', 
+    amountUsed:'43324342.33', 
+    amountLeft:'43324342.33',
+    isActive: false,  
   },
  ]
   /** Constructor **/
@@ -225,7 +229,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit, OnChanges {
     this.isFinancialPcaAssignmentGridLoaderShow = false;
   }
   public rowClass = (args:any) => ({
-    "table-row-disabled": (!args.dataItem.assigned),
+    "table-row-disabled": (!args.dataItem.isActive),
   });
  
   onOpenAddPcaAssignmentClicked(template: TemplateRef<unknown>): void {

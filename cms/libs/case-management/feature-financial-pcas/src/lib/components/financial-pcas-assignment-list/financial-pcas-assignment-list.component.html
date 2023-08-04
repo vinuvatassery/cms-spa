@@ -36,31 +36,36 @@
       <kendo-grid [resizable]="true" [loading]="isFinancialPcaAssignmentGridLoaderShow" [pageSize]="state.take"
             [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
             [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
-            (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [rowClass]="rowClass" [selectable]="true"
+            (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [rowClass]="rowClass" 
             [data]="aaaaaa">
          
-            <kendo-grid-column field="assigned" title="Assigned"   [columnMenu]="false" [width]="80"> 
-                  <ng-template kendoGridCellTemplate let-dataItem> 
-                        <div class="text-center">
-                              <span class="material-icons green-text-color" *ngIf="dataItem.assigned">
-                                    check_circle_outline </span>
+ 
+            <kendo-grid-column     field=""    title="" [width]="50"   [columnMenu]="false" [sortable]="false"  class="text-center text-muted"   >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <span class="material-icons">drag_indicator</span>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="priority" title="Priority" [width]="60" [columnMenu]="false" [sortable]="false">
+          </kendo-grid-column>
+            <kendo-grid-column field="pca" title="PCA" [width]="100"> </kendo-grid-column>
+            <kendo-grid-column field="object" title="Object" [width]="180"> </kendo-grid-column>
+            <kendo-grid-column field="objectCode" title="Object Code" [width]="140"> </kendo-grid-column>
+            <kendo-grid-column field="amount" title="Amount" [width]="140"> <ng-template kendoGridCellTemplate let-dataItem>
+                  <span class="tableamountview"> <strong>$</strong> {{dataItem.amount}}</span>
+                </ng-template> </kendo-grid-column>
 
-                                    <span class="material-icons" *ngIf="!dataItem.assigned === true">
-                                          do_not_disturb_alt
-                                          </span> 
-                        </div>
-                  </ng-template>
-            </kendo-grid-column>
-            <kendo-grid-column field="pca" title="PCA #" [width]="100"> </kendo-grid-column>
-            <kendo-grid-column field="ay" title="AY" [width]="80"> </kendo-grid-column>
-            <kendo-grid-column field="description" title="Description" [width]="250"> </kendo-grid-column>
-            <kendo-grid-column field="amount" title="Amount" [width]="160"> </kendo-grid-column>
-
-            <kendo-grid-column field="remaining" title="Remaining" [width]="140">
+            <kendo-grid-column field="openDate" title="Open Date" [width]="140">
             </kendo-grid-column>
             <kendo-grid-column field="closeDate" title="Close Date" [width]="120"> </kendo-grid-column>
-            <kendo-grid-column field="grantName" title="Grant Name" [width]="180"> </kendo-grid-column>
-            <kendo-grid-column field="grantNumber" title="Grant Number" [width]="140"> </kendo-grid-column>
+            <kendo-grid-column field="totalAmount" title="Total Amount" [width]="180"> <ng-template kendoGridCellTemplate let-dataItem>
+                  <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmount}}</span>
+                </ng-template>  </kendo-grid-column>
+            <kendo-grid-column field="amountUsed" title="Amount Used" [width]="140">  <ng-template kendoGridCellTemplate let-dataItem>
+                  <span class="tableamountview"> <strong>$</strong> {{dataItem.amountUsed}}</span>
+                </ng-template> </kendo-grid-column>
+            <kendo-grid-column field="amountLeft" title="Amount Left" [width]="140">  <ng-template kendoGridCellTemplate let-dataItem>
+                  <span class="tableamountview"> <strong>$</strong> {{dataItem.amountLeft}}</span>
+                </ng-template> </kendo-grid-column>
          
 
             <kendo-grid-column field="Option"  title=" "  [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
