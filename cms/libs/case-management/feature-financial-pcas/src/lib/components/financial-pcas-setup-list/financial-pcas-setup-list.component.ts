@@ -28,8 +28,8 @@ import { Subject } from 'rxjs';
 export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
  
   public formUiStyle: UIFormStyle = new UIFormStyle();
- 
-  
+  pcaSetupRemoveDialogService  : any;
+  pcaSetupAddEditDialogService : any;
   popupClassAction = 'TableActionPopup app-dropdown-action-list'; 
   isFinancialPcaSetupGridLoaderShow = false;
 
@@ -198,6 +198,31 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
   }
  
  
+  onOpenAddPcaSetupClicked(template: TemplateRef<unknown>): void {
+    this.pcaSetupAddEditDialogService = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onCloseAddEditPcaSetupClicked(result: any) {
+    if (result) { 
+      this.pcaSetupAddEditDialogService.close();
+    }
+  }
+
+  onRemovePcaSetupClicked(template: TemplateRef<unknown>): void {
+    this.pcaSetupRemoveDialogService = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onCloseRemovePcaSetupClicked(result: any) {
+    if (result) { 
+      this.pcaSetupRemoveDialogService.close();
+    }
+  }
+
+
 }
  
  

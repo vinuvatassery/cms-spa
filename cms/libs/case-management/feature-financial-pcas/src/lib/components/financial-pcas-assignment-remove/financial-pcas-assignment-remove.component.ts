@@ -1,7 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
   selector: 'cms-financial-pcas-assignment-remove',
   templateUrl: './financial-pcas-assignment-remove.component.html',
 })
-export class FinancialPcasAssignmentRemoveComponent {}
+export class FinancialPcasAssignmentRemoveComponent {
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  @Output() closeRemovePcaSetupClickedEvent = new EventEmitter();
+
+ 
+  closeRemovePcaSetupClicked() {
+    this.closeRemovePcaSetupClickedEvent.emit(true);
+  }
+}

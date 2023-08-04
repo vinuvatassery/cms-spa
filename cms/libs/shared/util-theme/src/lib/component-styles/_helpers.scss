@@ -7,6 +7,9 @@ section {
 .d-flex {
   display: flex;
 }
+.d-in-flex {
+  display: inline-flex !important;
+}
 .justify-content-end {
   justify-content: flex-end;
   display: flex;
@@ -266,4 +269,8 @@ section {
   border-top-color: $grey-c;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
+}
+
+.green-text-color{
+  color: $success-green;
 }
