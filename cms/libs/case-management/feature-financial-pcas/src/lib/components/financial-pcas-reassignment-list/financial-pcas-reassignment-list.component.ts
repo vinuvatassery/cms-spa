@@ -23,6 +23,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-financial-pcas-reassignment-list',
   templateUrl: './financial-pcas-reassignment-list.component.html',
+  styleUrls: ['./financial-pcas-reassignment-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPcasReassignmentListComponent
@@ -66,7 +67,7 @@ export class FinancialPcasReassignmentListComponent
     {
       id: 1,
       pca: '123123`',
-      object: 'Object Name',
+      object: 'Object & Group Assignment',
       closeDate: 'MM/DD/YYYY',
       group: 'Some Description Some Description',
       originalAmount: '43324342.33',
@@ -78,7 +79,7 @@ export class FinancialPcasReassignmentListComponent
     {
       id: 2,
       pca: '123123`',
-      object: 'Object Name',
+      object: 'Object & Group Assignment',
       closeDate: 'MM/DD/YYYY',
       group: 'Some Description Some Description',
       originalAmount: '43324342.33',
@@ -89,6 +90,27 @@ export class FinancialPcasReassignmentListComponent
     },
     
   ];
+
+  pcaLists =[
+    {
+      id: 1,
+      name: 'Name Name Name`',
+      remainingAmt: '2343243.333',
+      closeDate: 'MM/DD/YYYY',
+    },
+    {
+      id: 2,
+      name: 'Name Name Name`',
+      remainingAmt: '2343243.333',
+      closeDate: 'MM/DD/YYYY',
+    },
+    {
+      id: 3,
+      name: 'Name Name Name`',
+      remainingAmt: '2343243.333',
+      closeDate: 'MM/DD/YYYY',
+    }
+  ]
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
