@@ -21,7 +21,7 @@
        <div class="flex-col mb-2">
           <p class="text-capital text-bold">Mailing Address</p>
           <span *ngIf="mailingAddress">
-            <p *ngIf="mailingAddress?.address1">{{ mailingAddress?.address1 }}</p>{{mailingAddress?.address1 }}
+            <p *ngIf="mailingAddress?.address1">{{ mailingAddress?.address1 }}</p>
             <p *ngIf="mailingAddress?.address2 || mailingAddress?.city">{{ mailingAddress?.address2 }} </p>
             <p>{{ mailingAddress?.city }}, {{ mailingAddress?.state }} {{ mailingAddress?.zip}}</p>
           </span>

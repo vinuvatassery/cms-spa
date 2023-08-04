@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 
 /** Data services **/
 import { EsignDataService } from '../infrastructure/esign-data.service';
-import { CommunicationEvents } from '../enums/communication-event.enum';
 import { EsignStatusCode } from '../enums/esign-status-code.enum';
 
 @Injectable({ providedIn: 'root' })
