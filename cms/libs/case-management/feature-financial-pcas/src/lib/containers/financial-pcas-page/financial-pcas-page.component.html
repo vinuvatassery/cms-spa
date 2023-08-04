@@ -11,11 +11,13 @@
                     <kendo-tabstrip-tab title="PCA Setup" [selected]="true">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-pcas-setup-list> </cms-financial-pcas-setup-list>
-                                <!-- <cms-financial-claims-process-list   [claimsType]="claimsType"   [financialClaimsProcessGridLists$]="financialClaimsProcessGridLists$"
-                                [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsProcess"
-                                [sortType]="sortType" [sort]="sortProcessList" 
-                                (loadFinancialClaimsProcessListEvent)="loadFinancialClaimsProcessListGrid($event)"></cms-financial-claims-process-list> -->
+                                <cms-financial-pcas-setup-list 
+                                [financialPcaSetupGridLists$]="financialPcaSetupGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaSetup"
+                                [sortType]="sortType" [sort]="sortPcaSetupList" 
+                                (loadFinancialPcaSetupListEvent)="loadFinancialPcaSetupListGrid($event)"
+                                 > </cms-financial-pcas-setup-list>
+                                
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

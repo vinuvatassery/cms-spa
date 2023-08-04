@@ -19,17 +19,17 @@ export class FinancialPcaFacade {
   public sortType = 'asc';
 
   public sortValueFinancialPcaSetup = 'invoiceID';
-  public sortProcessList: SortDescriptor[] = [{
+  public sortPcaSetupList: SortDescriptor[] = [{
     field: this.sortValueFinancialPcaSetup,
   }];
 
   public sortValueFinancialPcaAssignment = 'batch';
-  public sortBatchList: SortDescriptor[] = [{
+  public sortPcaAssignmentList: SortDescriptor[] = [{
     field: this.sortValueFinancialPcaAssignment,
   }];
 
   public sortValueFinancialPcaReassignment = 'batch';
-  public sortPaymentsList: SortDescriptor[] = [{
+  public sortPcaReassignmentList: SortDescriptor[] = [{
     field: this.sortValueFinancialPcaReassignment,
   }];
 
@@ -38,9 +38,9 @@ export class FinancialPcaFacade {
     field: this.sortValueFinancialPcaReport,
   }];
 
-  public sortValueClaims = 'batch';
-  public sortClaimsList: SortDescriptor[] = [{
-    field: this.sortValueClaims,
+  public sortValuePcaObject = 'batch';
+  public sortPcaObjectList: SortDescriptor[] = [{
+    field: this.sortValuePcaObject,
   }];
 
  
@@ -151,7 +151,7 @@ export class FinancialPcaFacade {
     });  
   }
  
-  loadFinancialPcaObjectGrid(){
+  loadFinancialPcaObjectListGrid(){
     this.financialPcaDataService.loadFinancialPcaObjectListService().subscribe({
       next: (dataResponse) => {
         this.batchRFinancialPcaObjectDataSubject.next(dataResponse);

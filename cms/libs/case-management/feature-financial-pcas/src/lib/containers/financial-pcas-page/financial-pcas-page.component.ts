@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade } from '@cms/case-management/domain';
+import { FinancialPcaFacade } from '@cms/case-management/domain';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {  filter } from 'rxjs';
 import { LoggingService } from '@cms/shared/util-core';
@@ -20,32 +20,35 @@ export class FinancialPcasPageComponent {
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
   claimsType: any;
-
-  sortType = this.financialClaimsFacade.sortType;
-  pageSizes = this.financialClaimsFacade.gridPageSizes;
-  gridSkipCount = this.financialClaimsFacade.skipCount;
-
-  sortValueFinancialClaimsProcess =
-    this.financialClaimsFacade.sortValueFinancialClaimsProcess;
-  sortProcessList = this.financialClaimsFacade.sortProcessList;
-  sortValueFinancialClaimsBatch =
-    this.financialClaimsFacade.sortValueFinancialClaimsBatch;
-  sortBatchList = this.financialClaimsFacade.sortBatchList;
-  sortValueFinancialClaimsPayments =
-    this.financialClaimsFacade.sortValueFinancialClaimsPayments;
-  sortPaymentsList = this.financialClaimsFacade.sortPaymentsList;
-
   state!: State;
-  financialClaimsProcessGridLists$ =
-    this.financialClaimsFacade.financialClaimsProcessData$;
-  financialClaimsBatchGridLists$ =
-    this.financialClaimsFacade.financialClaimsBatchData$;
+  sortType = this.financialPcaFacade.sortType;
+  pageSizes = this.financialPcaFacade.gridPageSizes;
+  gridSkipCount = this.financialPcaFacade.skipCount;
 
-  financialClaimsAllPaymentsGridLists$ =
-    this.financialClaimsFacade.financialClaimsAllPaymentsData$;
+  sortValueFinancialPcaSetup = this.financialPcaFacade.sortValueFinancialPcaSetup;
+  sortPcaSetupList = this.financialPcaFacade.sortPcaSetupList;
+  
+  sortValueFinancialPcaAssignment = this.financialPcaFacade.sortValueFinancialPcaAssignment;
+  sortPcaAssignmentList = this.financialPcaFacade.sortPcaAssignmentList;
+
+  sortValueFinancialPcaReassignment = this.financialPcaFacade.sortValueFinancialPcaReassignment;
+  sortPcaReassignmentList = this.financialPcaFacade.sortPcaReassignmentList;
+
+  sortValueFinancialPcaReport = this.financialPcaFacade.sortValueFinancialPcaReport;
+  sortFinancialPcaReportList = this.financialPcaFacade.sortFinancialPcaReportList;
+
+  sortValuePcaObject = this.financialPcaFacade.sortValuePcaObject;
+  sortPcaObjectList = this.financialPcaFacade.sortPcaObjectList;
+
+
+  financialPcaSetupGridLists$ = this.financialPcaFacade.financialPcaSetupData$;
+  financialPcaAssignmentGridLists$ = this.financialPcaFacade.financialPcaAssignmentData$;
+  financialPcaReassignmentGridLists$ = this.financialPcaFacade.financialPcaReassignmentData$;
+  financialPcaReportGridLists$ = this.financialPcaFacade.financialPcaReportData$;
+  financialPcaObjectGridList$ = this.financialPcaFacade.financialPcaObjectDataList$;
 
   constructor(
-    private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly financialPcaFacade: FinancialPcaFacade,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
@@ -54,16 +57,24 @@ export class FinancialPcasPageComponent {
 
  
  
-  loadFinancialClaimsProcessListGrid(event: any) {
-    this.financialClaimsFacade.loadFinancialClaimsProcessListGrid();
+  loadFinancialPcaSetupListGrid(event: any) {
+    this.financialPcaFacade.loadFinancialPcaSetupListGrid();
   }
 
-  loadFinancialClaimsBatchListGrid(event: any) {
-    this.financialClaimsFacade.loadFinancialClaimsBatchListGrid();
+  loadFinancialPcaAssignmentListGrid(event: any) {
+    this.financialPcaFacade.loadFinancialPcaAssignmentListGrid();
   }
 
-  loadFinancialClaimsAllPaymentsListGrid(event: any) {
-    this.financialClaimsFacade.loadFinancialClaimsAllPaymentsListGrid();
+  loadFinancialPcaReassignmentListGrid(event: any) {
+    this.financialPcaFacade.loadFinancialPcaReassignmentListGrid();
+  }
+
+  loadFinancialPcaReporttListGrid(event: any) {
+    this.financialPcaFacade.loadFinancialPcaReportListGrid();
+  }
+
+  loadFinancialPcaObjectListGrid(event: any) {
+    this.financialPcaFacade.loadFinancialPcaObjectListGrid();
   }
 }
 
