@@ -25,7 +25,7 @@ export class PaymentsFacade {
   private paymentBatchSubListSubject = new BehaviorSubject<any>([]);
   private paymentsAddressDataSubject = new BehaviorSubject<any>([]);
   private paymentBatchLoaderSubject = new BehaviorSubject<boolean>(false);
-  private paymentPanelSubject = new BehaviorSubject<any>({});
+  private paymentPanelSubject = new Subject<any>();
   paymentBatches$ = this.paymentBatchesSubject.asObservable();
   paymentBatchSubList$ = this.paymentBatchSubListSubject.asObservable();
   paymentsAddressData$ = this.paymentsAddressDataSubject.asObservable();

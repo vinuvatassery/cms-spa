@@ -11,7 +11,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PaymentPanel, PaymentsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ConfigurationProvider, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
 @Component({
@@ -38,9 +38,10 @@ import { Subscription } from 'rxjs';
   @Input() batchId:any ;
   @Input() paymentPanelDetails:any;
   @Output() closePaymentDetailFormClickedEvent = new EventEmitter();
+  @Output()  updatePaymentPanel  = new EventEmitter<any>();
 
   constructor(private formBuilder: FormBuilder, public intl: IntlService,
-    private paymentFacade:PaymentsFacade, private configurationProvider: ConfigurationProvider,
+    private configurationProvider: ConfigurationProvider,
     private readonly cd: ChangeDetectorRef){
     
   }
@@ -180,26 +181,12 @@ import { Subscription } from 'rxjs';
     });
     
   }
-  save(){
-   
+  save(){   
     this.validateModel();
     if(this.medicalClaimPaymentForm.valid){
-      this.paymentFacade.showLoader();
-      this.populatePaymentPanelModel();
-      this.paymentFacade.updatePaymentPanel(this.vendorId,this.batchId, this.paymentPanel).subscribe({
-        next: (data: any) => {         
-          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment panel updated successfully.');
-          this.paymentFacade.hideLoader();
-          this.closePaymentDetailFormClickedEvent.emit(true);
-          
-        },
-        error: (err) => {       
-          this.paymentFacade.hideLoader();
-          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-          this.closePaymentDetailClicked();
-        }
-      });
-
+      this.populatePaymentPanelModel();    
+      this.closePaymentDetailFormClickedEvent.emit(true);
+      this.updatePaymentPanel.emit(this.paymentPanel);
     }
   }
 

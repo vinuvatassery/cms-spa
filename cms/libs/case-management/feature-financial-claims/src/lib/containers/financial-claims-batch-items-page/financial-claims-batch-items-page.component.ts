@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, OnInit, Component, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, OnInit, Component, ChangeDetectorRef, Input } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade, PaymentsFacade } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, PaymentPanel, PaymentsFacade } from '@cms/case-management/domain';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import {  filter } from 'rxjs';
-import { LoggingService } from '@cms/shared/util-core';
+import { LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'cms-financial-claims-batch-items-page',
@@ -25,8 +25,8 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   claimsType: any;
   currentUrl:any
   paymentPanelData$ = this.paymentFacade.paymentPanelData$;
-  vendorId:any;
-  batchId:any;
+  @Input() vendorId:any;
+  @Input() batchId:any;
 
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
@@ -68,5 +68,20 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   }
   loadPaymentPanel(event:any=null){
     this.paymentFacade.loadPaymentPanel(this.vendorId,this.batchId);    
+  }
+  updatePaymentPanel(paymentPanel:PaymentPanel){
+    this.paymentFacade.showLoader();
+    this.paymentFacade.updatePaymentPanel(this.vendorId,this.batchId, paymentPanel).subscribe({
+        next: (response: any) => {        
+          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+          this.paymentFacade.hideLoader();  
+          this.loadPaymentPanel();    
+          
+        },
+        error: (err) => {       
+          this.paymentFacade.hideLoader();
+          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        }
+      });
   }
 }

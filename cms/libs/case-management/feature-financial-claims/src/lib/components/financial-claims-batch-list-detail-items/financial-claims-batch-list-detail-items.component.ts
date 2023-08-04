@@ -20,7 +20,7 @@ import {
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { PaymentsFacade } from '@cms/case-management/domain';
+import { PaymentPanel } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-claims-batch-list-detail-items',
   templateUrl: './financial-claims-batch-list-detail-items.component.html', 
@@ -42,6 +42,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   @Input() batchId:any;
   @Output() loadBatchItemsListEvent = new EventEmitter<any>();
   @Output() loadPaymentPanel = new EventEmitter<any>();
+  @Output()  updatePaymentPanel  = new EventEmitter<PaymentPanel>();
   paymentPanelDetails:any;
   public state!: State;
   sortColumn = 'batch';
@@ -64,7 +65,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService, 
-    public activeRoute: ActivatedRoute,private paymentFacade:PaymentsFacade,
+    public activeRoute: ActivatedRoute,
     private readonly cd: ChangeDetectorRef) {
     
     }
@@ -222,5 +223,8 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
       this.loadPaymentPanel.emit(true);
       this.paymentDetailsDialog.close();
     }
+  }
+  updatePaymentPanelRecord(paymentPanel:PaymentPanel){
+    this.updatePaymentPanel.emit(paymentPanel);
   }
 }
