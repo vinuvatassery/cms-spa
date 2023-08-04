@@ -180,7 +180,7 @@
     
 <ng-template #leavePageDialogTemplate>
        
-    <cms-financial-premiums-leave-page (modalLeavePageCloseClicked)="onLeavePageCloseClicked($event)"></cms-financial-premiums-leave-page>
+    <cms-financial-premiums-leave-page [premiumsType]="premiumsType" (modalLeavePageCloseClicked)="onLeavePageCloseClicked($event)"></cms-financial-premiums-leave-page>
     </ng-template>
 
 
