@@ -102,6 +102,9 @@ public state!: any;
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
   private userProfileSubsriction !: Subscription;
   loginUserId!:any;
+  groupValue = null;
+  statusValue = null;
+
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public readonly  intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider, private readonly  cdr :ChangeDetectorRef,
@@ -163,17 +166,17 @@ public state!: any;
  filterChange(filter: CompositeFilterDescriptor): void {
     this.gridFilter = filter;
   }
- groupFilterChange(value: any, filterService: FilterService): void {
+ groupFilterChange(value: any, filterService: FilterService): void {  
     filterService.filter({
         filters: [{
           field: "group",
           operator: "eq",
-          value:value.lovTypeCode
+          value:value.lovDesc
       }],
         logic: "or"
-    });
+    });    
 }
-dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+dropdownFilterChange(field:string, value: any, filterService: FilterService): void {  
   filterService.filter({
       filters: [{
         field: field,
@@ -182,6 +185,13 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     }],
       logic: "or"
   });
+
+  if(field == "group"){
+    this.groupValue = value;
+  }
+  if(field == "caseStatus"){
+    this.statusValue = value;
+  }
 }
 
  pageselectionchange(data: any) {
@@ -279,10 +289,12 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
           this.state=JSON.parse(x?.gridStateValue || '{}') ;
           if(this.state.searchValue!='' && this.state.searchValue!=undefined){
             this.filter = this.searchValue = this.state.searchValue;
+            this.state.filter = this.filter;
             this.columnName = this.state.columnName;
             this.selectedColumn = this.state.selectedColumn;
           }
           this.setGridState(this.state);
+          this.cdr.detectChanges();
         }
         this.loadProfileCasesList();
         this.gridFacade.hideLoader();
@@ -327,12 +339,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.sortValue  = this.caseFacade.sortValue;
     this.sortType  = this.caseFacade.sortType;
     this.sort  = this.caseFacade.sort;
-    if (this.selectedTab == 1)
-    {
-      this.sort = [];
-      this.sortType = "";
-      this.sortValue = "";
-    }
+
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
