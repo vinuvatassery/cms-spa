@@ -24,7 +24,7 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   loadVendorInfo() {
-    this.financialVendorFacade.getProviderPanel(this.vendorId)
+    this.financialVendorFacade.getProviderPanel('5449D739-5C70-446B-8269-13A862FE771F')
   }
  
   closeViewProviderClicked() {

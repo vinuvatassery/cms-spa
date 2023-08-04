@@ -1,7 +1,9 @@
-<kendo-dialog-titlebar (close)="closeViewProviderClicked()" >Very Nice Provider</kendo-dialog-titlebar>
+
+<ng-container  *ngIf="vendorProfile$ | async as vendorProfile">
+<kendo-dialog-titlebar (close)="closeViewProviderClicked()" >{{vendorProfile.vendorName}}</kendo-dialog-titlebar>
 <section class="k-dialog-body newcase">
       <button aria-label="Edit Provider Profile" kendoButton look="flat" class="card-link-button">Edit </button> 
-      <div class="detail-items-with-border mt-2" *ngIf="vendorProfile$ | async as vendorProfile">
+      <div class="detail-items-with-border mt-2">
           <table >
               <caption hidden> Provider Details</caption>
               <tr hidden>
@@ -29,7 +31,7 @@
                   <td> <p>{{vendorProfile.address1}} </p>  
                        <p>{{vendorProfile.address2}} </p>
                        <p>
-                        {{vendorProfile.city}}, {{vendorProfile.state}} {{vendorProfile.zip}}
+                        {{vendorProfile.cityCode}}, {{vendorProfile.stateCode}} {{vendorProfile.zip}}
                       </p>
                  </td>
               </tr>
@@ -40,8 +42,13 @@
               <tr *ngFor="let contact of vendorProfile.contact;let i = index"> 
                 <td><strong>Contact {{i+1}}</strong></td>
                 <td> <p>{{contact.contactName}}</p>
-                      <p>{{contact.phoneNbr}}</p> 
-                      <p>{{contact.emailAddress}}</p>  </td>
+                    <ng-container *ngFor="let phone of contact.phone"> 
+                      <p>{{phone.phoneNbr}}</p> 
+                    </ng-container>
+                    <ng-container *ngFor="let email of contact.email">
+                      <p>{{email.emailAddress}}</p> 
+                    </ng-container>
+                     </td>
             </tr>
               
   
@@ -62,3 +69,5 @@
           
       </div>
   </kendo-dialog-actions>
+
+</ng-container>
