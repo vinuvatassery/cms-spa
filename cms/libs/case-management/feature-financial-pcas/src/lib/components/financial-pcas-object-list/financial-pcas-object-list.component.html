@@ -69,7 +69,7 @@
             <div *kendoGridDetailTemplate="let dataItem">
               
 
-                      <cms-financial-pcas-group-list></cms-financial-pcas-group-list>
+                      <cms-financial-pcas-group-list  (openAddGroupClickedEventTriggered)="onOpenAddGroupClicked($event)"></cms-financial-pcas-group-list>
 
                   </div>
             <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"

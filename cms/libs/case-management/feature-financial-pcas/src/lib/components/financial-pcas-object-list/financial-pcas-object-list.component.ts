@@ -115,7 +115,7 @@ export class FinancialPcasObjectListComponent implements OnInit, OnChanges
       click: (data: any): void => {
         if (!this.isAddGroupOptionClosed) {
           this.isAddGroupOptionClosed = true; 
-          this.onOpenAddGroupClicked();
+          this.onOpenAddGroupClicked(data);
         }
       },
     },
@@ -323,7 +323,7 @@ export class FinancialPcasObjectListComponent implements OnInit, OnChanges
     }
   }
 
-  onOpenAddGroupClicked(): void {
+  onOpenAddGroupClicked(result:any): void {
    this.isAddGroupOptionClosed = false;
   }
 

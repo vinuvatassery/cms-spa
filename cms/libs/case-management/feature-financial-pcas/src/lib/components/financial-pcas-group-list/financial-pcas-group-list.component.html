@@ -2,7 +2,7 @@
       <h4>Group</h4>
       <button kendoButton icon="add" [primary]="true"
       class="add-new-button"
-     aria-label="add"> Group</button>
+     aria-label="add" (click)="addEditGroupEventTrigged()"> Group</button>
     </div>
     <div class="app-c-table">
 <kendo-grid [resizable]="true" [data]="bbbbbb"> 
@@ -28,3 +28,17 @@
       </kendo-grid-column>
      </kendo-grid>
 </div>
+
+<ng-template #addEditGroupDialogTemplate>
+  <cms-financial-pcas-group-form (closeAddEditGroupClickedEvent)="onCloseAddEditGroupClicked($event)"> </cms-financial-pcas-group-form>
+   </ng-template>
+   <ng-template #activeGroupDialogTemplate>
+  <cms-financial-pcas-group-activate (closeActivateGroupClickedEvent)="onCloseActivateGroupClicked($event)"></cms-financial-pcas-group-activate>
+   </ng-template>
+   <ng-template #deActiveGroupDialogTemplate>
+  <cms-financial-pcas-group-deactivate (closeDeactivateGroupClickedEvent)="onCloseDeactivateGroupClicked($event)"></cms-financial-pcas-group-deactivate>
+   </ng-template>
+  
+   <ng-template #removeGroupDialogTemplate>
+  <cms-financial-pcas-group-remove (closeRemoveGroupClickedEvent)="onCloseRemoveGroupClicked($event)"></cms-financial-pcas-group-remove>
+   </ng-template>
