@@ -85,29 +85,7 @@ export class FinancialPcasObjectListComponent implements OnInit, OnChanges
 
   ];
 
-  groupGridActions =[
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Edit Group',
-      icon: 'edit', 
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Active Group',
-      icon: 'check', 
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'De-active Group',
-      icon: 'block', 
-    },
-    {
-      buttonType: 'btn-h-danger',
-      text: 'Delete Group',
-      icon: 'delete', 
-    },
-
-  ];
+ 
   aaaaaa = [
     {
       id: 1, 
@@ -123,19 +101,7 @@ export class FinancialPcasObjectListComponent implements OnInit, OnChanges
     },
     
   ];
-  bbbbbb = [
-    {
-      id: 1,  
-      group: '123123`',  
-      isActive: true,
-    },
-    {
-      id: 2,
-      group: '123123`',  
-      isActive: true,
-    },
-    
-  ];
+
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,

@@ -1,1 +1,14 @@
-<p>financial-pcas-object-deactivate works!</p>
+<kendo-dialog-titlebar (close)="closeModalClicked()"> Deactivate Object </kendo-dialog-titlebar>
+<section class="k-dialog-body">
+      <p class="text-muted mb-2">Are you sure you want to Deactivate Object <strong>Object Name</strong>?</p>    </section>
+  <kendo-dialog-actions>
+      <div class="justify-content-between">
+          <div class="justify-content-end">
+              <button kendoButton [primary]="true" look="outline" aria-label="cancel" (click)="closeModalClicked()"
+                  > Cancel </button>
+              <button kendoButton [primary]="true" aria-label="DEACTIVATE"   > DEACTIVATE </button>
+          </div>
+      </div>
+  </kendo-dialog-actions>
+
+  

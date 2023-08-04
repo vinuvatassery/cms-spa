@@ -21,12 +21,12 @@ import { FinancialPcasAssignmentRemoveComponent } from './components/financial-p
 import { FinancialPcasAssignmentReportAlertComponent } from './components/financial-pcas-assignment-report-alert/financial-pcas-assignment-report-alert.component';
 import { FinancialPcasAssignmentReportPreviewSubmitComponent } from './components/financial-pcas-assignment-report-preview-submit/financial-pcas-assignment-report-preview-submit.component';
 import { FinancialPcasObjectFormComponent } from './components/financial-pcas-object-form/financial-pcas-object-form.component';
-import { FinancialPcasObjectDeleteComponent } from './components/financial-pcas-object-delete/financial-pcas-object-delete.component';
+import { FinancialPcasObjectRemoveComponent } from './components/financial-pcas-object-remove/financial-pcas-object-remove.component';
 import { FinancialPcasObjectActivateComponent } from './components/financial-pcas-object-activate/financial-pcas-object-activate.component';
 import { FinancialPcasObjectDeactivateComponent } from './components/financial-pcas-object-deactivate/financial-pcas-object-deactivate.component';
 import { FinancialPcasGroupDeactivateComponent } from './components/financial-pcas-group-deactivate/financial-pcas-group-deactivate.component';
 import { FinancialPcasGroupActivateComponent } from './components/financial-pcas-group-activate/financial-pcas-group-activate.component';
-import { FinancialPcasGroupDeleteComponent } from './components/financial-pcas-group-delete/financial-pcas-group-delete.component';
+import { FinancialPcasGroupRemoveComponent } from './components/financial-pcas-group-remove/financial-pcas-group-remove.component';
 import { FinancialPcasGroupFormComponent } from './components/financial-pcas-group-form/financial-pcas-group-form.component';
 
 @NgModule({
@@ -55,12 +55,12 @@ import { FinancialPcasGroupFormComponent } from './components/financial-pcas-gro
     FinancialPcasAssignmentReportAlertComponent,
     FinancialPcasAssignmentReportPreviewSubmitComponent,
     FinancialPcasObjectFormComponent,
-    FinancialPcasObjectDeleteComponent,
+    FinancialPcasObjectRemoveComponent,
     FinancialPcasObjectActivateComponent,
     FinancialPcasObjectDeactivateComponent,
     FinancialPcasGroupDeactivateComponent,
     FinancialPcasGroupActivateComponent,
-    FinancialPcasGroupDeleteComponent,
+    FinancialPcasGroupRemoveComponent,
     FinancialPcasGroupFormComponent,
   ],
   exports: [
@@ -81,12 +81,12 @@ import { FinancialPcasGroupFormComponent } from './components/financial-pcas-gro
     FinancialPcasAssignmentReportAlertComponent,
     FinancialPcasAssignmentReportPreviewSubmitComponent,
     FinancialPcasObjectFormComponent,
-    FinancialPcasObjectDeleteComponent,
+    FinancialPcasObjectRemoveComponent,
     FinancialPcasObjectActivateComponent,
     FinancialPcasObjectDeactivateComponent,
     FinancialPcasGroupDeactivateComponent,
     FinancialPcasGroupActivateComponent,
-    FinancialPcasGroupDeleteComponent,
+    FinancialPcasGroupRemoveComponent,
     FinancialPcasGroupFormComponent,
   ],
 })

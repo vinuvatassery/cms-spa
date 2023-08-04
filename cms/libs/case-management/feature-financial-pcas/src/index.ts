@@ -32,7 +32,7 @@ export * from './lib/components/financial-pcas-assignment-report-preview-submit/
 
 export * from './lib/components/financial-pcas-object-form/financial-pcas-object-form.component';
 
-export * from './lib/components/financial-pcas-object-delete/financial-pcas-object-delete.component';
+export * from './lib/components/financial-pcas-object-remove/financial-pcas-object-remove.component';
 
 export * from './lib/components/financial-pcas-object-activate/financial-pcas-object-activate.component';
 
@@ -42,6 +42,6 @@ export * from './lib/components/financial-pcas-group-deactivate/financial-pcas-g
 
 export * from './lib/components/financial-pcas-group-activate/financial-pcas-group-activate.component';
 
-export * from './lib/components/financial-pcas-group-delete/financial-pcas-group-delete.component';
+export * from './lib/components/financial-pcas-group-remove/financial-pcas-group-remove.component';
 
 export * from './lib/components/financial-pcas-group-form/financial-pcas-group-form.component';
