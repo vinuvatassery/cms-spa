@@ -86,7 +86,7 @@
                               [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
                               [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
                               [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
-                              [data]="reconcileGridLists$ | async">
+                              [data]="reconcileGridLists" (selectionChange)="onSelectionChange($event)">
                               <kendo-grid-checkbox-column [sticky]="true" title="Print Notice" [columnMenu]="false" [showSelectAll]="false"
                                     [width]="80"></kendo-grid-checkbox-column>
                               <kendo-grid-column field="vendorName" title="Medical Provider" [width]="160">
@@ -97,19 +97,19 @@
                                           </button>
                                     </ng-template>
                               </kendo-grid-column>
-                              <kendo-grid-column field="type" title="TIN" [width]="160"> </kendo-grid-column>
+                              <kendo-grid-column field="tin" title="TIN" [width]="160"> </kendo-grid-column>
 
-                              <kendo-grid-column field="clientName" title="Pmt. Method" [width]="160">
+                              <kendo-grid-column field="paymentMethod" title="Pmt. Method" [width]="160">
                               </kendo-grid-column>
-                              <kendo-grid-column field="refundWarrant" title="Date Pmt. Reconciled" [width]="200">
+                              <kendo-grid-column field="datePaymentReconciled" title="Date Pmt. Reconciled" [width]="200">
                               </kendo-grid-column>
-                              <kendo-grid-column field="refundAmount" title="Date Pmt. Sent" [width]="160">
+                              <kendo-grid-column field="datePaymentSent" title="Date Pmt. Sent" [width]="160">
                               </kendo-grid-column>
-                              <kendo-grid-column field="depositDate" title="Pmt. Amount" [width]="180">
+                              <kendo-grid-column field="paymentAmount" title="Pmt. Amount" [width]="180">
                               </kendo-grid-column>
-                              <kendo-grid-column field="depositMethod" title="Warrant Number" [width]="180">
+                              <kendo-grid-column field="warrantNumber" title="Warrant Number" [width]="180">
                               </kendo-grid-column>
-                              <kendo-grid-column field="indexCode" title="Note (Optional)" [width]="180">
+                              <kendo-grid-column field="note" title="Note (Optional)" [width]="180">
                               </kendo-grid-column>
                               
                    
@@ -175,8 +175,12 @@
 
 
 <ng-template #PrintAuthorizationDialog>
-      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Authorization(s)</kendo-dialog-titlebar>
-    <cms-financial-claims-print-authorization></cms-financial-claims-print-authorization>
+      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Advice Letter(s)</kendo-dialog-titlebar>
+      <cms-financial-claims-print-authorization
+  [printOption]="onlyPrintAdviceLetter"
+  [items]="selectedDataRows"
+  (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+  ></cms-financial-claims-print-authorization>
     </ng-template>
 
 

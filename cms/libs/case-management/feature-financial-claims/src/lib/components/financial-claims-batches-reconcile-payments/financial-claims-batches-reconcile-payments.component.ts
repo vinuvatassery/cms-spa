@@ -50,13 +50,41 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
+  selectedDataRows: any[] = [];
+  selectedCount: number = 0;
+  onlyPrintAdviceLetter : boolean = false;
+  startItemNumber: number = 1;
+  isStartItemNumberUpdated: boolean = false;
 
   gridClaimsReconcileDataSubject = new Subject<any>();
   gridClaimsReconcileData$ = this.gridClaimsReconcileDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
- 
+
+  reconcileGridLists =[
+    {
+      vendorName: 'Very Nice Vendor',
+      tin:'1234', 
+      paymentMethod:'ACH', 
+      datePaymentReconciled:'12/07/2023', 
+      datePaymenttSent:'12/07/2023', 
+      paymentAmount:'1000.00', 
+      warrantNumber:'16276', 
+      note:'Testing'
+    },
+    {
+      vendorName: 'Test Vendor',
+      tin:'4321', 
+      paymentMethod:'Check', 
+      datePaymentReconciled:'21/07/2023', 
+      datePaymentSent:'21/07/2023', 
+      paymentAmount:'2000.00', 
+      warrantNumber:'87645', 
+      note:'Testing'
+    }
+  ];
+  
   
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute ) {}
@@ -190,5 +218,35 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       this.route.navigate(['/financial-management/claims/' + this.claimsType] );
  
      }
+
+     onSelectionChange(selectedKeys: any): void {
+      if(selectedKeys.selectedRows.length > 0 || selectedKeys.deselectedRows.length > 0){
+        if(selectedKeys.selectedRows[0] != undefined){
+          selectedKeys.selectedRows.forEach((element:any) => {
+            this.startItemNumber == this.getItemNumber();
+            const eachSelectedRow = { ...element.dataItem, item: this.startItemNumber, isChecked: true };
+            this.selectedDataRows.push(eachSelectedRow);
+          });
+        }
+        if(selectedKeys.deselectedRows[0] != undefined){
+          selectedKeys.deselectedRows.forEach((element:any) => {
+            this.selectedDataRows.splice(element.index);
+          });
+        }
+        if(this.selectedDataRows.length == 0){
+          this.isStartItemNumberUpdated = false;
+        }
+        this.selectedCount = this.selectedDataRows.length;
+      }
+    }
+
+    getItemNumber(){
+      if(!this.isStartItemNumberUpdated){
+        this.isStartItemNumberUpdated = true;
+        return this.startItemNumber;
+      }else{
+        return this.startItemNumber++;
+      }
+    }
 }
 

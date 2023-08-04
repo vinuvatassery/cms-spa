@@ -36,13 +36,48 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
   isRequestPaymentClicked = false;
-  isPrintAuthorizationClicked = false;
+  isPrintAdviceLetterClicked = false;
   isUnBatchClaimsClosed = false;
   isDeleteClaimClosed = false;
   PreviewSubmitPaymentDialog: any;
   printAuthorizationDialog: any;
   UnBatchDialog: any;
   deleteClaimsDialog: any;
+
+  bathcLogGridDataLst =[
+    {
+      item: 1,
+      invoiceID:1,
+      providerName: 'Very Nice Provider',
+      taxID:'1234', 
+      paymentMethod:'ACH', 
+      clientName:'Client 1', 
+      nameOnPrimaryInsuranceCard:'Test User', 
+      memberID:'12', 
+      serviceCount:'1', 
+      totalCost:'1000', 
+      totalDue:'500', 
+      paymentStatus:'InProgress', 
+      by: 'by',
+    },
+    {
+      item: 2,
+      invoiceID:2,
+      providerName: 'Test Provider',
+      taxID:'4321', 
+      paymentMethod:'Check', 
+      clientName:'Client Client', 
+      nameOnPrimaryInsuranceCard:'John Deo', 
+      memberID:'21', 
+      serviceCount:'2', 
+      totalCost:'2000', 
+      totalDue:'800', 
+      paymentStatus:'InProgress', 
+      by: 'by',
+    }
+  ];
+
+  
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -50,7 +85,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
       icon: 'local_atm',
       click: (data: any): void => {
       this.isRequestPaymentClicked = true;
-      this.isPrintAuthorizationClicked = false;
+      this.isPrintAdviceLetterClicked = false;
         
       },  
     },
@@ -66,11 +101,11 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
 
     {
       buttonType: 'btn-h-primary',
-      text: 'Print Authorizations',
+      text: 'Print Advice Letters',
       icon: 'print',
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;
-        this.isPrintAuthorizationClicked = true;
+        this.isPrintAdviceLetterClicked = true;
           
         },
     },
@@ -132,7 +167,10 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+  selectedDataRows: any[] = [];
+  selectedKeys: any[] = [];
+  selectedCount: number = 0;
+  onlyPrintAdviceLetter : boolean = true;
    
   /** Constructor **/
   constructor(private route: Router,private dialogService: DialogService, public activeRoute: ActivatedRoute ) {}
@@ -275,7 +313,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
 
   onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
-    this.isPrintAuthorizationClicked = false;
+    this.isPrintAdviceLetterClicked = false;
   }
 
   onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
@@ -317,6 +355,23 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   onModalDeleteClaimsModalClose(result: any) {
     if (result) { 
       this.deleteClaimsDialog.close();
+    }
+  }
+
+  onSelectionChange(selectedKeys: any): void {
+    if(selectedKeys.selectedRows.length > 0 || selectedKeys.deselectedRows.length > 0){
+      if(selectedKeys.selectedRows[0] != undefined){
+        selectedKeys.selectedRows.forEach((element:any) => {
+          const eachSelectedRow = { ...element.dataItem, isChecked: true };
+          this.selectedDataRows.push(eachSelectedRow);
+        });
+      }
+      if(selectedKeys.deselectedRows[0] != undefined){
+        selectedKeys.deselectedRows.forEach((element:any) => {
+          this.selectedDataRows.splice(element.index);
+        });
+      }
+      this.selectedCount = this.selectedDataRows.length;
     }
   }
  
