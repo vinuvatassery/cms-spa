@@ -36,6 +36,7 @@
                         </ng-template>
                     </kendo-tabstrip-tab>
                     <kendo-tabstrip-tab title="PCA Reassignment">
+                        <ng-template kendoTabTitle> PCA Reassignment <span class="tab-batch-notify">50</span></ng-template>
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-financial-pcas-reassignment-list  [financialPcaReassignmentGridLists$]="financialPcaReassignmentGridLists$"
@@ -50,14 +51,20 @@
                     <kendo-tabstrip-tab title="Assignment Report">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-pcas-assignment-report-list></cms-financial-pcas-assignment-report-list>
+                                <cms-financial-pcas-assignment-report-list  [financialPcaReportGridLists$]="financialPcaReportGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaReport"
+                                [sortType]="sortType" [sort]="sortFinancialPcaReportList" 
+                                (loadFinancialPcaReportListEvent)="loadFinancialPcaReportListGrid($event)"></cms-financial-pcas-assignment-report-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
                     <kendo-tabstrip-tab title="Object & Group Assignment">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-pcas-object-list></cms-financial-pcas-object-list>
+                                <cms-financial-pcas-object-list  [financialPcaObjectGridLists$]="financialPcaObjectGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValuePcaObject"
+                                [sortType]="sortType" [sort]="sortPcaObjectList" 
+                                (loadFinancialPcaObjectListEvent)="loadFinancialPcaObjectListGrid($event)"></cms-financial-pcas-object-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

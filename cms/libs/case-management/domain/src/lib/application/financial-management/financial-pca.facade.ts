@@ -58,7 +58,7 @@ export class FinancialPcaFacade {
   financialPcaReportData$ = this.financialPcaReportDataSubject.asObservable();
 
   private batchRFinancialPcaObjectDataSubject =  new Subject<any>();
-  financialPcaObjectDataList$ = this.batchRFinancialPcaObjectDataSubject.asObservable();
+  financialPcaObjectData$ = this.batchRFinancialPcaObjectDataSubject.asObservable();
  
  
  
