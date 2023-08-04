@@ -180,8 +180,10 @@
                                         <div class="flex-col flex-col-4">
                                             <kendo-floatinglabel text="CTP Code">
                                                 <kendo-textbox aria-label="CTP Code"
-                                                    [fillMode]="formUiStyle.inputFillMode" formControlName="ctpCode">
+                                                    [fillMode]="formUiStyle.inputFillMode" formControlName="cptCode"
+                                                    (valueChange)="searchctpcode($event, i)"> 
                                                 </kendo-textbox>
+                                               
                                             </kendo-floatinglabel>
                                             <kendo-formerror *ngIf="(isControlValid('ctpCode', i) && isSubmitted)"
                                                 class="d-flex align-items-center"> <span class="material-icons mr-1"
@@ -201,7 +203,8 @@
                                             <kendo-floatinglabel text="Service Description">
                                                 <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
                                                     aria-label="Service Description"
-                                                    formControlName="serviceDescription">
+                                                    formControlName="serviceDescription"
+                                                        >
                                                     <kendo-textarea-suffix class="justify-content-end">
                                                         <span class="tareacounter"> 10/300</span>
                                                     </kendo-textarea-suffix>

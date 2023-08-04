@@ -40,7 +40,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   gridSkipCount = this.financialMedicalClaimsFacade.skipCount;
   sort = this.financialMedicalClaimsFacade.sortClaimsList;
   state!: State;
-
+ 
   paymentRequestType$ = this.lovFacade.paymentRequestType$;
   medicalProvidersearchLoaderVisibility$ = this.financialVendorRefundFacade.medicalProviderSearchLoaderVisibility$;
   pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
@@ -58,7 +58,6 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   sessionId: any = '';
   clientCaseEligibilityId: any = null;
   isEdit = false;
-
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
   constructor(
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
@@ -99,6 +98,23 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
 
   searchMedicalProvider(searchText: any) {
     this.financialVendorRefundFacade.searchPharmacies(searchText);
+  }
+
+  searchctpcode(cptcode:any, index:number){
+    let _cptcode = this.financialMedicalClaimsFacade.searchctpcode(cptcode)
+    .subscribe({
+      next: (response: any) => {
+        let service=response[0]
+        let ctpCodeIsvalid = this.AddClaimServicesForm.at(index) as FormGroup;
+        ctpCodeIsvalid.patchValue({
+          cptCode: service.cptCode1,
+          serviceDescription: service.serviceDesc
+        }); 
+        this.cd.detectChanges();
+      },
+      error:(error: any) => {
+      }
+    });
   }
 
   loadClientBySearchText(searchText: any) {
@@ -298,8 +314,6 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
 
     this.cd.detectChanges();
   }
-
-
 }
 
 export class MedicalClaims {

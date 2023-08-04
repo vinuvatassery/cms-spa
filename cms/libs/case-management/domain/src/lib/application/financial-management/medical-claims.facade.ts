@@ -76,7 +76,6 @@ export class FinancialMedicalClaimsFacade {
 
   private medicalClaimByCpt = new Subject<any>();
   medicalClaimByCpt$ = this.medicalClaimByCpt.asObservable();
-  /** Private properties **/
  
   /** Public properties **/
  
@@ -176,6 +175,7 @@ export class FinancialMedicalClaimsFacade {
       },
     });  
   }
+  
   loadReconcileListGrid(){
     this.financialMedicalClaimsDataService.loadReconcileListService().subscribe({
       next: (dataResponse) => {
@@ -214,5 +214,9 @@ export class FinancialMedicalClaimsFacade {
         return of(false);
       })
     )
+  }
+
+  searchctpcode(cptcode: string){    
+    return this.financialMedicalClaimsDataService.searchctpcode(cptcode)
   }
 }

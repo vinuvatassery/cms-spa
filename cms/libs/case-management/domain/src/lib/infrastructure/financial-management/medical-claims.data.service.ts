@@ -476,9 +476,14 @@ export class FinancialMedicalClaimsDataService {
 
   getMedicalClaimByPaymentRequestId(event : any)
   {
-    debugger
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/MedicalClaim/Medicalclaim/${event}`
+    )
+  }
+
+  searchctpcode(cptcode:string){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/MedicalClaim/cptcode/${cptcode}`
     )
   }
 }
