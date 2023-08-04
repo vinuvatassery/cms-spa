@@ -248,44 +248,36 @@ export class FinancialClaimsDataService {
     ]);
   }
 
-  loadReconcileListService(){
-    return of([
-      {
-        id:1,
-        vendorName: 'Vendor Name',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
-      },
-      {
-        id:2,
-        vendorName: 'Address `',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
-      },
+  loadReconcileListService(batchId:any,claimsType:any,paginationParameters:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}/reconcile-payments?expenseType=${claimsType}&SkipCount=${paginationParameters?.skipCount}
+    &maxResultCount=${paginationParameters?.pageSize}&sortType=${paginationParameters?.sortType}&sorting=${paginationParameters?.sortColumn}`);
+    // return of([
+    //   {
+    //     paymentId:1,
+    //     medicalProvider: 'Vendor Name',
+    //     tin:'tin123', 
+    //     paymentMethod:'method1', 
+    //     datePmtReconciled:new Date, 
+    //     datePmtSent:new Date,  
+    //     paymentAmount:'address2', 
+    //     warrantNumber:'number123',
+    //     note:'note123',
+    //     noteHover:false,
+    //   },
+    //   {
+    //     paymentId:2,
+    //     medicalProvider: 'Vendor Name',
+    //     tin:'tin123', 
+    //     paymentMethod:'method1', 
+    //     datePmtReconciled:new Date, 
+    //     datePmtSent:new Date,  
+    //     paymentAmount:'address2', 
+    //     warrantNumber:'number123',
+    //     note:'note123',
+    //     noteHover:false,
+    //   },
      
-    ]);
+    // ]);
   }
   loadClaimsListService( ) {
     return of([

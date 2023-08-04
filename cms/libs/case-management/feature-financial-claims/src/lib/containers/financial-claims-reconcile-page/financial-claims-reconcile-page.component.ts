@@ -22,7 +22,7 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   sort = this.financialClaimsFacade.sortReconcileList;
   state!: State;
   reconcileGridLists$ = this.financialClaimsFacade.reconcileDataList$;
-
+  batchId:any='0B20DA09-C242-4EFC-93D8-B40E5314E04A';
   claimsType: any;
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
@@ -53,6 +53,6 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   }
 
   loadReconcileListGrid(event: any) {
-    this.financialClaimsFacade.loadReconcileListGrid();
+    this.financialClaimsFacade.loadReconcileListGrid(this.batchId,this.claimsType,event);
   }
 }

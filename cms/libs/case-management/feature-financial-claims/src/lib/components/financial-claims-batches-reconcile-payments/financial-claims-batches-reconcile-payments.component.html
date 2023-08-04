@@ -17,7 +17,7 @@
                         <div class="flex-col flex-col-4 field-with-btn">
                               <kendo-floatinglabel text="Date Payment Reconciled">
                                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                                          formatPlaceholder="formatPattern" aria-label="Date Payment Reconciled"
+                                          formatPlaceholder="formatPattern" aria-label="Date Payment Reconciled" [(ngModel)]="datePaymentReconciled"
                                           placeholder="">
                                     </kendo-datepicker>
                               </kendo-floatinglabel>
@@ -82,35 +82,82 @@
 
 
                   <div class="app-c-table">
-                        <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take"
-                              [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
-                              [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
-                              [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
-                              [data]="reconcileGridLists$ | async">
-                              <kendo-grid-checkbox-column [sticky]="true" title="Print Notice" [columnMenu]="false" [showSelectAll]="false"
-                                    [width]="80"></kendo-grid-checkbox-column>
-                              <kendo-grid-column field="vendorName" title="Medical Provider" [width]="160">
-                                    <ng-template kendoGridCellTemplate let-dataItem>
-                                          <button aria-label="Medical Provider" kendoButton look="flat"
-                                                class="card-link-button">
-                                                {{ dataItem.vendorName }}
-                                          </button>
-                                    </ng-template>
-                              </kendo-grid-column>
-                              <kendo-grid-column field="type" title="TIN" [width]="160"> </kendo-grid-column>
+                        <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take" #grid
+                        [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
+                        [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
+                        [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
+                        [data]="reconcilePaymentGridPagedResult" >
+                        <kendo-grid-checkbox-column [sticky]="true" title="Print Advice Ltr" [columnMenu]="false" [showSelectAll]="false"
+                              [width]="80"></kendo-grid-checkbox-column>
+                        <kendo-grid-column field="vendorName" title="Medical Provider" [width]="160">
+                              <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex" 
+                              let-formArray >
+                                    <button aria-label="Medical Provider" kendoButton look="flat"
+                                          class="card-link-button"  >
+                                          {{dataItem?.vendorName}} 
+                                    </button>
+                              </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="tin" title="TIN" [width]="160"> 
+                        </kendo-grid-column>
+                        <kendo-grid-column field="paymentMethodCode" title="Pmt. Method" [width]="160">
+                        </kendo-grid-column>
+                        <kendo-grid-column  title="Date Pmt. Reconciled" [width]="200">
+                              <ng-template kendoGridCellTemplate let-dataItem  let-rowIndex="rowIndex">                  
+                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                                    aria-label="Date Pmt. Reconciled"  
+                                    [(ngModel)]="dataItem.paymentReconciledDate"  (valueChange)="dateChange($event,dataItem,'DATE_PAYMENT_RECONCILED')"
+                                    [ngClass]="dataItem.datePaymentRecInValid?'ng-dirty ng-invalid' :''" [max]="currentDate"                             
+                                     formatPlaceholder="formatPattern"  placeholder="Date Pmt. Reconciled" >                                          
+                                  </kendo-datepicker>
+                                  <kendo-formerror *ngIf="dataItem.datePaymentRecInValid">Future dates not allowed.</kendo-formerror>
+                              </ng-template>
+                        </kendo-grid-column>
+                          <kendo-grid-column field="paymentSentDate" title="Date Pmt. Sent" [width]="160">
+                              <ng-template kendoGridCellTemplate let-dataItem>
+                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                                    aria-label="Date Pmt. Sent"  
+                                    [(ngModel)]="dataItem.paymentSentDate"   (valueChange)="dateChange($event,dataItem,'DATE_PAYMENT_SENT')"
+                                    [ngClass]="dataItem.datePaymentSentInValid?'ng-dirty ng-invalid' :''" [max]="currentDate"                                      
+                                     formatPlaceholder="formatPattern"  placeholder="Date Pmt. Sent" >                                          
+                                  </kendo-datepicker>
+                                  <kendo-formerror *ngIf="dataItem.datePaymentSentInValid">Future dates not allowed.</kendo-formerror>
+                              </ng-template>
+                        </kendo-grid-column>                   
 
-                              <kendo-grid-column field="clientName" title="Pmt. Method" [width]="160">
-                              </kendo-grid-column>
-                              <kendo-grid-column field="refundWarrant" title="Date Pmt. Reconciled" [width]="200">
-                              </kendo-grid-column>
-                              <kendo-grid-column field="refundAmount" title="Date Pmt. Sent" [width]="160">
-                              </kendo-grid-column>
-                              <kendo-grid-column field="depositDate" title="Pmt. Amount" [width]="180">
-                              </kendo-grid-column>
-                              <kendo-grid-column field="depositMethod" title="Warrant Number" [width]="180">
-                              </kendo-grid-column>
-                              <kendo-grid-column field="indexCode" title="Note (Optional)" [width]="180">
-                              </kendo-grid-column>
+                        <kendo-grid-column field="amountPaid" title="Pmt. Amount" [width]="180">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="checkNbr" title="Warrant Number" [width]="180">
+                              <ng-template kendoGridCellTemplate let-dataItem>
+                                    <kendo-textbox  aria-label="Warrant Number"
+                                    placeholder="Warrant Number"  [maxlength]="12"
+                                    [fillMode]="formUiStyle.inputFillMode"
+                                    [(ngModel)]="dataItem.checkNbr" (valueChange)="warrantNumberChange(dataItem)"    >
+                                  </kendo-textbox>
+                              </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column field="comments" title="Note (optional)" [width]="180">
+                              <ng-template kendoGridCellTemplate let-dataItem>
+                                    <div kendoTooltip>                                             
+                                          <kendo-textarea
+                                          #tareaCessation
+                                          [fillMode]="formUiStyle.inputFillMode"
+                                          [maxlength]="tAreaCessationMaxLength"
+                                          [rows]="2"                                          
+                                          resizable ="none"
+                                          [(ngModel)]="dataItem.comments"
+                                          (valueChange)="noteChange(dataItem)"
+                                          aria-label="smoking cessation note"
+                                          class="form-control table-text-area"
+                                          title ="{{dataItem.comments}}">
+                                       
+                                        </kendo-textarea>
+                                        <kendo-textarea-suffix class="justify-content-end">
+                                          <span class="counter">{{ dataItem.tAreaCessationCounter }}</span>
+                                        </kendo-textarea-suffix>
+                                    </div>
+                        </ng-template>
+                        </kendo-grid-column>
                               
                    
 

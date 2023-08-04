@@ -1153,3 +1153,11 @@ color: $app-primary-font-color;
     min-height: 38px;
   }
 }
+
+.table-text-area{
+  textarea{
+    height: 35px;
+    resize: vertical;
+    line-height: normal;
+  }
+}

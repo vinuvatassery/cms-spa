@@ -253,7 +253,6 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   }
 
   goToBatchItems(event : any){   
-    debugger
     this.route.navigate([this.route.url, 'items'] ); 
   }
 

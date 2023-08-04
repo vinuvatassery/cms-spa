@@ -9,6 +9,7 @@ import {
   Output,
   TemplateRef,
   ViewChild,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {  GridDataResult } from '@progress/kendo-angular-grid';
@@ -41,6 +42,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   @Input() reconcileGridLists$: any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   public state!: State;
+  public currentDate =  new Date(); 
   sortColumn = 'batch';
   sortDir = 'Ascending';
   columnsReordered = false;
@@ -50,20 +52,24 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  reconcilePaymentGridPagedResult!: any;
+  reconcilePaymentGridUpdatedResult!: any;
   gridClaimsReconcileDataSubject = new Subject<any>();
   gridClaimsReconcileData$ = this.gridClaimsReconcileDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
- 
+  datePaymentReconciled:any;
+  tAreaCessationMaxLength:any=200;
+  //tareaCessationCounter: string="200";
   
   /** Constructor **/
-  constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute ) {}
+  constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
+    private readonly cd: ChangeDetectorRef) {}
   
   ngOnInit(): void {
      
-    this.loadReconcileListGrid();
+    //this.loadReconcileListGrid();
   }
   ngOnChanges(): void {
     this.state = {
@@ -71,7 +77,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
+    this.gridDataHandle();
     this.loadReconcileListGrid();
   }
 
@@ -93,12 +99,12 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     this.isReconcileGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
+      pageSize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
     };
     this.loadReconcileListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
+    //this.gridDataHandle();
   }
  
   
@@ -149,28 +155,92 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
 
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
+    this.assignGridDataToMainListToSave();
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadReconcileListGrid();
   }
+
+  assignGridDataToMainListToSave(){
+    if(this.reconcilePaymentGridUpdatedResult === null || this.reconcilePaymentGridUpdatedResult === undefined){
+      this.reconcilePaymentGridUpdatedResult = this.reconcilePaymentGridPagedResult.filter((x:any)=>x.datePmtReconciled !==null
+      || x.datePmtSent !== null || x.warrantNumber !== null)
+    }
+    }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
 
   gridDataHandle() {
-    this.reconcileGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
+     this.reconcileGridLists$.subscribe((data: any) => {
+      this.reconcilePaymentGridPagedResult = data.items;  
+      this.tAreaVariablesInitiation(this.reconcilePaymentGridPagedResult);
+      this.reconcilePaymentGridPagedResult.data = filterBy(
+        this.reconcilePaymentGridPagedResult.data,
         this.filterData
       );
-      this.gridClaimsReconcileDataSubject.next(this.gridDataResult);
+      this.isReconcileGridLoaderShow = false;
+      this.gridClaimsReconcileDataSubject.next(this.reconcilePaymentGridPagedResult);
       if (data?.total >= 0 || data?.total === -1) { 
-        this.isReconcileGridLoaderShow = false;
+        this.isReconcileGridLoaderShow = false;       
       }
+      this.cd.detectChanges()
     });
     this.isReconcileGridLoaderShow = false;
+    this.cd.detectChanges()
+  }
+
+  validateGridRecord(){
+
+  }
+
+  dateChange(enteredDate: Date,dataItem:any,type:any) {
+    const todayDate = new Date(); 
+    switch (type.toUpperCase()) {
+      case "DATE_PAYMENT_RECONCILED":
+        if (enteredDate > todayDate) {  
+          dataItem.datePaymentRecInValid = true;
+        }     
+        else{
+          dataItem.datePaymentRecInValid = false;
+        }
+        break;
+      case "DATE_PAYMENT_SENT":
+        if (enteredDate > todayDate) {  
+          dataItem.datePaymentSentInValid = true;
+        }     
+        else{
+          dataItem.datePaymentSentInValid = false;
+        }
+        break;        
+    }   
+  }
+
+  noteChange(dataItem:any){
+    this.calculateCharacterCount(dataItem)
+  }
+  
+  private tAreaVariablesInitiation(dataItem:any) {
+    dataItem.forEach((dataItem:any) => {
+      this.calculateCharacterCount(dataItem);
+    });
+    
+  }
+
+  calculateCharacterCount(dataItem:any){
+    let tAreaCessationCharactersCount = dataItem.comments
+      ? dataItem.comments.length
+      : 0;
+      dataItem.tAreaCessationCounter = `${tAreaCessationCharactersCount}/${this.tAreaCessationMaxLength}`;
+  }
+  warrantNumberChange(dataItem:any){
+    if(this.datePaymentReconciled === null || this.datePaymentReconciled === undefined){
+      dataItem.paymentReconciledDate = this.currentDate;
+      dataItem.datePaymentRecInValid = false;
+      dataItem.datePaymentSentInValid = false;
+    }
+
   }
 
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {

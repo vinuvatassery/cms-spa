@@ -181,8 +181,8 @@ export class FinancialClaimsFacade {
       },
     });  
   }
-  loadReconcileListGrid(){
-    this.financialClaimsDataService.loadReconcileListService().subscribe({
+  loadReconcileListGrid(batchId:any,claimsType:any,event:any){
+    this.financialClaimsDataService.loadReconcileListService(batchId,claimsType,event).subscribe({
       next: (dataResponse) => {
         this.batchReconcileDataSubject.next(dataResponse);
         this.hideLoader();
