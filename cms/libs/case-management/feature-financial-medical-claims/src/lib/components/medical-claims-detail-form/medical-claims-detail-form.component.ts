@@ -57,8 +57,6 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   medicalClaimServices = new MedicalClaims();
   sessionId: any = '';
   clientCaseEligibilityId: any = null;
-
-
   isEdit = false;
 
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
@@ -77,7 +75,9 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.addClaimServiceGroup();
-    this.getMedicalClaimByPaymentRequestId();
+    if(this.isEdit){
+      this.getMedicalClaimByPaymentRequestId();
+    }    
   }
 
   closeAddEditClaimsFormModalClicked() {
@@ -185,8 +185,9 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
     let bodyData = {
       clientId: formValues.client.clientId,
       vendorId: formValues.medicalProvider.vendorId,
-      claimNbr: '0',
+      claimNbr: formValues.medicalProvider.invoiceId,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
+      paymentMethodCode: "MEDICAL",
       tpainvoice: [{}],
     };
     for (let i = 0; i < formValues.claimService.length; i++) {
