@@ -1,1 +1,82 @@
-<p>financial-pcas-setup-form works!</p>
+<kendo-dialog-titlebar (close)="closeAddEditPcaSetupClicked()"> Add PCA's </kendo-dialog-titlebar>
+
+<section class="k-dialog-body">
+      <p class="text-muted mb-2">
+            All fields are required unless otherwise stated.
+      </p>
+      <div class="flex-row">
+            <div class="flex-col flex-col-8">
+                  <kendo-floatinglabel text="PCA Number">
+                        <kendo-textbox aria-label="PCA Number" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                  </kendo-floatinglabel>
+
+            </div>
+            <div class="flex-col flex-col-4">
+                  <kendo-floatinglabel text="AY">
+                        <kendo-textbox aria-label="AY" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                  </kendo-floatinglabel>
+
+
+            </div>
+      </div>
+      <div class="flex-row">
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Grant Name">
+                        <kendo-dropdownlist aria-label="Grant Name" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-dropdownlist>
+                  </kendo-floatinglabel>
+
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Description">
+                        <kendo-textbox aria-label="Description" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                  </kendo-floatinglabel>
+
+
+            </div>
+      </div>
+      <div class="flex-row">
+            <div class="flex-col flex-col-6">
+                  <kendo-floatinglabel text="Open Date">
+                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                              formatPlaceholder="formatPattern" placeholder="">
+                        </kendo-datepicker>
+                  </kendo-floatinglabel>
+
+            </div>
+            <div class="flex-col flex-col-6">
+                  <kendo-floatinglabel text="Close Date">
+                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                              formatPlaceholder="formatPattern" placeholder="">
+                        </kendo-datepicker>
+                  </kendo-floatinglabel>
+
+            </div>
+      </div>
+      <div class="flex-row">
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Amount" class="amount-with-symbol">
+                        <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                        <kendo-numerictextbox placeholder="Amount" aria-label="Amount" [spinners]="false"
+                              class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-numerictextbox>
+                  </kendo-floatinglabel>
+
+            </div>
+
+      </div>
+</section>
+
+<kendo-dialog-actions>
+      <div class="justify-content-between">
+            <div class="justify-content-end">
+                  <button kendoButton [primary]="true" look="outline" aria-label="cancel"
+                        (click)="closeAddEditPcaSetupClicked()">
+                        Cancel
+                  </button>
+                  <button kendoButton [primary]="true" aria-label="Add">
+                        Add
+                  </button>
+            </div>
+      </div>
+</kendo-dialog-actions>
