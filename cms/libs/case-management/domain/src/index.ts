@@ -54,6 +54,7 @@ export * from './lib/entities/grid-state'
 export * from './lib/entities/session-data';
 export * from './lib/entities/payment-request';
 export * from './lib/entities/vendor-contacts';
+export * from './lib/entities/financial-management/payment-panel';
 
 
 /** Enums **/
