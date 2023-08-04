@@ -28,7 +28,14 @@ import { Subject } from 'rxjs';
  
 export class FinancialPcasObjectListComponent implements OnInit, OnChanges
 {
- 
+  @ViewChild('addEditObjectDialogTemplate', { read: TemplateRef })
+  addEditObjectDialogTemplate!: TemplateRef<any>;
+  @ViewChild('activeObjectDialogTemplate', { read: TemplateRef })
+  activeObjectDialogTemplate!: TemplateRef<any>;
+  @ViewChild('deActiveObjectDialogTemplate', { read: TemplateRef })
+  deActiveObjectDialogTemplate!: TemplateRef<any>;
+  @ViewChild('removeObjectDialogTemplate', { read: TemplateRef })
+  removeObjectDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isFinancialPcaObjectGridLoaderShow = false;
@@ -48,39 +55,80 @@ export class FinancialPcasObjectListComponent implements OnInit, OnChanges
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
   gridFinancialPcaObjectDataSubject = new Subject<any>();
   gridFinancialPcaObjectData$ =
     this.gridFinancialPcaObjectDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+
+  isEditObjectOptionClosed = false;
+  isRemoveObjectOptionClosed = false;
+  isActivateObjectOptionClosed = false;
+  isDeactiveteObjectOptionClosed = false;
+  isAddGroupOptionClosed = false;
+
+  addEditDialogService: any;
+  activateDialogService: any;
+  deactivateDialogService: any;
+  removeDialogService: any;
+
   objectGridActions =[
 
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Object',
       icon: 'edit', 
+      click: (data: any): void => {
+        if (!this.isEditObjectOptionClosed) {
+          this.isEditObjectOptionClosed = true; 
+          this.onOpenAddEditObjectClicked(this.addEditObjectDialogTemplate);
+        }
+      },
     },
     {
       buttonType: 'btn-h-primary',
       text: 'Active Object',
       icon: 'check', 
+      click: (data: any): void => {
+        if (!this.isActivateObjectOptionClosed) {
+          this.isActivateObjectOptionClosed = true; 
+          this.onOpenActivateObjectClicked(this.activeObjectDialogTemplate);
+        }
+      },
     },
     {
       buttonType: 'btn-h-primary',
       text: 'De-active Object',
       icon: 'block', 
+      click: (data: any): void => {
+        if (!this.isDeactiveteObjectOptionClosed) {
+          this.isDeactiveteObjectOptionClosed = true; 
+          this.onOpenDeactivateObjectClicked(this.deActiveObjectDialogTemplate);
+        }
+      },
     },
     {
       buttonType: 'btn-h-primary',
       text: 'Add Group',
       icon: 'add', 
+      click: (data: any): void => {
+        if (!this.isAddGroupOptionClosed) {
+          this.isAddGroupOptionClosed = true; 
+          this.onOpenAddGroupClicked();
+        }
+      },
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Object',
+      text: 'Remove Object',
       icon: 'delete', 
+      click: (data: any): void => {
+        if (!this.isRemoveObjectOptionClosed) {
+          this.isRemoveObjectOptionClosed = true; 
+          this.onOpenRemoveObjectClicked(this.removeObjectDialogTemplate);
+        }
+      },
     },
 
   ];
@@ -219,8 +267,66 @@ export class FinancialPcasObjectListComponent implements OnInit, OnChanges
     this.isFinancialPcaObjectGridLoaderShow = false;
   }
 
+
+  
+   
+
+  onOpenAddEditObjectClicked(template: TemplateRef<unknown>): void {
+    this.addEditDialogService = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onCloseAddEditObjectClicked(result: any) {
+    if (result) { 
+      this.isEditObjectOptionClosed = false;
+      this.addEditDialogService.close();
+    }
+  }
  
- 
+  onOpenActivateObjectClicked(template: TemplateRef<unknown>): void {
+    this.activateDialogService = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onCloseActivateObjectClicked(result: any) {
+    if (result) { 
+      this.isActivateObjectOptionClosed = false;
+      this.activateDialogService.close();
+    }
+  }
+
+  onOpenDeactivateObjectClicked(template: TemplateRef<unknown>): void {
+    this.deactivateDialogService = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onCloseDeactivateObjectClicked(result: any) {
+    if (result) { 
+      this.isDeactiveteObjectOptionClosed = false;
+      this.deactivateDialogService.close();
+    }
+  }
+
+  onOpenRemoveObjectClicked(template: TemplateRef<unknown>): void {
+    this.removeDialogService = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  onCloseRemoveObjectClicked(result: any) {
+    if (result) { 
+      this.isRemoveObjectOptionClosed = false;
+      this.removeDialogService.close();
+    }
+  }
+
+  onOpenAddGroupClicked(): void {
+   this.isAddGroupOptionClosed = false;
+  }
+
 }
 
 

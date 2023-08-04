@@ -19,7 +19,7 @@
       </span>
       <span class="search-with-btn">
             <button kendoButton icon="add" [primary]="true"
-             class="add-new-button"
+             class="add-new-button" (click)="onOpenAddEditObjectClicked(addEditObjectDialogTemplate);"
             aria-label="add"> Object</button>
       </span>
 </section>
@@ -107,4 +107,16 @@
 </div>
 
  
- 
+ <ng-template #addEditObjectDialogTemplate>
+<cms-financial-pcas-object-form (closeAddEditObjectClickedEvent)="onCloseAddEditObjectClicked($event)"> </cms-financial-pcas-object-form>
+ </ng-template>
+ <ng-template #activeObjectDialogTemplate>
+<cms-financial-pcas-object-activate (closeActivateObjectClickedEvent)="onCloseActivateObjectClicked($event)"></cms-financial-pcas-object-activate>
+ </ng-template>
+ <ng-template #deActiveObjectDialogTemplate>
+<cms-financial-pcas-object-deactivate (closeDeactivateObjectClickedEvent)="onCloseDeactivateObjectClicked($event)"></cms-financial-pcas-object-deactivate>
+ </ng-template>
+
+ <ng-template #removeObjectDialogTemplate>
+<cms-financial-pcas-object-remove (closeRemoveObjectClickedEvent)="onCloseRemoveObjectClicked($event)"></cms-financial-pcas-object-remove>
+ </ng-template>
