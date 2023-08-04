@@ -7,10 +7,10 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class FinancialPcasAssignmentRemoveComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  @Output() closeRemovePcaSetupClickedEvent = new EventEmitter();
+  @Output() closeRemovePcaAssignmentClickedEvent = new EventEmitter();
 
  
   closeRemovePcaSetupClicked() {
-    this.closeRemovePcaSetupClickedEvent.emit(true);
+    this.closeRemovePcaAssignmentClickedEvent.emit(true);
   }
 }

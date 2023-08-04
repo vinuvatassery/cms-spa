@@ -25,11 +25,13 @@
                     <kendo-tabstrip-tab title="PCA Assignment">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-pcas-assignment-list></cms-financial-pcas-assignment-list>
-                                <!-- <cms-financial-claims-batches-list  [claimsType]="claimsType" [financialClaimsBatchGridLists$]="financialClaimsBatchGridLists$"
-                                [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsBatch"
-                                [sortType]="sortType" [sort]="sortBatchList" 
-                                (loadFinancialClaimsBatchListEvent)="loadFinancialClaimsBatchListGrid($event)"></cms-financial-claims-batches-list> -->
+                                <cms-financial-pcas-assignment-list 
+                                [financialPcaAssignmentGridLists$]="financialPcaAssignmentGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaAssignment"
+                                [sortType]="sortType" [sort]="sortPcaAssignmentList" 
+                                (loadFinancialPcaAssignmentListEvent)="loadFinancialPcaAssignmentListGrid($event)"
+                                ></cms-financial-pcas-assignment-list>
+                              
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

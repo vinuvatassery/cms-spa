@@ -26,13 +26,17 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
- 
+  @ViewChild('addEditPcaSetupDialogTemplate', { read: TemplateRef })
+  addEditPcaSetupDialogTemplate!: TemplateRef<any>;
+  @ViewChild('removePcaSetupDialogTemplate', { read: TemplateRef })
+  removePcaSetupDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   pcaSetupRemoveDialogService  : any;
   pcaSetupAddEditDialogService : any;
   popupClassAction = 'TableActionPopup app-dropdown-action-list'; 
   isFinancialPcaSetupGridLoaderShow = false;
-
+  isEditSetupClosed = false;
+  isDeleteSetupClosed = false;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -56,6 +60,31 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  public gridMoreActions = [
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Edit',
+      icon: 'edit',
+      click: (data: any): void => {
+        if (!this.isEditSetupClosed) {
+          this.isEditSetupClosed = true; 
+          this.onOpenAddPcaSetupClicked(this.addEditPcaSetupDialogTemplate);
+        }
+      },
+    },
+    {
+      buttonType: 'btn-h-danger',
+      text: 'Delete',
+      icon: 'delete',
+      click: (data: any): void => {
+        if (!this.isDeleteSetupClosed) {
+          this.isDeleteSetupClosed = true; 
+          this.onRemovePcaSetupClicked(this.removePcaSetupDialogTemplate);
+        }
+      },
+    },
+  ];
+
  aaaaaa = [
   {
     id:1,
@@ -197,7 +226,9 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
     this.isFinancialPcaSetupGridLoaderShow = false;
   }
  
- 
+  public rowClass = (args:any) => ({
+    "table-row-disabled": (!args.dataItem.assigned),
+  });
   onOpenAddPcaSetupClicked(template: TemplateRef<unknown>): void {
     this.pcaSetupAddEditDialogService = this.dialogService.open({
       content: template,
