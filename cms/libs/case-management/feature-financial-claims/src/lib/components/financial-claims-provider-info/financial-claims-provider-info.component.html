@@ -1,10 +1,8 @@
-
-<ng-container  *ngIf="vendorProfile$ | async as vendorProfile">
-<kendo-dialog-titlebar (close)="closeViewProviderClicked()" >{{vendorProfile.vendorName}}</kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeViewProviderClicked()"> {{isEditProvider ? 'Edit' : ''}} Very Nice Provider</kendo-dialog-titlebar>
 <section class="k-dialog-body newcase">
-      <button aria-label="Edit Provider Profile" kendoButton look="flat" class="card-link-button">Edit </button> 
-      <div class="detail-items-with-border mt-2">
-          <table >
+    <button aria-label="Edit Provider Profile" kendoButton look="flat" class="card-link-button"  *ngIf="!isEditProvider" (click)="editProviderClicked()">Edit </button>
+    <div class="detail-items-with-border mt-2 small-input-only-field">
+       <table *ngIf="!isEditProvider">
               <caption hidden> Provider Details</caption>
               <tr hidden>
                   <th>Field</th>
@@ -53,21 +51,147 @@
               
   
           </table>
-  
-      </div>
-  
  
- 
-  </section>
-  
-  <kendo-dialog-actions>
-      <div class="justify-content-between">
-          
-              <button  kendoButton [primary]="true" look="flat" class="" aria-label="Provider profile"> Provider profile <span class="material-icons ml-1">
-                  chevron_right
-                  </span></button>  
-          
-      </div>
-  </kendo-dialog-actions>
 
-</ng-container>
+        <table *ngIf="isEditProvider">
+            <caption hidden> Provider Details</caption>
+            <tr hidden>
+                <th>Field</th>
+                <th> details</th>
+            </tr>
+            <tr>
+                <td><strong>TIN</strong></td>
+                <td> 
+                        <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+                        
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Mail Code</strong></td>
+                <td> <kendo-textbox aria-label="Mail Code" [fillMode]="formUiStyle.inputFillMode">
+                    </kendo-textbox>
+                    
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Payment Method</strong></td>
+                <td> <div class="">
+                    <div class="component-list-h">
+                        <span class="app-radiobtnwidtext-wrapper">
+                          <input type="radio" kendoRadioButton aria-labelledby="Check"   name="Method"
+                             id="Check" value="Check" />
+                          <kendo-label class="k-radio-label" text="Check" for="Check"></kendo-label>
+                        </span>
+                        <span class="app-radiobtnwidtext-wrapper">
+                          <input type="radio" kendoRadioButton  id="ACH" aria-labelledby="ACH" name="Method"
+                              value="ACH"  />
+                          <kendo-label class="k-radio-label" text="ACH" for="ACH"></kendo-label>
+                        </span>
+                        <span class="app-radiobtnwidtext-wrapper">
+                            <input type="radio" kendoRadioButton   id="SPOTS" aria-labelledby="SPOTS" name="Method"
+                                value="SPOTS"  />
+                            <kendo-label class="k-radio-label" text="SPOTS" for="SPOTS"></kendo-label>
+                          </span>
+                          <span class="app-radiobtnwidtext-wrapper">
+                            <input type="radio" kendoRadioButton   id="DOR Hold" aria-labelledby="DOR Hold" name="Method"
+                                value="DOR Hold"  />
+                            <kendo-label class="k-radio-label" text="DOR Hold" for="DOR Hold"></kendo-label>
+                          </span>
+                      </div>
+                </div></td>
+            </tr>
+            <tr>
+                <td><strong>Email Address</strong></td>
+                <td> <kendo-textbox aria-label="Email Address" [fillMode]="formUiStyle.inputFillMode">
+                    </kendo-textbox>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Address</strong></td>
+                <td>
+                    <div class="flex-row">
+                        <div class="flex-col mt-1">
+                            <kendo-textbox aria-label="Address 1" placeholder="Address 1" [fillMode]="formUiStyle.inputFillMode">
+                            </kendo-textbox>
+                        </div>
+                        <div class="flex-col mt-1">
+                            <kendo-textbox aria-label="Address 1" placeholder="Address 2" [fillMode]="formUiStyle.inputFillMode">
+                            </kendo-textbox>
+                        </div>
+                        <div class="flex-col mt-1">
+                            <kendo-textbox aria-label="City" placeholder="City" [fillMode]="formUiStyle.inputFillMode">
+                            </kendo-textbox>
+                        </div>
+                        <div class="flex-col flex-col-6 mt-1">
+                            <kendo-textbox aria-label="State" [fillMode]="formUiStyle.inputFillMode">
+                            </kendo-textbox>
+                        </div>
+                        <div class="flex-col flex-col-6 mt-1">
+                            <kendo-textbox aria-label="Zip" placeholder="Zip"  [fillMode]="formUiStyle.inputFillMode">
+                            </kendo-textbox>
+                        </div>
+
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Special Handling</strong></td>
+                <td>
+                    <div class="flex-col flex-col-6">
+                        
+                            <kendo-textarea  aria-label="Special Handling" [fillMode]="formUiStyle.inputFillMode"  [rows]="3" resize="none">
+                            </kendo-textarea>
+                        
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                     <div class="flex-row fiel-column-label"><strong>Contact 1 Name</strong> </div>
+                     <div class="flex-row fiel-column-label"><strong>Contact 1 Phone</strong> </div>
+                     <div class="flex-row fiel-column-label"><strong>Contact 1 Email</strong> </div>
+                </td>
+                <td>
+                    <div class="flex-col mt-1">
+                        <kendo-textbox aria-label="Name" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+                    </div>
+                    <div class="flex-col mt-1">
+                        <kendo-textbox aria-label="Phone" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+                    </div>
+                    <div class="flex-col mt-1">
+                        <kendo-textbox aria-label="Email" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+
+</section>
+
+<kendo-dialog-actions>
+    <div class="justify-content-between" *ngIf="!isEditProvider">
+
+        <button kendoButton [primary]="true" look="flat" class="" aria-label="Provider profile"> Provider profile <span
+                class="material-icons ml-1">
+                chevron_right
+            </span></button>
+
+    </div>
+
+    <div class="justify-content-between align-items-center" *ngIf="isEditProvider">
+        <div class="align-items-center">
+               
+              <button kendoButton [primary]="true" aria-label="Update">Update</button>
+              <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="editProviderClicked()">
+                    Cancel
+              </button>
+            
+        </div>
+  </div>
+</kendo-dialog-actions>

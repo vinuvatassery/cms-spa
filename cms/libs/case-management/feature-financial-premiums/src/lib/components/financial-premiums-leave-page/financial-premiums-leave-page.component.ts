@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'cms-financial-premiums-leave-page',
@@ -7,13 +7,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class FinancialPremiumsLeavePageComponent {
   @Output() modalLeavePageCloseClicked = new EventEmitter();
-  premiumsType: any;
+  @Input() premiumsType: any;
   constructor(private route: Router, public activeRoute: ActivatedRoute ) {}
   closeLeavePageClicked() {
     this.modalLeavePageCloseClicked.emit(true);
   }
   navToBatchDetails(event : any){  
-    this.route.navigate(['/financial-management/' + this.premiumsType] );  
+    this.route.navigate(['/financial-management/premiums/' + this.premiumsType] );  
     this.closeLeavePageClicked();
   }
 }
