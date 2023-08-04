@@ -1,9 +1,64 @@
- 
-<div class="app-l-inner-rapper pt-0" kendoRippleContainer>
+<div class="app-l-inner-rapper pb-8rem pt-0">
     <common-bread-crumb></common-bread-crumb>
-    <section class="app-l-mainTittle">
-        <h1 class="maintitle_withicon text-bold"> 
-            financial-pcas-page works!
-        </h1>
-      </section>
+    <div class=" pt-0">
+        <section class="app-l-mainTittle">
+            <h1 class="maintitle_withicon text-bold text-capitalize">PCA's</h1>
+        </section>
+        <section class="app-l-client-wrapper">
+            <section class="app-l-wrapper">
+                <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+                    class="app-c-tab case-360-tab">
+                    <kendo-tabstrip-tab title="PCA Setup" [selected]="true">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-financial-pcas-setup-list> </cms-financial-pcas-setup-list>
+                                <!-- <cms-financial-claims-process-list   [claimsType]="claimsType"   [financialClaimsProcessGridLists$]="financialClaimsProcessGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsProcess"
+                                [sortType]="sortType" [sort]="sortProcessList" 
+                                (loadFinancialClaimsProcessListEvent)="loadFinancialClaimsProcessListGrid($event)"></cms-financial-claims-process-list> -->
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+
+                    <kendo-tabstrip-tab title="PCA Assignment">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-financial-pcas-assignment-list></cms-financial-pcas-assignment-list>
+                                <!-- <cms-financial-claims-batches-list  [claimsType]="claimsType" [financialClaimsBatchGridLists$]="financialClaimsBatchGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsBatch"
+                                [sortType]="sortType" [sort]="sortBatchList" 
+                                (loadFinancialClaimsBatchListEvent)="loadFinancialClaimsBatchListGrid($event)"></cms-financial-claims-batches-list> -->
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+                    <kendo-tabstrip-tab title="PCA Reassignment">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-financial-pcas-reassignment-list></cms-financial-pcas-reassignment-list>
+                                <!-- <cms-financial-claims-all-payments-list [claimsType]="claimsType" [financialClaimsAllPaymentsGridLists$]="financialClaimsAllPaymentsGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsPayments"
+                                [sortType]="sortType" [sort]="sortPaymentsList" 
+                                (loadFinancialClaimsAllPaymentsListEvent)="loadFinancialClaimsAllPaymentsListGrid($event)"></cms-financial-claims-all-payments-list> -->
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+
+                    <kendo-tabstrip-tab title="Assignment Report">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-financial-pcas-assignment-report-list></cms-financial-pcas-assignment-report-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+                    <kendo-tabstrip-tab title="Object & Group Assignment">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-financial-pcas-object-list></cms-financial-pcas-object-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+                </kendo-tabstrip>
+            </section>
+        </section>
+    </div>
 </div>
