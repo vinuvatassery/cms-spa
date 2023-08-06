@@ -116,7 +116,7 @@
                     <div class=" mb-3">
                         <ng-container formArrayName="claimService">
                             <ng-container *ngFor="let contact of AddClaimServicesForm.controls; let i=index">
-                                <ng-container [formGroupName]="i">
+                                <ng-container [formGroupName]="i">                                    
                                     <div class="flex-space-bw align-items-center">
                                         <h4 class="mar-0">SERVICE {{i+1}}</h4>
                                         <button class="" kendoButton fillMode="flat" themeColor="error"
@@ -166,7 +166,7 @@
                                             <kendo-floatinglabel text="Payment Type">
                                                 <kendo-dropdownlist formControlName="paymentType" aria-label="Type"
                                                     [fillMode]="formUiStyle.dropDownFillMode"
-                                                    [data]="paymentRequestType$ | async" valueField="id"
+                                                    [data]="paymentRequestType$ | async" valueField="lovCode"
                                                     textField="lovDesc" [valuePrimitive]="true"
                                                     [loading]="(paymentRequestType$ | async)?.length===0">
 
@@ -181,11 +181,11 @@
                                             <kendo-floatinglabel text="CTP Code">
                                                 <kendo-textbox aria-label="CTP Code"
                                                     [fillMode]="formUiStyle.inputFillMode" formControlName="cptCode"
-                                                    (valueChange)="searchctpcode($event, i)"> 
+                                                    (valueChange)="searchcptcode($event, i)"> 
                                                 </kendo-textbox>
                                                
                                             </kendo-floatinglabel>
-                                            <kendo-formerror *ngIf="(isControlValid('ctpCode', i) && isSubmitted)"
+                                            <kendo-formerror *ngIf="(isControlValid('cptCode', i) && isSubmitted)"
                                                 class="d-flex align-items-center"> <span class="material-icons mr-1"
                                                     aria-hidden="false">info</span>CTP Code is required
                                             </kendo-formerror>

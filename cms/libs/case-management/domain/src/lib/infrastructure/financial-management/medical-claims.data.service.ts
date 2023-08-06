@@ -481,7 +481,7 @@ export class FinancialMedicalClaimsDataService {
     )
   }
 
-  searchctpcode(cptcode:string){
+  searchcptcode(cptcode:string){
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/MedicalClaim/cptcode/${cptcode}`
     )

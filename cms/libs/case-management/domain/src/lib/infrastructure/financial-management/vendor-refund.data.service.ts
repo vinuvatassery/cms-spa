@@ -436,4 +436,8 @@ export class FinancialVendorRefundDataService {
   saveMedicalClaim(claim: any) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/MedicalClaim`, claim)
   }
+  
+  updateMedicalClaim(claim: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/MedicalClaim`, claim)
+  }
 }

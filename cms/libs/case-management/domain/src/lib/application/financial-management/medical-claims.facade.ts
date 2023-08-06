@@ -216,7 +216,7 @@ export class FinancialMedicalClaimsFacade {
     )
   }
 
-  searchctpcode(cptcode: string){    
-    return this.financialMedicalClaimsDataService.searchctpcode(cptcode)
+  searchcptcode(cptcode: string){    
+    return this.financialMedicalClaimsDataService.searchcptcode(cptcode)
   }
 }

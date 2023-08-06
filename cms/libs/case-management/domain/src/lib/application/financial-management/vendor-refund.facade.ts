@@ -222,4 +222,17 @@ export class FinancialVendorRefundFacade {
     );
   }
 
+  public updateMedicalClaim(data: any){
+    return this.financialVendorRefundDataService.updateMedicalClaim(data).pipe(
+      catchError((err: any) => {
+        this.loaderService.hide();
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        if (!(err?.error ?? false)) {
+          this.loggingService.logException(err);
+          this.hideLoader();
+        }
+        return of(false);
+      })
+    );
+  }
 }
