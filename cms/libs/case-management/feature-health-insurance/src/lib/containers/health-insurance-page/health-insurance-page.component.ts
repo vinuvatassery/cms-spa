@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal libraries **/
 import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, StatusFlag, NavigationType } from '@cms/case-management/domain';
-import { LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-health-insurance-page',
@@ -147,15 +147,10 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
       tap(() => this.workflowFacade.disableSaveButton()),
       mergeMap((navigationType: NavigationType) =>
-        forkJoin([of(navigationType), this.saveAndContinue(), this.validateCerReviewStatus()])
+        forkJoin([of(navigationType), this.saveAndContinue()])
       ),
-    ).subscribe(([navigationType, isSaved, isReviewPending]) => {
-      if(isReviewPending){
-        this.HideLoader();
-        this.workflowFacade.enableSaveButton();
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, 'Insurance Review not complete', NotificationSource.UI);
-      }
-      else if (isSaved) {
+    ).subscribe(([navigationType, isSaved]) => {
+      if (isSaved) {
        this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Health Insurance status updated');
         this.workflowFacade.navigate(navigationType);
         this.HideLoader();
@@ -164,7 +159,6 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       }
     });
   }
-
   private saveAndContinue() {
     if (this.insuranceFlagForm.controls['currentInsuranceFlag'].value == StatusFlag.No) {
       this.insurancePolicyFacade.showInsuranceRequiredSubject.next(false);

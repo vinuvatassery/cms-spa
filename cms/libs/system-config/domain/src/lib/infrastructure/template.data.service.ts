@@ -37,7 +37,7 @@ export class TemplateDataService {
     params = params.append('templateId',filepath);
     params = params.append('typeCode',typeCode);
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}` + '/case-management/templates/'+`${typeCode}`+'/forms',{params:params}
+      `${this.configurationProvider.appSettings.caseApiUrl}` + '/case-management/templates/'+`${typeCode}`+'/templates',{params:params}
     );
   }
 
