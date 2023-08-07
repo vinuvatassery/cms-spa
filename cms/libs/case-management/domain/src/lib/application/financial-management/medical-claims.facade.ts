@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  Subject, catchError, of } from 'rxjs';
+import {  BehaviorSubject, Subject, catchError, of } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -76,7 +76,13 @@ export class FinancialMedicalClaimsFacade {
 
   private medicalClaimByCpt = new Subject<any>();
   medicalClaimByCpt$ = this.medicalClaimByCpt.asObservable();
- 
+  
+  private searchCTPCodeSubject = new BehaviorSubject<any>({});
+  public searchCTPCode$ =this.searchCTPCodeSubject.asObservable();
+
+  private CPTCodeSearchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
+  CPTCodeSearchLoaderVisibility$= this.CPTCodeSearchLoaderVisibilitySubject.asObservable();
+
   /** Public properties **/
  
   // handling the snackbar & loader
@@ -105,7 +111,8 @@ export class FinancialMedicalClaimsFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly snackbarService: NotificationSnackbarService,
   ) { }
 
   /** Public methods **/
@@ -217,6 +224,23 @@ export class FinancialMedicalClaimsFacade {
   }
 
   searchcptcode(cptcode: string){    
-    return this.financialMedicalClaimsDataService.searchcptcode(cptcode)
+//return this.financialMedicalClaimsDataService.searchcptcode(cptcode)
+
+this.CPTCodeSearchLoaderVisibilitySubject.next(true);
+    return this.financialMedicalClaimsDataService.searchcptcode(cptcode).subscribe({
+      next: (response: any[]) => {
+        response?.forEach((cptcodes:any) => {
+          cptcodes.providerFullName = `${cptcodes.cptCode1 ?? ''}`;
+        });
+        this.searchCTPCodeSubject.next(response);
+        this.CPTCodeSearchLoaderVisibilitySubject .next(false);
+      },
+      error: (err) => {  
+        this.CPTCodeSearchLoaderVisibilitySubject .next(false);
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
+    })
+
   }
 }

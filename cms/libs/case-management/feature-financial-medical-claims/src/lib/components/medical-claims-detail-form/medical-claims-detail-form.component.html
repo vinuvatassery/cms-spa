@@ -178,12 +178,40 @@
                                             </kendo-formerror>
                                         </div>
                                         <div class="flex-col flex-col-4">
-                                            <kendo-floatinglabel text="CTP Code">
-                                                <kendo-textbox aria-label="CTP Code"
-                                                    [fillMode]="formUiStyle.inputFillMode" formControlName="cptCode"
-                                                    (valueChange)="searchcptcode($event, i)"> 
-                                                </kendo-textbox>
-                                               
+                                            <kendo-floatinglabel text="">
+                                            <div class="autoSelect-search mat-form-no-b-space field-label-hide">
+                                                <div class="global-search">
+                                                  <span
+                                                    class="material-icons global-search-icon"
+                                                    aria-label="search pharmacy"
+                                                    aria-hidden="true"
+                                                    >search</span
+                                                  >
+                                                  <span *ngIf="CPTCodeSearchLoaderVisibility$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+                                                  <kendo-formfield>
+                                                    <kendo-label text="Search CPT Code"> 
+                                                      <kendo-autocomplete
+                                                      autofocusfield
+                                                      [fillMode]="formUiStyle.dropDownFillMode" 
+                                                    [data]="searchCTPCode$ | async"    
+                                                    
+                                                      valueField ="providerFullName"    
+                                                      [filterable]="true"  
+                                                      placeholder="Search CPT Code"
+                                                      (filterChange)="searchcptcode($event,i)"
+                                                      [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }" 
+                                                      > 
+                                                      <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
+                                                        <span class="pr-1" (click)="onCPTCodeValueChange($event,i)">{{ dataItem.cptCode1}}</span>          
+                                                      </ng-template>
+                                                      </kendo-autocomplete>
+                                                      <kendo-formerror *ngIf="(isControlValid('cptCode', i) && isSubmitted)">
+                                                        CPT Code Is required.
+                                                      </kendo-formerror>
+                                                    </kendo-label>
+                                                  </kendo-formfield>
+                                                </div>
+                                              </div>
                                             </kendo-floatinglabel>
                                             <kendo-formerror *ngIf="(isControlValid('cptCode', i) && isSubmitted)"
                                                 class="d-flex align-items-center"> <span class="material-icons mr-1"

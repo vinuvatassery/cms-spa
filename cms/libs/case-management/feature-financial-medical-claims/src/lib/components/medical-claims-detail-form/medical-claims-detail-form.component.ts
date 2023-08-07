@@ -41,9 +41,10 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   state!: State;
 
   paymentRequestType$ = this.lovFacade.paymentRequestType$;
-  medicalProvidersearchLoaderVisibility$ =
-    this.financialVendorRefundFacade.medicalProviderSearchLoaderVisibility$;
+  medicalProvidersearchLoaderVisibility$ =this.financialVendorRefundFacade.medicalProviderSearchLoaderVisibility$;
+  CPTCodeSearchLoaderVisibility$ =this.financialMedicalClaimsFacade.CPTCodeSearchLoaderVisibility$;
   pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
+  searchCTPCode$ = this.financialMedicalClaimsFacade.searchCTPCode$;
 
   clientSearchLoaderVisibility$ =
     this.financialVendorRefundFacade.clientSearchLoaderVisibility$;
@@ -103,22 +104,19 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   searchMedicalProvider(searchText: any) {
     this.financialVendorRefundFacade.searchPharmacies(searchText);
   }
-
-  searchcptcode(cptcode: any, index: number) {
-    this.financialMedicalClaimsFacade.searchcptcode(cptcode).subscribe({
-      next: (response: any) => {
-        let service = response[0];
+  onCPTCodeValueChange(event: any,index: number) {    
+        let service = event;
         let ctpCodeIsvalid = this.AddClaimServicesForm.at(index) as FormGroup;
         ctpCodeIsvalid.patchValue({
           cptCode: service.cptCode1,
           serviceDescription: service.serviceDesc,
-          medicadeRate: service.medicadeRate,
+          medicadeRate: service.medicaidRate          ,
         });
         this.calculateMedicadeRate(index);
         this.cd.detectChanges();
-      },
-      error: (error: any) => {},
-    });
+  }
+  searchcptcode(cptcode: any, index: number) {
+     this.financialMedicalClaimsFacade.searchcptcode(cptcode);   
   }
 
   loadClientBySearchText(searchText: any) {
@@ -165,7 +163,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  onClientValueChange(event: any) {
+  onClientValueChange(event: any) {  
     this.clientCaseEligibilityId = event.clientCaseEligibilityId;
   }
 
