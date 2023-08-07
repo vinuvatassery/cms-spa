@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input} from '@angular/core';
 
 @Component({
   selector: 'case-management-preview-email',
