@@ -57,7 +57,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   medicalClaimServices = new MedicalClaims();
   sessionId: any = '';
   clientCaseEligibilityId: any = null;
-  isEdit = true;
+  isEdit = false;
   paymentRequestId: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
 
@@ -260,10 +260,17 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
     this.financialVendorRefundFacade.saveMedicalClaim(data).subscribe({
       next: (response: any) => {
         this.loaderService.hide();
-        this.financialVendorRefundFacade.showHideSnackBar(
-          SnackBarNotificationType.SUCCESS,
-          'Claim added successfully'
-        );
+        if(!response){
+          this.financialVendorRefundFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            "An error occure whilie adding claim"
+          );
+        }else{
+          this.financialVendorRefundFacade.showHideSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            'Claim added successfully'
+          );
+        }        
       },
       error: (error: any) => {
         this.loaderService.hide();
@@ -320,10 +327,10 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
           this.financialVendorRefundFacade.pharmaciesSubject.next(vendors);
           this.selectedMedicalProvider = vendors[0];          
           this.claimForm.patchValue({
-           // invoiceId: val.claimNbr,
+            invoiceId: val.claimNbr,
             paymentRequestId: val.paymentRequestId
           });      
-          this.claimForm.controls['invoiceId'].setValue(val.invoiceId);
+          
           this.invoiceId = val.claimNbr; 
           this.clientCaseEligibilityId = val.clientCaseEligibilityId;
           this.paymentRequestId = val.paymentRequestId;   
