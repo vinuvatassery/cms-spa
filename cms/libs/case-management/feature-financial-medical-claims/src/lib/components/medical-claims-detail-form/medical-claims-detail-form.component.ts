@@ -5,6 +5,7 @@ import {
   EventEmitter,
   ChangeDetectorRef,
   OnInit,
+  Input,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
@@ -57,10 +58,11 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   medicalClaimServices = new MedicalClaims();
   sessionId: any = '';
   clientCaseEligibilityId: any = null;
-  isEdit = true;
-  paymentRequestId: any;
+  @Input() isEdit : any;
+  @Input() paymentRequestId : any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
-
+  title : any
+  addOrEdit: any;
   constructor(
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialMedicalClaimsFacade: FinancialMedicalClaimsFacade,
@@ -75,9 +77,13 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   ngOnInit(): void {
     this.lovFacade.getCoPaymentRequestTypeLov();
     if (!this.isEdit) {
+      this.title = 'Add Medical Claims';
+      this.addOrEdit = 'Add'
       this.addClaimServiceGroup();
     }
     if (this.isEdit) {
+      this.title = 'Edit Claim';
+      this.addOrEdit = 'Edit'
       this.getMedicalClaimByPaymentRequestId();
     }
   }
@@ -318,7 +324,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   getMedicalClaimByPaymentRequestId() {
     this.loaderService.show();
     this.financialMedicalClaimsFacade
-      .getMedicalClaimByPaymentRequestId('3A150DE3-228F-4FFF-A3F4-7991466353C5')
+      .getMedicalClaimByPaymentRequestId(this.paymentRequestId)
       .subscribe({
         next: (val) => {
           const clients = [

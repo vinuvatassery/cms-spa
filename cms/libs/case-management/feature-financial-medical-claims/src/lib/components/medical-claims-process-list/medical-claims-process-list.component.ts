@@ -61,10 +61,12 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
 
   gridMedicalClaimsProcessDataSubject = new Subject<any>();
   gridMedicalClaimsProcessData$ =
-    this.gridMedicalClaimsProcessDataSubject.asObservable();
+  this.gridMedicalClaimsProcessDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  isEdit: boolean;
+  paymentRequestId: string;
   public claimsProcessMore = [
     {
       buttonType: 'btn-h-primary',
@@ -108,11 +110,15 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService
-  ) {}
+  ) {
+    this.isEdit = true;
+    this.paymentRequestId = '3A150DE3-228F-4FFF-A3F4-7991466353C5'
+  }
 
   ngOnInit(): void {
     this.loadMedicalClaimsProcessListGrid();
-  }
+
+  } 
   ngOnChanges(): void {
     this.state = {
       skip: 0,
