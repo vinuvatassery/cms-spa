@@ -36,7 +36,7 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
   popupClassAction = 'TableActionPopup app-dropdown-action-list'; 
   isFinancialPcaSetupGridLoaderShow = false;
   isEditSetupClosed = false;
-  isConfirmationClosed = false;
+  isRemoveConfirmationClosed = false;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -74,11 +74,11 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete',
+      text: 'Remove',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.isConfirmationClosed) {
-          this.isConfirmationClosed = true; 
+        if (!this.isRemoveConfirmationClosed) {
+          this.isRemoveConfirmationClosed = true; 
           this.onRemovePcaSetupClicked(this.removePcaSetupDialogTemplate);
         }
       },
@@ -109,6 +109,54 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
     grantName:'Name', 
     grantNumber:'34535345', 
     assigned: false,  
+  },
+  {
+    id:1,
+    pca: '123123`',
+    ay:'AY21', 
+    description:'Some Description Some Description', 
+    amount:'43324342.33',  
+    remaining:'345435.33', 
+    closeDate:'MM/DD/YYYY', 
+    grantName:'Name', 
+    grantNumber:'34535345', 
+    assigned: true,  
+  },
+  {
+    id:2,
+    pca: '123123`',
+    ay:'AY21', 
+    description:'Some Description Some Description', 
+    amount:'43324342.33',  
+    remaining:'345435.33', 
+    closeDate:'MM/DD/YYYY', 
+    grantName:'Name', 
+    grantNumber:'34535345', 
+    assigned: false,  
+  },
+  {
+    id:1,
+    pca: '123123`',
+    ay:'AY21', 
+    description:'Some Description Some Description', 
+    amount:'43324342.33',  
+    remaining:'345435.33', 
+    closeDate:'MM/DD/YYYY', 
+    grantName:'Name', 
+    grantNumber:'34535345', 
+    assigned: true,  
+  },
+  {
+    id:1,
+    pca: '123123`',
+    ay:'AY21', 
+    description:'Some Description Some Description', 
+    amount:'43324342.33',  
+    remaining:'345435.33', 
+    closeDate:'MM/DD/YYYY', 
+    grantName:'Name', 
+    grantNumber:'34535345', 
+    assigned: true,  
   },
  ]
   /** Constructor **/
@@ -250,7 +298,7 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
   }
   onCloseRemovePcaSetupClicked(result: any) {
     if (result) { 
-      this.isConfirmationClosed = false;
+      this.isRemoveConfirmationClosed = false;
       this.pcaSetupRemoveDialogService.close();
     }
   }

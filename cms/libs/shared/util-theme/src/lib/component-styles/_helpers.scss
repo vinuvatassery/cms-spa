@@ -280,3 +280,7 @@ section {
 .green-text-color{
   color: $success-green;
 }
+
+.red-text-color{
+  color: material-color($hive-error-palette, 400);
+}

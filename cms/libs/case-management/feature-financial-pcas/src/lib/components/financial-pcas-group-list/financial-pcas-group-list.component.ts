@@ -31,7 +31,7 @@ export class FinancialPcasGroupListComponent {
 
     {
       buttonType: 'btn-h-primary',
-      text: 'EditGroup',
+      text: 'Edit Group',
       icon: 'edit', 
       click: (data: any): void => {
         if (!this.isEditGroupOptionClosed) {
@@ -42,7 +42,7 @@ export class FinancialPcasGroupListComponent {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'ActiveGroup',
+      text: 'Active Group',
       icon: 'check', 
       click: (data: any): void => {
         if (!this.isActivateGroupOptionClosed) {
@@ -53,7 +53,7 @@ export class FinancialPcasGroupListComponent {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'De-activeGroup',
+      text: 'De-active Group',
       icon: 'block', 
       click: (data: any): void => {
         if (!this.isDeactiveteGroupOptionClosed) {
@@ -65,7 +65,7 @@ export class FinancialPcasGroupListComponent {
  
     {
       buttonType: 'btn-h-danger',
-      text: 'RemoveGroup',
+      text: 'Remove Group',
       icon: 'delete', 
       click: (data: any): void => {
         if (!this.isRemoveGroupOptionClosed) {

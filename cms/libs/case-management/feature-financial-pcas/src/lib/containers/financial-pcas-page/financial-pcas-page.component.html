@@ -7,7 +7,7 @@
         <section class="app-l-client-wrapper">
             <section class="app-l-wrapper">
                 <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
-                    class="app-c-tab case-360-tab">
+                    class="app-c-tab">
                     <kendo-tabstrip-tab title="PCA Setup" [selected]="true">
                         <ng-template kendoTabContent>
                             <div class="block-section">
@@ -58,7 +58,7 @@
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
-                    <kendo-tabstrip-tab title="Object & Group Assignment">
+                    <!-- <kendo-tabstrip-tab title="Object & Group Assignment">
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-financial-pcas-object-list  [financialPcaObjectGridLists$]="financialPcaObjectGridLists$"
@@ -67,7 +67,7 @@
                                 (loadFinancialPcaObjectListEvent)="loadFinancialPcaObjectListGrid($event)"></cms-financial-pcas-object-list>
                             </div>
                         </ng-template>
-                    </kendo-tabstrip-tab>
+                    </kendo-tabstrip-tab> -->
                 </kendo-tabstrip>
             </section>
         </section>

@@ -38,7 +38,8 @@ export class FinancialPcasReassignmentListComponent
   pcaReassignmentAddEditDialogService: any;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isFinancialPcaReassignmentGridLoaderShow = false;
-
+  isViewGridOptionClicked = false;
+  isEditGridOptionClicked = false;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -62,7 +63,30 @@ export class FinancialPcasReassignmentListComponent
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+  public gridMoreActions = [
+    {
+      buttonType: 'btn-h-primary',
+      text: 'View',
+      icon: 'visibility',
+      click: (data: any): void => {
+        if (!this.isViewGridOptionClicked) {
+          this.isViewGridOptionClicked = true; 
+          this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate);
+        }
+      },
+    },
+    {
+      buttonType: 'btn-h-danger',
+      text: 'Edit',
+      icon: 'edit',
+      click: (data: any): void => {
+        if (!this.isEditGridOptionClicked) {
+          this.isEditGridOptionClicked = true; 
+          this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate);
+        }
+      },
+    },
+  ];
   aaaaaa = [
     {
       id: 1,
@@ -75,6 +99,42 @@ export class FinancialPcasReassignmentListComponent
       overspendAmount: '345435.33',
       TotalOverspendAmount: '345435.33', 
       isActive: true,
+    },
+    {
+      id: 2,
+      pca: '123123`',
+      object: 'Object & Group Assignment',
+      closeDate: 'MM/DD/YYYY',
+      group: 'Some Description Some Description',
+      originalAmount: '43324342.33',
+      spendAfterExpiration: '345435.33',
+      overspendAmount: '345435.33',
+      TotalOverspendAmount: '345435.33', 
+      isActive: false,
+    },
+    {
+      id: 2,
+      pca: '123123`',
+      object: 'Object & Group Assignment',
+      closeDate: 'MM/DD/YYYY',
+      group: 'Some Description Some Description',
+      originalAmount: '43324342.33',
+      spendAfterExpiration: '345435.33',
+      overspendAmount: '345435.33',
+      TotalOverspendAmount: '345435.33', 
+      isActive: false,
+    },
+    {
+      id: 2,
+      pca: '123123`',
+      object: 'Object & Group Assignment',
+      closeDate: 'MM/DD/YYYY',
+      group: 'Some Description Some Description',
+      originalAmount: '43324342.33',
+      spendAfterExpiration: '345435.33',
+      overspendAmount: '345435.33',
+      TotalOverspendAmount: '345435.33', 
+      isActive: false,
     },
     {
       id: 2,
@@ -229,7 +289,7 @@ export class FinancialPcasReassignmentListComponent
   }
 
  
-  onOpenEditPcaReassignmentClicked(template: TemplateRef<unknown>): void {
+  onOpenViewEditPcaReassignmentClicked(template: TemplateRef<unknown>): void {
     this.pcaReassignmentAddEditDialogService = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
@@ -237,6 +297,8 @@ export class FinancialPcasReassignmentListComponent
   }
   onCloseEditPcaReassignmentClicked(result: any) {
     if (result) {
+      this.isViewGridOptionClicked = false;
+      this.isEditGridOptionClicked = false;
       this.pcaReassignmentAddEditDialogService.close();
     }
   }

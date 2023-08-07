@@ -48,7 +48,7 @@
                               <span class="material-icons green-text-color" *ngIf="dataItem.assigned">
                                     check_circle_outline </span>
 
-                                    <span class="material-icons" *ngIf="!dataItem.assigned === true">
+                                    <span class="material-icons red-text-color" *ngIf="!dataItem.assigned === true">
                                           do_not_disturb_alt
                                           </span> 
                         </div>
@@ -64,8 +64,8 @@
             <kendo-grid-column field="remaining" title="Remaining" [width]="140">
             </kendo-grid-column>
             <kendo-grid-column field="closeDate" title="Close Date" [width]="120"> </kendo-grid-column>
-            <kendo-grid-column field="grantName" title="Grant Name" [width]="180"> </kendo-grid-column>
-            <kendo-grid-column field="grantNumber" title="Grant Number" [width]="140"> </kendo-grid-column>
+            <kendo-grid-column field="grantName" title="Funding Source Name" [width]="200"> </kendo-grid-column>
+            <kendo-grid-column field="grantNumber" title="Funding Source Number" [width]="180"> </kendo-grid-column>
             <kendo-grid-column field="Option" title=" " [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     <kendo-dropdownbutton [data]="gridMoreActions" icon="more-vertical"
