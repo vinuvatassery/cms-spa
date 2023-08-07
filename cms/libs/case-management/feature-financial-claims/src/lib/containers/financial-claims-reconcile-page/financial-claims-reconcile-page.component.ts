@@ -15,13 +15,15 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
-  sortValue = this.financialClaimsFacade.sortValueReconcile;
+  sortValue = this.financialClaimsFacade.sortValueReconcilePaymentBreakout;
   sortType = this.financialClaimsFacade.sortType;
   pageSizes = this.financialClaimsFacade.gridPageSizes;
   gridSkipCount = this.financialClaimsFacade.skipCount;
-  sort = this.financialClaimsFacade.sortReconcileList;
+  sort = this.financialClaimsFacade.sortReconcilePaymentBreakoutList;
   state!: State;
   reconcileGridLists$ = this.financialClaimsFacade.reconcileDataList$;
+  reconcileBreakoutSummary$ = this.financialClaimsFacade.reconcileBreakoutSummary$;
+  reconcilePaymentBreakoutList$ = this.financialClaimsFacade.reconcilePaymentBreakoutList$;
   batchId:any='0B20DA09-C242-4EFC-93D8-B40E5314E04A';
   claimsType: any;
   constructor(
@@ -54,5 +56,25 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
 
   loadReconcileListGrid(event: any) {
     this.financialClaimsFacade.loadReconcileListGrid(this.batchId,this.claimsType,event);
+  }
+
+  loadReconcileBreakoutSummary(event: any)
+  {
+    this.financialClaimsFacade.loadReconcilePaymentBreakoutSummary(event.batchId,event.entityId);
+  }
+
+  loadReconcilePaymentBreakoutList(event: any)
+  {
+    this.financialClaimsFacade.loadReconcilePaymentBreakoutListGrid(event.batchId,event.entityId,event.skipCount, event.pageSize, event.sort,event.sortType);
+  }
+
+  loadReconcileBreakoutSummary(event: any)
+  {
+    this.financialClaimsFacade.loadReconcilePaymentBreakoutSummary(event.batchId,event.entityId);
+  }
+
+  loadReconcilePaymentBreakoutList(event: any)
+  {
+    this.financialClaimsFacade.loadReconcilePaymentBreakoutListGrid(event.batchId,event.entityId,event.skipCount, event.pageSize, event.sort,event.sortType);
   }
 }
