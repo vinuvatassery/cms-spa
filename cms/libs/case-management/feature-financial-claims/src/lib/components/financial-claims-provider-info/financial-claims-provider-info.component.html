@@ -1,4 +1,5 @@
-<kendo-dialog-titlebar (close)="closeViewProviderClicked()"> {{isEditProvider ? 'Edit' : ''}} Very Nice Provider</kendo-dialog-titlebar>
+<ng-container  *ngIf="vendorProfile$ | async as vendorProfile">
+<kendo-dialog-titlebar (close)="closeViewProviderClicked()"> {{isEditProvider ? 'Edit' : ''}}{{vendorProfile.vendorName}}</kendo-dialog-titlebar>
 <section class="k-dialog-body newcase">
     <button aria-label="Edit Provider Profile" kendoButton look="flat" class="card-link-button"  *ngIf="!isEditProvider" (click)="editProviderClicked()">Edit </button>
     <div class="detail-items-with-border mt-2 small-input-only-field">
@@ -9,50 +10,51 @@
                   <th> details</th>
               </tr>
               <tr> 
-                  <td><strong>TIN</strong></td>
-                  <td> 1 {{vendorProfile.tin |ssn}}</td>
-              </tr>
-              <tr> 
-                  <td><strong>Mail Code</strong></td>
-                  <td>{{vendorProfile.mailCode}}</td>
-              </tr>
-              <tr> 
-                  <td><strong>Payment Method</strong></td>
-                  <td> {{vendorProfile.paymentMethod}}</td>
-              </tr>
-              <tr> 
-                  <td><strong>Email Address</strong></td>
-                  <td>{{vendorProfile.emailAddress}}</td>
-              </tr>
-              <tr> 
-                  <td><strong>Address</strong></td>
-                  <td> <p>{{vendorProfile.address1}} </p>  
-                       <p>{{vendorProfile.address2}} </p>
-                       <p>
-                        {{vendorProfile.cityCode}}, {{vendorProfile.stateCode}} {{vendorProfile.zip}}
-                      </p>
-                 </td>
-              </tr>
-              <tr> 
-                  <td><strong>Special Handling</strong></td>
-                  <td>{{vendorProfile.SpecialHandlingDesc}}</td>
-              </tr>
-              <tr *ngFor="let contact of vendorProfile.contact;let i = index"> 
-                <td><strong>Contact {{i+1}}</strong></td>
-                <td> <p>{{contact.contactName}}</p>
-                    <ng-container *ngFor="let phone of contact.phone"> 
-                      <p>{{phone.phoneNbr}}</p> 
-                    </ng-container>
-                    <ng-container *ngFor="let email of contact.email">
-                      <p>{{email.emailAddress}}</p> 
-                    </ng-container>
-                     </td>
+                <td><strong>TIN</strong></td>
+                <td> 1 {{vendorProfile.tin |ssn}}</td>
             </tr>
-              
-  
-          </table>
- 
+            <tr> 
+                <td><strong>Mail Code</strong></td>
+                <td>{{vendorProfile.address.mailCode}}</td>
+            </tr>
+            <tr> 
+                <td><strong>Payment Method</strong></td>
+                <td> {{vendorProfile.address.paymentMethodCode}}</td>
+            </tr>
+            <tr> 
+                <td><strong>Email Address</strong></td>
+                <td>{{vendorProfile.emailAddress}}</td>
+            </tr>
+            <tr> 
+                <td><strong>Address</strong></td>
+                <td> <p>{{vendorProfile.address.address1}} </p>  
+                     <p>{{vendorProfile.address.address2}} </p>
+                     <p>
+                      {{vendorProfile.address.cityCode}}, {{vendorProfile.address.stateCode}} {{vendorProfile.address.zip}}
+                    </p>
+               </td>
+            </tr>
+            <tr> 
+                <td><strong>Special Handling</strong></td>
+                <td>{{vendorProfile.address.SpecialHandlingDesc}}</td>
+            </tr>
+            <tr *ngFor="let contact of vendorProfile.address.contacts;let i = index"> 
+              <td><strong>Contact {{i+1}}</strong></td>
+              <td> <p>{{contact.contactName}}</p>
+                  <ng-container *ngFor="let phone of contact.phones"> 
+                    <p>{{phone.phoneNbr  | phone }}</p> 
+                  </ng-container>
+                  <ng-container *ngFor="let email of contact.emails">
+                    <p>{{email.emailAddress}}</p> 
+                  </ng-container>
+                   </td>
+          </tr>
+            
 
+        </table>
+
+
+        <ng-container [formGroup]="profileForm">
         <table *ngIf="isEditProvider">
             <caption hidden> Provider Details</caption>
             <tr hidden>
@@ -62,14 +64,19 @@
             <tr>
                 <td><strong>TIN</strong></td>
                 <td> 
-                        <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode">
+                        <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" formControlName="tin">
                         </kendo-textbox>
                         
                 </td>
             </tr>
+            <ng-container formGroupName="address">
             <tr>
                 <td><strong>Mail Code</strong></td>
-                <td> <kendo-textbox aria-label="Mail Code" [fillMode]="formUiStyle.inputFillMode">
+                <td><kendo-textbox aria-label="Mail Code" 
+                    [disabled]="true"
+                     
+                     [fillMode]="formUiStyle.inputFillMode" 
+                     formControlName="mailCode">
                     </kendo-textbox>
                     
                 </td>
@@ -78,26 +85,16 @@
                 <td><strong>Payment Method</strong></td>
                 <td> <div class="">
                     <div class="component-list-h">
-                        <span class="app-radiobtnwidtext-wrapper">
-                          <input type="radio" kendoRadioButton aria-labelledby="Check"   name="Method"
-                             id="Check" value="Check" />
-                          <kendo-label class="k-radio-label" text="Check" for="Check"></kendo-label>
+                        <span class="app-radiobtnwidtext-wrapper" *ngFor="let paymentMethod of paymentMethodCode$ | async ; let i = index">
+                          <input type="radio" kendoRadioButton formControlName="paymentMethod" [value]="paymentMethod.lovCode"
+                          name="paymentMethod" attr.aria-labelledby="{{ paymentMethod.lovCode }}"
+                          id="{{ paymentMethod.lovCode }}" />
+
+                        <kendo-label class="k-radio-label" for="trans{{ paymentMethod.lovCode }}"
+                          text="{{ paymentMethod.lovDesc }}"></kendo-label>
+
                         </span>
-                        <span class="app-radiobtnwidtext-wrapper">
-                          <input type="radio" kendoRadioButton  id="ACH" aria-labelledby="ACH" name="Method"
-                              value="ACH"  />
-                          <kendo-label class="k-radio-label" text="ACH" for="ACH"></kendo-label>
-                        </span>
-                        <span class="app-radiobtnwidtext-wrapper">
-                            <input type="radio" kendoRadioButton   id="SPOTS" aria-labelledby="SPOTS" name="Method"
-                                value="SPOTS"  />
-                            <kendo-label class="k-radio-label" text="SPOTS" for="SPOTS"></kendo-label>
-                          </span>
-                          <span class="app-radiobtnwidtext-wrapper">
-                            <input type="radio" kendoRadioButton   id="DOR Hold" aria-labelledby="DOR Hold" name="Method"
-                                value="DOR Hold"  />
-                            <kendo-label class="k-radio-label" text="DOR Hold" for="DOR Hold"></kendo-label>
-                          </span>
+
                       </div>
                 </div></td>
             </tr>
@@ -107,28 +104,44 @@
                     </kendo-textbox>
                 </td>
             </tr>
+           
             <tr>
                 <td><strong>Address</strong></td>
                 <td>
                     <div class="flex-row">
                         <div class="flex-col mt-1">
-                            <kendo-textbox aria-label="Address 1" placeholder="Address 1" [fillMode]="formUiStyle.inputFillMode">
+                            <kendo-textbox aria-label="Address 1" placeholder="Address 1" 
+                            [fillMode]="formUiStyle.inputFillMode" formControlName="address1"   [maxlength]="100">
                             </kendo-textbox>
                         </div>
                         <div class="flex-col mt-1">
-                            <kendo-textbox aria-label="Address 1" placeholder="Address 2" [fillMode]="formUiStyle.inputFillMode">
+                            <kendo-textbox aria-label="Address 1" placeholder="Address 2" 
+                            [fillMode]="formUiStyle.inputFillMode" formControlName="address2" [maxlength]="100">
                             </kendo-textbox>
                         </div>
                         <div class="flex-col mt-1">
-                            <kendo-textbox aria-label="City" placeholder="City" [fillMode]="formUiStyle.inputFillMode">
+                            <kendo-textbox aria-label="City" placeholder="City" [fillMode]="formUiStyle.inputFillMode"
+                             formControlName="cityCode" [maxlength]="20">
                             </kendo-textbox>
                         </div>
                         <div class="flex-col flex-col-6 mt-1">
-                            <kendo-textbox aria-label="State" [fillMode]="formUiStyle.inputFillMode">
-                            </kendo-textbox>
+                            <!-- <kendo-textbox aria-label="State" [fillMode]="formUiStyle.inputFillMode" formControlName="stateCode">
+                            </kendo-textbox> -->
+                            <kendo-dropdownlist 
+                            aria-label="State" 
+                            [fillMode]="formUiStyle.dropDownFillMode"
+                            formControlName="stateCode"
+                            [data]="ddlStates$ | async"
+                            textField="stateName"
+                            valueField="stateCode"
+                            [valuePrimitive]="true" placeholder="State"
+                          
+                            >
+                            </kendo-dropdownlist>
                         </div>
                         <div class="flex-col flex-col-6 mt-1">
-                            <kendo-textbox aria-label="Zip" placeholder="Zip"  [fillMode]="formUiStyle.inputFillMode">
+                            <kendo-textbox aria-label="Zip" placeholder="Zip"  [fillMode]="formUiStyle.inputFillMode"
+                             formControlName="zip" [maxlength]="10">
                             </kendo-textbox>
                         </div>
 
@@ -146,28 +159,47 @@
                     </div>
                 </td>
             </tr>
-            <tr>
+
+            <ng-container formArrayName="contacts">
+            <tr *ngFor="let contact of profileForm.controls.address.controls.contacts.value; let i=index">
+                <ng-container [formGroupName]="i">
                 <td>
-                     <div class="flex-row fiel-column-label"><strong>Contact 1 Name</strong> </div>
-                     <div class="flex-row fiel-column-label"><strong>Contact 1 Phone</strong> </div>
-                     <div class="flex-row fiel-column-label"><strong>Contact 1 Email</strong> </div>
+                     <div class="flex-row fiel-column-label"><strong>Contact {{i+1}} Name</strong> </div>
+                 
+                     <div class="flex-row fiel-column-label"><strong>Contact {{i+1}} Phone</strong> </div>
+                    
+                     <div class="flex-row fiel-column-label"><strong>Contact {{i+1}} Email</strong> </div>
                 </td>
                 <td>
                     <div class="flex-col mt-1">
-                        <kendo-textbox aria-label="Name" [fillMode]="formUiStyle.inputFillMode">
+                        <kendo-textbox aria-label="Name" [fillMode]="formUiStyle.inputFillMode"  formControlName="contactName">
                         </kendo-textbox>
                     </div>
-                    <div class="flex-col mt-1">
-                        <kendo-textbox aria-label="Phone" [fillMode]="formUiStyle.inputFillMode">
-                        </kendo-textbox>
+                    <ng-container formArrayName="phones">
+                    <div class="flex-col mt-1" *ngFor="let phone of  phones(i).controls; let j=index">
+                        <ng-container [formGroupName]="j">
+                            <kendo-maskedtextbox  aria-label="Phone"  [maskOnFocus]="true"  [maxlength]="10"  mask="(999) 000-0000" [fillMode]="formUiStyle.inputFillMode" formControlName="phoneNbr">
+                            </kendo-maskedtextbox> 
+                        </ng-container>
                     </div>
-                    <div class="flex-col mt-1">
-                        <kendo-textbox aria-label="Email" [fillMode]="formUiStyle.inputFillMode">
+                    </ng-container>
+
+                    <ng-container formArrayName="emails">
+                        <div class="flex-col mt-1" *ngFor="let phone of  emails(i).controls; let k=index">
+                            <ng-container [formGroupName]="k">
+                        <kendo-textbox aria-label="Email" [fillMode]="formUiStyle.inputFillMode" formControlName="emailAddress">
                         </kendo-textbox>
+                            </ng-container>
+
                     </div>
+                    </ng-container>
                 </td>
+            </ng-container> 
             </tr>
+            </ng-container>
+        </ng-container>
         </table>
+    </ng-container>
     </div>
 
 
@@ -177,7 +209,7 @@
 <kendo-dialog-actions>
     <div class="justify-content-between" *ngIf="!isEditProvider">
 
-        <button kendoButton [primary]="true" look="flat" class="" aria-label="Provider profile"> Provider profile <span
+        <button kendoButton [primary]="true" look="flat" class="" aria-label="Provider profile" (click)="onVendorProfileViewClicked()"> Provider profile <span
                 class="material-icons ml-1">
                 chevron_right
             </span></button>
@@ -187,7 +219,7 @@
     <div class="justify-content-between align-items-center" *ngIf="isEditProvider">
         <div class="align-items-center">
                
-              <button kendoButton [primary]="true" aria-label="Update">Update</button>
+              <button kendoButton [primary]="true" aria-label="Update" (click)="updateProfile()">Update</button>
               <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="editProviderClicked()">
                     Cancel
               </button>
@@ -195,3 +227,4 @@
         </div>
   </div>
 </kendo-dialog-actions>
+</ng-container>
