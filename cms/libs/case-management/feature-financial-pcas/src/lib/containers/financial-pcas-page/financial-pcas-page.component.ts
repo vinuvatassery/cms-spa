@@ -37,15 +37,10 @@ export class FinancialPcasPageComponent {
   sortValueFinancialPcaReport = this.financialPcaFacade.sortValueFinancialPcaReport;
   sortFinancialPcaReportList = this.financialPcaFacade.sortFinancialPcaReportList;
 
-  sortValuePcaObject = this.financialPcaFacade.sortValuePcaObject;
-  sortPcaObjectList = this.financialPcaFacade.sortPcaObjectList;
-
-
   financialPcaSetupGridLists$ = this.financialPcaFacade.financialPcaSetupData$;
   financialPcaAssignmentGridLists$ = this.financialPcaFacade.financialPcaAssignmentData$;
   financialPcaReassignmentGridLists$ = this.financialPcaFacade.financialPcaReassignmentData$;
-  financialPcaReportGridLists$ = this.financialPcaFacade.financialPcaReportData$;
-  financialPcaObjectGridLists$ = this.financialPcaFacade.financialPcaObjectData$;
+  financialPcaReportGridLists$ = this.financialPcaFacade.financialPcaReportData$; 
 
   constructor(
     private readonly financialPcaFacade: FinancialPcaFacade,
@@ -73,9 +68,7 @@ export class FinancialPcasPageComponent {
     this.financialPcaFacade.loadFinancialPcaReportListGrid();
   }
 
-  loadFinancialPcaObjectListGrid(event: any) {
-    this.financialPcaFacade.loadFinancialPcaObjectListGrid();
-  }
+ 
 }
 
   

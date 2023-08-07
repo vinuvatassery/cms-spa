@@ -56,9 +56,6 @@ export class FinancialPcaFacade {
 
   private financialPcaReportDataSubject =  new Subject<any>();
   financialPcaReportData$ = this.financialPcaReportDataSubject.asObservable();
-
-  private batchRFinancialPcaObjectDataSubject =  new Subject<any>();
-  financialPcaObjectData$ = this.batchRFinancialPcaObjectDataSubject.asObservable();
  
  
  
@@ -150,19 +147,6 @@ export class FinancialPcaFacade {
       },
     });  
   }
- 
-  loadFinancialPcaObjectListGrid(){
-    this.financialPcaDataService.loadFinancialPcaObjectListService().subscribe({
-      next: (dataResponse) => {
-        this.batchRFinancialPcaObjectDataSubject.next(dataResponse);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
-      },
-    });  
-  }
-  
+
  
 }

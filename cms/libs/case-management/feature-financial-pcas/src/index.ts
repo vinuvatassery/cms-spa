@@ -8,12 +8,6 @@ export * from './lib/components/financial-pcas-reassignment-list/financial-pcas-
 
 export * from './lib/components/financial-pcas-assignment-report-list/financial-pcas-assignment-report-list.component';
 
-export * from './lib/components/financial-pcas-object-group-assignment/financial-pcas-object-group-assignment.component';
-
-export * from './lib/components/financial-pcas-group-list/financial-pcas-group-list.component';
-
-export * from './lib/components/financial-pcas-object-list/financial-pcas-object-list.component';
-
 export * from './lib/components/financial-pcas-setup-form/financial-pcas-setup-form.component';
 
 export * from './lib/components/financial-pcas-setup-remove/financial-pcas-setup-remove.component';
@@ -30,18 +24,4 @@ export * from './lib/components/financial-pcas-assignment-report-alert/financial
 
 export * from './lib/components/financial-pcas-assignment-report-preview-submit/financial-pcas-assignment-report-preview-submit.component';
 
-export * from './lib/components/financial-pcas-object-form/financial-pcas-object-form.component';
 
-export * from './lib/components/financial-pcas-object-remove/financial-pcas-object-remove.component';
-
-export * from './lib/components/financial-pcas-object-activate/financial-pcas-object-activate.component';
-
-export * from './lib/components/financial-pcas-object-deactivate/financial-pcas-object-deactivate.component';
-
-export * from './lib/components/financial-pcas-group-deactivate/financial-pcas-group-deactivate.component';
-
-export * from './lib/components/financial-pcas-group-activate/financial-pcas-group-activate.component';
-
-export * from './lib/components/financial-pcas-group-remove/financial-pcas-group-remove.component';
-
-export * from './lib/components/financial-pcas-group-form/financial-pcas-group-form.component';
