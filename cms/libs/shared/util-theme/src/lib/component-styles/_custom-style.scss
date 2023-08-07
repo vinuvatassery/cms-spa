@@ -971,6 +971,9 @@ color: $app-primary-font-color;
     justify-content: flex-end;
     gap: 10px;
   }
+  .app-c-table .k-grid-content, .k-grid .k-grid-content{
+    max-height: 80px;
+  }
 }
 .sub-fix-bar{
   padding: 8px 20px 16px 20px;
@@ -1157,3 +1160,10 @@ color: $app-primary-font-color;
   margin-left: .8rem;
   margin-top: 1.7rem;
 }
+.add-new-button-common {
+  float: right;
+  position: absolute;
+  top: 40px;
+  right: 30px;
+}
+ 

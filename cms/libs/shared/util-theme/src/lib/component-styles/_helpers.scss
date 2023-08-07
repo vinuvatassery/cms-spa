@@ -10,6 +10,9 @@ section {
 .d-in-flex {
   display: inline-flex !important;
 }
+.d-inline-flex {
+  display: inline-flex;
+}
 .justify-content-end {
   justify-content: flex-end;
   display: flex;
@@ -41,6 +44,9 @@ section {
 }
 .text-upper{
   text-transform: uppercase;
+}
+.text-normal{
+  text-transform: none;
 }
 .text {
   &-noWrap {
