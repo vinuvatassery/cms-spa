@@ -1,4 +1,4 @@
-<section class="k-dialog-body" [formGroup]="clientReminderForm">
+<section class="k-dialog-body" [formGroup]="clientReminderForm" kendoTooltip>
   <p class="text-muted">All fields are required unless otherwise stated.</p>
   <section>
     <div class="flex-row">
@@ -47,8 +47,13 @@
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="!clientReminderForm.controls['description'].valid">Description is required.</kendo-formerror>
       </div>
-      
-      <div class="flex-col mt-3" *ngIf="isShow">
+      <div class="flex-col mt-3 field_with_info" *ngIf="isShow">
+        <kendo-floatinglabel text="Link Reminder To">
+          <kendo-dropdownlist aria-label="Link Reminder To" [fillMode]="formUiStyle.dropDownFillMode" > </kendo-dropdownlist>
+      </kendo-floatinglabel>
+      <span class="material-icons" title="Select an entity if you want this item to be displayed in its profile.">info</span>
+      </div>
+      <div class="flex-col mt-3 field_with_info" *ngIf="isShow">
         <div class="autoSelect-search mat-form-no-b-space">
           <div class="global-search">
             <span
@@ -77,6 +82,7 @@
             </kendo-multicolumncombobox>
           </div>
         </div>
+        <span class="material-icons" title="Select a client or service provider if you want this reminder to be displayed in their profile.">info</span>
       </div>
         <div class="flex-col mt-3" *ngIf="isShow"  >
           <div class="global-search mat-form-no-b-space">
@@ -126,8 +132,8 @@
     
   </section>
 </section>
-<kendo-dialog-actions>
-  <section class="justify-content-end">
+<kendo-dialog-actions kendoTooltip>
+  <div class="justify-content-end">
     <button
       kendoButton
       [primary]="true"
@@ -137,8 +143,8 @@
     >
       Cancel
     </button>
-    <button kendoButton [primary]="true" (click)="onCloseReminderClicked()"  aria-label="create reminder">
+    <button kendoButton [primary]="true" (click)="save()"  aria-label="create reminder">
       Create
     </button>
-  </section>
+  </div>
 </kendo-dialog-actions>

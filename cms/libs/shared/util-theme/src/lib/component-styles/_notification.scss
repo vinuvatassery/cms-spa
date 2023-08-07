@@ -39,9 +39,25 @@
     color: $black-3;
   }
 }
+.k-notification-container{
+  max-width: 500px;
+  box-shadow: 0 2px 4px -1px rgba($black, 0.2), 
+  0 4px 5px 0 rgba($black, 0.14), 
+  0 1px 10px 0 rgba($black, 0.12);
+  border-radius: 4px;
+  @media (max-width: $breakpoint-sm) {
+    max-width: 95%;
+    margin: auto;
+  }
+}
 .k-notification-group {
   z-index: 999999999;  
   padding-top: $size-xxxx;
+  @media (max-width: $breakpoint-sm) {
+    left: 0 !important;
+    right: 0 !important;
+    margin: auto !important;
+  }
   .k-notification-wrap > .k-icon {
     margin-top: $size-0;
     font-size: $font-size-xlg + 2;
@@ -49,7 +65,17 @@
   .k-notification {
     min-width: 500px;
     width: 100%;
-    max-width: 500px;
+    max-width: 100%;
+    box-shadow: none;
+    align-items: flex-start;
+    @media (max-width: $breakpoint-sm) {
+      min-width: 280px;
+      max-width: 10%;
+      margin: auto;
+    }
+    .k-notification-status{
+      margin-top: 4px;
+    }
     .k-notification-content {
       margin-top: $size-m;
       .k-notification-title {
@@ -58,9 +84,9 @@
       }
       .k-notification-sub-title {
         font-family: $font-family;
-        padding-left: $size-l;
+        padding-left: 0;
         word-break: break-word;
-        margin-left: 10px;
+        margin-left: 0;
       }
     }
     .k-i-close {
@@ -100,6 +126,9 @@
           content: '\e000';
           font-family: $font-family-Material-icon;
         }
+      }
+      .k-notification-actions, .snakbar-close-btn{
+        color: $black-3;
       }
     }
     &.k-notification-info {
@@ -201,9 +230,8 @@
 }
 .snack-barwrapper{
   display: grid;
-  grid-template-columns: 40px auto auto;
   align-items: center;
-  grid-gap: 10px;
+  grid-gap: 4px;
   .snakbar-close-btn{
   width: 30px;
   height: 30px;
@@ -212,3 +240,5 @@
   right: 9px;
   }
 }
+
+

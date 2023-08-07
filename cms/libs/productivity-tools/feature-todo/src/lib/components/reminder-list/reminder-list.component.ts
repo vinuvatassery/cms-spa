@@ -1,12 +1,18 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy ,  TemplateRef} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ViewChild,
+  TemplateRef,
+  Output,
+  EventEmitter
+} from '@angular/core';
 /** External libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
-import { UIFormStyle } from '@cms/shared/ui-tpa'
-/** Facades **/
-import {ReminderFacade} from '@cms/productivity-tools/domain';
-import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+/** Facades **/ 
+import { LoaderService } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-reminder-list',
@@ -15,87 +21,96 @@ import { DialogService } from '@progress/kendo-angular-dialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReminderListComponent {
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  @ViewChild('reminderDetailsTemplate', { read: TemplateRef })
+  reminderDetailsTemplate!: TemplateRef<any>;
+  @ViewChild('deleteToDODialogTemplate', { read: TemplateRef })
+  deleteToDODialogTemplate!: TemplateRef<any>;
   isOpenDeleteTODOItem = false;
-  isOpenTODOItemDetailsNoFeature= false;
   /** Public properties **/
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
   isShowReminderDetailsModal = false;
   reminderActionPopupClass = 'more-action-dropdown app-dropdown-action-list';
-  private newReminderDetailsDialog : any;
+  private newReminderDetailsDialog: any;
+  public deleteReminderDialog: any;
+  public deleteToDoDialog: any;
+  @Output() ReminderEventClicked  = new EventEmitter<any>();
+
   public reminderActions = [
     {
-      buttonType:"btn-h-primary",
-      text: "Done",
-      icon: "done",
+      buttonType: 'btn-h-primary',
+      text: 'Done',
+      icon: 'done',
       click: (): void => {
-        this.onDoneClicked();
+        this.onReminderDoneClicked();
       },
     },
     {
-      buttonType:"btn-h-primary",
-      text: "Edit",
-      icon: "edit",
+      buttonType: 'btn-h-primary',
+      text: 'Edit',
+      icon: 'edit',
       click: (): void => {
-        this.clickOpenReminderToDoDetails();
+        this.onNewReminderOpenClicked(this.reminderDetailsTemplate);
       },
     },
     {
-      buttonType:"btn-h-danger",
-      text: "Delete",
-      icon: "delete",
+      buttonType: 'btn-h-danger',
+      text: 'Delete',
+      icon: 'delete',
       click: (): void => {
-        this.clickOpenDeleteToDo();
+        this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
       },
     },
   ];
 
   /** Constructor **/
-  constructor(
-    private reminderFacade : ReminderFacade,
-    private loaderService: LoaderService,    
+  constructor( 
+    private loaderService: LoaderService,
     private dialogService: DialogService
-  ){}
+  ) {}
   /** Internal event methods **/
-  onDoneClicked() {
-    this.reminderFacade.showHideSnackBar(
-      SnackBarNotificationType.SUCCESS,
-      'Item  updated to Done successfully'
-    );
-   
+  onReminderDoneClicked() { 
+    this.ReminderEventClicked.emit();
   }
 
- 
-
   onNewReminderClosed(result: any) {
-    if(result){
-      this.newReminderDetailsDialog.close()
-    }}
+    if (result) {
+      this.newReminderDetailsDialog.close();
+    }
+  }
 
-    onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
+  onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
     this.newReminderDetailsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    }); 
-  }
-  
-  clickOpenReminderToDoDetails( ) {
-    this.isOpenTODOItemDetailsNoFeature = true;
-  
-  }
-  clickCloseReminderToDoDetails() {
-    this.isOpenTODOItemDetailsNoFeature = false;
+      
+    });
   }
 
-  clickOpenDeleteToDo( ) {
-    this.isOpenDeleteTODOItem = true;
-  
-  }
-  clickCloseDeleteToDo() {
-    this.isOpenDeleteTODOItem = false;
+  onOpenDeleteToDoClicked(template: TemplateRef<unknown>): void {
+    this.deleteToDoDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
   }
 
-  
+  onCloseDeleteToDoClicked(result: any) {
+    if (result) {
+      this.deleteToDoDialog.close();
+    }
+  }
+
+  onDeleteReminderClosed(result: any) {
+    if (result) {
+      this.deleteReminderDialog.close();
+    }
+  }
+  onDeleteReminderOpenClicked(template: TemplateRef<unknown>): void {
+    this.deleteReminderDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
 }

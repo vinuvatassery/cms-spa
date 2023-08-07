@@ -7,6 +7,9 @@ section {
 .d-flex {
   display: flex;
 }
+.d-inline-flex {
+  display: inline-flex;
+}
 .justify-content-end {
   justify-content: flex-end;
   display: flex;
@@ -32,6 +35,15 @@ section {
 .align-items-center {
   align-items: center;
   display: flex;
+}
+.text-capitalize{
+  text-transform: capitalize;
+}
+.text-upper{
+  text-transform: uppercase;
+}
+.text-normal{
+  text-transform: none;
 }
 .text {
   &-noWrap {
@@ -192,6 +204,14 @@ section {
   &-5 {
     padding-bottom: $size-xxx + $size-xx  + $size-xx +  $size-xxx !important;
   }
+  &-12rem{
+    padding-bottom: 12rem;
+  }
+}
+.mar{
+  &-0{
+    margin: 0;
+  }
 }
 .pl {
   &-0 {
@@ -227,9 +247,29 @@ section {
     padding-right: $size-xxx + $size-xx !important;
   }
 }
+ 
 .gap-m {
   gap: $size-xx;
 }
 .fade-5 {
   opacity: 0.5;
+}
+
+.nm-20{
+  margin-left: -20px;
+  margin-right: -20px;
+}
+
+.rw-100{
+  width: 100%;
+}
+
+.border-top-line{
+  border-top: 1px solid $grey-c;
+}
+
+.row-border{
+  border-top-color: $grey-c;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }

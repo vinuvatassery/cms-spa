@@ -32,6 +32,7 @@ export class PaymentAddressesComponent {
   billingAddressObj: any[] = [];
   tabCode: string = '';
   addressId: any;
+  financialVendorType: typeof FinancialVendorTypeCode = FinancialVendorTypeCode;
   paymentAddressInnerGridLists = [
     {
       Name: 'FName LName',

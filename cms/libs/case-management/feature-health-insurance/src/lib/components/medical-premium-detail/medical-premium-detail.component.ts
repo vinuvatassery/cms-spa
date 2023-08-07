@@ -931,6 +931,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         this.healthInsurancePolicy.isCerReview = this.isReviewPopup;
         return;
       }
+      if (this.ddlInsuranceType === HealthInsurancePlan.Veterans) {
+        this.healthInsurancePolicy.isCerReview = this.isReviewPopup;
+        return;
+      }
       this.healthInsurancePolicy.insuranceVendorId = this.healthInsuranceForm.controls['insuranceCarrierName'].value;
       this.healthInsurancePolicy.insurancePlanId =
         this.healthInsuranceForm.controls['insurancePlanName'].value;

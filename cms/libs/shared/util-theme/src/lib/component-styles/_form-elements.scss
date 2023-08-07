@@ -142,6 +142,9 @@
   gap: $size-xx;
   border-radius: $border-radius-sm;
   transition: ease all 0.4s;
+  .material-icons{
+    font-size: $font-size-xl;
+  }
   &.blue-banner {
     background: $app-primary;
     color: $white;
@@ -154,6 +157,14 @@
   &.red-banner {
     background: material-color($hive-error-palette, 100);
     color: material-color($hive-error-palette, 900);
+    a {
+      color: $white;
+      word-break: break-word;
+    }
+  }
+  &.red-bg-banner {
+    background: material-color($hive-error-palette, 800);
+    color: material-color($hive-error-palette, A100);
     a {
       color: $white;
       word-break: break-word;
@@ -173,6 +184,15 @@
     color: material-color($hive-canyon-palette, 900);
     a {
       color: $white;
+      word-break: break-word;
+    }
+  }
+  &.canyon-banner-with-black {
+    background: rgba($color: $lightWarm, $alpha: 0.5);
+    color:  rgba($color: $black, $alpha: 1) ;
+    
+    a {
+      color: $black-3;
       word-break: break-word;
     }
   }
@@ -379,7 +399,12 @@
   padding: $size-m $size-l;
 }
  
-
+.k-form-error{
+  .material-icons{
+    font-size: $font-size-xl;
+    line-height: normal;
+  }
+}
 /*Floating Outline Dropdown*/
 .k-dropdown .k-dropdown-wrap,
 .k-dropdowntree .k-dropdown-wrap {
@@ -924,5 +949,22 @@ kendo-timepicker {
   gap: 2rem;
   .app-radiobtnwidtext-wrapper{
     width: auto;
+  }
+}
+
+.small-input-only-field{
+  .k-textbox, 
+ .k-picker-wrap, 
+.k-dropdownlist{
+    height: 36px;
+    .k-input-inner{
+      padding: 8px 10px;
+    }
+  }
+  .fiel-column-label{
+    height: 36px;
+    padding-left: 1rem;
+    align-items: center; 
+    margin-top: 10px !important;
   }
 }

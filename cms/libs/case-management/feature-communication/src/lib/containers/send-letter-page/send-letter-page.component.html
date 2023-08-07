@@ -1,5 +1,6 @@
 <section class="app-l-mainTittle" kendoTooltip>
   <h2>{{title}}  {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'Email' : 'Letter'}}</h2>
+  <h2>{{title}}  {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'Email' : 'Letter'}}</h2>
   <p class="mt-1 mb-3">
     If there is an issue with this {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'email' : 'letter'}} template, please contact your
     Administrator. Make edits as needed, then click “Send {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'email' : 'to print'}}” once the
@@ -21,6 +22,7 @@
         aria-label="preview letter"
       >
         Preview  {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'EMAIL' : 'LETTER'}}
+        Preview  {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'EMAIL' : 'LETTER'}}
       </button>
       <button
         kendoButton
@@ -29,6 +31,7 @@
         (click)="onOpenPrintClicked()"
         aria-label="print letter"
       >
+       {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'SEND EMAIL' : 'SEND TO PRINT'}}
        {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'SEND EMAIL' : 'SEND TO PRINT'}}
       </button>
     </div>
@@ -41,7 +44,10 @@
   (close)="onClosePrintPreviewClicked()"
   class="app-c-modal app-c-modal-lg app-c-modal-np"
   title="Preview {{paperlessFlag === 'Y' ? 'Email' : 'Letter'}}"
+  class="app-c-modal app-c-modal-lg app-c-modal-np"
+  title="Preview {{paperlessFlag === 'Y' ? 'Email' : 'Letter'}}"
 >
+  <case-management-preview-letter [paperlessFlag]="paperlessFlag"></case-management-preview-letter>
   <case-management-preview-letter [paperlessFlag]="paperlessFlag"></case-management-preview-letter>
   <kendo-dialog-actions>
     <div class="justify-content-between">
@@ -54,6 +60,7 @@
           aria-label="cancel print preview"
         >
         CLOSE 
+        CLOSE 
         </button>
         <button
           kendoButton
@@ -61,6 +68,7 @@
           (click)="onOpenPrintClicked()"
           aria-label="send to print"
         >
+        {{paperlessFlag === 'Y' ? 'SEND EMAIL' : 'SEND TO PRINT'}}
         {{paperlessFlag === 'Y' ? 'SEND EMAIL' : 'SEND TO PRINT'}}
         </button>
       </div>
@@ -76,7 +84,16 @@
   [class.app-c-modal-md] = "isDisenrollmentPage"
   [class.app-c-modal-md] = "!isDisenrollmentPage"
   title= {{confirmTitle}} 
+  class="app-c-modal app-c-modal-np"
+  [class.app-c-modal-md] = "isDisenrollmentPage"
+  [class.app-c-modal-md] = "!isDisenrollmentPage"
+  title= {{confirmTitle}} 
 >
+<section class="k-dialog-body">
+  <p *ngIf="isDisenrollmentPage" class="text-muted mb-2">
+    {{printModelText}}
+  </p>
+</section>
 <section class="k-dialog-body">
   <p *ngIf="isDisenrollmentPage" class="text-muted mb-2">
     {{printModelText}}
@@ -94,6 +111,8 @@
         >
           Cancel
         </button>
+        <button kendoButton [primary]="true" aria-label="print letter"   (click)="onClosePrintClicked()">
+          {{paperlessFlag === 'Y' ? 'EMAIL' : 'PRINT'}}
         <button kendoButton [primary]="true" aria-label="print letter"   (click)="onClosePrintClicked()">
           {{paperlessFlag === 'Y' ? 'EMAIL' : 'PRINT'}}
         </button>

@@ -10,8 +10,12 @@ import {
   ChangeDetectorRef,
   AfterViewInit, 
   AfterContentChecked,
+  ChangeDetectorRef,
+  AfterViewInit, 
+  AfterContentChecked,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ContactFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { ContactFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subscription, first } from 'rxjs';
@@ -22,6 +26,7 @@ import { Subscription, first } from 'rxjs';
   styleUrls: ['./send-letter-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewInit, AfterContentChecked  {
 export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewInit, AfterContentChecked  {
   /** Public properties **/
   getLetterEditorValue = new EventEmitter<boolean>();
@@ -39,9 +44,17 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
   sessionId! : string
   clientId: any;
   clientCaseEligibilityId: any
+  clientCaseEligibilityId: any
   private disenrollLaterDialog: any;
   private approvalLaterDialog: any;
+  private approvalLaterDialog: any;
   private saveForLaterValidationSubscription !: Subscription;
+  @ViewChild('disenrollment_letter_later', { read: TemplateRef })  disenrollment_letter_later!: TemplateRef<any>;
+
+  @ViewChild('approval_letter_later', { read: TemplateRef })  approval_letter_later!: TemplateRef<any>;
+  paperless$ = this.contactFacade.paperless$;
+  paperlessFlag = 'N'
+ 
   @ViewChild('disenrollment_letter_later', { read: TemplateRef })  disenrollment_letter_later!: TemplateRef<any>;
 
   @ViewChild('approval_letter_later', { read: TemplateRef })  approval_letter_later!: TemplateRef<any>;
@@ -53,6 +66,9 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
     constructor(    
       private route: ActivatedRoute,
       private workflowFacade: WorkflowFacade,
+      private dialogService: DialogService, 
+      private readonly contactFacade: ContactFacade,
+      private readonly cdr: ChangeDetectorRef
       private dialogService: DialogService, 
       private readonly contactFacade: ContactFacade,
       private readonly cdr: ChangeDetectorRef
@@ -91,7 +107,13 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
   ngAfterViewInit() {   
     this.workflowFacade.enableSaveButton();     
   }
+  ngAfterViewInit() {   
+    this.workflowFacade.enableSaveButton();     
+  }
 
+  ngAfterContentChecked() {
+    this.cdr.detectChanges();     
+  }
   ngAfterContentChecked() {
     this.cdr.detectChanges();     
   }
@@ -101,7 +123,11 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
       
       if(this.isDisenrollmentPage)
       {
+      
+      if(this.isDisenrollmentPage)
+      {
       this.disenrollLaterDialog = this.dialogService.open({
+        title: "Send Disenrollment "+this.sendType+" later?",
         title: "Send Disenrollment "+this.sendType+" later?",
         content: this.disenrollment_letter_later,
         cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
@@ -116,6 +142,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
       });
      }
     });
+    
     
   }
 
@@ -151,6 +178,12 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
       .pipe(first((sessionData) => sessionData.sessionData != null))
       .subscribe((session: any) => {      
         this.clientId = JSON.parse(session.sessionData).clientId;       
+        this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
+         
+        if(this.clientId && this.clientCaseEligibilityId )
+        {
+        this.loadClientPaperLessStatusHandle()
+        }
         this.clientCaseEligibilityId = JSON.parse(session.sessionData).clientCaseEligibilityId;
          
         if(this.clientId && this.clientCaseEligibilityId )

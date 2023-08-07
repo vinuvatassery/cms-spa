@@ -206,6 +206,7 @@
 /* Tooltip */
 .k-tooltip-wrapper{
 z-index: 105;
+max-width: 250px;
 }
 .k-tooltip {
   background: material-color($hive-neutral-palette, 900);
@@ -308,6 +309,17 @@ z-index: 105;
   }
 }
 
+.combo-search-wrapper{
+  position: relative;
+  .global-search-icon{
+    position: absolute;
+    top: 8px;
+    left: 10px; 
+  }
+  .k-input-inner{
+    padding-left: 40px;
+  }
+}
 .k-no-data,
 .k-nodata {
   min-height: 40px;
