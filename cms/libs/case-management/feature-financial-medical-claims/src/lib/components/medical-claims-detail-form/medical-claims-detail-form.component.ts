@@ -5,6 +5,7 @@ import {
   EventEmitter,
   ChangeDetectorRef,
   OnInit,
+  Input,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
@@ -58,10 +59,11 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   medicalClaimServices = new MedicalClaims();
   sessionId: any = '';
   clientCaseEligibilityId: any = null;
-  isEdit = false;
-  paymentRequestId: any;
+  @Input() isEdit : any;
+  @Input() paymentRequestId : any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
-
+  title : any
+  addOrEdit: any;
   constructor(
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialMedicalClaimsFacade: FinancialMedicalClaimsFacade,
@@ -76,9 +78,13 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   ngOnInit(): void {
     this.lovFacade.getCoPaymentRequestTypeLov();
     if (!this.isEdit) {
+      this.title = 'Add Medical Claims';
+      this.addOrEdit = 'Add'
       this.addClaimServiceGroup();
     }
     if (this.isEdit) {
+      this.title = 'Edit Claim';
+      this.addOrEdit = 'Edit'
       this.getMedicalClaimByPaymentRequestId();
     }
   }
@@ -156,8 +162,8 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
         this.medicalClaimServices.reasonForException
       ),
       medicadeRate: new FormControl(this.medicalClaimServices.medicadeRate),
-      paymentRequestId : new FormControl(),
-      tpaInvoiceId: new FormControl(),      
+      paymentRequestId: new FormControl(),
+      tpaInvoiceId: new FormControl(),
     });
     this.AddClaimServicesForm.push(claimForm);
     this.cd.detectChanges();
@@ -201,12 +207,15 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
 
   save() {
     this.isSubmitted = true;
+    if (!this.claimForm.valid) {
+      return;
+    }    
     let formValues = this.claimForm.value;
 
     let bodyData = {
       clientId: formValues.client.clientId,
       vendorId: formValues.medicalProvider.vendorId,
-      claimNbr: formValues.medicalProvider.invoiceId,
+      claimNbr: formValues.invoiceId,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       paymentMethodCode: 'MEDICAL',
       paymentRequestId: this.paymentRequestId,
@@ -229,7 +238,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
         amountDue: element.amountDue,
         ServiceDesc: element.serviceDescription,
         exceptionReasonCode: element.reasonForException,
-        tpaInvoiceId: element.tpaInvoiceId     
+        tpaInvoiceId: element.tpaInvoiceId,
       };
       if (
         !this.isStartEndDateValid(
@@ -239,7 +248,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
       ) {
         this.financialVendorRefundFacade.showHideSnackBar(
           SnackBarNotificationType.ERROR,
-          "Start date must less than end date"
+          'Start date must less than end date'
         );
         return;
       }
@@ -258,17 +267,18 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
     this.financialVendorRefundFacade.saveMedicalClaim(data).subscribe({
       next: (response: any) => {
         this.loaderService.hide();
-        if(!response){
+        if (!response) {
           this.financialVendorRefundFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,
-            "An error occure whilie adding claim"
+            'An error occure whilie adding claim'
           );
-        }else{
+        } else {
+          this.closeAddEditClaimsFormModalClicked();
           this.financialVendorRefundFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
             'Claim added successfully'
           );
-        }        
+        }
       },
       error: (error: any) => {
         this.loaderService.hide();
@@ -286,10 +296,18 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
     this.financialVendorRefundFacade.updateMedicalClaim(data).subscribe({
       next: (response: any) => {
         this.loaderService.hide();
-        this.financialVendorRefundFacade.showHideSnackBar(
-          SnackBarNotificationType.SUCCESS,
-          'Claim updated successfully'
-        );
+        if (!response) {
+          this.financialVendorRefundFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            'An error occure whilie updating claim'
+          );
+        } else {
+          this.closeAddEditClaimsFormModalClicked();
+          this.financialVendorRefundFacade.showHideSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            'Claim updated successfully'
+          );
+        }
       },
       error: (error: any) => {
         this.loaderService.hide();
@@ -304,7 +322,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   getMedicalClaimByPaymentRequestId() {
     this.loaderService.show();
     this.financialMedicalClaimsFacade
-      .getMedicalClaimByPaymentRequestId('3A150DE3-228F-4FFF-A3F4-7991466353C5')
+      .getMedicalClaimByPaymentRequestId(this.paymentRequestId)
       .subscribe({
         next: (val) => {
           const clients = [
@@ -323,15 +341,15 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
           this.selectedClient = clients[0];
 
           this.financialVendorRefundFacade.pharmaciesSubject.next(vendors);
-          this.selectedMedicalProvider = vendors[0];          
+          this.selectedMedicalProvider = vendors[0];
           this.claimForm.patchValue({
             invoiceId: val.claimNbr,
-            paymentRequestId: val.paymentRequestId
-          });      
-          
-          this.invoiceId = val.claimNbr; 
+            paymentRequestId: val.paymentRequestId,
+          });
+
+          this.invoiceId = val.claimNbr;
           this.clientCaseEligibilityId = val.clientCaseEligibilityId;
-          this.paymentRequestId = val.paymentRequestId;   
+          this.paymentRequestId = val.paymentRequestId;
           this.cd.detectChanges();
           this.loaderService.hide();
           this.setFormValues(val.tpainvoice);
@@ -361,9 +379,11 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
       serviceForm.controls['serviceDescription'].setValue(service.serviceDesc);
       serviceForm.controls['serviceCost'].setValue(service.serviceCost);
       serviceForm.controls['amountDue'].setValue(service.amountDue);
-      serviceForm.controls['paymentType'].setValue(service.paymentTypeCode);     
+      serviceForm.controls['paymentType'].setValue(service.paymentTypeCode);
       serviceForm.controls['tpaInvoiceId'].setValue(service.tpaInvoiceId);
-      serviceForm.controls['reasonForException'].setValue(service.exceptionReasonCode);      
+      serviceForm.controls['reasonForException'].setValue(
+        service.exceptionReasonCode
+      );
     }
     this.cd.detectChanges();
   }

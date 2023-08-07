@@ -222,7 +222,7 @@
 </ng-template>
 <ng-template #addEditClaimsDialog>
   <cms-medical-claims-detail-form
-    (modalCloseAddEditClaimsFormModal)="modalCloseAddEditClaimsFormModal($event)"></cms-medical-claims-detail-form>
+    (modalCloseAddEditClaimsFormModal)="modalCloseAddEditClaimsFormModal($event)" [isEdit]="isEdit" [paymentRequestId]="paymentRequestId"></cms-medical-claims-detail-form>
 </ng-template>
 
 <ng-template #clientRecentClaimsDialog>
