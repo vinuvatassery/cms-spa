@@ -40,6 +40,7 @@ export class FinancialPcasAssignmentReportListComponent implements OnInit, OnCha
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialPcaReportGridLists$: any;
+  @Input() financialPcaReportGridListsSubGrid$: any;
   @Output() loadFinancialPcaReportListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'vendorName';
@@ -58,62 +59,7 @@ export class FinancialPcasAssignmentReportListComponent implements OnInit, OnCha
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
-  aaaaaa = [
-    {
-      id: 1,
-      pca: '123123`',
-      object: 'Object & Group Assignment',
-      objectCode: '123213',
-      ay: 'A2032',
-      openDate:'MM/DD/YYYY',
-      closeDate: 'MM/DD/YYYY',  
-      amountAssigned: '43324342.33',
-      amountRemaining: '345435.33',
-      groupsCovered: 'Some Description Some Description',      
-      isActive: true,
-    },
-    {
-      id: 2,
-      pca: '123123`',
-      object: 'Object & Group Assignment',
-      objectCode: '123213',
-      ay: 'A2032',
-      openDate:'MM/DD/YYYY',
-      closeDate: 'MM/DD/YYYY',  
-      amountAssigned: '43324342.33',
-      amountRemaining: '345435.33',
-      groupsCovered: 'Some Description Some Description',      
-      isActive: true,
-    },
-    
-  ];
-  bbbbbb = [
-    {
-      id: 1,
-      priority:1,
-      pca: '123123`', 
-      ay: 'A2032',
-      openDate:'MM/DD/YYYY',
-      closeDate: 'MM/DD/YYYY',  
-      amountAssigned: '43324342.33',
-      amountRemaining: '345435.33',
-         
-      isActive: true,
-    },
-    {
-      id: 2,
-      priority:2,
-      pca: '123123`', 
-      ay: 'A2032',
-      openDate:'MM/DD/YYYY',
-      closeDate: 'MM/DD/YYYY',  
-      amountAssigned: '43324342.33',
-      amountRemaining: '345435.33', 
-      isActive: true,
-    },
-    
-  ];
+ 
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,

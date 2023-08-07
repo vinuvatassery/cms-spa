@@ -86,70 +86,7 @@ export class FinancialPcasReassignmentListComponent
         }
       },
     },
-  ];
-  aaaaaa = [
-    {
-      id: 1,
-      pca: '123123`',
-      object: 'Object & Group Assignment',
-      closeDate: 'MM/DD/YYYY',
-      group: 'Some Description Some Description',
-      originalAmount: '43324342.33',
-      spendAfterExpiration: '345435.33',
-      overspendAmount: '345435.33',
-      TotalOverspendAmount: '345435.33', 
-      isActive: true,
-    },
-    {
-      id: 2,
-      pca: '123123`',
-      object: 'Object & Group Assignment',
-      closeDate: 'MM/DD/YYYY',
-      group: 'Some Description Some Description',
-      originalAmount: '43324342.33',
-      spendAfterExpiration: '345435.33',
-      overspendAmount: '345435.33',
-      TotalOverspendAmount: '345435.33', 
-      isActive: false,
-    },
-    {
-      id: 2,
-      pca: '123123`',
-      object: 'Object & Group Assignment',
-      closeDate: 'MM/DD/YYYY',
-      group: 'Some Description Some Description',
-      originalAmount: '43324342.33',
-      spendAfterExpiration: '345435.33',
-      overspendAmount: '345435.33',
-      TotalOverspendAmount: '345435.33', 
-      isActive: false,
-    },
-    {
-      id: 2,
-      pca: '123123`',
-      object: 'Object & Group Assignment',
-      closeDate: 'MM/DD/YYYY',
-      group: 'Some Description Some Description',
-      originalAmount: '43324342.33',
-      spendAfterExpiration: '345435.33',
-      overspendAmount: '345435.33',
-      TotalOverspendAmount: '345435.33', 
-      isActive: false,
-    },
-    {
-      id: 2,
-      pca: '123123`',
-      object: 'Object & Group Assignment',
-      closeDate: 'MM/DD/YYYY',
-      group: 'Some Description Some Description',
-      originalAmount: '43324342.33',
-      spendAfterExpiration: '345435.33',
-      overspendAmount: '345435.33',
-      TotalOverspendAmount: '345435.33', 
-      isActive: false,
-    },
-    
-  ];
+  ]; 
 
   pcaLists =[
     {
