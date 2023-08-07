@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, OnInit, Component, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, OnInit, Component, ChangeDetectorRef, Input } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade } from '@cms/case-management/domain';
-import { Router, NavigationEnd } from '@angular/router';
+import { FinancialClaimsFacade, PaymentPanel, PaymentsFacade } from '@cms/case-management/domain';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import {  filter } from 'rxjs';
-import { LoggingService } from '@cms/shared/util-core';
+import { LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'cms-financial-claims-batch-items-page',
@@ -24,17 +24,23 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   batchItemsGridLists$ = this.financialClaimsFacade.batchItemsData$;
   claimsType: any;
   currentUrl:any
+  paymentPanelData$ = this.paymentFacade.paymentPanelData$;
+  @Input() vendorId:any;
+  @Input() batchId:any;
 
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly router: Router, 
     private readonly cdr: ChangeDetectorRef,
     private loggingService: LoggingService,
+    private paymentFacade:PaymentsFacade,
+    private readonly route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {    
    this.claimsType = this.financialClaimsFacade.getClaimsType(this.router)
    this.addNavigationSubscription();
+   this.getQueryParams()
   }
 
   private addNavigationSubscription() {
@@ -51,7 +57,31 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
         },
       });
   }
+
+  private getQueryParams() {
+    this.vendorId = this.route.snapshot.params['vendorId'];
+    this.batchId = this.route.snapshot.params['batchId'];
+  }
+
   loadBatchItemListGrid(event: any) {
     this.financialClaimsFacade.loadBatchItemsListGrid();
+  }
+  loadPaymentPanel(event:any=null){
+    this.paymentFacade.loadPaymentPanel(this.vendorId,this.batchId);    
+  }
+  updatePaymentPanel(paymentPanel:PaymentPanel){
+    this.paymentFacade.showLoader();
+    this.paymentFacade.updatePaymentPanel(this.vendorId,this.batchId, paymentPanel).subscribe({
+        next: (response: any) => {        
+          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+          this.paymentFacade.hideLoader();  
+          this.loadPaymentPanel();    
+          
+        },
+        error: (err) => {       
+          this.paymentFacade.hideLoader();
+          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        }
+      });
   }
 }

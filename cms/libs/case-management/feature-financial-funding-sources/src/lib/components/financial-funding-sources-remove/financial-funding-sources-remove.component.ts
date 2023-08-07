@@ -1,0 +1,20 @@
+ 
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Output, 
+  EventEmitter,
+} from '@angular/core';
+@Component({
+  selector: 'cms-financial-funding-sources-remove',
+  templateUrl: './financial-funding-sources-remove.component.html', 
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class FinancialFundingSourcesRemoveComponent {
+  @Output() isModalRemoveFundingSourcesCloseClicked = new EventEmitter();
+
+ 
+  closeRemoveFundingSourcesClicked() {
+    this.isModalRemoveFundingSourcesCloseClicked.emit(true);
+  }
+}
