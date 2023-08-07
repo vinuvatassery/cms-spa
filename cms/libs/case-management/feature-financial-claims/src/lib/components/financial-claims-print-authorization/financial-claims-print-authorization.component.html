@@ -15,8 +15,8 @@
                                     </span>
                               </div>
 
-                              <div>
-                                    <label>Content Will come here</label>
+                              <div [innerHTML]="letterContnet" class="view-auth-port">
+                                  
                               </div>
                         </div>
                         <div *ngIf="!printOption">
@@ -49,7 +49,7 @@
                   <button kendoButton (click)="onClosePrintAdviceLetterClicked()" [primary]="true" look="outline" aria-label="Cancel">
                         Cancel
                   </button>
-                  <button kendoButton [disabled]="printCount == 0" [primary]="true" aria-label="Submit"> {{printOption ? 'Print' : 'Reconcile & Print'}}</button>
+                  <button kendoButton [disabled]="printCount == 0" (click)="onPrintAdviceLetterClicked()" [primary]="true" aria-label="Submit"> {{printOption ? 'Print' : 'Reconcile & Print'}}</button>
             </div>
       </div>
 </kendo-dialog-actions>

@@ -69,5 +69,9 @@ export class PaymentsDataService {
       `/financial-management/vendors/${vendorId}/batches/${batchId}`     
     ,paymentPanel);
   }
+
+  getPrintAdviceLetterData(selectedProviders: any[]) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/generate`,selectedProviders);
+  }
  
 }

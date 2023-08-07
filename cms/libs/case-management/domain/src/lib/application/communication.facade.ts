@@ -81,4 +81,10 @@ export class CommunicationFacade {
       },
     });
   }
+
+  loadEmailTemplates(typeCode: string) {
+    return this.emailDataService.loadEmailTemplates(
+      typeCode
+    );
+  }
 }

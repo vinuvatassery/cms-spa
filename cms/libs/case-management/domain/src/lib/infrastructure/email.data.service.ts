@@ -4,13 +4,14 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 /** Entities **/
 import { Email } from '../entities/email';
 
 @Injectable({ providedIn: 'root' })
 export class EmailDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider) {}
 
   /** Public methods **/
   loadEmails(): Observable<Email[]> {
@@ -81,6 +82,13 @@ export class EmailDataService {
         text: "Attach from Client's Attachments",
       },
     ]);
+  }
+
+  
+  loadEmailTemplates(typeCode: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/forms`
+    );
   }
 }
  
