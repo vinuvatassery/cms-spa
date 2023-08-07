@@ -2,13 +2,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnInit,
 } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialPcaFacade } from '@cms/case-management/domain';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import {  filter } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoggingService } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-financial-pcas-page',
