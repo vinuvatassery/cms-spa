@@ -322,13 +322,6 @@ export class CaseFacade {
       next: (clientProfileResponse) => {
         this.clientProfileHeaderSubject.next(clientProfileResponse);
         this.hideLoader();
-        if (clientProfileResponse) {
-          const activeSession = {
-            clientCaseId: clientProfileResponse?.clientCaseId,
-            clientId: clientProfileResponse?.clientId,
-          };
-          this.createActiveSession(activeSession);
-        }
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);

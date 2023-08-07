@@ -48,6 +48,10 @@ export class ProfileClientPageComponent implements OnInit {
     this.loadReadOnlyClientInfoEventHandler()
   }
 
+  loadUpdatedClientProfile(){
+    this.loadReadOnlyClientInfoEventHandler();
+  }
+
   loadReadOnlyClientInfoEventHandler() {
     this.caseFacade.loadClientProfile(this.clientCaseEligibilityId);
     this.specialHandlings$.subscribe(question =>{
