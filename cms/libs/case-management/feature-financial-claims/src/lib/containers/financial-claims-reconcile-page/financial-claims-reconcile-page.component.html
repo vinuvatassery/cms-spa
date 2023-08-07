@@ -2,4 +2,8 @@
 [reconcileGridLists$]="reconcileGridLists$"
 [pageSizes]="pageSizes" [sortValue]="sortValue"
 [sortType]="sortType" [sort]="sort" 
-(loadReconcileListEvent)="loadReconcileListGrid($event)"></cms-financial-claims-batches-reconcile-payments>
+(loadReconcileListEvent)="loadReconcileListGrid($event)"
+[reconcileBreakoutSummary$]="reconcileBreakoutSummary$ | async"
+[reconcilePaymentBreakoutList$]="reconcilePaymentBreakoutList$"
+(loadReconcileBreakoutSummaryEvent)="loadReconcileBreakoutSummary($event)"
+(loadReconcilePaymentBreakoutListEvent)="loadReconcilePaymentBreakoutList($event)"></cms-financial-claims-batches-reconcile-payments>

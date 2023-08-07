@@ -275,7 +275,7 @@
 <kendo-dialog-actions>
   <div class="justify-content-between">
     <div>
-      <button kendoButton class="k-danger-link" *ngIf="isDeleteEnabled" (click)="onDeleteClick()"
+      <button kendoButton class="k-danger-link" *ngIf="isDeleteEnabled && !isPaymentDone" (click)="onDeleteClick()"
         aria-label="delete medical premium">
         Delete
       </button>

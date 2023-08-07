@@ -28,8 +28,11 @@
               placeholder="New Group Start Date">
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror>
+          <kendo-formerror *ngIf="groupFormControls?.['groupStartDate']?.errors?.required">
             New Group Start Date is required
+          </kendo-formerror>
+          <kendo-formerror *ngIf="groupFormControls?.['groupStartDate']?.errors?.minError">
+            New Group Start Date must be equal to or greater than the current date.
           </kendo-formerror>
         </kendo-formfield>
       </div>

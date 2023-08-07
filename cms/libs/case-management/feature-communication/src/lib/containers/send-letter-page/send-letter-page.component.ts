@@ -29,9 +29,10 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
   isOpenedPrint = false;
   isOpenedPrintPreview = false;
   isCERForm = false;
-  title= "Send Approval"
+  title= "Send "
+  customTitle=""
   printModelTitle = "";
-  confirmTitle="approval letter?"
+  confirmTitle=" letter?"
   sendType=""
   printModelText = "";
   isDisenrollmentPage = false;
@@ -62,15 +63,23 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
      
     //NOSONAR this is a temporary title setting please work on it when the form is developed
     this.isCERForm = this.route.snapshot.queryParams['wtc'] === 'CA_CER';
+
+    this.customTitle ="Approval"
     if(this.isCERForm)
     {
-     this.title =  this.route?.snapshot?.data['title']
-     if(this.title.toLowerCase().includes("disenrollment")){
+      this.customTitle = "Eligibility"   
+      
+      this.confirmTitle = this.customTitle + this.confirmTitle
+      
+     if(this.route.snapshot?.data?.["title"]?.toLowerCase().includes("disenrollment")){      
+      this.customTitle = "Disenrollment"   
       this.isDisenrollmentPage = true;
       this.printModelTitle = "Send Disenrollment Letter to "
       this.printModelText = "This action cannot be undone, If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal."
      }
-    }
+    }    
+
+    this.title =this.title + this.customTitle
     this.loadCase()   
     this.addSaveForLaterValidationsSubscription();
    }
@@ -101,7 +110,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
      else
      {
       this.approvalLaterDialog = this.dialogService.open({
-        title: "Send Approval "+this.sendType+" later?",
+        title: "Send "+this.customTitle+" "+this.sendType+" later?",
         content: this.approval_letter_later,
         cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
       });
@@ -174,7 +183,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
       ?.pipe(first((emailData: any) => emailData?.paperlessFlag != null))
       .subscribe((emailData: any) => {
         if (emailData?.paperlessFlag) {
-          let pageType= this.isDisenrollmentPage === true? "Disenrollment" : "Approval"
+          let pageType= this.isDisenrollmentPage === true? "Disenrollment" : this.customTitle
           this.paperlessFlag = emailData?.paperlessFlag;
           this.printModelTitle = this.printModelTitle + (this.paperlessFlag === 'Y' ? 'email?' : 'print?')
           this.confirmTitle =  (this.paperlessFlag === 'Y' ? "Send "+pageType+" Email?" : "Send "+pageType+" Letter to Print?")

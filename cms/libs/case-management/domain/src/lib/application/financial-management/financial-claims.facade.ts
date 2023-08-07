@@ -56,6 +56,11 @@ export class FinancialClaimsFacade {
     field: this.sortValueReconcile,
   }];
 
+  public sortValueReconcilePaymentBreakout = 'invoiceNbr';
+  public sortReconcilePaymentBreakoutList: SortDescriptor[] = [{
+    field: this.sortValueReconcilePaymentBreakout,
+  }];
+
   private financialClaimsProcessDataSubject = new Subject<any>();
   financialClaimsProcessData$ = this.financialClaimsProcessDataSubject.asObservable();
 
@@ -80,6 +85,12 @@ export class FinancialClaimsFacade {
 
   private claimsListDataSubject =  new Subject<any>();
   claimsListData$ = this.claimsListDataSubject.asObservable();
+
+  private reconcileBreakoutSummaryDataSubject =  new Subject<any>();
+  reconcileBreakoutSummary$ = this.reconcileBreakoutSummaryDataSubject.asObservable();
+  
+  private reconcilePaymentBreakoutListDataSubject =  new Subject<any>();
+  reconcilePaymentBreakoutList$ = this.reconcilePaymentBreakoutListDataSubject.asObservable();
   /** Private properties **/
  
   /** Public properties **/
@@ -205,6 +216,41 @@ export class FinancialClaimsFacade {
       },
     });  
   }
+
+  loadReconcilePaymentBreakoutSummary(batchId: string, entityId: string){    
+    this.showLoader();
+    this.financialClaimsDataService.loadReconcilePaymentBreakoutSummaryService(batchId,entityId).subscribe({
+      next: (dataResponse) => {
+        this.reconcileBreakoutSummaryDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  } 
+
+  loadReconcilePaymentBreakoutListGrid(batchId: string, entityId: string,skipcount: number, pagesize: number, sort: any, sortType: any){
+    this.showLoader();
+    this.financialClaimsDataService.loadReconcilePaymentBreakoutListService(batchId,entityId,skipcount,pagesize,sort,sortType).subscribe({
+      next: (dataResponse) => {
+        this.reconcilePaymentBreakoutListDataSubject.next(dataResponse);
+        if (dataResponse) {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.reconcilePaymentBreakoutListDataSubject.next(gridView);
+        }
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  } 
 
   loadServicesByPayment(paymentId: string, params:GridFilterParam){
     return this.financialClaimsDataService.loadServicesByPayment(paymentId, params);
