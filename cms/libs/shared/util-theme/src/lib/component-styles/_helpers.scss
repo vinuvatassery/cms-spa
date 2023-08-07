@@ -7,6 +7,9 @@ section {
 .d-flex {
   display: flex;
 }
+.d-inline-flex {
+  display: inline-flex;
+}
 .justify-content-end {
   justify-content: flex-end;
   display: flex;
@@ -38,6 +41,9 @@ section {
 }
 .text-upper{
   text-transform: uppercase;
+}
+.text-normal{
+  text-transform: none;
 }
 .text {
   &-noWrap {

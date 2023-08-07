@@ -92,7 +92,7 @@
                               <kendo-grid-column field="vendorName" title="Medical Provider" [width]="160">
                                     <ng-template kendoGridCellTemplate let-dataItem>
                                           <button aria-label="Medical Provider" kendoButton look="flat"
-                                                class="card-link-button">
+                                                class="card-link-button" (click)="loadBreakOutDetailOnRowClick(batchId,entityId)">
                                                 {{ dataItem.vendorName }}
                                           </button>
                                     </ng-template>
@@ -155,21 +155,40 @@
       <div class="bottom-fixed-wrapper">
             <div class="sub-fix-bar">
                   <div class="flex-sp-btn">
-                        <div> <span><strong>Amount Total:</strong> $13,000.00</span> <span class="ml-2"><strong>Warrant Total:</strong> $13,000.00</span></div>
-                        <div>0 payment(s) to reconcile</div>
+                        <div> <span class="ml-2"><strong>Amount Total:</strong> $&nbsp;{{reconcileBreakoutSummary$.amountTotal |
+                              kendoNumber:'n2'}}</span>
+                        <span class="ml-2"><strong>Warrant Total:</strong></span> <span class="ml-2"
+                              *ngIf="isBreakoutPanelShow; else searchByBatchTemplate">$&nbsp;{{reconcileBreakoutSummary$.warrantTotal
+                              | kendoNumber: 'n2'}}</span>
+                        <ng-template #searchByBatchTemplate>
+                              <span class="ml-2">$&nbsp;{{0 | kendoNumber: 'n2'}}</span>
+                        </ng-template>
                   </div>
-                 
+                  <div><span>{{ isBreakoutPanelShow ? reconcileBreakoutSummary$.paymentToReconcileCount : 0}} payment(s)
+                              to
+                              reconcile</span>
+                        <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="close">
+                              <span class="material-icons" aria-label="close" aria-hidden="true"
+                                    (click)="toggleBreakoutPanel()">close</span>
+                        </button>
+                  </div>
+                  </div>   
+
                   <div>
-                        <cms-financial-claims-batches-reconcile-payments-breakout></cms-financial-claims-batches-reconcile-payments-breakout>
+                        <cms-financial-claims-batches-reconcile-payments-breakout [isBreakoutPanelShow]="isBreakoutPanelShow"
+                        [pageSizes]="pageSizes" [sortValue]="sortValue"
+                        [sortType]="sortType" [sort]="sort"     
+                        [reconcilePaymentBreakoutList$]="reconcilePaymentBreakoutList$"
+                        (loadReconcilePaymentBreakOutGridEvent)="loadReconcilePaymentBreakOutGridList($event)"></cms-financial-claims-batches-reconcile-payments-breakout>
                   </div>
             </div>
-            <div class="text-right flex-gap">
-                  
+            <div class="text-right flex-gap">     
+
                   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Close </button>
                   <button kendoButton [primary]="true" aria-label="Receipting Log" class="" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
             </div>
       
-      
+
       </div>
 </div>
 

@@ -39,7 +39,14 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   @Input() sortType: any;
   @Input() sort: any;
   @Input() reconcileGridLists$: any;
+  @Input() reconcileBreakoutSummary$:any;
+  @Input() reconcilePaymentBreakoutList$ :any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
+  @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
+  @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();
+  batchId: any = '587B0312-1324-49F8-A91D-0657C93D19B2';
+  entityId: any = '823E2464-0649-49DA-91E7-26DCC76A2A6B';
+  public isBreakoutPanelShow:boolean=true;
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -90,7 +97,8 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute ) {}
   
   ngOnInit(): void {
-     
+    this.isBreakoutPanelShow=false;
+    this.loadReconcilePaymentSummary(this.batchId,'0');
     this.loadReconcileListGrid();
   }
   ngOnChanges(): void {
@@ -219,34 +227,70 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
  
      }
 
-     onSelectionChange(selectedKeys: any): void {
-      if(selectedKeys.selectedRows.length > 0 || selectedKeys.deselectedRows.length > 0){
-        if(selectedKeys.selectedRows[0] != undefined){
-          selectedKeys.selectedRows.forEach((element:any) => {
-            this.startItemNumber == this.getItemNumber();
-            const eachSelectedRow = { ...element.dataItem, item: this.startItemNumber, isChecked: true };
-            this.selectedDataRows.push(eachSelectedRow);
-          });
-        }
-        if(selectedKeys.deselectedRows[0] != undefined){
-          selectedKeys.deselectedRows.forEach((element:any) => {
-            this.selectedDataRows.splice(element.index);
-          });
-        }
-        if(this.selectedDataRows.length == 0){
-          this.isStartItemNumberUpdated = false;
-        }
-        this.selectedCount = this.selectedDataRows.length;
-      }
+    toggleBreakoutPanel()
+    {
+      this.isBreakoutPanelShow=!this.isBreakoutPanelShow;
     }
 
-    getItemNumber(){
-      if(!this.isStartItemNumberUpdated){
-        this.isStartItemNumberUpdated = true;
-        return this.startItemNumber;
-      }else{
-        return this.startItemNumber++;
-      }
+    loadBreakOutDetailOnRowClick(batchId:any,entityId:any)
+    {
+      this.loadReconcilePaymentSummary(batchId,entityId);
+      this.loadReconcilePaymentBreakoutListEvent.emit({
+        batchId: batchId,
+        entityId: entityId,
+        skipCount:0, 
+        pageSize:this.pageSizes[0]?.value, 
+        sort:this.sort,
+        sortType:this.sortType
+      });
+      this.isBreakoutPanelShow=true;
+    }
+
+    loadReconcilePaymentSummary(batchId:any,entityId:any)
+    {
+      this.loadReconcileBreakoutSummaryEvent.emit({batchId: batchId, entityId: entityId});
+    }
+
+  loadReconcilePaymentBreakOutGridList(event:any)
+  {
+    this.loadReconcilePaymentBreakoutListEvent.emit({
+      batchId: this.batchId,
+      entityId: this.entityId,
+      skipCount:event.skipCount, 
+      pageSize:event.pagesize, 
+      sort:event.sortColumn,
+      sortType:event.sortType
+    });
+    }
+
+    onSelectionChange(selectedKeys: any): void {
+        if (selectedKeys.selectedRows.length > 0 || selectedKeys.deselectedRows.length > 0) {
+            if (selectedKeys.selectedRows[0] != undefined) {
+                selectedKeys.selectedRows.forEach((element: any) => {
+                    this.startItemNumber == this.getItemNumber();
+                    const eachSelectedRow = { ...element.dataItem, item: this.startItemNumber, isChecked: true };
+                    this.selectedDataRows.push(eachSelectedRow);
+                });
+            }
+            if (selectedKeys.deselectedRows[0] != undefined) {
+                selectedKeys.deselectedRows.forEach((element: any) => {
+                    this.selectedDataRows.splice(element.index);
+                });
+            }
+            if (this.selectedDataRows.length == 0) {
+                this.isStartItemNumberUpdated = false;
+            }
+            this.selectedCount = this.selectedDataRows.length;
+        }
+    }
+
+    getItemNumber() {
+        if (!this.isStartItemNumberUpdated) {
+            this.isStartItemNumberUpdated = true;
+            return this.startItemNumber;
+        } else {
+            return this.startItemNumber++;
+        }
     }
 }
 

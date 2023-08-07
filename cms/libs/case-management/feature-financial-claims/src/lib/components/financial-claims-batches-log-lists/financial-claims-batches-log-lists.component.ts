@@ -290,8 +290,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
     this.route.navigate(['/financial-management/claims/' + this.claimsType ] ); 
   }
 
-  goToBatchItems(event : any){   
-    debugger
+  goToBatchItems(event : any){ 
     this.route.navigate([this.route.url, 'items'] ); 
   }
 
