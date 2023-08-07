@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  Subject } from 'rxjs';
+import {  BehaviorSubject, Subject } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -9,6 +9,7 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { FinancialClaimsDataService } from '../../infrastructure/financial-management/financial-claims.data.service';
 import { Router } from '@angular/router';
 import { FinancialClaimTypeCode } from '../../enums/financial-claim-types';
+import { GridFilterParam } from '@cms/case-management/domain';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
@@ -33,9 +34,9 @@ export class FinancialClaimsFacade {
     field: this.sortValueFinancialClaimsPayments,
   }];
 
-  public sortValueBatchLog = 'vendorName';
+  public sortValueBatchLog = 'creationTime';
   public sortBatchLogList: SortDescriptor[] = [{
-    field: this.sortValueBatchLog,
+    field: this.sortValueBatchLog, dir: 'desc'
   }];
 
   public sortValueClaims = 'batch';
@@ -44,9 +45,9 @@ export class FinancialClaimsFacade {
   }];
 
 
-  public sortValueBatchItem = 'vendorName';
+  public sortValueBatchItem = 'creationTime';
   public sortBatchItemList: SortDescriptor[] = [{
-    field: this.sortValueBatchItem,
+    field: this.sortValueBatchItem, dir: 'desc'
   }];
 
 
@@ -64,14 +65,18 @@ export class FinancialClaimsFacade {
   private financialClaimsAllPaymentsDataSubject =  new Subject<any>();
   financialClaimsAllPaymentsData$ = this.financialClaimsAllPaymentsDataSubject.asObservable();
 
-  private batchLogDataSubject =  new Subject<any>();
-  batchLogData$ = this.batchLogDataSubject.asObservable();
+  private paymentsByBatchDataSubject =  new Subject<any>();
+  private paymentByBatchGridLoaderSubject =  new BehaviorSubject<boolean>(false);
+  paymentsByBatchData$ = this.paymentsByBatchDataSubject.asObservable();
+  paymentByBatchGridLoader$ = this.paymentByBatchGridLoaderSubject.asObservable();
 
   private batchReconcileDataSubject =  new Subject<any>();
   reconcileDataList$ = this.batchReconcileDataSubject.asObservable();
 
   private batchItemsDataSubject =  new Subject<any>();
+  private batchItemsLoaderSubject =  new BehaviorSubject<any>(false);
   batchItemsData$ = this.batchItemsDataSubject.asObservable();
+  batchItemsLoader$ = this.batchItemsLoaderSubject.asObservable();
 
   private claimsListDataSubject =  new Subject<any>();
   claimsListData$ = this.claimsListDataSubject.asObservable();
@@ -156,28 +161,22 @@ export class FinancialClaimsFacade {
     });  
   }
 
+  loadBatchItemsListGrid(paymentId: string, param: GridFilterParam){
+    this.batchItemsLoaderSubject.next(true);
+    this.financialClaimsDataService.loadBatchItemsListService(paymentId, param).subscribe({
+      next: (dataResponse: any) => {
 
-  loadBatchLogListGrid(){
-    this.financialClaimsDataService.loadBatchLogListService().subscribe({
-      next: (dataResponse) => {
-        this.batchLogDataSubject.next(dataResponse);
-        this.hideLoader();
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+
+        this.batchItemsDataSubject.next(gridView);
+        this.batchItemsLoaderSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
-      },
-    });  
-  }
-  loadBatchItemsListGrid(){
-    this.financialClaimsDataService.loadBatchItemsListService().subscribe({
-      next: (dataResponse) => {
-        this.batchItemsDataSubject.next(dataResponse);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.batchItemsLoaderSubject.next(false);
       },
     });  
   }
@@ -203,6 +202,30 @@ export class FinancialClaimsFacade {
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
         this.hideLoader(); 
+      },
+    });  
+  }
+
+  loadServicesByPayment(paymentId: string, params:GridFilterParam){
+    return this.financialClaimsDataService.loadServicesByPayment(paymentId, params);
+  }
+
+
+  loadBatchLogListGrid(batchId: string, params:GridFilterParam){
+    this.paymentByBatchGridLoaderSubject.next(true);
+    this.financialClaimsDataService.loadPaymentsByBatch(batchId, params).subscribe({
+      next: (dataResponse) => {
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+
+        this.paymentsByBatchDataSubject.next(gridView);
+        this.paymentByBatchGridLoaderSubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.paymentByBatchGridLoaderSubject.next(false);
       },
     });  
   }

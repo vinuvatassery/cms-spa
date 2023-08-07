@@ -1,5 +1,5 @@
- <cms-financial-claims-batches-log-lists  [claimsType]="claimsType" [batchLogGridLists$]="batchLogGridLists$"
- [pageSizes]="pageSizes" [sortValue]="sortValue"
+ <cms-financial-claims-batches-log-lists  [claimsType]="claimsType" [batchLogGridLists$]="paymentsByBatchGridLists$"
+ [loader$]="paymentByBatchGridLoader$" [pageSizes]="pageSizes" [sortValue]="sortValue"
  [sortType]="sortType" [sort]="sort" 
  (loadBatchLogListEvent)="loadBatchLogListGrid($event)"></cms-financial-claims-batches-log-lists>
 

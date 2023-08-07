@@ -16,7 +16,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
@@ -35,10 +35,12 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchItemsGridLists$: any;
+  @Input() itemsListGridLoader$!: Observable<boolean>;
   @Output() loadBatchItemsListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'batch';
+  sortColumn: string='creationTime';
   sortDir = 'Ascending';
+  sortColumnDesc:string = 'Entry Date';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
@@ -53,7 +55,21 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  serviceGridColumnName = ''; 
 
+  gridColumns : {[key: string]: string} = {
+            clientFullName: 'Client Name',
+            nameOnInsuranceCard: 'Name on Primary Insurance Card',
+            paymentStatus: 'Payment Status',
+            clientId: 'Member ID',
+            serviceStartDate: 'Service Date',
+            cptCode: 'CPT Code',
+            serviceDesc:'',
+            serviceCost: 'Service Cost',
+            amountDue: 'Client Co-Pay',
+            creationTime: 'Entry Date',
+            invoiceNbr:'Invoice ID'
+          };
   
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService, 
@@ -62,18 +78,14 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
     }
   
   ngOnInit(): void { 
+    this.serviceGridColumnName = this.claimsType.charAt(0).toUpperCase() + this.claimsType.slice(1);
+    this.gridColumns['serviceDesc'] = `${this.serviceGridColumnName} Service`;
+    this.initializeGridState();
     this.loadBatchLogItemsListGrid();
   }
   ngOnChanges(): void {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
-
-    this.loadBatchLogItemsListGrid();
+    this.initializeGridState();
   }
-
 
   private loadBatchLogItemsListGrid(): void {
     this.loadBatchLogItems(
@@ -97,7 +109,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
       sortType: sortTypeValue,
     };
     this.loadBatchItemsListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
+   // this.gridDataHandle();
   }
  
   
@@ -143,6 +155,8 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumn = stateData.sort[0]?.field;
+    this.sortColumnDesc = this.gridColumns[this.sortColumn];
     this.loadBatchLogItemsListGrid();
   }
 
@@ -157,20 +171,20 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
     this.filterData = filter;
   }
 
-  gridDataHandle() {
-    this.batchItemsGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridClaimsBatchLogItemsDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
-        this.isBatchLogItemsGridLoaderShow = false;
-      }
-    });
-    this.isBatchLogItemsGridLoaderShow = false;
-  }
+  // gridDataHandle() {
+  //   this.batchItemsGridLists$.subscribe((data: GridDataResult) => {
+  //     this.gridDataResult = data;
+  //     this.gridDataResult.data = filterBy(
+  //       this.gridDataResult.data,
+  //       this.filterData
+  //     );
+  //     this.gridClaimsBatchLogItemsDataSubject.next(this.gridDataResult);
+  //     if (data?.total >= 0 || data?.total === -1) { 
+  //       this.isBatchLogItemsGridLoaderShow = false;
+  //     }
+  //   });
+  //   this.isBatchLogItemsGridLoaderShow = false;
+  // }
 
   backToBatchLog(event : any){  
     this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch'] );
@@ -206,5 +220,14 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
     if(result){
       this.paymentDetailsDialog.close();
     }
+  }
+
+  private initializeGridState(){
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: [{ field: 'creationTime', dir: 'desc' }],
+    };
+    this.sortColumnDesc = 'Entry Date';
   }
 }

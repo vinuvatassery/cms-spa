@@ -18,7 +18,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'cms-financial-claims-batches-log-lists',
@@ -116,9 +116,10 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchLogGridLists$: any;
-  @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
+  @Input() loader$!: Observable<boolean>;
+  @Output() loadBatchLogListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'batch';
+  sortColumn = 'creationTime';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -169,10 +170,10 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
+      sortColumn: this.sortColumn ?? 'creationTime',
+      sortType: sortTypeValue ?? 'asc',
     };
-    this.loadVendorRefundBatchListEvent.emit(gridDataRefinerValue);
+    this.loadBatchLogListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
  
@@ -219,6 +220,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumn = stateData.sort[0]?.field
     this.loadBatchLogListGrid();
   }
 
@@ -253,7 +255,6 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   }
 
   goToBatchItems(event : any){   
-    debugger
     this.route.navigate([this.route.url, 'items'] ); 
   }
 

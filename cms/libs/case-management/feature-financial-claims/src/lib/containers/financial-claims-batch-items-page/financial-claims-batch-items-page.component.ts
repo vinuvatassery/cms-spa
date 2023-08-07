@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, OnInit, Component, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { Router, NavigationEnd } from '@angular/router';
 import {  filter } from 'rxjs';
 import { LoggingService } from '@cms/shared/util-core';
@@ -22,6 +22,7 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   sort = this.financialClaimsFacade.sortBatchItemList;
   state!: State;
   batchItemsGridLists$ = this.financialClaimsFacade.batchItemsData$;
+  batchItemsLoader$ =  this.financialClaimsFacade.batchItemsLoader$;
   claimsType: any;
   currentUrl:any
 
@@ -51,7 +52,9 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
         },
       });
   }
+
   loadBatchItemListGrid(event: any) {
-    this.financialClaimsFacade.loadBatchItemsListGrid();
+    const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType);
+    this.financialClaimsFacade.loadBatchItemsListGrid('0A8DC775-91C7-450A-8E98-EF65AA96DFC6', params);
   }
 }
