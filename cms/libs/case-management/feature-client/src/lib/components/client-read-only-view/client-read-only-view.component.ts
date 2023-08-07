@@ -205,6 +205,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
               'Applicant Info updated Successfully'
             );
             this.onCloseEditClientInformationClicked();
+            this.clientFacade.clientProfileReloadSubject.next(true);
             this.onUpdateApplicantInfo.emit();
           },
           error: (error: any) => {
