@@ -1,12 +1,16 @@
 
-export class MedicalClaims{
-    serviceStartDate: string = null;
-    serviceEndDate: string = null;
-    paymentType: string = null;
-    ctpCode: string = null;
-    pcaCode: string = null;
-    serviceDescription: string = null;
-    serviceCost: string = null;
-    amoundDue: string = null;
-    reasonForException: string = null;
-}
+interface MedicalClaims {
+    vendorId: string;
+    serviceStartDate: string;
+    serviceEndDate: string;
+    paymentType: string;
+    cptCode: string;
+    pcaCode: string;
+    serviceDescription: string;
+    serviceCost?: number;
+    amoundDue: string;
+    reasonForException: string;
+    amountDue?: number;
+    medicadeRate: number;
+    cptCodeId: string;
+  }

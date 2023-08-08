@@ -13,7 +13,6 @@ import {
   EntityTypeCode,
   FinancialMedicalClaimsFacade,
   FinancialVendorRefundFacade,
-  WorkflowFacade,
 } from '@cms/case-management/domain';
 import {
   FormArray,
@@ -58,7 +57,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   selectedClient: any;
   invoiceId: any;
   claimForm!: FormGroup;
-  medicalClaimServices = new MedicalClaims();
+  medicalClaimServices!: MedicalClaims;
   sessionId: any = '';
   clientCaseEligibilityId: any = null;
   @Input() isEdit: any;
@@ -75,6 +74,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
     private readonly loaderService: LoaderService,
     private lovFacade: LovFacade
   ) {
+    this.initMedicalClaimObject();
     this.initClaimForm();
   }
 
@@ -90,6 +90,22 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
       this.addOrEdit = 'Edit';
       this.getMedicalClaimByPaymentRequestId();
     }
+  }
+
+  initMedicalClaimObject(){
+    this.medicalClaimServices = {
+      vendorId: '',
+      serviceStartDate: '',
+      serviceEndDate: '',
+      paymentType: '',
+      cptCode: '',
+      pcaCode: '',
+      serviceDescription: '',
+      amoundDue: '',
+      reasonForException: '',
+      medicadeRate: 0,
+      cptCodeId: ''
+    };
   }
 
   closeAddEditClaimsFormModalClicked() {
@@ -411,18 +427,18 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   }
 }
 
-export class MedicalClaims {
-  vendorId: string = '';
-  serviceStartDate: string = '';
-  serviceEndDate: string = '';
-  paymentType: string = '';
-  cptCode: string = '';
-  pcaCode: string = '';
-  serviceDescription: string = '';
-  serviceCost: number = 0;
-  amoundDue: string = '';
-  reasonForException: string = '';
-  amountDue: number = 0;
-  medicadeRate: number = 0;
-  cptCodeId: string = '';
+interface MedicalClaims {
+  vendorId: string;
+  serviceStartDate: string;
+  serviceEndDate: string;
+  paymentType: string;
+  cptCode: string;
+  pcaCode: string;
+  serviceDescription: string;
+  serviceCost?: number;
+  amoundDue: string;
+  reasonForException: string;
+  amountDue?: number;
+  medicadeRate: number;
+  cptCodeId: string;
 }
