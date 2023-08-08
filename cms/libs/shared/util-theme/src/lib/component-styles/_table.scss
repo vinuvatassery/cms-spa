@@ -28,6 +28,14 @@ $pagination-height : 48px;
   .k-header-column-menu,
   .k-header .k-icon {
     color: $white;
+  } 
+
+  .k-table-row{
+    &.k-selected {
+      > td,  > .k-table-td{
+        background:  material-color($hive-primary-palette, 50) !important;
+      }
+    }
   }
 
   th,
@@ -789,6 +797,12 @@ table,
   }
 }
 
+.table-row-orange {
+
+  td {
+    background-color:  material-color($hive-warn-palette, 100);
+  }
+}
 .k-grid-norecords {
   background: $white;
 

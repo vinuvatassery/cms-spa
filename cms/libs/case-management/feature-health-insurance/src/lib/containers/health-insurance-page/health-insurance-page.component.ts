@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal libraries **/
 import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, StatusFlag, NavigationType } from '@cms/case-management/domain';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'case-management-health-insurance-page',
@@ -40,7 +40,6 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   private saveForLaterClickSubscription !: Subscription;
   private saveForLaterValidationSubscription !: Subscription;
   private healthInsuranceStatusSubscription !: Subscription;
-
   /** Constructor **/
   constructor(private workflowFacade: WorkflowFacade,
     private insurancePolicyFacade: HealthInsurancePolicyFacade,
@@ -143,15 +142,19 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       groupPolicyEligibleFlag: [null]
     });
   }
-
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
       tap(() => this.workflowFacade.disableSaveButton()),
       mergeMap((navigationType: NavigationType) =>
-        forkJoin([of(navigationType), this.saveAndContinue()])
+        forkJoin([of(navigationType), this.saveAndContinue(), this.validateCerReviewStatus()])
       ),
-    ).subscribe(([navigationType, isSaved]) => {
-      if (isSaved) {
+    ).subscribe(([navigationType, isSaved, isReviewPending]) => {
+      if(isReviewPending){
+        this.HideLoader();
+        this.workflowFacade.enableSaveButton();
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, 'Insurance Review not complete', NotificationSource.UI);
+      }
+      else if (isSaved) {
        this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, 'Health Insurance status updated');
         this.workflowFacade.navigate(navigationType);
         this.HideLoader();
@@ -188,6 +191,18 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     }
     return of(false)
   }
+
+  private validateCerReviewStatus(){
+    if(!this.isCerForm)
+    {
+       return of(false);
+    }
+    else
+    {
+     return this.insurancePolicyFacade.validateCerReviewStatus(this.clientCaseEligibilityId);
+    }
+  }
+
   validateForm() {
     this.insuranceFlagForm.markAllAsTouched();
     this.insuranceFlagForm.controls['currentInsuranceFlag'].setValidators([
@@ -473,6 +488,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       }
     });
   }
+
   checkValidations() {
     this.validateForm();
     this.ref.detectChanges();
