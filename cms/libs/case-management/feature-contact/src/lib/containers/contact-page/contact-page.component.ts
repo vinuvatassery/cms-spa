@@ -734,6 +734,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private save() {
+   if (this.isNoProofOfHomeChecked){
+      this.handleFileRemoved(null);
+    }
     this.setValidation();
     this.contactInfoForm.markAllAsTouched();
     const isLargeFile = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof?.size ?? 0) > (this.configurationProvider?.appSettings.uploadFileSizeLimit ?? 0);
@@ -1006,6 +1009,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       elgbtyConcurrencyStamp: this.contactInfo?.clientCaseEligibility?.elgbtyConcurrencyStamp,
       previousClientEligibilityId: this.prevClientCaseEligibilityId
     };
+
+    if(this.isCerForm && clientCaseEligibility?.emailAddressChangedFlag === StatusFlag.No){
+      clientCaseEligibility.paperlessFlag = this.oldContactInfo?.clientCaseEligibility?.paperlessFlag;
+    }
 
     let addressProofDoc: HomeAddressProof | undefined = undefined;
     if (this.uploadedHomeAddressProof != null && !homeAddressGroup?.get('noHomeAddressProofFlag')?.value) {
@@ -1434,10 +1441,22 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setVisibilityByNoHomeAddressProofFlag(isChecked: boolean) {
     this.isNoProofOfHomeChecked = isChecked;
+    const container = this.elementRef.nativeElement.querySelectorAll('.k-upload-files');
     if (isChecked) {
       this.showAddressProofRequiredValidation = false;
       this.showAddressProofSizeValidation = false;
-      this.elementRef.nativeElement.querySelectorAll('.k-delete');
+
+      if(container[0])
+      {
+      container[0].hidden=true
+      }
+    }
+    else{
+
+      if(container[0])
+      {
+        container[0].hidden=false
+      }
     }
     this.updateHomeAddressProofCount(this.homeAddressProofFile?.length > 0);
   }
@@ -1518,10 +1537,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm?.get('homeAddress.address1')?.enable();
       this.contactInfoForm?.get('homeAddress.address2')?.enable();
       this.contactInfoForm?.get('homeAddress.zip')?.enable();
-      if (this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.value ?? false) {
-        this.setSameAsMailingAddressFlagChanges(true);
-      }
     }
+
+    const isSameAsEmailSelected =  this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.value ?? false;
+    this.setSameAsMailingAddressFlagChanges(isSameAsEmailSelected);
     this.isNoMailAddressValidationRequired = false;
   }
 
@@ -1635,12 +1654,15 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       }
 
       this.setHomeAddress(address);
+      homeAddressGroup?.controls['city']?.disable();
       if (!(homeAddressGroup?.controls['homelessFlag']?.value ?? false)) {
         this.homeAddressIsNotValid = this.mailingAddressIsNotValid;
       }
+      else{
+        homeAddressGroup?.controls['city']?.enable();
+      }
       homeAddressGroup?.controls['address1']?.disable();
       homeAddressGroup?.controls['address2']?.disable();
-      homeAddressGroup?.controls['city']?.enable();
       homeAddressGroup?.controls['state']?.disable();
       homeAddressGroup?.controls['zip']?.disable();
       this.isHomeAddressStateOregon$.next(address?.state === StatesInUSA.Oregon);
@@ -1748,7 +1770,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.updateHomeAddressProofCount(true);
   }
 
-  handleFileRemoved(e: SelectEvent) {
+  handleFileRemoved(e: SelectEvent | null) {
     this.showAddressProofSizeValidation = false;
     if (this.homeAddressProofFile !== undefined && this.homeAddressProofFile[0]?.uid) {
       this.loaderService.show();

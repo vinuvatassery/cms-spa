@@ -191,7 +191,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
         direction: 'left',
         type: 'slide', 
       }, 
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np app-c-modal-right-side',
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
   }
   onCloseEditListItemsDetailClicked(){

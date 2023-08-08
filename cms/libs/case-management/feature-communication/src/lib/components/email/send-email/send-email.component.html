@@ -1,19 +1,23 @@
- 
-
 <kendo-dialog-titlebar (close)="onCloseSendEmailClicked()">Send New Email </kendo-dialog-titlebar>
+<kendo-dialog
+  *ngIf="isOpenSendEmailClicked"
+  (close)="onCloseSendEmailClicked()"
+  class="app-c-modal app-c-modal-lg app-c-modal-np"
+  title="Send New Email "
+>
   <section class="k-dialog-body">
     <p class="text-muted mb-1">
       Select an existing template or draft a custom email.
     </p>
     <div class="flex-row pb-2">
       <div class="flex-col">
-        <kendo-floatinglabel text="Email Templates">
+        <kendo-floatinglabel text="Email Templates" class="inline-search-loader">
           <kendo-dropdownlist
           [fillMode]="formUiStyle.dropDownFillMode"
-            [data]="ddlTemplates"
-            textField="value"
-            valueField="key"
-            (valueChange)="handleDdlEmailValueChange()"
+            [data]="ddlTemplates" 
+            textField="description"
+            valueField="documentTemplateId"
+            (valueChange)="handleDdlEmailValueChange($event)"
           >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
@@ -21,44 +25,47 @@
       <div *ngIf="isOpenDdlEmailDetails">
         <div class="flex-col">
           <kendo-floatinglabel text="To" class="inline-search-loader">
-          <span *ngIf="this.isShowToEmailLoader$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-            <kendo-multiselect
-            [fillMode]="formUiStyle.dropDownFillMode"
-            [data]="ddlEmails$ | async"
-            textField="email"
-            valueField="email"
-            aria-label="to address"
-            ></kendo-multiselect>
+          <span *ngIf="showToEmailLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+          <kendo-multiselect
+          [readonly]="true"
+          [fillMode]="formUiStyle.dropDownFillMode"
+          [data]="toEmail"
+          [(ngModel)]="selectedEmail"
+          aria-label="to address"
+          ></kendo-multiselect>
           </kendo-floatinglabel>
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="CC" class="inline-search-loader">
             <kendo-multiselect
-            [fillMode]="formUiStyle.dropDownFillMode"
-              [data]="ddlEmails$ | async"
-              textField="email"
-              valueField="email"
-              aria-label="cc of email"
-            ></kendo-multiselect>
+          [fillMode]="formUiStyle.dropDownFillMode"
+          [data]="ccEmail"
+          [(ngModel)]="selectedCCEmail"
+          aria-label="cc of email"
+          ></kendo-multiselect>
           </kendo-floatinglabel>
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Subject">
-            <kendo-textbox  placeholder="Subject"  aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+            <kendo-textbox  placeholder="Subject" [(ngModel)]="emailSubject" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
           </kendo-floatinglabel>
         </div>
         <div class="flex-col mt-3">
           <p>
             Type the body of the email. The email header and footer generate
-            from Admin settings. Click "Preview Email" to what the client will
+            from Admin settings. Click "Preview Email" to see what the client will
             receive.
           </p>
         </div>
         <div class="flex-col  ">
           <case-management-email-editor
-            [dataEvent]="emailEditorValueEvent"
-            (editorValue)="handleEmailEditor($event)"
-            class="editor-lg-email"
+          [dataEvent]="emailEditorValueEvent"
+          [currentValue]="currentEmailData"
+          [clientCaseEligibilityId]="clientCaseEligibilityId"
+          [clientId]="clientId"
+          (cerEmailAttachments)="cerEmailAttachments($event)"
+          (editorValue)="handleEmailEditor($event)"
+          class="editor-lg-email"
           ></case-management-email-editor>
         </div>
       </div>
@@ -83,7 +90,7 @@
           (click)="onPreviewEmailClicked()"
           aria-label="preview letter"
         >
-          Preview Letter
+          Preview Email
         </button>
       </div>
       <div class="justify-content-end">
@@ -109,9 +116,8 @@
   </kendo-dialog-actions>
  
 <!-- Save for Latter (Email Draft) Modal -->
-<kendo-dialog
+<kendo-dialog (close)="onCloseSaveForLaterClicked()"
   *ngIf="isShowSaveForLaterPopupClicked"
-  (close)="onCloseSaveForLaterClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   title="Email Draft Saved"
 >
@@ -127,7 +133,7 @@
         <button
           kendoButton
           [primary]="true"
-          (click)="onCloseSaveForLaterClicked()"
+          (click)="onSaveForLaterTemplateClicked()"
           aria-label="confirmation for save for later"
         >
           OK
@@ -138,14 +144,14 @@
 </kendo-dialog>
 
 <!-- Email Preview Modal -->
-<kendo-dialog
+<kendo-dialog (close)="onClosePreviewEmail()"
   *ngIf="isShowPreviewEmailPopupClicked"
   (close)="onClosePreviewEmail()"
   class="app-c-modal app-c-modal-lg app-c-modal-np no-title-actions"
   title="Preview Email"
 >
   <case-management-preview-email
-    [emailContent]="emailContentValue"
+    [emailContent]="emailContentValue" [paperlessFlag]="paperlessFlag"
   ></case-management-preview-email>
   <kendo-dialog-actions>
     <div class="justify-content-between bigbtn-wrapper">
@@ -178,11 +184,12 @@
 <!-- Sene Email ConfirmationModal -->
 <kendo-dialog
   *ngIf="isShowSendEmailConfirmationPopupClicked"
-  (close)="onSendEmailConfirmationDialogClicked('Close')"
+  (close)="onSendEmailDailougeConfirmationClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Send email?"
->
-  <case-management-send-email-confirmation></case-management-send-email-confirmation>
+  title="Send Email?"
+>  <section class="k-dialog-body">
+  <p class="text-muted mb-2">The action cannot be undone</p>
+</section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="w100">

@@ -45,6 +45,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   insuranceStatusType:any;
   isEdit!: boolean;
   currentInsurancePolicyId:any;
+  isPaymentDone:any;
   isTriggerPriorityPopup = false;
   isOpenedChangePriorityModal:boolean= false;
   isEditInsurancePriorityTitle = false;
@@ -130,6 +131,12 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
     }
   }
   
+  deleteButtonClicked(deleteButtonClicked: any) {
+    if (deleteButtonClicked) {
+      this.onDeleteConfirmOpenClicked();
+    }
+  }
+
   ngOnDestroy(): void {
     this.dentalInsuranceListSubscription.unsubscribe();
   }
@@ -176,6 +183,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       this.onDeleteConfirmOpenClicked();
     }
     if (type.toUpperCase() == 'EDIT') {
+      this.isPaymentDone = dataItem.isPaymentDone
       this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
       this.handleHealthInsuranceOpenClicked('edit');
       this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);

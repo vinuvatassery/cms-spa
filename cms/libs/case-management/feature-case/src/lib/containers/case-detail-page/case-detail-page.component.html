@@ -49,7 +49,7 @@
 
 <!-- Finish the application later Modal -->
 <kendo-dialog *ngIf="isShowSaveLaterPopup" (close)="onCloseSaveLaterClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="{{isCerForm ? 'Finish the CER later?' : 'Finish The Application Later?'}}">
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="{{isCerForm ? 'Finish the CER later?' : 'Finish the application later?'}}">
   <section class="k-dialog-body">
     <p class="text-muted mb-2">
       The application status will be set to REJECT if not completed within 45
@@ -72,7 +72,14 @@
         </kendo-formerror>
       </div>
       <div class="flex-col mb-2">
-        <h5>Do you need to send the client a letter?</h5>
+        <h5 *ngIf="paperlessFlag == 'Y'; else letterTemplate">Do you want to send the client an email?</h5>
+        <ng-template #letterTemplate>
+          <h5>Do you want to send a letter?</h5>
+        </ng-template>
+        <h5 *ngIf="paperlessFlag == 'Y'; else letterTemplate">Do you want to send the client an email?</h5>
+        <ng-template #letterTemplate>
+          <h5>Do you want to send a letter?</h5>
+        </ng-template>
         <div class="component-list-h">
           <span class="app-radiobtnwidtext-wrapper">
             <input type="radio" [(ngModel)]="sendLetterFlag" value="Y" aria-labelledby="send Letter" kendoRadioButton name="sendLetter" />
@@ -147,9 +154,17 @@
 
     <!-- Send New Email Modal -->
     <ng-template #sendNewEmailModalDialog>
-<case-management-send-email [data]="ScreenName"
+<case-management-send-email [data]="ScreenName" [paperlessFlag]="paperlessFlag"
 (closeSendEmailEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-email>
 </ng-template>
+<ng-template #sendNewLetterModalDialog>
+  <case-management-send-letter [data]="ScreenName"
+  (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-letter>
+  </ng-template>
+<ng-template #sendNewLetterModalDialog>
+  <case-management-send-letter [data]="ScreenName"
+  (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-letter>
+  </ng-template>
 <!-- Cancel Application Modal -->
 <kendo-dialog *ngIf="cancelApplicationFlag" class="app-c-modal app-c-modal-md app-c-modal-np" (close)="closeCancelApplicationPopup()">
   <kendo-dialog-titlebar> Cancel Application</kendo-dialog-titlebar>

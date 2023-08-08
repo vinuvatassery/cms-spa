@@ -110,4 +110,8 @@ export class GroupDetailComponent implements OnInit {
       this.updateGroup.emit(groupChanged); 
     }
   }
+
+  get groupFormControls(){
+    return (this.groupForm)?.controls as any;
+  }
 }

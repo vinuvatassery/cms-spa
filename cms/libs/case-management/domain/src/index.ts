@@ -54,6 +54,7 @@ export * from './lib/entities/grid-state'
 export * from './lib/entities/session-data';
 export * from './lib/entities/payment-request';
 export * from './lib/entities/vendor-contacts';
+export * from './lib/entities/financial-management/payment-panel';
 
 
 /** Enums **/
@@ -111,6 +112,11 @@ export * from './lib/enums/financial-vendor-provider-tab-code';
 export * from './lib/enums/financial-vendor-type-code';
 export * from './lib/enums/service-sub-type-code';
 export * from './lib/enums/grid-column-filter.enum';
+export * from './lib/enums/payment-type-code.enum';
+export * from './lib/enums/financial-claim-types';
+export * from './lib/enums/financial-premium-types';
+export * from './lib/enums/esign-status-code.enum';
+export * from './lib/enums/communication-event-type-code.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
@@ -152,7 +158,11 @@ export * from './lib/infrastructure/financial-management/insurance-provider.data
 export * from './lib/infrastructure/financial-management/vendor-insurance-plan.data.service';
 export * from './lib/infrastructure/financial-management/vendor.data.service';
 export * from './lib/infrastructure/financial-management/vendor-refund.data.service';
-
+export * from './lib/infrastructure/financial-management/financial-claims.data.service'; 
+export * from './lib/infrastructure/financial-management/financial-premiums.data.service';
+export * from './lib/infrastructure/esign-data.service';
+export * from './lib/infrastructure/financial-management/pharmacy-claims.data.service';
+export * from './lib/infrastructure/financial-management/financial-funding-source.data.service';
 
 
 /** Facades **/
@@ -201,6 +211,11 @@ export * from './lib/application/financial-management/claims.facade';
 export * from './lib/application/financial-management/insurance-provider.facade';
 export * from './lib/application/financial-management/vendor-insurance-plan.facade';
 export * from './lib/application/financial-management/vendor-refund.facade';
+export * from './lib/application/financial-management/financial-claims.facade'; 
+export * from './lib/application/financial-management/financial-premiums.facade';
+export * from './lib/application/esign.facade';
+export * from './lib/application/financial-management/pharmacy-claims.facade';
+export * from './lib/application/financial-management/financial-funding-source.facade';
 
 
 

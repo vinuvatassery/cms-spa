@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 /** Modules **/
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
+import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { CaseManagementDomainModule } from '@cms/case-management/domain';
 import { CaseManagementFeatureCommunicationRoutingModule } from './case-management-feature-communication-routing.module';
 /** Components **/
@@ -25,11 +26,13 @@ import { SendIdCardComponent } from './components/id-card/send-id-card/send-id-c
 import { CommunicationPageComponent } from './containers/communication-page/communication-page.component';
 import { SendLetterPageComponent } from './containers/send-letter-page/send-letter-page.component';
 import { DisEnrollmentLaterComponent } from './components/disenrollment-letter-later/disenrollment-letter-later.component';
+import { ApprovalLaterComponent } from './components/approval-letter-later/approval-letter-later.component';
 
 @NgModule({
   imports: [
     CommonModule,
     SharedUiTpaModule,
+    SharedUiCommonModule,
     CaseManagementDomainModule,
     CaseManagementFeatureCommunicationRoutingModule,
   ],
@@ -52,7 +55,8 @@ import { DisEnrollmentLaterComponent } from './components/disenrollment-letter-l
     SendIdCardComponent,
     CommunicationPageComponent,
     SendLetterPageComponent,
-    DisEnrollmentLaterComponent
+    DisEnrollmentLaterComponent,
+    ApprovalLaterComponent
   ],
   exports: [
     SendTextMessageComponent,
@@ -73,7 +77,8 @@ import { DisEnrollmentLaterComponent } from './components/disenrollment-letter-l
     SendIdCardComponent,
     CommunicationPageComponent,
     SendLetterPageComponent,
-    DisEnrollmentLaterComponent
+    DisEnrollmentLaterComponent,
+    ApprovalLaterComponent
   ],
 })
 export class CaseManagementFeatureCommunicationModule {}

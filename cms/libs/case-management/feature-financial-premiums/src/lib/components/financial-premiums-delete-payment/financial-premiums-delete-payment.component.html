@@ -1,0 +1,12 @@
+<kendo-dialog-titlebar  (close)="closeDeletePaymentClicked()"> Delete Payment? </kendo-dialog-titlebar>
+<section class="k-dialog-body mb-2">
+        <p class="text-muted mb-1"> This action cannot be undone. The premiums in this payment will not be deleted and can be found in the client’s profile.  </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="closeDeletePaymentClicked()"> Cancel  </button>
+        <button kendoButton class="k-error-button" aria-label="remove">Delete</button>
+      </div>
+    </div>
+  </kendo-dialog-actions>

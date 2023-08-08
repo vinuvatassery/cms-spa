@@ -1,8 +1,46 @@
-<div class="app-l-inner-rapper pt-0" kendoRippleContainer>
+<div class="app-l-inner-rapper pb-8rem pt-0">
     <common-bread-crumb></common-bread-crumb>
-    <section class="app-l-mainTittle">
-        <h1 class="maintitle_withicon text-bold"> 
-            pharmacy-claims-page works!
-        </h1>
-      </section>
+    <div class=" pt-0">
+        <section class="app-l-mainTittle">
+            <h1 class="maintitle_withicon text-bold"> Pharmacy Claims </h1>
+        </section>
+        <section class="app-l-client-wrapper">
+            <section class="app-l-wrapper">
+                <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+                    class="app-c-tab case-360-tab">
+                    <kendo-tabstrip-tab title="Process" [selected]="true">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-pharmacy-claims-process-list      [pharmacyClaimsProcessGridLists$]="pharmacyClaimsProcessGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsProcess"
+                                [sortType]="sortType" [sort]="sortProcessList" 
+                                (loadPharmacyClaimsProcessListEvent)="loadPharmacyClaimsProcessListGrid($event)"></cms-pharmacy-claims-process-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+
+                    <kendo-tabstrip-tab title="Batches">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-pharmacy-claims-batches-list   [pharmacyClaimsBatchGridLists$]="pharmacyClaimsBatchGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsBatch"
+                                [sortType]="sortType" [sort]="sortBatchList" 
+                                (loadPharmacyClaimsBatchListEvent)="loadPharmacyClaimsBatchListGrid($event)"></cms-pharmacy-claims-batches-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+                    <kendo-tabstrip-tab title="All Payments">
+                        <ng-template kendoTabContent>
+                            <div class="block-section">
+                                <cms-pharmacy-claims-all-payments-list  [pharmacyClaimsAllPaymentsGridLists$]="pharmacyClaimsAllPaymentsGridLists$"
+                                [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsPayments"
+                                [sortType]="sortType" [sort]="sortPaymentsList" 
+                                (loadPharmacyClaimsAllPaymentsListEvent)="loadPharmacyClaimsAllPaymentsListGrid($event)"></cms-pharmacy-claims-all-payments-list>
+                            </div>
+                        </ng-template>
+                    </kendo-tabstrip-tab>
+                </kendo-tabstrip>
+            </section>
+        </section>
+    </div>
 </div>

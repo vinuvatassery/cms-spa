@@ -121,7 +121,9 @@ export class FinancialVendorFacade {
     });
   }
 
-
+  updateManufacturerProfile(vendorProfile: any){
+    return this.financialVendorDataService.updateManufacturerProfile(vendorProfile);    
+  }
   addVendorProfile(vendorProfile: any) {
     return this.financialVendorDataService.addVendorProfile(vendorProfile);
   }

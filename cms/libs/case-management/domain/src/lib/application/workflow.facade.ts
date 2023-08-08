@@ -52,7 +52,7 @@ export class WorkflowFacade {
     WorkflowProcessCompletionStatus[]
   >([]);
   private routesSubject = new BehaviorSubject<any>([]);
-  private routesDataSubject = new BehaviorSubject<any>([]);
+  private routesDataSubject = new Subject<any>();
   private sessionSubject = new BehaviorSubject<any>([]);
   private sessionDataSubject = new Subject<any>();
   private workflowReadySubject = new Subject<boolean>();
@@ -194,19 +194,26 @@ export class WorkflowFacade {
     }
 
     this.workflowService.createNewSession(this.sessionData).subscribe({
-      next: (sessionResp: any) => {
-        if (sessionResp && sessionResp?.workflowSessionId) {
-          this.router.navigate(['case-management/' + navigationPath], {
-            queryParams: {
-              sid: sessionResp?.workflowSessionId,
-              eid: sessionResp?.sessionData?.entityID,
-              wtc: sessionResp?.workflowTypeCode,
-            },
-          });
+      next: (sessionResp: any) => {        
+        if(sessionResp?.statusCode === "ACCEPT")
+        {
+          this.showHideSnackBar(SnackBarNotificationType.WARNING, "CER Complete");
         }
-        if (!sessionResp?.sessionData?.prevClientCaseEligibilityId) {
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, successMessage);
-        }
+        else
+        {
+            if (sessionResp && sessionResp?.workflowSessionId) {
+              this.router.navigate(['case-management/' + navigationPath], {
+                queryParams: {
+                  sid: sessionResp?.workflowSessionId,
+                  eid: sessionResp?.sessionData?.entityID,
+                  wtc: sessionResp?.workflowTypeCode,
+                },
+              });
+            }
+            if (!sessionResp?.sessionData?.prevClientCaseEligibilityId) {
+              this.showHideSnackBar(SnackBarNotificationType.SUCCESS, successMessage);
+            }
+      }
         this.hideLoader();
       },
       error: (err: any) => {
@@ -317,10 +324,18 @@ export class WorkflowFacade {
     );
   }
 
-  updateNonequenceNavigation(currentWorkflow: WorkFlowProgress) {
-    const previousRoute = this.deepCopy(
+  updateNonequenceNavigation(currentWorkflow: WorkFlowProgress) {    
+    let previousRoute = this.deepCopy(
       this.currentSession?.workFlowProgress
     )?.filter((wf: WorkFlowProgress) => wf?.currentFlag == StatusFlag.Yes)[0];
+
+    if(!previousRoute){
+      const processId = this.actRoute.snapshot.queryParams['pid'];
+      previousRoute = this.deepCopy(
+          this.currentSession?.workFlowProgress
+        )?.find((wf: WorkFlowProgress) => wf?.processId == processId)
+    }
+
     this.updateRoutes(previousRoute, currentWorkflow);
   }
 

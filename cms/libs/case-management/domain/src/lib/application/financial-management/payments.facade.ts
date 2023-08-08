@@ -25,10 +25,12 @@ export class PaymentsFacade {
   private paymentBatchSubListSubject = new BehaviorSubject<any>([]);
   private paymentsAddressDataSubject = new BehaviorSubject<any>([]);
   private paymentBatchLoaderSubject = new BehaviorSubject<boolean>(false);
+  private paymentPanelSubject = new Subject<any>();
   paymentBatches$ = this.paymentBatchesSubject.asObservable();
   paymentBatchSubList$ = this.paymentBatchSubListSubject.asObservable();
   paymentsAddressData$ = this.paymentsAddressDataSubject.asObservable();
   paymentBatchLoader$ = this.paymentBatchLoaderSubject.asObservable();
+  paymentPanelData$ = this.paymentPanelSubject.asObservable();
 
   /** Private properties **/
 
@@ -96,6 +98,21 @@ export class PaymentsFacade {
         this.hideLoader();
       },
     });
+  }
+  loadPaymentPanel(vendorId:any,batchId:any):any{
+    this.paymentsDataService.loadPaymentPanel(vendorId,batchId).subscribe({
+      next: (dataResponse) => {
+        this.paymentPanelSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+  updatePaymentPanel(vendorId:any,batchId:any,paymentPanel:any){
+    return this.paymentsDataService.updatePaymentPanel(vendorId,batchId,paymentPanel)
   }
 
 }

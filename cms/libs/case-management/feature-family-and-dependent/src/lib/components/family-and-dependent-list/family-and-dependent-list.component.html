@@ -12,12 +12,8 @@
   (dataStateChange)="dataStateChange($event)">
   <ng-template kendoGridColumnMenuTemplate let-service="service">
     <span class="k-icon k-i-x" (click)="service.close()"
-      style="position: absolute; right: 5px; top: 5px;cursor: pointer;"></span>
-    <kendo-grid-columnmenu-sort [service]="service">
-    </kendo-grid-columnmenu-sort>
-    <kendo-grid-columnmenu-chooser [service]="service"> </kendo-grid-columnmenu-chooser>
-    <kendo-grid-columnmenu-lock [service]="service">
-    </kendo-grid-columnmenu-lock>
+      style="position: absolute; right: 5px; top: 5px;cursor: pointer;"></span>   
+    <kendo-grid-columnmenu-chooser [service]="service"> </kendo-grid-columnmenu-chooser> 
   </ng-template>
 
     <kendo-grid-column  [width]="180"
@@ -78,7 +74,7 @@
       {{ dataItem.enrolledInInsuranceFlag === 'Y' ? 'YES' : 'NO'}}
     </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column  *ngIf="!isAddOrEditFamilyDependentDisplay" field="by" title="By" [width]="50">
+    <kendo-grid-column  *ngIf="!isAddOrEditFamilyDependentDisplay" field="by" title="By"  [sortable]="false" [width]="50">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button
           kendoButton

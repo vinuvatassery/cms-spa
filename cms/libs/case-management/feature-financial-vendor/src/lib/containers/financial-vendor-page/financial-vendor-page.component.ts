@@ -15,16 +15,19 @@ export class FinancialVendorPageComponent implements OnInit {
   isVendorDetailFormShow = false;
   medicalProviderForm: FormGroup;
   providerTypeCode: string = '';
+  
   isShowMedicalProvider: boolean = false;
   isShowDentalProvider: boolean = false;
   isShowInsuranceProvider: boolean = false;
   isShowPharmacyProvider: boolean = false;
   reminderTabOn = true;
+  isShowManufacturers: boolean = false;
+
   data = [
     {
       text: 'Manufacture',
       click: (dataItem: any): void => {
-        this.clickOpenVendorDetails(dataItem);
+        this.clickOpenManufacturers();
       },
     },
     {
@@ -153,6 +156,7 @@ export class FinancialVendorPageComponent implements OnInit {
       next:(response:any)=>{
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal();
+        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Vendor profile added successfully");
         this.cdr.detectChanges();
       },
       error:(err:any)=>{
@@ -166,6 +170,7 @@ export class FinancialVendorPageComponent implements OnInit {
     this.isShowDentalProvider = false;
     this.isShowInsuranceProvider =false;
     this.isShowPharmacyProvider = false;
+    this.isShowManufacturers = false;
   }
 
   clickOpenInsuranceVendorModal(){
@@ -184,5 +189,11 @@ export class FinancialVendorPageComponent implements OnInit {
       SnackBarNotificationType.SUCCESS,
       'Item  updated to Done successfully'
     );
+  }
+
+  clickOpenManufacturers() {
+    this.buildVendorForm();
+    this.providerTypeCode = FinancialVendorTypeCode.Manufacturers;
+    this.isShowManufacturers = true;
   }
 }
