@@ -123,7 +123,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="clients" title="clients" [width]="100"  format="0" *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors
+    <kendo-grid-column field="clients" title="Clients" [width]="100"  format="0" *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors
     || vendorTypeCode===financeVendorTypeCodes.Pharmacy">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
