@@ -293,11 +293,21 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       dataItem.paymentReconciledDate = this.currentDate;
       dataItem.datePaymentRecInValid = false;
       dataItem.datePaymentRecInValidMsg = null;
-      dataItem.datePaymentSentInValid = false;
-      dataItem.datePaymentSentInValidMsg = null;
+      if(dataItem.paymentSentDate === null || dataItem.paymentSentDate === ''){
+        dataItem.datePaymentSentInValid = true;
+        dataItem.datePaymentSentInValidMsg = 'Date payment sent is required.';
+      }
+      else{
+        dataItem.datePaymentSentInValid = false;
+        dataItem.datePaymentSentInValidMsg = null;
+      }
     }
     else{
       dataItem.isPrintAdviceLetter = false;
+      dataItem.datePaymentRecInValid = false;
+      dataItem.datePaymentRecInValidMsg = null;
+      dataItem.datePaymentSentInValid = false;
+      dataItem.datePaymentSentInValidMsg = null;
     }
     if(this.datePaymentReconciled === null || this.datePaymentReconciled === undefined){
     
