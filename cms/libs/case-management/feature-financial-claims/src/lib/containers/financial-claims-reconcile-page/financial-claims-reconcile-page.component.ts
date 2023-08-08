@@ -20,6 +20,8 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   pageSizes = this.financialClaimsFacade.gridPageSizes;
   gridSkipCount = this.financialClaimsFacade.skipCount;
   sort = this.financialClaimsFacade.sortReconcilePaymentBreakoutList;
+  sortValueBatch = this.financialClaimsFacade.sortValueReconcile;
+  sortBatch = this.financialClaimsFacade.sortReconcileList;
   state!: State;
   reconcileGridLists$ = this.financialClaimsFacade.reconcileDataList$;
   reconcileBreakoutSummary$ = this.financialClaimsFacade.reconcileBreakoutSummary$;
@@ -55,17 +57,12 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   }
 
   loadReconcileListGrid(event: any) {
-    this.financialClaimsFacade.loadReconcileListGrid(this.batchId,this.claimsType,event);
-  }
-
-  loadReconcileBreakoutSummary(event: any)
-  {
-    this.financialClaimsFacade.loadReconcilePaymentBreakoutSummary(event.batchId,event.entityId);
-  }
-
-  loadReconcilePaymentBreakoutList(event: any)
-  {
-    this.financialClaimsFacade.loadReconcilePaymentBreakoutListGrid(event.batchId,event.entityId,event.skipCount, event.pageSize, event.sort,event.sortType);
+    let serviceSubTypeCode ="MEDICAL_CLAIM";   
+    if(this.claimsType ==="dental"){
+      serviceSubTypeCode ="DENTAL_CLAIM";
+      }
+    this.financialClaimsFacade.loadReconcileListGrid(this.batchId,serviceSubTypeCode,event);
+    
   }
 
   loadReconcileBreakoutSummary(event: any)

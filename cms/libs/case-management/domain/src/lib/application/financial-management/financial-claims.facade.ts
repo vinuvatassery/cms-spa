@@ -194,8 +194,12 @@ export class FinancialClaimsFacade {
   }
   loadReconcileListGrid(batchId:any,claimsType:any,event:any){
     this.financialClaimsDataService.loadReconcileListService(batchId,claimsType,event).subscribe({
-      next: (dataResponse) => {
-        this.batchReconcileDataSubject.next(dataResponse);
+      next: (dataResponse:any) => {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.batchReconcileDataSubject.next(gridView);
         this.hideLoader();
       },
       error: (err) => {
