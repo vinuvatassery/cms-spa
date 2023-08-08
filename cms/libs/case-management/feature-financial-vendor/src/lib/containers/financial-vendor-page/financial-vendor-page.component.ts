@@ -117,7 +117,7 @@ export class FinancialVendorPageComponent implements OnInit {
 
   loadFinancialVendorsList(data: any) {
 
-    this.financialVendorFacade.getVendors(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.vendorTypeCode)
+    this.financialVendorFacade.getVendors(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.vendorTypeCode, data?.filter)
   }
 
   buildVendorForm() {
