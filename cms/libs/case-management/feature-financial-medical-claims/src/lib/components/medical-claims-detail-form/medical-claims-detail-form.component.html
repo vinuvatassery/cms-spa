@@ -253,19 +253,28 @@
                                                 <kendo-numerictextbox aria-label="CTP Code"
                                                     [fillMode]="formUiStyle.inputFillMode"
                                                     format="#.000"
-                                                    formControlName="serviceCost">
+                                                    formControlName="serviceCost" >
                                                 </kendo-numerictextbox>
                                             </kendo-floatinglabel>
-
+                                            <kendo-formerror
+                                                *ngIf="(isControlValid('serviceCost',i) && isSubmitted)"
+                                                class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                                    aria-hidden="false">info</span>Service Cost is required
+                                            </kendo-formerror>
                                         </div>
                                         <div class="flex-col flex-col-6">
                                             <kendo-floatinglabel text="Amount Due" class="amount-with-symbol">
                                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
                                                 <kendo-numerictextbox aria-label="PCA Code"
                                                     [fillMode]="formUiStyle.inputFillMode" formControlName="amountDue"
-                                                    format="#.000">
+                                                    format="#.000" >
                                                 </kendo-numerictextbox>
                                             </kendo-floatinglabel>
+                                            <kendo-formerror
+                                                *ngIf="(isControlValid('amountDue',i) && isSubmitted)"
+                                                class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                                    aria-hidden="false">info</span>Amount Due is required
+                                            </kendo-formerror>
                                         </div>
                                         <div class="ml-2">
                                             <kendo-formerror *ngIf="IsServiceStartDateValid(i) && isSubmitted"
