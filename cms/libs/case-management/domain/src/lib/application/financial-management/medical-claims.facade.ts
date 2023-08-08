@@ -77,7 +77,7 @@ export class FinancialMedicalClaimsFacade {
   private medicalClaimByCpt = new Subject<any>();
   medicalClaimByCpt$ = this.medicalClaimByCpt.asObservable();
   
-  private searchCTPCodeSubject = new BehaviorSubject<any>({});
+  private searchCTPCodeSubject = new BehaviorSubject<any>([]);
   public searchCTPCode$ =this.searchCTPCodeSubject.asObservable();
 
   private CPTCodeSearchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
@@ -223,14 +223,12 @@ export class FinancialMedicalClaimsFacade {
     )
   }
 
-  searchcptcode(cptcode: string){    
-//return this.financialMedicalClaimsDataService.searchcptcode(cptcode)
-
+  searchcptcode(cptcode: string){
 this.CPTCodeSearchLoaderVisibilitySubject.next(true);
     return this.financialMedicalClaimsDataService.searchcptcode(cptcode).subscribe({
       next: (response: any[]) => {
         response?.forEach((cptcodes:any) => {
-          cptcodes.cptcode = `${cptcodes.cptCode1 ?? ''}`;
+          cptcodes.cptCode1 = `${cptcodes.cptCode1 ?? ''}`;
         });
         this.searchCTPCodeSubject.next(response);
         this.CPTCodeSearchLoaderVisibilitySubject .next(false);

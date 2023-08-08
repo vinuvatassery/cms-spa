@@ -195,10 +195,11 @@
                                                       [fillMode]="formUiStyle.dropDownFillMode" 
                                                     [data]="searchCTPCode$ | async"    
                                                      formControlName="cptCode"
-                                                      valueField ="cptcode"    
+                                                      valueField ="cptCode1"    
                                                       [filterable]="true"  
+                                                      [value]="selectedCPTCode"
                                                       placeholder="Search CPT Code"
-                                                      (filterChange)="searchcptcode($event,i)"
+                                                      (filterChange)="searchcptcode($event)"
                                                       [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }" 
                                                       > 
                                                       <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
@@ -206,9 +207,9 @@
                                                       </ng-template>
                                                       </kendo-autocomplete>
                                                     <kendo-formerror *ngIf="(isControlValid('cptCode', i) && isSubmitted)"
-                                                class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                                       class="d-flex align-items-center"> <span class="material-icons mr-1"
                                                     aria-hidden="false">info</span>CTP Code is required
-                                            </kendo-formerror>
+                                                   </kendo-formerror>                                                 
                                                     </kendo-label>
                                                   </kendo-formfield>
                                                 </div>

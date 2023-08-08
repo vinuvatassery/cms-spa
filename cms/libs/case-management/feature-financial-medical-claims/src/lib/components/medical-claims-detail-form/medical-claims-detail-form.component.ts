@@ -64,6 +64,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
   title: any
   addOrEdit: any;
+  selectedCPTCode:any;
   constructor(
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialMedicalClaimsFacade: FinancialMedicalClaimsFacade,
@@ -121,7 +122,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
         this.calculateMedicadeRate(index);
         this.cd.detectChanges();
   }
-  searchcptcode(cptcode: any, index: number) {
+  searchcptcode(cptcode: any) {
      this.financialMedicalClaimsFacade.searchcptcode(cptcode);   
   }
 
@@ -407,7 +408,7 @@ export class MedicalClaims {
   serviceStartDate: string = '';
   serviceEndDate: string = '';
   paymentType: string = '';
-  cptCode: string = '';
+  cptCode:string ='';
   pcaCode: string = '';
   serviceDescription: string = '';
   serviceCost: number = 0;
