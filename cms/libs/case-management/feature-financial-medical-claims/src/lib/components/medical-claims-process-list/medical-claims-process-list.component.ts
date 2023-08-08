@@ -111,7 +111,7 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService
   ) {
-    this.isEdit = true;
+    this.isEdit = false;
     this.paymentRequestId = '3A150DE3-228F-4FFF-A3F4-7991466353C5'
   }
 

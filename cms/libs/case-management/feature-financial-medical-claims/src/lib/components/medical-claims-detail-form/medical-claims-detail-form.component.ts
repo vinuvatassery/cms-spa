@@ -116,7 +116,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
         ctpCodeIsvalid.patchValue({
           cptCode: service.cptCode1,
           serviceDescription: service.serviceDesc,
-          medicadeRate: service.medicaidRate          ,
+          medicadeRate: service.medicaidRate,
         });
         this.calculateMedicadeRate(index);
         this.cd.detectChanges();
@@ -218,7 +218,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
       claimNbr: formValues.invoiceId,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       paymentMethodCode: 'MEDICAL',
-      paymentRequestId: this.paymentRequestId,
+      paymentRequestId: this.isEdit ? this.paymentRequestId : null,
       tpainvoice: [{}],
     };
     for (let i = 0; i < formValues.claimService.length; i++) {
