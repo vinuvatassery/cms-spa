@@ -2,13 +2,12 @@
 <div class="app-l-inner-rapper pt-0" kendoTooltip>
   <!-- Main Title Section -->
   <section  class="app-l-mainTittle">
-    <h1  class="maintitle_withicon text-bold">     <span class="material-icons sidebar-menu_icon" aria-label="task" aria-hidden="true">
+    <h1 (click)="notificationTriger()" class="maintitle_withicon text-bold">     <span class="material-icons sidebar-menu_icon" aria-label="task" aria-hidden="true">
       task
     </span>
     Pending Approvals </h1>
   </section>
  
-
   <kendo-tabstrip class="app-c-tab app-c-tab--color">
     <kendo-tabstrip-tab [selected]="true" title="General">
       <ng-template kendoTabTitle> General <span class="tab-batch-notify">4</span></ng-template>

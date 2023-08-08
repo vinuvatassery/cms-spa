@@ -4,18 +4,20 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
 import { ApprovalFacade } from '@cms/productivity-tools/domain';
-
+import { ReminderNotificationSnackbarService, ReminderSnackBarNotificationType } from '@cms/shared/util-core';
+import { NotificationService } from '@progress/kendo-angular-notification';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
   styleUrls: ['./approval-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApprovalPageComponent {
+export class ApprovalPageComponent  {
   /** Public properties **/
+
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
-
+  commonReminderSnackbar$   = this.reminderNotificationSnackbarService.snackbar$
   sortType = this.approvalFacade.sortType;
   pageSizes = this.approvalFacade.gridPageSizes;
   gridSkipCount = this.approvalFacade.skipCount;
@@ -33,7 +35,7 @@ export class ApprovalPageComponent {
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
 
   /** Constructor **/
-  constructor(private readonly approvalFacade: ApprovalFacade) {}
+  constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,     private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService,) {}
 
  
    loadApprovalsGeneralGrid(event: any): void {
@@ -46,4 +48,9 @@ export class ApprovalPageComponent {
   loadImportedClaimsGrid(event: any): void {
     this.approvalFacade.loadImportedClaimsLists();
   }
+  notificationTriger(){
+    this.approvalFacade.NotifyShowHideSnackBar(ReminderSnackBarNotificationType.LIGHT, 'Group deleted asdasd');
+    
+  }
+  
 }

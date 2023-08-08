@@ -241,4 +241,66 @@
   }
 }
 
+.reminder-notification-bar{
+  border-left: 3px solid $primary;
+  padding-right: 40px;
+    position: relative;
+    /* margin-right: 20px; */
+    right: 20px;
+    overflow: hidden;
+    max-width: 350px !important;
+    min-width: 300px !important;
+    box-shadow: inherit !important;
+  .k-icon-wrapper-host{
+    display: none;
+  }
+  .k-notification-content{
+    margin: 0px;
+  }
+  .reminder-snack-bar-wrapper{
+    display: flex;
+    align-items: flex-start;
+    gap: 10px; 
+   }
+   .k-notification-actions{
+    display: none;
+   }
+.reminder-col-two{
+  .k-button{
+    padding: 4px 6px;
+  }
+}
+.reminder-description{
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  max-height: 36px;
+  height: 36px;
+   &:hover{
+    display: block;
+    overflow: auto;
+    max-height: 250px; 
+    height: 100%;
+  }
+ 
+}
+   .reminder-col-three{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    bottom: 0;
+    background: $grey-f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .k-button{
+      padding: 2px;
+      color: rgba($black, 0.5);
+      height: 100%;
+    }
+   }
+}
+
 
