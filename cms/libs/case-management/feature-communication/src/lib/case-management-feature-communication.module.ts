@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 /** Modules **/
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
+import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { CaseManagementDomainModule } from '@cms/case-management/domain';
 import { CaseManagementFeatureCommunicationRoutingModule } from './case-management-feature-communication-routing.module';
 /** Components **/
@@ -31,6 +32,7 @@ import { ApprovalLaterComponent } from './components/approval-letter-later/appro
   imports: [
     CommonModule,
     SharedUiTpaModule,
+    SharedUiCommonModule,
     CaseManagementDomainModule,
     CaseManagementFeatureCommunicationRoutingModule,
   ],

@@ -142,7 +142,6 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       groupPolicyEligibleFlag: [null]
     });
   }
-
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
       tap(() => this.workflowFacade.disableSaveButton()),
@@ -164,7 +163,6 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       }
     });
   }
-
   private saveAndContinue() {
     if (this.insuranceFlagForm.controls['currentInsuranceFlag'].value == StatusFlag.No) {
       this.insurancePolicyFacade.showInsuranceRequiredSubject.next(false);
@@ -195,8 +193,14 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   }
 
   private validateCerReviewStatus(){
-    if(!this.isCerForm) return of(false);
+    if(!this.isCerForm)
+    {
+       return of(false);
+    }
+    else
+    {
      return this.insurancePolicyFacade.validateCerReviewStatus(this.clientCaseEligibilityId);
+    }
   }
 
   validateForm() {

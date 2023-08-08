@@ -112,6 +112,6 @@ export class GroupDetailComponent implements OnInit {
   }
 
   get groupFormControls(){
-    return (this.groupForm as FormGroup)?.controls as any;
+    return (this.groupForm)?.controls as any;
   }
 }
