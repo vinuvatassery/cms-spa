@@ -42,8 +42,10 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   state!: State;
 
   paymentRequestType$ = this.lovFacade.paymentRequestType$;
-  medicalProvidersearchLoaderVisibility$ =this.financialVendorRefundFacade.medicalProviderSearchLoaderVisibility$;
-  CPTCodeSearchLoaderVisibility$ =this.financialMedicalClaimsFacade.CPTCodeSearchLoaderVisibility$;
+  medicalProvidersearchLoaderVisibility$ =
+    this.financialVendorRefundFacade.medicalProviderSearchLoaderVisibility$;
+  CPTCodeSearchLoaderVisibility$ =
+    this.financialMedicalClaimsFacade.CPTCodeSearchLoaderVisibility$;
   pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
   searchCTPCode$ = this.financialMedicalClaimsFacade.searchCTPCode$;
 
@@ -62,9 +64,9 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
-  title: any
+  title: any;
   addOrEdit: any;
-  selectedCPTCode:any;
+  selectedCPTCode: any;
   constructor(
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialMedicalClaimsFacade: FinancialMedicalClaimsFacade,
@@ -80,12 +82,12 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
     this.lovFacade.getCoPaymentRequestTypeLov();
     if (!this.isEdit) {
       this.title = 'Add Medical Claims';
-      this.addOrEdit = 'Add'
+      this.addOrEdit = 'Add';
       this.addClaimServiceGroup();
     }
     if (this.isEdit) {
       this.title = 'Edit Claim';
-      this.addOrEdit = 'Edit'
+      this.addOrEdit = 'Edit';
       this.getMedicalClaimByPaymentRequestId();
     }
   }
@@ -111,19 +113,20 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   searchMedicalProvider(searchText: any) {
     this.financialVendorRefundFacade.searchPharmacies(searchText);
   }
-  onCPTCodeValueChange(event: any,index: number) {   
-        let service = event;
-        let ctpCodeIsvalid = this.AddClaimServicesForm.at(index) as FormGroup;
-         ctpCodeIsvalid.patchValue({
-          cptCode: service.cptCode1,
-          serviceDescription: service.serviceDesc!=undefined?service.serviceDesc:" ",
-          medicadeRate: service.medicaidRate          ,
-        });
-        this.calculateMedicadeRate(index);
-        this.cd.detectChanges();
+  onCPTCodeValueChange(event: any, index: number) {
+    let service = event;
+    let ctpCodeIsvalid = this.AddClaimServicesForm.at(index) as FormGroup;
+    ctpCodeIsvalid.patchValue({
+      cptCode: service.cptCode1,
+      serviceDescription: service.serviceDesc != undefined ? service.serviceDesc : '',
+      medicadeRate: service.medicaidRate,
+      cptCodeId: service.cptCodeId,
+    });
+    this.calculateMedicadeRate(index);
+    this.cd.detectChanges();
   }
   searchcptcode(cptcode: any) {
-     this.financialMedicalClaimsFacade.searchcptcode(cptcode);   
+    this.financialMedicalClaimsFacade.searchcptcode(cptcode);
   }
 
   loadClientBySearchText(searchText: any) {
@@ -151,21 +154,31 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
         Validators.required,
       ]),
       pcaCode: new FormControl(this.medicalClaimServices.pcaCode),
-      serviceDescription: new FormControl(this.medicalClaimServices.serviceDescription, [Validators.required]),
-      serviceCost: new FormControl(this.medicalClaimServices.serviceCost,[Validators.required]),
-      amountDue: new FormControl(this.medicalClaimServices.amountDue, [Validators.required]),
+      serviceDescription: new FormControl(
+        this.medicalClaimServices.serviceDescription,
+        [Validators.required]
+      ),
+      serviceCost: new FormControl(this.medicalClaimServices.serviceCost, [
+        Validators.required,
+      ]),
+      amountDue: new FormControl(this.medicalClaimServices.amountDue, [
+        Validators.required,
+      ]),
       reasonForException: new FormControl(
         this.medicalClaimServices.reasonForException
       ),
       medicadeRate: new FormControl(this.medicalClaimServices.medicadeRate),
       paymentRequestId: new FormControl(),
       tpaInvoiceId: new FormControl(),
+      cptCodeId: new FormControl(this.medicalClaimServices.cptCodeId, [
+        Validators.required,
+      ]),
     });
     this.AddClaimServicesForm.push(claimForm);
     this.cd.detectChanges();
   }
 
-  onClientValueChange(event: any) {  
+  onClientValueChange(event: any) {
     this.clientCaseEligibilityId = event.clientCaseEligibilityId;
   }
 
@@ -179,11 +192,6 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   }
 
   isControlValid(controlName: string, index: any) {
-    if(controlName === 'serviceCost' || controlName === 'amountDue'){
-      debugger
-      let control = this.AddClaimServicesForm.at(index) as FormGroup;
-      return control.controls[controlName].status == 'INVALID';
-    }
     let control = this.AddClaimServicesForm.at(index) as FormGroup;
     return control.controls[controlName].status == 'INVALID';
   }
@@ -382,9 +390,9 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
       serviceForm.controls['amountDue'].setValue(service.amountDue);
       serviceForm.controls['paymentType'].setValue(service.paymentTypeCode);
       serviceForm.controls['tpaInvoiceId'].setValue(service.tpaInvoiceId);
-      serviceForm.controls['reasonForException'].setValue(
-        service.exceptionReasonCode
-      );
+      serviceForm.controls['reasonForException'].setValue(service.exceptionReasonCode);
+      serviceForm.controls['cptCode'].setValue(service.cptCode);
+      serviceForm.controls['cptCodeId'].setValue(service.cptCodeId);
     }
     this.cd.detectChanges();
   }
@@ -408,7 +416,7 @@ export class MedicalClaims {
   serviceStartDate: string = '';
   serviceEndDate: string = '';
   paymentType: string = '';
-  cptCode:string ='';
+  cptCode: string = '';
   pcaCode: string = '';
   serviceDescription: string = '';
   serviceCost: number = 0;
@@ -416,4 +424,5 @@ export class MedicalClaims {
   reasonForException: string = '';
   amountDue: number = 0;
   medicadeRate: number = 0;
+  cptCodeId: string = '';
 }
