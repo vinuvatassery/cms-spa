@@ -70,7 +70,7 @@ export class PaymentsDataService {
     ,paymentPanel);
   }
 
-  getPrintAdviceLetterData(selectedProviders: any[]) {
+  getPrintAdviceLetterData(selectedProviders: any) {
     return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/generate`,selectedProviders);
   }
  

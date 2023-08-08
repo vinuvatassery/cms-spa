@@ -54,21 +54,32 @@ hideLoader(){
 
   loadPrintLetterContent() {
     this.loaderService.show();
-    let formDataList: FormData[] = [];
-    let formData = new Array<FormData>();
+    let printAdviceLetterData: any;
+    let selectedProviders: any = [];
     this.finalPrintList.forEach(item => {
-      const formData = new FormData();
-      formData.append('clientName', item.clientName);
-      formData.append('invoiceID', item.invoiceID);
-      formData.append('providerName', item.providerName);
-      formData.append('totalCost', item.totalCost);
-      formDataList.push(formData);
+      printAdviceLetterData = {      
+      vendorId: item.vendorId,
+      paymentRequestId: item.paymentRequestId,
+      paymentRequestBatchId: item.paymentRequestBatchId,
+      providerName: item.providerName,
+      selectedProviderList: []
+    };
+    const selectedItem = {
+      memberID: item.memberID,
+      clientName: item.clientName,
+      invoiceID: item.invoiceID.toString(),
+      totalCost: item.totalCost,
+      serviceStateDate: item.serviceStateDate,
+      clientDOB: item.clientDOB
+    };
+    selectedProviders.push(selectedItem);
     });
-    this.paymentsFacade.loadPrintAdviceLetter(formDataList)
+    printAdviceLetterData.selectedProviderList = selectedProviders;
+    this.paymentsFacade.loadPrintAdviceLetter(printAdviceLetterData)
     .subscribe({
       next: (data: any) =>{
         if (data) {
-          this.letterContnet = data;
+          this.letterContnet = data.Value;
           this.ref.detectChanges();
         }
       this.loaderService.hide();

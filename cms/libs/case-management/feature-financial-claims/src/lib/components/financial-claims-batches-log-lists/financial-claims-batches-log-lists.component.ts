@@ -47,8 +47,8 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   bathcLogGridDataLst =[
     {
       item: 1,
-      invoiceID:1,
-      providerName: 'Very Nice Provider',
+      invoiceID:14323,
+      providerName: 'Very Nice Provider 1',
       taxID:'1234', 
       paymentMethod:'ACH', 
       clientName:'Client 1', 
@@ -59,14 +59,17 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
       totalDue:'500', 
       paymentStatus:'InProgress', 
       by: 'by',
+      vendorId: '3F111CFD-906B-4F56-B7E2-7FCE5A563C36',
+      paymentRequestId: 'AF1338C1-A6CC-4E76-8741-B9ABA59ABC99',
+      paymentRequestBatchId: 'AF1338C1-A6CC-4E76-8741-B9ABA59ABC99'
     },
     {
       item: 2,
-      invoiceID:2,
-      providerName: 'Test Provider',
+      invoiceID:24533,
+      providerName: 'Test Provider 2',
       taxID:'4321', 
       paymentMethod:'Check', 
-      clientName:'Client Client', 
+      clientName:'Client 2', 
       nameOnPrimaryInsuranceCard:'John Deo', 
       memberID:'21', 
       serviceCount:'2', 
@@ -74,6 +77,9 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
       totalDue:'800', 
       paymentStatus:'InProgress', 
       by: 'by',
+      vendorId: '3F111CFD-906B-4F56-B7E2-7FCE5A563C36',
+      paymentRequestId: 'AF1338C1-A6CC-4E76-8741-B9ABA59ABC99',
+      paymentRequestBatchId: 'AF1338C1-A6CC-4E76-8741-B9ABA59ABC99'
     }
   ];
 

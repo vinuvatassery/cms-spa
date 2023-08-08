@@ -115,8 +115,8 @@ export class PaymentsFacade {
     return this.paymentsDataService.updatePaymentPanel(vendorId,batchId,paymentPanel)
   }
 
-  loadPrintAdviceLetter(selectedProviders: any[]){
-    return this.paymentsDataService.getPrintAdviceLetterData(selectedProviders);
+  loadPrintAdviceLetter(printAdviceLetterData: any){
+    return this.paymentsDataService.getPrintAdviceLetterData(printAdviceLetterData);
   }
 
 }
