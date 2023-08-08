@@ -194,29 +194,26 @@
                                                       autofocusfield
                                                       [fillMode]="formUiStyle.dropDownFillMode" 
                                                     [data]="searchCTPCode$ | async"    
-                                                    
-                                                      valueField ="providerFullName"    
+                                                     formControlName="cptCode"
+                                                      valueField ="cptcode"    
                                                       [filterable]="true"  
                                                       placeholder="Search CPT Code"
                                                       (filterChange)="searchcptcode($event,i)"
                                                       [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }" 
                                                       > 
                                                       <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
-                                                        <span class="pr-1" (click)="onCPTCodeValueChange($event,i)">{{ dataItem.cptCode1}}</span>          
+                                                        <span class="pr-1" (click)="onCPTCodeValueChange(dataItem,i)">{{ dataItem.cptCode1}}</span>          
                                                       </ng-template>
                                                       </kendo-autocomplete>
-                                                      <kendo-formerror *ngIf="(isControlValid('cptCode', i) && isSubmitted)">
-                                                        CPT Code Is required.
-                                                      </kendo-formerror>
+                                                    <kendo-formerror *ngIf="(isControlValid('cptCode', i) && isSubmitted)"
+                                                class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                                    aria-hidden="false">info</span>CTP Code is required
+                                            </kendo-formerror>
                                                     </kendo-label>
                                                   </kendo-formfield>
                                                 </div>
                                               </div>
-                                            </kendo-floatinglabel>
-                                            <kendo-formerror *ngIf="(isControlValid('cptCode', i) && isSubmitted)"
-                                                class="d-flex align-items-center"> <span class="material-icons mr-1"
-                                                    aria-hidden="false">info</span>CTP Code is required
-                                            </kendo-formerror>
+                                            </kendo-floatinglabel>                                          
                                         </div>
                                         <div class="flex-col flex-col-4">
                                             <kendo-floatinglabel text="PCA Code">

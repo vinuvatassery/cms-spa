@@ -110,12 +110,12 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   searchMedicalProvider(searchText: any) {
     this.financialVendorRefundFacade.searchPharmacies(searchText);
   }
-  onCPTCodeValueChange(event: any,index: number) {    
+  onCPTCodeValueChange(event: any,index: number) {   
         let service = event;
         let ctpCodeIsvalid = this.AddClaimServicesForm.at(index) as FormGroup;
-        ctpCodeIsvalid.patchValue({
+         ctpCodeIsvalid.patchValue({
           cptCode: service.cptCode1,
-          serviceDescription: service.serviceDesc,
+          serviceDescription: service.serviceDesc!=undefined?service.serviceDesc:" ",
           medicadeRate: service.medicaidRate          ,
         });
         this.calculateMedicadeRate(index);

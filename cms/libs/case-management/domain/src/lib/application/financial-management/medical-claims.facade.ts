@@ -230,7 +230,7 @@ this.CPTCodeSearchLoaderVisibilitySubject.next(true);
     return this.financialMedicalClaimsDataService.searchcptcode(cptcode).subscribe({
       next: (response: any[]) => {
         response?.forEach((cptcodes:any) => {
-          cptcodes.providerFullName = `${cptcodes.cptCode1 ?? ''}`;
+          cptcodes.cptcode = `${cptcodes.cptCode1 ?? ''}`;
         });
         this.searchCTPCodeSubject.next(response);
         this.CPTCodeSearchLoaderVisibilitySubject .next(false);
