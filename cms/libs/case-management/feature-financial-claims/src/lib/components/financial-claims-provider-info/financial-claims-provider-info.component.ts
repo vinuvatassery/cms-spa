@@ -83,7 +83,7 @@ export class FinancialClaimsProviderInfoComponent {
 
     contact.emails.forEach((email: any) => {
       return emails.push(this.formBuilder.group({
-        emailAddress: email.emailAddress,
+        emailAddress: [email.emailAddress,Validators.required],
         vendorContactEmailId: email.vendorContactEmailId
       }));
     })
@@ -94,7 +94,7 @@ export class FinancialClaimsProviderInfoComponent {
     var phones = new FormArray<FormGroup>([])
     contact.phones.forEach((phone: any) => {
       return phones.push(this.formBuilder.group({
-        phoneNbr: phone.phoneNbr,
+        phoneNbr: [phone.phoneNbr,Validators.required],
         vendorContactPhoneId: phone.vendorContactPhoneId
       }));
     })
@@ -193,7 +193,13 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   updateProfile() {
-    
+    this.isSubmitted =true;
+
+    this.profileForm.markAllAsTouched();
+    if(!this.profileForm.valid)
+    {
+return;
+    }
     var providerPanelDto = {
       vendorId: this.vendorProfiles.vendorId,
       tin: this.profileForm?.controls['tin'].value,
