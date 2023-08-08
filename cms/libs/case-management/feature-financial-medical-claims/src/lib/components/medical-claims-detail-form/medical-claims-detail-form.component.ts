@@ -59,10 +59,10 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   medicalClaimServices = new MedicalClaims();
   sessionId: any = '';
   clientCaseEligibilityId: any = null;
-  @Input() isEdit : any;
-  @Input() paymentRequestId : any;
+  @Input() isEdit: any;
+  @Input() paymentRequestId: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
-  title : any
+  title: any
   addOrEdit: any;
   constructor(
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
@@ -150,14 +150,9 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
         Validators.required,
       ]),
       pcaCode: new FormControl(this.medicalClaimServices.pcaCode),
-      serviceDescription: new FormControl(
-        this.medicalClaimServices.serviceDescription,
-        [Validators.required]
-      ),
-      serviceCost: new FormControl(this.medicalClaimServices.serviceCost),
-      amountDue: new FormControl(this.medicalClaimServices.amountDue, [
-        Validators.required,
-      ]),
+      serviceDescription: new FormControl(this.medicalClaimServices.serviceDescription, [Validators.required]),
+      serviceCost: new FormControl(this.medicalClaimServices.serviceCost,[Validators.required]),
+      amountDue: new FormControl(this.medicalClaimServices.amountDue, [Validators.required]),
       reasonForException: new FormControl(
         this.medicalClaimServices.reasonForException
       ),
@@ -183,6 +178,11 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
   }
 
   isControlValid(controlName: string, index: any) {
+    if(controlName === 'serviceCost' || controlName === 'amountDue'){
+      debugger
+      let control = this.AddClaimServicesForm.at(index) as FormGroup;
+      return control.controls[controlName].status == 'INVALID';
+    }
     let control = this.AddClaimServicesForm.at(index) as FormGroup;
     return control.controls[controlName].status == 'INVALID';
   }
@@ -209,7 +209,7 @@ export class MedicalClaimsDetailFormComponent implements OnInit {
     this.isSubmitted = true;
     if (!this.claimForm.valid) {
       return;
-    }    
+    }
     let formValues = this.claimForm.value;
 
     let bodyData = {
