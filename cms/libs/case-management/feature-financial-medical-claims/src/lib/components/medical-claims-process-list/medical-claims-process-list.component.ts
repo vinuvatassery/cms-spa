@@ -112,7 +112,7 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
     private dialogService: DialogService
   ) {
     this.isEdit = false;
-    this.paymentRequestId = '3A150DE3-228F-4FFF-A3F4-7991466353C5'
+    this.paymentRequestId = '40683fe5-a6cd-476d-82f2-e9d38c44d5f1'
   }
 
   ngOnInit(): void {
