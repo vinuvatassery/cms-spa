@@ -5,7 +5,7 @@ import {
   EventEmitter,
   Input,
 } from '@angular/core';
-import { Form, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ContactFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -79,7 +79,7 @@ export class FinancialClaimsProviderInfoComponent {
 
   createEmailsFormArray(contact: any): FormArray {
 
-    var emails = new FormArray<FormGroup>([])
+    let emails = new FormArray<FormGroup>([])
 
     contact.emails.forEach((email: any) => {
       return emails.push(this.formBuilder.group({
@@ -91,7 +91,7 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   createPhonesFormArray(contact: any): FormArray {
-    var phones = new FormArray<FormGroup>([])
+    let phones = new FormArray<FormGroup>([])
     contact.phones.forEach((phone: any) => {
       return phones.push(this.formBuilder.group({
         phoneNbr: [phone.phoneNbr,Validators.required],
@@ -158,11 +158,11 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   getContactArrayFormValues() {
-    var contact: any[] = []
+    let contact: any[] = []
     this.profileForm.controls.contacts.controls.forEach(control => {
-      var contactForm = control as unknown as FormGroup
-      var emailsFormArray = contactForm.controls['emails'] as unknown as FormArray
-      var phonesFormArray = contactForm.controls['phones'] as unknown as FormArray
+      let contactForm = control as unknown as FormGroup
+      let emailsFormArray = contactForm.controls['emails'] as unknown as FormArray
+      let phonesFormArray = contactForm.controls['phones'] as unknown as FormArray
       contact.push({
         contactName: contactForm.controls['contactName']?.value,
         vendorContactId: contactForm.controls['vendorContactId']?.value,
@@ -174,9 +174,9 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   getEmailArrayFormValues(emailsFormArray: FormArray) {
-    var emails: any[] = []
+    let emails: any[] = []
     emailsFormArray.controls.forEach(control => {
-      var emailForm = control as unknown as FormGroup
+      let emailForm = control as unknown as FormGroup
       emails.push({
         emailAddress: emailForm.controls['emailAddress']?.value,
         VendorContactEmailId: emailForm.controls['vendorContactEmailId']?.value
@@ -186,9 +186,9 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   getPhoneArrayFormValues(phonesFormArray: FormArray) {
-    var phones: any[] = []
+    let phones: any[] = []
     phonesFormArray.controls.forEach(control => {
-      var phonesForm = control as unknown as FormGroup
+     let phonesForm = control as unknown as FormGroup
       phones.push({
         PhoneNbr: phonesForm.controls['phoneNbr']?.value,
         VendorContactPhoneId: phonesForm.controls['vendorContactPhoneId']?.value
@@ -205,7 +205,7 @@ export class FinancialClaimsProviderInfoComponent {
     {
         return;
     }
-    var providerPanelDto = {
+    let providerPanelDto = {
       vendorId: this.vendorProfiles.vendorId,
       tin: this.profileForm?.controls['tin'].value,
       Address: {
