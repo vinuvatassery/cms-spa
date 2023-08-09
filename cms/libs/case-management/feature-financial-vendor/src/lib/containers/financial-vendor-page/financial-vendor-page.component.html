@@ -38,8 +38,7 @@
             <ng-template kendoTabContent>
               <div class="block-section ">
                 
-                <cms-financial-vendors-list
-                 [financeTabTypeCode]="financeManagementTabs.MedicalProvider"
+                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.MedicalProvider"
                 [financeTabTypeCode]="financeManagementTabs.MedicalProvider"
                 [vendorTypeCode]="financeVendorTypeCodes.MedicalProviders"
                 [vendorsList$]="vendorsList$"
@@ -54,7 +53,8 @@
             <ng-template kendoTabContent>
               <div class="block-section ">
                 
-                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.InsuranceVendors"
+                <cms-financial-vendors-list
+                 [financeTabTypeCode]="financeManagementTabs.InsuranceVendors"
                  [vendorTypeCode]="financeVendorTypeCodes.InsuranceVendors"
                  [vendorsList$]="vendorsList$"
                  [pageSizes]="pageSizes" [sortValue]="sortValue"
