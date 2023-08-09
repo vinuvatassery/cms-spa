@@ -18,7 +18,7 @@ export class FinancialClaimsFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueFinancialClaimsProcess = 'invoiceID';
+  public sortValueFinancialClaimsProcess = 'invoiceNbr';
   public sortProcessList: SortDescriptor[] = [{
     field: this.sortValueFinancialClaimsProcess,
   }];
@@ -126,10 +126,15 @@ export class FinancialClaimsFacade {
     return router.url.split('/')?.filter(element => element === FinancialClaimTypeCode.Dental || element ===FinancialClaimTypeCode.Medical)[0];    
   }
 
-  loadFinancialClaimsProcessListGrid(){
-    this.financialClaimsDataService.loadFinancialClaimsProcessListService().subscribe({
+  loadFinancialClaimsProcessListGrid(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string){
+    filter = JSON.stringify(filter);
+    this.financialClaimsDataService.loadFinancialClaimsProcessListService(skipcount,  maxResultCount,  sort,  sortType, filter ).subscribe({
       next: (dataResponse) => {
-        this.financialClaimsProcessDataSubject.next(dataResponse);
+        const gridView = {
+          data: dataResponse["items"],
+          total: dataResponse["totalCount"]
+        };
+        this.financialClaimsProcessDataSubject.next(gridView);
         this.hideLoader();
       },
       error: (err) => {

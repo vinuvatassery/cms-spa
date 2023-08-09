@@ -16,38 +16,22 @@ export class FinancialClaimsDataService {
  
 
  
-  loadFinancialClaimsProcessListService( ) {
-    return of([
-      {
-        invoiceID:1,
-        providerName: 'Address `',
-        taxID:'address2', 
-        paymentMethod:'address2', 
-        clientName:'address2', 
-        nameOnPrimaryInsuranceCard:'address2', 
-        memberID:'address2', 
-        serviceCount:'address2', 
-        totalCost:'address2', 
-        totalDue:'address2', 
-        paymentStatus:'address2', 
-        by: 'by',
-      },
-      {
-        invoiceID:2,
-        providerName: 'Address `',
-        taxID:'address2', 
-        paymentMethod:'address2', 
-        clientName:'address2', 
-        nameOnPrimaryInsuranceCard:'address2', 
-        memberID:'address2', 
-        serviceCount:'address2', 
-        totalCost:'address2', 
-        totalDue:'address2', 
-        paymentStatus:'address2', 
-        by: 'by',
-      },
-    ]);
+  loadFinancialClaimsProcessListService(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string ) {
+
+    const MedicalClaimsPageAndSortedRequestDto =
+    {    
+      SortType : sortType,
+      Sorting : sort,
+      SkipCount : skipcount,
+      MaxResultCount : maxResultCount,
+      Filter : filter
+    }
+    
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical`,MedicalClaimsPageAndSortedRequestDto
+    );
   }
+
   loadFinancialClaimsBatchListService( ) {
     return of([
       {

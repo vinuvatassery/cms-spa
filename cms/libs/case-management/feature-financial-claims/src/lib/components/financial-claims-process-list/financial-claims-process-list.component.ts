@@ -16,8 +16,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy,
+  State  
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
@@ -50,7 +49,7 @@ export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
   @Input() financialClaimsProcessGridLists$: any;
   @Output() loadFinancialClaimsProcessListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'vendorName';
+  sortColumn = 'Invoice ID';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -61,8 +60,7 @@ export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
   gridDataResult!: GridDataResult;
 
   gridFinancialClaimsProcessDataSubject = new Subject<any>();
-  gridFinancialClaimsProcessData$ =
-    this.gridFinancialClaimsProcessDataSubject.asObservable();
+  gridFinancialClaimsProcessData$ =  this.gridFinancialClaimsProcessDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -112,9 +110,9 @@ export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    this.loadFinancialClaimsProcessListGrid();
+    //this.loadFinancialClaimsProcessListGrid();
   }
-  ngOnChanges(): void {
+  ngOnChanges(): void {    
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -144,6 +142,7 @@ export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter : this.state?.["filter"]?.["filters"] ?? []
     };
     this.loadFinancialClaimsProcessListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
@@ -206,18 +205,14 @@ export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
-    this.financialClaimsProcessGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
+    this.financialClaimsProcessGridLists$.subscribe((data: GridDataResult) => {      
+      this.gridDataResult = data;    
       this.gridFinancialClaimsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isFinancialClaimsProcessGridLoaderShow = false;
       }
     });
-    this.isFinancialClaimsProcessGridLoaderShow = false;
+  
   }
 
   public onBatchClaimsClicked(template: TemplateRef<unknown>): void {
