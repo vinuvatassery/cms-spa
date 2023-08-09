@@ -32,6 +32,13 @@ export class FinancialClaimsDataService {
     );
   }
 
+  loadFinancialClaimsInvoiceListService(paymentRequestId : string, skipcount: number,  maxResultCount: number,  sort: string,  sortType: string) {  
+    
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/${paymentRequestId}/invoices?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`,
+    );
+  }
+
   loadFinancialClaimsBatchListService( ) {
     return of([
       {

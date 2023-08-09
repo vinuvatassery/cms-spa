@@ -23,6 +23,11 @@ export class FinancialClaimsFacade {
     field: this.sortValueFinancialClaimsProcess,
   }];
 
+  public sortValueFinancialInvoiceProcess = 'serviceStartDate';
+  public sortInvoiceList: SortDescriptor[] = [{
+    field: this.sortValueFinancialInvoiceProcess,
+  }];
+
   public sortValueFinancialClaimsBatch = 'batch';
   public sortBatchList: SortDescriptor[] = [{
     field: this.sortValueFinancialClaimsBatch,
@@ -62,6 +67,9 @@ export class FinancialClaimsFacade {
 
   private financialClaimsProcessDataSubject = new Subject<any>();
   financialClaimsProcessData$ = this.financialClaimsProcessDataSubject.asObservable();
+
+  private financialClaimsInvoiceSubject = new Subject<any>();
+  financialClaimsInvoice$ = this.financialClaimsInvoiceSubject.asObservable();
 
   private financialClaimsBatchDataSubject =  new Subject<any>();
   financialClaimsBatchData$ = this.financialClaimsBatchDataSubject.asObservable();  
@@ -143,6 +151,25 @@ export class FinancialClaimsFacade {
       },
     });  
   }   
+
+  loadFinancialClaimsInvoiceListService(paymentRequestId : string, skipcount: number,  maxResultCount: number,  sort: string,  sortType: string){
+    
+    this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType).subscribe({
+      next: (dataResponse) => {
+        const gridView = {
+          data: dataResponse["items"],
+          total: dataResponse["totalCount"]
+        };
+        this.financialClaimsInvoiceSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  }   
+
 
 
   loadFinancialClaimsBatchListGrid(){

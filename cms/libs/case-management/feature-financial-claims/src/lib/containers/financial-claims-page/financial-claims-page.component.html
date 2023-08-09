@@ -11,10 +11,14 @@
                     <kendo-tabstrip-tab title="Process" [selected]="true">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-claims-process-list   [claimsType]="claimsType"   [financialClaimsProcessGridLists$]="financialClaimsProcessGridLists$"
+                                <cms-financial-claims-process-list   [claimsType]="claimsType" 
+                                [financialClaimsProcessGridLists$]="financialClaimsProcessGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsProcess"
                                 [sortType]="sortType" [sort]="sortProcessList" 
-                                (loadFinancialClaimsProcessListEvent)="loadFinancialClaimsProcessListGrid($event)"></cms-financial-claims-process-list>
+                                [sortValueFinancialInvoices]="sortValueFinancialInvoices"
+                                [financialClaimsInvoice$]="financialClaimsInvoice$"
+                                (loadFinancialClaimsProcessListEvent)="loadFinancialClaimsProcessListGrid($event)"
+                                (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)></cms-financial-claims-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
