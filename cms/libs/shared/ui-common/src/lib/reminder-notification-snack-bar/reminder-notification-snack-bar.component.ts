@@ -7,7 +7,6 @@ import {
   TemplateRef,
   ViewChild,
   ViewContainerRef,
- 
 } from '@angular/core';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
@@ -23,25 +22,23 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
   templateUrl: './reminder-notification-snack-bar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReminderNotificationSnackBarComponent
-  implements OnInit 
-{
-  /** Input properties **/
+export class ReminderNotificationSnackBarComponent implements OnInit {
+ 
   @Input() data$!: Observable<SnackBar>;
   public hideAfter = this.configurationProvider.appSettings.snackbarHideAfter;
   public duration =
     this.configurationProvider.appSettings.snackbarAnimationDuration;
-  /** Public properties **/
+ 
   @ViewChild('reminderNotificationTemplate', { read: TemplateRef })
   alertTemplate!: TemplateRef<any>;
-  snackbarMessage!: SnackBar;
-
-
-  @ViewChild('reminderNotificationTemplateContainer', { read: ViewContainerRef })
-  reminderNotificationTemplateContainer!: ViewContainerRef;
-
- 
-
+  snackbarMessage!: SnackBar; 
+  @ViewChild('reminderNotificationTemplateContainer', {
+    read: ViewContainerRef,
+  })
+  reminderNotificationTemplateContainer!: ViewContainerRef; 
+  isReminderExpand = false;
+  isReminderSideOn: any;
+  isReminderSideOff: any;
   public data = [
     {
       text: 'Edit Reminder Snooze',
@@ -68,12 +65,10 @@ export class ReminderNotificationSnackBarComponent
     this.removePreviousMessage();
     this.reminderSnackBarSubscribe();
   }
- 
+
   reminderSnackBarSubscribe() {
-  
     this.data$.subscribe({
       next: (res) => {
-      
         if (res) {
           this.snackbarMessage = res;
           this.notificationService.show({
@@ -95,6 +90,8 @@ export class ReminderNotificationSnackBarComponent
   }
 
   public removePreviousMessage() {
+    this.showSideReminderNotification();
+
     const divMessage = document.getElementsByClassName(
       'k-notification-container ng-star-inserted'
     );
@@ -102,5 +99,29 @@ export class ReminderNotificationSnackBarComponent
       let currentMessage = divMessage.item(0);
       currentMessage?.remove();
     }
+  }
+
+  reminderContainerClicked() {
+    this.showSideReminderNotification();
+    const divMessage = document.getElementsByClassName(
+      'k-notification-container ng-star-inserted'
+    );
+    if (divMessage.length > 1) {
+      this.isReminderExpand = !this.isReminderExpand;
+    } else {
+      this.isReminderExpand = false;
+    }
+  }
+  moveSideReminderNotification() {
+    this.isReminderSideOn = document.getElementById('reminder_notify');
+    this.isReminderSideOn.classList.add('move_notify_aside');
+    this.isReminderSideOn.classList.remove('expand_view');
+    this.isReminderSideOn.classList.remove('collapse_view');
+    this.isReminderExpand = false;
+  }
+
+  showSideReminderNotification() {
+    this.isReminderSideOff = document.getElementById('reminder_notify');
+    this.isReminderSideOff.classList.remove('move_notify_aside');
   }
 }

@@ -1,4 +1,4 @@
-<div #reminderNotificationTemplateContainer class="remainder_container">
+<div #reminderNotificationTemplateContainer class="remainder_container" (click)="reminderContainerClicked();$event.stopPropagation()" [ngClass]="{'expand_view': isReminderExpand === true, 'collapse_view' : isReminderExpand === false}" id="reminder_notify">
 
 </div>
 
@@ -9,27 +9,26 @@
       <span class="material-icons"> alarm </span>
     </div>
     <div class="reminder-col-two">
-      <!-- <span class="k-notification-title" aria-live="polite" role="status">{{ snackbarMessage.title }}</span>
-    
+      <!-- <span class="k-notification-title" aria-live="polite" role="status">{{ snackbarMessage.title }}</span>    
       <span class="k-notification-sub-title" ria-live="assertive">{{ snackbarMessage.subtitle }}</span> -->
-      <p class="reminder-description"><a>Chadwick Boseman </a> Generic reminder displays at 9AM on the day of the
-        reminder Generic reminder displays at 9AM on the day of the reminder </p>
+      <p class="reminder-description"><a>Chadwick Boseman </a>Generic reminder displays at 9AM on the day of the
+        reminder Generic reminder displays at 9AM on the day of the reminder  </p>
       <div class="flex-space-bw align-items-center mt-1">
         <div>
           <span> Today</span>
         </div>
         <div>
-          <kendo-dropdownbutton themeColor="primary" fillMode="flat" class="ml-1" [data]="data">
+          <kendo-dropdownbutton themeColor="primary" fillMode="flat" class="ml-1" [data]="data" (click)="$event.stopPropagation()">
             Options <span class="material-icons">   arrow_drop_down    </span>
           </kendo-dropdownbutton>
 
-          <button kendoButton themeColor="primary" class="ml-1" fillMode="flat"> DISMISS</button>
+          <button kendoButton themeColor="primary" class="ml-1" fillMode="flat"  (click)="removePreviousMessage();$event.stopPropagation()"> DISMISS</button>
         </div>
       </div>
     </div>
     <div class="reminder-col-three">
       <button kendoButton fillMode="clear" class="snakbar-close-btn" themeColor="light"
-        (click)="removePreviousMessage()">
+        (click)="moveSideReminderNotification();$event.stopPropagation()">
         <span class="material-icons"> chevron_right </span>
       </button>
     </div> 
