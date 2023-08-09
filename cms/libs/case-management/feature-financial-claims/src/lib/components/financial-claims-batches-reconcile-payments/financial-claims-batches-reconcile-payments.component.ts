@@ -28,7 +28,7 @@ import { FinancialClaimsFacade } from '@cms/case-management/domain';
   styleUrls: ['./financial-claims-batches-reconcile-payments.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit, OnChanges{
+export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit, OnChanges {
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
   PrintAuthorizationDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -73,7 +73,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   datePaymentReconciled:any;
   datePaymentSend:any;
   tAreaCessationMaxLength:any=200;
-  //tareaCessationCounter: string="200";
   
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
@@ -82,7 +81,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   ngOnInit(): void {
     this.isBreakoutPanelShow=false;
     this.loadReconcilePaymentSummary(this.batchId,'0');
-    //this.loadReconcileListGrid();
   }
   ngOnChanges(): void {
     this.state = {
@@ -93,7 +91,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     this.gridDataHandle();
     this.loadReconcileListGrid();
   }
-
 
   private loadReconcileListGrid(): void {
     this.loadReconcile(
@@ -195,23 +192,29 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       }
   }
 
-  assignDataFromUpdatedResultToPagedResult(){
-      this.reconcilePaymentGridPagedResult.data.forEach((item: any, index: number) => {
+  assignDataFromUpdatedResultToPagedResult(itemResponse:any){
+    itemResponse.data.forEach((item: any, index: number) => {
         let ifExist = this.reconcilePaymentGridUpdatedResult.find((x:any)=>x.vendorId ===item.vendorId);
         if (ifExist !== undefined && item.vendorId === ifExist.vendorId) {
-          this.reconcilePaymentGridPagedResult.data[index].paymentReconciledDate = ifExist?.paymentReconciledDate;
-          this.reconcilePaymentGridPagedResult.data[index].paymentSentDate = ifExist?.paymentSentDate;
-          this.reconcilePaymentGridPagedResult.data[index].checkNbr = ifExist?.checkNbr;
-          this.reconcilePaymentGridPagedResult.data[index].comments = ifExist?.comments;
-          this.reconcilePaymentGridPagedResult.data[index].datePaymentRecInValid = ifExist?.datePaymentRecInValid;
-          this.reconcilePaymentGridPagedResult.data[index].datePaymentRecInValidMsg = ifExist?.datePaymentRecInValidMsg;
-          this.reconcilePaymentGridPagedResult.data[index].datePaymentSentInValid = ifExist?.datePaymentSentInValid;
-          this.reconcilePaymentGridPagedResult.data[index].datePaymentSentInValidMsg = ifExist?.datePaymentSentInValidMsg;
-          this.reconcilePaymentGridPagedResult.data[index].isPrintAdviceLetter = ifExist?.isPrintAdviceLetter;
-          this.reconcilePaymentGridPagedResult.data[index].tAreaCessationCounter = ifExist?.tAreaCessationCounter;
+          itemResponse.data[index].paymentReconciledDate = ifExist?.paymentReconciledDate;
+          itemResponse.data[index].paymentSentDate = ifExist?.paymentSentDate;
+          itemResponse.data[index].checkNbr = ifExist?.checkNbr;
+          itemResponse.data[index].comments = ifExist?.comments;
+          itemResponse.data[index].datePaymentRecInValid = ifExist?.datePaymentRecInValid;
+          itemResponse.data[index].datePaymentRecInValidMsg = ifExist?.datePaymentRecInValidMsg;
+          itemResponse.data[index].datePaymentSentInValid = ifExist?.datePaymentSentInValid;
+          itemResponse.data[index].datePaymentSentInValidMsg = ifExist?.datePaymentSentInValidMsg;
+          itemResponse.data[index].isPrintAdviceLetter = ifExist?.isPrintAdviceLetter;
+          itemResponse.data[index].tAreaCessationCounter = ifExist?.tAreaCessationCounter;
 
         }
+        // itemResponse.data[index].datePaymentRecInValid = true;
+        // itemResponse.data[index].datePaymentRecInValidMsg = 'ff';
+        // itemResponse.data[index].datePaymentSentInValid = true;
+        // itemResponse.data[index].datePaymentSentInValidMsg = 'nnnn';
       });
+      
+      this.reconcilePaymentGridPagedResult = itemResponse;
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -219,9 +222,8 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   }
 
   gridDataHandle() {
-     this.reconcileGridLists$.subscribe((data: any) => {
-      this.reconcilePaymentGridPagedResult = data;
-      this.assignDataFromUpdatedResultToPagedResult();
+     this.reconcileGridLists$.subscribe((data: any) => { 
+      this.assignDataFromUpdatedResultToPagedResult(data);
       this.tAreaVariablesInitiation(this.reconcilePaymentGridPagedResult.data);
       this.reconcilePaymentGridPagedResult = filterBy(
         this.reconcilePaymentGridPagedResult,
@@ -231,11 +233,11 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       this.gridClaimsReconcileDataSubject.next(this.reconcilePaymentGridPagedResult);
       if (data?.total >= 0 || data?.total === -1) { 
         this.isReconcileGridLoaderShow = false;       
-      }
+      }   
       this.cd.detectChanges()
     });
      this.isReconcileGridLoaderShow = false;
-     this.cd.detectChanges()
+     this.cd.detectChanges();
   }
 
 
@@ -313,6 +315,8 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     
     }
     this.assignRowDataToMainList(dataItem);
+    //this.ngDirtyInValid(dataItem,)
+
   }
 
   validateReconcileGridRecord() {
@@ -367,6 +371,21 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
 
     this.assignPagedGridItemToUpdatedList(this.reconcilePaymentGridPagedResult.data);
 
+  }
+
+  ngDirtyInValid(dataItem:any,control:any,rowIndex:any){
+    let inValid = control ==='paymentSentDate'?dataItem.datePaymentSentInValid:dataItem.datePaymentRecInValid
+    if(inValid){
+      document.getElementById(control+rowIndex)?.classList.remove('ng-valid');
+      document.getElementById(control+rowIndex)?.classList.add('ng-invalid');
+      document.getElementById(control+rowIndex)?.classList.add('ng-dirty');
+    }
+    else{
+      document.getElementById(control+rowIndex)?.classList.remove('ng-invalid');
+      document.getElementById(control+rowIndex)?.classList.remove('ng-dirty');
+      document.getElementById(control+rowIndex)?.classList.add('ng-valid');
+    }
+    return 'ng-dirty ng-invalid';
   }
 
   assignPagedGridItemToUpdatedList(dataItem:any){

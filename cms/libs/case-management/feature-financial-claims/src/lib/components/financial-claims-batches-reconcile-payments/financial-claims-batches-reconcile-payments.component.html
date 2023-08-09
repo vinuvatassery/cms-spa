@@ -83,7 +83,7 @@
 
                   <div class="app-c-table">
                         <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take" #grid
-                        [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
+                        [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" 
                         [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
                         [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
                         [data]="reconcilePaymentGridPagedResult" >
@@ -109,22 +109,25 @@
                         <kendo-grid-column field="paymentMethodCode" title="Pmt. Method" [width]="160">
                         </kendo-grid-column>
                         <kendo-grid-column  field="paymentReconciledDate" title="Date Pmt. Reconciled" [width]="200">
-                              <ng-template kendoGridCellTemplate let-dataItem>                  
+                              <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">              
                                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                                    aria-label="Date Pmt. Reconciled"  
+                                    aria-label="Date Pmt. Reconciled"  id ="paymentReconciledDate{{rowIndex}}"  name ="paymentReconciledDate{{rowIndex}}"
                                     [(ngModel)]="dataItem.paymentReconciledDate"  (valueChange)="dateChange($event,dataItem,'DATE_PAYMENT_RECONCILED')"
-                                    [ngClass]="dataItem.datePaymentRecInValid?'ng-dirty ng-invalid' :''" [max]="currentDate"                             
+                                    [ngClass]="ngDirtyInValid(dataItem,'paymentReconciledDate',rowIndex)"
+                                                                       
+                                    [max]="currentDate"                             
                                      formatPlaceholder="formatPattern"  placeholder="Date Pmt. Reconciled" >                                          
                                   </kendo-datepicker>
                                   <kendo-formerror *ngIf="dataItem.datePaymentRecInValid">{{dataItem.datePaymentRecInValidMsg}}</kendo-formerror>
                               </ng-template>
                         </kendo-grid-column>
                           <kendo-grid-column field="paymentSentDate" title="Date Pmt. Sent" [width]="160">
-                              <ng-template kendoGridCellTemplate let-dataItem>
+                              <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                                    aria-label="Date Pmt. Sent"  
+                                    aria-label="Date Pmt. Sent"  id ="paymentSentDate{{rowIndex}}"  name ="paymentSentDate{{rowIndex}}"
                                     [(ngModel)]="dataItem.paymentSentDate"   (valueChange)="dateChange($event,dataItem,'DATE_PAYMENT_SENT')"
-                                    [ngClass]="dataItem.datePaymentSentInValid?'ng-dirty ng-invalid' :''" [max]="currentDate"                                      
+                                    [ngClass]="ngDirtyInValid(dataItem,'paymentSentDate',rowIndex)" 
+                                    [max]="currentDate"                                      
                                      formatPlaceholder="formatPattern"  placeholder="Date Pmt. Sent" >                                          
                                   </kendo-datepicker>
                                   <kendo-formerror *ngIf="dataItem.datePaymentSentInValid">{{dataItem.datePaymentSentInValidMsg}}</kendo-formerror>
