@@ -17,12 +17,12 @@
         <div>
           <span> Today</span>
         </div>
-        <div>
-          <kendo-dropdownbutton themeColor="primary" fillMode="flat" class="ml-1" [data]="data" (click)="$event.stopPropagation()">
+        <div class="d-flex">
+          <kendo-dropdownbutton themeColor="primary" fillMode="flat"  [data]="data" (click)="$event.stopPropagation()">
             Options <span class="material-icons">   arrow_drop_down    </span>
           </kendo-dropdownbutton>
 
-          <button kendoButton themeColor="primary" class="ml-1" fillMode="flat"  (click)="removePreviousMessage();$event.stopPropagation()"> DISMISS</button>
+          <button kendoButton themeColor="primary"  fillMode="flat"  (click)="removePreviousMessage();$event.stopPropagation()"> DISMISS</button>
         </div>
       </div>
     </div>
