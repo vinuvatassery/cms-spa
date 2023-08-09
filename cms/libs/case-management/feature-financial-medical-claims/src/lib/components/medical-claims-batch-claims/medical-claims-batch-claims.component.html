@@ -8,11 +8,11 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Select Manager">
-          
+
           <kendo-dropdownlist
           placeholder="Select Manager"
           required [data]="ddlBatchManagers"
-            formControlName="batchManagerCode" 
+            [formControl]="batchManagerCode"
             textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
             >
           </kendo-dropdownlist>
@@ -20,7 +20,7 @@
       </div>
     </section>
 </div>
-  
+
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
@@ -33,11 +33,10 @@
         >
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="Batch"  
-        (click)="batchClaimsClicked()">
+        <button kendoButton [primary]="true" aria-label="Batch"
+        [disabled]="!batchManagerCode.valid" (click)="batchClaimsClicked()">
           Batch
         </button>
       </div>
     </div>
   </kendo-dialog-actions>
-  

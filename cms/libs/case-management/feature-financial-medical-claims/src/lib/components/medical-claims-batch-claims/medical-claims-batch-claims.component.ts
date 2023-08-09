@@ -1,15 +1,17 @@
-import { ChangeDetectionStrategy, Output, Input , EventEmitter, Component } from '@angular/core'; 
+import { ChangeDetectionStrategy, Output, Input , EventEmitter, Component } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'cms-medical-claims-batch-claims',
-  templateUrl: './medical-claims-batch-claims.component.html', 
+  templateUrl: './medical-claims-batch-claims.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsBatchClaimsComponent {
-  
+
   @Output() isModalBatchClaimsCloseClicked = new EventEmitter();
-  @Output() isModalBatchClaimsButtonClicked = new EventEmitter();
-  @Input() selectedProcessClaimsCount: Number = 0; 
+  @Output() isModalBatchClaimsButtonClicked = new EventEmitter<string>();
+  @Input() selectedProcessClaimsCount = 0;
+  batchManagerCode = new FormControl();
   ddlBatchManagers = [
     {
       "id": "c43fbe98-2f0f-4e8a-aaef-3098efe1bc78",
@@ -32,9 +34,10 @@ export class MedicalClaimsBatchClaimsComponent {
   ]
 
   closeBatchClaimsClicked(){
-    this.isModalBatchClaimsCloseClicked.emit(true);  
+    this.isModalBatchClaimsCloseClicked.emit();
   }
   batchClaimsClicked(){
-    this.isModalBatchClaimsButtonClicked.emit(true);  
+    if(this.batchManagerCode.valid)
+    this.isModalBatchClaimsButtonClicked.emit(this.batchManagerCode.value);
   }
 }

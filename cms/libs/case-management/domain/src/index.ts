@@ -54,6 +54,7 @@ export * from './lib/entities/grid-state'
 export * from './lib/entities/session-data';
 export * from './lib/entities/payment-request';
 export * from './lib/entities/vendor-contacts';
+export * from './lib/entities/batch-claim';
 
 
 /** Enums **/
@@ -156,6 +157,7 @@ export * from './lib/infrastructure/financial-management/vendor-refund.data.serv
 export * from './lib/infrastructure/financial-management/medical-claims.data.service';
 export * from './lib/infrastructure/financial-management/dental-claims.data.service';
 export * from './lib/infrastructure/financial-management/medical-premiums.data.service';
+export * from './lib/infrastructure/financial-management/vendor-claims.data.service';
 
 
 
@@ -208,6 +210,7 @@ export * from './lib/application/financial-management/vendor-refund.facade';
 export * from './lib/application/financial-management/medical-claims.facade';
 export * from './lib/application/financial-management/dental-claims.facade';
 export * from './lib/application/financial-management/medical-premiums.facade';
+export * from './lib/application/financial-management/vendor-claims.facade';
 
 
 

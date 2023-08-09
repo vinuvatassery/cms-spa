@@ -13,16 +13,19 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+
+import { BatchClaim, VendorClaimsFacade } from '@cms/case-management/domain';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-medical-claims-process-list',
-  templateUrl: './medical-claims-process-list.component.html', 
+  templateUrl: './medical-claims-process-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
@@ -64,6 +67,10 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
     this.gridMedicalClaimsProcessDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
+  public checkboxOnly = true;
+  public mode: SelectableMode = "multiple";
+  public drag = false;
+  public selectableSettings: SelectableSettings;
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   public claimsProcessMore = [
     {
@@ -72,7 +79,7 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
       icon: 'check',
       click: (data: any): void => {
         if (!this.isProcessBatchClosed) {
-          this.isProcessBatchClosed = true; 
+          this.isProcessBatchClosed = true;
           this.onBatchClaimsGridSelectedClicked();
         }
       },
@@ -84,7 +91,7 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isDeleteBatchClosed) {
-          this.isDeleteBatchClosed = true; 
+          this.isDeleteBatchClosed = true;
           this.onBatchClaimsDeleteGridSelectedClicked();
         }
       },
@@ -107,8 +114,15 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
-  ) {}
+    private dialogService: DialogService,
+    private vendorClaimsFacade: VendorClaimsFacade
+  ) {
+    this.selectableSettings = {
+      checkboxOnly: this.checkboxOnly,
+      mode: this.mode,
+      drag: this.drag,
+    };
+  }
 
   ngOnInit(): void {
     this.loadMedicalClaimsProcessListGrid();
@@ -208,7 +222,7 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
     this.medicalClaimsProcessGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = {"total":1,"data":[
         {
-        "invoiceID":"invoiceID1",
+        "invoiceID":"34343",
         "providerName":"providerName",
         "taxID":"taxID",
         "paymentMethod":"paymentMethod",
@@ -222,7 +236,7 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
         "by":"by"
         },
         {
-          "invoiceID":"invoiceID2",
+          "invoiceID":"2222122",
           "providerName":"providerName",
           "taxID":"taxID",
           "paymentMethod":"paymentMethod",
@@ -254,14 +268,23 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
-  onModalBatchClaimsModalClose(result: any) {
-    if (result) { 
-      this.batchConfirmClaimsDialog.close();
-    }
+  onModalBatchClaimsModalClose() {
+    this.batchConfirmClaimsDialog.close();
   }
-  onModalBatchClaimsButtonClicked(result: any) {
-    if (result) { 
-      this.batchConfirmClaimsDialog.close();
+  onModalBatchClaimsButtonClicked(managerId: string) {
+    if (managerId) {
+      const input: BatchClaim = {
+        managerId: managerId,
+        invoiceNumbers: this.selectedProcessClaims
+      }
+      this.vendorClaimsFacade.batchClaims(input).subscribe(res =>{
+        if(res)
+        this.vendorClaimsFacade.showHideSnackBar(
+          SnackBarNotificationType.SUCCESS,
+          'Claim(s) batched!'
+        );
+        this.batchConfirmClaimsDialog.close();
+      })
     }
   }
 
@@ -272,7 +295,7 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
     });
   }
   onModalDeleteClaimsModalClose(result: any) {
-    if (result) { 
+    if (result) {
       this.deleteClaimsDialog.close();
     }
   }
@@ -319,9 +342,9 @@ export class MedicalClaimsProcessListComponent implements OnInit, OnChanges {
   }
 
   closeRecentClaimsModal(result: any){
-    if (result) { 
+    if (result) {
       this.addClientRecentClaimsDialog.close();
     }
   }
- 
+
 }
