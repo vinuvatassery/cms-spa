@@ -38,10 +38,10 @@ export class FinancialClaimsProviderInfoComponent {
       cityCode: ['', Validators.required],
       stateCode: ['', Validators.required],
       zip: ['', Validators.required],
-      specialHandling: [''],
-      mailCode: [''],
-      contacts: this.formBuilder.array([])
-    })
+      specialHandlingDesc: [''],
+      mailCode: ['']
+    }),
+    contacts: new FormArray([])
   })
   isSubmitted: boolean = false
   constructor(private financialVendorFacade: FinancialVendorFacade, public formBuilder: FormBuilder
@@ -53,7 +53,6 @@ export class FinancialClaimsProviderInfoComponent {
     private readonly snackbarService: NotificationSnackbarService,) {
 
   }
-
 
   ngOnInit(): void {
     this.vendorProfile$.subscribe(res => {
@@ -69,6 +68,7 @@ export class FinancialClaimsProviderInfoComponent {
   loadPaymentMethodCodes() {
     this.lovFacade.getPaymentMethodLov()
   }
+
   loadStates() {
     this.contactFacade.loadDdlStates();
   }
@@ -77,7 +77,7 @@ export class FinancialClaimsProviderInfoComponent {
     this.closeViewProviderDetailClickedEvent.emit(true);
   }
 
-  CreateEmailsFormArray(contact: any): FormArray {
+  createEmailsFormArray(contact: any): FormArray {
 
     var emails = new FormArray<FormGroup>([])
 
@@ -101,40 +101,31 @@ export class FinancialClaimsProviderInfoComponent {
     return phones;
   }
 
-
   createContactsFormArray() {
-    var contacts = this.profileForm.controls.address.controls.contacts as FormArray
-
+    const contacts =  this.profileForm.get('contacts') as FormArray
     this.vendorProfiles.address.contacts.forEach((contact: any, index: number) => {
 
-      contacts.push(this.formBuilder.group({
-        contactName: contact.contactName,
-        vendorContactId: contact.vendorContactId,
-        emails: this.CreateEmailsFormArray(contact),
-        phones: this.createPhonesFormArray(contact)
-      }))
+       contacts.push(
+        this.formBuilder.group({
+          contactName: [contact.contactName,Validators.required],
+          vendorContactId: contact.vendorContactId,
+          emails: this.createEmailsFormArray(contact),
+          phones: this.createPhonesFormArray(contact)
+        }));
     });
 
+    return contacts;
   }
 
-  phones(i: number) {
-    var x = this.profileForm.controls.address.controls.contacts.controls[i].get('phones') as FormArray<FormGroup>
 
-    return x;
-  }
 
-  emails(i: number) {
-    var x = this.profileForm.controls.address.controls.contacts.controls[i].get('emails') as FormArray<FormGroup>
 
-    return x;
-  }
   editProviderClicked() {
     this.loadPaymentMethodCodes()
     this.loadStates()
     this.isEditProvider = !this.isEditProvider
 
-
-    this.createContactsFormArray()
+    
     this.profileForm.patchValue({
       tin: this.vendorProfiles.tin,
       address: {
@@ -145,48 +136,62 @@ export class FinancialClaimsProviderInfoComponent {
         stateCode: this.vendorProfiles.address.stateCode,
         zip: this.vendorProfiles.address.zip,
         mailCode: this.vendorProfiles.address.mailCode,
-        specialHandling: this.vendorProfiles.address.specialHandling,
-        paymentMethod: this.vendorProfiles.address.paymentMethodCode
+        specialHandlingDesc: this.vendorProfiles.address.specialHandlingDesc,
+        paymentMethod: this.vendorProfiles.address.paymentMethodCode,
+      
       }
     });
+    this.createContactsFormArray() 
+  }
 
+  get contactsArray(): FormArray<FormGroup> {
+    return this.profileForm.get("contacts") as unknown as  FormArray<FormGroup>;
+  }
+
+
+  getPhonesArray(contact: any):FormArray {
+    return contact.get('phones') as unknown as FormArray<FormGroup>
+  }
+
+  getEmailsArray(contact:any) :FormArray{
+    return contact.get('phones') as unknown as FormArray<FormGroup>
   }
 
   getContactArrayFormValues() {
     var contact: any[] = []
-    this.profileForm.controls.address.controls.contacts.controls.forEach(control => {
-      var c = control as unknown as FormGroup
-      var e = c.controls['emails'] as unknown as FormArray
-      var p = c.controls['phones'] as unknown as FormArray
+    this.profileForm.controls.contacts.controls.forEach(control => {
+      var contactForm = control as unknown as FormGroup
+      var emailsFormArray = contactForm.controls['emails'] as unknown as FormArray
+      var phonesFormArray = contactForm.controls['phones'] as unknown as FormArray
       contact.push({
-        contactName: c.controls['contactName']?.value,
-        vendorContactId: c.controls['vendorContactId']?.value,
-        emails: this.getEmailArrayFormValues(e),
-        phones: this.getPhoneArrayFormValues(p)
+        contactName: contactForm.controls['contactName']?.value,
+        vendorContactId: contactForm.controls['vendorContactId']?.value,
+        emails: this.getEmailArrayFormValues(emailsFormArray),
+        phones: this.getPhoneArrayFormValues(phonesFormArray)
       })
     });
     return contact
   }
 
-  getEmailArrayFormValues(e: FormArray) {
+  getEmailArrayFormValues(emailsFormArray: FormArray) {
     var emails: any[] = []
-    e.controls.forEach(control => {
-      var c = control as unknown as FormGroup
+    emailsFormArray.controls.forEach(control => {
+      var emailForm = control as unknown as FormGroup
       emails.push({
-        emailAddress: c.controls['emailAddress']?.value,
-        VendorContactEmailId: c.controls['vendorContactEmailId']?.value
+        emailAddress: emailForm.controls['emailAddress']?.value,
+        VendorContactEmailId: emailForm.controls['vendorContactEmailId']?.value
       })
     })
     return emails;
   }
 
-  getPhoneArrayFormValues(e: FormArray) {
+  getPhoneArrayFormValues(phonesFormArray: FormArray) {
     var phones: any[] = []
-    e.controls.forEach(control => {
-      var c = control as unknown as FormGroup
+    phonesFormArray.controls.forEach(control => {
+      var phonesForm = control as unknown as FormGroup
       phones.push({
-        PhoneNbr: c.controls['phoneNbr']?.value,
-        VendorContactPhoneId: c.controls['vendorContactPhoneId']?.value
+        PhoneNbr: phonesForm.controls['phoneNbr']?.value,
+        VendorContactPhoneId: phonesForm.controls['vendorContactPhoneId']?.value
       })
     })
     return phones;
@@ -198,14 +203,14 @@ export class FinancialClaimsProviderInfoComponent {
     this.profileForm.markAllAsTouched();
     if(!this.profileForm.valid)
     {
-return;
+        return;
     }
     var providerPanelDto = {
       vendorId: this.vendorProfiles.vendorId,
       tin: this.profileForm?.controls['tin'].value,
       Address: {
         vendorAddressId: this.vendorProfiles.address.vendorAddressId,
-        specialHandlingDesc: this.profileForm?.controls.address.controls['paymentMethod']?.value,
+        specialHandlingDesc: this.profileForm?.controls.address.controls['specialHandlingDesc']?.value,
         paymentMethodCode: this.profileForm?.controls.address.controls['paymentMethod']?.value,
         address1: this.profileForm?.controls.address.controls['address1']?.value,
         address2: this.profileForm?.controls.address.controls['address2']?.value,
@@ -216,7 +221,6 @@ return;
       }
     
     }
-  //  this.validateFeilds(providerPanelDto);
     this.loaderService.show()
 
     this.financialVendorFacade.updateProviderPanel(providerPanelDto).subscribe({
@@ -233,6 +237,7 @@ return;
       }
     });
   }
+
   validateFeilds(providerPanelDto:any) {
     if(providerPanelDto.address.address1 &&
        providerPanelDto.address.city &&
@@ -244,7 +249,6 @@ return;
       this.isSubmitted = false;
     }
   }
-
 
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
     return FinancialVendorProviderTabCode;
