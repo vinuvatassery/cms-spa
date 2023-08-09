@@ -61,9 +61,9 @@ export class FinancialVendorFacade {
   }
 
 
-  getVendors(skipcount: number, maxResultCount: number, sort: string, sortType: string, vendorTypeCode: string): void {
-
-    this.financialVendorDataService.getVendors(skipcount, maxResultCount, sort, sortType, vendorTypeCode).subscribe({
+  getVendors(skipcount: number, maxResultCount: number, sort: string, sortType: string, vendorTypeCode: string,filter : string): void {
+    filter = JSON.stringify(filter);
+    this.financialVendorDataService.getVendors(skipcount, maxResultCount, sort, sortType, vendorTypeCode,filter).subscribe({
       next: (vendorsResponse: any) => {
         if (vendorsResponse) {
           const gridView = {

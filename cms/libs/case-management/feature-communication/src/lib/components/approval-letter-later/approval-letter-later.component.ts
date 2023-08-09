@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 })
 export class ApprovalLaterComponent {
   @Input() clientId: any;
+  @Input() paperlessFlag! : any
   @Output() closeApprovalLetterModalEvent = new EventEmitter();
   constructor(private readonly router: Router) {}
 

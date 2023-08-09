@@ -86,7 +86,7 @@ export class ReminderDetailComponent implements OnInit {
     if (this.clientReminderForm.valid && !this.dateValidator) {
        this.caseFacade.showHideSnackBar( SnackBarNotificationType.SUCCESS, 'Client Reminder added successfully');
        this.isModalNewReminderCloseClicked.emit();
+       this.isModalNewReminderCloseClicked.emit();
     }
   }
-  }
-
+}

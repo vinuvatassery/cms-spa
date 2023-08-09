@@ -18,28 +18,28 @@
                         <span class="mr-3">Pmt. Requested XX/XX/XXXX</span> <span class="mr-3">$550.00 Due</span>
                         <span class="mr-3">Status Requested</span></p>
                   </div>
-                  <div class="grey-banner-section mt-2">
+                  <div class="grey-banner-section mt-2" *ngIf ="paymentPanelDetails?.paymentStatusDate != null">
                         <div class="flex-row">
                               <button aria-label="edit" kendoButton look="flat" class="edit-btn card-link-button" (click)="onPaymentDetailFormClicked(paymentDetailsFromTemplate)" > Edit </button>
                         <div class="flex-col flex-col-2">
                               <small>Date Payment Reconciled</small>
-                              <p>XX/XX/XXXX</p>
+                              <p>{{paymentPanelDetails?.paymentStatusDate | date:'dd/MM/yyyy'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Date Payment Sent</small>
-                              <p>XX/XX/XXXX</p>
+                              <p>{{paymentPanelDetails?.sentDate | date:'dd/MM/yyyy'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Payment Amount</small>
-                              <p>$X,XXX.XX</p>
+                              <p>{{paymentPanelDetails?.amountPaid | currency:'USD':'$'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Warrant Number</small>
-                              <p>XXXXXXXXXX</p>
+                              <p>{{paymentPanelDetails?.checkNbr}}</p>
                         </div>
                         <div class="flex-col flex-col-4">
                               <small>Note</small> 
-                              <p>Lorem ipsum dolor set icus unum omg hello</p>
+                              <p>{{paymentPanelDetails?.notes}}</p>
                         </div>
                   </div>
                   </div>
@@ -161,6 +161,7 @@
 
 
 <ng-template #paymentDetailsFromTemplate>
-      <cms-financial-claims-payment-details-form
-            (closePaymentDetailFormClickedEvent)="onClosePaymentDetailFormClicked($event)"></cms-financial-claims-payment-details-form>
+      <cms-financial-claims-payment-details-form [paymentPanelDetails] ="paymentPanelDetails"[vendorId]="vendorId"
+      (updatePaymentPanel)="updatePaymentPanelRecord($event)"
+      [batchId]="batchId" (closePaymentDetailFormClickedEvent)="onClosePaymentDetailFormClicked($event)"></cms-financial-claims-payment-details-form>
 </ng-template>

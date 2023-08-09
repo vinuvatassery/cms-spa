@@ -309,7 +309,8 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.isCerText=false;
           this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].setValue(true);
           this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy'].updateValueAndValidity();
-        this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy']?.enable();
+          this.prescriptionDrugForm.controls['isClientNotUsingAnyPharmacy']?.enable();
+          this.showPharmacySection = false;
         }
         this.changeDetector.detectChanges();
         const pharmacyFound = pharmacies?.length > 0;

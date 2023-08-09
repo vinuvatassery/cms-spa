@@ -17,12 +17,12 @@
                 </ng-template>
                 <kendo-grid-column field="eligibilityStartDate" title="Status Start" [width]="100">
                     <ng-template kendoGridCellTemplate let-dataItem>
-                        {{dataItem.eligibilityStartDate |date:'MM/dd/YYYY'}}
+                        {{dataItem.eligibilityStartDate }}
                     </ng-template>
                 </kendo-grid-column>
                 <kendo-grid-column field="eligibilityEndDate" title="Status End" [width]="100">
                     <ng-template kendoGridCellTemplate let-dataItem>
-                        {{dataItem.eligibilityEndDate |date:'MM/dd/YYYY'}}
+                        {{dataItem.eligibilityEndDate }}
                     </ng-template>
                 </kendo-grid-column>
                 <kendo-grid-column field="eligibilityStatusDesc" title="Status" [width]="100"></kendo-grid-column>
