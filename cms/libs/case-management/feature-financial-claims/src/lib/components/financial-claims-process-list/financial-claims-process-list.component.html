@@ -175,11 +175,11 @@
       <ng-template kendoGridCellTemplate let-dataItem>
         <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
           [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
-          <common-user-photo-icon></common-user-photo-icon>
+          <common-user-photo-icon [userId]="dataItem?.creatorId"></common-user-photo-icon>
         </button>
         <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
           <ng-template kendoPopoverBodyTemplate>
-            <common-user-profile-card></common-user-profile-card>
+            <common-user-profile-card [userId]="dataItem?.creatorId"></common-user-profile-card>
           </ng-template>
         </kendo-popover>
       </ng-template>
