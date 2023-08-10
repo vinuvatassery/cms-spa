@@ -60,8 +60,8 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
       paymentStatus:'InProgress', 
       by: 'by',
       vendorId: '3F111CFD-906B-4F56-B7E2-7FCE5A563C36',
-      paymentRequestId: 'AF1338C1-A6CC-4E76-8741-B9ABA59ABC99',
-      paymentRequestBatchId: 'AF1338C1-A6CC-4E76-8741-B9ABA59ABC99'
+      paymentRequestId: '012D6618-C464-41C1-852D-03584075A17B',
+      paymentRequestBatchId: '1B9F14A7-A983-44A9-BDC9-9B85716BE4DD'
     },
     {
       item: 2,
@@ -77,9 +77,9 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
       totalDue:'800', 
       paymentStatus:'InProgress', 
       by: 'by',
-      vendorId: '3F111CFD-906B-4F56-B7E2-7FCE5A563C36',
+      vendorId: '433D134A-99D4-4A67-9A7D-8773190035CD',
       paymentRequestId: 'AF1338C1-A6CC-4E76-8741-B9ABA59ABC99',
-      paymentRequestBatchId: 'AF1338C1-A6CC-4E76-8741-B9ABA59ABC99'
+      paymentRequestBatchId: '1B9F14A7-A983-44A9-BDC9-9B85716BE4DD'
     }
   ];
 

@@ -17,7 +17,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
   finalPrintList!: any[];
   printCount: number = 0;
   letterContnet!: any;
-
+  generatedContentList: any[] = [];
     /** Input properties **/
   @Input() items!: any[];
   @Input() printOption: boolean = false;
@@ -31,8 +31,6 @@ export class FinancialClaimsPrintAuthorizationComponent {
     private readonly loggingService: LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly ref: ChangeDetectorRef) { }
-
-  // printLetterCount: number = this.items.length;
   ngOnInit(): void {
     this.finalPrintList = this.items;
     this.getPrintLetterCount();
@@ -56,14 +54,17 @@ hideLoader(){
     this.loaderService.show();
     let printAdviceLetterData: any;
     let selectedProviders: any = [];
+    let vendorIds: any = [];
     this.finalPrintList.forEach(item => {
       printAdviceLetterData = {      
       vendorId: item.vendorId,
       paymentRequestId: item.paymentRequestId,
       paymentRequestBatchId: item.paymentRequestBatchId,
       providerName: item.providerName,
-      selectedProviderList: []
+      selectedProviderList: [],
+      clientId: []
     };
+    vendorIds.push(item.vendorId);
     const selectedItem = {
       memberID: item.memberID,
       clientName: item.clientName,
@@ -75,13 +76,28 @@ hideLoader(){
     selectedProviders.push(selectedItem);
     });
     printAdviceLetterData.selectedProviderList = selectedProviders;
+    printAdviceLetterData.VendorIdList = vendorIds;
     this.paymentsFacade.loadPrintAdviceLetter(printAdviceLetterData)
     .subscribe({
-      next: (data: any) =>{
-        if (data) {
-          this.letterContnet = data.Value;
-          this.ref.detectChanges();
+      next: (data: any[]) =>{
+        if (data.length > 0) {
+          this.items.forEach(item => {
+            data.forEach(result => {
+            if(item.vendorId.toLowerCase() == result.vendorId.toLowerCase()){
+              // const index = this.items.findIndex(item => item.vendorId.toLowerCase() === result.vendorId.toLowerCase());
+              // if (index !== -1) {
+              //   this.items.splice(index, 1, { ...item, letterContent: result.letterContent });
+              //   this.generatedContentList.push(item);
+              // }
+              var generatedContent = { ...item, letterContent: result.letterContent }
+              this.generatedContentList.push(generatedContent);
+        }else{
+        this.generatedContentList.push(item);
         }
+      }); 
+    });
+          this.ref.detectChanges();
+    }
       this.loaderService.hide();
     },
       error: (err) => {
