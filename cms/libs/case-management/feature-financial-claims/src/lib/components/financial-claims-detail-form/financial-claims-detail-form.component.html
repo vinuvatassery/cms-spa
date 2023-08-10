@@ -150,8 +150,7 @@
                                             </kendo-formerror>
                                         </div>
                                         <div class="ml-2">
-                                            <kendo-formerror *ngIf="false"
-                                                class="d-flex align-items-center">
+                                            <kendo-formerror *ngIf="false" class="d-flex align-items-center">
                                                 <span class="material-icons mr-1" aria-hidden="false">info</span>
                                                 Invoice is over 1 year old. <a kendoButton
                                                     class="ml-1 card-link-button">Make
@@ -175,42 +174,24 @@
                                             </kendo-formerror>
                                         </div>
                                         <div class="flex-col flex-col-4">
-                                            <kendo-floatinglabel text="">
-                                                <div class="autoSelect-search mat-form-no-b-space field-label-hide">
-                                                    <div class="global-search">
-                                                        <span class="material-icons global-search-icon"
-                                                            aria-label="search pharmacy"
-                                                            aria-hidden="true">search</span>
-                                                        <span *ngIf="CPTCodeSearchLoaderVisibility$ | async"
-                                                            class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                                                        <kendo-formfield>
-                                                            <kendo-label text="Search CPT Code">
-                                                                <kendo-autocomplete
-                                                                    [fillMode]="formUiStyle.dropDownFillMode"
-                                                                    [data]="searchCTPCode$ | async"
-                                                                    formControlName="cptCode" valueField="cptCode1"
-                                                                    [filterable]="true" [value]="selectedCPTCode"
-                                                                    placeholder="Search CPT Code"
-                                                                    (filterChange)="searchcptcode($event)"                                                                    
-                                                                    [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }">
-                                                                    <ng-template kendoAutoCompleteItemTemplate
-                                                                        let-dataItem>
-                                                                        <span class="pr-1"
-                                                                            (click)="onCPTCodeValueChange(dataItem,i)">{{
-                                                                            dataItem.cptCode1}}</span>
-                                                                    </ng-template>
-                                                                </kendo-autocomplete>
-                                                                <kendo-formerror
-                                                                    *ngIf="(isControlValid('cptCode', i) && isSubmitted)"
-                                                                    class="d-flex align-items-center"> <span
-                                                                        class="material-icons mr-1"
-                                                                        aria-hidden="false">info</span>CTP Code is
-                                                                    required
-                                                                </kendo-formerror>
-                                                            </kendo-label>
-                                                        </kendo-formfield>
-                                                    </div>
-                                                </div>
+                                            <kendo-floatinglabel text="CPT Code" class="inline-search-loader">
+                                                <span *ngIf="CPTCodeSearchLoaderVisibility$ | async"
+                                                    class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+                                                <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode"
+                                                    [data]="searchCTPCode$ | async" formControlName="cptCode"
+                                                    valueField="cptCode1" [filterable]="true" [value]="selectedCPTCode"
+                                                    (filterChange)="searchcptcode($event)"
+                                                    [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }">
+                                                    <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                                                        <span class="pr-1" (click)="onCPTCodeValueChange(dataItem,i)">{{
+                                                            dataItem.cptCode1}}</span>
+                                                    </ng-template>
+                                                </kendo-autocomplete>
+                                                <kendo-formerror *ngIf="(isControlValid('cptCode', i) && isSubmitted)"
+                                                    class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                                        aria-hidden="false">info</span>CTP Code is
+                                                    required
+                                                </kendo-formerror>
                                             </kendo-floatinglabel>
                                         </div>
                                         <div class="flex-col flex-col-4">
@@ -268,8 +249,7 @@
                                             </kendo-formerror>
                                         </div>
                                         <div class="ml-2">
-                                            <kendo-formerror *ngIf="false"
-                                                class="align-items-center">
+                                            <kendo-formerror *ngIf="false" class="align-items-center">
                                                 <span class="material-icons mr-1" aria-hidden="false">info</span> Client
                                                 exceeded maximum
                                                 benefits. <a kendoButton class="ml-1 card-link-button">Make

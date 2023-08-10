@@ -67,6 +67,10 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
+  isEdit!: boolean;
+  paymentRequestId!: string;
+  isMedicalClaim!: boolean;
+
   columns : any = {
     invoiceNbr:"Invoice ID",
     vendorFullName:"Provider Name",
@@ -185,7 +189,11 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService
-  ) {}
+  ) {
+    this.isEdit = false;
+    this.paymentRequestId = '90840450-D73E-49D4-AF0F-BA66724F549D';
+    this.isMedicalClaim = true;
+  }
 
   
   ngOnChanges(): void {    

@@ -54,6 +54,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
+  @Input() isMedicalClaim: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
@@ -230,7 +231,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       vendorId: formValues.medicalProvider.vendorId,
       claimNbr: formValues.invoiceId,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
-      paymentMethodCode: 'MEDICAL',
+      paymentMethodCode: this.isMedicalClaim ? 'MEDICAL' : "DENTAL",
       paymentRequestId: this.isEdit ? this.paymentRequestId : null,
       tpainvoice: [{}],
     };
