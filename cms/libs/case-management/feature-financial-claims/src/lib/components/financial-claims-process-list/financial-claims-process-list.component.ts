@@ -5,8 +5,7 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
-  OnInit,
+  OnChanges,  
   Output,
   TemplateRef,
   ViewChild,
@@ -16,8 +15,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy,
+  State  
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
@@ -25,7 +23,7 @@ import { Subject } from 'rxjs';
   templateUrl: './financial-claims-process-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
+export class FinancialClaimsProcessListComponent implements  OnChanges {
   @ViewChild('batchClaimsConfirmationDialog', { read: TemplateRef })
   batchClaimsConfirmationDialog!: TemplateRef<any>;
   @ViewChild('deleteClaimsConfirmationDialog', { read: TemplateRef })
@@ -47,10 +45,13 @@ export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  @Input() sortValueFinancialInvoices : any
   @Input() financialClaimsProcessGridLists$: any;
+  @Input() financialClaimsInvoice$ : any
   @Output() loadFinancialClaimsProcessListEvent = new EventEmitter<any>();
+  @Output() loadFinancialClaimsInvoiceListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'vendorName';
+  sortColumn = 'Invoice ID';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -61,11 +62,86 @@ export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
   gridDataResult!: GridDataResult;
 
   gridFinancialClaimsProcessDataSubject = new Subject<any>();
-  gridFinancialClaimsProcessData$ =
-    this.gridFinancialClaimsProcessDataSubject.asObservable();
+  gridFinancialClaimsProcessData$ =  this.gridFinancialClaimsProcessDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+
+  columns : any = {
+    invoiceNbr:"Invoice ID",
+    vendorFullName:"Provider Name",
+    tin:"Tax ID",
+    paymentMethodCode:"Payment Method",
+    clientFullName:"Client Name",
+    insuranceName:"Name on Primary Insurance Card",
+    clientId:"Client ID",
+    serviceCount:"Service Count",
+    annualTotal:"Client Annual Total",
+    balanceAmount:"Client Balance",
+    amountDue:"Total Due",
+    paymentStatusCode:"Payment Status"   
+  }
+  
+  dropDowncolumns : any = [
+    {
+      "columnCode": "invoiceNbr",
+      "columnDesc": "Invoice ID"    
+    },
+    {
+      "columnCode": "vendorFullName",
+      "columnDesc": "Provider Name"        
+    },
+    {
+      "columnCode": "tin",
+      "columnDesc": "Tax ID"     
+    }
+    ,
+    {
+      "columnCode": "paymentMethodCode",
+      "columnDesc": "Payment Method"         
+    }
+    ,
+    {
+      "columnCode": "clientFullName",
+      "columnDesc": "Client Name"         
+    }
+    ,
+    {
+      "columnCode": "insuranceName",
+      "columnDesc": "Name on Primary Insurance Card"         
+    }
+    ,
+    {
+      "columnCode": "clientId",
+      "columnDesc": "Client ID"         
+    }
+    ,
+    {
+      "columnCode": "serviceCount",
+      "columnDesc": "Service Count"         
+    }
+    ,
+    {
+      "columnCode": "annualTotal",
+      "columnDesc": "Client Annual Total"         
+    }
+    ,
+    {
+      "columnCode": "balanceAmount",
+      "columnDesc": "Client Balance"         
+    }
+    ,
+    {
+      "columnCode": "amountDue",
+      "columnDesc": "Total Due"         
+    }
+    ,
+    {
+      "columnCode": "paymentStatusCode",
+      "columnDesc": "Payment Status"         
+    }
+  ]
+
   public claimsProcessMore = [
     {
       buttonType: 'btn-h-primary',
@@ -111,10 +187,8 @@ export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
     private dialogService: DialogService
   ) {}
 
-  ngOnInit(): void {
-    this.loadFinancialClaimsProcessListGrid();
-  }
-  ngOnChanges(): void {
+  
+  ngOnChanges(): void {    
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -144,6 +218,7 @@ export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter : this.state?.["filter"]?.["filters"] ?? []
     };
     this.loadFinancialClaimsProcessListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
@@ -151,15 +226,22 @@ export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
 
   onChange(data: any) {
     this.defaultGridState();
+    let operator= "startswith"
 
+    if(this.selectedColumn ==="clientId" || this.selectedColumn ==="serviceCount" || this.selectedColumn ==="annualTotal"
+    || this.selectedColumn ==="amountDue" || this.selectedColumn === "balanceAmount")
+    {
+      operator = "eq"
+    }
+    
     this.filterData = {
       logic: 'and',
       filters: [
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
+              field: this.selectedColumn ?? 'invoiceNbr',
+              operator: operator,
               value: data,
             },
           ],
@@ -191,7 +273,27 @@ export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadFinancialClaimsProcessListGrid();
+
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+
+    if(stateData.filter?.filters.length > 0)
+    {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      this.isFiltered = true;
+      const filterList = []
+      for(const filter of stateData.filter.filters)
+      {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy =  filterList.toString();
+    }
+    else
+    {
+      this.filter = "";
+      this.isFiltered = false
+    }
+    this.loadFinancialClaimsProcessListGrid();    
   }
 
   // updating the pagination infor based on dropdown selection
@@ -206,18 +308,14 @@ export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
-    this.financialClaimsProcessGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
+    this.financialClaimsProcessGridLists$.subscribe((data: GridDataResult) => {      
+      this.gridDataResult = data;    
       this.gridFinancialClaimsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isFinancialClaimsProcessGridLoaderShow = false;
       }
     });
-    this.isFinancialClaimsProcessGridLoaderShow = false;
+  
   }
 
   public onBatchClaimsClicked(template: TemplateRef<unknown>): void {
@@ -284,5 +382,31 @@ export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
       this.addClientRecentClaimsDialog.close();
     }
   }
+  setToDefault()
+  {
+
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,  
+      };
+  
+    this.sortColumn = 'Invoice ID';
+    this.sortDir = 'Ascending';    
+    this.filter = "";    
+    this.searchValue = "";
+    this.isFiltered = false;
+    this.columnsReordered = false;
+    
+    this.sortValue  = 'invoiceNbr';
+    this.sortType  = 'asc'
+    this.sort  = this.sortColumn;
+  
+    this.loadFinancialClaimsProcessListGrid();    
+  }
  
+  loadFinancialClaimsInvoiceListService(data : any)
+  {
+    this.loadFinancialClaimsInvoiceListEvent.emit(data)
+  }
 }

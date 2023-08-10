@@ -42,7 +42,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
     this.providerId = this.activeRoute.snapshot.queryParams['prv_id'];
     this.tabCode = this.activeRoute.snapshot.queryParams['tab_code'];
-    this.vendorTypeCode = this.activeRoute.snapshot.queryParams['vendor_type_code'];
+    
     this.loadVendorInfo();
     if(this.vendorId && this.tabCode)
     {
@@ -51,16 +51,23 @@ export class FinancialVendorProfileComponent implements OnInit {
 
     switch (this.tabCode) {
       case FinancialVendorProviderTabCode.Manufacturers:
+        this.vendorTypeCode = FinancialVendorTypeCode.Manufacturers
         this.profileInfoTitle = 'Manufacture Info';
         break;
       case FinancialVendorProviderTabCode.InsuranceVendors:
+        this.vendorTypeCode = FinancialVendorTypeCode.InsuranceVendors
         this.profileInfoTitle = 'Insurance Vendor Info';
         break;
       case FinancialVendorProviderTabCode.MedicalProvider:
+        this.vendorTypeCode = FinancialVendorTypeCode.MedicalProviders
+        this.profileInfoTitle = 'Provider Info';
+        break;
       case FinancialVendorProviderTabCode.DentalProvider:
+        this.vendorTypeCode = FinancialVendorTypeCode.DentalProviders
         this.profileInfoTitle = 'Provider Info';
         break;
       case FinancialVendorProviderTabCode.Pharmacy:
+        this.vendorTypeCode = FinancialVendorTypeCode.Pharmacy
         this.profileInfoTitle = 'Pharmacy Info';
         break;
     }

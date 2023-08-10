@@ -205,8 +205,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     const query = {
       queryParams: {
         v_id: vendorId ,
-        tab_code :  this.financeTabTypeCode,
-        vendor_type_code: this.vendorTypeCode
+        tab_code :  this.financeTabTypeCode      
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query )
