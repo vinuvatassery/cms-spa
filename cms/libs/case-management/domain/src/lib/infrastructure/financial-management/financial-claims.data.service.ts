@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { Pharmacy } from '../../entities/client-pharmacy';
+import { ClientCase } from '../../entities/client-case';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsDataService {
@@ -476,5 +478,37 @@ export class FinancialClaimsDataService {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}/payment-entity/${entityId}/reconcile-breakout?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`
     );
+  }
+
+  getMedicalClaimByPaymentRequestId(event : any)
+  {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/MedicalClaim/Medicalclaim/${event}`
+    )
+  }
+
+  searchcptcode(cptcode:string){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/MedicalClaim/cptcode/${cptcode}`
+    )
+  }
+
+  searchPharmacies(searchText: string) {
+    return this.http.get<Pharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/pharmacies?searchText=${searchText}`);
+  }
+
+  loadClientBySearchText(text: string) {
+    return this.http.get<ClientCase[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/case-management/clients/SearchText=${text}`
+    );
+  }
+
+  saveMedicalClaim(claim: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/MedicalClaim`, claim)
+  }
+  
+  updateMedicalClaim(claim: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/MedicalClaim`, claim)
   }
 }
