@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, ServiceSubTypeCode } from '@cms/case-management/domain';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
@@ -57,9 +57,9 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   }
 
   loadReconcileListGrid(event: any) {
-    let serviceSubTypeCode ="MEDICAL_CLAIM";   
+    let serviceSubTypeCode =ServiceSubTypeCode.medicalClaim; 
     if(this.claimsType ==="dental"){
-      serviceSubTypeCode ="DENTAL_CLAIM";
+      serviceSubTypeCode =ServiceSubTypeCode.dentalClaim
       }
     this.financialClaimsFacade.loadReconcileListGrid(this.batchId,serviceSubTypeCode,event);
     

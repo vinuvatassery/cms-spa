@@ -12,27 +12,34 @@
                   <p> Enter “Date Payment Reconciled,” “Date Payment Sent,” and “Note” in the fields below then click
                         “Bulk” to add those values to all payments that have a Warrant Number. Only payments ready to
                         reconcile appear in this table.</p>
-
-                  <div class="flex-row">
+              
+                  <div class="flex-row"  *ngIf="reconcileAssignValueBatchForm" [formGroup]="reconcileAssignValueBatchForm">
                         <div class="flex-col flex-col-4 field-with-btn">
-                              <kendo-floatinglabel text="Date Payment Reconciled">
+                              <kendo-floatinglabel text="Date Payment Reconciled">                                  
                                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                                          formatPlaceholder="formatPattern" aria-label="Date Payment Reconciled" [(ngModel)]="datePaymentReconciled"
-                                          placeholder="">
+                                    aria-label="Date Payment Reconciled"  
+                                    formControlName="datePaymentReconciled" [max]="currentDate"                         
+                                     formatPlaceholder="formatPattern"  placeholder="Date Payment Reconciled"
+                                     (valueChange)="reconcileDateOnChange('datePaymentReconciled')" >                                          
                                     </kendo-datepicker>
+                                   <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['datePaymentReconciled'].valid && !datePaymentReconciledRequired">Reconciled date cannot be a future date.</kendo-formerror>
+                                   <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['datePaymentReconciled'].valid && datePaymentReconciledRequired">Date payment reconciled is required..</kendo-formerror>                     
                               </kendo-floatinglabel>
-                              <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Batch"> Batch
+                              <button kendoButton [primary]="true" (click)="reconcileDateBatch()" class="noshadow-btn" aria-label="Batch"> Batch
                               </button>
-
                         </div>
                         <div class="flex-col flex-col-4 field-with-btn">
                               <kendo-floatinglabel text="Date Payment Sent">
                                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                                          formatPlaceholder="formatPattern" aria-label="Date Payment Sent" [(ngModel)]="datePaymentSend"
+                                          formatPlaceholder="formatPattern" aria-label="Date Payment Sent"formControlName="datePaymentSend"
+                                          [max]="currentDate"   (valueChange)="reconcileDateOnChange('datePaymentSend')"
                                           placeholder="">
                                     </kendo-datepicker>
-                              </kendo-floatinglabel>
-                              <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Batch"> Batch
+                                    <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['datePaymentSend'].valid && !paymentSentDateRequired">Date payment sent cannot be a future date.</kendo-formerror>
+                                    <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['datePaymentSend'].valid && paymentSentDateRequired">Date payment sent is required..</kendo-formerror>                     
+
+                               </kendo-floatinglabel>
+                              <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Batch" (click)="paymentSentDateBatch()" > Batch
                               </button>
 
                         </div>
@@ -80,7 +87,15 @@
                         <span class="sort-items">Columns Re-ordered</span>
                   </div>
 
-
+                  <!-- <div>
+                        <div class="info-banners red-banner d-flex mt-2 mb-2">
+                              <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>              
+                              <div>              
+                                <p >Please fill the mandatory fields, check the page number  {{mandatoryValidationMissingPages}} </p>                                    
+                                     
+                              </div>              
+                         </div>
+                  </div> -->
                   <div class="app-c-table">
                         <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take" #grid
                         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" 
@@ -112,7 +127,7 @@
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">              
                                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                                     aria-label="Date Pmt. Reconciled"  id ="paymentReconciledDate{{rowIndex}}"  name ="paymentReconciledDate{{rowIndex}}"
-                                    [(ngModel)]="dataItem.paymentReconciledDate"  (valueChange)="dateChange($event,dataItem,'DATE_PAYMENT_RECONCILED')"
+                                    [(ngModel)]="dataItem.paymentReconciledDate"  (valueChange)="dateChangeListItems($event,dataItem,'DATE_PAYMENT_RECONCILED')"
                                     [ngClass]="ngDirtyInValid(dataItem,'paymentReconciledDate',rowIndex)"
                                                                        
                                     [max]="currentDate"                             
@@ -125,7 +140,7 @@
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                                     aria-label="Date Pmt. Sent"  id ="paymentSentDate{{rowIndex}}"  name ="paymentSentDate{{rowIndex}}"
-                                    [(ngModel)]="dataItem.paymentSentDate"   (valueChange)="dateChange($event,dataItem,'DATE_PAYMENT_SENT')"
+                                    [(ngModel)]="dataItem.paymentSentDate"   (valueChange)="dateChangeListItems($event,dataItem,'DATE_PAYMENT_SENT')"
                                     [ngClass]="ngDirtyInValid(dataItem,'paymentSentDate',rowIndex)" 
                                     [max]="currentDate"                                      
                                      formatPlaceholder="formatPattern"  placeholder="Date Pmt. Sent" >                                          
@@ -137,7 +152,7 @@
                         <kendo-grid-column field="amountPaid" title="Pmt. Amount" [width]="180">
                         </kendo-grid-column>
                         <kendo-grid-column field="checkNbr" title="Warrant Number" [width]="180">
-                              <ng-template kendoGridCellTemplate let-dataItem>
+                              <ng-template kendoGridCellTemplate let-dataItem >
                                     <kendo-textbox  aria-label="Warrant Number"
                                     placeholder="Warrant Number"  [maxlength]="12"
                                     [fillMode]="formUiStyle.inputFillMode"
@@ -204,7 +219,7 @@
 
       <div class="bottom-fixed-wrapper">
             <div class="sub-fix-bar">
-                  <div class="flex-sp-btn">
+                  <!-- <div class="flex-sp-btn">
                         <div> <span class="ml-2"><strong>Amount Total:</strong> $&nbsp;{{reconcileBreakoutSummary$.amountTotal |
                               kendoNumber:'n2'}}</span>
                         <span class="ml-2"><strong>Warrant Total:</strong></span> <span class="ml-2"
@@ -222,7 +237,7 @@
                                     (click)="toggleBreakoutPanel()">close</span>
                         </button>
                   </div>
-                  </div>   
+                  </div>    -->
 
                   <div>
                         <cms-financial-claims-batches-reconcile-payments-breakout [isBreakoutPanelShow]="isBreakoutPanelShow"
