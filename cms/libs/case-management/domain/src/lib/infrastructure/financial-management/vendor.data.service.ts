@@ -75,14 +75,14 @@ export class FinancialVendorDataService {
   getProviderPanel(vendorId:string){
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/vendors/vendor/${vendorId}`
+        `/financial-management/vendors/${vendorId}`
     );
   }
 
   updateProviderPanel(providePanelDto:any){
     return this.http.put<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/vendors/vendor/profile`,providePanelDto
+        `/financial-management/vendors/vendor-profile`,providePanelDto
     );
   }
 
