@@ -78,9 +78,7 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   createEmailsFormArray(contact: any): FormArray {
-
     let emails = new FormArray<FormGroup>([])
-
     contact.emails.forEach((email: any) => {
       return emails.push(this.formBuilder.group({
         emailAddress: [email.emailAddress,Validators.required],
@@ -104,7 +102,6 @@ export class FinancialClaimsProviderInfoComponent {
   createContactsFormArray() {
     const contacts =  this.profileForm.get('contacts') as FormArray
     this.vendorProfiles.address.contacts.forEach((contact: any, index: number) => {
-
        contacts.push(
         this.formBuilder.group({
           contactName: [contact.contactName,Validators.required],
@@ -113,19 +110,14 @@ export class FinancialClaimsProviderInfoComponent {
           phones: this.createPhonesFormArray(contact)
         }));
     });
-
     return contacts;
   }
-
-
 
 
   editProviderClicked() {
     this.loadPaymentMethodCodes()
     this.loadStates()
-    this.isEditProvider = !this.isEditProvider
-
-    
+    this.isEditProvider = !this.isEditProvider  
     this.profileForm.patchValue({
       tin: this.vendorProfiles.tin,
       address: {
@@ -144,6 +136,10 @@ export class FinancialClaimsProviderInfoComponent {
     this.createContactsFormArray() 
   }
 
+  get addressForm(){
+  return this.profileForm.get("address")
+  }
+
   get contactsArray(): FormArray<FormGroup> {
     return this.profileForm.get("contacts") as unknown as  FormArray<FormGroup>;
   }
@@ -154,7 +150,7 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   getEmailsArray(contact:any) :FormArray{
-    return contact.get('phones') as unknown as FormArray<FormGroup>
+    return contact.get('emails') as unknown as FormArray<FormGroup>
   }
 
   getContactArrayFormValues() {
@@ -199,7 +195,6 @@ export class FinancialClaimsProviderInfoComponent {
 
   updateProfile() {
     this.isSubmitted =true;
-
     this.profileForm.markAllAsTouched();
     if(!this.profileForm.valid)
     {
@@ -218,16 +213,13 @@ export class FinancialClaimsProviderInfoComponent {
         stateCode: this.profileForm?.controls.address.controls['stateCode']?.value,
         zip: this.profileForm?.controls.address.controls['zip']?.value,
         contacts: this.getContactArrayFormValues()
-      }
-    
+      }    
     }
     this.loaderService.show()
-
     this.financialVendorFacade.updateProviderPanel(providerPanelDto).subscribe({
       next: (data) => {
         this.loaderService.hide();
         this.isEditProvider = !this.isEditProvider
-
         this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Provider profile Saved Successfully.")
         this.loadVendorInfo();
       },

@@ -105,7 +105,7 @@
                             <kendo-textbox aria-label="Address 1" placeholder="Address 1" 
                             [fillMode]="formUiStyle.inputFillMode" formControlName="address1"   [maxlength]="100">
                             </kendo-textbox>
-                            <kendo-formerror *ngIf="profileForm.hasError('required','address1') && isSubmitted">Address Line 1 is Required
+                            <kendo-formerror *ngIf="addressForm?.hasError('required','address1') && isSubmitted">Address Line 1 is Required
                             </kendo-formerror>
                           
                         </div>
@@ -118,7 +118,7 @@
                             <kendo-textbox aria-label="City" placeholder="City" [fillMode]="formUiStyle.inputFillMode"
                              formControlName="cityCode" [maxlength]="20">
                             </kendo-textbox>
-                            <kendo-formerror *ngIf="profileForm.hasError('required','cityCode') && isSubmitted">City is Required
+                            <kendo-formerror *ngIf="addressForm?.hasError('required','cityCode') && isSubmitted">City is Required
                             </kendo-formerror>
                           
                         </div>
@@ -135,14 +135,14 @@
                           
                             >
                             </kendo-dropdownlist>
-                            <kendo-formerror *ngIf="profileForm.hasError('required','stateCode') && isSubmitted">State is Required
+                            <kendo-formerror *ngIf="addressForm?.hasError('required','stateCode') && isSubmitted">State is Required
                             </kendo-formerror>
                         </div>
                         <div class="flex-col flex-col-6 mt-1">
                             <kendo-textbox aria-label="Zip" placeholder="Zip"  [fillMode]="formUiStyle.inputFillMode"
                              formControlName="zip" [maxlength]="10">
                             </kendo-textbox>
-                            <kendo-formerror *ngIf="profileForm.hasError('required','zip') && isSubmitted">Zip is Required
+                            <kendo-formerror *ngIf="addressForm?.hasError('required','zip') && isSubmitted">Zip is Required
                             </kendo-formerror>
                         </div>
 
@@ -178,7 +178,7 @@
                     <div class="flex-col mt-1"  >
                         <kendo-textbox aria-label="Name" [fillMode]="formUiStyle.inputFillMode"  formControlName="contactName"  id="{{'contactName'+i}}">
                         </kendo-textbox>
-                        <kendo-formerror *ngIf="profileForm.hasError('required','contactName') && isSubmitted">phoneNbr is Required
+                        <kendo-formerror *ngIf="contact.hasError('required','contactName') && isSubmitted">Contact name is Required
                         </kendo-formerror>
                     </div>
            
@@ -186,7 +186,7 @@
                         <div [formGroupName]="j">                       
                             <kendo-maskedtextbox  aria-label="Phone"  [maskOnFocus]="true"  mask="(999) 000-0000" [fillMode]="formUiStyle.inputFillMode" formControlName="phoneNbr" id="{{'phoneNbr'+i}}">
                             </kendo-maskedtextbox> 
-                            <kendo-formerror *ngIf="profileForm.hasError('required','phoneNbr') && isSubmitted">phoneNbr is Required
+                            <kendo-formerror *ngIf="phone.hasError('required','phoneNbr') && isSubmitted">phoneNbr is Required
                             </kendo-formerror>
                         </div>
                     </div>
@@ -195,7 +195,7 @@
                             <div [formGroupName]="k">
                         <kendo-textbox aria-label="Email" [fillMode]="formUiStyle.inputFillMode" formControlName="emailAddress" id="{{'emailAddress'+i}}">
                         </kendo-textbox>
-                        <kendo-formerror *ngIf="profileForm.hasError('required','emailAddress') && isSubmitted">EmailAddress is Required
+                        <kendo-formerror *ngIf="email.hasError('required','emailAddress') &&  isSubmitted">EmailAddress is Required
                         </kendo-formerror>
                     </div>
 
