@@ -42,12 +42,13 @@ import {PaymentAddressDetailsComponent} from './components/payment-address-detai
 import {PaymentAddressDeactivateComponent} from './components/payment-address-deactivate/payment-address-deactivate.component';
 import {PaymentAddressDeleteComponent} from './components/payment-address-delete/payment-address-delete.component';
 import {VendorContactComponent} from './components/vendor-contact/vendor-contact.component';
-import { ProductivityToolsFeatureEventLogModule } from '@cms/productivity-tools/feature-event-log'; 
+import { ProductivityToolsFeatureEventLogModule } from '@cms/productivity-tools/feature-event-log';
 import { VendorSpecialHandlingComponent } from './components/vendor-special-handling/vendor-special-handling.component';
 import { FinancialPaymentBatchSubListComponent } from './components/financial-payment-sub-list/financial-payment-sub-list.component';
 import { FinancialInsurancePlanListComponent } from './components/financial-insurance-plan-list/financial-insurance-plan-list.component';
 import { ContactAddressDetailsComponent } from './components/contact-address-details/contact-address-details.component';
 import { ContactAddressListComponent } from './components/contact-address-list/contact-address-list.component';
+import { CaseManagementFeatureCommunicationModule } from '@cms/case-management/feature-communication';
 @NgModule({
   imports: [
     CaseManagementDomainModule,
@@ -55,8 +56,9 @@ import { ContactAddressListComponent } from './components/contact-address-list/c
     SharedUiCommonModule,
     CommonModule,
     CaseManagementFeatureFinancialVendorRoutingModule,
-    ProductivityToolsFeatureTodoModule, 
-    ProductivityToolsFeatureEventLogModule
+    ProductivityToolsFeatureTodoModule,
+    ProductivityToolsFeatureEventLogModule,
+    CaseManagementFeatureCommunicationModule
   ],
   declarations: [
     FinancialVendorPageComponent,

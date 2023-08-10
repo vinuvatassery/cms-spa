@@ -14,6 +14,8 @@ export class FinancialVendorProfileComponent implements OnInit {
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
   isShownEventLog = false;
   vendorId!: string;
+  clientCaseEligibilityId!:any;
+  clientId!:any;
   providerId!: string;
   tabCode!: string;
   vendorTypeCode!: string;

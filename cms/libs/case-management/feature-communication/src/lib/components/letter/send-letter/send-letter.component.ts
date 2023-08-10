@@ -29,9 +29,10 @@ export class SendLetterComponent implements OnInit {
   /** Input properties **/
   @Input() data!: any;
   @Input() mailingAddress$!: Observable<any>;
+  @Input() communicationTypeCode!:any;
   @Input() clientCaseEligibilityId!: any;
   @Input() clientId!: any;
-  @Input() isCerForm!: any; 
+  @Input() isCerForm!: any;
 
   /** Output properties  **/
   @Output() closeSendLetterEvent = new EventEmitter<CommunicationEvents>();
@@ -87,7 +88,7 @@ export class SendLetterComponent implements OnInit {
     } else {
       this.isNewLetterClicked = false;
     }
-    this.loadDropdownLetterTemplates(); 
+    this.loadDropdownLetterTemplates();
     this.loadCurrentSession();
   }
 
@@ -220,11 +221,11 @@ export class SendLetterComponent implements OnInit {
     this.currentLetterData = event;
   }
 
-  handleOpenTemplateClicked() { 
+  handleOpenTemplateClicked() {
     this.isOpenLetterTemplate = true;
     this.loadInitialData.emit();
   }
-  
+
   onClosePreview(){
     this.isShowPreviewLetterPopupClicked = false;
   }
@@ -253,6 +254,7 @@ this.isShowSendLetterToPrintPopupClicked = false;
   }
 
   handleDdlLetterValueChange(event: any) {
+    debugger;
     this.isOpenLetterTemplate=true;
     this.selectedTemplate = event;
     this.handleLetterEditor(event);
@@ -282,14 +284,14 @@ this.isShowSendLetterToPrintPopupClicked = false;
   }
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
+  {
       if(type == SnackBarNotificationType.ERROR)
       {
-        const err= subtitle;    
+        const err= subtitle;
         this.loggingService.logException(err)
-      }  
+      }
         this.notificationSnackbarService.manageSnackBar(type,subtitle)
-        this.hideLoader();   
+        this.hideLoader();
   }
 
   hideLoader()
@@ -302,7 +304,7 @@ this.isShowSendLetterToPrintPopupClicked = false;
  }
 
  cerEmailAttachments(event:any){
-  this.cerEmailAttachedFiles = event; 
+  this.cerEmailAttachedFiles = event;
 }
 
 loadMailingAddress() {
