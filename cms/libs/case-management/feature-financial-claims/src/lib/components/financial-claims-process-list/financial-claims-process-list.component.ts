@@ -5,8 +5,7 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
-  OnInit,
+  OnChanges,  
   Output,
   TemplateRef,
   ViewChild,
@@ -24,7 +23,7 @@ import { Subject } from 'rxjs';
   templateUrl: './financial-claims-process-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
+export class FinancialClaimsProcessListComponent implements  OnChanges {
   @ViewChild('batchClaimsConfirmationDialog', { read: TemplateRef })
   batchClaimsConfirmationDialog!: TemplateRef<any>;
   @ViewChild('deleteClaimsConfirmationDialog', { read: TemplateRef })
@@ -188,9 +187,7 @@ export class FinancialClaimsProcessListComponent implements OnInit, OnChanges {
     private dialogService: DialogService
   ) {}
 
-  ngOnInit(): void {
-    //this.loadFinancialClaimsProcessListGrid();
-  }
+  
   ngOnChanges(): void {    
     this.state = {
       skip: 0,

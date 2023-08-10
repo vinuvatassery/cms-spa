@@ -1,6 +1,6 @@
 /** Angular **/
-import {    ChangeDetectionStrategy,    ChangeDetectorRef,    Component,    EventEmitter,    Input,
-    OnChanges,    OnInit,    Output,    TemplateRef,    ViewChild,  } from '@angular/core';
+import {    ChangeDetectionStrategy,     Component,    EventEmitter,    Input,
+    OnChanges,       Output,     } from '@angular/core';
 
   import { UIFormStyle } from '@cms/shared/ui-tpa';
   import { GridDataResult } from '@progress/kendo-angular-grid';
