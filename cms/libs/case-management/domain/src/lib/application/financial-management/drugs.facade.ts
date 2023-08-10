@@ -21,7 +21,7 @@ export class DrugsFacade {
     field: this.sortValue,
   }];
 
-  private drugsDataSubject = new BehaviorSubject<any>([]);
+  private drugsDataSubject = new Subject<any>();
   drugsData$ = this.drugsDataSubject.asObservable();
 
   /** Private properties **/
