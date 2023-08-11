@@ -240,9 +240,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       serviceSubTypeCode: this.claimsType == "medical" ? "MEDICAL": "DENTAL",
       tpainvoice: [{}],
     };
-    for (let i = 0; i < formValues.claimService.length; i++) {
-      let element = formValues.claimService[i];
-
+    for (let element  of formValues.claimService) {
       let service = {
         vendorId: bodyData.vendorId,
         clientId: bodyData.clientId,
