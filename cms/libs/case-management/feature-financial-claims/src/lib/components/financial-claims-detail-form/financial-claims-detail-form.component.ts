@@ -11,7 +11,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { EntityTypeCode, FinancialClaimsFacade } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
 @Component({
@@ -120,7 +120,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   searchMedicalProvider(searchText: any) {
-    this.financialClaimsFacade.searchPharmacies(searchText);
+    this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == "medical" ? "MEDICAL_PROVIDER" : "DENTAL_PROVIDER");
   }
   onCPTCodeValueChange(event: any, index: number) {
     let service = event;
@@ -213,9 +213,8 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   isStartEndDateValid(startDate: any, endDate: any): boolean {
-    if (startDate > endDate) {
-      this.financialClaimsFacade.showHideSnackBar(
-        SnackBarNotificationType.ERROR,
+    if (startDate != "" && endDate != "" && startDate > endDate) {
+      this.financialClaimsFacade.errorShowHideSnackBar(
         'Start date must less than end date'
       );
       return false;
@@ -224,8 +223,9 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   save() {
-    this.isSubmitted = true;
+    this.isSubmitted = true;    
     if (!this.claimForm.valid) {
+      this.claimForm.markAllAsTouched()
       return;
     }
     let formValues = this.claimForm.value;

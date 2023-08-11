@@ -467,9 +467,9 @@ export class FinancialClaimsFacade {
     );
   }
 
-  searchPharmacies(searchText: string) {
+  searchPharmacies(searchText: string, typeCode: string) {
     this.medicalProviderSearchLoaderVisibilitySubject.next(true);
-    return this.financialClaimsDataService.searchPharmacies(searchText).subscribe({
+    return this.financialClaimsDataService.searchPharmacies(searchText, typeCode).subscribe({
       next: (response: Pharmacy[]) => {
         response?.forEach((vendor:any) => {
           vendor.providerFullName = `${vendor.vendorName ?? ''} #${vendor.vendorNbr ?? ''} ${vendor.address1 ?? ''} ${vendor.address2 ?? ''} ${vendor.cityCode ?? ''} ${vendor.stateCode ?? ''} ${vendor.zip ?? ''}`;

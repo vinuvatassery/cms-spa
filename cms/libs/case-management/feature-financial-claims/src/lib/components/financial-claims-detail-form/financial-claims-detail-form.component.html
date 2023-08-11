@@ -37,6 +37,12 @@
                                 </ng-template>
                             </kendo-combobox-column>
 
+                            <kendo-combobox-column>
+                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                    <span class="text-muted"><em> Mail Code:</em> {{ dataItem.mailCode }}</span>
+                                </ng-template>
+                            </kendo-combobox-column>
+
                         </kendo-multicolumncombobox>
                         <kendo-formerror *ngIf="(!claimForm.controls['medicalProvider'].valid) && isSubmitted"
                             class="d-flex align-items-center"> <span class="material-icons mr-1"
@@ -261,7 +267,7 @@
                                             <kendo-floatinglabel text="Reason For Exception">
                                                 <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
                                                     aria-label="Reason For Exception"
-                                                    formControlName="reasonForException">
+                                                    formControlName="exceptionReasonCode">
                                                     <kendo-textarea-suffix class="justify-content-end">
                                                         <span class="tareacounter"> 10/300</span>
                                                     </kendo-textarea-suffix>
