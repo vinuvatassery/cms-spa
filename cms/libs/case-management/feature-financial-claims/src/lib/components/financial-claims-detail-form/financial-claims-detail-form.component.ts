@@ -53,6 +53,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   addOrEdit: any;
   selectedCPTCode: any = null;
   claimsType: any;
+  isSpotsPayment!: boolean ;
 
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
@@ -80,7 +81,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   ngOnInit(): void {
     this.lovFacade.getCoPaymentRequestTypeLov();
     this.activatedRoute.params.subscribe(data => this.claimsType = data['type'])
-    debugger;
     if (!this.isEdit) {
       this.title = 'Add Medical Claims';
       this.addOrEdit = 'Add';
@@ -226,7 +226,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   save() {
     this.isSubmitted = true;
     if (!this.claimForm.valid) {
-      return;
+      //return;
     }
     let formValues = this.claimForm.value;
 
@@ -234,9 +234,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       clientId: formValues.client.clientId,
       vendorId: formValues.medicalProvider.vendorId,
       claimNbr: formValues.invoiceId,
-      clientCaseEligibilityId: this.clientCaseEligibilityId,
-      paymentMethodCode: this.claimsType == 'medical' ? 'MEDICAL' : "DENTAL",
+      clientCaseEligibilityId: this.clientCaseEligibilityId,      
       paymentRequestId: this.isEdit ? this.paymentRequestId : null,
+      paymentMethodCode: this.isSpotsPayment ? "SPOTS": "ACH",
+      serviceSubTypeCode: this.claimsType == "medical" ? "MEDICAL": "DENTAL",
       tpainvoice: [{}],
     };
     for (let i = 0; i < formValues.claimService.length; i++) {
@@ -364,7 +365,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
             invoiceId: val.claimNbr,
             paymentRequestId: val.paymentRequestId,
           });
-
+          this.isSpotsPayment = val.isSpotsPayment;
           this.invoiceId = val.claimNbr;
           this.clientCaseEligibilityId = val.clientCaseEligibilityId;
           this.paymentRequestId = val.paymentRequestId;
@@ -417,6 +418,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         serviceForm.controls['amountDue'].setValue(amoundDue);
       }
     }
+  }
+
+  onSpotsPaymentChange(check: any){
+    this.isSpotsPayment = check.currentTarget.checked;
   }
 }
 interface MedicalClaims {

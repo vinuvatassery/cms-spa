@@ -190,7 +190,7 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
     private dialogService: DialogService
   ) {
     this.isEdit = false;
-    this.paymentRequestId = '90840450-D73E-49D4-AF0F-BA66724F549D';
+    this.paymentRequestId = '492BE11E-725F-4018-A614-28F2811783E5';
   }
 
   
