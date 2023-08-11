@@ -49,7 +49,7 @@ export class ApprovalPageComponent  {
     this.approvalFacade.loadImportedClaimsLists();
   }
   notificationTriger(){
-    this.approvalFacade.NotifyShowHideSnackBar(ReminderSnackBarNotificationType.LIGHT, 'Group deleted asdasd');
+    this.approvalFacade.NotifyShowHideSnackBar(ReminderSnackBarNotificationType.LIGHT, ' Generic reminder displays at 9AM on the day of the reminder Generic reminder displays at 9AM on the day of the reminder');
     
   }
   

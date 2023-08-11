@@ -1,19 +1,16 @@
-<div #reminderNotificationTemplateContainer class="remainder_container" (click)="reminderContainerClicked();$event.stopPropagation()" [ngClass]="{'expand_view': isReminderExpand === true, 'collapse_view' : isReminderExpand === false}" id="reminder_notify">
+<div kendoTooltip #reminderNotificationTemplateContainer class="remainder_container" (click)="reminderContainerClicked();$event.stopPropagation()" [ngClass]="{'expand_view': isReminderExpand === true, 'collapse_view' : isReminderExpand === false}" id="reminder_notify">
 
 </div>
 
  
 <ng-template #reminderNotificationTemplate>
-  <button class="reminder_list_show_btn" kendoButton *ngIf="isReminderExpands"> <span class="material-icons"> alarm </span> <span class="app-c-badge badge-round-right badge-warn">5</span></button>
+  <button class="reminder_list_show_btn" title="Reminder Notification List" kendoButton *ngIf="isReminderExpands"> <span class="material-icons"> alarm </span> <span class="app-c-badge badge-round-right badge-warn">{{messageCount.length}}</span></button>
   <div class="reminder-snack-bar-wrapper">
     <div class="reminder-col-one">
       <span class="material-icons"> alarm </span>
     </div>
     <div class="reminder-col-two">
-      <!-- <span class="k-notification-title" aria-live="polite" role="status">{{ snackbarMessage.title }}</span>    
-      <span class="k-notification-sub-title" ria-live="assertive">{{ snackbarMessage.subtitle }}</span> -->
-      <p class="reminder-description"><a>Chadwick Boseman </a>Generic reminder displays at 9AM on the day of the
-        reminder Generic reminder displays at 9AM on the day of the reminder  </p>
+      <p class="reminder-description"> {{ snackbarMessage.subtitle }}  </p>
       <div class="flex-space-bw align-items-center mt-1">
         <div>
           <span> Today</span>

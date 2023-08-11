@@ -40,6 +40,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   isReminderExpands = false;
   isReminderSideOn: any;
   isReminderSideOff: any;
+  messageCount : any;
   public data = [
     {
       text: 'Edit Reminder Snooze',
@@ -83,6 +84,10 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
             cssClass: 'reminder-notification-bar',
           });
         }
+        this.messageCount = document.getElementsByClassName(
+          'k-notification-container ng-star-inserted'
+        );
+   
       },
       error: (err) => {
         console.error('err', err);
