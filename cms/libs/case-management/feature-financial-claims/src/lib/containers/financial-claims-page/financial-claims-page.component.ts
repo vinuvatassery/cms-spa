@@ -74,7 +74,7 @@ export class FinancialClaimsPageComponent implements OnInit {
       });
   }
 
-  loadFinancialClaimsProcessListGrid(data: any) {    
+  loadFinancialClaimsProcessListGrid(data: any) {   
     this.financialClaimsFacade.loadFinancialClaimsProcessListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType,data?.filter,this.claimsType);
   }
 
