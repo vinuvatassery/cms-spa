@@ -63,7 +63,7 @@
               </kendo-formerror>
             </kendo-floatinglabel>
           </div>
-          <div class="flex-col" *ngIf="editVendorInfo">
+          <div class="flex-col" *ngIf="editVendorInfo && !medicalProviderForm.value.parentVendorId">
             <kendo-floatinglabel text="Provider Name">
               <kendo-textbox aria-label="Provider Name" [fillMode]="formUiStyle.inputFillMode"
                formControlName="providerName">
@@ -82,7 +82,7 @@
               <label class="k-checkbox-label" for="Applicable">Not Applicable</label>
             </span>
           </div>
-          <div class="flex-col" [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
+          <div class="flex-col" *ngIf="!!medicalProviderForm.value.parentVendorId" [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
             <kendo-floatinglabel text="Provider First Name">
               <kendo-textbox aria-label="Provider First Name" [fillMode]="formUiStyle.inputFillMode"
                 formControlName="firstName">
@@ -93,7 +93,7 @@
               </kendo-formerror>
             </kendo-floatinglabel>
           </div>
-          <div class="flex-col" [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
+          <div class="flex-col" *ngIf="!!medicalProviderForm.value.parentVendorId" [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
             <kendo-floatinglabel text="Provider Last Name">
               <kendo-textbox aria-label="Provider Last Name" [fillMode]="formUiStyle.inputFillMode"
                 formControlName="lastName">
