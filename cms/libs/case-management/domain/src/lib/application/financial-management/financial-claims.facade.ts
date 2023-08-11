@@ -10,10 +10,11 @@ import { FinancialClaimsDataService } from '../../infrastructure/financial-manag
 import { Router } from '@angular/router';
 import { FinancialClaimTypeCode } from '../../enums/financial-claim-types';
 import { HttpErrorResponse } from '@angular/common/http';
+import { BatchClaim } from '../../entities/financial-management/batch-claim';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
- 
+
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -73,7 +74,7 @@ export class FinancialClaimsFacade {
   financialClaimsInvoice$ = this.financialClaimsInvoiceSubject.asObservable();
 
   private financialClaimsBatchDataSubject =  new Subject<any>();
-  financialClaimsBatchData$ = this.financialClaimsBatchDataSubject.asObservable();  
+  financialClaimsBatchData$ = this.financialClaimsBatchDataSubject.asObservable();
 
   private financialClaimsAllPaymentsDataSubject =  new Subject<any>();
   financialClaimsAllPaymentsData$ = this.financialClaimsAllPaymentsDataSubject.asObservable();
@@ -92,16 +93,16 @@ export class FinancialClaimsFacade {
 
   private reconcileBreakoutSummaryDataSubject =  new Subject<any>();
   reconcileBreakoutSummary$ = this.reconcileBreakoutSummaryDataSubject.asObservable();
-  
+
   private reconcilePaymentBreakoutListDataSubject =  new Subject<any>();
   reconcilePaymentBreakoutList$ = this.reconcilePaymentBreakoutListDataSubject.asObservable();
   /** Private properties **/
- 
+
   /** Public properties **/
- 
+
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>(); 
+  snackbarSubject = new Subject<SnackBar>();
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
@@ -132,7 +133,7 @@ export class FinancialClaimsFacade {
 
   getClaimsType(router : Router)
   {
-    return router.url.split('/')?.filter(element => element === FinancialClaimTypeCode.Dental || element ===FinancialClaimTypeCode.Medical)[0];    
+    return router.url.split('/')?.filter(element => element === FinancialClaimTypeCode.Dental || element ===FinancialClaimTypeCode.Medical)[0];
   }
 
   loadFinancialClaimsProcessListGrid(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string,claimsType : string){
@@ -148,13 +149,13 @@ export class FinancialClaimsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
-  }   
+    });
+  }
 
   loadFinancialClaimsInvoiceListService(paymentRequestId : string, skipcount: number,  maxResultCount: number,  sort: string,  sortType: string,claimsType : string){
-    
+
     this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType,claimsType).subscribe({
       next: (dataResponse) => {
         const gridView = {
@@ -166,10 +167,10 @@ export class FinancialClaimsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
-  }   
+    });
+  }
 
 
 
@@ -181,9 +182,9 @@ export class FinancialClaimsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
 
 
@@ -195,9 +196,9 @@ export class FinancialClaimsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
 
 
@@ -209,9 +210,9 @@ export class FinancialClaimsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
   loadBatchItemsListGrid(){
     this.financialClaimsDataService.loadBatchItemsListService().subscribe({
@@ -221,9 +222,9 @@ export class FinancialClaimsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
   loadReconcileListGrid(){
     this.financialClaimsDataService.loadReconcileListService().subscribe({
@@ -233,11 +234,11 @@ export class FinancialClaimsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
-  
+
   loadClaimsListGrid(){
     this.financialClaimsDataService.loadClaimsListService().subscribe({
       next: (dataResponse) => {
@@ -246,12 +247,12 @@ export class FinancialClaimsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
 
-  loadReconcilePaymentBreakoutSummary(batchId: string, entityId: string){    
+  loadReconcilePaymentBreakoutSummary(batchId: string, entityId: string){
     this.showLoader();
     this.financialClaimsDataService.loadReconcilePaymentBreakoutSummaryService(batchId,entityId).subscribe({
       next: (dataResponse) => {
@@ -260,10 +261,10 @@ export class FinancialClaimsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
-  } 
+    });
+  }
 
   loadReconcilePaymentBreakoutListGrid(batchId: string, entityId: string,skipcount: number, pagesize: number, sort: any, sortType: any){
     this.showLoader();
@@ -281,13 +282,28 @@ export class FinancialClaimsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
-  } 
+    });
+  }
 deleteClaims(batchClaims: any) {
     this.showLoader();
     return this.financialClaimsDataService.deleteClaims(batchClaims).pipe(
+      catchError((err: HttpErrorResponse) => {
+        this.loaderService.hide();
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        if (!(err?.error ?? false)) {
+          this.loggingService.logException(err);
+          this.hideLoader();
+        }
+        return of(false);
+      })
+    );
+  }
+
+  batchClaims(batchClaims: BatchClaim) {
+    this.showLoader();
+    return this.financialClaimsDataService.batchClaims(batchClaims).pipe(
       catchError((err: HttpErrorResponse) => {
         this.loaderService.hide();
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);

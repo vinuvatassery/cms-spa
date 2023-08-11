@@ -10,7 +10,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { BatchClaim, FinancialClaimsFacade, VendorClaimsFacade } from '@cms/case-management/domain';
+import { BatchClaim, FinancialClaimTypeCode, FinancialClaimsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -200,7 +200,6 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
-    private vendorClaimsFacade: VendorClaimsFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
   ) {
     this.selectableSettings = {
@@ -212,7 +211,6 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
 
 OnSingledetele(selection:any)
 {
-  debugger
   this.selectedKeysChange(selection)
 }
 
@@ -364,13 +362,16 @@ OnSingledetele(selection:any)
         managerId: managerId,
         PaymentRequestIds: this.selectedProcessClaims
       }
-      this.vendorClaimsFacade.batchClaims(input).subscribe(res =>{
+      if(this.claimsType === FinancialClaimTypeCode.Medical)
+      this.financialClaimsFacade.batchClaims(input).subscribe(res =>{
         if(res)
-        this.vendorClaimsFacade.showHideSnackBar(
+        this.financialClaimsFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
           'Claim(s) batched!'
         );
         this.batchConfirmClaimsDialog.close();
+        this.onBatchClaimsGridSelectedCancelClicked();
+        this.loadFinancialClaimsProcessListGrid();
       })
     }
   }
@@ -383,7 +384,7 @@ OnSingledetele(selection:any)
       }
       this.financialClaimsFacade.deleteClaims(input).subscribe(res =>{
         if(res)
-        this.vendorClaimsFacade.showHideSnackBar(
+        this.financialClaimsFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
           'Claim(s) Deleted'
         );
