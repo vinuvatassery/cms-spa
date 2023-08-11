@@ -71,8 +71,8 @@ export class FinancialVendorDataService {
     );
   }
 
-  
-  getVendorProfileSpecialHandling(vendorId: string) {  
+
+  getVendorProfileSpecialHandling(vendorId: string) {
 
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
@@ -80,7 +80,7 @@ export class FinancialVendorDataService {
     );
   }
 
-  
+
   addVendorProfile(vendorProfile:any) {
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
@@ -104,7 +104,12 @@ export class FinancialVendorDataService {
       );
   }
 
-
+  loadVendorList(vendorTypeCode:string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/financial-management/vendors/vendorType/${vendorTypeCode}`
+    );
+  }
 
 
 }
