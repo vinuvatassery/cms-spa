@@ -34,7 +34,7 @@ export class FinancialClaimsPageComponent implements OnInit {
   sortValueFinancialClaimsPayments =
     this.financialClaimsFacade.sortValueFinancialClaimsPayments;
   sortPaymentsList = this.financialClaimsFacade.sortPaymentsList;
-
+  sortValueFinancialInvoices = this.financialClaimsFacade.sortValueFinancialInvoiceProcess
   state!: State;
   financialClaimsProcessGridLists$ =
     this.financialClaimsFacade.financialClaimsProcessData$;
@@ -44,6 +44,7 @@ export class FinancialClaimsPageComponent implements OnInit {
   financialClaimsAllPaymentsGridLists$ =
     this.financialClaimsFacade.financialClaimsAllPaymentsData$;
 
+    financialClaimsInvoice$ = this.financialClaimsFacade.financialClaimsInvoice$;
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly router: Router,
@@ -73,8 +74,13 @@ export class FinancialClaimsPageComponent implements OnInit {
       });
   }
 
-  loadFinancialClaimsProcessListGrid(event: any) {
-    this.financialClaimsFacade.loadFinancialClaimsProcessListGrid();
+  loadFinancialClaimsProcessListGrid(data: any) {    
+    this.financialClaimsFacade.loadFinancialClaimsProcessListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType,data?.filter,this.claimsType);
+  }
+
+  loadFinancialClaimsInvoiceListService(data: any)
+  {
+  this.financialClaimsFacade.loadFinancialClaimsInvoiceListService(data?.paymentRequestId , data?.skipcount,   data?.pagesize, data?.sortColumn, data?.sortType,this.claimsType)
   }
 
   loadFinancialClaimsBatchListGrid(event: any) {
