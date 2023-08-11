@@ -7,11 +7,9 @@ import {
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ContactFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
+import { FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-claims-provider-info',
@@ -21,13 +19,19 @@ import { BehaviorSubject } from 'rxjs';
 export class FinancialClaimsProviderInfoComponent {
   @Output() closeViewProviderDetailClickedEvent = new EventEmitter();
   @Input() vendorId: any
-  vendorProfile$ = this.financialVendorFacade.providePanelSubject$
-  ddlStates$ = this.contactFacade.ddlStates$;
+  @Output() getProviderPanelEvent = new EventEmitter<any>();
+  @Output() updateProviderProfileEvent = new EventEmitter<any>();
+  @Output() onEditProviderProfileEvent = new EventEmitter<any>();
+ 
+  @Input()
+  vendorProfile$: Observable<any> | undefined;
+  @Input() updateProviderPanelSubject$ : Observable<any> | undefined;
+  @Input() ddlStates$ : Observable<any> | undefined;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isEditProvider = false;
   vendorProfiles: any
   showAddressValidationLoader$= new BehaviorSubject(false);
-  paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  @Input() paymentMethodCode$ : Observable<any> | undefined;
   profileForm = this.formBuilder.group({
     tin: [''],
     address: this.formBuilder.group({
@@ -44,34 +48,27 @@ export class FinancialClaimsProviderInfoComponent {
     contacts: new FormArray([])
   })
   isSubmitted: boolean = false
-  constructor(private financialVendorFacade: FinancialVendorFacade, public formBuilder: FormBuilder
-    , public lovFacade: LovFacade,
-    private loaderService: LoaderService,
-    public contactFacade: ContactFacade,
-    private route: Router,
-    private readonly loggingService: LoggingService,
-    private readonly snackbarService: NotificationSnackbarService,) {
+  constructor(public formBuilder: FormBuilder, 
+
+    private route: Router) {
 
   }
 
   ngOnInit(): void {
-    this.vendorProfile$.subscribe(res => {
-      this.vendorProfiles = res;
-    })
+  
     this.loadVendorInfo()
   }
 
   loadVendorInfo() {
-    this.financialVendorFacade.getProviderPanel('5449D739-5C70-446B-8269-13A862FE771F')
+    this.vendorProfile$?.subscribe(res => {
+      this.vendorProfiles = res;
+    })
+
+    this.getProviderPanelEvent.emit('5449D739-5C70-446B-8269-13A862FE771F')
   }
 
-  loadPaymentMethodCodes() {
-    this.lovFacade.getPaymentMethodLov()
-  }
 
-  loadStates() {
-    this.contactFacade.loadDdlStates();
-  }
+
 
   closeViewProviderClicked() {
     this.closeViewProviderDetailClickedEvent.emit(true);
@@ -115,9 +112,9 @@ export class FinancialClaimsProviderInfoComponent {
 
 
   editProviderClicked() {
-    this.loadPaymentMethodCodes()
-    this.loadStates()
-    this.isEditProvider = !this.isEditProvider  
+
+    this.onEditProviderProfileEvent.emit()
+    this.isEditProvider = !this.isEditProvider
     this.profileForm.patchValue({
       tin: this.vendorProfiles.tin,
       address: {
@@ -215,32 +212,15 @@ export class FinancialClaimsProviderInfoComponent {
         contacts: this.getContactArrayFormValues()
       }    
     }
-    this.loaderService.show()
-    this.financialVendorFacade.updateProviderPanel(providerPanelDto).subscribe({
-      next: (data) => {
-        this.loaderService.hide();
+    this.updateProviderProfileEvent.emit(providerPanelDto)
+    this.updateProviderPanelSubject$?.subscribe(res=>{    
+    if(res){
         this.isEditProvider = !this.isEditProvider
-        this.snackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, "Provider profile Saved Successfully.")
         this.loadVendorInfo();
-      },
-      error: (error) => {
-        this.loggingService.logException(error);
-        this.loaderService.hide();
-      }
+      }      
     });
   }
 
-  validateFeilds(providerPanelDto:any) {
-    if(providerPanelDto.address.address1 &&
-       providerPanelDto.address.city &&
-        providerPanelDto.address.city &&
-         providerPanelDto.address.zip){
-            this.isSubmitted = true;
-    }
-    else{
-      this.isSubmitted = false;
-    }
-  }
 
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
     return FinancialVendorProviderTabCode;

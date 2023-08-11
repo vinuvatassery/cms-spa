@@ -21,12 +21,14 @@ export class FinancialVendorFacade {
   private clinicVendorSubject = new Subject<any>();
   private clinicVendorLoaderSubject = new Subject<any>();  /** Public properties **/
   private providePanelSubject = new Subject<any>();
+  private updateProviderPanelSubject = new Subject<any>();
   vendorsList$ = this.vendorsSubject.asObservable();
   selectedVendor$ = this.selectedVendorSubject.asObservable();
   vendorProfile$ = this.vendorProfileSubject.asObservable();
    clinicVendorList$ = this.clinicVendorSubject.asObservable();
   clinicVendorLoader$ = this.clinicVendorLoaderSubject.asObservable(); 
   providePanelSubject$ = this.providePanelSubject.asObservable();
+  updateProviderPanelSubject$ = this.updateProviderPanelSubject.asObservable();
   vendorProfileSpecialHandling$ = this.vendorProfileSpecialHandlingSubject.asObservable();
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'vendorName'
@@ -140,7 +142,19 @@ export class FinancialVendorFacade {
   }
 
   updateProviderPanel(ProviderPanelDto:any){
-    return this.financialVendorDataService.updateProviderPanel(ProviderPanelDto)
+    this.showLoader();
+    return this.financialVendorDataService.updateProviderPanel(ProviderPanelDto).subscribe({
+      next: (updatedResponse: any) => {
+        if (updatedResponse) {
+          this.updateProviderPanelSubject.next(updatedResponse);   
+          this.hideLoader();      
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
   }
 
 

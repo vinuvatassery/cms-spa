@@ -156,7 +156,10 @@
 <ng-template #providerDetailsTemplate>
       <cms-financial-claims-provider-info
             (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
-            [vendorId]="vendorId"></cms-financial-claims-provider-info>
+            [vendorId]="vendorId" (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+            (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+            [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+            [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
 </ng-template>
 
 
