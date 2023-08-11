@@ -84,15 +84,15 @@ hideLoader(){
           this.items.forEach(item => {
             data.forEach(result => {
             if(item.vendorId.toLowerCase() == result.vendorId.toLowerCase()){
-              // const index = this.items.findIndex(item => item.vendorId.toLowerCase() === result.vendorId.toLowerCase());
-              // if (index !== -1) {
-              //   this.items.splice(index, 1, { ...item, letterContent: result.letterContent });
-              //   this.generatedContentList.push(item);
-              // }
-              var generatedContent = { ...item, letterContent: result.letterContent }
+              let generatedContent = { 
+                item: item.item,
+                providerName: item.providerName,
+                totalCost: item.totalCost,
+                paymentMethod: item.paymentMethod,
+                letterContent: result.letterContent,
+                isChecked: item.isChecked
+               };
               this.generatedContentList.push(generatedContent);
-        }else{
-        this.generatedContentList.push(item);
         }
       }); 
     });
