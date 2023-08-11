@@ -1,13 +1,13 @@
 <kendo-dialog-titlebar (close)="closeAddEditClaimsFormModalClicked()">
     <section class="app-l-mainTittle">
-        <h1 class="maintitle_withicon text-bold">{{title}}</h1>
+        <h1 class="maintitle_withicon text-bold">{{title}} Claims</h1>
     </section>
 </kendo-dialog-titlebar>
 <section class="add_main_popup_screen">
     <div [formGroup]="claimForm">
 
         <div class="add_new_top_section">
-            <p class="mb-3"> Select a Medical Provider to bulk add services for this claim.</p>
+            <p class="mb-3"> Select a {{claimsType}} Provider to bulk add services for this claim.</p>
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
                     <div class="combotable_search_list new_refund_Search new_claims_Search mb-3">

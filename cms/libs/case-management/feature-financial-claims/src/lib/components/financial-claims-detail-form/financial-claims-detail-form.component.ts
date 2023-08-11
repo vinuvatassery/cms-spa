@@ -14,6 +14,10 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { LoaderService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
+import {FinancialProvider} from '@cms/case-management/domain'
+import {PaymentMethodCode} from '@cms/case-management/domain'
+import {FinancialClaims} from '@cms/case-management/domain'
+
 @Component({
   selector: 'cms-financial-claims-detail-form',
   templateUrl: './financial-claims-detail-form.component.html',
@@ -46,7 +50,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   selectedClient: any;
   invoiceId: any;
   claimForm!: FormGroup;
-  medicalClaimServices!: MedicalClaims;
+  medicalClaimServices!: FinancialClaims;
   sessionId: any = '';
   clientCaseEligibilityId: any = null;
   title: any;
@@ -58,6 +62,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
+  readonly financialProvider = 'medical';
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
@@ -80,14 +85,24 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.lovFacade.getCoPaymentRequestTypeLov();
-    this.activatedRoute.params.subscribe(data => this.claimsType = data['type'])
-    if (!this.isEdit) {
-      this.title = 'Add Medical Claims';
+    this.activatedRoute.params.subscribe(data => {
+      this.claimsType = data['type']
+    });
+
+
+    if (!this.isEdit && this.claimsType == this.financialProvider) {
+      this.title = 'Add Medical';
       this.addOrEdit = 'Add';
       this.addClaimServiceGroup();
     }
+    else if(!this.isEdit && this.claimsType != this.financialProvider){
+      this.title = 'Add Dental';
+      this.addOrEdit = 'Add';
+      this.addClaimServiceGroup();
+    }
+    
     if (this.isEdit) {
-      this.title = 'Edit Claim';
+      this.title = 'Edit';
       this.addOrEdit = 'Edit';
       this.getMedicalClaimByPaymentRequestId();
     }
@@ -120,7 +135,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   searchMedicalProvider(searchText: any) {
-    this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == "medical" ? "MEDICAL_PROVIDER" : "DENTAL_PROVIDER");
+    this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider);
   }
   onCPTCodeValueChange(event: any, index: number) {
     let service = event;
@@ -236,8 +251,8 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       claimNbr: formValues.invoiceId,
       clientCaseEligibilityId: this.clientCaseEligibilityId,      
       paymentRequestId: this.isEdit ? this.paymentRequestId : null,
-      paymentMethodCode: this.isSpotsPayment ? "SPOTS": "ACH",
-      serviceSubTypeCode: this.claimsType == "medical" ? "MEDICAL": "DENTAL",
+      paymentMethodCode: this.isSpotsPayment ? PaymentMethodCode.SPOTS: PaymentMethodCode.ACH,
+      serviceSubTypeCode: this.claimsType == this.financialProvider ? "MEDICAL": "DENTAL",
       tpainvoice: [{}],
     };
     for (let element  of formValues.claimService) {
@@ -422,18 +437,4 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.isSpotsPayment = check.currentTarget.checked;
   }
 }
-interface MedicalClaims {
-  vendorId: string;
-  serviceStartDate: string;
-  serviceEndDate: string;
-  paymentType: string;
-  cptCode: string;
-  pcaCode: string;
-  serviceDescription: string;
-  serviceCost?: number;
-  amoundDue: string;
-  reasonForException: string;
-  amountDue?: number;
-  medicadeRate: number;
-  cptCodeId: string;
-}
+

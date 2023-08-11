@@ -494,7 +494,7 @@ export class FinancialClaimsDataService {
   }
 
   searchPharmacies(searchText: string, typeCode: string) {
-    return this.http.get<Pharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/pharmacies?searchText=${searchText}&typeCode=${typeCode}`);
+    return this.http.get<Pharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/MedicalClaim?searchText=${searchText}&typeCode=${typeCode}`);
   }
 
   loadClientBySearchText(text: string) {
