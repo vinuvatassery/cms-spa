@@ -384,6 +384,8 @@ OnSingledetele(selection:any)
           'Claim(s) Deleted'
         );
         this.deleteClaimsDialog.close();
+        this.onBatchClaimsGridSelectedCancelClicked();
+        this.cdr.detectChanges();
       })
     }
   }
