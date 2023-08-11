@@ -189,9 +189,9 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
       click: (data: any): void => {
         this.OnSingledetele(data.paymentRequestId.split(","))
           this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog)
-        
+
       },
-      
+
     },
   ];
 
@@ -336,7 +336,7 @@ OnSingledetele(selection:any)
   }
 
   gridDataHandle() {
-    this.financialClaimsProcessGridLists$.subscribe((data: GridDataResult) => {   
+    this.financialClaimsProcessGridLists$.subscribe((data: GridDataResult) => {
        this.gridDataResult = data;
       this.gridFinancialClaimsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
@@ -347,6 +347,7 @@ OnSingledetele(selection:any)
   }
 
   public onBatchClaimsClicked(template: TemplateRef<unknown>): void {
+    if(!this.selectedProcessClaims.length) return
     this.batchConfirmClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
@@ -357,11 +358,11 @@ OnSingledetele(selection:any)
   }
 
   onModalBatchClaimsButtonClicked(managerId: string) {
-  
+
     if (managerId) {
       const input: BatchClaim = {
         managerId: managerId,
-        invoiceNumbers: this.selectedProcessClaims
+        PaymentRequestIds: this.selectedProcessClaims
       }
       this.vendorClaimsFacade.batchClaims(input).subscribe(res =>{
         if(res)
@@ -392,6 +393,7 @@ OnSingledetele(selection:any)
   }
 
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
+    if(!this.selectedProcessClaims.length) return
     this.deleteClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
@@ -424,7 +426,7 @@ OnSingledetele(selection:any)
     this.isProcessGridExpand = false;
   }
   selectedKeysChange(selection:any){
-    
+
     this.selectedProcessClaims = selection;
   }
 
