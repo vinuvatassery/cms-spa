@@ -69,7 +69,6 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
 
   isEdit!: boolean;
   paymentRequestId!: string;
-  isMedicalClaim!: boolean;
 
   columns : any = {
     invoiceNbr:"Invoice ID",
@@ -192,7 +191,6 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   ) {
     this.isEdit = false;
     this.paymentRequestId = '90840450-D73E-49D4-AF0F-BA66724F549D';
-    this.isMedicalClaim = true;
   }
 
   

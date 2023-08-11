@@ -13,6 +13,7 @@ import { EntityTypeCode, FinancialClaimsFacade } from '@cms/case-management/doma
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'cms-financial-claims-detail-form',
   templateUrl: './financial-claims-detail-form.component.html',
@@ -51,17 +52,18 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   title: any;
   addOrEdit: any;
   selectedCPTCode: any = null;
+  claimsType: any;
 
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
-  @Input() isMedicalClaim: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
       private cd: ChangeDetectorRef,
       private readonly loaderService: LoaderService,
-      private lovFacade: LovFacade
+      private lovFacade: LovFacade,
+      private readonly activatedRoute: ActivatedRoute,
     ) {
       this.initMedicalClaimObject();
       this.initClaimForm();
@@ -77,6 +79,8 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.lovFacade.getCoPaymentRequestTypeLov();
+    this.activatedRoute.params.subscribe(data => this.claimsType = data['type'])
+    debugger;
     if (!this.isEdit) {
       this.title = 'Add Medical Claims';
       this.addOrEdit = 'Add';
@@ -231,7 +235,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       vendorId: formValues.medicalProvider.vendorId,
       claimNbr: formValues.invoiceId,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
-      paymentMethodCode: this.isMedicalClaim ? 'MEDICAL' : "DENTAL",
+      paymentMethodCode: this.claimsType == 'medical' ? 'MEDICAL' : "DENTAL",
       paymentRequestId: this.isEdit ? this.paymentRequestId : null,
       tpainvoice: [{}],
     };
