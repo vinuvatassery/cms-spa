@@ -253,7 +253,6 @@
       </div>
       <p>There is no data to display.</p>
     </ng-template>
-
   </kendo-grid>
 </div>
 
@@ -295,7 +294,7 @@
 </ng-template>
 <ng-template #deleteClaimsConfirmationDialog>
   <cms-financial-claims-delete-claims
-    (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)"></cms-financial-claims-delete-claims>
+    (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)" (isModalDeletedClaimsButtonClicked)="onModalBatchDeletingClaimsButtonClicked($event)" [selectedProcessClaimsCount] = "selectedProcessClaims.length"></cms-financial-claims-delete-claims>
 </ng-template>
 <ng-template #addEditClaimsDialog>
   <cms-financial-claims-detail-form

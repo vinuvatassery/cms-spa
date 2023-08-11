@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  Subject } from 'rxjs';
+import {  Subject, catchError, of } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -9,6 +9,7 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { FinancialClaimsDataService } from '../../infrastructure/financial-management/financial-claims.data.service';
 import { Router } from '@angular/router';
 import { FinancialClaimTypeCode } from '../../enums/financial-claim-types';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
@@ -284,4 +285,18 @@ export class FinancialClaimsFacade {
       },
     });  
   } 
+deleteClaims(batchClaims: any) {
+    this.showLoader();
+    return this.financialClaimsDataService.deleteClaims(batchClaims).pipe(
+      catchError((err: HttpErrorResponse) => {
+        this.loaderService.hide();
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        if (!(err?.error ?? false)) {
+          this.loggingService.logException(err);
+          this.hideLoader();
+        }
+        return of(false);
+      })
+    );
+  }
 }

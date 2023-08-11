@@ -477,4 +477,8 @@ export class FinancialClaimsDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}/payment-entity/${entityId}/reconcile-breakout?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`
     );
   }
+
+  deleteClaims(Claims: any) {
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/deleteMedicalClaims`, Claims);
+  }
 }

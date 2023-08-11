@@ -10,7 +10,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { BatchClaim, VendorClaimsFacade } from '@cms/case-management/domain';
+import { BatchClaim, FinancialClaimsFacade, VendorClaimsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -74,7 +74,7 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   public mode: SelectableMode = "multiple";
   public drag = false;
 
-  public selectedProcessClaims: string[] = [];
+  public selectedProcessClaims: any[] = [];
 
   columns : any = {
     invoiceNbr:"Invoice ID",
@@ -186,6 +186,12 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
       buttonType: 'btn-h-danger',
       text: 'Delete Claims',
       icon: 'delete',
+      click: (data: any): void => {
+        this.OnSingledetele(data.paymentRequestId.split(","))
+          this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog)
+        
+      },
+      
     },
   ];
 
@@ -194,7 +200,8 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
-    private vendorClaimsFacade: VendorClaimsFacade
+    private vendorClaimsFacade: VendorClaimsFacade,
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
   ) {
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -203,6 +210,11 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
     };
   }
 
+OnSingledetele(selection:any)
+{
+  debugger
+  this.selectedKeysChange(selection)
+}
 
   ngOnChanges(): void {
     this.state = {
@@ -324,38 +336,8 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   }
 
   gridDataHandle() {
-    this.financialClaimsProcessGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = {"total":1,"data":[
-        {
-        "invoiceNbr":"34343",
-        "providerName":"providerName",
-        "taxID":"taxID",
-        "paymentMethod":"paymentMethod",
-        "clientName":"clientName",
-        "nameOnPrimaryInsuranceCard":"nameOnPrimaryInsuranceCard",
-        "memberID":"providerName",
-        "serviceCount":"serviceCount",
-        "totalCost":"totalCost",
-        "totalDue":"totalDue",
-        "paymentStatus":"paymentStatus",
-        "by":"by"
-        },
-        {
-          "invoiceNbr":"2222122",
-          "providerName":"providerName",
-          "taxID":"taxID",
-          "paymentMethod":"paymentMethod",
-          "clientName":"clientName",
-          "nameOnPrimaryInsuranceCard":"nameOnPrimaryInsuranceCard",
-          "memberID":"providerName",
-          "serviceCount":"serviceCount",
-          "totalCost":"totalCost",
-          "totalDue":"totalDue",
-          "paymentStatus":"paymentStatus",
-          "by":"by"
-          }
-      ]};//data;
-      // this.gridDataResult = data;
+    this.financialClaimsProcessGridLists$.subscribe((data: GridDataResult) => {   
+       this.gridDataResult = data;
       this.gridFinancialClaimsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isFinancialClaimsProcessGridLoaderShow = false;
@@ -375,12 +357,30 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   }
 
   onModalBatchClaimsButtonClicked(managerId: string) {
+  
     if (managerId) {
       const input: BatchClaim = {
         managerId: managerId,
         invoiceNumbers: this.selectedProcessClaims
       }
       this.vendorClaimsFacade.batchClaims(input).subscribe(res =>{
+        if(res)
+        this.vendorClaimsFacade.showHideSnackBar(
+          SnackBarNotificationType.SUCCESS,
+          'Claim(s) batched!'
+        );
+        this.batchConfirmClaimsDialog.close();
+      })
+    }
+  }
+
+  onModalBatchDeletingClaimsButtonClicked(action:any) {
+
+    if (action) {
+      const input: any = {
+        invoiceNumbers: this.selectedProcessClaims
+      }
+      this.financialClaimsFacade.deleteClaims(input).subscribe(res =>{
         if(res)
         this.vendorClaimsFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
@@ -399,6 +399,7 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   }
   onModalDeleteClaimsModalClose(result: any) {
     if (result) {
+      this.isDeleteBatchClosed=false;
       this.deleteClaimsDialog.close();
     }
   }
@@ -423,6 +424,7 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
     this.isProcessGridExpand = false;
   }
   selectedKeysChange(selection:any){
+    
     this.selectedProcessClaims = selection;
   }
 
