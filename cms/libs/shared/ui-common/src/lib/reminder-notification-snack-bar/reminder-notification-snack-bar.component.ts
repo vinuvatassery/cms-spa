@@ -37,6 +37,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   })
   reminderNotificationTemplateContainer!: ViewContainerRef; 
   isReminderExpand = false;
+  isReminderExpands = false;
   isReminderSideOn: any;
   isReminderSideOff: any;
   public data = [
@@ -118,10 +119,12 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     this.isReminderSideOn.classList.remove('expand_view');
     this.isReminderSideOn.classList.remove('collapse_view');
     this.isReminderExpand = false;
+    this.isReminderExpands = true;
   }
 
   showSideReminderNotification() {
     this.isReminderSideOff = document.getElementById('reminder_notify');
     this.isReminderSideOff.classList.remove('move_notify_aside');
+    this.isReminderExpands = false;
   }
 }
