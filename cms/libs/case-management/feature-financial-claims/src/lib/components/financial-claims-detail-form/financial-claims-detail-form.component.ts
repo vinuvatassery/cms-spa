@@ -7,6 +7,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialClaimsFacade } from '@cms/case-management/domain';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'cms-financial-claims-detail-form',
   templateUrl: './financial-claims-detail-form.component.html', 
@@ -22,8 +23,18 @@ export class FinancialClaimsDetailFormComponent {
   gridSkipCount = this.financialClaimsFacade.skipCount;
   sort = this.financialClaimsFacade.sortClaimsList;
   state!: State;
-  isExceptionVisible = false;
-  buttonText = 'Make Exception';
+
+  isExcededMaxBeniftFlag = false;
+  isExcededMaxBanifitButtonText = 'Make Exception';
+  claimFlagExcededBaniftForm!: FormGroup;
+  formIsSubmitted!: boolean;
+  claimFlagExceptionMaxLength = 300;
+  claimFlagExceptionCounter!: string;
+  claimFlagExceptionText = '';
+  claimFlagExceptionCharachtersCount!: number;
+  checkservicescastvalue:any 
+
+  
   clientSearchResult = [
     {
       clientId: '12',
@@ -82,9 +93,14 @@ export class FinancialClaimsDetailFormComponent {
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
 
   constructor(
-    private readonly financialClaimsFacade: FinancialClaimsFacade
-  ) {}
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private formBuilder: FormBuilder
+  ) {
+    this.buildForm();
 
+  }
+  ngOnInit(): void {
+  }
   closeAddEditClaimsFormModalClicked() {
     this.modalCloseAddEditClaimsFormModal.emit(true);
   }
@@ -93,11 +109,49 @@ export class FinancialClaimsDetailFormComponent {
     this.financialClaimsFacade.loadClaimsListGrid();
   }
   onMakeExceptionClick() {
-    this.isExceptionVisible = !this.isExceptionVisible;
-    if (this.isExceptionVisible) {
-      this.buttonText = "Don't Make Exception";
+    this.formIsSubmitted = false;
+    this.claimFlagExcededBaniftForm.reset();
+    this.isExcededMaxBeniftFlag = !this.isExcededMaxBeniftFlag;
+    if (this.isExcededMaxBeniftFlag) {
+      this.isExcededMaxBanifitButtonText = "Don't Make Exception";
     } else {
-      this.buttonText = "Make Exception";
+      this.isExcededMaxBanifitButtonText = "Make Exception";
     }
+  }
+  private buildForm() {
+    this.claimFlagExcededBaniftForm = this.formBuilder.group({
+      exceptionReason: ['', Validators.required],
+      serviceCost:['',Validators.required],
+
+      newClaimFlagExcededBaniftForm: this.formBuilder.array([]),
+    });
+  }
+  onAddButtonClick(){
+    debugger
+    this.formIsSubmitted = true;
+    if (!this.claimFlagExcededBaniftForm.valid) return;
+
+    let formValues = this.claimFlagExcededBaniftForm.value;
+    if (formValues.newClaimFlagExcededBaniftForm.length > 0) {
+      formValues.exceptionReason  = [];
+      formValues.newClaimFlagExcededBaniftForm.forEach((a:any) => {
+    
+        formValues.exceptionReason.push(this.claimFlagExcededBaniftForm);
+      })
+    }
+    this.formIsSubmitted = false;
+    this.claimFlagExcededBaniftForm.reset();
+
+  }
+  onClaimFlagExceptionValueChange(event: any): void {
+    this.claimFlagExceptionCharachtersCount = event.length;
+    this.claimFlagExceptionCounter = `${this.claimFlagExceptionCharachtersCount}/${this.claimFlagExceptionMaxLength}`;
+  }
+  loadServiceCostMethod(){
+    debugger
+    const serviceCost = this.claimFlagExcededBaniftForm.controls['serviceCost'].value;
+    this.checkservicescastvalue = serviceCost
+    console.log(serviceCost);
+    
   }
 }
