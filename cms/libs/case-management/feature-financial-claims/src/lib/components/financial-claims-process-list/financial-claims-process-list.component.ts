@@ -381,7 +381,7 @@ OnSingledetele(selection:any)
     if (action) {
       this.financialClaimsFacade.deleteClaims(this.selectedProcessClaims).subscribe(res =>{
         if(res)
-        this.vendorClaimsFacade.showHideSnackBar(
+        this.financialClaimsFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
           'Claim(s) Deleted'
         );
