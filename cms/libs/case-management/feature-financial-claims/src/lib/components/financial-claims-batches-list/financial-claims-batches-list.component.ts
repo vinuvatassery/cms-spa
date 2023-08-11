@@ -24,7 +24,7 @@ import { Subject } from 'rxjs';
   templateUrl: './financial-claims-batches-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsBatchesListComponent implements OnInit, OnChanges{
+export class FinancialClaimsBatchesListComponent implements  OnChanges{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isFinancialClaimsBatchGridLoaderShow = false;
@@ -36,7 +36,7 @@ export class FinancialClaimsBatchesListComponent implements OnInit, OnChanges{
   @Input() financialClaimsBatchGridLists$: any;
   @Output() loadFinancialClaimsBatchListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'batch';
+  sortColumn = 'Batch #';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -52,14 +52,51 @@ export class FinancialClaimsBatchesListComponent implements OnInit, OnChanges{
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+
+  columns : any = {
+    batchName:"Batch #",    providerCount:"# of Providers",
+    totalClaims:"# of Claims",    totalPaymentsRequested:"# of Pmts Requested",
+    reconciledPayments:"# of Pmts Reconciled",    totalAmountDue:"Total Amount Due",
+    totalAmountReconciled:"Total Amount Reconciled"      
+  }
   
+
+  dropDowncolumns : any = [
+    {
+      "columnCode": "batchName",
+      "columnDesc": "Batch #"    
+    },
+    {
+      "columnCode": "providerCount",
+      "columnDesc": "# of Providers"        
+    },
+    {
+      "columnCode": "totalClaims",
+      "columnDesc": "# of Claims"     
+    },
+    {
+      "columnCode": "totalPaymentsRequested",
+      "columnDesc": "# of Pmts Requested"     
+    }
+    ,
+    {
+      "columnCode": "reconciledPayments",
+      "columnDesc": "# of Pmts Reconciled"     
+    }
+    ,
+    {
+      "columnCode": "totalAmountDue",
+      "columnDesc": "Total Amount Due"     
+    }
+    ,
+    {
+      "columnCode": "totalAmountReconciled",
+      "columnDesc": "Total Amount Reconciled"     
+    }]
   /** Constructor **/
   constructor(private route: Router, public activeRoute: ActivatedRoute) {}
 
-  ngOnInit(): void {
-  
-    this.loadFinancialClaimsBatchListGrid();
-  }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -72,14 +109,14 @@ export class FinancialClaimsBatchesListComponent implements OnInit, OnChanges{
 
 
   private loadFinancialClaimsBatchListGrid(): void {
-    this.loadRefundBatch(
+    this.loadClaimsProcess(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType
     );
   }
-  loadRefundBatch(
+  loadClaimsProcess(
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
@@ -91,23 +128,31 @@ export class FinancialClaimsBatchesListComponent implements OnInit, OnChanges{
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter : this.state?.["filter"]?.["filters"] ?? []
     };
     this.loadFinancialClaimsBatchListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
 
+
  
   onChange(data: any) {
     this.defaultGridState();
+    let operator= "startswith"
 
+    if(this.selectedColumn !=="batchName")
+    {
+      operator = "eq"
+    }
+    
     this.filterData = {
       logic: 'and',
       filters: [
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
+              field: this.selectedColumn ?? 'batchName',
+              operator: operator,
               value: data,
             },
           ],
@@ -115,7 +160,7 @@ export class FinancialClaimsBatchesListComponent implements OnInit, OnChanges{
         },
       ],
     };
-    let stateData = this.state;
+    const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
@@ -139,9 +184,28 @@ export class FinancialClaimsBatchesListComponent implements OnInit, OnChanges{
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadFinancialClaimsBatchListGrid();
-  }
 
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+
+    if(stateData.filter?.filters.length > 0)
+    {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      this.isFiltered = true;
+      const filterList = []
+      for(const filter of stateData.filter.filters)
+      {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy =  filterList.toString();
+    }
+    else
+    {
+      this.filter = "";
+      this.isFiltered = false
+    }
+    this.loadFinancialClaimsBatchListGrid();    
+  }
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
@@ -152,23 +216,42 @@ export class FinancialClaimsBatchesListComponent implements OnInit, OnChanges{
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
-
   gridDataHandle() {
-    this.financialClaimsBatchGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
+    this.financialClaimsBatchGridLists$.subscribe((data: GridDataResult) => {      
+      this.gridDataResult = data;    
       this.gridFinancialClaimsBatchDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
+      if (data?.total >= 0 || data?.total === -1) {
         this.isFinancialClaimsBatchGridLoaderShow = false;
       }
     });
-    this.isFinancialClaimsBatchGridLoaderShow = false;
+  
   }
-  navToBatchDetails(event : any){   
-    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch'] );
+
+  setToDefault()
+  {
+
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,  
+      };
+  
+    this.sortColumn = 'Batch #';
+    this.sortDir = 'Ascending';    
+    this.filter = "";    
+    this.searchValue = "";
+    this.isFiltered = false;
+    this.columnsReordered = false;
+    
+    this.sortValue  = 'batchName';
+    this.sortType  = 'asc'
+    this.sort  = this.sortColumn;
+  
+    this.loadFinancialClaimsBatchListGrid();    
+  }
+
+  navToBatchDetails(data : any){   
+    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch/'+data?.paymentRequestBatchId] );
   }
 
 }
