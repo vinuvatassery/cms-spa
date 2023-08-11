@@ -385,7 +385,7 @@ OnSingledetele(selection:any)
         if(res)
         this.vendorClaimsFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
-          'Claim(s) batched!'
+          'Claim(s) Deleted'
         );
         this.batchConfirmClaimsDialog.close();
       })
