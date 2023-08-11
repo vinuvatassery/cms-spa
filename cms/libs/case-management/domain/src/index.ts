@@ -55,7 +55,8 @@ export * from './lib/entities/session-data';
 export * from './lib/entities/payment-request';
 export * from './lib/entities/vendor-contacts';
 export * from './lib/entities/financial-management/payment-panel';
-export * from './lib/entities/financial-management/batch-claim';
+export * from './lib/entities/financial-management/batch-claim';export * from './lib/entities/manufacturer-drugs';
+
 
 /** Enums **/
 export * from './lib/enums/communication-event.enum';
@@ -112,6 +113,7 @@ export * from './lib/enums/financial-vendor-provider-tab-code';
 export * from './lib/enums/financial-vendor-type-code';
 export * from './lib/enums/service-sub-type-code';
 export * from './lib/enums/grid-column-filter.enum';
+export * from './lib/enums/drug-category-code.enum';
 export * from './lib/enums/payment-type-code.enum';
 export * from './lib/enums/financial-claim-types';
 export * from './lib/enums/financial-premium-types';
