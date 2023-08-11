@@ -386,7 +386,7 @@ OnSingledetele(selection:any)
           SnackBarNotificationType.SUCCESS,
           'Claim(s) Deleted'
         );
-        this.batchConfirmClaimsDialog.close();
+        this.deleteClaimsDialog.close();
       })
     }
   }
