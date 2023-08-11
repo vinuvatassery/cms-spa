@@ -226,7 +226,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   save() {
     this.isSubmitted = true;
     if (!this.claimForm.valid) {
-      //return;
+      return;
     }
     let formValues = this.claimForm.value;
 
