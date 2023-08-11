@@ -480,7 +480,7 @@ export class FinancialClaimsDataService {
   }
 
   deleteClaims(Claims: any) {
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/deleteMedicalClaims`, Claims);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/deleteMedicalClaims`, Claims);
   }
 
   batchClaims(batchClaims: BatchClaim) {

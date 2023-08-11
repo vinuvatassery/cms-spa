@@ -379,16 +379,13 @@ OnSingledetele(selection:any)
   onModalBatchDeletingClaimsButtonClicked(action:any) {
 
     if (action) {
-      const input: any = {
-        invoiceNumbers: this.selectedProcessClaims
-      }
-      this.financialClaimsFacade.deleteClaims(input).subscribe(res =>{
+      this.financialClaimsFacade.deleteClaims(this.selectedProcessClaims).subscribe(res =>{
         if(res)
-        this.financialClaimsFacade.showHideSnackBar(
+        this.vendorClaimsFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
           'Claim(s) Deleted'
         );
-        this.batchConfirmClaimsDialog.close();
+        this.deleteClaimsDialog.close();
       })
     }
   }
