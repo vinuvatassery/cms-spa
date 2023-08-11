@@ -172,9 +172,9 @@ export class FinancialClaimsFacade {
 
 
 
-  loadFinancialClaimsBatchListGrid(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string, claimsType : string){
+  loadFinancialClaimsBatchListGrid(skipCount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string, claimsType : string){
     filter = JSON.stringify(filter);
-    this.financialClaimsDataService.loadFinancialClaimsBatchListService(skipcount,  maxResultCount,  sort,  sortType,filter,claimsType).subscribe({
+    this.financialClaimsDataService.loadFinancialClaimsBatchListService(skipCount,  maxResultCount,  sort,  sortType,filter,claimsType).subscribe({
       next: (dataResponse) => {
         const gridView = {
           data: dataResponse["items"],

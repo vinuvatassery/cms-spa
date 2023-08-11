@@ -6,8 +6,7 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
-  OnInit,
+  OnChanges, 
   Output,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
@@ -15,8 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy,
+  State 
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
@@ -108,7 +106,7 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
   }
 
 
-  private loadFinancialClaimsBatchListGrid(): void {
+  private loadFinancialClaimsBatchListGrid(): void {    
     this.loadClaimsProcess(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -209,7 +207,7 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
-    this.state.skip = 0;
+    this.state.skip = data.skip;
     this.loadFinancialClaimsBatchListGrid();
   }
 
