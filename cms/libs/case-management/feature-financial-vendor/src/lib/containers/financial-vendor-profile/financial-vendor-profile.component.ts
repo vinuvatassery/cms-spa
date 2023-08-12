@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
+import { DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, VendorFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
+import { State } from '@progress/kendo-data-query';
 
 
 @Component({
@@ -10,6 +11,14 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialVendorProfileComponent implements OnInit {
+  drugsData$ = this.drugsFacade.drugsData$;
+  pageSizes = this.drugsFacade.gridPageSizes;
+  sortValue = this.drugsFacade.sortValue;
+  sortType = this.drugsFacade.sortType;
+  sort = this.drugsFacade.sort;
+  gridSkipCount = this.drugsFacade.skipCount;
+  vendorDetails$ = this.financialVendorFacade.vendorDetails$;
+  public state!: State;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
   isShownEventLog = false;
@@ -23,10 +32,17 @@ export class FinancialVendorProfileComponent implements OnInit {
   selectedVendorInfo$ = this.financialVendorFacade.selectedVendor$;
   vendorProfile$ = this.financialVendorFacade.vendorProfile$
   vendorProfileSpecialHandling$ = this.financialVendorFacade.vendorProfileSpecialHandling$
-  constructor(private activeRoute: ActivatedRoute, private financialVendorFacade : FinancialVendorFacade) {}
+  constructor(private activeRoute: ActivatedRoute, private financialVendorFacade : FinancialVendorFacade,
+              private readonly drugsFacade: DrugsFacade) {}
 
   ngOnInit(): void {
     this.loadQueryParams();
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value
+    };
+    this.loadDrugsListGrid();
+    this.loadVendorDetailList();
   }
 
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
@@ -42,7 +58,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
     this.providerId = this.activeRoute.snapshot.queryParams['prv_id'];
     this.tabCode = this.activeRoute.snapshot.queryParams['tab_code'];
-    this.vendorTypeCode = this.activeRoute.snapshot.queryParams['vendor_type_code'];
+    
     this.loadVendorInfo();
     if(this.vendorId && this.tabCode)
     {
@@ -51,16 +67,23 @@ export class FinancialVendorProfileComponent implements OnInit {
 
     switch (this.tabCode) {
       case FinancialVendorProviderTabCode.Manufacturers:
+        this.vendorTypeCode = FinancialVendorTypeCode.Manufacturers
         this.profileInfoTitle = 'Manufacture Info';
         break;
       case FinancialVendorProviderTabCode.InsuranceVendors:
+        this.vendorTypeCode = FinancialVendorTypeCode.InsuranceVendors
         this.profileInfoTitle = 'Insurance Vendor Info';
         break;
       case FinancialVendorProviderTabCode.MedicalProvider:
+        this.vendorTypeCode = FinancialVendorTypeCode.MedicalProviders
+        this.profileInfoTitle = 'Provider Info';
+        break;
       case FinancialVendorProviderTabCode.DentalProvider:
+        this.vendorTypeCode = FinancialVendorTypeCode.DentalProviders
         this.profileInfoTitle = 'Provider Info';
         break;
       case FinancialVendorProviderTabCode.Pharmacy:
+        this.vendorTypeCode = FinancialVendorTypeCode.Pharmacy
         this.profileInfoTitle = 'Pharmacy Info';
         break;
     }
@@ -87,5 +110,29 @@ export class FinancialVendorProfileComponent implements OnInit {
       this.loadVendorInfo();
       this.loadFinancialVendorProfile(this.vendorId);
     }
+  }
+
+  loadDrugsListGrid() {
+    this.drugsFacade.loadDrugsListGrid(
+      this.vendorId ?? "",
+      this.state.skip ?? 0,
+      this.state.take ?? 0,
+      this.sortValue,
+      this.sortType
+    );
+  }
+
+  loadDrugList(event: any) {
+    this.state = {
+      skip: event.skipCount,
+      take: event.pageSize
+    };
+    this.sortValue = event.sortColumn;
+    this.sortType = event.sortType;
+    this.loadDrugsListGrid();
+  }
+
+  loadVendorDetailList(){
+    this.financialVendorFacade.loadVendorList(this.vendorTypeCode);
   }
 }

@@ -1,58 +1,88 @@
 <!-- employer form details -->
-<form class="k-form">
+<form class="k-form" [formGroup]="drugForm">
     <section class="k-dialog-body">
         <p class="text-muted mb-1">
             All fields are required unless otherwise stated.
         </p>
         <div class="flex-row">
-            <div class="flex-col">
-                <kendo-floatinglabel text="NDC Code">
-                    <kendo-textbox textFieldautofocus aria-label="NDC Code" [fillMode]="formUiStyle.inputFillMode">
+
+          <div class="flex-col mb-1">
+            <kendo-floatinglabel text="Manufacturer">
+                <kendo-dropdownlist [data]="vendorDetails$ | async" [fillMode]="formUiStyle.dropDownFillMode"  [valuePrimitive]="true"  textField="vendorName"
+                    valueField="vendorId" aria-label="Manufacturer" formControlName="manufacturer" [disabled]="true">
+                </kendo-dropdownlist>
+            </kendo-floatinglabel>
+          </div>
+          <div class="flex-col mb-1">
+            <kendo-floatinglabel text="Ndc Code">
+                <kendo-textbox
+                aria-label="NDC Code"
+                [fillMode]="formUiStyle.inputFillMode"
+                formControlName="ndcNbr"
+              >
+              </kendo-textbox>
+              </kendo-floatinglabel>
+              <kendo-formerror *ngIf="(!drugForm.controls['ndcNbr'].valid) && isSubmitted">
+                NDC number is required.
+              </kendo-formerror>
+        </div>
+
+            <div class="flex-col mb-1">
+                <kendo-floatinglabel text="Drug Name">
+                    <kendo-textbox placeholder="Drug Name" [fillMode]="formUiStyle.inputFillMode" formControlName="drugName">
                     </kendo-textbox>
                 </kendo-floatinglabel>
-
+                <kendo-formerror  *ngIf="(!drugForm.controls['drugName'].valid) && isSubmitted">
+                  Drug name is required.
+                </kendo-formerror>
             </div>
+
             <div class="flex-col mb-1">
 
-                <kendo-floatinglabel text="Drug Name">
-                    <kendo-textbox aria-label="Drug Name" [fillMode]="formUiStyle.inputFillMode">
-                    </kendo-textbox>
-                </kendo-floatinglabel>
-            </div>
+              <kendo-floatinglabel text="Brand Name">
+                  <kendo-textbox aria-label="Brand Name" [fillMode]="formUiStyle.inputFillMode" formControlName="brandName">
+                  </kendo-textbox>
+              </kendo-floatinglabel>
+              <kendo-formerror  *ngIf="(!drugForm.controls['brandName'].valid) && isSubmitted">
+                Brand name is required.
+              </kendo-formerror>
+          </div>
+
             <div class="flex-col mb-1">
                 <kendo-floatinglabel text="Delivery Method">
-                    <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" textField="lovDesc"
-                        valueField="lovCode" aria-label="State">
+                    <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" textField="deliveryMethodCode"
+                        valueField="deliveryMethodCode" [data]="deliveryMethodCodes" aria-label="State" [valuePrimitive]="true" formControlName="deliveryMethodCode">
                     </kendo-dropdownlist>
                 </kendo-floatinglabel>
+                <kendo-formerror *ngIf="(!drugForm.controls['deliveryMethodCode'].valid) &&isSubmitted">A Delivery Method code must be
+                  selected</kendo-formerror>
             </div>
+           <!-- Drug Type Checkbox Validation -->
             <div class="flex-col mb-1 mt-1">
-                <fieldset class="k-form-fieldset no_margin_fieldset">
-                    <legend class="k-form-legend">
-                        <h5>Drug Type (Select all that apply)</h5>
-                    </legend>
-                    <div class="component-list-h">
-                        <span class="app-checkboxwidtext-wrapper">
-                            <input type="checkbox" kendoCheckBox aria-labelledby="HIV" id="HIV" />
-                            <label class="k-checkbox-label" for="HIV"> HIV </label>
-
-                        </span>
-                        <span class="app-checkboxwidtext-wrapper">
-                            <input type="checkbox" kendoCheckBox aria-labelledby="Hepatitis" id="Hepatitis" />
-                            <label class="k-checkbox-label" for="Hepatitis"> Hepatitis </label>
-
-                        </span>
-                        <span class="app-checkboxwidtext-wrapper">
-                            <input type="checkbox" kendoCheckBox aria-labelledby="Opportunistic Infection"
-                                id="OpportunisticInfection" />
-                            <label class="k-checkbox-label" for="OpportunisticInfection"> Opportunistic Infection
-                            </label>
-
-                        </span>
-
-                    </div>
-                </fieldset>
+              <fieldset class="k-form-fieldset no_margin_fieldset">
+                <legend class="k-form-legend">
+                  <h5>Drug Type (Select all that apply)</h5>
+                </legend>
+                <div class="component-list-h">
+                  <span class="app-checkboxwidtext-wrapper">
+                    <input type="checkbox" kendoCheckBox aria-labelledby="HIV" id="HIV" [checked]="drugForm.get('drugCategoryCode.hiv')?.value" (change)="updateDrugTypeValidity('hiv')" />
+                    <label class="k-checkbox-label" for="HIV"> HIV </label>
+                  </span>
+                  <span class="app-checkboxwidtext-wrapper">
+                    <input type="checkbox" kendoCheckBox aria-labelledby="Hepatitis" id="Hepatitis" [checked]="drugForm.get('drugCategoryCode.hepatitis')?.value" (change)="updateDrugTypeValidity('hepatitis')" />
+                    <label class="k-checkbox-label" for="Hepatitis"> Hepatitis </label>
+                  </span>
+                  <span class="app-checkboxwidtext-wrapper">
+                    <input type="checkbox" kendoCheckBox aria-labelledby="Opportunistic Infection" id="OpportunisticInfection" [checked]="drugForm.get('drugCategoryCode.opportunisticInfection')?.value" (change)="updateDrugTypeValidity('opportunisticInfection')" />
+                    <label class="k-checkbox-label" for="OpportunisticInfection"> Opportunistic Infection </label>
+                  </span>
+                </div>
+              </fieldset>
+              <kendo-formerror *ngIf="getError(drugForm.get('drugCategoryCode'), 'atLeastOneDrugTypeRequired') && isSubmitted">
+                Please select at least one drug type.
+              </kendo-formerror>
             </div>
+
             <div class="flex-col mb-1 mt-1">
 
                 <fieldset class="k-form-fieldset no_margin_fieldset">
@@ -62,18 +92,20 @@
                     <div class="component-list-h">
                         <span class="app-radiobtnwidtext-wrapper">
 
-                            <input type="radio" kendoRadioButton aria-labelledby="manufacturerrebatesyes"
+                            <input type="radio" kendoRadioButton aria-labelledby="manufacturerrebatesyes" formControlName="includeInManufacturerRebatesFlag"
                                 id="manufacturerrebatesyes" class="form-control" value="Y" name="manufacturerRebates" />
                             <label class="k-radio-label" for="manufacturerrebatesyes">Yes</label>
                         </span>
                         <span class="app-radiobtnwidtext-wrapper">
-                            <input type="radio" kendoRadioButton aria-labelledby="manufacturerrebatesno"
+                            <input type="radio" kendoRadioButton aria-labelledby="manufacturerrebatesno" formControlName="includeInManufacturerRebatesFlag"
                                 id="manufacturerrebatesno" value="N" name="manufacturerRebates" />
                             <label class="k-radio-label" for="manufacturerrebatesno">No</label>
                         </span>
                     </div>
                 </fieldset>
-
+                <kendo-formerror *ngIf="(!drugForm.controls['includeInManufacturerRebatesFlag'].valid) && isSubmitted">
+                  Please select whether to include in manufacturer rebates (Yes or No).
+                </kendo-formerror>
 
             </div>
         </div>
@@ -81,11 +113,11 @@
     <kendo-dialog-actions>
         <div class="justify-content-between mt-2">
             <div>
-                <button kendoButton [primary]="true" look="flat" aria-label="delete employer"> Deactivate </button>
+                <button *ngIf="dialogTitle==='Edit'" kendoButton [primary]="true" look="flat" aria-label="deactivate drug"> Deactivate </button>
             </div>
             <div class="justify-content-end">
-                <button kendoButton [primary]="true" aria-label="cancel employer" look="outline"> Cancel </button>
-                <button kendoButton [primary]="true" aria-label="add new employer"> Update </button>
+                <button kendoButton [primary]="true" aria-label="cancel drug" look="outline" (click)="onCancelClick()"> Cancel </button>
+                <button kendoButton [primary]="true" aria-label="add new drug" (click)="save()"> {{dialogTitle==="Add"?"Add":"Update"}} </button>
             </div>
         </div>
     </kendo-dialog-actions>

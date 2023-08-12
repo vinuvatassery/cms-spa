@@ -28,7 +28,7 @@ export class SendLetterProfileComponent implements OnInit {
   clientCaseId: any;
   isEdit = true;
   clientEligibilityInfo! : ClientEligibilityInfo;
-
+  prevClientCaseEligibilityId: string =""
 
   /** Constructor **/
   constructor(private readonly caseFacade: CaseFacade,
@@ -56,6 +56,7 @@ export class SendLetterProfileComponent implements OnInit {
           this.clientCaseId = sessionData.ClientCaseId;
           this.clientCaseEligibilityId = sessionData.clientCaseEligibilityId;
           this.clientId = sessionData.clientId;
+          this.prevClientCaseEligibilityId =  JSON.parse( session.sessionData)?.prevClientCaseEligibilityId
           if(this.clientCaseEligibilityId && this.clientId && this.clientCaseId)
           {
           this.loadEligibilityInfo();
@@ -86,7 +87,7 @@ export class SendLetterProfileComponent implements OnInit {
   }
   loadEligibilityInfo()
   {
-    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.clientEligibilityInfo).subscribe({
+    this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.clientEligibilityInfoProfile).subscribe({
       next: (data:any) => {
         this.clientEligibilityInfo = data;
         this.changeDetector.detectChanges();
