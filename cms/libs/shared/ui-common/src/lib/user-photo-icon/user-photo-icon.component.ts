@@ -1,6 +1,8 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserDataService, UserManagementFacade } from '@cms/system-config/domain';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'common-user-photo-icon',
@@ -11,16 +13,17 @@ import { UserManagementFacade } from '@cms/system-config/domain';
 
 export class UserPhotoIconComponent implements OnInit{
 
-   @Input() userId !: any  
-  
-  userImage$ = this.userManagementFacade.userImage$;
-  userById$ = this.userManagementFacade.usersById$;
+   @Input() userId !: any    
+
   imageLoaderVisible =true;
   userData! : any
+   userImageSubject = new Subject<any>(); 
+   userByIdSubject = new Subject<any>();   
 
     /** Constructor**/
     constructor(     
-      private userManagementFacade : UserManagementFacade
+      private userManagementFacade : UserManagementFacade,
+      private readonly userDataService: UserDataService
     ) {}
 
 
@@ -33,16 +36,32 @@ export class UserPhotoIconComponent implements OnInit{
     loadprofilePhoto()
     {   
       if(this.userId)
-      {
-        this.userManagementFacade.getUserImage(this.userId)
+      {   
+          this.userDataService.getUserImage(this.userId).subscribe({
+            next: (userImageResponse : any) => {        
+              this.userImageSubject.next(userImageResponse);
+            },
+            error: (err) => {        
+              this.userManagementFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+            },
+          });
+        
+      
       }
     }
    
     loadprofileData()
     { 
       if(this.userId)
-      {
-        this.userManagementFacade.getUserById(this.userId)  
+      {   
+        this.userDataService.getUserById(this.userId).subscribe({
+          next: (userDataResponse : any) => {        
+            this.userByIdSubject.next(userDataResponse);
+          },
+          error: (err) => {
+            this.userManagementFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+          },
+        });
       }  
     }
    

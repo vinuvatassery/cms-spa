@@ -1159,10 +1159,17 @@ color: $app-primary-font-color;
     min-height: 38px;
   }
 }
-
+.search-with-btn{
+  margin-left: .8rem;
+  margin-top: 1.7rem;
+}
 .add-new-button-common {
   float: right;
   position: absolute;
   top: 40px;
   right: 30px;
+}
+ 
+.preferred-heading{
+  border-left:3px solid material-color($hive-canyon-palette, A700) !important;
 }

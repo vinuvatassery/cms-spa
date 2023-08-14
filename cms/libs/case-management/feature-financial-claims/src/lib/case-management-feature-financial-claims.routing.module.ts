@@ -17,7 +17,7 @@ const routes = [
     },
   },
   {
-    path: 'batch',
+    path: 'batch/:batchId',
     component: FinancialClaimsBatchRouterPageComponent,
     data: {
       title: 'Batch',
