@@ -200,11 +200,9 @@ export class FinancialClaimsFacade {
           total: dataResponse['totalCount'],
         };
         this.batchReconcileDataSubject.next(gridView);
-        this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
       },
     });  
   }

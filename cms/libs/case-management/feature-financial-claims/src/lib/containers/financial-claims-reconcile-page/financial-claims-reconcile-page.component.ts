@@ -35,7 +35,7 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
     private loggingService: LoggingService,
   ) {}
 
-  ngOnInit(): void {   
+  ngOnInit(): void { 
     this.claimsType = this.financialClaimsFacade.getClaimsType(this.router)
     this.addNavigationSubscription();
   }
