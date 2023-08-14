@@ -60,7 +60,7 @@ import { FinancialClaimsPaymentServiceListComponent } from './components/financi
     FinancialClaimsPaymentsRouterPageComponent,
     FinancialClaimsBatchesReconcilePaymentsBreakoutComponent,
     FinancialClaimsPrintDenialLetterComponent,
-    FinancialClaimsInvoiceListComponent
+    FinancialClaimsInvoiceListComponent,
     FinancialClaimsPaymentServiceListComponent
   ],
   exports: [
@@ -87,7 +87,7 @@ import { FinancialClaimsPaymentServiceListComponent } from './components/financi
     FinancialClaimsPaymentsRouterPageComponent,
     FinancialClaimsBatchesReconcilePaymentsBreakoutComponent,
     FinancialClaimsPrintDenialLetterComponent,
-    FinancialClaimsInvoiceListComponent
+    FinancialClaimsInvoiceListComponent,
     FinancialClaimsPaymentServiceListComponent
   ],
 })
