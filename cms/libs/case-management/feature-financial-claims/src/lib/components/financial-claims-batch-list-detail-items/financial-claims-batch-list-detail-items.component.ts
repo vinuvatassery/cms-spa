@@ -20,7 +20,8 @@ import {
 import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { PaymentPanel } from '@cms/case-management/domain';
+import { PaymentDetail, PaymentPanel } from '@cms/case-management/domain';
+import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 @Component({
   selector: 'cms-financial-claims-batch-list-detail-items',
   templateUrl: './financial-claims-batch-list-detail-items.component.html', 
@@ -41,6 +42,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   @Input() vendorId:any;
   @Input() batchId:any;
   @Input() itemsListGridLoader$!: Observable<boolean>;
+  @Input() paymentDetails$!: Observable<PaymentDetail>;
   @Output() loadBatchItemsListEvent = new EventEmitter<any>();
   @Output() loadPaymentPanel = new EventEmitter<any>();
   @Output()  updatePaymentPanel  = new EventEmitter<PaymentPanel>();
@@ -78,7 +80,9 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
             creationTime: 'Entry Date',
             invoiceNbr:'Invoice ID'
           };
-  
+    
+  paymentStatusList = ['SUBMITTED', 'PENDING_APPROVAL', 'DENIED', 'MANAGER_APPROVED', 'PAYMENT_REQUESTED', 'ONHOLD', 'FAILED', 'PAID'];
+  paymentStatusFilter = '';
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService, 
     public activeRoute: ActivatedRoute,
@@ -123,6 +127,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter: this.filter
     };
     this.loadBatchItemsListEvent.emit(gridDataRefinerValue);
    // this.gridDataHandle();
@@ -173,6 +178,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumn = stateData.sort[0]?.field;
     this.sortColumnDesc = this.gridColumns[this.sortColumn];
+    this.filter = stateData?.filter?.filters;
     this.loadBatchLogItemsListGrid();
   }
 
@@ -187,25 +193,23 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
     this.filterData = filter;
   }
 
-  // gridDataHandle() {
-  //   this.batchItemsGridLists$.subscribe((data: GridDataResult) => {
-  //     this.gridDataResult = data;
-  //     this.gridDataResult.data = filterBy(
-  //       this.gridDataResult.data,
-  //       this.filterData
-  //     );
-  //     this.gridClaimsBatchLogItemsDataSubject.next(this.gridDataResult);
-  //     if (data?.total >= 0 || data?.total === -1) { 
-  //       this.isBatchLogItemsGridLoaderShow = false;
-  //     }
-  //   });
-  //   this.isBatchLogItemsGridLoaderShow = false;
-  // }
-
-  backToBatchLog(event : any){  
-    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch'] );
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    this.paymentStatusFilter = value;
+    filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value:value
+      }],
+        logic: "or"
+    });
   }
 
+  backToBatchLog(event : any){  
+    const batchId = this.activeRoute.snapshot.queryParams['bid'];
+    this.route.navigate([`/financial-management/claims/${this.claimsType}/batch`],
+    { queryParams :{bid: batchId}});
+  }
 
   onViewProviderDetailClicked(  template: TemplateRef<unknown>): void {   
     this.providerDetailsDialog = this.dialogService.open({

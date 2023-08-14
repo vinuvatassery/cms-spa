@@ -23,6 +23,7 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   state!: State;
   batchItemsGridLists$ = this.financialClaimsFacade.batchItemsData$;
   batchItemsLoader$ =  this.financialClaimsFacade.batchItemsLoader$;
+  paymentDetails$ =  this.paymentFacade.paymentDetails$;
   claimsType: any;
   currentUrl:any
   paymentPanelData$ = this.paymentFacade.paymentPanelData$;
@@ -41,7 +42,8 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   ngOnInit(): void {    
    this.claimsType = this.financialClaimsFacade.getClaimsType(this.router)
    this.addNavigationSubscription();
-   this.getQueryParams()
+   this.getQueryParams();
+   this.loadPaymentDetails();
   }
 
   private addNavigationSubscription() {
@@ -66,8 +68,9 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
 
 
   loadBatchItemListGrid(event: any) {
-    const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType);
-    this.financialClaimsFacade.loadBatchItemsListGrid('0A8DC775-91C7-450A-8E98-EF65AA96DFC6', params);
+    const itemId = this.route.snapshot.queryParams['iid'];
+    const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
+    this.financialClaimsFacade.loadBatchItemsListGrid(itemId, params);
   }
 
   loadPaymentPanel(event:any=null){
@@ -87,5 +90,10 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
           this.paymentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         }
       });
+  }
+
+  loadPaymentDetails(){
+    const itemId = this.route.snapshot.queryParams['iid'];
+    this.paymentFacade.loadPaymentDetails(itemId, 'INDIVIDUAL');
   }
 }

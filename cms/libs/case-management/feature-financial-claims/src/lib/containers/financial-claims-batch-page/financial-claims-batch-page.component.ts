@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs';
 import { LoggingService } from '@cms/shared/util-core';
 
@@ -23,18 +23,22 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
   state!: State;
   paymentsByBatchGridLists$ = this.financialClaimsFacade.paymentsByBatchData$;
   paymentByBatchGridLoader$ =  this.financialClaimsFacade.paymentByBatchGridLoader$;
+  paymentBatchName$ =  this.financialClaimsFacade.paymentBatchName$;
   claimsType: any;
+  batchId!:string;
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly router: Router,   
+    private readonly route: ActivatedRoute, 
     private readonly cdr: ChangeDetectorRef,
     private loggingService: LoggingService,
   ) {}
 
   ngOnInit(): void {
-  
+    this.batchId =  this.route.snapshot.params['bid'];
     this.claimsType = this.financialClaimsFacade.getClaimsType(this.router)
     this.addNavigationSubscription();
+    this.loadBatchName();
   }
 
   private addNavigationSubscription() {
@@ -52,7 +56,14 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
   }
 
   loadBatchLogListGrid(event: any) {
-    const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType);
-    this.financialClaimsFacade.loadBatchLogListGrid('4C8A6C59-377E-47B5-ACDF-D9CAD2E6EEBC', params);
+    const batchId = this.route.snapshot.queryParams['bid'];
+    const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
+    this.financialClaimsFacade.loadBatchLogListGrid(batchId, params);
   }
+
+  loadBatchName(){
+    const batchId = this.route.snapshot.queryParams['bid'];
+    this.financialClaimsFacade.loadBatchName(batchId);
+  }
+
 }

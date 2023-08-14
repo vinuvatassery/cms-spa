@@ -168,7 +168,9 @@ export class FinancialClaimsBatchesListComponent implements OnInit, OnChanges{
     this.isFinancialClaimsBatchGridLoaderShow = false;
   }
   navToBatchDetails(event : any){   
-    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch'] );
+    
+    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch'],
+   {queryParams: {bid: '4C8A6C59-377E-47B5-ACDF-D9CAD2E6EEBC'}} );
   }
 
 }

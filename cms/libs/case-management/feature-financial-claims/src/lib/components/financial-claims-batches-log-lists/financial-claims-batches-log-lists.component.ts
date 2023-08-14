@@ -20,6 +20,8 @@ import {
 } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
+import { PaymentBatchName } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-claims-batches-log-lists',
   templateUrl: './financial-claims-batches-log-lists.component.html', 
@@ -43,7 +45,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   printAuthorizationDialog: any;
   UnBatchDialog: any;
   deleteClaimsDialog: any;
-  public bulkMore = [
+  bulkMore = [
     {
       buttonType: 'btn-h-primary',
       text: 'Request Payments',
@@ -111,16 +113,19 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
     },
   ];
   @Input() claimsType: any;
+  @Input() batchId: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchLogGridLists$: any;
   @Input() loader$!: Observable<boolean>;
+  @Input() paymentBatchName$!:  Observable<PaymentBatchName>;
   @Output() loadBatchLogListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'creationTime';
+  sortColumn = 'paymentNbr';
   sortDir = 'Ascending';
+  sortColumnName = '';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
@@ -134,13 +139,38 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
-   
+  gridColumns : {[key: string]: string} = {
+    paymentNbr: 'Item #',
+    invoiceNbr: 'Invoice ID',
+    vendorName: 'Provider Name',
+    tin: 'Tax ID',
+    clientId: 'Member ID',
+    clientFullName: 'Client Name',
+    nameOnInsuranceCard:'Name on Primary Insurance Card',
+    serviceCount: 'Service Count',
+    serviceCost: 'Total Cost',
+    amountDue: 'Total Due',
+    paymentMethodCode:'Payment Method',
+    paymentTypeCode:'Payment Type',
+    paymentStatusCode:'Payment Status',
+    clientMaximum:'Client Annual Total',
+    balanceAmount:'Client Balance'
+  };
+
+  paymentMethods = ['CHECK', 'ACH', 'SPOTS'];
+  paymentTypes = ['PAYMENT', 'REFUND', 'COPAYMENT', 'DEDUCTIBLE', 'FULL PAY'];
+  paymentStatusList = ['SUBMITTED', 'PENDING_APPROVAL', 'DENIED', 'MANAGER_APPROVED', 'PAYMENT_REQUESTED', 'ONHOLD', 'FAILED', 'PAID'];
+  paymentMethodFilter:string ='';
+  paymentTypeFilter:string ='';
+  paymentStatusFilter:string='';
   /** Constructor **/
   constructor(private route: Router,private dialogService: DialogService, public activeRoute: ActivatedRoute ) {}
   
   ngOnInit(): void { 
+    this.sortColumnName = 'Item #';
     this.loadBatchLogListGrid();
   }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -160,6 +190,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
       this.sortType
     );
   }
+
   loadBatchLog(
     skipCountValue: number,
     maxResultCountValue: number,
@@ -170,34 +201,35 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
-      sortColumn: this.sortColumn ?? 'creationTime',
+      sortColumn: this.sortColumn ?? 'paymentNbr',
       sortType: sortTypeValue ?? 'asc',
+      filter: this.filter
     };
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
+    //this.gridDataHandle();
   }
  
   
   onChange(data: any) {
     this.defaultGridState();
 
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
+    // this.filterData = {
+    //   logic: 'and',
+    //   filters: [
+    //     {
+    //       filters: [
+    //         {
+    //           field: this.selectedColumn ?? 'vendorName',
+    //           operator: 'startswith',
+    //           value: data,
+    //         },
+    //       ],
+    //       logic: 'and',
+    //     },
+    //   ],
+    // };
     const stateData = this.state;
-    stateData.filter = this.filterData;
+    //stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
 
@@ -207,7 +239,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
       take: this.pageSizes[0]?.value,
       sort: this.sort,
       filter: { logic: 'and', filters: [] },
-    };
+    };   
   }
 
   onColumnReorder($event: any) {
@@ -221,7 +253,43 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumn = stateData.sort[0]?.field
+    this.sortColumnName = this.gridColumns[this.sortColumn];
+    //this.setFilterState(stateData.filter);
+    this.filter = stateData?.filter?.filters;
     this.loadBatchLogListGrid();
+  }
+
+  setFilterState(filter: any){
+    if(filter?.filters.length > 0)
+    {
+      let stateFilter = filter?.filters.slice(-1)[0].filters[0];
+      //this.columnName = stateFilter.field;
+
+        this.filter = stateFilter.value;
+    }else{
+      this.filter = "";
+    }
+  }
+
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    if(field === 'paymentMethodCode'){
+      this.paymentMethodFilter = value;
+    }
+    else if(field === 'paymentTypeCode'){
+      this.paymentTypeFilter = value;
+    }
+    else if(field === 'paymentStatusCode'){
+      this.paymentStatusFilter = value;
+    }
+
+    filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value:value
+      }],
+        logic: "or"
+    });
   }
 
   // updating the pagination infor based on dropdown selection
@@ -235,21 +303,6 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
     this.filterData = filter;
   }
 
-  gridDataHandle() {
-    this.batchLogGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridClaimsBatchLogDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
-        this.isBatchLogGridLoaderShow = false;
-      }
-    });
-    this.isBatchLogGridLoaderShow = false;
-  }
-
    backToBatch(event : any){  
     this.route.navigate(['/financial-management/claims/' + this.claimsType ] ); 
   }
@@ -258,6 +311,12 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
     this.route.navigate([this.route.url, 'items'] ); 
   }
 
+  paymentClickHandler(paymentRequestId: string){
+    const batchId = this.activeRoute.snapshot.queryParams['bid'];
+    this.route.navigate([this.route.url.split('?')[0] , 'items'], {
+      queryParams: { bid: batchId, iid: paymentRequestId}
+    }); 
+  }
   navToReconcilePayments(event : any){  
     this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch/reconcile-payments'] ); 
   }
@@ -319,6 +378,5 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
     if (result) { 
       this.deleteClaimsDialog.close();
     }
-  }
- 
+  } 
 }

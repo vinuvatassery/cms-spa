@@ -173,21 +173,23 @@ export class FinancialClaimsDataService {
   }
 
   loadPaymentsByBatch(batchId: string, params:GridFilterParam){
-    const queryString = params.convertToQueryString();
+    return this.http.post<any>(      
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/payment-batches/${batchId}/payments`, params);    
+  }
+
+  loadBatchName(batchId: string){
     return this.http.get<any>(      
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/payment-batches/${batchId}/payments${queryString}`);    
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}`);    
   }
 
   loadServicesByPayment(paymentId: string, params:GridFilterParam){
-    const queryString = params.convertToQueryString();
-    return this.http.get<any>(      
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/payments/${paymentId}/services${queryString}`);    
+    return this.http.post<any>(      
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/payments/${paymentId}/services`, params);    
   }
 
   loadBatchItemsListService(paymentId: string, params: GridFilterParam){
-    const queryString = params.convertToQueryString();
-    return this.http.get<any>(      
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/payments/${paymentId}/services${queryString}&type=INDIVIDUAL`);    
+    return this.http.post<any>(      
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/payments/${paymentId}/services?type=INDIVIDUAL`, params);    
   }
 
   loadReconcileListService(){

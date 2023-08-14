@@ -9,6 +9,7 @@ import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { PaymentsDataService } from '../../infrastructure/financial-management/payments.data.service';
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { PaymentDetail } from '@cms/case-management/domain';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentsFacade {
@@ -26,11 +27,13 @@ export class PaymentsFacade {
   private paymentsAddressDataSubject = new BehaviorSubject<any>([]);
   private paymentBatchLoaderSubject = new BehaviorSubject<boolean>(false);
   private paymentPanelSubject = new Subject<any>();
+  private paymentDetailsSubject = new Subject<PaymentDetail>();
   paymentBatches$ = this.paymentBatchesSubject.asObservable();
   paymentBatchSubList$ = this.paymentBatchSubListSubject.asObservable();
   paymentsAddressData$ = this.paymentsAddressDataSubject.asObservable();
   paymentBatchLoader$ = this.paymentBatchLoaderSubject.asObservable();
   paymentPanelData$ = this.paymentPanelSubject.asObservable();
+  paymentDetails$ = this.paymentDetailsSubject.asObservable();
 
   /** Private properties **/
 
@@ -115,4 +118,14 @@ export class PaymentsFacade {
     return this.paymentsDataService.updatePaymentPanel(vendorId,batchId,paymentPanel)
   }
 
+  loadPaymentDetails(paymentId: string, type: string){
+    return this.paymentsDataService.loadPaymentDetails(paymentId, type).subscribe({
+      next: (dataResponse: any) => {
+        this.paymentDetailsSubject.next(dataResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
 }

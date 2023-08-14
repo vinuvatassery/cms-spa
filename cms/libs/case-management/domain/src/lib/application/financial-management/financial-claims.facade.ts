@@ -9,7 +9,7 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { FinancialClaimsDataService } from '../../infrastructure/financial-management/financial-claims.data.service';
 import { Router } from '@angular/router';
 import { FinancialClaimTypeCode } from '../../enums/financial-claim-types';
-import { GridFilterParam } from '@cms/case-management/domain';
+import { GridFilterParam, PaymentBatchName } from '@cms/case-management/domain';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
@@ -72,8 +72,10 @@ export class FinancialClaimsFacade {
 
   private paymentsByBatchDataSubject =  new Subject<any>();
   private paymentByBatchGridLoaderSubject =  new BehaviorSubject<boolean>(false);
+  paymentBatchNameSubject  =  new Subject<PaymentBatchName>();
   paymentsByBatchData$ = this.paymentsByBatchDataSubject.asObservable();
   paymentByBatchGridLoader$ = this.paymentByBatchGridLoaderSubject.asObservable();
+  paymentBatchName$ = this.paymentBatchNameSubject.asObservable();
 
   private batchReconcileDataSubject =  new Subject<any>();
   reconcileDataList$ = this.batchReconcileDataSubject.asObservable();
@@ -272,6 +274,17 @@ export class FinancialClaimsFacade {
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         this.paymentByBatchGridLoaderSubject.next(false);
+      },
+    });  
+  }
+
+  loadBatchName(batchId: string){
+    this.financialClaimsDataService.loadBatchName(batchId).subscribe({
+      next: (dataResponse) => { 
+        this.paymentBatchNameSubject.next(dataResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
       },
     });  
   }
