@@ -16,7 +16,6 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -206,30 +205,12 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
       filter: this.filter
     };
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
-    //this.gridDataHandle();
   }
  
   
   onChange(data: any) {
     this.defaultGridState();
-
-    // this.filterData = {
-    //   logic: 'and',
-    //   filters: [
-    //     {
-    //       filters: [
-    //         {
-    //           field: this.selectedColumn ?? 'vendorName',
-    //           operator: 'startswith',
-    //           value: data,
-    //         },
-    //       ],
-    //       logic: 'and',
-    //     },
-    //   ],
-    // };
     const stateData = this.state;
-    //stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
 
@@ -254,21 +235,8 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumn = stateData.sort[0]?.field
     this.sortColumnName = this.gridColumns[this.sortColumn];
-    //this.setFilterState(stateData.filter);
     this.filter = stateData?.filter?.filters;
     this.loadBatchLogListGrid();
-  }
-
-  setFilterState(filter: any){
-    if(filter?.filters.length > 0)
-    {
-      let stateFilter = filter?.filters.slice(-1)[0].filters[0];
-      //this.columnName = stateFilter.field;
-
-        this.filter = stateFilter.value;
-    }else{
-      this.filter = "";
-    }
   }
 
   dropdownFilterChange(field:string, value: any, filterService: FilterService): void {

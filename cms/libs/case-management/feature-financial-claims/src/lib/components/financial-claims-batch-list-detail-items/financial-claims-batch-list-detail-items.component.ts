@@ -15,7 +15,6 @@ import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -130,7 +129,6 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
       filter: this.filter
     };
     this.loadBatchItemsListEvent.emit(gridDataRefinerValue);
-   // this.gridDataHandle();
   }
  
   
