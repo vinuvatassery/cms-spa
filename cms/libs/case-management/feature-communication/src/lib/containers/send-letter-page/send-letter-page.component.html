@@ -1,8 +1,8 @@
 <section class="app-l-mainTittle" kendoTooltip>
   <h2>{{title}}  {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'Email' : 'Letter'}}</h2>
   <p class="mt-1 mb-3">
-    If there is an issue with this letter template, please contact your
-    Administrator. Make edits as needed, then click “Send to Print” once the
+    If there is an issue with this {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'email' : 'letter'}} template, please contact your
+    Administrator. Make edits as needed, then click “Send {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'email' : 'to print'}}” once the
     letter is complete.
   </p>
   <div class="flex-row">
@@ -112,6 +112,6 @@
 
 <ng-template #approval_letter_later>
   <case-management-approval-letter-later
-  [clientId]="clientId" 
+  [clientId]="clientId" [paperlessFlag]="paperlessFlag"
   (closeApprovalLetterModalEvent)="closeApprovalLetterModal()"></case-management-approval-letter-later>
 </ng-template>

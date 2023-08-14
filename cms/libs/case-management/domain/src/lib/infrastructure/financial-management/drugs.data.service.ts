@@ -2,8 +2,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** External libraries **/
-import { of } from 'rxjs/internal/observable/of';
-import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DrugsDataService {
@@ -15,20 +15,11 @@ export class DrugsDataService {
 
   /** Public methods **/
 
- 
-  loadDrugsListService() {
-    return of([
-      {
-        NDC: 'XXXXXXXXXX `',
-        brandName:'Very Nice Brand Name', 
-        drugName: 'Drug Name',
-        deliveryMethod: 'Tablet',
-        includedInRebates: 'Yes',
-        hivDrugs: 'Yes',
-        hepDrugs: 'No',
-        oiDrugs: 'No',
-      },
-    ]);
+
+  loadDrugList(vendorId: string, skipCount: number, maxResultCount: number, sort: string, sortType: string) : Observable<any> {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/drugs?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`
+    );
   }
 
 }
