@@ -87,15 +87,15 @@
                         <span class="sort-items">Columns Re-ordered</span>
                   </div>
 
-                  <!-- <div>
+                  <div *ngIf="pageValidationMessage !== null">
                         <div class="info-banners red-banner d-flex mt-2 mb-2">
                               <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>              
                               <div>              
-                                <p >Please fill the mandatory fields, check the page number  {{mandatoryValidationMissingPages}} </p>                                    
+                                <p > {{pageValidationMessage}} </p>                                    
                                      
                               </div>              
                          </div>
-                  </div> -->
+                  </div>
                   <div class="app-c-table">
                         <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take" #grid
                         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" 
