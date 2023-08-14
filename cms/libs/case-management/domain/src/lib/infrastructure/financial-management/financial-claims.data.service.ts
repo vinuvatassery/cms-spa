@@ -221,35 +221,8 @@ export class FinancialClaimsDataService {
   }
 
   loadReconcileListService(batchId:any,claimsType:any,paginationParameters:any){
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}/reconcile-payments?serviceSubTypeCode=${claimsType}&SkipCount=${paginationParameters?.skipCount}
-    &maxResultCount=${paginationParameters?.pageSize}&sortType=${paginationParameters?.sortType}&sorting=${paginationParameters?.sortColumn}`);
-    // return of([
-    //   {
-    //     paymentId:1,
-    //     medicalProvider: 'Vendor Name',
-    //     tin:'tin123', 
-    //     paymentMethod:'method1', 
-    //     datePmtReconciled:new Date, 
-    //     datePmtSent:new Date,  
-    //     paymentAmount:'address2', 
-    //     warrantNumber:'number123',
-    //     note:'note123',
-    //     noteHover:false,
-    //   },
-    //   {
-    //     paymentId:2,
-    //     medicalProvider: 'Vendor Name',
-    //     tin:'tin123', 
-    //     paymentMethod:'method1', 
-    //     datePmtReconciled:new Date, 
-    //     datePmtSent:new Date,  
-    //     paymentAmount:'address2', 
-    //     warrantNumber:'number123',
-    //     note:'note123',
-    //     noteHover:false,
-    //   },
-     
-    // ]);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/reconcile-payments?&SkipCount=${paginationParameters?.skipCount}
+    &maxResultCount=${paginationParameters?.pageSize}&sortType=${paginationParameters?.sortType}&sorting=${paginationParameters?.sortColumn}`);    
   }
   loadClaimsListService( ) {
     return of([
