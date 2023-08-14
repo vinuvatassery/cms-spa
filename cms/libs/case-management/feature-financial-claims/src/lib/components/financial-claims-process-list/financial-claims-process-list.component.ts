@@ -67,6 +67,9 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
+  vendorId:any;
+  clientId:any;
+  clientName:any;
   columns : any = {
     invoiceNbr:"Invoice ID",
     vendorFullName:"Provider Name",
@@ -366,6 +369,7 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   }
 
   clientRecentClaimsModalClicked (template: TemplateRef<unknown>, data:any): void {
+    debugger;
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
@@ -375,6 +379,10 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
         duration: 200
       }
     });
+    debugger;
+    this.vendorId=data.vendorId;
+    this.clientId=data.clientId;  
+    this.clientName=data.clientFullName;  
   }
 
   closeRecentClaimsModal(result: any){
