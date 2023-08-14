@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade, ServiceSubTypeCode } from '@cms/case-management/domain';
-import { Router, NavigationEnd, ActivatedRoute,ParamMap, Params  } from '@angular/router';
+import { FinancialClaimsFacade } from '@cms/case-management/domain';
+import { Router, NavigationEnd, ActivatedRoute  } from '@angular/router';
 import { filter } from 'rxjs';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { LoggingService } from '@cms/shared/util-core';
