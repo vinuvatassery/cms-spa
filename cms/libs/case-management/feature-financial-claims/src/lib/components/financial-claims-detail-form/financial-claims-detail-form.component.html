@@ -213,9 +213,11 @@
                                             <kendo-floatinglabel text="Service Description">
                                                 <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
                                                     aria-label="Service Description"
-                                                    formControlName="serviceDescription">
+                                                    formControlName="serviceDescription"
+                                                    [maxlength]="textMaxLength"
+                                                    >
                                                     <kendo-textarea-suffix class="justify-content-end">
-                                                        <span class="tareacounter"> 10/300</span>
+                                                        <span class="tareacounter"> {{serviceDescCharCount(i)}}</span>
                                                     </kendo-textarea-suffix>
                                                 </kendo-textarea>
                                             </kendo-floatinglabel>
@@ -267,9 +269,10 @@
                                             <kendo-floatinglabel text="Reason For Exception">
                                                 <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
                                                     aria-label="Reason For Exception"
-                                                    formControlName="exceptionReasonCode">
+                                                    [maxlength]="textMaxLength"
+                                                    formControlName="reasonForException">
                                                     <kendo-textarea-suffix class="justify-content-end">
-                                                        <span class="tareacounter"> 10/300</span>
+                                                        <span class="tareacounter"> {{reasonCharCount(i)}}</span>
                                                     </kendo-textarea-suffix>
                                                 </kendo-textarea>
                                             </kendo-floatinglabel>
@@ -295,7 +298,7 @@
                         [checked]="isSpotsPayment" 
                         (change)="onSpotsPaymentChange($event)" />
                     <label class="k-checkbox-label" for="isSpotsPaymentInput">
-                        <strong>This is a SPOTs payment</strong></label>
+                        <strong>This is a SPOTS payment</strong></label>
                 </span>
             </div>
 

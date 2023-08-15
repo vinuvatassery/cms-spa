@@ -58,6 +58,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   selectedCPTCode: any = null;
   claimsType: any;
   isSpotsPayment!: boolean ;
+  textMaxLength: number = 300;
 
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
@@ -436,5 +437,22 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   onSpotsPaymentChange(check: any){
     this.isSpotsPayment = check.currentTarget.checked;
   }
+
+  serviceDescCharCount( i: number){
+    let serviceDescription = this.claimForm.value.claimService[i].serviceDescription; 
+    if(serviceDescription){
+      return `${serviceDescription.length}/${this.textMaxLength}`;
+    }
+    return `0/${this.textMaxLength}`;
+  }
+
+  reasonCharCount(i: number){    
+    let reasonForException = this.claimForm.value.claimService[i].reasonForException;
+    if(reasonForException){
+      return `${reasonForException.length}/${this.textMaxLength}`;
+    }    
+    return `0/${this.textMaxLength}`;
+  }
+
 }
 
