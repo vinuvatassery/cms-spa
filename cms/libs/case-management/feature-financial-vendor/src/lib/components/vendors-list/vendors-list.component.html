@@ -164,9 +164,6 @@
     </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="preferredFlag" title="Preferred" [width]="100" *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy">
-    </kendo-grid-column>
-
     <kendo-grid-column field="NpiNbr" title="Npi Number" [width]="100" *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"

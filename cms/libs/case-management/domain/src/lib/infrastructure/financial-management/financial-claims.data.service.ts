@@ -40,39 +40,19 @@ export class FinancialClaimsDataService {
     );
   }
 
-  loadFinancialClaimsBatchListService( ) {
-    return of([
-      {
-        id:1,
-        batch: '05012021_001 `',
-        ofProviders:'XX',
-        ofClaims:'XX',
-        pmtsRequested:'XX',
-        pmtsReconciled:'XX',
-        totalAmountDue:'XX,XXX.XX',
-        totalAmountReconciled:'XX,XXX.XX',
-      },
-      {
-        id:2,
-        batch: '05012021_001 `',
-        ofProviders:'XX',
-        ofClaims:'XX',
-        pmtsRequested:'XX',
-        pmtsReconciled:'XX',
-        totalAmountDue:'XX,XXX.XX',
-        totalAmountReconciled:'XX,XXX.XX',
-      },
-      {
-        id:3,
-        batch: '05012021_001 `',
-        ofProviders:'XX',
-        ofClaims:'XX',
-        pmtsRequested:'XX',
-        pmtsReconciled:'XX',
-        totalAmountDue:'XX,XXX.XX',
-        totalAmountReconciled:'XX,XXX.XX',
-      },
-    ]);
+  loadFinancialClaimsBatchListService(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string, claimsType : string ) {
+    const MedicalClaimsBatchPageAndSortedRequestDto =
+    {
+      SortType : sortType,
+      Sorting : sort,
+      SkipCount : skipcount,
+      MaxResultCount : maxResultCount,
+      Filter : filter
+    }
+
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches`,MedicalClaimsBatchPageAndSortedRequestDto
+    );
   }
   loadFinancialClaimsAllPaymentsListService( ) {
     return of([
