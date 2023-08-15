@@ -187,7 +187,7 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
       text: 'Delete Claims',
       icon: 'delete',
       click: (data: any): void => {
-        this.OnSingledetele(data.paymentRequestId.split(","))
+        this.onSingleClaimDelete(data.paymentRequestId.split(","))
           this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog)
 
       },
@@ -209,7 +209,7 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
     };
   }
 
-OnSingledetele(selection:any)
+onSingleClaimDelete(selection:any)
 {
   this.selectedKeysChange(selection)
 }
