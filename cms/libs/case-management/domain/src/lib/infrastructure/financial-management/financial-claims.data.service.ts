@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
-import { GridFilterParam } from '@cms/case-management/domain';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsDataService {
@@ -143,9 +143,9 @@ export class FinancialClaimsDataService {
     ]);
   }
 
-  loadPaymentsByBatch(batchId: string, params:GridFilterParam){
+  loadPaymentsByBatch(batchId: string, params:GridFilterParam, claimType:string){
     return this.http.post<any>(      
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/payment-batches/${batchId}/payments`, params);    
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payment-batches/${batchId}/payments`, params);    
   }
 
   loadBatchName(batchId: string){
@@ -153,14 +153,14 @@ export class FinancialClaimsDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}`);    
   }
 
-  loadServicesByPayment(paymentId: string, params:GridFilterParam){
+  loadServicesByPayment(paymentId: string, params:GridFilterParam, claimType:string){
     return this.http.post<any>(      
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/payments/${paymentId}/services`, params);    
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payments/${paymentId}/services`, params);    
   }
 
-  loadBatchItemsListService(paymentId: string, params: GridFilterParam){
+  loadBatchItemsListService(paymentId: string, params: GridFilterParam, claimType:string){
     return this.http.post<any>(      
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/payments/${paymentId}/services?type=INDIVIDUAL`, params);    
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payments/${paymentId}/services?type=INDIVIDUAL`, params);    
   }
 
   loadReconcileListService(){

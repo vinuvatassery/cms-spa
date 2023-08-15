@@ -9,7 +9,8 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { FinancialClaimsDataService } from '../../infrastructure/financial-management/financial-claims.data.service';
 import { Router } from '@angular/router';
 import { FinancialClaimTypeCode } from '../../enums/financial-claim-types';
-import { GridFilterParam, PaymentBatchName } from '@cms/case-management/domain';
+import { PaymentBatchName } from '../../entities/financial-management/Payment-details';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
@@ -211,9 +212,9 @@ export class FinancialClaimsFacade {
     });  
   }
 
-  loadBatchItemsListGrid(paymentId: string, param: GridFilterParam){
+  loadBatchItemsListGrid(paymentId: string, param: GridFilterParam, claimType:string){
     this.batchItemsLoaderSubject.next(true);
-    this.financialClaimsDataService.loadBatchItemsListService(paymentId, param).subscribe({
+    this.financialClaimsDataService.loadBatchItemsListService(paymentId, param, claimType).subscribe({
       next: (dataResponse: any) => {
 
         const gridView: any = {
@@ -291,14 +292,14 @@ export class FinancialClaimsFacade {
     });  
   } 
 
-  loadServicesByPayment(paymentId: string, params:GridFilterParam){
-    return this.financialClaimsDataService.loadServicesByPayment(paymentId, params);
+  loadServicesByPayment(paymentId: string, params:GridFilterParam, claimType:string){
+    return this.financialClaimsDataService.loadServicesByPayment(paymentId, params, claimType);
   }
 
 
-  loadBatchLogListGrid(batchId: string, params:GridFilterParam){
+  loadBatchLogListGrid(batchId: string, params:GridFilterParam, claimType:string){
     this.paymentByBatchGridLoaderSubject.next(true);
-    this.financialClaimsDataService.loadPaymentsByBatch(batchId, params).subscribe({
+    this.financialClaimsDataService.loadPaymentsByBatch(batchId, params, claimType).subscribe({
       next: (dataResponse) => {
         const gridView: any = {
           data: dataResponse['items'],
@@ -315,7 +316,7 @@ export class FinancialClaimsFacade {
     });  
   }
 
-  loadBatchName(batchId: string){
+    loadBatchName(batchId: string){
     this.financialClaimsDataService.loadBatchName(batchId).subscribe({
       next: (dataResponse) => { 
         this.paymentBatchNameSubject.next(dataResponse);

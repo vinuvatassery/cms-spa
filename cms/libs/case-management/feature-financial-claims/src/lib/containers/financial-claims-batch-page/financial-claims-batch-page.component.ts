@@ -58,7 +58,7 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
   loadBatchLogListGrid(event: any) {
     const batchId = this.route.snapshot.queryParams['bid'];
     const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
-    this.financialClaimsFacade.loadBatchLogListGrid(batchId, params);
+    this.financialClaimsFacade.loadBatchLogListGrid(batchId, params, this.claimsType);
   }
 
   loadBatchName(){

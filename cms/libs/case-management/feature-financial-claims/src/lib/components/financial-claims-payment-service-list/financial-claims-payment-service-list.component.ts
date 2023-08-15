@@ -14,6 +14,7 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
 
     /** Input Properties **/
     @Input() paymentId!: string;
+    @Input() claimType!: string;
 
     /* Public properties */
     formUiStyle: UIFormStyle = new UIFormStyle();
@@ -56,7 +57,7 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
         this.servicesList$.next({ data: [], total: 0 });
         this.loader$.next(true);
         const params = new GridFilterParam(this.state.skip, this.state.take , this.sort[0]?.field, this.sort[0]?.dir,'')
-        this.claimsFacade.loadServicesByPayment(this.paymentId, params).subscribe({
+        this.claimsFacade.loadServicesByPayment(this.paymentId, params, this.claimType).subscribe({
             next: (dataResponse: any) => {
                 const gridView: any = {
                     data: dataResponse['items'],
