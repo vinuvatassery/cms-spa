@@ -6,29 +6,29 @@ import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
-import { FinancialDentalClaimsDataService } from '../../infrastructure/financial-management/dental-claims.data.service';
+import { FinancialPharmacyClaimsDataService } from '../../infrastructure/financial-management/pharmacy-claims.data.service';
 
 @Injectable({ providedIn: 'root' })
-export class FinancialDentalClaimsFacade {
+export class FinancialPharmacyClaimsFacade {
  
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueDentalClaimsProcess = 'invoiceID';
+  public sortValuePharmacyClaimsProcess = 'invoiceID';
   public sortProcessList: SortDescriptor[] = [{
-    field: this.sortValueDentalClaimsProcess,
+    field: this.sortValuePharmacyClaimsProcess,
   }];
 
-  public sortValueDentalClaimsBatch = 'batch';
+  public sortValuePharmacyClaimsBatch = 'batch';
   public sortBatchList: SortDescriptor[] = [{
-    field: this.sortValueDentalClaimsBatch,
+    field: this.sortValuePharmacyClaimsBatch,
   }];
 
-  public sortValueDentalClaimsPayments = 'batch';
+  public sortValuePharmacyClaimsPayments = 'batch';
   public sortPaymentsList: SortDescriptor[] = [{
-    field: this.sortValueDentalClaimsPayments,
+    field: this.sortValuePharmacyClaimsPayments,
   }];
 
   public sortValueBatchLog = 'vendorName';
@@ -53,14 +53,14 @@ export class FinancialDentalClaimsFacade {
     field: this.sortValueReconcile,
   }];
 
-  private dentalClaimsProcessDataSubject = new Subject<any>();
-  dentalClaimsProcessData$ = this.dentalClaimsProcessDataSubject.asObservable();
+  private pharmacyClaimsProcessDataSubject = new Subject<any>();
+  pharmacyClaimsProcessData$ = this.pharmacyClaimsProcessDataSubject.asObservable();
 
-  private dentalClaimsBatchDataSubject =  new Subject<any>();
-  dentalClaimsBatchData$ = this.dentalClaimsBatchDataSubject.asObservable();  
+  private pharmacyClaimsBatchDataSubject =  new Subject<any>();
+  pharmacyClaimsBatchData$ = this.pharmacyClaimsBatchDataSubject.asObservable();  
 
-  private dentalClaimsAllPaymentsDataSubject =  new Subject<any>();
-  dentalClaimsAllPaymentsData$ = this.dentalClaimsAllPaymentsDataSubject.asObservable();
+  private pharmacyClaimsAllPaymentsDataSubject =  new Subject<any>();
+  pharmacyClaimsAllPaymentsData$ = this.pharmacyClaimsAllPaymentsDataSubject.asObservable();
 
   private batchLogDataSubject =  new Subject<any>();
   batchLogData$ = this.batchLogDataSubject.asObservable();
@@ -99,7 +99,7 @@ export class FinancialDentalClaimsFacade {
 
   /** Constructor**/
   constructor(
-    public financialDentalClaimsDataService: FinancialDentalClaimsDataService,
+    public financialPharmacyClaimsDataService: FinancialPharmacyClaimsDataService,
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
@@ -107,10 +107,10 @@ export class FinancialDentalClaimsFacade {
   ) { }
 
   /** Public methods **/
-  loadDentalClaimsProcessListGrid(){
-    this.financialDentalClaimsDataService.loadDentalClaimsProcessListService().subscribe({
+  loadPharmacyClaimsProcessListGrid(){
+    this.financialPharmacyClaimsDataService.loadPharmacyClaimsProcessListService().subscribe({
       next: (dataResponse) => {
-        this.dentalClaimsProcessDataSubject.next(dataResponse);
+        this.pharmacyClaimsProcessDataSubject.next(dataResponse);
         this.hideLoader();
       },
       error: (err) => {
@@ -121,10 +121,10 @@ export class FinancialDentalClaimsFacade {
   }   
 
 
-  loadDentalClaimsBatchListGrid(){
-    this.financialDentalClaimsDataService.loadDentalClaimsBatchListService().subscribe({
+  loadPharmacyClaimsBatchListGrid(){
+    this.financialPharmacyClaimsDataService.loadPharmacyClaimsBatchListService().subscribe({
       next: (dataResponse) => {
-        this.dentalClaimsBatchDataSubject.next(dataResponse);
+        this.pharmacyClaimsBatchDataSubject.next(dataResponse);
         this.hideLoader();
       },
       error: (err) => {
@@ -135,10 +135,10 @@ export class FinancialDentalClaimsFacade {
   }
 
 
-  loadDentalClaimsAllPaymentsListGrid(){
-    this.financialDentalClaimsDataService.loadDentalClaimsAllPaymentsListService().subscribe({
+  loadPharmacyClaimsAllPaymentsListGrid(){
+    this.financialPharmacyClaimsDataService.loadPharmacyClaimsAllPaymentsListService().subscribe({
       next: (dataResponse) => {
-        this.dentalClaimsAllPaymentsDataSubject.next(dataResponse);
+        this.pharmacyClaimsAllPaymentsDataSubject.next(dataResponse);
         this.hideLoader();
       },
       error: (err) => {
@@ -150,7 +150,7 @@ export class FinancialDentalClaimsFacade {
 
 
   loadBatchLogListGrid(){
-    this.financialDentalClaimsDataService.loadBatchLogListService().subscribe({
+    this.financialPharmacyClaimsDataService.loadBatchLogListService().subscribe({
       next: (dataResponse) => {
         this.batchLogDataSubject.next(dataResponse);
         this.hideLoader();
@@ -162,7 +162,7 @@ export class FinancialDentalClaimsFacade {
     });  
   }
   loadBatchItemsListGrid(){
-    this.financialDentalClaimsDataService.loadBatchItemsListService().subscribe({
+    this.financialPharmacyClaimsDataService.loadBatchItemsListService().subscribe({
       next: (dataResponse) => {
         this.batchItemsDataSubject.next(dataResponse);
         this.hideLoader();
@@ -174,7 +174,7 @@ export class FinancialDentalClaimsFacade {
     });  
   }
   loadReconcileListGrid(){
-    this.financialDentalClaimsDataService.loadReconcileListService().subscribe({
+    this.financialPharmacyClaimsDataService.loadReconcileListService().subscribe({
       next: (dataResponse) => {
         this.batchReconcileDataSubject.next(dataResponse);
         this.hideLoader();
@@ -186,16 +186,5 @@ export class FinancialDentalClaimsFacade {
     });  
   }
   
-  loadClaimsListGrid(){
-    this.financialDentalClaimsDataService.loadClaimsListService().subscribe({
-      next: (dataResponse) => {
-        this.claimsListDataSubject.next(dataResponse);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
-      },
-    });  
-  }
+ 
 }

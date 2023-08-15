@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** External libraries **/
+import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
 
@@ -15,71 +16,42 @@ export class FinancialClaimsDataService {
  
 
  
-  loadFinancialClaimsProcessListService( ) {
-    return of([
-      {
-        invoiceID:1,
-        providerName: 'Address `',
-        taxID:'address2', 
-        paymentMethod:'address2', 
-        clientName:'address2', 
-        nameOnPrimaryInsuranceCard:'address2', 
-        memberID:'address2', 
-        serviceCount:'address2', 
-        totalCost:'address2', 
-        totalDue:'address2', 
-        paymentStatus:'address2', 
-        by: 'by',
-      },
-      {
-        invoiceID:2,
-        providerName: 'Address `',
-        taxID:'address2', 
-        paymentMethod:'address2', 
-        clientName:'address2', 
-        nameOnPrimaryInsuranceCard:'address2', 
-        memberID:'address2', 
-        serviceCount:'address2', 
-        totalCost:'address2', 
-        totalDue:'address2', 
-        paymentStatus:'address2', 
-        by: 'by',
-      },
-    ]);
+  loadFinancialClaimsProcessListService(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string, claimsType : string ) {
+
+    const MedicalClaimsPageAndSortedRequestDto =
+    {    
+      SortType : sortType,
+      Sorting : sort,
+      SkipCount : skipcount,
+      MaxResultCount : maxResultCount,
+      Filter : filter
+    }
+    
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}`,MedicalClaimsPageAndSortedRequestDto
+    );
   }
-  loadFinancialClaimsBatchListService( ) {
-    return of([
-      {
-        id:1,
-        batch: '05012021_001 `',
-        ofProviders:'XX', 
-        ofClaims:'XX', 
-        pmtsRequested:'XX', 
-        pmtsReconciled:'XX', 
-        totalAmountDue:'XX,XXX.XX', 
-        totalAmountReconciled:'XX,XXX.XX',  
-      },
-      {
-        id:2,
-        batch: '05012021_001 `',
-        ofProviders:'XX', 
-        ofClaims:'XX', 
-        pmtsRequested:'XX', 
-        pmtsReconciled:'XX', 
-        totalAmountDue:'XX,XXX.XX', 
-        totalAmountReconciled:'XX,XXX.XX',
-      },
-      {
-        id:3,
-        batch: '05012021_001 `',
-        ofProviders:'XX', 
-        ofClaims:'XX', 
-        pmtsRequested:'XX', 
-        pmtsReconciled:'XX', 
-        totalAmountDue:'XX,XXX.XX', 
-        totalAmountReconciled:'XX,XXX.XX',  
-      },
-    ]);
+
+  loadFinancialClaimsInvoiceListService(paymentRequestId : string, skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, claimsType : string) {  
+    
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/${paymentRequestId}/invoices?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`,
+    );
+  }
+
+  loadFinancialClaimsBatchListService(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string, claimsType : string ) {
+    const MedicalClaimsBatchPageAndSortedRequestDto =
+    {    
+      SortType : sortType,
+      Sorting : sort,
+      SkipCount : skipcount,
+      MaxResultCount : maxResultCount,
+      Filter : filter
+    }
+    
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches`,MedicalClaimsBatchPageAndSortedRequestDto
+    );
   }
   loadFinancialClaimsAllPaymentsListService( ) {
     return of([
@@ -472,5 +444,17 @@ export class FinancialClaimsDataService {
       
       
     ]);
+  }
+
+  loadReconcilePaymentBreakoutSummaryService(batchId: string, entityId: string): Observable<any> {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}/payment-entity/${entityId}/reconcile-summary`
+    );
+  }
+
+  loadReconcilePaymentBreakoutListService(batchId: string, entityId: string, skipCount: number, maxResultCount: number, sort: string, sortType: string): Observable<any> {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}/payment-entity/${entityId}/reconcile-breakout?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`
+    );
   }
 }

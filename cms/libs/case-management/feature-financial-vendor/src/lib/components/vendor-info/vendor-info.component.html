@@ -1,9 +1,12 @@
 <div class="block-section">
-  <div class="flex-row mb-1">
+  <div class="flex-row mb-1 align-items-center">
     <div class="flex-col flex-col-6 align-items-center" kendoTooltip>
       <h2 class="title-md mb-0 text-bold">{{profileInfoTitle}}</h2>
       <button kendoButton class="ml-2 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit Client Info"
         aria-label="edit client info" (click)="openEditInfoDialog();"></button>
+    </div>
+    <div *ngIf="providerType == vendorTypes.MedicalProviders && selectedVendorInfo$.parentVendorId">
+      <span>{{selectedVendorInfo$?.vendorName}} (Parent)</span>
     </div>
   </div>
   <div class="flex-row">
@@ -37,7 +40,13 @@
         <tbody>
           <tr>
             <td>{{profileInfoTitle.split(' ')[0]}} Name</td>
-            <td>{{selectedVendorInfo$?.vendorName}}</td>
+            <td *ngIf="(providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders) && (!!selectedVendorInfo$?.parentVendorId)">
+              {{selectedVendorInfo$?.firstName + ' ' + selectedVendorInfo$?.lastName}}
+            </td>
+            <td *ngIf="!selectedVendorInfo$?.parentVendorId">
+              {{selectedVendorInfo$?.vendorName}}
+              <span *ngIf="providerType == vendorTypes.DentalProviders"> (Parent)</span>
+            </td>
           </tr>
           <tr>
             <td>TIN</td>
@@ -99,9 +108,9 @@
 </div>
 
 <kendo-dialog *ngIf="openEditDailog" (close)="openEditDailog=false;" class="app-c-modal app-c-modal-sm app-c-modal-np">
-    <kendo-dialog-titlebar class="transform-none" *ngIf="vendorDetail.vendorTypeCode!='MANUFACTURERS'"> Edit {{editTitlePrefix + profileInfoTitle}} </kendo-dialog-titlebar>
-  <kendo-dialog-titlebar *ngIf="vendorDetail.vendorTypeCode=='MANUFACTURERS'" class="transform-none"> Edit Manufacturer Info </kendo-dialog-titlebar>
-  <cms-vendor-details [editVendorInfo]="true" [vendorDetails]="vendorDetail" [providerType]="providerType"
+    <kendo-dialog-titlebar class="transform-none" *ngIf="selectedVendorInfo$.vendorTypeCode!='MANUFACTURERS'"> Edit {{editTitlePrefix + profileInfoTitle}} </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar *ngIf="selectedVendorInfo$.vendorTypeCode=='MANUFACTURERS'" class="transform-none"> Edit Manufacturer Info </kendo-dialog-titlebar>
+  <cms-vendor-details [editVendorInfo]="true" [vendorDetails]="selectedVendorInfo$" [providerType]="providerType"
                       [profileInfoTitle]="profileInfoTitle" [medicalProviderForm]="medicalProviderForm" (closeModalEventClicked)="closeEditModal($event)"
                       [medicalProviderForm] = medicalProviderForm (saveProviderEventClicked)="saveVendorProfile($event)"></cms-vendor-details>
 </kendo-dialog>

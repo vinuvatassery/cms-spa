@@ -1,0 +1,34 @@
+<kendo-grid [resizable]="true" [navigable]="true" [data]="gridFinancialClaimsInvoice$ | async"
+[loading]="isFinancialClaimsInvoiceGridLoaderShow">
+
+<kendo-grid-column field="serviceStartDate" title="Service Start" [width]="150">
+  
+</kendo-grid-column>
+<kendo-grid-column field="serviceEndDate" title="Service End" [width]="100">
+ 
+</kendo-grid-column>
+<kendo-grid-column field="cptCode" title="CPT Code" [width]="100">
+
+</kendo-grid-column>
+<kendo-grid-column field="serviceDesc" title="Medical Service" [width]="100"> </kendo-grid-column>
+<kendo-grid-column field="serviceCost" title="Service Cost" [width]="100"> </kendo-grid-column>
+<kendo-grid-column field="amountDue" title="Amount Due" [width]="100"> </kendo-grid-column>
+<kendo-grid-column field="paymentTypeCode" title="Payment Type" [width]="100"> </kendo-grid-column>
+<kendo-grid-column field="CreationTime" title="Entry Date" [width]="100"> </kendo-grid-column>
+<kendo-grid-column field="creatorId" title="By" [width]="70"  [sortable]="false" >
+  <ng-template kendoGridCellTemplate let-dataItem>
+    <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
+      [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
+      <common-user-photo-icon [userId]="dataItem?.creatorId"></common-user-photo-icon>
+    </button>
+    <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+      <ng-template kendoPopoverBodyTemplate>
+        <common-user-profile-card [userId]="dataItem?.creatorId"></common-user-profile-card>
+      </ng-template>
+    </kendo-popover>
+  </ng-template>
+  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+    
+  </ng-template>
+</kendo-grid-column>
+</kendo-grid>

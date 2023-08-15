@@ -76,6 +76,10 @@
         <ng-template #letterTemplate>
           <h5>Do you want to send a letter?</h5>
         </ng-template>
+        <h5 *ngIf="paperlessFlag == 'Y'; else letterTemplate">Do you want to send the client an email?</h5>
+        <ng-template #letterTemplate>
+          <h5>Do you want to send a letter?</h5>
+        </ng-template>
         <div class="component-list-h">
           <span class="app-radiobtnwidtext-wrapper">
             <input type="radio" [(ngModel)]="sendLetterFlag" value="Y" aria-labelledby="send Letter" kendoRadioButton name="sendLetter" />
@@ -150,9 +154,13 @@
 
     <!-- Send New Email Modal -->
     <ng-template #sendNewEmailModalDialog>
-<case-management-send-email [data]="ScreenName"
+<case-management-send-email [data]="ScreenName" [paperlessFlag]="paperlessFlag"
 (closeSendEmailEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-email>
 </ng-template>
+<ng-template #sendNewLetterModalDialog>
+  <case-management-send-letter [data]="ScreenName"
+  (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-letter>
+  </ng-template>
 <ng-template #sendNewLetterModalDialog>
   <case-management-send-letter [data]="ScreenName"
   (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)" kendoTooltip></case-management-send-letter>

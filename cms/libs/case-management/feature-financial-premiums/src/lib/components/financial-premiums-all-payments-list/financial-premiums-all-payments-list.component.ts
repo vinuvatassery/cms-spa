@@ -242,7 +242,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   }
   navToReconcilePayments(event: any) {
     this.route.navigate([
-      '/financial-management/premiums/'+ this.premiumsType +'/reconcile-payments',
+      '/financial-management/premiums/'+ this.premiumsType +'/payments/reconcile-payments',
     ]);
   }
 

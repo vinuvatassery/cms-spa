@@ -171,7 +171,6 @@ export class CasePageComponent implements OnInit {
     }
 
     onReminderDoneClicked(event:any) {
-      debugger
       this.reminderFacade.showHideSnackBar(
         SnackBarNotificationType.SUCCESS,
         'Item  updated to Done successfully'

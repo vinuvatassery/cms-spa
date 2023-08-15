@@ -18,12 +18,17 @@ export class FinancialClaimsFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueFinancialClaimsProcess = 'invoiceID';
+  public sortValueFinancialClaimsProcess = 'invoiceNbr';
   public sortProcessList: SortDescriptor[] = [{
     field: this.sortValueFinancialClaimsProcess,
   }];
 
-  public sortValueFinancialClaimsBatch = 'batch';
+  public sortValueFinancialInvoiceProcess = 'serviceStartDate';
+  public sortInvoiceList: SortDescriptor[] = [{
+    field: this.sortValueFinancialInvoiceProcess,
+  }];
+
+  public sortValueFinancialClaimsBatch = 'batchName';
   public sortBatchList: SortDescriptor[] = [{
     field: this.sortValueFinancialClaimsBatch,
   }];
@@ -55,8 +60,16 @@ export class FinancialClaimsFacade {
     field: this.sortValueReconcile,
   }];
 
+  public sortValueReconcilePaymentBreakout = 'invoiceNbr';
+  public sortReconcilePaymentBreakoutList: SortDescriptor[] = [{
+    field: this.sortValueReconcilePaymentBreakout,
+  }];
+
   private financialClaimsProcessDataSubject = new Subject<any>();
   financialClaimsProcessData$ = this.financialClaimsProcessDataSubject.asObservable();
+
+  private financialClaimsInvoiceSubject = new Subject<any>();
+  financialClaimsInvoice$ = this.financialClaimsInvoiceSubject.asObservable();
 
   private financialClaimsBatchDataSubject =  new Subject<any>();
   financialClaimsBatchData$ = this.financialClaimsBatchDataSubject.asObservable();  
@@ -75,6 +88,12 @@ export class FinancialClaimsFacade {
 
   private claimsListDataSubject =  new Subject<any>();
   claimsListData$ = this.claimsListDataSubject.asObservable();
+
+  private reconcileBreakoutSummaryDataSubject =  new Subject<any>();
+  reconcileBreakoutSummary$ = this.reconcileBreakoutSummaryDataSubject.asObservable();
+  
+  private reconcilePaymentBreakoutListDataSubject =  new Subject<any>();
+  reconcilePaymentBreakoutList$ = this.reconcilePaymentBreakoutListDataSubject.asObservable();
   /** Private properties **/
  
   /** Public properties **/
@@ -115,10 +134,33 @@ export class FinancialClaimsFacade {
     return router.url.split('/')?.filter(element => element === FinancialClaimTypeCode.Dental || element ===FinancialClaimTypeCode.Medical)[0];    
   }
 
-  loadFinancialClaimsProcessListGrid(){
-    this.financialClaimsDataService.loadFinancialClaimsProcessListService().subscribe({
+  loadFinancialClaimsProcessListGrid(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string,claimsType : string){
+    filter = JSON.stringify(filter);
+    this.financialClaimsDataService.loadFinancialClaimsProcessListService(skipcount,  maxResultCount,  sort,  sortType, filter , claimsType).subscribe({
       next: (dataResponse) => {
-        this.financialClaimsProcessDataSubject.next(dataResponse);
+        const gridView = {
+          data: dataResponse["items"],
+          total: dataResponse["totalCount"]
+        };
+        this.financialClaimsProcessDataSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  }   
+
+  loadFinancialClaimsInvoiceListService(paymentRequestId : string, skipcount: number,  maxResultCount: number,  sort: string,  sortType: string,claimsType : string){
+    
+    this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType,claimsType).subscribe({
+      next: (dataResponse) => {
+        const gridView = {
+          data: dataResponse["items"],
+          total: dataResponse["totalCount"]
+        };
+        this.financialClaimsInvoiceSubject.next(gridView);
         this.hideLoader();
       },
       error: (err) => {
@@ -129,10 +171,16 @@ export class FinancialClaimsFacade {
   }   
 
 
-  loadFinancialClaimsBatchListGrid(){
-    this.financialClaimsDataService.loadFinancialClaimsBatchListService().subscribe({
+
+  loadFinancialClaimsBatchListGrid(skipCount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string, claimsType : string){
+    filter = JSON.stringify(filter);
+    this.financialClaimsDataService.loadFinancialClaimsBatchListService(skipCount,  maxResultCount,  sort,  sortType,filter,claimsType).subscribe({
       next: (dataResponse) => {
-        this.financialClaimsBatchDataSubject.next(dataResponse);
+        const gridView = {
+          data: dataResponse["items"],
+          total: dataResponse["totalCount"]
+        };
+        this.financialClaimsBatchDataSubject.next(gridView);
         this.hideLoader();
       },
       error: (err) => {
@@ -206,4 +254,39 @@ export class FinancialClaimsFacade {
       },
     });  
   }
+
+  loadReconcilePaymentBreakoutSummary(batchId: string, entityId: string){    
+    this.showLoader();
+    this.financialClaimsDataService.loadReconcilePaymentBreakoutSummaryService(batchId,entityId).subscribe({
+      next: (dataResponse) => {
+        this.reconcileBreakoutSummaryDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  } 
+
+  loadReconcilePaymentBreakoutListGrid(batchId: string, entityId: string,skipcount: number, pagesize: number, sort: any, sortType: any){
+    this.showLoader();
+    this.financialClaimsDataService.loadReconcilePaymentBreakoutListService(batchId,entityId,skipcount,pagesize,sort,sortType).subscribe({
+      next: (dataResponse) => {
+        this.reconcilePaymentBreakoutListDataSubject.next(dataResponse);
+        if (dataResponse) {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.reconcilePaymentBreakoutListDataSubject.next(gridView);
+        }
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  } 
 }

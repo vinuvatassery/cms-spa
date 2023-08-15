@@ -22,6 +22,9 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class LetterEditorComponent implements OnInit {
   /** Input properties **/
   @Input() dataEvent!: EventEmitter<any>;
+  @Input() currentValue!: any;
+  @Input() clientCaseEligibilityId!:string;
+  @Input() clientId!:any;
  
   /** Output properties  **/
   @Output() editorValue = new EventEmitter<any>();
