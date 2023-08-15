@@ -306,9 +306,24 @@ deleteClaims(batchClaims: any) {
     );
   }
 
-  batchClaims(batchClaims: BatchClaim) {
+  batchMedicalClaims(batchClaims: BatchClaim) {
     this.showLoader();
-    return this.financialClaimsDataService.batchClaims(batchClaims).pipe(
+    return this.financialClaimsDataService.batchMedicalClaims(batchClaims).pipe(
+      catchError((err: HttpErrorResponse) => {
+        this.loaderService.hide();
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        if (!(err?.error ?? false)) {
+          this.loggingService.logException(err);
+          this.hideLoader();
+        }
+        return of(false);
+      })
+    );
+  }
+
+  batchDentalClaims(batchClaims: BatchClaim) {
+    this.showLoader();
+    return this.financialClaimsDataService.batchDentalClaims(batchClaims).pipe(
       catchError((err: HttpErrorResponse) => {
         this.loaderService.hide();
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);

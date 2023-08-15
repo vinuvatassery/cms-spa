@@ -363,7 +363,18 @@ onSingleClaimDelete(selection:any)
         PaymentRequestIds: this.selectedProcessClaims
       }
       if(this.claimsType === FinancialClaimTypeCode.Medical)
-      this.financialClaimsFacade.batchClaims(input).subscribe(res =>{
+      this.financialClaimsFacade.batchMedicalClaims(input).subscribe(res =>{
+        if(res)
+        this.financialClaimsFacade.showHideSnackBar(
+          SnackBarNotificationType.SUCCESS,
+          'Claim(s) batched!'
+        );
+        this.batchConfirmClaimsDialog.close();
+        this.onBatchClaimsGridSelectedCancelClicked();
+        this.loadFinancialClaimsProcessListGrid();
+      })
+      if(this.claimsType === FinancialClaimTypeCode.Dental)
+      this.financialClaimsFacade.batchDentalClaims(input).subscribe(res =>{
         if(res)
         this.financialClaimsFacade.showHideSnackBar(
           SnackBarNotificationType.SUCCESS,
