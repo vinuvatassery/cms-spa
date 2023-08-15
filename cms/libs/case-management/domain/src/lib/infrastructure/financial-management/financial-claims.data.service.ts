@@ -482,7 +482,6 @@ export class FinancialClaimsDataService {
   }
 
   getMedicalClaimByPaymentRequestId(event: any, typeCode: string) {
-    debugger
     let path;
     if (typeCode == FinancialProvider.MedicalProvider) {
       path = 'financial-management/claims/medical/claim'
@@ -513,7 +512,6 @@ export class FinancialClaimsDataService {
   }
 
   saveMedicalClaim(claim: any, typeCode: string) {
-    debugger
     let path;
     if (typeCode == FinancialProvider.MedicalProvider) {
       path = 'financial-management/claims/medical/claim';
@@ -525,7 +523,6 @@ export class FinancialClaimsDataService {
   }
 
   updateMedicalClaim(claim: any, typeCode: string) {
-    debugger
     let path;
     if (typeCode == FinancialProvider.MedicalProvider) {
       path = 'financial-management/claims/medical/claim'

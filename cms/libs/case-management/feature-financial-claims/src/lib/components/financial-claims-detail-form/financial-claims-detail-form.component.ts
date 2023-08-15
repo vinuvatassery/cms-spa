@@ -148,7 +148,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       cptCodeId: service.cptCodeId,
     });
     this.calculateMedicadeRate(index);
-    this.cd.detectChanges();
   }
   searchcptcode(cptcode: any) {
     this.financialClaimsFacade.searchcptcode(cptcode);
@@ -200,7 +199,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       ]),
     });
     this.AddClaimServicesForm.push(claimForm);
-    this.cd.detectChanges();
   }
 
   onClientValueChange(event: any) {

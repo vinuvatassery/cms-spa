@@ -67,6 +67,9 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
+  @ViewChild('addEditClaimsDialog')
+  private addEditClaimsDialog!: TemplateRef<any>;
+
   isEdit!: boolean;
   paymentRequestId!: string;
 
@@ -189,8 +192,6 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService
   ) {
-    this.isEdit = false;
-    this.paymentRequestId = '492BE11E-725F-4018-A614-28F2811783E5';
   }
 
   
@@ -414,5 +415,11 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   loadFinancialClaimsInvoiceListService(data : any)
   {
     this.loadFinancialClaimsInvoiceListEvent.emit(data)
+  }
+
+  onClaimClick(dataitem: any){
+    this.isEdit = true;
+    this.paymentRequestId = dataitem.paymentRequestId;
+    this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog);
   }
 }
