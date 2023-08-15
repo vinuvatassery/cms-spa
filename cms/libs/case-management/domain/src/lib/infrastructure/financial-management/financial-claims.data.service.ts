@@ -220,44 +220,9 @@ export class FinancialClaimsDataService {
     ]);
   }
 
-  loadReconcileListService(){
-    return of([
-      {
-        id:1,
-        vendorName: 'Vendor Name',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
-      },
-      {
-        id:2,
-        vendorName: 'Address `',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
-      },
-     
-    ]);
+  loadReconcileListService(batchId:any,claimsType:any,paginationParameters:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/reconcile-payments?&SkipCount=${paginationParameters?.skipCount}
+    &maxResultCount=${paginationParameters?.pageSize}&sortType=${paginationParameters?.sortType}&sorting=${paginationParameters?.sortColumn}`);    
   }
   loadClaimsListService( ) {
     return of([

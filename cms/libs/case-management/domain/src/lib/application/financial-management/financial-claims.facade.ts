@@ -229,15 +229,17 @@ export class FinancialClaimsFacade {
       },
     });  
   }
-  loadReconcileListGrid(){
-    this.financialClaimsDataService.loadReconcileListService().subscribe({
-      next: (dataResponse) => {
-        this.batchReconcileDataSubject.next(dataResponse);
-        this.hideLoader();
+  loadReconcileListGrid(batchId:any,claimsType:any,event:any){
+    this.financialClaimsDataService.loadReconcileListService(batchId,claimsType,event).subscribe({
+      next: (dataResponse:any) => {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.batchReconcileDataSubject.next(gridView);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
       },
     });  
   }
