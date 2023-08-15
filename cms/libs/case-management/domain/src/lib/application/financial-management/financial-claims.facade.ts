@@ -420,9 +420,9 @@ export class FinancialClaimsFacade {
     });
   }
 
-  getMedicalClaimByPaymentRequestId(event: any) {
+  getMedicalClaimByPaymentRequestId(event: any, typeCode: string) {
     return this.financialClaimsDataService
-      .getMedicalClaimByPaymentRequestId(event)
+      .getMedicalClaimByPaymentRequestId(event,typeCode)
       .pipe(
         catchError((err: any) => {
           this.loaderService.hide();
@@ -439,8 +439,8 @@ export class FinancialClaimsFacade {
       );
   }
 
-  public saveMedicalClaim(data: any){
-    return this.financialClaimsDataService.saveMedicalClaim(data).pipe(
+  public saveMedicalClaim(data: any, typeCode : string){
+    return this.financialClaimsDataService.saveMedicalClaim(data,typeCode).pipe(
       catchError((err: any) => {
         this.loaderService.hide();
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
@@ -453,8 +453,8 @@ export class FinancialClaimsFacade {
     );
   }
 
-  public updateMedicalClaim(data: any){
-    return this.financialClaimsDataService.updateMedicalClaim(data).pipe(
+  public updateMedicalClaim(data: any, typeCode : string){
+    return this.financialClaimsDataService.updateMedicalClaim(data,typeCode).pipe(
       catchError((err: any) => {
         this.loaderService.hide();
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
