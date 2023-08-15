@@ -249,7 +249,7 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
   }
 
   navToBatchDetails(data : any){   
-    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch/'+data?.paymentRequestBatchId] );
+    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch?bid='+data?.paymentRequestBatchId] );
   }
 
 }
