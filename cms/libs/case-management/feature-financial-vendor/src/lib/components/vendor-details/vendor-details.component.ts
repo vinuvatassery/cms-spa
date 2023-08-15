@@ -405,7 +405,7 @@ fillFormData(){
       AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,
       AcceptsCombinedPaymentsFlag: (formValues.isAcceptCombinedPayment != null && formValues.isAcceptCombinedPayment != '') ? formValues.isAcceptCombinedPayment : null,
       PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? Number(formValues.paymentRunDate) : null,
-      PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes,
+      PreferredFlag: (formValues.isPreferedPharmacy) ? StatusFlag.Yes:StatusFlag.No,
       emailAddressTypeCode: AddressType.Mailing
     }
     return vendorProfileData;
