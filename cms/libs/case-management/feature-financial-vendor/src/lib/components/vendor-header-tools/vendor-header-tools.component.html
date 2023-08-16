@@ -43,13 +43,17 @@
 <!-- Send New Letter Popup -->
 <ng-template #sendLetterDialog>
   <case-management-send-letter  [data]="letterScreenName" [mailingAddress$]="mailingAddress$"
-  (closeSendLetterEvent)="handleSendNewLetterClosed($event)" (loadInitialData)="loadMailingAddress()"
-  [communicationTypeCode]="communicationTypeCode"
+  [vendorId]="vendorId" (closeSendLetterEvent)="handleSendNewLetterClosed($event)"
+  (loadInitialData)="loadMailingAddress()"
+  [communicationLetterTypeCode]="communicationLetterTypeCode"
   kendoTooltip></case-management-send-letter>
 </ng-template>
 
 <!-- Send New Email Popup -->
 <ng-template #sendNewEmailDialog>
   <case-management-send-email [data]="emailScreenName" [ddlEmails$]="emailAddress$"
+  [communicationEmailTypeCode]="communicationEmailTypeCode"
+  [emailSubject]="emailSubject"
+  [toEmail]="toEmail"
   (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
 </ng-template>

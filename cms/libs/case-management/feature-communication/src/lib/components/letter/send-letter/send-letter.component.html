@@ -1,4 +1,4 @@
- 
+
   <kendo-dialog-titlebar  (close)="onCloseNewLetterClicked()">Send New Letter </kendo-dialog-titlebar>
   <section class="k-dialog-body" >
     <p class="text-muted mb-1">
@@ -56,10 +56,10 @@
   <kendo-dialog-actions *ngIf="isOpenLetterTemplate">
     <div class="justify-content-between bigbtn-wrapper">
       <div class="w100">
-        <button kendoButton [primary]="true" look="flat" (click)="onSaveForLaterClicked()" aria-label="save for later">
+        <button *ngIf="isButtonsVisible" kendoButton [primary]="true" look="flat" (click)="onSaveForLaterClicked()" aria-label="save for later">
           Save for Later
         </button>
-        <button kendoButton [primary]="true" look="flat" (click)="onPreviewLetterClicked()" aria-label="preview letter">
+        <button *ngIf="isButtonsVisible" kendoButton [primary]="true" look="flat" (click)="onPreviewLetterClicked()" aria-label="preview letter">
           Preview Letter
         </button>
       </div>
@@ -74,7 +74,7 @@
       </div>
     </div>
   </kendo-dialog-actions>
- 
+
 
 <!-- Save for Latter (Letter Draft) Modal -->
 <kendo-dialog *ngIf="isShowSaveForLaterPopupClicked" (close)="onCloseSaveForLaterClicked()"

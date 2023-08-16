@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component ,Input, TemplateRef,} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommunicationEventTypeCode, CommunicationEvents, ContactFacade, ScreenType } from '@cms/case-management/domain';
+import { CommunicationEventTypeCode, CommunicationEvents, FinancialVendorTypeCode, ScreenType, VendorContactsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subscription } from 'rxjs';
@@ -15,14 +15,12 @@ export class VendorHeaderToolsComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   @Input() vendorProfile$:any;
-  @Input() clientId: any
-  @Input() clientCaseEligibilityId: any
   private todoDetailsDialog : any;
   private newReminderDetailsDialog : any;
   emailScreenName = ScreenType.FinancialManagementVendorPageEmail;
   letterScreenName = ScreenType.FinancialManagementVendorPageLetter;
-  emailAddress$ = this.contactFacade.emailAddress$;
-  mailingAddress$ = this.contactFacade.mailingAddress$;
+  emailAddress$ = this.vendorContactFacade.emailAddress$;
+  mailingAddress$ = this.vendorContactFacade.mailingAddress$;
   emailSubscription$ = new Subscription();
   reloadSubscription$ = new Subscription();
   buttonList!: any[];
@@ -30,7 +28,12 @@ export class VendorHeaderToolsComponent {
   private isSendNewEmailOpenedDialog : any;
   isSendNewLetterOpened = false;
   isSendNewEmailOpened = false;
-  communicationTypeCode = CommunicationEventTypeCode.ManufacuterLetter;
+  vendorId: any;
+  vendorTypeCode: any;
+  emailSubject: any;
+  communicationLetterTypeCode: any;
+  communicationEmailTypeCode: any;
+  toEmail: Array<any> = [];
 
   public sendActions = [
     {
@@ -57,22 +60,30 @@ export class VendorHeaderToolsComponent {
 
 
   constructor(private route: Router,private activeRoute : ActivatedRoute,
-    private readonly contactFacade: ContactFacade, private dialogService: DialogService) {
+    private readonly vendorContactFacade: VendorContactsFacade, private dialogService: DialogService) {
   }
 
   ngOnInit(): void {
+    this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
+    this.vendorTypeCode = this.activeRoute.snapshot.queryParams['vendor_type_code'];
     this.initialize();
+    this.getVendorTypeCode();
   }
 
   private initialize() {
     this.loadEmailAddress();
+    this.loadMailingAddress();
     this.addEmailSubscription();
     this.refreshButtonList();
   }
 
   private addEmailSubscription() {
-    this.emailSubscription$ = this.emailAddress$.subscribe((email: any) => {
-      this.sendActions[1].isVisible = email?.length > 0;
+      this.emailSubscription$ = this.emailAddress$.subscribe((x: any) => {
+      this.sendActions[1].isVisible = x?.email?.length > 0;
+      if(x?.email?.length !== null){
+        this.toEmail = [];
+        this.toEmail.push(x?.email?.trim());
+      }
       this.refreshButtonList();
     });
   }
@@ -133,11 +144,30 @@ export class VendorHeaderToolsComponent {
     }
 
     loadEmailAddress() {
-      debugger;
-      this.contactFacade.loadEmailAddress(this.clientId, this.clientCaseEligibilityId);
+      this.vendorContactFacade.loadEmailAddress(this.vendorId);
     }
 
     loadMailingAddress() {
-      this.contactFacade.loadMailingAddress(this.clientId);
+      this.vendorContactFacade.loadMailingAddress(this.vendorId);
+    }
+
+    getVendorTypeCode() {
+      switch (this.vendorTypeCode) {
+        case FinancialVendorTypeCode.Manufacturers:
+          this.emailSubject = CommunicationEventTypeCode.ManufacturerSubject;
+          this.communicationEmailTypeCode = CommunicationEventTypeCode.ManufacturerEmail;
+          this.communicationLetterTypeCode = CommunicationEventTypeCode.ManufacuterLetter;
+          break;
+        case FinancialVendorTypeCode.InsuranceVendors:
+          this.emailSubject = CommunicationEventTypeCode.InsuranceVendorSubject;
+          this.communicationEmailTypeCode = CommunicationEventTypeCode.InsuranceVendorEmail;
+          this.communicationLetterTypeCode = CommunicationEventTypeCode.InsuranceVendorLetter;
+          break;
+        case FinancialVendorTypeCode.MedicalProviders:
+          this.emailSubject = CommunicationEventTypeCode.MedicalProviderSubject
+          this.communicationEmailTypeCode = CommunicationEventTypeCode.MedicalProviderEmail;
+          this.communicationLetterTypeCode = CommunicationEventTypeCode.MedicalProviderLetter;
+          break;
+      }
     }
 }

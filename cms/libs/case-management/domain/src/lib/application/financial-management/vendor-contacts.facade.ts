@@ -36,13 +36,19 @@ export class VendorContactsFacade {
   private deActiveContactAddressSubject = new BehaviorSubject<boolean>(false);
   private removeContactAddressSubject = new BehaviorSubject<boolean>(false);
   private mailCodeSubject = new Subject<any>();
+  private mailingAddressSubject = new Subject<any>();
+  private emailAddressSubject = new Subject<any>();
+
   /** Public properties **/
-  contactsData$ = this.contactsDataSubject.asObservable();  
+  contactsData$ = this.contactsDataSubject.asObservable();
   contacts$ = this.contactsSubject.asObservable();
 
   deActiveContactAddressObs = this.deActiveContactAddressSubject.asObservable();
   removeContactAddressObs = this.removeContactAddressSubject.asObservable();
   mailCodes$ = this.mailCodeSubject.asObservable();
+  mailingAddress$ = this.mailingAddressSubject.asObservable();
+  emailAddress$ = this.emailAddressSubject.asObservable();
+
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
@@ -91,7 +97,7 @@ export class VendorContactsFacade {
     });
   }
   loadcontacts(vendorAddressId:string)
-  { 
+  {
     this.showLoader();
     this.vendorcontactsDataService.loadcontacts(vendorAddressId).subscribe({
       next:(res:any)=>{
@@ -100,11 +106,11 @@ export class VendorContactsFacade {
       },
       error:(err:any)=>{
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-     this.hideLoader(); 
+     this.hideLoader();
       }
     })
   }
-  saveContactAddress(contactAddress: any) {  
+  saveContactAddress(contactAddress: any) {
 
     this.showLoader();
     return this.vendorcontactsDataService.saveContactAddress(contactAddress).pipe(
@@ -119,7 +125,7 @@ export class VendorContactsFacade {
       })
     );
   }
-  deactiveContactAddress(vendorContactId: string){ 
+  deactiveContactAddress(vendorContactId: string){
     return new Promise((resolve,reject) =>{
       this.loaderService.show();
       this.vendorcontactsDataService.deactiveContactAddress(vendorContactId).subscribe({
@@ -130,7 +136,7 @@ export class VendorContactsFacade {
           this.loaderService.hide();
          }
          this.loaderService.hide();
-         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, ' Address De-Activated Successfully');       
+         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, ' Address De-Activated Successfully');
        },
        error: (err) => {
         resolve(false);
@@ -140,7 +146,7 @@ export class VendorContactsFacade {
        },
      });
     })
-    
+
   }
 
   removeContactAddress( vendorContactId: string) {
@@ -165,9 +171,9 @@ export class VendorContactsFacade {
         },
       });
     })
-    
+
   }
-  updateContactAddress(contact:any){  
+  updateContactAddress(contact:any){
     this.loaderService.show();
     return this.vendorcontactsDataService.updateContactAddress(contact).pipe(
       catchError((err: any) => {
@@ -198,6 +204,37 @@ export class VendorContactsFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
+  }
+
+  loadMailingAddress(vendorId: string){
+    this.mailingAddressSubject.next(null);
+    return this.vendorcontactsDataService.loadVendorAddress(vendorId).subscribe({
+      next: (reponse: any) => {
+        if (reponse) {
+          this.hideLoader();
+          this.mailingAddressSubject.next(reponse);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  loadEmailAddress(vendorId: string): void {
+    this.emailAddressSubject.next([]);
+    this.vendorcontactsDataService
+      .loadVendorEmail(vendorId).subscribe({
+        next: (reponse: any) => {
+          if (reponse) {
+            this.hideLoader();
+            this.emailAddressSubject.next(reponse);
+          }
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
   }
 }
 
