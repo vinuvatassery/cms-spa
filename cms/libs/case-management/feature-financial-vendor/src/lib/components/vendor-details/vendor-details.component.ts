@@ -71,32 +71,18 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   setVendorDetailFormValues() {
-    if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders) {
-      let name = !!this.vendorDetails.vendorName ? this.vendorDetails.vendorName : "";
-      this.medicalProviderForm.controls['providerName'].setValue(name);
-    }
-    else {
-      this.medicalProviderForm.controls['providerName'].setValue(this.vendorDetails.vendorName);
-    }
+    this.medicalProviderForm.controls['providerName'].setValue(this.vendorDetails.vendorName);
     this.medicalProviderForm.controls['firstName'].setValue(this.vendorDetails.firstName);
     this.medicalProviderForm.controls['lastName'].setValue(this.vendorDetails.lastName);
     this.medicalProviderForm.controls['tinNumber'].setValue(this.vendorDetails.tin);
     this.medicalProviderForm.controls['npiNbr'].setValue(this.vendorDetails.npiNbr);
+    this.medicalProviderForm.controls['parentVendorId'].setValue(this.vendorDetails.parentVendorId);
     if (this.vendorDetails.preferredFlag != null) {
       let flag = this.vendorDetails.preferredFlag == 'Y' ? true : false
       this.medicalProviderForm.controls['isPreferedPharmacy'].setValue(flag);
     }
     else {
       this.medicalProviderForm.controls['isPreferedPharmacy'].setValue(this.vendorDetails.preferredFlag);
-    }
-    if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders) {
-      if (!this.vendorDetails.vendorName) {
-        this.medicalProviderForm.get('providerName')?.disable();
-      }
-      else {
-        this.medicalProviderForm.get('firstName')?.disable();
-        this.medicalProviderForm.get('lastName')?.disable();
-      }
     }
   }
 
@@ -335,9 +321,7 @@ fillFormData(){
       vendorValues['lastName'] = this.medicalProviderForm.controls['lastName'].value;
       vendorValues['tin'] = this.medicalProviderForm.controls['tinNumber'].value;
       vendorValues['npiNbr'] = this.medicalProviderForm.controls['npiNbr'].value;
-      if (this.medicalProviderForm.controls['isPreferedPharmacy']?.value != null && this.providerType == this.vendorTypes.Pharmacy) {
-        vendorValues['preferredFlag'] = this.medicalProviderForm.controls['isPreferedPharmacy'].value ? 'Y' : 'N';
-      }
+      vendorValues['preferredFlag'] = this.medicalProviderForm.controls['isPreferedPharmacy'].value ? 'Y' : 'N';
       this.financialVendorDataService.updateVendorDetails(vendorValues).subscribe({
         next: (resp) => {
           if (resp) {
@@ -360,7 +344,7 @@ fillFormData(){
   validateEditForm() {
     this.medicalProviderForm.markAllAsTouched();
     if (this.vendorTypes.DentalProviders == this.providerType || this.vendorTypes.MedicalProviders == this.providerType) {
-      if (!!this.vendorDetails.vendorName) {
+      if (this.vendorDetails.vendorName) {
         this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
       }
@@ -421,7 +405,7 @@ fillFormData(){
       AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,
       AcceptsCombinedPaymentsFlag: (formValues.isAcceptCombinedPayment != null && formValues.isAcceptCombinedPayment != '') ? formValues.isAcceptCombinedPayment : null,
       PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? Number(formValues.paymentRunDate) : null,
-      PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes,
+      PreferredFlag: (formValues.isPreferedPharmacy) ? StatusFlag.Yes:StatusFlag.No,
       emailAddressTypeCode: AddressType.Mailing
     }
     return vendorProfileData;

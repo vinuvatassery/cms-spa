@@ -25,3 +25,4 @@ export * from './lib/containers/financial-claims-payments-router-page/financial-
 export * from './lib/components/financial-claims-batches-reconcile-payments-breakout/financial-claims-batches-reconcile-payments-breakout.component';
 
 export * from './lib/components/financial-claims-print-denial-letter/financial-claims-print-denial-letter.component';
+export * from './lib/components/financial-claims-payment-service-list/financial-claims-payment-service-list.component';

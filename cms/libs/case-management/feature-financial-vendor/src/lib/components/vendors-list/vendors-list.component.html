@@ -34,7 +34,8 @@
   <kendo-grid (columnReorder)="onColumnReorder($event)" 
     [filter]="state.filter" [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
     [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{filter: true }" [sort]="state.sort"
-    (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [loading]="loader"
+    (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [loading]="loader" 
+    [rowClass]="rowClass"
     [data]="gridVendorsData$ | async">
     <kendo-grid-column field="vendorName" title="Vendor Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
@@ -161,9 +162,6 @@
         <kendo-filter-contains-operator></kendo-filter-contains-operator>
       </kendo-grid-string-filter-menu>
     </ng-template>
-    </kendo-grid-column>
-
-    <kendo-grid-column field="preferredFlag" title="Preferred" [width]="100" *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy">
     </kendo-grid-column>
 
     <kendo-grid-column field="NpiNbr" title="Npi Number" [width]="100" *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy">
