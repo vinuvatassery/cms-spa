@@ -157,7 +157,7 @@ public state!: any;
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
-      filters:{logic:'and',filters:[]},
+    filters:{logic:'and',filters:[]},
       selectedColumn: 'ALL',
       columnName: '',
       searchValue: ''
