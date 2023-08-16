@@ -286,7 +286,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
     }); 
   }
   navToReconcilePayments(event : any){ 
-    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch/reconcile-payments?bid='+this.batchId] ); 
+    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch/reconcile-payments'] ); 
   }
   public onPreviewSubmitPaymentOpenClicked(template: TemplateRef<unknown>): void {
     this.PreviewSubmitPaymentDialog = this.dialogService.open({

@@ -21,7 +21,6 @@ import {
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { FinancialClaimsFacade } from '@cms/case-management/domain';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
