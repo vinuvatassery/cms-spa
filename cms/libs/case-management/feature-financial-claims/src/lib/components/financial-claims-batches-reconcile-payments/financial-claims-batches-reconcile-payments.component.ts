@@ -48,10 +48,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   @Input() reconcileGridLists$: any;
   @Input() reconcileBreakoutSummary$:any;
   @Input() reconcilePaymentBreakoutList$ :any;
+  @Input() batchId: any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
-  @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();
-  batchId: any = '587B0312-1324-49F8-A91D-0657C93D19B2';
+  @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>(); 
   entityId: any = '823E2464-0649-49DA-91E7-26DCC76A2A6B';
   public isBreakoutPanelShow:boolean=true;
   public state!: State;
@@ -91,10 +91,8 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     }
   
   ngOnInit(): void {
-   
     this.isBreakoutPanelShow=false;
-    this.loadReconcilePaymentSummary(this.batchId,'0');
-    
+    this.loadReconcilePaymentSummary(this.batchId,'0');    
   }
   ngOnChanges(): void {
     this.state = {
