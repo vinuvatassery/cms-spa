@@ -4,8 +4,9 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
-import { ConfigurationProvider } from '@cms/shared/util-core';
 import { BatchClaim } from '../../entities/financial-management/batch-claim';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsDataService {
@@ -143,7 +144,6 @@ export class FinancialClaimsDataService {
     ]);
   }
 
-
   loadBatchLogListService( ) {
     return of([
       {
@@ -181,84 +181,30 @@ export class FinancialClaimsDataService {
 
     ]);
   }
-  loadBatchItemsListService(){
-    return of([
-      {
-        id:101,
-        vendorName: 'vendorName',
-        type:'address2',
-        clientName:'address2',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'address2',
-        by: 'by',
-      },
-      {
-        id:102,
-        vendorName: 'vendorName',
-        type:'address2',
-        clientName:'address2',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'address2',
-        by: 'by',
-      },
 
-    ]);
+  loadPaymentsByBatch(batchId: string, params:GridFilterParam, claimType:string){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payment-batches/${batchId}/payments`, params);
   }
 
-  loadReconcileListService(){
-    return of([
-      {
-        id:1,
-        vendorName: 'Vendor Name',
-        type:'address2',
-        clientName:'address2',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'address2',
-        by: 'by',
-      },
-      {
-        id:2,
-        vendorName: 'Address `',
-        type:'address2',
-        clientName:'address2',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'address2',
-        by: 'by',
-      },
+  loadBatchName(batchId: string){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}`);
+  }
 
-    ]);
+  loadServicesByPayment(paymentId: string, params:GridFilterParam, claimType:string){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payments/${paymentId}/services`, params);
+  }
+
+  loadBatchItemsListService(paymentId: string, params: GridFilterParam, claimType:string){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payments/${paymentId}/services?type=INDIVIDUAL`, params);
+  }
+
+  loadReconcileListService(batchId:any,claimsType:any,paginationParameters:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/reconcile-payments?&SkipCount=${paginationParameters?.skipCount}
+    &maxResultCount=${paginationParameters?.pageSize}&sortType=${paginationParameters?.sortType}&sorting=${paginationParameters?.sortColumn}`);
   }
   loadClaimsListService( ) {
     return of([
