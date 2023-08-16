@@ -30,7 +30,7 @@
         max-width: 75%;
 
         p {
-          background: #057123 0% 0% no-repeat padding-box;
+          background: $success-green-dark;
           padding: 10px;
           border-radius: 6px 6px 6px 0px;
           color: $white;
@@ -42,10 +42,10 @@
         max-width: 75%;
 
         p {
-          background: #0000001F 0% 0% no-repeat padding-box;
+          background: rgba($color: $black, $alpha: 0.04);
           padding: 10px;
           border-radius: 6px 6px 6px 0px;
-          color: $black-3;
+          color: $black;
         }
       }
 
@@ -97,7 +97,7 @@
     }
     .message-normal-text-box{
       width: 100%;
-    min-height: 42Wpx;
+    min-height: 42px;
     border: 0;
     border-top: 1px solid $grey-c;
     border-radius: 0px;
@@ -165,5 +165,22 @@
         height: 40px;
       }
     }
+  }
+  .msg-attachment-wrapper {
+    display: flex;
+    overflow: auto;
+    gap: 10px;
+    width: 100%;
+    min-width: 100%;
+    padding: 10px;
+  }
+  .attachment-container-list{
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid $grey-c;
+    padding: 6px 12px 6px 8px;
+    border-radius: 4px;
+    margin-bottom: 4px;
   }
 }
