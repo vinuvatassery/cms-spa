@@ -96,7 +96,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   ngOnChanges(): void {
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: this.pageSizes[2]?.value,
       sort: this.sortBatch,
     };
     this.gridDataHandle();
