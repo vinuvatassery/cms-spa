@@ -74,7 +74,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     this.isSubmitted = true;
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
     this.AddContactForm.value.forEach((element:any, i: number) => {
-      this.AddContactForm.at(i).patchValue({isPreferedContact: element.isPreferedContact?"Y":"N"})
+      this.AddContactForm.at(i).patchValue({isPreferredContact: element.isPreferredContact?"Y":"N"})
     }); 
     if (this.contactForm.valid) {
       this.loaderService.show();
@@ -104,7 +104,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   public Update() {
     this.isSubmitted = true;
     this.AddContactForm.value.forEach((element:any, i: number) => {
-      this.AddContactForm.at(i).patchValue({isPreferedContact: element.isPreferedContact?"Y":"N"})
+      this.AddContactForm.at(i).patchValue({isPreferredContact: element.isPreferredContact?"Y":"N"})
     }); 
     if (this.contactForm.controls['vendorContacts'].valid) {
       this.loaderService.show();
@@ -168,7 +168,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       jobTitle: new FormControl(this.contactAddress.jobTitle),
       vendorName: new FormControl(this.contactAddress.vendorName),
       effectiveDate: new FormControl(this.contactAddress.effectiveDate),
-      isPreferedContact: new FormControl(this.contactAddress.isPreferedContact=="Y"?true:false),
+      isPreferredContact: new FormControl(this.contactAddress.isPreferredContact=="Y"?true:false),
     });
     this.AddContactForm.push(addContactForm);
     this.cd.detectChanges();
@@ -182,12 +182,12 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     const isChecked = (<HTMLInputElement>event.target).checked;
     if (isChecked) {
       this.AddContactForm.value.forEach((element:any, i: number) => {
-        this.AddContactForm.at(i).patchValue({isPreferedContact: false})
+        this.AddContactForm.at(i).patchValue({isPreferredContact: false})
       });    
-      this.AddContactForm.at(index).patchValue({isPreferedContact: true})
+      this.AddContactForm.at(index).patchValue({isPreferredContact: true})
       this.isVisible = true;
     } else {
-      this.AddContactForm.at(index).patchValue({isPreferedContact: false})
+      this.AddContactForm.at(index).patchValue({isPreferredContact: false})
       this.isVisible = false;
     }
     this.cd.detectChanges();

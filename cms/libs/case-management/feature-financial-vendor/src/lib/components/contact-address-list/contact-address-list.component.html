@@ -2,7 +2,7 @@
 
   <kendo-grid-column field="contactName" title="Name" [width]="100">
     <ng-template kendoGridCellTemplate let-dataItem> 
-      <span class="preferred-phoneNo posi_relative" title="Preferred Contact" *ngIf=" dataItem.isPreferedContact === 'Y'">
+      <span class="preferred-phoneNo posi_relative" title="Preferred Contact" *ngIf=" dataItem.isPreferredContact === 'Y'">
         <span
           class="material-icons icon-size-md"
           aria-label="preferred contact"
