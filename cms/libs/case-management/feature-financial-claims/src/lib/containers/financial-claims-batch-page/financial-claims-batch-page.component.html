@@ -1,6 +1,6 @@
- <cms-financial-claims-batches-log-lists  [claimsType]="claimsType" [batchLogGridLists$]="batchLogGridLists$"
- [pageSizes]="pageSizes" [sortValue]="sortValue"
- [sortType]="sortType" [sort]="sort" 
+ <cms-financial-claims-batches-log-lists  [claimsType]="claimsType" [batchId]="batchId" [batchLogGridLists$]="paymentsByBatchGridLists$"
+ [loader$]="paymentByBatchGridLoader$" [pageSizes]="pageSizes" [sortValue]="sortValue"
+ [sortType]="sortType" [sort]="sort" [paymentBatchName$]="paymentBatchName$"
  (loadBatchLogListEvent)="loadBatchLogListGrid($event)"></cms-financial-claims-batches-log-lists>
 
  
