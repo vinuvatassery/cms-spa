@@ -368,7 +368,12 @@ export class FinancialClaimsDataService {
   }
 
   deleteClaims(Claims: any, claimsType: string) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/deleteMedicalClaims`, Claims);
+    const options = {
+      body: {
+        Claims: Claims,
+      }
+    }
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/deleteMedicalClaims`, options);
   }
 
   batchClaims(batchClaims: BatchClaim, claimsType: string) {
