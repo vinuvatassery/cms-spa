@@ -373,7 +373,7 @@ export class FinancialClaimsDataService {
         Claims: Claims,
       }
     }
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/deleteMedicalClaims`, options);
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}`, options);
   }
 
   batchClaims(batchClaims: BatchClaim, claimsType: string) {
