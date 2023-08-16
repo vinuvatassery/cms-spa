@@ -96,6 +96,12 @@ export class FinancialClaimsFacade {
 
   private reconcilePaymentBreakoutListDataSubject =  new Subject<any>();
   reconcilePaymentBreakoutList$ = this.reconcilePaymentBreakoutListDataSubject.asObservable();
+
+  private deleteClaimsSubject =  new Subject<any>();
+  deleteClaims$ = this.deleteClaimsSubject.asObservable();
+
+  private batchClaimsSubject =  new Subject<any>();
+  batchClaims$ = this.batchClaimsSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -291,48 +297,43 @@ export class FinancialClaimsFacade {
       },
     });
   }
-deleteClaims(batchClaims: any) {
+  deleteClaims(batchClaims: any, claimsType: string) {
     this.showLoader();
-    return this.financialClaimsDataService.deleteClaims(batchClaims).pipe(
-      catchError((err: HttpErrorResponse) => {
-        this.loaderService.hide();
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
-        if (!(err?.error ?? false)) {
-          this.loggingService.logException(err);
-          this.hideLoader();
+    return this.financialClaimsDataService.deleteClaims(batchClaims, claimsType).subscribe({
+      next: (response) => {
+        this.deleteClaimsSubject.next(response);
+        if (response === true) {
+          const message = 'Claim(s) Deleted';
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            message
+          );
         }
-        return of(false);
-      })
-    );
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
   }
 
-  batchMedicalClaims(batchClaims: BatchClaim) {
+  batchClaims(batchClaims: BatchClaim, claimsType: string) {
     this.showLoader();
-    return this.financialClaimsDataService.batchMedicalClaims(batchClaims).pipe(
-      catchError((err: HttpErrorResponse) => {
-        this.loaderService.hide();
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
-        if (!(err?.error ?? false)) {
-          this.loggingService.logException(err);
-          this.hideLoader();
-        }
-        return of(false);
-      })
-    );
-  }
-
-  batchDentalClaims(batchClaims: BatchClaim) {
-    this.showLoader();
-    return this.financialClaimsDataService.batchDentalClaims(batchClaims).pipe(
-      catchError((err: HttpErrorResponse) => {
-        this.loaderService.hide();
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
-        if (!(err?.error ?? false)) {
-          this.loggingService.logException(err);
-          this.hideLoader();
-        }
-        return of(false);
-      })
-    );
+    return this.financialClaimsDataService
+      .batchClaims(batchClaims, claimsType)
+      .subscribe({
+        next: (response) => {
+          this.batchClaimsSubject.next(response);
+          if (response === true) {
+            const message = 'Claim(s) batched!';
+            this.notificationSnackbarService.manageSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              message
+            );
+          }
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
   }
 }

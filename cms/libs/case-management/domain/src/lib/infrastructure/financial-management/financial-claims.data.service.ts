@@ -459,15 +459,11 @@ export class FinancialClaimsDataService {
     );
   }
 
-  deleteClaims(Claims: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/deleteMedicalClaims`, Claims);
+  deleteClaims(Claims: any, claimsType: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/deleteMedicalClaims`, Claims);
   }
 
-  batchMedicalClaims(batchClaims: BatchClaim) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/batch`, batchClaims);
-  }
-
-  batchDentalClaims(batchClaims: BatchClaim) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/dental/batch`, batchClaims);
+  batchClaims(batchClaims: BatchClaim, claimsType: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batch`, batchClaims);
   }
 }
