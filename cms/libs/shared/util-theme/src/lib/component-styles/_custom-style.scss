@@ -1168,8 +1168,16 @@ color: $app-primary-font-color;
   position: absolute;
   top: 40px;
   right: 30px;
+} 
+
+
+.table-text-area{
+  textarea{
+    height: 35px;
+    resize: vertical;
+    line-height: normal;
+  }
 }
- 
 .preferred-heading{
   border-left:3px solid material-color($hive-canyon-palette, A700) !important;
 }
