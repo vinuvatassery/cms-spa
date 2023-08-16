@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
-import { VendorContacts, VendorContactsFacade, Contacts, EmailAddressTypeCode, PhoneTypeCode, PaymentsFacade, ContactFacade } from '@cms/case-management/domain';
+import { VendorContacts, VendorContactsFacade, Contacts, EmailAddressTypeCode, PhoneTypeCode, PaymentsFacade, ContactFacade, StatusFlag } from '@cms/case-management/domain';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-contact-address-details',
@@ -23,6 +23,8 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   contact = new Contacts();
   contactForm!: FormGroup;
   isSubmitted: boolean = false;
+  isVisible: any;
+  preferedContact:any;
   showLoader() {
     this.loaderService.show();
   }
@@ -45,6 +47,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     });
 
   }
+
 
   ngOnInit(): void {
 
@@ -70,6 +73,9 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   public save() {
     this.isSubmitted = true;
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
+    this.AddContactForm.value.forEach((element:any, i: number) => {
+      this.AddContactForm.at(i).patchValue({isPreferedContact: element.isPreferedContact?"Y":"N"})
+    }); 
     if (this.contactForm.valid) {
       this.loaderService.show();
       this.vendocontactsFacade.saveContactAddress(this.contactForm.value).subscribe({
@@ -79,7 +85,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
               SnackBarNotificationType.SUCCESS,
               'Contact Address added successfully'
             );
-            this.vendocontactsFacade.loadcontacts(this.contactAddress.vendorAddressId??"");
+            this.vendocontactsFacade.loadcontacts(this.contactAddress.vendorAddressId ?? "");
             this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);
           }
@@ -129,7 +135,11 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   IsContactNameValid(index: any) {
     let contactNameIsvalid = this.AddContactForm.at(index) as FormGroup;
+
     return contactNameIsvalid.controls['contactName'].status == 'INVALID';
+  }
+  getContactControl(index: number, fieldName: string) {
+    return this.AddContactForm.at(index).get(fieldName);
   }
 
   onToggleAddNewContactClick() {
@@ -139,9 +149,9 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
         [Validators.required]
       ),
       contactDesc: new FormControl(this.contactAddress.contactDesc),
-      phoneNbr: new FormControl(this.contactAddress.phoneNbr),
-      faxNbr: new FormControl(this.contactAddress.faxNbr),
-      emailAddress: new FormControl(this.contactAddress.emailAddress),
+      phoneNbr: new FormControl(this.contactAddress.phoneNbr, Validators.pattern('[0-9]+')),
+      faxNbr: new FormControl(this.contactAddress.faxNbr, Validators.pattern('[0-9]+')),
+      emailAddress: new FormControl(this.contactAddress.emailAddress,Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)),
       emailAddressTypeCode: new FormControl(EmailAddressTypeCode.Work),
       phoneTypeCode: new FormControl(PhoneTypeCode.Work),
       vendorContactId: new FormControl(this.contactAddress.vendorContactId),
@@ -155,6 +165,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       jobTitle: new FormControl(this.contactAddress.jobTitle),
       vendorName: new FormControl(this.contactAddress.vendorName),
       effectiveDate: new FormControl(this.contactAddress.effectiveDate),
+      isPreferedContact: new FormControl(this.contactAddress.isPreferedContact),
     });
     this.AddContactForm.push(addContactForm);
     this.cd.detectChanges();
@@ -162,5 +173,20 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   removeContact(i: number) {
     this.AddContactForm.removeAt(i);
+  }
+
+  OncheckboxClick(event: Event, index: any) {
+    const isChecked = (<HTMLInputElement>event.target).checked;
+    if (isChecked) {
+      this.AddContactForm.value.forEach((element:any, i: number) => {
+        this.AddContactForm.at(i).patchValue({isPreferedContact: false})
+      });    
+      this.AddContactForm.at(index).patchValue({isPreferedContact: true})
+      this.isVisible = true;
+    } else {
+      this.AddContactForm.at(index).patchValue({isPreferedContact: false})
+      this.isVisible = false;
+    }
+    this.cd.detectChanges();
   }
 }
