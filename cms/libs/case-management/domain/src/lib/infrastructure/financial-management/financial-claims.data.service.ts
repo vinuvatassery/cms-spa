@@ -496,12 +496,12 @@ export class FinancialClaimsDataService {
 
   searchcptcode(cptcode: string) {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/cptcode/${cptcode}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/cpt-code/${cptcode}`
     )
   }
 
   searchPharmacies(searchText: string, typeCode: string) {
-    return this.http.get<Pharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/searchprovider/${searchText}/${typeCode}`);
+    return this.http.get<Pharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/search-provider/${searchText}/${typeCode}`);
   }
 
   loadClientBySearchText(text: string) {
@@ -514,10 +514,10 @@ export class FinancialClaimsDataService {
   saveMedicalClaim(claim: any, typeCode: string) {
     let path;
     if (typeCode == FinancialProvider.MedicalProvider) {
-      path = 'financial-management/claims/medical/claim';
+      path = 'financial-management/claims/medical/save';
     }
     else {
-      path = 'financial-management/claims/dental/claim'
+      path = 'financial-management/claims/dental/save'
     }
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/${path}`, claim)
   }
@@ -525,10 +525,10 @@ export class FinancialClaimsDataService {
   updateMedicalClaim(claim: any, typeCode: string) {
     let path;
     if (typeCode == FinancialProvider.MedicalProvider) {
-      path = 'financial-management/claims/medical/claim'
+      path = 'financial-management/claims/medical'
     }
     else {
-      path = 'financial-management/claims/dental/claim'
+      path = 'financial-management/claims/dental'
     }
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/${path}`, claim)
   }
