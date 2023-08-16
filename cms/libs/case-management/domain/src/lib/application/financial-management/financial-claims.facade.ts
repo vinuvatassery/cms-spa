@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { FinancialClaimTypeCode } from '../../enums/financial-claim-types';
 import { PaymentBatchName } from '../../entities/financial-management/Payment-details';
 import { GridFilterParam } from '../../entities/grid-filter-param';
+import { BatchClaim } from '../../entities/financial-management/batch-claim';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
@@ -333,5 +334,45 @@ export class FinancialClaimsFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
       },
     });
+  }
+
+  deleteClaims(batchClaims: any, claimsType: string) {
+    this.showLoader();
+    return this.financialClaimsDataService.deleteClaims(batchClaims, claimsType).subscribe({
+      next: (response) => {
+        this.deleteClaimsSubject.next(response);
+        if (response === true) {
+          const message = 'Claim(s) Deleted';
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            message
+          );
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  batchClaims(batchClaims: BatchClaim, claimsType: string) {
+    this.showLoader();
+    return this.financialClaimsDataService
+      .batchClaims(batchClaims, claimsType)
+      .subscribe({
+        next: (response) => {
+          this.batchClaimsSubject.next(response);
+          if (response === true) {
+            const message = 'Claim(s) batched!';
+            this.notificationSnackbarService.manageSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              message
+            );
+          }
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
   }
 }
