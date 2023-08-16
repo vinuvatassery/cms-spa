@@ -1,18 +1,12 @@
 <div>
   <div class="flex-col flex-space-bw align-items-center">
     <h5 class="title-md mb-0 text-capital">Payments</h5>
-    <div>
-      <span class="app-checkboxwidtext-wrapper">
-        <input type="checkbox" kendoCheckBox aria-labelledby="AddressesshowHistorical" id="AddressesshowHistorical" />
-        <label class="k-checkbox-label" for="AddressesshowHistorical">Show historical</label>
-      </span>
-    </div>
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
       <kendo-grid [resizable]="true" [loading]="(paymentBatchLoader$ | async) ?? false" [pageSize]="state.take"
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
-        [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
+        [resizable]="true" [columnMenu]="{ filter: false }" [sort]="state.sort" 
         (dataStateChange)="dataStateChange($event)" [navigable]="true" [data]="paymentBatchesGridView$ | async">
 
         <kendo-grid-column field="Batch" title="Batch #" [width]="150">
