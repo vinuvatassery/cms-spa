@@ -339,13 +339,12 @@ export class FinancialClaimsFacade {
   deleteClaims(batchClaims: any, claimsType: string) {
     this.showLoader();
     return this.financialClaimsDataService.deleteClaims(batchClaims, claimsType).subscribe({
-      next: (response) => {
+      next: (response:any) => {
         this.deleteClaimsSubject.next(response);
-        if (response === true) {
-          const message = 'Claim(s) Deleted';
+        if (response.status) {
           this.notificationSnackbarService.manageSnackBar(
             SnackBarNotificationType.SUCCESS,
-            message
+            response.message
           );
         }
       },
@@ -360,13 +359,12 @@ export class FinancialClaimsFacade {
     return this.financialClaimsDataService
       .batchClaims(batchClaims, claimsType)
       .subscribe({
-        next: (response) => {
+        next: (response:any) => {
           this.batchClaimsSubject.next(response);
-          if (response === true) {
-            const message = 'Claim(s) batched!';
+          if (response.status) {
             this.notificationSnackbarService.manageSnackBar(
               SnackBarNotificationType.SUCCESS,
-              message
+              response.message
             );
           }
         },
