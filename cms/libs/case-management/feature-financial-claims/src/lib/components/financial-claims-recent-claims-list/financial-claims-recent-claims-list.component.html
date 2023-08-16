@@ -12,7 +12,8 @@
     [data]="recentClaimsGridLists$ | async" 
     [loading]="isFinancialClaimsRecentClaimGridLoaderShow"
     (dataStateChange)="dataStateChange($event)" 
-    (filterChange)="filterChange($event)">
+    (filterChange)="filterChange($event)"
+    (columnVisibilityChange)="columnChange($event)">
     <kendo-grid-column field="invoiceId" title="Invoice ID" [width]="120">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"

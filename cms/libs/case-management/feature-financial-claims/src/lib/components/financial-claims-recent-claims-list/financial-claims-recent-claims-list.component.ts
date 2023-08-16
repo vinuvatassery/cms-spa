@@ -5,7 +5,7 @@ import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State,CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { FinancialClaimsFacade } from '@cms/case-management/domain';
-
+import { ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'cms-financial-claims-recent-claims-list',
   templateUrl: './financial-claims-recent-claims-list.component.html',
@@ -22,7 +22,7 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   @Input() clientId: any;
   @Input() claimsType: any;
 
-  public state!: State;
+  public state!: any;
   sortColumn = 'Entry Date';
   sortDir = 'Ascending';
   columnsReordered = false;
@@ -40,6 +40,7 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  addRemoveColumns="Default Columns"
   columns : any = {
     invoiceId:"Invoice ID",
     serviceStartDate:"Service Start Date",
@@ -266,5 +267,49 @@ loadFinancialRecentClaimListGrid() {
 
   loadRecentClaimsGrid(data: any) {
     this.financialClaimsFacade.loadRecentClaimListGrid(data);
+  }
+
+  public columnChange(e: any) {
+    let event = e as ColumnVisibilityChangeEvent;
+    const columnsRemoved = event?.columns.filter(x=> x.hidden).length
+    const columnsAdded = event?.columns.filter(x=> x.hidden === false).length
+
+  if (columnsAdded > 0) {
+    this.addRemoveColumns = 'Columns Added';
+  }
+  else {
+    this.addRemoveColumns = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
+  }
+
+  event.columns.forEach(column => {
+    if (column.hidden) {
+      const field = (column as ColumnComponent)?.field;
+      const mainFilters = this.state.filter.filters;
+
+      mainFilters.forEach((filter:any) => {
+          const filterList = filter.filters;
+
+          const foundFilter = filterList.find((x: any) => x.field === field);
+
+          if (foundFilter) {
+            filter.filters = filterList.filter((x: any) => x.field !== field);
+            this.clearSelectedColumn();
+          }
+        });
+      }
+      if (!column.hidden) {
+        let columnData = column as ColumnComponent;
+        this.columns[columnData.field] = columnData.title;
+      }
+
+    });
+  }
+
+  private clearSelectedColumn() {
+    this.selectedColumn = '';
+    this.filter = '';
+    this.state.searchValue = '';
+    this.state.selectedColumn = '';
+    this.state.columnName = '';
   }
 }
