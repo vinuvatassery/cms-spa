@@ -103,6 +103,9 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   public Update() {
     this.isSubmitted = true;
+    this.AddContactForm.value.forEach((element:any, i: number) => {
+      this.AddContactForm.at(i).patchValue({isPreferedContact: element.isPreferedContact?"Y":"N"})
+    }); 
     if (this.contactForm.controls['vendorContacts'].valid) {
       this.loaderService.show();
       this.vendocontactsFacade.updateContactAddress(this.contactForm.value.vendorContacts[0]).subscribe({
@@ -165,7 +168,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       jobTitle: new FormControl(this.contactAddress.jobTitle),
       vendorName: new FormControl(this.contactAddress.vendorName),
       effectiveDate: new FormControl(this.contactAddress.effectiveDate),
-      isPreferedContact: new FormControl(this.contactAddress.isPreferedContact),
+      isPreferedContact: new FormControl(this.contactAddress.isPreferedContact=="Y"?true:false),
     });
     this.AddContactForm.push(addContactForm);
     this.cd.detectChanges();

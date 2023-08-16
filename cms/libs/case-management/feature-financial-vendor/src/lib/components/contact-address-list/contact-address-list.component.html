@@ -1,10 +1,19 @@
 <kendo-grid [resizable]="true" [navigable]="true" [kendoGridBinding]="contactResponse">
 
   <kendo-grid-column field="contactName" title="Name" [width]="100">
-    <ng-template kendoGridCellTemplate let-dataItem>
+    <ng-template kendoGridCellTemplate let-dataItem> 
+      <span class="preferred-phoneNo posi_relative" title="Preferred Contact" *ngIf=" dataItem.isPreferedContact === 'Y'">
+        <span
+          class="material-icons icon-size-md"
+          aria-label="preferred contact"
+          aria-hidden="true"
+          >star</span
+        >
+      </span>
       <button aria-label="name" kendoButton look="flat" class="card-link-button">
         {{ dataItem.contactName }}
       </button>
+ 
     </ng-template> </kendo-grid-column>
   <kendo-grid-column field="contactDesc" title="Description" [width]="100"> </kendo-grid-column>
   <kendo-grid-column field="phoneNbr" title="Phone Number" [width]="60"> </kendo-grid-column>
