@@ -285,9 +285,12 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
       queryParams: { bid: batchId, iid: paymentRequestId}
     }); 
   }
-  navToReconcilePayments(event : any){ 
-    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch/reconcile-payments'] ); 
+  
+  navToReconcilePayments(event : any){
+    this.route.navigate([`/financial-management/claims/${this.claimsType}/batch/reconcile-payments`],
+    { queryParams :{bid: this.batchId}});
   }
+
   public onPreviewSubmitPaymentOpenClicked(template: TemplateRef<unknown>): void {
     this.PreviewSubmitPaymentDialog = this.dialogService.open({
       content: template,
