@@ -1,6 +1,6 @@
 <kendo-dialog-titlebar (close)="onCloseSendEmailClicked()">Send New Email </kendo-dialog-titlebar>
 <kendo-dialog
-  *ngIf="false"
+  *ngIf="true"
   (close)="onCloseSendEmailClicked()"
   class="app-c-modal app-c-modal-lg app-c-modal-np"
   title="Send New Email "
@@ -14,15 +14,10 @@
       </div>
       <div>
         <div class="flex-col">
-          <kendo-floatinglabel text="To" class="inline-search-loader">
-          <span  class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-          <kendo-multiselect
-          [readonly]="true"
-          [fillMode]="formUiStyle.dropDownFillMode"         
-          [(ngModel)]="selectedEmail"
-          aria-label="to address"
-          ></kendo-multiselect>
-          </kendo-floatinglabel>
+          <kendo-floatinglabel text="Email">
+            <kendo-textbox aria-label="Email" [fillMode]="formUiStyle.inputFillMode" [maxlength]="40" [(ngModel)]="email"></kendo-textbox>
+            
+        </kendo-floatinglabel>
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="CC" class="inline-search-loader">

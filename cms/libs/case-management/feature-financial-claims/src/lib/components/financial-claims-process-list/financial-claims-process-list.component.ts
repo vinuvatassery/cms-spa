@@ -12,11 +12,9 @@ import {
 } from '@angular/core';
 import {
   BatchClaim,
-  FinancialClaimTypeCode,
   FinancialClaimsFacade,
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   GridDataResult,

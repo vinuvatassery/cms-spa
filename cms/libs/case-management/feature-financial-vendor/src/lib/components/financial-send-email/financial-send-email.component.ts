@@ -3,7 +3,8 @@ import {
   Component,
   ChangeDetectionStrategy,
   Output,
-  EventEmitter
+  EventEmitter,
+  Input
 } from '@angular/core';
 
 /** Internal Libraries **/
@@ -18,6 +19,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialSendEmailComponent {
+  /** Input properties  **/
+ @Input() email : any
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();  

@@ -44,12 +44,12 @@
 
 <!-- Send New Letter Modal -->
 <ng-template #sendLetterDialog>
-  <cms-financial-send-letter    
+  <cms-financial-send-letter    (closeSendLetterEvent)="handleSendNewLetterClosed($event)"
   kendoTooltip></cms-financial-send-letter>
 </ng-template>
 
 <!-- Send New Email Modal -->
 <ng-template #sendNewEmailDialog>
-  <cms-financial-send-email    kendoTooltip></cms-financial-send-email>
+  <cms-financial-send-email [email]="vendorProfile$?.email" (closeSendEmailEvent)="handleSendNewEmailClosed($event)"    kendoTooltip></cms-financial-send-email>
 </ng-template>
 
