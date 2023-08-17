@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
-import { VendorContacts, VendorContactsFacade, Contacts, EmailAddressTypeCode, PhoneTypeCode, PaymentsFacade, ContactFacade, StatusFlag } from '@cms/case-management/domain';
+import { VendorContacts, VendorContactsFacade, Contacts, EmailAddressTypeCode, PhoneTypeCode, PaymentsFacade, ContactFacade} from '@cms/case-management/domain';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-contact-address-details',

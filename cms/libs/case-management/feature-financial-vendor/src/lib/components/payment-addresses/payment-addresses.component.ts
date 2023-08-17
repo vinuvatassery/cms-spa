@@ -160,7 +160,6 @@ export class PaymentAddressesComponent {
   }
   clickOpenAddContactDetails() {
     this.paymentsAddressGridView$.pipe(take(1)).subscribe(({data})=>{
-      debugger;
       data.forEach((item:any, idx:number) => {
         this.grid.last.collapseRow((this.state.skip ?? 0) + idx);
       })
