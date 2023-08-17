@@ -67,8 +67,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   selectedDataRows: any[] = [];
+  selectedReconcileDataRows: any[] = [];
   selectedCount: number = 0;
   onlyPrintAdviceLetter : boolean = false;
+  isSaveClicked : boolean = false;
   startItemNumber: number = 1;
   isStartItemNumberUpdated: boolean = false;
 
@@ -207,7 +209,9 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
             this.reconcilePaymentGridUpdatedResult[index].datePaymentSentInValidMsg = dataItem?.datePaymentSentInValidMsg;
             this.reconcilePaymentGridUpdatedResult[index].isPrintAdviceLetter = dataItem?.isPrintAdviceLetter;
             this.reconcilePaymentGridUpdatedResult[index].tAreaCessationCounter = dataItem?.tAreaCessationCounter;
-      
+            this.reconcilePaymentGridUpdatedResult[index].vendorName = dataItem?.vendorName;
+            this.reconcilePaymentGridUpdatedResult[index].amountPaid = dataItem?.amountPaid;
+            this.reconcilePaymentGridUpdatedResult[index].paymentMethodCode = dataItem?.paymentMethodCode;
           }
         });
       }
@@ -460,6 +464,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       
   }
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+    this.isSaveClicked = true;
     this.validateReconcileGridRecord();
     let isValid = this.reconcilePaymentGridUpdatedResult.filter((x:any)=>x.datePaymentSentInValid || x.datePaymentRecInValid);
     let datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x:any)=>x.datePaymentSentInValid);
@@ -470,7 +475,8 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       totalCount + " is the total number of validation errors found.";
     }
     else{
-      this.pageValidationMessage ="validation errors are cleared"
+      this.pageValidationMessage ="validation errors are cleared";
+      this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.filter((x:any)=>x.isPrintAdviceLetter);
     }
     if(isValid.length<=0){
       this.printAuthorizationDialog = this.dialogService.open({

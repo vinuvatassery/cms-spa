@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 	/** Internal Libraries **/
-import {PaymentsFacade } from '@cms/case-management/domain';
+import {FinancialClaimsFacade, PaymentsFacade } from '@cms/case-management/domain';
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 
@@ -17,10 +17,12 @@ export class FinancialClaimsPrintAuthorizationComponent {
   finalPrintList!: any[];
   printCount: number = 0;
   letterContnet!: any;
-  generatedContentList: any[] = [];
+  entityId: any = '823E2464-0649-49DA-91E7-26DCC76A2A6B';
     /** Input properties **/
   @Input() items!: any[];
+  @Input() batchId!: any;
   @Input() printOption: boolean = false;
+  @Input() isSaveClicked!: boolean;
 
   /** Output properties  **/
   @Output() onClosePrintAdviceLetterEvent = new EventEmitter<any>();
@@ -30,11 +32,16 @@ export class FinancialClaimsPrintAuthorizationComponent {
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly ref: ChangeDetectorRef) { }
+    private readonly ref: ChangeDetectorRef,
+    private readonly financialClaimsFacade: FinancialClaimsFacade) { }
   ngOnInit(): void {
     this.finalPrintList = this.items;
     this.getPrintLetterCount();
-    this.loadPrintLetterContent();
+    if(this.printOption || this.isSaveClicked){
+      this.loadPrintLetterContent();
+    }else{
+      this.reconcilePaymentsAndPrintLetterContent();
+    }
   }
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -52,47 +59,20 @@ hideLoader(){
 
   loadPrintLetterContent() {
     this.loaderService.show();
-    let printAdviceLetterData: any;
-    let selectedProviders: any = [];
-    let vendorIds: any = [];
-    this.finalPrintList.forEach(item => {
-      printAdviceLetterData = {      
-      vendorId: item.vendorId,
-      paymentRequestId: item.paymentRequestId,
-      paymentRequestBatchId: item.paymentRequestBatchId,
-      providerName: item.providerName,
-      selectedProviderList: [],
-      clientId: []
-    };
-    vendorIds.push(item.vendorId);
-    const selectedItem = {
-      memberID: item.memberID,
-      clientName: item.clientName,
-      invoiceID: item.invoiceID.toString(),
-      totalCost: item.totalCost,
-      serviceStateDate: item.serviceStateDate,
-      clientDOB: item.clientDOB
-    };
-    selectedProviders.push(selectedItem);
-    });
-    printAdviceLetterData.selectedProviderList = selectedProviders;
-    printAdviceLetterData.VendorIdList = vendorIds;
-    this.paymentsFacade.loadPrintAdviceLetter(printAdviceLetterData)
+    let printAdviceLetterData = this.loadPrintLetterModelData(this.finalPrintList);
+    this.financialClaimsFacade.loadPrintAdviceLetterData(printAdviceLetterData)
     .subscribe({
       next: (data: any[]) =>{
         if (data.length > 0) {
-          this.items.forEach(item => {
+          this.items.forEach((item: any, index: number) => {
             data.forEach(result => {
             if(item.vendorId.toLowerCase() == result.vendorId.toLowerCase()){
-              let generatedContent = { 
-                item: item.item,
-                providerName: item.providerName,
-                totalCost: item.totalCost,
-                paymentMethod: item.paymentMethod,
-                letterContent: result.letterContent,
-                isChecked: item.isChecked
-               };
-              this.generatedContentList.push(generatedContent);
+                this.finalPrintList[index+1].item = index + 1,
+                this.finalPrintList[index+1].paymentMethodCode = item.paymentMethodCode,
+                this.finalPrintList[index+1].amountPaid = item.amountPaid,
+                this.finalPrintList[index+1].vendorName = item.vendorName,
+                this.finalPrintList[index+1].letterContent = result.letterContent,
+                this.finalPrintList[index+1].isChecked = true
         }
       }); 
     });
@@ -100,7 +80,27 @@ hideLoader(){
     }
       this.loaderService.hide();
     },
-      error: (err) => {
+      error: (err: Error) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+    },
+  });
+  }
+
+  reconcilePaymentsAndPrintLetterContent() {
+    this.loaderService.show();
+    let reconcileData = this.reconcilePaymentsData(this.finalPrintList);
+    this.financialClaimsFacade.reconcilePaymentsAndLoadPrintLetterContent(this.batchId, reconcileData)
+    .subscribe({
+      next: (data: any) =>{
+        if (data) {
+          this.loadPrintLetterContent();
+          this.ref.detectChanges();
+    }
+      this.loaderService.hide();
+    },
+      error: (err: Error) => {
       this.loaderService.hide();
       this.loggingService.logException(err);
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
@@ -141,4 +141,39 @@ hideLoader(){
   onPrintAdviceLetterClicked(){
     console.log(this.letterContnet);
   }
+
+  loadPrintLetterModelData(selectedPrintList: any[]) {
+    let printAdviceLetterData: any;
+    let vendorIds: any = [];
+    selectedPrintList.forEach(item => {
+      printAdviceLetterData = {      
+      vendorId: item.vendorId,
+      selectedProviderList: [],
+    };
+    vendorIds.push(item.vendorId);
+    });
+    printAdviceLetterData.paymentRequestBatchId = this.batchId;
+    printAdviceLetterData.VendorIdList = vendorIds;
+    return printAdviceLetterData;
+  }
+
+  reconcilePaymentsData(selectedPrintList: any[]) {
+    let selectedProviders: any = [];
+    selectedPrintList.forEach(item => {
+      let selectedProvider = {     
+      checkRequestId: item.checkRequestId, 
+      vendorId: item.vendorId,
+      entityId: item.entityId,
+      paymentReconciledDate: item.paymentReconciledDate,
+      paymentSentDate: item.paymentSentDate,
+      checkNbr: item.checkNbr,
+      comments: item.comments
+    };
+    selectedProviders.push(selectedProvider);
+  });
+  return selectedProviders;
 }
+}
+
+
+

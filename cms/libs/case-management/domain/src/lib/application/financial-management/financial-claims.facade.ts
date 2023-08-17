@@ -328,4 +328,12 @@ export class FinancialClaimsFacade {
       },
     });  
   }
+
+  loadPrintAdviceLetterData(printAdviceLetterData: any) {
+    return this.financialClaimsDataService.getPrintAdviceLetterData(printAdviceLetterData);
+  }
+  
+  reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any) {
+    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData);
+  }
 }

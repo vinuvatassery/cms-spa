@@ -9,6 +9,7 @@ import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsDataService {
+
   /** Constructor**/
   constructor(
     private readonly http: HttpClient,
@@ -364,5 +365,13 @@ export class FinancialClaimsDataService {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}/payment-entity/${entityId}/reconcile-breakout?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`
     );
+  }
+
+  getPrintAdviceLetterData(selectedProviders: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/generate`,selectedProviders);
+  }
+
+  reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/batches/${batchId}/reconcile-payments`,reconcileData);
   }
 }

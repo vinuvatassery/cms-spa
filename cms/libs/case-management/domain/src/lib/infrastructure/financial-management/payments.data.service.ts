@@ -69,10 +69,6 @@ export class PaymentsDataService {
       `/financial-management/vendors/${vendorId}/batches/${batchId}`     
     ,paymentPanel);
   }
-
-  getPrintAdviceLetterData(selectedProviders: any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/generate`,selectedProviders);
-  }
  
   loadPaymentDetails(paymentId: string, type: string){
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payments/${paymentId}?type=${type}`);

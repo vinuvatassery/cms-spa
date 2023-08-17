@@ -44,6 +44,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   printAuthorizationDialog: any;
   UnBatchDialog: any;
   deleteClaimsDialog: any;
+  onlyPrintAdviceLetter: boolean = false;
 
   bathcLogGridDataLst =[
     {
@@ -203,6 +204,8 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   paymentMethodFilter:string ='';
   paymentTypeFilter:string ='';
   paymentStatusFilter:string='';
+  selectedDataRows: any;
+  selectedCount: any;
   /** Constructor **/
   constructor(private route: Router,private dialogService: DialogService, public activeRoute: ActivatedRoute ) {}
   
@@ -405,5 +408,4 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
       this.selectedCount = this.selectedDataRows.length;
     }
   }
- 
 }
