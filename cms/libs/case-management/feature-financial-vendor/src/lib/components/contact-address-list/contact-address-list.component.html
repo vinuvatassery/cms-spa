@@ -1,6 +1,8 @@
-<kendo-grid [resizable]="true" [navigable]="true" [kendoGridBinding]="contactResponse">
+<kendo-grid [resizable]="true" [navigable]="true" [kendoGridBinding]="contactResponse" 
+   [sortable]="true"  [groupable]="false" [reorderable]="true"
+[columnMenu]="{ filter: true }" >
 
-  <kendo-grid-column field="contactName" title="Name" [width]="100">
+  <kendo-grid-column field="contactName" title="Name" [width]="100" >
     <ng-template kendoGridCellTemplate let-dataItem> 
       <span class="preferred-phoneNo posi_relative" title="Preferred Contact" *ngIf=" dataItem.isPreferredContact === 'Y'&&dataItem.activeFlag === 'Y'">
         <span
@@ -30,7 +32,7 @@
       </ng-template>
     </ng-template>
   </kendo-grid-column>
-  <kendo-grid-column field="creatorId" title="By" [width]="50">
+  <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false">
     <ng-template kendoGridCellTemplate let-dataItem>
       <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
         [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
