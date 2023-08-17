@@ -417,6 +417,21 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       dataItem.isPrintAdviceLetter = true
     }    
     this.assignRowDataToMainList(dataItem);
+
+    let isCheckNumberAlreadyExist = this.reconcilePaymentGridUpdatedResult.filter((x:any) =>x.checkNbr === dataItem.checkNbr && x.vendorId !== dataItem.vendorId);
+    if(isCheckNumberAlreadyExist.length>0){
+      dataItem.warrantNumberInValid = true;
+      dataItem.warrantNumberInValidMsg ='Duplicate Warrant Number entered.'
+    }
+    else{
+      dataItem.warrantNumberInValidMsg =null;
+      dataItem.warrantNumberInValid = false;
+    }
+    if(dataItem.checkNbr === null || dataItem.checkNbr === ''){
+      dataItem.warrantNumberInValidMsg =null;
+      dataItem.warrantNumberInValid = false;
+    }  
+    
   }
 
   validateReconcileGridRecord() {
@@ -483,9 +498,17 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     }
   }
 
-
   ngDirtyInValid(dataItem:any,control:any,rowIndex:any){
-    let inValid = control ==='paymentSentDate'?dataItem.datePaymentSentInValid:dataItem.datePaymentRecInValid
+    let inValid = false ;
+    if(control ==='paymentReconciledDate'){
+      inValid = dataItem.datePaymentRecInValid;
+    }
+    if(control ==='paymentSentDate'){
+      inValid = dataItem.datePaymentSentInValid;
+    }
+    if(control ==='checkNbr'){
+      inValid = dataItem.warrantNumberInValid;
+    }
     if(inValid){
       document.getElementById(control+rowIndex)?.classList.remove('ng-valid');
       document.getElementById(control+rowIndex)?.classList.add('ng-invalid');
