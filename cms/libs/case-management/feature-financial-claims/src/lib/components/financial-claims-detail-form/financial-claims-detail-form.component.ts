@@ -40,6 +40,66 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.financialClaimsFacade.CPTCodeSearchLoaderVisibility$;
   pharmacySearchResult$ = this.financialClaimsFacade.pharmacies$;
   searchCTPCode$ = this.financialClaimsFacade.searchCTPCode$;
+  vendorId:any;
+  clientId:any;
+  vendorName:any;
+  clientName:any;
+  isRecentClaimShow:boolean=false;
+  @Input() claimsType: any;
+  clientSearchResult = [
+    {
+      clientId: '12',
+      clientFullName: 'Fname Lname',
+      ssn: '2434324324234',
+      dob: '23/12/2023',
+    },
+    {
+      clientId: '12',
+      clientFullName: 'Fname Lname',
+      ssn: '2434324324234',
+      dob: '23/12/2023',
+    },
+    {
+      clientId: '12',
+      clientFullName: 'Fname Lname',
+      ssn: '2434324324234',
+      dob: '23/12/2023',
+    },
+    {
+      clientId: '12',
+      clientFullName: 'Fname Lname',
+      ssn: '2434324324234',
+      dob: '23/12/2023',
+    },
+    {
+      clientId: '12',
+      clientFullName: 'Fname Lname',
+      ssn: '2434324324234',
+      dob: '23/12/2023',
+    },
+  ];
+  providerSearchResult = [
+    {
+      providerId: '12',
+      providerFullName: 'Fname Lname',
+      tin: '2434324324234', 
+    },
+    {
+      providerId: '12',
+      providerFullName: 'Fname Lname',
+      tin: '2434324324234', 
+    },
+    {
+      providerId: '12',
+      providerFullName: 'Fname Lname',
+      tin: '2434324324234', 
+    },
+    {
+      providerId: '12',
+      providerFullName: 'Fname Lname',
+      tin: '2434324324234', 
+    },
+  ];
 
   clientSearchLoaderVisibility$ =
     this.financialClaimsFacade.clientSearchLoaderVisibility$;
@@ -56,7 +116,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   title: any;
   addOrEdit: any;
   selectedCPTCode: any = null;
-  claimsType: any;
   isSpotsPayment!: boolean ;
   textMaxLength: number = 300;
 

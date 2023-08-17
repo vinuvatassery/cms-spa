@@ -12,11 +12,9 @@ import {
 } from '@angular/core';
 import {
   BatchClaim,
-  FinancialClaimTypeCode,
   FinancialClaimsFacade,
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   GridDataResult,
@@ -81,29 +79,31 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   isEdit!: boolean;
   paymentRequestId!: string;
 
+  vendorId:any;
+  clientId:any;
+  clientName:any;
   public selectableSettings: SelectableSettings;
   public checkboxOnly = true;
   public mode: SelectableMode = 'multiple';
   public drag = false;
 
   public selectedProcessClaims: any[] = [];
-
-  columns: any = {
-    invoiceNbr: 'Invoice ID',
-    vendorFullName: 'Provider Name',
-    tin: 'Tax ID',
-    paymentMethodCode: 'Payment Method',
-    clientFullName: 'Client Name',
-    insuranceName: 'Name on Primary Insurance Card',
-    clientId: 'Client ID',
-    serviceCount: 'Service Count',
-    annualTotal: 'Client Annual Total',
-    balanceAmount: 'Client Balance',
-    amountDue: 'Total Due',
-    paymentStatusCode: 'Payment Status',
-  };
-
-  dropDowncolumns: any = [
+  columns : any = {
+    invoiceNbr:"Invoice ID",
+    vendorFullName:"Provider Name",
+    tin:"Tax ID",
+    paymentMethodCode:"Payment Method",
+    clientFullName:"Client Name",
+    insuranceName:"Name on Primary Insurance Card",
+    clientId:"Client ID",
+    serviceCount:"Service Count",
+    annualTotal:"Client Annual Total",
+    balanceAmount:"Client Balance",
+    amountDue:"Total Due",
+    paymentStatusCode:"Payment Status"   
+  }
+  
+  dropDowncolumns : any = [
     {
       columnCode: 'invoiceNbr',
       columnDesc: 'Invoice ID',
@@ -456,6 +456,9 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
         duration: 200,
       },
     });
+    this.vendorId=data.vendorId;
+    this.clientId=data.clientId;  
+    this.clientName=data.clientFullName;  
   }
 
   closeRecentClaimsModal(result: any) {

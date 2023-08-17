@@ -314,9 +314,9 @@
 </ng-template>
 
 <ng-template #clientRecentClaimsDialog>
-  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)">Recent Claims for Donna Summer</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)">Recent Claims for {{clientName}}</kendo-dialog-titlebar>
   <section class="k-dialog-body">
-    <cms-financial-claims-recent-claims-list
+    <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
       (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>
   </section>
   <kendo-dialog-actions>

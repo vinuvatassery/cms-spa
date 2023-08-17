@@ -87,6 +87,11 @@ export class FinancialClaimsFacade {
     },
   ];
 
+  public sortValueRecentClaimList = 'entryDate';
+  public sortRecentClaimList: SortDescriptor[] = [{
+    field: this.sortValueRecentClaimList,
+  }];
+
   private financialClaimsProcessDataSubject = new Subject<any>();
   financialClaimsProcessData$ =
     this.financialClaimsProcessDataSubject.asObservable();
@@ -125,10 +130,6 @@ export class FinancialClaimsFacade {
   reconcileBreakoutSummary$ =
     this.reconcileBreakoutSummaryDataSubject.asObservable();
 
-  private reconcilePaymentBreakoutListDataSubject = new Subject<any>();
-  reconcilePaymentBreakoutList$ =
-    this.reconcilePaymentBreakoutListDataSubject.asObservable();
-
   private medicalClaimByCpt = new Subject<any>();
   medicalClaimByCpt$ = this.medicalClaimByCpt.asObservable();
 
@@ -151,11 +152,18 @@ export class FinancialClaimsFacade {
   CPTCodeSearchLoaderVisibility$ =
     this.CPTCodeSearchLoaderVisibilitySubject.asObservable();
 
+  private reconcilePaymentBreakoutListDataSubject =  new Subject<any>();
+  reconcilePaymentBreakoutList$ = this.reconcilePaymentBreakoutListDataSubject.asObservable();
   private deleteClaimsSubject =  new Subject<any>();
   deleteClaims$ = this.deleteClaimsSubject.asObservable();
 
   private batchClaimsSubject =  new Subject<any>();
   batchClaims$ = this.batchClaimsSubject.asObservable();
+
+  private recentClaimListDataSubject =  new Subject<any>();
+  recentClaimsGridLists$ = this.recentClaimListDataSubject.asObservable();
+  
+  
   /** Private properties **/
 
   /** Public properties **/
@@ -399,8 +407,8 @@ export class FinancialClaimsFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
         this.hideLoader();
       },
-    });
-  }
+    });  
+  } 
 
   getMedicalClaimByPaymentRequestId(event: any, typeCode: string) {
     return this.financialClaimsDataService
@@ -467,6 +475,27 @@ export class FinancialClaimsFacade {
     });
   }
     
+loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
+    this.showLoader();
+    recentClaimsPageAndSortedRequestDto.filter = JSON.stringify(recentClaimsPageAndSortedRequestDto.filter);
+    this.financialClaimsDataService.loadRecentClaimListService(recentClaimsPageAndSortedRequestDto).subscribe({
+      next: (dataResponse) => {
+        this.recentClaimListDataSubject.next(dataResponse);
+        if (dataResponse) {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.recentClaimListDataSubject.next(gridView);
+        }
+       this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.hideLoader(); 
+      },
+    });  
+  } 
   loadServicesByPayment(paymentId: string, params:GridFilterParam, claimType:string){
     return this.financialClaimsDataService.loadServicesByPayment(paymentId, params, claimType);
   }
