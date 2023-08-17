@@ -329,7 +329,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
       queryParams: { bid: batchId, iid: paymentRequestId}
     }); 
   }
-  navToReconcilePayments(event : any){  
+  navToReconcilePayments(event : any){ 
     this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch/reconcile-payments'] ); 
   }
   public onPreviewSubmitPaymentOpenClicked(template: TemplateRef<unknown>): void {
