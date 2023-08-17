@@ -5,7 +5,7 @@
                   <ng-template let-item="item">
                         <div *ngIf="printOption">
                               <div class="slidertitle-bar">
-                                    <p><strong>{{item.item}}) {{item.providerName}} </strong> <label class="ml-1 text-muted">${{item.totalCost}}</label>
+                                    <p><strong>{{item.index}}) {{item.providerName}} </strong> <label class="ml-1 text-muted">${{item.totalCost}}</label>
                                           <label class="ml-1 text-muted"> {{item.paymentMethod}}</label></p>
                               </div>
                               <div class="text-right mt-1">
@@ -20,7 +20,7 @@
                         </div>
                         <div *ngIf="!printOption">
                               <div class="slidertitle-bar">
-                                    <p><strong>{{item.item}}) {{item.vendorName}} </strong> <label class="ml-1 text-muted">${{item.amountPaid}}</label>
+                                    <p><strong>{{item.index}}) {{item.vendorName}} </strong> <label class="ml-1 text-muted">${{item.amountPaid}}</label>
                                           <label class="ml-1 text-muted"> {{item.paymentMethodCode}}</label></p>
                               </div>
                               <div class="text-right mt-1">
@@ -42,12 +42,14 @@
 <kendo-dialog-actions>
       <div class="justify-content-between align-items-center">
             <div class="justify-content-end align-items-center">
-                  <span class="mr-1">{{printOption ? +printCount+' advice letter(s) to be printed' : '1 payment(s) to reconcile, ' +printCount+ 'authorization(s) to be printed'}}</span>
+                  <span class="mr-1">{{ printOption
+                        ? printCount + ' advice letter(s) to be printed'
+                        : reconcileCount + ' payment(s) to reconcile, ' + printCount + ' authorization(s) to be printed' }}</span>
 
                   <button kendoButton (click)="onClosePrintAdviceLetterClicked()" [primary]="true" look="outline" aria-label="Cancel">
                         Cancel
                   </button>
-                  <button kendoButton [disabled]="printCount == 0" (click)="onPrintAdviceLetterClicked()" [primary]="true" aria-label="Submit"> {{printOption ? 'Print' : 'Reconcile & Print'}}</button>
+                  <button kendoButton [disabled]="printCount == 0" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true" aria-label="Submit"> {{printOption ? 'Print' : 'Reconcile & Print'}}</button>
             </div>
       </div>
 </kendo-dialog-actions>

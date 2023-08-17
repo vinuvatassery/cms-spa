@@ -16,7 +16,6 @@ import { BatchClaim } from '../../entities/financial-management/batch-claim';
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
 
-
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
@@ -380,5 +379,9 @@ export class FinancialClaimsFacade {
   
   reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any) {
     return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData);
+}
+
+viewAdviceLetterData(printAdviceLetterData: any) {
+  return this.financialClaimsDataService.viewPrintAdviceLetterData(printAdviceLetterData);
 }
 }

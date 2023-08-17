@@ -16,6 +16,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   finalPrintList!: any[];
   printCount: number = 0;
+  reconcileCount: number = 0;
   letterContnet!: any;
   entityId: any = '823E2464-0649-49DA-91E7-26DCC76A2A6B';
     /** Input properties **/
@@ -37,11 +38,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
   ngOnInit(): void {
     this.finalPrintList = this.items;
     this.getPrintLetterCount();
-    if(this.printOption || this.isSaveClicked){
-      this.loadPrintLetterContent();
-    }else{
-      this.reconcilePaymentsAndPrintLetterContent();
-    }
+    this.loadPrintLetterContent();
   }
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -64,15 +61,18 @@ hideLoader(){
     .subscribe({
       next: (data: any[]) =>{
         if (data.length > 0) {
+          if(this.isSaveClicked){
+            this.items = this.items.filter((x:any)=>x.isPrintAdviceLetter);
+          }
           this.items.forEach((item: any, index: number) => {
             data.forEach(result => {
             if(item.vendorId.toLowerCase() == result.vendorId.toLowerCase()){
-                this.finalPrintList[index+1].item = index + 1,
-                this.finalPrintList[index+1].paymentMethodCode = item.paymentMethodCode,
-                this.finalPrintList[index+1].amountPaid = item.amountPaid,
-                this.finalPrintList[index+1].vendorName = item.vendorName,
-                this.finalPrintList[index+1].letterContent = result.letterContent,
-                this.finalPrintList[index+1].isChecked = true
+              this.finalPrintList[index].index = index + 1; 
+              this.finalPrintList[index].paymentMethodCode = item.paymentMethodCode,
+              this.finalPrintList[index].amountPaid = item.amountPaid,
+              this.finalPrintList[index].vendorName = item.vendorName,
+              this.finalPrintList[index].letterContent = result.letterContent,
+              this.finalPrintList[index].isChecked = true
         }
       }); 
     });
@@ -88,67 +88,15 @@ hideLoader(){
   });
   }
 
-  reconcilePaymentsAndPrintLetterContent() {
-    this.loaderService.show();
-    let reconcileData = this.reconcilePaymentsData(this.finalPrintList);
-    this.financialClaimsFacade.reconcilePaymentsAndLoadPrintLetterContent(this.batchId, reconcileData)
-    .subscribe({
-      next: (data: any) =>{
-        if (data) {
-          this.loadPrintLetterContent();
-          this.ref.detectChanges();
-    }
-      this.loaderService.hide();
-    },
-      error: (err: Error) => {
-      this.loaderService.hide();
-      this.loggingService.logException(err);
-      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
-    },
-  });
-  }
-
-  onClosePrintAdviceLetterClicked() {
-    this.onClosePrintAdviceLetterEvent.emit('Close');
-  }
-
-  onCheckboxChange(event: any, item: any): void {
-    item.isChecked = event.target.checked;
-    if(this.printOption){
-      if(item.isChecked)
-      {
-      this.finalPrintList.push(item);
-      }
-      else{
-        this.finalPrintList = this.finalPrintList.filter(element => element.item !== item.item);
-      }
-    }else{
-      if(item.isChecked)
-      {
-      this.finalPrintList.push(item);
-      }
-      else{
-        this.finalPrintList = this.finalPrintList.filter(element => element.warrantNumber !== item.warrantNumber);
-      }
-    }
-    this.printCount = this.finalPrintList.length;
-  }
-
-  getPrintLetterCount(){
-    this.printCount = this.items.length;
-  }
-
-  onPrintAdviceLetterClicked(){
-    console.log(this.letterContnet);
-  }
-
   loadPrintLetterModelData(selectedPrintList: any[]) {
     let printAdviceLetterData: any;
     let vendorIds: any = [];
+    if(this.isSaveClicked){
+    selectedPrintList = this.finalPrintList.filter((x:any)=>x.isPrintAdviceLetter);
+    }
     selectedPrintList.forEach(item => {
       printAdviceLetterData = {      
       vendorId: item.vendorId,
-      selectedProviderList: [],
     };
     vendorIds.push(item.vendorId);
     });
@@ -173,7 +121,90 @@ hideLoader(){
   });
   return selectedProviders;
 }
-}
 
+  onClosePrintAdviceLetterClicked() {
+    this.onClosePrintAdviceLetterEvent.emit('Close');
+  }
+
+  onCheckboxChange(event: any, item: any): void {
+    item.isChecked = event.target.checked;
+    if(this.isSaveClicked){
+      this.finalPrintList = this.finalPrintList.filter((x:any)=>x.isPrintAdviceLetter)
+    }
+    if(this.printOption){
+      if(item.isChecked)
+      {
+      this.finalPrintList.push(item);
+      }
+      else{
+        this.finalPrintList = this.finalPrintList.filter(element => element.item !== item.item);
+      }
+    }else{
+      if(item.isChecked)
+      {
+      this.finalPrintList.push(item);
+      }
+      else{
+        this.finalPrintList = this.finalPrintList.filter(element => element.checkNbr !== item.checkNbr);
+      }
+    }
+    this.printCount = this.finalPrintList.length;
+  }
+
+  getPrintLetterCount(){
+    this.reconcileCount = this.items.length;
+    this.printCount = this.finalPrintList.filter((x:any)=>x.isPrintAdviceLetter).length;
+  }
+
+  onPrintAdviceLetterClicked(buttonText: string){
+    if(buttonText == 'Print'){
+      this.generateAndPrintAdviceLetter();
+    }else{
+      this.reconcilePaymentsAndPrintAdviceLetter();
+    }
+  }
+
+  generateAndPrintAdviceLetter() {
+    this.loaderService.show();
+    let printAdviceLetterData = this.loadPrintLetterModelData(this.finalPrintList);
+    printAdviceLetterData.isPrintClicked = true;
+    this.financialClaimsFacade.viewAdviceLetterData(printAdviceLetterData)
+      .subscribe({
+        next: (data: any) =>{
+          if (data) {
+            const fileUrl = window.URL.createObjectURL(data);
+            window.open(fileUrl, "_blank");
+            this.ref.detectChanges();
+      }
+        this.loaderService.hide();
+      },
+        error: (err: Error) => {
+        this.loaderService.hide();
+        this.loggingService.logException(err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+      },
+    });
+  }
+
+  reconcilePaymentsAndPrintAdviceLetter() {
+    this.loaderService.show();
+    let reconcileData = this.reconcilePaymentsData(this.finalPrintList);
+    this.financialClaimsFacade.reconcilePaymentsAndLoadPrintLetterContent(this.batchId, reconcileData)
+    .subscribe({
+      next: (data: any) =>{
+        if (data) {
+          this.generateAndPrintAdviceLetter();
+          this.ref.detectChanges();
+    }
+      this.loaderService.hide();
+    },
+      error: (err: Error) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+    },
+  });
+  }
+}
 
 

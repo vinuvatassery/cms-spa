@@ -518,7 +518,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     }
     else{
       this.pageValidationMessage ="validation errors are cleared";
-      this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.filter((x:any)=>x.isPrintAdviceLetter);
+      this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.filter((x:any)=>x.checkNbr != null);
     }
     if(isValid.length<=0){
       this.printAuthorizationDialog = this.dialogService.open({
