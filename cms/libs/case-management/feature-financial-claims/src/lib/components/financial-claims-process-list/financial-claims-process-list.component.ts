@@ -5,25 +5,32 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,  
+  OnChanges,
   Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
-  CompositeFilterDescriptor,
-  State  
-} from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+  BatchClaim,
+  FinancialClaimTypeCode,
+  FinancialClaimsFacade,
+} from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import {
+  GridDataResult,
+  SelectableMode,
+  SelectableSettings,
+} from '@progress/kendo-angular-grid';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { Subject, first } from 'rxjs';
 @Component({
   selector: 'cms-financial-claims-process-list',
-  templateUrl: './financial-claims-process-list.component.html', 
+  templateUrl: './financial-claims-process-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsProcessListComponent implements  OnChanges {
+export class FinancialClaimsProcessListComponent implements OnChanges {
   @ViewChild('batchClaimsConfirmationDialog', { read: TemplateRef })
   batchClaimsConfirmationDialog!: TemplateRef<any>;
   @ViewChild('deleteClaimsConfirmationDialog', { read: TemplateRef })
@@ -45,9 +52,9 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
-  @Input() sortValueFinancialInvoices : any
+  @Input() sortValueFinancialInvoices: any;
   @Input() financialClaimsProcessGridLists$: any;
-  @Input() financialClaimsInvoice$ : any
+  @Input() financialClaimsInvoice$: any;
   @Output() loadFinancialClaimsProcessListEvent = new EventEmitter<any>();
   @Output() loadFinancialClaimsInvoiceListEvent = new EventEmitter<any>();
   public state!: State;
@@ -62,85 +69,84 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   gridDataResult!: GridDataResult;
 
   gridFinancialClaimsProcessDataSubject = new Subject<any>();
-  gridFinancialClaimsProcessData$ =  this.gridFinancialClaimsProcessDataSubject.asObservable();
+  gridFinancialClaimsProcessData$ =
+    this.gridFinancialClaimsProcessDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
-  columns : any = {
-    invoiceNbr:"Invoice ID",
-    vendorFullName:"Provider Name",
-    tin:"Tax ID",
-    paymentMethodCode:"Payment Method",
-    clientFullName:"Client Name",
-    insuranceName:"Name on Primary Insurance Card",
-    clientId:"Client ID",
-    serviceCount:"Service Count",
-    annualTotal:"Client Annual Total",
-    balanceAmount:"Client Balance",
-    amountDue:"Total Due",
-    paymentStatusCode:"Payment Status"   
-  }
-  
-  dropDowncolumns : any = [
+  public selectableSettings: SelectableSettings;
+  public checkboxOnly = true;
+  public mode: SelectableMode = 'multiple';
+  public drag = false;
+
+  public selectedProcessClaims: any[] = [];
+
+  columns: any = {
+    invoiceNbr: 'Invoice ID',
+    vendorFullName: 'Provider Name',
+    tin: 'Tax ID',
+    paymentMethodCode: 'Payment Method',
+    clientFullName: 'Client Name',
+    insuranceName: 'Name on Primary Insurance Card',
+    clientId: 'Client ID',
+    serviceCount: 'Service Count',
+    annualTotal: 'Client Annual Total',
+    balanceAmount: 'Client Balance',
+    amountDue: 'Total Due',
+    paymentStatusCode: 'Payment Status',
+  };
+
+  dropDowncolumns: any = [
     {
-      "columnCode": "invoiceNbr",
-      "columnDesc": "Invoice ID"    
+      columnCode: 'invoiceNbr',
+      columnDesc: 'Invoice ID',
     },
     {
-      "columnCode": "vendorFullName",
-      "columnDesc": "Provider Name"        
+      columnCode: 'vendorFullName',
+      columnDesc: 'Provider Name',
     },
     {
-      "columnCode": "tin",
-      "columnDesc": "Tax ID"     
-    }
-    ,
+      columnCode: 'tin',
+      columnDesc: 'Tax ID',
+    },
     {
-      "columnCode": "paymentMethodCode",
-      "columnDesc": "Payment Method"         
-    }
-    ,
+      columnCode: 'paymentMethodCode',
+      columnDesc: 'Payment Method',
+    },
     {
-      "columnCode": "clientFullName",
-      "columnDesc": "Client Name"         
-    }
-    ,
+      columnCode: 'clientFullName',
+      columnDesc: 'Client Name',
+    },
     {
-      "columnCode": "insuranceName",
-      "columnDesc": "Name on Primary Insurance Card"         
-    }
-    ,
+      columnCode: 'insuranceName',
+      columnDesc: 'Name on Primary Insurance Card',
+    },
     {
-      "columnCode": "clientId",
-      "columnDesc": "Client ID"         
-    }
-    ,
+      columnCode: 'clientId',
+      columnDesc: 'Client ID',
+    },
     {
-      "columnCode": "serviceCount",
-      "columnDesc": "Service Count"         
-    }
-    ,
+      columnCode: 'serviceCount',
+      columnDesc: 'Service Count',
+    },
     {
-      "columnCode": "annualTotal",
-      "columnDesc": "Client Annual Total"         
-    }
-    ,
+      columnCode: 'annualTotal',
+      columnDesc: 'Client Annual Total',
+    },
     {
-      "columnCode": "balanceAmount",
-      "columnDesc": "Client Balance"         
-    }
-    ,
+      columnCode: 'balanceAmount',
+      columnDesc: 'Client Balance',
+    },
     {
-      "columnCode": "amountDue",
-      "columnDesc": "Total Due"         
-    }
-    ,
+      columnCode: 'amountDue',
+      columnDesc: 'Total Due',
+    },
     {
-      "columnCode": "paymentStatusCode",
-      "columnDesc": "Payment Status"         
-    }
-  ]
+      columnCode: 'paymentStatusCode',
+      columnDesc: 'Payment Status',
+    },
+  ];
 
   public claimsProcessMore = [
     {
@@ -149,7 +155,7 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
       icon: 'check',
       click: (data: any): void => {
         if (!this.isProcessBatchClosed) {
-          this.isProcessBatchClosed = true; 
+          this.isProcessBatchClosed = true;
           this.onBatchClaimsGridSelectedClicked();
         }
       },
@@ -161,7 +167,7 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isDeleteBatchClosed) {
-          this.isDeleteBatchClosed = true; 
+          this.isDeleteBatchClosed = true;
           this.onBatchClaimsGridSelectedClicked();
         }
       },
@@ -177,18 +183,31 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
       buttonType: 'btn-h-danger',
       text: 'Delete Claims',
       icon: 'delete',
+      click: (data: any): void => {
+        this.onSingleClaimDelete(data.paymentRequestId.split(','));
+        this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog);
+      },
     },
   ];
-
 
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
-  ) {}
+    private dialogService: DialogService,
+    private readonly financialClaimsFacade: FinancialClaimsFacade
+  ) {
+    this.selectableSettings = {
+      checkboxOnly: this.checkboxOnly,
+      mode: this.mode,
+      drag: this.drag,
+    };
+  }
 
-  
-  ngOnChanges(): void {    
+  onSingleClaimDelete(selection: any) {
+    this.selectedKeysChange(selection);
+  }
+
+  ngOnChanges(): void {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -218,7 +237,7 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
-      filter : this.state?.["filter"]?.["filters"] ?? []
+      filter: this.state?.['filter']?.['filters'] ?? [],
     };
     this.loadFinancialClaimsProcessListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
@@ -226,14 +245,18 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
 
   onChange(data: any) {
     this.defaultGridState();
-    let operator= "startswith"
+    let operator = 'startswith';
 
-    if(this.selectedColumn ==="clientId" || this.selectedColumn ==="serviceCount" || this.selectedColumn ==="annualTotal"
-    || this.selectedColumn ==="amountDue" || this.selectedColumn === "balanceAmount")
-    {
-      operator = "eq"
+    if (
+      this.selectedColumn === 'clientId' ||
+      this.selectedColumn === 'serviceCount' ||
+      this.selectedColumn === 'annualTotal' ||
+      this.selectedColumn === 'amountDue' ||
+      this.selectedColumn === 'balanceAmount'
+    ) {
+      operator = 'eq';
     }
-    
+
     this.filterData = {
       logic: 'and',
       filters: [
@@ -276,24 +299,20 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
 
     this.sortColumn = this.columns[stateData.sort[0]?.field];
 
-    if(stateData.filter?.filters.length > 0)
-    {
-      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+    if (stateData.filter?.filters.length > 0) {
+      const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.filter = stateFilter.value;
       this.isFiltered = true;
-      const filterList = []
-      for(const filter of stateData.filter.filters)
-      {
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
         filterList.push(this.columns[filter.filters[0].field]);
       }
-      this.filteredBy =  filterList.toString();
+      this.filteredBy = filterList.toString();
+    } else {
+      this.filter = '';
+      this.isFiltered = false;
     }
-    else
-    {
-      this.filter = "";
-      this.isFiltered = false
-    }
-    this.loadFinancialClaimsProcessListGrid();    
+    this.loadFinancialClaimsProcessListGrid();
   }
 
   // updating the pagination infor based on dropdown selection
@@ -308,36 +327,82 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
   }
 
   gridDataHandle() {
-    this.financialClaimsProcessGridLists$.subscribe((data: GridDataResult) => {      
-      this.gridDataResult = data;    
+    this.financialClaimsProcessGridLists$.subscribe((data: GridDataResult) => {
+      this.gridDataResult = data;
       this.gridFinancialClaimsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isFinancialClaimsProcessGridLoaderShow = false;
       }
     });
-  
   }
 
   public onBatchClaimsClicked(template: TemplateRef<unknown>): void {
+    if (!this.selectedProcessClaims.length) return;
     this.batchConfirmClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
-  onModalBatchClaimsModalClose(result: any) {
-    if (result) { 
-      this.batchConfirmClaimsDialog.close();
+  onModalBatchClaimsModalClose() {
+    this.batchConfirmClaimsDialog.close();
+  }
+
+  onModalBatchClaimsButtonClicked(managerId: string) {
+    if (managerId) {
+      const input: BatchClaim = {
+        managerId: managerId,
+        PaymentRequestIds: this.selectedProcessClaims,
+      };
+
+      this.handleBatchClaims();
+      this.financialClaimsFacade.batchClaims(input, this.claimsType);
+    }
+  }
+
+  handleBatchClaims() {
+    this.financialClaimsFacade.batchClaims$
+      .pipe(first((batchResponse: any) => batchResponse != null))
+      .subscribe((batchResponse: any) => {
+        if (batchResponse ?? false) {
+          this.loadFinancialClaimsProcessListGrid();
+          this.onBatchClaimsGridSelectedCancelClicked();
+        }
+      });
+    this.batchConfirmClaimsDialog.close();
+  }
+
+  handleDeleteClaims() {
+    this.financialClaimsFacade.deleteClaims$
+      .pipe(first((deleteResponse: any) => deleteResponse != null))
+      .subscribe((deleteResponse: any) => {
+        if (deleteResponse ?? false) {
+          this.loadFinancialClaimsProcessListGrid();
+          this.onBatchClaimsGridSelectedCancelClicked();
+        }
+      });
+    this.deleteClaimsDialog.close();
+  }
+
+  onModalBatchDeletingClaimsButtonClicked(action: any) {
+    if (action) {
+      this.handleDeleteClaims();
+      this.financialClaimsFacade.deleteClaims(
+        this.selectedProcessClaims,
+        this.claimsType
+      );
     }
   }
 
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
+    if (!this.selectedProcessClaims.length) return;
     this.deleteClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
   onModalDeleteClaimsModalClose(result: any) {
-    if (result) { 
+    if (result) {
+      this.isDeleteBatchClosed = false;
       this.deleteClaimsDialog.close();
     }
   }
@@ -358,55 +423,62 @@ export class FinancialClaimsProcessListComponent implements  OnChanges {
     this.isProcessGridExpand = false;
   }
 
+  onBatchClaimsDeleteGridSelectedClicked() {
+    this.isProcessGridExpand = false;
+  }
+  selectedKeysChange(selection: any) {
+    this.selectedProcessClaims = selection;
+  }
+
   onBatchClaimsGridSelectedCancelClicked() {
     this.isProcessGridExpand = true;
     this.isDeleteBatchClosed = false;
     this.isProcessBatchClosed = false;
-  
+    this.selectedProcessClaims = [];
   }
 
-  clientRecentClaimsModalClicked (template: TemplateRef<unknown>, data:any): void {
+  clientRecentClaimsModalClicked(
+    template: TemplateRef<unknown>,
+    data: any
+  ): void {
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
-      animation:{
+      animation: {
         direction: 'up',
-        type:'slide',
-        duration: 200
-      }
+        type: 'slide',
+        duration: 200,
+      },
     });
   }
 
-  closeRecentClaimsModal(result: any){
-    if (result) { 
+  closeRecentClaimsModal(result: any) {
+    if (result) {
       this.addClientRecentClaimsDialog.close();
     }
   }
-  setToDefault()
-  {
-
+  setToDefault() {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,  
-      };
-  
+      sort: this.sort,
+    };
+
     this.sortColumn = 'Invoice ID';
-    this.sortDir = 'Ascending';    
-    this.filter = "";    
-    this.searchValue = "";
+    this.sortDir = 'Ascending';
+    this.filter = '';
+    this.searchValue = '';
     this.isFiltered = false;
     this.columnsReordered = false;
-    
-    this.sortValue  = 'invoiceNbr';
-    this.sortType  = 'asc'
-    this.sort  = this.sortColumn;
-  
-    this.loadFinancialClaimsProcessListGrid();    
+
+    this.sortValue = 'invoiceNbr';
+    this.sortType = 'asc';
+    this.sort = this.sortColumn;
+
+    this.loadFinancialClaimsProcessListGrid();
   }
- 
-  loadFinancialClaimsInvoiceListService(data : any)
-  {
-    this.loadFinancialClaimsInvoiceListEvent.emit(data)
+
+  loadFinancialClaimsInvoiceListService(data: any) {
+    this.loadFinancialClaimsInvoiceListEvent.emit(data);
   }
 }
