@@ -31,7 +31,7 @@
                         <div class="flex-col flex-col-4 field-with-btn">
                               <kendo-floatinglabel text="Date Payment Sent">
                                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                                          formatPlaceholder="formatPattern" aria-label="Date Payment Sent"formControlName="datePaymentSend"
+                                          formatPlaceholder="formatPattern" aria-label="Date Payment Sent" formControlName="datePaymentSend"
                                           [max]="currentDate"   (valueChange)="reconcileDateOnChange('datePaymentSend')"
                                           placeholder="">
                                     </kendo-datepicker>
@@ -45,10 +45,12 @@
                         </div>
                         <div class="flex-col flex-col-4 field-with-btn">
                               <kendo-floatinglabel text="Note">
-                                    <kendo-textbox aria-label="Note" [fillMode]="formUiStyle.inputFillMode">
+                                    <kendo-textbox aria-label="Note" [fillMode]="formUiStyle.inputFillMode"
+                                    formControlName="note">
                                     </kendo-textbox>
+                                    <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['note'].valid">note is required..</kendo-formerror>                     
                               </kendo-floatinglabel>
-                              <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Batch"> Batch
+                              <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Batch" (click)="noteBatch()"> Batch
                               </button>
 
                         </div>
