@@ -1173,6 +1173,15 @@ color: $app-primary-font-color;
   position: absolute;
   top: 40px;
   right: 30px;
+} 
+
+
+.table-text-area{
+  textarea{
+    height: 35px;
+    resize: vertical;
+    line-height: normal;
+  }
 }
  .table-filter-with-dropdown{
   display: grid;
@@ -1184,3 +1193,6 @@ color: $app-primary-font-color;
   }
 
  }
+.preferred-heading{
+  border-left:3px solid material-color($hive-canyon-palette, A700) !important;
+}

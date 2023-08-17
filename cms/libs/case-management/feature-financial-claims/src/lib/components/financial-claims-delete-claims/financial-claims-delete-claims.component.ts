@@ -2,6 +2,7 @@ import {
   Component,
   ChangeDetectionStrategy,
   Output, 
+  Input,
   EventEmitter,
 } from '@angular/core';
 @Component({
@@ -11,9 +12,13 @@ import {
 })
 export class FinancialClaimsDeleteClaimsComponent {
   @Output() isModalDeleteClaimsCloseClicked = new EventEmitter();
-
- 
+  @Output() isModalDeletedClaimsButtonClicked = new EventEmitter<boolean>();
+  @Input() selectedProcessClaimsCount = 0;
+  
   closeDeleteClaimsClicked() {
     this.isModalDeleteClaimsCloseClicked.emit(true);
+  }
+  deleteClaimsClicked(){
+    this.isModalDeletedClaimsButtonClicked.emit(true);
   }
 }
