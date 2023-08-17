@@ -1,8 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { Subject } from 'rxjs';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Subject } from 'rxjs'; 
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -15,23 +14,22 @@ export class DrugsFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'address1';
+  public sortValue = 'brandName';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
   }];
 
-  private drugsDataSubject = new BehaviorSubject<any>([]);
+  private drugsDataSubject = new Subject<any>();
   drugsData$ = this.drugsDataSubject.asObservable();
 
-  
   /** Private properties **/
- 
+
   /** Public properties **/
- 
+
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>(); 
+  snackbarSubject = new Subject<SnackBar>();
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
@@ -59,19 +57,28 @@ export class DrugsFacade {
   ) { }
 
   /** Public methods **/
-  loadDrugsListGrid(){
-    this.drugsDataService.loadDrugsListService().subscribe({
+  loadDrugsListGrid(vendorId:string, skipCount: number, maxResultCount: number, sort: string, sortType: string) {
+    this.showLoader();
+    this.drugsDataService.loadDrugList(vendorId,skipCount,maxResultCount,sort,sortType).subscribe({
       next: (dataResponse) => {
         this.drugsDataSubject.next(dataResponse);
+
+        if (dataResponse) {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.drugsDataSubject.next(gridView);
+        }
         this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.drugsDataSubject.next(false);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.hideLoader();
       },
     });
-   
-  
+
+
   }
- 
 }

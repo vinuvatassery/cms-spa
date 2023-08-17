@@ -106,7 +106,7 @@ export class PaymentAddressesComponent {
   }
 
   public onDetailExpand(e: any): void { 
-    this.VendorAddressId=e.dataItem.VendorAddressId;  
+    this.VendorAddressId=e.dataItem.vendorAddressId;  
    
   }
   public dataStateChange(stateData: any): void {

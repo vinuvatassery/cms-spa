@@ -4,7 +4,9 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
-import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { BatchClaim } from '../../entities/financial-management/batch-claim';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsDataService {
@@ -13,456 +15,343 @@ export class FinancialClaimsDataService {
     private readonly http: HttpClient,
     private readonly configurationProvider: ConfigurationProvider
   ) {}
- 
 
- 
+
+
   loadFinancialClaimsProcessListService(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string, claimsType : string ) {
 
     const MedicalClaimsPageAndSortedRequestDto =
-    {    
+    {
       SortType : sortType,
       Sorting : sort,
       SkipCount : skipcount,
       MaxResultCount : maxResultCount,
       Filter : filter
     }
-    
+
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}`,MedicalClaimsPageAndSortedRequestDto
     );
   }
 
-  loadFinancialClaimsInvoiceListService(paymentRequestId : string, skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, claimsType : string) {  
-    
+  loadFinancialClaimsInvoiceListService(paymentRequestId : string, skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, claimsType : string) {
+
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/${paymentRequestId}/invoices?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`,
     );
   }
 
-  loadFinancialClaimsBatchListService( ) {
-    return of([
-      {
-        id:1,
-        batch: '05012021_001 `',
-        ofProviders:'XX', 
-        ofClaims:'XX', 
-        pmtsRequested:'XX', 
-        pmtsReconciled:'XX', 
-        totalAmountDue:'XX,XXX.XX', 
-        totalAmountReconciled:'XX,XXX.XX',  
-      },
-      {
-        id:2,
-        batch: '05012021_001 `',
-        ofProviders:'XX', 
-        ofClaims:'XX', 
-        pmtsRequested:'XX', 
-        pmtsReconciled:'XX', 
-        totalAmountDue:'XX,XXX.XX', 
-        totalAmountReconciled:'XX,XXX.XX',
-      },
-      {
-        id:3,
-        batch: '05012021_001 `',
-        ofProviders:'XX', 
-        ofClaims:'XX', 
-        pmtsRequested:'XX', 
-        pmtsReconciled:'XX', 
-        totalAmountDue:'XX,XXX.XX', 
-        totalAmountReconciled:'XX,XXX.XX',  
-      },
-    ]);
+  loadFinancialClaimsBatchListService(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string, claimsType : string ) {
+    const MedicalClaimsBatchPageAndSortedRequestDto =
+    {
+      SortType : sortType,
+      Sorting : sort,
+      SkipCount : skipcount,
+      MaxResultCount : maxResultCount,
+      Filter : filter
+    }
+
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches`,MedicalClaimsBatchPageAndSortedRequestDto
+    );
   }
   loadFinancialClaimsAllPaymentsListService( ) {
     return of([
       {
         batch: 'MMDDYYYY_XXX',
         vendor: 'Provider Name',
-        type:'TPA', 
-        clientName:'FName LName', 
-        primaryInsurance:'FName LName', 
-        memberID:'FName LName', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        originalWarranty:'XXXXXX', 
-        originalAmount:'XXXXXX', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'XX-XX-XXXX',  
+        type:'TPA',
+        clientName:'FName LName',
+        primaryInsurance:'FName LName',
+        memberID:'FName LName',
+        refundWarrant:'address2',
+        refundAmount:'address2',
+        depositDate:'address2',
+        depositMethod:'address2',
+        originalWarranty:'XXXXXX',
+        originalAmount:'XXXXXX',
+        indexCode:'address2',
+        pca:'address2',
+        grant:'address2',
+        vp:'address2',
+        refundNote:'address2',
+        entryDate:'XX-XX-XXXX',
         by: 'by',
       },
       {
         batch: 'MMDDYYYY_XXX',
         vendor: 'Provider Name',
-        type:'TPA', 
-        clientName:'FName LName', 
-        primaryInsurance:'FName LName', 
-        memberID:'FName LName', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        originalWarranty:'XXXXXX', 
-        originalAmount:'XXXXXX', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'XX-XX-XXXX',  
+        type:'TPA',
+        clientName:'FName LName',
+        primaryInsurance:'FName LName',
+        memberID:'FName LName',
+        refundWarrant:'address2',
+        refundAmount:'address2',
+        depositDate:'address2',
+        depositMethod:'address2',
+        originalWarranty:'XXXXXX',
+        originalAmount:'XXXXXX',
+        indexCode:'address2',
+        pca:'address2',
+        grant:'address2',
+        vp:'address2',
+        refundNote:'address2',
+        entryDate:'XX-XX-XXXX',
         by: 'by',
       },
       {
         batch: 'MMDDYYYY_XXX',
         vendor: 'Provider Name',
-        type:'TPA', 
-        clientName:'FName LName', 
-        primaryInsurance:'FName LName', 
-        memberID:'FName LName', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        originalWarranty:'XXXXXX', 
-        originalAmount:'XXXXXX', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'XX-XX-XXXX',  
+        type:'TPA',
+        clientName:'FName LName',
+        primaryInsurance:'FName LName',
+        memberID:'FName LName',
+        refundWarrant:'address2',
+        refundAmount:'address2',
+        depositDate:'address2',
+        depositMethod:'address2',
+        originalWarranty:'XXXXXX',
+        originalAmount:'XXXXXX',
+        indexCode:'address2',
+        pca:'address2',
+        grant:'address2',
+        vp:'address2',
+        refundNote:'address2',
+        entryDate:'XX-XX-XXXX',
         by: 'by',
       },
       {
         batch: 'MMDDYYYY_XXX',
         vendor: 'Provider Name',
-        type:'TPA', 
-        clientName:'FName LName', 
-        primaryInsurance:'FName LName', 
-        memberID:'FName LName', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        originalWarranty:'XXXXXX', 
-        originalAmount:'XXXXXX', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'XX-XX-XXXX',  
+        type:'TPA',
+        clientName:'FName LName',
+        primaryInsurance:'FName LName',
+        memberID:'FName LName',
+        refundWarrant:'address2',
+        refundAmount:'address2',
+        depositDate:'address2',
+        depositMethod:'address2',
+        originalWarranty:'XXXXXX',
+        originalAmount:'XXXXXX',
+        indexCode:'address2',
+        pca:'address2',
+        grant:'address2',
+        vp:'address2',
+        refundNote:'address2',
+        entryDate:'XX-XX-XXXX',
         by: 'by',
       },
     ]);
   }
 
-
-  loadBatchLogListService( ) {
-    return of([
-      {
-        vendorName: 'Address `',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
-      },
-      {
-        vendorName: 'Address `',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
-      },
-     
-    ]);
-  }
-  loadBatchItemsListService(){
-    return of([
-      {
-        id:101,
-        vendorName: 'vendorName',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
-      },
-      {
-        id:102,
-        vendorName: 'vendorName',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
-      },
-     
-    ]);
+  loadPaymentsByBatch(batchId: string, params:GridFilterParam, claimType:string){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payment-batches/${batchId}/payments`, params);
   }
 
-  loadReconcileListService(){
-    return of([
-      {
-        id:1,
-        vendorName: 'Vendor Name',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
-      },
-      {
-        id:2,
-        vendorName: 'Address `',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
-      },
-     
-    ]);
+  loadBatchName(batchId: string){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}`);
+  }
+
+  loadServicesByPayment(paymentId: string, params:GridFilterParam, claimType:string){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payments/${paymentId}/services`, params);
+  }
+
+  loadBatchItemsListService(paymentId: string, params: GridFilterParam, claimType:string){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payments/${paymentId}/services?type=INDIVIDUAL`, params);
+  }
+
+  loadReconcileListService(batchId:any,claimsType:any,paginationParameters:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/reconcile-payments?&SkipCount=${paginationParameters?.skipCount}
+    &maxResultCount=${paginationParameters?.pageSize}&sortType=${paginationParameters?.sortType}&sorting=${paginationParameters?.sortColumn}`);
   }
   loadClaimsListService( ) {
     return of([
       {
         insuranceCarrier: 'Carrier Name',
-        planName:'Plan Name', 
-        insuranceType:'Off-Exchange Plan', 
-        amount:'XXX.XX', 
-        coverageDates:'XX/XX/XXXX-XX/XX/XXXX', 
-        policyID:'XXXXXXXXX', 
-        groupID:'XXXXXXXXX', 
-        paymentID:'XXXXXXXXX', 
-        pmtMethod:'ACH', 
-        pmtStatus:'Recon', 
-        PCA:'XXXXXX', 
-        mailCode:'XXXX',   
+        planName:'Plan Name',
+        insuranceType:'Off-Exchange Plan',
+        amount:'XXX.XX',
+        coverageDates:'XX/XX/XXXX-XX/XX/XXXX',
+        policyID:'XXXXXXXXX',
+        groupID:'XXXXXXXXX',
+        paymentID:'XXXXXXXXX',
+        pmtMethod:'ACH',
+        pmtStatus:'Recon',
+        PCA:'XXXXXX',
+        mailCode:'XXXX',
         by: 'by',
       },
       {
         insuranceCarrier: 'Carrier Name',
-        planName:'Plan Name', 
-        insuranceType:'Off-Exchange Plan', 
-        amount:'XXX.XX', 
-        coverageDates:'XX/XX/XXXX-XX/XX/XXXX', 
-        policyID:'XXXXXXXXX', 
-        groupID:'XXXXXXXXX', 
-        paymentID:'XXXXXXXXX', 
-        pmtMethod:'ACH', 
-        pmtStatus:'Recon', 
-        PCA:'XXXXXX', 
-        mailCode:'XXXX',   
+        planName:'Plan Name',
+        insuranceType:'Off-Exchange Plan',
+        amount:'XXX.XX',
+        coverageDates:'XX/XX/XXXX-XX/XX/XXXX',
+        policyID:'XXXXXXXXX',
+        groupID:'XXXXXXXXX',
+        paymentID:'XXXXXXXXX',
+        pmtMethod:'ACH',
+        pmtStatus:'Recon',
+        PCA:'XXXXXX',
+        mailCode:'XXXX',
         by: 'by',
       },
       {
         insuranceCarrier: 'Carrier Name',
-        planName:'Plan Name', 
-        insuranceType:'Off-Exchange Plan', 
-        amount:'XXX.XX', 
-        coverageDates:'XX/XX/XXXX-XX/XX/XXXX', 
-        policyID:'XXXXXXXXX', 
-        groupID:'XXXXXXXXX', 
-        paymentID:'XXXXXXXXX', 
-        pmtMethod:'ACH', 
-        pmtStatus:'Recon', 
-        PCA:'XXXXXX', 
-        mailCode:'XXXX',   
+        planName:'Plan Name',
+        insuranceType:'Off-Exchange Plan',
+        amount:'XXX.XX',
+        coverageDates:'XX/XX/XXXX-XX/XX/XXXX',
+        policyID:'XXXXXXXXX',
+        groupID:'XXXXXXXXX',
+        paymentID:'XXXXXXXXX',
+        pmtMethod:'ACH',
+        pmtStatus:'Recon',
+        PCA:'XXXXXX',
+        mailCode:'XXXX',
         by: 'by',
       },
       {
         insuranceCarrier: 'Carrier Name',
-        planName:'Plan Name', 
-        insuranceType:'Off-Exchange Plan', 
-        amount:'XXX.XX', 
-        coverageDates:'XX/XX/XXXX-XX/XX/XXXX', 
-        policyID:'XXXXXXXXX', 
-        groupID:'XXXXXXXXX', 
-        paymentID:'XXXXXXXXX', 
-        pmtMethod:'ACH', 
-        pmtStatus:'Recon', 
-        PCA:'XXXXXX', 
-        mailCode:'XXXX',   
+        planName:'Plan Name',
+        insuranceType:'Off-Exchange Plan',
+        amount:'XXX.XX',
+        coverageDates:'XX/XX/XXXX-XX/XX/XXXX',
+        policyID:'XXXXXXXXX',
+        groupID:'XXXXXXXXX',
+        paymentID:'XXXXXXXXX',
+        pmtMethod:'ACH',
+        pmtStatus:'Recon',
+        PCA:'XXXXXX',
+        mailCode:'XXXX',
         by: 'by',
       },
       {
         insuranceCarrier: 'Carrier Name',
-        planName:'Plan Name', 
-        insuranceType:'Off-Exchange Plan', 
-        amount:'XXX.XX', 
-        coverageDates:'XX/XX/XXXX-XX/XX/XXXX', 
-        policyID:'XXXXXXXXX', 
-        groupID:'XXXXXXXXX', 
-        paymentID:'XXXXXXXXX', 
-        pmtMethod:'ACH', 
-        pmtStatus:'Recon', 
-        PCA:'XXXXXX', 
-        mailCode:'XXXX',   
+        planName:'Plan Name',
+        insuranceType:'Off-Exchange Plan',
+        amount:'XXX.XX',
+        coverageDates:'XX/XX/XXXX-XX/XX/XXXX',
+        policyID:'XXXXXXXXX',
+        groupID:'XXXXXXXXX',
+        paymentID:'XXXXXXXXX',
+        pmtMethod:'ACH',
+        pmtStatus:'Recon',
+        PCA:'XXXXXX',
+        mailCode:'XXXX',
         by: 'by',
       },
       {
         insuranceCarrier: 'Carrier Name',
-        planName:'Plan Name', 
-        insuranceType:'Off-Exchange Plan', 
-        amount:'XXX.XX', 
-        coverageDates:'XX/XX/XXXX-XX/XX/XXXX', 
-        policyID:'XXXXXXXXX', 
-        groupID:'XXXXXXXXX', 
-        paymentID:'XXXXXXXXX', 
-        pmtMethod:'ACH', 
-        pmtStatus:'Recon', 
-        PCA:'XXXXXX', 
-        mailCode:'XXXX',   
+        planName:'Plan Name',
+        insuranceType:'Off-Exchange Plan',
+        amount:'XXX.XX',
+        coverageDates:'XX/XX/XXXX-XX/XX/XXXX',
+        policyID:'XXXXXXXXX',
+        groupID:'XXXXXXXXX',
+        paymentID:'XXXXXXXXX',
+        pmtMethod:'ACH',
+        pmtStatus:'Recon',
+        PCA:'XXXXXX',
+        mailCode:'XXXX',
         by: 'by',
       },
       {
         insuranceCarrier: 'Carrier Name',
-        planName:'Plan Name', 
-        insuranceType:'Off-Exchange Plan', 
-        amount:'XXX.XX', 
-        coverageDates:'XX/XX/XXXX-XX/XX/XXXX', 
-        policyID:'XXXXXXXXX', 
-        groupID:'XXXXXXXXX', 
-        paymentID:'XXXXXXXXX', 
-        pmtMethod:'ACH', 
-        pmtStatus:'Recon', 
-        PCA:'XXXXXX', 
-        mailCode:'XXXX',   
+        planName:'Plan Name',
+        insuranceType:'Off-Exchange Plan',
+        amount:'XXX.XX',
+        coverageDates:'XX/XX/XXXX-XX/XX/XXXX',
+        policyID:'XXXXXXXXX',
+        groupID:'XXXXXXXXX',
+        paymentID:'XXXXXXXXX',
+        pmtMethod:'ACH',
+        pmtStatus:'Recon',
+        PCA:'XXXXXX',
+        mailCode:'XXXX',
         by: 'by',
       },
       {
         insuranceCarrier: 'Carrier Name',
-        planName:'Plan Name', 
-        insuranceType:'Off-Exchange Plan', 
-        amount:'XXX.XX', 
-        coverageDates:'XX/XX/XXXX-XX/XX/XXXX', 
-        policyID:'XXXXXXXXX', 
-        groupID:'XXXXXXXXX', 
-        paymentID:'XXXXXXXXX', 
-        pmtMethod:'ACH', 
-        pmtStatus:'Recon', 
-        PCA:'XXXXXX', 
-        mailCode:'XXXX',   
+        planName:'Plan Name',
+        insuranceType:'Off-Exchange Plan',
+        amount:'XXX.XX',
+        coverageDates:'XX/XX/XXXX-XX/XX/XXXX',
+        policyID:'XXXXXXXXX',
+        groupID:'XXXXXXXXX',
+        paymentID:'XXXXXXXXX',
+        pmtMethod:'ACH',
+        pmtStatus:'Recon',
+        PCA:'XXXXXX',
+        mailCode:'XXXX',
         by: 'by',
       },
       {
         insuranceCarrier: 'Carrier Name',
-        planName:'Plan Name', 
-        insuranceType:'Off-Exchange Plan', 
-        amount:'XXX.XX', 
-        coverageDates:'XX/XX/XXXX-XX/XX/XXXX', 
-        policyID:'XXXXXXXXX', 
-        groupID:'XXXXXXXXX', 
-        paymentID:'XXXXXXXXX', 
-        pmtMethod:'ACH', 
-        pmtStatus:'Recon', 
-        PCA:'XXXXXX', 
-        mailCode:'XXXX',   
+        planName:'Plan Name',
+        insuranceType:'Off-Exchange Plan',
+        amount:'XXX.XX',
+        coverageDates:'XX/XX/XXXX-XX/XX/XXXX',
+        policyID:'XXXXXXXXX',
+        groupID:'XXXXXXXXX',
+        paymentID:'XXXXXXXXX',
+        pmtMethod:'ACH',
+        pmtStatus:'Recon',
+        PCA:'XXXXXX',
+        mailCode:'XXXX',
         by: 'by',
       },
       {
         insuranceCarrier: 'Carrier Name',
-        planName:'Plan Name', 
-        insuranceType:'Off-Exchange Plan', 
-        amount:'XXX.XX', 
-        coverageDates:'XX/XX/XXXX-XX/XX/XXXX', 
-        policyID:'XXXXXXXXX', 
-        groupID:'XXXXXXXXX', 
-        paymentID:'XXXXXXXXX', 
-        pmtMethod:'ACH', 
-        pmtStatus:'Recon', 
-        PCA:'XXXXXX', 
-        mailCode:'XXXX',   
+        planName:'Plan Name',
+        insuranceType:'Off-Exchange Plan',
+        amount:'XXX.XX',
+        coverageDates:'XX/XX/XXXX-XX/XX/XXXX',
+        policyID:'XXXXXXXXX',
+        groupID:'XXXXXXXXX',
+        paymentID:'XXXXXXXXX',
+        pmtMethod:'ACH',
+        pmtStatus:'Recon',
+        PCA:'XXXXXX',
+        mailCode:'XXXX',
         by: 'by',
       },
       {
         insuranceCarrier: 'Carrier Name',
-        planName:'Plan Name', 
-        insuranceType:'Off-Exchange Plan', 
-        amount:'XXX.XX', 
-        coverageDates:'XX/XX/XXXX-XX/XX/XXXX', 
-        policyID:'XXXXXXXXX', 
-        groupID:'XXXXXXXXX', 
-        paymentID:'XXXXXXXXX', 
-        pmtMethod:'ACH', 
-        pmtStatus:'Recon', 
-        PCA:'XXXXXX', 
-        mailCode:'XXXX',   
+        planName:'Plan Name',
+        insuranceType:'Off-Exchange Plan',
+        amount:'XXX.XX',
+        coverageDates:'XX/XX/XXXX-XX/XX/XXXX',
+        policyID:'XXXXXXXXX',
+        groupID:'XXXXXXXXX',
+        paymentID:'XXXXXXXXX',
+        pmtMethod:'ACH',
+        pmtStatus:'Recon',
+        PCA:'XXXXXX',
+        mailCode:'XXXX',
         by: 'by',
       },
       {
         insuranceCarrier: 'Carrier Name',
-        planName:'Plan Name', 
-        insuranceType:'Off-Exchange Plan', 
-        amount:'XXX.XX', 
-        coverageDates:'XX/XX/XXXX-XX/XX/XXXX', 
-        policyID:'XXXXXXXXX', 
-        groupID:'XXXXXXXXX', 
-        paymentID:'XXXXXXXXX', 
-        pmtMethod:'ACH', 
-        pmtStatus:'Recon', 
-        PCA:'XXXXXX', 
-        mailCode:'XXXX',   
+        planName:'Plan Name',
+        insuranceType:'Off-Exchange Plan',
+        amount:'XXX.XX',
+        coverageDates:'XX/XX/XXXX-XX/XX/XXXX',
+        policyID:'XXXXXXXXX',
+        groupID:'XXXXXXXXX',
+        paymentID:'XXXXXXXXX',
+        pmtMethod:'ACH',
+        pmtStatus:'Recon',
+        PCA:'XXXXXX',
+        mailCode:'XXXX',
         by: 'by',
       },
-      
-      
+
+
     ]);
   }
 
@@ -476,5 +365,18 @@ export class FinancialClaimsDataService {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}/payment-entity/${entityId}/reconcile-breakout?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`
     );
+  }
+
+  deleteClaims(Claims: any, claimsType: string) {
+    const options = {
+      body: {
+        Claims: Claims,
+      }
+    }
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}`, options);
+  }
+
+  batchClaims(batchClaims: BatchClaim, claimsType: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batch`, batchClaims);
   }
 }
