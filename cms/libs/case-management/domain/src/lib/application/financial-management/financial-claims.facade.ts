@@ -126,24 +126,22 @@ export class FinancialClaimsFacade {
   private medicalClaimByCpt = new Subject<any>();
   medicalClaimByCpt$ = this.medicalClaimByCpt.asObservable();
 
-  private searchCTPCodeSubject = new BehaviorSubject<any>([]);
+  private searchCTPCodeSubject = new Subject<any>;
   public searchCTPCode$ = this.searchCTPCodeSubject.asObservable();
 
-  private medicalProviderSearchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
+  private medicalProviderSearchLoaderVisibilitySubject = new Subject<boolean>;
   medicalProviderSearchLoaderVisibility$= this.medicalProviderSearchLoaderVisibilitySubject.asObservable();
 
-  public pharmaciesSubject = new BehaviorSubject<any>([]);
+  public pharmaciesSubject = new Subject<any>;
   pharmacies$ = this.pharmaciesSubject.asObservable();
 
-  private clientSearchLoaderVisibilitySubject = new BehaviorSubject<boolean>(false);
+  private clientSearchLoaderVisibilitySubject = new Subject<boolean>;
   clientSearchLoaderVisibility$= this.clientSearchLoaderVisibilitySubject.asObservable();
 
   public clientSubject = new BehaviorSubject<any>([]);
   clients$ = this.clientSubject.asObservable();
 
-  private CPTCodeSearchLoaderVisibilitySubject = new BehaviorSubject<boolean>(
-    false
-  );
+  private CPTCodeSearchLoaderVisibilitySubject = new Subject<boolean>;
   CPTCodeSearchLoaderVisibility$ =
     this.CPTCodeSearchLoaderVisibilitySubject.asObservable();
   /** Private properties **/

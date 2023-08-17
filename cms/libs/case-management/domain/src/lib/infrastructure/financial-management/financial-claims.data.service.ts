@@ -15,30 +15,40 @@ export class FinancialClaimsDataService {
   constructor(
     private readonly http: HttpClient,
     private readonly configurationProvider: ConfigurationProvider
-  ) { }
+  ) {}
 
-
-
-  loadFinancialClaimsProcessListService(skipcount: number, maxResultCount: number, sort: string, sortType: string, filter: string, claimsType: string) {
-
-    const MedicalClaimsPageAndSortedRequestDto =
-    {
+  loadFinancialClaimsProcessListService(
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string,
+    filter: string,
+    claimsType: string
+  ) {
+    const MedicalClaimsPageAndSortedRequestDto = {
       SortType: sortType,
       Sorting: sort,
       SkipCount: skipcount,
       MaxResultCount: maxResultCount,
-      Filter: filter
-    }
+      Filter: filter,
+    };
 
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}`, MedicalClaimsPageAndSortedRequestDto
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}`,
+      MedicalClaimsPageAndSortedRequestDto
     );
   }
 
-  loadFinancialClaimsInvoiceListService(paymentRequestId: string, skipcount: number, maxResultCount: number, sort: string, sortType: string, claimsType: string) {
-
+  loadFinancialClaimsInvoiceListService(
+    paymentRequestId: string,
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string,
+    claimsType: string
+  ) {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/${paymentRequestId}/invoices?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/${paymentRequestId}/invoices?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
     );
   }
 
@@ -165,7 +175,6 @@ export class FinancialClaimsDataService {
     ]);
   }
 
-
   loadBatchLogListService() {
     return of([
       {
@@ -200,7 +209,6 @@ export class FinancialClaimsDataService {
         entryDate: 'address2',
         by: 'by',
       },
-
     ]);
   }
   loadBatchItemsListService() {
@@ -239,7 +247,6 @@ export class FinancialClaimsDataService {
         entryDate: 'address2',
         by: 'by',
       },
-
     ]);
   }
 
@@ -279,7 +286,6 @@ export class FinancialClaimsDataService {
         entryDate: 'address2',
         by: 'by',
       },
-
     ]);
   }
   loadClaimsListService() {
@@ -464,50 +470,65 @@ export class FinancialClaimsDataService {
         mailCode: 'XXXX',
         by: 'by',
       },
-
-
     ]);
   }
 
-  loadReconcilePaymentBreakoutSummaryService(batchId: string, entityId: string): Observable<any> {
+  loadReconcilePaymentBreakoutSummaryService(
+    batchId: string,
+    entityId: string
+  ): Observable<any> {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}/payment-entity/${entityId}/reconcile-summary`
     );
   }
 
-  loadReconcilePaymentBreakoutListService(batchId: string, entityId: string, skipCount: number, maxResultCount: number, sort: string, sortType: string): Observable<any> {
+  loadReconcilePaymentBreakoutListService(
+    batchId: string,
+    entityId: string,
+    skipCount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string
+  ): Observable<any> {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}/payment-entity/${entityId}/reconcile-breakout?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`
     );
   }
 
-  getMedicalClaimByPaymentRequestId(event: any, typeCode: string) {
+  getMedicalClaimByPaymentRequestId(paymentRequestId: any, typeCode: string) {
     let path;
     if (typeCode == FinancialProvider.MedicalProvider) {
-      path = 'financial-management/claims/medical/claim'
-    }
-    else {
-      path = 'financial-management/claims/dental/claim'
+      path = 'financial-management/claims/medical/claim';
+    } else {
+      path = 'financial-management/claims/dental/claim';
     }
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/${path}/${event}`
-    )
+      `${this.configurationProvider.appSettings.caseApiUrl}/${path}/${paymentRequestId}`
+    );
   }
 
   searchcptcode(cptcode: string) {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/cpt-code/${cptcode}`
-    )
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/cpt-code/SearchText=${cptcode}`
+    );
   }
 
   searchPharmacies(searchText: string, typeCode: string) {
-    return this.http.get<Pharmacy[]>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/search-provider/${searchText}/${typeCode}`);
+    if (typeCode == FinancialProvider.MedicalProvider) {
+      return this.http.get<Pharmacy[]>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/SearchText=${searchText}`
+      );
+    } else {
+      return this.http.get<Pharmacy[]>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/SearchText=${searchText}`
+      );
+    }    
   }
 
   loadClientBySearchText(text: string) {
     return this.http.get<ClientCase[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/financial-management/claims/medical/clients/SearchText=${text}`
+        `/financial-management/claims/medical/clients/SearchText=${text}`
     );
   }
 
@@ -515,21 +536,25 @@ export class FinancialClaimsDataService {
     let path;
     if (typeCode == FinancialProvider.MedicalProvider) {
       path = 'financial-management/claims/medical/save';
+    } else {
+      path = 'financial-management/claims/dental/save';
     }
-    else {
-      path = 'financial-management/claims/dental/save'
-    }
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/${path}`, claim)
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/${path}`,
+      claim
+    );
   }
 
   updateMedicalClaim(claim: any, typeCode: string) {
     let path;
     if (typeCode == FinancialProvider.MedicalProvider) {
-      path = 'financial-management/claims/medical'
+      path = 'financial-management/claims/medical';
+    } else {
+      path = 'financial-management/claims/dental';
     }
-    else {
-      path = 'financial-management/claims/dental'
-    }
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/${path}`, claim)
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/${path}`,
+      claim
+    );
   }
 }
