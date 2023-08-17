@@ -362,7 +362,11 @@ color: $app-primary-font-color;
   justify-content: center;
   display: flex;
   cursor: default;
-
+&.posi_relative{
+  position: relative;
+  display: inline-flex;
+  vertical-align: sub;
+}
   .material-icons {
     color: $white;
     font-size: $font-size-l;
@@ -1168,5 +1172,16 @@ color: $app-primary-font-color;
   position: absolute;
   top: 40px;
   right: 30px;
+} 
+
+
+.table-text-area{
+  textarea{
+    height: 35px;
+    resize: vertical;
+    line-height: normal;
+  }
 }
- 
+.preferred-heading{
+  border-left:3px solid material-color($hive-canyon-palette, A700) !important;
+}

@@ -5,7 +5,7 @@ import {  Subject } from 'rxjs';
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, SnackBarNotificationType } from '@cms/shared/util-core';
 /** Entities **/ 
 /** Data services **/
 import { ApprovalDataService } from '../infrastructure/approval.data.service';
@@ -62,10 +62,21 @@ export class ApprovalFacade {
       this.hideLoader();
     }
 
+
+  NotifyShowHideSnackBar(type: ReminderSnackBarNotificationType, subtitle: any) {
+    if (type == ReminderSnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
+    }
+      this.reminderNotificationSnackbarService.manageSnackBar(type, subtitle)
+      this.hideLoader();
+    }
+
   /** Constructor **/ 
   constructor(
     public approvalDataService: ApprovalDataService,
-    private loggingService: LoggingService,
+    private loggingService: LoggingService,  
+    private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService

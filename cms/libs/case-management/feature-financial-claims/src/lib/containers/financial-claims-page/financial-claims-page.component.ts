@@ -74,7 +74,7 @@ export class FinancialClaimsPageComponent implements OnInit {
       });
   }
 
-  loadFinancialClaimsProcessListGrid(data: any) {    
+  loadFinancialClaimsProcessListGrid(data: any) {   
     this.financialClaimsFacade.loadFinancialClaimsProcessListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType,data?.filter,this.claimsType);
   }
 
@@ -83,8 +83,9 @@ export class FinancialClaimsPageComponent implements OnInit {
   this.financialClaimsFacade.loadFinancialClaimsInvoiceListService(data?.paymentRequestId , data?.skipcount,   data?.pagesize, data?.sortColumn, data?.sortType,this.claimsType)
   }
 
-  loadFinancialClaimsBatchListGrid(event: any) {
-    this.financialClaimsFacade.loadFinancialClaimsBatchListGrid();
+  loadFinancialClaimsBatchListGrid(data: any) {
+    
+    this.financialClaimsFacade.loadFinancialClaimsBatchListGrid( data?.skipCount,   data?.pagesize, data?.sortColumn, data?.sortType,data?.filter,this.claimsType);
   }
 
   loadFinancialClaimsAllPaymentsListGrid(event: any) {

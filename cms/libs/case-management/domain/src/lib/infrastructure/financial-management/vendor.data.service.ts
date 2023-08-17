@@ -72,6 +72,20 @@ export class FinancialVendorDataService {
   }
 
   
+  getProviderPanel(vendorId:string){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors?vendorId=${vendorId}`
+    );
+  }
+
+  updateProviderPanel(providePanelDto:any){
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors/profile`,providePanelDto
+    );
+  }
+
   getVendorProfileSpecialHandling(vendorId: string) {  
 
     return this.http.get<any>(
@@ -80,7 +94,7 @@ export class FinancialVendorDataService {
     );
   }
 
-  
+
   addVendorProfile(vendorProfile:any) {
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
@@ -104,7 +118,12 @@ export class FinancialVendorDataService {
       );
   }
 
-
+  loadVendorList(vendorTypeCode:string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/financial-management/vendors/vendorType/${vendorTypeCode}`
+    );
+  }
 
 
 }

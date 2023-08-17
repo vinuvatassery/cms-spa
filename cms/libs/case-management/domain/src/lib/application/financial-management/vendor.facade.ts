@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { SortDescriptor } from '@progress/kendo-data-query';
 
 
@@ -20,12 +20,20 @@ export class FinancialVendorFacade {
   private vendorProfileSpecialHandlingSubject = new Subject<any>();
   private clinicVendorSubject = new Subject<any>();
   private clinicVendorLoaderSubject = new Subject<any>();  /** Public properties **/
+  private providePanelSubject = new Subject<any>();
+  private updateProviderPanelSubject = new Subject<any>();
   vendorsList$ = this.vendorsSubject.asObservable();
   selectedVendor$ = this.selectedVendorSubject.asObservable();
   vendorProfile$ = this.vendorProfileSubject.asObservable();
    clinicVendorList$ = this.clinicVendorSubject.asObservable();
-  clinicVendorLoader$ = this.clinicVendorLoaderSubject.asObservable();
+  clinicVendorLoader$ = this.clinicVendorLoaderSubject.asObservable(); 
+  providePanelSubject$ = this.providePanelSubject.asObservable();
+  updateProviderPanelSubject$ = this.updateProviderPanelSubject.asObservable();
   vendorProfileSpecialHandling$ = this.vendorProfileSpecialHandlingSubject.asObservable();
+
+  private vendorsListSubject = new BehaviorSubject<any>([]);
+  vendorDetails$ = this.vendorsListSubject.asObservable();
+
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'vendorName'
   public sortType = 'asc'
@@ -81,12 +89,12 @@ export class FinancialVendorFacade {
     this.showLoader();
     this.financialVendorDataService.getVendorProfile(vendorId,tabCode).subscribe({
       next: (vendorResponse: any) => {
-        if (vendorResponse) {        
+        if (vendorResponse) {
           this.vendorProfileSubject.next(vendorResponse);
           this.hideLoader();
-        }       
+        }
       },
-      error: (err) => {     
+      error: (err) => {
         this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
@@ -94,14 +102,14 @@ export class FinancialVendorFacade {
   }
 
 
-  getVendorProfileSpecialHandling(vendorId: string): void {   
+  getVendorProfileSpecialHandling(vendorId: string): void {
     this.financialVendorDataService.getVendorProfileSpecialHandling(vendorId).subscribe({
       next: (vendorHandlingResponse: any) => {
-        if (vendorHandlingResponse) {        
-          this.vendorProfileSpecialHandlingSubject.next(vendorHandlingResponse);       
-        }       
+        if (vendorHandlingResponse) {
+          this.vendorProfileSpecialHandlingSubject.next(vendorHandlingResponse);
+        }
       },
-      error: (err) => {             
+      error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
@@ -110,7 +118,7 @@ export class FinancialVendorFacade {
   getVendorDetails(vendorId: string) {
     this.showLoader();
     this.financialVendorDataService.getVendorDetails(vendorId).subscribe({
-      next: (vendorDetail: any) => {
+      next: (vendorDetail: any) => {    
         this.selectedVendorSubject.next(vendorDetail);
         this.hideLoader();
       },
@@ -121,8 +129,41 @@ export class FinancialVendorFacade {
     });
   }
 
+  getProviderPanel(vendorId:string){
+    this.showLoader();
+    this.financialVendorDataService.getProviderPanel(vendorId).subscribe({
+      next: (vendorsResponse: any) => {
+        if (vendorsResponse) {
+          this.providePanelSubject.next(vendorsResponse);   
+          this.hideLoader();      
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
+  updateProviderPanel(ProviderPanelDto:any){
+    this.showLoader();
+    return this.financialVendorDataService.updateProviderPanel(ProviderPanelDto).subscribe({
+      next: (updatedResponse: any) => {
+        if (updatedResponse) {
+          this.updateProviderPanelSubject.next(updatedResponse);   
+          this.hideLoader();      
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
+  }
+
+
   updateManufacturerProfile(vendorProfile: any){
-    return this.financialVendorDataService.updateManufacturerProfile(vendorProfile);    
+    return this.financialVendorDataService.updateManufacturerProfile(vendorProfile);
   }
   addVendorProfile(vendorProfile: any) {
     return this.financialVendorDataService.addVendorProfile(vendorProfile);
@@ -140,6 +181,21 @@ export class FinancialVendorFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
+  loadVendorList(vendorTypeCode:any): void {
+    this.showLoader();
+    this.financialVendorDataService.loadVendorList(vendorTypeCode).subscribe({
+      next: (reponse: any) => {
+        if (reponse) {
+          this.hideLoader();
+          this.vendorsListSubject.next(reponse);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
