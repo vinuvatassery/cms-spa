@@ -2,14 +2,13 @@
 <div class="app-l-inner-rapper pt-0" kendoTooltip>
   <!-- Main Title Section -->
   <section  class="app-l-mainTittle">
-    <h1  class="maintitle_withicon text-bold">     <span class="material-icons sidebar-menu_icon" aria-label="task" aria-hidden="true">
+    <h1 class="maintitle_withicon text-bold">     <span class="material-icons sidebar-menu_icon" aria-label="task" aria-hidden="true">
       task
     </span>
-    Pending Approvals </h1>
+    Pending Approvals <button (click)="notificationTriger()" kendoButton fillMode="flat">Show Reminder Snackbar</button> </h1>
   </section>
  
-
-  <kendo-tabstrip class="app-c-tab app-c-tab--color">
+  <kendo-tabstrip class="app-c-tab app-c-tab--color" [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }">
     <kendo-tabstrip-tab [selected]="true" title="General">
       <ng-template kendoTabTitle> General <span class="tab-batch-notify">4</span></ng-template>
       <ng-template kendoTabContent>
