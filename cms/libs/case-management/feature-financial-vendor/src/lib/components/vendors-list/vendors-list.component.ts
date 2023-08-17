@@ -22,6 +22,7 @@ export class VendorsListComponent implements OnChanges , OnInit{
 @Input() vendorsList$ : any
 
 @Output() loadFinancialVendorsListEvent = new EventEmitter<any>();
+@Output() exportGridDataEvent = new EventEmitter<any>();
 
 vndorId! : string
 public  state!: State
@@ -332,4 +333,8 @@ public filterChange(filter: CompositeFilterDescriptor): void {
   public rowClass = (args:any) => ({
     "preferred-yellow": (args.dataItem.preferredFlag === 'Y' && this.vendorTypeCode === 'PHARMACY'),
   });
+
+  onClickedExport(){
+    this.exportGridDataEvent.emit(true)    
+  }
 }
