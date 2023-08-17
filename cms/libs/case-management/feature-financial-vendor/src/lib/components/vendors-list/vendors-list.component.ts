@@ -329,5 +329,7 @@ public filterChange(filter: CompositeFilterDescriptor): void {
   
     this.loadFinancialVendorsList();
   }
-
+  public rowClass = (args:any) => ({
+    "preferred-yellow": (args.dataItem.preferredFlag === 'Y' && this.vendorTypeCode === 'PHARMACY'),
+  });
 }

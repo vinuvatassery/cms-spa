@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, OnInit, Component, ChangeDetectorRef, Input } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, PaymentPanel, PaymentsFacade } from '@cms/case-management/domain';
+import { ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, PaymentPanel, PaymentsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import {  filter } from 'rxjs';
 import { LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -23,6 +23,8 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   sort = this.financialClaimsFacade.sortBatchItemList;
   state!: State;
   batchItemsGridLists$ = this.financialClaimsFacade.batchItemsData$;
+  batchItemsLoader$ =  this.financialClaimsFacade.batchItemsLoader$;
+  paymentDetails$ =  this.paymentFacade.paymentDetails$;
   claimsType: any;
   currentUrl:any
   paymentPanelData$ = this.paymentFacade.paymentPanelData$;
@@ -47,7 +49,8 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   ngOnInit(): void {    
    this.claimsType = this.financialClaimsFacade.getClaimsType(this.router)
    this.addNavigationSubscription();
-   this.getQueryParams()
+   this.getQueryParams();
+   this.loadPaymentDetails();
   }
 
   private addNavigationSubscription() {
@@ -70,9 +73,13 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
     this.batchId = this.route.snapshot.params['batchId'];
   }
 
+
   loadBatchItemListGrid(event: any) {
-    this.financialClaimsFacade.loadBatchItemsListGrid();
+    const itemId = this.route.snapshot.queryParams['iid'];
+    const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
+    this.financialClaimsFacade.loadBatchItemsListGrid(itemId, params, this.claimsType);
   }
+
   loadPaymentPanel(event:any=null){
     this.paymentFacade.loadPaymentPanel(this.vendorId,this.batchId);    
   }
@@ -104,5 +111,10 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   OnEditProviderProfileClick(){
     this.contactFacade.loadDdlStates()
     this.lovFacade.getPaymentMethodLov()
+  }
+
+  loadPaymentDetails(){
+    const itemId = this.route.snapshot.queryParams['iid'];
+    this.paymentFacade.loadPaymentDetails(itemId, 'INDIVIDUAL',);
   }
 }
