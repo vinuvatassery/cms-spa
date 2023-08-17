@@ -48,6 +48,8 @@ import { FinancialPaymentBatchSubListComponent } from './components/financial-pa
 import { FinancialInsurancePlanListComponent } from './components/financial-insurance-plan-list/financial-insurance-plan-list.component';
 import { ContactAddressDetailsComponent } from './components/contact-address-details/contact-address-details.component';
 import { ContactAddressListComponent } from './components/contact-address-list/contact-address-list.component';
+import { FinancialSendLetterComponent } from './components/financial-send-letter/financial-send-letter.component';
+import { FinancialSendEmailComponent } from './components/financial-send-email/financial-send-email.component';
 @NgModule({
   imports: [
     CaseManagementDomainModule,
@@ -100,7 +102,9 @@ import { ContactAddressListComponent } from './components/contact-address-list/c
     VendorSpecialHandlingComponent,
     FinancialPaymentBatchSubListComponent,
     FinancialInsurancePlanListComponent,
-    VendorContactComponent
+    VendorContactComponent,
+    FinancialSendLetterComponent,
+    FinancialSendEmailComponent
   ],
   exports: [
     FinancialVendorPageComponent,
@@ -144,6 +148,8 @@ import { ContactAddressListComponent } from './components/contact-address-list/c
     VendorSpecialHandlingComponent,
     FinancialPaymentBatchSubListComponent,
     FinancialInsurancePlanListComponent
+    ,FinancialSendLetterComponent,
+    FinancialSendEmailComponent
   ],
 })
 export class CaseManagementFeatureFinancialVendorModule {}
