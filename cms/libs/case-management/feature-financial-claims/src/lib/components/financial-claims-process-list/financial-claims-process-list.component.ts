@@ -192,7 +192,6 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
 
   /** Constructor **/
   constructor(
-    private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
     private readonly financialClaimsFacade: FinancialClaimsFacade
   ) {

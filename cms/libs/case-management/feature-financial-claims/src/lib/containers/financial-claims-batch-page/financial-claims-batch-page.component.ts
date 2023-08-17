@@ -28,14 +28,14 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
   batchId!:string;
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private readonly router: Router,   
-    private readonly route: ActivatedRoute, 
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
     private loggingService: LoggingService,
   ) {}
 
   ngOnInit(): void {
-    this.batchId =  this.route.snapshot.params['bid'];
+    this.batchId =  this.route.snapshot.queryParams['bid'];
     this.claimsType = this.financialClaimsFacade.getClaimsType(this.router)
     this.addNavigationSubscription();
     this.loadBatchName();
@@ -43,7 +43,7 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
 
   private addNavigationSubscription() {
     this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd)) 
+      .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe({
         next: () => {
           this.claimsType = this.financialClaimsFacade.getClaimsType(this.router)

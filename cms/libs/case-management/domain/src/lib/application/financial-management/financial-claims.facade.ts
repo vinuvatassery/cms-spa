@@ -109,6 +109,12 @@ export class FinancialClaimsFacade {
 
   private batchClaimsSubject =  new Subject<any>();
   batchClaims$ = this.batchClaimsSubject.asObservable();
+
+  private unbatchEntireBatchSubject =  new Subject<any>();
+  unbatchEntireBatch$ = this.unbatchEntireBatchSubject.asObservable();
+
+  private unbatchClaimsSubject =  new Subject<any>();
+  unbatchClaims$ = this.unbatchClaimsSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -347,9 +353,11 @@ export class FinancialClaimsFacade {
             response.message
           );
         }
+        this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
       },
     });
   }
@@ -367,9 +375,55 @@ export class FinancialClaimsFacade {
               response.message
             );
           }
+          this.hideLoader();
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.hideLoader();
+        },
+      });
+  }
+
+  unbatchEntireBatch(paymentRequestBatchIds: string[], claimsType: string) {
+    this.showLoader();
+    return this.financialClaimsDataService
+      .unbatchEntireBatch(paymentRequestBatchIds, claimsType)
+      .subscribe({
+        next: (response:any) => {
+          this.unbatchEntireBatchSubject.next(response);
+          if (response.status) {
+            this.notificationSnackbarService.manageSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              response.message
+            );
+          }
+          this.hideLoader();
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.hideLoader();
+        },
+      });
+  }
+
+  unbatchClaims(paymentRequestIds: string[], claimsType: string) {
+    this.showLoader();
+    return this.financialClaimsDataService
+      .unbatchClaims(paymentRequestIds, claimsType)
+      .subscribe({
+        next: (response:any) => {
+          this.unbatchClaimsSubject.next(response);
+          if (response.status) {
+            this.notificationSnackbarService.manageSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              response.message
+            );
+          }
+          this.hideLoader();
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.hideLoader();
         },
       });
   }

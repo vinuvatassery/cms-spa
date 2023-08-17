@@ -379,4 +379,12 @@ export class FinancialClaimsDataService {
   batchClaims(batchClaims: BatchClaim, claimsType: string) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batch`, batchClaims);
   }
+
+  unbatchEntireBatch(paymentRequestBatchIds: string[], claimsType: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/un-batch`, paymentRequestBatchIds);
+  }
+
+  unbatchClaims(paymentRequestIds: string[], claimsType: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/un-batch-claim`, paymentRequestIds);
+  }
 }
