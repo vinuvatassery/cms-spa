@@ -12,7 +12,7 @@
   <span class="filter-section_items filter--search">
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
-      <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)"  aria-label="Search case" rounded="medium" 
+      <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)"  aria-label="Search case" rounded="medium"
       [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
     </kendo-floatinglabel>
@@ -33,26 +33,34 @@
 
 
 <div class="app-c-table">
-  <kendo-grid 
-  [reorderable]="true" 
+  <kendo-grid
+  [reorderable]="true"
   [resizable]="true"
 [columnMenu]="{ filter: true }"
  [sort]="state.sort"
  [pageSize]="state.take"
  [pageable]="true"
-  [sortable]="true" 
+  [sortable]="true"
   [skip]="state.skip"
   [resizable]="true"
   [loading]="isFinancialClaimsProcessGridLoaderShow"
-   [groupable]="false"     
+   [groupable]="false"
     [navigable]="isProcessGridExpand"
   (dataStateChange)="dataStateChange($event)"
-  (filterChange)="filterChange($event)" [selectable]="true"
-    [data]="gridFinancialClaimsProcessData$ | async">
-    
-    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [columnMenu]="false" [showSelectAll]="true"
+  (filterChange)="filterChange($event)" [selectable]="selectableSettings"
+    [data]="gridFinancialClaimsProcessData$ | async"
+    kendoGridSelectBy="paymentRequestId"
+    (selectedKeysChange)="selectedKeysChange($event)"
+    [(selectedKeys)]="selectedProcessClaims">>
+
+    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand"
+        [headerClass]="{ 'text-center': true }"
+        [class]="{ 'text-center': true }"
+        [resizable]="false"
+        [columnMenu]="false"
+        [showSelectAll]="true"
       [width]="40"></kendo-grid-checkbox-column>
-    <kendo-grid-column field="invoiceNbr" title="Invoice ID" [width]="160"> 
+    <kendo-grid-column field="invoiceNbr" title="Invoice ID" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -69,7 +77,7 @@
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="providerName" kendoButton look="flat" class="card-link-button">
           {{ dataItem.vendorFullName }}
-        </button>      
+        </button>
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -81,7 +89,7 @@
         </kendo-grid-string-filter-menu>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="tin" title="Tax ID" [width]="100"> 
+    <kendo-grid-column field="tin" title="Tax ID" [width]="100">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -108,7 +116,7 @@
           (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog, dataItem)">
           {{ dataItem.clientFullName }}
         </button>
-      </ng-template> 
+      </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -129,7 +137,7 @@
         </kendo-grid-string-filter-menu>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="clientId" title="Client ID" [width]="120"> 
+    <kendo-grid-column field="clientId" title="Client ID" [width]="120">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -137,14 +145,14 @@
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="serviceCount" title="Service Count" [width]="160"> 
+    <kendo-grid-column field="serviceCount" title="Service Count" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
           <kendo-filter-eq-operator></kendo-filter-eq-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template>
-    </kendo-grid-column>   
+    </kendo-grid-column>
 
     <kendo-grid-column field="amountDue" title="Total Due" [width]="120">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -160,7 +168,7 @@
             [extra]="false" operator="eq">
             <kendo-filter-eq-operator></kendo-filter-eq-operator>
           </kendo-grid-numeric-filter-menu>
-        </ng-template> </kendo-grid-column>    
+        </ng-template> </kendo-grid-column>
 
         <kendo-grid-column field="balanceAmount" title="Client Balance" [width]="120">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -168,7 +176,7 @@
               [extra]="false" operator="eq">
               <kendo-filter-eq-operator></kendo-filter-eq-operator>
             </kendo-grid-numeric-filter-menu>
-          </ng-template> </kendo-grid-column>    
+          </ng-template> </kendo-grid-column>
 
     <kendo-grid-column field="paymentStatusCode" title="Payment Status" [width]="160"> 
        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -193,7 +201,7 @@
         </kendo-popover>
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        
+
       </ng-template>
     </kendo-grid-column>
 
@@ -218,7 +226,7 @@
     </kendo-grid-column>
 
     <div *kendoGridDetailTemplate="let dataItem">
-    <cms-financial-claims-invoice-list 
+    <cms-financial-claims-invoice-list
     [paymentRequestId]="dataItem?.paymentRequestId"
     [financialInvoiceList$]="financialClaimsInvoice$"
     [sort]="sortValueFinancialInvoices"
@@ -254,22 +262,22 @@
       </div>
       <p>There is no data to display.</p>
     </ng-template>
-
   </kendo-grid>
 </div>
 
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span class="">0 claims(s) to be deleted</span>
+  <span *ngIf="isProcessBatchClosed" class="">{{selectedProcessClaims.length}} claims(s) to be batched</span>
+  <span *ngIf="isDeleteBatchClosed" class="">{{selectedProcessClaims.length}} claims(s) to be deleted</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchClaimsGridSelectedCancelClicked()" *ngIf="isDeleteBatchClosed || isProcessBatchClosed"> Cancel
   </button>
 
-  <button kendoButton kendoButton class="k-error-button" aria-label="Delete" *ngIf="isDeleteBatchClosed"
+  <button kendoButton kendoButton class="k-error-button" aria-label="Delete" *ngIf="isDeleteBatchClosed" [disabled]="!selectedProcessClaims.length"
     (click)="onDeleteClaimsOpenClicked(deleteClaimsConfirmationDialog)"> <span class="material-icons mr-1"
       aria-label="Delete"> delete</span> Delete </button>
 
-  <button kendoButton [primary]="true" aria-label="Receipting Log" class=""
+  <button kendoButton [primary]="true" aria-label="Receipting Log" class="" [disabled]="!selectedProcessClaims.length"
     (click)="onBatchClaimsClicked(batchClaimsConfirmationDialog)" *ngIf="isProcessBatchClosed"> Batch </button>
 
   <kendo-splitbutton *ngIf="!isDeleteBatchClosed && !isProcessBatchClosed" [data]="claimsProcessMore"
@@ -291,11 +299,11 @@
 
 <ng-template #batchClaimsConfirmationDialog>
   <cms-financial-claims-batch-claims
-    (isModalBatchClaimsCloseClicked)="onModalBatchClaimsModalClose($event)"></cms-financial-claims-batch-claims>
+  (isModalBatchClaimsCloseClicked)="onModalBatchClaimsModalClose()" (isModalBatchClaimsButtonClicked)="onModalBatchClaimsButtonClicked($event)" [selectedProcessClaimsCount] = "selectedProcessClaims.length"></cms-financial-claims-batch-claims>
 </ng-template>
 <ng-template #deleteClaimsConfirmationDialog>
   <cms-financial-claims-delete-claims
-    (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)"></cms-financial-claims-delete-claims>
+    (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)" (isModalDeletedClaimsButtonClicked)="onModalBatchDeletingClaimsButtonClicked($event)" [selectedProcessClaimsCount] = "selectedProcessClaims.length"></cms-financial-claims-delete-claims>
 </ng-template>
 <ng-template #addEditClaimsDialog>
   <cms-financial-claims-detail-form
