@@ -44,6 +44,10 @@ columnDroplistSubject =  new Subject<any[]>();
 columnDroplist$ = this.columnDroplistSubject.asObservable();
 filterData : CompositeFilterDescriptor={logic:'and',filters:[]};
 loader = false;
+vendorNameTitle ="Vendor Name"
+vendorNameTitleDataSubject = new Subject<any>();
+vendornameTitleData$ = this.vendorNameTitleDataSubject.asObservable();
+
 
 columns : any = {
   vendorName:"Vendor Name",
@@ -157,13 +161,26 @@ ngOnChanges(): void {
     sort: this.sort
     };
   if(this.vendorTypeCode)
-  {
+  {    
+    switch(this.vendorTypeCode)
+    {
+      case FinancialVendorTypeCode.Manufacturers:
+          this.vendorNameTitle = "Manufacturer Name"
+          break;
+      case FinancialVendorTypeCode.Pharmacy:
+          this.vendorNameTitle = "Pharmacy Name"
+          break;
+      case FinancialVendorTypeCode.MedicalProviders:
+      case FinancialVendorTypeCode.DentalProviders:
+          this.vendorNameTitle = "Provider Name"
+          break;
+    }
    this.loadFinancialVendorsList()
   }
 }
 
 ngOnInit(): void {
-  this.bindDropdownClumns()
+  this.bindDropdownClumns() 
   if(!this.selectedColumn)
       {
         this.selectedColumn = "vendorName";
@@ -184,7 +201,7 @@ private loadFinancialVendorsList(): void {
   this.loadVendors(this.state?.skip ?? 0 ,this.state?.take ?? 0,this.sortValue , this.sortType)
 }
 loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string)
- {
+ {  
   this.loader = true;
    const gridDataRefinerValue =
    {
@@ -300,6 +317,7 @@ public filterChange(filter: CompositeFilterDescriptor): void {
 
       this.gridDataResult = data    
       this.gridVendorsDataSubject.next(this.gridDataResult);
+      this.vendorNameTitleDataSubject.next(this.vendorNameTitle)
         if (data?.total >= 0 || data?.total === -1) {
           this.loader = false;
         }

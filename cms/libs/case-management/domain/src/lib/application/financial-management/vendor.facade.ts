@@ -8,7 +8,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
 import { ConfigurationProvider, LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
 import { FinancialVendorDataService } from '../../infrastructure/financial-management/vendor.data.service';
-
+import { FinancialVendorTypeCode } from '../../enums/financial-vendor-type-code';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorFacade {
@@ -30,6 +30,7 @@ export class FinancialVendorFacade {
   private vendorsListSubject = new BehaviorSubject<any>([]);
   vendorDetails$ = this.vendorsListSubject.asObservable();
 
+  public selectedVendorType = FinancialVendorTypeCode.Manufacturers
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'vendorName'
   public sortType = 'asc'
