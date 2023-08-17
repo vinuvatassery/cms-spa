@@ -51,6 +51,7 @@ export class NotificationSnackBarComponent implements OnInit {
             closable: false,
             type: { style: res.type, icon: true },
             hideAfter: this.hideAfter,
+          
           });
         }
       },

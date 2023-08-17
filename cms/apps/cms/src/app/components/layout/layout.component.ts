@@ -1,5 +1,6 @@
 /** Angular **/
 import { Component, HostListener } from '@angular/core';
+import { ReminderNotificationSnackbarService } from '@cms/shared/util-core';
 import { UserDataService } from '@cms/system-config/domain';
 
 @Component({
@@ -7,7 +8,8 @@ import { UserDataService } from '@cms/system-config/domain';
   templateUrl: './layout.component.html',
 })
 export class LayoutComponent {
-  constructor(private readonly userDataService: UserDataService) {}
+  commonReminderSnackbar$   = this.reminderNotificationSnackbarService.snackbar$
+  constructor(private readonly userDataService: UserDataService, private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService) {}
 
   /** Public properties **/
   isSideMenuToggled = false;
