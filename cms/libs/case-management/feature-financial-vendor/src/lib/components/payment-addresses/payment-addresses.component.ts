@@ -84,11 +84,14 @@ export class PaymentAddressesComponent {
 
    
   ngOnInit(): void {
-    this.paymentBillingFacade.billingAddressData$.subscribe((res:any)=>{
-      if(res.data.length>0)
+    this.vendorcontactFacade.loadMailCodes(this.vendorId);
+    this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {   
+      if(mailCode.length>0)
       {
         this.IsAddContactDisabled=false;
         this.cdr.detectChanges();
+      }else{
+        this.IsAddContactDisabled=true;
       }
     })
     this.state = {
@@ -101,6 +104,7 @@ export class PaymentAddressesComponent {
   }
 
   ngOnChanges(): void {
+    this.vendorcontactFacade.loadMailCodes(this.vendorId);
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value,
