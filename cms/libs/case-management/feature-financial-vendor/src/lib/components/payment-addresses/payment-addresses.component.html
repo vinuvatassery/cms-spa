@@ -11,7 +11,7 @@
     </div>
     <div class="flex-col mt-1">
         <div class="app-c-table">          
-            <kendo-grid  [resizable]="true" [loading]="isPaymentsAddressGridLoaderShow" [pageSize]="state.take" [pageable]="true"
+            <kendo-grid #grid  [resizable]="true" [loading]="isPaymentsAddressGridLoaderShow" [pageSize]="state.take" [pageable]="true"
             [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
             [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [navigable]="true" [data]="paymentsAddressGridView$ | async"   (detailCollapse)="onDetailCollapse($event)"
             (detailExpand)="onDetailExpand($event)" >
@@ -129,7 +129,7 @@
         Address
       </button>
        
-      <button kendoButton   icon="add" [primary]="true" (click)="clickOpenAddContactDetails()" look="flat" aria-label="Add Contact" >
+      <button kendoButton [disabled]="IsAddContactDisabled"   icon="add" [primary]="true" (click)="clickOpenAddContactDetails()" look="flat" aria-label="Add Contact" >
           Contact
         </button>
     </div>

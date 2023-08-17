@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input } from '@angular/core'; 
+import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList } from '@angular/core'; 
 import { PaymentsFacade,BillingAddressFacade,VendorContactsFacade, ContactResponse ,FinancialVendorTypeCode, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
+import { GridComponent } from '@progress/kendo-angular-grid';
+import { take } from 'rxjs';
 
 
 @Component({
@@ -33,6 +35,8 @@ export class PaymentAddressesComponent {
   tabCode: string = '';
   addressId: any;
   financialVendorType: typeof FinancialVendorTypeCode = FinancialVendorTypeCode;
+  @ViewChildren(GridComponent) private grid !: QueryList<GridComponent>;
+  IsAddContactDisabled:boolean=true;
   paymentAddressInnerGridLists = [
     {
       Name: 'FName LName',
@@ -80,6 +84,13 @@ export class PaymentAddressesComponent {
 
    
   ngOnInit(): void {
+    this.paymentBillingFacade.billingAddressData$.subscribe((res:any)=>{
+      if(res.data.length>0)
+      {
+        this.IsAddContactDisabled=false;
+        this.cdr.detectChanges();
+      }
+    })
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
@@ -144,6 +155,11 @@ export class PaymentAddressesComponent {
     this.isPaymentAddressDetailShow = false;
   }
   clickOpenAddContactDetails() {
+    this.paymentsAddressGridView$.pipe(take(1)).subscribe(({data})=>{
+      data.forEach((item:any, idx:number) => {
+        this.grid.last.collapseRow(idx);
+      })
+    })
     this.isContactDetailShow = true;
   }
   onClose(isClosed: any) {
