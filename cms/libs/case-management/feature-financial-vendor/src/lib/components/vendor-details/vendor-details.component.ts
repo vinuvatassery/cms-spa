@@ -61,8 +61,7 @@ export class VendorDetailsComponent implements OnInit {
     else {
       this.contactFacade.loadDdlStates();
       this.getPaymentMethods();
-        this.getPaymentRunDate();
-        this.fillFormData();
+      this.getPaymentRunDate();
     }
   }
 
