@@ -380,4 +380,12 @@ export class FinancialClaimsDataService {
   batchClaims(batchClaims: BatchClaim, claimsType: string) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batch`, batchClaims);
   }
+
+  getPrintAdviceLetterData(selectedProviders: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/generate`,selectedProviders);
+  }
+
+  reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/batches/${batchId}/reconcile-payments`,reconcileData);
+  }
 }
