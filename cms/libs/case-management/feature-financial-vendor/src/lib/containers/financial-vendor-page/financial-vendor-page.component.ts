@@ -196,4 +196,11 @@ export class FinancialVendorPageComponent implements OnInit {
     this.providerTypeCode = FinancialVendorTypeCode.Manufacturers;
     this.isShowManufacturers = true;
   }
+
+
+  exportGridData(data: any){
+    if(data){
+      this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Files Exported Successfully')
+    }
+  }
 }

@@ -45,7 +45,7 @@
                     {{ dataItem.creationTime | date:'MM/dd/yyyy' }}
                   </ng-template>  
                 </kendo-grid-column>
-                 <kendo-grid-column field="creatorId" title="By" [width]="50">
+                 <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false">
                 <ng-template kendoGridCellTemplate let-dataItem>
                       <button
                         kendoButton

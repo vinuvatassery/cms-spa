@@ -45,6 +45,13 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   @Output() loadBatchItemsListEvent = new EventEmitter<any>();
   @Output() loadPaymentPanel = new EventEmitter<any>();
   @Output()  updatePaymentPanel  = new EventEmitter<PaymentPanel>();
+  @Output() getProviderPanelEvent = new EventEmitter<any>();
+  @Output() updateProviderProfileEvent = new EventEmitter<any>();
+  @Output() onEditProviderProfileEvent = new EventEmitter<any>();
+  @Input() vendorProfile$ :any;
+  @Input() updateProviderPanelSubject$:any
+  @Input() ddlStates$ :any
+  @Input() paymentMethodCode$ :any
   paymentPanelDetails:any;
   public state!: State;
   sortColumn: string='creationTime';
@@ -242,6 +249,18 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   }
   updatePaymentPanelRecord(paymentPanel:PaymentPanel){
     this.updatePaymentPanel.emit(paymentPanel);
+  }
+  
+  getProviderPanel(event:any){
+    this.getProviderPanelEvent.emit('5449D739-5C70-446B-8269-13A862FE771F')
+  }
+
+  updateProviderProfile(event:any){
+    this.updateProviderProfileEvent.emit(event)
+  }
+
+  OnEditProviderProfileClick(){
+   this.onEditProviderProfileEvent.emit()
   }
 
   private initializeGridState(){
