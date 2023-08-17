@@ -1163,10 +1163,24 @@ color: $app-primary-font-color;
   margin-left: .8rem;
   margin-top: 1.7rem;
 }
+.search-with-addbtn{
+  position: fixed;
+  top: 80px;
+  right: 20px;
+}
 .add-new-button-common {
   float: right;
   position: absolute;
   top: 40px;
   right: 30px;
 }
- 
+ .table-filter-with-dropdown{
+  display: grid;
+  grid-template-columns: 200px auto 200px 200px;
+ }
+ .fixed-height-input{
+  .k-selection-multiple{
+    height: 39px;
+  }
+
+ }
