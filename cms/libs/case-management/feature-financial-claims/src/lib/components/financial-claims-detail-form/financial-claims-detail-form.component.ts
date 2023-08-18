@@ -7,7 +7,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialClaimsFacade } from '@cms/case-management/domain';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'cms-financial-claims-detail-form',
   templateUrl: './financial-claims-detail-form.component.html', 
@@ -100,6 +100,7 @@ export class FinancialClaimsDetailFormComponent {
 
   }
   ngOnInit(): void {
+    this.addClaimServiceGroup()
   }
   closeAddEditClaimsFormModalClicked() {
     this.modalCloseAddEditClaimsFormModal.emit(true);
@@ -120,38 +121,42 @@ export class FinancialClaimsDetailFormComponent {
   }
   private buildForm() {
     this.claimFlagExcededBaniftForm = this.formBuilder.group({
-      exceptionReason: ['', Validators.required],
-      serviceCost:['',Validators.required],
-
-      newClaimFlagExcededBaniftForm: this.formBuilder.array([]),
+      claimService: new FormArray([]),
     });
   }
   onAddButtonClick(){
-    debugger
     this.formIsSubmitted = true;
-    if (!this.claimFlagExcededBaniftForm.valid) return;
-
-    let formValues = this.claimFlagExcededBaniftForm.value;
-    if (formValues.newClaimFlagExcededBaniftForm.length > 0) {
-      formValues.exceptionReason  = [];
-      formValues.newClaimFlagExcededBaniftForm.forEach((a:any) => {
-    
-        formValues.exceptionReason.push(this.claimFlagExcededBaniftForm);
-      })
+    if (!this.claimFlagExcededBaniftForm.valid) {
+      return;
     }
-    this.formIsSubmitted = false;
-    this.claimFlagExcededBaniftForm.reset();
-
   }
-  onClaimFlagExceptionValueChange(event: any): void {
+  onClaimFlagExceptionValueChange(event: any,i: number): any {
     this.claimFlagExceptionCharachtersCount = event.length;
     this.claimFlagExceptionCounter = `${this.claimFlagExceptionCharachtersCount}/${this.claimFlagExceptionMaxLength}`;
   }
-  loadServiceCostMethod(){
-    debugger
-    const serviceCost = this.claimFlagExcededBaniftForm.controls['serviceCost'].value;
-    this.checkservicescastvalue = serviceCost
-    console.log(serviceCost);
-    
+  loadServiceCostMethod(index:number){
+    let totalServiceCost = 0;
+    for(let i = 0; i < this.AddClaimServicesForm.length; i++) {
+      const serviceCostControl = this.AddClaimServicesForm.at(i).get('serviceCost');
+      if (serviceCostControl) {
+        totalServiceCost += +serviceCostControl.value;
+      }
+    }
+    this.checkservicescastvalue = totalServiceCost
+    return totalServiceCost;
+  }
+  get AddClaimServicesForm(): FormArray {
+    return this.claimFlagExcededBaniftForm.get('claimService') as FormArray;
+  }
+  addClaimServiceGroup() {
+    let claimFlagExcededBaniftForm = this.formBuilder.group({
+      serviceCost: new FormControl('', [
+        Validators.required,
+      ]),
+      exceptionReason: new FormControl('', [
+        Validators.required,
+      ]),
+    });
+    this.AddClaimServicesForm.push(claimFlagExcededBaniftForm);
   }
 }
