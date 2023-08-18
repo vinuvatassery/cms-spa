@@ -123,7 +123,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       pageSize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
-      filter : this.filter === undefined?[]:this.filter
+      filter : this.filter === undefined?null:this.filter
     };
     this.loadReconcileListEvent.emit(gridDataRefinerValue);    
   }
