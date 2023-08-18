@@ -12,10 +12,16 @@
         <span class="material-icons" aria-label="expand" aria-hidden="true" role="menuitem">arrow_right</span>
         <ng-template class="app-dropdown-action-list" kendoSplitButtonItemTemplate let-dataItem>
           <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-            aria-hidden="false" (click)="dataItem.click">
+          aria-hidden="false" *ngIf="dataItem.id === 'new_letter'" (click)="dataItem.click(sendLetterDialog)">
             <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
             <label> {{ dataItem.text }} </label>
           </button>
+          <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+          aria-hidden="false" *ngIf="dataItem.id === 'new_email'" (click)="dataItem.click(sendNewEmailDialog)">
+            <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+            <label> {{ dataItem.text }} </label>
+          </button>        
+        
         </ng-template>
       </kendo-dropdownbutton>
     </div>   
@@ -34,3 +40,16 @@
   <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">Create New Reminder for {{vendorProfile$?.vendorName}} </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail   (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"></productivity-tools-reminder-detail>
 </ng-template>
+
+
+<!-- Send New Letter Modal -->
+<ng-template #sendLetterDialog>
+  <cms-financial-send-letter    (closeSendLetterEvent)="handleSendNewLetterClosed($event)"
+  kendoTooltip></cms-financial-send-letter>
+</ng-template>
+
+<!-- Send New Email Modal -->
+<ng-template #sendNewEmailDialog>
+  <cms-financial-send-email [email]="vendorProfile$?.email" (closeSendEmailEvent)="handleSendNewEmailClosed($event)"    kendoTooltip></cms-financial-send-email>
+</ng-template>
+

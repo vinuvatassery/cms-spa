@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, OnInit, Component, ChangeDetectorRef, Input } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade, PaymentPanel, PaymentsFacade, GridFilterParam } from '@cms/case-management/domain';
+import { ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, PaymentPanel, PaymentsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import {  filter } from 'rxjs';
 import { LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-financial-claims-batch-items-page',
@@ -29,7 +30,10 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   paymentPanelData$ = this.paymentFacade.paymentPanelData$;
   @Input() vendorId:any;
   @Input() batchId:any;
-
+  vendorProfile$ = this.financialVendorFacade.providePanelSubject$
+  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
+  ddlStates$ = this.contactFacade.ddlStates$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly router: Router, 
@@ -37,6 +41,9 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
     private loggingService: LoggingService,
     private paymentFacade:PaymentsFacade,
     private readonly route: ActivatedRoute,
+    public contactFacade: ContactFacade,
+    public lovFacade: LovFacade,
+    private readonly financialVendorFacade : FinancialVendorFacade
   ) {}
 
   ngOnInit(): void {    
@@ -90,6 +97,20 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
           this.paymentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         }
       });
+  }
+
+  getProviderPanel(event:any){
+    this.financialVendorFacade.getProviderPanel(event)
+  }
+
+  updateProviderProfile(event:any){
+    console.log(event)
+    this.financialVendorFacade.updateProviderPanel(event)
+  }
+
+  OnEditProviderProfileClick(){
+    this.contactFacade.loadDdlStates()
+    this.lovFacade.getPaymentMethodLov()
   }
 
   loadPaymentDetails(){

@@ -16,7 +16,7 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
   @Input() vendorId: any;
   @Input() dialogTitle: any;
   @Input() vendorDetails$!: Observable<any>;
-  @Output() cancelClick = new EventEmitter<any>();
+  @Output() close = new EventEmitter<any>();
 
   drug= new ManufacturerDrugs();
   drugForm!: FormGroup;
@@ -54,7 +54,7 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
         hepatitis: [''],
         opportunisticInfection: [''],
       }, { validators: this.atLeastOneDrugTypeSelected() }),
-      includeInManufacturerRebatesFlag: [''],
+      includeInManufacturerRebatesFlag: ['',Validators.required],
     });
   }
 
@@ -102,7 +102,6 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
   }
 
   validateForm() {
-    this.drugForm.markAllAsTouched();
     this.drugForm.controls['includeInManufacturerRebatesFlag'].setValidators([
       Validators.required,
     ]);
@@ -118,6 +117,6 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
   }
 
   onCancelClick() {
-    this.cancelClick.emit();
+    this.close.emit();
   }
 }
