@@ -21,7 +21,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
   entityId: any = '823E2464-0649-49DA-91E7-26DCC76A2A6B';
     /** Input properties **/
   @Input() items!: any[];
-  @Input() batchId!: any;
+  @Input() batchId: any;
   @Input() printOption: boolean = false;
   @Input() isSaveClicked!: boolean;
 
@@ -62,12 +62,12 @@ hideLoader(){
       next: (data: any[]) =>{
         if (data.length > 0) {
           if(this.isSaveClicked){
-            this.items = this.items.filter((x:any)=>x.isPrintAdviceLetter);
+            this.finalPrintList = this.finalPrintList.filter((x:any)=>x.isChecked);
           }
-          this.items.forEach((item: any, index: number) => {
+          this.finalPrintList.forEach((item: any, index: number) => {
             data.forEach(result => {
             if(item.vendorId.toLowerCase() == result.vendorId.toLowerCase()){
-              this.finalPrintList[index].index = index + 1; 
+              this.finalPrintList[index].paymentNbr = index + 1; 
               this.finalPrintList[index].paymentMethodCode = item.paymentMethodCode,
               this.finalPrintList[index].amountPaid = item.amountPaid,
               this.finalPrintList[index].vendorName = item.vendorName,
@@ -91,9 +91,7 @@ hideLoader(){
   loadPrintLetterModelData(selectedPrintList: any[]) {
     let printAdviceLetterData: any;
     let vendorIds: any = [];
-    if(this.isSaveClicked){
-    selectedPrintList = this.finalPrintList.filter((x:any)=>x.isPrintAdviceLetter);
-    }
+    selectedPrintList = this.finalPrintList.filter((x:any)=>x.isChecked);
     selectedPrintList.forEach(item => {
       printAdviceLetterData = {      
       vendorId: item.vendorId,
@@ -128,36 +126,34 @@ hideLoader(){
 
   onCheckboxChange(event: any, item: any): void {
     item.isChecked = event.target.checked;
-    if(this.isSaveClicked){
-      this.finalPrintList = this.finalPrintList.filter((x:any)=>x.isPrintAdviceLetter)
-    }
-    if(this.printOption){
-      if(item.isChecked)
-      {
-      this.finalPrintList.push(item);
+      if(item.isChecked){
+        this.updateIsCheckedFlagForPrint(item, item.isChecked);
+        }else{
+        this.updateIsCheckedFlagForPrint(item, item.isChecked);
+        }
+    this.printCount = this.finalPrintList.filter((element) => element.isChecked == true).length;
+  }
+
+ updateIsCheckedFlagForPrint(item: any, isChecked: any) {
+    const itemToUpdate = this.finalPrintList.find((element) => element.paymentNbr === item.paymentNbr);
+      if (itemToUpdate) {
+        itemToUpdate.isChecked = isChecked;
       }
-      else{
-        this.finalPrintList = this.finalPrintList.filter(element => element.item !== item.item);
-      }
-    }else{
-      if(item.isChecked)
-      {
-      this.finalPrintList.push(item);
-      }
-      else{
-        this.finalPrintList = this.finalPrintList.filter(element => element.checkNbr !== item.checkNbr);
-      }
-    }
-    this.printCount = this.finalPrintList.length;
   }
 
   getPrintLetterCount(){
+    if(this.printOption){
+      this.printCount = this.finalPrintList.length;
+    }
+    if(this.isSaveClicked)
+    {
     this.reconcileCount = this.items.length;
-    this.printCount = this.finalPrintList.filter((x:any)=>x.isPrintAdviceLetter).length;
+    this.printCount = this.finalPrintList.filter((x:any)=>x.isChecked).length;
+    }
   }
 
   onPrintAdviceLetterClicked(buttonText: string){
-    if(buttonText == 'Print'){
+    if(buttonText == 'PRINT'){
       this.generateAndPrintAdviceLetter();
     }else{
       this.reconcilePaymentsAndPrintAdviceLetter();
@@ -206,5 +202,4 @@ hideLoader(){
   });
   }
 }
-
 

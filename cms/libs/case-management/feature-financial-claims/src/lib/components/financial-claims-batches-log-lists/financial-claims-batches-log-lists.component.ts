@@ -44,46 +44,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   printAuthorizationDialog: any;
   UnBatchDialog: any;
   deleteClaimsDialog: any;
-  onlyPrintAdviceLetter: boolean = false;
-
-  bathcLogGridDataLst =[
-    {
-      item: 1,
-      invoiceID:14323,
-      providerName: 'Very Nice Provider 1',
-      taxID:'1234', 
-      paymentMethod:'ACH', 
-      clientName:'Client 1', 
-      nameOnPrimaryInsuranceCard:'Test User', 
-      memberID:'12', 
-      serviceCount:'1', 
-      totalCost:'1000', 
-      totalDue:'500', 
-      paymentStatus:'InProgress', 
-      by: 'by',
-      vendorId: '3F111CFD-906B-4F56-B7E2-7FCE5A563C36',
-      paymentRequestId: '012D6618-C464-41C1-852D-03584075A17B',
-      paymentRequestBatchId: '1B9F14A7-A983-44A9-BDC9-9B85716BE4DD'
-    },
-    {
-      item: 2,
-      invoiceID:24533,
-      providerName: 'Test Provider 2',
-      taxID:'4321', 
-      paymentMethod:'Check', 
-      clientName:'Client 2', 
-      nameOnPrimaryInsuranceCard:'John Deo', 
-      memberID:'21', 
-      serviceCount:'2', 
-      totalCost:'2000', 
-      totalDue:'800', 
-      paymentStatus:'InProgress', 
-      by: 'by',
-      vendorId: '433D134A-99D4-4A67-9A7D-8773190035CD',
-      paymentRequestId: 'AF1338C1-A6CC-4E76-8741-B9ABA59ABC99',
-      paymentRequestBatchId: '1B9F14A7-A983-44A9-BDC9-9B85716BE4DD'
-    }
-  ];
+  onlyPrintAdviceLetter: boolean = true;
 
   
   public bulkMore = [
@@ -204,7 +165,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   paymentMethodFilter:string ='';
   paymentTypeFilter:string ='';
   paymentStatusFilter:string='';
-  selectedDataRows: any;
+  selectedDataRows: any[] = [];
   selectedCount: any;
   /** Constructor **/
   constructor(private route: Router,private dialogService: DialogService, public activeRoute: ActivatedRoute ) {}
@@ -410,4 +371,20 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
       this.selectedCount = this.selectedDataRows.length;
     }
   }
+
+  onCheckboxChecked(event: any, selectedDatarow: any) {
+    selectedDatarow.isChecked = event.target.checked;
+    if(selectedDatarow != null){
+      if(selectedDatarow.isChecked)
+      {
+        const eachSelectedRow = { ...selectedDatarow, isChecked: true};
+      this.selectedDataRows.push(eachSelectedRow);
+      }else{
+        const index = this.selectedDataRows.findIndex((item) => item.paymentNbr === selectedDatarow.paymentNbr);
+      if (index !== -1) {
+        this.selectedDataRows.splice(index, 1);
+      }
+    }
+  }
+}
 }

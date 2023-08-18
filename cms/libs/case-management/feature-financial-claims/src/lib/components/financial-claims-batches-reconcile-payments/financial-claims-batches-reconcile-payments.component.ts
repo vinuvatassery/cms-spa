@@ -205,7 +205,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
             this.reconcilePaymentGridUpdatedResult[index].datePaymentRecInValidMsg = dataItem?.datePaymentRecInValidMsg;
             this.reconcilePaymentGridUpdatedResult[index].datePaymentSentInValid = dataItem?.datePaymentSentInValid;
             this.reconcilePaymentGridUpdatedResult[index].datePaymentSentInValidMsg = dataItem?.datePaymentSentInValidMsg;
-            this.reconcilePaymentGridUpdatedResult[index].isPrintAdviceLetter = dataItem?.isPrintAdviceLetter;
+            this.reconcilePaymentGridUpdatedResult[index].isChecked = dataItem?.isChecked;
             this.reconcilePaymentGridUpdatedResult[index].tAreaCessationCounter = dataItem?.tAreaCessationCounter;
             this.reconcilePaymentGridUpdatedResult[index].vendorName = dataItem?.vendorName;
             this.reconcilePaymentGridUpdatedResult[index].amountPaid = dataItem?.amountPaid;
@@ -267,7 +267,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
           itemResponse.data[index].datePaymentRecInValidMsg = ifExist?.datePaymentRecInValidMsg;
           itemResponse.data[index].datePaymentSentInValid = ifExist?.datePaymentSentInValid;
           itemResponse.data[index].datePaymentSentInValidMsg = ifExist?.datePaymentSentInValidMsg;
-          itemResponse.data[index].isPrintAdviceLetter = ifExist?.isPrintAdviceLetter;
+          itemResponse.data[index].isChecked = ifExist?.isChecked;
           itemResponse.data[index].tAreaCessationCounter = ifExist?.tAreaCessationCounter;
 
         }
@@ -467,14 +467,14 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       || this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value === undefined
       || this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value === '')
       {
-      dataItem.isPrintAdviceLetter = false;
+      dataItem.isChecked = false;
       dataItem.paymentReconciledDate = this.currentDate;
       dataItem.datePaymentRecInValid = false;
       dataItem.datePaymentRecInValidMsg = null;
       
     }
     if(dataItem.checkNbr !== ''){
-      dataItem.isPrintAdviceLetter = true
+      dataItem.isChecked = true
     }    
     this.assignRowDataToMainList(dataItem);
     let isCheckNumberAlreadyExist = this.reconcilePaymentGridUpdatedResult.filter((x:any) =>x.checkNbr === dataItem.checkNbr && x.vendorId !== dataItem.vendorId);

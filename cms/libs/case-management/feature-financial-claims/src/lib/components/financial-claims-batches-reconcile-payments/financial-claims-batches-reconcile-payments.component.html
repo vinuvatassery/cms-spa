@@ -108,7 +108,7 @@
                         <kendo-grid-column   title="Print Advice Ltr" [width]="80">
                               <ng-template kendoGridCellTemplate let-dataItem>                  
                                     <input class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr"
-                                    aria-labelledby="printAdviceLetter" kendoCheckBox  (change)="printAdviceLetterChange(dataItem)" [(ngModel)]="dataItem.isPrintAdviceLetter"
+                                    aria-labelledby="printAdviceLetter" kendoCheckBox  (change)="printAdviceLetterChange(dataItem)" [(ngModel)]="dataItem.isChecked"
                                     />                                 
                               </ng-template>
                         </kendo-grid-column>

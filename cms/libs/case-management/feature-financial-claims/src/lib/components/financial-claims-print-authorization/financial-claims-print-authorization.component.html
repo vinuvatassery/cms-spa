@@ -5,8 +5,8 @@
                   <ng-template let-item="item">
                         <div *ngIf="printOption">
                               <div class="slidertitle-bar">
-                                    <p><strong>{{item.index}}) {{item.providerName}} </strong> <label class="ml-1 text-muted">${{item.totalCost}}</label>
-                                          <label class="ml-1 text-muted"> {{item.paymentMethod}}</label></p>
+                                    <p><strong>{{item.paymentNbr}}) {{item.vendorName}} </strong> <label class="ml-1 text-muted">${{item.totalCost}}</label>
+                                          <label class="ml-1 text-muted"> {{item.paymentMethodCode}}</label></p>
                               </div>
                               <div class="text-right mt-1">
                                     <span class="app-checkboxwidtext-wrapper">
@@ -20,7 +20,7 @@
                         </div>
                         <div *ngIf="!printOption">
                               <div class="slidertitle-bar">
-                                    <p><strong>{{item.index}}) {{item.vendorName}} </strong> <label class="ml-1 text-muted">${{item.amountPaid}}</label>
+                                    <p><strong>{{item.paymentNbr}}) {{item.vendorName}} </strong> <label class="ml-1 text-muted">${{item.amountPaid}}</label>
                                           <label class="ml-1 text-muted"> {{item.paymentMethodCode}}</label></p>
                               </div>
                               <div class="text-right mt-1">
