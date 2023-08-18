@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component ,Input, TemplateRef,} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommunicationEventTypeCode, CommunicationEvents, FinancialVendorTypeCode, ScreenType, VendorContactsFacade } from '@cms/case-management/domain';
+import { CommunicationEventTypeCode, CommunicationEvents, FinancialVendorProviderTabCode, ScreenType, VendorContactsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { CommunicationEvents } from 'libs/case-management/domain/src/lib/enums/communication-event.enum';
 import { Subscription } from 'rxjs';
 @Component({
   selector: 'cms-vendor-header-tools',
@@ -34,8 +33,6 @@ export class VendorHeaderToolsComponent {
   private isSendNewEmailOpenedDialog : any;
   private isNewSMSTextOpenedDialog : any;
   private isIdCardOpenedDialog : any;
-  isSendNewLetterOpened = false;
-  isSendNewEmailOpened = false;
   vendorId: any;
   vendorTypeCode: any;
   emailSubject: any;
@@ -64,27 +61,28 @@ export class VendorHeaderToolsComponent {
       click: (templatename: any): void => {
         this.onSendNewEmailClicked(templatename);
       },
-      {
-        buttonType: 'btn-h-primary',
-        text: 'New SMS Text',
-        icon: 'comment',
-        id: 'new_sms_text',
-        isVisible: false,
-        click: (templatename: any): void => {
-          this.onNewSMSTextClicked(templatename);
-        },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'New SMS Text',
+      icon: 'comment',
+      id: 'new_sms_text',
+      isVisible: false,
+      click: (templatename: any): void => {
+        this.onNewSMSTextClicked(templatename);
       },
-      {
-        buttonType: 'btn-h-primary',
-        text: 'New ID Card',
-        icon: 'call_to_action',
-        id:'new_id_card',
-        isVisible: true,
-        click: (templatename: any): void => {
-          this.onIdCardClicked(templatename);
-        }
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'New ID Card',
+      icon: 'call_to_action',
+      id:'new_id_card',
+      isVisible: false,
+      click: (templatename: any): void => {
+        this.onIdCardClicked(templatename);
       }
-    ];
+    }
+  ];
 
 
   constructor(private route: Router,private activeRoute : ActivatedRoute,
@@ -94,7 +92,7 @@ export class VendorHeaderToolsComponent {
 
   ngOnInit(): void {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
-    this.vendorTypeCode = this.activeRoute.snapshot.queryParams['vendor_type_code'];
+    this.vendorTypeCode = this.activeRoute.snapshot.queryParams['tab_code'];
     this.initialize();
     this.getVendorTypeCode();
   }
@@ -220,18 +218,19 @@ export class VendorHeaderToolsComponent {
     }
 
     getVendorTypeCode() {
+      debugger;
       switch (this.vendorTypeCode) {
-        case FinancialVendorTypeCode.Manufacturers:
+        case FinancialVendorProviderTabCode.Manufacturers:
           this.emailSubject = CommunicationEventTypeCode.ManufacturerSubject;
           this.communicationEmailTypeCode = CommunicationEventTypeCode.ManufacturerEmail;
           this.communicationLetterTypeCode = CommunicationEventTypeCode.ManufacuterLetter;
           break;
-        case FinancialVendorTypeCode.InsuranceVendors:
+        case FinancialVendorProviderTabCode.InsuranceVendors:
           this.emailSubject = CommunicationEventTypeCode.InsuranceVendorSubject;
           this.communicationEmailTypeCode = CommunicationEventTypeCode.InsuranceVendorEmail;
           this.communicationLetterTypeCode = CommunicationEventTypeCode.InsuranceVendorLetter;
           break;
-        case FinancialVendorTypeCode.MedicalProviders:
+        case FinancialVendorProviderTabCode.MedicalProvider:
           this.emailSubject = CommunicationEventTypeCode.MedicalProviderSubject
           this.communicationEmailTypeCode = CommunicationEventTypeCode.MedicalProviderEmail;
           this.communicationLetterTypeCode = CommunicationEventTypeCode.MedicalProviderLetter;
