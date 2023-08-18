@@ -3,24 +3,10 @@
 <button kendoButton icon="add" [primary]="true"
 (click)="onOpenAddPcaAssignmentClicked(addEditPcaAssignmentDialogTemplate)" class="add-new-button search-with-addbtn"
 aria-label="add"> Assignment</button> 
-<p class="mt-1">Select object and group below to load the grid data</p>
-<section class="table-filter-section mat-form-no-b-space  table-filter-with-dropdown">
-                  <span class="filter-section_items filter--select  ">
-                        <kendo-floatinglabel>
-                              <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"
-                                    textField="columnDesc" valueField="columnCode">
-                              </kendo-dropdownlist>
-                        </kendo-floatinglabel>
-                  </span>
-                  <span class="filter-section_items filter--search ">
-                        <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
-                        <kendo-floatinglabel text="Search">
-                              <kendo-textbox aria-label="Search case" rounded="medium"
-                                    [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-
-                        </kendo-floatinglabel>
-                  </span>
-                  <span class="ml-1">
+<p class="mt-2">Select object and group below to load the grid data</p>
+<section class="flex-row mb-1">
+           
+                  <span class="flex-col flex-col-3">
                         <kendo-floatinglabel text="Object">
                         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
                         placeholder="Object"
@@ -30,7 +16,7 @@ aria-label="add"> Assignment</button>
                         </kendo-dropdownlist>
                         </kendo-floatinglabel>
                   </span>
-                  <span class="ml-1">
+                  <span class="flex-col flex-col-9">
                         <kendo-floatinglabel text="Group">
                         <kendo-multiselect 
                         class="fixed-height-input"
@@ -40,7 +26,7 @@ aria-label="add"> Assignment</button>
                         aria-label="to address"
                         [textField]="'lovDesc'"
                         [valueField]="'lovCode'"
-                        [kendoMultiSelectSummaryTag]="0"
+                        [kendoMultiSelectSummaryTag]="5"
                         ></kendo-multiselect>
                         </kendo-floatinglabel>
                   </span>
