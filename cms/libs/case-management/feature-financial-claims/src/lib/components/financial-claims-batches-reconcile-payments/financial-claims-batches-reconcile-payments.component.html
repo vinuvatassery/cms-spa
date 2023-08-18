@@ -45,10 +45,13 @@
                         </div>
                         <div class="flex-col flex-col-4 field-with-btn">
                               <kendo-floatinglabel text="Note">
-                                    <kendo-textbox aria-label="Note" [fillMode]="formUiStyle.inputFillMode">
+                                    <kendo-textbox aria-label="Note" [fillMode]="formUiStyle.inputFillMode"
+                                    formControlName="note">
                                     </kendo-textbox>
+                                    <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['note'].valid">note is required..</kendo-formerror>                     
                               </kendo-floatinglabel>
-                              <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Batch"> Batch
+                         
+                              <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Batch" (click)="noteBatch()"> Batch
                               </button>
 
                         </div>
@@ -152,12 +155,14 @@
                         <kendo-grid-column field="amountPaid" title="Pmt. Amount" [width]="180">
                         </kendo-grid-column>
                         <kendo-grid-column field="checkNbr" title="Warrant Number" [width]="180">
-                              <ng-template kendoGridCellTemplate let-dataItem >
+                              <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                                     <kendo-textbox  aria-label="Warrant Number"
                                     placeholder="Warrant Number"  [maxlength]="12"
                                     [fillMode]="formUiStyle.inputFillMode"
-                                    [(ngModel)]="dataItem.checkNbr" (valueChange)="warrantNumberChange(dataItem)"    >
+                                    [(ngModel)]="dataItem.checkNbr" (valueChange)="warrantNumberChange(dataItem)"   
+                                    [ngClass]="ngDirtyInValid(dataItem,'checkNbr',rowIndex)"  id ="checkNbr{{rowIndex}}" >
                                   </kendo-textbox>
+                                  <kendo-formerror *ngIf="dataItem.warrantNumberInValid">{{dataItem.warrantNumberInValidMsg}}</kendo-formerror>
                               </ng-template>
                         </kendo-grid-column>
                         <kendo-grid-column field="comments" title="Note (optional)" [width]="180">

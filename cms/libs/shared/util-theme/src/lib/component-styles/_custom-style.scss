@@ -362,7 +362,11 @@ color: $app-primary-font-color;
   justify-content: center;
   display: flex;
   cursor: default;
-
+&.posi_relative{
+  position: relative;
+  display: inline-flex;
+  vertical-align: sub;
+}
   .material-icons {
     color: $white;
     font-size: $font-size-l;
@@ -1193,6 +1197,7 @@ color: $app-primary-font-color;
   }
 
  }
+
 .preferred-heading{
   border-left:3px solid material-color($hive-canyon-palette, A700) !important;
 }

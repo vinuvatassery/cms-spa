@@ -13,28 +13,32 @@
       Financial Management
     </h1>
   </section>
+ 
   <section class="app-l-client-wrapper" [ngClass]="{'due-notification-on': reminderTabOn}">
     <div class="app-l-client-left"  >
       <section class="app-l-wrapper">
 
         <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
           class="app-c-tab case-360-tab">
-          <kendo-tabstrip-tab title="Manufacturers" [selected]="true"  *ifPermission='["Financial_Manufacturers_Tab"]'>
+          <kendo-tabstrip-tab title="Manufacturers" [selected]="selectedVendorType===financeVendorTypeCodes.Manufacturers" 
+            *ifPermission='["Financial_Manufacturers_Tab"]'>
             <ng-template kendoTabContent>
               <div class="block-section ">
                 
-                <cms-financial-vendors-list 
+                <cms-financial-vendors-list  
                 [financeTabTypeCode]="financeManagementTabs.Manufacturers"
                 [vendorTypeCode]="financeVendorTypeCodes.Manufacturers"
                 [vendorsList$]="vendorsList$"
                 [pageSizes]="pageSizes" [sortValue]="sortValue"
                 [sortType]="sortType" [sort]="sort" 
-                (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"></cms-financial-vendors-list>
+                (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
+                (exportGridDataEvent)="exportGridData($event)"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
 
-          <kendo-tabstrip-tab title="Medical Providers" *ifPermission='["Financial_MedicalProvider_Tab"]'>
+          <kendo-tabstrip-tab title="Medical Providers" [selected]="selectedVendorType===financeVendorTypeCodes.MedicalProviders" 
+           *ifPermission='["Financial_MedicalProvider_Tab"]'>
             <ng-template kendoTabContent>
               <div class="block-section ">
                 
@@ -44,12 +48,14 @@
                 [vendorsList$]="vendorsList$"
                 [pageSizes]="pageSizes" [sortValue]="sortValue"
                 [sortType]="sortType" [sort]="sort" 
-                (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"></cms-financial-vendors-list>
+                (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
+                (exportGridDataEvent)="exportGridData($event)"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
 
-          <kendo-tabstrip-tab title="Insurance Vendors" *ifPermission='["Financial_InsuranceVendors_Tab"]'>
+          <kendo-tabstrip-tab title="Insurance Vendors" *ifPermission='["Financial_InsuranceVendors_Tab"]'
+          [selected]="selectedVendorType===financeVendorTypeCodes.InsuranceVendors" >
             <ng-template kendoTabContent>
               <div class="block-section ">
                 
@@ -59,12 +65,14 @@
                  [vendorsList$]="vendorsList$"
                  [pageSizes]="pageSizes" [sortValue]="sortValue"
                  [sortType]="sortType" [sort]="sort" 
-                 (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"></cms-financial-vendors-list>
+                 (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
+                 (exportGridDataEvent)="exportGridData($event)"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
 
-          <kendo-tabstrip-tab title="Pharmacies" *ifPermission='["Financial_Pharmacy_Tab"]'>
+          <kendo-tabstrip-tab title="Pharmacies" *ifPermission='["Financial_Pharmacy_Tab"]'
+          [selected]="selectedVendorType===financeVendorTypeCodes.Pharmacy" >
             <ng-template kendoTabContent>
               <div class="block-section ">
                 
@@ -74,12 +82,14 @@
                  [vendorsList$]="vendorsList$"
                  [pageSizes]="pageSizes" [sortValue]="sortValue"
                  [sortType]="sortType" [sort]="sort" 
-                 (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"></cms-financial-vendors-list>
+                 (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
+                 (exportGridDataEvent)="exportGridData($event)"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
 
-          <kendo-tabstrip-tab title="Dental Providers" *ifPermission='["Financial_DentalProvider_Tab"]'>
+          <kendo-tabstrip-tab title="Dental Providers" *ifPermission='["Financial_DentalProvider_Tab"]'
+          [selected]="selectedVendorType===financeVendorTypeCodes.DentalProviders" >
             <ng-template kendoTabContent>
               <div class="block-section ">
                  
@@ -89,13 +99,15 @@
                 [vendorsList$]="vendorsList$"
                 [pageSizes]="pageSizes" [sortValue]="sortValue"
                 [sortType]="sortType" [sort]="sort" 
-                (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"></cms-financial-vendors-list>
+                (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
+                (exportGridDataEvent)="exportGridData($event)"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
         </kendo-tabstrip>
 
       </section>
+      
     </div>
     <!-- Right Reminders-->
     <div class="app-l-client-right todo-list">
