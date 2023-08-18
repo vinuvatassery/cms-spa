@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component ,Input, TemplateRef,} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component ,Input, TemplateRef,} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommunicationEventTypeCode, CommunicationEvents, FinancialVendorTypeCode, ScreenType, VendorContactsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -19,8 +19,8 @@ export class VendorHeaderToolsComponent {
   private newReminderDetailsDialog : any;
   emailScreenName = ScreenType.FinancialManagementVendorPageEmail;
   letterScreenName = ScreenType.FinancialManagementVendorPageLetter;
-  emailAddress$ = this.vendorContactFacade.emailAddress$;
-  mailingAddress$ = this.vendorContactFacade.mailingAddress$;
+  contacts$ = this.vendorContactFacade.contacts$;
+  mailCodes$ = this.vendorContactFacade.mailCodes$;
   emailSubscription$ = new Subscription();
   reloadSubscription$ = new Subscription();
   buttonList!: any[];
@@ -34,6 +34,7 @@ export class VendorHeaderToolsComponent {
   communicationLetterTypeCode: any;
   communicationEmailTypeCode: any;
   toEmail: Array<any> = [];
+  vendorAddressId:any;
 
   public sendActions = [
     {
@@ -60,7 +61,8 @@ export class VendorHeaderToolsComponent {
 
 
   constructor(private route: Router,private activeRoute : ActivatedRoute,
-    private readonly vendorContactFacade: VendorContactsFacade, private dialogService: DialogService) {
+    private readonly vendorContactFacade: VendorContactsFacade, private dialogService: DialogService,
+    private readonly ref: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -71,20 +73,24 @@ export class VendorHeaderToolsComponent {
   }
 
   private initialize() {
-    this.loadEmailAddress();
     this.loadMailingAddress();
-    this.addEmailSubscription();
     this.refreshButtonList();
   }
 
   private addEmailSubscription() {
-      this.emailSubscription$ = this.emailAddress$.subscribe((x: any) => {
-      this.sendActions[1].isVisible = x?.email?.length > 0;
-      if(x?.email?.length !== null){
-        this.toEmail = [];
-        this.toEmail.push(x?.email?.trim());
+    this.vendorContactFacade.contacts$.subscribe((resp) => {
+      const preferredContact = resp.find((contact: any) => contact.isPreferedContact === "Y" && contact.emailAddress?.trim());
+      const contactWithValidEmail = resp.find((contact: any) => contact.emailAddress && contact.emailAddress.trim());
+      this.toEmail = [];
+      if (preferredContact) {
+        this.toEmail = [preferredContact.emailAddress.trim()];
+        this.sendActions[1].isVisible = true;
+      } else if (contactWithValidEmail) {
+        this.toEmail = [contactWithValidEmail.emailAddress.trim()];
+        this.sendActions[1].isVisible = true;
       }
       this.refreshButtonList();
+      this.ref.detectChanges();
     });
   }
 
@@ -144,11 +150,20 @@ export class VendorHeaderToolsComponent {
     }
 
     loadEmailAddress() {
-      this.vendorContactFacade.loadEmailAddress(this.vendorId);
+      this.vendorContactFacade.mailCodes$.subscribe((resp) => {
+        if (resp && resp.length > 0) {
+          const selectedAddress = resp.find((address:any) => address.preferredFlag === "Y") || resp[0];
+          this.vendorAddressId = selectedAddress.vendorAddressId;
+          this.vendorContactFacade.loadcontacts(this.vendorAddressId);
+          this.addEmailSubscription();
+        }
+        this.ref.detectChanges();
+      });
     }
 
     loadMailingAddress() {
-      this.vendorContactFacade.loadMailingAddress(this.vendorId);
+      this.vendorContactFacade.loadMailCodes(this.vendorId);
+      this.loadEmailAddress();
     }
 
     getVendorTypeCode() {

@@ -75,16 +75,17 @@ export class SendLetterComponent implements OnInit {
   ];
   popupClass = 'app-c-split-button';
   ddlTemplates: any;
-  isButtonsVisible: boolean = true;
+  isButtonVisible: boolean = true;
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter)
     {
-      this.isButtonsVisible=false;
-      this.vendorContactFacade.mailingAddress$.subscribe((resp) => {
-        if (resp) {
-          this.mailingAddress = resp;
+      this.isButtonVisible=false;
+      this.vendorContactFacade.mailCodes$.subscribe((resp) => {
+        if (resp && resp.length > 0) {
+          const selectedAddress = resp.find((address:any) => address.preferredFlag === "Y") || resp[0];
+          this.mailingAddress = selectedAddress;
         }
         this.ref.detectChanges();
       });
@@ -323,7 +324,7 @@ this.isShowSendLetterToPrintPopupClicked = false;
 loadMailingAddress() {
   if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter)
   {
-    this.vendorContactFacade.loadMailingAddress(this.vendorId);
+    this.vendorContactFacade.loadMailCodes(this.vendorId);
   }
   else
      this.contactFacade.loadMailingAddress(this.clientId);

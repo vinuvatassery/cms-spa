@@ -138,6 +138,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   private loadEmailTemplates() {
+    if(this.communicationEmailTypeCode==undefined)
+      return;
     this.loaderService.show();
     const channelTypeCode = CommunicationEvents.Email;
     this.communicationFacade.loadEmailTemplates(this.communicationEmailTypeCode ?? '', channelTypeCode??'')
@@ -244,6 +246,7 @@ onClosePreviewEmail(){
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
     this.isClearEmails =true;
+
     this.isShowToEmailLoader$.next(true);
     this.isOpenDdlEmailDetails = true;
     this.selectedTemplate = event;
@@ -253,7 +256,7 @@ onClosePreviewEmail(){
     this.selectedToEmail = this.selectedEmail;
     this.handleEmailEditor(event);
     this.showToEmailLoader = false;
-    if (CommunicationEventTypeCode.CerAuthorizationEmail!==this.communicationEmailTypeCode) {
+    if (CommunicationEventTypeCode.CerAuthorizationEmail===this.communicationEmailTypeCode) {
       this.getCCEmailList(this.clientId, this.loginUserId);
     }
     this.ref.detectChanges();

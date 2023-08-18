@@ -36,8 +36,6 @@ export class VendorContactsFacade {
   private deActiveContactAddressSubject = new BehaviorSubject<boolean>(false);
   private removeContactAddressSubject = new BehaviorSubject<boolean>(false);
   private mailCodeSubject = new Subject<any>();
-  private mailingAddressSubject = new Subject<any>();
-  private emailAddressSubject = new Subject<any>();
 
   /** Public properties **/
   contactsData$ = this.contactsDataSubject.asObservable();
@@ -46,8 +44,6 @@ export class VendorContactsFacade {
   deActiveContactAddressObs = this.deActiveContactAddressSubject.asObservable();
   removeContactAddressObs = this.removeContactAddressSubject.asObservable();
   mailCodes$ = this.mailCodeSubject.asObservable();
-  mailingAddress$ = this.mailingAddressSubject.asObservable();
-  emailAddress$ = this.emailAddressSubject.asObservable();
 
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
@@ -204,37 +200,6 @@ export class VendorContactsFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
-  }
-
-  loadMailingAddress(vendorId: string){
-    this.mailingAddressSubject.next(null);
-    return this.vendorcontactsDataService.loadVendorAddress(vendorId).subscribe({
-      next: (reponse: any) => {
-        if (reponse) {
-          this.hideLoader();
-          this.mailingAddressSubject.next(reponse);
-        }
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-      },
-    });
-  }
-
-  loadEmailAddress(vendorId: string): void {
-    this.emailAddressSubject.next([]);
-    this.vendorcontactsDataService
-      .loadVendorEmail(vendorId).subscribe({
-        next: (reponse: any) => {
-          if (reponse) {
-            this.hideLoader();
-            this.emailAddressSubject.next(reponse);
-          }
-        },
-        error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        },
-      });
   }
 }
 

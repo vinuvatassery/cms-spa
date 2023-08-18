@@ -42,7 +42,7 @@
 
 <!-- Send New Letter Popup -->
 <ng-template #sendLetterDialog>
-  <case-management-send-letter  [data]="letterScreenName" [mailingAddress$]="mailingAddress$"
+  <case-management-send-letter  [data]="letterScreenName" [mailingAddress$]="mailCodes$"
   [vendorId]="vendorId" (closeSendLetterEvent)="handleSendNewLetterClosed($event)"
   (loadInitialData)="loadMailingAddress()"
   [communicationLetterTypeCode]="communicationLetterTypeCode"
@@ -51,7 +51,7 @@
 
 <!-- Send New Email Popup -->
 <ng-template #sendNewEmailDialog>
-  <case-management-send-email [data]="emailScreenName" [ddlEmails$]="emailAddress$"
+  <case-management-send-email [data]="emailScreenName"
   [communicationEmailTypeCode]="communicationEmailTypeCode"
   [emailSubject]="emailSubject"
   [toEmail]="toEmail"
