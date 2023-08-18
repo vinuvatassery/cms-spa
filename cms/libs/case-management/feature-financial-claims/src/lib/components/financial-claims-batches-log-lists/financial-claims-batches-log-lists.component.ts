@@ -45,7 +45,6 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   UnBatchDialog: any;
   deleteClaimsDialog: any;
   onlyPrintAdviceLetter: boolean = true;
-
   
   public bulkMore = [
     {
@@ -166,7 +165,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   paymentTypeFilter:string ='';
   paymentStatusFilter:string='';
   selectedDataRows: any[] = [];
-  selectedCount: any;
+  selectedCount: number = 0;
   /** Constructor **/
   constructor(private route: Router,private dialogService: DialogService, public activeRoute: ActivatedRoute ) {}
   
@@ -386,5 +385,6 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
       }
     }
   }
+  this.selectedCount = this.selectedDataRows.length;
 }
 }
