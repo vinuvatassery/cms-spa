@@ -406,7 +406,7 @@ export class FinancialClaimsDataService {
       );
     } else {
       return this.http.get<Pharmacy[]>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/SearchText=${searchText}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/dental/SearchText=${searchText}`
       );
     }    
   }
