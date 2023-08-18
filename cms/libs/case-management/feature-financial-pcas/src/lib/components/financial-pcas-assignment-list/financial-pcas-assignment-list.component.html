@@ -1,27 +1,37 @@
 <!-- Table Top Filter, Search and Export -->
 
- 
-<section class="table-filter-section mat-form-no-b-space">
-                  <span class="filter-section_items filter--select">
-                        <kendo-floatinglabel>
-                              <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"
-                                    textField="columnDesc" valueField="columnCode">
-                              </kendo-dropdownlist>
+<button kendoButton icon="add" [primary]="true"
+(click)="onOpenAddPcaAssignmentClicked(addEditPcaAssignmentDialogTemplate)" class="add-new-button search-with-addbtn"
+aria-label="add"> Assignment</button> 
+<p class="mt-2">Select object and group below to load the grid data</p>
+<section class="flex-row mb-1">
+           
+                  <span class="flex-col flex-col-3">
+                        <kendo-floatinglabel text="Object">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
+                        placeholder="Object"
+                         required [data]="objectList" 
+                          textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
+                          >
+                        </kendo-dropdownlist>
                         </kendo-floatinglabel>
                   </span>
-                  <span class="filter-section_items filter--search">
-                        <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
-                        <kendo-floatinglabel text="Search">
-                              <kendo-textbox aria-label="Search case" rounded="medium"
-                                    [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-
+                  <span class="flex-col flex-col-9">
+                        <kendo-floatinglabel text="Group">
+                        <kendo-multiselect 
+                        class="fixed-height-input"
+                        [checkboxes]="{ checkOnClick: true, enabled: true }"
+                        [fillMode]="formUiStyle.dropDownFillMode"
+                        [data]="groupList" 
+                        aria-label="to address"
+                        [textField]="'lovDesc'"
+                        [valueField]="'lovCode'"
+                        [kendoMultiSelectSummaryTag]="5"
+                        ></kendo-multiselect>
                         </kendo-floatinglabel>
                   </span>
-                 <span class="search-with-btn"> <button kendoButton icon="add" [primary]="true"
-                  (click)="onOpenAddPcaAssignmentClicked(addEditPcaAssignmentDialogTemplate)" class="add-new-button"
-                  aria-label="add"> Assignment</button></span>
+                
 </section>
- 
 
 <!-- Sorted Info -->
 <div class="table-sorted-info">
@@ -45,11 +55,10 @@
               <span class="material-icons">drag_indicator</span>
             </ng-template>
           </kendo-grid-column>
-          <kendo-grid-column field="priority" title="Priority" [width]="60" [columnMenu]="false" [sortable]="false">
+          <kendo-grid-column field="priority" title="Priority" [width]="70" [columnMenu]="false" [sortable]="false">
           </kendo-grid-column>
             <kendo-grid-column field="pca" title="PCA" [width]="100"> </kendo-grid-column>
-            <kendo-grid-column field="object" title="Object" [width]="180"> </kendo-grid-column>
-            <kendo-grid-column field="objectCode" title="Object Code" [width]="140"> </kendo-grid-column>
+            <kendo-grid-column field="object" title="Object" [width]="180"> </kendo-grid-column>           
             <kendo-grid-column field="amount" title="Amount" [width]="140"> <ng-template kendoGridCellTemplate let-dataItem>
                   <span class="tableamountview"> <strong>$</strong> {{dataItem.amount}}</span>
                 </ng-template> </kendo-grid-column>
