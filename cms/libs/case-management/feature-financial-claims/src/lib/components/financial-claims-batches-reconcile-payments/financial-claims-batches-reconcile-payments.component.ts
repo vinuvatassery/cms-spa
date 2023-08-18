@@ -83,7 +83,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     note: new FormControl('', [])
   });
 
-
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
     private readonly cd: ChangeDetectorRef) {
@@ -113,7 +112,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     );
   }
 
-
   loadReconcile(
     skipCountValue: number,
     maxResultCountValue: number,
@@ -126,6 +124,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       pageSize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter : this.filter === undefined?[]:this.filter
     };
     this.loadReconcileListEvent.emit(gridDataRefinerValue);    
   }
@@ -133,24 +132,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   
   onChange(data: any) {
     this.defaultGridState();
-
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
     const stateData = this.state;
-    stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
 
@@ -172,8 +154,11 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     this.sortValueBatch = stateData.sort[0]?.field ?? this.sortValueBatch;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir = this.sortBatch[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortDir = this.sortBatch[0]?.dir === 'asc' ? 'Ascending' : 'Descending'; 
+    this.filter = stateData?.filter?.filters; 
+
     this.loadReconcileListGrid();
+    
   }
 
   // updating the pagination infor based on dropdown selection
@@ -285,22 +270,26 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   }
 
   gridDataHandle() {
-     this.reconcileGridLists$.subscribe((data: any) => {
-      this.assignDataFromUpdatedResultToPagedResult(data);
-      this.tAreaVariablesInitiation(this.reconcilePaymentGridPagedResult.data);
-      this.reconcilePaymentGridPagedResult = filterBy(
-        this.reconcilePaymentGridPagedResult,
-        this.filterData
-      );
-      this.isReconcileGridLoaderShow = false;
-      this.gridClaimsReconcileDataSubject.next(this.reconcilePaymentGridPagedResult);
-      if (data?.total >= 0 || data?.total === -1) { 
-        this.isReconcileGridLoaderShow = false;       
-      }   
-      this.cd.detectChanges()
+    this.reconcileGridLists$.subscribe((response: any) => {
+      if (response.data.length > 0) {
+        this.assignDataFromUpdatedResultToPagedResult(response);
+        this.tAreaVariablesInitiation(this.reconcilePaymentGridPagedResult.data); 
+        this.isReconcileGridLoaderShow = false;
+        this.gridClaimsReconcileDataSubject.next(this.reconcilePaymentGridPagedResult);
+        if (response?.total >= 0 || response?.total === -1) {
+          this.isReconcileGridLoaderShow = false;
+        }
+        this.cd.detectChanges()
+      }
+      else{
+        this.reconcilePaymentGridPagedResult = response;
+        this.isReconcileGridLoaderShow = false;
+        this.cd.detectChanges()
+      }
     });
-     this.isReconcileGridLoaderShow = false;
-     this.cd.detectChanges();
+    this.isReconcileGridLoaderShow = false;
+    this.cd.detectChanges();
+
   }
 
   reconcileDateOnChange(control:any){
