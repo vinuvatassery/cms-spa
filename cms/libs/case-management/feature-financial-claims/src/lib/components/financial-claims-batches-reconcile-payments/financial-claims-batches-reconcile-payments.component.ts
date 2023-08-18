@@ -15,8 +15,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State  
-  State  
+  State    
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
