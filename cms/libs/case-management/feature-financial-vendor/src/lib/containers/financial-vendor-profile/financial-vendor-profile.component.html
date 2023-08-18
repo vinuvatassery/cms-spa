@@ -9,7 +9,7 @@
       <ng-template kendoTabContent>
         <div class="block-section">
           <div class="client-profile-outlet">
-            <cms-vendor-info  [profileInfoTitle]="profileInfoTitle" [vendorTypes]="vendorTypes"
+            <cms-vendor-info [providerType]="vendorTypeCode" [profileInfoTitle]="profileInfoTitle" [vendorTypes]="vendorTypes"
             [vendorProfile$]="vendorProfile$ | async" [selectedVendorInfo$]="selectedVendorInfo$ | async"
             (onVendorEditSuccessStatus)="onVendorEditSuccess($event)">
           </cms-vendor-info>
