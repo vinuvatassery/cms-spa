@@ -1,5 +1,7 @@
-<ng-container  *ngIf="vendorProfile$ | async as vendorProfile">
+
 <kendo-dialog-titlebar (close)="closeViewProviderClicked()"> {{isEditProvider ? 'Edit' : ''}}{{vendorProfile.vendorName}}</kendo-dialog-titlebar>
+<ng-container  *ngIf="vendorProfile$ | async as vendorProfile"></ng-container>
+
 <section class="k-dialog-body newcase">
     <button aria-label="Edit Provider Profile" kendoButton look="flat" class="card-link-button"  *ngIf="!isEditProvider" (click)="editProviderClicked()">Edit </button>
     <div class="detail-items-with-border mt-2 small-input-only-field">
