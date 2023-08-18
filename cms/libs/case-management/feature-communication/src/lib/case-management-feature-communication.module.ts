@@ -56,7 +56,7 @@ import { ApprovalLaterComponent } from './components/approval-letter-later/appro
     CommunicationPageComponent,
     SendLetterPageComponent,
     DisEnrollmentLaterComponent,
-    ApprovalLaterComponent
+    ApprovalLaterComponent    
   ],
   exports: [
     SendTextMessageComponent,
@@ -78,7 +78,7 @@ import { ApprovalLaterComponent } from './components/approval-letter-later/appro
     CommunicationPageComponent,
     SendLetterPageComponent,
     DisEnrollmentLaterComponent,
-    ApprovalLaterComponent
+    ApprovalLaterComponent    
   ],
 })
 export class CaseManagementFeatureCommunicationModule {}

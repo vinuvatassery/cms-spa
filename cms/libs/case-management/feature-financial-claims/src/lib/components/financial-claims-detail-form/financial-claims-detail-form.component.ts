@@ -2,7 +2,7 @@ import {
   Component,
   ChangeDetectionStrategy,
   Output,
-  EventEmitter,
+  EventEmitter,Input
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
@@ -22,6 +22,12 @@ export class FinancialClaimsDetailFormComponent {
   gridSkipCount = this.financialClaimsFacade.skipCount;
   sort = this.financialClaimsFacade.sortClaimsList;
   state!: State;
+  vendorId:any;
+  clientId:any;
+  vendorName:any;
+  clientName:any;
+  isRecentClaimShow:boolean=false;
+  @Input() claimsType: any;
   clientSearchResult = [
     {
       clientId: '12',
@@ -90,4 +96,21 @@ export class FinancialClaimsDetailFormComponent {
   loadClaimsListGrid() {
     this.financialClaimsFacade.loadClaimsListGrid();
   }
+
+  providerValueChange($event:any)
+  {
+    this.isRecentClaimShow=false;
+    this.vendorId=$event.providerId;
+    this.vendorName=$event.providerFullName;
+  }
+
+  clientValueChange($event:any)
+  {
+    this.clientId=$event.clientId;
+    this.clientName=$event.clientFullName;
+    if(this.clientId != null && this.vendorId != null)
+    {
+      this.isRecentClaimShow=true;
+    }
+  } 
 }

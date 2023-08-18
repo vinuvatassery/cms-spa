@@ -218,10 +218,12 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       }
   }
 
-  assignPaymentReconciledDateToPagedList() {
+  assignPaymentReconciledDateToPagedList() {    
     this.reconcilePaymentGridPagedResult.data.forEach((item: any) => {   
       if(item.checkNbr !== null && item.checkNbr !== '' && item.checkNb !== null)    { 
           item.paymentReconciledDate = this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value; 
+          item.datePaymentRecInValid = false;
+          item.datePaymentRecInValidMsg = null;
       }
     });
     this.reconcilePaymentGridPagedResult.data.forEach((item:any) => {
@@ -230,9 +232,11 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   }
 
   assignPaymentSendDateToPagedList() {
-    this.reconcilePaymentGridPagedResult.data.forEach((item: any) => {
-      if(item.checkNbr !== null && item.checkNbr !== '' && item.checkNb !== null)    {
+    this.reconcilePaymentGridPagedResult.data.forEach((item: any) => {  
+      if(item.checkNbr !== null && item.checkNbr !== '' && item.checkNb !== null)    {   
           item.paymentSentDate = this.reconcileAssignValueBatchForm.controls['datePaymentSend'].value; 
+          item.datePaymentSentInValid = false;
+          item.datePaymentSentInValidMsg = null;
       }
     });
     this.reconcilePaymentGridPagedResult.data.forEach((item:any) => {
@@ -245,7 +249,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       if(item.checkNbr !== null && item.checkNbr !== '' && item.checkNbr !== null)    {    
           item.comments = this.reconcileAssignValueBatchForm.controls['note'].value; 
       }
-    });
+    });  
     this.reconcilePaymentGridPagedResult.data.forEach((item:any) => {
       this.assignRowDataToMainList(item);
    })  
@@ -268,6 +272,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
 
         }
         else{
+          if(item.checkNbr !== null && item.checkNbr !== '' && item.checkNbr !== undefined){
           if(this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].valid){
             itemResponse.data[index].paymentReconciledDate = this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value;
           }
@@ -277,6 +282,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
           if(this.reconcileAssignValueBatchForm.controls['note'].valid){
             itemResponse.data[index].comments = this.reconcileAssignValueBatchForm.controls['note'].value;
           }
+        }
           
         }
       
@@ -343,12 +349,21 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       }
     }
     else {
+      this.reconcilePaymentGridUpdatedResult.forEach((item: any) => {
+        if(item.checkNbr !== null && item.checkNbr !== '' && item.checkNbr !== null)    {    
+            item.paymentReconciledDate = this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value; 
+            item.datePaymentRecInValid = false;
+            item.datePaymentRecInValidMsg = null;
+        }
+      });
       this.assignPaymentReconciledDateToPagedList();
       this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].updateValueAndValidity();
     }
   }
 
-  paymentSentDateBatch() {    this.reconcileAssignValueBatchForm.markAllAsTouched();
+  paymentSentDateBatch() 
+  {    
+    this.reconcileAssignValueBatchForm.markAllAsTouched();
     if (this.reconcileAssignValueBatchForm.controls['datePaymentSend'].value === null 
     || this.reconcileAssignValueBatchForm.controls['datePaymentSend'].value === '') {
       this.reconcileAssignValueBatchForm.controls['datePaymentSend'].setValidators([
@@ -366,12 +381,18 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       }
     }
     else {
+      this.reconcilePaymentGridUpdatedResult.forEach((item: any) => {
+        if(item.checkNbr !== null && item.checkNbr !== '' && item.checkNbr !== null)    {    
+            item.paymentSentDate = this.reconcileAssignValueBatchForm.controls['datePaymentSend'].value; 
+            item.datePaymentSentInValid = false;
+            item.datePaymentSentInValidMsg = null;
+        }
+      });
       this.assignPaymentSendDateToPagedList();
       this.reconcileAssignValueBatchForm.controls['datePaymentSend'].updateValueAndValidity();
     }
-
   }
-
+  
   noteBatch(){
     this.reconcileAssignValueBatchForm.markAllAsTouched();
     if (this.reconcileAssignValueBatchForm.controls['note'].value === null 
@@ -382,6 +403,11 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       this.reconcileAssignValueBatchForm.controls['note'].updateValueAndValidity();
     }
     if(this.reconcileAssignValueBatchForm.controls['note'].valid){
+      this.reconcilePaymentGridUpdatedResult.forEach((item: any) => {
+        if(item.checkNbr !== null && item.checkNbr !== '' && item.checkNbr !== null)    {    
+            item.comments = this.reconcileAssignValueBatchForm.controls['note'].value; 
+        }
+      });
       this.assignPaymentNoteToPagedList();
     }
 
@@ -451,7 +477,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       dataItem.isPrintAdviceLetter = true
     }    
     this.assignRowDataToMainList(dataItem);
-
     let isCheckNumberAlreadyExist = this.reconcilePaymentGridUpdatedResult.filter((x:any) =>x.checkNbr === dataItem.checkNbr && x.vendorId !== dataItem.vendorId);
     if(isCheckNumberAlreadyExist.length>0){
       dataItem.warrantNumberInValid = true;
@@ -465,8 +490,8 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       dataItem.warrantNumberInValidMsg =null;
       dataItem.warrantNumberInValid = false;
     }  
-    
   }
+
 
   validateReconcileGridRecord() {
     this.reconcilePaymentGridPagedResult.data.forEach((currentPage: any, index: number) => {
