@@ -15,7 +15,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State  
+  State    
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -123,7 +123,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       pageSize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
-      filter : this.filter === undefined?[]:this.filter
+      filter : this.filter === undefined?null:this.filter
     };
     this.loadReconcileListEvent.emit(gridDataRefinerValue);    
   }
