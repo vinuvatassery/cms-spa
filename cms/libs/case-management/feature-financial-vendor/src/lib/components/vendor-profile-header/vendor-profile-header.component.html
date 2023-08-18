@@ -4,11 +4,11 @@
     <!-- Main Title Section -->
     <section class="app-l-mainTittle">
       <div class="d-flex mb-1">
-        <button aria-label="back to vendor list" kendoButton look="flat" (click)="onBackClicked()"> <span
+        <button aria-label="back to vendor list" kendoButton look="flat" (click)="onBackClicked()"  title="Back"> <span
             class="material-icons">
             arrow_back </span> </button>
         <h1 class="title_with_bld">
-          <span class="bold-text pl-1"> {{vendorProfile$?.vendorName}}</span>
+          <span class="bold-text pl-1" [ngClass]="getHeaderPreferredFlag(vendorProfile$)"> {{vendorProfile$?.vendorName}}</span>
           <span class="title-star-icon icon-filled" aria-label="special Handling Details" aria-hidden="true">
             <span kendoPopoverAnchor showOn="hover"  [popover]="specialHandlingDetails" class="material-icons" aria-label="user information star"
               aria-hidden="true">star</span>

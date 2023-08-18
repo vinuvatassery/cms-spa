@@ -34,7 +34,15 @@
         <div class="block-section">
 
           <div class="client-profile-outlet">
-            <cms-financial-drugs></cms-financial-drugs>
+            <cms-financial-drugs
+            (loadDrugListEvent)="loadDrugList($event)"
+            [drugsData$]="drugsData$"
+            [pageSizes]="pageSizes"
+            [sortValue]="sortValue"
+            [sortType]="sortType"
+            [sort]="sort"
+            [gridSkipCount]="gridSkipCount"
+            [vendorDetails$]="vendorDetails$"></cms-financial-drugs>
           </div>
         </div>
       </ng-template>

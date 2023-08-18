@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input } from '@angular/core'; 
+import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList } from '@angular/core'; 
 import { PaymentsFacade,BillingAddressFacade,VendorContactsFacade, ContactResponse ,FinancialVendorTypeCode, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
+import { GridComponent } from '@progress/kendo-angular-grid';
+import { take } from 'rxjs';
 
 
 @Component({
@@ -33,6 +35,8 @@ export class PaymentAddressesComponent {
   tabCode: string = '';
   addressId: any;
   financialVendorType: typeof FinancialVendorTypeCode = FinancialVendorTypeCode;
+  @ViewChildren(GridComponent) private grid !: QueryList<GridComponent>;
+  IsAddContactDisabled:boolean=true;
   paymentAddressInnerGridLists = [
     {
       Name: 'FName LName',
@@ -80,6 +84,16 @@ export class PaymentAddressesComponent {
 
    
   ngOnInit(): void {
+    this.vendorcontactFacade.loadMailCodes(this.vendorId);
+    this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {   
+      if(mailCode.length>0)
+      {
+        this.IsAddContactDisabled=false;
+        this.cdr.detectChanges();
+      }else{
+        this.IsAddContactDisabled=true;
+      }
+    })
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
@@ -90,6 +104,7 @@ export class PaymentAddressesComponent {
   }
 
   ngOnChanges(): void {
+    this.vendorcontactFacade.loadMailCodes(this.vendorId);
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value,
@@ -106,7 +121,7 @@ export class PaymentAddressesComponent {
   }
 
   public onDetailExpand(e: any): void { 
-    this.VendorAddressId=e.dataItem.VendorAddressId;  
+    this.VendorAddressId=e.dataItem.vendorAddressId;  
    
   }
   public dataStateChange(stateData: any): void {
@@ -144,6 +159,11 @@ export class PaymentAddressesComponent {
     this.isPaymentAddressDetailShow = false;
   }
   clickOpenAddContactDetails() {
+    this.paymentsAddressGridView$.pipe(take(1)).subscribe(({data})=>{
+      data.forEach((item:any, idx:number) => {
+        this.grid.last.collapseRow((this.state.skip ?? 0) + idx);
+      })
+    })
     this.isContactDetailShow = true;
   }
   onClose(isClosed: any) {

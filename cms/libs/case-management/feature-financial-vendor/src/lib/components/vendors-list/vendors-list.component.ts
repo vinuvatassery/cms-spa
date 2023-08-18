@@ -22,6 +22,7 @@ export class VendorsListComponent implements OnChanges , OnInit{
 @Input() vendorsList$ : any
 
 @Output() loadFinancialVendorsListEvent = new EventEmitter<any>();
+@Output() exportGridDataEvent = new EventEmitter<any>();
 
 vndorId! : string
 public  state!: State
@@ -44,6 +45,10 @@ columnDroplistSubject =  new Subject<any[]>();
 columnDroplist$ = this.columnDroplistSubject.asObservable();
 filterData : CompositeFilterDescriptor={logic:'and',filters:[]};
 loader = false;
+vendorNameTitle ="Vendor Name"
+vendorNameTitleDataSubject = new Subject<any>();
+vendornameTitleData$ = this.vendorNameTitleDataSubject.asObservable();
+
 
 columns : any = {
   vendorName:"Vendor Name",
@@ -157,13 +162,26 @@ ngOnChanges(): void {
     sort: this.sort
     };
   if(this.vendorTypeCode)
-  {
+  {    
+    switch(this.vendorTypeCode)
+    {
+      case FinancialVendorTypeCode.Manufacturers:
+          this.vendorNameTitle = "Manufacturer Name"
+          break;
+      case FinancialVendorTypeCode.Pharmacy:
+          this.vendorNameTitle = "Pharmacy Name"
+          break;
+      case FinancialVendorTypeCode.MedicalProviders:
+      case FinancialVendorTypeCode.DentalProviders:
+          this.vendorNameTitle = "Provider Name"
+          break;
+    }
    this.loadFinancialVendorsList()
   }
 }
 
 ngOnInit(): void {
-  this.bindDropdownClumns()
+  this.bindDropdownClumns() 
   if(!this.selectedColumn)
       {
         this.selectedColumn = "vendorName";
@@ -184,7 +202,7 @@ private loadFinancialVendorsList(): void {
   this.loadVendors(this.state?.skip ?? 0 ,this.state?.take ?? 0,this.sortValue , this.sortType)
 }
 loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string)
- {
+ {  
   this.loader = true;
    const gridDataRefinerValue =
    {
@@ -205,8 +223,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     const query = {
       queryParams: {
         v_id: vendorId ,
-        tab_code :  this.financeTabTypeCode,
-        vendor_type_code: this.vendorTypeCode
+        tab_code :  this.financeTabTypeCode      
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query )
@@ -301,6 +318,7 @@ public filterChange(filter: CompositeFilterDescriptor): void {
 
       this.gridDataResult = data    
       this.gridVendorsDataSubject.next(this.gridDataResult);
+      this.vendorNameTitleDataSubject.next(this.vendorNameTitle)
         if (data?.total >= 0 || data?.total === -1) {
           this.loader = false;
         }
@@ -330,5 +348,11 @@ public filterChange(filter: CompositeFilterDescriptor): void {
   
     this.loadFinancialVendorsList();
   }
+  public rowClass = (args:any) => ({
+    "preferred-yellow": (args.dataItem.preferredFlag === 'Y' && this.vendorTypeCode === 'PHARMACY'),
+  });
 
+  onClickedExport(){
+    this.exportGridDataEvent.emit(true)    
+  }
 }

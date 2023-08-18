@@ -6,8 +6,11 @@
       <span class="material-icons"> info </span>
       <p> No data found</p>
     </div>
-    <div class="flex-row" *ngIf="infoObjectValidator(vendorProfileSpecialHandling$)">    
-        <h5 *ngIf="vendorProfileSpecialHandling$">Special handling</h5>
+    <div class="flex-row" *ngIf="infoObjectValidator(vendorProfileSpecialHandling$)">  
+      <div class="flex-col">
+        <h3 *ngIf="vendorProfileSpecialHandling$">Special handling</h3>
+      </div>  
+        
       <div class="flex-col" *ngIf="vendorProfileSpecialHandling$?.physicalAddress">
         <h5>Physical Address</h5>
         <ul aria-label="preferred contact menu">

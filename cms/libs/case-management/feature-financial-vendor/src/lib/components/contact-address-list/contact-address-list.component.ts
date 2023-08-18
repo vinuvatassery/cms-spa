@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { VendorContactsFacade, ContactResponse } from '@cms/case-management/domain';
 import { LoaderService} from '@cms/shared/util-core';
+import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'cms-contact-address-list',
   templateUrl: './contact-address-list.component.html',
@@ -23,6 +24,7 @@ export class ContactAddressListComponent implements OnChanges {
   VendorContactId:any;
   VendorContactAddressId: string="";
   @Input() VendorAddressId: any;
+  public state!: State;
   showLoader() {
     this.loaderService.show();
   }

@@ -81,4 +81,9 @@ export class VendorProfileHeaderComponent {
   {
     this.loadSpecialHandlingEvent.emit()
   }
+
+  getHeaderPreferredFlag(vendorProfile : any)
+  {    
+     return vendorProfile?.preferredFlag === 'Y' ? 'preferred-heading' : ''
+  }
 }

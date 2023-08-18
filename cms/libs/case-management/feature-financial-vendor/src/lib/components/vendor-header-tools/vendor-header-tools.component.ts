@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommunicationEventTypeCode, CommunicationEvents, FinancialVendorTypeCode, ScreenType, VendorContactsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { CommunicationEvents } from 'libs/case-management/domain/src/lib/enums/communication-event.enum';
 import { Subscription } from 'rxjs';
 @Component({
   selector: 'cms-vendor-header-tools',
@@ -15,6 +16,11 @@ export class VendorHeaderToolsComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   @Input() vendorProfile$:any;
+
+  isIdCardOpened = false;
+  isSendNewLetterOpened = false;
+  isSendNewEmailOpened = false;
+  isNewSMSTextOpened = false;
   private todoDetailsDialog : any;
   private newReminderDetailsDialog : any;
   emailScreenName = ScreenType.FinancialManagementVendorPageEmail;
@@ -26,6 +32,8 @@ export class VendorHeaderToolsComponent {
   buttonList!: any[];
   private isSendNewLetterDialog : any;
   private isSendNewEmailOpenedDialog : any;
+  private isNewSMSTextOpenedDialog : any;
+  private isIdCardOpenedDialog : any;
   isSendNewLetterOpened = false;
   isSendNewEmailOpened = false;
   vendorId: any;
@@ -56,8 +64,27 @@ export class VendorHeaderToolsComponent {
       click: (templatename: any): void => {
         this.onSendNewEmailClicked(templatename);
       },
-    }
-  ];
+      {
+        buttonType: 'btn-h-primary',
+        text: 'New SMS Text',
+        icon: 'comment',
+        id: 'new_sms_text',
+        isVisible: false,
+        click: (templatename: any): void => {
+          this.onNewSMSTextClicked(templatename);
+        },
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'New ID Card',
+        icon: 'call_to_action',
+        id:'new_id_card',
+        isVisible: true,
+        click: (templatename: any): void => {
+          this.onIdCardClicked(templatename);
+        }
+      }
+    ];
 
 
   constructor(private route: Router,private activeRoute : ActivatedRoute,
@@ -146,6 +173,32 @@ export class VendorHeaderToolsComponent {
       if (value === CommunicationEvents.Close) {
         this.isSendNewEmailOpened = false;
         this.isSendNewEmailOpenedDialog.close();
+      }
+    }
+
+    onNewSMSTextClicked(template: TemplateRef<unknown>): void {
+      this.isNewSMSTextOpenedDialog = this.dialogService.open({
+        content: template,
+        cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+      });
+    }
+    handleNewSMSTextClosed(value: CommunicationEvents) {
+      if (value === CommunicationEvents.Close) {
+        this.isNewSMSTextOpenedDialog.close();
+        this.isNewSMSTextOpened = false;
+      }
+    }
+    onIdCardClicked(template: TemplateRef<unknown>): void {
+      this.isIdCardOpenedDialog = this.dialogService.open({
+        title: 'Send New ID Card',
+        content: template,
+        cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      });
+    }
+    handleIdCardClosed(result: any) {
+      if(result){
+        this.isIdCardOpened = false;
+        this.isIdCardOpenedDialog.close();
       }
     }
 

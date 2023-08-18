@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade } from '@cms/case-management/domain';
-import { Router, NavigationEnd } from '@angular/router';
+import { FinancialClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
+import { Router, NavigationEnd, ActivatedRoute  } from '@angular/router';
 import { filter } from 'rxjs';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { LoggingService } from '@cms/shared/util-core';
@@ -20,22 +20,26 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   pageSizes = this.financialClaimsFacade.gridPageSizes;
   gridSkipCount = this.financialClaimsFacade.skipCount;
   sort = this.financialClaimsFacade.sortReconcilePaymentBreakoutList;
+  sortValueBatch = this.financialClaimsFacade.sortValueReconcile;
+  sortBatch = this.financialClaimsFacade.sortReconcileList;
   state!: State;
   reconcileGridLists$ = this.financialClaimsFacade.reconcileDataList$;
   reconcileBreakoutSummary$ = this.financialClaimsFacade.reconcileBreakoutSummary$;
   reconcilePaymentBreakoutList$ = this.financialClaimsFacade.reconcilePaymentBreakoutList$;
-
+  batchId:any;
   claimsType: any;
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly router: Router,
     private readonly cdr: ChangeDetectorRef,
     private loggingService: LoggingService,
+    private readonly route: ActivatedRoute,
   ) {}
 
-  ngOnInit(): void {   
+  ngOnInit(): void { 
+    this.getQueryParams();
     this.claimsType = this.financialClaimsFacade.getClaimsType(this.router)
-    this.addNavigationSubscription();
+    this.addNavigationSubscription();    
   }
 
   private addNavigationSubscription() {
@@ -54,8 +58,13 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
       });
   }
 
-  loadReconcileListGrid(event: any) {
-    this.financialClaimsFacade.loadReconcileListGrid();
+  private getQueryParams() {
+    this.batchId = this.route.snapshot.queryParams['bid'];   
+  }
+
+  loadReconcileListGrid(event: any) {  
+    const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter)); 
+    this.financialClaimsFacade.loadReconcileListGrid(this.batchId,this.claimsType,params);    
   }
 
   loadReconcileBreakoutSummary(event: any)

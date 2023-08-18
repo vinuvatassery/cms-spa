@@ -15,12 +15,12 @@ import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { PaymentPanel } from '@cms/case-management/domain';
+import { PaymentDetail, PaymentPanel } from '@cms/case-management/domain';
+import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 @Component({
   selector: 'cms-financial-claims-batch-list-detail-items',
   templateUrl: './financial-claims-batch-list-detail-items.component.html', 
@@ -40,13 +40,23 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   @Input() paymentPanelData$:any;
   @Input() vendorId:any;
   @Input() batchId:any;
+  @Input() itemsListGridLoader$!: Observable<boolean>;
+  @Input() paymentDetails$!: Observable<PaymentDetail>;
   @Output() loadBatchItemsListEvent = new EventEmitter<any>();
   @Output() loadPaymentPanel = new EventEmitter<any>();
   @Output()  updatePaymentPanel  = new EventEmitter<PaymentPanel>();
+  @Output() getProviderPanelEvent = new EventEmitter<any>();
+  @Output() updateProviderProfileEvent = new EventEmitter<any>();
+  @Output() onEditProviderProfileEvent = new EventEmitter<any>();
+  @Input() vendorProfile$ :any;
+  @Input() updateProviderPanelSubject$:any
+  @Input() ddlStates$ :any
+  @Input() paymentMethodCode$ :any
   paymentPanelDetails:any;
   public state!: State;
-  sortColumn = 'batch';
+  sortColumn: string='creationTime';
   sortDir = 'Ascending';
+  sortColumnDesc:string = 'Entry Date';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
@@ -61,8 +71,24 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  serviceGridColumnName = ''; 
 
-  
+  gridColumns : {[key: string]: string} = {
+            clientFullName: 'Client Name',
+            nameOnInsuranceCard: 'Name on Primary Insurance Card',
+            paymentStatus: 'Payment Status',
+            clientId: 'Member ID',
+            serviceStartDate: 'Service Date',
+            cptCode: 'CPT Code',
+            serviceDesc:'',
+            serviceCost: 'Service Cost',
+            amountDue: 'Client Co-Pay',
+            creationTime: 'Entry Date',
+            invoiceNbr:'Invoice ID'
+          };
+    
+  paymentStatusList = ['SUBMITTED', 'PENDING_APPROVAL', 'DENIED', 'MANAGER_APPROVED', 'PAYMENT_REQUESTED', 'ONHOLD', 'FAILED', 'PAID'];
+  paymentStatusFilter = '';
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService, 
     public activeRoute: ActivatedRoute,
@@ -71,6 +97,9 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
     }
   
   ngOnInit(): void { 
+    this.serviceGridColumnName = this.claimsType.charAt(0).toUpperCase() + this.claimsType.slice(1);
+    this.gridColumns['serviceDesc'] = `${this.serviceGridColumnName} Service`;
+    this.initializeGridState();
     this.loadBatchLogItemsListGrid();   
    
   }
@@ -80,16 +109,9 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
       this.cd.detectChanges();
     })
 
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
-
-    this.loadBatchLogItemsListGrid();
+    this.initializeGridState();
     this.loadPaymentPanel.emit(true);
   }
-
 
   private loadBatchLogItemsListGrid(): void {
     this.loadBatchLogItems(
@@ -111,9 +133,9 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter: this.filter
     };
     this.loadBatchItemsListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
   }
  
   
@@ -159,6 +181,9 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumn = stateData.sort[0]?.field;
+    this.sortColumnDesc = this.gridColumns[this.sortColumn];
+    this.filter = stateData?.filter?.filters;
     this.loadBatchLogItemsListGrid();
   }
 
@@ -173,25 +198,23 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
     this.filterData = filter;
   }
 
-  gridDataHandle() {
-    this.batchItemsGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridClaimsBatchLogItemsDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
-        this.isBatchLogItemsGridLoaderShow = false;
-      }
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    this.paymentStatusFilter = value;
+    filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value:value
+      }],
+        logic: "or"
     });
-    this.isBatchLogItemsGridLoaderShow = false;
   }
 
   backToBatchLog(event : any){  
-    this.route.navigate(['/financial-management/claims/' + this.claimsType +'/batch'] );
+    const batchId = this.activeRoute.snapshot.queryParams['bid'];
+    this.route.navigate([`/financial-management/claims/${this.claimsType}/batch`],
+    { queryParams :{bid: batchId}});
   }
-
 
   onViewProviderDetailClicked(  template: TemplateRef<unknown>): void {   
     this.providerDetailsDialog = this.dialogService.open({
@@ -226,5 +249,26 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   }
   updatePaymentPanelRecord(paymentPanel:PaymentPanel){
     this.updatePaymentPanel.emit(paymentPanel);
+  }
+  
+  getProviderPanel(event:any){
+    this.getProviderPanelEvent.emit('5449D739-5C70-446B-8269-13A862FE771F')
+  }
+
+  updateProviderProfile(event:any){
+    this.updateProviderProfileEvent.emit(event)
+  }
+
+  OnEditProviderProfileClick(){
+   this.onEditProviderProfileEvent.emit()
+  }
+
+  private initializeGridState(){
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: [{ field: 'creationTime', dir: 'desc' }],
+    };
+    this.sortColumnDesc = 'Entry Date';
   }
 }
