@@ -43,18 +43,24 @@
               </kendo-floatinglabel>
             </div>
             <div class="flex-col">
-              <kendo-floatinglabel text="Phone Number (optional)">
-                <kendo-textbox aria-label="Phone Number (optional)" formControlName="phoneNbr"
-                  [fillMode]="formUiStyle.inputFillMode">
-                </kendo-textbox>
+              <kendo-floatinglabel text="Phone Number (optional)">             
+                <kendo-maskedtextbox [maxlength]="10"  placeholder="Phone Number (optional)"  mask="(999) 000-0000" aria-label="Phone Number (optional)" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="phoneNbr">
+      </kendo-maskedtextbox>
               </kendo-floatinglabel>
+              <kendo-formerror *ngIf="isSubmitted && getContactControl(i, 'phoneNbr')?.errors?.['pattern']">
+                Contact's Phone Number must have 10 digits
+              </kendo-formerror>
             </div>
             <div class="flex-col mb-1">
               <kendo-floatinglabel text="Fax (optional)">
-                <kendo-textbox aria-label="Fax (optional)" formControlName="faxNbr"
-                  [fillMode]="formUiStyle.inputFillMode">
-                </kendo-textbox>
+                <kendo-maskedtextbox [maxlength]="10" aria-label="Fax (optional)" placeholder="Fax (optional)" mask="(999) 000-0000" [fillMode]="formUiStyle.inputFillMode"
+                formControlName="faxNbr">
+            </kendo-maskedtextbox>
               </kendo-floatinglabel>
+              <kendo-formerror *ngIf="isSubmitted && getContactControl(i, 'faxNbr')?.errors?.['pattern']">
+                Contact's Fax must have 10 digits
+              </kendo-formerror>
             </div>
 
             <div class="flex-col mb-1">
@@ -63,8 +69,27 @@
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>
+              <kendo-formerror *ngIf="isSubmitted && getContactControl(i, 'emailAddress')?.errors?.['pattern']">
+                Not a valid email format
+              </kendo-formerror>
             </div>
-
+            <div class="flex-col mb-1  mt-checkbox">
+              <div class="component-list-h">
+                <span class="app-checkboxwidtext-wrapper" role="group">
+                  <input
+                    type="checkbox"
+                    kendoCheckBox
+                    aria-labelledby="AddressesshowHistorical"
+                   value="Y" name="isPreferredContact" id="isPreferredContactno" 
+                    (change)="OncheckboxClick($event,i)" formControlName="isPreferredContact"
+                  />
+                  <label class="k-checkbox-label" for="isPreferredContactYes">Prefered Contact </label 
+                  >
+                </span>
+              
+               
+              </div>
+            </div>
           </ng-container>
         </ng-container>
         <div class="flex-col"  *ngIf="this.contactAddress.vendorContactId==null">
