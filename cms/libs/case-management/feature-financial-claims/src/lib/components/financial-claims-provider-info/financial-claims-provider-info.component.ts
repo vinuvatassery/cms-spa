@@ -6,7 +6,7 @@ import {
   Input,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
@@ -18,7 +18,6 @@ import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
 })
 export class FinancialClaimsProviderInfoComponent {
   @Output() closeViewProviderDetailClickedEvent = new EventEmitter();
-  @Input() vendorId: any
   @Output() getProviderPanelEvent = new EventEmitter<any>();
   @Output() updateProviderProfileEvent = new EventEmitter<any>();
   @Output() onEditProviderProfileEvent = new EventEmitter<any>();
@@ -48,23 +47,28 @@ export class FinancialClaimsProviderInfoComponent {
     contacts: new FormArray([])
   })
   isSubmitted: boolean = false
+  paymentRequestId:any
   constructor(public formBuilder: FormBuilder, 
-
+    public activeRoute: ActivatedRoute,
     private route: Router) {
 
   }
 
   ngOnInit(): void {
-  
+   this.paymentRequestId= this.activeRoute.snapshot.queryParams['iid'];
     this.loadVendorInfo()
   }
 
   loadVendorInfo() {
     this.vendorProfile$?.subscribe(res => {
+      if(res){
       this.vendorProfiles = res;
+      }else{
+        this.closeViewProviderClicked()
+      }
     })
 
-    this.getProviderPanelEvent.emit('5449D739-5C70-446B-8269-13A862FE771F')
+    this.getProviderPanelEvent.emit(this.paymentRequestId)
   }
 
 
@@ -217,6 +221,8 @@ export class FinancialClaimsProviderInfoComponent {
     if(res){
         this.isEditProvider = !this.isEditProvider
         this.loadVendorInfo();
+      }else{
+        this.closeViewProviderClicked()
       }      
     });
   }

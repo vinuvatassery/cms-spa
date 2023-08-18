@@ -72,10 +72,10 @@ export class FinancialVendorDataService {
   }
 
   
-  getProviderPanel(vendorId:string){
+  getProviderPanel(paymentRequestId:string){
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/vendors?vendorId=${vendorId}`
+        `/financial-management/vendors?paymentRequestId=${paymentRequestId}`
     );
   }
 
