@@ -1,0 +1,60 @@
+<div class="app-c-table">
+      <kendo-grid [resizable]="true"  
+             [sortable]="true"   
+           [resizable]="true" [columnMenu]="{ filter: true }"
+              
+            [data]="recentClaimsGridLists$ | async">
+           
+            <kendo-grid-column field="clientName" title="Client Name" [width]="160">
+              
+            </kendo-grid-column>
+        
+            <kendo-grid-column field="nameOnPrimaryInsuranceCard" title="Name on Primary Insurance Card" [width]="200">
+            </kendo-grid-column>
+            <kendo-grid-column field="memberID" title="Member ID" [width]="120"> </kendo-grid-column>
+            <kendo-grid-column field="RXNumber" title="RX Number" [width]="160"> </kendo-grid-column>
+            <kendo-grid-column field="FillDate" title="Fill Date" [width]="120"> </kendo-grid-column>
+            <kendo-grid-column field="ndcCode" title="NDC Code" [width]="120"> </kendo-grid-column>
+            <kendo-grid-column field="brandName" title="Brand Name" [width]="160"> </kendo-grid-column>
+            <kendo-grid-column field="drugName" title="Drug Name" [width]="120"> </kendo-grid-column>
+            <kendo-grid-column field="paymentType" title="Payment Type" [width]="120"> </kendo-grid-column>
+            <kendo-grid-column field="amountPaid" title="Amount Paid" [width]="120"> <ng-template kendoGridCellTemplate
+                let-dataItem>
+                <span class="tableamountview"> <strong>$</strong> {{dataItem.amountPaid}}</span>
+              </ng-template></kendo-grid-column>
+            <kendo-grid-column field="rxQty" title="RX Qty." [width]="120"> </kendo-grid-column>
+            <kendo-grid-column field="rxType" title="RX Type" [width]="120"> </kendo-grid-column>
+            <kendo-grid-column field="rxDaysSupply" title="RX Days Supply" [width]="120"> </kendo-grid-column>
+            <kendo-grid-column field="indexCode" title="Index Code" [width]="120"> </kendo-grid-column>
+            <kendo-grid-column field="pcaCode" title="PCA Code" [width]="120"> </kendo-grid-column>
+            <kendo-grid-column field="objectCode" title="Object Code" [width]="120"> </kendo-grid-column>
+            <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="120"> </kendo-grid-column>
+            <kendo-grid-column field="warrantNumber" title="Warrant Number" [width]="120"> </kendo-grid-column>
+            <kendo-grid-column field="entryDate" title="Entry Date" [width]="120"> </kendo-grid-column>
+
+            <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true">
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                    <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
+                      [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
+                      <common-user-photo-icon></common-user-photo-icon>
+                    </button>
+                    <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+                      <ng-template kendoPopoverBodyTemplate>
+                        <common-user-profile-card></common-user-profile-card>
+                      </ng-template>
+                    </kendo-popover>
+                  </ng-template>
+                </kendo-grid-column>
+             <ng-template kendoGridLoadingTemplate>
+                  <common-grid-loader-component></common-grid-loader-component>
+            </ng-template>
+            <!-- grid No data Template -->
+            <ng-template kendoGridNoRecordsTemplate>
+                  <div> <kendo-badge-container> <span class="material-icons"> info </span>
+                        </kendo-badge-container>
+                  </div>
+                  <p>There is no data to display.</p>
+            </ng-template>
+
+      </kendo-grid>
+</div>

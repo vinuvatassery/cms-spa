@@ -14,17 +14,19 @@ export class FinancialVendorDataService {
   ) {}
 
   /** Public methods **/
-  getVendors(
-    skipcount: number,
-    maxResultCount: number,
-    sort: string,
-    sortType: string,
-    vendorTypeCode: string
-  ) {
-    return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/vendors/?VendorTypeCode=${vendorTypeCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
-    );
+  getVendors(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, vendorTypeCode: string,filter : string ) 
+  {
+    const VendorPageAndSortedRequest =
+    {
+      vendorTypeCode: vendorTypeCode,
+      SortType : sortType,
+      Sorting : sort,
+      SkipCount : skipcount,
+      MaxResultCount : maxResultCount,
+      Filter : filter
+    }
+
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors`, VendorPageAndSortedRequest);
   }
 
   getVendorDetails(vendorId: string) {
@@ -70,6 +72,20 @@ export class FinancialVendorDataService {
   }
 
   
+  getProviderPanel(vendorId:string){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors?vendorId=${vendorId}`
+    );
+  }
+
+  updateProviderPanel(providePanelDto:any){
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors/profile`,providePanelDto
+    );
+  }
+
   getVendorProfileSpecialHandling(vendorId: string) {  
 
     return this.http.get<any>(
@@ -78,7 +94,7 @@ export class FinancialVendorDataService {
     );
   }
 
-  
+
   addVendorProfile(vendorProfile:any) {
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
@@ -102,7 +118,12 @@ export class FinancialVendorDataService {
       );
   }
 
-
+  loadVendorList(vendorTypeCode:string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/financial-management/vendors/vendorType/${vendorTypeCode}`
+    );
+  }
 
 
 }

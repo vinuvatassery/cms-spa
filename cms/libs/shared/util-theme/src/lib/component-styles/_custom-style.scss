@@ -61,6 +61,9 @@
   @media (max-height:400px) {
     position: relative;
   }
+  @media (max-height:400px) {
+    position: relative;
+  }
   .k-breadcrumb {
     background: transparent;
   }
@@ -359,7 +362,11 @@ color: $app-primary-font-color;
   justify-content: center;
   display: flex;
   cursor: default;
-
+&.posi_relative{
+  position: relative;
+  display: inline-flex;
+  vertical-align: sub;
+}
   .material-icons {
     color: $white;
     font-size: $font-size-l;
@@ -971,6 +978,9 @@ color: $app-primary-font-color;
     justify-content: flex-end;
     gap: 10px;
   }
+  .app-c-table .k-grid-content, .k-grid .k-grid-content{
+    max-height: 80px;
+  }
 }
 .sub-fix-bar{
   padding: 8px 20px 16px 20px;
@@ -1152,4 +1162,42 @@ color: $app-primary-font-color;
   .k-button{
     min-height: 38px;
   }
+}
+.search-with-btn{
+  margin-left: .8rem;
+  margin-top: 1.7rem;
+}
+.search-with-addbtn{
+  position: fixed;
+  top: 80px;
+  right: 20px;
+}
+.add-new-button-common {
+  float: right;
+  position: absolute;
+  top: 40px;
+  right: 30px;
+} 
+
+
+.table-text-area{
+  textarea{
+    height: 35px;
+    resize: vertical;
+    line-height: normal;
+  }
+}
+ .table-filter-with-dropdown{
+  display: grid;
+  grid-template-columns: 200px auto 200px 200px;
+ }
+ .fixed-height-input{
+  .k-selection-multiple{
+    height: 39px;
+  }
+
+ }
+
+.preferred-heading{
+  border-left:3px solid material-color($hive-canyon-palette, A700) !important;
 }

@@ -182,6 +182,9 @@
           <kendo-textbox aria-label="Name on Check" [fillMode]="formUiStyle.inputFillMode"
             formControlName="nameOnCheck">
           </kendo-textbox>
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['nameOnCheck'].valid && isValidateForm">
+            Name on Check is required
+          </kendo-formerror>
         </kendo-floatinglabel>
       </div>
 
@@ -190,6 +193,9 @@
           <kendo-textbox aria-label="Name on Envelop" [fillMode]="formUiStyle.inputFillMode"
             formControlName="nameOnEnvolop">
           </kendo-textbox>
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['nameOnEnvolop'].valid && isValidateForm">
+            Name on Envelop is required
+          </kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">

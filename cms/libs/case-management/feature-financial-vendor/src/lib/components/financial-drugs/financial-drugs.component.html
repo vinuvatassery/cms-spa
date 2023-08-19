@@ -1,24 +1,40 @@
 <div>
     <div class="flex-col flex-space-bw align-items-center">
         <h5 class="title-md mb-0 text-capital">Drugs</h5>
-       
+
     </div>
     <div class="flex-col mt-1">
         <div class="app-c-table">
             <kendo-grid [resizable]="true" [loading]="isDrugsGridLoaderShow" [pageSize]="state.take" [pageable]="true"
             [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-            [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [data]="drugsGridView$ | async">
+            [columnMenu]="{ filter: false }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [data]="drugsData$ | async"
+            (columnVisibilityChange)="columnChange($event)">
 
-                <kendo-grid-column field="NDC" title="NDC" [width]="150"> </kendo-grid-column> 
+                <kendo-grid-column field="ndcNbr" title="NDC" [width]="150"> </kendo-grid-column>
                 <kendo-grid-column field="brandName" title="Brand Name" [width]="100"> </kendo-grid-column>
-                <kendo-grid-column field="drugName" title="Brand Name" [width]="100"> </kendo-grid-column>
-                <kendo-grid-column field="deliveryMethod" title="Brand Name" [width]="100"> </kendo-grid-column>
-                <kendo-grid-column field="includedInRebates" title="Brand Name" [width]="100"> </kendo-grid-column>
-                <kendo-grid-column field="hivDrugs" title="Brand Name" [width]="100"> </kendo-grid-column>
-                <kendo-grid-column field="hepDrugs" title="Brand Name" [width]="100"> </kendo-grid-column>
-                <kendo-grid-column field="oiDrugs" title="Brand Name" [width]="100">   </kendo-grid-column>
-
-                <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="75" class="text-center">
+                <kendo-grid-column field="drugName" title="Drug Name" [width]="100"> </kendo-grid-column>
+                <kendo-grid-column field="deliveryMethodCode" title="Delivery Method" [width]="100"> </kendo-grid-column>
+                <kendo-grid-column field="includeInManufacturerRebatesFlag" title="Included in rebates?" [width]="100">
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem.includeInManufacturerRebatesFlag | yesOrNo }}
+                  </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column field="hiv" title="HIV Drugs?" [width]="100">
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem.hiv | yesOrNo }}
+                  </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column field="hepatitis" title="Hep Drugs?" [width]="100">
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem.hepatitis | yesOrNo }}
+                  </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column field="opportunisticInfection" title="OI Drugs?" [width]="100">
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem.opportunisticInfection | yesOrNo }}
+                  </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column [sortable]="false" field="Option" title=" " [columnMenu]="false" [width]="75" class="text-center">
                     <ng-template kendoGridCellTemplate let-dataItem>
                       <kendo-dropdownbutton [data]="emailBillingAddressActions" icon="more-vertical"
                         class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -33,10 +49,10 @@
                               <label> {{ buttondataItem.text }} </label>
                             </button>
                           </ng-container>
-          
-          
-          
-          
+
+
+
+
                         </ng-template>
                       </kendo-dropdownbutton>
                     </ng-template>
@@ -73,15 +89,19 @@
             </kendo-grid>
         </div>
     </div>
-
+    <div class="flex-col mt-1">
+      <button kendoButton [primary]="true" icon="add" aria-label="add" (click)="clickOpenAddEditFinancialDrugsDetails('Add')">
+        Drugs
+      </button>
+    </div>
 </div>
 
 
 <kendo-dialog *ngIf="isFinancialDrugsDetailShow" (close)="clickCloseAddEditFinancialDrugsDetails()"
 class="app-c-modal app-c-modal-sm app-c-modal-np">
-<kendo-dialog-titlebar (close)="clickCloseAddEditFinancialDrugsDetails()">  Edit Drugs
+<kendo-dialog-titlebar (close)="clickCloseAddEditFinancialDrugsDetails()">  {{dialogTitle}} Drug
 </kendo-dialog-titlebar>
-<cms-financial-drugs-details> </cms-financial-drugs-details>
+<cms-financial-drugs-details [vendorId]="vendorId" [dialogTitle]="dialogTitle" [vendorDetails$]="vendorDetails$" (close)="clickCloseAddEditFinancialDrugsDetails()"> </cms-financial-drugs-details>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isFinancialDrugsReassignShow" (close)="clickCloseReassignFinancialDrugs()"
@@ -95,4 +115,3 @@ class="app-c-modal app-c-modal-sm app-c-modal-np">
 <cms-financial-drugs-deactivate> </cms-financial-drugs-deactivate>
 </kendo-dialog>
 
- 

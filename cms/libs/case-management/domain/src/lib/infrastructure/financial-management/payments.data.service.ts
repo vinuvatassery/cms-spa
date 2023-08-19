@@ -59,5 +59,18 @@ export class PaymentsDataService {
       },
     ]);
   }
+
+  loadPaymentPanel(vendorId:any,batchId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/batches/${batchId}`);
+  }
+  updatePaymentPanel(vendorId:any,batchId:any,paymentPanel:any){
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}`+
+      `/financial-management/vendors/${vendorId}/batches/${batchId}`     
+    ,paymentPanel);
+  }
  
+  loadPaymentDetails(paymentId: string, type: string){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payments/${paymentId}?type=${type}`);
+  }
 }

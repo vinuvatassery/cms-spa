@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { VendorContactsFacade, ContactResponse } from '@cms/case-management/domain';
 import { LoaderService} from '@cms/shared/util-core';
+import { State } from '@progress/kendo-data-query';
 @Component({
   selector: 'cms-contact-address-list',
   templateUrl: './contact-address-list.component.html',
@@ -23,6 +24,7 @@ export class ContactAddressListComponent implements OnChanges {
   VendorContactId:any;
   VendorContactAddressId: string="";
   @Input() VendorAddressId: any;
+  public state!: State;
   showLoader() {
     this.loaderService.show();
   }
@@ -33,7 +35,7 @@ export class ContactAddressListComponent implements OnChanges {
   public contactAddressActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Address',
+      text: 'Edit Contact',
       icon: 'edit',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -44,7 +46,7 @@ export class ContactAddressListComponent implements OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Deactivate Address',
+      text: 'Deactivate Contact',
       icon: 'block',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -56,7 +58,7 @@ export class ContactAddressListComponent implements OnChanges {
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Address',
+      text: 'Delete Contact',
       icon: 'delete',
       click: (data: any): void => {
         if (data?.vendorContactId) {

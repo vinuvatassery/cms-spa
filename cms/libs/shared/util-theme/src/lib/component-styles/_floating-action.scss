@@ -56,6 +56,9 @@
     .card-list{
       max-width: 100%;
     }
+    &.sidePanel-direct-messages{
+      height: calc(100vh - 110px);
+    }
   }
 }
 .k-fab-items {

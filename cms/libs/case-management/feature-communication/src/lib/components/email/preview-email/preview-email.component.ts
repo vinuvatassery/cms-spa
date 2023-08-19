@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input} from '@angular/core';
 
 @Component({
   selector: 'case-management-preview-email',
@@ -10,4 +10,5 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 export class PreviewEmailComponent {
   /** Input properties **/
   @Input() emailContent!: any;
+  @Input() paperlessFlag! : any
 }

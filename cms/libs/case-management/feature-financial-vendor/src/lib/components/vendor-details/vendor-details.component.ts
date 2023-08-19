@@ -61,8 +61,7 @@ export class VendorDetailsComponent implements OnInit {
     else {
       this.contactFacade.loadDdlStates();
       this.getPaymentMethods();
-        this.getPaymentRunDate();
-        this.fillFormData();
+      this.getPaymentRunDate();
     }
   }
 
@@ -152,6 +151,19 @@ fillFormData(){
     }
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if (mailCode) {
+      
+      this.medicalProviderForm.controls['nameOnCheck']
+        .setValidators([
+          Validators.required,
+        ]);
+      this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
+
+      this.medicalProviderForm.controls['nameOnEnvolop']
+      .setValidators([
+        Validators.required,
+      ]);
+      this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
+
       this.medicalProviderForm.controls['addressLine1']
         .setValidators([
           Validators.required,
@@ -253,34 +265,8 @@ fillFormData(){
         }
       })
     }
-    let vendorProfileData = {
-      vendorId: formValues.vendorId,
-      vendorName: formValues.providerName,
-      firstName: formValues.firstName,
-      lastName: formValues.lastName,
-      vendorTypeCode: this.providerType,
-      tin: formValues.tinNumber,
-      mailCode: formValues.mailCode,
-      addressTypeCode: AddressType.Mailing,
-      address1: formValues.addressLine1,
-      address2: formValues.addressLine2,
-      cityCode: formValues.city,
-      stateCode: formValues.state,
-      zip: formValues.zip,
-      nameOnCheck: formValues.nameOnCheck,
-      nameOnEnvelope: formValues.nameOnEnvolop,
-      paymentMethodCode: formValues.paymentMethod,
-      specialHandling: formValues.specialHandling,
-      phoneTypeCode: AddressType.Mailing,
-      vendorContacts: this.vendorContactList,
-      AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,
-      AcceptsCombinedPaymentsFlag: (formValues.isAcceptCombinedPayment != null && formValues.isAcceptCombinedPayment != '') ? formValues.isAcceptCombinedPayment : null,
-      PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? Number(formValues.paymentRunDate) : null,
-      PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes,
-      emailAddressTypeCode: AddressType.Mailing
-    }
     this.mapAddressContact(formValues);
-    vendorProfileData = this.createVendorProfileData(formValues)
+    const vendorProfileData = this.createVendorProfileData(formValues)
     return vendorProfileData;
   }
 
@@ -431,7 +417,7 @@ fillFormData(){
       AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,
       AcceptsCombinedPaymentsFlag: (formValues.isAcceptCombinedPayment != null && formValues.isAcceptCombinedPayment != '') ? formValues.isAcceptCombinedPayment : null,
       PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? Number(formValues.paymentRunDate) : null,
-      PreferredFlag: (formValues.isPreferedPharmacy) ?? StatusFlag.Yes,
+      PreferredFlag: (formValues.isPreferedPharmacy) ? StatusFlag.Yes:StatusFlag.No,
       emailAddressTypeCode: AddressType.Mailing
     }
     return vendorProfileData;

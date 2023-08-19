@@ -65,7 +65,7 @@ export class FinancialVendorPageComponent implements OnInit {
   sortValue = this.financialVendorFacade.sortValue;
   sortType = this.financialVendorFacade.sortType;
   sort = this.financialVendorFacade.sort;
-
+  selectedVendorType = this.financialVendorFacade.selectedVendorType
   constructor(private caseFacade: CaseFacade, private financialVendorFacade: FinancialVendorFacade,
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
@@ -115,9 +115,9 @@ export class FinancialVendorPageComponent implements OnInit {
     this.isVendorDetailFormShow = false;
   }
 
-  loadFinancialVendorsList(data: any) {
-
-    this.financialVendorFacade.getVendors(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.vendorTypeCode)
+  loadFinancialVendorsList(data: any) {    
+    this.financialVendorFacade.selectedVendorType = data?.vendorTypeCode
+    this.financialVendorFacade.getVendors(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.vendorTypeCode, data?.filter)
   }
 
   buildVendorForm() {
@@ -195,5 +195,12 @@ export class FinancialVendorPageComponent implements OnInit {
     this.buildVendorForm();
     this.providerTypeCode = FinancialVendorTypeCode.Manufacturers;
     this.isShowManufacturers = true;
+  }
+
+
+  exportGridData(data: any){
+    if(data){
+      this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Files Exported Successfully')
+    }
   }
 }

@@ -42,10 +42,32 @@ const routes: Routes = [
     },
   },
   {
-    path: 'medical-claims',
+    path: 'claims/:type',
     loadChildren: () =>
-      import('@cms/case-management/feature-financial-medical-claims').then(
-        (m) => m.CaseManagementFeatureFinancialMedicalClaimsModule
+      import('@cms/case-management/feature-financial-claims').then(
+        (m) => m.CaseManagementFeatureFinancialClaimsModule
+      ),
+    data: {
+      title: null, 
+    },
+  },
+
+  {
+    path: 'premiums/:type',
+    loadChildren: () =>
+      import('@cms/case-management/feature-financial-premiums').then(
+        (m) => m.CaseManagementFeatureFinancialPremiumsModule
+      ),
+    data: {
+      title: null, 
+    },
+  },
+ 
+  {
+    path: 'pharmacy-claims',
+    loadChildren: () =>
+      import('@cms/case-management/feature-financial-pharmacy-claims').then(
+        (m) => m.CaseManagementFeatureFinancialPharmacyClaimsModule
       ),
     data: {
       title: null,
@@ -66,46 +88,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('@cms/case-management/feature-financial-pcas').then(
         (m) => m.CaseManagementFeatureFinancialPcasModule
-      ),
-    data: {
-      title: null,
-    },
-  },
-  {
-    path: 'insurance-premiums',
-    loadChildren: () =>
-      import('@cms/case-management/feature-financial-insurance-premiums').then(
-        (m) => m.CaseManagementFeatureFinancialInsurancePremiumsModule
-      ),
-    data: {
-      title: null,
-    },
-  },
-  {
-    path: 'dental-claims',
-    loadChildren: () =>
-      import('@cms/case-management/feature-financial-dental-claims').then(
-        (m) => m.CaseManagementFeatureFinancialDentalClaimsModule
-      ),
-    data: {
-      title: null,
-    },
-  },
-  {
-    path: 'dental-premiums',
-    loadChildren: () =>
-      import('@cms/case-management/feature-financial-dental-premiums').then(
-        (m) => m.CaseManagementFeatureFinancialDentalPremiumsModule
-      ),
-    data: {
-      title: null,
-    },
-  },
-  {
-    path: 'pharmacy-claims',
-    loadChildren: () =>
-      import('@cms/case-management/feature-financial-pharmacy-claims').then(
-        (m) => m.CaseManagementFeatureFinancialPharmacyClaimsModule
       ),
     data: {
       title: null,

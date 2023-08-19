@@ -11,7 +11,7 @@
         <kendo-grid-column field="providerName" title="Insurance Provider" [width]="100"> </kendo-grid-column>
         <kendo-grid-column field="insurancePlanCount" title="# Of Active Plans" [width]="50"> </kendo-grid-column>
         <kendo-grid-column field="clientCount" title="# Of Active Clients" [width]="50"> </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="20">
+        <kendo-grid-column field="by" title="By" [width]="20" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">

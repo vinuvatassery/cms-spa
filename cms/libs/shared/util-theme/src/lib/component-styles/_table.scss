@@ -28,6 +28,20 @@ $pagination-height : 48px;
   .k-header-column-menu,
   .k-header .k-icon {
     color: $white;
+  } 
+  tr.preferred-yellow {
+    td{
+     &:first-child{
+       border-left:3px solid material-color($hive-canyon-palette, A700) !important;
+     }
+    }    
+   }
+  .k-table-row{
+    &.k-selected {
+      > td,  > .k-table-td{
+        background:  material-color($hive-primary-palette, 50) !important;
+      }
+    }
   }
 
   th,
@@ -789,6 +803,12 @@ table,
   }
 }
 
+.table-row-orange {
+
+  td {
+    background-color:  material-color($hive-warn-palette, 100);
+  }
+}
 .k-grid-norecords {
   background: $white;
 
