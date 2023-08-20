@@ -104,7 +104,6 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   }
 
   updateProviderProfile(event:any){
-    console.log(event)
     this.financialVendorFacade.updateProviderPanel(event)
   }
 

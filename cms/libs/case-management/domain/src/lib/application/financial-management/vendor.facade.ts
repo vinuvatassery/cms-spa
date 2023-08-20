@@ -141,7 +141,6 @@ export class FinancialVendorFacade {
       },
       error: (err) => {
         this.hideLoader();
-        this.providePanelSubject.next(false);  
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
@@ -158,7 +157,6 @@ export class FinancialVendorFacade {
       },
       error: (err) => {
         this.hideLoader();
-        this.updateProviderPanelSubject.next(false)
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     })

@@ -9,7 +9,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, take } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-claims-provider-info',
@@ -28,7 +28,7 @@ export class FinancialClaimsProviderInfoComponent {
   @Input() ddlStates$ : Observable<any> | undefined;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isEditProvider = false;
-  vendorProfiles: any
+  vendorProfile: any
   showAddressValidationLoader$= new BehaviorSubject(false);
   @Input() paymentMethodCode$ : Observable<any> | undefined;
   profileForm = this.formBuilder.group({
@@ -61,11 +61,8 @@ export class FinancialClaimsProviderInfoComponent {
 
   loadVendorInfo() {
     this.vendorProfile$?.subscribe(res => {
-      if(res){
-      this.vendorProfiles = res;
-      }else{
-        this.closeViewProviderClicked()
-      }
+      this.vendorProfile = res;
+      this.isEditProvider = !this.isEditProvider
     })
 
     this.getProviderPanelEvent.emit(this.paymentRequestId)
@@ -101,8 +98,11 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   createContactsFormArray() {
-    const contacts =  this.profileForm.get('contacts') as FormArray
-    this.vendorProfiles.address.contacts.forEach((contact: any, index: number) => {
+    var contacts =  this.profileForm.get('contacts') as FormArray
+    while (contacts.length !== 0) {
+      contacts.removeAt(0)
+    }
+    this.vendorProfile.address.contacts.forEach((contact: any, index: number) => {
        contacts.push(
         this.formBuilder.group({
           contactName: [contact.contactName,Validators.required],
@@ -120,17 +120,17 @@ export class FinancialClaimsProviderInfoComponent {
     this.onEditProviderProfileEvent.emit()
     this.isEditProvider = !this.isEditProvider
     this.profileForm.patchValue({
-      tin: this.vendorProfiles.tin,
+      tin: this.vendorProfile.tin,
       address: {
-        vendorAddressId: this.vendorProfiles.address.vendorAddressId,
-        address1: this.vendorProfiles.address.address1,
-        address2: this.vendorProfiles.address.address2,
-        cityCode: this.vendorProfiles.address.cityCode,
-        stateCode: this.vendorProfiles.address.stateCode,
-        zip: this.vendorProfiles.address.zip,
-        mailCode: this.vendorProfiles.address.mailCode,
-        specialHandlingDesc: this.vendorProfiles.address.specialHandlingDesc,
-        paymentMethod: this.vendorProfiles.address.paymentMethodCode,
+        vendorAddressId: this.vendorProfile.address.vendorAddressId,
+        address1: this.vendorProfile.address.address1,
+        address2: this.vendorProfile.address.address2,
+        cityCode: this.vendorProfile.address.cityCode,
+        stateCode: this.vendorProfile.address.stateCode,
+        zip: this.vendorProfile.address.zip,
+        mailCode: this.vendorProfile.address.mailCode,
+        specialHandlingDesc: this.vendorProfile.address.specialHandlingDesc,
+        paymentMethod: this.vendorProfile.address.paymentMethodCode,
       
       }
     });
@@ -202,10 +202,10 @@ export class FinancialClaimsProviderInfoComponent {
         return;
     }
     let providerPanelDto = {
-      vendorId: this.vendorProfiles.vendorId,
+      vendorId: this.vendorProfile.vendorId,
       tin: this.profileForm?.controls['tin'].value,
       Address: {
-        vendorAddressId: this.vendorProfiles.address.vendorAddressId,
+        vendorAddressId: this.vendorProfile.address.vendorAddressId,
         specialHandlingDesc: this.profileForm?.controls.address.controls['specialHandlingDesc']?.value,
         paymentMethodCode: this.profileForm?.controls.address.controls['paymentMethod']?.value,
         address1: this.profileForm?.controls.address.controls['address1']?.value,
@@ -217,13 +217,8 @@ export class FinancialClaimsProviderInfoComponent {
       }    
     }
     this.updateProviderProfileEvent.emit(providerPanelDto)
-    this.updateProviderPanelSubject$?.subscribe(res=>{    
-    if(res){
-        this.isEditProvider = !this.isEditProvider
-        this.loadVendorInfo();
-      }else{
-        this.closeViewProviderClicked()
-      }      
+    this.updateProviderPanelSubject$?.pipe(take(1)).subscribe(res=>{       
+        this.loadVendorInfo(); 
     });
   }
 
@@ -239,7 +234,7 @@ export class FinancialClaimsProviderInfoComponent {
   onVendorProfileViewClicked() {
     const query = {
       queryParams: {
-        v_id: this.vendorProfiles.vendorId
+        v_id: this.vendorProfile.vendorId
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query)
