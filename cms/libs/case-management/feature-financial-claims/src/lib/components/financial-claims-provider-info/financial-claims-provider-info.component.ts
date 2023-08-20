@@ -62,7 +62,7 @@ export class FinancialClaimsProviderInfoComponent {
   loadVendorInfo() {
     this.vendorProfile$?.subscribe(res => {
       this.vendorProfile = res;
-      this.isEditProvider = !this.isEditProvider
+      this.isEditProvider = false
     })
 
     this.getProviderPanelEvent.emit(this.paymentRequestId)
@@ -77,23 +77,43 @@ export class FinancialClaimsProviderInfoComponent {
 
   createEmailsFormArray(contact: any): FormArray {
     let emails = new FormArray<FormGroup>([])
+   
+    if(contact.emails && contact.emails.length===0){
+       emails.push(this.formBuilder.group({
+        emailAddress: ['',Validators.required],
+        vendorContactEmailId: null,
+        vendorContactId: contact.vendorContactId
+      }));
+    }
+    else{
     contact.emails.forEach((email: any) => {
       return emails.push(this.formBuilder.group({
         emailAddress: [email.emailAddress,Validators.required],
         vendorContactEmailId: email.vendorContactEmailId
       }));
     })
+  }
     return emails;
   }
 
   createPhonesFormArray(contact: any): FormArray {
     let phones = new FormArray<FormGroup>([])
+
+    if(contact.phones && contact.phones.length===0){
+      phones.push(this.formBuilder.group({
+        phoneNbr: ['',Validators.required],
+        vendorContactPhoneId: null,
+        vendorContactId: contact.vendorContactId,
+     }));
+   }
+   else{
     contact.phones.forEach((phone: any) => {
       return phones.push(this.formBuilder.group({
         phoneNbr: [phone.phoneNbr,Validators.required],
         vendorContactPhoneId: phone.vendorContactPhoneId
       }));
     })
+  }
     return phones;
   }
 
@@ -176,7 +196,8 @@ export class FinancialClaimsProviderInfoComponent {
       let emailForm = control as unknown as FormGroup
       emails.push({
         emailAddress: emailForm.controls['emailAddress']?.value,
-        VendorContactEmailId: emailForm.controls['vendorContactEmailId']?.value
+        VendorContactEmailId: emailForm.controls['vendorContactEmailId']?.value,  
+        vendorContactId: emailForm.controls['vendorContactId']?.value
       })
     })
     return emails;
@@ -188,7 +209,8 @@ export class FinancialClaimsProviderInfoComponent {
      let phonesForm = control as unknown as FormGroup
       phones.push({
         PhoneNbr: phonesForm.controls['phoneNbr']?.value,
-        VendorContactPhoneId: phonesForm.controls['vendorContactPhoneId']?.value
+        VendorContactPhoneId: phonesForm.controls['vendorContactPhoneId']?.value,
+        vendorContactId: phonesForm.controls['vendorContactId']?.value
       })
     })
     return phones;
