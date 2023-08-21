@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList } from '@angular/core'; 
+import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList } from '@angular/core';
 import { PaymentsFacade,BillingAddressFacade,VendorContactsFacade, ContactResponse ,FinancialVendorTypeCode, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -29,7 +29,7 @@ export class PaymentAddressesComponent {
   isContactDetailShow = false;
   isPaymentAddressDetailIsEdit = false;
   isPaymentAddressDeactivateShow = false;
-  isPaymentAddressDeleteShow = false; 
+  isPaymentAddressDeleteShow = false;
   VendorAddressId:any;
   billingAddressObj: any[] = [];
   tabCode: string = '';
@@ -45,18 +45,19 @@ export class PaymentAddressesComponent {
       PhoneNumber: 'XXXXXX',
       FaxNumber: 'XXXXXX',
       EmailAddress: 'XXXXXX',
-      EffectiveDate: 'XXXXXX', 
-      by: 'XX', 
+      EffectiveDate: 'XXXXXX',
+      by: 'XX',
     },
   ];
-     
 
-  
+
+
   public paymentAddressActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Address',
       icon: 'edit',
+      type: 'Edit',
       click: (data: any): void => {;
         this.clickOpenAddEditPaymentAddressDetails();
       },
@@ -64,6 +65,7 @@ export class PaymentAddressesComponent {
     {
       buttonType: 'btn-h-primary',
       text: 'Deactivate Address',
+      type: 'Deactivate',
       icon: 'block',
       click: (data: any): void => {
         this.clickOpenDeactivatePaymentAddressDetails();
@@ -72,6 +74,7 @@ export class PaymentAddressesComponent {
     {
       buttonType: 'btn-h-danger',
       text: 'Delete Address',
+      type: 'Delete',
       icon: 'delete',
       click: (data: any): void => {
         this.clickOpenDeletePaymentAddressDetails();
@@ -82,10 +85,10 @@ export class PaymentAddressesComponent {
   /** Constructor **/
   constructor(private readonly paymentsFacade: PaymentsFacade,private readonly paymentBillingFacade: BillingAddressFacade,private readonly vendorcontactFacade: VendorContactsFacade,private route: ActivatedRoute, private readonly cdr: ChangeDetectorRef) { }
 
-   
+
   ngOnInit(): void {
     this.vendorcontactFacade.loadMailCodes(this.vendorId);
-    this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {   
+    this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {
       if(mailCode.length>0)
       {
         this.IsAddContactDisabled=false;
@@ -120,9 +123,9 @@ export class PaymentAddressesComponent {
   public onDetailCollapse(e: any): void {
   }
 
-  public onDetailExpand(e: any): void { 
-    this.VendorAddressId=e.dataItem.vendorAddressId;  
-   
+  public onDetailExpand(e: any): void {
+    this.VendorAddressId=e.dataItem.vendorAddressId;
+
   }
   public dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
@@ -187,7 +190,7 @@ export class PaymentAddressesComponent {
     this.isPaymentAddressDeactivateShow = true;
   }
 
-  
+
 
   clickCloseDeactivatePaymentAddress(isSuccess: boolean): void {
     this.isPaymentAddressDeactivateShow = false;
