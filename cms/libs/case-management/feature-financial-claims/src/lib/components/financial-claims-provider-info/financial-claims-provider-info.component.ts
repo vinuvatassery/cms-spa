@@ -55,7 +55,7 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   ngOnInit(): void {
-   this.paymentRequestId= this.activeRoute.snapshot.queryParams['iid'];
+   this.paymentRequestId= this.activeRoute.snapshot.queryParams['pid'];
     this.loadVendorInfo()
   }
 
