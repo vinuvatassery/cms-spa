@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy,ChangeDetectorRef,Component, Input, OnChanges, OnInit } from '@angular/core';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { GridDataResult } from '@progress/kendo-angular-grid';
-import { State,CompositeFilterDescriptor } from '@progress/kendo-data-query';
+import { GridDataResult,ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { FinancialClaimsFacade } from '@cms/case-management/domain';
-import { ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
+
 @Component({
   selector: 'cms-financial-claims-recent-claims-list',
   templateUrl: './financial-claims-recent-claims-list.component.html',

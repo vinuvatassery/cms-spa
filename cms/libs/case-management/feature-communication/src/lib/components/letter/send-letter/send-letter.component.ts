@@ -11,7 +11,7 @@ import {
 
 
 /** Internal Libraries **/
-import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade, CommunicationEventTypeCode } from '@cms/case-management/domain';
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade, CommunicationEventTypeCode, VendorContactsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -29,9 +29,11 @@ export class SendLetterComponent implements OnInit {
   /** Input properties **/
   @Input() data!: any;
   @Input() mailingAddress$!: Observable<any>;
+  @Input() communicationLetterTypeCode!:any;
   @Input() clientCaseEligibilityId!: any;
   @Input() clientId!: any;
-  @Input() isCerForm!: any; 
+  @Input() isCerForm!: any;
+  @Input() vendorId!: any;
 
   /** Output properties  **/
   @Output() closeSendLetterEvent = new EventEmitter<CommunicationEvents>();
@@ -48,7 +50,8 @@ export class SendLetterComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly workflowFacade: WorkflowFacade,
-    private readonly contactFacade: ContactFacade) { }
+    private readonly contactFacade: ContactFacade,
+    private readonly vendorContactFacade: VendorContactsFacade) { }
 
   /** Public properties **/
   public formUiStyle : UIFormStyle = new UIFormStyle();
@@ -72,23 +75,36 @@ export class SendLetterComponent implements OnInit {
   ];
   popupClass = 'app-c-split-button';
   ddlTemplates: any;
+  isButtonVisible: boolean = true;
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.contactFacade.mailingAddress$.subscribe((resp) => {
-      if (resp) {
-        this.mailingAddress = resp;
-      }
-      this.ref.detectChanges();
-    });
-
+    if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter)
+    {
+      this.isButtonVisible=false;
+      this.vendorContactFacade.mailCodes$.subscribe((resp) => {
+        if (resp && resp.length > 0) {
+          const selectedAddress = resp.find((address:any) => address.preferredFlag === "Y") || resp[0];
+          this.mailingAddress = selectedAddress;
+        }
+        this.ref.detectChanges();
+      });
+    }
+    else {
+      this.contactFacade.mailingAddress$.subscribe((resp) => {
+        if (resp) {
+          this.mailingAddress = resp;
+        }
+        this.ref.detectChanges();
+      });
+      this.loadCurrentSession();
+    }
     if (this.data) {
       this.isNewLetterClicked = true;
     } else {
       this.isNewLetterClicked = false;
     }
-    this.loadDropdownLetterTemplates(); 
-    this.loadCurrentSession();
+    this.loadDropdownLetterTemplates();
   }
 
   private loadCurrentSession() {
@@ -220,11 +236,11 @@ export class SendLetterComponent implements OnInit {
     this.currentLetterData = event;
   }
 
-  handleOpenTemplateClicked() { 
+  handleOpenTemplateClicked() {
     this.isOpenLetterTemplate = true;
     this.loadInitialData.emit();
   }
-  
+
   onClosePreview(){
     this.isShowPreviewLetterPopupClicked = false;
   }
@@ -236,7 +252,7 @@ this.isShowSendLetterToPrintPopupClicked = false;
   private loadDropdownLetterTemplates() {
     this.loaderService.show();
     const channelTypeCode = CommunicationEvents.Letter;
-    this.communicationFacade.loadEmailTemplates(CommunicationEventTypeCode.CerAuthorizationLetter, channelTypeCode)
+    this.communicationFacade.loadEmailTemplates(this.communicationLetterTypeCode, channelTypeCode)
     .subscribe({
       next: (data: any) =>{
         if (data) {
@@ -282,14 +298,14 @@ this.isShowSendLetterToPrintPopupClicked = false;
   }
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
+  {
       if(type == SnackBarNotificationType.ERROR)
       {
-        const err= subtitle;    
+        const err= subtitle;
         this.loggingService.logException(err)
-      }  
+      }
         this.notificationSnackbarService.manageSnackBar(type,subtitle)
-        this.hideLoader();   
+        this.hideLoader();
   }
 
   hideLoader()
@@ -302,10 +318,15 @@ this.isShowSendLetterToPrintPopupClicked = false;
  }
 
  cerEmailAttachments(event:any){
-  this.cerEmailAttachedFiles = event; 
+  this.cerEmailAttachedFiles = event;
 }
 
 loadMailingAddress() {
-  this.contactFacade.loadMailingAddress(this.clientId);
+  if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter)
+  {
+    this.vendorContactFacade.loadMailCodes(this.vendorId);
+  }
+  else
+     this.contactFacade.loadMailingAddress(this.clientId);
 }
 }

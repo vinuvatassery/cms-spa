@@ -6,7 +6,7 @@
       <button kendoButton class="k-icon-button small-i-btn" title="New Reminder" aria-label="New Reminder" (click)="onNewReminderClicked(NewReminderTemplate)">
         <span class="material-icons" role="button" aria-label="New Reminder" aria-hidden="true">add_alarm</span>
       </button>
-      <kendo-dropdownbutton [data]="sendActions" class="TableActionPopup app-dropdown-action k-border-s-dropdown"
+      <kendo-dropdownbutton [data]="buttonList" class="TableActionPopup app-dropdown-action k-border-s-dropdown"
         buttonClass="k-flat-button" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
         Send
         <span class="material-icons" aria-label="expand" aria-hidden="true" role="menuitem">arrow_right</span>
@@ -20,17 +20,17 @@
           aria-hidden="false" *ngIf="dataItem.id === 'new_email'" (click)="dataItem.click(sendNewEmailDialog)">
             <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
             <label> {{ dataItem.text }} </label>
-          </button>        
-        
+          </button>
+
         </ng-template>
       </kendo-dropdownbutton>
-    </div>   
-  </section> 
+    </div>
+  </section>
 
    <!-- Create New To Do Modal Html-->
 <ng-template #todoDetailTemplate>
   <kendo-dialog-titlebar (close)="onTodoDetailsClosed($event)">Create To Do Item for Donna </kendo-dialog-titlebar>
-  <productivity-tools-todo-detail 
+  <productivity-tools-todo-detail
   (isModalTodoDetailsCloseClicked)="onTodoDetailsClosed($event)"
   ></productivity-tools-todo-detail>
 </ng-template>
@@ -41,15 +41,20 @@
   <productivity-tools-reminder-detail   (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"></productivity-tools-reminder-detail>
 </ng-template>
 
-
-<!-- Send New Letter Modal -->
+<!-- Send New Letter Popup -->
 <ng-template #sendLetterDialog>
-  <cms-financial-send-letter    (closeSendLetterEvent)="handleSendNewLetterClosed($event)"
-  kendoTooltip></cms-financial-send-letter>
+  <case-management-send-letter  [data]="letterScreenName" [mailingAddress$]="mailCodes$"
+  [vendorId]="vendorId" (closeSendLetterEvent)="handleSendNewLetterClosed($event)"
+  (loadInitialData)="loadMailingAddress()"
+  [communicationLetterTypeCode]="communicationLetterTypeCode"
+  kendoTooltip></case-management-send-letter>
 </ng-template>
 
-<!-- Send New Email Modal -->
+<!-- Send New Email Popup -->
 <ng-template #sendNewEmailDialog>
-  <cms-financial-send-email [email]="vendorProfile$?.email" (closeSendEmailEvent)="handleSendNewEmailClosed($event)"    kendoTooltip></cms-financial-send-email>
+  <case-management-send-email [data]="emailScreenName"
+  [communicationEmailTypeCode]="communicationEmailTypeCode"
+  [emailSubject]="emailSubject"
+  [toEmail]="toEmail"
+  (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
 </ng-template>
-

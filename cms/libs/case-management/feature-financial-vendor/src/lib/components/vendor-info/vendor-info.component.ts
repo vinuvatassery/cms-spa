@@ -25,7 +25,7 @@ export class VendorInfoComponent implements OnInit {
   openEditDailog: boolean = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   addressGridView = [];
-  providerType!: string;
+  @Input() providerType!: string;
   editTitlePrefix: string = "";
   tabCode!: string;
   public actions = [
@@ -65,7 +65,6 @@ export class VendorInfoComponent implements OnInit {
   ngOnInit() {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
     this.buildVendorForm();
-    this.providerType = this.activeRoute.snapshot.queryParams['vendor_type_code'];
     this.tabCode = this.activeRoute.snapshot.queryParams['tab_code'];
     if (this.providerType == this.vendorTypes.DentalProviders) {
       this.editTitlePrefix = 'Dental ';

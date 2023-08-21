@@ -14,7 +14,7 @@
         <kendo-floatinglabel text="Email Templates" class="inline-search-loader">
           <kendo-dropdownlist
           [fillMode]="formUiStyle.dropDownFillMode"
-            [data]="ddlTemplates" 
+            [data]="ddlTemplates"
             textField="description"
             valueField="documentTemplateId"
             (valueChange)="handleDdlEmailValueChange($event)"
@@ -36,13 +36,17 @@
           </kendo-floatinglabel>
         </div>
         <div class="flex-col">
-          <kendo-floatinglabel text="CC" class="inline-search-loader">
+          <kendo-floatinglabel text="CC" class="inline-search-loader" *ngIf="isCCDropdownVisible">
             <kendo-multiselect
           [fillMode]="formUiStyle.dropDownFillMode"
           [data]="ccEmail"
           [(ngModel)]="selectedCCEmail"
           aria-label="cc of email"
           ></kendo-multiselect>
+          </kendo-floatinglabel>
+
+          <kendo-floatinglabel text="CC" *ngIf="isCCDropdownVisible===false">
+            <kendo-textbox  placeholder="CC" [(ngModel)]="selectedCCEmail" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
           </kendo-floatinglabel>
         </div>
         <div class="flex-col">
@@ -74,7 +78,7 @@
   <kendo-dialog-actions *ngIf="isOpenDdlEmailDetails">
     <div class="justify-content-between bigbtn-wrapper">
       <div class="w100">
-        <button
+        <button *ngIf="isButtonsVisible"
           kendoButton
           [primary]="true"
           look="flat"
@@ -83,7 +87,7 @@
         >
           Save for Later
         </button>
-        <button
+        <button *ngIf="isButtonsVisible"
           kendoButton
           [primary]="true"
           look="flat"
@@ -114,7 +118,7 @@
       </div>
     </div>
   </kendo-dialog-actions>
- 
+
 <!-- Save for Latter (Email Draft) Modal -->
 <kendo-dialog (close)="onCloseSaveForLaterClicked()"
   *ngIf="isShowSaveForLaterPopupClicked"

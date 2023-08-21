@@ -8,4 +8,6 @@ export enum ScreenType {
   Case360PageEmail = 'Case360PageEmail',
   Case360PageLetter = 'Case360PageLetter',
   Case360PageSMS = 'Case360PageSMS',
+  FinancialManagementVendorPageLetter = 'FinancialManagementVendorPageLetter',
+  FinancialManagementVendorPageEmail = 'FinancialManagementVendorPageEmail',
 }
