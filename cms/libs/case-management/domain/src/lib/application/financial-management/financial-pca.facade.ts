@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  Subject } from 'rxjs';
+import {  BehaviorSubject, Subject } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FinancialPcaDataService } from '../../infrastructure/financial-management/financial-pca.data.service';
+import { GridFilterParam } from '../../entities/grid-filter-param';
  
  
 
@@ -18,7 +19,7 @@ export class FinancialPcaFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueFinancialPcaSetup = 'invoiceID';
+  public sortValueFinancialPcaSetup = 'pcaCode';
   public sortPcaSetupList: SortDescriptor[] = [{
     field: this.sortValueFinancialPcaSetup,
   }];
@@ -47,6 +48,9 @@ export class FinancialPcaFacade {
 
   private financialPcaSetupDataSubject = new Subject<any>();
   financialPcaSetupData$ = this.financialPcaSetupDataSubject.asObservable();
+
+  private financialPcaSetupLoaderSubject = new BehaviorSubject<any>(false);
+  financialPcaSetupLoader$ = this.financialPcaSetupLoaderSubject.asObservable();
 
   private financialPcaAssignmentDataSubject =  new Subject<any>();
   financialPcaAssignmentData$ = this.financialPcaAssignmentDataSubject.asObservable();  
@@ -93,15 +97,21 @@ export class FinancialPcaFacade {
   /** Public methods **/
 
  
-  loadFinancialPcaSetupListGrid(){
-    this.financialPcaDataService.loadFinancialPcaSetupListService().subscribe({
+  loadFinancialPcaSetupListGrid(params: GridFilterParam){
+    this.financialPcaSetupLoaderSubject.next(true);
+    this.financialPcaDataService.loadFinancialPcaSetupListService(params).subscribe({
       next: (dataResponse) => {
-        this.financialPcaSetupDataSubject.next(dataResponse);
-        this.hideLoader();
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+
+        this.financialPcaSetupDataSubject.next(gridView);
+        this.financialPcaSetupLoaderSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.financialPcaSetupLoaderSubject.next(false); 
       },
     });  
   }   
