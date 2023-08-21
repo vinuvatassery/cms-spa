@@ -460,7 +460,7 @@ export class FinancialClaimsDataService {
   }
 
   unbatchClaims(paymentRequestIds: string[], claimsType: string) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payment-requests/un-batch-claim`, paymentRequestIds);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payment-requests/un-batch`, paymentRequestIds);
   }
   loadRecentClaimListService(data:any): Observable<any> {
     const recentClaimsPageAndSortedRequestDto =
