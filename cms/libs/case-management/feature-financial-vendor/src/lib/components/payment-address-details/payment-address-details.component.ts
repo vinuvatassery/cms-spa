@@ -152,6 +152,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
 
   submit() {
     this.formIsSubmitted = true;
+    this.paymentAddressForm.markAllAsTouched();
     if (!this.paymentAddressForm.valid) return;
 
     let formValues = this.paymentAddressForm.value;
