@@ -8,10 +8,6 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Pharmacy } from '../../entities/client-pharmacy';
 import { ClientCase } from '../../entities/client-case';
 import { FinancialProvider } from '../../enums/financial-provider.enum';
-import { ConfigurationProvider } from '@cms/shared/util-core';
-import { Pharmacy } from '../../entities/client-pharmacy';
-import { ClientCase } from '../../entities/client-case';
-import { FinancialProvider } from '../../enums/financial-provider.enum';
 import { BatchClaim } from '../../entities/financial-management/batch-claim';
 import { GridFilterParam } from '../../entities/grid-filter-param';
 
