@@ -307,6 +307,9 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
     }
   }
 
+  loadPrintAdviceLetterEvent(event:any){
+    this.loadBatchLogListEvent.emit(event);
+  }
   onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
     this.isPrintAdviceLetterClicked = false;
