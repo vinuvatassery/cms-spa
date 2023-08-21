@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsDataService {
@@ -14,7 +15,21 @@ export class FinancialClaimsDataService {
   ) {}
  
 
- 
+  CheckExceededMaxBenefit(serviceCost: number, clientId: number ) {
+    debugger
+    console.log(`${this.configurationProvider.appSettings.caseApiUrl}` +
+    `/ClaimFlags/medicalclaim?servicesCost=${serviceCost}&clientId=${clientId}`)
+
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/ClaimFlags/medicalclaim?servicesCost=${serviceCost}&clientId=${clientId}`
+    );
+    // console.log(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/dental/exceeded-limit?servicesCost=${serviceCost}&clientId=${clientId}`);
+    // return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/dental/exceeded-limit?servicesCost=${serviceCost}&clientId=${clientId}`
+    // );
+    
+    
+  }
   loadFinancialClaimsProcessListService( ) {
     return of([
       {

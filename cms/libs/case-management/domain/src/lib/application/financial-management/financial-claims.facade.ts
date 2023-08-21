@@ -114,7 +114,6 @@ export class FinancialClaimsFacade {
   {
     return router.url.split('/')?.filter(element => element === FinancialClaimTypeCode.Dental || element ===FinancialClaimTypeCode.Medical)[0];    
   }
-
   loadFinancialClaimsProcessListGrid(){
     this.financialClaimsDataService.loadFinancialClaimsProcessListService().subscribe({
       next: (dataResponse) => {
@@ -205,5 +204,11 @@ export class FinancialClaimsFacade {
         this.hideLoader(); 
       },
     });  
+  }
+  loadExceededMaxBenefit(serviceCost: number, clientId: number){
+    return this.financialClaimsDataService.CheckExceededMaxBenefit(
+      serviceCost,
+      clientId
+    )
   }
 }
