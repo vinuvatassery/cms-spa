@@ -21,7 +21,7 @@ export class VendorContacts {
   faxNbr: string| null = null;
   vendorName: string| null = null;
   effectiveDate: any | null = null;
-  isPreferredContact: string| null = null;
+  PreferredFlag: string| null = null;
 }
 export interface ContactResponse {
   

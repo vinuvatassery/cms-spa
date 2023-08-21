@@ -151,20 +151,7 @@ fillFormData(){
     }
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if (mailCode) {
-      
-      this.medicalProviderForm.controls['nameOnCheck']
-        .setValidators([
-          Validators.required,
-        ]);
-      this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
-
-      this.medicalProviderForm.controls['nameOnEnvolop']
-      .setValidators([
-        Validators.required,
-      ]);
-      this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
-
-      this.medicalProviderForm.controls['addressLine1']
+               this.medicalProviderForm.controls['addressLine1']
         .setValidators([
           Validators.required,
         ]);
@@ -196,6 +183,19 @@ fillFormData(){
           Validators.required,
         ]);
       this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();
+
+      this.medicalProviderForm.controls['nameOnCheck']
+      .setValidators([
+        Validators.required,
+      ]);
+    this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
+
+    this.medicalProviderForm.controls['nameOnEnvolop']
+    .setValidators([
+      Validators.required,
+    ]);
+    this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
+
     }
 
     if (this.providerType == this.vendorTypes.InsuranceVendors) {
@@ -347,7 +347,7 @@ fillFormData(){
        },
          error: (err) => {
           this.financialVendorFacade.hideLoader();
-          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);  
+          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
          },
        });
       }
@@ -385,7 +385,7 @@ fillFormData(){
             emailAddress: contact.email,
             emailAddressTypeCode: AddressType.Email,
             faxNbr: contact.fax,
-            isPreferedContact : contact.isPreferedContact ? 'Y' : 'N'
+            preferredFlag : contact.isPreferedContact ? 'Y' : 'N'
           }
           this.vendorContactList.push(vendorContact);
         }
