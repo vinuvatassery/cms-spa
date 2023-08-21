@@ -92,7 +92,7 @@
                     <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['paymentMethodCode'].valid">a selection is required.</kendo-formerror>
                 </fieldset>
             </div>
-            <div *ngIf="tabCode !== financialVendorProviderTabCode.Manufacturers" class="flex-col flex-col-6">
+            <div *ngIf="tabCode === financialVendorProviderTabCode.InsuranceVendors" class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Payment run date">
                     <kendo-dropdownlist formControlName="paymentRunDateMonthly" [data]="paymentRunDatelov$ | async" textField="lovDesc"
                         valueField="lovCode" [fillMode]="formUiStyle.dropDownFillMode" [valuePrimitive]="true" >
@@ -100,7 +100,7 @@
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['paymentRunDateMonthly'].valid">a selection is required.</kendo-formerror>
             </div>
-            <div *ngIf="tabCode !== financialVendorProviderTabCode.Manufacturers" class="flex-col flex-col-6 mt-4">
+            <div *ngIf="tabCode === financialVendorProviderTabCode.InsuranceVendors" class="flex-col flex-col-6 mt-4">
                 <kendo-label> Of each Month</kendo-label>
             </div>
             <div class="flex-col mt-1" *ngIf="tabCode === financialVendorProviderTabCode.InsuranceVendors">

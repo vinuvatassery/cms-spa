@@ -8,6 +8,10 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Pharmacy } from '../../entities/client-pharmacy';
 import { ClientCase } from '../../entities/client-case';
 import { FinancialProvider } from '../../enums/financial-provider.enum';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { Pharmacy } from '../../entities/client-pharmacy';
+import { ClientCase } from '../../entities/client-case';
+import { FinancialProvider } from '../../enums/financial-provider.enum';
 import { BatchClaim } from '../../entities/financial-management/batch-claim';
 import { GridFilterParam } from '../../entities/grid-filter-param';
 
@@ -169,8 +173,7 @@ export class FinancialClaimsDataService {
   }
 
   loadReconcileListService(batchId:any,claimsType:any,paginationParameters:any){
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/reconcile-payments?&SkipCount=${paginationParameters?.skipCount}
-    &maxResultCount=${paginationParameters?.pageSize}&sortType=${paginationParameters?.sortType}&sorting=${paginationParameters?.sortColumn}`);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/reconcile-payments`,paginationParameters);
   }
   loadClaimsListService() {
     return of([
