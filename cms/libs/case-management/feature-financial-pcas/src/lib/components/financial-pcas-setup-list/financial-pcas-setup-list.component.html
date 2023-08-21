@@ -1,6 +1,9 @@
 <!-- Table Top Filter, Search and Export -->
 
- 
+  
+<button kendoButton icon="add" [primary]="true"
+(click)="onOpenAddPcaSetupClicked(addEditPcaSetupDialogTemplate)" class="add-new-button search-with-addbtn"
+aria-label="add"> PCA Setup</button>
 <section class="table-filter-section mat-form-no-b-space">
                   <span class="filter-section_items filter--select">
                         <kendo-floatinglabel>
@@ -17,15 +20,10 @@
 
                         </kendo-floatinglabel>
                   </span>
-                  <span class="search-with-btn">
-                        <button kendoButton icon="add" [primary]="true"
-                        (click)="onOpenAddPcaSetupClicked(addEditPcaSetupDialogTemplate)" class="add-new-button"
-                        aria-label="add"> PCA Setup</button>
-                  </span>
+             
 </section>
       
-       
- 
+
 <!-- Sorted Info -->
 <div class="table-sorted-info">
       Sorted Descending by <span class="sort-items"> Source </span>

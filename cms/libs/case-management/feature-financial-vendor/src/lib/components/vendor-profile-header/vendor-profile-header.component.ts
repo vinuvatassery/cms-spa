@@ -9,6 +9,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class VendorProfileHeaderComponent {
 @Input() vendorProfileSpecialHandling$ : any
 @Input() vendorProfile$ : any
+@Input() clientCaseEligibilityId!: any;
+@Input() clientId!: any;
 @Output() loadSpecialHandlingEvent =  new EventEmitter();
 
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -24,7 +26,7 @@ export class VendorProfileHeaderComponent {
       text: 'New Letter',
       icon: 'markunread_mailbox',
       isVisible: true,
-      click: (): void => { 
+      click: (): void => {
       },
     },
     {
@@ -33,10 +35,10 @@ export class VendorProfileHeaderComponent {
       icon: 'mail_outline',
       isVisible: false,
       click: (): void => {
-     
+
       },
     },
-     
+
   ];
 
   public reminderActions = [
@@ -45,7 +47,7 @@ export class VendorProfileHeaderComponent {
       text: "Done",
       icon: "done",
       click: (): void => {
-      
+
       },
     },
     {
@@ -53,7 +55,7 @@ export class VendorProfileHeaderComponent {
       text: "Edit",
       icon: "edit",
       click: (): void => {
- 
+
       },
     },
     {
@@ -61,15 +63,15 @@ export class VendorProfileHeaderComponent {
       text: "Delete",
       icon: "delete",
       click: (): void => {
-    
+
       },
     },
   ];
   reminderActionPopupClass = 'more-action-dropdown app-dropdown-action-list';
   constructor(private route: Router,private activeRoute : ActivatedRoute) {
- 
+
   }
-  
+
   onBackClicked()
   {
     this.route.navigate(['financial-management/vendors'])
@@ -77,7 +79,7 @@ export class VendorProfileHeaderComponent {
 
   loadSpecialHandling()
   {
-    this.loadSpecialHandlingEvent.emit()  
+    this.loadSpecialHandlingEvent.emit()
   }
 
   getHeaderPreferredFlag(vendorProfile : any)

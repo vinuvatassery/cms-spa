@@ -108,9 +108,11 @@ export class PaymentAddressDetailsComponent implements OnInit {
     if(this.tabCode === FinancialVendorProviderTabCode.Manufacturers)
     {
       this.paymentAddressForm.controls['paymentMethodCode'].removeValidators([Validators.required]);
+    }
+    if(this.tabCode !== FinancialVendorProviderTabCode.InsuranceVendors)
+    {
       this.paymentAddressForm.controls['paymentRunDateMonthly'].removeValidators([Validators.required]);
       this.paymentAddressForm.controls['paymentRunDateMonthly'].setValue(null);
-
     }
   }
   private setAddressTypeCode() {
@@ -150,6 +152,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
 
   submit() {
     this.formIsSubmitted = true;
+    this.paymentAddressForm.markAllAsTouched();
     if (!this.paymentAddressForm.valid) return;
 
     let formValues = this.paymentAddressForm.value;

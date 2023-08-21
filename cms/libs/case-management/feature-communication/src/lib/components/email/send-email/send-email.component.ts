@@ -34,13 +34,13 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() toEmail: Array<string> = [];
   @Input() clientCaseEligibilityId!: any;
   @Input() clientId!: any;
-  @Input() isCerForm!: any; 
-  
+  @Input() isCerForm!: any;
+  @Input() communicationEmailTypeCode!: any;
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
   @Output() loadInitialData = new EventEmitter();
-  @Output() cerEmailContentEvent = new EventEmitter<any>(); 
+  @Output() cerEmailContentEvent = new EventEmitter<any>();
   @Output() emailEditorValueEvent = new EventEmitter<any>();
   @Output() editorValue = new EventEmitter<any>();
   @Output() isSendEmailSuccess = new EventEmitter<boolean>();
@@ -75,10 +75,13 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   caseEligibilityId!:any;
   cerEmailAttachedFiles: any[] = [];
   userSelectedAttachment: any[] = [];
-  emailSubject!: string;
+  @Input() emailSubject!: string;
   existingFile: any = [];
   loginUserId!: any;
   isSaveFoLater: boolean = false;
+  isButtonsVisible: boolean = true;
+  isCCDropdownVisible: boolean = true;
+
   /** Private properties **/
   private currentSessionSubscription !: Subscription;
 
@@ -98,7 +101,12 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getLoggedInUserProfile();
     this.updateOpenSendEmailFlag();
-    this.loadDraftEsignRequest();
+    if (CommunicationEventTypeCode.CerAuthorizationEmail!==this.communicationEmailTypeCode){
+      this.isButtonsVisible = this.isCCDropdownVisible = false;
+      this.loadEmailTemplates();
+    }
+    else
+      this.loadDraftEsignRequest();
   }
 
   ngOnDestroy(): void {
@@ -106,14 +114,14 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
+  {
       if(type == SnackBarNotificationType.ERROR)
       {
-        const err= subtitle;    
+        const err= subtitle;
         this.loggingService.logException(err)
-      }  
+      }
         this.notificationSnackbarService.manageSnackBar(type,subtitle)
-        this.hideLoader();   
+        this.hideLoader();
   }
 
   hideLoader()
@@ -130,10 +138,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   private loadEmailTemplates() {
+    if(this.communicationEmailTypeCode==undefined)
+      return;
     this.loaderService.show();
-    this.cerAuthorizationEmailTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
     const channelTypeCode = CommunicationEvents.Email;
-    this.communicationFacade.loadEmailTemplates(this.cerAuthorizationEmailTypeCode ?? '', channelTypeCode??'')
+    this.communicationFacade.loadEmailTemplates(this.communicationEmailTypeCode ?? '', channelTypeCode??'')
     .subscribe({
       next: (data: any) =>{
         if (data) {
@@ -197,15 +206,15 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isOpenSendEmailClicked = true;
   }
 
-  onSaveForLaterClicked() { 
-    this.isShowSaveForLaterPopupClicked = true; 
+  onSaveForLaterClicked() {
+    this.isShowSaveForLaterPopupClicked = true;
   }
 
   onSendEmailDailougeConfirmationClicked(){
     this.isShowSendEmailConfirmationPopupClicked = false;
   }
 
-  onPreviewEmailClicked() { 
+  onPreviewEmailClicked() {
     this.isShowPreviewEmailPopupClicked = true;
     this.emailEditorValueEvent.emit(this.currentEmailData);
     this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
@@ -237,16 +246,19 @@ onClosePreviewEmail(){
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
     this.isClearEmails =true;
+    this.emailSubject = event.description;
     this.isShowToEmailLoader$.next(true);
     this.isOpenDdlEmailDetails = true;
     this.selectedTemplate = event;
     this.emailContentValue = event.templateContent == undefined? event.requestBody : event.templateContent;
-    this.emailSubject = CommunicationEventTypeCode.CERAuthorizationSubject;
+    this.selectedEmail = [];
     this.selectedEmail.push(this.toEmail[0].trim());
     this.selectedToEmail = this.selectedEmail;
     this.handleEmailEditor(event);
     this.showToEmailLoader = false;
-    this.getCCEmailList(this.clientId, this.loginUserId);
+    if (CommunicationEventTypeCode.CerAuthorizationEmail===this.communicationEmailTypeCode) {
+      this.getCCEmailList(this.clientId, this.loginUserId);
+    }
     this.ref.detectChanges();
   }
 
@@ -260,7 +272,7 @@ onClosePreviewEmail(){
 
   private initiateAdobeEsignProcess(emailData: any, requestType: string){
     this.loaderService.show();
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater); 
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater);
     let formData = this.esignFacade.prepareAdobeEsingData(esignRequestFormdata, emailData, this.cerEmailAttachedFiles);
     this.esignFacade.initiateAdobeesignRequest(formData, emailData)
         .subscribe({
@@ -306,8 +318,8 @@ onClosePreviewEmail(){
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
     this.isSaveFoLater = true;
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater); 
-    let draftEsignRequest = this.esignFacade.prepareDraftAdobeEsignRequest(esignRequestFormdata, draftTemplate, this.cerEmailAttachedFiles); 
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater);
+    let draftEsignRequest = this.esignFacade.prepareDraftAdobeEsignRequest(esignRequestFormdata, draftTemplate, this.cerEmailAttachedFiles);
       if(draftTemplate?.esignRequestId == undefined || draftTemplate?.esignRequestId == null){
         this.esignFacade.saveDraftEsignRequest(draftEsignRequest)
         .subscribe({
@@ -344,9 +356,9 @@ onClosePreviewEmail(){
       });
       }
   }
-  
+
   cerEmailAttachments(event:any){
-    this.cerEmailAttachedFiles = event; 
+    this.cerEmailAttachedFiles = event;
   }
 
   getLoggedInUserProfile(){

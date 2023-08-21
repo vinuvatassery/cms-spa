@@ -3,7 +3,7 @@
 
   <section class="k-dialog-body">
     <p class="text-muted mb-2">
-      Select which mail code to add the contact(s) for. All fields are required unless otherwise stated.
+    <span *ngIf="this.contactAddress.vendorContactId==null">Select which mail code to add the contact(s) for.</span>All fields are required unless otherwise stated.
     </p>
 
     <!-- Contacts -->
@@ -20,9 +20,9 @@
       <ng-container formArrayName="vendorContacts">
         <ng-container *ngFor="let contact of AddContactForm.controls; let i=index">
           <ng-container [formGroupName]="i">
-            <div class="flex-col d-flex align-iems-center justify-content-between" [formGroupName]="i" *ngIf="this.contactAddress.vendorContactId==null">
-              <h4 class="mb-0">CONTACT {{i+1}} (OPTIONAL)</h4>
-              <button kendoButton class="card-link-button no-ul text-bold k-danger-link" aria-label="delete contact"
+            <div class="flex-col d-flex align-iems-center justify-content-between" [formGroupName]="i"*ngIf="this.contactAddress.vendorContactId==null">
+              <h4 class="mb-0">CONTACT {{i+1}}  <span *ngIf="i>0"> (OPTIONAL)</span></h4>
+              <button kendoButton class="card-link-button no-ul text-bold k-danger-link" aria-label="delete contact" *ngIf="i>0"
                 (click)="removeContact(i)">
                 DELETE CONTACT
               </button>
@@ -80,10 +80,10 @@
                     type="checkbox"
                     kendoCheckBox
                     aria-labelledby="AddressesshowHistorical"
-                   value="Y" name="isPreferredContact" id="isPreferredContactno" 
-                    (change)="OncheckboxClick($event,i)" formControlName="isPreferredContact"
+                   value="Y" name="PreferredFlag" id="PreferredFlagno" 
+                    (change)="OncheckboxClick($event,i)" formControlName="PreferredFlag"
                   />
-                  <label class="k-checkbox-label" for="isPreferredContactYes">Prefered Contact </label 
+                  <label class="k-checkbox-label" for="PreferredFlagYes">Prefered Contact </label 
                   >
                 </span>
               
@@ -113,7 +113,7 @@
             Add
         </button>
         <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="Update()" *ngIf="this.contactAddress.vendorContactId!=null" >
-          Edit
+          Update
       </button>
       </div>
     </div>

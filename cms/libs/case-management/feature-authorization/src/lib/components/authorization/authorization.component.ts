@@ -27,7 +27,7 @@ export class AuthorizationComponent   {
   @Input() templateNotice$ : any
 
   /** Output properties **/
-  @Output() cerDateSignatureEvent = new EventEmitter<any>(); 
+  @Output() cerDateSignatureEvent = new EventEmitter<any>();
   @Output() loadAuthorizationData = new EventEmitter();
   @Output() saveAuthorizationData = new EventEmitter<any>();
   @Output() loadAuthorizationNotice = new EventEmitter();
@@ -42,7 +42,7 @@ export class AuthorizationComponent   {
   documentTypeCode!: string;
   screenName = ScreenType.Authorization;
   isPrintClicked!: boolean;
-  isSendEmailClicked!: boolean;  
+  isSendEmailClicked!: boolean;
   isAuthorizationNoticePopupOpened = false;
   uploadedDocument!: File | undefined;
   public formUiStyle : UIFormStyle = new UIFormStyle();
@@ -73,6 +73,10 @@ export class AuthorizationComponent   {
   errorMessage!: string;
   isSendEmailFailed: boolean = false;
   signedClietDocumentId!: string;
+  communicationLetterTypeCode: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter;
+  communicationEmailTypeCode: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
+  emailSubject: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
+
   /** Private properties **/
   private userProfileSubsriction !: Subscription;
 
@@ -94,8 +98,8 @@ export class AuthorizationComponent   {
   ) {   }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void 
-  {  
+  ngOnInit(): void
+  {
     this.loadUserContactInfo(this.clientId, this.clientCaseEligibilityId);
     this.buildForm();
     this.addApplicationSignatureDetailsSubscription();
@@ -104,7 +108,7 @@ export class AuthorizationComponent   {
     this.addDiscardChangesSubscription();
   }
 
-  /** Private methods **/  
+  /** Private methods **/
   private loadUserContactInfo(clientId: any, clientCaseEligibilityId: any) {
     this.loaderService.show();
       this.contactFacade.loadContactInfo(this.clientId ?? 0, this.clientCaseEligibilityId ?? '')
@@ -121,6 +125,7 @@ export class AuthorizationComponent   {
               }
               this.loadPendingEsignRequestInfo();
             }
+            this.loaderService.hide();
       },
       error: (err: any) => {
         this.loaderService.hide();
@@ -267,17 +272,17 @@ export class AuthorizationComponent   {
   /** Internal event methods **/
 
   onSendNewLetterClicked(template: TemplateRef<unknown>): void {
-    this.isSendLetterOpenedDialog = this.dialogService.open({ 
-      content: template, 
+    this.isSendLetterOpenedDialog = this.dialogService.open({
+      content: template,
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
-    }); 
+    });
   }
 
   onSendNewEmailClicked(template: TemplateRef<unknown>): void {
-    this.isSendEmailOpenedDialog = this.dialogService.open({ 
-      content: template, 
+    this.isSendEmailOpenedDialog = this.dialogService.open({
+      content: template,
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
-    }); 
+    });
   }
 
   onCloseAuthorizationNoticeClicked() {
@@ -329,7 +334,7 @@ export class AuthorizationComponent   {
   handleCloseSendNewLetterClicked(event: CommunicationEvents) {
     switch (event) {
       case CommunicationEvents.Close:
-     
+
         this.isSendLetterOpenedDialog.close(event);
         break;
       case CommunicationEvents.Print:
@@ -412,7 +417,7 @@ export class AuthorizationComponent   {
       }];
 
     this.workflowFacade.updateChecklist(workFlowData);
-  } 
+  }
 
   loadDateSignature(){
   this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
@@ -435,7 +440,7 @@ export class AuthorizationComponent   {
     }else{
       this.currentDate = event;
       this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.value;
-      this.cerDateSignatureEvent.emit(this.dateSignatureNoted); 
+      this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
     }
   }
 
@@ -479,7 +484,8 @@ loadPendingEsignRequestInfo(){
 }
 
 loadCompletedEsignRequestInfo(){
-  this.typeCode=CommunicationEventTypeCode.CopyOfSignedApplication;  
+  this.loaderService.show();
+  this.typeCode=CommunicationEventTypeCode.CopyOfSignedApplication;
   this.clientDocumentFacade.getSignedDocumentInfo(this.typeCode ?? ' ', this.subTypeCode ?? ' ',this.workflowFacade.clientCaseEligibilityId ?? '')
     .subscribe({
       next: (data: any) =>{
@@ -488,6 +494,7 @@ loadCompletedEsignRequestInfo(){
           this.isCERApplicationSigned = true;
           this.ref.detectChanges();
           }
+          this.loaderService.hide();
     },
     error: (err: any) => {
       this.loaderService.hide();
@@ -505,7 +512,7 @@ onGetSignedApplicationClicked(){
         const fileUrl = window.URL.createObjectURL(data);
         window.open(fileUrl, "_blank");
         this.loaderService.hide();
-      }, 
+      },
       error: (error) => {
         this.loaderService.hide();
         this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error);

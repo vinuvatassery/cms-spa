@@ -74,7 +74,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     this.isSubmitted = true;
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
     this.AddContactForm.value.forEach((element:any, i: number) => {
-      this.AddContactForm.at(i).patchValue({isPreferredContact: element.isPreferredContact?"Y":"N"})
+      this.AddContactForm.at(i).patchValue({PreferredFlag: element.PreferredFlag?"Y":"N"})
     }); 
     if (this.contactForm.valid) {
       this.loaderService.show();
@@ -85,7 +85,6 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
               SnackBarNotificationType.SUCCESS,
               'Contact Address added successfully'
             );
-            this.vendocontactsFacade.loadcontacts(this.contactAddress.vendorAddressId ?? "");
             this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);
           }
@@ -101,10 +100,10 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     }
   }
 
-  public Update() {
+  public Update() {    
     this.isSubmitted = true;
-    this.AddContactForm.value.forEach((element:any, i: number) => {
-      this.AddContactForm.at(i).patchValue({isPreferredContact: element.isPreferredContact?"Y":"N"})
+    this.AddContactForm.value.forEach((element:any, i: number) => {    
+      this.AddContactForm.at(i).patchValue({PreferredFlag: element.PreferredFlag?"Y":"N"})
     }); 
     if (this.contactForm.controls['vendorContacts'].valid) {
       this.loaderService.show();
@@ -168,7 +167,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       jobTitle: new FormControl(this.contactAddress.jobTitle),
       vendorName: new FormControl(this.contactAddress.vendorName),
       effectiveDate: new FormControl(this.contactAddress.effectiveDate),
-      isPreferredContact: new FormControl(this.contactAddress.isPreferredContact=="Y"?true:false),
+      PreferredFlag: new FormControl(this.contactAddress.PreferredFlag=="Y"?true:false),
     });
     this.AddContactForm.push(addContactForm);
     this.cd.detectChanges();
@@ -182,12 +181,12 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     const isChecked = (<HTMLInputElement>event.target).checked;
     if (isChecked) {
       this.AddContactForm.value.forEach((element:any, i: number) => {
-        this.AddContactForm.at(i).patchValue({isPreferredContact: false})
+        this.AddContactForm.at(i).patchValue({PreferredFlag: false})
       });    
-      this.AddContactForm.at(index).patchValue({isPreferredContact: true})
+      this.AddContactForm.at(index).patchValue({PreferredFlag: true})
       this.isVisible = true;
     } else {
-      this.AddContactForm.at(index).patchValue({isPreferredContact: false})
+      this.AddContactForm.at(index).patchValue({PreferredFlag: false})
       this.isVisible = false;
     }
     this.cd.detectChanges();

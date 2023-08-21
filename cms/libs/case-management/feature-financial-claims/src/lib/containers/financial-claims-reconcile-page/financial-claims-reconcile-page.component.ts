@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { Router, NavigationEnd, ActivatedRoute  } from '@angular/router';
 import { filter } from 'rxjs';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
@@ -62,8 +62,9 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
     this.batchId = this.route.snapshot.queryParams['bid'];   
   }
 
-  loadReconcileListGrid(event: any) {   
-    this.financialClaimsFacade.loadReconcileListGrid(this.batchId,this.claimsType,event);    
+  loadReconcileListGrid(event: any) {
+    const params = new GridFilterParam(event.skipCount, event.pageSize, event.sortColumn, event.sortType, JSON.stringify(event.filter)); 
+    this.financialClaimsFacade.loadReconcileListGrid(this.batchId,this.claimsType,params);    
   }
 
   loadReconcileBreakoutSummary(event: any)

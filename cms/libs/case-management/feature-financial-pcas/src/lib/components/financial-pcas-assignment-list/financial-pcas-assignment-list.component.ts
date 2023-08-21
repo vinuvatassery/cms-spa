@@ -72,18 +72,49 @@ export class FinancialPcasAssignmentListComponent implements OnInit, OnChanges {
         }
       },
     },
-    {
-      buttonType: 'btn-h-danger',
-      text: 'Remove',
-      icon: 'delete',
-      click: (data: any): void => {
-        if (!this.isRemoveAssignmentClosed) {
-          this.isRemoveAssignmentClosed = true; 
-          this.onRemovePcaAssignmentClicked(this.removePcaAssignmentDialogTemplate);
-        }
-      },
-    },
   ];
+
+  objectList = [
+    {
+      lovDesc:'Pharmacy - 4955',
+      lovCode: 4955
+    },
+    {
+      lovDesc:'Third Party (TPA) - 4956',
+      lovCode: 4956
+    },
+    {
+      lovDesc:'Insurance Premiums - 4957',
+      lovCode: 4957
+    },
+  ]
+
+  groupList = [
+    {
+      lovDesc:'Group I',
+      lovCode: 1
+    },
+    {
+      lovDesc:'Group II',
+      lovCode: 2
+    },
+    {
+      lovDesc:'UPP',
+      lovCode: 3
+    },
+    {
+      lovDesc:'Bridge',
+      lovCode: 4
+    },
+    {
+      lovDesc:'Group 1 INS Gap',
+      lovCode: 5
+    },
+    {
+      lovDesc:'Group 2 INS Gap',
+      lovCode: 6
+    },
+  ]
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,

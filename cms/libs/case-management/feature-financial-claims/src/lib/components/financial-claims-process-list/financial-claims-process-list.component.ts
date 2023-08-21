@@ -1,7 +1,6 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -12,7 +11,7 @@ import {
 } from '@angular/core';
 import {
   BatchClaim,
-  FinancialClaimsFacade,
+  FinancialClaimsFacade
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -73,6 +72,12 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
+  @ViewChild('addEditClaimsDialog')
+  private addEditClaimsDialog!: TemplateRef<any>;
+
+  isEdit!: boolean;
+  paymentRequestId!: string;
+
   vendorId:any;
   clientId:any;
   clientName:any;
@@ -94,9 +99,9 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
     annualTotal:"Client Annual Total",
     balanceAmount:"Client Balance",
     amountDue:"Total Due",
-    paymentStatusCode:"Payment Status"   
+    paymentStatusCode:"Payment Status"
   }
-  
+
   dropDowncolumns : any = [
     {
       columnCode: 'invoiceNbr',
@@ -192,7 +197,6 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
 
   /** Constructor **/
   constructor(
-    private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
     private readonly financialClaimsFacade: FinancialClaimsFacade
   ) {
@@ -451,8 +455,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
       },
     });
     this.vendorId=data.vendorId;
-    this.clientId=data.clientId;  
-    this.clientName=data.clientFullName;  
+    this.clientId=data.clientId;
+    this.clientName=data.clientFullName;
   }
 
   closeRecentClaimsModal(result: any) {
@@ -483,5 +487,11 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
 
   loadFinancialClaimsInvoiceListService(data: any) {
     this.loadFinancialClaimsInvoiceListEvent.emit(data);
+  }
+
+  onClaimClick(dataitem: any){
+    this.isEdit = true;
+    this.paymentRequestId = dataitem.paymentRequestId;
+    this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog);
   }
 }
