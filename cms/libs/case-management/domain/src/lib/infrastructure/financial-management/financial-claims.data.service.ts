@@ -407,7 +407,7 @@ export class FinancialClaimsDataService {
       return this.http.get<Pharmacy[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/dental/SearchText=${searchText}`
       );
-    }    
+    }
   }
 
   loadClientBySearchText(text: string) {
@@ -454,17 +454,25 @@ export class FinancialClaimsDataService {
   batchClaims(batchClaims: BatchClaim, claimsType: string) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batch`, batchClaims);
   }
-  loadRecentClaimListService(data:any): Observable<any> {  
+
+  unbatchEntireBatch(paymentRequestBatchIds: string[], claimsType: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/unbatch`, paymentRequestBatchIds);
+  }
+
+  unbatchClaims(paymentRequestIds: string[], claimsType: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payment-requests/unbatch`, paymentRequestIds);
+  }
+  loadRecentClaimListService(data:any): Observable<any> {
     const recentClaimsPageAndSortedRequestDto =
     {
       VendorId : data.vendorId,
-      ClientId : data.clientId,    
+      ClientId : data.clientId,
       SortType : data.sortType,
       Sorting : data.sort,
       SkipCount : data.skipCount,
       MaxResultCount : data.pageSize,
       Filter : data.filter
-    }  
+    }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/recent-claims`,recentClaimsPageAndSortedRequestDto
     );
