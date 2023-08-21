@@ -58,6 +58,7 @@ export class PaymentAddressesComponent {
       buttonType: 'btn-h-primary',
       text: 'Edit Address',
       icon: 'edit',
+      type: 'Edit',
       click: (data: any): void => {;
         this.clickOpenAddEditPaymentAddressDetails();
       },
@@ -65,6 +66,7 @@ export class PaymentAddressesComponent {
     {
       buttonType: 'btn-h-primary',
       text: 'Deactivate Address',
+      type: 'Deactivate',
       icon: 'block',
       click: (data: any): void => {
         this.clickOpenDeactivatePaymentAddressDetails();
@@ -73,6 +75,7 @@ export class PaymentAddressesComponent {
     {
       buttonType: 'btn-h-danger',
       text: 'Delete Address',
+      type: 'Delete',
       icon: 'delete',
       click: (data: any): void => {
         this.clickOpenDeletePaymentAddressDetails();
