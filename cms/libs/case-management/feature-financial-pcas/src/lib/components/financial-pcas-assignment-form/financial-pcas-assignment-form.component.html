@@ -7,15 +7,28 @@
       <div class="flex-row">
             <div class="flex-col">
                   <kendo-floatinglabel text="Object">
-                        <kendo-textbox aria-label="PCA Number" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
+                        placeholder="Object"
+                         required [data]="objectList" 
+                          textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
+                          [disabled]="true">
+                        </kendo-dropdownlist>
                   </kendo-floatinglabel>
 
             </div>
             <div class="flex-col">
                   <kendo-floatinglabel text="Group">
-                        <kendo-dropdownlist aria-label="Group" [fillMode]="formUiStyle.inputFillMode">
-                        </kendo-dropdownlist>
-                  </kendo-floatinglabel>
+                        <kendo-multiselect 
+                        class="fixed-height-input"
+                        [checkboxes]="{ checkOnClick: true, enabled: true }"
+                        [fillMode]="formUiStyle.dropDownFillMode"
+                        [data]="groupList" 
+                        aria-label="to address"
+                        [textField]="'lovDesc'"
+                        [valueField]="'lovCode'" 
+                        [disabled]="true"
+                        ></kendo-multiselect>
+                        </kendo-floatinglabel>
 
             </div>
 

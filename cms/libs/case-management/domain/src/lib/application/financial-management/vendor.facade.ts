@@ -8,7 +8,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
 import { ConfigurationProvider, LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
 import { FinancialVendorDataService } from '../../infrastructure/financial-management/vendor.data.service';
-
+import { FinancialVendorTypeCode } from '../../enums/financial-vendor-type-code';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorFacade {
@@ -20,16 +20,21 @@ export class FinancialVendorFacade {
   private vendorProfileSpecialHandlingSubject = new Subject<any>();
   private clinicVendorSubject = new Subject<any>();
   private clinicVendorLoaderSubject = new Subject<any>();  /** Public properties **/
+  private providePanelSubject = new Subject<any>();
+  private updateProviderPanelSubject = new Subject<any>();
   vendorsList$ = this.vendorsSubject.asObservable();
   selectedVendor$ = this.selectedVendorSubject.asObservable();
   vendorProfile$ = this.vendorProfileSubject.asObservable();
    clinicVendorList$ = this.clinicVendorSubject.asObservable();
-  clinicVendorLoader$ = this.clinicVendorLoaderSubject.asObservable();
+  clinicVendorLoader$ = this.clinicVendorLoaderSubject.asObservable(); 
+  providePanelSubject$ = this.providePanelSubject.asObservable();
+  updateProviderPanelSubject$ = this.updateProviderPanelSubject.asObservable();
   vendorProfileSpecialHandling$ = this.vendorProfileSpecialHandlingSubject.asObservable();
 
   private vendorsListSubject = new BehaviorSubject<any>([]);
   vendorDetails$ = this.vendorsListSubject.asObservable();
 
+  public selectedVendorType = FinancialVendorTypeCode.Manufacturers
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'vendorName'
   public sortType = 'asc'
@@ -114,7 +119,7 @@ export class FinancialVendorFacade {
   getVendorDetails(vendorId: string) {
     this.showLoader();
     this.financialVendorDataService.getVendorDetails(vendorId).subscribe({
-      next: (vendorDetail: any) => {
+      next: (vendorDetail: any) => {    
         this.selectedVendorSubject.next(vendorDetail);
         this.hideLoader();
       },
@@ -124,6 +129,39 @@ export class FinancialVendorFacade {
       }
     });
   }
+
+  getProviderPanel(vendorId:string){
+    this.showLoader();
+    this.financialVendorDataService.getProviderPanel(vendorId).subscribe({
+      next: (vendorsResponse: any) => {
+        if (vendorsResponse) {
+          this.providePanelSubject.next(vendorsResponse);   
+          this.hideLoader();      
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
+  updateProviderPanel(ProviderPanelDto:any){
+    this.showLoader();
+    return this.financialVendorDataService.updateProviderPanel(ProviderPanelDto).subscribe({
+      next: (updatedResponse: any) => {
+        if (updatedResponse) {
+          this.updateProviderPanelSubject.next(updatedResponse);   
+          this.hideLoader();      
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
+  }
+
 
   updateManufacturerProfile(vendorProfile: any){
     return this.financialVendorDataService.updateManufacturerProfile(vendorProfile);

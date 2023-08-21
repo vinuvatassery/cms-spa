@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DrugCategoryCode } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+
 @Component({
   selector: 'cms-financial-drugs',
   templateUrl: './financial-drugs.component.html',
@@ -61,7 +62,9 @@ export class FinancialDrugsComponent {
 
 
    /** Constructor **/
-   constructor(private route: ActivatedRoute) {}
+   constructor(private route: ActivatedRoute,
+    private readonly ref: ChangeDetectorRef,
+   ) {}
 
 
 
@@ -139,5 +142,10 @@ export class FinancialDrugsComponent {
         sortType: sortTypeValue,
       };
      this.loadDrugListEvent.emit(gridDataRefinerValue);
+  }
+
+
+  public columnChange(e: any) {
+    this.ref.detectChanges();
   }
 }

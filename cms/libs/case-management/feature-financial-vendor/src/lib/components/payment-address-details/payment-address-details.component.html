@@ -58,7 +58,7 @@
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['cityCode'].valid">City is
                     required.</kendo-formerror>
             </div>
-            <div class="flex-col flex-col-6">                
+            <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="State">
                     <kendo-dropdownlist formControlName="stateCode" [data]="ddlStates$ | async" textField="stateName"
                         valueField="stateCode" [fillMode]="formUiStyle.dropDownFillMode" [valuePrimitive]="true">
@@ -87,11 +87,12 @@
                             <input type="radio" kendoRadioButton  name="paymentMethodCode" formControlName="paymentMethodCode"
                              id="{{item.lovDesc}}" [value]="item.lovCode" />
                             <kendo-label class="k-radio-label" text="{{item.lovDesc}}" for="{{item.lovDesc}}"></kendo-label>
-                        </span>                        
+                        </span>
                     </div>
+                    <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['paymentMethodCode'].valid">a selection is required.</kendo-formerror>
                 </fieldset>
             </div>
-            <div *ngIf="tabCode !== financialVendorProviderTabCode.Manufacturers" class="flex-col flex-col-6">
+            <div *ngIf="tabCode === financialVendorProviderTabCode.InsuranceVendors" class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Payment run date">
                     <kendo-dropdownlist formControlName="paymentRunDateMonthly" [data]="paymentRunDatelov$ | async" textField="lovDesc"
                         valueField="lovCode" [fillMode]="formUiStyle.dropDownFillMode" [valuePrimitive]="true" >
@@ -99,7 +100,7 @@
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['paymentRunDateMonthly'].valid">a selection is required.</kendo-formerror>
             </div>
-            <div *ngIf="tabCode !== financialVendorProviderTabCode.Manufacturers" class="flex-col flex-col-6 mt-4">
+            <div *ngIf="tabCode === financialVendorProviderTabCode.InsuranceVendors" class="flex-col flex-col-6 mt-4">
                 <kendo-label> Of each Month</kendo-label>
             </div>
             <div class="flex-col mt-1" *ngIf="tabCode === financialVendorProviderTabCode.InsuranceVendors">
@@ -170,14 +171,14 @@
             <div class="flex-col">
                 <cms-vendor-contact [from]="paymentAddressForm" [formSubmitted]="formIsSubmitted" [isEdit]="isEdit" [vendorAddressId]="vendorAddressId"></cms-vendor-contact>
             </div>
-            
+
 
         </div>
     </section>
 
     <kendo-dialog-actions>
         <div class="justify-content-between">
-            
+
             <div class="justify-content-end">
                 <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail" (click)="closeModal(true)"> Cancel
                 </button>
