@@ -135,7 +135,6 @@ export class FinancialClaimsDetailFormComponent {
     this.claimFlagExceptionCounter = `${this.claimFlagExceptionCharachtersCount}/${this.claimFlagExceptionMaxLength}`;
   }
   loadServiceCostMethod(index:number){
-    debugger
     let totalServiceCost = 0;
     for(let i = 0; i < this.AddClaimServicesForm.length; i++) {
       const serviceCostControl = this.AddClaimServicesForm.at(i).get('serviceCost');
