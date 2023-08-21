@@ -17,16 +17,16 @@ export class FinancialClaimsDataService {
 
   CheckExceededMaxBenefit(serviceCost: number, clientId: number ) {
     debugger
-    console.log(`${this.configurationProvider.appSettings.caseApiUrl}` +
-    `/ClaimFlags/medicalclaim?servicesCost=${serviceCost}&clientId=${clientId}`)
+    // console.log(`${this.configurationProvider.appSettings.caseApiUrl}` +
+    // `/ClaimFlags/medicalclaim?servicesCost=${serviceCost}&clientId=${clientId}`)
 
-    return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/ClaimFlags/medicalclaim?servicesCost=${serviceCost}&clientId=${clientId}`
-    );
-    // console.log(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/dental/exceeded-limit?servicesCost=${serviceCost}&clientId=${clientId}`);
-    // return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/dental/exceeded-limit?servicesCost=${serviceCost}&clientId=${clientId}`
+    // return this.http.get<any>(
+    //   `${this.configurationProvider.appSettings.caseApiUrl}` +
+    //     `/ClaimFlags/medicalclaim?servicesCost=${serviceCost}&clientId=${clientId}`
     // );
+    console.log(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/dental/exceeded-limit?servicesCost=${serviceCost}&clientId=${clientId}`);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/dental/exceeded-limit?servicesCost=${serviceCost}&clientId=${clientId}`
+    );
     
     
   }
