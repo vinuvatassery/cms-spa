@@ -142,9 +142,7 @@ export class FinancialClaimsDetailFormComponent {
         totalServiceCost += +serviceCostControl.value;
       }
     }
-    this.checkservicescastvalue = totalServiceCost
-    // return totalServiceCost;
-        return this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,12)
+    return this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,12)
   }
   get AddClaimServicesForm(): FormArray {
     return this.claimFlagExcededBaniftForm.get('claimService') as FormArray;
