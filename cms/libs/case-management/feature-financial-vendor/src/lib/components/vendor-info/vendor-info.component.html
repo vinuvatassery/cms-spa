@@ -62,7 +62,7 @@
           </tr>
           <tr *ngIf="providerType == vendorTypes.Pharmacy">
             <td>Preferred Pharmacy?</td>
-            <td>{{selectedVendorInfo$?.preferredFlag == 'Y' ? 'Yes' : 
+            <td>{{selectedVendorInfo$?.preferredFlag == 'Y' ? 'Yes' :
               (selectedVendorInfo$?.preferredFlag == 'N' ? 'No' : '' )}}
             </td>
           </tr>
@@ -86,7 +86,7 @@
         <kendo-popover
           #onUserProfileDetailsHovered
           width="330"
-          position="left"
+          position="right"
         >
           <ng-template kendoPopoverBodyTemplate>
             <common-user-profile-card [userId]="selectedVendorInfo$?.lastModifierId"></common-user-profile-card>
