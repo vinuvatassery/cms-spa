@@ -35,7 +35,7 @@ export class ContactAddressListComponent implements OnChanges {
   public contactAddressActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Address',
+      text: 'Edit Contact',
       icon: 'edit',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -46,7 +46,7 @@ export class ContactAddressListComponent implements OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Deactivate Address',
+      text: 'Deactivate Contact',
       icon: 'block',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -58,7 +58,7 @@ export class ContactAddressListComponent implements OnChanges {
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Address',
+      text: 'Delete Contact',
       icon: 'delete',
       click: (data: any): void => {
         if (data?.vendorContactId) {
