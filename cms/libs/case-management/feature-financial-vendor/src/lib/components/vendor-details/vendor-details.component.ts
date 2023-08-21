@@ -151,7 +151,7 @@ fillFormData(){
     }
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if (mailCode) {
-      
+
       this.medicalProviderForm.controls['nameOnCheck']
         .setValidators([
           Validators.required,
@@ -347,7 +347,7 @@ fillFormData(){
        },
          error: (err) => {
           this.financialVendorFacade.hideLoader();
-          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);  
+          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
          },
        });
       }
@@ -385,7 +385,7 @@ fillFormData(){
             emailAddress: contact.email,
             emailAddressTypeCode: AddressType.Email,
             faxNbr: contact.fax,
-            isPreferedContact : contact.isPreferedContact ? 'Y' : 'N'
+            preferredFlag : contact.isPreferedContact ? 'Y' : 'N'
           }
           this.vendorContactList.push(vendorContact);
         }
