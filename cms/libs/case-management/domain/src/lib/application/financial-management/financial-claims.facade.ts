@@ -205,10 +205,24 @@ export class FinancialClaimsFacade {
       },
     });  
   }
+  // loadExceededMaxBenefit(serviceCost: number, clientId: number){
+  //   return this.financialClaimsDataService.CheckExceededMaxBenefit(
+  //     serviceCost,
+  //     clientId
+  //   )
+  // }
+
   loadExceededMaxBenefit(serviceCost: number, clientId: number){
-    return this.financialClaimsDataService.CheckExceededMaxBenefit(
-      serviceCost,
-      clientId
-    )
+    this.showLoader();
+    this.financialClaimsDataService.CheckExceededMaxBenefit(serviceCost,clientId).subscribe({
+      next: (serviceCostResponse:any)=>{
+        serviceCostResponse.serviceCost,
+        serviceCostResponse.clientId
+      },
+      error: (err:any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    })
+    this.hideLoader();
   }
 }
