@@ -4,7 +4,7 @@
   <h4 hidden>Authorization Notice</h4>
 
   <section class="pt-1">
-    <p> 
+    <p>
      {{isCerForm?  'Send the CER to the client to sign. They may also sign through their online portal.':'Send the application to the applicant to sign. They may also sign through  their online portal.'}}
     </p>
     <div class="flex-row">
@@ -38,13 +38,13 @@
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Date Signature Noted">
-          <kendo-textbox 
-          placeholder="Date Signature Noted" 
-          aria-label="Date Signature Noted" 
-          [disabled]="true" 
+          <kendo-textbox
+          placeholder="Date Signature Noted"
+          aria-label="Date Signature Noted"
+          [disabled]="true"
           [fillMode]="formUiStyle.inputFillMode"
           formControlName="signatureNotedDate"
-          >   
+          >
         </kendo-textbox>
         </kendo-floatinglabel>
       </div>
@@ -58,7 +58,7 @@
         >
           Send Letter
         </button>
-        <button *ngIf="isGoPaperlessOpted" [disabled]="dateSignatureNoted != null" 
+        <button *ngIf="isGoPaperlessOpted" [disabled]="dateSignatureNoted != null"
           kendoButton
           [primary]="true"
           class="ml-2"
@@ -101,7 +101,7 @@
             >
               Send Email
             </button>
-          </div>        
+          </div>
           </div>
         </div>
       </div>
@@ -118,9 +118,9 @@
               [isFileViewable]="true"
               (handleFileSelectEvent)="handleFileSelected($event)"
               (handleFileRemoveEvent)="handleFileRemoved($event)"
-              (handleTypeCodeEvent)="handleTypeCodeEvent($event)"> 
+              (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
             </common-document-upload>
-            <kendo-formhint>Max file size 25MB</kendo-formhint> 
+            <kendo-formhint>Max file size 25MB</kendo-formhint>
             <kendo-formerror *ngIf="showCopyOfSignedApplicationRequiredValidation | async"> Copy of signed application is required</kendo-formerror>
             <kendo-formerror *ngIf="showCopyOfSignedApplicationSizeValidation | async">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
         </div>
@@ -190,11 +190,12 @@
 
 <!-- Send New Letter Modal -->
 <ng-template #sendLetterDialog>
-<case-management-send-letter 
+<case-management-send-letter
   [data]="screenName"
   [clientId]="clientId"
   [isCerForm]="isCerForm"
   [clientCaseEligibilityId]="clientCaseEligibilityId"
+  [communicationLetterTypeCode] = "communicationLetterTypeCode"
   (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)"
   kendoTooltip
 >
@@ -210,6 +211,8 @@
   [clientCaseEligibilityId]="clientCaseEligibilityId"
   (closeSendEmailEvent)="handleCloseSendNewEmailClicked($event)"
   (isSendEmailSuccess)="updateSendEmailSuccessStatus($event)"
+  [emailSubject] = "emailSubject"
+  [communicationEmailTypeCode] = "communicationEmailTypeCode"
   kendoTooltip
 ></case-management-send-email>
 </ng-template>

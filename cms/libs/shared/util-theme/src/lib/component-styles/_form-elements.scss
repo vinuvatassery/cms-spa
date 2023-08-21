@@ -762,6 +762,12 @@ kendo-timepicker {
   border-color: material-color($hive-neutral-palette, 50) !important;
   border: 1px solid material-color($hive-neutral-palette, 50) !important;
   opacity: 1;
+  .k-chip-actions, .k-clear-value{
+    display: none;
+  }
+  .k-chip-outline-base{
+    border-color:rgba($color: $black, $alpha: 0.1)
+  }
 }
  
 .small-dropdown-form {
