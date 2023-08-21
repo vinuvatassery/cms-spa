@@ -151,20 +151,7 @@ fillFormData(){
     }
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if (mailCode) {
-      
-      this.medicalProviderForm.controls['nameOnCheck']
-        .setValidators([
-          Validators.required,
-        ]);
-      this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
-
-      this.medicalProviderForm.controls['nameOnEnvolop']
-      .setValidators([
-        Validators.required,
-      ]);
-      this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
-
-      this.medicalProviderForm.controls['addressLine1']
+               this.medicalProviderForm.controls['addressLine1']
         .setValidators([
           Validators.required,
         ]);
@@ -196,6 +183,19 @@ fillFormData(){
           Validators.required,
         ]);
       this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();
+
+      this.medicalProviderForm.controls['nameOnCheck']
+      .setValidators([
+        Validators.required,
+      ]);
+    this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
+
+    this.medicalProviderForm.controls['nameOnEnvolop']
+    .setValidators([
+      Validators.required,
+    ]);
+    this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
+
     }
 
     if (this.providerType == this.vendorTypes.InsuranceVendors) {
