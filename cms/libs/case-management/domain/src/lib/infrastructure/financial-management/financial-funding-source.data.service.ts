@@ -15,20 +15,26 @@ export class FinancialFundingSourceDataService {
  
 
  
-  loadFinancialFundingSourceFacadeListService( ) {
-    return of([
-      {
-        id:1,
-        fundingSource: 'Address `',
-        fundingName:'address2', 
-        isActive: false,
-      },
-      {
-        id:1,
-        fundingSource: 'Address `',
-        fundingName:'address2', 
-        isActive: true,
-      },
-    ]);
+  // loadFinancialFundingSourceFacadeListService( ) {
+  //   return of([
+  //     {
+  //       id:1,
+  //       fundingSource: 'Address `',
+  //       fundingName:'address2', 
+  //       isActive: false,
+  //     },
+  //     {
+  //       id:1,
+  //       fundingSource: 'Address `',
+  //       fundingName:'address2', 
+  //       isActive: true,
+  //     },
+  //   ]);
+  // }
+  loadFinancialFundingSourceFacadeListService(){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/funding-source/`
+    );
   }
-}
+  }

@@ -14,11 +14,13 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
+import { FinancialFundingSourceFacade } from '@cms/case-management/domain';
 import {
   CompositeFilterDescriptor,
   State,
   filterBy,
 } from '@progress/kendo-data-query';
+
 import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-financial-funding-sources-list',
@@ -50,6 +52,8 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
+  gridFinancialFunding:any;
+  
 
   gridFinancialFundingSourcesDataSubject = new Subject<any>();
   gridFinancialFundingSourceData$ =
@@ -91,11 +95,14 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
+    private financialFundingSourceFacade: FinancialFundingSourceFacade,
     private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
     this.loadFinancialFundingSourceFacadeListGrid();
+    this.loadAllFundingSourceAsync();
+    
   }
   ngOnChanges(): void {
     this.state = {
@@ -234,6 +241,10 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
       this.removeFundingOpened =false;
       this.removeFundingDialog.close();
     }
+  }
+  loadAllFundingSourceAsync(){
+    debugger;
+    this.financialFundingSourceFacade.loadFinancialFundingSourceFacadeListGrid();
   }
  
 }

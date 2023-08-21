@@ -60,11 +60,16 @@ export class FinancialFundingSourceFacade {
 
   /** Public methods **/
   loadFinancialFundingSourceFacadeListGrid(){
-    this.financialFundingSourceDataService.loadFinancialFundingSourceFacadeListService().subscribe({
+    this.financialFundingSourceDataService. loadFinancialFundingSourceFacadeListService().subscribe({
       next: (dataResponse) => {
-        this.financialFundingSourceFacadeDataSubject.next(dataResponse);
+        if (dataResponse) {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+        this.financialFundingSourceFacadeDataSubject.next(gridView);
         this.hideLoader();
-      },
+      }},
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
         this.hideLoader(); 
@@ -72,5 +77,17 @@ export class FinancialFundingSourceFacade {
     });  
   }   
 
+  // loadAllFundingSourceAsync(){
+  //   this.financialFundingSourceDataService.loadAllFundingSourceAsync().subscribe({
+  //     next: (dataResponse) => {
+  //       this.financialFundingSourceFacadeDataSubject.next(dataResponse);
+  //       this.hideLoader();
+  //     },
+  //     error: (err) => {
+  //       this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+  //       this.hideLoader();
+  //     },
+  //   });
+  // }
 
 }
