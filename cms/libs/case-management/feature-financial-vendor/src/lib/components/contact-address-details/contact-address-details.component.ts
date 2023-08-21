@@ -85,7 +85,6 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
               SnackBarNotificationType.SUCCESS,
               'Contact Address added successfully'
             );
-            this.vendocontactsFacade.loadcontacts(this.contactAddress.vendorAddressId ?? "");
             this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);
           }
