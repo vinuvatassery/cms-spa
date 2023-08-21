@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList } from '@angular/core'; 
+import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList } from '@angular/core';
 import { PaymentsFacade,BillingAddressFacade,VendorContactsFacade, ContactResponse ,FinancialVendorTypeCode, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -29,11 +29,12 @@ export class PaymentAddressesComponent {
   isContactDetailShow = false;
   isPaymentAddressDetailIsEdit = false;
   isPaymentAddressDeactivateShow = false;
-  isPaymentAddressDeleteShow = false; 
+  isPaymentAddressDeleteShow = false;
   VendorAddressId:any;
   billingAddressObj: any[] = [];
   tabCode: string = '';
   addressId: any;
+  isShowHistoricalData = false;
   financialVendorType: typeof FinancialVendorTypeCode = FinancialVendorTypeCode;
   @ViewChildren(GridComponent) private grid !: QueryList<GridComponent>;
   IsAddContactDisabled:boolean=true;
@@ -45,13 +46,13 @@ export class PaymentAddressesComponent {
       PhoneNumber: 'XXXXXX',
       FaxNumber: 'XXXXXX',
       EmailAddress: 'XXXXXX',
-      EffectiveDate: 'XXXXXX', 
-      by: 'XX', 
+      EffectiveDate: 'XXXXXX',
+      by: 'XX',
     },
   ];
-     
 
-  
+
+
   public paymentAddressActions = [
     {
       buttonType: 'btn-h-primary',
@@ -82,10 +83,10 @@ export class PaymentAddressesComponent {
   /** Constructor **/
   constructor(private readonly paymentsFacade: PaymentsFacade,private readonly paymentBillingFacade: BillingAddressFacade,private readonly vendorcontactFacade: VendorContactsFacade,private route: ActivatedRoute, private readonly cdr: ChangeDetectorRef) { }
 
-   
+
   ngOnInit(): void {
     this.vendorcontactFacade.loadMailCodes(this.vendorId);
-    this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {   
+    this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {
       if(mailCode.length>0)
       {
         this.IsAddContactDisabled=false;
@@ -120,9 +121,9 @@ export class PaymentAddressesComponent {
   public onDetailCollapse(e: any): void {
   }
 
-  public onDetailExpand(e: any): void { 
-    this.VendorAddressId=e.dataItem.vendorAddressId;  
-   
+  public onDetailExpand(e: any): void {
+    this.VendorAddressId=e.dataItem.vendorAddressId;
+
   }
   public dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
@@ -138,7 +139,9 @@ export class PaymentAddressesComponent {
       this.state.skip ?? 0,
       this.state.take ?? 0,
       this.sortValue,
-      this.sortType
+      this.sortType,
+      this.vendorId,
+      this.isShowHistoricalData
     );
   }
 
@@ -187,7 +190,7 @@ export class PaymentAddressesComponent {
     this.isPaymentAddressDeactivateShow = true;
   }
 
-  
+
 
   clickCloseDeactivatePaymentAddress(isSuccess: boolean): void {
     this.isPaymentAddressDeactivateShow = false;
@@ -242,5 +245,9 @@ export class PaymentAddressesComponent {
       this.clickOpenDeactivatePaymentAddressDetails();
     }
     this.cdr.detectChanges();
+  }
+  onGetHistoricalPaymentAddressData()
+  {
+    this.loadPaymentsAddressListGrid();
   }
 }

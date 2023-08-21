@@ -4,13 +4,13 @@
         <div>
             <span class="app-checkboxwidtext-wrapper">
                 <input type="checkbox" kendoCheckBox  aria-labelledby="AddressesshowHistorical"
-                    id="AddressesshowHistorical" />
+                    id="AddressesshowHistorical" [(ngModel)]="isShowHistoricalData" (ngModelChange)="onGetHistoricalPaymentAddressData()" />
                 <label class="k-checkbox-label" for="AddressesshowHistorical">Show historical</label>
             </span>
         </div>
     </div>
     <div class="flex-col mt-1">
-        <div class="app-c-table">          
+        <div class="app-c-table">
             <kendo-grid #grid  [resizable]="true" [loading]="isPaymentsAddressGridLoaderShow" [pageSize]="state.take" [pageable]="true"
             [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
             [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [navigable]="true" [data]="paymentsAddressGridView$ | async"   (detailCollapse)="onDetailCollapse($event)"
@@ -85,10 +85,10 @@
                         </kendo-dropdownbutton>
                     </ng-template>
                 </kendo-grid-column>
-              
+
                   <div *kendoGridDetailTemplate="let dataItem">
                     <cms-contact-address-list [VendorAddressId]="VendorAddressId"></cms-contact-address-list>
-                  
+
                     </div>
 
                         <!-- grid Pagination template -->
@@ -128,7 +128,7 @@
       <button kendoButton [primary]="true" icon="add" aria-label="add Address" class="mr-1"  (click)="clickOpenAddEditPaymentAddressDetails()">
         Address
       </button>
-       
+
       <button kendoButton [disabled]="IsAddContactDisabled"   icon="add" [primary]="true" (click)="clickOpenAddContactDetails()" look="flat" aria-label="Add Contact" >
           Contact
         </button>
@@ -139,7 +139,7 @@
 class="app-c-modal app-c-modal-md app-c-modal-np">
 <kendo-dialog-titlebar (close)="clickCloseAddContactDetails()"> Add Contact(
   <span style="font-size: small;  font-weight: bold;" >s</span>)
-  
+
 </kendo-dialog-titlebar>
 <cms-contact-address-details [vendorId]="vendorId" (isContactDetailPopupClose)="onClose($event)"></cms-contact-address-details>
 </kendo-dialog>
