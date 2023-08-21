@@ -246,4 +246,8 @@ export class PaymentAddressesComponent {
     }
     this.cdr.detectChanges();
   }
+
+  public columnChange(e: any) {
+    this.cdr.detectChanges();
+  }
 }
