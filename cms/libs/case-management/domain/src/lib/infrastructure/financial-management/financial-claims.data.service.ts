@@ -418,7 +418,6 @@ export class FinancialClaimsDataService {
   }
 
   saveMedicalClaim(claim: any, typeCode: string) {
-    debugger
     let path;
     if (typeCode == FinancialProvider.MedicalProvider) {
       path = 'financial-management/claims/medical/save';
