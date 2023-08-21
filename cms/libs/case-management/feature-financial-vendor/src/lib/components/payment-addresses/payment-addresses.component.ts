@@ -35,6 +35,8 @@ export class PaymentAddressesComponent {
   tabCode: string = '';
   addressId: any;
   isShowHistoricalData = false;
+  addEditTitleText = 'Add Payment Address';
+  manufacturerAddEditTitleText = 'Add Address';
   financialVendorType: typeof FinancialVendorTypeCode = FinancialVendorTypeCode;
   @ViewChildren(GridComponent) private grid !: QueryList<GridComponent>;
   IsAddContactDisabled:boolean=true;
@@ -60,7 +62,6 @@ export class PaymentAddressesComponent {
       icon: 'edit',
       type: 'Edit',
       click: (data: any): void => {;
-        this.clickOpenAddEditPaymentAddressDetails();
       },
     },
     {
@@ -152,6 +153,8 @@ export class PaymentAddressesComponent {
 
 
   clickOpenAddEditPaymentAddressDetails() {
+    this.addEditTitleText = 'Add Payment Address'
+    this.manufacturerAddEditTitleText = 'Add Address'
     this.isPaymentAddressDetailShow = true;
     this.isPaymentAddressDetailIsEdit = false;
   }
@@ -197,6 +200,7 @@ export class PaymentAddressesComponent {
 
   clickCloseDeactivatePaymentAddress(isSuccess: boolean): void {
     this.isPaymentAddressDeactivateShow = false;
+    this.clickCloseAddEditPaymentAddressDetails();
     if (isSuccess)
       this.loadPaymentsAddressListGrid();
   }
@@ -241,6 +245,8 @@ export class PaymentAddressesComponent {
     else if (type == 'Edit') {
       this.addressId = dataItem.vendorAddressId ?? this.addressId;
       this.billingAddressObj = dataItem;
+      this.addEditTitleText = 'Edit Payment Address'
+      this.manufacturerAddEditTitleText = 'Edit Address'
       this.clickOpenEditPaymentAddressDetails();
     }
     else if (type == 'Deactivate') {
@@ -252,5 +258,9 @@ export class PaymentAddressesComponent {
   onGetHistoricalPaymentAddressData()
   {
     this.loadPaymentsAddressListGrid();
+  }
+  onEditDeactivateClicked(event:any)
+  {
+    this.handleOptionClick(event,'Deactivate');
   }
 }

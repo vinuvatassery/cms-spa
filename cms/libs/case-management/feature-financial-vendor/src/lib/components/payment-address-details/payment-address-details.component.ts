@@ -14,6 +14,7 @@ type NewType = LovFacade;
 })
 export class PaymentAddressDetailsComponent implements OnInit {
   @Output() closeEvent = new EventEmitter<any>();
+  @Output() editDeactivateClicked = new EventEmitter<any>();
   @Input() isEdit!: any
   @Input() billingAddress!: any
   specialHandlingLength = 100;
@@ -68,6 +69,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
     this.paymentAddressForm.controls['stateCode'].setValue(this.billingAddress.stateCode);
     this.paymentAddressForm.controls['zip'].setValue(this.billingAddress.zip);
     this.paymentAddressForm.controls['paymentMethodCode'].setValue(this.billingAddress.paymentMethodCode);
+    this.paymentAddressForm.controls['paymentRunDateMonthly'].setValue(this.billingAddress.paymentRunDateMonthly.toString());
     this.paymentAddressForm.controls['specialHandlingDesc'].setValue(this.billingAddress.specialHandlingDesc);
     if (this.tabCode === FinancialVendorProviderTabCode.InsuranceVendors) {
       this.paymentAddressForm.controls['acceptsReportsFlag'].setValue(this.billingAddress.acceptsReportsFlag);
@@ -193,6 +195,10 @@ export class PaymentAddressDetailsComponent implements OnInit {
   onSpecialHandlingValueChange(event: any): void {
     this.specialHandlingCharachtersCount = event.length;
     this.specialHandlingCounter = `${this.specialHandlingCharachtersCount}/${this.specialHandlingLength}`;
+  }
+  deactivatePaymentAddress()
+  {
+    this.editDeactivateClicked.emit(this.billingAddress);
   }
 
 }
