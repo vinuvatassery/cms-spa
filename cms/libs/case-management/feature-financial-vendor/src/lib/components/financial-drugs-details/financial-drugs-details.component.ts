@@ -43,7 +43,7 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
 
   createDrugForm(){
     this.drugForm = this.formBuilder.group({
-      manufacturer: [{ value: this.drug.manufacturer, disabled: true }],
+      manufacturer: [{ value: this.drug.manufacturer, disabled: false }],
       ndcNbr: [this.drug.ndcNbr, Validators.required],
       vendorId: [this.drug.vendorId],
       deliveryMethodCode: [this.drug.deliveryMethodCode, Validators.required],
@@ -53,8 +53,7 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
         hiv: [''],
         hepatitis: [''],
         opportunisticInfection: [''],
-      }, { validators: this.atLeastOneDrugTypeSelected() }),
-      includeInManufacturerRebatesFlag: ['',Validators.required],
+      }, { validators: this.atLeastOneDrugTypeSelected() })
     });
   }
 
@@ -102,10 +101,6 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
   }
 
   validateForm() {
-    this.drugForm.controls['includeInManufacturerRebatesFlag'].setValidators([
-      Validators.required,
-    ]);
-    this.drugForm.controls['includeInManufacturerRebatesFlag'].updateValueAndValidity();
     this.drugForm.controls['drugCategoryCode'].setValidators(this.atLeastOneDrugTypeSelected());
     this.drugForm.controls['drugCategoryCode'].updateValueAndValidity();
   }
