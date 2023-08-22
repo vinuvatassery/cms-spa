@@ -383,9 +383,9 @@ export class FinancialClaimsDataService {
   getMedicalClaimByPaymentRequestId(paymentRequestId: any, typeCode: string) {
     let path;
     if (typeCode == FinancialProvider.MedicalProvider) {
-      path = 'financial-management/claims/medical/claim';
+      path = 'financial-management/claims/medical';
     } else {
-      path = 'financial-management/claims/dental/claim';
+      path = 'financial-management/claims/dental';
     }
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/${path}/${paymentRequestId}`
