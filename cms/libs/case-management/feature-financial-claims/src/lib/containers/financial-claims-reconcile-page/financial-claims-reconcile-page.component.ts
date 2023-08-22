@@ -62,8 +62,8 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
     this.batchId = this.route.snapshot.queryParams['bid'];   
   }
 
-  loadReconcileListGrid(event: any) {  
-    const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter)); 
+  loadReconcileListGrid(event: any) {
+    const params = new GridFilterParam(event.skipCount, event.pageSize, event.sortColumn, event.sortType, JSON.stringify(event.filter)); 
     this.financialClaimsFacade.loadReconcileListGrid(this.batchId,this.claimsType,params);    
   }
 
