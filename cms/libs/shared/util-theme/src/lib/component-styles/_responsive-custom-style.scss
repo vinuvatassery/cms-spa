@@ -302,7 +302,7 @@
   flex-direction: column-reverse;
   gap: 8px;
   .sidePanel-event-log .sidePanel_body {
-    max-height: calc(100vh - 35vh);
+    max-height: 57vh !important;
   }
   .app-c-fab-sidePanel{
     max-width: 100%;
@@ -320,10 +320,6 @@
   }
   .sidePanel-todo-reminders .sidePanel_body {
     max-height: 56vh !important;
-}
-
-.sidePanel-event-log .sidePanel_body {
-  max-height: 57vh !important;
 }
   }
 }
