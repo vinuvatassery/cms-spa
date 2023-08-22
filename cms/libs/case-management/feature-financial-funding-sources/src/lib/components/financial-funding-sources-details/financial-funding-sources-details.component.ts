@@ -60,7 +60,7 @@ export class FinancialFundingSourcesDetailsComponent implements OnInit {
     if (this.fundingSourceForm.invalid) {
       return;
     }
-    var fundingSource = {
+    let fundingSource = {
       fundingSourceId: this.fundingSourceForm?.controls.fundingSourceId.value,
       fundingSourceCode: this.fundingSourceForm?.controls.fundingSourceCode.value,
       fundingDesc: this.fundingSourceForm?.controls.fundingDesc.value
