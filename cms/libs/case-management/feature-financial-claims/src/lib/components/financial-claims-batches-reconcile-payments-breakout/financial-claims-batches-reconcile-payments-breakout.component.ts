@@ -24,6 +24,9 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
   @Input() batchId:any;
   @Input() entityId:any;
   @Output() loadReconcilePaymentBreakOutGridEvent = new EventEmitter<any>();
+  vendorId:any;
+  clientId:any;
+  clientName:any;
   private addClientRecentClaimsDialog: any;
   public state!: any;
   public formUiStyle : UIFormStyle = new UIFormStyle();   
@@ -295,6 +298,9 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
         duration: 200
       }
     });
+    this.vendorId=data.vendorId;
+    this.clientId=data.clientId;  
+    this.clientName=data.clientName; 
   }
 
   closeRecentClaimsModal(result: any){
