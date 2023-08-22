@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, OnInit, Component, EventEmitter, Output, Input, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import {  AddressTypeCode, BillingAddressFacade, ContactFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
+import {  AddressTypeCode, BillingAddressFacade, ContactFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, StatusFlag } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
@@ -69,11 +69,14 @@ export class PaymentAddressDetailsComponent implements OnInit {
     this.paymentAddressForm.controls['stateCode'].setValue(this.billingAddress.stateCode);
     this.paymentAddressForm.controls['zip'].setValue(this.billingAddress.zip);
     this.paymentAddressForm.controls['paymentMethodCode'].setValue(this.billingAddress.paymentMethodCode);
-    this.paymentAddressForm.controls['paymentRunDateMonthly'].setValue(this.billingAddress.paymentRunDateMonthly.toString());
+    this.paymentAddressForm.controls['paymentRunDateMonthly'].setValue(this.billingAddress.paymentRunDateMonthly?.toString());
     this.paymentAddressForm.controls['specialHandlingDesc'].setValue(this.billingAddress.specialHandlingDesc);
     if (this.tabCode === FinancialVendorProviderTabCode.InsuranceVendors) {
       this.paymentAddressForm.controls['acceptsReportsFlag'].setValue(this.billingAddress.acceptsReportsFlag);
       this.paymentAddressForm.controls['acceptsCombinedPaymentsFlag'].setValue(this.billingAddress.acceptsCombinedPaymentsFlag);
+    }
+    if (this.tabCode === FinancialVendorProviderTabCode.Pharmacy) {
+      this.paymentAddressForm.controls['physicalAddressFlag'].setValue(this.billingAddress.physicalAddressFlag == StatusFlag.Yes?true:null);
     }
     this.cdr.detectChanges();
   }
@@ -116,6 +119,10 @@ export class PaymentAddressDetailsComponent implements OnInit {
       this.paymentAddressForm.controls['paymentRunDateMonthly'].removeValidators([Validators.required]);
       this.paymentAddressForm.controls['paymentRunDateMonthly'].setValue(null);
     }
+    if(this.tabCode === FinancialVendorProviderTabCode.Pharmacy)
+    {
+      this.paymentAddressForm.addControl('physicalAddressFlag', new FormControl(''))
+    }
   }
   private setAddressTypeCode() {
     switch (this.tabCode) {
@@ -155,6 +162,10 @@ export class PaymentAddressDetailsComponent implements OnInit {
   submit() {
     this.formIsSubmitted = true;
     this.paymentAddressForm.markAllAsTouched();
+    if (this.tabCode === FinancialVendorProviderTabCode.Pharmacy)
+    {
+      this.paymentAddressForm.patchValue({physicalAddressFlag: this.paymentAddressForm.controls['physicalAddressFlag'].value ? StatusFlag.Yes:null});
+    }
     if (!this.paymentAddressForm.valid) return;
 
     let formValues = this.paymentAddressForm.value;
@@ -200,6 +211,15 @@ export class PaymentAddressDetailsComponent implements OnInit {
   deactivatePaymentAddress()
   {
     this.editDeactivateClicked.emit(this.billingAddress);
+  }
+  OncheckboxClick(event: Event) {
+    const isChecked = (<HTMLInputElement>event.target).checked;
+    if (isChecked) {
+      this.paymentAddressForm.patchValue({physicalAddressFlag: true});
+    } else {
+      this.paymentAddressForm.patchValue({physicalAddressFlag: null});
+    }
+    this.cdr.detectChanges();
   }
 
 }
