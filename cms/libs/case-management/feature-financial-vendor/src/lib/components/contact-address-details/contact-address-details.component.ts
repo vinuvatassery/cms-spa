@@ -103,7 +103,6 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   public Update() {    
     this.isSubmitted = true;
     this.AddContactForm.value.forEach((element:any, i: number) => {  
-      debugger  
       this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
     }); 
     if (this.contactForm.controls['vendorContacts'].valid) {
@@ -146,7 +145,6 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   }
 
   onToggleAddNewContactClick() {
-    debugger
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl(
         this.contactAddress.contactName,
@@ -181,7 +179,6 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   }
 
   OncheckboxClick(event: Event, index: any) {
-    debugger
     const isChecked = (<HTMLInputElement>event.target).checked;
     if (isChecked) {
       this.AddContactForm.value.forEach((element:any, i: number) => {
