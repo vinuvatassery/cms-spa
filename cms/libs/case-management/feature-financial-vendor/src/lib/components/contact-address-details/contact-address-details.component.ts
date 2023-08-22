@@ -100,7 +100,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     }
   }
 
-  public Update() {    
+  public update() {    
     this.isSubmitted = true;
     this.AddContactForm.value.forEach((element:any, i: number) => {  
       this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
@@ -135,7 +135,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     return this.contactForm.get('vendorContacts') as FormArray;
   }
 
-  IsContactNameValid(index: any) {
+  isContactNameValid(index: any) {
     let contactNameIsvalid = this.AddContactForm.at(index) as FormGroup;
 
     return contactNameIsvalid.controls['contactName'].status == 'INVALID';
@@ -170,7 +170,6 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       preferredFlag: new FormControl(this.contactAddress.preferredFlag=="Y"?true:false),
     });
     this.AddContactForm.push(addContactForm);
-    debugger
     this.cd.detectChanges();
   }
 
@@ -178,7 +177,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     this.AddContactForm.removeAt(i);
   }
 
-  OncheckboxClick(event: Event, index: any) {
+  oncheckboxClick(event: Event, index: any) {
     const isChecked = (<HTMLInputElement>event.target).checked;
     if (isChecked) {
       this.AddContactForm.value.forEach((element:any, i: number) => {
