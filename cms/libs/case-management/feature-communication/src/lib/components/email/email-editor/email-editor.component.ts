@@ -112,7 +112,7 @@ export class EmailEditorComponent implements OnInit {
     if(this.currentValue){
       this.emailEditorValueEvent(this.currentValue);
       this.selectedAttachedFile = [];
-      if(this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter){
+      if(this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter){
         this.loadUserDraftTemplateAttachment();
         this.loadLetterAttachment(this.currentValue.documentTemplateId, CommunicationEventTypeCode.CERAttachmentTypeCode);
       }
