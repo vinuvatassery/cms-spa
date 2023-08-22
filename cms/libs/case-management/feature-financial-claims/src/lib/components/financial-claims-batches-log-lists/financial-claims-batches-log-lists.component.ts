@@ -56,7 +56,7 @@ export class FinancialClaimsBatchesLogListsComponent
       icon: 'local_atm',
       click: (data: any): void => {
         this.isRequestPaymentClicked = true;
-        this.isPrintAuthorizationClicked = false;
+        this.isPrintAdviceLetterClicked = false;
       },
     },
     {
@@ -73,7 +73,7 @@ export class FinancialClaimsBatchesLogListsComponent
       icon: 'print',
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;
-        this.isPrintAuthorizationClicked = true;
+        this.isPrintAdviceLetterClicked = true;
       },
     },
     {
