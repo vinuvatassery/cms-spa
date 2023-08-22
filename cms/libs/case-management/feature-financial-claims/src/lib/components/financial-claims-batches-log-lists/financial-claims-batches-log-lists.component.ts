@@ -333,7 +333,10 @@ export class FinancialClaimsBatchesLogListsComponent
     }
   }
 
-  onBulkOptionCancelClicked() {
+  loadPrintAdviceLetterEvent(event:any){
+    this.loadBatchLogListEvent.emit(event);
+  }
+  onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
     this.isPrintAdviceLetterClicked = false;
   }
