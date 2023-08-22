@@ -167,12 +167,11 @@
     }
   }
   .msg-attachment-wrapper {
-    display: flex;
     overflow: auto;
     gap: 10px;
     width: 100%;
     min-width: 100%;
-    padding: 10px;
+    padding: 10px 0px;
   }
   .attachment-container-list{
     display: inline-flex;

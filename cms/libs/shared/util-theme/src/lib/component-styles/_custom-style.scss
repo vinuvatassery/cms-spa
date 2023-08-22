@@ -917,7 +917,9 @@ color: $app-primary-font-color;
     padding: 5px 6px;
   }
 }
-
+.vendor-header-top{
+  display: flex;
+}
 .more_action_wid {
   >.k-button-solid {
     padding: 8px;
