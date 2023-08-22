@@ -125,6 +125,7 @@ export class AuthorizationComponent   {
               }
               this.loadPendingEsignRequestInfo();
             }
+            this.loaderService.hide();
       },
       error: (err: any) => {
         this.loaderService.hide();
@@ -483,6 +484,7 @@ loadPendingEsignRequestInfo(){
 }
 
 loadCompletedEsignRequestInfo(){
+  this.loaderService.show();
   this.typeCode=CommunicationEventTypeCode.CopyOfSignedApplication;
   this.clientDocumentFacade.getSignedDocumentInfo(this.typeCode ?? ' ', this.subTypeCode ?? ' ',this.workflowFacade.clientCaseEligibilityId ?? '')
     .subscribe({
@@ -492,6 +494,7 @@ loadCompletedEsignRequestInfo(){
           this.isCERApplicationSigned = true;
           this.ref.detectChanges();
           }
+          this.loaderService.hide();
     },
     error: (err: any) => {
       this.loaderService.hide();
