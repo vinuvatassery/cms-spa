@@ -71,6 +71,22 @@ export class FinancialFundingSourceFacade {
       },
     });  
   }   
-
+  loadFundingSourceList(){
+    this.financialFundingSourceDataService.loadFundingSourceList().subscribe({
+      next: (dataResponse) => {
+        if (dataResponse) {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+        this.financialFundingSourceFacadeDataSubject.next(gridView);
+        this.hideLoader();
+      }},
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  }
 
 }

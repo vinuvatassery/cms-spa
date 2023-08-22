@@ -31,4 +31,11 @@ export class FinancialFundingSourceDataService {
       },
     ]);
   }
+  loadFundingSourceList(){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/funding-sources/`
+    );
+  }
+  
 }

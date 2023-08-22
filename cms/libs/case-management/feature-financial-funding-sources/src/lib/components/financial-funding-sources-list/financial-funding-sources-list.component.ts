@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { FinancialFundingSourceFacade } from '@cms/case-management/domain'; 
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
@@ -91,11 +92,13 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private financialFundingSourceFacade: FinancialFundingSourceFacade,
   ) {}
 
   ngOnInit(): void {
     this.loadFinancialFundingSourceFacadeListGrid();
+    this.loadFundingSource();
   }
   ngOnChanges(): void {
     this.state = {
@@ -235,7 +238,9 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
       this.removeFundingDialog.close();
     }
   }
- 
+  loadFundingSource(){
+    this.financialFundingSourceFacade.loadFundingSourceList();
+  }
 }
 
  
