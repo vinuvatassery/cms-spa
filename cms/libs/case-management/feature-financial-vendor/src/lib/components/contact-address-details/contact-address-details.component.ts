@@ -74,7 +74,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     this.isSubmitted = true;
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
     this.AddContactForm.value.forEach((element:any, i: number) => {
-      this.AddContactForm.at(i).patchValue({PreferredFlag: element.PreferredFlag?"Y":"N"})
+      this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
     }); 
     if (this.contactForm.valid) {
       this.loaderService.show();
@@ -100,10 +100,10 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     }
   }
 
-  public Update() {    
+  public update() {    
     this.isSubmitted = true;
-    this.AddContactForm.value.forEach((element:any, i: number) => {    
-      this.AddContactForm.at(i).patchValue({PreferredFlag: element.PreferredFlag?"Y":"N"})
+    this.AddContactForm.value.forEach((element:any, i: number) => {  
+      this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
     }); 
     if (this.contactForm.controls['vendorContacts'].valid) {
       this.loaderService.show();
@@ -135,7 +135,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     return this.contactForm.get('vendorContacts') as FormArray;
   }
 
-  IsContactNameValid(index: any) {
+  isContactNameValid(index: any) {
     let contactNameIsvalid = this.AddContactForm.at(index) as FormGroup;
 
     return contactNameIsvalid.controls['contactName'].status == 'INVALID';
@@ -167,7 +167,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       jobTitle: new FormControl(this.contactAddress.jobTitle),
       vendorName: new FormControl(this.contactAddress.vendorName),
       effectiveDate: new FormControl(this.contactAddress.effectiveDate),
-      PreferredFlag: new FormControl(this.contactAddress.PreferredFlag=="Y"?true:false),
+      preferredFlag: new FormControl(this.contactAddress.preferredFlag=="Y"?true:false),
     });
     this.AddContactForm.push(addContactForm);
     this.cd.detectChanges();
@@ -177,16 +177,16 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     this.AddContactForm.removeAt(i);
   }
 
-  OncheckboxClick(event: Event, index: any) {
+  oncheckboxClick(event: Event, index: any) {
     const isChecked = (<HTMLInputElement>event.target).checked;
     if (isChecked) {
       this.AddContactForm.value.forEach((element:any, i: number) => {
-        this.AddContactForm.at(i).patchValue({PreferredFlag: false})
+        this.AddContactForm.at(i).patchValue({preferredFlag: false})
       });    
-      this.AddContactForm.at(index).patchValue({PreferredFlag: true})
+      this.AddContactForm.at(index).patchValue({preferredFlag: true})
       this.isVisible = true;
     } else {
-      this.AddContactForm.at(index).patchValue({PreferredFlag: false})
+      this.AddContactForm.at(index).patchValue({preferredFlag: false})
       this.isVisible = false;
     }
     this.cd.detectChanges();
