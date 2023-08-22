@@ -23,7 +23,7 @@
           <span *ngIf="mailingAddress">
             <p *ngIf="mailingAddress?.address1">{{ mailingAddress?.address1 }}</p>
             <p *ngIf="mailingAddress?.address2 || mailingAddress?.city">{{ mailingAddress?.address2 }} </p>
-            <p>{{ mailingAddress?.city }}, {{ mailingAddress?.state }} {{ mailingAddress?.zip}}</p>
+            <p *ngIf="mailingAddress?.state || mailingAddress?.city || mailingAddress?.zip">{{ mailingAddress?.city }}, {{ mailingAddress?.state }} {{ mailingAddress?.zip}}</p>
           </span>
           <div style="width:60%" *ngIf="!(mailingAddress)">
             <kendo-skeleton shape="text" animation="pulse" width="40%"></kendo-skeleton>
@@ -46,6 +46,7 @@
           [currentValue]="currentLetterData"
           [clientCaseEligibilityId]="clientCaseEligibilityId"
           [clientId]="clientId"
+          [communicationTypeCode]="communicationLetterTypeCode"
           (cerEmailAttachments)="cerEmailAttachments($event)"
           ></case-management-email-editor>
         </div>
