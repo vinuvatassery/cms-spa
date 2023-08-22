@@ -263,4 +263,7 @@ export class PaymentAddressesComponent {
   {
     this.handleOptionClick(event,'Deactivate');
   }
+  public columnChange(e: any) {
+    this.cdr.detectChanges();
+  }
 }
