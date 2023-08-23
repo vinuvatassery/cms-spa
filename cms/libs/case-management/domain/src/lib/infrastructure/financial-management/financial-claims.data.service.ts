@@ -358,25 +358,34 @@ export class FinancialClaimsDataService {
     ]);
   }
 
-  loadReconcilePaymentBreakoutSummaryService(
-    batchId: string,
-    entityId: string
-  ): Observable<any> {
-    return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}/payment-entity/${entityId}/reconcile-summary`
+  loadReconcilePaymentBreakoutSummaryService(data:any): Observable<any> {  
+    const ReconcilePaymentResponseDto =
+    {
+      BatchId : data.batchId,
+      EntityId : data.entityId,    
+      AmountTotal : data.amountTotal,
+      WarrantTotal : data.warrantTotal,
+      WarrantNbr : data.warrantNbr,
+      PaymentToReconcileCount : data.paymentToReconcileCount
+    }  
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/payment-reconcile-summary`,ReconcilePaymentResponseDto
     );
   }
 
-  loadReconcilePaymentBreakoutListService(
-    batchId: string,
-    entityId: string,
-    skipCount: number,
-    maxResultCount: number,
-    sort: string,
-    sortType: string
-  ): Observable<any> {
-    return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}/payment-entity/${entityId}/reconcile-breakout?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`
+  loadReconcilePaymentBreakoutListService(data:any): Observable<any> { 
+    const BreakoutPanelPageAndSortedRequestDto =
+    {
+      BatchId : data.batchId,
+      EntityId : data.entityId,    
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }  
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/payment-reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto
     );
   }
 

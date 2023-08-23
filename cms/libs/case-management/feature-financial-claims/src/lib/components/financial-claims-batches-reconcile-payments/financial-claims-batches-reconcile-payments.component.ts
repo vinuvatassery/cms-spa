@@ -50,8 +50,11 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
   @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>(); 
-  entityId: any = '823E2464-0649-49DA-91E7-26DCC76A2A6B';
+  entityId: any;
   public isBreakoutPanelShow:boolean=true;
+  amountTotal:any;
+  warrantTotal:any;
+  paymentToReconcileCount:any;
   public state!: State;
   public currentDate =  new Date(); 
   sortColumn = 'batch';
@@ -89,8 +92,19 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     }
   
   ngOnInit(): void {
-    this.isBreakoutPanelShow=false;
-    this.loadReconcilePaymentSummary(this.batchId,'0');    
+    this.isBreakoutPanelShow=false; 
+    this.loadReconcileListGrid();
+    const ReconcilePaymentResponseDto =
+      {
+        batchId : this.batchId,
+        entityId : this.entityId,
+        claimsType: this.claimsType,  
+        amountTotal : 0,
+        warrantTotal : 0,
+        warrantNbr : "",
+        paymentToReconcileCount : 0
+      } 
+      this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
   }
   ngOnChanges(): void {
     this.state = {
@@ -600,36 +614,51 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     toggleBreakoutPanel()
     {
       this.isBreakoutPanelShow=!this.isBreakoutPanelShow;
+      if(!this.isBreakoutPanelShow)
+      {
+        this.reconcileBreakoutSummary$.warrantTotal=0;
+        this.reconcileBreakoutSummary$.paymentToReconcileCount=0;
+      }
     }
 
-    loadBreakOutDetailOnRowClick(batchId:any,entityId:any)
+    onRowSelection(grid:any, selection:any)
     {
-      this.loadReconcilePaymentSummary(batchId,entityId);
-      this.loadReconcilePaymentBreakoutListEvent.emit({
-        batchId: batchId,
-        entityId: entityId,
-        skipCount:0, 
-        pageSize:this.pageSizes[0]?.value, 
-        sort:this.sort,
-        sortType:this.sortType
-      });
+      const data = selection.selectedRows[0].dataItem;
+      this.batchId=this.batchId;
+      this.entityId = data.entityId;          
       this.isBreakoutPanelShow=true;
+      const ReconcilePaymentResponseDto =
+      {
+        batchId : this.batchId,
+        entityId : data.entityId,
+        claimsType: this.claimsType,  
+        amountTotal : data.amountTotal,
+        warrantTotal : data.amountPaid,
+        warrantNbr : data.checkNbr,
+        paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
+      } 
+      this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);    
     }
-
-    loadReconcilePaymentSummary(batchId:any,entityId:any)
+    
+    loadReconcilePaymentSummary(ReconcilePaymentResponseDto:any)
     {
-      this.loadReconcileBreakoutSummaryEvent.emit({batchId: batchId, entityId: entityId});
+      this.loadReconcileBreakoutSummaryEvent.emit(ReconcilePaymentResponseDto);
+      this.amountTotal=this.reconcileBreakoutSummary$.amountTotal;
+      this.paymentToReconcileCount=this.reconcileBreakoutSummary$.paymentToReconcileCount;
+      this.warrantTotal=this.reconcileBreakoutSummary$.warrantTotal;
     }
 
   loadReconcilePaymentBreakOutGridList(event:any)
   {
     this.loadReconcilePaymentBreakoutListEvent.emit({
-      batchId: this.batchId,
-      entityId: this.entityId,
+      batchId: event.batchId,
+      entityId: event.entityId,
+      claimsType:event.claimsType,
       skipCount:event.skipCount, 
       pageSize:event.pagesize, 
       sort:event.sortColumn,
-      sortType:event.sortType
+      sortType:event.sortType,
+      filter:event.filter
     });
   }
 }
