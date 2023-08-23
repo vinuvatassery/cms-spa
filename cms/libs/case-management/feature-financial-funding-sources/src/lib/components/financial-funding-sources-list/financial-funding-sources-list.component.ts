@@ -252,7 +252,9 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
       this.removeFundingDialog.close();
     }
   }
- 
+ loadFundingSource(){
+  this.financialFundingSourceFacade.loadFundingSourceList();
+ }
 }
 
 
