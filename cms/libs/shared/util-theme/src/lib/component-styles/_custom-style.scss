@@ -961,7 +961,7 @@ color: $app-primary-font-color;
   right: 0;
   width: auto;
   left: $app-left_menu-width;
-  z-index: 2;
+  z-index: 4;
   min-height: 40px;
 &.content-start{
   justify-content: flex-start !important;
@@ -1202,4 +1202,9 @@ color: $app-primary-font-color;
 
 .preferred-heading{
   border-left:3px solid material-color($hive-canyon-palette, A700) !important;
+}
+
+
+.bottom-pad{
+  padding-bottom: 60px;
 }

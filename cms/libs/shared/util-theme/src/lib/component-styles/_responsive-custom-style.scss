@@ -322,6 +322,27 @@
     max-height: 56vh !important;
 }
   }
+  .menuSectionToggled {
+    .bottom-fixed-wrapper {
+      left: 0;
+      transition: 0.5s;
+  }
+  }
+  .bottom-fixed-wrapper{
+
+    &.flex-gap, > .flex-gap{
+      flex-wrap: wrap-reverse;
+      left: 0;
+    }
+  }
+  .bottom-pad{
+    padding-bottom: 120px;
+  }
+  .app-c-modal-full{
+    .k-dialog-content{
+      padding: 0px;
+    }
+  }
 }
 
 @media (max-width: $breakpoint-md) {
