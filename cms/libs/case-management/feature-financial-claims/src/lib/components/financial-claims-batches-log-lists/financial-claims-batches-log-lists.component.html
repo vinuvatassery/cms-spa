@@ -297,7 +297,11 @@
     <div *ngIf="isPrintAdviceLetterClicked" >
       <cms-financial-claims-print-advice-letter-log-lists [claimsType]="claimsType" [loader$]="loader$"
       [batchLogGridLists$]="batchLogGridLists$"
-      [pageSizes]="pageSizes" (loadPrintAdviceLetterEvent)="loadPrintAdviceLetterEvent($event)"></cms-financial-claims-print-advice-letter-log-lists>
+      [pageSizes]="pageSizes" 
+      (loadPrintAdviceLetterEvent)="loadPrintAdviceLetterEvent($event)" 
+      (selectUnSelectEvent)="disablePreviewButton($event)"
+      [sort]="sort" [sortValue]="sortValue"
+      [sortType]="sortType"></cms-financial-claims-print-advice-letter-log-lists>
     </div>
     
 
@@ -309,7 +313,7 @@
     <button (click)="goToBatchItems($event)">Batch Log items</button> 
     <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAdviceLetterClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button> 
     <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
-    <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isPrintAdviceLetterClicked" [disabled]="selectedCount == 0" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
+    <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isPrintAdviceLetterClicked" [disabled]="disablePrwButton" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
     <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action"
       buttonClass="k-split-button" [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isPrintAdviceLetterClicked"
       [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">

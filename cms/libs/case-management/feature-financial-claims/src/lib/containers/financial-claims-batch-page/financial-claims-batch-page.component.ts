@@ -35,7 +35,7 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.batchId =  this.route.snapshot.params['bid'];
+    this.batchId =   this.route.snapshot.queryParams['bid'];  
     this.claimsType = this.financialClaimsFacade.getClaimsType(this.router)
     this.addNavigationSubscription();
     this.loadBatchName();

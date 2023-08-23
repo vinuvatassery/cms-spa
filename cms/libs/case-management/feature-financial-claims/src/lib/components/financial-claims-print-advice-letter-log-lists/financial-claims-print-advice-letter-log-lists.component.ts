@@ -21,6 +21,7 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
   @Input() batchLogGridLists$: any;
   @Input() claimsType: any;
   @Output() loadPrintAdviceLetterEvent = new EventEmitter<any>();
+  @Output() selectUnSelectEvent = new EventEmitter<any>();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public state!: State;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -28,10 +29,11 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
   sortDir = 'Ascending';
   sortColumnName = '';
   @Input() pageSizes: any;
-  sort: any ='desc';
-  sortValue: any='creationTime';
-  sortType: any;
+  @Input() sort: any;
+  @Input() sortValue: any;
+  @Input() sortType: any;
   @Input() loader$!: Observable<boolean>;
+  batchLogPrintAdviceLetterPagedList:any;
   isBatchLogGridLoaderShow = false;
   filter!: any;
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -42,6 +44,9 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
   paymentTypeFilter:string ='';
   paymentStatusFilter:string='';
   selectAll:boolean=false;
+  unCheckedPaymentRequest:any=[];
+  selectedDataIfSelectAllUnchecked:any=[];
+  currentGridFilter:any;
   gridColumns : {[key: string]: string} = {
     paymentNbr: 'Item #',
     invoiceNbr: 'Invoice ID',
@@ -67,6 +72,10 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
     });
     this.sortColumnName = 'Item #';
     this.loadBatchLogListGrid();
+    this.batchLogGridLists$.subscribe((response:any) =>{
+        this.markAsChecked(response.data);
+      this.batchLogPrintAdviceLetterPagedList = response;
+    })
   
   }
 
@@ -95,10 +104,67 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
     };   
   }
 
-  selectionChange(event:any){
-    debugger;
+  selectionChange(paymentRequestId:any,selected:boolean){
+    if(!selected){
+      this.unCheckedPaymentRequest.push(paymentRequestId);
+      if(!this.selectAll){
+      let index = this.selectedDataIfSelectAllUnchecked.findIndex((x:any)=>x === paymentRequestId)
+      this.selectedDataIfSelectAllUnchecked = this.selectedDataIfSelectAllUnchecked.splice(index + 1);
+      }
+    }
+    else{
+      let index = this.unCheckedPaymentRequest.findIndex((x:any)=>x === paymentRequestId)
+      this.unCheckedPaymentRequest = this.unCheckedPaymentRequest.splice(index + 1);
+      if(!this.selectAll){
+      this.selectedDataIfSelectAllUnchecked.push(paymentRequestId); 
+      }          
+    }
+    let returnResult = {'selectAll':this.selectAll,'unCheckedResult':this.unCheckedPaymentRequest,'checkedResult':this.selectedDataIfSelectAllUnchecked}
+    this.selectUnSelectEvent.emit(returnResult); 
+   
   }
 
+  selectionAllChange(){
+    this.unCheckedPaymentRequest=[];
+    this.selectedDataIfSelectAllUnchecked=[];
+    if(this.selectAll){
+      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList.data);
+    }
+    else{
+      this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
+    }
+    let returnResult = {'selectAll':this.selectAll,'unCheckedResult':this.unCheckedPaymentRequest,'checkedResult':this.selectedDataIfSelectAllUnchecked}
+    this.selectUnSelectEvent.emit(returnResult);
+  }
+
+  markAsChecked(data:any){
+    data.forEach((element:any) => { 
+      if(this.selectAll){
+        element.selected = true; 
+      } 
+      else{
+        element.selected = false; 
+      }
+      if(this.unCheckedPaymentRequest.length>0 || this.selectedDataIfSelectAllUnchecked.length >0)   {
+        let itemMarkedAsUnChecked=   this.unCheckedPaymentRequest.find((x:any)=>x ===element.paymentRequestId);
+        if(itemMarkedAsUnChecked !== null && itemMarkedAsUnChecked !== undefined){
+          element.selected = false;    
+        }
+        let itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x:any)=>x ===element.paymentRequestId);
+        if(itemMarkedAsChecked !== null && itemMarkedAsChecked !== undefined){
+          element.selected = true;   
+        }
+      }
+     
+    });
+  
+  }
+
+  markAsUnChecked(data:any){
+    data.forEach((element:any) => {     
+      element.selected = false;    
+  });
+  }
   private loadBatchLogListGrid(): void {
     this.loadBatchLog(
       this.state?.skip ?? 0,
@@ -120,7 +186,7 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
       sortColumn: this.sortColumn ?? 'paymentNbr',
       sortType: sortTypeValue ?? 'asc',
       filter: this.filter
-    };
+    };  
     this.loadPrintAdviceLetterEvent.emit(gridDataRefinerValue);
   }
 

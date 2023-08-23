@@ -45,7 +45,8 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   UnBatchDialog: any;
   deleteClaimsDialog: any;
   onlyPrintAdviceLetter: boolean = true;
-  
+  currentPrintAdviceLetterGridFilter:any;
+
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -166,6 +167,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   paymentStatusFilter:string='';
   selectedDataRows: any[] = [];
   selectedCount: number = 0;
+  disablePrwButton:boolean= true;
   /** Constructor **/
   constructor(private route: Router,private dialogService: DialogService, public activeRoute: ActivatedRoute ) {}
   
@@ -308,6 +310,7 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
   }
 
   loadPrintAdviceLetterEvent(event:any){
+    this.currentPrintAdviceLetterGridFilter = event;
     this.loadBatchLogListEvent.emit(event);
   }
   onBulkOptionCancelClicked(){
@@ -356,38 +359,19 @@ export class FinancialClaimsBatchesLogListsComponent implements OnInit, OnChange
       this.deleteClaimsDialog.close();
     }
   }
-
-  onSelectionChange(selectedKeys: any): void {
-    if(selectedKeys.selectedRows.length > 0 || selectedKeys.deselectedRows.length > 0){
-      if(selectedKeys.selectedRows[0] != undefined){
-        selectedKeys.selectedRows.forEach((element:any) => {
-          const eachSelectedRow = { ...element.dataItem, isChecked: true };
-          this.selectedDataRows.push(eachSelectedRow);
-        });
-      }
-      if(selectedKeys.deselectedRows[0] != undefined){
-        selectedKeys.deselectedRows.forEach((element:any) => {
-          this.selectedDataRows.splice(element.index);
-        });
-      }
-      this.selectedCount = this.selectedDataRows.length;
+ 
+  disablePreviewButton(result: any) {
+    if(result.selectAll){
+      this.disablePrwButton = false;
     }
-  }
-
-  onCheckboxChecked(event: any, selectedDatarow: any) {
-    selectedDatarow.isChecked = event.target.checked;
-    if(selectedDatarow != null){
-      if(selectedDatarow.isChecked)
-      {
-        const eachSelectedRow = { ...selectedDatarow, isChecked: true};
-      this.selectedDataRows.push(eachSelectedRow);
-      }else{
-        const index = this.selectedDataRows.findIndex((item) => item.paymentNbr === selectedDatarow.paymentNbr);
-      if (index !== -1) {
-        this.selectedDataRows.splice(index, 1);
-      }
+    else if(result.checkedResult.length>0)
+    {
+      this.disablePrwButton = false;
     }
+    else
+    {
+      this.disablePrwButton = true;
+    }
+
   }
-  this.selectedCount = this.selectedDataRows.length;
-}
 }
