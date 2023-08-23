@@ -28,8 +28,8 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
   batchId!:string;
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private readonly router: Router,   
-    private readonly route: ActivatedRoute, 
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
     private loggingService: LoggingService,
   ) {}
@@ -43,7 +43,7 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
 
   private addNavigationSubscription() {
     this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd)) 
+      .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe({
         next: () => {
           this.claimsType = this.financialClaimsFacade.getClaimsType(this.router)
