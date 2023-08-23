@@ -20,14 +20,14 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 @Component({
   selector: 'cms-financial-funding-sources-list',
   templateUrl: './financial-funding-sources-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
- 
+
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addEditFundingSourceDialogTemplate', { read: TemplateRef })
   addEditFundingSourceDialogTemplate!: TemplateRef<any>;
@@ -35,6 +35,10 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   removeFundingSourceDialogTemplate!: TemplateRef<any>;
   isFinancialFundingSourceFacadeGridLoaderShow = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  @Output() onAddFundingSourceEvent = new EventEmitter<any>();
+  @Output() onUpdateFundingSourceEvent = new EventEmitter<any>();
+  @Input() addFundingSource$: Observable<any> | undefined;
+  @Input() updateFundingSource$: Observable<any> | undefined;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -63,6 +67,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   isEditFundingSource = false;
   addEditFundingDialog: any;
   removeFundingDialog: any;;
+
   public processGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -70,8 +75,8 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
       icon: 'edit',
       click: (data: any): void => {
         if (!this.editFundingOpened) {
-          this.editFundingOpened = true; 
-          this.onAddEditFundingSourceOpenClicked(this.addEditFundingSourceDialogTemplate, true);
+          this.editFundingOpened = true;
+          this.onAddEditFundingSourceOpenClicked(this.addEditFundingSourceDialogTemplate, data);
         }
       },
     },
@@ -81,7 +86,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
       icon: 'delete',
       click: (data: any): void => {
         if (!this.removeFundingOpened) {
-          this.removeFundingOpened = true; 
+          this.removeFundingOpened = true;
           this.onRemoveFundingSourceOpenClicked(this.removeFundingSourceDialogTemplate)
         }
       },
@@ -94,7 +99,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
     private financialFundingSourceFacade: FinancialFundingSourceFacade,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadFinancialFundingSourceFacadeListGrid();
@@ -206,13 +211,13 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
     this.isFinancialFundingSourceFacadeGridLoaderShow = false;
   }
 
-  public rowClass = (args:any) => ({
+  public rowClass = (args: any) => ({
     "table-row-disabled": (args.dataItem.isActive),
   });
 
 
   public onAddEditFundingSourceOpenClicked(template: TemplateRef<unknown>, dataItem: any): void {
-  
+
     this.addEditFundingDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
@@ -220,10 +225,18 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
     this.isEditFundingSource = dataItem;
   }
   onModalCloseAddEditFundingSourceClicked(result: any) {
-    if (result) { 
-      this.editFundingOpened =false;
+    if (result) {
+      this.editFundingOpened = false;
       this.addEditFundingDialog.close();
     }
+  }
+
+  addFundingSource(event: any) {
+    this.onAddFundingSourceEvent.emit(event)
+  }
+
+  updateFundingSource(event: any) {
+    this.onUpdateFundingSourceEvent.emit(event)
   }
 
   public onRemoveFundingSourceOpenClicked(template: TemplateRef<unknown>): void {
@@ -232,15 +245,14 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
+
   onModalCloseRemoveFundingSourceClicked(result: any) {
-    if (result) { 
-      this.removeFundingOpened =false;
+    if (result) {
+      this.removeFundingOpened = false;
       this.removeFundingDialog.close();
     }
   }
-  loadFundingSource(){
-    this.financialFundingSourceFacade.loadFundingSourceList();
-  }
+ 
 }
 
- 
+

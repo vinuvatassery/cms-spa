@@ -100,7 +100,14 @@ Funding
 </div>
 
  <ng-template #addEditFundingSourceDialogTemplate>
-<cms-financial-funding-sources-details (isEditFundingSource)="isEditFundingSource" (isModalDetailsFundingSourcesCloseClicked)="onModalCloseAddEditFundingSourceClicked($event)"></cms-financial-funding-sources-details>
+<cms-financial-funding-sources-details 
+ [isEditFundingSource]="isEditFundingSource"
+ (isModalDetailsFundingSourcesCloseClicked)="onModalCloseAddEditFundingSourceClicked($event)"
+ (onAddFundingSourceEvent)="addFundingSource($event)"
+ [addFundingSource$]="addFundingSource$"
+ [updateFundingSource$]="updateFundingSource$"
+ (onUpdateFundingSourceEvent)="updateFundingSource($event)"
+ ></cms-financial-funding-sources-details>
  </ng-template>
  <ng-template #removeFundingSourceDialogTemplate>
 <cms-financial-funding-sources-remove (isModalRemoveFundingSourcesCloseClicked)="onModalCloseRemoveFundingSourceClicked($event)"></cms-financial-funding-sources-remove>

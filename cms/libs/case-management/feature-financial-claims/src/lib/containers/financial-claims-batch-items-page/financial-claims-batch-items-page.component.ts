@@ -75,7 +75,7 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
 
 
   loadBatchItemListGrid(event: any) {
-    const itemId = this.route.snapshot.queryParams['iid'];
+    const itemId = this.route.snapshot.queryParams['pid'];
     const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
     this.financialClaimsFacade.loadBatchItemsListGrid(itemId, params, this.claimsType);
   }
@@ -104,7 +104,6 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   }
 
   updateProviderProfile(event:any){
-    console.log(event)
     this.financialVendorFacade.updateProviderPanel(event)
   }
 
@@ -114,7 +113,7 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   }
 
   loadPaymentDetails(){
-    const itemId = this.route.snapshot.queryParams['iid'];
+    const itemId = this.route.snapshot.queryParams['pid'];
     this.paymentFacade.loadPaymentDetails(itemId, 'INDIVIDUAL',);
   }
 }
