@@ -37,7 +37,7 @@ export class EmailEditorComponent implements OnInit {
   @Input() currentValue!: any;
   @Input() clientCaseEligibilityId!:string;
   @Input() clientId!:any;
-
+  @Input() communicationTypeCode!:any;
   /** Output properties  **/
   @Output() editorValue = new EventEmitter<any>();
   @Output() cerEmailAttachments = new EventEmitter();
@@ -112,8 +112,8 @@ export class EmailEditorComponent implements OnInit {
     if(this.currentValue){
       this.emailEditorValueEvent(this.currentValue);
       this.selectedAttachedFile = [];
-      this.loadUserDraftTemplateAttachment();
-      if(this.currentValue.typeCode == CommunicationEventTypeCode.CerAuthorizationLetter){
+      if(this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter){
+        this.loadUserDraftTemplateAttachment();
         this.loadLetterAttachment(this.currentValue.documentTemplateId, CommunicationEventTypeCode.CERAttachmentTypeCode);
       }
     }
@@ -156,7 +156,7 @@ export class EmailEditorComponent implements OnInit {
     .subscribe({
       next: (variables: any) =>{
         if (variables) {
-          this.clientVariables = variables; 
+          this.clientVariables = variables;
         }
       this.loaderService.hide();
     },
@@ -241,7 +241,7 @@ if(!this.attachedFileValidatorSize){
   handleFileRemoved(event: any) {
     this.attachedFiles = null;
   }
-  
+
   removeFile(event:any, index: any) {
     this.deleteEsignRequestAttachment(event, index);
   }

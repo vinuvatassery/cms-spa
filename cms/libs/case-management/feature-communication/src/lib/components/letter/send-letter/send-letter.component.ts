@@ -318,7 +318,10 @@ this.isShowSendLetterToPrintPopupClicked = false;
  }
 
  cerEmailAttachments(event:any){
-  this.cerEmailAttachedFiles = event;
+  if (this.communicationLetterTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter)
+  {
+    this.cerEmailAttachedFiles = event;
+  }
 }
 
 loadMailingAddress() {

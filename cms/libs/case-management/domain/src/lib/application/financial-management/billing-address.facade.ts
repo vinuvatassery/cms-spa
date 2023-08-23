@@ -95,7 +95,9 @@ export class BillingAddressFacade {
     skipcount: number,
     maxResultCount: number,
     sort: string,
-    sortType: string
+    sortType: string,
+    vendorId: any,
+    isShowHistoricalData:boolean=false
   ) {
     this.showLoader();
 
@@ -107,7 +109,9 @@ export class BillingAddressFacade {
         skipcount,
         maxResultCount,
         sort,
-        sortType
+        sortType,
+        vendorId,
+        isShowHistoricalData
       )
       .subscribe({
         next: (dataResponse) => {
