@@ -917,7 +917,9 @@ color: $app-primary-font-color;
     padding: 5px 6px;
   }
 }
-
+.vendor-header-top{
+  display: flex;
+}
 .more_action_wid {
   >.k-button-solid {
     padding: 8px;
@@ -959,7 +961,7 @@ color: $app-primary-font-color;
   right: 0;
   width: auto;
   left: $app-left_menu-width;
-  z-index: 2;
+  z-index: 4;
   min-height: 40px;
 &.content-start{
   justify-content: flex-start !important;
@@ -1168,9 +1170,9 @@ color: $app-primary-font-color;
   margin-top: 1.7rem;
 }
 .search-with-addbtn{
-  position: fixed;
-  top: 80px;
-  right: 20px;
+  position: absolute;
+  top: -110px;
+  right: 0px;
 }
 .add-new-button-common {
   float: right;
@@ -1200,4 +1202,9 @@ color: $app-primary-font-color;
 
 .preferred-heading{
   border-left:3px solid material-color($hive-canyon-palette, A700) !important;
+}
+
+
+.bottom-pad{
+  padding-bottom: 60px;
 }

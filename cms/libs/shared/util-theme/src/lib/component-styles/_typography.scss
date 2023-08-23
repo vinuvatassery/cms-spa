@@ -109,3 +109,10 @@ h5 {
   width: $size-xx * 2;
   font-size: $font-size-xlg;
 }
+@media (max-width: $breakpoint-sm) {
+  .mat-h1,
+.mat-headline,
+h1 {
+  font-size: 22px !important; 
+}
+}
