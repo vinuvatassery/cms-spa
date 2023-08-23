@@ -33,7 +33,7 @@
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>
-              <kendo-formerror *ngIf="IsContactNameValid(i)&&isSubmitted">A Contact Name is
+              <kendo-formerror *ngIf="isContactNameValid(i)&&isSubmitted">A Contact Name is
                 required</kendo-formerror>
             </div>
             <div class="flex-col">
@@ -80,10 +80,10 @@
                     type="checkbox"
                     kendoCheckBox
                     aria-labelledby="AddressesshowHistorical"
-                   value="Y" name="PreferredFlag" id="PreferredFlagno" 
-                    (change)="OncheckboxClick($event,i)" formControlName="PreferredFlag"
+                   value="Y" name="preferredFlag" id="preferredFlagno" 
+                    (change)="oncheckboxClick($event,i)" formControlName="preferredFlag"
                   />
-                  <label class="k-checkbox-label" for="PreferredFlagYes">Prefered Contact </label 
+                  <label class="k-checkbox-label" for="preferredFlagYes">Prefered Contact </label 
                   >
                 </span>
               
@@ -112,7 +112,7 @@
         <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="save()" *ngIf="this.contactAddress.vendorContactId==null" >
             Add
         </button>
-        <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="Update()" *ngIf="this.contactAddress.vendorContactId!=null" >
+        <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="update()" *ngIf="this.contactAddress.vendorContactId!=null" >
           Update
       </button>
       </div>
