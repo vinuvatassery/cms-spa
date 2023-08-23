@@ -111,7 +111,9 @@ export class FinancialClaimsBatchesLogListsComponent
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isDeleteClaimClosed) {
+          this.isUnBatchClaimsClosed = false;
           this.isDeleteClaimClosed = true;
+          this.onSingleClaimDelete(data.paymentRequestId.split(','));
           this.onDeleteClaimsOpenClicked(
             this.deleteClaimsConfirmationDialogTemplate
           );
@@ -408,7 +410,34 @@ export class FinancialClaimsBatchesLogListsComponent
   }
   onModalDeleteClaimsModalClose(result: any) {
     if (result) {
+      this.isDeleteClaimClosed=false;
       this.deleteClaimsDialog.close();
     }
+  }
+  onSingleClaimDelete(selection: any) {
+    this.selected=selection;
+  }
+
+  onModalBatchDeletingClaimsButtonClicked(action: any) {
+    if (action) {
+      this.handleDeleteClaims();
+      this.financialClaimsFacade.deleteClaims(
+        this.selected,
+        this.claimsType
+      );
+    }
+  }
+
+  handleDeleteClaims() {
+    this.financialClaimsFacade.deleteClaims$
+      .pipe(first((deleteResponse: any) => deleteResponse != null))
+      .subscribe((deleteResponse: any) => {
+        debugger
+        if (deleteResponse!=null) {
+          this.isDeleteClaimClosed=false;
+          this.deleteClaimsDialog.close()
+          this.loadBatchLogListGrid();
+        }
+      });
   }
 }

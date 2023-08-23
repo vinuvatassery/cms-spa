@@ -331,5 +331,5 @@
 
 <ng-template #deleteClaimsConfirmationDialogTemplate>
   <cms-financial-claims-delete-claims
-    (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)"></cms-financial-claims-delete-claims>
+  (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)" (isModalDeletedClaimsButtonClicked)="onModalBatchDeletingClaimsButtonClicked($event)" [selectedProcessClaimsCount] = "selected.length"></cms-financial-claims-delete-claims>
 </ng-template>
