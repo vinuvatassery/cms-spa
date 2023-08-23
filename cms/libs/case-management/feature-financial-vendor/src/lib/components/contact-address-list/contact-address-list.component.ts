@@ -25,6 +25,7 @@ export class ContactAddressListComponent implements OnChanges {
   VendorContactAddressId: string="";
   @Input() VendorAddressId: any;
   public state!: State;
+  
   showLoader() {
     this.loaderService.show();
   }

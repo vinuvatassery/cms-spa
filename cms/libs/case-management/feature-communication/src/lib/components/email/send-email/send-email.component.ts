@@ -246,7 +246,7 @@ onClosePreviewEmail(){
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
     this.isClearEmails =true;
-
+    this.emailSubject = event.description;
     this.isShowToEmailLoader$.next(true);
     this.isOpenDdlEmailDetails = true;
     this.selectedTemplate = event;

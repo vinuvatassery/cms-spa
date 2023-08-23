@@ -151,7 +151,8 @@ export class FinancialVendorFacade {
     return this.financialVendorDataService.updateProviderPanel(ProviderPanelDto).subscribe({
       next: (updatedResponse: any) => {
         if (updatedResponse) {
-          this.updateProviderPanelSubject.next(updatedResponse);   
+          this.updateProviderPanelSubject.next(updatedResponse);            
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Updated success fully')
           this.hideLoader();      
         }
       },

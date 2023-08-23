@@ -82,31 +82,7 @@
               <label class="k-checkbox-label" for="Applicable">Not Applicable</label>
             </span>
           </div>
-          <div *ngIf="editVendorInfo">
-            <div class="flex-col" *ngIf="!!medicalProviderForm.value.parentVendorId" [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
-              <kendo-floatinglabel text="Provider First Name">
-                <kendo-textbox aria-label="Provider First Name" [fillMode]="formUiStyle.inputFillMode"
-                  formControlName="firstName">
-                </kendo-textbox>
-                <kendo-formerror
-                  *ngIf="!medicalProviderForm.controls['firstName'].valid && !medicalProviderForm.controls['firstName'].disabled && isValidateForm">
-                  Provider first name is required
-                </kendo-formerror>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col" *ngIf="!!medicalProviderForm.value.parentVendorId" [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
-              <kendo-floatinglabel text="Provider Last Name">
-                <kendo-textbox aria-label="Provider Last Name" [fillMode]="formUiStyle.inputFillMode"
-                  formControlName="lastName">
-                </kendo-textbox>
-                <kendo-formerror
-                  *ngIf="!medicalProviderForm.controls['lastName'].valid && !medicalProviderForm.controls['lastName'].disabled && isValidateForm">
-                  Provider last name is required
-                </kendo-formerror>
-              </kendo-floatinglabel>
-            </div>
-          </div>
-          <div class="flex-col" *ngIf="!editVendorInfo" [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
+          <div class="flex-col" *ngIf="!editVendorInfo || (editVendorInfo && medicalProviderForm.value.parentVendorId)" [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
             <kendo-floatinglabel text="Provider First Name">
               <kendo-textbox aria-label="Provider First Name" [fillMode]="formUiStyle.inputFillMode"
                 formControlName="firstName">
@@ -117,7 +93,7 @@
               </kendo-formerror>
             </kendo-floatinglabel>
           </div>
-          <div class="flex-col" *ngIf="!editVendorInfo" [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
+          <div class="flex-col" *ngIf="!editVendorInfo || (editVendorInfo && medicalProviderForm.value.parentVendorId)" [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
             <kendo-floatinglabel text="Provider Last Name">
               <kendo-textbox aria-label="Provider Last Name" [fillMode]="formUiStyle.inputFillMode"
                 formControlName="lastName">

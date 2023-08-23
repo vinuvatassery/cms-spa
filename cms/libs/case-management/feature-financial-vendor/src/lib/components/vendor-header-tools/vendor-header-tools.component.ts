@@ -104,7 +104,7 @@ export class VendorHeaderToolsComponent {
 
   private addEmailSubscription() {
     this.vendorContactFacade.contacts$.subscribe((resp) => {
-      const preferredContact = resp.find((contact: any) => contact.isPreferedContact === "Y" && contact.emailAddress?.trim());
+      const preferredContact = resp.find((contact: any) => contact.preferredFlag === "Y" && contact.emailAddress?.trim());
       const contactWithValidEmail = resp.find((contact: any) => contact.emailAddress && contact.emailAddress.trim());
       this.toEmail = [];
       if (preferredContact) {
@@ -217,8 +217,7 @@ export class VendorHeaderToolsComponent {
       this.loadEmailAddress();
     }
 
-    getVendorTypeCode() {
-      debugger;
+    getVendorTypeCode() { 
       switch (this.vendorTypeCode) {
         case FinancialVendorProviderTabCode.Manufacturers:
           this.emailSubject = CommunicationEventTypeCode.ManufacturerSubject;

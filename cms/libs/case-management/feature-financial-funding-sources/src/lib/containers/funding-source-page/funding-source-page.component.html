@@ -4,17 +4,16 @@
         <section class="app-l-mainTittle">
             <h1 class="maintitle_withicon text-bold text-capitalize">Funding Sources</h1>
         </section>
-      
-          
-
-
                 <cms-financial-funding-sources-list
-                    [financialFundingSourceGridLists$]="financialFundingSourceFacadeGridLists$" [pageSizes]="pageSizes"
-                    [sortValue]="sortValueFinancialFundingSourceFacade" [sortType]="sortType" [sort]="sortProcessList"
+                    [financialFundingSourceGridLists$]="financialFundingSourceFacadeGridLists$"
+                     [pageSizes]="pageSizes"
+                    [sortValue]="sortValueFinancialFundingSourceFacade" [sortType]="sortType"
+                     [sort]="sortProcessList"
+                     (onAddFundingSourceEvent)="addFundingSource($event)"
+                     [addFundingSource$]="addFundingSource$"
+                     [updateFundingSource$]="updateFundingSource$"
+                     (onUpdateFundingSourceEvent)="updateFundingSource($event)"
                     (loadFinancialFundingSourceFacadeListEvent)="loadFinancialFundingSourceFacadeListGrid($event)">
                 </cms-financial-funding-sources-list>
-
-           
-        
     </div>
 </div>

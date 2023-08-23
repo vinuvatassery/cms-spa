@@ -216,7 +216,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
     { queryParams :{bid: batchId}});
   }
 
-  onViewProviderDetailClicked(  template: TemplateRef<unknown>): void {   
+  onViewProviderDetailClicked(  template: TemplateRef<unknown>): void {  
     this.providerDetailsDialog = this.dialogService.open({
       content: template,
       animation:{
@@ -252,7 +252,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   }
   
   getProviderPanel(event:any){
-    this.getProviderPanelEvent.emit('5449D739-5C70-446B-8269-13A862FE771F')
+    this.getProviderPanelEvent.emit(event)
   }
 
   updateProviderProfile(event:any){
