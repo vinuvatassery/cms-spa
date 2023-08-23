@@ -1170,9 +1170,9 @@ color: $app-primary-font-color;
   margin-top: 1.7rem;
 }
 .search-with-addbtn{
-  position: fixed;
-  top: 80px;
-  right: 20px;
+  position: absolute;
+  top: -110px;
+  right: 0px;
 }
 .add-new-button-common {
   float: right;
