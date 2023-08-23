@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
 import { GridFilterParam } from '../../entities/grid-filter-param';
+import { PcaDetails } from '../../entities/financial-management/pca-details';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPcaDataService {
@@ -177,5 +178,25 @@ export class FinancialPcaDataService {
      
     ]);
   } 
- 
+
+   /* PCA setup */
+
+  loadPcaById(pcaId: string) {
+    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/${pcaId}`); 
+  }
+  
+ savePca(pcaModel: PcaDetails){
+  return this.http.post<any>(
+    `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca`, pcaModel);
+ }
+
+ updatePca(pcaId: string, pcaModel: PcaDetails){
+  return this.http.put<any>(
+    `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/${pcaId}`, pcaModel);
+ }
+
+ deletePca(pcaId: string){
+  return this.http.delete<any>(
+    `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/${pcaId}`);
+ }
 }

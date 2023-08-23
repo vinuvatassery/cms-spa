@@ -1,17 +1,17 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { GridFilterParam } from '@cms/case-management/domain';
+import { GridFilterParam, PcaDetails } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
@@ -19,13 +19,13 @@ import {
   CompositeFilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'cms-financial-pcas-setup-list',
   templateUrl: './financial-pcas-setup-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
+export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('addEditPcaSetupDialogTemplate', { read: TemplateRef })
   addEditPcaSetupDialogTemplate!: TemplateRef<any>;
   @ViewChild('removePcaSetupDialogTemplate', { read: TemplateRef })
@@ -42,7 +42,13 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
   @Input() sort: any;
   @Input() financialPcaSetupGridLists$: any;
   @Input() financialPcaSetupGridLoader$: any;
+  @Input() fundingSourceLookup$: any;
+  @Input() pcaActionIsSuccess$ = new Observable<any>();
+  @Input() pcaData$ = new Observable<PcaDetails | null>();
   @Output() loadFinancialPcaSetupListEvent = new EventEmitter<GridFilterParam>();
+  @Output() loadAddOrEditPcaEvent = new EventEmitter<any>();
+  @Output() savePcaEvent = new EventEmitter<{ pcaId?: string | null, pcaDetails: PcaDetails }>();
+  @Output() removePcaEvent = new EventEmitter<string>();
   public state!: State;
   sortColumn = 'pcaCode';
   sortDir = 'Ascending';
@@ -54,13 +60,17 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  selectedPcaId?: string | null = null;
+  selectedPcaDesc!: string;
+  selectedFundingSource!: string;
   gridFinancialPcaSetupDataSubject = new Subject<any>();
   gridFinancialPcaSetupData$ =
     this.gridFinancialPcaSetupDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+
+  private saveResponseSubscription !: Subscription;
   gridMoreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -69,7 +79,7 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
       click: (data: any): void => {
         if (!this.isEditSetupClosed) {
           this.isEditSetupClosed = true;
-          this.onOpenAddPcaSetupClicked(this.addEditPcaSetupDialogTemplate);
+          this.onOpenAddPcaSetupClicked(this.addEditPcaSetupDialogTemplate, data?.pcaId);
         }
       },
     },
@@ -80,7 +90,7 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
       click: (data: any): void => {
         if (!this.isRemoveConfirmationClosed) {
           this.isRemoveConfirmationClosed = true;
-          this.onRemovePcaSetupClicked(this.removePcaSetupDialogTemplate);
+          this.onRemovePcaSetupClicked(this.removePcaSetupDialogTemplate, data?.pcaId, data?.pcaDesc, data?.fundingDesc);
         }
       },
     },
@@ -100,13 +110,14 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
 
   /** Constructor **/
   constructor(
-    private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService
   ) { }
 
   ngOnInit(): void {
     this.loadFinancialPcaSetupListGrid();
+    this.addActionResponseSubscription();
   }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -117,14 +128,8 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
     this.loadFinancialPcaSetupListGrid();
   }
 
-  private loadFinancialPcaSetupListGrid(): void {
-    const param = new GridFilterParam(
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType,
-      JSON.stringify(this.filter));
-    this.loadFinancialPcaSetupListEvent.emit(param);
+  ngOnDestroy(): void {
+    this.saveResponseSubscription.unsubscribe();
   }
 
   onChange(data: any) {
@@ -150,6 +155,7 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
     this.dataStateChange(stateData);
   }
 
+  /* Public methods */
   defaultGridState() {
     this.state = {
       skip: 0,
@@ -188,12 +194,16 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
   public rowClass = (args: any) => ({
     "table-row-disabled": (!args.dataItem.assigned),
   });
-  onOpenAddPcaSetupClicked(template: TemplateRef<unknown>): void {
+
+  onOpenAddPcaSetupClicked(template: TemplateRef<unknown>, pcaId?: string | null): void {
+    this.loadAddOrEditPcaEvent.emit(pcaId);
+    this.selectedPcaId = pcaId;
     this.pcaSetupAddEditDialogService = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
+
   onCloseAddEditPcaSetupClicked(result: any) {
     if (result) {
       this.isEditSetupClosed = false;
@@ -201,7 +211,10 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
     }
   }
 
-  onRemovePcaSetupClicked(template: TemplateRef<unknown>): void {
+  onRemovePcaSetupClicked(template: TemplateRef<unknown>, pcaId:string, pcaDesc:string, fundingName: string): void {
+    this.selectedPcaId = pcaId;
+    this.selectedPcaDesc = pcaDesc;
+    this.selectedFundingSource = fundingName;
     this.pcaSetupRemoveDialogService = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
@@ -214,6 +227,35 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
     }
   }
 
+  savePca(event: { pcaId?: string | null, pcaDetails: PcaDetails }) {
+    this.savePcaEvent.emit(event);
+  }
 
+  removePca(pcaId: string) {
+    this.removePcaEvent.emit(pcaId);
+  }
+
+  /* Private methods */
+  private addActionResponseSubscription() {
+    this.saveResponseSubscription = this.pcaActionIsSuccess$.subscribe((resp: any) => {
+      if (resp === 'remove') {
+        this.onCloseRemovePcaSetupClicked(true);
+      }
+      else if(resp === 'save'){
+        this.onCloseAddEditPcaSetupClicked(true);
+      }
+      this.loadFinancialPcaSetupListGrid();  
+    });
+  }
+
+  private loadFinancialPcaSetupListGrid(): void {
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType,
+      JSON.stringify(this.filter));
+    this.loadFinancialPcaSetupListEvent.emit(param);
+  }
 }
 

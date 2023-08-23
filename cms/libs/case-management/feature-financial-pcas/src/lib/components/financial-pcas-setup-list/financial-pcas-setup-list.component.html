@@ -2,7 +2,7 @@
 
   
 <button kendoButton icon="add" [primary]="true"
-(click)="onOpenAddPcaSetupClicked(addEditPcaSetupDialogTemplate)" class="add-new-button search-with-addbtn"
+(click)="onOpenAddPcaSetupClicked(addEditPcaSetupDialogTemplate, null)" class="add-new-button search-with-addbtn"
 aria-label="add"> PCA Setup</button>
 <section class="table-filter-section mat-form-no-b-space">
                   <span class="filter-section_items filter--select">
@@ -159,7 +159,8 @@ aria-label="add"> PCA Setup</button>
                       <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                         <ng-container>
                           <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                            [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                            [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)"
+                            [hidden]="dataItem.isPcaAssigned && buttondataItem.text === 'Remove'">
                             <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                             <label> {{ buttondataItem.text }} </label>
                           </button>
@@ -204,13 +205,21 @@ aria-label="add"> PCA Setup</button>
 
 
 <ng-template #addEditPcaSetupDialogTemplate>
-      <cms-financial-pcas-setup-form (closeAddEditPcaSetupClickedEvent)="onCloseAddEditPcaSetupClicked($event)">
+      <cms-financial-pcas-setup-form 
+            [pcaId]="selectedPcaId"
+            [fundingSourceLookup$]="fundingSourceLookup$" 
+            [pcaData$]="pcaData$"
+            (savePcaEvent)="savePca($event)"
+            (closeAddEditPcaSetupClickedEvent)="onCloseAddEditPcaSetupClicked($event)">
       </cms-financial-pcas-setup-form>
-
 </ng-template>
 
 <ng-template #removePcaSetupDialogTemplate>
-      <cms-financial-pcas-setup-remove (closeRemovePcaSetupClickedEvent)="onCloseRemovePcaSetupClicked($event)">
+      <cms-financial-pcas-setup-remove 
+      [pcaId]="selectedPcaId"
+      [pcaDesc]="selectedPcaDesc"
+      [fundingSource]="selectedFundingSource"
+      (removePcaEvent)="removePca($event)"
+      (closeRemoveConfirmationEvent)="onCloseRemovePcaSetupClicked($event)">
       </cms-financial-pcas-setup-remove>
-
 </ng-template>
