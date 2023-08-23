@@ -138,28 +138,4 @@ export class FinancialFundingSourceFacade {
   }
 
 
-  updateFundingSource(fundingSource: any) {
-    this.showLoader();
-    this.financialFundingSourceDataService.updateFundingSource(fundingSource).subscribe({
-      next: (dataResponse) => {
-        this.updateFundingSourceSubject.next(dataResponse);
-        this.hideLoader();
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, `Updated funding source successfully`);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.hideLoader();
-      },
-    })
-  }
-  loadFundingSourceLookup(){
-    this.financialFundingSourceDataService.loadFundingSourceLookup().subscribe({
-      next: (dataResponse) => {
-        this.fundingSourceLookupSubject.next(dataResponse);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-      },
-    });  
-  }
 }
