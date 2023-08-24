@@ -31,6 +31,10 @@ export class FinancialFundingSourceFacade {
 
   addFundingSource$ = this.addFundingSourceSubject.asObservable();
   updateFundingSource$ = this.updateFundingSourceSubject.asObservable();
+
+  private fundingSourceLookupSubject = new Subject<any>();
+  fundingSourceLookup$ = this.fundingSourceLookupSubject.asObservable();
+ 
   /** Public properties **/
 
   // handling the snackbar & loader
@@ -105,5 +109,14 @@ export class FinancialFundingSourceFacade {
       },
     })
   }
-
+  loadFundingSourceLookup(){
+    this.financialFundingSourceDataService.loadFundingSourceLookup().subscribe({
+      next: (dataResponse) => {
+        this.fundingSourceLookupSubject.next(dataResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+      },
+    });  
+  }
 }

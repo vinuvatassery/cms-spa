@@ -217,8 +217,7 @@ export class VendorHeaderToolsComponent {
       this.loadEmailAddress();
     }
 
-    getVendorTypeCode() {
-      debugger;
+    getVendorTypeCode() { 
       switch (this.vendorTypeCode) {
         case FinancialVendorProviderTabCode.Manufacturers:
           this.emailSubject = CommunicationEventTypeCode.ManufacturerSubject;
