@@ -36,7 +36,7 @@
                                 [financialPcaAssignmentGridLists$]="financialPcaAssignmentGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaAssignment"
                                 [sortType]="sortType" [sort]="sortPcaAssignmentList" 
-                                (loadFinancialPcaAssignmentListEvent)="loadFinancialPcaAssignmentListGrid($event)"
+                                (loadFinancialPcaAssignmentListEvent)="loadFinancialPcaAssignmentListGrid($event)"                             
                                 ></cms-financial-pcas-assignment-list>
                               
                             </div>
@@ -49,7 +49,10 @@
                                 <cms-financial-pcas-reassignment-list  [financialPcaReassignmentGridLists$]="financialPcaReassignmentGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaReassignment"
                                 [sortType]="sortType" [sort]="sortPcaReassignmentList" 
-                                (loadFinancialPcaReassignmentListEvent)="loadFinancialPcaReassignmentListGrid($event)"></cms-financial-pcas-reassignment-list>
+                                (loadFinancialPcaReassignmentListEvent)="loadFinancialPcaReassignmentListGrid($event)"
+                                (getPcaReassignmentByFundSourceIdEvent)="getPcaReassignmentByFundSourceId($event)"
+                                [pcaReassignmentByFundSourceId$]="pcaReassignmentByFundSourceId$"
+                                ></cms-financial-pcas-reassignment-list>
                                 
                             </div>
                         </ng-template>

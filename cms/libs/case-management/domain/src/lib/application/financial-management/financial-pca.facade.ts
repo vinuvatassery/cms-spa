@@ -59,6 +59,9 @@ export class FinancialPcaFacade {
   private pcaActionIsSuccessSubject = new Subject<any>();
   pcaActionIsSuccess$ = this.pcaActionIsSuccessSubject.asObservable();
 
+  private pcaReassignmentByFundSourceId = new Subject<any>();
+  pcaReassignmentByFundSourceId$ = this.pcaReassignmentByFundSourceId.asObservable();
+
   private pcaDataSubject = new BehaviorSubject<PcaDetails | null>(null);
   pcaData$ = this.pcaDataSubject.asObservable();
 
@@ -216,6 +219,21 @@ export class FinancialPcaFacade {
         this.pcaActionIsSuccessSubject.next('remove');
         this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+
+  getPcaReassignmentByFundSourceId(fundingSourceId: string) {
+    this.showLoader();
+    this.financialPcaDataService.getPcaReassignmentByFundSourceId(fundingSourceId).subscribe({
+      next: (response) => {
+        this.pcaReassignmentByFundSourceId.next(response);
+        this.hideLoader();
+      
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);

@@ -43,7 +43,7 @@ export class FinancialPcasPageComponent {
   fundingSourceLookup$ = this.fundingSourceFacade.fundingSourceLookup$;
   pcaActionIsSuccess$ = this.financialPcaFacade.pcaActionIsSuccess$;
   pcaData$ = this.financialPcaFacade.pcaData$
-
+  pcaReassignmentByFundSourceId$ = this.financialPcaFacade.pcaReassignmentByFundSourceId$;
   constructor(
     private readonly financialPcaFacade: FinancialPcaFacade,
     private readonly fundingSourceFacade: FinancialFundingSourceFacade,
@@ -93,6 +93,11 @@ export class FinancialPcasPageComponent {
       this.financialPcaFacade.deletePca(pcaId);
     }
   }
+ 
+  getPcaReassignmentByFundSourceId(fundingSourceId:any){
+    this.financialPcaFacade.getPcaReassignmentByFundSourceId(fundingSourceId);
+  }
+
 }
 
 

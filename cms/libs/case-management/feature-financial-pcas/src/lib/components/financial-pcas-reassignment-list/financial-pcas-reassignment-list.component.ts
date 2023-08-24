@@ -1,5 +1,6 @@
 /** Angular **/
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -27,7 +28,7 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPcasReassignmentListComponent
-  implements OnInit, OnChanges
+  implements OnInit, OnChanges, AfterViewInit
 {
   @ViewChild('addEditPcaReassignmentDialogTemplate', { read: TemplateRef })
   addEditPcaReassignmentDialogTemplate!: TemplateRef<any>;
@@ -46,6 +47,8 @@ export class FinancialPcasReassignmentListComponent
   @Input() sort: any;
   @Input() financialPcaReassignmentGridLists$: any;
   @Output() loadFinancialPcaReassignmentListEvent = new EventEmitter<any>();
+  @Output() getPcaReassignmentByFundSourceIdEvent = new EventEmitter<any>();
+  @Input() pcaReassignmentByFundSourceId$ :any
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -71,7 +74,7 @@ export class FinancialPcasReassignmentListComponent
       click: (data: any): void => {
         if (!this.isViewGridOptionClicked) {
           this.isViewGridOptionClicked = true; 
-          this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate);
+          this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate,data);
         }
       },
     },
@@ -82,7 +85,7 @@ export class FinancialPcasReassignmentListComponent
       click: (data: any): void => {
         if (!this.isEditGridOptionClicked) {
           this.isEditGridOptionClicked = true; 
-          this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate);
+          this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate,data);
         }
       },
     },
@@ -108,11 +111,16 @@ export class FinancialPcasReassignmentListComponent
       closeDate: 'MM/DD/YYYY',
     }
   ]
+  editPcaReassignmentItem: any;
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService
   ) {}
+
+   ngAfterViewInit(): void {
+  //   this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate,null);
+   }
 
   ngOnInit(): void {
     this.loadFinancialPcaReassignmentListGrid();
@@ -226,12 +234,18 @@ export class FinancialPcasReassignmentListComponent
   }
 
  
-  onOpenViewEditPcaReassignmentClicked(template: TemplateRef<unknown>): void {
+  onOpenViewEditPcaReassignmentClicked(template: TemplateRef<unknown>,data:any): void {
     this.pcaReassignmentAddEditDialogService = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
+    this.editPcaReassignmentItem = data;
   }
+
+  getPcaReassignmentByFundSourceId(fundingSourceId:any){
+    this.getPcaReassignmentByFundSourceIdEvent.emit(fundingSourceId);
+  }
+
   onCloseEditPcaReassignmentClicked(result: any) {
     if (result) {
       this.isViewGridOptionClicked = false;

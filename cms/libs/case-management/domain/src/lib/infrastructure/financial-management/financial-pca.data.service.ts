@@ -199,4 +199,10 @@ export class FinancialPcaDataService {
   return this.http.delete<any>(
     `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/${pcaId}`);
  }
+ 
+ getPcaReassignmentByFundSourceId(fundingSourceId:any){
+  return this.http.get<any>(
+    `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/${fundingSourceId}`);
+ }
+ 
 }
