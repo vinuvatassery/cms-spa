@@ -24,7 +24,7 @@ export class VendorHeaderToolsComponent {
   private newReminderDetailsDialog : any;
   emailScreenName = ScreenType.FinancialManagementVendorPageEmail;
   letterScreenName = ScreenType.FinancialManagementVendorPageLetter;
-  contacts$ = this.vendorContactFacade.contacts$;
+  contacts$ = this.vendorContactFacade.allContacts$;//this.vendorContactFacade.contacts$;
   mailCodes$ = this.vendorContactFacade.mailCodes$;
   emailSubscription$ = new Subscription();
   reloadSubscription$ = new Subscription();
@@ -103,9 +103,10 @@ export class VendorHeaderToolsComponent {
   }
 
   private addEmailSubscription() {
-    this.vendorContactFacade.contacts$.subscribe((resp) => {
-      const preferredContact = resp.find((contact: any) => contact.preferredFlag === "Y" && contact.emailAddress?.trim());
-      const contactWithValidEmail = resp.find((contact: any) => contact.emailAddress && contact.emailAddress.trim());
+    debugger;
+    this.vendorContactFacade.allContacts$.subscribe((resp) => {//this.vendorContactFacade.contacts$.subscribe((resp) => {
+      const preferredContact = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.preferredFlag === "Y" && contact.emailAddress?.trim());
+      const contactWithValidEmail = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.emailAddress && contact.emailAddress.trim());
       this.toEmail = [];
       if (preferredContact) {
         this.toEmail = [preferredContact.emailAddress.trim()];
@@ -201,11 +202,17 @@ export class VendorHeaderToolsComponent {
     }
 
     loadEmailAddress() {
+      debugger;
       this.vendorContactFacade.mailCodes$.subscribe((resp) => {
         if (resp && resp.length > 0) {
-          const selectedAddress = resp.find((address:any) => address.preferredFlag === "Y") || resp[0];
-          this.vendorAddressId = selectedAddress.vendorAddressId;
-          this.vendorContactFacade.loadcontacts(this.vendorAddressId);
+          let selectedAddress = resp.find((address: any) => address?.activeFlag === "Y" && address.preferredFlag === "Y");
+          if (!selectedAddress) {
+              selectedAddress = resp.find((address: any) => address?.activeFlag === "Y");
+          }
+
+          //this.vendorAddressId = selectedAddress.vendorAddressId;
+          this.vendorContactFacade.loadVendorAllcontacts(this.vendorId);
+          //this.vendorContactFacade.loadcontacts(this.vendorAddressId);
           this.addEmailSubscription();
         }
         this.ref.detectChanges();
@@ -236,5 +243,8 @@ export class VendorHeaderToolsComponent {
           this.communicationLetterTypeCode = CommunicationEventTypeCode.MedicalProviderLetter;
           break;
       }
+    }
+    onSendMenuClick(){
+      this.loadEmailAddress();
     }
 }
