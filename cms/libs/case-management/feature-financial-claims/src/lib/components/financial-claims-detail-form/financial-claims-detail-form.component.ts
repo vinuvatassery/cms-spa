@@ -44,7 +44,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   clientId:any;
   vendorName:any;
   clientName:any;
-  isRecentClaimShow:boolean=false;
   @Input() claimsType: any;
   clientSearchResult = [
     {

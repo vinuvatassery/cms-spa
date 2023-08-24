@@ -7,7 +7,7 @@
     <div [formGroup]="claimForm">
 
         <div class="add_new_top_section">
-            <p class="mb-3"> Select a {{claimsType}} Provider to bulk add services for this claim.</p>
+            <p class="mb-3"> Select a {{claimsType |  titlecase}} Provider to bulk add services for this claim.</p>
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
                     <div class="combotable_search_list new_refund_Search new_claims_Search mb-3">
@@ -278,7 +278,6 @@
                                             </kendo-floatinglabel>
                                         </div>
                                     </div>
-
                                 </ng-container>
                             </ng-container>
                         </ng-container>
@@ -307,7 +306,6 @@
     </div>
 </section>
 <div class="add_new_fixed_bottom">
-    <div *ngIf="isRecentClaimShow">
         <h5>Recent Claims for this {{clientName}} and {{vendorName}}</h5>
         <div class="add_new_fixed_bottom_grid_section">
             <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"></cms-financial-claims-recent-claims-list>
@@ -320,6 +318,4 @@
                 (click)="closeAddEditClaimsFormModalClicked()"> Cancel </button>
             <span class="ml-2">1 service(s) to be added</span>
         </div>
-    </div>
-
 </div>
