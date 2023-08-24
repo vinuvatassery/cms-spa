@@ -342,9 +342,9 @@ export class FinancialClaimsFacade {
     });
   }
 
-  loadReconcilePaymentBreakoutSummary(batchId: string, entityId: string){
+  loadReconcilePaymentBreakoutSummary(data:any){
     this.showLoader();
-    this.financialClaimsDataService.loadReconcilePaymentBreakoutSummaryService(batchId,entityId).subscribe({
+    this.financialClaimsDataService.loadReconcilePaymentBreakoutSummaryService(data).subscribe({
       next: (dataResponse) => {
         this.reconcileBreakoutSummaryDataSubject.next(dataResponse);
         this.hideLoader();
@@ -356,24 +356,11 @@ export class FinancialClaimsFacade {
     });
   }
 
-  loadReconcilePaymentBreakoutListGrid(
-    batchId: string,
-    entityId: string,
-    skipcount: number,
-    pagesize: number,
-    sort: any,
-    sortType: any
-  ) {
+  loadReconcilePaymentBreakoutListGrid(data:any) {
     this.showLoader();
+    data.filter=JSON.stringify(data.filter);
     this.financialClaimsDataService
-      .loadReconcilePaymentBreakoutListService(
-        batchId,
-        entityId,
-        skipcount,
-        pagesize,
-        sort,
-        sortType
-      )
+      .loadReconcilePaymentBreakoutListService(data)
       .subscribe({
         next: (dataResponse) => {
           this.reconcilePaymentBreakoutListDataSubject.next(dataResponse);
