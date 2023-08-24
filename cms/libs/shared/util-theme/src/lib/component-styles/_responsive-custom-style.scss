@@ -1,3 +1,14 @@
+@media (max-width: 400px) {
+  .grid-custom-paginationtemplates{
+    .d-flex.align-items-center{
+      display: none;
+    }
+    > .d-flex{
+      width: 100%;
+      justify-content: end;
+    }
+  }
+}
 @media (max-width: $breakpoint-sm) {
   // Top Header responsive CSS
   .app-l-header {
@@ -343,6 +354,9 @@
       padding: 0px;
     }
   }
+  .exp_button-text{
+    display: none;
+}
 }
 
 @media (max-width: $breakpoint-md) {
