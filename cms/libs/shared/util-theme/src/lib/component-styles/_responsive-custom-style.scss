@@ -8,6 +8,7 @@
       justify-content: end;
     }
   }
+
 }
 @media (max-width: $breakpoint-sm) {
   // Top Header responsive CSS
@@ -356,6 +357,11 @@
   }
   .exp_button-text{
     display: none;
+}
+.search-with-addbtn{
+  &.add-new-button{
+    top: -80px;
+  }
 }
 }
 
