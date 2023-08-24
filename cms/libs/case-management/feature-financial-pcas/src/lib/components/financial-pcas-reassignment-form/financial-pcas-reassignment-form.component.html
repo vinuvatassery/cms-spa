@@ -1,94 +1,95 @@
 <kendo-dialog-titlebar (close)="closeEditPcaReassignmentClicked()"> Edit PCA Code </kendo-dialog-titlebar>
+<div [formGroup]="pcaEditForm">
+      <section class="k-dialog-body">
+            <p class="text-muted">
+                  All fields are required unless otherwise stated.
+            </p>
+      
+            <div class="flex-row">
+                  <div class="flex-col mt-1">
+                        <p class="relative-heading"><strong>PCA Settings</strong></p>
+                  </div>
+                  <div class="flex-col flex-col-8">
+                        <kendo-floatinglabel text="PCA" >
+                              <kendo-dropdownlist aria-label="PCA" [fillMode]="formUiStyle.inputFillMode"  formControlName="pCA">
+                              </kendo-dropdownlist>
+                        </kendo-floatinglabel>
 
-<section class="k-dialog-body">
-      <p class="text-muted">
-            All fields are required unless otherwise stated.
-      </p>
-     
-      <div class="flex-row">
-            <div class="flex-col mt-1">
-                  <p class="relative-heading"><strong>PCA Settings</strong></p>
+                  </div>
+                  <div class="flex-col flex-col-4">
+                        <kendo-floatinglabel text="AY">
+                              <kendo-textbox aria-label="AT" [fillMode]="formUiStyle.inputFillMode" formControlName="aY" ></kendo-textbox> >
+                        </kendo-floatinglabel>
+                  </div>
             </div>
-            <div class="flex-col flex-col-8">
-                  <kendo-floatinglabel text="PCA">
-                        <kendo-dropdownlist aria-label="PCA" [fillMode]="formUiStyle.inputFillMode">
-                        </kendo-dropdownlist>
-                  </kendo-floatinglabel>
+            <div class="flex-row mt-3">
+                  <div class="flex-col flex-col-4">
+                        <label> PCA Amount </label>
+                        <p>5,00,0000.00</p>
+                  </div>
+                  <div class="flex-col flex-col-4">
+                        <label> Allocated </label>
+                        <p> $ 5,00,0000.00</p>
+                  </div>
+                  <div class="flex-col flex-col-4">
+                        <label> Remaining </label>
+                        <p class="green-text-color">$ 5,00,0000.00</p>
+                  </div>
+                  
+            </div>
+            <div class="flex-row">
+                  <div class="flex-col mt-1">
+                  
+                        <p class="relative-heading"><strong>Object Settings</strong></p>
+                  </div>
+                  <div class="flex-col flex-col-6">
+                        <kendo-floatinglabel text="Open Date">
+                              <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                                    formatPlaceholder="formatPattern" placeholder="" formControlName="openDate">
+                              </kendo-datepicker>
+                        </kendo-floatinglabel>
+
+                  </div>
+                  <div class="flex-col flex-col-6">
+                        <kendo-floatinglabel text="Close Date">
+                              <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                                    formatPlaceholder="formatPattern" placeholder=""  formControlName="closeDate" >
+                              </kendo-datepicker>
+                        </kendo-floatinglabel>
+
+                  </div>
+            </div>
+            <div class="flex-row">
+                  <div class="flex-col ">
+                        <kendo-floatinglabel text="Assignment Amount" class="amount-with-symbol">
+                              <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                              <kendo-numerictextbox  aria-label="AssignmentAmount" [spinners]="false"
+                                    class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode" formControlName="totalAmount" >
+                              </kendo-numerictextbox>
+                        </kendo-floatinglabel>
+
+                  </div>
+                  <div class="flex-col mt-2">
+                        <span class="app-checkboxwidtext-wrapper">
+                              <input type="checkbox" kendoCheckBox aria-labelledby="Unlimited" id="Unlimited" />
+                              <label class="k-checkbox-label" for="Unlimited">Unlimited</label>
+                        </span>
+                  </div>
 
             </div>
-            <div class="flex-col flex-col-4">
-                  <kendo-floatinglabel text="AY">
-                        <kendo-textbox aria-label="AT" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                  </kendo-floatinglabel>
-            </div>
-      </div>
-      <div class="flex-row mt-3">
-            <div class="flex-col flex-col-4">
-                  <label> PCA Amount </label>
-                  <p> $ 5,00,0000.00</p>
-            </div>
-            <div class="flex-col flex-col-4">
-                  <label> Allocated </label>
-                  <p> $ 5,00,0000.00</p>
-            </div>
-            <div class="flex-col flex-col-4">
-                  <label> Remaining </label>
-                  <p class="green-text-color">$ 5,00,0000.00</p>
-            </div>
-            
-      </div>
-      <div class="flex-row">
-            <div class="flex-col mt-1">
-            
-                  <p class="relative-heading"><strong>Object Settings</strong></p>
-            </div>
-            <div class="flex-col flex-col-6">
-                  <kendo-floatinglabel text="Open Date">
-                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                              formatPlaceholder="formatPattern" placeholder="">
-                        </kendo-datepicker>
-                  </kendo-floatinglabel>
+      </section>
 
+      <kendo-dialog-actions>
+            <div class="justify-content-between">
+                  <div class="justify-content-end">
+                        <button kendoButton [primary]="true" look="outline" aria-label="cancel"
+                              (click)="closeEditPcaReassignmentClicked()">
+                              Cancel
+                        </button>
+                        <button kendoButton [primary]="true" aria-label="Save">
+                              Save
+                        </button>
+                  </div>
             </div>
-            <div class="flex-col flex-col-6">
-                  <kendo-floatinglabel text="Close Date">
-                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                              formatPlaceholder="formatPattern" placeholder="">
-                        </kendo-datepicker>
-                  </kendo-floatinglabel>
-
-            </div>
-      </div>
-      <div class="flex-row">
-            <div class="flex-col ">
-                  <kendo-floatinglabel text="Object Amount" class="amount-with-symbol">
-                        <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                        <kendo-numerictextbox  aria-label="Object Amount" [spinners]="false"
-                              class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
-                        </kendo-numerictextbox>
-                  </kendo-floatinglabel>
-
-            </div>
-            <div class="flex-col mt-2">
-                  <span class="app-checkboxwidtext-wrapper">
-                        <input type="checkbox" kendoCheckBox aria-labelledby="Unlimited" id="Unlimited" />
-                        <label class="k-checkbox-label" for="Unlimited">Unlimited</label>
-                  </span>
-            </div>
-
-      </div>
-</section>
-
-<kendo-dialog-actions>
-      <div class="justify-content-between">
-            <div class="justify-content-end">
-                  <button kendoButton [primary]="true" look="outline" aria-label="cancel"
-                        (click)="closeEditPcaReassignmentClicked()">
-                        Cancel
-                  </button>
-                  <button kendoButton [primary]="true" aria-label="Save">
-                        Save
-                  </button>
-            </div>
-      </div>
-</kendo-dialog-actions>
+      </kendo-dialog-actions>
+</div>

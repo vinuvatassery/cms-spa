@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, of } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -70,6 +70,9 @@ export class FinancialPcaFacade {
 
   private financialPcaReportDataSubject = new Subject<any>();
   financialPcaReportData$ = this.financialPcaReportDataSubject.asObservable();
+
+  private financialPcaReassignmentEditDataSubject = new Subject<any>();
+  financialPcaReassignmentEditData$ = this.financialPcaReassignmentEditDataSubject.asObservable();
 
 
 
@@ -215,6 +218,23 @@ export class FinancialPcaFacade {
       next: (response) => {
         this.pcaActionIsSuccessSubject.next('remove');
         this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+  
+
+  loadPcaReassigmentDataById(fundingSouceId : string)
+  {
+    this.showLoader();
+    this.financialPcaDataService.loadPcaReassigmentDataById(fundingSouceId).subscribe({
+      next: (response) => {
+        this.hideLoader();
+        this.financialPcaReassignmentEditDataSubject.next(response);
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
       },
       error: (err) => {
