@@ -46,6 +46,8 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   @Input() financialFundingSourceGridLists$: any;
   @Input() gridFinancialFundingSourceData$: any;
   @Output() loadFinancialFundingSourcesListEvent = new EventEmitter<any>();
+  @Output() removeFundingSourceClick = new EventEmitter<string>();
+  isRemoveFundingSourceClicked$ = new Subject();
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -67,7 +69,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   isEditFundingSource = false;
   addEditFundingDialog: any;
   removeFundingDialog: any;;
-
+  selectFundingSourceId!: string;;
   public processGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -252,9 +254,26 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
       this.removeFundingDialog.close();
     }
   }
- loadFundingSource(){
-  this.financialFundingSourceFacade.loadFundingSourceList();
- }
+  loadFundingSource(){
+    this.financialFundingSourceFacade.loadFundingSourceList();
+  }
+  removeFundingSourceEvent(fundingSoruceId: string) {
+    this.removeFundingSourceClick.emit(fundingSoruceId);
+  }
+  removeFundingSource(dataItem: any) {
+    if (dataItem?.isDelete === true) {
+      this.removeFundingSourceEvent(this.selectFundingSourceId);
+      this.removeFundingDialog.close();
+      dataItem?.isDelete === false
+    }
+    else{
+      this.removeFundingDialog.close();
+    }
+  }
+  removedClick(fundingId:any)
+  {
+    this.selectFundingSourceId = fundingId
+  }
 }
 
 
