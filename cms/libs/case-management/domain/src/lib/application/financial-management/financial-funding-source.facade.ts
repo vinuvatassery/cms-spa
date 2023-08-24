@@ -80,43 +80,43 @@ export class FinancialFundingSourceFacade {
     });
   }
 
-  addFundingSource(fundingSource: any) {
-    this.showLoader();
-    this.financialFundingSourceDataService.addFundingSource(fundingSource).subscribe({
-      next: (dataResponse) => {
-        this.addFundingSourceSubject.next(dataResponse);
-        this.hideLoader();
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, `Added funding source successfully`);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.hideLoader();
-      },
-    })
-  }
+  // addFundingSource(fundingSource: any) {
+  //   this.showLoader();
+  //   this.financialFundingSourceDataService.addFundingSource(fundingSource).subscribe({
+  //     next: (dataResponse) => {
+  //       this.addFundingSourceSubject.next(dataResponse);
+  //       this.hideLoader();
+  //       this.showHideSnackBar(SnackBarNotificationType.SUCCESS, `Added funding source successfully`);
+  //     },
+  //     error: (err) => {
+  //       this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+  //       this.hideLoader();
+  //     },
+  //   })
+  // }
 
-  updateFundingSource(fundingSource: any) {
-    this.showLoader();
-    this.financialFundingSourceDataService.updateFundingSource(fundingSource).subscribe({
-      next: (dataResponse) => {
-        this.updateFundingSourceSubject.next(dataResponse);
-        this.hideLoader();
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, `Updated funding source successfully`);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.hideLoader();
-      },
-    })
-  }
-  loadFundingSourceLookup(){
-    this.financialFundingSourceDataService.loadFundingSourceLookup().subscribe({
-      next: (dataResponse) => {
-        this.fundingSourceLookupSubject.next(dataResponse);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-      },
-    });  
-  }
+  // updateFundingSource(fundingSource: any) {
+  //   this.showLoader();
+  //   this.financialFundingSourceDataService.updateFundingSource(fundingSource).subscribe({
+  //     next: (dataResponse) => {
+  //       this.updateFundingSourceSubject.next(dataResponse);
+  //       this.hideLoader();
+  //       this.showHideSnackBar(SnackBarNotificationType.SUCCESS, `Updated funding source successfully`);
+  //     },
+  //     error: (err) => {
+  //       this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+  //       this.hideLoader();
+  //     },
+  //   })
+  // }
+  // loadFundingSourceLookup(){
+  //   this.financialFundingSourceDataService.loadFundingSourceLookup().subscribe({
+  //     next: (dataResponse) => {
+  //       this.fundingSourceLookupSubject.next(dataResponse);
+  //     },
+  //     error: (err) => {
+  //       this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+  //     },
+  //   });  
+  // }
 }

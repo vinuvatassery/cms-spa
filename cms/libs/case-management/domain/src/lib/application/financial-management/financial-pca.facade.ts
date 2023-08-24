@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, of } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -222,5 +222,27 @@ export class FinancialPcaFacade {
         this.hideLoader();
       },
     });
+  }
+  
+  loadPcaReassignment( ) {
+  return of([
+     {
+      PCA: 345, 
+     object: 'object and group assigment `',
+      Group:'some description', 
+      OriginalAmount : 456666,
+      AmountSpendAfterExpiration:8232918,
+      CloseDate :13/4/2011,
+     
+       },
+     {
+      PCA: 345, 
+      object: 'object and group assigment `',
+      Group:'some description', 
+      OriginalAmount : 456666,
+      AmountSpendAfterExpiration:8232918,
+      CloseDate :13/4/2011,
+      },
+  ]);
   }
 }
