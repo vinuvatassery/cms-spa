@@ -97,7 +97,11 @@ export class VendorContactsFacade {
     this.showLoader();
     this.vendorcontactsDataService.loadcontacts(vendorAddressId).subscribe({
       next:(res:any)=>{
-      this.contactsSubject.next(res);
+        const gridView = {
+          data: res['items'],
+          total: res['totalCount'],
+        };
+      this.contactsSubject.next(gridView);
       this.hideLoader();
       },
       error:(err:any)=>{
@@ -132,7 +136,7 @@ export class VendorContactsFacade {
           this.loaderService.hide();
          }
          this.loaderService.hide();
-         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, ' Address De-Activated Successfully');
+         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, ' Contact De-Activated Successfully');
        },
        error: (err) => {
         resolve(false);
@@ -153,7 +157,7 @@ export class VendorContactsFacade {
           if (response === true) {
             this.removeContactAddressSubject.next(true);
             resolve(true);
-            this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Address Removed Successfully');
+            this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Contact Removed Successfully');
             this.loaderService.hide();
           }
           this.loaderService.hide();
