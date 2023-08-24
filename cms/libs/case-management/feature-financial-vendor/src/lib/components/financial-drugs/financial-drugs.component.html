@@ -11,9 +11,9 @@
             (columnVisibilityChange)="columnChange($event)">
 
                 <kendo-grid-column field="ndcNbr" title="NDC" [width]="150"> </kendo-grid-column>
-                <kendo-grid-column field="brandName" title="Brand Name" [width]="100"> </kendo-grid-column>
-                <kendo-grid-column field="drugName" title="Drug Name" [width]="100"> </kendo-grid-column>
-                <kendo-grid-column field="deliveryMethodCode" title="Delivery Method" [width]="100"> </kendo-grid-column>
+                <kendo-grid-column field="brandName" title="Brand Name" [width]="140"> </kendo-grid-column>
+                <kendo-grid-column field="drugName" title="Drug Name" [width]="180"> </kendo-grid-column>
+                <kendo-grid-column field="deliveryMethodCode" title="Delivery Method" [width]="120"> </kendo-grid-column>
                 <kendo-grid-column field="hiv" title="HIV Drugs?" [width]="100">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     {{ dataItem.hiv | yesOrNo }}
