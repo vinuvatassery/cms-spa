@@ -44,6 +44,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialFundingSourceGridLists$: any;
+  @Input() gridFinancialFundingSourceData$: any;
   @Output() loadFinancialFundingSourcesListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'vendorName';
@@ -57,8 +58,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   gridDataResult!: GridDataResult;
 
   gridFinancialFundingSourcesDataSubject = new Subject<any>();
-  gridFinancialFundingSourceData$ =
-    this.gridFinancialFundingSourcesDataSubject.asObservable();
+
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
