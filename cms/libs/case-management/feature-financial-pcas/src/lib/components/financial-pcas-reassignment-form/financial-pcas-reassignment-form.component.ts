@@ -48,8 +48,9 @@ buildForm() {
     aY: ['', Validators.required],
     openDate: ['', Validators.required],
     closeDate: ['', Validators.required],
-    TotalAmount : ['', Validators.required],
-    totalAmount : ['', Validators.required]
+    totalAmount : ['', Validators.required],
+
+
   })
 }
 closeEditPcaReassignmentClicked() {
