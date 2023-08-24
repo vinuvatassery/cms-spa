@@ -349,7 +349,7 @@ $pagination-height : 48px;
       position: relative;
 
       @media (max-width: $breakpoint-xlg) {
-        max-width: 200px;
+        max-width: 100%;
       }
 
       .material-icons {
