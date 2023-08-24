@@ -452,7 +452,12 @@ export class FinancialClaimsDataService {
     );
   }
   deleteClaims(Claims: any, claimsType: string) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/delete-claims`, Claims);
+    const options = {
+      body: {
+        paymentRequestIds: Claims,
+      }
+    }
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/delete-claims`,options);
   }
 
   batchClaims(batchClaims: BatchClaim, claimsType: string) {
