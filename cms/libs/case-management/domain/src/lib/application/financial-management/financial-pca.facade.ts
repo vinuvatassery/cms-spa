@@ -104,28 +104,6 @@ export class FinancialPcaFacade {
   ) { }
 
   /** Public methods **/
-
-
-  loadFinancialPcaSetupListGrid(params: GridFilterParam) {
-    this.financialPcaSetupLoaderSubject.next(true);
-    this.financialPcaDataService.loadFinancialPcaSetupListService(params).subscribe({
-      next: (dataResponse) => {
-        const gridView: any = {
-          data: dataResponse['items'],
-          total: dataResponse?.totalCount,
-        };
-
-        this.financialPcaSetupDataSubject.next(gridView);
-        this.financialPcaSetupLoaderSubject.next(false);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.financialPcaSetupLoaderSubject.next(false);
-      },
-    });
-  }
-
-
   loadFinancialPcaAssignmentListGrid() {
     this.financialPcaDataService.loadFinancialPcaAssignmentListService().subscribe({
       next: (dataResponse) => {
@@ -168,6 +146,25 @@ export class FinancialPcaFacade {
   }
 
   /* PCA setup */
+  loadFinancialPcaSetupListGrid(params: GridFilterParam) {
+    this.financialPcaSetupLoaderSubject.next(true);
+    this.financialPcaDataService.loadFinancialPcaSetupListService(params).subscribe({
+      next: (dataResponse) => {
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+
+        this.financialPcaSetupDataSubject.next(gridView);
+        this.financialPcaSetupLoaderSubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.financialPcaSetupLoaderSubject.next(false);
+      },
+    });
+  }
+
   loadPcaById(pcaId: string){
     this.pcaDataSubject.next(null);
     this.financialPcaDataService.loadPcaById(pcaId).subscribe({

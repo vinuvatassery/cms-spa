@@ -13,13 +13,17 @@ import {
 } from '@angular/core';
 import { GridFilterParam, PcaDetails } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { TooltipDirective } from '@progress/kendo-angular-tooltip';
 import {
   CompositeFilterDescriptor,
+  SortDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription, debounceTime } from 'rxjs';
 @Component({
   selector: 'cms-financial-pcas-setup-list',
   templateUrl: './financial-pcas-setup-list.component.html',
@@ -30,6 +34,8 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
   addEditPcaSetupDialogTemplate!: TemplateRef<any>;
   @ViewChild('removePcaSetupDialogTemplate', { read: TemplateRef })
   removePcaSetupDialogTemplate!: TemplateRef<any>;
+  @ViewChild(TooltipDirective)
+  public tooltipDir!: TooltipDirective;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   pcaSetupRemoveDialogService: any;
   pcaSetupAddEditDialogService: any;
@@ -69,7 +75,8 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+  searchText = '';
+  private searchSubject = new Subject<string>();
   private saveResponseSubscription !: Subscription;
   gridMoreActions = [
     {
@@ -97,9 +104,10 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
   ];
 
   gridColumns: { [key: string]: string } = {
+    ALL: 'All Columns',
     isPcaAssigned: 'Assigned',
     pcaCode: 'PCA #',
-    appropriationYear: 'AY',
+    appropriationYear: 'AY #',
     pcaDesc: 'Description',
     totalAmount: 'Amount',
     remainingAmount: 'Remaining',
@@ -108,41 +116,85 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
     fundingSource: 'Funding Source'
   };
 
+  searchColumnList: { columnName: string, columnDesc: string }[] = [
+    { columnName: 'ALL', columnDesc: 'All Columns' },
+    { columnName: 'pcaCode', columnDesc: 'PCA #' },
+    { columnName: 'appropriationYear', columnDesc: 'AY #' },
+    { columnName: 'pcaDesc', columnDesc: 'Description' },
+    { columnName: 'closeDate', columnDesc: 'Close Date' },
+    { columnName: 'fundingSource', columnDesc: 'Funding Source' },
+    { columnName: 'fundingDesc', columnDesc: 'Funding Name' },
+  ];
+  selectedSearchColumn = 'ALL';
+  filteredByColumnDesc = '';
+  showDateSearchWarning = false;
+  showNumberSearchWarning = false;
+  columnChangeDesc = 'Default Columns'
   /** Constructor **/
   constructor(
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly intl: IntlService,
+    private readonly configProvider: ConfigurationProvider
   ) { }
 
   ngOnInit(): void {
-    this.loadFinancialPcaSetupListGrid();
-    this.addActionResponseSubscription();
+    this.initializePcaPage();
   }
 
   ngOnChanges(): void {
+    this.initializePCAGrid();
+    this.loadFinancialPcaSetupListGrid();
+  }
+
+  private initializePCAGrid() {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      sort: [{ field: 'pcaCode', dir: 'asc' }]
     };
-
-    this.loadFinancialPcaSetupListGrid();
   }
 
   ngOnDestroy(): void {
     this.saveResponseSubscription.unsubscribe();
+    this.searchSubject.complete();
   }
 
-  onChange(data: any) {
-    this.defaultGridState();
+  searchColumnChangeHandler(value: string) {
+    this.filter = [];
+    this.showNumberSearchWarning = (['pcaCode', 'appropriationYear']).includes(value);
+    this.showDateSearchWarning = value === 'closeDate';
+    if (this.searchText) {
+      this.onPcaSearch(this.searchText);
+    }
+  }
 
+  onPcaSearch(searchValue: any) {
+    const isDateSearch = searchValue.includes('/');
+    this.showDateSearchWarning = isDateSearch || this.selectedSearchColumn === 'closeDate';
+    searchValue = this.formatSearchValue(searchValue, isDateSearch);
+    if (isDateSearch && !searchValue) return;
+    this.setFilterBy(false, searchValue, []);
+    this.searchSubject.next(searchValue);
+  }
+
+  performPcaSearch(data: any) {
+    this.defaultGridState();
+    const operator = (['pcaCode', 'closeDate', 'appropriationYear']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
+    data = this.selectedSearchColumn === 'appropriationYear' ? data.toLowerCase().replace('ay', '') : data;
+    if (this.selectedSearchColumn === 'closeDate' && (!this.isValidDate(data) && data !== '')) {
+      return;
+    }
+    if ((['pcaCode', 'appropriationYear']).includes(this.selectedSearchColumn) && isNaN(Number(data))) {
+      return;
+    }
     this.filterData = {
       logic: 'and',
       filters: [
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'pcaCode',
-              operator: 'startswith',
+              field: this.selectedSearchColumn ?? 'pcaCode',
+              operator: operator,
               value: data,
             },
           ],
@@ -153,6 +205,24 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
+    this.loadFinancialPcaSetupListGrid();
+  }
+  restPcaGrid() {
+    this.sortValue = 'pcaCode';
+    this.sortType = 'asc';
+    this.initializePCAGrid();
+    this.sortColumn = 'pcaCode';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
+    this.filter = [];
+    this.searchText = '';
+    this.selectedSearchColumn = 'ALL';
+    this.filteredByColumnDesc = '';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.columnChangeDesc = 'Default Columns';
+    this.showDateSearchWarning = false;
+    this.showNumberSearchWarning = false;
+    this.loadFinancialPcaSetupListGrid();
   }
 
   /* Public methods */
@@ -177,23 +247,46 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.filter = stateData?.filter?.filters;
+    this.setFilterBy(true, '', this.filter);
     this.loadFinancialPcaSetupListGrid();
   }
 
-  // updating the pagination infor based on dropdown selection
+  private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
+    this.filteredByColumnDesc = '';
+    if (isFromGrid) {
+      if (filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) =>
+          f.filters?.map((fld: any) =>
+            this.gridColumns[fld.field])
+        );
+        this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
+      }
+      return;
+    }
+
+    if (searchValue !== '') {
+      this.filteredByColumnDesc = this.searchColumnList?.find(i => i.columnName === this.selectedSearchColumn)?.columnDesc ?? '';
+    }
+  }
+
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadFinancialPcaSetupListGrid();
   }
 
-  public filterChange(filter: CompositeFilterDescriptor): void {
+  filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
 
-  public rowClass = (args: any) => ({
+  rowClass = (args: any) => ({
     "table-row-disabled": (!args.dataItem.assigned),
   });
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter(x=> x.hidden).length
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
+  }
 
   onOpenAddPcaSetupClicked(template: TemplateRef<unknown>, pcaId?: string | null): void {
     this.loadAddOrEditPcaEvent.emit(pcaId);
@@ -211,7 +304,7 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
     }
   }
 
-  onRemovePcaSetupClicked(template: TemplateRef<unknown>, pcaId:string, pcaDesc:string, fundingName: string): void {
+  onRemovePcaSetupClicked(template: TemplateRef<unknown>, pcaId: string, pcaDesc: string, fundingName: string): void {
     this.selectedPcaId = pcaId;
     this.selectedPcaDesc = pcaDesc;
     this.selectedFundingSource = fundingName;
@@ -236,15 +329,21 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
   }
 
   /* Private methods */
+  private initializePcaPage() {
+    this.loadFinancialPcaSetupListGrid();
+    this.addActionResponseSubscription();
+    this.addSearchSubjectSubscription();
+  }
+
   private addActionResponseSubscription() {
     this.saveResponseSubscription = this.pcaActionIsSuccess$.subscribe((resp: any) => {
       if (resp === 'remove') {
         this.onCloseRemovePcaSetupClicked(true);
       }
-      else if(resp === 'save'){
+      else if (resp === 'save') {
         this.onCloseAddEditPcaSetupClicked(true);
       }
-      this.loadFinancialPcaSetupListGrid();  
+      this.loadFinancialPcaSetupListGrid();
     });
   }
 
@@ -257,5 +356,28 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
       JSON.stringify(this.filter));
     this.loadFinancialPcaSetupListEvent.emit(param);
   }
+
+  private addSearchSubjectSubscription() {
+    this.searchSubject.pipe(debounceTime(300))
+      .subscribe((searchValue) => {
+        this.performPcaSearch(searchValue);
+      });
+  }
+
+  private isValidDate = (searchValue: any) => isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(new Date(searchValue), this.configProvider?.appSettings?.dateFormat);
+      }
+      else {
+        return '';
+      }
+    }
+
+    return searchValue;
+  }
+
 }
 
