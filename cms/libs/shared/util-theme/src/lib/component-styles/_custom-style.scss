@@ -1183,7 +1183,7 @@ color: $app-primary-font-color;
   float: right;
   position: absolute;
   top: 40px;
-  right: 30px;
+  right: 20px;
 } 
 
 
@@ -1212,4 +1212,8 @@ color: $app-primary-font-color;
 
 .bottom-pad{
   padding-bottom: 60px;
+}
+
+.exp_button-text{
+  font-style: normal;
 }

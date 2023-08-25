@@ -25,7 +25,7 @@ export class FinancialVendorPageComponent implements OnInit {
 
   data = [
     {
-      text: 'Manufacture',
+      text: 'Manufacturer',
       click: (dataItem: any): void => {
         this.clickOpenManufacturers();
       },

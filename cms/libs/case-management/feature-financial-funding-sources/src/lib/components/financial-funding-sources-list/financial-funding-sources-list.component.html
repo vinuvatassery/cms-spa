@@ -40,10 +40,10 @@ Funding
     [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
     [columnMenu]="{ filter: true }" [sort]="state.sort"  
     (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
-    [data]="financialFundingSourceGridLists$ | async"  [rowClass]="rowClass">
+    [data]="fundingSourceList$ | async" [rowClass]="rowClass">
   
-    <kendo-grid-column field="fundingSource" title="Funding Source"  > </kendo-grid-column>
-    <kendo-grid-column field="fundingName" title="Funding Name"> </kendo-grid-column>
+    <kendo-grid-column field="fundingSourceCode" title="Funding Source"  > </kendo-grid-column>
+    <kendo-grid-column field="fundingDesc" title="Funding Name"> </kendo-grid-column>
     
 
     <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="50" class="text-center">
@@ -56,7 +56,7 @@ Funding
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
             <ng-container>
               <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                [class]="buttondataItem.buttonType" aria-hidden="false">
                 <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                 <label> {{ buttondataItem.text }} </label>
               </button>
@@ -109,6 +109,9 @@ Funding
  (onUpdateFundingSourceEvent)="updateFundingSource($event)"
  ></cms-financial-funding-sources-details>
  </ng-template>
+
  <ng-template #removeFundingSourceDialogTemplate>
-<cms-financial-funding-sources-remove (isModalRemoveFundingSourcesCloseClicked)="onModalCloseRemoveFundingSourceClicked($event)"></cms-financial-funding-sources-remove>
+<cms-financial-funding-sources-remove
+[fundingSourceId]="selectFundingSourceId">
+</cms-financial-funding-sources-remove>
  </ng-template>

@@ -455,10 +455,10 @@ export class FinancialClaimsDataService {
   deleteClaims(Claims: any, claimsType: string) {
     const options = {
       body: {
-        Claims: Claims,
+        paymentRequestIds: Claims,
       }
     }
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}`, options);
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}`,options);
   }
 
   batchClaims(batchClaims: BatchClaim, claimsType: string) {
