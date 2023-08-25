@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { GridFilterParam } from '../../entities/grid-filter-param';
+import { PcaDetails } from '../../entities/financial-management/pca-details';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPcaDataService {
@@ -13,35 +15,11 @@ export class FinancialPcaDataService {
     private readonly configurationProvider: ConfigurationProvider
   ) {}
  
-  loadFinancialPcaSetupListService( ) {
-    return of([
-      {
-        id:1,
-        pca: '123123`',
-        ay:'AY21', 
-        description:'Some Description Some Description', 
-        amount:'43324342.33',  
-        remaining:'345435.33', 
-        closeDate:'MM/DD/YYYY', 
-        grantName:'Name', 
-        grantNumber:'34535345', 
-        assigned: true,  
-      },
-      {
-        id:2,
-        pca: '123123`',
-        ay:'AY21', 
-        description:'Some Description Some Description', 
-        amount:'43324342.33',  
-        remaining:'345435.33', 
-        closeDate:'MM/DD/YYYY', 
-        grantName:'Name', 
-        grantNumber:'34535345', 
-        assigned: false,  
-      },
-      
-    ]);
+  loadFinancialPcaSetupListService(params: GridFilterParam) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/search${params.convertToQueryString()}`);
   }
+
   loadFinancialPcaAssignmentListService( ) {
     return of([
       {
@@ -200,5 +178,25 @@ export class FinancialPcaDataService {
      
     ]);
   } 
- 
+
+   /* PCA setup */
+
+  loadPcaById(pcaId: string) {
+    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/${pcaId}`); 
+  }
+  
+ savePca(pcaModel: PcaDetails){
+  return this.http.post<any>(
+    `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca`, pcaModel);
+ }
+
+ updatePca(pcaId: string, pcaModel: PcaDetails){
+  return this.http.put<any>(
+    `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/${pcaId}`, pcaModel);
+ }
+
+ deletePca(pcaId: string){
+  return this.http.delete<any>(
+    `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/${pcaId}`);
+ }
 }

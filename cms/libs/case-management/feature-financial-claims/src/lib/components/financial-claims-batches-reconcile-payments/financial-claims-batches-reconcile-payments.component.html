@@ -103,7 +103,8 @@
                         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" 
                         [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"  (filterChange)="filterChange($event)"
                         [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true" filterable="menu" [filter]="state.filter"
-                        [data]="reconcilePaymentGridPagedResult" >
+                        [data]="reconcilePaymentGridPagedResult" 
+                        (selectionChange)="onRowSelection(grid, $event)">
 
                         <kendo-grid-column   title="Print Advice Ltr" [width]="80">
                               <ng-template kendoGridCellTemplate let-dataItem>                  
@@ -293,10 +294,10 @@
             </section>
       </section>
 
-      <div class="bottom-fixed-wrapper">
+      <div class="bottom-fixed-wrapper ">
             <div class="sub-fix-bar">
                   <div class="flex-sp-btn">
-                        <div> <span class="ml-2"><strong>Amount Total:</strong> $&nbsp;{{reconcileBreakoutSummary$.amountTotal |
+                        <div> <span class="ml-2"><strong>Amount Total:</strong> $&nbsp;{{reconcileBreakoutSummary$?.amountTotal |
                               kendoNumber:'n2'}}</span>
                         <span class="ml-2"><strong>Warrant Total:</strong></span> <span class="ml-2"
                               *ngIf="isBreakoutPanelShow; else searchByBatchTemplate">$&nbsp;{{reconcileBreakoutSummary$.warrantTotal
@@ -315,10 +316,10 @@
                   </div>
                   </div>   
 
-                  <div>
-                        <cms-financial-claims-batches-reconcile-payments-breakout [isBreakoutPanelShow]="isBreakoutPanelShow"
-                        [pageSizes]="pageSizes" [sortValue]="sortValue"
-                        [sortType]="sortType" [sort]="sort"     
+                  <div *ngIf="isBreakoutPanelShow">
+                        <cms-financial-claims-batches-reconcile-payments-breakout
+                        [pageSizes]="pageSizes" [sortValue]="sortValue" [claimsType]="claimsType"
+                        [sortType]="sortType" [sort]="sort"  [batchId]="batchId" [entityId]="entityId"    
                         [reconcilePaymentBreakoutList$]="reconcilePaymentBreakoutList$"
                         (loadReconcilePaymentBreakOutGridEvent)="loadReconcilePaymentBreakOutGridList($event)"></cms-financial-claims-batches-reconcile-payments-breakout>
                   </div>

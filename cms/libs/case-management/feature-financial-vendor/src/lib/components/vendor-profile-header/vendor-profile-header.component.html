@@ -3,8 +3,9 @@
   <div class="app-l-inner-rapper pt-0 pb-0 pl-0" kendoRippleContainer kendoTooltip>
     <!-- Main Title Section -->
     <section class="app-l-mainTittle">
-      <div class="d-flex mb-1">
-        <button aria-label="back to vendor list" kendoButton look="flat" (click)="onBackClicked()"  title="Back"> <span
+      <div class="vendor-header-top mb-1">
+        <div class="d-flex">
+          <button aria-label="back to vendor list" kendoButton look="flat" (click)="onBackClicked()"  title="Back"> <span
             class="material-icons">
             arrow_back </span> </button>
         <h1 class="title_with_bld">
@@ -15,6 +16,8 @@
           </span>
 
         </h1>
+        </div>
+     
         <div class="title-client-info-block ml-2">
           <span *ngIf="vendorProfile$?.tin" class="title-client-info">TIN {{vendorProfile$?.tin}} </span>          
           <span class="title-client-info">{{vendorProfile$?.unReconciledPayments}} Unreconciled Claim(s) </span>

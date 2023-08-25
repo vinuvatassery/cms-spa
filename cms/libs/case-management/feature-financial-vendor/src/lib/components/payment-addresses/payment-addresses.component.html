@@ -1,20 +1,20 @@
 <div >
     <div class="flex-col flex-space-bw align-items-center">
-        <h5 class="title-md mb-0 text-capital">Payments</h5>
+        <h5 class="title-md mb-0 text-capital">{{tabCode !== financialVendorType.Manufacturers ? 'Payment Addresses' : 'Addresses and Contacts'}}</h5>
         <div>
             <span class="app-checkboxwidtext-wrapper">
                 <input type="checkbox" kendoCheckBox  aria-labelledby="AddressesshowHistorical"
-                    id="AddressesshowHistorical" />
+                    id="AddressesshowHistorical" [(ngModel)]="isShowHistoricalData" (ngModelChange)="onGetHistoricalPaymentAddressData()" />
                 <label class="k-checkbox-label" for="AddressesshowHistorical">Show historical</label>
             </span>
         </div>
     </div>
     <div class="flex-col mt-1">
-        <div class="app-c-table">          
+        <div class="app-c-table">
             <kendo-grid #grid  [resizable]="true" [loading]="isPaymentsAddressGridLoaderShow" [pageSize]="state.take" [pageable]="true"
             [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-            [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [navigable]="true" [data]="paymentsAddressGridView$ | async"   (detailCollapse)="onDetailCollapse($event)"
-            (detailExpand)="onDetailExpand($event)" >
+            [columnMenu]="{ filter: false }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [navigable]="true" [data]="paymentsAddressGridView$ | async"   (detailCollapse)="onDetailCollapse($event)"
+            (detailExpand)="onDetailExpand($event)" (columnVisibilityChange)="columnChange($event)">
 
                 <kendo-grid-column field="mailCode" title="Mail Code" [width]="150">
                     <ng-template kendoGridCellTemplate let-dataItem>
@@ -26,18 +26,18 @@
                      </kendo-grid-column>
                 <kendo-grid-column field="nameOnCheck" title="Name on Check" [width]="130"> </kendo-grid-column>
                 <kendo-grid-column field="nameOnEnvelope" title="Name on Envelope" [width]="150"> </kendo-grid-column>
-                <kendo-grid-column field="paymentMethod" title="Payment Method" [width]="150"> </kendo-grid-column>
-                <kendo-grid-column field="paymentRunDateMonthlyDesc" title="Payment Run Date" [width]="150"> </kendo-grid-column>
-                <kendo-grid-column field="acceptsCombinedPaymentsFlag" title="Accept Combined Payments?" [width]="180"> </kendo-grid-column>
-                <kendo-grid-column field="acceptsReportsFlag" title="Accepts Reports?" [width]="150"> </kendo-grid-column>
+                <kendo-grid-column *ngIf="(tabCode !== financialVendorType.Manufacturers)" field="paymentMethod" title="Payment Method" [width]="150"> </kendo-grid-column>
+                <kendo-grid-column *ngIf="(tabCode === financialVendorType.InsuranceVendors)" field="paymentRunDateMonthlyDesc" title="Payment Run Date" [width]="150"> </kendo-grid-column>
+                <kendo-grid-column *ngIf="(tabCode === financialVendorType.InsuranceVendors)" field="acceptsCombinedPaymentsFlag" title="Accept Combined Payments?" [width]="180"> </kendo-grid-column>
+                <kendo-grid-column *ngIf="(tabCode === financialVendorType.InsuranceVendors)" field="acceptsReportsFlag" title="Accepts Reports?" [width]="150"> </kendo-grid-column>
                 <kendo-grid-column field="address1" title="Address 1" [width]="180">   </kendo-grid-column>
                 <kendo-grid-column field="address2" title="Address 2" [width]="120">   </kendo-grid-column>
                 <kendo-grid-column field="cityCode" title="City" [width]="100">   </kendo-grid-column>
                 <kendo-grid-column field="state" title="State" [width]="100">   </kendo-grid-column>
                 <kendo-grid-column field="zip" title="Zip" [width]="100">   </kendo-grid-column>
-                <kendo-grid-column field="specialHandlingDesc" title="Special Handling" [width]="100">   </kendo-grid-column>
-                <kendo-grid-column field="effectiveDates" title="Effective Dates" [width]="100">   </kendo-grid-column>
-                <kendo-grid-column field="creatorId" title="By" [width]="70">
+                <kendo-grid-column field="specialHandlingDesc" title="Special Handling" [width]="120">   </kendo-grid-column>
+                <kendo-grid-column field="effectiveDates" title="Effective Dates" [width]="120">   </kendo-grid-column>
+                <kendo-grid-column [sortable]="false" field="creatorId" title="By" [width]="70">
                     <ng-template kendoGridCellTemplate let-dataItem>
                       <button
                         kendoButton
@@ -61,7 +61,7 @@
                       </kendo-popover>
                     </ng-template>
                   </kendo-grid-column>
-                  <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="60" class="text-center">
+                  <kendo-grid-column [sortable]="false" field="Option" title=" " [columnMenu]="false" [width]="60" class="text-center">
                     <ng-template kendoGridCellTemplate let-dataItem>
                         <kendo-dropdownbutton [data]="paymentAddressActions" icon="more-vertical"
                             class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -85,10 +85,10 @@
                         </kendo-dropdownbutton>
                     </ng-template>
                 </kendo-grid-column>
-              
+
                   <div *kendoGridDetailTemplate="let dataItem">
                     <cms-contact-address-list [VendorAddressId]="VendorAddressId"></cms-contact-address-list>
-                  
+
                     </div>
 
                         <!-- grid Pagination template -->
@@ -128,7 +128,7 @@
       <button kendoButton [primary]="true" icon="add" aria-label="add Address" class="mr-1"  (click)="clickOpenAddEditPaymentAddressDetails()">
         Address
       </button>
-       
+
       <button kendoButton [disabled]="IsAddContactDisabled"   icon="add" [primary]="true" (click)="clickOpenAddContactDetails()" look="flat" aria-label="Add Contact" >
           Contact
         </button>
@@ -139,15 +139,15 @@
 class="app-c-modal app-c-modal-md app-c-modal-np">
 <kendo-dialog-titlebar (close)="clickCloseAddContactDetails()"> Add Contact(
   <span style="font-size: small;  font-weight: bold;" >s</span>)
-  
+
 </kendo-dialog-titlebar>
 <cms-contact-address-details [vendorId]="vendorId" (isContactDetailPopupClose)="onClose($event)"></cms-contact-address-details>
 </kendo-dialog>
 <kendo-dialog *ngIf="isPaymentAddressDetailShow" (close)="clickCloseAddEditPaymentAddressDetails()"
 class="app-c-modal app-c-modal-md app-c-modal-np">
-<kendo-dialog-titlebar (close)="clickCloseAddEditPaymentAddressDetails()"> {{tabCode !== financialVendorType.Manufacturers ? 'Add Payment Address' : 'Add Address'}}
+<kendo-dialog-titlebar (close)="clickCloseAddEditPaymentAddressDetails()"> {{tabCode !== financialVendorType.Manufacturers ? addEditTitleText : manufacturerAddEditTitleText}}
 </kendo-dialog-titlebar>
-<cms-payment-address-details (closeEvent)="closePaymentAddressDetails($event)" [isEdit]="isPaymentAddressDetailIsEdit" [billingAddress]="billingAddressObj" > </cms-payment-address-details>
+<cms-payment-address-details (closeEvent)="closePaymentAddressDetails($event)" (editDeactivateClicked)="onEditDeactivateClicked($event)" [isEdit]="isPaymentAddressDetailIsEdit" [billingAddress]="billingAddressObj" > </cms-payment-address-details>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isPaymentAddressDeactivateShow" (close)="clickCloseDeactivatePaymentAddress(false)" class="app-c-modal app-c-modal-sm app-c-modal-np">
