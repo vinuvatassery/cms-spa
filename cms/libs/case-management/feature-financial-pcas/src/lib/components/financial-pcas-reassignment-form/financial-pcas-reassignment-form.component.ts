@@ -21,8 +21,8 @@ export class FinancialPcasReassignmentFormComponent implements  OnInit {
     totalAmount :[''],
     amountSpent :[''],
     balanceAmount :[''],
-    PcaRemainingAmount:[''],
-    PcaAllocated:[''],
+    pcaRemainingAmount:[''],
+    pcaAllocated:[''],
     unlimited:['']
   })
   constructor(private formBuilder:FormBuilder){
@@ -30,9 +30,16 @@ export class FinancialPcasReassignmentFormComponent implements  OnInit {
   }
   ngOnInit(): void {
     console.log(this.editPcaReassignmentItem)
-    this.getPcaReassignmentByFundSourceIdEvent.emit('B652E450-C943-4C4A-8771-6E86D6935076')
+    this.getPcaReassignmentByFundSourceIdEvent.emit('72B63ADD-4B44-4568-B22A-44096C1D5CF2')
     this.pcaReassignmentByFundSourceId$.subscribe((res:any) =>{
      this.pcaReassignmentByFundSourceId = res;
+     this.pcaReassignmentForm.patchValue({
+        ay : res.ay,
+        openDate: res.openDate,
+        closeDate : res.closeDate,
+        unlimited: res.unlimited,
+        pcaRemainingAmount : res.pcaRemainingAmount
+     });
     })
 
   }
