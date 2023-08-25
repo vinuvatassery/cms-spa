@@ -641,15 +641,15 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       });
   }
 
-  loadPrintAdviceLetterData(printAdviceLetterData: any) {
-    return this.financialClaimsDataService.getPrintAdviceLetterData(printAdviceLetterData);
+  loadPrintAdviceLetterData(batchId:any,printAdviceLetterData: any) {
+    return this.financialClaimsDataService.getPrintAdviceLetterData(batchId,printAdviceLetterData);
   }
   
   reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any) {
     return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData);
 }
 
-viewAdviceLetterData(printAdviceLetterData: any) {
-  return this.financialClaimsDataService.viewPrintAdviceLetterData(printAdviceLetterData);
+viewAdviceLetterData(batchId:any,printAdviceLetterData: any) {
+  return this.financialClaimsDataService.viewPrintAdviceLetterData(batchId,printAdviceLetterData);
 }
 }

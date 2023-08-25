@@ -479,18 +479,18 @@ export class FinancialClaimsDataService {
     );
   }
 
-  getPrintAdviceLetterData(selectedProviders: any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/generate`,selectedProviders);
+  getPrintAdviceLetterData(batchId:any,selectedProviders: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/batches/${batchId}/print-advice-letter`,selectedProviders);
   }
 
   reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/batches/${batchId}/reconcile-payments`,reconcileData);
   }
 
-  viewPrintAdviceLetterData(printAdviceLetterData: any) {
+  viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any) {
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/download`,printAdviceLetterData,
-      {responseType: 'blob'}
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/batches/${batchId}/print-advice-letter/download`, printAdviceLetterData,
+      { responseType: 'blob' }
     );
-    }
+  }
 }

@@ -18,8 +18,6 @@ export class FinancialClaimsPrintAuthorizationComponent {
   returnResultFinalPrintList!: any[];
   printCount: number = 0;
   reconcileCount: number = 0;
-  letterContnet!: any;
-  entityId: any = '823E2464-0649-49DA-91E7-26DCC76A2A6B';
   printAdviceLetterData: any
     /** Input properties **/
   @Input() items!: any;
@@ -67,7 +65,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
 
   loadPrintLetterContent(request:any) {
     this.loaderService.show();
-    this.financialClaimsFacade.loadPrintAdviceLetterData(request)
+    this.financialClaimsFacade.loadPrintAdviceLetterData(this.batchId,request)
       .subscribe({
         next: (data: any[]) => {
           if (data.length > 0) {
@@ -156,7 +154,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
 
   generateAndPrintAdviceLetter(request:any) {
     this.loaderService.show();
-    this.financialClaimsFacade.viewAdviceLetterData(request)
+    this.financialClaimsFacade.viewAdviceLetterData(this.batchId,request)
       .subscribe({
         next: (data: any) => {
           if (data) {

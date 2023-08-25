@@ -9,10 +9,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'cms-financial-claims-print-advice-letter-log-lists',
   templateUrl:
-    './financial-claims-print-advice-letter-log-lists.component.html',
-  styleUrls: [
-    './financial-claims-print-advice-letter-log-lists.component.scss',
-  ],
+    './financial-claims-print-advice-letter-log-lists.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit, OnChanges{ 
