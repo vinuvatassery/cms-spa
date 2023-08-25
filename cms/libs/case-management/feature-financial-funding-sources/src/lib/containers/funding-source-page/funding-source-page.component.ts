@@ -31,10 +31,7 @@ export class FundingSourcePageComponent {
 
   ) { }
 
-  ngOnInit(): void {
-    this.loadFundingSource();
 
-  }
   loadFinancialFundingSourceFacadeListGrid(event: any) {
     this.financialFundingSourceFacade.loadFinancialFundingSourceFacadeListGrid();
   }
@@ -45,9 +42,6 @@ export class FundingSourcePageComponent {
   updateFundingSource(event: any) {
     this.financialFundingSourceFacade.updateFundingSource(event)
   }
-  loadFundingSource(){
-    // this.financialFundingSourceFacade.loadFundingSourceList();
-   }
    loadFundingSourceHandle(gridDataRefinerValue: any): void {
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
