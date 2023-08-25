@@ -284,3 +284,7 @@ section {
 .red-text-color{
   color: material-color($hive-error-palette, 400);
 }
+
+.break-word{
+  word-wrap: break-word;
+}

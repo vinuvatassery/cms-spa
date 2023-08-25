@@ -59,7 +59,7 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   }
 
   private getQueryParams() {
-    this.batchId = this.route.snapshot.queryParams['bid'];   
+    this.batchId = this.route.snapshot.queryParams['bid'];  
   }
 
   loadReconcileListGrid(event: any) {
@@ -69,11 +69,13 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
 
   loadReconcileBreakoutSummary(event: any)
   {
-    this.financialClaimsFacade.loadReconcilePaymentBreakoutSummary(event.batchId,event.entityId);
+    event.claimsType=this.claimsType;
+    this.financialClaimsFacade.loadReconcilePaymentBreakoutSummary(event);
   }
 
   loadReconcilePaymentBreakoutList(event: any)
   {
-    this.financialClaimsFacade.loadReconcilePaymentBreakoutListGrid(event.batchId,event.entityId,event.skipCount, event.pageSize, event.sort,event.sortType);
+    event.claimsType=this.claimsType;
+    this.financialClaimsFacade.loadReconcilePaymentBreakoutListGrid(event);
   }
 }

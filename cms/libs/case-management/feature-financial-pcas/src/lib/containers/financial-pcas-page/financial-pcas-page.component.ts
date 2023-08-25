@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialPcaFacade } from '@cms/case-management/domain';
+import { FinancialFundingSourceFacade, FinancialPcaFacade, GridFilterParam, PcaDetails } from '@cms/case-management/domain';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggingService } from '@cms/shared/util-core';
 @Component({
@@ -25,7 +25,7 @@ export class FinancialPcasPageComponent {
 
   sortValueFinancialPcaSetup = this.financialPcaFacade.sortValueFinancialPcaSetup;
   sortPcaSetupList = this.financialPcaFacade.sortPcaSetupList;
-  
+
   sortValueFinancialPcaAssignment = this.financialPcaFacade.sortValueFinancialPcaAssignment;
   sortPcaAssignmentList = this.financialPcaFacade.sortPcaAssignmentList;
 
@@ -36,22 +36,27 @@ export class FinancialPcasPageComponent {
   sortFinancialPcaReportList = this.financialPcaFacade.sortFinancialPcaReportList;
 
   financialPcaSetupGridLists$ = this.financialPcaFacade.financialPcaSetupData$;
+  financialPcaSetupLoader$ = this.financialPcaFacade.financialPcaSetupLoader$;
   financialPcaAssignmentGridLists$ = this.financialPcaFacade.financialPcaAssignmentData$;
   financialPcaReassignmentGridLists$ = this.financialPcaFacade.financialPcaReassignmentData$;
-  financialPcaReportGridLists$ = this.financialPcaFacade.financialPcaReportData$; 
+  financialPcaReportGridLists$ = this.financialPcaFacade.financialPcaReportData$;
+  fundingSourceLookup$ = this.fundingSourceFacade.fundingSourceLookup$;
+  pcaActionIsSuccess$ = this.financialPcaFacade.pcaActionIsSuccess$;
+  pcaData$ = this.financialPcaFacade.pcaData$
 
   constructor(
     private readonly financialPcaFacade: FinancialPcaFacade,
+    private readonly fundingSourceFacade: FinancialFundingSourceFacade,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
     private loggingService: LoggingService,
-  ) {}
+  ) { }
 
- 
- 
-  loadFinancialPcaSetupListGrid(event: any) {
-    this.financialPcaFacade.loadFinancialPcaSetupListGrid();
+
+
+  loadFinancialPcaSetupListGrid(event: GridFilterParam) {
+    this.financialPcaFacade.loadFinancialPcaSetupListGrid(event);
   }
 
   loadFinancialPcaAssignmentListGrid(event: any) {
@@ -66,7 +71,28 @@ export class FinancialPcasPageComponent {
     this.financialPcaFacade.loadFinancialPcaReportListGrid();
   }
 
- 
+  loadAddOrEditPcaEvent(pcaId: any) {
+    this.fundingSourceFacade.loadFundingSourceLookup();
+    this.financialPcaFacade.loadPcaById(pcaId);
+  }
+
+  loadPcaById(pcaId: string){
+    this.financialPcaFacade.loadPcaById(pcaId);
+  }
+
+  savePca(event: { pcaId?: string | null, pcaDetails: PcaDetails }) {
+    if (event?.pcaId) {
+      this.financialPcaFacade.updatePca(event?.pcaId, event?.pcaDetails);
+    } else {
+      this.financialPcaFacade.savePca(event?.pcaDetails);
+    }
+  }
+
+  removePca(pcaId: string) {
+    if(pcaId){
+      this.financialPcaFacade.deletePca(pcaId);
+    }
+  }
 }
 
-  
+
