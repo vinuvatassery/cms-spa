@@ -9,14 +9,11 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { EntityTypeCode, FinancialClaimsFacade } from '@cms/case-management/domain';
+import { EntityTypeCode, FinancialClaimsFacade, FinancialProvider, PaymentMethodCode, FinancialClaims } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { LoaderService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
-import {FinancialProvider} from '@cms/case-management/domain'
-import {PaymentMethodCode} from '@cms/case-management/domain'
-import {FinancialClaims} from '@cms/case-management/domain'
 
 @Component({
   selector: 'cms-financial-claims-detail-form',
