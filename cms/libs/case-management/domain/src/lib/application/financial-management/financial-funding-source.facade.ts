@@ -19,7 +19,7 @@ export class FinancialFundingSourceFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueFinancialFundingSourceFacade = 'invoiceID';
+  public sortValueFinancialFundingSourceFacade = 'fundingSourceCode';
   public sortProcessList: SortDescriptor[] = [{
     field: this.sortValueFinancialFundingSourceFacade,
   }];
@@ -38,7 +38,7 @@ export class FinancialFundingSourceFacade {
 
   private fundingSourceLookupSubject = new Subject<any>();
   fundingSourceLookup$ = this.fundingSourceLookupSubject.asObservable();
- 
+
   /** Public properties **/
 
   // handling the snackbar & loader
@@ -121,10 +121,20 @@ export class FinancialFundingSourceFacade {
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
       },
-    });  
-  }   
-  loadFundingSourceList(){
-    this.financialFundingSourceDataService.loadFundingSourceList().subscribe({
+    });
+  }
+  loadFundingSourceList(
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string){
+      this.showLoader();
+    this.financialFundingSourceDataService.loadFundingSourceList(
+        skipcount,
+        maxResultCount,
+        sort,
+        sortType,
+    ).subscribe({
       next: (dataResponse) => {
         if (dataResponse) {
           this.hideLoader();
@@ -133,13 +143,12 @@ export class FinancialFundingSourceFacade {
             total: dataResponse['totalCount'],
           };
         this.fundingSourceListSubject.next(gridView);
-        this.hideLoader();
       }},
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.hideLoader();
       },
-    });  
+    });
   }
   removeFundingSource(fundingSourceId: string): void {
       this.showLoader();
@@ -147,7 +156,7 @@ export class FinancialFundingSourceFacade {
         next: (deleteResponse) => {
           if (deleteResponse ?? false) {
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Funding Source Removed Successfully')
-            this.loadFundingSourceList();
+            // this.loadFundingSourceList();
           }
         },
         error: (err) => {

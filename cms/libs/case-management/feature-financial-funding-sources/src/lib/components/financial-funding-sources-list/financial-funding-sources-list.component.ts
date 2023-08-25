@@ -102,7 +102,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit(): void {
-   
+
   }
   ngOnChanges(): void {
     this.state = {
@@ -128,7 +128,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isFinancialFundingSourceFacadeGridLoaderShow = true;
+    // this.isFinancialFundingSourceFacadeGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
@@ -196,18 +196,18 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
-    this.financialFundingSourceGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridFinancialFundingSourcesDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) {
-        this.isFinancialFundingSourceFacadeGridLoaderShow = false;
-      }
-    });
-    this.isFinancialFundingSourceFacadeGridLoaderShow = false;
+    // this.financialFundingSourceGridLists$.subscribe((data: GridDataResult) => {
+    //   this.gridDataResult = data;
+    //   this.gridDataResult.data = filterBy(
+    //     this.gridDataResult.data,
+    //     this.filterData
+    //   );
+    //   this.gridFinancialFundingSourcesDataSubject.next(this.gridDataResult);
+    //   if (data?.total >= 0 || data?.total === -1) {
+    //     this.isFinancialFundingSourceFacadeGridLoaderShow = false;
+    //   }
+    // });
+    // this.isFinancialFundingSourceFacadeGridLoaderShow = false;
   }
 
   public rowClass = (args: any) => ({

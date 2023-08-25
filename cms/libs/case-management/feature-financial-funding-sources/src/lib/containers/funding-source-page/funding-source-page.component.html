@@ -9,6 +9,7 @@
                      [pageSizes]="pageSizes"
                     [sortValue]="sortValueFinancialFundingSourceFacade" [sortType]="sortType"
                      [sort]="sortProcessList"
+                     (loadFinancialFundingSourcesListEvent)="loadFundingSourceHandle($event)"
                      (onAddFundingSourceEvent)="addFundingSource($event)"
                      [addFundingSource$]="addFundingSource$"
                      [updateFundingSource$]="updateFundingSource$"
