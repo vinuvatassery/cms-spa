@@ -166,6 +166,7 @@
 </div>
 <ng-template #addEditPcaReassignmentDialogTemplate>
       <cms-financial-pcas-reassignment-form
+            [isViewGridOptionClicked]="isViewGridOptionClicked"
             (getPcaReassignmentByFundSourceIdEvent)="getPcaReassignmentByFundSourceId($event)"
             [editPcaReassignmentItem]="editPcaReassignmentItem"
             (closeEditPcaReassignmentClickedEvent)="onCloseEditPcaReassignmentClicked($event)"

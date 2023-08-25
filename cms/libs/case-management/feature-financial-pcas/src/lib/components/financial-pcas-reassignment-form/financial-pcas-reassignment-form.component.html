@@ -12,29 +12,32 @@
             </div>
             <div class="flex-col flex-col-8">
                   <kendo-floatinglabel text="PCA">
-                        <kendo-dropdownlist aria-label="PCA" [fillMode]="formUiStyle.inputFillMode">
+                        <kendo-dropdownlist aria-label="PCA" [fillMode]="formUiStyle.inputFillMode" 
+                        [disabled]="isViewGridOptionClicked">
                         </kendo-dropdownlist>
                   </kendo-floatinglabel>
 
             </div>
             <div class="flex-col flex-col-4">
                   <kendo-floatinglabel text="AY">
-                        <kendo-textbox aria-label="AT" [fillMode]="formUiStyle.inputFillMode"   formControlName="ay" > </kendo-textbox>
+                        <kendo-textbox aria-label="AT" [fillMode]="formUiStyle.inputFillMode" 
+                        [disabled]="isViewGridOptionClicked"
+                        [readonly]="isViewGridOptionClicked" formControlName="ay" > </kendo-textbox>
                   </kendo-floatinglabel>
             </div>
       </div>
       <div class="flex-row mt-3">
             <div class="flex-col flex-col-4">
                   <label> PCA Amount </label>
-                  <p> $ 5,00,0000.00</p>
+                  <p> $ {{pcaReassignmentByFundSource.totalAmount}}</p>
             </div>
             <div class="flex-col flex-col-4">
                   <label> Allocated </label>
-                  <p> $ 5,00,0000.00</p>
+                  <p> $ {{pcaReassignmentByFundSource.amountSpent}}</p>
             </div>
             <div class="flex-col flex-col-4">
                   <label> Remaining </label>
-                  <p class="green-text-color">$ 5,00,0000.00</p>
+                  <p class="green-text-color">$ {{pcaReassignmentByFundSource.pcaRemainingAmount}}</p>
             </div>
             
       </div>
@@ -65,7 +68,8 @@
                   <kendo-floatinglabel text="Object Amount" class="amount-with-symbol">
                         <span class="k-input-prefix custom-currencysymbol"> $ </span>
                         <kendo-numerictextbox  aria-label="Object Amount" [spinners]="false"
-                              class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
+                              class="input-icon-right" placeholder="00.00"
+                               [fillMode]="formUiStyle.inputFillMode" formControlName="totalAmount">
                         </kendo-numerictextbox>
                   </kendo-floatinglabel>
 
@@ -87,7 +91,7 @@
                         (click)="closeEditPcaReassignmentClicked()">
                         Cancel
                   </button>
-                  <button kendoButton [primary]="true" aria-label="Save">
+                  <button kendoButton [primary]="true" aria-label="Save" *ngIf="!isViewGridOptionClicked">
                         Save
                   </button>
             </div>
