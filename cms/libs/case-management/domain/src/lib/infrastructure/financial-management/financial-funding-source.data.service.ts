@@ -40,10 +40,6 @@ export class FinancialFundingSourceDataService {
         `/financial-management/funding-sources?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
     );
   }
-  removeFundingSource(fundingSourceId: string) {
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/funding-sources/${fundingSourceId}`);
-  }
-
   addFundingSource(fundingSource: any) {
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +

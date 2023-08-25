@@ -38,10 +38,6 @@ export class FundingSourcePageComponent {
   loadFinancialFundingSourceFacadeListGrid(event: any) {
     this.financialFundingSourceFacade.loadFinancialFundingSourceFacadeListGrid();
   }
-
-  removeFundingSource(fundingSourceId: string) {
-    this.financialFundingSourceFacade.removeFundingSource(fundingSourceId)
-  }
   addFundingSource(event: any) {
     this.financialFundingSourceFacade.addFundingSource(event)
   }

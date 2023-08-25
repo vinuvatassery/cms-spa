@@ -150,18 +150,4 @@ export class FinancialFundingSourceFacade {
       },
     });
   }
-  removeFundingSource(fundingSourceId: string): void {
-      this.showLoader();
-      this.financialFundingSourceDataService.removeFundingSource(fundingSourceId).subscribe({
-        next: (deleteResponse) => {
-          if (deleteResponse ?? false) {
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Funding Source Removed Successfully')
-            // this.loadFundingSourceList();
-          }
-        },
-        error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-        },
-      });
-    }
 }
