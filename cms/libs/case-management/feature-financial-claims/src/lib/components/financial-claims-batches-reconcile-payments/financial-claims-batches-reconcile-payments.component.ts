@@ -275,7 +275,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
 
   gridDataHandle() {
     this.reconcileGridLists$.subscribe((response: any) => {
-      debugger
       if (response.data.length > 0) {
         this.assignDataFromUpdatedResultToPagedResult(response);
         this.tAreaVariablesInitiation(this.reconcilePaymentGridPagedResult.data);

@@ -49,6 +49,7 @@ export class FinancialClaimsBatchesLogListsComponent
   deleteClaimsDialog: any;
   onlyPrintAdviceLetter: boolean = true;
   currentPrintAdviceLetterGridFilter:any;
+  printAdviceLetterResult :any;
 
   public bulkMore = [
     {
@@ -183,7 +184,7 @@ export class FinancialClaimsBatchesLogListsComponent
   paymentTypeFilter = '';
   paymentStatusFilter = '';
   selected: any;
-  selectedDataRows: any[] = [];
+  selectedDataRows: any;
   selectedCount: number = 0;
   disablePrwButton:boolean= true;
   /** Constructor **/
@@ -233,6 +234,7 @@ export class FinancialClaimsBatchesLogListsComponent
       filter: this.filter,
     };
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
+    this.currentPrintAdviceLetterGridFilter = this.filter;
   }
 
   onChange(data: any) {
@@ -336,7 +338,7 @@ export class FinancialClaimsBatchesLogListsComponent
   }
 
   loadPrintAdviceLetterEvent(event:any){
-    this.currentPrintAdviceLetterGridFilter = event;
+    this.currentPrintAdviceLetterGridFilter = event.filter;
     this.loadBatchLogListEvent.emit(event);
   }
   onBulkOptionCancelClicked(){
@@ -345,6 +347,7 @@ export class FinancialClaimsBatchesLogListsComponent
   }
 
   onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+    this.selectedDataRows.currentPrintAdviceLetterGridFilter = JSON.stringify(this.currentPrintAdviceLetterGridFilter);
     this.printAuthorizationDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-xlg',
@@ -423,16 +426,43 @@ export class FinancialClaimsBatchesLogListsComponent
   }
  
   disablePreviewButton(result: any) {
+    this.selectedDataRows = result;
+    this.selectedDataRows.batchId = this.batchId
     if(result.selectAll){
       this.disablePrwButton = false;
     }
-    else if(result.checkedResult.length>0)
+    else if(result.PrintAdviceLetterSelected.length>0)
     {
       this.disablePrwButton = false;
     }
     else
     {
       this.disablePrwButton = true;
+    }
+  }
+  selectUnSelectPayment(dataItem: any) {
+    if (!dataItem.selected) {
+      let exist = this.selectedDataRows.PrintAdviceLetterUnSelected.filter((x: any) => x.vendorAddressId === dataItem.vendorAddressId).length;
+      if (exist === 0) {
+        this.selectedDataRows.PrintAdviceLetterUnSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
+      }
+        this.selectedDataRows?.PrintAdviceLetterSelected?.forEach((element: any) => {
+          if (element.paymentRequestId === dataItem.paymentRequestId) {
+            element.selected = false;
+          }
+        });
+    }
+    else {
+      this.selectedDataRows.PrintAdviceLetterUnSelected.forEach((element: any) => {
+        if (element.paymentRequestId === dataItem.paymentRequestId) {
+          element.selected = false;
+        }
+      });
+        let exist = this.selectedDataRows.PrintAdviceLetterSelected.filter((x: any) => x.vendorAddressId === dataItem.vendorAddressId).length;
+        if (exist === 0) {
+          this.selectedDataRows.PrintAdviceLetterSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
+        }
+     
     }
 
   }

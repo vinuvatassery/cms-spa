@@ -14,7 +14,7 @@
          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
              <input style="zoom: 1.2;" 
                  type="checkbox"  [(ngModel)]="dataItem.selected" 
-                 (change)="selectionChange(dataItem.paymentRequestId,dataItem.selected)"/>
+                 (change)="selectionChange(dataItem,dataItem.selected)"/>
          </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="paymentNbr" title="Item #" [width]="150">

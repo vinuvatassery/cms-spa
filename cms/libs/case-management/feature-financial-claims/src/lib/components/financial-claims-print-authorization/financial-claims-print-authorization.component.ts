@@ -22,13 +22,14 @@ export class FinancialClaimsPrintAuthorizationComponent {
   entityId: any = '823E2464-0649-49DA-91E7-26DCC76A2A6B';
   printAdviceLetterData: any
     /** Input properties **/
-  @Input() items!: any[];
+  @Input() items!: any;
   @Input() batchId: any;
   @Input() printOption: boolean = false;
   @Input() isSaveClicked!: boolean;
 
   /** Output properties  **/
   @Output() onClosePrintAdviceLetterEvent = new EventEmitter<any>();
+  @Output() selectUnSelectPayment  = new EventEmitter<any>();
 
   /** Constructor **/
   constructor(private readonly paymentsFacade: PaymentsFacade,
@@ -39,8 +40,16 @@ export class FinancialClaimsPrintAuthorizationComponent {
     private readonly financialClaimsFacade: FinancialClaimsFacade) { }
 
   ngOnInit(): void {
-    this.finalPrintList = this.items;
-    this.loadPrintLetterContent();
+    if(this.items['print']){
+      this.loadPrintLetterContent(this.items);
+    }
+    else
+    {
+      this.finalPrintList = this.items;
+      this.printAdviceLetterData = this.loadPrintLetterModelData();
+      this.loadPrintLetterContent(this.printAdviceLetterData);
+    }
+    
   }
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -56,10 +65,9 @@ export class FinancialClaimsPrintAuthorizationComponent {
     this.loaderService.hide();
   }
 
-  loadPrintLetterContent() {
+  loadPrintLetterContent(request:any) {
     this.loaderService.show();
-    this.printAdviceLetterData = this.loadPrintLetterModelData();
-    this.financialClaimsFacade.loadPrintAdviceLetterData(this.printAdviceLetterData)
+    this.financialClaimsFacade.loadPrintAdviceLetterData(request)
       .subscribe({
         next: (data: any[]) => {
           if (data.length > 0) {
@@ -93,7 +101,6 @@ export class FinancialClaimsPrintAuthorizationComponent {
     'vendorAddressId':item.entityId,'clientId':item.clientId,'isPrintAdviceLetter':item.isPrintAdviceLetter});
     });
     this.printAdviceLetterData.PrintAdviceLetterGenerateInfo = PrintAdviceLetterInfo;
-    debugger;
     return this.printAdviceLetterData;
   }
 
@@ -123,26 +130,32 @@ export class FinancialClaimsPrintAuthorizationComponent {
     item.isPrintAdviceLetter = event.target.checked;
     this.printCount = this.returnResultFinalPrintList.filter(x => x.isPrintAdviceLetter === true).length;
     this.reconcileCount = this.returnResultFinalPrintList.length;
-    this.printAdviceLetterData.PrintAdviceLetterGenerateInfo.forEach((value: any) => {
-      if (item.vendorId === value.vendorId) {
-        value.isPrintAdviceLetter = event.target.checked;
-      }
-    });
+    if (!this.items['print']) {
+      this.printAdviceLetterData.PrintAdviceLetterGenerateInfo.forEach((value: any) => {
+        if (item.vendorId === value.vendorId) {
+          value.isPrintAdviceLetter = event.target.checked;
+        }
+      });
+    }
+    if (this.items['print']) {
+      this.selectUnSelectPayment.emit({'selected':event.target.checked,'vendorAddressId':item.vendorAddressId});
+    }
+    
 
   }
 
   onPrintAdviceLetterClicked(buttonText: string) {
     if (buttonText == 'PRINT') {
-      this.generateAndPrintAdviceLetter();
+      this.items.PrintAdviceLetterUnSelected =  this.items.PrintAdviceLetterUnSelected.filter((x:any)=>x.selected);
+      this.items.PrintAdviceLetterSelected =  this.items.PrintAdviceLetterSelected.filter((x:any)=>x.selected);
+      this.generateAndPrintAdviceLetter(this.items);
     } else {
       this.reconcilePaymentsAndPrintAdviceLetter();
     }
   }
 
-  generateAndPrintAdviceLetter() {
+  generateAndPrintAdviceLetter(request:any) {
     this.loaderService.show();
-    let printReconcileRecords = this.printAdviceLetterData?.PrintAdviceLetterGenerateInfo?.filter((x: any) => x.isPrintAdviceLetter === true)
-    let request = { 'PrintAdviceLetterGenerateInfo': printReconcileRecords, 'batchId': this.printAdviceLetterData.batchId };
     this.financialClaimsFacade.viewAdviceLetterData(request)
       .subscribe({
         next: (data: any) => {
@@ -168,7 +181,9 @@ export class FinancialClaimsPrintAuthorizationComponent {
       .subscribe({
         next: (data: any) => {
           if (data) {
-            this.generateAndPrintAdviceLetter();
+            let printReconcileRecords = this.printAdviceLetterData?.PrintAdviceLetterGenerateInfo?.filter((x: any) => x.isPrintAdviceLetter === true)
+            let request = { 'PrintAdviceLetterGenerateInfo': printReconcileRecords, 'batchId': this.printAdviceLetterData.batchId };
+            this.generateAndPrintAdviceLetter(request);
             this.ref.detectChanges();
           }
           this.loaderService.hide();

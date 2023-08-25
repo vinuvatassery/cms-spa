@@ -75,6 +75,7 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
     this.batchLogGridLists$.subscribe((response:any) =>{
         this.markAsChecked(response.data);
       this.batchLogPrintAdviceLetterPagedList = response;
+      
     })
   
   }
@@ -104,22 +105,23 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
     };   
   }
 
-  selectionChange(paymentRequestId:any,selected:boolean){
+  selectionChange(dataItem:any,selected:boolean){
     if(!selected){
-      this.unCheckedPaymentRequest.push(paymentRequestId);
+      this.unCheckedPaymentRequest.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true});
       if(!this.selectAll){
-      let index = this.selectedDataIfSelectAllUnchecked.findIndex((x:any)=>x === paymentRequestId)
-      this.selectedDataIfSelectAllUnchecked = this.selectedDataIfSelectAllUnchecked.splice(index + 1);
+      this.selectedDataIfSelectAllUnchecked = this.selectedDataIfSelectAllUnchecked.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
+
       }
     }
     else{
-      let index = this.unCheckedPaymentRequest.findIndex((x:any)=>x === paymentRequestId)
-      this.unCheckedPaymentRequest = this.unCheckedPaymentRequest.splice(index + 1);
+      this.unCheckedPaymentRequest = this.unCheckedPaymentRequest.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
       if(!this.selectAll){
-      this.selectedDataIfSelectAllUnchecked.push(paymentRequestId); 
+      this.selectedDataIfSelectAllUnchecked.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true});
       }          
     }
-    let returnResult = {'selectAll':this.selectAll,'unCheckedResult':this.unCheckedPaymentRequest,'checkedResult':this.selectedDataIfSelectAllUnchecked}
+    let returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
+    'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
     this.selectUnSelectEvent.emit(returnResult); 
    
   }
@@ -133,7 +135,9 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
     else{
       this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
     }
-    let returnResult = {'selectAll':this.selectAll,'unCheckedResult':this.unCheckedPaymentRequest,'checkedResult':this.selectedDataIfSelectAllUnchecked}
+    let returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
+    'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
     this.selectUnSelectEvent.emit(returnResult);
   }
 
@@ -146,11 +150,11 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
         element.selected = false; 
       }
       if(this.unCheckedPaymentRequest.length>0 || this.selectedDataIfSelectAllUnchecked.length >0)   {
-        let itemMarkedAsUnChecked=   this.unCheckedPaymentRequest.find((x:any)=>x ===element.paymentRequestId);
+        let itemMarkedAsUnChecked=   this.unCheckedPaymentRequest.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
         if(itemMarkedAsUnChecked !== null && itemMarkedAsUnChecked !== undefined){
           element.selected = false;    
         }
-        let itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x:any)=>x ===element.paymentRequestId);
+        let itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
         if(itemMarkedAsChecked !== null && itemMarkedAsChecked !== undefined){
           element.selected = true;   
         }
