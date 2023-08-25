@@ -63,6 +63,9 @@ export class FundingSourcePageComponent {
       gridDataRefiner.sortType,
     );
   }
+  removeFundingSource(fundingSourceId: any) {
+    this.financialFundingSourceFacade.removeFundingSource(fundingSourceId)
+  }
 }
 
 

@@ -68,7 +68,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
   isEditFundingSource = false;
   addEditFundingDialog: any;
   removeFundingDialog: any;
-  selectFundingSourceId!:any;
+  selectFundingSourceId!:string;
 
   public processGridActions = [
     {
@@ -250,23 +250,26 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
     }
   }
  loadFundingSource(){
-  this.financialFundingSourceFacade.loadFundingSourceList();
+  //this.financialFundingSourceFacade.loadFundingSourceList();
  }
- removedClick(fundingSourceId:string){
-  this.selectFundingSourceId= fundingSourceId
- }
- removeFundingSourceEvent(fundingSourceId: string) {
-  this.removeFundingSourceClick.emit(fundingSourceId);
+removeFundingSourceEvent(fundingSoruceId: any) {
+  this.removeFundingSourceClick.emit(fundingSoruceId);
 }
-  removeFundingSource(dataItem: any) {
-    if (dataItem?.isDelete === true) {
-      this.removeFundingSourceEvent(dataItem.fundingSourceId);
-    }
-    else{
-      this.removeFundingDialog.close();
-    }
-  }
+removeFundingSource(dataItem: any) {
+  if (dataItem?.isDelete === true) {
+    this.removeFundingSourceEvent(this.selectFundingSourceId);
+    this.removeFundingDialog.close();
 
+  }
+  else{
+    this.removeFundingDialog.close();
+  }
+  this.loadFinancialFundingSourceFacadeListGrid();
+}
+removedClick(fundingId:any)
+{
+  this.selectFundingSourceId = fundingId
+}
 }
 
 
