@@ -1095,12 +1095,17 @@ color: $app-primary-font-color;
     min-height: 340px;
     max-height: 500px;
   }
-
+  .k-scrollview-wrap > li{
+    overflow-y: auto;
+  }
   .slidertitle-bar {
     padding: 10px;
     text-align: center;
     background: $light-blue-one ;
     border-radius: 4px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
 
   .k-scrollview-prev {
