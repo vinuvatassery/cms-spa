@@ -5,9 +5,10 @@ import {
 } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialPcaFacade } from '@cms/case-management/domain';
+import { FinancialPcaFacade, PcaAssignmentsFacade } from '@cms/case-management/domain';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggingService } from '@cms/shared/util-core';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-financial-pcas-page',
   templateUrl: './financial-pcas-page.component.html',
@@ -39,13 +40,21 @@ export class FinancialPcasPageComponent {
   financialPcaAssignmentGridLists$ = this.financialPcaFacade.financialPcaAssignmentData$;
   financialPcaReassignmentGridLists$ = this.financialPcaFacade.financialPcaReassignmentData$;
   financialPcaReportGridLists$ = this.financialPcaFacade.financialPcaReportData$; 
+  objectCodesData$ = this.pcaAssignmentsFacade.objectCodesData$;
+  groupCodesData$ = this.pcaAssignmentsFacade.groupCodesData$;
+  pcaCodesData$ = this.pcaAssignmentsFacade.pcaCodesData$;
+  pcaDatesData$ = this.pcaAssignmentsFacade.pcaDatesData$;
+  pcaCodesInfoData$ = this.pcaAssignmentsFacade.pcaCodesInfoData$;
+
+   pcaAssignOpenDatesListSubject = new Subject<any>();
+  pcaAssignOpenDatesList$ = this.pcaAssignOpenDatesListSubject.asObservable();
+
+   pcaAssignCloseDatesListSubject = new Subject<any>();
+  pcaAssignCloseDatesList$ = this.pcaAssignCloseDatesListSubject.asObservable();
 
   constructor(
     private readonly financialPcaFacade: FinancialPcaFacade,
-    private readonly router: Router,
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly cdr: ChangeDetectorRef,
-    private loggingService: LoggingService,
+    private readonly pcaAssignmentsFacade : PcaAssignmentsFacade   
   ) {}
 
  
@@ -66,7 +75,36 @@ export class FinancialPcasPageComponent {
     this.financialPcaFacade.loadFinancialPcaReportListGrid();
   }
 
- 
+  loadObjectCodes() {
+    this.pcaAssignmentsFacade.loadObjectCodes()
+  }
+
+  loadGroupCodes() {
+    this.pcaAssignmentsFacade.loadGroupCodes()
+  }
+
+  loadPcaCodes() {
+    this.pcaAssignmentsFacade.loadPcaCodes()
+  }
+
+  loadPcaDates(pcaId : any) {
+    this.pcaAssignmentsFacade.loadPcaDates(pcaId)
+    this.getPcaDatesList()
+  }
+
+  assignPca(assignPcaRequest : any) {
+    this.pcaAssignmentsFacade.assignPca(assignPcaRequest)
+  }
+
+  getPcaDatesList()
+  {        
+   this.pcaDatesData$?.pipe()
+   .subscribe((data: any) =>
+   {  
+    this.pcaAssignOpenDatesListSubject.next(data?.pcaAssignOpenDatesList)
+    this.pcaAssignCloseDatesListSubject.next(data?.pcaAssignCloseDatesList)        
+   })
+  }
 }
 
   

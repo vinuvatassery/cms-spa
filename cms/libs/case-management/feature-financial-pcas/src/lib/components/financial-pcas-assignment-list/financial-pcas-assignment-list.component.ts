@@ -4,13 +4,13 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Input,
-  OnChanges,
+  Input,  
   OnInit,
   Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
@@ -25,7 +25,7 @@ import { Subject } from 'rxjs';
   templateUrl: './financial-pcas-assignment-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPcasAssignmentListComponent implements OnInit, OnChanges {
+export class FinancialPcasAssignmentListComponent implements OnInit {
   @ViewChild('addEditPcaAssignmentDialogTemplate', { read: TemplateRef })
   addEditPcaAssignmentDialogTemplate!: TemplateRef<any>;
   @ViewChild('removePcaAssignmentDialogTemplate', { read: TemplateRef })
@@ -37,12 +37,21 @@ export class FinancialPcasAssignmentListComponent implements OnInit, OnChanges {
   isFinancialPcaAssignmentGridLoaderShow = false;
   isEditAssignmentClosed = false;
   isRemoveAssignmentClosed = false;
-  @Input() pageSizes: any;
-  @Input() sortValue: any;
-  @Input() sortType: any;
-  @Input() sort: any;
+  
   @Input() financialPcaAssignmentGridLists$: any;
+  @Input() objectCodesData$:any
+  @Input() groupCodesData$:any
+  @Input() pcaCodesData$:any
+  @Input() pcaAssignOpenDatesList$ : any
+  @Input() pcaAssignCloseDatesList$ : any
+  @Input() pcaCodesInfoData$ : any
+
   @Output() loadFinancialPcaAssignmentListEvent = new EventEmitter<any>();
+  @Output() loadObjectCodesEvent = new EventEmitter<any>();
+  @Output() loadGroupCodesEvent = new EventEmitter<any>();
+  @Output() loadPcaCodesEvent = new EventEmitter<any>();
+  @Output() loadPcaDatesEvent = new EventEmitter<any>();
+
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -53,6 +62,10 @@ export class FinancialPcasAssignmentListComponent implements OnInit, OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
+  objectCodeIdValue! : any
+  groupCodeIdsdValue : any=[];
+
+  pcaAssignmentGroupForm!: FormGroup;
 
   gridFinancialPcaAssignmentDataSubject = new Subject<any>();
   gridFinancialPcaAssignmentData$ =
@@ -74,145 +87,47 @@ export class FinancialPcasAssignmentListComponent implements OnInit, OnChanges {
     },
   ];
 
-  objectList = [
-    {
-      lovDesc:'Pharmacy - 4955',
-      lovCode: 4955
-    },
-    {
-      lovDesc:'Third Party (TPA) - 4956',
-      lovCode: 4956
-    },
-    {
-      lovDesc:'Insurance Premiums - 4957',
-      lovCode: 4957
-    },
-  ]
-
-  groupList = [
-    {
-      lovDesc:'Group I',
-      lovCode: 1
-    },
-    {
-      lovDesc:'Group II',
-      lovCode: 2
-    },
-    {
-      lovDesc:'UPP',
-      lovCode: 3
-    },
-    {
-      lovDesc:'Bridge',
-      lovCode: 4
-    },
-    {
-      lovDesc:'Group 1 INS Gap',
-      lovCode: 5
-    },
-    {
-      lovDesc:'Group 2 INS Gap',
-      lovCode: 6
-    },
-  ]
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit(): void {
+    this.loadObjectCodesEvent.emit()
+    this.loadGroupCodesEvent.emit()
+    this.loadPcaCodesEvent.emit()
+    this.loadPcaDatesEvent.emit('00000000-0000-0000-0000-000000000000')
     this.loadFinancialPcaAssignmentListGrid();
-  }
-  ngOnChanges(): void {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
 
-    this.loadFinancialPcaAssignmentListGrid();
+    this.pcaAssignmentGroupForm = this.formBuilder.group({    
+   
+      groupCodes:[[]],
+   
+    });
+  }
+
+  groupChange($event : any)
+  {    
+    this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;   
   }
 
   private loadFinancialPcaAssignmentListGrid(): void {
-    this.loadPcaAssignment(
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType
-    );
+    this.loadPcaAssignment();
   }
   loadPcaAssignment(
-    skipCountValue: number,
-    maxResultCountValue: number,
-    sortValue: string,
-    sortTypeValue: string
+   
   ) {
     this.isFinancialPcaAssignmentGridLoaderShow = true;
     const gridDataRefinerValue = {
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
+    
     };
     this.loadFinancialPcaAssignmentListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
-
-  onChange(data: any) {
-    this.defaultGridState();
-
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
-    const stateData = this.state;
-    stateData.filter = this.filterData;
-    this.dataStateChange(stateData);
-  }
-
-  defaultGridState() {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-      filter: { logic: 'and', filters: [] },
-    };
-  }
-
   onColumnReorder($event: any) {
     this.columnsReordered = true;
-  }
-
-  dataStateChange(stateData: any): void {
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
-    this.state = stateData;
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadFinancialPcaAssignmentListGrid();
-  }
-
-  // updating the pagination infor based on dropdown selection
-  pageSelectionChange(data: any) {
-    this.state.take = data.value;
-    this.state.skip = 0;
-    this.loadFinancialPcaAssignmentListGrid();
-  }
-
-  public filterChange(filter: CompositeFilterDescriptor): void {
-    this.filterData = filter;
   }
 
   gridDataHandle() {

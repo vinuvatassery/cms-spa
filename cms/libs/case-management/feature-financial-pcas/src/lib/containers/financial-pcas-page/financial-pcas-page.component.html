@@ -26,10 +26,17 @@
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-financial-pcas-assignment-list 
-                                [financialPcaAssignmentGridLists$]="financialPcaAssignmentGridLists$"
-                                [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaAssignment"
-                                [sortType]="sortType" [sort]="sortPcaAssignmentList" 
-                                (loadFinancialPcaAssignmentListEvent)="loadFinancialPcaAssignmentListGrid($event)"
+                                [financialPcaAssignmentGridLists$]="financialPcaAssignmentGridLists$"  
+                                [objectCodesData$]="objectCodesData$ | async"   
+                                [groupCodesData$]="groupCodesData$ | async"   
+                                [pcaCodesData$]="pcaCodesData$ | async"   
+                                [pcaAssignOpenDatesList$]="pcaAssignOpenDatesList$ | async"       
+                                [pcaAssignCloseDatesList$]="pcaAssignCloseDatesList$ | async"  
+                                [pcaCodesInfoData$]="pcaCodesInfoData$"                          
+                                (loadObjectCodesEvent)="loadObjectCodes()"
+                                (loadGroupCodesEvent)="loadGroupCodes()"
+                                (loadPcaCodesEvent)="loadPcaCodes()"
+                                (loadPcaDatesEvent)="loadPcaDates($event)"
                                 ></cms-financial-pcas-assignment-list>
                               
                             </div>

@@ -1,5 +1,5 @@
 <kendo-dialog-titlebar (close)="closeAddEditPcaAssignmentClicked()"> Add PCA Assignment </kendo-dialog-titlebar>
-
+<form [formGroup]="pcaAssignmentForm" (ngSubmit)="onPcaAssignmentFormSubmit()">   
 <section class="k-dialog-body">
       <p class="text-muted">
             All fields are required unless otherwise stated.
@@ -9,9 +9,11 @@
                   <kendo-floatinglabel text="Object">
                         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
                         placeholder="Object"
-                         required [data]="objectList" 
-                          textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
-                          [disabled]="true">
+                         required [data]="objectCodesData$" 
+                          textField="ledgerName" valueField="objectCodeId" [valuePrimitive]="true"
+                          [disabled]="true" 
+                          formControlName="objectCode"
+                          >
                         </kendo-dropdownlist>
                   </kendo-floatinglabel>
 
@@ -19,14 +21,14 @@
             <div class="flex-col">
                   <kendo-floatinglabel text="Group">
                         <kendo-multiselect 
-                        class="fixed-height-input"
-                        [checkboxes]="{ checkOnClick: true, enabled: true }"
+                        class="fixed-height-input"                      
                         [fillMode]="formUiStyle.dropDownFillMode"
-                        [data]="groupList" 
+                        [data]="groupCodesData$" 
                         aria-label="to address"
-                        [textField]="'lovDesc'"
-                        [valueField]="'lovCode'" 
-                        [disabled]="true"
+                        [textField]="'groupCode'"
+                        [valueField]="'groupCodeId'"     
+                        [disabled]="true" 
+                        formControlName="groupCodes"
                         ></kendo-multiselect>
                         </kendo-floatinglabel>
 
@@ -39,7 +41,14 @@
             </div>
             <div class="flex-col flex-col-8">
                   <kendo-floatinglabel text="PCA">
-                        <kendo-dropdownlist aria-label="PCA" [fillMode]="formUiStyle.inputFillMode">
+                        <kendo-dropdownlist aria-label="PCA" [fillMode]="formUiStyle.inputFillMode"
+                        [data]="pcaCodesData$"
+                        textField="pcaCode"
+                        valueField="pcaId" 
+                        aria-label="Pca Code"
+                        [valuePrimitive]="true"
+                        formControlName="pcaId">
+
                         </kendo-dropdownlist>
                   </kendo-floatinglabel>
 
@@ -71,17 +80,38 @@
             </div>
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Open Date">
-                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                              formatPlaceholder="formatPattern" placeholder="">
-                        </kendo-datepicker>
+                        <div class="flex-col flex-col-12">
+                              <kendo-floatinglabel >
+                                    <kendo-dropdownlist  [fillMode]="formUiStyle.inputFillMode"
+                                    [data]="pcaAssignOpenDatesList$"
+                                    textField="dateValue"
+                                    valueField="date" 
+                                    aria-label="date"
+                                    [valuePrimitive]="true"
+                                    formControlName="openDate">
+            
+                                    </kendo-dropdownlist>
+                              </kendo-floatinglabel>            
+                        </div>
                   </kendo-floatinglabel>
 
             </div>
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Close Date">
-                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                              formatPlaceholder="formatPattern" placeholder="">
-                        </kendo-datepicker>
+                        <div class="flex-col flex-col-12">
+                              <kendo-floatinglabel >
+                                    <kendo-dropdownlist  [fillMode]="formUiStyle.inputFillMode"
+                                    [data]="pcaAssignCloseDatesList$"
+                                    textField="dateValue"
+                                    valueField="date" 
+                                    aria-label="date"
+                                    [valuePrimitive]="true"
+                                    formControlName="closeDate">
+            
+                                    </kendo-dropdownlist>
+                              </kendo-floatinglabel>
+            
+                        </div>
                   </kendo-floatinglabel>
 
             </div>
@@ -118,3 +148,4 @@
             </div>
       </div>
 </kendo-dialog-actions>
+</form>
