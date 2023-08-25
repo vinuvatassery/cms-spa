@@ -27,12 +27,12 @@
       </div>
       <!-- for manufacturers -->
       <div class="flex-col" *ngIf="providerType == vendorTypes.Manufacturers">
-        <kendo-floatinglabel text="Manufacture Name">
-          <kendo-textbox aria-label="Manufacture name" [fillMode]="formUiStyle.inputFillMode"
+        <kendo-floatinglabel text="Manufacturer Name">
+          <kendo-textbox aria-label="Manufacturer name" [fillMode]="formUiStyle.inputFillMode"
             formControlName="providerName">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
-            Manufacture name is required
+            Manufacturer name is required
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -176,7 +176,7 @@
         </kendo-floatinglabel>
       </div>
 
-      <!-- stop the Name on check and Name on envelop to not show on manufacture -->
+      <!-- stop the Name on check and Name on envelop to not show on manufacturer -->
       <div class="flex-col" *ngIf="providerType != vendorTypes.Manufacturers">
         <kendo-floatinglabel text="Name on Check">
           <kendo-textbox aria-label="Name on Check" [fillMode]="formUiStyle.inputFillMode"
