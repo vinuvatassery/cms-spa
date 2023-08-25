@@ -457,7 +457,7 @@ export class FinancialClaimsDataService {
         paymentRequestIds: Claims,
       }
     }
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/delete-claims`,options);
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}`,options);
   }
 
   batchClaims(batchClaims: BatchClaim, claimsType: string) {
