@@ -25,8 +25,8 @@ import { Subject } from 'rxjs';
   templateUrl: './financial-pcas-assignment-report-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
-export class FinancialPcasAssignmentReportListComponent implements OnInit, OnChanges
+export class FinancialPcasAssignmentReportListComponent
+  implements OnInit, OnChanges
 {
   @ViewChild('alertPcaReportDialogTemplate', { read: TemplateRef })
   alertPcaReportDialogTemplate!: TemplateRef<any>;
@@ -67,7 +67,7 @@ export class FinancialPcasAssignmentReportListComponent implements OnInit, OnCha
   ) {}
 
   ngOnInit(): void {
-    this.loadFinancialPcaReportListGrid();
+    // this.loadFinancialPcaReportListGrid();
   }
   ngOnChanges(): void {
     this.state = {
@@ -99,7 +99,18 @@ export class FinancialPcasAssignmentReportListComponent implements OnInit, OnCha
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
-      filter : this.state?.["filter"]?.["filters"] ?? []
+      filter: this.state?.['filter']?.['filters'] ?? [
+        {
+          filters: [
+            {
+              field: this.selectedColumn ?? 'status',
+              operator: 'eq',
+              value: 'active',
+            },
+          ],
+          logic: 'and',
+        },
+      ],
     };
     this.loadFinancialPcaReportListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
@@ -114,7 +125,7 @@ export class FinancialPcasAssignmentReportListComponent implements OnInit, OnCha
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
+              field: this.selectedColumn ?? 'PcaCode',
               operator: 'startswith',
               value: data,
             },
@@ -162,22 +173,19 @@ export class FinancialPcasAssignmentReportListComponent implements OnInit, OnCha
   }
 
   gridDataHandle() {
-    this.financialPcaReportGridLists$.subscribe(
-      (data: GridDataResult) => {
-        this.gridDataResult = data;
-        this.gridDataResult.data = filterBy(
-          this.gridDataResult.data,
-          this.filterData
-        );
-        this.gridFinancialPcaReportDataSubject.next(this.gridDataResult);
-        if (data?.total >= 0 || data?.total === -1) {
-          this.isFinancialPcaReportGridLoaderShow = false;
-        }
+    this.financialPcaReportGridLists$.subscribe((data: GridDataResult) => {
+      this.gridDataResult = data;
+      this.gridDataResult.data = filterBy(
+        this.gridDataResult.data,
+        this.filterData
+      );
+      this.gridFinancialPcaReportDataSubject.next(this.gridDataResult);
+      if (data?.total >= 0 || data?.total === -1) {
+        this.isFinancialPcaReportGridLoaderShow = false;
       }
-    );
+    });
     this.isFinancialPcaReportGridLoaderShow = false;
   }
-
 
   onPcaReportAlertClicked(template: TemplateRef<unknown>): void {
     this.pcaReportAlertDialogService = this.dialogService.open({
@@ -190,7 +198,9 @@ export class FinancialPcasAssignmentReportListComponent implements OnInit, OnCha
       this.pcaReportAlertDialogService.close();
     }
   }
-  public onPreviewSubmitPaymentOpenClicked(template: TemplateRef<unknown>): void {
+  public onPreviewSubmitPaymentOpenClicked(
+    template: TemplateRef<unknown>
+  ): void {
     this.PreviewSubmitPaymenttDialogService = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
@@ -202,7 +212,6 @@ export class FinancialPcasAssignmentReportListComponent implements OnInit, OnCha
       this.PreviewSubmitPaymenttDialogService.close();
     }
   }
-
 }
 
 
