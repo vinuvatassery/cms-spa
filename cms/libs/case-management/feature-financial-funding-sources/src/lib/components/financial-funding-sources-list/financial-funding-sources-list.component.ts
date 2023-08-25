@@ -25,7 +25,7 @@ import { Observable, Subject } from 'rxjs';
   templateUrl: './financial-funding-sources-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
+export class FinancialFundingSourcesListComponent implements OnChanges {
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addEditFundingSourceDialogTemplate', { read: TemplateRef })
@@ -100,10 +100,6 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService
   ) { }
-
-  ngOnInit(): void {
-
-  }
   ngOnChanges(): void {
     this.state = {
       skip: 0,
