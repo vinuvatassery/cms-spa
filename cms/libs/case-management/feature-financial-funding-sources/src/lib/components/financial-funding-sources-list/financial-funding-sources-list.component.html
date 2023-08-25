@@ -56,7 +56,7 @@ Funding
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
             <ng-container>
               <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                [class]="buttondataItem.buttonType" aria-hidden="false">
+                [class]="buttondataItem.buttonType" aria-hidden="false" (click)="removedClick(dataItem.fundingSourceId); buttondataItem.click(dataItem)">
                 <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                 <label> {{ buttondataItem.text }} </label>
               </button>
@@ -109,9 +109,9 @@ Funding
  (onUpdateFundingSourceEvent)="updateFundingSource($event)"
  ></cms-financial-funding-sources-details>
  </ng-template>
-
  <ng-template #removeFundingSourceDialogTemplate>
 <cms-financial-funding-sources-remove
 [fundingSourceId]="selectFundingSourceId">
+(removeConfirmEvent)="removeFundingSource($event)"
 </cms-financial-funding-sources-remove>
  </ng-template>

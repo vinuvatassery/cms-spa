@@ -11,6 +11,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { FinancialFundingSourceFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
@@ -46,7 +47,6 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   @Input() fundingSourceList$!: Observable<any>;
   @Output() loadFinancialFundingSourcesListEvent = new EventEmitter<any>();
   @Output() removeFundingSourceClick = new EventEmitter<string>();
-  isRemoveFundingSourceClicked$ = new Subject();
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -67,8 +67,9 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   removeFundingOpened = false;
   isEditFundingSource = false;
   addEditFundingDialog: any;
-  removeFundingDialog: any;;
-  selectFundingSourceId!: string;;
+  removeFundingDialog: any;
+  selectFundingSourceId!:any;
+
   public processGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -98,7 +99,8 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private financialFundingSourceFacade : FinancialFundingSourceFacade
   ) { }
 
   ngOnInit(): void {
@@ -251,6 +253,24 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
       this.removeFundingDialog.close();
     }
   }
+ loadFundingSource(){
+  this.financialFundingSourceFacade.loadFundingSourceList();
+ }
+ removedClick(fundingSourceId:string){
+  this.selectFundingSourceId= fundingSourceId
+ }
+ removeFundingSourceEvent(fundingSourceId: string) {
+  this.removeFundingSourceClick.emit(fundingSourceId);
+}
+  removeFundingSource(dataItem: any) {
+    if (dataItem?.isDelete === true) {
+      this.removeFundingSourceEvent(dataItem.fundingSourceId);
+    }
+    else{
+      this.removeFundingDialog.close();
+    }
+  }
+
 }
 
 

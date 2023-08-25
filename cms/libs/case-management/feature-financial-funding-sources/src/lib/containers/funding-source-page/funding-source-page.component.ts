@@ -20,7 +20,7 @@ export class FundingSourcePageComponent {
   gridSkipCount = this.financialFundingSourceFacade.skipCount;
 
   sortValueFinancialFundingSourceFacade =
-  this.financialFundingSourceFacade.sortValueFinancialFundingSourceFacade;
+    this.financialFundingSourceFacade.sortValueFinancialFundingSourceFacade;
   sortProcessList = this.financialFundingSourceFacade.sortProcessList;
 
   state!: State;
@@ -39,9 +39,6 @@ export class FundingSourcePageComponent {
     this.financialFundingSourceFacade.loadFinancialFundingSourceFacadeListGrid();
   }
 
-  removeFundingSource(fundingSourceId: string) {
-    this.financialFundingSourceFacade.removeFundingSource(fundingSourceId)
-  }
   addFundingSource(event: any) {
     this.financialFundingSourceFacade.addFundingSource(event)
   }
