@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FinancialFundingSourceDataService } from '../../infrastructure/financial-management/financial-funding-source.data.service';
@@ -26,6 +27,8 @@ export class FinancialFundingSourceFacade {
   private financialFundingSourceFacadeDataSubject = new Subject<any>();
   private addFundingSourceSubject = new Subject<any>();
   private updateFundingSourceSubject = new Subject<any>();
+  private fundingSourceListSubject = new BehaviorSubject<any>([]);
+  fundingSourceList$ = this.fundingSourceListSubject.asObservable();
 
   financialFundingSourceFacadeData$ = this.financialFundingSourceFacadeDataSubject.asObservable();
 
@@ -123,11 +126,12 @@ export class FinancialFundingSourceFacade {
     this.financialFundingSourceDataService.loadFundingSourceList().subscribe({
       next: (dataResponse) => {
         if (dataResponse) {
+          this.hideLoader();
           const gridView = {
             data: dataResponse['items'],
             total: dataResponse['totalCount'],
           };
-        this.financialFundingSourceFacadeDataSubject.next(gridView);
+        this.fundingSourceListSubject.next(gridView);
         this.hideLoader();
       }},
       error: (err) => {

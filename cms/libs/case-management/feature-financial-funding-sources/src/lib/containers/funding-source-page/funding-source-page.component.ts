@@ -14,7 +14,7 @@ export class FundingSourcePageComponent {
   addFundingSource$ = this.financialFundingSourceFacade.addFundingSource$
   updateFundingSource$ = this.financialFundingSourceFacade.updateFundingSource$
   claimsType: any;
-
+  fundingSourceList$ = this.financialFundingSourceFacade.fundingSourceList$;
   sortType = this.financialFundingSourceFacade.sortType;
   pageSizes = this.financialFundingSourceFacade.gridPageSizes;
   gridSkipCount = this.financialFundingSourceFacade.skipCount;
@@ -24,18 +24,17 @@ export class FundingSourcePageComponent {
   sortProcessList = this.financialFundingSourceFacade.sortProcessList;
 
   state!: State;
-  financialFundingSourceFacadeGridLists$ =
-    this.financialFundingSourceFacade.financialFundingSourceFacadeData$;
 
-    gridFinancialFundingSourcesDataSubject = new Subject<any>();
-    gridFinancialFundingSourceData$ =this.gridFinancialFundingSourcesDataSubject.asObservable();
 
   constructor(
     private readonly financialFundingSourceFacade: FinancialFundingSourceFacade,
 
   ) { }
 
-
+  ngOnInit(): void {
+    this.loadFundingSource();
+    
+  }
   loadFinancialFundingSourceFacadeListGrid(event: any) {
     this.financialFundingSourceFacade.loadFinancialFundingSourceFacadeListGrid();
   }
@@ -47,7 +46,9 @@ export class FundingSourcePageComponent {
   updateFundingSource(event: any) {
     this.financialFundingSourceFacade.updateFundingSource(event)
   }
-
+  loadFundingSource(){
+    this.financialFundingSourceFacade.loadFundingSourceList();
+   }
 }
 
 

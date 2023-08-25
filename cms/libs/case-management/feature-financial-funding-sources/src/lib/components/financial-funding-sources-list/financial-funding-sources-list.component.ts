@@ -13,7 +13,6 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { FinancialFundingSourceFacade } from '@cms/case-management/domain'; 
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
@@ -44,7 +43,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialFundingSourceGridLists$: any;
-  @Input() gridFinancialFundingSourceData$: any;
+  @Input() fundingSourceList$!: Observable<any>;
   @Output() loadFinancialFundingSourcesListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'vendorName';
@@ -97,13 +96,11 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService,
-    private financialFundingSourceFacade: FinancialFundingSourceFacade,
+    private dialogService: DialogService
   ) { }
 
   ngOnInit(): void {
-    this.loadFinancialFundingSourceFacadeListGrid();
-    this.loadFundingSource();
+   
   }
   ngOnChanges(): void {
     this.state = {
@@ -252,9 +249,6 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
       this.removeFundingDialog.close();
     }
   }
- loadFundingSource(){
-  this.financialFundingSourceFacade.loadFundingSourceList();
- }
 }
 
 
