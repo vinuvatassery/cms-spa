@@ -33,12 +33,11 @@ export class FundingSourcePageComponent {
 
   ngOnInit(): void {
     this.loadFundingSource();
-    
+
   }
   loadFinancialFundingSourceFacadeListGrid(event: any) {
     this.financialFundingSourceFacade.loadFinancialFundingSourceFacadeListGrid();
   }
-
   addFundingSource(event: any) {
     this.financialFundingSourceFacade.addFundingSource(event)
   }
@@ -47,8 +46,23 @@ export class FundingSourcePageComponent {
     this.financialFundingSourceFacade.updateFundingSource(event)
   }
   loadFundingSource(){
-    this.financialFundingSourceFacade.loadFundingSourceList();
+    // this.financialFundingSourceFacade.loadFundingSourceList();
    }
+   loadFundingSourceHandle(gridDataRefinerValue: any): void {
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sort: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+    };
+    this.pageSizes = this.financialFundingSourceFacade.gridPageSizes;
+    this.financialFundingSourceFacade.loadFundingSourceList(
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sort,
+      gridDataRefiner.sortType,
+    );
+  }
 }
 
 

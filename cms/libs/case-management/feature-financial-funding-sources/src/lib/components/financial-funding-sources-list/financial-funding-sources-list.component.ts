@@ -26,7 +26,7 @@ import { Observable, Subject } from 'rxjs';
   templateUrl: './financial-funding-sources-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
+export class FinancialFundingSourcesListComponent implements OnChanges {
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addEditFundingSourceDialogTemplate', { read: TemplateRef })
@@ -102,10 +102,6 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
     private dialogService: DialogService,
     private financialFundingSourceFacade : FinancialFundingSourceFacade
   ) { }
-
-  ngOnInit(): void {
-   
-  }
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -130,7 +126,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isFinancialFundingSourceFacadeGridLoaderShow = true;
+    // this.isFinancialFundingSourceFacadeGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
@@ -198,18 +194,18 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
-    this.financialFundingSourceGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridFinancialFundingSourcesDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) {
-        this.isFinancialFundingSourceFacadeGridLoaderShow = false;
-      }
-    });
-    this.isFinancialFundingSourceFacadeGridLoaderShow = false;
+    // this.financialFundingSourceGridLists$.subscribe((data: GridDataResult) => {
+    //   this.gridDataResult = data;
+    //   this.gridDataResult.data = filterBy(
+    //     this.gridDataResult.data,
+    //     this.filterData
+    //   );
+    //   this.gridFinancialFundingSourcesDataSubject.next(this.gridDataResult);
+    //   if (data?.total >= 0 || data?.total === -1) {
+    //     this.isFinancialFundingSourceFacadeGridLoaderShow = false;
+    //   }
+    // });
+    // this.isFinancialFundingSourceFacadeGridLoaderShow = false;
   }
 
   public rowClass = (args: any) => ({
