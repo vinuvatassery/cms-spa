@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, EventEmitter, Output } from '@angular/core';
 /** Facades **/
 import { EventLogFacade } from '@cms/productivity-tools/domain';
  
@@ -12,7 +12,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 })
 export class EventDetailComponent implements OnInit {
 
- 
+  @Output() public closeEventDetailsClickedEmitter = new EventEmitter<any>();
   public formUiStyle : UIFormStyle = new UIFormStyle();
  
   /** Public properties **/
@@ -29,5 +29,8 @@ export class EventDetailComponent implements OnInit {
   /** Private methods **/
   private loadDdlEvents() {
     this.eventLogFacade.loadDdlEvents();
+  } 
+  closeEventDetails(){
+    this.closeEventDetailsClickedEmitter.emit(true);
   }
 }

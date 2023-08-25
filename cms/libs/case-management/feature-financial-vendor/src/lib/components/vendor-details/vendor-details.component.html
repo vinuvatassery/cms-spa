@@ -27,12 +27,12 @@
       </div>
       <!-- for manufacturers -->
       <div class="flex-col" *ngIf="providerType == vendorTypes.Manufacturers">
-        <kendo-floatinglabel text="Manufacture Name">
-          <kendo-textbox aria-label="Manufacture name" [fillMode]="formUiStyle.inputFillMode"
+        <kendo-floatinglabel text="Manufacturer Name">
+          <kendo-textbox aria-label="Manufacturer name" [fillMode]="formUiStyle.inputFillMode"
             formControlName="providerName">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
-            Manufacture name is required
+            Manufacturer name is required
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -40,22 +40,16 @@
         *ngIf="providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders">
         <div class="flex-row">
           <div class="flex-col flex-col-8 inlineloaderwrapper" *ngIf="!editVendorInfo">
-            <span *ngIf="clinicVendorLoader$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+            <span *ngIf="clinicVendorLoader$ | async"
+              class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
             <kendo-floatinglabel text="Clinic Name">
-              <kendo-autocomplete
-              [fillMode]="formUiStyle.dropDownFillMode" 
-              [data]="clinicVendorList$ | async"
-              textField = "vendorName"
-              valueField = "vendorName"
-              formControlName="providerName"
-              [filterable]="true"
-              placeholder="Clinic Name"
-              (filterChange)="searchClinic($event)"
-              [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }" 
-              > 
-              <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
-                <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{dataItem.vendorName}}</span>          
-              </ng-template>
+              <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" [data]="clinicVendorList$ | async"
+                textField="vendorName" valueField="vendorName" formControlName="providerName" [filterable]="true"
+                placeholder="Clinic Name" (filterChange)="searchClinic($event)"
+                [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }">
+                <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                  <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{dataItem.vendorName}}</span>
+                </ng-template>
               </kendo-autocomplete>
               <kendo-formerror
                 *ngIf="!medicalProviderForm.controls['providerName'].valid && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
@@ -66,7 +60,7 @@
           <div class="flex-col" *ngIf="editVendorInfo && !medicalProviderForm.value.parentVendorId">
             <kendo-floatinglabel text="Provider Name">
               <kendo-textbox aria-label="Provider Name" [fillMode]="formUiStyle.inputFillMode"
-               formControlName="providerName">
+                formControlName="providerName">
               </kendo-textbox>
               <kendo-formerror
                 *ngIf="!medicalProviderForm.controls['providerName'].valid && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
@@ -82,7 +76,8 @@
               <label class="k-checkbox-label" for="Applicable">Not Applicable</label>
             </span>
           </div>
-          <div class="flex-col" *ngIf="!editVendorInfo || (editVendorInfo && medicalProviderForm.value.parentVendorId)" [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
+          <div class="flex-col" *ngIf="!editVendorInfo || (editVendorInfo && medicalProviderForm.value.parentVendorId)"
+            [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
             <kendo-floatinglabel text="Provider First Name">
               <kendo-textbox aria-label="Provider First Name" [fillMode]="formUiStyle.inputFillMode"
                 formControlName="firstName">
@@ -93,7 +88,8 @@
               </kendo-formerror>
             </kendo-floatinglabel>
           </div>
-          <div class="flex-col" *ngIf="!editVendorInfo || (editVendorInfo && medicalProviderForm.value.parentVendorId)" [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
+          <div class="flex-col" *ngIf="!editVendorInfo || (editVendorInfo && medicalProviderForm.value.parentVendorId)"
+            [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
             <kendo-floatinglabel text="Provider Last Name">
               <kendo-textbox aria-label="Provider Last Name" [fillMode]="formUiStyle.inputFillMode"
                 formControlName="lastName">
@@ -120,15 +116,14 @@
       <div class="flex-col">
         <kendo-floatinglabel text="TIN">
           <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" formControlName="tinNumber"
-          [maxlength]="100">
+            [maxlength]="100">
           </kendo-textbox>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col mt-1" *ngIf="providerType == vendorTypes.Pharmacy && editVendorInfo">
         <kendo-floatinglabel text="NPI (optional)">
-            <kendo-textbox aria-label="NPI" [fillMode]="formUiStyle.inputFillMode" 
-            formControlName="npiNbr">
-            </kendo-textbox>
+          <kendo-textbox aria-label="NPI" [fillMode]="formUiStyle.inputFillMode" formControlName="npiNbr">
+          </kendo-textbox>
         </kendo-floatinglabel>
       </div>
       <div *ngIf="providerType == vendorTypes.Pharmacy" class="flex-col mt-1">
@@ -162,21 +157,21 @@
           payment addresses may be added once the insurance vendor is added.
           If you add a payment address, all fields are required unless otherwise stated.
         </p>
-        <p *ngIf="providerType == vendorTypes.Manufacturers">Add a address and contacts for that address. Additional 
-            addresses may be added once the manufacturer is added.
-             If you add an address, all fields are required unless otherwise stated.
-          </p>
+        <p *ngIf="providerType == vendorTypes.Manufacturers">Add a address and contacts for that address. Additional
+          addresses may be added once the manufacturer is added.
+          If you add an address, all fields are required unless otherwise stated.
+        </p>
       </div>
 
       <div class="flex-col">
         <kendo-floatinglabel text="Mail Code">
           <kendo-textbox aria-label="Mail Code" [fillMode]="formUiStyle.inputFillMode" formControlName="mailCode"
-          [maxlength]="3">
+            [maxlength]="3">
           </kendo-textbox>
         </kendo-floatinglabel>
       </div>
 
-      <!-- stop the Name on check and Name on envelop to not show on manufacture -->
+      <!-- stop the Name on check and Name on envelop to not show on manufacturer -->
       <div class="flex-col" *ngIf="providerType != vendorTypes.Manufacturers">
         <kendo-floatinglabel text="Name on Check">
           <kendo-textbox aria-label="Name on Check" [fillMode]="formUiStyle.inputFillMode"
@@ -362,7 +357,8 @@
 
 
 
-      <div class="flex-col" *ngIf="providerType != vendorTypes.MedicalProviders && providerType != vendorTypes.DentalProviders && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy && providerType != vendorTypes.Manufacturers">
+      <div class="flex-col"
+        *ngIf="providerType != vendorTypes.MedicalProviders && providerType != vendorTypes.DentalProviders && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy && providerType != vendorTypes.Manufacturers">
         <fieldset class="k-form-fieldset no_margin_fieldset">
           <legend class="k-form-legend">
             <h5>Invoice For (Select all that apply)</h5>
@@ -422,16 +418,17 @@
           <div class="flex-col mb-1">
 
             <kendo-floatinglabel text="Phone Number (optional)">
-              <kendo-textbox aria-label="Phone Number (optional)" [fillMode]="formUiStyle.inputFillMode"
-                formControlName="phoneNumber">
-              </kendo-textbox>
+              <kendo-maskedtextbox aria-label="Phone Number (optional)" [fillMode]="formUiStyle.inputFillMode"
+                formControlName="phoneNumber" mask="(999) 000-0000">
+              </kendo-maskedtextbox>
             </kendo-floatinglabel>
           </div>
           <div class="flex-col mb-1">
 
             <kendo-floatinglabel text="Fax (optional)">
-              <kendo-textbox aria-label="Fax (optional)" [fillMode]="formUiStyle.inputFillMode" formControlName="fax">
-              </kendo-textbox>
+              <kendo-maskedtextbox aria-label="Fax (optional)" [fillMode]="formUiStyle.inputFillMode"
+                formControlName="fax" mask="(999) 000-0000">
+              </kendo-maskedtextbox>
             </kendo-floatinglabel>
           </div>
 
@@ -446,7 +443,7 @@
             <div class="component-list-h">
               <span class="app-checkboxwidtext-wrapper">
                 <input type="checkbox" kendoCheckBox aria-labelledby="Rebate" id="isPreferedContact{{i}}"
-                  formControlName="isPreferedContact" (click)="checkContactPreference(i)"/>
+                  formControlName="isPreferedContact" (click)="checkContactPreference(i)" />
                 <label class="k-checkbox-label" for="isPreferedContact{{i}}"> This is a preferred contact </label>
               </span>
             </div>
@@ -460,23 +457,26 @@
         </button>
       </div>
     </div>
-  
+
   </div>
 </section>
 
 <kendo-dialog-actions>
   <div class="justify-content-between" *ngIf="!editVendorInfo">
     <div class="justify-content-end">
-      <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail" (click)="closeVedorModal()"> Cancel
+      <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"
+        (click)="closeVedorModal()"> Cancel
       </button>
       <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="save()"> Save </button>
     </div>
   </div>
   <div class="justify-content-between" *ngIf="editVendorInfo">
     <div class="justify-content-end">
-      <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail" (click)="closeVedorModal()"> Cancel
+      <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"
+        (click)="closeVedorModal()"> Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="updateVendorDetails()"> Update </button>
+      <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="updateVendorDetails()">
+        Update </button>
     </div>
   </div>
 </kendo-dialog-actions>

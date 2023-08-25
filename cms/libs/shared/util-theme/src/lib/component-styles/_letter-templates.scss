@@ -1,0 +1,71 @@
+.letter-two-column-wrapper {
+  border: 1px solid $black-3;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+.view-auth-port{
+width: 100%;
+}
+
+.letter-left-wrapper {
+  padding: 1rem; 
+  float: left;
+  display: block;
+  width: 100%;
+  .logo-infos{
+    display: block;
+    width: 200px;
+    float: left;
+  }
+}
+
+.letter-right-wrapper {
+  padding: 1rem;
+  min-height: 100%;
+}
+
+.oha-logo {
+  width: 80%;
+  margin-bottom: 1rem; 
+  display: block;
+}
+.address-sections-temp{
+  display: block;
+  float: right;
+  width: calc(100% - 200px);
+  white-space: normal;
+  text-align: right;
+}
+.care-logo {
+  height: 20px;
+}
+
+.mt-2rem {
+  margin-top: 1rem;
+}
+
+.table-data {
+  max-height: 100%;
+  overflow: auto;
+  width: 100%;
+
+  table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+  }
+
+  th {
+    background: $app-primary;
+    color:  $white;
+  }
+
+  tr:nth-child(odd) {
+    background-color: $white;
+  }
+
+  th, td {
+    padding: 8px;
+    border: 1px solid #c4c4c4;
+  }
+}

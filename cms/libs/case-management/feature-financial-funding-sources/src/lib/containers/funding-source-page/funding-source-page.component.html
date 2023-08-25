@@ -5,10 +5,11 @@
             <h1 class="maintitle_withicon text-bold text-capitalize">Funding Sources</h1>
         </section>
                 <cms-financial-funding-sources-list
-                    [financialFundingSourceGridLists$]="financialFundingSourceFacadeGridLists$"
+                    [fundingSourceList$]="fundingSourceList$"
                      [pageSizes]="pageSizes"
                     [sortValue]="sortValueFinancialFundingSourceFacade" [sortType]="sortType"
                      [sort]="sortProcessList"
+                     (loadFinancialFundingSourcesListEvent)="loadFundingSourceHandle($event)"
                      (onAddFundingSourceEvent)="addFundingSource($event)"
                      [addFundingSource$]="addFundingSource$"
                      [updateFundingSource$]="updateFundingSource$"

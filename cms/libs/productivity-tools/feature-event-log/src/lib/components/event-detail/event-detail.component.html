@@ -14,8 +14,7 @@
         <kendo-textarea
  
         [fillMode]="formUiStyle.inputFillMode"
- 
-          name="Event Description"
+  
           aria-label="event description"
           [rows]="2"
           [cols]="40"
@@ -42,8 +41,7 @@
         <kendo-textarea
  
         [fillMode]="formUiStyle.inputFillMode"
- 
-          name="Attachment Note"
+  
           aria-label="attachment note"
           [rows]="1"
           [cols]="40"
@@ -67,6 +65,7 @@
         [primary]="true"
         look="outline"
         aria-label="cancel event"
+        (click)="closeEventDetails()"
       >
         Cancel
       </button>
