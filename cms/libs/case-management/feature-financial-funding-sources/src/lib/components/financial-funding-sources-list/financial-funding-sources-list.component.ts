@@ -124,7 +124,6 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
     sortValue: string,
     sortTypeValue: string
   ) {
-    // this.isFinancialFundingSourceFacadeGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
@@ -132,7 +131,6 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
       sortType: sortTypeValue,
     };
     this.loadFinancialFundingSourcesListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
   }
 
   onChange(data: any) {
@@ -191,20 +189,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
     this.filterData = filter;
   }
 
-  gridDataHandle() {
-    // this.financialFundingSourceGridLists$.subscribe((data: GridDataResult) => {
-    //   this.gridDataResult = data;
-    //   this.gridDataResult.data = filterBy(
-    //     this.gridDataResult.data,
-    //     this.filterData
-    //   );
-    //   this.gridFinancialFundingSourcesDataSubject.next(this.gridDataResult);
-    //   if (data?.total >= 0 || data?.total === -1) {
-    //     this.isFinancialFundingSourceFacadeGridLoaderShow = false;
-    //   }
-    // });
-    // this.isFinancialFundingSourceFacadeGridLoaderShow = false;
-  }
+ 
 
   public rowClass = (args: any) => ({
     "table-row-disabled": (args.dataItem.isActive),
