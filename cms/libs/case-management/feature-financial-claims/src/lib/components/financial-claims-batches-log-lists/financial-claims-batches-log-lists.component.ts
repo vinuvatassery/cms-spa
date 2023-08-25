@@ -453,4 +453,45 @@ export class FinancialClaimsBatchesLogListsComponent
         }
       });
   }
+  disablePreviewButton(result: any) {
+    this.selectedDataRows = result;
+    this.selectedDataRows.batchId = this.batchId
+    if(result.selectAll){
+      this.disablePrwButton = false;
+    }
+    else if(result.PrintAdviceLetterSelected.length>0)
+    {
+      this.disablePrwButton = false;
+    }
+    else
+    {
+      this.disablePrwButton = true;
+    }
+  }
+  selectUnSelectPayment(dataItem: any) {
+    if (!dataItem.selected) {
+      let exist = this.selectedDataRows.PrintAdviceLetterUnSelected.filter((x: any) => x.vendorAddressId === dataItem.vendorAddressId).length;
+      if (exist === 0) {
+        this.selectedDataRows.PrintAdviceLetterUnSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
+      }
+        this.selectedDataRows?.PrintAdviceLetterSelected?.forEach((element: any) => {
+          if (element.paymentRequestId === dataItem.paymentRequestId) {
+            element.selected = false;
+          }
+        });
+    }
+    else {
+      this.selectedDataRows.PrintAdviceLetterUnSelected.forEach((element: any) => {
+        if (element.paymentRequestId === dataItem.paymentRequestId) {
+          element.selected = false;
+        }
+      });
+        let exist = this.selectedDataRows.PrintAdviceLetterSelected.filter((x: any) => x.vendorAddressId === dataItem.vendorAddressId).length;
+        if (exist === 0) {
+          this.selectedDataRows.PrintAdviceLetterSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
+        }
+     
+    }
+
+  }
 }
