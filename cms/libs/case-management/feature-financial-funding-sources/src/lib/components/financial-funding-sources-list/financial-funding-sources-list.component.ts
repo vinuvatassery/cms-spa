@@ -45,6 +45,8 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   @Input() financialFundingSourceGridLists$: any;
   @Input() fundingSourceList$!: Observable<any>;
   @Output() loadFinancialFundingSourcesListEvent = new EventEmitter<any>();
+  @Output() removeFundingSourceClick = new EventEmitter<string>();
+  isRemoveFundingSourceClicked$ = new Subject();
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -66,7 +68,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   isEditFundingSource = false;
   addEditFundingDialog: any;
   removeFundingDialog: any;;
-
+  selectFundingSourceId!: string;;
   public processGridActions = [
     {
       buttonType: 'btn-h-primary',
