@@ -25,7 +25,7 @@ import { Subject } from 'rxjs';
   templateUrl: './financial-pcas-assignment-report-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
- 
+
 export class FinancialPcasAssignmentReportListComponent implements OnInit, OnChanges
 {
   @ViewChild('alertPcaReportDialogTemplate', { read: TemplateRef })
@@ -43,7 +43,7 @@ export class FinancialPcasAssignmentReportListComponent implements OnInit, OnCha
   @Input() financialPcaReportGridListsSubGrid$: any;
   @Output() loadFinancialPcaReportListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'vendorName';
+  sortColumn = 'pcaCode';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -59,7 +59,7 @@ export class FinancialPcasAssignmentReportListComponent implements OnInit, OnCha
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
- 
+
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -99,6 +99,7 @@ export class FinancialPcasAssignmentReportListComponent implements OnInit, OnCha
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter : this.state?.["filter"]?.["filters"] ?? []
     };
     this.loadFinancialPcaReportListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
@@ -177,7 +178,7 @@ export class FinancialPcasAssignmentReportListComponent implements OnInit, OnCha
     this.isFinancialPcaReportGridLoaderShow = false;
   }
 
- 
+
   onPcaReportAlertClicked(template: TemplateRef<unknown>): void {
     this.pcaReportAlertDialogService = this.dialogService.open({
       content: template,
@@ -185,7 +186,7 @@ export class FinancialPcasAssignmentReportListComponent implements OnInit, OnCha
     });
   }
   onClosePcaReportAlertClicked(result: any) {
-    if (result) {  
+    if (result) {
       this.pcaReportAlertDialogService.close();
     }
   }
@@ -197,11 +198,11 @@ export class FinancialPcasAssignmentReportListComponent implements OnInit, OnCha
   }
 
   onPreviewSubmitPaymentCloseClicked(result: any) {
-    if (result) { 
+    if (result) {
       this.PreviewSubmitPaymenttDialogService.close();
     }
   }
- 
+
 }
 
 

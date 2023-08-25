@@ -34,18 +34,18 @@
       <kendo-grid [resizable]="true" [loading]="isFinancialPcaReportGridLoaderShow" [pageSize]="state.take"
             [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
             [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
-            (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [data]="financialPcaReportGridLists$ | async">
+            (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [data]="gridFinancialPcaReportData$ | async">
             <!-- financialPcaReportGridLists$ | async -->
-            
-            <kendo-grid-column field="pca" title="PCA #" [width]="100"> </kendo-grid-column>
-            <kendo-grid-column field="object" title="Object" [width]="220"> </kendo-grid-column>
+
+            <kendo-grid-column field="pcaCode" title="PCA #" [width]="100"> </kendo-grid-column>
+            <kendo-grid-column field="objectName" title="Object" [width]="220"> </kendo-grid-column>
             <kendo-grid-column field="objectCode" title="Object Code" [width]="130"> </kendo-grid-column>
             <kendo-grid-column field="ay" title="AY" [width]="80"> </kendo-grid-column>
-           
+
             <kendo-grid-column field="openDate" title="Open Date" [width]="120"> </kendo-grid-column>
 
             <kendo-grid-column field="closeDate" title="Close Date" [width]="120"> </kendo-grid-column>
-           
+
             <kendo-grid-column field="amountAssigned" title="Amount Assigned" [width]="170">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <span class="tableamountview"> <strong>$</strong> {{dataItem.amountAssigned}}</span>
@@ -55,8 +55,8 @@
                         <span class="tableamountview"> <strong>$</strong> {{dataItem.amountRemaining}}</span>
                   </ng-template> </kendo-grid-column>
                   <kendo-grid-column field="groupsCovered" title="Groups Covered" [width]="160"> </kendo-grid-column>
-           
-            <kendo-grid-column field="Option" title=" "  [columnMenu]="false" [width]="50" 
+
+            <kendo-grid-column field="Option" title=" "  [columnMenu]="false" [width]="50"
                   class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <button kendoButton themeColor="primary" fillMode="flat" class="clear-icon-btn" aria-label="Edit Reminder" title="Edit Reminder">
@@ -76,15 +76,15 @@
                       <kendo-grid [resizable]="true" [data]="financialPcaReportGridListsSubGrid$ | async">
                       <!-- financialPcaReportGridLists$ | async -->
                       <kendo-grid-column field="priority" title="Priority" [width]="100"> </kendo-grid-column>
-                      
+
                       <kendo-grid-column field="pca" title="PCA #" [width]="100"> </kendo-grid-column>
-                
+
                       <kendo-grid-column field="ay" title="AY" [width]="80"> </kendo-grid-column>
-                     
+
                       <kendo-grid-column field="openDate" title="Open Date" [width]="120"> </kendo-grid-column>
-          
+
                       <kendo-grid-column field="closeDate" title="Close Date" [width]="120"> </kendo-grid-column>
-                     
+
                       <kendo-grid-column field="amountAssigned" title="Amount Assigned" [width]="170">
                             <ng-template kendoGridCellTemplate let-dataItem>
                                   <span class="tableamountview"> <strong>$</strong> {{dataItem.amountAssigned}}</span>
@@ -94,7 +94,7 @@
                                   <span class="tableamountview"> <strong>$</strong> {{dataItem.amountRemaining}}</span>
                             </ng-template> </kendo-grid-column>
                             </kendo-grid>
-                            
+
 
                   </div>
             <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
@@ -131,9 +131,9 @@
       </kendo-grid>
 </div>
 
- 
+
 <button (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentReportDialogTemplate)" >Preview & Submit Payment</button>
- 
+
 
  <button (click)="onPcaReportAlertClicked(alertPcaReportDialogTemplate)" >alert</button>
 
@@ -141,7 +141,7 @@
       <cms-financial-pcas-assignment-report-alert (closePcaReportAlertClickedEvent)="onClosePcaReportAlertClicked($event)"></cms-financial-pcas-assignment-report-alert>
  </ng-template>
 
- 
+
  <ng-template #previewSubmitPaymentReportDialogTemplate>
 <cms-financial-pcas-assignment-report-preview-submit (previewSubmitPaymentCloseClicked)="onPreviewSubmitPaymentCloseClicked($event)"></cms-financial-pcas-assignment-report-preview-submit>
  </ng-template>
