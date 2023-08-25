@@ -95,25 +95,39 @@ export class VendorHeaderToolsComponent {
     this.vendorTypeCode = this.activeRoute.snapshot.queryParams['tab_code'];
     this.initialize();
     this.getVendorTypeCode();
+    this.addEmailSubscription();
+    this.addMailAddressSupscription();
   }
 
   private initialize() {
     this.loadMailingAddress();
+    this.loadEmailAddress();
     this.refreshButtonList();
   }
 
-  private addEmailSubscription() {
-    debugger;
+  loadEmailAddress(){
+    this.vendorContactFacade.loadVendorAllcontacts(this.vendorId);
+  }
+
+  addEmailSubscription() {
+  debugger;
     this.vendorContactFacade.allContacts$.subscribe((resp) => {//this.vendorContactFacade.contacts$.subscribe((resp) => {
-      const preferredContact = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.preferredFlag === "Y" && contact.emailAddress?.trim());
-      const contactWithValidEmail = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.emailAddress && contact.emailAddress.trim());
-      this.toEmail = [];
-      if (preferredContact) {
-        this.toEmail = [preferredContact.emailAddress.trim()];
-        this.sendActions[1].isVisible = true;
-      } else if (contactWithValidEmail) {
-        this.toEmail = [contactWithValidEmail.emailAddress.trim()];
-        this.sendActions[1].isVisible = true;
+    debugger;
+      if(resp.length!=0){
+        const preferredContact = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.preferredFlag === "Y" && contact.emailAddress?.trim());
+        const contactWithValidEmail = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.emailAddress && contact.emailAddress.trim());
+        this.toEmail = [];
+        if (preferredContact) {
+          this.toEmail = [preferredContact.emailAddress.trim()];
+          this.sendActions[1].isVisible = true;
+        } else if (contactWithValidEmail) {
+          this.toEmail = [contactWithValidEmail.emailAddress.trim()];
+          this.sendActions[1].isVisible = true;
+        }
+      }
+      else {
+        this.toEmail = [];
+        this.sendActions[1].isVisible = false;
       }
       this.refreshButtonList();
       this.ref.detectChanges();
@@ -201,8 +215,7 @@ export class VendorHeaderToolsComponent {
       }
     }
 
-    loadEmailAddress() {
-      debugger;
+    addMailAddressSupscription() {
       this.vendorContactFacade.mailCodes$.subscribe((resp) => {
         if (resp && resp.length > 0) {
           let selectedAddress = resp.find((address: any) => address?.activeFlag === "Y" && address.preferredFlag === "Y");
@@ -211,9 +224,9 @@ export class VendorHeaderToolsComponent {
           }
 
           //this.vendorAddressId = selectedAddress.vendorAddressId;
-          this.vendorContactFacade.loadVendorAllcontacts(this.vendorId);
+          //this.vendorContactFacade.loadVendorAllcontacts(this.vendorId);
           //this.vendorContactFacade.loadcontacts(this.vendorAddressId);
-          this.addEmailSubscription();
+          //this.addEmailSubscription();
         }
         this.ref.detectChanges();
       });
@@ -221,7 +234,7 @@ export class VendorHeaderToolsComponent {
 
     loadMailingAddress() {
       this.vendorContactFacade.loadMailCodes(this.vendorId);
-      this.loadEmailAddress();
+      this.addMailAddressSupscription();
     }
 
     getVendorTypeCode() {
@@ -245,6 +258,6 @@ export class VendorHeaderToolsComponent {
       }
     }
     onSendMenuClick(){
-      this.loadEmailAddress();
+     // this.loadEmailAddress();
     }
 }

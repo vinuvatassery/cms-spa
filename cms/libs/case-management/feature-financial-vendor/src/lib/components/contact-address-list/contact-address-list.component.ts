@@ -24,8 +24,9 @@ export class ContactAddressListComponent implements OnChanges {
   VendorContactId:any;
   VendorContactAddressId: string="";
   @Input() VendorAddressId: any;
+  @Input() vendorId:any;
   public state!: State;
-  
+
   showLoader() {
     this.loaderService.show();
   }
@@ -71,8 +72,8 @@ export class ContactAddressListComponent implements OnChanges {
   ];
   constructor(private readonly vendocontactsFacade: VendorContactsFacade, private cd: ChangeDetectorRef, private readonly loaderService: LoaderService,) { }
 
-  ngOnChanges(changes: SimpleChanges) { 
-    this.vendocontactsFacade.loadcontacts(this.VendorAddressId);    
+  ngOnChanges(changes: SimpleChanges) {
+    this.vendocontactsFacade.loadcontacts(this.VendorAddressId);
     this.vendocontactsFacade.contacts$.subscribe((res: any) => {
       this.contactResponse = res;
       this.cd.detectChanges();

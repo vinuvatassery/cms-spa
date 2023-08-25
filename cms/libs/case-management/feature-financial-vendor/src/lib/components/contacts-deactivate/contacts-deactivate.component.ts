@@ -7,6 +7,7 @@ import { VendorContactsFacade } from '@cms/case-management/domain';
 })
 export class ContactsDeactivateComponent {
   @Input() VendorContactId:any;
+  @Input() vendorId:any;
   @Output() closeDeactivateContactAddress = new EventEmitter();
 
  /** Constructor **/
@@ -21,8 +22,9 @@ export class ContactsDeactivateComponent {
     this.vendocontactsFacade.deactiveContactAddress(this.VendorContactId).then((isDeavtivated:any) =>{
       if(isDeavtivated){
         this.onCloseDeactivateContactAddressClicked();
-      } 
+        this.vendocontactsFacade.loadVendorAllcontacts(this.vendorId);
+      }
     })
   }
- 
+
 }

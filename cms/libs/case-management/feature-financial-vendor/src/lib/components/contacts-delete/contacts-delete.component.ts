@@ -7,6 +7,7 @@ import { VendorContactsFacade } from '@cms/case-management/domain';
 })
 export class ContactsDeleteComponent {
   @Input() VendorContactId:any;
+  @Input() vendorId:any;
   @Output() closeDeleteContactAddress = new EventEmitter();
  /** Constructor **/
  constructor(
@@ -17,11 +18,12 @@ export class ContactsDeleteComponent {
     this.closeDeleteContactAddress.emit(true);
   }
   deleteContactAddress(){
-    
+
     this.vendocontactsFacade.removeContactAddress(this.VendorContactId).then((isDeleted:any) =>{
       if(isDeleted){
         this.onCloseDeleteContactAddressClicked();
-      } 
+        this.vendocontactsFacade.loadVendorAllcontacts(this.vendorId);
+      }
     })
   }
 }
