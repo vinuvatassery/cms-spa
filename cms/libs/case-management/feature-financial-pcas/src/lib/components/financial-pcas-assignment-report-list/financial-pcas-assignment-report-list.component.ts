@@ -6,14 +6,13 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -25,8 +24,7 @@ import { Subject } from 'rxjs';
   templateUrl: './financial-pcas-assignment-report-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPcasAssignmentReportListComponent
-  implements OnInit, OnChanges
+export class FinancialPcasAssignmentReportListComponent implements OnChanges
 {
   @ViewChild('alertPcaReportDialogTemplate', { read: TemplateRef })
   alertPcaReportDialogTemplate!: TemplateRef<any>;
@@ -51,6 +49,19 @@ export class FinancialPcasAssignmentReportListComponent
   isFiltered = false;
   filter!: any;
   selectedColumn!: any;
+  columns : any = {
+    status: "Status",
+    pcaCode:"PCA #",
+    objectName:"Object",
+    objectCode:"Object Code",
+    ay:"AY",
+    openDate:"Open Date",
+    closeDate:"Close Date",
+    clientId:"Client ID",
+    amountAssigned:"Amount Assigned",
+    amountRemaining:"Amount Remaining",
+    groupsCovered:"Groups Covered"
+  }
   gridDataResult!: GridDataResult;
 
   gridFinancialPcaReportDataSubject = new Subject<any>();
@@ -66,9 +77,6 @@ export class FinancialPcasAssignmentReportListComponent
     private dialogService: DialogService
   ) {}
 
-  ngOnInit(): void {
-    // this.loadFinancialPcaReportListGrid();
-  }
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -157,7 +165,23 @@ export class FinancialPcasAssignmentReportListComponent
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
+
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+
+    if (stateData.filter?.filters.length > 0) {
+      const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      this.isFiltered = true;
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    } else {
+      this.filter = '';
+      this.isFiltered = false;
+    }
     this.loadFinancialPcaReportListGrid();
   }
 
@@ -186,6 +210,38 @@ export class FinancialPcasAssignmentReportListComponent
     });
     this.isFinancialPcaReportGridLoaderShow = false;
   }
+
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+  filterService.filter({
+      filters: [{
+        field: field,
+        operator: "eq",
+        value:value
+    }],
+      logic: "and"
+  });
+}
+
+setToDefault() {
+  this.state = {
+    skip: 0,
+    take: this.pageSizes[0]?.value,
+    sort: this.sort,
+  };
+
+  this.sortColumn = 'PCA #';
+  this.sortDir = 'Ascending';
+  this.filter = '';
+  this.searchValue = '';
+  this.isFiltered = false;
+  this.columnsReordered = false;
+
+  this.sortValue = 'pcaCode';
+  this.sortType = 'asc';
+  this.sort = this.sortColumn;
+
+  this.loadFinancialPcaReportListGrid();
+}
 
   onPcaReportAlertClicked(template: TemplateRef<unknown>): void {
     this.pcaReportAlertDialogService = this.dialogService.open({

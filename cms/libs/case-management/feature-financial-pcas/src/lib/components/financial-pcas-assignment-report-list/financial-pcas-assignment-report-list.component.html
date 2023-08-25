@@ -2,147 +2,228 @@
 
 
 <section class="table-filter-section mat-form-no-b-space">
-      <span class="filter-section_items filter--select">
-            <kendo-floatinglabel>
-                  <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"
-                        textField="columnDesc" valueField="columnCode">
-                  </kendo-dropdownlist>
-            </kendo-floatinglabel>
-      </span>
-      <span class="filter-section_items filter--search">
-            <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
-            <kendo-floatinglabel text="Search">
-                  <kendo-textbox aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode">
-                  </kendo-textbox>
+  <span class="filter-section_items filter--select">
+    <kendo-floatinglabel>
+      <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc"
+        valueField="columnCode">
+      </kendo-dropdownlist>
+    </kendo-floatinglabel>
+  </span>
+  <span class="filter-section_items filter--search">
+    <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
+    <kendo-floatinglabel text="Search">
+      <kendo-textbox aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode">
+      </kendo-textbox>
 
-            </kendo-floatinglabel>
-      </span>
+    </kendo-floatinglabel>
+  </span>
 </section>
 
 
 
 <!-- Sorted Info -->
 <div class="table-sorted-info">
-      Sorted Descending by <span class="sort-items"> Source </span>
-      <span class="sort-items">No Filters</span>
-      <span class="sort-items">Filtered by PCA</span>
-      <span class="sort-items">Default Columns</span>
+  Sorted {{sortDir}} by <span class="sort-items">  {{sortColumn}} </span>
+  <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
+  <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
+  <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
+  <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+    <a>Set to Default</a>
+  </button>
 </div>
 
 
 <div class="app-c-table">
-      <kendo-grid [resizable]="true" [loading]="isFinancialPcaReportGridLoaderShow" [pageSize]="state.take"
-            [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
-            [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
-            (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [data]="gridFinancialPcaReportData$ | async">
-            <!-- financialPcaReportGridLists$ | async -->
+  <kendo-grid [resizable]="true" [loading]="isFinancialPcaReportGridLoaderShow" [pageSize]="state.take"
+    [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
+    [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
+    (filterChange)="filterChange($event)" [data]="gridFinancialPcaReportData$ | async">
+    <!-- financialPcaReportGridLists$ | async -->
 
-            <kendo-grid-column field="status" title="Status" [width]="100"> </kendo-grid-column>
-            <kendo-grid-column field="pcaCode" title="PCA #" [width]="100"> </kendo-grid-column>
-            <kendo-grid-column field="objectName" title="Object" [width]="220"> </kendo-grid-column>
-            <kendo-grid-column field="objectCode" title="Object Code" [width]="130"> </kendo-grid-column>
-            <kendo-grid-column field="ay" title="AY" [width]="80"> </kendo-grid-column>
+    <kendo-grid-column field="status" title="Status" [width]="100">
+      <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter"
+        let-filterService="filterService">
+        <kendo-dropdownlist [data]="['Active', 'Inactive']" [valuePrimitive]="true"
+          (valueChange)="dropdownFilterChange('status',$event, filterService)">
+        </kendo-dropdownlist>
+      </ng-template>
+    </kendo-grid-column>
 
-            <kendo-grid-column field="openDate" title="Open Date" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="pcaCode" title="PCA #" [width]="100">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+          [extra]="false" operator="eq">
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+        </kendo-grid-numeric-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
 
-            <kendo-grid-column field="closeDate" title="Close Date" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="objectName" title="Object" [width]="220">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+          [extra]="false" operator="eq">
+          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
 
-            <kendo-grid-column field="amountAssigned" title="Amount Assigned" [width]="170">
-                  <ng-template kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountAssigned}}</span>
-                  </ng-template> </kendo-grid-column>
-            <kendo-grid-column field="amountRemaining" title="Amount Remaining" [width]="180"> <ng-template
-                        kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountRemaining}}</span>
-                  </ng-template> </kendo-grid-column>
-                  <kendo-grid-column field="groupsCovered" title="Groups Covered" [width]="160"> </kendo-grid-column>
+    <kendo-grid-column field="objectCode" title="Object Code" [width]="130">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+          [extra]="false" operator="eq">
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+        </kendo-grid-numeric-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
 
-            <kendo-grid-column field="Option" title=" "  [columnMenu]="false" [width]="50"
-                  class="text-center">
-                  <ng-template kendoGridCellTemplate let-dataItem>
-                        <button kendoButton themeColor="primary" fillMode="flat" class="clear-icon-btn" aria-label="Edit Reminder" title="Edit Reminder">
-                              <span class="material-icons"> edit </span>
-                        </button>
-                  </ng-template>
-            </kendo-grid-column>
-            <div *kendoGridDetailTemplate="let dataItem">
-                  <div class="info-banners orange-banner d-flex">
-                        <span class="material-icons" aria-label="info" aria-hidden="true">info</span>
-                        <div>
-                          <p > If the primary PCA assignment expires or is overdrawn, the following PCA will be assigned to the expenses.
-                          </p>
-                        </div>
-                      </div>
+    <kendo-grid-column field="ay" title="AY" [width]="80">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+          [extra]="false" operator="eq">
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+        </kendo-grid-numeric-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
 
-                      <kendo-grid [resizable]="true" [data]="financialPcaReportGridListsSubGrid$ | async">
-                      <!-- financialPcaReportGridLists$ | async -->
-                      <kendo-grid-column field="priority" title="Priority" [width]="100"> </kendo-grid-column>
+    <kendo-grid-column field="openDate" title="Open Date" [width]="120" [format]="{ date: 'MM-dd-YYYY' }">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.openDate | date:'MM/dd/YYYY'}}
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <common-grid-cell-date-range-filter field="openDate" [filter]="filter"
+          [filterService]="filterService">
+        </common-grid-cell-date-range-filter>
+      </ng-template>
+    </kendo-grid-column>
 
-                      <kendo-grid-column field="pca" title="PCA #" [width]="100"> </kendo-grid-column>
+    <kendo-grid-column field="closeDate" title="Close Date" [width]="120" [format]="{ date: 'MM-dd-YYYY' }">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.closeDate | date:'MM/dd/YYYY'}}
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <common-grid-cell-date-range-filter field="closeDate" [filter]="filter"
+          [filterService]="filterService">
+        </common-grid-cell-date-range-filter>
+      </ng-template>
+    </kendo-grid-column>
 
-                      <kendo-grid-column field="ay" title="AY" [width]="80"> </kendo-grid-column>
+    <kendo-grid-column field="amountAssigned" title="Amount Assigned" [width]="170">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountAssigned}}</span>
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+          [extra]="false" operator="eq">
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+        </kendo-grid-numeric-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
 
-                      <kendo-grid-column field="openDate" title="Open Date" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="amountRemaining" title="Amount Remaining" [width]="180"> <ng-template
+        kendoGridCellTemplate let-dataItem>
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountRemaining}}</span>
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+          [extra]="false" operator="eq">
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+        </kendo-grid-numeric-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
 
-                      <kendo-grid-column field="closeDate" title="Close Date" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="groupsCovered" title="Groups Covered" [width]="160"> </kendo-grid-column>
 
-                      <kendo-grid-column field="amountAssigned" title="Amount Assigned" [width]="170">
-                            <ng-template kendoGridCellTemplate let-dataItem>
-                                  <span class="tableamountview"> <strong>$</strong> {{dataItem.amountAssigned}}</span>
-                            </ng-template> </kendo-grid-column>
-                      <kendo-grid-column field="amountRemaining" title="Amount Remaining" [width]="180"> <ng-template
-                                  kendoGridCellTemplate let-dataItem>
-                                  <span class="tableamountview"> <strong>$</strong> {{dataItem.amountRemaining}}</span>
-                            </ng-template> </kendo-grid-column>
-                            </kendo-grid>
+    <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="50" class="text-center">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button kendoButton themeColor="primary" fillMode="flat" class="clear-icon-btn" aria-label="Edit Reminder"
+          title="Edit Reminder">
+          <span class="material-icons"> edit </span>
+        </button>
+      </ng-template>
+    </kendo-grid-column>
+    <div *kendoGridDetailTemplate="let dataItem">
+      <div class="info-banners orange-banner d-flex">
+        <span class="material-icons" aria-label="info" aria-hidden="true">info</span>
+        <div>
+          <p> If the primary PCA assignment expires or is overdrawn, the following PCA will be assigned to the expenses.
+          </p>
+        </div>
+      </div>
 
+      <kendo-grid [resizable]="true" [data]="financialPcaReportGridListsSubGrid$ | async">
+        <!-- financialPcaReportGridLists$ | async -->
+        <kendo-grid-column field="priority" title="Priority" [width]="100"> </kendo-grid-column>
 
-                  </div>
-            <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
-                  let-currentPage="currentPage">
-                  <div class="grid-custom-paginationtemplates d-flex">
-                        <div class="d-flex align-items-center">
-                              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
-                              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes"
-                                    [textField]="'text'" [valueField]="'value'" [valuePrimitive]="true"
-                                    aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
-                                    (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
-                              <kendo-pager-info> </kendo-pager-info>
-                              <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'">
-                              </kendo-grid-messages>
+        <kendo-grid-column field="pca" title="PCA #" [width]="100"> </kendo-grid-column>
 
-                        </div>
-                        <div class="d-flex">
-                              <kendo-pager-input></kendo-pager-input>
-                              <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
-                              <kendo-pager-next-buttons></kendo-pager-next-buttons>
-                        </div>
-                  </div>
-            </ng-template>
-            <ng-template kendoGridLoadingTemplate>
-                  <common-grid-loader-component></common-grid-loader-component>
-            </ng-template>
-            <!-- grid No data Template -->
-            <ng-template kendoGridNoRecordsTemplate>
-                  <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
-                  </div>
-                  <p>There is no data to display.</p>
-            </ng-template>
+        <kendo-grid-column field="ay" title="AY" [width]="80"> </kendo-grid-column>
 
+        <kendo-grid-column field="openDate" title="Open Date" [width]="120"> </kendo-grid-column>
+
+        <kendo-grid-column field="closeDate" title="Close Date" [width]="120"> </kendo-grid-column>
+
+        <kendo-grid-column field="amountAssigned" title="Amount Assigned" [width]="170">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.amountAssigned}}</span>
+          </ng-template> </kendo-grid-column>
+        <kendo-grid-column field="amountRemaining" title="Amount Remaining" [width]="180"> <ng-template
+            kendoGridCellTemplate let-dataItem>
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.amountRemaining}}</span>
+          </ng-template> </kendo-grid-column>
       </kendo-grid>
+
+
+    </div>
+    <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+      let-currentPage="currentPage">
+      <div class="grid-custom-paginationtemplates d-flex">
+        <div class="d-flex align-items-center">
+          <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
+            [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
+            [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
+          <kendo-pager-info> </kendo-pager-info>
+          <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'">
+          </kendo-grid-messages>
+
+        </div>
+        <div class="d-flex">
+          <kendo-pager-input></kendo-pager-input>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-next-buttons></kendo-pager-next-buttons>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template kendoGridLoadingTemplate>
+      <common-grid-loader-component></common-grid-loader-component>
+    </ng-template>
+    <!-- grid No data Template -->
+    <ng-template kendoGridNoRecordsTemplate>
+      <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+      </div>
+      <p>There is no data to display.</p>
+    </ng-template>
+
+  </kendo-grid>
 </div>
 
 
-<button (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentReportDialogTemplate)" >Preview & Submit Payment</button>
+<button (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentReportDialogTemplate)">Preview & Submit
+  Payment</button>
 
 
- <button (click)="onPcaReportAlertClicked(alertPcaReportDialogTemplate)" >alert</button>
+<button (click)="onPcaReportAlertClicked(alertPcaReportDialogTemplate)">alert</button>
 
- <ng-template #alertPcaReportDialogTemplate>
-      <cms-financial-pcas-assignment-report-alert (closePcaReportAlertClickedEvent)="onClosePcaReportAlertClicked($event)"></cms-financial-pcas-assignment-report-alert>
- </ng-template>
+<ng-template #alertPcaReportDialogTemplate>
+  <cms-financial-pcas-assignment-report-alert
+    (closePcaReportAlertClickedEvent)="onClosePcaReportAlertClicked($event)"></cms-financial-pcas-assignment-report-alert>
+</ng-template>
 
 
- <ng-template #previewSubmitPaymentReportDialogTemplate>
-<cms-financial-pcas-assignment-report-preview-submit (previewSubmitPaymentCloseClicked)="onPreviewSubmitPaymentCloseClicked($event)"></cms-financial-pcas-assignment-report-preview-submit>
- </ng-template>
+<ng-template #previewSubmitPaymentReportDialogTemplate>
+  <cms-financial-pcas-assignment-report-preview-submit
+    (previewSubmitPaymentCloseClicked)="onPreviewSubmitPaymentCloseClicked($event)"></cms-financial-pcas-assignment-report-preview-submit>
+</ng-template>
