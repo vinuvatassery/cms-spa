@@ -28,8 +28,8 @@ export class VendorContactsDataService {
       },
     ]);
   }
-  loadcontacts(vendorAddressId: string) {
-    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/addresses/${vendorAddressId}/contacts`);
+  loadcontacts(vendorAddressId: string,skip: any, pageSize: any, sortBy: any, sortType: any, filters:any) {
+    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/addresses/${vendorAddressId}/contacts?SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}&Filter=${filters}`);
   }
   saveContactAddress(contact: any) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/contacts`, contact);

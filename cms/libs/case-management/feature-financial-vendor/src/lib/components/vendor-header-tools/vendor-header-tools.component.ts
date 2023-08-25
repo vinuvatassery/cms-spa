@@ -40,7 +40,13 @@ export class VendorHeaderToolsComponent {
   communicationEmailTypeCode: any;
   toEmail: Array<any> = [];
   vendorAddressId:any;
-
+  public sortValue = this.vendorContactFacade.sortValue;
+  public sortType = this.vendorContactFacade.sortType;
+  public pageSizes = this.vendorContactFacade.gridPageSizes;
+  public gridSkipCount = this.vendorContactFacade.skipCount;
+  public sort = this.vendorContactFacade.sort;
+  public state!: any;
+  filters = "";
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -205,7 +211,13 @@ export class VendorHeaderToolsComponent {
         if (resp && resp.length > 0) {
           const selectedAddress = resp.find((address:any) => address.preferredFlag === "Y") || resp[0];
           this.vendorAddressId = selectedAddress.vendorAddressId;
-          this.vendorContactFacade.loadcontacts(this.vendorAddressId);
+          this.vendorContactFacade.loadcontacts(this.vendorAddressId,
+            this.state?.skip ?? 0,
+            this.state?.take ?? 0,
+            this.sortValue,
+            this.sortType,
+            this.filters
+            );  
           this.addEmailSubscription();
         }
         this.ref.detectChanges();
