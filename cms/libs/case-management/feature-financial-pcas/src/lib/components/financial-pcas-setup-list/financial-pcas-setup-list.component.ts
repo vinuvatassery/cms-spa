@@ -20,7 +20,6 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { TooltipDirective } from '@progress/kendo-angular-tooltip';
 import {
   CompositeFilterDescriptor,
-  SortDescriptor,
   State,
 } from '@progress/kendo-data-query';
 import { Observable, Subject, Subscription, debounceTime } from 'rxjs';
