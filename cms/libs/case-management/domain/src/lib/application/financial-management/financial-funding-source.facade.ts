@@ -127,13 +127,15 @@ export class FinancialFundingSourceFacade {
     skipcount: number,
     maxResultCount: number,
     sort: string,
-    sortType: string){
+    sortType: string,
+    filter:any,){
       this.showLoader();
     this.financialFundingSourceDataService.loadFundingSourceList(
         skipcount,
         maxResultCount,
         sort,
         sortType,
+        filter
     ).subscribe({
       next: (dataResponse) => {
         if (dataResponse) {

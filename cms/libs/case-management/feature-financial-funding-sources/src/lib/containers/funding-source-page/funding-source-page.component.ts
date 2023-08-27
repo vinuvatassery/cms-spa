@@ -47,6 +47,7 @@ export class FundingSourcePageComponent {
       maxResultCount: gridDataRefinerValue.pagesize,
       sort: gridDataRefinerValue.sortColumn,
       sortType: gridDataRefinerValue.sortType,
+      filter:gridDataRefinerValue.filter
     };
     this.pageSizes = this.financialFundingSourceFacade.gridPageSizes;
     this.financialFundingSourceFacade.loadFundingSourceList(
@@ -54,6 +55,7 @@ export class FundingSourcePageComponent {
       gridDataRefiner.maxResultCount,
       gridDataRefiner.sort,
       gridDataRefiner.sortType,
+      gridDataRefiner.filter
     );
   }
 }
