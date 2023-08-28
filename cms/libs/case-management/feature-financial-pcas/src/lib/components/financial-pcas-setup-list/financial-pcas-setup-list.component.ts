@@ -366,7 +366,16 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
   private isValidDate = (searchValue: any) => isNaN(searchValue) && !isNaN(Date.parse(searchValue));
 
   private formatSearchValue(searchValue: any, isDateSearch: boolean) {
-    if (isDateSearch) {
+    // if (isDateSearch) {
+    //   if (this.isValidDate(searchValue)) {
+    //     return this.intl.formatDate(new Date(searchValue), this.configProvider?.appSettings?.dateFormat);
+    //   }
+    //   else {
+    //     return '';
+    //   }
+    // }
+    return searchValue;
+      if (isDateSearch) {
       if (this.isValidDate(searchValue)) {
         return this.intl.formatDate(new Date(searchValue), this.configProvider?.appSettings?.dateFormat);
       }
