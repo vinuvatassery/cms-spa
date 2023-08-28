@@ -36,7 +36,7 @@ export class FinancialFundingSourceDataService {
     sortType: string,
     filter:any
   ){
-    let paramsBody = {
+    const filterRequestBody = {
       skipcount:skipcount,
       maxResultCount:maxResultCount,
       sort:sort,
@@ -45,7 +45,7 @@ export class FinancialFundingSourceDataService {
     }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/funding-sources/funding_source`,paramsBody
+        `/financial-management/funding-sources/funding_source`,filterRequestBody
     );
   }
   addFundingSource(fundingSource: any) {
