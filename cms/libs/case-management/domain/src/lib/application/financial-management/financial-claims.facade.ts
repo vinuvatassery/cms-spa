@@ -92,6 +92,8 @@ export class FinancialClaimsFacade {
   }];
 
   public serviceCostFlag = false;
+  private showExceedMaxBenefitExceptionSubject = new Subject<any>();
+  showExceedMaxBenefitException$ = this.showExceedMaxBenefitExceptionSubject.asObservable();
 
   private financialClaimsProcessDataSubject = new Subject<any>();
   financialClaimsProcessData$ =
@@ -461,14 +463,14 @@ export class FinancialClaimsFacade {
         this.pharmaciesSubject.next(response);
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
       },
-      error: (err) => {  
+      error: (err) => {
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
         this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
         this.loggingService.logException(err);
       }
     });
   }
-    
+
 loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
     this.showLoader();
     recentClaimsPageAndSortedRequestDto.filter = JSON.stringify(recentClaimsPageAndSortedRequestDto.filter);
@@ -549,13 +551,13 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
     this.clientSearchLoaderVisibilitySubject.next(true);
     if(text){
       this.financialClaimsDataService.loadClientBySearchText(text).subscribe({
-      
+
         next: (caseBySearchTextResponse) => {
           this.clientSubject.next(caseBySearchTextResponse);
           this.clientSearchLoaderVisibilitySubject.next(false);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       });
     }
@@ -633,7 +635,7 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
   loadPrintAdviceLetterData(batchId:any,printAdviceLetterData: any) {
     return this.financialClaimsDataService.getPrintAdviceLetterData(batchId,printAdviceLetterData);
   }
-  
+
   reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any) {
     return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData);
 }
@@ -641,11 +643,16 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
 viewAdviceLetterData(batchId:any,printAdviceLetterData: any) {
   return this.financialClaimsDataService.viewPrintAdviceLetterData(batchId,printAdviceLetterData);
 }
-loadExceededMaxBenefit(serviceCost: number, clientId: number){
+loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any){
   this.showLoader();
   this.financialClaimsDataService.CheckExceededMaxBenefit(serviceCost,clientId).subscribe({
     next: (serviceCostResponse:any)=>{
-      this.serviceCostFlag =  serviceCostResponse; 
+      this.serviceCostFlag =  serviceCostResponse;
+      let response = {
+        flag: serviceCostResponse,
+        indexNumber: indexNumber
+      }
+      this.showExceedMaxBenefitExceptionSubject.next(response);
     },
     error: (err:any) => {
       debugger

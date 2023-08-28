@@ -120,8 +120,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   isExcededMaxBanifitButtonText = 'Make Exception';
   claimFlagExceptionCounter!: string;
   claimFlagExceptionText = '';
-  checkservicescastvalue:any 
-  serviceCostFlag!:boolean ;
+  checkservicescastvalue:any
+  exceedMaxBenefitFlag!:boolean ;
+  showExceedMaxBenefitException$ = this.financialClaimsFacade.showExceedMaxBenefitException$;
+
 
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
@@ -152,7 +154,13 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.activatedRoute.params.subscribe(data => {
       this.claimsType = data['type']
     });
-
+    this.showExceedMaxBenefitException$.subscribe(data => {
+      if(data)
+      {
+        this.AddExceptionForm.at(data?.indexNumber).get('exceedMaxBenefitExceptionFlag')?.setValue(data?.flag);
+        this.cd.detectChanges();
+      }
+    });
 
     if (!this.isEdit && this.claimsType == this.financialProvider) {
       this.title = 'Add Medical';
@@ -195,6 +203,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       invoiceId: [this.invoiceId, Validators.required],
       paymentRequestId: [this.paymentRequestId],
       claimService: new FormArray([]),
+      exceptionArray : new FormArray([])
     });
   }
 
@@ -222,6 +231,9 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   get AddClaimServicesForm(): FormArray {
     return this.claimForm.get('claimService') as FormArray;
+  }
+  get AddExceptionForm(): FormArray {
+    return this.claimForm.get('exceptionArray') as FormArray;
   }
 
   addClaimServiceGroup() {
@@ -252,7 +264,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         Validators.required,
       ]),
       reasonForException: new FormControl(
-        this.medicalClaimServices.reasonForException,[Validators.required,]
+        this.medicalClaimServices.reasonForException
       ),
       medicadeRate: new FormControl(this.medicalClaimServices.medicadeRate),
       paymentRequestId: new FormControl(),
@@ -260,8 +272,18 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       cptCodeId: new FormControl(this.medicalClaimServices.cptCodeId, [
         Validators.required,
       ]),
+      exceedMaxBenefitExceptionFlag: new FormControl(false),
     });
     this.AddClaimServicesForm.push(claimForm);
+    this.addExceptionForm();
+  }
+  addExceptionForm()
+  {
+    let exceptionForm = this.formBuilder.group({
+      exceedMaxBenefitExceptionFlag: new FormControl(false),
+      showMaxBenefitExceptionReason: new FormControl(false),
+    });
+    this.AddExceptionForm.push(exceptionForm);
   }
 
   onClientValueChange(event: any) {
@@ -270,6 +292,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   removeService(i: number) {
     this.AddClaimServicesForm.removeAt(i);
+    this.AddExceptionForm.removeAt(i);
   }
 
   IsServiceStartDateValid(index: any) {
@@ -298,9 +321,27 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     }
     return true;
   }
+  setExceptionValidation()
+  {
+    this.AddClaimServicesForm.controls.forEach((element, index) => {
+      if(this.AddExceptionForm.at(index).get('showMaxBenefitExceptionReason')?.value)
+      {
+        this.AddClaimServicesForm.at(index).get('reasonForException')?.setValidators(Validators.required);
+        this.AddClaimServicesForm.at(index).get('reasonForException')?.updateValueAndValidity();
+      }
+      else
+      {
+        this.AddClaimServicesForm.at(index).get('reasonForException')?.removeValidators(Validators.required);
+        this.AddClaimServicesForm.at(index).get('reasonForException')?.updateValueAndValidity();
+      }
+  });
+  this.cd.detectChanges();
+  }
 
   save() {
+    this.setExceptionValidation();
     this.isSubmitted = true;
+
     if (!this.claimForm.valid) {
       this.claimForm.markAllAsTouched()
       return;
@@ -527,25 +568,28 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     }
   }
   loadServiceCostMethod(index:number){
-    let totalServiceCost = 0;
-    for(let i = 0; i < this.AddClaimServicesForm.length; i++) {
-      const serviceCostControl = this.AddClaimServicesForm.at(i).get('serviceCost');
-      if (serviceCostControl) {
-        totalServiceCost += +serviceCostControl.value;
-      }
+    const formValues = this.claimForm.value
+    if(formValues.client.clientId)
+    {
+      let totalServiceCost = 0;
+      this.AddClaimServicesForm.controls.forEach((element, index) => {
+          totalServiceCost += + element.get('serviceCost')?.value;
+      });
+      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index);
+      this.exceedMaxBenefitFlag = this.financialClaimsFacade.serviceCostFlag;
     }
-    this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,12);
-    this.serviceCostFlag = this.financialClaimsFacade.serviceCostFlag
   }
-  onMakeExceptionClick() {
-    this.isSubmitted = false;
-    this.claimForm.reset();
-    this.isExcededMaxBeniftFlag = !this.isExcededMaxBeniftFlag;
-    if (this.isExcededMaxBeniftFlag) {
+  onMakeExceptionClick(controlName: string,index: any) {
+    this.AddExceptionForm.at(index).get(controlName)?.setValue(!this.AddExceptionForm.at(index).get(controlName)?.value);
+    if (this.AddExceptionForm.at(index).get(controlName)?.value) {
       this.isExcededMaxBanifitButtonText = "Don't Make Exception";
     } else {
       this.isExcededMaxBanifitButtonText = "Make Exception";
     }
+  }
+  checkExceptionWarning(controlName: string, index: any)
+  {
+    return this.AddExceptionForm.at(index).get(controlName)?.value
   }
 }
 
