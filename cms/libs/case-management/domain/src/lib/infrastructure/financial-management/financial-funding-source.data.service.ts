@@ -36,9 +36,16 @@ export class FinancialFundingSourceDataService {
     sortType: string,
     filter:any
   ){
-    return this.http.get<any>(
+    let paramsBody = {
+      skipcount:skipcount,
+      maxResultCount:maxResultCount,
+      sort:sort,
+      sortType:sortType,
+      filter:filter
+    }
+    return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/funding-sources?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&Filter=${filter}`
+        `/financial-management/funding-sources/funding_source`,paramsBody
     );
   }
   addFundingSource(fundingSource: any) {
