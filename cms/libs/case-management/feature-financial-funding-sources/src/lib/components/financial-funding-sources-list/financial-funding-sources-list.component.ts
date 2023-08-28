@@ -14,12 +14,10 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   GridDataResult,
-  FilterService,
-  ColumnVisibilityChangeEvent,
-  ColumnComponent,
+  FilterService
 } from '@progress/kendo-angular-grid';
 
-import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor} from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
 @Component({
   selector: 'cms-financial-funding-sources-list',
@@ -150,7 +148,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
     this.loadFinancialFundingSourcesListEvent.emit(gridDataRefinerValue);
   }
 
-  onChange(data: any) {
+  onChange(event: any) {
     this.defaultGridState();
     this.columnName = this.state.columnName = this.columnDroplist[this.selectedColumn];
     this.sortColumn = this.columns[this.selectedColumn];
