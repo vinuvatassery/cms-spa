@@ -39,7 +39,7 @@ export class FinancialClaimsBatchesLogListsComponent
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
   isRequestPaymentClicked = false;
-  isPrintAuthorizationClicked = false;
+  isPrintAdviceLetterClicked = false;
   isUnBatchClaimsClosed = false;
   isDeleteClaimClosed = false;
   isBulkUnBatchOpened = false;
@@ -47,14 +47,18 @@ export class FinancialClaimsBatchesLogListsComponent
   printAuthorizationDialog: any;
   UnBatchDialog: any;
   deleteClaimsDialog: any;
-  bulkMore = [
+  onlyPrintAdviceLetter: boolean = true;
+  currentPrintAdviceLetterGridFilter:any;
+  printAdviceLetterResult :any;
+
+  public bulkMore = [
     {
       buttonType: 'btn-h-primary',
       text: 'Request Payments',
       icon: 'local_atm',
       click: (data: any): void => {
         this.isRequestPaymentClicked = true;
-        this.isPrintAuthorizationClicked = false;
+        this.isPrintAdviceLetterClicked = false;
       },
     },
     {
@@ -67,11 +71,11 @@ export class FinancialClaimsBatchesLogListsComponent
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Print Authorizations',
+      text: 'Print Advice Letters',
       icon: 'print',
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;
-        this.isPrintAuthorizationClicked = true;
+        this.isPrintAdviceLetterClicked = true;
       },
     },
     {
@@ -111,7 +115,9 @@ export class FinancialClaimsBatchesLogListsComponent
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isDeleteClaimClosed) {
+          this.isUnBatchClaimsClosed = false;
           this.isDeleteClaimClosed = true;
+          this.onSingleClaimDelete(data.paymentRequestId.split(','));
           this.onDeleteClaimsOpenClicked(
             this.deleteClaimsConfirmationDialogTemplate
           );
@@ -180,6 +186,9 @@ export class FinancialClaimsBatchesLogListsComponent
   paymentTypeFilter = '';
   paymentStatusFilter = '';
   selected: any;
+  selectedDataRows: any;
+  selectedCount: number = 0;
+  disablePrwButton:boolean= true;
   /** Constructor **/
   constructor(
     private route: Router,
@@ -227,6 +236,7 @@ export class FinancialClaimsBatchesLogListsComponent
       filter: this.filter,
     };
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
+    this.currentPrintAdviceLetterGridFilter = this.filter;
   }
 
   onChange(data: any) {
@@ -329,15 +339,20 @@ export class FinancialClaimsBatchesLogListsComponent
     }
   }
 
-  onBulkOptionCancelClicked() {
+  loadPrintAdviceLetterEvent(event:any){
+    this.currentPrintAdviceLetterGridFilter = event.filter;
+    this.loadBatchLogListEvent.emit(event);
+  }
+  onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
-    this.isPrintAuthorizationClicked = false;
+    this.isPrintAdviceLetterClicked = false;
   }
 
   onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+    this.selectedDataRows.currentPrintAdviceLetterGridFilter = JSON.stringify(this.currentPrintAdviceLetterGridFilter);
     this.printAuthorizationDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-xlg',
     });
   }
 
@@ -408,7 +423,75 @@ export class FinancialClaimsBatchesLogListsComponent
   }
   onModalDeleteClaimsModalClose(result: any) {
     if (result) {
+      this.isDeleteClaimClosed=false;
       this.deleteClaimsDialog.close();
     }
+  }
+  onSingleClaimDelete(selection: any) {
+    this.selected=selection;
+  }
+
+  onModalBatchDeletingClaimsButtonClicked(action: any) {
+    if (action) {
+      this.handleDeleteClaims();
+      this.financialClaimsFacade.deleteClaims(
+        this.selected,
+        this.claimsType
+      );
+    }
+  }
+
+  handleDeleteClaims() {
+    this.financialClaimsFacade.deleteClaims$
+      .pipe(first((deleteResponse: any) => deleteResponse != null))
+      .subscribe((deleteResponse: any) => {
+        debugger
+        if (deleteResponse!=null) {
+          this.isDeleteClaimClosed=false;
+          this.deleteClaimsDialog.close()
+          this.loadBatchLogListGrid();
+        }
+      });
+  }
+  disablePreviewButton(result: any) {
+    this.selectedDataRows = result;
+    this.selectedDataRows.batchId = this.batchId
+    if(result.selectAll){
+      this.disablePrwButton = false;
+    }
+    else if(result.PrintAdviceLetterSelected.length>0)
+    {
+      this.disablePrwButton = false;
+    }
+    else
+    {
+      this.disablePrwButton = true;
+    }
+  }
+  selectUnSelectPayment(dataItem: any) {
+    if (!dataItem.selected) {
+      let exist = this.selectedDataRows.PrintAdviceLetterUnSelected.filter((x: any) => x.vendorAddressId === dataItem.vendorAddressId).length;
+      if (exist === 0) {
+        this.selectedDataRows.PrintAdviceLetterUnSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
+      }
+        this.selectedDataRows?.PrintAdviceLetterSelected?.forEach((element: any) => {
+          if (element.paymentRequestId === dataItem.paymentRequestId) {
+            element.selected = false;
+          }
+        });
+    }
+    else {
+      this.selectedDataRows.PrintAdviceLetterUnSelected.forEach((element: any) => {
+        if (element.paymentRequestId === dataItem.paymentRequestId) {
+          element.selected = false;
+        }
+      });
+        let exist = this.selectedDataRows.PrintAdviceLetterSelected.filter((x: any) => x.vendorAddressId === dataItem.vendorAddressId).length;
+        if (exist === 0) {
+          this.selectedDataRows.PrintAdviceLetterSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
+        }
+     
+    }
+
   }
 }

@@ -68,7 +68,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     switch (this.tabCode) {
       case FinancialVendorProviderTabCode.Manufacturers:
         this.vendorTypeCode = FinancialVendorTypeCode.Manufacturers
-        this.profileInfoTitle = 'Manufacture Info';
+        this.profileInfoTitle = 'Manufacturer Info';
         break;
       case FinancialVendorProviderTabCode.InsuranceVendors:
         this.vendorTypeCode = FinancialVendorTypeCode.InsuranceVendors
