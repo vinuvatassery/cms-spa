@@ -1,7 +1,7 @@
 
 
 <kendo-dialog-titlebar (close)="closeEditPcaReassignmentClicked()">  {{isViewGridOptionClicked? 'View' :'Edit' }} PCA Code </kendo-dialog-titlebar>
-<ng-container *ngIf="res">
+<ng-container *ngIf="pcaReassignmentByFundSource">
 <div [formGroup]="pcaReassignmentForm">
 <section class="k-dialog-body">
       <p class="text-muted">
