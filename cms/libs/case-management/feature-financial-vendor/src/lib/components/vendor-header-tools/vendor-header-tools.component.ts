@@ -251,9 +251,19 @@ export class VendorHeaderToolsComponent {
           this.communicationLetterTypeCode = CommunicationEventTypeCode.InsuranceVendorLetter;
           break;
         case FinancialVendorProviderTabCode.MedicalProvider:
-          this.emailSubject = CommunicationEventTypeCode.MedicalProviderSubject
+          this.emailSubject = CommunicationEventTypeCode.MedicalProviderSubject;
           this.communicationEmailTypeCode = CommunicationEventTypeCode.MedicalProviderEmail;
           this.communicationLetterTypeCode = CommunicationEventTypeCode.MedicalProviderLetter;
+          break;
+        case FinancialVendorProviderTabCode.DentalProvider:
+          this.emailSubject = CommunicationEventTypeCode.DentalProviderSubject;
+          this.communicationEmailTypeCode = CommunicationEventTypeCode.DentalProviderEmail;
+          this.communicationLetterTypeCode = CommunicationEventTypeCode.DentalProviderLetter;
+          break;
+        case FinancialVendorProviderTabCode.Pharmacy:
+          this.emailSubject = CommunicationEventTypeCode.PharmacySubject;
+          this.communicationEmailTypeCode = CommunicationEventTypeCode.PharmacyEmail;
+          this.communicationLetterTypeCode = CommunicationEventTypeCode.PharmacyLetter;
           break;
       }
     }

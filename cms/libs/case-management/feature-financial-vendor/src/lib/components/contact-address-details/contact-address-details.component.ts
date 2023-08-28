@@ -75,7 +75,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
     this.AddContactForm.value.forEach((element:any, i: number) => {
       this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
-    }); 
+    });
     if (this.contactForm.valid) {
       this.loaderService.show();
       this.vendocontactsFacade.saveContactAddress(this.contactForm.value).subscribe({
@@ -87,6 +87,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
             );
             this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);
+            this.vendocontactsFacade.loadVendorAllcontacts(this.vendorId);
           }
         },
         error: (error: any) => {
@@ -100,11 +101,11 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     }
   }
 
-  public update() {    
+  public update() {
     this.isSubmitted = true;
-    this.AddContactForm.value.forEach((element:any, i: number) => {  
+    this.AddContactForm.value.forEach((element:any, i: number) => {
       this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
-    }); 
+    });
     if (this.contactForm.controls['vendorContacts'].valid) {
       this.loaderService.show();
       this.vendocontactsFacade.updateContactAddress(this.contactForm.value.vendorContacts[0]).subscribe({
@@ -182,7 +183,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     if (isChecked) {
       this.AddContactForm.value.forEach((element:any, i: number) => {
         this.AddContactForm.at(i).patchValue({preferredFlag: false})
-      });    
+      });
       this.AddContactForm.at(index).patchValue({preferredFlag: true})
       this.isVisible = true;
     } else {
