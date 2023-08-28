@@ -233,7 +233,9 @@
                                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
                                                 <kendo-numerictextbox aria-label="CTP Code"
                                                     [fillMode]="formUiStyle.inputFillMode" format="#.000"
-                                                    formControlName="serviceCost">
+                                                    formControlName="serviceCost"
+                                                    (blur)="loadServiceCostMethod(i)">
+                                                    
                                                 </kendo-numerictextbox>
                                             </kendo-floatinglabel>
                                             <kendo-formerror *ngIf="(isControlValid('serviceCost',i) && isSubmitted)"
@@ -254,15 +256,16 @@
                                                     aria-hidden="false">info</span>Amount Due is required
                                             </kendo-formerror>
                                         </div>
-                                        <div class="ml-2">
-                                            <kendo-formerror *ngIf="false" class="align-items-center">
-                                                <span class="material-icons mr-1" aria-hidden="false">info</span> Client
-                                                exceeded maximum
-                                                benefits. <a kendoButton class="ml-1 card-link-button">Make
-                                                    Exception</a></kendo-formerror>
+                                        <div class="ml-2" *ngIf="serviceCostFlag" >
+                                            <kendo-formerror class="align-items-center"> <span
+                                                    class="material-icons mr-1" aria-hidden="false">info</span> Client
+                                                exceeded maximum benefits. <a kendoButton class="ml-1 card-link-button"
+                                                    (click)="onMakeExceptionClick()">{{isExcededMaxBanifitButtonText}}
+                                                </a>
+                                            </kendo-formerror>
                                         </div>
                                     </div>
-                                    <div class="flex-row">
+                                    <div class="flex-row" *ngIf="isExcededMaxBeniftFlag">
                                         <div class="flex-col">
                                             <kendo-floatinglabel text="Reason For Exception">
                                                 <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"

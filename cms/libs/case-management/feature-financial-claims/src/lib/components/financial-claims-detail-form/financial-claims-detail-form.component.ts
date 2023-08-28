@@ -116,6 +116,13 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   isSpotsPayment!: boolean;
   textMaxLength: number = 300;
 
+  isExcededMaxBeniftFlag = false;
+  isExcededMaxBanifitButtonText = 'Make Exception';
+  claimFlagExceptionCounter!: string;
+  claimFlagExceptionText = '';
+  checkservicescastvalue:any 
+  serviceCostFlag!:boolean ;
+
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
@@ -245,7 +252,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         Validators.required,
       ]),
       reasonForException: new FormControl(
-        this.medicalClaimServices.reasonForException
+        this.medicalClaimServices.reasonForException,[Validators.required,]
       ),
       medicadeRate: new FormControl(this.medicalClaimServices.medicadeRate),
       paymentRequestId: new FormControl(),
@@ -517,6 +524,27 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.clientName = $event.clientFullName;
     if (this.clientId != null && this.vendorId != null) {
       this.isRecentClaimShow = true;
+    }
+  }
+  loadServiceCostMethod(index:number){
+    this.serviceCostFlag = this.financialClaimsFacade.serviceCostFlag
+    let totalServiceCost = 0;
+    for(let i = 0; i < this.AddClaimServicesForm.length; i++) {
+      const serviceCostControl = this.AddClaimServicesForm.at(i).get('serviceCost');
+      if (serviceCostControl) {
+        totalServiceCost += +serviceCostControl.value;
+      }
+    }
+    this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,12);
+  }
+  onMakeExceptionClick() {
+    this.isSubmitted = false;
+    this.claimForm.reset();
+    this.isExcededMaxBeniftFlag = !this.isExcededMaxBeniftFlag;
+    if (this.isExcededMaxBeniftFlag) {
+      this.isExcededMaxBanifitButtonText = "Don't Make Exception";
+    } else {
+      this.isExcededMaxBanifitButtonText = "Make Exception";
     }
   }
 }

@@ -91,6 +91,8 @@ export class FinancialClaimsFacade {
     field: this.sortValueRecentClaimList,
   }];
 
+  public serviceCostFlag = false;
+
   private financialClaimsProcessDataSubject = new Subject<any>();
   financialClaimsProcessData$ =
     this.financialClaimsProcessDataSubject.asObservable();
@@ -639,4 +641,18 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
 viewAdviceLetterData(batchId:any,printAdviceLetterData: any) {
   return this.financialClaimsDataService.viewPrintAdviceLetterData(batchId,printAdviceLetterData);
 }
+loadExceededMaxBenefit(serviceCost: number, clientId: number){
+  this.showLoader();
+  this.financialClaimsDataService.CheckExceededMaxBenefit(serviceCost,clientId).subscribe({
+    next: (serviceCostResponse:any)=>{
+      this.serviceCostFlag =  serviceCostResponse; 
+    },
+    error: (err:any) => {
+      debugger
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+    },
+  })
+  this.hideLoader();
+}
+
 }

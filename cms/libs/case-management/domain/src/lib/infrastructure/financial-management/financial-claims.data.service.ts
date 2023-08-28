@@ -502,4 +502,8 @@ export class FinancialClaimsDataService {
       { responseType: 'blob' }
     );
   }
+  CheckExceededMaxBenefit(serviceCost: number, clientId: number ) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/exceeded-limit?servicesCost=${serviceCost}&clientId=${clientId}`
+    );
+  }
 }
