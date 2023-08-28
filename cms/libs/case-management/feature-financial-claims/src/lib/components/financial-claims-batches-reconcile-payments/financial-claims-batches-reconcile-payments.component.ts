@@ -21,6 +21,8 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Component({
   selector: 'cms-financial-claims-batches-reconcile-payments',
@@ -88,6 +90,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   paymentSentDateRequired= false; 
   noteRequired= false; 
   pageValidationMessage:any=null;
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   public reconcileAssignValueBatchForm: FormGroup = new FormGroup({
     datePaymentReconciled: new FormControl('', []),
     datePaymentSend: new FormControl('', []),
@@ -96,7 +99,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
 
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
-    private readonly cd: ChangeDetectorRef) {
+    private readonly cd: ChangeDetectorRef, public intl: IntlService, private configurationProvider: ConfigurationProvider) {
     
     }
   
@@ -347,7 +350,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     else {
       this.reconcilePaymentGridUpdatedResult.forEach((item: any) => {
         if (item.checkNbr !== null && item.checkNbr !== '' && item.checkNbr !== null) {
-          item.paymentReconciledDate = this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value;
+          item.paymentReconciledDate = this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value;        
           item.datePaymentRecInValid = false;
           item.datePaymentRecInValidMsg = null;
         }
@@ -595,12 +598,20 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     else {
       this.pageValidationMessage = "validation errors are cleared";
       this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '');
+      this.selectedReconcileDataRows.forEach((data:any) =>{
+        data. paymentReconciledDate =  this.intl.formatDate(data.paymentReconciledDate, this.dateFormat);
+        data. paymentSentDate =  this.intl.formatDate(data.paymentSentDate, this.dateFormat);
+      })
+      
     }
-    if (isValid.length <= 0) {
+    if (isValid.length <= 0 && this.selectedReconcileDataRows.length>0) {
       this.printAuthorizationDialog = this.dialogService.open({
         content: template,
         cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
       });
+    }
+    else{
+      this.pageValidationMessage = "No data for reconcile and print";
     }
   }
  
