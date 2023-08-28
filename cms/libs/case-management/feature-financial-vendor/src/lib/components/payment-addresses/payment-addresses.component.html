@@ -137,10 +137,7 @@
 
 <kendo-dialog *ngIf="isContactDetailShow" (close)="clickCloseAddEditPaymentAddressDetails()"
 class="app-c-modal app-c-modal-md app-c-modal-np">
-<kendo-dialog-titlebar (close)="clickCloseAddContactDetails()"> Add Contact(
-  <span style="font-size: small;  font-weight: bold;" >s</span>)
-
-</kendo-dialog-titlebar>
+<kendo-dialog-titlebar class="text-normal" (close)="clickCloseAddContactDetails()"> Add Contact(s) </kendo-dialog-titlebar>
 <cms-contact-address-details [vendorId]="vendorId" (isContactDetailPopupClose)="onClose($event)"></cms-contact-address-details>
 </kendo-dialog>
 <kendo-dialog *ngIf="isPaymentAddressDetailShow" (close)="clickCloseAddEditPaymentAddressDetails()"

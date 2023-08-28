@@ -64,11 +64,11 @@ export class FinancialPcasPageComponent {
   }
 
   loadFinancialPcaReassignmentListGrid(event: any) {
-    this.financialPcaFacade.loadFinancialPcaReassignmentListGrid();
+    this.financialPcaFacade.loadFinancialPcaReassignmentListGrid(event);
   }
 
-  loadFinancialPcaReportListGrid(event: any) {
-    this.financialPcaFacade.loadFinancialPcaReportListGrid();
+  loadFinancialPcaReportListGrid(data: any) {
+    this.financialPcaFacade.loadFinancialPcaReportListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.filter);
   }
 
   loadAddOrEditPcaEvent(pcaId: any) {

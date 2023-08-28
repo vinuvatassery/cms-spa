@@ -6,7 +6,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
   TemplateRef,
   ViewChild,
@@ -17,7 +16,6 @@ import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
 @Component({
@@ -25,7 +23,7 @@ import { Observable, Subject } from 'rxjs';
   templateUrl: './financial-funding-sources-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
+export class FinancialFundingSourcesListComponent implements OnChanges {
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addEditFundingSourceDialogTemplate', { read: TemplateRef })
@@ -43,7 +41,10 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialFundingSourceGridLists$: any;
+  @Input() fundingSourceList$!: Observable<any>;
   @Output() loadFinancialFundingSourcesListEvent = new EventEmitter<any>();
+  @Output() removeFundingSourceClick = new EventEmitter<string>();
+  isRemoveFundingSourceClicked$ = new Subject();
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -56,8 +57,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   gridDataResult!: GridDataResult;
 
   gridFinancialFundingSourcesDataSubject = new Subject<any>();
-  gridFinancialFundingSourceData$ =
-    this.gridFinancialFundingSourcesDataSubject.asObservable();
+
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -66,7 +66,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
   isEditFundingSource = false;
   addEditFundingDialog: any;
   removeFundingDialog: any;;
-
+  selectFundingSourceId!: string;;
   public processGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -98,10 +98,6 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService
   ) { }
-
-  ngOnInit(): void {
-    this.loadFinancialFundingSourceFacadeListGrid();
-  }
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -126,7 +122,6 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isFinancialFundingSourceFacadeGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
@@ -134,7 +129,6 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
       sortType: sortTypeValue,
     };
     this.loadFinancialFundingSourcesListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
   }
 
   onChange(data: any) {
@@ -193,20 +187,7 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
     this.filterData = filter;
   }
 
-  gridDataHandle() {
-    this.financialFundingSourceGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridFinancialFundingSourcesDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) {
-        this.isFinancialFundingSourceFacadeGridLoaderShow = false;
-      }
-    });
-    this.isFinancialFundingSourceFacadeGridLoaderShow = false;
-  }
+ 
 
   public rowClass = (args: any) => ({
     "table-row-disabled": (args.dataItem.isActive),
@@ -249,7 +230,6 @@ export class FinancialFundingSourcesListComponent implements OnInit, OnChanges {
       this.removeFundingDialog.close();
     }
   }
-
 }
 
 

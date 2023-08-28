@@ -57,7 +57,7 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
     reconciledPayments:"# of Pmts Reconciled",    totalAmountDue:"Total Amount Due",
     totalAmountReconciled:"Total Amount Reconciled"      
   }
-  
+
 
   dropDowncolumns : any = [
     {
@@ -256,4 +256,3 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
 }
 
 
- 
