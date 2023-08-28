@@ -527,7 +527,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     }
   }
   loadServiceCostMethod(index:number){
-    this.serviceCostFlag = this.financialClaimsFacade.serviceCostFlag
     let totalServiceCost = 0;
     for(let i = 0; i < this.AddClaimServicesForm.length; i++) {
       const serviceCostControl = this.AddClaimServicesForm.at(i).get('serviceCost');
@@ -536,6 +535,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       }
     }
     this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,12);
+    this.serviceCostFlag = this.financialClaimsFacade.serviceCostFlag
   }
   onMakeExceptionClick() {
     this.isSubmitted = false;
