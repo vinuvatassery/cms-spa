@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Internal libraries **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FinancialFundingSourceDataService } from '../../infrastructure/financial-management/financial-funding-source.data.service';
@@ -13,11 +14,12 @@ import { FinancialFundingSourceDataService } from '../../infrastructure/financia
 export class FinancialFundingSourceFacade {
 
 
+
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueFinancialFundingSourceFacade = 'invoiceID';
+  public sortValueFinancialFundingSourceFacade = 'fundingSourceCode';
   public sortProcessList: SortDescriptor[] = [{
     field: this.sortValueFinancialFundingSourceFacade,
   }];
@@ -26,6 +28,8 @@ export class FinancialFundingSourceFacade {
   private financialFundingSourceFacadeDataSubject = new Subject<any>();
   private addFundingSourceSubject = new Subject<any>();
   private updateFundingSourceSubject = new Subject<any>();
+  private fundingSourceListSubject = new BehaviorSubject<any>([]);
+  fundingSourceList$ = this.fundingSourceListSubject.asObservable();
 
   financialFundingSourceFacadeData$ = this.financialFundingSourceFacadeDataSubject.asObservable();
 
@@ -34,7 +38,7 @@ export class FinancialFundingSourceFacade {
 
   private fundingSourceLookupSubject = new Subject<any>();
   fundingSourceLookup$ = this.fundingSourceLookupSubject.asObservable();
- 
+
   /** Public properties **/
 
   // handling the snackbar & loader
@@ -117,6 +121,33 @@ export class FinancialFundingSourceFacade {
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
       },
-    });  
+    });
+  }
+  loadFundingSourceList(
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string){
+      this.showLoader();
+    this.financialFundingSourceDataService.loadFundingSourceList(
+        skipcount,
+        maxResultCount,
+        sort,
+        sortType,
+    ).subscribe({
+      next: (dataResponse) => {
+        if (dataResponse) {
+          this.hideLoader();
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+        this.fundingSourceListSubject.next(gridView);
+      }},
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
   }
 }

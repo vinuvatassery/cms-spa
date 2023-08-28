@@ -96,7 +96,7 @@ fillFormData(){
       description: new FormControl(),
       phoneNumber: new FormControl(),
       fax: new FormControl(),
-      email: new FormControl(),
+      email: new FormControl('',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)),
       isPreferedContact : new FormControl()
     });
     this.AddContactForm.push(addContactForm);

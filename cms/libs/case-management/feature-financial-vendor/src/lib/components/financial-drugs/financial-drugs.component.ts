@@ -73,7 +73,6 @@ export class FinancialDrugsComponent {
   }
 
   ngOnChanges(): void {
-    debugger;
     this.state = {
       skip: this.gridSkipCount,
       take: this.state?.take ?? this.pageSizes[0]?.value,
@@ -83,14 +82,12 @@ export class FinancialDrugsComponent {
   }
 
   pageSelectionchange(data: any) {
-    debugger;
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadDrugsListGrid();
   }
 
   public dataStateChange(stateData: any): void {
-    debugger;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';

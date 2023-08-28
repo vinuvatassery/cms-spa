@@ -31,7 +31,7 @@
                         <div class="flex-col flex-col-4 field-with-btn">
                               <kendo-floatinglabel text="Date Payment Sent">
                                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                                          formatPlaceholder="formatPattern" aria-label="Date Payment Sent"formControlName="datePaymentSend"
+                                          formatPlaceholder="formatPattern" aria-label="Date Payment Sent" formControlName="datePaymentSend"
                                           [max]="currentDate"   (valueChange)="reconcileDateOnChange('datePaymentSend')"
                                           placeholder="">
                                     </kendo-datepicker>
@@ -50,7 +50,6 @@
                                     </kendo-textbox>
                                     <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['note'].valid">note is required..</kendo-formerror>                     
                               </kendo-floatinglabel>
-                         
                               <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Batch" (click)="noteBatch()"> Batch
                               </button>
 
@@ -214,8 +213,8 @@
                                     <kendo-textbox  aria-label="Warrant Number"
                                     placeholder="Warrant Number"  [maxlength]="12"
                                     [fillMode]="formUiStyle.inputFillMode"
-                                    [(ngModel)]="dataItem.checkNbr" (valueChange)="warrantNumberChange(dataItem)"   
-                                    [ngClass]="ngDirtyInValid(dataItem,'checkNbr',rowIndex)"  id ="checkNbr{{rowIndex}}" >
+                                    [ngClass]="ngDirtyInValid(dataItem,'checkNbr',rowIndex)"  id ="checkNbr{{rowIndex}}"
+                                    [(ngModel)]="dataItem.checkNbr" (valueChange)="warrantNumberChange(dataItem)"    >
                                   </kendo-textbox>
                                   <kendo-formerror *ngIf="dataItem.warrantNumberInValid">{{dataItem.warrantNumberInValidMsg}}</kendo-formerror>
                               </ng-template>
@@ -337,9 +336,15 @@
 
 
 <ng-template #PrintAuthorizationDialog>
-      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Authorization(s)</kendo-dialog-titlebar>
-      <cms-financial-claims-print-authorization></cms-financial-claims-print-authorization>
-</ng-template>
+      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Advice Letter(s)</kendo-dialog-titlebar>
+      <cms-financial-claims-print-authorization
+  [printOption]="onlyPrintAdviceLetter"
+  [isSaveClicked]="isSaveClicked"
+  [items]="selectedReconcileDataRows"
+  [batchId]="batchId"
+  (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+  ></cms-financial-claims-print-authorization>
+    </ng-template>
 
 
   
