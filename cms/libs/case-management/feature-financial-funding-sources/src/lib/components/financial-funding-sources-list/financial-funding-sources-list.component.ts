@@ -26,7 +26,7 @@ import { Observable, Subject } from 'rxjs';
   templateUrl: './financial-funding-sources-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialFundingSourcesListComponent implements OnChanges {
+export class FinancialFundingSourcesListComponent implements OnChanges,OnInit {
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addEditFundingSourceDialogTemplate', { read: TemplateRef })
@@ -102,6 +102,9 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
     private dialogService: DialogService,
     private financialFundingSourceFacade : FinancialFundingSourceFacade
   ) { }
+  ngOnInit(): void {
+    this.loadFinancialFundingSourceFacadeListGrid();
+  }
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -230,6 +233,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
 
   addFundingSource(event: any) {
     this.onAddFundingSourceEvent.emit(event)
+    this.loadFinancialFundingSourceFacadeListGrid();
   }
 
   updateFundingSource(event: any) {
@@ -254,12 +258,12 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
  }
 removeFundingSourceEvent(fundingSoruceId: any) {
   this.removeFundingSourceClick.emit(fundingSoruceId);
+  this.removeFundingOpened = false;
 }
 removeFundingSource(dataItem: any) {
   if (dataItem?.isDelete === true) {
     this.removeFundingSourceEvent(this.selectFundingSourceId);
     this.removeFundingDialog.close();
-
   }
   else{
     this.removeFundingDialog.close();
