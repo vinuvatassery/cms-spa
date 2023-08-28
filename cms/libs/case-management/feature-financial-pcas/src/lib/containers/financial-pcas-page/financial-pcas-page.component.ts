@@ -64,7 +64,7 @@ export class FinancialPcasPageComponent {
   }
 
   loadFinancialPcaReassignmentListGrid(event: any) {
-    this.financialPcaFacade.loadFinancialPcaReassignmentListGrid();
+    this.financialPcaFacade.loadFinancialPcaReassignmentListGrid(event);
   }
 
   loadFinancialPcaReportListGrid(data: any) {
