@@ -33,8 +33,7 @@ export class FinancialPcasReassignmentFormComponent implements  OnInit {
       unlimited:['']
     })
     this.isViewGridOptionClicked = true;
-    console.log(this.editPcaReassignmentItem)
-    this.getPcaReassignmentByFundSourceIdEvent.emit('72B63ADD-4B44-4568-B22A-44096C1D5CF2')
+    this.getPcaReassignmentByFundSourceIdEvent.emit(this.editPcaReassignmentItem.PcaAssignmentId)
     this.pcaReassignmentByFundSourceId$.subscribe((res:any) =>{
      this.pcaReassignmentByFundSource = res;
      this.pcaReassignmentForm.patchValue({

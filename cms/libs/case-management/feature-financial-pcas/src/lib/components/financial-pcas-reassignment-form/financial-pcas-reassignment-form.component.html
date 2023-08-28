@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar (close)="closeEditPcaReassignmentClicked()"> Edit PCA Code </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeEditPcaReassignmentClicked()">  {{isViewGridOptionClicked? 'View' :'Edit' }} PCA Code </kendo-dialog-titlebar>
 
 <div [formGroup]="pcaReassignmentForm">
 <section class="k-dialog-body">
