@@ -91,6 +91,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   noteRequired= false; 
   pageValidationMessage:any=null;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  providerTitle:any = 'Medical Provider';
   public reconcileAssignValueBatchForm: FormGroup = new FormGroup({
     datePaymentReconciled: new FormControl('', []),
     datePaymentSend: new FormControl('', []),
@@ -104,6 +105,9 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     }
   
   ngOnInit(): void {
+    if(this.claimsType === 'dental'){
+      this.providerTitle = 'Dental Provider';
+    }
     this.isBreakoutPanelShow=false; 
     this.loadReconcileListGrid();
     const ReconcilePaymentResponseDto =
