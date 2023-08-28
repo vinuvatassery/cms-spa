@@ -45,7 +45,7 @@ export class FinancialFundingSourceDataService {
     }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/funding-sources/funding-sources`,filterRequestBody
+        `/financial-management/funding-sources/funding-source-list`,filterRequestBody
     );
   }
   addFundingSource(fundingSource: any) {
