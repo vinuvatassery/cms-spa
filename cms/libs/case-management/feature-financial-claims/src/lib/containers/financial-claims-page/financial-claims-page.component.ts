@@ -53,7 +53,7 @@ export class FinancialClaimsPageComponent implements OnInit {
     private loggingService: LoggingService,
   ) {}
 
-  ngOnInit(): void {  
+  ngOnInit(): void {
     this.activatedRoute.params.subscribe(data => this.claimsType = data['type'])
     this.addNavigationSubscription();
   }
@@ -74,7 +74,7 @@ export class FinancialClaimsPageComponent implements OnInit {
       });
   }
 
-  loadFinancialClaimsProcessListGrid(data: any) {   
+  loadFinancialClaimsProcessListGrid(data: any) {
     this.financialClaimsFacade.loadFinancialClaimsProcessListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType,data?.filter,this.claimsType);
   }
 
@@ -84,11 +84,11 @@ export class FinancialClaimsPageComponent implements OnInit {
   }
 
   loadFinancialClaimsBatchListGrid(data: any) {
-    
+
     this.financialClaimsFacade.loadFinancialClaimsBatchListGrid( data?.skipCount,   data?.pagesize, data?.sortColumn, data?.sortType,data?.filter,this.claimsType);
   }
 
-  loadFinancialClaimsAllPaymentsListGrid(event: any) {
-    this.financialClaimsFacade.loadFinancialClaimsAllPaymentsListGrid();
+  loadFinancialClaimsAllPaymentsListGrid(data: any) {
+    this.financialClaimsFacade.loadFinancialClaimsAllPaymentsListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.filter, this.claimsType);
   }
 }

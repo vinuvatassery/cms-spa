@@ -47,7 +47,7 @@ export class FinancialClaimsFacade {
     field: this.sortValueFinancialClaimsBatch,
   }];
 
-  public sortValueFinancialClaimsPayments = 'batch';
+  public sortValueFinancialClaimsPayments = 'batchNumber';
   public sortPaymentsList: SortDescriptor[] = [
     {
       field: this.sortValueFinancialClaimsPayments,
@@ -281,10 +281,15 @@ export class FinancialClaimsFacade {
   }
 
 
-  loadFinancialClaimsAllPaymentsListGrid(){
-    this.financialClaimsDataService.loadFinancialClaimsAllPaymentsListService().subscribe({
+  loadFinancialClaimsAllPaymentsListGrid(skipCount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string, claimsType : string){
+    filter = JSON.stringify(filter);
+    this.financialClaimsDataService.loadFinancialClaimsAllPaymentsListService(skipCount, maxResultCount, sort, sortType, filter, claimsType).subscribe({
       next: (dataResponse) => {
-        this.financialClaimsAllPaymentsDataSubject.next(dataResponse);
+        const gridView = {
+          data: dataResponse["items"],
+          total: dataResponse["totalCount"]
+        };
+        this.financialClaimsAllPaymentsDataSubject.next(gridView);
         this.hideLoader();
       },
       error: (err) => {
@@ -459,14 +464,14 @@ export class FinancialClaimsFacade {
         this.pharmaciesSubject.next(response);
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
       },
-      error: (err) => {  
+      error: (err) => {
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
         this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
         this.loggingService.logException(err);
       }
     });
   }
-    
+
 loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
     this.showLoader();
     recentClaimsPageAndSortedRequestDto.filter = JSON.stringify(recentClaimsPageAndSortedRequestDto.filter);
@@ -547,13 +552,13 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
     this.clientSearchLoaderVisibilitySubject.next(true);
     if(text){
       this.financialClaimsDataService.loadClientBySearchText(text).subscribe({
-      
+
         next: (caseBySearchTextResponse) => {
           this.clientSubject.next(caseBySearchTextResponse);
           this.clientSearchLoaderVisibilitySubject.next(false);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)    
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       });
     }
@@ -631,7 +636,7 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
   loadPrintAdviceLetterData(batchId:any,printAdviceLetterData: any) {
     return this.financialClaimsDataService.getPrintAdviceLetterData(batchId,printAdviceLetterData);
   }
-  
+
   reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any) {
     return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData);
 }

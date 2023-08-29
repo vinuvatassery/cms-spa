@@ -445,7 +445,6 @@ export class FinancialClaimsBatchesLogListsComponent
     this.financialClaimsFacade.deleteClaims$
       .pipe(first((deleteResponse: any) => deleteResponse != null))
       .subscribe((deleteResponse: any) => {
-        debugger
         if (deleteResponse!=null) {
           this.isDeleteClaimClosed=false;
           this.deleteClaimsDialog.close()
@@ -490,7 +489,7 @@ export class FinancialClaimsBatchesLogListsComponent
         if (exist === 0) {
           this.selectedDataRows.PrintAdviceLetterSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
         }
-     
+
     }
 
   }
