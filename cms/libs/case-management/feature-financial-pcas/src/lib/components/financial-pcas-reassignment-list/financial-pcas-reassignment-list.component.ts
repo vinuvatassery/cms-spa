@@ -74,6 +74,7 @@ export class FinancialPcasReassignmentListComponent
       click: (data: any): void => {
         if (!this.isViewGridOptionClicked) {
           this.isViewGridOptionClicked = true; 
+          this.isEditGridOptionClicked=false;
           this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate,data);
         }
       },
@@ -84,7 +85,8 @@ export class FinancialPcasReassignmentListComponent
       icon: 'edit',
       click: (data: any): void => {
         if (!this.isEditGridOptionClicked) {
-          this.isEditGridOptionClicked = true; 
+          this.isViewGridOptionClicked = false; 
+          this.isEditGridOptionClicked=true;
           this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate,data);
         }
       },

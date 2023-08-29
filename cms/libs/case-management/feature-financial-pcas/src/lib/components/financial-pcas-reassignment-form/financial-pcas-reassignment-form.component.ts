@@ -32,7 +32,6 @@ export class FinancialPcasReassignmentFormComponent implements  OnInit {
       pcaAllocated:[''],
       unlimited:['']
     })
-    this.isViewGridOptionClicked = true;
     this.getPcaReassignmentByFundSourceIdEvent.emit(this.editPcaReassignmentItem.pcaAssignmentId)
     this.pcaReassignmentByFundSourceId$.subscribe((res:any) =>{
      this.pcaReassignmentByFundSource = res;
