@@ -29,7 +29,7 @@ constructor(private formBuilder:FormBuilder){
       ay: [{value: '', disabled: true}],
       openDate: ['', Validators.required],
       closeDate: ['', Validators.required],
-      totalAmount :[{value: '', disabled: true}],
+      totalAmount :[''],
       amountSpent :[{value: '', disabled: true}],
       balanceAmount :[{value: '', disabled: true}],
       pcaRemainingAmount:[''],
@@ -46,7 +46,7 @@ constructor(private formBuilder:FormBuilder){
         closeDate : res.closeDate,
         unlimited: res.unlimitedFlag ==='Y',
         pcaRemainingAmount : res.pcaRemainingAmount,
-        totalAmount:res.totalAmount,
+        totalAmount:res.assignmentAmount,
         amountSpent: res.amountSpent
      });
 
@@ -55,6 +55,7 @@ constructor(private formBuilder:FormBuilder){
      this.pcaReassignmentForm.controls['closeDate'].disable();
      this.pcaReassignmentForm.controls['unlimited'].disable();
      this.pcaReassignmentForm.controls['pcaRemainingAmount'].disable();
+     this.pcaReassignmentForm.controls['totalAmount'].disable();
      }
      
      this.pcaList.push(`${this.pcaReassignmentByFundSource.fundingSourceCode}-${this.pcaReassignmentByFundSource.pcaCode}`)

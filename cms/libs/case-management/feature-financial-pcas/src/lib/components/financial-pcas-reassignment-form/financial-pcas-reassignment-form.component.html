@@ -31,22 +31,22 @@
       <div class="flex-row mt-3">
             <div class="flex-col flex-col-4">
                   <label> PCA Amount </label>
-                  <p> $ {{pcaReassignmentByFundSource.totalAmount}}</p>
+                  <p> $ {{pcaReassignmentByFundSource.pcaAmount}}</p>
             </div>
             <div class="flex-col flex-col-4">
                   <label> Allocated </label>
-                  <p> $ {{pcaReassignmentByFundSource.amountSpent}}</p>
+                  <p> $ {{pcaReassignmentByFundSource.allocatedAmount}}</p>
             </div>
             <div class="flex-col flex-col-4">
                   <label> Remaining </label>
-                  <p class="green-text-color">$ {{pcaReassignmentByFundSource.pcaRemainingAmount}}</p>
+                  <p class="green-text-color">$ {{pcaReassignmentByFundSource.remainingAmount}}</p>
             </div>
             
       </div>
       <div class="flex-row">
             <div class="flex-col mt-1">
             
-                  <p class="relative-heading"><strong>Object Settings</strong></p>
+                  <p class="relative-heading"><strong>Assignment Settings</strong></p>
             </div>
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Open Date">
@@ -69,7 +69,7 @@
       </div>
       <div class="flex-row">
             <div class="flex-col ">
-                  <kendo-floatinglabel text="Object Amount" class="amount-with-symbol">
+                  <kendo-floatinglabel text="Assignment Amount" class="amount-with-symbol">
                         <span class="k-input-prefix custom-currencysymbol"> $ </span>
                         <kendo-numerictextbox  aria-label="Object Amount" [spinners]="false"
                               class="input-icon-right" placeholder="00.00"
