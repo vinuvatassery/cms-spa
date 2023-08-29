@@ -32,11 +32,14 @@
                                 [pcaCodesData$]="pcaCodesData$ | async"   
                                 [pcaAssignOpenDatesList$]="pcaAssignOpenDatesList$ | async"       
                                 [pcaAssignCloseDatesList$]="pcaAssignCloseDatesList$ | async"  
-                                [pcaCodesInfoData$]="pcaCodesInfoData$"                          
+                                [pcaCodesInfoData$]="pcaCodesInfoData$"     
+                                [pcaAssignmentData$]="pcaAssignmentData$"                     
                                 (loadObjectCodesEvent)="loadObjectCodes()"
-                                (loadGroupCodesEvent)="loadGroupCodes()"
-                                (loadPcaCodesEvent)="loadPcaCodes()"
-                                (loadPcaDatesEvent)="loadPcaDates($event)"
+                                (loadGroupCodesEvent)="loadGroupCodes()"                                                          
+                                (pcaChangeEvent)="loadPcaDates()"
+                                (loadPcaEvent)="loadPcaCodes()"
+                                (getPcaAssignmentEvent)="getPcaAssignment($event)"
+                                (addPcaDataEvent)="assignPca($event)">
                                 ></cms-financial-pcas-assignment-list>
                               
                             </div>

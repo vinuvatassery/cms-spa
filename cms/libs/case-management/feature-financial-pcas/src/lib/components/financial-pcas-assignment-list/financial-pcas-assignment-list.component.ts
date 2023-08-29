@@ -20,6 +20,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 @Component({
   selector: 'cms-financial-pcas-assignment-list',
   templateUrl: './financial-pcas-assignment-list.component.html',
@@ -45,12 +46,15 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
   @Input() pcaAssignOpenDatesList$ : any
   @Input() pcaAssignCloseDatesList$ : any
   @Input() pcaCodesInfoData$ : any
+  @Input() pcaAssignmentData$ : any
 
   @Output() loadFinancialPcaAssignmentListEvent = new EventEmitter<any>();
   @Output() loadObjectCodesEvent = new EventEmitter<any>();
   @Output() loadGroupCodesEvent = new EventEmitter<any>();
-  @Output() loadPcaCodesEvent = new EventEmitter<any>();
-  @Output() loadPcaDatesEvent = new EventEmitter<any>();
+  @Output() pcaChangeEvent = new EventEmitter<any>();
+  @Output() loadPcaEvent = new EventEmitter<any>();
+  @Output() getPcaAssignmentEvent = new EventEmitter<any>();
+  @Output() addPcaDataEvent = new EventEmitter<any>();
 
   public state!: State;
   sortColumn = 'vendorName';
@@ -81,7 +85,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
       click: (data: any): void => {
         if (!this.isEditAssignmentClosed) {
           this.isEditAssignmentClosed = true; 
-          this.onOpenAddPcaAssignmentClicked(this.addEditPcaAssignmentDialogTemplate);
+          this.onOpenAddPcaAssignmentClicked(this.addEditPcaAssignmentDialogTemplate,'');
         }
       },
     },
@@ -96,11 +100,9 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadObjectCodesEvent.emit()
-    this.loadGroupCodesEvent.emit()
-    this.loadPcaCodesEvent.emit()
-    this.loadPcaDatesEvent.emit('00000000-0000-0000-0000-000000000000')
+    this.loadGroupCodesEvent.emit()  
     this.loadFinancialPcaAssignmentListGrid();
-
+    this. onPcaChangeEvent()
     this.pcaAssignmentGroupForm = this.formBuilder.group({    
    
       groupCodes:[[]],
@@ -108,6 +110,15 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
     });
   }
 
+  addPcaData(pcaAssignmentData : any)
+  {
+  this.addPcaDataEvent.emit(pcaAssignmentData)
+  }
+
+  onLoadPcaEvent($event :  any)
+  {
+  this.loadPcaEvent.emit()
+  }
   groupChange($event : any)
   {    
     this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;   
@@ -148,12 +159,13 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
     "table-row-disabled": (!args.dataItem.isActive),
   });
  
-  onOpenAddPcaAssignmentClicked(template: TemplateRef<unknown>): void {
+  onOpenAddPcaAssignmentClicked(template: TemplateRef<unknown>,pcaAssignmentId : string): void {
+    this.getPcaAssignmentEvent.emit(pcaAssignmentId)  
     this.pcaAssignmentAddEditDialogService = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
-  }
+  } 
   onCloseAddEditPcaAssignmentClicked(result: any) {
     if (result) { 
       this.isEditAssignmentClosed = false;
@@ -174,7 +186,10 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
     }
   }
 
-
+  onPcaChangeEvent()
+  {
+    this.pcaChangeEvent.emit()
+  }
 }
  
  

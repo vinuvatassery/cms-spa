@@ -1,7 +1,7 @@
 <!-- Table Top Filter, Search and Export -->
 
 <button kendoButton icon="add" [primary]="true"
-(click)="onOpenAddPcaAssignmentClicked(addEditPcaAssignmentDialogTemplate)" class="add-new-button search-with-addbtn"
+(click)="onOpenAddPcaAssignmentClicked(addEditPcaAssignmentDialogTemplate,'E368B32F-89C5-4370-978D-06B3D97929BF')" class="add-new-button search-with-addbtn"
 aria-label="add"> Assignment</button> 
 <p class="mt-2">Select object and group below to load the grid data</p>
 <section class="flex-row mb-1">
@@ -110,8 +110,11 @@ aria-label="add"> Assignment</button>
       [pcaCodesData$]="pcaCodesData$"
       [pcaAssignOpenDatesList$]="pcaAssignOpenDatesList$"       
       [pcaAssignCloseDatesList$]="pcaAssignCloseDatesList$"  
-      [pcaCodesInfoData$]="pcaCodesInfoData$"
-      (closeAddEditPcaAssignmentClickedEvent)="onCloseAddEditPcaAssignmentClicked($event)">
+      [pcaCodesInfoData$]="pcaCodesInfoData$"    
+      [pcaAssignmentData$]="pcaAssignmentData$"     
+      (closeAddEditPcaAssignmentClickedEvent)="onCloseAddEditPcaAssignmentClicked($event)"    
+      (loadPcaEvent)="onLoadPcaEvent($event)"
+      (addPcaDataEvent)="addPcaData($event)">
       </cms-financial-pcas-assignment-form>
 
 </ng-template>

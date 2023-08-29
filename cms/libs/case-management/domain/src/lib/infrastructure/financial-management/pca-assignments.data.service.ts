@@ -25,12 +25,16 @@ export class PcaAssignmentsDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/pca-codes`);
   }
 
-  loadPcaDates(pcaId : string) {
+  loadPcaDates() {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/dates`);
   }
 
   assignPca(assignPcaRequest : any) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments`,assignPcaRequest);
+  }
+
+  getPcaAssignment(pcaAssignmentId : string) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/${pcaAssignmentId}`);
   }
 
 }

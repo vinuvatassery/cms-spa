@@ -45,6 +45,7 @@ export class FinancialPcasPageComponent {
   pcaCodesData$ = this.pcaAssignmentsFacade.pcaCodesData$;
   pcaDatesData$ = this.pcaAssignmentsFacade.pcaDatesData$;
   pcaCodesInfoData$ = this.pcaAssignmentsFacade.pcaCodesInfoData$;
+  pcaAssignmentData$ = this.pcaAssignmentsFacade.pcaAssignmentData$;
 
    pcaAssignOpenDatesListSubject = new Subject<any>();
   pcaAssignOpenDatesList$ = this.pcaAssignOpenDatesListSubject.asObservable();
@@ -87,13 +88,17 @@ export class FinancialPcasPageComponent {
     this.pcaAssignmentsFacade.loadPcaCodes()
   }
 
-  loadPcaDates(pcaId : any) {
-    this.pcaAssignmentsFacade.loadPcaDates(pcaId)
+  loadPcaDates() {
+    this.pcaAssignmentsFacade.loadPcaDates()
     this.getPcaDatesList()
   }
 
   assignPca(assignPcaRequest : any) {
     this.pcaAssignmentsFacade.assignPca(assignPcaRequest)
+  }
+
+  getPcaAssignment(pcaAssignmentId : string) {
+    this.pcaAssignmentsFacade.getPcaAssignment(pcaAssignmentId)
   }
 
   getPcaDatesList()
