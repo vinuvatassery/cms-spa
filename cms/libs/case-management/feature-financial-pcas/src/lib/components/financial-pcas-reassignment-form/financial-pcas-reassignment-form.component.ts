@@ -25,18 +25,18 @@ constructor(private formBuilder:FormBuilder){
   }
   ngOnInit(): void {
     this.pcaReassignmentForm = this.formBuilder.group({
-      pca:[''],
-      ay: [null],
+      pca:[{value: '', disabled: true}],
+      ay: [{value: '', disabled: true}],
       openDate: ['', Validators.required],
       closeDate: ['', Validators.required],
-      totalAmount :[''],
-      amountSpent :[''],
-      balanceAmount :[''],
+      totalAmount :[{value: '', disabled: true}],
+      amountSpent :[{value: '', disabled: true}],
+      balanceAmount :[{value: '', disabled: true}],
       pcaRemainingAmount:[''],
-      pcaAllocated:[''],
+      pcaAllocated:[{value: '', disabled: true}],
       unlimited:[false]
     })
-    this.getPcaReassignmentByFundSourceIdEvent.emit('E368B32F-89C5-4370-978D-06B3D97929BF')
+    this.getPcaReassignmentByFundSourceIdEvent.emit(this.editPcaReassignmentItem.pcaAssignmentId)
     this.pcaReassignmentByFundSourceId$.subscribe((res:any) =>{
      this.pcaReassignmentByFundSource = res;
      this.pcaReassignmentForm.patchValue({
@@ -54,11 +54,7 @@ constructor(private formBuilder:FormBuilder){
      this.pcaReassignmentForm.controls['openDate'].disable();
      this.pcaReassignmentForm.controls['closeDate'].disable();
      this.pcaReassignmentForm.controls['unlimited'].disable();
-     this.pcaReassignmentForm.controls['ay'].disable();
      this.pcaReassignmentForm.controls['pcaRemainingAmount'].disable();
-     this.pcaReassignmentForm.controls['amountSpent'].disable();
-     this.pcaReassignmentForm.controls['totalAmount'].disable();
-     this.pcaReassignmentForm.controls['pca'].disable();
      }
      
      this.pcaList.push(`${this.pcaReassignmentByFundSource.fundingSourceCode}-${this.pcaReassignmentByFundSource.pcaCode}`)
