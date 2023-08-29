@@ -55,9 +55,9 @@ export class FinancialPcaDataService {
       },
     ]);
   }
-  loadFinancialPcaReassignmentListService(event:any) {
+  loadFinancialPcaReassignmentListService(gridValuesInput:any) {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments`,event);
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments`,gridValuesInput);
   }
 
   loadFinancialPcaReportListService(

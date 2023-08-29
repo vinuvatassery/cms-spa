@@ -138,8 +138,8 @@ export class FinancialPcaFacade {
   }
 
 
-  loadFinancialPcaReassignmentListGrid(event: any) {
-    this.financialPcaDataService.loadFinancialPcaReassignmentListService(event).subscribe({
+  loadFinancialPcaReassignmentListGrid(gridValuesInput: any) {
+    this.financialPcaDataService.loadFinancialPcaReassignmentListService(gridValuesInput).subscribe({
       next: (dataResponse) => {
         this.financialPcaReassignmentDataSubject.next(dataResponse);
         this.hideLoader();
