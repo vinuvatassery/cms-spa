@@ -114,7 +114,7 @@
                               </ng-template>
                         </kendo-grid-column>
 
-                        <kendo-grid-column field="vendorName" title="Medical Provider" [width]="160">
+                        <kendo-grid-column field="vendorName" [title]="providerTitle" [width]="160">
                         <ng-template kendoGridCellTemplate let-dataItem>
                               <button aria-label="Medical Provider" kendoButton look="flat"
                                           class="card-link-button"  >
