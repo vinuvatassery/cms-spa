@@ -33,6 +33,10 @@ export class PcaAssignmentsDataService {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments`,assignPcaRequest);
   }
 
+  editAssignedPca(assignPcaRequest : any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments`,assignPcaRequest);
+  }
+
   getPcaAssignment(pcaAssignmentId : string) {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/${pcaAssignmentId}`);
   }

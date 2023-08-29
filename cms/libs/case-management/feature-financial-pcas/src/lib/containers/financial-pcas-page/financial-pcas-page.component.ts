@@ -94,7 +94,23 @@ export class FinancialPcasPageComponent {
   }
 
   assignPca(assignPcaRequest : any) {
-    this.pcaAssignmentsFacade.assignPca(assignPcaRequest)
+
+    if(assignPcaRequest?.pcaAssignmentId !== "00000000-0000-0000-0000-000000000000")
+    {
+      const pcaAssignmentData =
+      {
+        pcaAssignmentId: assignPcaRequest?.pcaAssignmentId,     
+        openDate: assignPcaRequest?.openDate,  
+        closeDate: assignPcaRequest?.closeDate,  
+        amount: assignPcaRequest?.amount,  
+        unlimitedFlag: assignPcaRequest?.unlimitedFlag       
+      }
+     this.pcaAssignmentsFacade.editAssignedPca(pcaAssignmentData)
+    }
+    else
+    {    
+      this.pcaAssignmentsFacade.assignPca(assignPcaRequest)
+    }
   }
 
   getPcaAssignment(pcaAssignmentId : string) {

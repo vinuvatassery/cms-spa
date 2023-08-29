@@ -21,6 +21,8 @@ export class FinancialPcasAssignmentFormComponent implements OnInit{
   @Input() pcaCodesInfoData$ : any
   @Input() pcaAssignmentData$ : any
 
+  groupCodeIdsdValueData : any=[];
+
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Output() closeAddEditPcaAssignmentClickedEvent = new EventEmitter();
   @Output() pcaChangeEvent = new EventEmitter<any>();
@@ -78,16 +80,26 @@ export class FinancialPcasAssignmentFormComponent implements OnInit{
   }
 
   private composePcaAssignmentEditForm()
-  {
+  {    
     this.pcaAssignmentData$?.pipe(first((existPcaData: any ) => existPcaData?.pcaAssignmentId != null))
     .subscribe((existPcaData: any) =>
     {  
+      
         if(existPcaData?.pcaAssignmentId)
-        {          
+        {       
+          let groupCodeIdsAssignedValue : any=[];   
           this.editPca = true      
           this.onPcaChange(existPcaData?.pcaId)    
           this.pcaAssignmentForm.controls['pcaId'].disable();
-       
+          
+          Object.values(this.groupCodeIdsdValue).forEach((key : any) => {  
+                     
+              if(existPcaData.groupCodeIds.split(',').filter((x:any)=>x=== key.groupCodeId).length > 0)
+              {
+                groupCodeIdsAssignedValue.push(key)
+              }            
+            })
+            
             this.pcaAssignmentForm.patchValue(
               {     
                 pcaAssignmentId:  existPcaData?.pcaAssignmentId ?? 0,  
@@ -96,7 +108,8 @@ export class FinancialPcasAssignmentFormComponent implements OnInit{
                 openDate: existPcaData?.openDate,
                 closeDate: existPcaData?.closeDate,
                 amount: existPcaData?.totalAmount,
-                unlimited: (existPcaData?.unlimitedFlag === 'Y')               
+                unlimited: (existPcaData?.unlimitedFlag === 'Y'),
+                groupCodes : groupCodeIdsAssignedValue               
               }
             )
           
@@ -105,11 +118,17 @@ export class FinancialPcasAssignmentFormComponent implements OnInit{
   }
 
   onPcaAssignmentFormSubmit()
-  {
-    debugger
+  {    
     this.pcaAssignmentForm.markAllAsTouched();
     if(this.pcaAssignmentForm.valid)
     {
+
+      const groupCodes= this.pcaAssignmentForm?.controls["groupCodes"].value
+      this.groupCodeIdsdValueData= []
+      for (const key in groupCodes) 
+      {           
+        this.groupCodeIdsdValueData.push(groupCodes[key]?.groupCodeId)     
+      }
       const pcaAssignmentData =
       {
         pcaAssignmentId: this.pcaAssignmentForm?.controls["pcaAssignmentId"].value
@@ -120,8 +139,8 @@ export class FinancialPcasAssignmentFormComponent implements OnInit{
         openDate: this.pcaAssignmentForm?.controls["openDate"].value,  
         closeDate: this.pcaAssignmentForm?.controls["closeDate"].value,  
         amount: this.pcaAssignmentForm?.controls["amount"].value,  
-        unlimitedFlag: this.pcaAssignmentForm?.controls["unlimited"].value,  
-        groupCodeIds : this.pcaAssignmentForm?.controls["groupCodes"].value,  
+        unlimitedFlag: this.pcaAssignmentForm?.controls["unlimited"].value === true ? 'Y' : 'N',  
+        groupCodeIds : this.groupCodeIdsdValueData,  
       }
       this.addPcaDataEvent.emit(pcaAssignmentData)
     }
