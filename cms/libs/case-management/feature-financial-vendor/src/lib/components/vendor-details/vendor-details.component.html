@@ -120,7 +120,7 @@
           </kendo-textbox>
         </kendo-floatinglabel>
       </div>
-      <div class="flex-col mt-1" *ngIf="providerType == vendorTypes.Pharmacy && editVendorInfo">
+      <div class="flex-col mt-1" *ngIf="providerType == vendorTypes.Pharmacy">
         <kendo-floatinglabel text="NPI (optional)">
           <kendo-textbox aria-label="NPI" [fillMode]="formUiStyle.inputFillMode" formControlName="npiNbr">
           </kendo-textbox>
