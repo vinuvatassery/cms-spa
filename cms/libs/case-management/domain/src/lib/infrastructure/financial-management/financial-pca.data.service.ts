@@ -197,5 +197,11 @@ export class FinancialPcaDataService {
   return this.http.get<any>(
     `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/${fundingSourceId}`);
  }
+ updateReassignmentPca(pcaModel: PcaDetails) {
+  return this.http.put<any>(
+    `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments`,
+    pcaModel
+  );
+}
  
 }

@@ -231,6 +231,21 @@ export class FinancialPcaFacade {
     });
   }
 
+  updateReassignmentPca(pcaModel: PcaDetails) {
+    this.showLoader();
+    this.financialPcaDataService.updateReassignmentPca(pcaModel).subscribe({
+      next: (response) => {
+        this.pcaActionIsSuccessSubject.next('save');
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+
   deletePca(pcaId: string) {
     this.showLoader();
     this.financialPcaDataService.deletePca(pcaId).subscribe({
