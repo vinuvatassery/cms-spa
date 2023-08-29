@@ -62,7 +62,7 @@ export class FinancialPcasSetupFormComponent implements OnInit, OnDestroy {
 
   savePca() {
     this.pcaForm.markAllAsTouched();
-    const isOpenCloseDatesValid = this.validate();
+    const isOpenCloseDatesValid = this.validateOpenAndCloseDates();
     const isPcaValid = this.pcaForm?.valid && isOpenCloseDatesValid;
     if (isPcaValid) {
       this.pcaDetails = this.getPcaDetails();
@@ -70,7 +70,7 @@ export class FinancialPcasSetupFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  validate() {
+  validateOpenAndCloseDates() {
     this.pcaFormControls?.openDate?.setErrors(Validators.required);
     this.pcaFormControls?.openDate?.updateValueAndValidity();
     this.pcaFormControls?.closeDate?.setErrors(Validators.required);
@@ -83,6 +83,8 @@ export class FinancialPcasSetupFormComponent implements OnInit, OnDestroy {
     }
 
     if (Date.parse(openDate) >= Date.parse(closeDate)) {
+      this.pcaFormControls?.openDate.markAllAsTouched();
+      this.pcaFormControls?.closeDate.markAllAsTouched();
       this.pcaFormControls?.openDate?.setErrors({ incorrect: true, message: 'Open date must be before close date' });
       this.pcaFormControls?.closeDate?.setErrors({ incorrect: true, message: 'Close date must be after open date' });
       return false;
@@ -145,7 +147,6 @@ export class FinancialPcasSetupFormComponent implements OnInit, OnDestroy {
       this.addPcaDataSubscription();
       this.pcaFormControls?.pcaCode?.disable();
       this.pcaFormControls?.appropriationYear?.disable();
-      this.pcaFormControls?.pcaDesc?.disable();
       this.pcaFormControls?.fundingSourceId?.disable();
   }
 }

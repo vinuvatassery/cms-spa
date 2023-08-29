@@ -35,7 +35,7 @@ export class FinancialPcaFacade {
     field: this.sortValueFinancialPcaReassignment,
   }];
 
-  public sortValueFinancialPcaReport = 'vendorName';
+  public sortValueFinancialPcaReport = 'pcaCode';
   public sortFinancialPcaReportList: SortDescriptor[] = [{
     field: this.sortValueFinancialPcaReport,
   }];
@@ -104,28 +104,6 @@ export class FinancialPcaFacade {
   ) { }
 
   /** Public methods **/
-
-
-  loadFinancialPcaSetupListGrid(params: GridFilterParam) {
-    this.financialPcaSetupLoaderSubject.next(true);
-    this.financialPcaDataService.loadFinancialPcaSetupListService(params).subscribe({
-      next: (dataResponse) => {
-        const gridView: any = {
-          data: dataResponse['items'],
-          total: dataResponse?.totalCount,
-        };
-
-        this.financialPcaSetupDataSubject.next(gridView);
-        this.financialPcaSetupLoaderSubject.next(false);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.financialPcaSetupLoaderSubject.next(false);
-      },
-    });
-  }
-
-
   loadFinancialPcaAssignmentListGrid() {
     this.financialPcaDataService.loadFinancialPcaAssignmentListService().subscribe({
       next: (dataResponse) => {
@@ -154,20 +132,58 @@ export class FinancialPcaFacade {
   }
 
 
-  loadFinancialPcaReportListGrid() {
-    this.financialPcaDataService.loadFinancialPcaReportListService().subscribe({
+  loadFinancialPcaReportListGrid(
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string,
+    filter: string
+  ) {
+    filter = JSON.stringify(filter);
+    this.financialPcaDataService
+      .loadFinancialPcaReportListService(
+        skipcount,
+        maxResultCount,
+        sort,
+        sortType,
+        filter
+      )
+      .subscribe({
+        next: (dataResponse) => {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.financialPcaReportDataSubject.next(gridView);
+          this.hideLoader();
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.hideLoader();
+        },
+      });
+  }
+
+  /* PCA setup */
+  loadFinancialPcaSetupListGrid(params: GridFilterParam) {
+    this.financialPcaSetupLoaderSubject.next(true);
+    this.financialPcaDataService.loadFinancialPcaSetupListService(params).subscribe({
       next: (dataResponse) => {
-        this.financialPcaReportDataSubject.next(dataResponse);
-        this.hideLoader();
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+
+        this.financialPcaSetupDataSubject.next(gridView);
+        this.financialPcaSetupLoaderSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.hideLoader();
+        this.financialPcaSetupLoaderSubject.next(false);
       },
     });
   }
 
-  /* PCA setup */
   loadPcaById(pcaId: string){
     this.pcaDataSubject.next(null);
     this.financialPcaDataService.loadPcaById(pcaId).subscribe({

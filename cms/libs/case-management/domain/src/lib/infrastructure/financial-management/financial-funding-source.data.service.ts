@@ -29,7 +29,17 @@ export class FinancialFundingSourceDataService {
       },
     ]);
   }
-
+  loadFundingSourceList(
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string
+  ){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/funding-sources?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+    );
+  }
   addFundingSource(fundingSource: any) {
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
