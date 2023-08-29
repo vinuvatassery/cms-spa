@@ -71,9 +71,7 @@ export class FinancialPcaFacade {
   private financialPcaReportDataSubject = new Subject<any>();
   financialPcaReportData$ = this.financialPcaReportDataSubject.asObservable();
 
-
-
-  /** Public properties **/
+    /** Public properties **/
 
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
@@ -241,5 +239,8 @@ export class FinancialPcaFacade {
         this.hideLoader();
       },
     });
+  }
+  pcaReassignmentCount(){
+    return this.financialPcaDataService.pcaReassignmentCount();
   }
 }
