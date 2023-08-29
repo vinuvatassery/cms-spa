@@ -15,14 +15,6 @@ export class FinancialPcaDataService {
     private readonly configurationProvider: ConfigurationProvider
   ) {}
 
-  loadFinancialPcaSetupListService(params: GridFilterParam) {
-    return this.http.get<any>(
-      `${
-        this.configurationProvider.appSettings.caseApiUrl
-      }/financial-management/pca/search${params.convertToQueryString()}`
-    );
-  }
-
   loadFinancialPcaAssignmentListService() {
     return of([
       {
@@ -165,31 +157,27 @@ export class FinancialPcaDataService {
     );
   }
 
-  /* PCA setup */
+   /* PCA setup */
+   loadFinancialPcaSetupListService(params: GridFilterParam) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/search`, params);
+  }
 
   loadPcaById(pcaId: string) {
-    return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/${pcaId}`
-    );
+    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/${pcaId}`);
   }
 
   savePca(pcaModel: PcaDetails) {
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca`,
-      pcaModel
-    );
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca`, pcaModel);
   }
 
   updatePca(pcaId: string, pcaModel: PcaDetails) {
     return this.http.put<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/${pcaId}`,
-      pcaModel
-    );
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/${pcaId}`, pcaModel);
   }
 
   deletePca(pcaId: string) {
     return this.http.delete<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/${pcaId}`
-    );
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/${pcaId}`);
   }
 }
