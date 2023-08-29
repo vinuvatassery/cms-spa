@@ -17,11 +17,15 @@ export class FinancialPcasReassignmentFormComponent implements  OnInit {
   pcaReassignmentByFundSource: any;
   pcaReassignmentForm!: FormGroup;
 
-  constructor(private formBuilder:FormBuilder){
+  pcaList:string[] = [] 
+  selectedValue: any;
+
+constructor(private formBuilder:FormBuilder){
 
   }
   ngOnInit(): void {
     this.pcaReassignmentForm = this.formBuilder.group({
+      pca:[''],
       ay: [null],
       openDate: ['', Validators.required],
       closeDate: ['', Validators.required],
@@ -30,21 +34,35 @@ export class FinancialPcasReassignmentFormComponent implements  OnInit {
       balanceAmount :[''],
       pcaRemainingAmount:[''],
       pcaAllocated:[''],
-      unlimited:['']
+      unlimited:[false]
     })
-    this.getPcaReassignmentByFundSourceIdEvent.emit(this.editPcaReassignmentItem.pcaAssignmentId)
+    this.getPcaReassignmentByFundSourceIdEvent.emit('E368B32F-89C5-4370-978D-06B3D97929BF')
     this.pcaReassignmentByFundSourceId$.subscribe((res:any) =>{
      this.pcaReassignmentByFundSource = res;
      this.pcaReassignmentForm.patchValue({
+        pca : `${res.fundingSourceCode}-${res.pcaCode}`,
         ay : res.ay,
         openDate: res.openDate,
         closeDate : res.closeDate,
-        unlimited: res.unlimited,
+        unlimited: res.unlimitedFlag ==='Y',
         pcaRemainingAmount : res.pcaRemainingAmount,
         totalAmount:res.totalAmount,
         amountSpent: res.amountSpent
      });
 
+     if(this.isViewGridOptionClicked){
+     this.pcaReassignmentForm.controls['openDate'].disable();
+     this.pcaReassignmentForm.controls['closeDate'].disable();
+     this.pcaReassignmentForm.controls['unlimited'].disable();
+     this.pcaReassignmentForm.controls['ay'].disable();
+     this.pcaReassignmentForm.controls['pcaRemainingAmount'].disable();
+     this.pcaReassignmentForm.controls['amountSpent'].disable();
+     this.pcaReassignmentForm.controls['totalAmount'].disable();
+     this.pcaReassignmentForm.controls['pca'].disable();
+     }
+     
+     this.pcaList.push(`${this.pcaReassignmentByFundSource.fundingSourceCode}-${this.pcaReassignmentByFundSource.pcaCode}`)
+ 
      this.pcaReassignmentForm.controls['openDate'].setValue(new Date(this.pcaReassignmentByFundSource.openDate));
      this.pcaReassignmentForm.controls['closeDate'].setValue(new Date(this.pcaReassignmentByFundSource.closeDate));
    

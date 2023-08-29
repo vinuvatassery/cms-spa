@@ -14,17 +14,17 @@
             </div>
             <div class="flex-col flex-col-8">
                   <kendo-floatinglabel text="PCA">
-                        <kendo-dropdownlist aria-label="PCA" [fillMode]="formUiStyle.inputFillMode" 
-                        [disabled]="isViewGridOptionClicked">
+                        <kendo-dropdownlist aria-label="PCA" [fillMode]="formUiStyle.inputFillMode"                  
+                        [data]="pcaList"
+                        formControlName="pca"
+                        >
                         </kendo-dropdownlist>
                   </kendo-floatinglabel>
 
             </div>
             <div class="flex-col flex-col-4">
                   <kendo-floatinglabel text="AY">
-                        <kendo-textbox aria-label="AT" [fillMode]="formUiStyle.inputFillMode" 
-                        [disabled]="isViewGridOptionClicked"
-                        [readonly]="isViewGridOptionClicked" formControlName="ay" > </kendo-textbox>
+                        <kendo-textbox aria-label="AT" [fillMode]="formUiStyle.inputFillMode" formControlName="ay" > </kendo-textbox>
                   </kendo-floatinglabel>
             </div>
       </div>
@@ -51,7 +51,8 @@
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Open Date">
                         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                              formatPlaceholder="formatPattern" placeholder=""   formControlName="openDate" >
+                              formatPlaceholder="formatPattern" placeholder=""
+                                 formControlName="openDate" >
                         </kendo-datepicker>
                   </kendo-floatinglabel>
 
@@ -59,7 +60,8 @@
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Close Date">
                         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                              formatPlaceholder="formatPattern" placeholder=""  formControlName="closeDate">
+                              formatPlaceholder="formatPattern" placeholder="" 
+                               formControlName="closeDate" >
                         </kendo-datepicker>
                   </kendo-floatinglabel>
 
@@ -78,13 +80,14 @@
             </div>
             <div class="flex-col mt-2">
                   <span class="app-checkboxwidtext-wrapper">
-                        <input type="checkbox" kendoCheckBox aria-labelledby="Unlimited" id="Unlimited" />
-                        <label class="k-checkbox-label" for="Unlimited"  formControlName="unlimited">Unlimited</label>
+                        <input type="checkbox" kendoCheckBox aria-labelledby="Unlimited" id="Unlimited"  formControlName="unlimited" />
+                        <label class="k-checkbox-label" for="Unlimited" >Unlimited</label>
                   </span>
             </div>
 
       </div>
 </section>
+
 </div>
 <kendo-dialog-actions>
       <div class="justify-content-between">
