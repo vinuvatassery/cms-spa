@@ -666,6 +666,23 @@
 // ************************************************** /* Disabled Form field styling */************************************************************
 
 // /* Disabled Form field styling */
+.text-area-readonly{
+  &.k-floating-label-container .k-picker-outline.k-focus + .k-label, 
+  &.k-floating-label-container .k-input-outline.k-focus + .k-label, 
+  &.k-floating-label-container > .k-label,
+  &.k-floating-label-container.k-focus > .k-label{
+    background: transparent;
+    color: $input_label_color;
+  }
+  .k-textarea.k-input{
+    background: material-color($hive-neutral-palette, 50) !important;
+    border-color: material-color($hive-neutral-palette, 50) !important;
+    border: 1px solid material-color($hive-neutral-palette, 50) !important;
+    opacity: 1;
+    padding-top: 8px;
+    color: rgba(0, 0, 0, 0.38);
+  }
+}
 .k-textbox {
   &:disabled {
     pointer-events: none;
