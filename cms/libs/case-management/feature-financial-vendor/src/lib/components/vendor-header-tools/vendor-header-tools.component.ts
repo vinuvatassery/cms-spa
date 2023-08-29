@@ -205,7 +205,6 @@ export class VendorHeaderToolsComponent {
         if (resp && resp.length > 0) {
           const selectedAddress = resp.find((address:any) => address.preferredFlag === "Y") || resp[0];
           this.vendorAddressId = selectedAddress.vendorAddressId;
-          this.vendorContactFacade.loadcontacts(this.vendorAddressId);
           this.addEmailSubscription();
         }
         this.ref.detectChanges();
