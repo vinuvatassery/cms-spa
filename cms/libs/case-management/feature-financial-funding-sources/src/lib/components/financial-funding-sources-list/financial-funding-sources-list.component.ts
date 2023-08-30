@@ -297,6 +297,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
     if (result) {
       this.editFundingOpened = false;
       this.addEditFundingDialog.close();
+      this.loadFinancialFundingSourceFacadeListGrid();
     }
   }
 
