@@ -12,7 +12,10 @@ export class PcaAssignmentsDataService {
   ) { }
 
   /** Public methods **/
-
+  loadFinancialPcaAssignmentListService(pcaAssignmentGridArguments : any) {
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/list`,pcaAssignmentGridArguments);
+  }
   loadObjectCodes() {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/object-codes`);
   }

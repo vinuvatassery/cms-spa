@@ -20,7 +20,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
+
 @Component({
   selector: 'cms-financial-pcas-assignment-list',
   templateUrl: './financial-pcas-assignment-list.component.html',
@@ -55,6 +55,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
   @Output() loadPcaEvent = new EventEmitter<any>();
   @Output() getPcaAssignmentEvent = new EventEmitter<any>();
   @Output() addPcaDataEvent = new EventEmitter<any>();
+  @Output() loadFinancialPcaAssignmentEvent = new EventEmitter<any>();
 
   public state!: State;
   sortColumn = 'vendorName';
@@ -101,7 +102,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
   ngOnInit(): void {
     this.loadObjectCodesEvent.emit()
     this.loadGroupCodesEvent.emit()  
-    this.loadFinancialPcaAssignmentListGrid();
+   
     this. onPcaChangeEvent()
     this.pcaAssignmentGroupForm = this.formBuilder.group({    
    
@@ -120,23 +121,27 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
   this.loadPcaEvent.emit()
   }
   groupChange($event : any)
-  {    
-    this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;   
+  {   
+    this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;  
+    let  groupCodeIdsdValueData= []
+    for (const key in this.groupCodeIdsdValue) 
+    {           
+      groupCodeIdsdValueData.push(this.groupCodeIdsdValue[key]?.groupCodeId)     
+    }
+    if(this.groupCodeIdsdValue.length > 0 && this.objectCodeIdValue) 
+    {
+      const pcaAssignmentGridArguments = 
+      {
+        objectId : this.objectCodeIdValue,
+        groupIds : groupCodeIdsdValueData
+      }
+
+      this.loadFinancialPcaAssignmentEvent.emit(pcaAssignmentGridArguments)
+      this.gridDataHandle();
+    }
   }
 
-  private loadFinancialPcaAssignmentListGrid(): void {
-    this.loadPcaAssignment();
-  }
-  loadPcaAssignment(
-   
-  ) {
-    this.isFinancialPcaAssignmentGridLoaderShow = true;
-    const gridDataRefinerValue = {
-    
-    };
-    this.loadFinancialPcaAssignmentListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
-  }
+
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }

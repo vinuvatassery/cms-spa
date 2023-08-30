@@ -1,15 +1,14 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
+
   Component,
   OnInit,
 } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialFundingSourceFacade, FinancialPcaFacade, PcaAssignmentsFacade, GridFilterParam, PcaDetails } from '@cms/case-management/domain';
-import { ActivatedRoute, Router } from '@angular/router';
-import { LoggingService } from '@cms/shared/util-core';
 import { Subject } from 'rxjs';
+
 @Component({
   selector: 'cms-financial-pcas-page',
   templateUrl: './financial-pcas-page.component.html',
@@ -40,7 +39,7 @@ export class FinancialPcasPageComponent implements OnInit{
 
   financialPcaSetupGridLists$ = this.financialPcaFacade.financialPcaSetupData$;
   financialPcaSetupLoader$ = this.financialPcaFacade.financialPcaSetupLoader$;
-  financialPcaAssignmentGridLists$ = this.financialPcaFacade.financialPcaAssignmentData$;
+  financialPcaAssignmentGridLists$ = this.pcaAssignmentsFacade.financialPcaAssignmentData$;
   financialPcaReassignmentGridLists$ = this.financialPcaFacade.financialPcaReassignmentData$;
   financialPcaReportGridLists$ = this.financialPcaFacade.financialPcaReportData$;
   fundingSourceLookup$ = this.fundingSourceFacade.fundingSourceLookup$;
@@ -82,8 +81,8 @@ export class FinancialPcasPageComponent implements OnInit{
     this.financialPcaFacade.loadFinancialPcaSetupListGrid(event);
   }
 
-  loadFinancialPcaAssignmentListGrid(event: any) {
-    this.financialPcaFacade.loadFinancialPcaAssignmentListGrid();
+  loadFinancialPcaAssignmentListGrid(pcaAssignmentGridArguments: any) {
+    this.pcaAssignmentsFacade.loadFinancialPcaAssignmentListGrid(pcaAssignmentGridArguments);
   }
 
   loadFinancialPcaReassignmentListGrid(event: any) {

@@ -35,6 +35,9 @@ export class PcaAssignmentsFacade {
 
     private pcaAssignmentDataSubject = new Subject<any>();
     pcaAssignmentData$ = this.pcaAssignmentDataSubject.asObservable();
+
+    private financialPcaAssignmentDataSubject = new Subject<any>();
+    financialPcaAssignmentData$ = this.financialPcaAssignmentDataSubject.asObservable();
      
   /** Public properties **/
  
@@ -66,6 +69,19 @@ export class PcaAssignmentsFacade {
     private configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService
   ) { }
+
+  loadFinancialPcaAssignmentListGrid(pcaAssignmentGridArguments :any) {
+    this.pcaAssignmentsDataService.loadFinancialPcaAssignmentListService(pcaAssignmentGridArguments).subscribe({
+      next: (dataResponse) => {
+        this.financialPcaAssignmentDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
 
   loadObjectCodes(){
     this.pcaAssignmentsDataService.loadObjectCodes().subscribe({
