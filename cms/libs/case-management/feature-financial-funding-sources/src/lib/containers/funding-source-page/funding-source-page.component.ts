@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialFundingSourceFacade } from '@cms/case-management/domain';
-import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-funding-source-page',
   templateUrl: './funding-source-page.component.html',
@@ -31,10 +30,6 @@ export class FundingSourcePageComponent {
 
   ) { }
 
-  ngOnInit(): void {
-    // this.loadFundingSource();
-
-  }
   loadFinancialFundingSourceFacadeListGrid(event: any) {
     this.financialFundingSourceFacade.loadFinancialFundingSourceFacadeListGrid();
   }

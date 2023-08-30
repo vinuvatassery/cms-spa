@@ -10,7 +10,6 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FinancialFundingSourceFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
@@ -325,9 +324,6 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
       this.removeFundingDialog.close();
     }
   }
- loadFundingSource(){
-  //this.financialFundingSourceFacade.loadFundingSourceList();
- }
 removeFundingSourceEvent(fundingSoruceId: any) {
   this.removeFundingSourceClick.emit(fundingSoruceId);
   this.removeFundingOpened = false;
