@@ -15,38 +15,6 @@ export class FinancialPcaDataService {
     private readonly configurationProvider: ConfigurationProvider
   ) {}
 
-  loadFinancialPcaAssignmentListService() {
-    return of([
-      {
-        id: 1,
-        priority: 1,
-        pca: '123123`',
-        object: 'Third Party',
-        objectCode: '234234',
-        amount: '43324342.33',
-        openDate: 'MM/DD/YYYY',
-        closeDate: 'MM/DD/YYYY',
-        totalAmount: '43324342.33',
-        amountUsed: '43324342.33',
-        amountLeft: '43324342.33',
-        isActive: true,
-      },
-      {
-        id: 2,
-        priority: 2,
-        pca: '123123`',
-        object: 'Third Party',
-        objectCode: '234234',
-        amount: '43324342.33',
-        openDate: 'MM/DD/YYYY',
-        closeDate: 'MM/DD/YYYY',
-        totalAmount: '43324342.33',
-        amountUsed: '43324342.33',
-        amountLeft: '43324342.33',
-        isActive: false,
-      },
-    ]);
-  }
   loadFinancialPcaReassignmentListService(gridValuesInput:any) {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments`,gridValuesInput);
