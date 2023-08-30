@@ -85,7 +85,6 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
     }); 
     if (this.contactForm.valid) {
-      this.loaderService.show();
       this.vendocontactsFacade.saveContactAddress(this.contactForm.value).subscribe({
         next: (response: any) => {
           if (response) {
@@ -93,12 +92,10 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
               SnackBarNotificationType.SUCCESS,
               'Contact  added successfully'
             );
-            this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);
           }
         },
-        error: (error: any) => {
-          this.loaderService.hide();
+        error: (error: any) => {          
           this.contactFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,
             error
@@ -124,11 +121,10 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
             );
             this.ContactUpdated.emit(true);
             this.loaderService.hide();
-            this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);
           }
         },
-        error: (error: any) => {
+        error: (error: any) => {          
           this.loaderService.hide();
           this.contactFacade.showHideSnackBar(
             SnackBarNotificationType.ERROR,

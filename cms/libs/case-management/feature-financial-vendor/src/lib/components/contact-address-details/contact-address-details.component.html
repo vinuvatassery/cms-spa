@@ -29,7 +29,8 @@
             </div>
             <div class="flex-col">
               <kendo-floatinglabel text=" Name">
-                <kendo-textbox aria-label="Contact Name" formControlName="contactName"
+                <kendo-textbox aria-label="Contact Name" formControlName="contactName" [maxlength]="200" onkeypress="return (event.charCode > 64 && 
+                  event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)"
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>
@@ -38,7 +39,8 @@
             </div>
             <div class="flex-col">
               <kendo-floatinglabel text="Description (Optional)">
-                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" formControlName="contactDesc"
+                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" onkeypress="return (event.charCode > 64 && 
+                  event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)"  [maxlength]="500" formControlName="contactDesc"
                   resizable="vertical"></kendo-textarea>
               </kendo-floatinglabel>
             </div>
@@ -65,7 +67,7 @@
 
             <div class="flex-col mb-1">
               <kendo-floatinglabel text="Email Address (optional)">
-                <kendo-textbox aria-label="Email Address (optional)" formControlName="emailAddress"
+                <kendo-textbox aria-label="Email Address (optional)" [maxlength]="200" formControlName="emailAddress"
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>

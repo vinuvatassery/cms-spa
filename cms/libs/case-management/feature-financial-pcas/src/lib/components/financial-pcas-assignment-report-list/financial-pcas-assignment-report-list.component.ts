@@ -161,7 +161,6 @@ export class FinancialPcasAssignmentReportListComponent implements OnChanges
   }
 
   dataStateChange(stateData: any): void {
-    debugger
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
