@@ -11,6 +11,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { FinancialPcaFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -60,8 +61,8 @@ export class FinancialPcasReassignmentListComponent
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
-
+  allnotassignpcslist:any;
+ notselectedpcspcs:any;
   gridFinancialPcaReassignmentDataSubject = new Subject<any>();
   gridFinancialPcaReassignmentData$ =
     this.gridFinancialPcaReassignmentDataSubject.asObservable();
@@ -117,10 +118,16 @@ export class FinancialPcasReassignmentListComponent
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
-    private financialPcaFacade:FinancialPcaFacade
+    private financialPcaFacade:FinancialPcaFacade,
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit(): void {
+ 
+    this.notAssignPcaLists$.subscribe((res:any)=>{
+      this.allnotassignpcslist=res;
+      this.notselectedpcspcs=this.allnotassignpcslist;
+    })
     this.loadFinancialPcaReassignmentListGrid();
     this.financialPcaFacade.pcaActionIsSuccess$.subscribe((res:string)=>{
       if(res='reassignment')
@@ -139,23 +146,46 @@ export class FinancialPcasReassignmentListComponent
 
     this.loadFinancialPcaReassignmentListGrid();
   }
-  onsearchTextChange(text : any)
+  onsearchTextChange(text : any,data:any)
   { 
     debugger
-   let val= this.inputvalue;
-
-    // if(text){ 
+    var  codes=this.reassignpcas.find((x:any)=>x.pcaAssignmentId==data.pcaAssignmentId);
+    if(text!=codes.pcaCode)
+    {
+      var idx = this.reassignpcas.findIndex((x:any)=>x.pcaCode==codes.pcaCode);
+      debugger
+      if (idx !== -1) {
+        debugger
+        this.reassignpcas.splice(idx, 1);
+      }
+      this.allnotassignpcslist=this.notselectedpcspcs;
+    }
+   this.allnotassignpcslist=this.notselectedpcspcs.filter((obj:any) =>
+   String(obj.pcaCode).includes(text)||String(obj.fundingSourceCode).includes(text))
+debugger
+   // if(text){ 
     //   this.showInputLoader = true;
     //   this.filterManager.next(text);
     // }
   }
-  onClientSelected(event: any) {
+  onClientSelected(event: any,data:any) {
     
+    debugger
+    if (event) {
+let obj={"PcaId":event.pcaId,"pcaAssignmentId":data.pcaAssignmentId,"pcaCode":event.pcaCode};
+this.reassignpcas.push(obj);
+debugger
+this.allnotassignpcslist=this.notselectedpcspcs;
+    }
+  }
+  onClientSelected1(event: any) {
     
+    debugger
     if (event) {
 let obj={"PcaId":event.pcaId,"pcaAssignmentId":event.pcaAssignmentId};
 this.reassignpcas.push(obj);
-      
+debugger
+this.allnotassignpcslist=this.notselectedpcspcs;
     }
   }
   private loadFinancialPcaReassignmentListGrid(): void {

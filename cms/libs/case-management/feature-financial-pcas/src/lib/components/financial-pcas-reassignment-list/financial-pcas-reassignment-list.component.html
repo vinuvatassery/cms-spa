@@ -30,7 +30,7 @@
 </div>
 
 
-<div class="app-c-table">
+<div class="app-c-table" >
       <kendo-grid [resizable]="true" [loading]="isFinancialPcaReassignmentGridLoaderShow" [pageSize]="state.take"
             [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
             [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
@@ -41,7 +41,9 @@
             <kendo-grid-column field="objectName" title="Object" [width]="180"> </kendo-grid-column>
             <kendo-grid-column field="group" title="Group" [width]="160"> </kendo-grid-column>
 
-            <kendo-grid-column field="closeDate" title="Close Date" [width]="120"> </kendo-grid-column>
+            <kendo-grid-column field="closeDate" title="Close Date" [width]="120" filter="date"> <ng-template kendoGridCellTemplate let-dataItem>
+                  <span>{{dataItem.closeDate| date:'MM/dd/yyyy'}}</span>
+            </ng-template> </kendo-grid-column>
             <kendo-grid-column field="originalAmount" title="Original Amount" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <span class="tableamountview"> <strong>$</strong> {{dataItem.originalAmount}}</span>
@@ -76,12 +78,12 @@
 
                        
                               <kendo-multicolumncombobox
-                              [data]="notAssignPcaLists$| async"
-                              [(ngModel)]="inputvalue"
-                              (valueChange)="onsearchTextChange($event)"
-                              (selectionChange)="onClientSelected($event)"
-                               textField="pcaCode" valueField="pcaCode"
-                              [fillMode]="formUiStyle.dropDownFillMode" placeholder="PCA" > 
+                              [data]="allnotassignpcslist"
+                              (filterChange)="onsearchTextChange($event,dataItem)"
+                              (selectionChange)="onClientSelected($event,dataItem)"
+                             
+                               textField="pcaCode" valueField="pcaCode" 
+                              [fillMode]="formUiStyle.dropDownFillMode" placeholder="PCA"  [filterable]="true"> 
                                     <kendo-combobox-column [width]="200">
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                                 <span class=""><strong>{{ dataItem.pcaCode }}/{{dataItem.fundingSourceCode}}</strong></span> 
@@ -165,7 +167,7 @@
 <div class="bottom-fixed-wrapper text-right flex-gap">
 
       <button kendoButton [primary]="true" aria-label="Receipting Log" class=""
-            (click)="onConfirmationPcaReassignmentClicked(confirmationPcaReassignmentDialogTemplate)"> Reassign
+            (click)="onConfirmationPcaReassignmentClicked(confirmationPcaReassignmentDialogTemplate)" [disabled]="reassignpcas.length==0" > Reassign
       </button>
 
 </div>
