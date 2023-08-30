@@ -71,6 +71,10 @@ export class FinancialPcaFacade {
   private financialPcaReportDataSubject = new Subject<any>();
   financialPcaReportData$ = this.financialPcaReportDataSubject.asObservable();
 
+
+  private notpcaDataSubject = new BehaviorSubject<PcaDetails | null>(null);
+  notpcaData$ = this.notpcaDataSubject.asObservable()
+
     /** Public properties **/
 
   // handling the snackbar & loader
@@ -193,6 +197,17 @@ export class FinancialPcaFacade {
       },
     });
   }
+  getpcaunassignments(){
+    this.notpcaDataSubject.next(null);
+    this.financialPcaDataService.getpcaunassignments().subscribe({
+      next: (response) => {
+        this.notpcaDataSubject.next(response);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
   savePca(pcaModel: PcaDetails) {
     this.showLoader();
     this.financialPcaDataService.savePca(pcaModel).subscribe({
@@ -207,7 +222,22 @@ export class FinancialPcaFacade {
       },
     });
   }
+  pcareassignment(data: any) {
+   this.showLoader();
+   this.financialPcaDataService.pcareassignment(data).subscribe({
+     next: (response) => {
+       this.pcaActionIsSuccessSubject.next('reassignment');
+       this.hideLoader();
+       this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+     },
+     error: (err) => {
+       this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+       this.hideLoader();
+     },
+   });
 
+   
+  }
   updatePca(pcaId: string, pcaModel: PcaDetails) {
     this.showLoader();
     this.financialPcaDataService.updatePca(pcaId, pcaModel).subscribe({

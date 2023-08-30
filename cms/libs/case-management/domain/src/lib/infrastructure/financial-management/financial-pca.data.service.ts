@@ -101,4 +101,16 @@ export class FinancialPcaDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/count`
     )
   }
+  
+  getpcaunassignments() {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/get-pca-unassignments`
+    );
+  }
+  pcareassignment(data: any) {
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/pca-reassignment`,
+      data
+    );
+  }
 }

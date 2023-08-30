@@ -45,7 +45,7 @@ export class FinancialPcasPageComponent implements OnInit{
   fundingSourceLookup$ = this.fundingSourceFacade.fundingSourceLookup$;
   pcaActionIsSuccess$ = this.financialPcaFacade.pcaActionIsSuccess$;
   pcaData$ = this.financialPcaFacade.pcaData$;
-
+  notAssignPcsLists$ = this.financialPcaFacade.notpcaData$;
   constructor(
     private readonly financialPcaFacade: FinancialPcaFacade,
     private readonly fundingSourceFacade: FinancialFundingSourceFacade,
@@ -56,6 +56,7 @@ export class FinancialPcasPageComponent implements OnInit{
   ) { }
   ngOnInit(): void {
     this.PcaReassignmetCount();
+    this.financialPcaFacade.getpcaunassignments();
   }
 
   PcaReassignmetCount() {
@@ -65,6 +66,7 @@ export class FinancialPcasPageComponent implements OnInit{
       },
     })
   }
+
 
 
 

@@ -75,17 +75,22 @@
                   <ng-template kendoGridCellTemplate let-dataItem>
 
                        
-                              <kendo-multicolumncombobox [data]="pcaLists" textField="name" valueField="id"
-                                    [fillMode]="formUiStyle.dropDownFillMode" placeholder="PCA">
+                              <kendo-multicolumncombobox
+                              [data]="notAssignPcaLists$| async"
+                              [(ngModel)]="inputvalue"
+                              (valueChange)="onsearchTextChange($event)"
+                              (selectionChange)="onClientSelected($event)"
+                               textField="pcaCode" valueField="pcaCode"
+                              [fillMode]="formUiStyle.dropDownFillMode" placeholder="PCA" > 
                                     <kendo-combobox-column [width]="200">
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                                <span class=""><strong>{{ dataItem.name }}</strong></span> 
+                                                <span class=""><strong>{{ dataItem.pcaCode }}/{{dataItem.fundingSourceCode}}</strong></span> 
                                           </ng-template>
                                     </kendo-combobox-column>
                                     <kendo-combobox-column [width]="180">
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                                 <span class=""><strong class="text-muted">Remaining Amount</strong>
-                                                      <p>$ {{ dataItem.remainingAmt }}</p>
+                                                      <p>$ {{ dataItem.pcaRemainingAmount }}</p>
                                                 </span>
                                           </ng-template>
                                     </kendo-combobox-column>
@@ -173,7 +178,7 @@
 
 <ng-template #confirmationPcaReassignmentDialogTemplate>
       <cms-financial-pcas-reassignment-confirmation
-            (closeConfirmationPcaReassignmentClickedEvent)="onCloseConfirmationPcaReassignmentClicked($event)">
+            (closeConfirmationPcaReassignmentClickedEvent)="onCloseConfirmationPcaReassignmentClicked($event)" (onConfirmationPcaReassignmentClicked)="onPcaReassignmentClicked($event)" [selectedPcaCount] = "reassignpcas.length">
       </cms-financial-pcas-reassignment-confirmation>
 
 </ng-template>

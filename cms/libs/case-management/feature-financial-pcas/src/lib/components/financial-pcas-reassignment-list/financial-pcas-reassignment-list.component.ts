@@ -11,6 +11,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { FinancialPcaFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
@@ -40,11 +41,14 @@ export class FinancialPcasReassignmentListComponent
   isFinancialPcaReassignmentGridLoaderShow = false;
   isViewGridOptionClicked = false;
   isEditGridOptionClicked = false;
+  inputvalue!:string;
+  reassignpcas:any[]=[];
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialPcaReassignmentGridLists$: any;
+  @Input() notAssignPcaLists$: any;
   @Output() loadFinancialPcaReassignmentListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'vendorName';
@@ -56,6 +60,7 @@ export class FinancialPcasReassignmentListComponent
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
+
 
   gridFinancialPcaReassignmentDataSubject = new Subject<any>();
   gridFinancialPcaReassignmentData$ =
@@ -111,22 +116,48 @@ export class FinancialPcasReassignmentListComponent
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private financialPcaFacade:FinancialPcaFacade
   ) {}
 
   ngOnInit(): void {
     this.loadFinancialPcaReassignmentListGrid();
+    this.financialPcaFacade.pcaActionIsSuccess$.subscribe((res:string)=>{
+      if(res='reassignment')
+      {
+        this.loadFinancialPcaReassignmentListGrid();
+      }
+    })
   }
+  
   ngOnChanges(): void {
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: 1,
       sort: this.sort,
     };
 
     this.loadFinancialPcaReassignmentListGrid();
   }
+  onsearchTextChange(text : any)
+  { 
+    debugger
+   let val= this.inputvalue;
 
+    // if(text){ 
+    //   this.showInputLoader = true;
+    //   this.filterManager.next(text);
+    // }
+  }
+  onClientSelected(event: any) {
+    
+    
+    if (event) {
+let obj={"PcaId":event.pcaId,"pcaAssignmentId":event.pcaAssignmentId};
+this.reassignpcas.push(obj);
+      
+    }
+  }
   private loadFinancialPcaReassignmentListGrid(): void {
     this.loadPcaReassignment(
       this.state?.skip ?? 0,
@@ -153,6 +184,7 @@ export class FinancialPcasReassignmentListComponent
   }
 
   onChange(data: any) {
+    
     this.defaultGridState();
 
     this.filterData = {
@@ -189,6 +221,7 @@ export class FinancialPcasReassignmentListComponent
   }
 
   dataStateChange(stateData: any): void {
+    
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -209,6 +242,7 @@ export class FinancialPcasReassignmentListComponent
   }
 
   gridDataHandle() {
+    
     this.financialPcaReassignmentGridLists$.subscribe(
       (data: GridDataResult) => {
         this.gridDataResult = data;
@@ -240,6 +274,7 @@ export class FinancialPcasReassignmentListComponent
     }
   }
 
+
   onConfirmationPcaReassignmentClicked(template: TemplateRef<unknown>): void {
     this.pcaReassignmentConfirmationDialogService = this.dialogService.open({
       content: template,
@@ -251,4 +286,10 @@ export class FinancialPcasReassignmentListComponent
       this.pcaReassignmentConfirmationDialogService.close();
     }
   }
+  onPcaReassignmentClicked(action: any) {
+    this.pcaReassignmentConfirmationDialogService.close();
+    this.financialPcaFacade.pcareassignment(this.reassignpcas);
+  
+}
+  
 }
