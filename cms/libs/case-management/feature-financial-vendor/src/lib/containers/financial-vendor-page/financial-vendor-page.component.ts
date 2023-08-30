@@ -127,6 +127,7 @@ export class FinancialVendorPageComponent implements OnInit {
       lastName:[],
       providerName: [''],
       tinNumber: [''],
+      npiNbr: [''],
       paymentMethod: [''],
       specialHandling: [''],
       mailCode: [''],
