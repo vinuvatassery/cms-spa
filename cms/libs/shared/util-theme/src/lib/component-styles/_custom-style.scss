@@ -1097,12 +1097,17 @@ color: $app-primary-font-color;
     min-height: 340px;
     max-height: 500px;
   }
-
+  .k-scrollview-wrap > li{
+    overflow-y: auto;
+  }
   .slidertitle-bar {
     padding: 10px;
     text-align: center;
     background: $light-blue-one ;
     border-radius: 4px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
 
   .k-scrollview-prev {
@@ -1178,7 +1183,7 @@ color: $app-primary-font-color;
   float: right;
   position: absolute;
   top: 40px;
-  right: 30px;
+  right: 20px;
 } 
 
 
@@ -1207,4 +1212,19 @@ color: $app-primary-font-color;
 
 .bottom-pad{
   padding-bottom: 60px;
+}
+
+.exp_button-text{
+  font-style: normal;
+}
+
+.vendor_header_container, .popover-banner-container{
+  .info-banners{
+    .cvp_three_dot_drop_btn > .k-button{
+      padding: 0px;
+      width: 24px;
+      height: 24px;
+      margin-left: 8px;
+    }
+   }
 }

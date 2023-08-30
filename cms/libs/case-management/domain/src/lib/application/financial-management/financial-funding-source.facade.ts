@@ -14,6 +14,7 @@ import { FinancialFundingSourceDataService } from '../../infrastructure/financia
 export class FinancialFundingSourceFacade {
 
 
+
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
@@ -126,13 +127,15 @@ export class FinancialFundingSourceFacade {
     skipcount: number,
     maxResultCount: number,
     sort: string,
-    sortType: string){
+    sortType: string,
+    filter:any,){
       this.showLoader();
     this.financialFundingSourceDataService.loadFundingSourceList(
         skipcount,
         maxResultCount,
         sort,
         sortType,
+        filter
     ).subscribe({
       next: (dataResponse) => {
         if (dataResponse) {

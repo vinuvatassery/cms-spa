@@ -35,7 +35,7 @@ export class FinancialPcaFacade {
     field: this.sortValueFinancialPcaReassignment,
   }];
 
-  public sortValueFinancialPcaReport = 'vendorName';
+  public sortValueFinancialPcaReport = 'pcaCode';
   public sortFinancialPcaReportList: SortDescriptor[] = [{
     field: this.sortValueFinancialPcaReport,
   }];
@@ -71,9 +71,7 @@ export class FinancialPcaFacade {
   private financialPcaReportDataSubject = new Subject<any>();
   financialPcaReportData$ = this.financialPcaReportDataSubject.asObservable();
 
-
-
-  /** Public properties **/
+    /** Public properties **/
 
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
@@ -104,8 +102,67 @@ export class FinancialPcaFacade {
   ) { }
 
   /** Public methods **/
+  loadFinancialPcaAssignmentListGrid() {
+    this.financialPcaDataService.loadFinancialPcaAssignmentListService().subscribe({
+      next: (dataResponse) => {
+        this.financialPcaAssignmentDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
 
 
+  loadFinancialPcaReassignmentListGrid(gridValuesInput: any) {
+    this.financialPcaDataService.loadFinancialPcaReassignmentListService(gridValuesInput).subscribe({
+      next: (dataResponse) => {
+        this.financialPcaReassignmentDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+
+
+  loadFinancialPcaReportListGrid(
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string,
+    filter: string
+  ) {
+    filter = JSON.stringify(filter);
+    this.financialPcaDataService
+      .loadFinancialPcaReportListService(
+        skipcount,
+        maxResultCount,
+        sort,
+        sortType,
+        filter
+      )
+      .subscribe({
+        next: (dataResponse) => {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.financialPcaReportDataSubject.next(gridView);
+          this.hideLoader();
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.hideLoader();
+        },
+      });
+  }
+
+  /* PCA setup */
   loadFinancialPcaSetupListGrid(params: GridFilterParam) {
     this.financialPcaSetupLoaderSubject.next(true);
     this.financialPcaDataService.loadFinancialPcaSetupListService(params).subscribe({
@@ -125,49 +182,6 @@ export class FinancialPcaFacade {
     });
   }
 
-
-  loadFinancialPcaAssignmentListGrid() {
-    this.financialPcaDataService.loadFinancialPcaAssignmentListService().subscribe({
-      next: (dataResponse) => {
-        this.financialPcaAssignmentDataSubject.next(dataResponse);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.hideLoader();
-      },
-    });
-  }
-
-
-  loadFinancialPcaReassignmentListGrid() {
-    this.financialPcaDataService.loadFinancialPcaReassignmentListService().subscribe({
-      next: (dataResponse) => {
-        this.financialPcaReassignmentDataSubject.next(dataResponse);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.hideLoader();
-      },
-    });
-  }
-
-
-  loadFinancialPcaReportListGrid() {
-    this.financialPcaDataService.loadFinancialPcaReportListService().subscribe({
-      next: (dataResponse) => {
-        this.financialPcaReportDataSubject.next(dataResponse);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.hideLoader();
-      },
-    });
-  }
-
-  /* PCA setup */
   loadPcaById(pcaId: string){
     this.pcaDataSubject.next(null);
     this.financialPcaDataService.loadPcaById(pcaId).subscribe({
@@ -222,5 +236,8 @@ export class FinancialPcaFacade {
         this.hideLoader();
       },
     });
+  }
+  pcaReassignmentCount(){
+    return this.financialPcaDataService.pcaReassignmentCount();
   }
 }

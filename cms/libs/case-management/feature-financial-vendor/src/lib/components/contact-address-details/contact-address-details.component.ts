@@ -25,6 +25,14 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   isSubmitted: boolean = false;
   isVisible: any;
   preferedContact:any;
+  public sortValue = this.vendocontactsFacade.sortValue;
+  public sortType = this.vendocontactsFacade.sortType;
+  public pageSizes = this.vendocontactsFacade.gridPageSizes;
+  public gridSkipCount = this.vendocontactsFacade.skipCount;
+  public sort = this.vendocontactsFacade.sort;
+  public state!: any;
+  filters = "";
+  @Output() ContactUpdated = new EventEmitter<boolean>();
   showLoader() {
     this.loaderService.show();
   }
@@ -83,7 +91,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
           if (response) {
             this.contactFacade.showHideSnackBar(
               SnackBarNotificationType.SUCCESS,
-              'Contact Address added successfully'
+              'Contact  added successfully'
             );
             this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);
@@ -112,9 +120,9 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
           if (response) {
             this.contactFacade.showHideSnackBar(
               SnackBarNotificationType.SUCCESS,
-              'Contact Address Updated successfully'
+              'Contact  Updated successfully'
             );
-            this.vendocontactsFacade.loadcontacts(this.contactAddress.vendorAddressId ?? "");
+            this.ContactUpdated.emit(true);
             this.loaderService.hide();
             this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);

@@ -118,7 +118,7 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   createContactsFormArray() {
-    var contacts =  this.profileForm.get('contacts') as FormArray
+    let contacts =  this.profileForm.get('contacts') as FormArray
     while (contacts.length !== 0) {
       contacts.removeAt(0)
     }

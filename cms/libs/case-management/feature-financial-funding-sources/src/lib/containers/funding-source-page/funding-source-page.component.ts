@@ -20,7 +20,7 @@ export class FundingSourcePageComponent {
   gridSkipCount = this.financialFundingSourceFacade.skipCount;
 
   sortValueFinancialFundingSourceFacade =
-    this.financialFundingSourceFacade.sortValueFinancialFundingSourceFacade;
+  this.financialFundingSourceFacade.sortValueFinancialFundingSourceFacade;
   sortProcessList = this.financialFundingSourceFacade.sortProcessList;
 
   state!: State;
@@ -32,7 +32,7 @@ export class FundingSourcePageComponent {
   ) { }
 
   ngOnInit(): void {
-    this.loadFundingSource();
+    // this.loadFundingSource();
 
   }
   loadFinancialFundingSourceFacadeListGrid(event: any) {
@@ -45,15 +45,13 @@ export class FundingSourcePageComponent {
   updateFundingSource(event: any) {
     this.financialFundingSourceFacade.updateFundingSource(event)
   }
-  loadFundingSource(){
-    // this.financialFundingSourceFacade.loadFundingSourceList();
-   }
    loadFundingSourceHandle(gridDataRefinerValue: any): void {
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
       maxResultCount: gridDataRefinerValue.pagesize,
       sort: gridDataRefinerValue.sortColumn,
       sortType: gridDataRefinerValue.sortType,
+      filter:gridDataRefinerValue.filter
     };
     this.pageSizes = this.financialFundingSourceFacade.gridPageSizes;
     this.financialFundingSourceFacade.loadFundingSourceList(
@@ -61,6 +59,7 @@ export class FundingSourcePageComponent {
       gridDataRefiner.maxResultCount,
       gridDataRefiner.sort,
       gridDataRefiner.sortType,
+      gridDataRefiner.filter
     );
   }
   removeFundingSource(fundingSourceId: any) {

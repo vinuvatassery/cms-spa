@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar (close)="closeAddEditPcaSetupClicked()"> Add PCA's </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeAddEditPcaSetupClicked()"> {{pcaId != null ? 'Edit':'Add'}} PCA's </kendo-dialog-titlebar>
 
 <section class="k-dialog-body" [formGroup]="pcaForm">
       <p class="text-muted">
@@ -47,7 +47,7 @@
       <div class="flex-row">
             <div class="flex-col">
                   <kendo-formfield>
-                        <kendo-floatinglabel text="Description">
+                        <kendo-floatinglabel text="Description" [ngClass]="{'text-area-readonly': pcaId != null}">
                               <kendo-textarea 
                                     aria-label="Description" 
                                     [maxlength]="300" 
@@ -98,14 +98,15 @@
                               format="MM-dd-yyyy"
                               formatPlaceholder="formatPattern" 
                               placeholder=""
-                              formControlName="openDate">
+                              formControlName="openDate"
+                              (valueChange)="validateOpenAndCloseDates()">
                               </kendo-datepicker>
                         </kendo-floatinglabel>
                         <kendo-formerror *ngIf="pcaFormControls?.openDate?.errors?.required">
                               Open Date is required
                         </kendo-formerror>
                         <kendo-formerror *ngIf="pcaFormControls?.openDate?.errors?.incorrect">
-                              Open Date must be before Close Date
+                              Open Date is after Close Date
                         </kendo-formerror>
                   </kendo-formfield>
             </div>
@@ -117,14 +118,15 @@
                               format="MM-dd-yyyy"
                               formatPlaceholder="formatPattern" 
                               placeholder=""
-                              formControlName="closeDate">
+                              formControlName="closeDate"
+                              (valueChange)="validateOpenAndCloseDates()">
                               </kendo-datepicker>
                         </kendo-floatinglabel>
                         <kendo-formerror *ngIf="pcaFormControls?.closeDate?.errors?.required">
                               Close Date is required
                         </kendo-formerror>
                         <kendo-formerror *ngIf="pcaFormControls?.closeDate?.errors?.incorrect">                              
-                              Close Date must be after Open Date
+                              Close Date is before Open Date
                         </kendo-formerror>
                   </kendo-formfield>
             </div>
@@ -142,8 +144,9 @@
                                     class="input-icon-right" 
                                     placeholder="00.00"     
                                     [fillMode]="formUiStyle.inputFillMode"
-                                    format="c4" 
+                                    format="c2" 
                                     [min]="0"
+                                    [decimals]="2"
                                     [maxlength]="15"
                                     formControlName="totalAmount"
                               >

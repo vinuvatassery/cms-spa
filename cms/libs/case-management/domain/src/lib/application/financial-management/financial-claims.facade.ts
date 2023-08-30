@@ -24,7 +24,6 @@ import { Pharmacy } from '../../entities/client-pharmacy';
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
 
-
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
@@ -628,4 +627,16 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
         },
       });
   }
+
+  loadPrintAdviceLetterData(batchId:any,printAdviceLetterData: any) {
+    return this.financialClaimsDataService.getPrintAdviceLetterData(batchId,printAdviceLetterData);
+  }
+  
+  reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any) {
+    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData);
+}
+
+viewAdviceLetterData(batchId:any,printAdviceLetterData: any) {
+  return this.financialClaimsDataService.viewPrintAdviceLetterData(batchId,printAdviceLetterData);
+}
 }
