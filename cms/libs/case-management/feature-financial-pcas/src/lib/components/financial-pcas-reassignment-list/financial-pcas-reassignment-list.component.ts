@@ -67,7 +67,6 @@ export class FinancialPcasReassignmentListComponent
   @Output() getPcaAssignmentByIdEvent = new EventEmitter<any>();
   @Input() getPcaAssignmentById$ :any
   
-
   public gridMoreActions = [
     {
       buttonType: 'btn-h-primary',

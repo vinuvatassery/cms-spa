@@ -49,20 +49,16 @@ constructor(private formBuilder:FormBuilder){
         assignmentAmount:res.assignmentAmount,
         amountSpent: res.amountSpent
      });
-
      if(this.isViewGridOptionClicked){
      this.pcaReassignmentForm.controls['openDate'].disable();
      this.pcaReassignmentForm.controls['closeDate'].disable();
      this.pcaReassignmentForm.controls['unlimited'].disable();
      this.pcaReassignmentForm.controls['pcaRemainingAmount'].disable();
      this.pcaReassignmentForm.controls['assignmentAmount'].disable();
-     }
-     
+     }    
      this.pcaList.push(`${this.pcaReassignmentByFundSource.fundingSourceCode}-${this.pcaReassignmentByFundSource.pcaCode}`)
- 
      this.pcaReassignmentForm.controls['openDate'].setValue(new Date(this.pcaReassignmentByFundSource.openDate));
-     this.pcaReassignmentForm.controls['closeDate'].setValue(new Date(this.pcaReassignmentByFundSource.closeDate));
-   
+     this.pcaReassignmentForm.controls['closeDate'].setValue(new Date(this.pcaReassignmentByFundSource.closeDate));  
     })
 
   }
