@@ -28,6 +28,5 @@ export class FinancialFundingSourcesRemoveComponent {
       fundingSourceId : this.fundingSourceId
     }
     this.removeConfirmEvent.emit(deleteFundingSourceConfirmParams);
-    console.log(deleteFundingSourceConfirmParams)
   }
 }
