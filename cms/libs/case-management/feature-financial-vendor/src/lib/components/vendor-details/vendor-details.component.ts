@@ -115,7 +115,6 @@ fillFormData(){
   getContactNameValidation(index: number) {
     return (<FormArray>this.medicalProviderForm.get('newAddContactForm')).at(index).get("isCheckContactNameValid")?.value;
   }
-
   checkContactPreference(i : number){
     for (let index = 0; index < this.AddContactForm.length; index++) {
       if(index != i)
@@ -204,7 +203,6 @@ fillFormData(){
 
     }
     this.medicalProviderForm.controls
-
     if (this.providerType == this.vendorTypes.InsuranceVendors) {
 
       this.medicalProviderForm.controls['paymentRunDate']
@@ -331,7 +329,6 @@ fillFormData(){
   closeVedorModal() {
     this.closeModalEventClicked.next(true);
   }
-
   updateVendorDetails() {
     this.validateEditForm();
     this.isValidateForm = true;
@@ -459,14 +456,14 @@ fillFormData(){
     this.medicalProviderForm.controls['nameOnEnvolop']
     .setValidators([]);
       this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
-      this.cdr
     } 
   
 }
-onkeyup( ) {
+onMailCodeChange( )
+ {
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
- 
-    if (mailCode.length >0) {
+    if (mailCode.length >0) 
+    {
       this.medicalProviderForm.controls['addressLine1'].setValidators([Validators.required,]);
       this.medicalProviderForm.controls['addressLine1'].updateValueAndValidity();
 
@@ -484,9 +481,10 @@ onkeyup( ) {
 
       this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.required,]);
       this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
-}
-else{
-  this.onChange();
-}
+    }
+    else
+    {
+      this.onChange();
+   }
 }
 }
