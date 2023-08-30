@@ -69,4 +69,9 @@ export class FinancialPcaDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/count`
     )
   }
+
+  getPcaAssignmentById(pcaAssignmentId:any){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/${pcaAssignmentId}`);
+   }
 }

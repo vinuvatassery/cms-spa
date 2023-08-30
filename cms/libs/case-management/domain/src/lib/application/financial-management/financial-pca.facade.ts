@@ -68,6 +68,10 @@ export class FinancialPcaFacade {
   private financialPcaReportDataSubject = new Subject<any>();
   financialPcaReportData$ = this.financialPcaReportDataSubject.asObservable();
 
+
+  private getPcaAssignmentByIdSubject = new Subject<any>();
+  getPcaAssignmentById$ = this.getPcaAssignmentByIdSubject.asObservable();
+
     /** Public properties **/
 
   // handling the snackbar & loader
@@ -223,5 +227,20 @@ export class FinancialPcaFacade {
   }
   pcaReassignmentCount(){
     return this.financialPcaDataService.pcaReassignmentCount();
+  }
+
+  getPcaAssignmentById(pcaAssignmentId: string) {
+    this.showLoader();
+    this.financialPcaDataService.getPcaAssignmentById(pcaAssignmentId).subscribe({
+      next: (response) => {
+        this.getPcaAssignmentByIdSubject.next(response);
+        this.hideLoader();
+      
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
   }
 }

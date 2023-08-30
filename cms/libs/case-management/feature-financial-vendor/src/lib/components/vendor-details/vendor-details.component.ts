@@ -401,6 +401,7 @@ fillFormData(){
       lastName: formValues.lastName,
       vendorTypeCode: this.providerType,
       tin: formValues.tinNumber,
+      npiNbr: formValues.npiNbr,
       mailCode: formValues.mailCode,
       addressTypeCode: AddressType.Mailing,
       address1: formValues.addressLine1,

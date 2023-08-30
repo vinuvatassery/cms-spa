@@ -57,7 +57,8 @@ export class FinancialPcasPageComponent implements OnInit{
 
    pcaAssignCloseDatesListSubject = new Subject<any>();
   pcaAssignCloseDatesList$ = this.pcaAssignCloseDatesListSubject.asObservable();
-
+  getPcaAssignmentById$ = this.financialPcaFacade.getPcaAssignmentById$;
+  
   constructor(
     private readonly financialPcaFacade: FinancialPcaFacade,
     private readonly fundingSourceFacade: FinancialFundingSourceFacade,
@@ -164,6 +165,11 @@ export class FinancialPcasPageComponent implements OnInit{
       this.financialPcaFacade.deletePca(pcaId);
     }
   }
+
+  getPcaAssignmentById(fundingSourceId:any){
+    this.financialPcaFacade.getPcaAssignmentById(fundingSourceId);
+  }
+
 }
 
 
