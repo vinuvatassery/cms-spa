@@ -41,12 +41,16 @@ section {
 }
 .text-capitalize{
   text-transform: capitalize;
+
 }
 .text-upper{
   text-transform: uppercase;
 }
 .text-normal{
   text-transform: none;
+  .k-window-title{
+    text-transform: none !important;
+  }
 }
 .text {
   &-noWrap {
@@ -283,4 +287,8 @@ section {
 
 .red-text-color{
   color: material-color($hive-error-palette, 400);
+}
+
+.break-word{
+  word-wrap: break-word;
 }

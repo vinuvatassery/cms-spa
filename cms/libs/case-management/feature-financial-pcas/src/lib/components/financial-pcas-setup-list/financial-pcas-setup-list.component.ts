@@ -1,40 +1,44 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { GridFilterParam, PcaDetails } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { TooltipDirective } from '@progress/kendo-angular-tooltip';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Observable, Subject, Subscription, debounceTime } from 'rxjs';
 @Component({
   selector: 'cms-financial-pcas-setup-list',
   templateUrl: './financial-pcas-setup-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
+export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('addEditPcaSetupDialogTemplate', { read: TemplateRef })
   addEditPcaSetupDialogTemplate!: TemplateRef<any>;
   @ViewChild('removePcaSetupDialogTemplate', { read: TemplateRef })
   removePcaSetupDialogTemplate!: TemplateRef<any>;
+  @ViewChild(TooltipDirective)
+  public tooltipDir!: TooltipDirective;
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  pcaSetupRemoveDialogService  : any;
-  pcaSetupAddEditDialogService : any;
-  popupClassAction = 'TableActionPopup app-dropdown-action-list'; 
-  isFinancialPcaSetupGridLoaderShow = false;
+  pcaSetupRemoveDialogService: any;
+  pcaSetupAddEditDialogService: any;
+  popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isEditSetupClosed = false;
   isRemoveConfirmationClosed = false;
   @Input() pageSizes: any;
@@ -42,10 +46,18 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialPcaSetupGridLists$: any;
-  @Output() loadFinancialPcaSetupListEvent = new EventEmitter<any>();
+  @Input() financialPcaSetupGridLoader$: any;
+  @Input() fundingSourceLookup$: any;
+  @Input() pcaActionIsSuccess$ = new Observable<any>();
+  @Input() pcaData$ = new Observable<PcaDetails | null>();
+  @Output() loadFinancialPcaSetupListEvent = new EventEmitter<GridFilterParam>();
+  @Output() loadAddOrEditPcaEvent = new EventEmitter<any>();
+  @Output() savePcaEvent = new EventEmitter<{ pcaId?: string | null, pcaDetails: PcaDetails }>();
+  @Output() removePcaEvent = new EventEmitter<string>();
   public state!: State;
-  sortColumn = 'vendorName';
+  sortColumn = 'pcaCode';
   sortDir = 'Ascending';
+  sortColumnDesc = 'PCA #';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
@@ -53,22 +65,27 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  selectedPcaId?: string | null = null;
+  selectedPcaDesc!: string;
+  selectedFundingSource!: string;
   gridFinancialPcaSetupDataSubject = new Subject<any>();
   gridFinancialPcaSetupData$ =
     this.gridFinancialPcaSetupDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  public gridMoreActions = [
+  searchText = '';
+  private searchSubject = new Subject<string>();
+  private saveResponseSubscription !: Subscription;
+  gridMoreActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit',
       icon: 'edit',
       click: (data: any): void => {
         if (!this.isEditSetupClosed) {
-          this.isEditSetupClosed = true; 
-          this.onOpenAddPcaSetupClicked(this.addEditPcaSetupDialogTemplate);
+          this.isEditSetupClosed = true;
+          this.onOpenAddPcaSetupClicked(this.addEditPcaSetupDialogTemplate, data?.pcaId);
         }
       },
     },
@@ -78,68 +95,105 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isRemoveConfirmationClosed) {
-          this.isRemoveConfirmationClosed = true; 
-          this.onRemovePcaSetupClicked(this.removePcaSetupDialogTemplate);
+          this.isRemoveConfirmationClosed = true;
+          this.onRemovePcaSetupClicked(this.removePcaSetupDialogTemplate, data?.pcaId, data?.pcaDesc, data?.fundingDesc);
         }
       },
     },
   ];
 
+  gridColumns: { [key: string]: string } = {
+    ALL: 'All Columns',
+    isPcaAssigned: 'Assigned',
+    pcaCode: 'PCA #',
+    appropriationYear: 'AY #',
+    pcaDesc: 'Description',
+    totalAmount: 'Amount',
+    remainingAmount: 'Remaining',
+    closeDate: 'Close Date',
+    fundingDesc: 'Funding Name ',
+    fundingSource: 'Funding Source'
+  };
+
+  searchColumnList: { columnName: string, columnDesc: string }[] = [
+    { columnName: 'ALL', columnDesc: 'All Columns' },
+    { columnName: 'pcaCode', columnDesc: 'PCA #' },
+    { columnName: 'appropriationYear', columnDesc: 'AY #' },
+    { columnName: 'pcaDesc', columnDesc: 'Description' },
+    { columnName: 'closeDate', columnDesc: 'Close Date' },
+    { columnName: 'fundingSource', columnDesc: 'Funding Source' },
+    { columnName: 'fundingDesc', columnDesc: 'Funding Name' },
+  ];
+  selectedSearchColumn = 'ALL';
+  filteredByColumnDesc = '';
+  showDateSearchWarning = false;
+  showNumberSearchWarning = false;
+  columnChangeDesc = 'Default Columns'
   /** Constructor **/
   constructor(
-    private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
-  ) {}
+    private dialogService: DialogService,
+    private readonly intl: IntlService,
+    private readonly configProvider: ConfigurationProvider
+  ) { }
 
   ngOnInit(): void {
+    this.initializePcaPage();
+  }
+
+  ngOnChanges(): void {
+    this.initializePCAGrid();
     this.loadFinancialPcaSetupListGrid();
   }
-  ngOnChanges(): void {
+
+  private initializePCAGrid() {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      sort: [{ field: 'pcaCode', dir: 'asc' }]
     };
-
-    this.loadFinancialPcaSetupListGrid();
   }
 
-  private loadFinancialPcaSetupListGrid(): void {
-    this.loadPcaSetup(
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType
-    );
-  }
-  loadPcaSetup(
-    skipCountValue: number,
-    maxResultCountValue: number,
-    sortValue: string,
-    sortTypeValue: string
-  ) {
-    this.isFinancialPcaSetupGridLoaderShow = true;
-    const gridDataRefinerValue = {
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
-    };
-    this.loadFinancialPcaSetupListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
+  ngOnDestroy(): void {
+    this.saveResponseSubscription.unsubscribe();
+    this.searchSubject.complete();
   }
 
-  onChange(data: any) {
+  searchColumnChangeHandler(value: string) {
+    this.filter = [];
+    this.showNumberSearchWarning = (['pcaCode', 'appropriationYear']).includes(value);
+    this.showDateSearchWarning = value === 'closeDate';
+    if (this.searchText) {
+      this.onPcaSearch(this.searchText);
+    }
+  }
+
+  onPcaSearch(searchValue: any) {
+    const isDateSearch = searchValue.includes('/');
+    this.showDateSearchWarning = isDateSearch || this.selectedSearchColumn === 'closeDate';
+    searchValue = this.formatSearchValue(searchValue, isDateSearch);
+    if (isDateSearch && !searchValue) return;
+    this.setFilterBy(false, searchValue, []);
+    this.searchSubject.next(searchValue);
+  }
+
+  performPcaSearch(data: any) {
     this.defaultGridState();
-
+    const operator = (['pcaCode', 'closeDate', 'appropriationYear']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
+    data = this.selectedSearchColumn === 'appropriationYear' ? data.toLowerCase().replace('ay', '') : data;
+    if (this.selectedSearchColumn === 'closeDate' && (!this.isValidDate(data) && data !== '')) {
+      return;
+    }
+    if ((['pcaCode', 'appropriationYear']).includes(this.selectedSearchColumn) && isNaN(Number(data))) {
+      return;
+    }
     this.filterData = {
       logic: 'and',
       filters: [
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
+              field: this.selectedSearchColumn ?? 'pcaCode',
+              operator: operator,
               value: data,
             },
           ],
@@ -150,8 +204,27 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
+    this.loadFinancialPcaSetupListGrid();
+  }
+  restPcaGrid() {
+    this.sortValue = 'pcaCode';
+    this.sortType = 'asc';
+    this.initializePCAGrid();
+    this.sortColumn = 'pcaCode';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
+    this.filter = [];
+    this.searchText = '';
+    this.selectedSearchColumn = 'ALL';
+    this.filteredByColumnDesc = '';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.columnChangeDesc = 'Default Columns';
+    this.showDateSearchWarning = false;
+    this.showNumberSearchWarning = false;
+    this.loadFinancialPcaSetupListGrid();
   }
 
+  /* Public methods */
   defaultGridState() {
     this.state = {
       skip: 0,
@@ -171,65 +244,141 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.filter = stateData?.filter?.filters;
+    this.setFilterBy(true, '', this.filter);
     this.loadFinancialPcaSetupListGrid();
   }
 
-  // updating the pagination infor based on dropdown selection
+  private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
+    this.filteredByColumnDesc = '';
+    if (isFromGrid) {
+      if (filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters?.filter((fld:any)=> fld.value)?.map((fld: any) =>
+            this.gridColumns[fld.field])
+          return ([...new Set(filteredColumns)]);
+        });
+
+        this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
+      }
+      return;
+    }
+
+    if (searchValue !== '') {
+      this.filteredByColumnDesc = this.searchColumnList?.find(i => i.columnName === this.selectedSearchColumn)?.columnDesc ?? '';
+    }
+  }
+
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadFinancialPcaSetupListGrid();
   }
 
-  public filterChange(filter: CompositeFilterDescriptor): void {
+  filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
 
-  gridDataHandle() {
-    this.financialPcaSetupGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridFinancialPcaSetupDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) {
-        this.isFinancialPcaSetupGridLoaderShow = false;
-      }
-    });
-    this.isFinancialPcaSetupGridLoaderShow = false;
-  }
- 
-  public rowClass = (args:any) => ({
+  rowClass = (args: any) => ({
     "table-row-disabled": (!args.dataItem.assigned),
   });
-  onOpenAddPcaSetupClicked(template: TemplateRef<unknown>): void {
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
+  }
+
+  onOpenAddPcaSetupClicked(template: TemplateRef<unknown>, pcaId?: string | null): void {
+    this.loadAddOrEditPcaEvent.emit(pcaId);
+    this.selectedPcaId = pcaId;
     this.pcaSetupAddEditDialogService = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
+
   onCloseAddEditPcaSetupClicked(result: any) {
-    if (result) { 
+    if (result) {
       this.isEditSetupClosed = false;
       this.pcaSetupAddEditDialogService.close();
     }
   }
 
-  onRemovePcaSetupClicked(template: TemplateRef<unknown>): void {
+  onRemovePcaSetupClicked(template: TemplateRef<unknown>, pcaId: string, pcaDesc: string, fundingName: string): void {
+    this.selectedPcaId = pcaId;
+    this.selectedPcaDesc = pcaDesc;
+    this.selectedFundingSource = fundingName;
     this.pcaSetupRemoveDialogService = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
   onCloseRemovePcaSetupClicked(result: any) {
-    if (result) { 
+    if (result) {
       this.isRemoveConfirmationClosed = false;
       this.pcaSetupRemoveDialogService.close();
     }
   }
 
+  savePca(event: { pcaId?: string | null, pcaDetails: PcaDetails }) {
+    this.savePcaEvent.emit(event);
+  }
+
+  removePca(pcaId: string) {
+    this.removePcaEvent.emit(pcaId);
+  }
+
+  /* Private methods */
+  private initializePcaPage() {
+    this.loadFinancialPcaSetupListGrid();
+    this.addActionResponseSubscription();
+    this.addSearchSubjectSubscription();
+  }
+
+  private addActionResponseSubscription() {
+    this.saveResponseSubscription = this.pcaActionIsSuccess$.subscribe((resp: any) => {
+      if (resp === 'remove') {
+        this.onCloseRemovePcaSetupClicked(true);
+      }
+      else if (resp === 'save') {
+        this.onCloseAddEditPcaSetupClicked(true);
+      }
+      this.loadFinancialPcaSetupListGrid();
+    });
+  }
+
+  private loadFinancialPcaSetupListGrid(): void {
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType,
+      JSON.stringify(this.filter));
+    this.loadFinancialPcaSetupListEvent.emit(param);
+  }
+
+  private addSearchSubjectSubscription() {
+    this.searchSubject.pipe(debounceTime(300))
+      .subscribe((searchValue) => {
+        this.performPcaSearch(searchValue);
+      });
+  }
+
+  private isValidDate = (searchValue: any) => isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(new Date(searchValue), this.configProvider?.appSettings?.dateFormat);
+      }
+      else {
+        return '';
+      }
+    }
+
+    return searchValue;
+  }
 
 }
- 
- 
+

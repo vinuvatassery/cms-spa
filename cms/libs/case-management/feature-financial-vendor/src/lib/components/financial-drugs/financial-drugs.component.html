@@ -11,14 +11,9 @@
             (columnVisibilityChange)="columnChange($event)">
 
                 <kendo-grid-column field="ndcNbr" title="NDC" [width]="150"> </kendo-grid-column>
-                <kendo-grid-column field="brandName" title="Brand Name" [width]="100"> </kendo-grid-column>
-                <kendo-grid-column field="drugName" title="Drug Name" [width]="100"> </kendo-grid-column>
-                <kendo-grid-column field="deliveryMethodCode" title="Delivery Method" [width]="100"> </kendo-grid-column>
-                <kendo-grid-column field="includeInManufacturerRebatesFlag" title="Included in rebates?" [width]="100">
-                  <ng-template kendoGridCellTemplate let-dataItem>
-                    {{ dataItem.includeInManufacturerRebatesFlag | yesOrNo }}
-                  </ng-template>
-                </kendo-grid-column>
+                <kendo-grid-column field="brandName" title="Brand Name" [width]="140"> </kendo-grid-column>
+                <kendo-grid-column field="drugName" title="Drug Name" [width]="180"> </kendo-grid-column>
+                <kendo-grid-column field="deliveryMethodCode" title="Delivery Method" [width]="120"> </kendo-grid-column>
                 <kendo-grid-column field="hiv" title="HIV Drugs?" [width]="100">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     {{ dataItem.hiv | yesOrNo }}
@@ -29,12 +24,12 @@
                     {{ dataItem.hepatitis | yesOrNo }}
                   </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column field="opportunisticInfection" title="OI Drugs?" [width]="100">
+                <kendo-grid-column field="opportunisticInfection" title="OI Drugs?" [width]="140">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     {{ dataItem.opportunisticInfection | yesOrNo }}
                   </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column [sortable]="false" field="Option" title=" " [columnMenu]="false" [width]="75" class="text-center">
+                <kendo-grid-column [sortable]="false" field="Option" title=" " [columnMenu]="false" [width]="60" class="text-center">
                     <ng-template kendoGridCellTemplate let-dataItem>
                       <kendo-dropdownbutton [data]="emailBillingAddressActions" icon="more-vertical"
                         class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"

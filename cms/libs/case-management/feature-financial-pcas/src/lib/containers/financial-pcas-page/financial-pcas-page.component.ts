@@ -2,10 +2,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnInit,
 } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialPcaFacade, PcaAssignmentsFacade } from '@cms/case-management/domain';
+import { FinancialFundingSourceFacade, FinancialPcaFacade, PcaAssignmentsFacade, GridFilterParam, PcaDetails } from '@cms/case-management/domain';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggingService } from '@cms/shared/util-core';
 import { Subject } from 'rxjs';
@@ -14,7 +15,7 @@ import { Subject } from 'rxjs';
   templateUrl: './financial-pcas-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPcasPageComponent {
+export class FinancialPcasPageComponent implements OnInit{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
@@ -23,10 +24,11 @@ export class FinancialPcasPageComponent {
   sortType = this.financialPcaFacade.sortType;
   pageSizes = this.financialPcaFacade.gridPageSizes;
   gridSkipCount = this.financialPcaFacade.skipCount;
+  pcaReassignmentCount!: number;
 
   sortValueFinancialPcaSetup = this.financialPcaFacade.sortValueFinancialPcaSetup;
   sortPcaSetupList = this.financialPcaFacade.sortPcaSetupList;
-  
+
   sortValueFinancialPcaAssignment = this.financialPcaFacade.sortValueFinancialPcaAssignment;
   sortPcaAssignmentList = this.financialPcaFacade.sortPcaAssignmentList;
 
@@ -37,9 +39,13 @@ export class FinancialPcasPageComponent {
   sortFinancialPcaReportList = this.financialPcaFacade.sortFinancialPcaReportList;
 
   financialPcaSetupGridLists$ = this.financialPcaFacade.financialPcaSetupData$;
+  financialPcaSetupLoader$ = this.financialPcaFacade.financialPcaSetupLoader$;
   financialPcaAssignmentGridLists$ = this.financialPcaFacade.financialPcaAssignmentData$;
   financialPcaReassignmentGridLists$ = this.financialPcaFacade.financialPcaReassignmentData$;
-  financialPcaReportGridLists$ = this.financialPcaFacade.financialPcaReportData$; 
+  financialPcaReportGridLists$ = this.financialPcaFacade.financialPcaReportData$;
+  fundingSourceLookup$ = this.fundingSourceFacade.fundingSourceLookup$;
+  pcaActionIsSuccess$ = this.financialPcaFacade.pcaActionIsSuccess$;
+  pcaData$ = this.financialPcaFacade.pcaData$;
   objectCodesData$ = this.pcaAssignmentsFacade.objectCodesData$;
   groupCodesData$ = this.pcaAssignmentsFacade.groupCodesData$;
   pcaCodesData$ = this.pcaAssignmentsFacade.pcaCodesData$;
@@ -55,13 +61,25 @@ export class FinancialPcasPageComponent {
 
   constructor(
     private readonly financialPcaFacade: FinancialPcaFacade,
+    private readonly fundingSourceFacade: FinancialFundingSourceFacade,
     private readonly pcaAssignmentsFacade : PcaAssignmentsFacade   
-  ) {}
+  ) { }
+  ngOnInit(): void {
+    this.PcaReassignmetCount();
+  }
 
- 
- 
-  loadFinancialPcaSetupListGrid(event: any) {
-    this.financialPcaFacade.loadFinancialPcaSetupListGrid();
+  PcaReassignmetCount() {
+    this.financialPcaFacade.pcaReassignmentCount().subscribe({
+      next: (val)=>{
+        this.pcaReassignmentCount = val;
+      },
+    })
+  }
+
+
+
+  loadFinancialPcaSetupListGrid(event: GridFilterParam) {
+    this.financialPcaFacade.loadFinancialPcaSetupListGrid(event);
   }
 
   loadFinancialPcaAssignmentListGrid(event: any) {
@@ -69,11 +87,27 @@ export class FinancialPcasPageComponent {
   }
 
   loadFinancialPcaReassignmentListGrid(event: any) {
-    this.financialPcaFacade.loadFinancialPcaReassignmentListGrid();
+    this.financialPcaFacade.loadFinancialPcaReassignmentListGrid(event);
   }
 
-  loadFinancialPcaReportListGrid(event: any) {
-    this.financialPcaFacade.loadFinancialPcaReportListGrid();
+  loadFinancialPcaReportListGrid(data: any) {
+    this.financialPcaFacade.loadFinancialPcaReportListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.filter);
+  }
+
+  loadAddOrEditPcaEvent(pcaId: any) {
+    this.fundingSourceFacade.loadFundingSourceLookup();
+    this.financialPcaFacade.loadPcaById(pcaId);
+  }
+
+  loadPcaById(pcaId: string){
+    this.financialPcaFacade.loadPcaById(pcaId);
+  }
+  savePca(event: { pcaId?: string | null, pcaDetails: PcaDetails }) {
+    if (event?.pcaId) {
+      this.financialPcaFacade.updatePca(event?.pcaId, event?.pcaDetails);
+    } else {
+      this.financialPcaFacade.savePca(event?.pcaDetails);
+    }
   }
 
   loadObjectCodes() {
@@ -126,6 +160,11 @@ export class FinancialPcasPageComponent {
     this.pcaAssignCloseDatesListSubject.next(data?.pcaAssignCloseDatesList)        
    })
   }
+  removePca(pcaId: string) {
+    if(pcaId){
+      this.financialPcaFacade.deletePca(pcaId);
+    }
+  }
 }
 
-  
+

@@ -13,9 +13,16 @@
                             <div class="block-section">
                                 <cms-financial-pcas-setup-list 
                                 [financialPcaSetupGridLists$]="financialPcaSetupGridLists$"
+                                [financialPcaSetupGridLoader$]="financialPcaSetupLoader$"
+                                [fundingSourceLookup$]="fundingSourceLookup$"
+                                [pcaActionIsSuccess$]="pcaActionIsSuccess$"
+                                [pcaData$]="pcaData$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaSetup"
                                 [sortType]="sortType" [sort]="sortPcaSetupList" 
                                 (loadFinancialPcaSetupListEvent)="loadFinancialPcaSetupListGrid($event)"
+                                (loadAddOrEditPcaEvent)="loadAddOrEditPcaEvent($event)"
+                                (savePcaEvent)="savePca($event)"
+                                (removePcaEvent)="removePca($event)"
                                  > </cms-financial-pcas-setup-list>
                                 
                             </div>
@@ -46,7 +53,7 @@
                         </ng-template>
                     </kendo-tabstrip-tab>
                     <kendo-tabstrip-tab title="PCA Reassignment">
-                        <ng-template kendoTabTitle> PCA Reassignment <span class="tab-batch-notify">50</span></ng-template>
+                        <ng-template kendoTabTitle> PCA Reassignment <span class="tab-batch-notify">{{pcaReassignmentCount}}</span></ng-template>
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-financial-pcas-reassignment-list  [financialPcaReassignmentGridLists$]="financialPcaReassignmentGridLists$"

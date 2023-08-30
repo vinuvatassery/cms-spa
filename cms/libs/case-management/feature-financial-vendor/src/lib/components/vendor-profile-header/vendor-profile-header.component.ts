@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'cms-vendor-profile-header',
-  templateUrl: './vendor-profile-header.component.html',
+  templateUrl: './vendor-profile-header.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VendorProfileHeaderComponent {
