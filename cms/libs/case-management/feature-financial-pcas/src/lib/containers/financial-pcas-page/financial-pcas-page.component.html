@@ -50,7 +50,9 @@
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaReassignment"
                                 [sortType]="sortType" [sort]="sortPcaReassignmentList" 
                                 (loadFinancialPcaReassignmentListEvent)="loadFinancialPcaReassignmentListGrid($event)"></cms-financial-pcas-reassignment-list>
-                                
+                                (getPcaAssignmentByIdEvent)="getPcaAssignmentByIdEvent($event)"
+                                [getPcaAssignmentById$]="getPcaAssignmentById$"
+                           
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
