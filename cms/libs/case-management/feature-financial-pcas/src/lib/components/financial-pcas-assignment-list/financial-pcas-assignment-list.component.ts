@@ -17,9 +17,8 @@ import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, first } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-pcas-assignment-list',
@@ -47,6 +46,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
   @Input() pcaAssignCloseDatesList$ : any
   @Input() pcaCodesInfoData$ : any
   @Input() pcaAssignmentData$ : any
+  @Input() assignPcaResponseData$ : any
 
   @Output() loadFinancialPcaAssignmentListEvent = new EventEmitter<any>();
   @Output() loadObjectCodesEvent = new EventEmitter<any>();
@@ -86,7 +86,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
       click: (data: any): void => {
         if (!this.isEditAssignmentClosed) {
           this.isEditAssignmentClosed = true; 
-          this.onOpenAddPcaAssignmentClicked(this.addEditPcaAssignmentDialogTemplate,'');
+          this.onOpenAddPcaAssignmentClicked(data);
         }
       },
     },
@@ -103,7 +103,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
     this.loadObjectCodesEvent.emit()
     this.loadGroupCodesEvent.emit()  
    
-    this. onPcaChangeEvent()
+    this.onPcaChangeEvent()
     this.pcaAssignmentGroupForm = this.formBuilder.group({    
    
       groupCodes:[[]],
@@ -114,6 +114,17 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
   addPcaData(pcaAssignmentData : any)
   {
   this.addPcaDataEvent.emit(pcaAssignmentData)
+
+  this.assignPcaResponseData$.pipe(first((deleteResponse: any ) => deleteResponse != null))
+  .subscribe((dependentData: any) =>
+  {
+    if(dependentData?.status ?? false)
+    {
+      this.onCloseAddEditPcaAssignmentClicked(true)
+      this.groupChange(true)
+    }
+
+  })
   }
 
   onLoadPcaEvent($event :  any)
@@ -130,6 +141,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
     }
     if(this.groupCodeIdsdValue.length > 0 && this.objectCodeIdValue) 
     {
+      this.isFinancialPcaAssignmentGridLoaderShow = true;
       const pcaAssignmentGridArguments = 
       {
         objectId : this.objectCodeIdValue,
@@ -141,33 +153,29 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
     }
   }
 
-
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
 
   gridDataHandle() {
     this.financialPcaAssignmentGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridFinancialPcaAssignmentDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) {
-        this.isFinancialPcaAssignmentGridLoaderShow = false;
-      }
+      this.gridDataResult = data;    
+      this.gridFinancialPcaAssignmentDataSubject.next(this.gridDataResult);     
+        this.isFinancialPcaAssignmentGridLoaderShow = false;     
     });
-    this.isFinancialPcaAssignmentGridLoaderShow = false;
+   
   }
   public rowClass = (args:any) => ({
     "table-row-disabled": (!args.dataItem.isActive),
   });
  
-  onOpenAddPcaAssignmentClicked(template: TemplateRef<unknown>,pcaAssignmentId : string): void {
+  onOpenAddPcaAssignmentClicked(pcaAssignmentId : any): void {   
+    if(pcaAssignmentId != '')
+    {   
     this.getPcaAssignmentEvent.emit(pcaAssignmentId)  
+    }
     this.pcaAssignmentAddEditDialogService = this.dialogService.open({
-      content: template,
+      content: this.addEditPcaAssignmentDialogTemplate,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   } 
@@ -175,19 +183,6 @@ export class FinancialPcasAssignmentListComponent implements OnInit {
     if (result) { 
       this.isEditAssignmentClosed = false;
       this.pcaAssignmentAddEditDialogService.close();
-    }
-  }
-
-  onRemovePcaAssignmentClicked(template: TemplateRef<unknown>): void {
-    this.pcaAssignmentRemoveDialogService = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    });
-  }
-  onCloseRemovePcaAssignmentClicked(result: any) {
-    if (result) { 
-      this.isRemoveAssignmentClosed = false;
-      this.pcaAssignmentRemoveDialogService.close();
     }
   }
 
