@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PharmacyClaimsBatchPageComponent } from '../pharmacy-claims-batch-page.component;
+import { PharmacyClaimsBatchPageComponent } from '../pharmacy-claims-batch-page.component';
 
 describe('PharmacyClaimsBatchPageComponent', () => {
   let component: PharmacyClaimsBatchPageComponent;

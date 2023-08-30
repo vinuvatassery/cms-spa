@@ -15,125 +15,9 @@ export class FinancialPcaDataService {
     private readonly configurationProvider: ConfigurationProvider
   ) {}
 
-  loadFinancialPcaAssignmentListService() {
-    return of([
-      {
-        id: 1,
-        priority: 1,
-        pca: '123123`',
-        object: 'Third Party',
-        objectCode: '234234',
-        amount: '43324342.33',
-        openDate: 'MM/DD/YYYY',
-        closeDate: 'MM/DD/YYYY',
-        totalAmount: '43324342.33',
-        amountUsed: '43324342.33',
-        amountLeft: '43324342.33',
-        isActive: true,
-      },
-      {
-        id: 2,
-        priority: 2,
-        pca: '123123`',
-        object: 'Third Party',
-        objectCode: '234234',
-        amount: '43324342.33',
-        openDate: 'MM/DD/YYYY',
-        closeDate: 'MM/DD/YYYY',
-        totalAmount: '43324342.33',
-        amountUsed: '43324342.33',
-        amountLeft: '43324342.33',
-        isActive: false,
-      },
-    ]);
-  }
-  loadFinancialPcaReassignmentListService() {
-    return of([
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type: 'TPA',
-        clientName: 'FName LName',
-        primaryInsurance: 'FName LName',
-        memberID: 'FName LName',
-        refundWarrant: 'address2',
-        refundAmount: 'address2',
-        depositDate: 'address2',
-        depositMethod: 'address2',
-        originalWarranty: 'XXXXXX',
-        originalAmount: 'XXXXXX',
-        indexCode: 'address2',
-        pca: 'address2',
-        grant: 'address2',
-        vp: 'address2',
-        refundNote: 'address2',
-        entryDate: 'XX-XX-XXXX',
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type: 'TPA',
-        clientName: 'FName LName',
-        primaryInsurance: 'FName LName',
-        memberID: 'FName LName',
-        refundWarrant: 'address2',
-        refundAmount: 'address2',
-        depositDate: 'address2',
-        depositMethod: 'address2',
-        originalWarranty: 'XXXXXX',
-        originalAmount: 'XXXXXX',
-        indexCode: 'address2',
-        pca: 'address2',
-        grant: 'address2',
-        vp: 'address2',
-        refundNote: 'address2',
-        entryDate: 'XX-XX-XXXX',
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type: 'TPA',
-        clientName: 'FName LName',
-        primaryInsurance: 'FName LName',
-        memberID: 'FName LName',
-        refundWarrant: 'address2',
-        refundAmount: 'address2',
-        depositDate: 'address2',
-        depositMethod: 'address2',
-        originalWarranty: 'XXXXXX',
-        originalAmount: 'XXXXXX',
-        indexCode: 'address2',
-        pca: 'address2',
-        grant: 'address2',
-        vp: 'address2',
-        refundNote: 'address2',
-        entryDate: 'XX-XX-XXXX',
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type: 'TPA',
-        clientName: 'FName LName',
-        primaryInsurance: 'FName LName',
-        memberID: 'FName LName',
-        refundWarrant: 'address2',
-        refundAmount: 'address2',
-        depositDate: 'address2',
-        depositMethod: 'address2',
-        originalWarranty: 'XXXXXX',
-        originalAmount: 'XXXXXX',
-        indexCode: 'address2',
-        pca: 'address2',
-        grant: 'address2',
-        vp: 'address2',
-        refundNote: 'address2',
-        entryDate: 'XX-XX-XXXX',
-        by: 'by',
-      },
-    ]);
+  loadFinancialPcaReassignmentListService(gridValuesInput:any) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments`,gridValuesInput);
   }
 
   loadFinancialPcaReportListService(
@@ -180,4 +64,14 @@ export class FinancialPcaDataService {
     return this.http.delete<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/${pcaId}`);
   }
+  pcaReassignmentCount(){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/count`
+    )
+  }
+
+  getPcaAssignmentById(pcaAssignmentId:any){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/${pcaAssignmentId}`);
+   }
 }
