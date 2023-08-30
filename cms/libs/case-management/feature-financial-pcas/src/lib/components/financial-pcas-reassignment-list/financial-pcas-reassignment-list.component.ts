@@ -46,6 +46,10 @@ export class FinancialPcasReassignmentListComponent
   @Input() sort: any;
   @Input() financialPcaReassignmentGridLists$: any;
   @Output() loadFinancialPcaReassignmentListEvent = new EventEmitter<any>();
+  @Output() getPcaReassignmentByFundSourceIdEvent = new EventEmitter<any>();
+  @Output() saveEditPcaReassignmentClickedEvent = new EventEmitter();
+  @Input() pcaReassignmentByFundSourceId$ :any
+
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -56,7 +60,7 @@ export class FinancialPcasReassignmentListComponent
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  editPcaReassignmentItem: any;
   gridFinancialPcaReassignmentDataSubject = new Subject<any>();
   gridFinancialPcaReassignmentData$ =
     this.gridFinancialPcaReassignmentDataSubject.asObservable();
@@ -225,6 +229,9 @@ export class FinancialPcasReassignmentListComponent
     this.isFinancialPcaReassignmentGridLoaderShow = false;
   }
 
+  getPcaReassignmentByFundSourceId(fundingSourceId:any){
+    this.getPcaReassignmentByFundSourceIdEvent.emit(fundingSourceId);
+  }
  
   onOpenViewEditPcaReassignmentClicked(template: TemplateRef<unknown>): void {
     this.pcaReassignmentAddEditDialogService = this.dialogService.open({
@@ -251,4 +258,11 @@ export class FinancialPcasReassignmentListComponent
       this.pcaReassignmentConfirmationDialogService.close();
     }
   }
+  editPcaReassignmentVaules(updatePcaReassignment:any){
+    this.saveEditPcaReassignmentClickedEvent.emit(updatePcaReassignment);
+    this.isViewGridOptionClicked = false;
+    this.isEditGridOptionClicked = false;
+    this.pcaReassignmentAddEditDialogService.close();
+  }
+
 }

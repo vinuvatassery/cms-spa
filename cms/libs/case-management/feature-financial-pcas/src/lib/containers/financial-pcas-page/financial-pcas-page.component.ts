@@ -45,6 +45,7 @@ export class FinancialPcasPageComponent implements OnInit{
   fundingSourceLookup$ = this.fundingSourceFacade.fundingSourceLookup$;
   pcaActionIsSuccess$ = this.financialPcaFacade.pcaActionIsSuccess$;
   pcaData$ = this.financialPcaFacade.pcaData$;
+  pcaReassignmentByFundSourceId$ = this.financialPcaFacade.pcaReassignmentByFundSourceId$;
 
   constructor(
     private readonly financialPcaFacade: FinancialPcaFacade,
@@ -106,6 +107,18 @@ export class FinancialPcasPageComponent implements OnInit{
       this.financialPcaFacade.deletePca(pcaId);
     }
   }
+ 
+  getPcaReassignmentByFundSourceId(fundingSourceId:any){
+    this.financialPcaFacade.getPcaReassignmentByFundSourceId(fundingSourceId);
+  }
+  updateReassignmentPca(updateReassignmentData:any){
+    console.log(updateReassignmentData)
+    this.financialPcaFacade.updateReassignmentPca(updateReassignmentData);
+
+
+  }
+  
+
 }
 
 
