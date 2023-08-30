@@ -239,6 +239,15 @@
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
+      <div *ngIf="providerType == vendorTypes.Pharmacy && !editVendorInfo" class="flex-col mt-1">
+        <div class="component-list-h">
+          <span class="app-checkboxwidtext-wrapper">
+            <input type="checkbox" kendoCheckBox aria-labelledby="Rebate" id="physicalAddressFlag"
+              formControlName="physicalAddressFlag" />
+            <label class="k-checkbox-label" for="physicalAddressFlag">  This is the pharmacy's physical address </label>
+          </span>
+        </div>
+      </div>
 
       <div
         *ngIf="(providerType != vendorTypes.MedicalProviders) && (providerType != vendorTypes.DentalProviders) && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy && (providerType != vendorTypes.Manufacturers)"

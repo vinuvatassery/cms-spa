@@ -138,6 +138,7 @@ export class FinancialVendorPageComponent implements OnInit {
       city: [''],
       state: [''],
       zip: [''],
+      physicalAddressFlag: [''],
       isPreferedPharmacy: [''],
       paymentRunDate:[''],
       isAcceptCombinedPayment:[''],
