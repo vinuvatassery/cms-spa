@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnInit,
 } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
@@ -13,7 +14,7 @@ import { LoggingService } from '@cms/shared/util-core';
   templateUrl: './financial-pcas-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPcasPageComponent {
+export class FinancialPcasPageComponent implements OnInit{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
@@ -22,6 +23,7 @@ export class FinancialPcasPageComponent {
   sortType = this.financialPcaFacade.sortType;
   pageSizes = this.financialPcaFacade.gridPageSizes;
   gridSkipCount = this.financialPcaFacade.skipCount;
+  pcaReassignmentCount!: number;
 
   sortValueFinancialPcaSetup = this.financialPcaFacade.sortValueFinancialPcaSetup;
   sortPcaSetupList = this.financialPcaFacade.sortPcaSetupList;
@@ -43,7 +45,7 @@ export class FinancialPcasPageComponent {
   financialPcaSubReportGridLists$ = this.financialPcaFacade.financialPcaSubReportData$;
   fundingSourceLookup$ = this.fundingSourceFacade.fundingSourceLookup$;
   pcaActionIsSuccess$ = this.financialPcaFacade.pcaActionIsSuccess$;
-  pcaData$ = this.financialPcaFacade.pcaData$
+  pcaData$ = this.financialPcaFacade.pcaData$;
 
   constructor(
     private readonly financialPcaFacade: FinancialPcaFacade,
@@ -53,6 +55,17 @@ export class FinancialPcasPageComponent {
     private readonly cdr: ChangeDetectorRef,
     private loggingService: LoggingService,
   ) { }
+  ngOnInit(): void {
+    this.PcaReassignmetCount();
+  }
+
+  PcaReassignmetCount() {
+    this.financialPcaFacade.pcaReassignmentCount().subscribe({
+      next: (val)=>{
+        this.pcaReassignmentCount = val;
+      },
+    })
+  }
 
 
 
@@ -65,7 +78,7 @@ export class FinancialPcasPageComponent {
   }
 
   loadFinancialPcaReassignmentListGrid(event: any) {
-    this.financialPcaFacade.loadFinancialPcaReassignmentListGrid();
+    this.financialPcaFacade.loadFinancialPcaReassignmentListGrid(event);
   }
 
   loadFinancialPcaReportListGrid(data: any) {

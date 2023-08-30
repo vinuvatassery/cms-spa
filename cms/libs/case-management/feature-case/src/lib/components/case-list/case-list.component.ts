@@ -361,6 +361,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.saveGridState();
     this.loadProfileCasesList();
   }
+  
   onColumnReorder(event:any)
   {
     this.columnsReordered = true;
