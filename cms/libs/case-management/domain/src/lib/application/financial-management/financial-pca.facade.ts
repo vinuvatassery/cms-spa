@@ -71,7 +71,8 @@ export class FinancialPcaFacade {
   private financialPcaReportDataSubject = new Subject<any>();
   financialPcaReportData$ = this.financialPcaReportDataSubject.asObservable();
 
-
+  private financialPcaSubReportDataSubject = new Subject<any>();
+  financialPcaSubReportData$ = this.financialPcaSubReportDataSubject.asObservable();
 
   /** Public properties **/
 
@@ -241,5 +242,32 @@ export class FinancialPcaFacade {
         this.hideLoader();
       },
     });
+  }
+
+  loadFinancialPcaSubReportListGrid(
+    objecCodeGroupCodeId:string,
+    skipCount: number,
+    maxResultCount: number
+  ) {
+    this.financialPcaDataService
+      .loadFinancialPcaSubReportListService(
+        objecCodeGroupCodeId,
+        skipCount,
+        maxResultCount
+      )
+      .subscribe({
+        next: (dataResponse) => {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.financialPcaSubReportDataSubject.next(gridView);
+          this.hideLoader();
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.hideLoader();
+        },
+      });
   }
 }

@@ -40,6 +40,7 @@ export class FinancialPcasPageComponent {
   financialPcaAssignmentGridLists$ = this.financialPcaFacade.financialPcaAssignmentData$;
   financialPcaReassignmentGridLists$ = this.financialPcaFacade.financialPcaReassignmentData$;
   financialPcaReportGridLists$ = this.financialPcaFacade.financialPcaReportData$;
+  financialPcaSubReportGridLists$ = this.financialPcaFacade.financialPcaSubReportData$;
   fundingSourceLookup$ = this.fundingSourceFacade.fundingSourceLookup$;
   pcaActionIsSuccess$ = this.financialPcaFacade.pcaActionIsSuccess$;
   pcaData$ = this.financialPcaFacade.pcaData$
@@ -92,6 +93,10 @@ export class FinancialPcasPageComponent {
     if(pcaId){
       this.financialPcaFacade.deletePca(pcaId);
     }
+  }
+
+  loadFinancialPcaSubReportListGrid(data:any) {
+    this.financialPcaFacade.loadFinancialPcaSubReportListGrid(data?.objecCodeGroupCodeId,data?.skipCount, data?.maxResultCount);
   }
 }
 

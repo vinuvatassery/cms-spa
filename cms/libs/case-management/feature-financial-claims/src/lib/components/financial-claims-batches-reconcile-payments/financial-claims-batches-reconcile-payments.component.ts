@@ -627,8 +627,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     onRowSelection(grid:any, selection:any)
     {
       const data = selection.selectedRows[0].dataItem;
-      this.batchId=this.batchId;
-      this.entityId = data.entityId;          
       this.isBreakoutPanelShow=true;
       const ReconcilePaymentResponseDto =
       {
