@@ -39,7 +39,7 @@ aria-label="add"> Assignment</button>
 
 <div class="app-c-table">
       <kendo-grid [resizable]="true" [loading]="isFinancialPcaAssignmentGridLoaderShow"  
-             [rowClass]="rowClass" [data]="financialPcaAssignmentGridLists$ | async">
+             [rowClass]="rowCallback" [data]="financialPcaAssignmentGridLists$ | async" (dataStateChange)="dataStateChange($event)">
          
  
             <kendo-grid-column     field=""    title="" [width]="50"   [columnMenu]="false" [sortable]="false"  class="text-center text-muted"   >

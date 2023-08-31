@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -8,6 +8,7 @@ import { first } from 'rxjs';
   selector: 'cms-financial-pcas-assignment-form',
   templateUrl: './financial-pcas-assignment-form.component.html',
   styleUrls: ['./financial-pcas-assignment-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPcasAssignmentFormComponent implements OnInit{
 
@@ -112,6 +113,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit{
                 groupCodes : groupCodeIdsAssignedValue               
               }
             )
+            this.ref.detectChanges()
           
         }
     })
