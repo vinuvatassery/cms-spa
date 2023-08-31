@@ -5,7 +5,6 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  OnChanges,
   Output,
   TemplateRef,
   ViewChild,
@@ -30,7 +29,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
   styleUrls: ['./financial-claims-batches-reconcile-payments.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit, OnChanges {
+export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit {
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
   //reconcileAssignValueBatchForm!: FormGroup;
   PrintAuthorizationDialog!: TemplateRef<any>;
@@ -108,8 +107,14 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     if(this.claimsType === 'dental'){
       this.providerTitle = 'Dental Provider';
     }
-    this.isBreakoutPanelShow=false; 
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[2]?.value,
+      sort: this.sortBatch,
+    };
+    this.gridDataHandle();
     this.loadReconcileListGrid();
+    this.isBreakoutPanelShow=false;     
     const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
@@ -121,14 +126,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         paymentToReconcileCount : 0
       } 
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
-  }
-  ngOnChanges(): void {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[2]?.value,
-      sort: this.sortBatch,
-    };
-    this.gridDataHandle();
   }
 
   private loadReconcileListGrid(): void {
