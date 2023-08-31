@@ -10,7 +10,8 @@ export interface PcaDetails {
   export interface UpdatePcaDetails{
     openDate: string
     closeDate: string
-    totalAmount: number
+    assignmentAmount: number
     pcaAssignmentId:string
     UnlimitedFlag:string
+    pcaId:string  
   }

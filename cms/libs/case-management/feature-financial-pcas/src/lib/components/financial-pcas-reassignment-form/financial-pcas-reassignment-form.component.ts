@@ -76,11 +76,13 @@ constructor(private formBuilder:FormBuilder){
       let pcaDetails: UpdatePcaDetails = {
         openDate: formData.openDate,
         closeDate: formData.closeDate,
-        totalAmount: formData.assignmentAmount,
+        assignmentAmount: formData.assignmentAmount,
         UnlimitedFlag: this.checkboxValue,
         pcaAssignmentId: this.pcaReassignmentByFundSource.pcaAssignmentId,
+        pcaId:  this.pcaReassignmentByFundSource.pcaId,
       };
       this.saveEditPcaReassignmentClickedEvent.emit(pcaDetails);
+      console.log(pcaDetails)
     }
   }
   dateValidate()
@@ -91,6 +93,7 @@ constructor(private formBuilder:FormBuilder){
       this.pcaReassignmentForm.controls['closeDate'].setErrors({ 'incorrect': true })
     }
   }
+ 
 }
 
  
