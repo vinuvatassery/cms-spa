@@ -42,9 +42,11 @@ export class FinancialPcasPageComponent implements OnInit{
   financialPcaAssignmentGridLists$ = this.pcaAssignmentsFacade.financialPcaAssignmentData$;
   financialPcaReassignmentGridLists$ = this.financialPcaFacade.financialPcaReassignmentData$;
   financialPcaReportGridLists$ = this.financialPcaFacade.financialPcaReportData$;
+  financialPcaSubReportGridLists$ = this.financialPcaFacade.financialPcaSubReportData$;
   fundingSourceLookup$ = this.fundingSourceFacade.fundingSourceLookup$;
   pcaActionIsSuccess$ = this.financialPcaFacade.pcaActionIsSuccess$;
   pcaData$ = this.financialPcaFacade.pcaData$;
+  pcaReassignmentByFundSourceId$ = this.financialPcaFacade.pcaReassignmentByFundSourceId$;
   objectCodesData$ = this.pcaAssignmentsFacade.objectCodesData$;
   groupCodesData$ = this.pcaAssignmentsFacade.groupCodesData$;
   pcaCodesData$ = this.pcaAssignmentsFacade.pcaCodesData$;
@@ -166,10 +168,25 @@ export class FinancialPcasPageComponent implements OnInit{
     }
   }
 
+  loadFinancialPcaSubReportListGrid(data:any) {
+    this.financialPcaFacade.loadFinancialPcaSubReportListGrid(data?.objecCodeGroupCodeId,data?.skipCount, data?.maxResultCount);
+  }
+
   getPcaAssignmentById(fundingSourceId:any){
     this.financialPcaFacade.getPcaAssignmentById(fundingSourceId);
   }
+  getPcaReassignmentByFundSourceId(fundingSourceId:any){
+    this.financialPcaFacade.getPcaReassignmentByFundSourceId(fundingSourceId);
+  }
+  updateReassignmentPca(updateReassignmentData:any){
+    this.financialPcaFacade.updateReassignmentPca(updateReassignmentData);
+  }
+  
+  saveEditPcaReassignmentClicked(updateReassignmentValue:any){
+    this.financialPcaFacade.updateReassignmentPca(updateReassignmentValue);
 
+  }
+  
 }
 
 
