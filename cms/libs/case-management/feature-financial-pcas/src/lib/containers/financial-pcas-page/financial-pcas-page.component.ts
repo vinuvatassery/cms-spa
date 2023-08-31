@@ -176,6 +176,12 @@ export class FinancialPcasPageComponent implements OnInit{
   updateReassignmentPca(updateReassignmentData:any){
     this.financialPcaFacade.updateReassignmentPca(updateReassignmentData);
   }
+  
+  saveEditPcaReassignmentClicked(updateReassignmentValue:any){
+    this.financialPcaFacade.updateReassignmentPca(updateReassignmentValue);
+
+  }
+  
 }
 
 
