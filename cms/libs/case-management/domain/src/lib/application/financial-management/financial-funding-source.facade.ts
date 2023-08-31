@@ -90,7 +90,7 @@ export class FinancialFundingSourceFacade {
       next: (dataResponse) => {
         this.addFundingSourceSubject.next(dataResponse);
         this.hideLoader();
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, `Added funding source successfully`);
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, `Funding Source added!`);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
@@ -105,7 +105,7 @@ export class FinancialFundingSourceFacade {
       next: (dataResponse) => {
         this.updateFundingSourceSubject.next(dataResponse);
         this.hideLoader();
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, `Updated funding source successfully`);
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, `Funding source Updated!`);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
