@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UpdatePcaDetails } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -12,10 +13,12 @@ export class FinancialPcasReassignmentFormComponent implements  OnInit {
   @Input() editPcaReassignmentItem:any
   @Output() closeEditPcaReassignmentClickedEvent = new EventEmitter();
   @Output() getPcaAssignmentByIdEvent = new EventEmitter<any>();
+  @Output() saveEditPcaReassignmentClickedEvent = new EventEmitter<any>();
   @Input() getPcaAssignmentById$ :any
   @Input() isViewGridOptionClicked = false;
   pcaReassignmentByFundSource: any;
   pcaReassignmentForm!: FormGroup;
+  checkboxValue!: string;
 
   pcaList:string[] = [] 
   selectedValue: any;
@@ -29,13 +32,14 @@ constructor(private formBuilder:FormBuilder){
       ay: [{value: '', disabled: true}],
       openDate: ['', Validators.required],
       closeDate: ['', Validators.required],
-      assignmentAmount :[''],
+      assignmentAmount :['',Validators.required],
       amountSpent :[{value: '', disabled: true}],
       balanceAmount :[{value: '', disabled: true}],
       pcaRemainingAmount:[''],
       pcaAllocated:[{value: '', disabled: true}],
       unlimited:[false]
     })
+
     this.getPcaAssignmentByIdEvent.emit(this.editPcaReassignmentItem.pcaAssignmentId)
     this.getPcaAssignmentById$.subscribe((res:any) =>{
      this.pcaReassignmentByFundSource = res;
@@ -65,6 +69,31 @@ constructor(private formBuilder:FormBuilder){
   closeEditPcaReassignmentClicked() {
     this.closeEditPcaReassignmentClickedEvent.emit(true);
   }
+  saveEditPcaReassignmentClicked() {
+    if (this.pcaReassignmentForm.valid) {
+      let formData = this.pcaReassignmentForm.value;
+      this.checkboxValue = formData.unlimited ? 'Y' : 'N'
+      let pcaDetails: UpdatePcaDetails = {
+        openDate: formData.openDate,
+        closeDate: formData.closeDate,
+        assignmentAmount: formData.assignmentAmount,
+        UnlimitedFlag: this.checkboxValue,
+        pcaAssignmentId: this.pcaReassignmentByFundSource.pcaAssignmentId,
+        pcaId:  this.pcaReassignmentByFundSource.pcaId,
+      };
+      this.saveEditPcaReassignmentClickedEvent.emit(pcaDetails);
+      console.log(pcaDetails)
+    }
+  }
+  dateValidate()
+  {
+    const endDate = this.pcaReassignmentForm.controls['closeDate'].value;
+    const startDate = this.pcaReassignmentForm.controls['openDate'].value;
+    if (endDate <= startDate && this.pcaReassignmentForm.controls['closeDate'].value) {
+      this.pcaReassignmentForm.controls['closeDate'].setErrors({ 'incorrect': true })
+    }
+  }
+ 
 }
 
  
