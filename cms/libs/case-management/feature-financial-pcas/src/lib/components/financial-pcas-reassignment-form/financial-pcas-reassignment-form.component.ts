@@ -91,9 +91,6 @@ constructor(private formBuilder:FormBuilder){
       this.pcaReassignmentForm.controls['closeDate'].setErrors({ 'incorrect': true })
     }
   }
-  handleCheckboxChange() {
-    const valueToSend = this.checkboxValue ? 'Y' : 'N';
-  }
 }
 
  
