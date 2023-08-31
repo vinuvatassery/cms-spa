@@ -628,15 +628,15 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       });
   }
 
-  loadPrintAdviceLetterData(batchId:any,printAdviceLetterData: any) {
-    return this.financialClaimsDataService.getPrintAdviceLetterData(batchId,printAdviceLetterData);
+  loadPrintAdviceLetterData(batchId:any,printAdviceLetterData: any,claimsType:any) {
+    return this.financialClaimsDataService.getPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
   }
   
-  reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any) {
-    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData);
+  reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any,claimsType:any) {
+    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData,claimsType);
 }
 
-viewAdviceLetterData(batchId:any,printAdviceLetterData: any) {
-  return this.financialClaimsDataService.viewPrintAdviceLetterData(batchId,printAdviceLetterData);
+viewAdviceLetterData(batchId:any,printAdviceLetterData: any, claimsType:any) {
+  return this.financialClaimsDataService.viewPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
 }
 }
