@@ -11,15 +11,20 @@
 
                 <kendo-grid-column field="batchName" title="Batch #" [width]="150"> </kendo-grid-column> 
                 <kendo-grid-column field="batchNumber" title="Item #" [width]="100"> </kendo-grid-column>
-                <kendo-grid-column field="clientFullName" title="Client Name" [width]="170"> </kendo-grid-column>
+                <kendo-grid-column field="clientFullName" title="Client Name" [width]="170">
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                    <button aria-label="Client Name" kendoButton look="flat" class="card-link-button" (click)="onClientNameClicked(dataItem)">
+                      {{ dataItem.clientFullName }}
+                    </button>
+                  </ng-template> 
+                </kendo-grid-column>
                 <kendo-grid-column field="vendorName" title="Pharmacy Name" [width]="270"> </kendo-grid-column>
-                <kendo-grid-column field="paymentType" title="Payment Method" [width]="100"> </kendo-grid-column>
                 <kendo-grid-column field="insuranceFirstName" title="Name on Primary Insurance Card" [width]="150"> 
                   <ng-template kendoGridCellTemplate let-dataItem>
                     {{ dataItem.insuranceFirstName ?? '' }} {{ dataItem.insuranceLastName ?? '' }}
                 </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column field="clientId" title="Member ID" [width]="100"> </kendo-grid-column>
+                <kendo-grid-column field="clientId" title="Client ID" [width]="100"> </kendo-grid-column>
                 <kendo-grid-column field="totalAmountPaid" title="Total Amount Paid" [width]="100"> </kendo-grid-column>
                 <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="100"> </kendo-grid-column>
                 <kendo-grid-column field="warrantNumber" title="Warrant #" [width]="100"> </kendo-grid-column>
@@ -39,7 +44,7 @@
                 <kendo-grid-column field="objectCode" title="Object Code" [width]="100"> </kendo-grid-column>
                 <kendo-grid-column field="rxQty" title="RX Qty" [width]="100"> </kendo-grid-column>
                 <kendo-grid-column field="rx Type" title="RX Type" [width]="100"> </kendo-grid-column>
-                <kendo-grid-column field="rxDays" title="RX Days" [width]="100"> </kendo-grid-column>
+                <kendo-grid-column field="rxDays" title="RX Days Supply" [width]="100"> </kendo-grid-column>
                 <kendo-grid-column field="creationTime" title="Entry Date" [width]="100">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     {{ dataItem.creationTime | date:'MM/dd/yyyy' }}

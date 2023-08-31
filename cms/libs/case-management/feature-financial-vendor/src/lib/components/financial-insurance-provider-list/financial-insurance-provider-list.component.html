@@ -24,7 +24,7 @@
             </kendo-popover>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="Option" title="Option" [columnMenu]="false" [width]="10" class="text-center">
+        <kendo-grid-column field="Option" title="Option" [columnMenu]="false" [width]="20" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton [data]="emailBillingAddressActions" icon="more-vertical"
               class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -83,7 +83,7 @@
   <div class="flex-col mt-1">
     <button kendoButton [primary]="true" icon="add" aria-label="add Insurance Plan" class="mr-1"
       (click)="clickOpenAddEditInsurancePlanDetails()">
-      Insurance Plan
+      Insurance Provider
     </button>
 
     <button kendoButton icon="export" [primary]="true" look="flat" aria-label="Export Insurance Plan">
