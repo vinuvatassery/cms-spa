@@ -42,6 +42,7 @@ export class FinancialPcasPageComponent implements OnInit{
   financialPcaAssignmentGridLists$ = this.pcaAssignmentsFacade.financialPcaAssignmentData$;
   financialPcaReassignmentGridLists$ = this.financialPcaFacade.financialPcaReassignmentData$;
   financialPcaReportGridLists$ = this.financialPcaFacade.financialPcaReportData$;
+  financialPcaSubReportGridLists$ = this.financialPcaFacade.financialPcaSubReportData$;
   fundingSourceLookup$ = this.fundingSourceFacade.fundingSourceLookup$;
   pcaActionIsSuccess$ = this.financialPcaFacade.pcaActionIsSuccess$;
   pcaData$ = this.financialPcaFacade.pcaData$;
@@ -165,6 +166,10 @@ export class FinancialPcasPageComponent implements OnInit{
     if(pcaId){
       this.financialPcaFacade.deletePca(pcaId);
     }
+  }
+
+  loadFinancialPcaSubReportListGrid(data:any) {
+    this.financialPcaFacade.loadFinancialPcaSubReportListGrid(data?.objecCodeGroupCodeId,data?.skipCount, data?.maxResultCount);
   }
 
   getPcaAssignmentById(fundingSourceId:any){

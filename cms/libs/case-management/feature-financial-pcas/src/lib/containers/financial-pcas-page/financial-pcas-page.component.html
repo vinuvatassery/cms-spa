@@ -77,7 +77,9 @@
                                 <cms-financial-pcas-assignment-report-list  [financialPcaReportGridLists$]="financialPcaReportGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaReport"
                                 [sortType]="sortType" [sort]="sortFinancialPcaReportList" 
-                                (loadFinancialPcaReportListEvent)="loadFinancialPcaReportListGrid($event)"></cms-financial-pcas-assignment-report-list>
+                                (loadFinancialPcaReportListEvent)="loadFinancialPcaReportListGrid($event)"
+                                [financialPcaSubReportGridLists$]="financialPcaSubReportGridLists$"
+                                (loadFinancialPcaSubReportListEvent)="loadFinancialPcaSubReportListGrid($event)"></cms-financial-pcas-assignment-report-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

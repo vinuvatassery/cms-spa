@@ -69,6 +69,16 @@ export class FinancialPcaDataService {
     )
   }
 
+  loadFinancialPcaSubReportListService(
+    objecCodeGroupCodeId:string,
+    skipCount: number,
+    maxResultCount: number
+  ) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/${objecCodeGroupCodeId}/reports?SortType=asc&Sorting=priority&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`
+    );
+  }
+
   getPcaAssignmentById(pcaAssignmentId:any){
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/${pcaAssignmentId}`);
