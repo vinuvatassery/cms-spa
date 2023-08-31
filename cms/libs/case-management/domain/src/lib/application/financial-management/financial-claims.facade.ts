@@ -643,9 +643,9 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
 viewAdviceLetterData(batchId:any,printAdviceLetterData: any) {
   return this.financialClaimsDataService.viewPrintAdviceLetterData(batchId,printAdviceLetterData);
 }
-loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any){
+loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, typeCode : string){
   this.showLoader();
-  this.financialClaimsDataService.CheckExceededMaxBenefit(serviceCost,clientId).subscribe({
+  this.financialClaimsDataService.CheckExceededMaxBenefit(serviceCost,clientId, typeCode).subscribe({
     next: (serviceCostResponse:any)=>{
       this.serviceCostFlag =  serviceCostResponse;
       let response = {
@@ -655,7 +655,6 @@ loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any){
       this.showExceedMaxBenefitExceptionSubject.next(response);
     },
     error: (err:any) => {
-      debugger
       this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
     },
   })

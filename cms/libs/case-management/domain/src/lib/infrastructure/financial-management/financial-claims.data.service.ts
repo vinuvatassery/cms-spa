@@ -502,8 +502,14 @@ export class FinancialClaimsDataService {
       { responseType: 'blob' }
     );
   }
-  CheckExceededMaxBenefit(serviceCost: number, clientId: number ) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/exceeded-limit?servicesCost=${serviceCost}&clientId=${clientId}`
+  CheckExceededMaxBenefit(serviceCost: number, clientId: number, typeCode : string ) {
+    let path;
+    if (typeCode == FinancialProvider.MedicalProvider) {
+      path = 'financial-management/claims/medical';
+    } else {
+      path = 'financial-management/claims/dental';
+    }
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/exceeded-limit?servicesCost=${serviceCost}&clientId=${clientId}`
     );
   }
 }
