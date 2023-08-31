@@ -72,6 +72,9 @@ export class FinancialPcaFacade {
   private getPcaAssignmentByIdSubject = new Subject<any>();
   getPcaAssignmentById$ = this.getPcaAssignmentByIdSubject.asObservable();
 
+  private pcaReassignmentByFundSourceIdSubject = new Subject<any>();
+  pcaReassignmentByFundSourceId$ = this.pcaReassignmentByFundSourceIdSubject.asObservable();
+
     /** Public properties **/
 
   // handling the snackbar & loader
@@ -236,6 +239,34 @@ export class FinancialPcaFacade {
         this.getPcaAssignmentByIdSubject.next(response);
         this.hideLoader();
       
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+  updateReassignmentPca(pcaModel: PcaDetails) {
+    this.showLoader();
+    this.financialPcaDataService.updateReassignmentPca(pcaModel).subscribe({
+      next: (response) => {
+        this.pcaActionIsSuccessSubject.next('save');
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+  getPcaReassignmentByFundSourceId(fundingSourceId: string) {
+    this.showLoader();
+    this.financialPcaDataService.getPcaReassignmentByFundSourceId(fundingSourceId).subscribe({
+      next: (response) => {
+        this.pcaReassignmentByFundSourceIdSubject.next(response);
+        this.hideLoader();
+
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
