@@ -40,7 +40,8 @@
                                 [pcaAssignOpenDatesList$]="pcaAssignOpenDatesList$ | async"       
                                 [pcaAssignCloseDatesList$]="pcaAssignCloseDatesList$ | async"  
                                 [pcaCodesInfoData$]="pcaCodesInfoData$"     
-                                [pcaAssignmentData$]="pcaAssignmentData$"                     
+                                [pcaAssignmentData$]="pcaAssignmentData$"      
+                                [assignPcaResponseData$]="assignPcaResponseData$"               
                                 (loadObjectCodesEvent)="loadObjectCodes()"
                                 (loadGroupCodesEvent)="loadGroupCodes()"                                                          
                                 (pcaChangeEvent)="loadPcaDates()"
@@ -60,9 +61,12 @@
                                 <cms-financial-pcas-reassignment-list  [financialPcaReassignmentGridLists$]="financialPcaReassignmentGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaReassignment"
                                 [sortType]="sortType" [sort]="sortPcaReassignmentList" 
-                                (loadFinancialPcaReassignmentListEvent)="loadFinancialPcaReassignmentListGrid($event)"></cms-financial-pcas-reassignment-list>
-                                (getPcaAssignmentByIdEvent)="getPcaAssignmentByIdEvent($event)"
+                                (loadFinancialPcaReassignmentListEvent)="loadFinancialPcaReassignmentListGrid($event)"
+                                (updatePcaAssignmentByEvent)="saveEditPcaReassignmentClicked($event)"
+                                (getPcaAssignmentByIdEvent)="getPcaAssignmentById($event)"
                                 [getPcaAssignmentById$]="getPcaAssignmentById$"
+                                ></cms-financial-pcas-reassignment-list>
+                          
                            
                             </div>
                         </ng-template>
@@ -74,7 +78,9 @@
                                 <cms-financial-pcas-assignment-report-list  [financialPcaReportGridLists$]="financialPcaReportGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaReport"
                                 [sortType]="sortType" [sort]="sortFinancialPcaReportList" 
-                                (loadFinancialPcaReportListEvent)="loadFinancialPcaReportListGrid($event)"></cms-financial-pcas-assignment-report-list>
+                                (loadFinancialPcaReportListEvent)="loadFinancialPcaReportListGrid($event)"
+                                [financialPcaSubReportGridLists$]="financialPcaSubReportGridLists$"
+                                (loadFinancialPcaSubReportListEvent)="loadFinancialPcaSubReportListGrid($event)"></cms-financial-pcas-assignment-report-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
