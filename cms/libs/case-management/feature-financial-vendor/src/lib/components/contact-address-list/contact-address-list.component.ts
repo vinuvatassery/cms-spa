@@ -232,7 +232,6 @@ export class ContactAddressListComponent implements OnChanges {
   }
 contactUpdated(res:boolean)
 {
-  debugger
 if(res)
 {
   this.vendocontactsFacade.loadcontacts(this.VendorAddressId,
