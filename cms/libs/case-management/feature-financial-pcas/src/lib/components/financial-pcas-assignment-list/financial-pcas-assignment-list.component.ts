@@ -51,6 +51,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit  , AfterView
   isFinancialPcaAssignmentGridLoaderShow = false;
   isEditAssignmentClosed = false;
   isRemoveAssignmentClosed = false;
+  pcaAssignmentFormData : any
   
   @Input() financialPcaAssignmentGridLists$: any;
   @Input() objectCodesData$:any
@@ -61,6 +62,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit  , AfterView
   @Input() pcaCodesInfoData$ : any
   @Input() pcaAssignmentData$ : any
   @Input() assignPcaResponseData$ : any
+  @Input() groupCodesDataFilter$ : any
 
   @Output() loadFinancialPcaAssignmentListEvent = new EventEmitter<any>();
   @Output() loadObjectCodesEvent = new EventEmitter<any>();
@@ -87,19 +89,24 @@ export class FinancialPcasAssignmentListComponent implements OnInit  , AfterView
   pcaAssignmentGroupForm!: FormGroup;
 
   gridFinancialPcaAssignmentDataSubject = new Subject<any>();
-  gridFinancialPcaAssignmentData$ =
-    this.gridFinancialPcaAssignmentDataSubject.asObservable();
+  gridFinancialPcaAssignmentData$ =  this.gridFinancialPcaAssignmentDataSubject.asObservable();
+
+  pcaAssignmentFormDataSubject = new Subject<any>();
+  pcaAssignmentFormDataModel$ =  this.pcaAssignmentFormDataSubject.asObservable();
+
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+  editButtonClicked = false
+  newForm = false
   public gridMoreActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit',
       icon: 'edit',
-      click: (data: any): void => {
-        if (!this.isEditAssignmentClosed) {
+      click: (data: any): void => {        
+        if (!this.editButtonClicked) {           
+          this.editButtonClicked =true        
           this.isEditAssignmentClosed = true; 
           this.onOpenAddPcaAssignmentClicked(data);
         }
@@ -207,18 +214,55 @@ public rowCallback(context: RowClassArgs) {
   });
  
   onOpenAddPcaAssignmentClicked(pcaAssignmentId : any): void {   
+    this.pcaAssignmentFormData = null
     if(pcaAssignmentId != '')
     {   
+      this.newForm = false
     this.getPcaAssignmentEvent.emit(pcaAssignmentId)  
+    this.onPcaAssignmentFormDataCompose()
     }
+    else
+    {
+      this.newForm = true
     this.pcaAssignmentAddEditDialogService = this.dialogService.open({
       content: this.addEditPcaAssignmentDialogTemplate,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
-  } 
+  }
+  }
+  
+  onPcaAssignmentFormDataCompose()
+  {
+    this.pcaAssignmentData$?.pipe(first((existPcaData: any ) => existPcaData?.pcaAssignmentId != null))
+    .subscribe((existPcaData: any) =>
+    {  
+        if(existPcaData?.pcaAssignmentId)
+        {
+         this.pcaAssignmentFormData =
+          {     
+            pcaAssignmentId:  existPcaData?.pcaAssignmentId ,  
+            objectCodeId:  existPcaData?.objectCodeId,     
+            pcaId: existPcaData?.pcaId, 
+            openDate: existPcaData?.openDate,
+            closeDate: existPcaData?.closeDate,
+            amount: existPcaData?.totalAmount,
+            unlimited: (existPcaData?.unlimitedFlag === 'Y') ,
+            groupCodeIds: existPcaData?.groupCodeIds                    
+          }
+          //this.pcaAssignmentFormDataSubject.next(pcaAssignmentFormData)
+          this.pcaAssignmentAddEditDialogService = this.dialogService.open({
+            content: this.addEditPcaAssignmentDialogTemplate,
+            cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+          });
+       
+        
+      }
+     })
+  }
   onCloseAddEditPcaAssignmentClicked(result: any) {
     if (result) { 
       this.isEditAssignmentClosed = false;
+      this.editButtonClicked = false
       this.pcaAssignmentAddEditDialogService.close();
     }
   }
