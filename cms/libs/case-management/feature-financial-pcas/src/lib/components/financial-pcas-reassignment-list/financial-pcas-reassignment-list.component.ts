@@ -65,6 +65,7 @@ export class FinancialPcasReassignmentListComponent
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   editPcaReassignmentItem: any;
   @Output() getPcaAssignmentByIdEvent = new EventEmitter<any>();
+  @Output() updatePcaAssignmentByEvent = new EventEmitter<any>();
   @Input() getPcaAssignmentById$ :any
   
   public gridMoreActions = [
@@ -261,5 +262,12 @@ export class FinancialPcasReassignmentListComponent
 
   getPcaAssignmentById(pcaAssignmentId:any){
     this.getPcaAssignmentByIdEvent.emit(pcaAssignmentId);
+  }
+  saveEditPcaReassignmentClicked(updateReassignmentValue:any){
+    this.updatePcaAssignmentByEvent.emit(updateReassignmentValue);
+    this.isViewGridOptionClicked = false;
+    this.isEditGridOptionClicked = false;
+    this.pcaReassignmentAddEditDialogService.close();
+
   }
 }

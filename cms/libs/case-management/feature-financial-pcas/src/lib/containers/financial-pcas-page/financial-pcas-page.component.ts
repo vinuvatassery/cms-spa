@@ -42,15 +42,18 @@ export class FinancialPcasPageComponent implements OnInit{
   financialPcaAssignmentGridLists$ = this.pcaAssignmentsFacade.financialPcaAssignmentData$;
   financialPcaReassignmentGridLists$ = this.financialPcaFacade.financialPcaReassignmentData$;
   financialPcaReportGridLists$ = this.financialPcaFacade.financialPcaReportData$;
+  financialPcaSubReportGridLists$ = this.financialPcaFacade.financialPcaSubReportData$;
   fundingSourceLookup$ = this.fundingSourceFacade.fundingSourceLookup$;
   pcaActionIsSuccess$ = this.financialPcaFacade.pcaActionIsSuccess$;
   pcaData$ = this.financialPcaFacade.pcaData$;
+  pcaReassignmentByFundSourceId$ = this.financialPcaFacade.pcaReassignmentByFundSourceId$;
   objectCodesData$ = this.pcaAssignmentsFacade.objectCodesData$;
   groupCodesData$ = this.pcaAssignmentsFacade.groupCodesData$;
   pcaCodesData$ = this.pcaAssignmentsFacade.pcaCodesData$;
   pcaDatesData$ = this.pcaAssignmentsFacade.pcaDatesData$;
   pcaCodesInfoData$ = this.pcaAssignmentsFacade.pcaCodesInfoData$;
   pcaAssignmentData$ = this.pcaAssignmentsFacade.pcaAssignmentData$;
+  assignPcaResponseData$ = this.pcaAssignmentsFacade.assignPcaResponseData$;
 
    pcaAssignOpenDatesListSubject = new Subject<any>();
   pcaAssignOpenDatesList$ = this.pcaAssignOpenDatesListSubject.asObservable();
@@ -166,10 +169,25 @@ export class FinancialPcasPageComponent implements OnInit{
     }
   }
 
+  loadFinancialPcaSubReportListGrid(data:any) {
+    this.financialPcaFacade.loadFinancialPcaSubReportListGrid(data?.objecCodeGroupCodeId,data?.skipCount, data?.maxResultCount);
+  }
+
   getPcaAssignmentById(fundingSourceId:any){
     this.financialPcaFacade.getPcaAssignmentById(fundingSourceId);
   }
+  getPcaReassignmentByFundSourceId(fundingSourceId:any){
+    this.financialPcaFacade.getPcaReassignmentByFundSourceId(fundingSourceId);
+  }
+  updateReassignmentPca(updateReassignmentData:any){
+    this.financialPcaFacade.updateReassignmentPca(updateReassignmentData);
+  }
+  
+  saveEditPcaReassignmentClicked(updateReassignmentValue:any){
+    this.financialPcaFacade.updateReassignmentPca(updateReassignmentValue);
 
+  }
+  
 }
 
 
