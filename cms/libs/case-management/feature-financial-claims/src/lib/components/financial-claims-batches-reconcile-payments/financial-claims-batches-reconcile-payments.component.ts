@@ -640,6 +640,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     {
       const data = selection.selectedRows[0].dataItem;
       this.isBreakoutPanelShow=true;
+      this.entityId=data.entityId;
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
