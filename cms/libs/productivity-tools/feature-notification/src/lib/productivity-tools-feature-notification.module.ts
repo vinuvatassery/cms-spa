@@ -11,6 +11,7 @@ import { ProductivityToolsFeatureNotificationRoutingModule } from './productivit
 import { NotificationListComponent } from './components/notification-list/notification-list.component';
 import { NotificationPanelComponent } from './components/notification-panel/notification-panel.component';
 import { NotificationPageComponent } from './containers/notification-page/notification-page.component';
+import { NotificationAndReminderPageComponent } from './containers/notification-and-reminder-page/notification-and-reminder-page.component';
 
 @NgModule({
   imports: [
@@ -25,11 +26,13 @@ import { NotificationPageComponent } from './containers/notification-page/notifi
     NotificationListComponent,
     NotificationPanelComponent,
     NotificationPageComponent,
+    NotificationAndReminderPageComponent,
   ],
   exports: [
     NotificationListComponent,
     NotificationPanelComponent,
     NotificationPageComponent,
+    NotificationAndReminderPageComponent,
   ],
 })
 export class ProductivityToolsFeatureNotificationModule {}

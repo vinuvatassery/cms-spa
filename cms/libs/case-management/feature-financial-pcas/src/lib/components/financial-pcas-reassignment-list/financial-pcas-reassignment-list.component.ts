@@ -63,6 +63,11 @@ export class FinancialPcasReassignmentListComponent
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  editPcaReassignmentItem: any;
+  @Output() getPcaAssignmentByIdEvent = new EventEmitter<any>();
+  @Output() updatePcaAssignmentByEvent = new EventEmitter<any>();
+  @Input() getPcaAssignmentById$ :any
+  
   public gridMoreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -71,7 +76,8 @@ export class FinancialPcasReassignmentListComponent
       click: (data: any): void => {
         if (!this.isViewGridOptionClicked) {
           this.isViewGridOptionClicked = true; 
-          this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate);
+          this.isEditGridOptionClicked=false;
+          this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate,data);
         }
       },
     },
@@ -82,7 +88,8 @@ export class FinancialPcasReassignmentListComponent
       click: (data: any): void => {
         if (!this.isEditGridOptionClicked) {
           this.isEditGridOptionClicked = true; 
-          this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate);
+          this.isViewGridOptionClicked = false;
+          this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate,data);
         }
       },
     },
@@ -226,11 +233,12 @@ export class FinancialPcasReassignmentListComponent
   }
 
  
-  onOpenViewEditPcaReassignmentClicked(template: TemplateRef<unknown>): void {
+  onOpenViewEditPcaReassignmentClicked(template: TemplateRef<unknown>,data:any): void {
     this.pcaReassignmentAddEditDialogService = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
+    this.editPcaReassignmentItem = data;
   }
   onCloseEditPcaReassignmentClicked(result: any) {
     if (result) {
@@ -250,5 +258,16 @@ export class FinancialPcasReassignmentListComponent
     if (result) {
       this.pcaReassignmentConfirmationDialogService.close();
     }
+  }
+
+  getPcaAssignmentById(pcaAssignmentId:any){
+    this.getPcaAssignmentByIdEvent.emit(pcaAssignmentId);
+  }
+  saveEditPcaReassignmentClicked(updateReassignmentValue:any){
+    this.updatePcaAssignmentByEvent.emit(updateReassignmentValue);
+    this.isViewGridOptionClicked = false;
+    this.isEditGridOptionClicked = false;
+    this.pcaReassignmentAddEditDialogService.close();
+
   }
 }

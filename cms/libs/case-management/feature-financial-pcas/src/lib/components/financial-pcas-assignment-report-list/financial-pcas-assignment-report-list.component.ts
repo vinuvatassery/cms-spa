@@ -38,8 +38,9 @@ export class FinancialPcasAssignmentReportListComponent implements OnChanges
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialPcaReportGridLists$: any;
-  @Input() financialPcaReportGridListsSubGrid$: any;
+  @Input() financialPcaSubReportGridLists$: any;
   @Output() loadFinancialPcaReportListEvent = new EventEmitter<any>();
+  @Output() loadFinancialPcaSubReportListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'pcaCode';
   sortDir = 'Ascending';
@@ -268,6 +269,10 @@ setToDefault() {
     if (result) {
       this.PreviewSubmitPaymenttDialogService.close();
     }
+  }
+
+  loadFinancialPcaSubReportListGrid(data: any) {
+    this.loadFinancialPcaSubReportListEvent.emit(data);
   }
 }
 

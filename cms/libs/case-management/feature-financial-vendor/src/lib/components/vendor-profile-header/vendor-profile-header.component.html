@@ -107,7 +107,7 @@
 
       </div>
       <div class="flex-col flex-col-2">
-        <button aria-label="" kendoButton look="flat" class="card-link-button"  kendoPopoverAnchor showOn="click" [popover]="moreAlertmessage">
+        <button aria-label="More Items" kendoButton look="flat" class="card-link-button"  kendoPopoverAnchor showOn="click" [popover]="moreAlertmessage">
          
 
           {{ showMoreAlert ? 'Hide Items' : ' 2+ More Items ' }}
@@ -189,6 +189,25 @@
       </kendo-dropdownbutton>
     </div>
   </div>
+
+  <button aria-label="View More" kendoButton look="flat" class="card-link-button mt-1" (click)="onNotificationsAndRemindersOpenClicked(notificationsAndRemindersDialog)">  View More on Notification Panel </button>
 </div>
    </ng-template>
  </kendo-popover>
+
+
+ <!-- Create New Reminder Popup -->
+<ng-template #notificationsAndRemindersDialog>
+ 
+  <kendo-dialog-titlebar  (close)="onNotificationsAndRemindersClosed()">
+    <span
+      class="material-icons mr-1"
+      aria-hidden="true"
+      aria-label="notifications"
+      >notifications</span
+    >
+    <span class="text-bold">Notifications and Reminders</span>
+  </kendo-dialog-titlebar>
+
+ <productivity-tools-notification-and-reminder-page></productivity-tools-notification-and-reminder-page>
+</ng-template>
