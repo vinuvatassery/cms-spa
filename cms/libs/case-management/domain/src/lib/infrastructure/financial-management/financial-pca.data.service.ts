@@ -69,8 +69,29 @@ export class FinancialPcaDataService {
     )
   }
 
+  loadFinancialPcaSubReportListService(
+    objecCodeGroupCodeId:string,
+    skipCount: number,
+    maxResultCount: number
+  ) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/${objecCodeGroupCodeId}/reports?SortType=asc&Sorting=priority&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`
+    );
+  }
+
   getPcaAssignmentById(pcaAssignmentId:any){
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/${pcaAssignmentId}`);
    }
+   getPcaReassignmentByFundSourceId(fundingSourceId:any){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/${fundingSourceId}`);
+   }
+   updateReassignmentPca(pcaModel: PcaDetails) {
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments`,
+      pcaModel
+    );
+  }
+
 }
