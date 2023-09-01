@@ -111,13 +111,12 @@
         </div>
       </div>
 
-
-
       <div class="flex-col">
-        <kendo-floatinglabel text="TIN">
-          <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" formControlName="tinNumber"
-            [maxlength]="100">
-          </kendo-textbox>
+        <kendo-floatinglabel text="TIN (optional)">
+          <kendo-maskedtextbox aria-label="TIN" 
+           [fillMode]="formUiStyle.inputFillMode" placeholder="TIN (optional)"
+           [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat">
+          </kendo-maskedtextbox> 
         </kendo-floatinglabel>
       </div>
       <div class="flex-col mt-1" *ngIf="providerType == vendorTypes.Pharmacy">
