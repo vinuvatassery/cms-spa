@@ -43,18 +43,15 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
 
   createDrugForm(){
     this.drugForm = this.formBuilder.group({
-      manufacturer: [{ value: this.drug.manufacturer, disabled: true }],
+      manufacturer: [{ value: this.drug.manufacturer, disabled: false }],
       ndcNbr: [this.drug.ndcNbr, Validators.required],
       vendorId: [this.drug.vendorId],
       deliveryMethodCode: [this.drug.deliveryMethodCode, Validators.required],
       drugName: [this.drug.drugName, Validators.required],
       brandName: [this.drug.brandName, Validators.required],
-      drugCategoryCode: this.formBuilder.group({
-        hiv: [''],
-        hepatitis: [''],
-        opportunisticInfection: [''],
-      }, { validators: this.atLeastOneDrugTypeSelected() }),
-      includeInManufacturerRebatesFlag: ['',Validators.required],
+      hiv: [false, this.atLeastOneDrugTypeSelected()],
+      hepatitis: [false, this.atLeastOneDrugTypeSelected()],
+      opportunisticInfection: [false, this.atLeastOneDrugTypeSelected()]
     });
   }
 
@@ -82,37 +79,41 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
     return control?.hasError(errorName) ?? false;
   }
 
-  updateDrugTypeValidity(checkboxName: string) {
-    const drugCategoryCode = this.drugForm.get('drugCategoryCode');
+  updateDrugTypeValidity() {
+    const hivSelected = this.drugForm.get('hiv')?.value;
+    const hepatitisSelected = this.drugForm.get('hepatitis')?.value;
+    const opportunisticInfectionSelected = this.drugForm.get('opportunisticInfection')?.value;
 
-    drugCategoryCode?.get(checkboxName)?.setValue(!drugCategoryCode.get(checkboxName)?.value);
+    const atLeastOneSelected = hivSelected || hepatitisSelected || opportunisticInfectionSelected;
 
-    drugCategoryCode?.updateValueAndValidity();
+    if (atLeastOneSelected) {
+      this.drugForm.controls['hiv'].setErrors(null);
+      this.drugForm.controls['hepatitis'].setErrors(null);
+      this.drugForm.controls['opportunisticInfection'].setErrors(null);
+    } else {
+      this.drugForm.controls['hiv'].setErrors({ required: true });
+      this.drugForm.controls['hepatitis'].setErrors({ required: true });
+      this.drugForm.controls['opportunisticInfection'].setErrors({ required: true });
+    }
 
-    this.cd.detectChanges();
+    return atLeastOneSelected;
   }
+
 
   public Update() {
     this.isSubmitted = true;
   }
 
   public save() {
-    this.checkValidations();
+    this.drugForm.markAllAsTouched();
+    const res = this.checkValidations();
     this.isSubmitted = true;
-  }
-
-  validateForm() {
-    this.drugForm.controls['includeInManufacturerRebatesFlag'].setValidators([
-      Validators.required,
-    ]);
-    this.drugForm.controls['includeInManufacturerRebatesFlag'].updateValueAndValidity();
-    this.drugForm.controls['drugCategoryCode'].setValidators(this.atLeastOneDrugTypeSelected());
-    this.drugForm.controls['drugCategoryCode'].updateValueAndValidity();
+    if(res){
+      this.onCancelClick();
+    }
   }
 
   checkValidations() {
-    this.validateForm();
-    this.cd.detectChanges();
     return this.drugForm.valid;
   }
 

@@ -29,7 +29,25 @@ export class FinancialFundingSourceDataService {
       },
     ]);
   }
-
+  loadFundingSourceList(
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string,
+    filter:any
+  ){
+    const filterRequestBody = {
+      skipcount:skipcount,
+      maxResultCount:maxResultCount,
+      sort:sort,
+      sortType:sortType,
+      filter:filter
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/funding-sources/list`,filterRequestBody
+    );
+  }
   addFundingSource(fundingSource: any) {
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
@@ -48,5 +66,8 @@ export class FinancialFundingSourceDataService {
   loadFundingSourceLookup( ) {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/funding-sources/lookup`);
+  }
+  removeFundingSource(fundingSourceId: string) {
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/funding-sources/${fundingSourceId}`);
   }
 }

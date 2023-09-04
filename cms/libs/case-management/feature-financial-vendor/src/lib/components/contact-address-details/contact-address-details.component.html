@@ -3,7 +3,7 @@
 
   <section class="k-dialog-body">
     <p class="text-muted mb-2">
-    <span *ngIf="this.contactAddress.vendorContactId==null">Select which mail code to add the contact(s) for.</span>All fields are required unless otherwise stated.
+    <span *ngIf="this.contactAddress.vendorContactId==null">Select which mail code to add the contact(s) for.</span> All fields are required unless otherwise stated.
     </p>
 
     <!-- Contacts -->
@@ -29,17 +29,23 @@
             </div>
             <div class="flex-col">
               <kendo-floatinglabel text=" Name">
-                <kendo-textbox aria-label="Contact Name" formControlName="contactName"
+                <kendo-textbox aria-label="Contact Name" formControlName="contactName" [maxlength]="200" (keypress)="onKeyPress($event)" 
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>
-              <kendo-formerror *ngIf="isContactNameValid(i)&&isSubmitted">A Contact Name is
+              <kendo-formerror *ngIf="isContactNameValid(i)&&isSubmitted">Contact Name is
                 required</kendo-formerror>
             </div>
             <div class="flex-col">
               <kendo-floatinglabel text="Description (Optional)">
-                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" formControlName="contactDesc"
-                  resizable="vertical"></kendo-textarea>
+                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" (keypress)="onKeyPress($event)"  [maxlength]="500" (valueChange)="onDescriptionValueChange($event)" formControlName="contactDesc"
+                  resizable="vertical">
+             
+  <kendo-textarea-suffix class="justify-content-end">
+    <kendo-formhint class="justify-content-end">{{descriptionCounter}} /500</kendo-formhint>
+
+  </kendo-textarea-suffix>
+                </kendo-textarea>
               </kendo-floatinglabel>
             </div>
             <div class="flex-col">
@@ -65,7 +71,7 @@
 
             <div class="flex-col mb-1">
               <kendo-floatinglabel text="Email Address (optional)">
-                <kendo-textbox aria-label="Email Address (optional)" formControlName="emailAddress"
+                <kendo-textbox aria-label="Email Address (optional)" [maxlength]="200" formControlName="emailAddress"
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>

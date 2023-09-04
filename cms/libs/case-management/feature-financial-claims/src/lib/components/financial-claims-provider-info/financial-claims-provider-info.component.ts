@@ -42,7 +42,7 @@ export class FinancialClaimsProviderInfoComponent {
       stateCode: ['', Validators.required],
       zip: ['', Validators.required],
       specialHandlingDesc: [''],
-      mailCode: ['']
+      mailCode: [{ value: '', disabled: true }]
     }),
     contacts: new FormArray([])
   })
@@ -118,7 +118,7 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   createContactsFormArray() {
-    var contacts =  this.profileForm.get('contacts') as FormArray
+    let contacts =  this.profileForm.get('contacts') as FormArray
     while (contacts.length !== 0) {
       contacts.removeAt(0)
     }

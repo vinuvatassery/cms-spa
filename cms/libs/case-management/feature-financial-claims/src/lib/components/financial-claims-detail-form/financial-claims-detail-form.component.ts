@@ -9,14 +9,11 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { EntityTypeCode, FinancialClaimsFacade } from '@cms/case-management/domain';
+import { EntityTypeCode, FinancialClaimsFacade, FinancialProvider, PaymentMethodCode, FinancialClaims } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { LoaderService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
-import {FinancialProvider} from '@cms/case-management/domain'
-import {PaymentMethodCode} from '@cms/case-management/domain'
-import {FinancialClaims} from '@cms/case-management/domain'
 
 @Component({
   selector: 'cms-financial-claims-detail-form',
@@ -44,8 +41,8 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   clientId:any;
   vendorName:any;
   clientName:any;
-  isRecentClaimShow:boolean=false;
   @Input() claimsType: any;
+  isRecentClaimShow = false;
   clientSearchResult = [
     {
       clientId: '12',
@@ -82,22 +79,22 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     {
       providerId: '12',
       providerFullName: 'Fname Lname',
-      tin: '2434324324234', 
+      tin: '2434324324234',
     },
     {
       providerId: '12',
       providerFullName: 'Fname Lname',
-      tin: '2434324324234', 
+      tin: '2434324324234',
     },
     {
       providerId: '12',
       providerFullName: 'Fname Lname',
-      tin: '2434324324234', 
+      tin: '2434324324234',
     },
     {
       providerId: '12',
       providerFullName: 'Fname Lname',
-      tin: '2434324324234', 
+      tin: '2434324324234',
     },
   ];
 
@@ -116,7 +113,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   title: any;
   addOrEdit: any;
   selectedCPTCode: any = null;
-  isSpotsPayment!: boolean ;
+  isSpotsPayment!: boolean;
   textMaxLength: number = 300;
 
   @Input() isEdit: any;
@@ -126,14 +123,14 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
-      private cd: ChangeDetectorRef,
-      private readonly loaderService: LoaderService,
-      private lovFacade: LovFacade,
-      private readonly activatedRoute: ActivatedRoute,
-    ) {
-      this.initMedicalClaimObject();
-      this.initClaimForm();
-    }
+    private cd: ChangeDetectorRef,
+    private readonly loaderService: LoaderService,
+    private lovFacade: LovFacade,
+    private readonly activatedRoute: ActivatedRoute,
+  ) {
+    this.initMedicalClaimObject();
+    this.initClaimForm();
+  }
 
   closeAddEditClaimsFormModalClicked() {
     this.modalCloseAddEditClaimsFormModal.emit(true);
@@ -155,12 +152,12 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       this.addOrEdit = 'Add';
       this.addClaimServiceGroup();
     }
-    else if(!this.isEdit && this.claimsType != this.financialProvider){
+    else if (!this.isEdit && this.claimsType != this.financialProvider) {
       this.title = 'Add Dental';
       this.addOrEdit = 'Add';
       this.addClaimServiceGroup();
     }
-    
+
     if (this.isEdit) {
       this.title = 'Edit';
       this.addOrEdit = 'Edit';
@@ -168,7 +165,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     }
   }
 
-  initMedicalClaimObject(){
+  initMedicalClaimObject() {
     this.medicalClaimServices = {
       vendorId: '',
       serviceStartDate: '',
@@ -183,7 +180,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       cptCodeId: ''
     };
   }
-  
+
   initClaimForm() {
     this.claimForm = this.formBuilder.group({
       medicalProvider: [this.selectedMedicalProvider, Validators.required],
@@ -296,7 +293,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   save() {
-    this.isSubmitted = true;    
+    this.isSubmitted = true;
     if (!this.claimForm.valid) {
       this.claimForm.markAllAsTouched()
       return;
@@ -307,13 +304,13 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       clientId: formValues.client.clientId,
       vendorId: formValues.medicalProvider.vendorId,
       claimNbr: formValues.invoiceId,
-      clientCaseEligibilityId: this.clientCaseEligibilityId,      
+      clientCaseEligibilityId: this.clientCaseEligibilityId,
       paymentRequestId: this.isEdit ? this.paymentRequestId : null,
-      paymentMethodCode: this.isSpotsPayment ? PaymentMethodCode.SPOTS: PaymentMethodCode.ACH,
-      serviceSubTypeCode: this.claimsType == this.financialProvider ? "MEDICAL": "DENTAL",
+      paymentMethodCode: this.isSpotsPayment ? PaymentMethodCode.SPOTS : PaymentMethodCode.ACH,
+      serviceSubTypeCode: this.claimsType == this.financialProvider ? "MEDICAL" : "DENTAL",
       tpainvoice: [{}],
     };
-    for (let element  of formValues.claimService) {
+    for (let element of formValues.claimService) {
       let service = {
         vendorId: bodyData.vendorId,
         clientId: bodyData.clientId,
@@ -354,7 +351,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   public saveData(data: any) {
     this.loaderService.show();
-    this.financialClaimsFacade.saveMedicalClaim(data,this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider).subscribe({
+    this.financialClaimsFacade.saveMedicalClaim(data, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider).subscribe({
       next: (response: any) => {
         this.loaderService.hide();
         if (!response) {
@@ -383,7 +380,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   public update(data: any) {
     this.isSubmitted = true;
     this.loaderService.show();
-    this.financialClaimsFacade.updateMedicalClaim(data,this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider).subscribe({
+    this.financialClaimsFacade.updateMedicalClaim(data, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider).subscribe({
       next: (response: any) => {
         this.loaderService.hide();
         if (!response) {
@@ -412,7 +409,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   getMedicalClaimByPaymentRequestId() {
     this.loaderService.show();
     this.financialClaimsFacade
-      .getMedicalClaimByPaymentRequestId(this.paymentRequestId,this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider)
+      .getMedicalClaimByPaymentRequestId(this.paymentRequestId, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider)
       .subscribe({
         next: (val) => {
           const clients = [
@@ -491,25 +488,36 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     }
   }
 
-  onSpotsPaymentChange(check: any){
+  onSpotsPaymentChange(check: any) {
     this.isSpotsPayment = check.currentTarget.checked;
   }
 
-  serviceDescCharCount( i: number){
-    let serviceDescription = this.claimForm.value.claimService[i].serviceDescription; 
-    if(serviceDescription){
+  serviceDescCharCount(i: number) {
+    let serviceDescription = this.claimForm.value.claimService[i].serviceDescription;
+    if (serviceDescription) {
       return `${serviceDescription.length}/${this.textMaxLength}`;
     }
     return `0/${this.textMaxLength}`;
   }
 
-  reasonCharCount(i: number){    
+  reasonCharCount(i: number) {
     let reasonForException = this.claimForm.value.claimService[i].reasonForException;
-    if(reasonForException){
+    if (reasonForException) {
       return `${reasonForException.length}/${this.textMaxLength}`;
-    }    
+    }
     return `0/${this.textMaxLength}`;
   }
-
+  providerValueChange($event: any) {
+    this.isRecentClaimShow = false;
+    this.vendorId = $event.providerId;
+    this.vendorName = $event.providerFullName;
+  }
+  clientValueChange($event: any) {
+    this.clientId = $event.clientId;
+    this.clientName = $event.clientFullName;
+    if (this.clientId != null && this.vendorId != null) {
+      this.isRecentClaimShow = true;
+    }
+  }
 }
 

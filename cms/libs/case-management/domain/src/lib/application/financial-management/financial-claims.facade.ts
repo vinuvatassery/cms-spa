@@ -24,7 +24,6 @@ import { Pharmacy } from '../../entities/client-pharmacy';
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
 
-
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
@@ -342,38 +341,21 @@ export class FinancialClaimsFacade {
     });
   }
 
-  loadReconcilePaymentBreakoutSummary(batchId: string, entityId: string){
-    this.showLoader();
-    this.financialClaimsDataService.loadReconcilePaymentBreakoutSummaryService(batchId,entityId).subscribe({
+  loadReconcilePaymentBreakoutSummary(data:any){
+    this.financialClaimsDataService.loadReconcilePaymentBreakoutSummaryService(data).subscribe({
       next: (dataResponse) => {
         this.reconcileBreakoutSummaryDataSubject.next(dataResponse);
-        this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader();
       },
     });
   }
 
-  loadReconcilePaymentBreakoutListGrid(
-    batchId: string,
-    entityId: string,
-    skipcount: number,
-    pagesize: number,
-    sort: any,
-    sortType: any
-  ) {
-    this.showLoader();
+  loadReconcilePaymentBreakoutListGrid(data:any) {
+    data.filter=JSON.stringify(data.filter);
     this.financialClaimsDataService
-      .loadReconcilePaymentBreakoutListService(
-        batchId,
-        entityId,
-        skipcount,
-        pagesize,
-        sort,
-        sortType
-      )
+      .loadReconcilePaymentBreakoutListService(data)
       .subscribe({
         next: (dataResponse) => {
           this.reconcilePaymentBreakoutListDataSubject.next(dataResponse);
@@ -384,11 +366,9 @@ export class FinancialClaimsFacade {
             };
             this.reconcilePaymentBreakoutListDataSubject.next(gridView);
           }
-          this.hideLoader();
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-          this.hideLoader();
         },
       });
   }
@@ -482,7 +462,6 @@ export class FinancialClaimsFacade {
   }
     
 loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
-    this.showLoader();
     recentClaimsPageAndSortedRequestDto.filter = JSON.stringify(recentClaimsPageAndSortedRequestDto.filter);
     this.financialClaimsDataService.loadRecentClaimListService(recentClaimsPageAndSortedRequestDto).subscribe({
       next: (dataResponse) => {
@@ -494,11 +473,9 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
           };
           this.recentClaimListDataSubject.next(gridView);
         }
-       this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
-        this.hideLoader();
       },
     });
   }
@@ -641,4 +618,16 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
         },
       });
   }
+
+  loadPrintAdviceLetterData(batchId:any,printAdviceLetterData: any,claimsType:any) {
+    return this.financialClaimsDataService.getPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
+  }
+  
+  reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any,claimsType:any) {
+    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData,claimsType);
+}
+
+viewAdviceLetterData(batchId:any,printAdviceLetterData: any, claimsType:any) {
+  return this.financialClaimsDataService.viewPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
+}
 }

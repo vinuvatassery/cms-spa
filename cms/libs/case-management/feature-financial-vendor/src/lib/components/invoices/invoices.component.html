@@ -9,7 +9,7 @@
           [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
           [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [navigable]="true" [data]="invoiceGridView$ | async"
           (detailExpand)="onExpand($event)" >
-          <kendo-grid-column field="invoiceNbr" title="Invoice ID" [width]="100" > 
+          <kendo-grid-column field="invoiceNbr" title="Invoice ID" [width]="120" > 
 
              <ng-template kendoGridCellTemplate let-dataItem>
                 <button aria-label="Batch name" kendoButton look="flat" class="card-link-button"
@@ -19,7 +19,7 @@
               </ng-template>
             </kendo-grid-column>
 
-              <kendo-grid-column field="batchName" title="Batch #" [width]="150">
+              <kendo-grid-column field="batchName" title="Batch #" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
                       <button aria-label="Batch name" kendoButton look="flat" class="card-link-button"
                       (click)="onBatchClicked()">
@@ -36,13 +36,13 @@
                       </button>
                     </ng-template>
               </kendo-grid-column>
-              <kendo-grid-column field="insuranceCardName" title="Name On Primary Insurance Card" [width]="100"> </kendo-grid-column>
+              <kendo-grid-column field="insuranceCardName" title="Name On Primary Insurance Card" [width]="200"> </kendo-grid-column>
               <kendo-grid-column field="clientId" title="Client ID" [width]="100"> </kendo-grid-column>
               <kendo-grid-column field="serviceCount" title="Service Count" [width]="100"> </kendo-grid-column>
               <kendo-grid-column field="totalCost" title="Total Cost" [width]="100"> </kendo-grid-column>
               <kendo-grid-column field="totalDue" title=" Total Due" [width]="100"> </kendo-grid-column>
               <kendo-grid-column field="paymentStatusDesc" title="Payment Status" [width]="100"> </kendo-grid-column>
-              <kendo-grid-column field="checkReconcileDate" title="Date Reconciled" [width]="100"> 
+              <kendo-grid-column field="checkReconcileDate" title="Date Reconciled" [width]="160"> 
                 <ng-template kendoGridCellTemplate let-dataItem>
                 
                     {{ dataItem.checkReconcileDate | date:'MM-dd-yyyy' }}
@@ -50,7 +50,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column field="warrant" title="Warrant#" [width]="100"> </kendo-grid-column>
-              <kendo-grid-column field="entryDate" title="Entry Date" [width]="100"> 
+              <kendo-grid-column field="entryDate" title="Entry Date" [width]="120"> 
                 <ng-template kendoGridCellTemplate let-dataItem>
                 
                     {{ dataItem.entryDate | date:'MM-dd-yyyy' }}
@@ -58,7 +58,7 @@
                 </ng-template>
               </kendo-grid-column>
 
-              <kendo-grid-column field="by" title="By" [width]="60">
+              <kendo-grid-column field="by" title="By" [width]="70">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     <button
                       kendoButton

@@ -13,6 +13,7 @@ import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsDataService {
+
   /** Constructor**/
   constructor(
     private readonly http: HttpClient,
@@ -358,25 +359,34 @@ export class FinancialClaimsDataService {
     ]);
   }
 
-  loadReconcilePaymentBreakoutSummaryService(
-    batchId: string,
-    entityId: string
-  ): Observable<any> {
-    return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}/payment-entity/${entityId}/reconcile-summary`
+  loadReconcilePaymentBreakoutSummaryService(data:any): Observable<any> {  
+    const ReconcilePaymentResponseDto =
+    {
+      BatchId : data.batchId,
+      EntityId : data.entityId,    
+      AmountTotal : data.amountTotal,
+      WarrantTotal : data.warrantTotal,
+      WarrantNbr : data.warrantNbr,
+      PaymentToReconcileCount : data.paymentToReconcileCount
+    }  
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/payment-reconcile-summary`,ReconcilePaymentResponseDto
     );
   }
 
-  loadReconcilePaymentBreakoutListService(
-    batchId: string,
-    entityId: string,
-    skipCount: number,
-    maxResultCount: number,
-    sort: string,
-    sortType: string
-  ): Observable<any> {
-    return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}/payment-entity/${entityId}/reconcile-breakout?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`
+  loadReconcilePaymentBreakoutListService(data:any): Observable<any> { 
+    const BreakoutPanelPageAndSortedRequestDto =
+    {
+      BatchId : data.batchId,
+      EntityId : data.entityId,    
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }  
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/payment-reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto
     );
   }
 
@@ -445,10 +455,10 @@ export class FinancialClaimsDataService {
   deleteClaims(Claims: any, claimsType: string) {
     const options = {
       body: {
-        Claims: Claims,
+        paymentRequestIds: Claims,
       }
     }
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}`, options);
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}`,options);
   }
 
   batchClaims(batchClaims: BatchClaim, claimsType: string) {
@@ -475,6 +485,21 @@ export class FinancialClaimsDataService {
     }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/recent-claims`,recentClaimsPageAndSortedRequestDto
+    );
+  }
+
+  getPrintAdviceLetterData(batchId:any,selectedProviders: any, claimsType:any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/print-advice-letter`,selectedProviders);
+  }
+
+  reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any, claimsType:any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/reconcile-payments`,reconcileData);
+  }
+
+  viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, claimsType:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/print-advice-letter/download`, printAdviceLetterData,
+      { responseType: 'blob' }
     );
   }
 }
