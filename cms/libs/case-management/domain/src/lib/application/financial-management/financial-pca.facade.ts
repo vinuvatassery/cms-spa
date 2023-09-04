@@ -62,18 +62,23 @@ export class FinancialPcaFacade {
   private pcaDataSubject = new BehaviorSubject<PcaDetails | null>(null);
   pcaData$ = this.pcaDataSubject.asObservable();
 
-  private financialPcaAssignmentDataSubject = new Subject<any>();
-  financialPcaAssignmentData$ = this.financialPcaAssignmentDataSubject.asObservable();
-
   private financialPcaReassignmentDataSubject = new Subject<any>();
   financialPcaReassignmentData$ = this.financialPcaReassignmentDataSubject.asObservable();
 
   private financialPcaReportDataSubject = new Subject<any>();
   financialPcaReportData$ = this.financialPcaReportDataSubject.asObservable();
 
+  private financialPcaSubReportDataSubject = new Subject<any>();
+  financialPcaSubReportData$ = this.financialPcaSubReportDataSubject.asObservable();
 
 
-  /** Public properties **/
+  private getPcaAssignmentByIdSubject = new Subject<any>();
+  getPcaAssignmentById$ = this.getPcaAssignmentByIdSubject.asObservable();
+
+  private pcaReassignmentByFundSourceIdSubject = new Subject<any>();
+  pcaReassignmentByFundSourceId$ = this.pcaReassignmentByFundSourceIdSubject.asObservable();
+
+    /** Public properties **/
 
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
@@ -105,43 +110,8 @@ export class FinancialPcaFacade {
 
   /** Public methods **/
 
-
-  loadFinancialPcaSetupListGrid(params: GridFilterParam) {
-    this.financialPcaSetupLoaderSubject.next(true);
-    this.financialPcaDataService.loadFinancialPcaSetupListService(params).subscribe({
-      next: (dataResponse) => {
-        const gridView: any = {
-          data: dataResponse['items'],
-          total: dataResponse?.totalCount,
-        };
-
-        this.financialPcaSetupDataSubject.next(gridView);
-        this.financialPcaSetupLoaderSubject.next(false);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.financialPcaSetupLoaderSubject.next(false);
-      },
-    });
-  }
-
-
-  loadFinancialPcaAssignmentListGrid() {
-    this.financialPcaDataService.loadFinancialPcaAssignmentListService().subscribe({
-      next: (dataResponse) => {
-        this.financialPcaAssignmentDataSubject.next(dataResponse);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.hideLoader();
-      },
-    });
-  }
-
-
-  loadFinancialPcaReassignmentListGrid() {
-    this.financialPcaDataService.loadFinancialPcaReassignmentListService().subscribe({
+  loadFinancialPcaReassignmentListGrid(gridValuesInput: any) {
+    this.financialPcaDataService.loadFinancialPcaReassignmentListService(gridValuesInput).subscribe({
       next: (dataResponse) => {
         this.financialPcaReassignmentDataSubject.next(dataResponse);
         this.hideLoader();
@@ -187,6 +157,25 @@ export class FinancialPcaFacade {
   }
 
   /* PCA setup */
+  loadFinancialPcaSetupListGrid(params: GridFilterParam) {
+    this.financialPcaSetupLoaderSubject.next(true);
+    this.financialPcaDataService.loadFinancialPcaSetupListService(params).subscribe({
+      next: (dataResponse) => {
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+
+        this.financialPcaSetupDataSubject.next(gridView);
+        this.financialPcaSetupLoaderSubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.financialPcaSetupLoaderSubject.next(false);
+      },
+    });
+  }
+
   loadPcaById(pcaId: string){
     this.pcaDataSubject.next(null);
     this.financialPcaDataService.loadPcaById(pcaId).subscribe({
@@ -235,6 +224,79 @@ export class FinancialPcaFacade {
         this.pcaActionIsSuccessSubject.next('remove');
         this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+
+  loadFinancialPcaSubReportListGrid(
+    objecCodeGroupCodeId:string,
+    skipCount: number,
+    maxResultCount: number
+  ) {
+    this.financialPcaDataService
+      .loadFinancialPcaSubReportListService(
+        objecCodeGroupCodeId,
+        skipCount,
+        maxResultCount
+      )
+      .subscribe({
+        next: (dataResponse) => {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.financialPcaSubReportDataSubject.next(gridView);
+          this.hideLoader();
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.hideLoader();
+        },
+      });
+  }
+  pcaReassignmentCount(){
+    return this.financialPcaDataService.pcaReassignmentCount();
+  }
+
+  getPcaAssignmentById(pcaAssignmentId: string) {
+    this.showLoader();
+    this.financialPcaDataService.getPcaAssignmentById(pcaAssignmentId).subscribe({
+      next: (response) => {
+        this.getPcaAssignmentByIdSubject.next(response);
+        this.hideLoader();
+      
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+  updateReassignmentPca(pcaModel: PcaDetails) {
+    this.showLoader();
+    this.financialPcaDataService.updateReassignmentPca(pcaModel).subscribe({
+      next: (response) => {
+        this.pcaActionIsSuccessSubject.next('save');
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+  getPcaReassignmentByFundSourceId(fundingSourceId: string) {
+    this.showLoader();
+    this.financialPcaDataService.getPcaReassignmentByFundSourceId(fundingSourceId).subscribe({
+      next: (response) => {
+        this.pcaReassignmentByFundSourceIdSubject.next(response);
+        this.hideLoader();
+
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);

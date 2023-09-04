@@ -26,6 +26,15 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   isSubmitted: boolean = false;
   isVisible: any;
   preferedContact:any;
+  public sortValue = this.vendocontactsFacade.sortValue;
+  public sortType = this.vendocontactsFacade.sortType;
+  public pageSizes = this.vendocontactsFacade.gridPageSizes;
+  public gridSkipCount = this.vendocontactsFacade.skipCount;
+  public sort = this.vendocontactsFacade.sort;
+  public state!: any;
+  descriptionCounter:number=500;
+  filters = "";
+  @Output() ContactUpdated = new EventEmitter<boolean>();
   showLoader() {
     this.loaderService.show();
   }
@@ -74,17 +83,18 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   public save() {
     this.isSubmitted = true;
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
-    this.AddContactForm.value.forEach((element:any, i: number) => {
-      this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
-    }); 
+    
     if (this.contactForm.valid) {
+       this.AddContactForm.value.forEach((element:any, i: number) => {
+      this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
+    });
       this.loaderService.show();
       this.vendocontactsFacade.saveContactAddress(this.contactForm.value).subscribe({
         next: (response: any) => {
           if (response) {
             this.contactFacade.showHideSnackBar(
               SnackBarNotificationType.SUCCESS,
-              'Contact Address added successfully'
+              'Contact  added successfully'
             );
             this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);
@@ -113,11 +123,10 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
           if (response) {
             this.contactFacade.showHideSnackBar(
               SnackBarNotificationType.SUCCESS,
-              'Contact Address Updated successfully'
+              'Contact Updated successfully'
             );
-            this.vendocontactsFacade.loadcontacts(this.contactAddress.vendorAddressId ?? "");
+            this.ContactUpdated.emit(true);
             this.loaderService.hide();
-            this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);
           }
         },
@@ -191,6 +200,13 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       this.isVisible = false;
     }
     this.cd.detectChanges();
+  }
+   onKeyPress(event: KeyboardEvent) {
+    return (event.charCode > 64 && 
+      event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)||event.charCode==32
+  }
+  onDescriptionValueChange(event: any): void {
+    this.descriptionCounter = event.length;
   }
   deactivatePaymentAddressContact()
   {
