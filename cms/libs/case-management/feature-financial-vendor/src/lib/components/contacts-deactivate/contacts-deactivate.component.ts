@@ -12,17 +12,17 @@ export class ContactsDeactivateComponent {
 
  /** Constructor **/
  constructor(
-  private readonly vendocontactsFacade: VendorContactsFacade
+  private readonly vendorContactsFacade: VendorContactsFacade
 ) {
 }
   onCloseDeactivateContactAddressClicked() {
     this.closeDeactivateContactAddress.emit(true);
   }
   deactiveContactAddress(){
-    this.vendocontactsFacade.deactiveContactAddress(this.VendorContactId).then((isDeavtivated:any) =>{
+    this.vendorContactsFacade.deactiveContactAddress(this.VendorContactId).then((isDeavtivated:any) =>{
       if(isDeavtivated){
         this.onCloseDeactivateContactAddressClicked();
-        this.vendocontactsFacade.loadVendorAllContacts(this.vendorId);
+        this.vendorContactsFacade.loadVendorAllContacts(this.vendorId);
       }
     })
   }

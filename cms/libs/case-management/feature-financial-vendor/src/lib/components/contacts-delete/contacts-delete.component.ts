@@ -11,7 +11,7 @@ export class ContactsDeleteComponent {
   @Output() closeDeleteContactAddress = new EventEmitter();
  /** Constructor **/
  constructor(
-  private readonly vendocontactsFacade: VendorContactsFacade
+  private readonly vendorContactsFacade: VendorContactsFacade
 ) {
 }
   onCloseDeleteContactAddressClicked() {
@@ -19,10 +19,10 @@ export class ContactsDeleteComponent {
   }
   deleteContactAddress(){
 
-    this.vendocontactsFacade.removeContactAddress(this.VendorContactId).then((isDeleted:any) =>{
+    this.vendorContactsFacade.removeContactAddress(this.VendorContactId).then((isDeleted:any) =>{
       if(isDeleted){
         this.onCloseDeleteContactAddressClicked();
-        this.vendocontactsFacade.loadVendorAllContacts(this.vendorId);
+        this.vendorContactsFacade.loadVendorAllContacts(this.vendorId);
       }
     })
   }
