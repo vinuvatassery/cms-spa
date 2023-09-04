@@ -84,8 +84,6 @@ export class SendLetterComponent implements OnInit {
       this.isButtonVisible=false;
       this.vendorContactFacade.mailCodes$.subscribe((resp) => {
         if (resp && resp.length > 0) {
-          //const selectedAddress = resp.find((address:any) => address.preferredFlag === "Y") || resp[0];
-
           let selectedAddress = resp.find((address: any) => address?.activeFlag === "Y" && address.preferredFlag === "Y");
           if (!selectedAddress) {
               selectedAddress = resp.find((address: any) => address?.activeFlag === "Y");

@@ -119,6 +119,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
             this.loaderService.hide();
             this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);
+            this.vendocontactsFacade.loadVendorAllcontacts(this.vendorId);
           }
         },
         error: (error: any) => {

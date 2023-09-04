@@ -22,7 +22,7 @@ export class PaymentAddressDeactivateComponent {
           this.onCloseDeactivatePaymentAddressClicked(true);
         } else {
           this.onCloseDeactivatePaymentAddressClicked(false);
-        }debugger;
+        }
         this.vendorContactFacade.loadVendorAllcontacts(this.vendorId);
       },
       error: (error) => {

@@ -24,7 +24,7 @@ export class VendorHeaderToolsComponent {
   private newReminderDetailsDialog : any;
   emailScreenName = ScreenType.FinancialManagementVendorPageEmail;
   letterScreenName = ScreenType.FinancialManagementVendorPageLetter;
-  contacts$ = this.vendorContactFacade.allContacts$;//this.vendorContactFacade.contacts$;
+  contacts$ = this.vendorContactFacade.allContacts$;
   mailCodes$ = this.vendorContactFacade.mailCodes$;
   emailSubscription$ = new Subscription();
   reloadSubscription$ = new Subscription();
@@ -110,9 +110,7 @@ export class VendorHeaderToolsComponent {
   }
 
   addEmailSubscription() {
-  debugger;
-    this.vendorContactFacade.allContacts$.subscribe((resp) => {//this.vendorContactFacade.contacts$.subscribe((resp) => {
-    debugger;
+    this.vendorContactFacade.allContacts$.subscribe((resp) => {
       if(resp.length!=0){
         const preferredContact = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.preferredFlag === "Y" && contact.emailAddress?.trim());
         const contactWithValidEmail = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.emailAddress && contact.emailAddress.trim());
@@ -222,11 +220,6 @@ export class VendorHeaderToolsComponent {
           if (!selectedAddress) {
               selectedAddress = resp.find((address: any) => address?.activeFlag === "Y");
           }
-
-          //this.vendorAddressId = selectedAddress.vendorAddressId;
-          //this.vendorContactFacade.loadVendorAllcontacts(this.vendorId);
-          //this.vendorContactFacade.loadcontacts(this.vendorAddressId);
-          //this.addEmailSubscription();
         }
         this.ref.detectChanges();
       });
@@ -238,7 +231,6 @@ export class VendorHeaderToolsComponent {
     }
 
     getVendorTypeCode() {
-      debugger;
       switch (this.vendorTypeCode) {
         case FinancialVendorProviderTabCode.Manufacturers:
           this.emailSubject = CommunicationEventTypeCode.ManufacturerSubject;
@@ -268,6 +260,5 @@ export class VendorHeaderToolsComponent {
       }
     }
     onSendMenuClick(){
-     // this.loadEmailAddress();
     }
 }
