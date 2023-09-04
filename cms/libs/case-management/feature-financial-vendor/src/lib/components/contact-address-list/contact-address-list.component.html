@@ -1,6 +1,9 @@
-<kendo-grid [resizable]="true" [navigable]="true" [kendoGridBinding]="contactResponse"
-   [sortable]="true"  [groupable]="false" [reorderable]="true"
-[columnMenu]="{ filter: true }" >
+<kendo-grid
+[resizable]="true" [pageSize]="state.take" [pageable]="true" [skip]="state.skip" [groupable]="false"
+        [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort" [pageable]="true"
+        [data]="contacts$| async" (dataStateChange)="dataStateChange($event)"
+        [sortable]="true"
+        [columnMenu]="{filter: true }" >
 
   <kendo-grid-column field="contactName" title="Name" [width]="100" >
     <ng-template kendoGridCellTemplate let-dataItem>

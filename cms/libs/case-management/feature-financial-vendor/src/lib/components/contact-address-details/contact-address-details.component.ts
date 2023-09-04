@@ -84,34 +84,34 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
 
     if (this.contactForm.valid) {
-       this.AddContactForm.value.forEach((element:any, i: number) => {
-      this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
-    });
-    if (this.contactForm.valid) {
-      this.loaderService.show();
-      this.vendocontactsFacade.saveContactAddress(this.contactForm.value).subscribe({
-        next: (response: any) => {
-          if (response) {
-            this.contactFacade.showHideSnackBar(
-              SnackBarNotificationType.SUCCESS,
-              'Contact  added successfully'
-            );
-            this.contactFacade.hideLoader();
-            this.isContactDetailPopupClose.emit(true);
-            this.vendocontactsFacade.loadVendorAllcontacts(this.vendorId);
-          }
-        },
-        error: (error: any) => {
-          this.loaderService.hide();
-          this.contactFacade.showHideSnackBar(
-            SnackBarNotificationType.ERROR,
-            error
-          );
-        },
+        this.AddContactForm.value.forEach((element:any, i: number) => {
+        this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
       });
+      if (this.contactForm.valid) {
+        this.loaderService.show();
+        this.vendocontactsFacade.saveContactAddress(this.contactForm.value).subscribe({
+          next: (response: any) => {
+            if (response) {
+              this.contactFacade.showHideSnackBar(
+                SnackBarNotificationType.SUCCESS,
+                'Contact  added successfully'
+              );
+              this.contactFacade.hideLoader();
+              this.isContactDetailPopupClose.emit(true);
+              this.vendocontactsFacade.loadVendorAllcontacts(this.vendorId);
+            }
+          },
+          error: (error: any) => {
+            this.loaderService.hide();
+            this.contactFacade.showHideSnackBar(
+              SnackBarNotificationType.ERROR,
+              error
+            );
+          },
+        });
+      }
     }
   }
-
   public update() {
     this.isSubmitted = true;
     this.AddContactForm.value.forEach((element:any, i: number) => {
