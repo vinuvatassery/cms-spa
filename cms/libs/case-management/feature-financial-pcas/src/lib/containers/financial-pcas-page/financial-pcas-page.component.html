@@ -11,20 +11,20 @@
                     <kendo-tabstrip-tab title="PCA Setup" [selected]="true">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-pcas-setup-list 
+                                <cms-financial-pcas-setup-list
                                 [financialPcaSetupGridLists$]="financialPcaSetupGridLists$"
                                 [financialPcaSetupGridLoader$]="financialPcaSetupLoader$"
                                 [fundingSourceLookup$]="fundingSourceLookup$"
                                 [pcaActionIsSuccess$]="pcaActionIsSuccess$"
                                 [pcaData$]="pcaData$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaSetup"
-                                [sortType]="sortType" [sort]="sortPcaSetupList" 
+                                [sortType]="sortType" [sort]="sortPcaSetupList"
                                 (loadFinancialPcaSetupListEvent)="loadFinancialPcaSetupListGrid($event)"
                                 (loadAddOrEditPcaEvent)="loadAddOrEditPcaEvent($event)"
                                 (savePcaEvent)="savePca($event)"
                                 (removePcaEvent)="removePca($event)"
                                  > </cms-financial-pcas-setup-list>
-                                
+
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -32,13 +32,13 @@
                     <kendo-tabstrip-tab title="PCA Assignment">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-pcas-assignment-list 
+                                <cms-financial-pcas-assignment-list
                                 [financialPcaAssignmentGridLists$]="financialPcaAssignmentGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaAssignment"
-                                [sortType]="sortType" [sort]="sortPcaAssignmentList" 
+                                [sortType]="sortType" [sort]="sortPcaAssignmentList"
                                 (loadFinancialPcaAssignmentListEvent)="loadFinancialPcaAssignmentListGrid($event)"
                                 ></cms-financial-pcas-assignment-list>
-                              
+
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -48,9 +48,9 @@
                             <div class="block-section">
                                 <cms-financial-pcas-reassignment-list  [financialPcaReassignmentGridLists$]="financialPcaReassignmentGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaReassignment"
-                                [sortType]="sortType" [sort]="sortPcaReassignmentList" 
+                                [sortType]="sortType" [sort]="sortPcaReassignmentList"
                                 (loadFinancialPcaReassignmentListEvent)="loadFinancialPcaReassignmentListGrid($event)"></cms-financial-pcas-reassignment-list>
-                                
+
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -58,14 +58,14 @@
                     <kendo-tabstrip-tab title="Assignment Report">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-pcas-assignment-report-list  [financialPcaReportGridLists$]="financialPcaReportGridLists$"
+                                <cms-financial-pcas-assignment-report-list [financialPcaReportGridLoader$]="financialPcaReportLoader$" [financialPcaReportGridLists$]="financialPcaReportGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaReport"
-                                [sortType]="sortType" [sort]="sortFinancialPcaReportList" 
+                                [sortType]="sortType" [sort]="sortFinancialPcaReportList"
                                 (loadFinancialPcaReportListEvent)="loadFinancialPcaReportListGrid($event)"></cms-financial-pcas-assignment-report-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
-               
+
                 </kendo-tabstrip>
             </section>
         </section>

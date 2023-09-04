@@ -41,6 +41,7 @@ export class FinancialPcasPageComponent implements OnInit{
   financialPcaSetupLoader$ = this.financialPcaFacade.financialPcaSetupLoader$;
   financialPcaAssignmentGridLists$ = this.financialPcaFacade.financialPcaAssignmentData$;
   financialPcaReassignmentGridLists$ = this.financialPcaFacade.financialPcaReassignmentData$;
+  financialPcaReportLoader$ = this.financialPcaFacade.financialPcaReportLoader$;
   financialPcaReportGridLists$ = this.financialPcaFacade.financialPcaReportData$;
   fundingSourceLookup$ = this.fundingSourceFacade.fundingSourceLookup$;
   pcaActionIsSuccess$ = this.financialPcaFacade.pcaActionIsSuccess$;

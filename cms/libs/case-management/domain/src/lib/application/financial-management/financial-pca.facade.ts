@@ -71,6 +71,9 @@ export class FinancialPcaFacade {
   private financialPcaReportDataSubject = new Subject<any>();
   financialPcaReportData$ = this.financialPcaReportDataSubject.asObservable();
 
+  private financialPcaReportLoaderSubject = new BehaviorSubject<any>(false);
+  financialPcaReportLoader$ = this.financialPcaReportLoaderSubject.asObservable();
+
     /** Public properties **/
 
   // handling the snackbar & loader
@@ -137,7 +140,7 @@ export class FinancialPcaFacade {
     sortType: string,
     filter: string
   ) {
-    filter = JSON.stringify(filter);
+    this.financialPcaReportLoaderSubject.next(true)
     this.financialPcaDataService
       .loadFinancialPcaReportListService(
         skipcount,
@@ -153,11 +156,11 @@ export class FinancialPcaFacade {
             total: dataResponse['totalCount'],
           };
           this.financialPcaReportDataSubject.next(gridView);
-          this.hideLoader();
+          this.financialPcaReportLoaderSubject.next(false)
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-          this.hideLoader();
+          this.financialPcaReportLoaderSubject.next(false)
         },
       });
   }

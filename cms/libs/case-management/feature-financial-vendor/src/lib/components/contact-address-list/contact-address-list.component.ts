@@ -23,7 +23,7 @@ export class ContactAddressListComponent implements OnChanges {
   isContactAddressDeleteShow = false;
   isContactAddressDetailShow = false;
   isContactsDetailShow = false;
-  public formUiStyle : UIFormStyle = new UIFormStyle(); 
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   VendorContactId:any;
   VendorContactAddressId: string="";
   @Input() VendorAddressId: any;
@@ -110,7 +110,7 @@ export class ContactAddressListComponent implements OnChanges {
   constructor(private readonly vendocontactsFacade: VendorContactsFacade, private cd: ChangeDetectorRef, private readonly loaderService: LoaderService,    public readonly  intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider) { }
 
-  ngOnChanges(changes: SimpleChanges) { 
+  ngOnChanges(changes: SimpleChanges) {
     this.defaultGridState();
     this.vendocontactsFacade.loadcontacts(this.VendorAddressId,
       this.state?.skip ?? 0,
@@ -118,8 +118,8 @@ export class ContactAddressListComponent implements OnChanges {
       this.sortValue,
       this.sortType,
       this.filters
-      );    
-  
+      );
+
   }
   clickOpenAddEditContactAddressDetails() {
     this.isContactsDetailShow = true;
@@ -149,7 +149,7 @@ export class ContactAddressListComponent implements OnChanges {
         this.sortValue,
         this.sortType,
         this.filters
-        ); 
+        );
       this.clickCloseDeleteContactAddress();
     }
   }
@@ -162,7 +162,7 @@ export class ContactAddressListComponent implements OnChanges {
         this.sortValue,
         this.sortType,
         this.filters
-        ); 
+        );
       this.clickCloseDeactivateContactAddress();
 
     }
@@ -180,7 +180,7 @@ export class ContactAddressListComponent implements OnChanges {
       this.sortValue,
       this.sortType,
       this.filters
-      ); 
+      );
   }
 
   public dataStateChange(stateData: any): void {
@@ -193,7 +193,7 @@ export class ContactAddressListComponent implements OnChanges {
       this.sortValue,
       this.sortType,
       this.filters
-      ); 
+      );
   }
    filterChange(filter: CompositeFilterDescriptor): void {
     this.filters = JSON.stringify(filter);
@@ -232,7 +232,6 @@ export class ContactAddressListComponent implements OnChanges {
   }
 contactUpdated(res:boolean)
 {
-  debugger
 if(res)
 {
   this.vendocontactsFacade.loadcontacts(this.VendorAddressId,

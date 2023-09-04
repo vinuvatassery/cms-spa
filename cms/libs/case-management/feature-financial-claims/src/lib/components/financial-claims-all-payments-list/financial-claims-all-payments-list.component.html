@@ -2,22 +2,22 @@
 
 <p class="mt-2"> Click “Bulk” to execute actions for one or more claims. Click on a row to view that claim.</p>
 <section class="table-filter-section mat-form-no-b-space">
-    <span class="filter-section_items filter--select">
-      <kendo-floatinglabel>
-        <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
-          textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
-    </span>
-    <span class="filter-section_items filter--search">
-      <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
-      <kendo-floatinglabel text="Search">
-        <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)" aria-label="Search case"
-          rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+  <span class="filter-section_items filter--select">
+    <kendo-floatinglabel>
+      <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
+        textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
+      </kendo-dropdownlist>
+    </kendo-floatinglabel>
+  </span>
+  <span class="filter-section_items filter--search">
+    <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
+    <kendo-floatinglabel text="Search">
+      <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)" aria-label="Search case"
+        rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
-      </kendo-floatinglabel>
-    </span>
-  </section>
+    </kendo-floatinglabel>
+  </span>
+</section>
 
   <!-- Sorted Info -->
   <div class="table-sorted-info">
