@@ -498,7 +498,7 @@ export class FinancialClaimsDataService {
 
   viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, claimsType:any) {
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/print-advice-letter/download`, printAdviceLetterData,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/download-advice-letter`, printAdviceLetterData,
       { responseType: 'blob' }
     );
   }
