@@ -272,9 +272,7 @@ export class PaymentAddressesComponent {
   }
   onDeactiveCancel(isCancel: any) {
     if (isCancel) {
-      this.vendorcontactFacade.loadcontacts(this.VendorAddressId);
       this.clickCloseDeactivateContactAddress();
-
     }
   }
 }
