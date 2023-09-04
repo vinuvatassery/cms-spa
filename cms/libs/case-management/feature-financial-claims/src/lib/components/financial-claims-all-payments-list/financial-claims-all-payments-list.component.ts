@@ -360,7 +360,6 @@ export class FinancialClaimsAllPaymentsListComponent
         }
       }
     );
-    this.isFinancialClaimsAllPaymentsGridLoaderShow = false;
   }
   navToReconcilePayments(event: any) {
     this.route.navigate([
