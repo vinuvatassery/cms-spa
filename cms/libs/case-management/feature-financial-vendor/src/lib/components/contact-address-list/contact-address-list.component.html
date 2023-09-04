@@ -81,6 +81,6 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar (close)="clickCloseAddEditContactsDetails()">Edit contact
   </kendo-dialog-titlebar>
-  <cms-contact-address-details [VendorContactId]="VendorContactId"
+  <cms-contact-address-details [VendorContactId]="VendorContactId" (editDeactivateContactClicked)="onEditDeactivateContactClicked($event)"
     (isContactDetailPopupClose)="clickCloseAddEditContactsDetails()"> </cms-contact-address-details>
 </kendo-dialog>
