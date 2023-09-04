@@ -37,7 +37,7 @@ export class VendorContactsDataService {
       MaxResultCount : pageSize,
       Filter : filters
     }
-   
+
     return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/addresses/${vendorAddressId}/contacts`,VendorContactsPageAndSortedRequestDto);
   }
   saveContactAddress(contact: any) {
@@ -62,6 +62,6 @@ export class VendorContactsDataService {
     );
   }
   loadVendorAllcontacts(vendorId: string) {
-    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/addresses/${vendorId}/active-contacts`);
+    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/${vendorId}/active-contacts`);
   }
 }

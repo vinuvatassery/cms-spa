@@ -252,7 +252,7 @@ onClosePreviewEmail(){
     this.selectedTemplate = event;
     this.emailContentValue = event.templateContent == undefined? event.requestBody : event.templateContent;
     this.selectedEmail = [];
-    this.selectedEmail.push(this.toEmail[0].trim());
+    this.selectedEmail.push(this.toEmail[0]?.trim());
     this.selectedToEmail = this.selectedEmail;
     this.handleEmailEditor(event);
     this.showToEmailLoader = false;
