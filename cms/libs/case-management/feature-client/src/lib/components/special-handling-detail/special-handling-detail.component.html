@@ -120,7 +120,9 @@
                 >  
              </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['materialInAlternateFormatOther'].valid && specialCaseHandlingForm.controls['materialInAlternateFormatCode'].valid) && !specialCaseHandlingForm.controls['materialInAlternateFormatDesc'].disabled ">A response is required.</kendo-formerror>  
+            <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['materialInAlternateFormatOther'].valid && specialCaseHandlingForm.controls['materialInAlternateFormatCode'].valid) && !specialCaseHandlingForm.controls['materialInAlternateFormatDesc'].disabled "> <span class="material-icons-outlined">
+              error
+              </span> A response is required.</kendo-formerror>  
               </div>
              
             </div>

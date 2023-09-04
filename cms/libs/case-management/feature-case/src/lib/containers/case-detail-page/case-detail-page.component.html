@@ -76,10 +76,6 @@
         <ng-template #letterTemplate>
           <h5>Do you want to send a letter?</h5>
         </ng-template>
-        <h5 *ngIf="paperlessFlag == 'Y'; else letterTemplate">Do you want to send the client an email?</h5>
-        <ng-template #letterTemplate>
-          <h5>Do you want to send a letter?</h5>
-        </ng-template>
         <div class="component-list-h">
           <span class="app-radiobtnwidtext-wrapper">
             <input type="radio" [(ngModel)]="sendLetterFlag" value="Y" aria-labelledby="send Letter" kendoRadioButton name="sendLetter" />

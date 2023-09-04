@@ -1228,3 +1228,20 @@ color: $app-primary-font-color;
     }
    }
 }
+
+.notice-view{
+.number-list, .ProseMirror{
+  padding: 0px;
+}
+.k-editor-content{
+  min-height: 60vh;
+  font-family: inherit;
+}
+iframe{
+ 
+  min-height: 60vh;
+  body{
+    font-family: $font-family;
+  }
+}
+}
