@@ -8,7 +8,7 @@ import {
 import { VendorContactsFacade, ContactResponse } from '@cms/case-management/domain';
 import { ConfigurationProvider, LoaderService} from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'cms-contact-address-list',
@@ -232,7 +232,6 @@ export class ContactAddressListComponent implements OnChanges {
   }
 contactUpdated(res:boolean)
 {
-  debugger
 if(res)
 {
   this.vendocontactsFacade.loadcontacts(this.VendorAddressId,
