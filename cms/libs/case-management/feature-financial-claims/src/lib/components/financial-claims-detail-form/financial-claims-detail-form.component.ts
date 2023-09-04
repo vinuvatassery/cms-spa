@@ -192,6 +192,9 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   searchMedicalProvider(searchText: any) {
+    if(!searchText || searchText.length == 0){
+      return;
+    }
     this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider);
   }
   onCPTCodeValueChange(event: any, index: number) {
@@ -303,11 +306,12 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     let bodyData = {
       clientId: formValues.client.clientId,
       vendorId: formValues.medicalProvider.vendorId,
+      vendorAddressId: formValues.medicalProvider.vendorAddressId,
       claimNbr: formValues.invoiceId,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       paymentRequestId: this.isEdit ? this.paymentRequestId : null,
       paymentMethodCode: this.isSpotsPayment ? PaymentMethodCode.SPOTS : PaymentMethodCode.ACH,
-      serviceSubTypeCode: this.claimsType == this.financialProvider ? "MEDICAL" : "DENTAL",
+      serviceSubTypeCode: this.claimsType == this.financialProvider ? FinancialProvider.MedicalClaim : FinancialProvider.DentalClaim,
       tpainvoice: [{}],
     };
     for (let element of formValues.claimService) {

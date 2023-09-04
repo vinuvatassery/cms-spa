@@ -17,12 +17,13 @@
                             class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
                         </span>
 
-                        <kendo-multicolumncombobox textField="providerFullName" valueField="vendorId"
+                        <kendo-multicolumncombobox textField="providerFullName" valueField="vendorAddressId"
                             [fillMode]="formUiStyle.dropDownFillMode"
-                            placeholder="Search Medical Providers by name or TIN"
+                            placeholder="Search {{claimsType | titlecase}} Providers by name or TIN"
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="medicalProvider" (filterChange)="searchMedicalProvider($event)"
-                            [data]="pharmacySearchResult$ | async" [(ngModel)]="selectedMedicalProvider">
+                            [data]="pharmacySearchResult$ | async" [(ngModel)]="selectedMedicalProvider"
+                            >
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
