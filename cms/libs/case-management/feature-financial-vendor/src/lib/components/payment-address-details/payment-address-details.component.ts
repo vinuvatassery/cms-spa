@@ -190,7 +190,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
           this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment Address Added Successfully')
         }
         this.billingAddressFacade.hideLoader();
-        this.vendorContactFacade.loadVendorAllcontacts(this.vendorId);
+        this.vendorContactFacade.loadVendorAllContacts(this.vendorId);
         this.closeModal('saved');
       },
       error: (err) => {

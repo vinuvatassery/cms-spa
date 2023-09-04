@@ -61,7 +61,7 @@ export class VendorContactsDataService {
       `/financial-management/vendors/${vendorId}/addresses`
     );
   }
-  loadVendorAllcontacts(vendorId: string) {
+  loadVendorAllContacts(vendorId: string) {
     return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/${vendorId}/active-contacts`);
   }
 }

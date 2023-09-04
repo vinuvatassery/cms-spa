@@ -23,7 +23,7 @@ export class PaymentAddressDeactivateComponent {
         } else {
           this.onCloseDeactivatePaymentAddressClicked(false);
         }
-        this.vendorContactFacade.loadVendorAllcontacts(this.vendorId);
+        this.vendorContactFacade.loadVendorAllContacts(this.vendorId);
       },
       error: (error) => {
         this.onCloseDeactivatePaymentAddressClicked(false);

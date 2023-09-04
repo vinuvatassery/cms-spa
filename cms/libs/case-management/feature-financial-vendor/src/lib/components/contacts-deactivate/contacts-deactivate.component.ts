@@ -22,7 +22,7 @@ export class ContactsDeactivateComponent {
     this.vendocontactsFacade.deactiveContactAddress(this.VendorContactId).then((isDeavtivated:any) =>{
       if(isDeavtivated){
         this.onCloseDeactivateContactAddressClicked();
-        this.vendocontactsFacade.loadVendorAllcontacts(this.vendorId);
+        this.vendocontactsFacade.loadVendorAllContacts(this.vendorId);
       }
     })
   }

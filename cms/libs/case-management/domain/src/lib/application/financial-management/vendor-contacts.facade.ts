@@ -208,10 +208,10 @@ export class VendorContactsFacade {
     });
   }
 
-  loadVendorAllcontacts(vendorId:string)
+  loadVendorAllContacts(vendorId:string)
   {
     this.showLoader();
-    this.vendorcontactsDataService.loadVendorAllcontacts(vendorId).subscribe({
+    this.vendorcontactsDataService.loadVendorAllContacts(vendorId).subscribe({
       next:(res:any)=>{
       this.allContactsSubject.next(res);
       this.hideLoader();

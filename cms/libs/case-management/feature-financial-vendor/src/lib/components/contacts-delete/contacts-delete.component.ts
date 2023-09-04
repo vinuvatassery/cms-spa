@@ -22,7 +22,7 @@ export class ContactsDeleteComponent {
     this.vendocontactsFacade.removeContactAddress(this.VendorContactId).then((isDeleted:any) =>{
       if(isDeleted){
         this.onCloseDeleteContactAddressClicked();
-        this.vendocontactsFacade.loadVendorAllcontacts(this.vendorId);
+        this.vendocontactsFacade.loadVendorAllContacts(this.vendorId);
       }
     })
   }

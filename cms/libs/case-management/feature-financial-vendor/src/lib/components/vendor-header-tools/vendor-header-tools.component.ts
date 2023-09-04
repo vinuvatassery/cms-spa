@@ -105,7 +105,7 @@ export class VendorHeaderToolsComponent {
   }
 
   loadEmailAddress(){
-    this.vendorContactFacade.loadVendorAllcontacts(this.vendorId);
+    this.vendorContactFacade.loadVendorAllContacts(this.vendorId);
   }
 
   addEmailSubscription() {
