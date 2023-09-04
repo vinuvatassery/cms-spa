@@ -14,7 +14,7 @@
             <kendo-grid #grid  [resizable]="true" [loading]="isPaymentsAddressGridLoaderShow" [pageSize]="state.take" [pageable]="true"
             [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
             [columnMenu]="{ filter: false }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [navigable]="true" [data]="paymentsAddressGridView$ | async"   (detailCollapse)="onDetailCollapse($event)"
-            (detailExpand)="onDetailExpand($event)" (columnVisibilityChange)="columnChange($event)">
+            (detailExpand)="onDetailExpand($event)" (columnVisibilityChange)="columnChange($event)" [rowClass]="rowClass">
 
                 <kendo-grid-column field="mailCode" title="Mail Code" [width]="150">
                     <ng-template kendoGridCellTemplate let-dataItem>
@@ -36,10 +36,10 @@
                 <kendo-grid-column field="state" title="State" [width]="100">   </kendo-grid-column>
                 <kendo-grid-column field="zip" title="Zip" [width]="100">   </kendo-grid-column>
                 <kendo-grid-column field="specialHandlingDesc" title="Special Handling" [width]="120">   </kendo-grid-column>
-                <kendo-grid-column field="effectiveDate" title="Effective Dates" [width]="120">  
+                <kendo-grid-column field="effectiveDate" title="Effective Dates" [width]="120">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                    {{dataItem.effectiveDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}  
-                   </ng-template>   
+                    {{dataItem.effectiveDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}
+                   </ng-template>
                 </kendo-grid-column>
                 <kendo-grid-column [sortable]="false" field="creatorId" title="By" [width]="70">
                     <ng-template kendoGridCellTemplate let-dataItem>
