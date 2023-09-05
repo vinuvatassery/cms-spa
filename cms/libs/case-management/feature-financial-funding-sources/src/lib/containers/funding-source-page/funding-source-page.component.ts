@@ -30,7 +30,6 @@ export class FundingSourcePageComponent {
 
   ) { }
 
-
   loadFinancialFundingSourceFacadeListGrid(event: any) {
     this.financialFundingSourceFacade.loadFinancialFundingSourceFacadeListGrid();
   }
@@ -57,6 +56,9 @@ export class FundingSourcePageComponent {
       gridDataRefiner.sortType,
       gridDataRefiner.filter
     );
+  }
+  removeFundingSource(fundingSourceId: any) {
+    this.financialFundingSourceFacade.removeFundingSource(fundingSourceId)
   }
 }
 

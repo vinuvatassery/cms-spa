@@ -1,5 +1,6 @@
-<kendo-dialog-titlebar (close)="closeEditPcaReassignmentClicked()"> Edit PCA Code </kendo-dialog-titlebar>
-
+<kendo-dialog-titlebar (close)="closeEditPcaReassignmentClicked()">  {{isViewGridOptionClicked? 'View' :'Edit' }} PCA Code </kendo-dialog-titlebar>
+<ng-container *ngIf="pcaReassignmentByFundSource">
+<div [formGroup]="pcaReassignmentForm">
 <section class="k-dialog-body">
       <p class="text-muted">
             All fields are required unless otherwise stated.
@@ -11,74 +12,90 @@
             </div>
             <div class="flex-col flex-col-8">
                   <kendo-floatinglabel text="PCA">
-                        <kendo-dropdownlist aria-label="PCA" [fillMode]="formUiStyle.inputFillMode">
+                        <kendo-dropdownlist aria-label="PCA" [fillMode]="formUiStyle.inputFillMode"                  
+                        [data]="pcaList"
+                        formControlName="pca"
+                        >
                         </kendo-dropdownlist>
                   </kendo-floatinglabel>
 
             </div>
             <div class="flex-col flex-col-4">
                   <kendo-floatinglabel text="AY">
-                        <kendo-textbox aria-label="AT" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                        <kendo-textbox aria-label="AT" [fillMode]="formUiStyle.inputFillMode" formControlName="ay" > </kendo-textbox>
                   </kendo-floatinglabel>
             </div>
       </div>
       <div class="flex-row mt-3">
             <div class="flex-col flex-col-4">
                   <label> PCA Amount </label>
-                  <p> $ 5,00,0000.00</p>
+                  <p> $ {{pcaReassignmentByFundSource.pcaAmount}}</p>
             </div>
             <div class="flex-col flex-col-4">
                   <label> Allocated </label>
-                  <p> $ 5,00,0000.00</p>
+                  <p> $ {{pcaReassignmentByFundSource.allocatedAmount}}</p>
             </div>
             <div class="flex-col flex-col-4">
                   <label> Remaining </label>
-                  <p class="green-text-color">$ 5,00,0000.00</p>
+                  <p class="green-text-color">$ {{pcaReassignmentByFundSource.remainingAmount}}</p>
             </div>
             
       </div>
       <div class="flex-row">
             <div class="flex-col mt-1">
             
-                  <p class="relative-heading"><strong>Object Settings</strong></p>
+                  <p class="relative-heading"><strong>Assignment Settings</strong></p>
             </div>
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Open Date">
                         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                              formatPlaceholder="formatPattern" placeholder="">
+                              formatPlaceholder="formatPattern" placeholder=""
+                                 formControlName="openDate" >
                         </kendo-datepicker>
                   </kendo-floatinglabel>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked &&!pcaReassignmentForm.controls['openDate'].valid">Open Date is required.</kendo-formerror>
 
             </div>
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Close Date">
                         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                              formatPlaceholder="formatPattern" placeholder="">
+                              formatPlaceholder="formatPattern" placeholder="" 
+                               formControlName="closeDate"
+                               (keyup)="dateValidate()"
+                               (valueChange)="dateValidate()" >
                         </kendo-datepicker>
                   </kendo-floatinglabel>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked &&!pcaReassignmentForm.controls['closeDate'].valid && !pcaReassignmentForm.controls['closeDate'].hasError('incorrect')"> Close Date is required.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && pcaReassignmentForm.controls['closeDate'].hasError('incorrect')"> Close Date is before the Open Date
+                  </kendo-formerror>
 
             </div>
       </div>
       <div class="flex-row">
             <div class="flex-col ">
-                  <kendo-floatinglabel text="Object Amount" class="amount-with-symbol">
+                  <kendo-floatinglabel text="Assignment Amount" class="amount-with-symbol">
                         <span class="k-input-prefix custom-currencysymbol"> $ </span>
                         <kendo-numerictextbox  aria-label="Object Amount" [spinners]="false"
-                              class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
+                              class="input-icon-right" placeholder="00.00"
+                               [fillMode]="formUiStyle.inputFillMode" formControlName="assignmentAmount">
                         </kendo-numerictextbox>
                   </kendo-floatinglabel>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked &&!pcaReassignmentForm.controls['assignmentAmount'].valid">Assignment Amount is required.</kendo-formerror>
+                  
+
 
             </div>
             <div class="flex-col mt-2">
                   <span class="app-checkboxwidtext-wrapper">
-                        <input type="checkbox" kendoCheckBox aria-labelledby="Unlimited" id="Unlimited" />
-                        <label class="k-checkbox-label" for="Unlimited">Unlimited</label>
+                        <input type="checkbox" kendoCheckBox aria-labelledby="Unlimited" id="Unlimited"  formControlName="unlimited"  />
+                        <label class="k-checkbox-label" for="Unlimited" >Unlimited</label>
                   </span>
             </div>
 
       </div>
 </section>
 
+</div>
 <kendo-dialog-actions>
       <div class="justify-content-between">
             <div class="justify-content-end">
@@ -86,9 +103,10 @@
                         (click)="closeEditPcaReassignmentClicked()">
                         Cancel
                   </button>
-                  <button kendoButton [primary]="true" aria-label="Save">
+                  <button kendoButton [primary]="true" aria-label="Save" *ngIf="!isViewGridOptionClicked " (click)="saveEditPcaReassignmentClicked()">
                         Save
                   </button>
             </div>
       </div>
 </kendo-dialog-actions>
+</ng-container>

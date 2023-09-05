@@ -10,7 +10,7 @@
             formControlName="providerName">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
-            Insurance Vendor name is required
+            Vendor Name is required
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -21,7 +21,7 @@
             formControlName="providerName">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
-            Pharmacy name is required
+            Pharmacy Name is required
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -53,7 +53,7 @@
               </kendo-autocomplete>
               <kendo-formerror
                 *ngIf="!medicalProviderForm.controls['providerName'].valid && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
-                Clinic name is required
+                Clinic Name is required
               </kendo-formerror>
             </kendo-floatinglabel>
           </div>
@@ -64,7 +64,7 @@
               </kendo-textbox>
               <kendo-formerror
                 *ngIf="!medicalProviderForm.controls['providerName'].valid && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
-                Provider name is required
+                Provider Name is required
               </kendo-formerror>
             </kendo-floatinglabel>
           </div>
@@ -111,16 +111,15 @@
         </div>
       </div>
 
-
-
       <div class="flex-col">
-        <kendo-floatinglabel text="TIN">
-          <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" formControlName="tinNumber"
-            [maxlength]="100">
-          </kendo-textbox>
+        <kendo-floatinglabel text="TIN (optional)">
+          <kendo-maskedtextbox aria-label="TIN" 
+           [fillMode]="formUiStyle.inputFillMode" placeholder="TIN (optional)"
+           [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat">
+          </kendo-maskedtextbox> 
         </kendo-floatinglabel>
       </div>
-      <div class="flex-col mt-1" *ngIf="providerType == vendorTypes.Pharmacy && editVendorInfo">
+      <div class="flex-col mt-1" *ngIf="providerType == vendorTypes.Pharmacy">
         <kendo-floatinglabel text="NPI (optional)">
           <kendo-textbox aria-label="NPI" [fillMode]="formUiStyle.inputFillMode" formControlName="npiNbr">
           </kendo-textbox>
@@ -165,7 +164,7 @@
 
       <div class="flex-col">
         <kendo-floatinglabel text="Mail Code">
-          <kendo-textbox aria-label="Mail Code" [fillMode]="formUiStyle.inputFillMode" formControlName="mailCode"
+          <kendo-textbox aria-label="Mail Code"  (valueChange)="onChange()" (keyup)="onMailCodeChange()"  [fillMode]="formUiStyle.inputFillMode" formControlName="mailCode"
             [maxlength]="3">
           </kendo-textbox>
         </kendo-floatinglabel>
@@ -199,7 +198,7 @@
             formControlName="addressLine1">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['addressLine1'].valid && isValidateForm">
-            Address Line 1 is required
+            Address is required
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -235,9 +234,18 @@
           <kendo-textbox aria-label="Zip" [fillMode]="formUiStyle.inputFillMode" formControlName="zip">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['zip'].valid && isValidateForm">
-            Zip is required
+            Zip Code is required
           </kendo-formerror>
         </kendo-floatinglabel>
+      </div>
+      <div *ngIf="providerType == vendorTypes.Pharmacy && !editVendorInfo" class="flex-col mt-1">
+        <div class="component-list-h">
+          <span class="app-checkboxwidtext-wrapper">
+            <input type="checkbox" kendoCheckBox aria-labelledby="Rebate" id="physicalAddressFlag"
+              formControlName="physicalAddressFlag" />
+            <label class="k-checkbox-label" for="physicalAddressFlag">  This is the pharmacy's physical address </label>
+          </span>
+        </div>
       </div>
 
       <div
@@ -405,7 +413,7 @@
             <p class="text-muted mb-2">
               If adding a contact person, Name is required
             </p>
-            <kendo-formerror *ngIf="!getContactControl(i, 'contactName')?.valid && isValidateForm">Contact Name is
+            <kendo-formerror *ngIf="!getContactControl(i, 'contactName')?.valid && isValidateForm && getContactNameValidation(i)">Contact Name is
               required</kendo-formerror>
           </div>
           <div class="flex-col mb-1">
@@ -467,7 +475,7 @@
       <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"
         (click)="closeVedorModal()"> Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="save()"> Save </button>
+      <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="save()"> Add </button>
     </div>
   </div>
   <div class="justify-content-between" *ngIf="editVendorInfo">

@@ -12,6 +12,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
+
 @Component({
   selector: 'cms-contact-address-list',
   templateUrl: './contact-address-list.component.html',
@@ -69,7 +70,7 @@ export class ContactAddressListComponent implements OnChanges {
   public contactAddressActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Contact',
+      text: 'Edit',
       icon: 'edit',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -80,7 +81,7 @@ export class ContactAddressListComponent implements OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Deactivate Contact',
+      text: 'Deactivate',
       icon: 'block',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -91,7 +92,7 @@ export class ContactAddressListComponent implements OnChanges {
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Contact',
+      text: 'Delete',
       icon: 'delete',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -240,24 +241,25 @@ export class ContactAddressListComponent implements OnChanges {
       searchValue: '',
     };
   }
-  contactUpdated(res: boolean) {
-    if (res) {
-      this.vendocontactsFacade.loadcontacts(
-        this.VendorAddressId,
-        this.state?.skip ?? 0,
-        this.state?.take ?? 0,
-        this.sortValue,
-        this.sortType,
-        this.filters
-      );
-    }
-  }
+contactUpdated(res:boolean)
+{
+if(res)
+{
+  this.vendocontactsFacade.loadcontacts(this.VendorAddressId,
+    this.state?.skip ?? 0,
+    this.state?.take ?? 0,
+    this.sortValue,
+    this.sortType,
+    this.filters
+    );
+}
+}
   public setGridState(stateData: any): void {
     this.state = stateData;
 
     const filters = stateData.filter?.filters ?? [];
 
-    for (let val of filters) {
+    for (const val of filters) {
       if (val.field === 'prescriptionFillDate' || val.field === 'entryDate') {
         this.intl.formatDate(val.value, this.dateFormat);
       }
@@ -288,6 +290,14 @@ export class ContactAddressListComponent implements OnChanges {
     }
     if (this.sort[0]?.dir === 'desc') {
       this.sortDir = 'Descending';
+    }
+  }
+
+  onEditDeactivateContactClicked(event:any)
+  {
+    if (event?.vendorContactId) {
+      this.VendorContactId = event?.vendorContactId;
+      this.clickOpenDeactivateContactAddressDetails();
     }
   }
 }

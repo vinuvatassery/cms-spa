@@ -297,11 +297,13 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
     if (result) {
       this.editFundingOpened = false;
       this.addEditFundingDialog.close();
+      this.loadFinancialFundingSourceFacadeListGrid();
     }
   }
 
   addFundingSource(event: any) {
-    this.onAddFundingSourceEvent.emit(event);
+    this.onAddFundingSourceEvent.emit(event)
+    this.loadFinancialFundingSourceFacadeListGrid();
   }
 
   updateFundingSource(event: any) {
@@ -323,4 +325,22 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
       this.removeFundingDialog.close();
     }
   }
+removeFundingSourceEvent(fundingSoruceId: any) {
+  this.removeFundingSourceClick.emit(fundingSoruceId);
+  this.removeFundingOpened = false;
+}
+removeFundingSource(dataItem: any) {
+  if (dataItem?.isDelete === true) {
+    this.removeFundingSourceEvent(this.selectFundingSourceId);
+    this.removeFundingDialog.close();
+  }
+  else{
+    this.removeFundingDialog.close();
+  }
+  this.loadFinancialFundingSourceFacadeListGrid();
+}
+removedClick(fundingId:any)
+{
+  this.selectFundingSourceId = fundingId
+}
 }

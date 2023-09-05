@@ -5,7 +5,6 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  OnChanges,
   Output,
   TemplateRef,
   ViewChild,
@@ -30,7 +29,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
   styleUrls: ['./financial-claims-batches-reconcile-payments.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit, OnChanges {
+export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit {
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
   //reconcileAssignValueBatchForm!: FormGroup;
   PrintAuthorizationDialog!: TemplateRef<any>;
@@ -108,8 +107,14 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     if(this.claimsType === 'dental'){
       this.providerTitle = 'Dental Provider';
     }
-    this.isBreakoutPanelShow=false;
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[2]?.value,
+      sort: this.sortBatch,
+    };
+    this.gridDataHandle();
     this.loadReconcileListGrid();
+    this.isBreakoutPanelShow=false;
     const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
@@ -121,15 +126,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         paymentToReconcileCount : 0
       }
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
-  }
-  ngOnChanges(): void {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[2]?.value,
-      sort: this.sortBatch,
-    };
-    this.gridDataHandle();
-    this.loadReconcileListGrid();
   }
 
   private loadReconcileListGrid(): void {
@@ -599,6 +595,9 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       this.pageValidationMessage = "validation errors found, please review each page for errors " +
         totalCount + " is the total number of validation errors found.";
     }
+    else if(this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '').length <= 0){
+      this.pageValidationMessage = "No data for reconcile and print";
+    }
     else {
       this.pageValidationMessage = "validation errors are cleared";
       this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '');
@@ -614,9 +613,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
       });
     }
-    else{
-      this.pageValidationMessage = "No data for reconcile and print";
-    }
+
   }
 
   onPrintAuthorizationCloseClicked(result: any) {
@@ -642,8 +639,8 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     onRowSelection(grid:any, selection:any)
     {
       const data = selection.selectedRows[0].dataItem;
-      this.entityId = data.entityId;
       this.isBreakoutPanelShow=true;
+      this.entityId=data.entityId;
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,

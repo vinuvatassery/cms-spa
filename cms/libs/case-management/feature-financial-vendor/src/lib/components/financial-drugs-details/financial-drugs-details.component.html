@@ -14,7 +14,7 @@
             </kendo-floatinglabel>
           </div>
           <div class="flex-col mb-1">
-            <kendo-floatinglabel text="Ndc Code">
+            <kendo-floatinglabel text="NDC Code">
                 <kendo-textbox
                 aria-label="NDC Code"
                 [fillMode]="formUiStyle.inputFillMode"
@@ -65,20 +65,20 @@
                 </legend>
                 <div class="component-list-h">
                   <span class="app-checkboxwidtext-wrapper">
-                    <input type="checkbox" kendoCheckBox aria-labelledby="HIV" id="HIV" [checked]="drugForm.get('drugCategoryCode.hiv')?.value" (change)="updateDrugTypeValidity('hiv')" />
+                    <input type="checkbox" kendoCheckBox aria-labelledby="HIV" required id="HIV" formControlName="hiv" [checked]="drugForm.get('hiv')?.value" (change)="updateDrugTypeValidity()" />
                     <label class="k-checkbox-label" for="HIV"> HIV </label>
                   </span>
                   <span class="app-checkboxwidtext-wrapper">
-                    <input type="checkbox" kendoCheckBox aria-labelledby="Hepatitis" id="Hepatitis" [checked]="drugForm.get('drugCategoryCode.hepatitis')?.value" (change)="updateDrugTypeValidity('hepatitis')" />
+                    <input type="checkbox" kendoCheckBox aria-labelledby="Hepatitis" required id="Hepatitis" formControlName="hepatitis" [checked]="drugForm.get('hepatitis')?.value" (change)="updateDrugTypeValidity()" />
                     <label class="k-checkbox-label" for="Hepatitis"> Hepatitis </label>
                   </span>
                   <span class="app-checkboxwidtext-wrapper">
-                    <input type="checkbox" kendoCheckBox aria-labelledby="Opportunistic Infection" id="OpportunisticInfection" [checked]="drugForm.get('drugCategoryCode.opportunisticInfection')?.value" (change)="updateDrugTypeValidity('opportunisticInfection')" />
+                    <input type="checkbox" kendoCheckBox required aria-labelledby="Opportunistic Infection" id="OpportunisticInfection" formControlName="opportunisticInfection" [checked]="drugForm.get('opportunisticInfection')?.value" (change)="updateDrugTypeValidity()" />
                     <label class="k-checkbox-label" for="OpportunisticInfection"> Opportunistic Infection </label>
                   </span>
                 </div>
               </fieldset>
-              <kendo-formerror *ngIf="getError(drugForm.get('drugCategoryCode'), 'atLeastOneDrugTypeRequired') && isSubmitted">
+              <kendo-formerror *ngIf="!updateDrugTypeValidity() && isSubmitted">
                 Please select at least one drug type.
               </kendo-formerror>
             </div>

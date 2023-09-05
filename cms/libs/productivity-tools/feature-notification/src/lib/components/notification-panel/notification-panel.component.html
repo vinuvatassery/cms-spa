@@ -232,38 +232,6 @@
     >
     <span class="text-bold">Notifications and Reminders</span>
   </kendo-dialog-titlebar>
-  <kendo-tabstrip class="app-c-tab app-c-tab--color reminder_lists">
-    <kendo-tabstrip-tab [selected]="true">
-      <ng-template kendoTabTitle>
-        <span
-          class="material-icons mr-1"
-          aria-hidden="true"
-          aria-label="notifications"
-          >notifications</span
-        >
-        Notifications
-      </ng-template>
-      <ng-template kendoTabContent>
-        <productivity-tools-notification-list></productivity-tools-notification-list>
-      </ng-template>
-    </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Reminders">
-      <ng-template kendoTabTitle>
-        <span
-          class="material-icons mr-1"
-          aria-label="reminders"
-          aria-hidden="true"
-          >alarm</span
-        >
-        Reminders
-      </ng-template>
-      <ng-template kendoTabContent>
-        <productivity-tools-reminder-list
-          class="reminder-list-modal-wrap"
-          (ReminderEventClicked)="onReminderDoneClicked($event)"
-        ></productivity-tools-reminder-list>
-      </ng-template>
-    </kendo-tabstrip-tab>
-  </kendo-tabstrip>
- 
+
+ <productivity-tools-notification-and-reminder-page></productivity-tools-notification-and-reminder-page>
 </ng-template>

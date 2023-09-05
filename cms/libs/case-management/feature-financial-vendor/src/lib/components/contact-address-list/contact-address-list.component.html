@@ -23,8 +23,17 @@
  
     </ng-template> </kendo-grid-column>
   <kendo-grid-column field="contactDesc" title="Description" [width]="100"> </kendo-grid-column>
-  <kendo-grid-column field="phoneNbr" title="Phone Number" [width]="60"> </kendo-grid-column>
-  <kendo-grid-column field="faxNbr" title="Fax Number" [width]="60"> </kendo-grid-column>
+  <kendo-grid-column field="phoneNbr" title="Phone Number" [width]="60">
+    <ng-template kendoGridCellTemplate let-dataItem>
+      {{ dataItem.phoneNbr | phone }}
+    </ng-template> 
+  </kendo-grid-column>
+ 
+  <kendo-grid-column field="faxNbr" title="Fax Number" [width]="60"> 
+    <ng-template kendoGridCellTemplate let-dataItem>
+      {{ dataItem.faxNbr | phone }}
+    </ng-template> 
+  </kendo-grid-column>
   <kendo-grid-column field="emailAddress" title="Email Address" [width]="60"> </kendo-grid-column>
   <kendo-grid-column field="effectiveDate" title="Effective Date" [width]="60">
     <ng-template kendoGridCellTemplate let-dataItem>
@@ -104,6 +113,6 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar (close)="clickCloseAddEditContactsDetails()">Edit contact
   </kendo-dialog-titlebar>
-  <cms-contact-address-details [VendorContactId]="VendorContactId"
-    (isContactDetailPopupClose)="clickCloseAddEditContactsDetails()" (ContactUpdated)=contactUpdated($event)> </cms-contact-address-details>
+  <cms-contact-address-details [VendorContactId]="VendorContactId"  (editDeactivateContactClicked)="onEditDeactivateContactClicked($event)"
+    (isContactDetailPopupClose)="clickCloseAddEditContactsDetails()"  (ContactUpdated)=contactUpdated($event)> </cms-contact-address-details>
 </kendo-dialog>

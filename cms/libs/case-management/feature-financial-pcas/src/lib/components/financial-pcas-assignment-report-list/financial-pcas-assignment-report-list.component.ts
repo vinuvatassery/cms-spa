@@ -44,9 +44,10 @@ export class FinancialPcasAssignmentReportListComponent
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialPcaReportGridLists$: any;
-  @Input() financialPcaReportGridListsSubGrid$: any;
+  @Input() financialPcaSubReportGridLists$: any;
   @Input() financialPcaReportGridLoader$: any;
   @Output() loadFinancialPcaReportListEvent = new EventEmitter<any>();
+  @Output() loadFinancialPcaSubReportListEvent = new EventEmitter<any>();
   public state!: State;
   columnsReordered = false;
 
@@ -400,5 +401,9 @@ export class FinancialPcasAssignmentReportListComponent
     }
 
     return searchValue;
+  }
+
+  loadFinancialPcaSubReportListGrid(data: any) {
+    this.loadFinancialPcaSubReportListEvent.emit(data);
   }
 }

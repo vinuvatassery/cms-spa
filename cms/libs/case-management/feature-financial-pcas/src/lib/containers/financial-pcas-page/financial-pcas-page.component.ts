@@ -1,14 +1,14 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
+
   Component,
   OnInit,
 } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialFundingSourceFacade, FinancialPcaFacade, GridFilterParam, PcaDetails } from '@cms/case-management/domain';
-import { ActivatedRoute, Router } from '@angular/router';
-import { LoggingService } from '@cms/shared/util-core';
+import { FinancialFundingSourceFacade, FinancialPcaFacade, PcaAssignmentsFacade, GridFilterParam, PcaDetails } from '@cms/case-management/domain';
+import { Subject } from 'rxjs';
+
 @Component({
   selector: 'cms-financial-pcas-page',
   templateUrl: './financial-pcas-page.component.html',
@@ -39,21 +39,34 @@ export class FinancialPcasPageComponent implements OnInit{
 
   financialPcaSetupGridLists$ = this.financialPcaFacade.financialPcaSetupData$;
   financialPcaSetupLoader$ = this.financialPcaFacade.financialPcaSetupLoader$;
-  financialPcaAssignmentGridLists$ = this.financialPcaFacade.financialPcaAssignmentData$;
+  financialPcaAssignmentGridLists$ = this.pcaAssignmentsFacade.financialPcaAssignmentData$;
   financialPcaReassignmentGridLists$ = this.financialPcaFacade.financialPcaReassignmentData$;
   financialPcaReportLoader$ = this.financialPcaFacade.financialPcaReportLoader$;
   financialPcaReportGridLists$ = this.financialPcaFacade.financialPcaReportData$;
+  financialPcaSubReportGridLists$ = this.financialPcaFacade.financialPcaSubReportData$;
   fundingSourceLookup$ = this.fundingSourceFacade.fundingSourceLookup$;
   pcaActionIsSuccess$ = this.financialPcaFacade.pcaActionIsSuccess$;
   pcaData$ = this.financialPcaFacade.pcaData$;
+  pcaReassignmentByFundSourceId$ = this.financialPcaFacade.pcaReassignmentByFundSourceId$;
+  objectCodesData$ = this.pcaAssignmentsFacade.objectCodesData$;
+  groupCodesData$ = this.pcaAssignmentsFacade.groupCodesData$;
+  pcaCodesData$ = this.pcaAssignmentsFacade.pcaCodesData$;
+  pcaDatesData$ = this.pcaAssignmentsFacade.pcaDatesData$;
+  pcaCodesInfoData$ = this.pcaAssignmentsFacade.pcaCodesInfoData$;
+  pcaAssignmentData$ = this.pcaAssignmentsFacade.pcaAssignmentData$;
+  assignPcaResponseData$ = this.pcaAssignmentsFacade.assignPcaResponseData$;
 
+   pcaAssignOpenDatesListSubject = new Subject<any>();
+  pcaAssignOpenDatesList$ = this.pcaAssignOpenDatesListSubject.asObservable();
+
+   pcaAssignCloseDatesListSubject = new Subject<any>();
+  pcaAssignCloseDatesList$ = this.pcaAssignCloseDatesListSubject.asObservable();
+  getPcaAssignmentById$ = this.financialPcaFacade.getPcaAssignmentById$;
+  
   constructor(
     private readonly financialPcaFacade: FinancialPcaFacade,
     private readonly fundingSourceFacade: FinancialFundingSourceFacade,
-    private readonly router: Router,
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly cdr: ChangeDetectorRef,
-    private loggingService: LoggingService,
+    private readonly pcaAssignmentsFacade : PcaAssignmentsFacade   
   ) { }
   ngOnInit(): void {
     this.PcaReassignmetCount();
@@ -73,8 +86,8 @@ export class FinancialPcasPageComponent implements OnInit{
     this.financialPcaFacade.loadFinancialPcaSetupListGrid(event);
   }
 
-  loadFinancialPcaAssignmentListGrid(event: any) {
-    this.financialPcaFacade.loadFinancialPcaAssignmentListGrid();
+  loadFinancialPcaAssignmentListGrid(pcaAssignmentGridArguments: any) {
+    this.pcaAssignmentsFacade.loadFinancialPcaAssignmentListGrid(pcaAssignmentGridArguments);
   }
 
   loadFinancialPcaReassignmentListGrid(event: any) {
@@ -93,7 +106,6 @@ export class FinancialPcasPageComponent implements OnInit{
   loadPcaById(pcaId: string){
     this.financialPcaFacade.loadPcaById(pcaId);
   }
-
   savePca(event: { pcaId?: string | null, pcaDetails: PcaDetails }) {
     if (event?.pcaId) {
       this.financialPcaFacade.updatePca(event?.pcaId, event?.pcaDetails);
@@ -102,11 +114,81 @@ export class FinancialPcasPageComponent implements OnInit{
     }
   }
 
+  loadObjectCodes() {
+    this.pcaAssignmentsFacade.loadObjectCodes()
+  }
+
+  loadGroupCodes() {
+    this.pcaAssignmentsFacade.loadGroupCodes()
+  }
+
+  loadPcaCodes() {
+    this.pcaAssignmentsFacade.loadPcaCodes()
+  }
+
+  loadPcaDates() {
+    this.pcaAssignmentsFacade.loadPcaDates()
+    this.getPcaDatesList()
+  }
+
+  assignPca(assignPcaRequest : any) {
+
+    if(assignPcaRequest?.pcaAssignmentId !== "00000000-0000-0000-0000-000000000000")
+    {
+      const pcaAssignmentData =
+      {
+        pcaAssignmentId: assignPcaRequest?.pcaAssignmentId,     
+        openDate: assignPcaRequest?.openDate,  
+        closeDate: assignPcaRequest?.closeDate,  
+        amount: assignPcaRequest?.amount,  
+        unlimitedFlag: assignPcaRequest?.unlimitedFlag       
+      }
+     this.pcaAssignmentsFacade.editAssignedPca(pcaAssignmentData)
+    }
+    else
+    {    
+      this.pcaAssignmentsFacade.assignPca(assignPcaRequest)
+    }
+  }
+
+  getPcaAssignment(pcaAssignmentId : string) {
+    this.pcaAssignmentsFacade.getPcaAssignment(pcaAssignmentId)
+  }
+
+  getPcaDatesList()
+  {        
+   this.pcaDatesData$?.pipe()
+   .subscribe((data: any) =>
+   {  
+    this.pcaAssignOpenDatesListSubject.next(data?.pcaAssignOpenDatesList)
+    this.pcaAssignCloseDatesListSubject.next(data?.pcaAssignCloseDatesList)        
+   })
+  }
   removePca(pcaId: string) {
     if(pcaId){
       this.financialPcaFacade.deletePca(pcaId);
     }
   }
+
+  loadFinancialPcaSubReportListGrid(data:any) {
+    this.financialPcaFacade.loadFinancialPcaSubReportListGrid(data?.objecCodeGroupCodeId,data?.skipCount, data?.maxResultCount);
+  }
+
+  getPcaAssignmentById(fundingSourceId:any){
+    this.financialPcaFacade.getPcaAssignmentById(fundingSourceId);
+  }
+  getPcaReassignmentByFundSourceId(fundingSourceId:any){
+    this.financialPcaFacade.getPcaReassignmentByFundSourceId(fundingSourceId);
+  }
+  updateReassignmentPca(updateReassignmentData:any){
+    this.financialPcaFacade.updateReassignmentPca(updateReassignmentData);
+  }
+  
+  saveEditPcaReassignmentClicked(updateReassignmentValue:any){
+    this.financialPcaFacade.updateReassignmentPca(updateReassignmentValue);
+
+  }
+  
 }
 
 

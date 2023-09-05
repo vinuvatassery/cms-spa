@@ -28,8 +28,8 @@
               </button>
             </div>
             <div class="flex-col">
-              <kendo-floatinglabel text=" Name">
-                <kendo-textbox aria-label="Contact Name" formControlName="contactName"
+              <kendo-floatinglabel text="Contact Name">
+                <kendo-textbox aria-label="Contact Name" formControlName="contactName"  [maxlength]="200" (keypress)="onKeyPress($event)" 
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>
@@ -38,8 +38,14 @@
             </div>
             <div class="flex-col">
               <kendo-floatinglabel text="Description (Optional)">
-                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" formControlName="contactDesc"
-                  resizable="vertical"></kendo-textarea>
+                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" (keypress)="onKeyPress($event)"  [maxlength]="500" (valueChange)="onDescriptionValueChange($event)" formControlName="contactDesc"
+                  resizable="vertical">
+             
+  <kendo-textarea-suffix class="justify-content-end">
+    <kendo-formhint class="justify-content-end">{{descriptionCounter}} /500</kendo-formhint>
+
+  </kendo-textarea-suffix>
+                </kendo-textarea>
               </kendo-floatinglabel>
             </div>
             <div class="flex-col">
@@ -53,8 +59,8 @@
               </kendo-formerror>
             </div>
             <div class="flex-col mb-1">
-              <kendo-floatinglabel text="Fax (optional)">
-                <kendo-maskedtextbox [maxlength]="10" aria-label="Fax (optional)" placeholder="Fax (optional)" mask="(999) 000-0000" [fillMode]="formUiStyle.inputFillMode"
+              <kendo-floatinglabel text="Fax Number (optional)">
+                <kendo-maskedtextbox [maxlength]="10" aria-label="Fax Number (optional)" placeholder="Fax (optional)" mask="(999) 000-0000" [fillMode]="formUiStyle.inputFillMode"
                 formControlName="faxNbr">
             </kendo-maskedtextbox>
               </kendo-floatinglabel>
@@ -65,7 +71,7 @@
 
             <div class="flex-col mb-1">
               <kendo-floatinglabel text="Email Address (optional)">
-                <kendo-textbox aria-label="Email Address (optional)" formControlName="emailAddress"
+                <kendo-textbox aria-label="Email Address (optional)" [maxlength]="200" formControlName="emailAddress"
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>
@@ -103,6 +109,18 @@
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
+      <div>
+        <button
+        *ngIf="this.contactAddress.vendorContactId!=null"
+          kendoButton
+          [primary]="true"
+          look="flat"
+          aria-label="deactivate"
+          (click)="deactivatePaymentAddressContact()"
+        >
+          Deactivate
+        </button>
+      </div>
       <div class="justify-content-end">
         <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"
           (click)="onCancel()">

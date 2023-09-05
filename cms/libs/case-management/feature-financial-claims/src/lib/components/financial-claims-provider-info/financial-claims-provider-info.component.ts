@@ -42,7 +42,7 @@ export class FinancialClaimsProviderInfoComponent {
       stateCode: ['', Validators.required],
       zip: ['', Validators.required],
       specialHandlingDesc: [''],
-      mailCode: ['']
+      mailCode: [{ value: '', disabled: true }]
     }),
     contacts: new FormArray([])
   })
