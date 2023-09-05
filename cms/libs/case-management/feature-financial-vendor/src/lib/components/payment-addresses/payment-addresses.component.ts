@@ -40,6 +40,7 @@ export class PaymentAddressesComponent {
   financialVendorType: typeof FinancialVendorTypeCode = FinancialVendorTypeCode;
   @ViewChildren(GridComponent) private grid !: QueryList<GridComponent>;
   IsAddContactDisabled:boolean=true;
+  isContactAddressDeactivateShow = false;
   paymentAddressInnerGridLists = [
     {
       Name: 'FName LName',
@@ -265,5 +266,13 @@ export class PaymentAddressesComponent {
   }
   public columnChange(e: any) {
     this.cdr.detectChanges();
+  }
+  clickCloseDeactivateContactAddress() {
+    this.isContactAddressDeactivateShow = false;
+  }
+  onDeactiveCancel(isCancel: any) {
+    if (isCancel) {
+      this.clickCloseDeactivateContactAddress();
+    }
   }
 }
