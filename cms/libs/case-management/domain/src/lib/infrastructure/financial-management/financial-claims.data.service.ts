@@ -72,7 +72,7 @@ export class FinancialClaimsDataService {
     }
 
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/all-payments`,ClaimsAllPaymentsPageAndSortedRequestDto
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments`,ClaimsAllPaymentsPageAndSortedRequestDto
     );
   }
 
