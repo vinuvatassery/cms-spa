@@ -312,7 +312,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       paymentRequestId: this.isEdit ? this.paymentRequestId : null,
       paymentMethodCode: this.isSpotsPayment ? PaymentMethodCode.SPOTS : PaymentMethodCode.ACH,
       serviceSubTypeCode: this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
-      tpainvoice: [{}],
+      tpaInvoice: [{}],
     };
     for (let element of formValues.claimService) {
       let service = {
@@ -343,9 +343,9 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         );
         return;
       }
-      bodyData.tpainvoice.push(service);
+      bodyData.tpaInvoice.push(service);
     }
-    bodyData.tpainvoice.splice(0, 1);
+    bodyData.tpaInvoice.splice(0, 1);
     if (!this.isEdit) {
       this.saveData(bodyData);
     } else {
@@ -444,7 +444,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
           this.paymentRequestId = val.paymentRequestId;
           this.cd.detectChanges();
           this.loaderService.hide();
-          this.setFormValues(val.tpainvoice);
+          this.setFormValues(val.tpaInvoice);
         },
         error: (err) => {
           this.loaderService.hide();
