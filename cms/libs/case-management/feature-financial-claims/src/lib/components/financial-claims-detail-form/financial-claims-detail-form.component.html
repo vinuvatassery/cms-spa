@@ -7,7 +7,7 @@
     <div [formGroup]="claimForm">
 
         <div class="add_new_top_section">
-            <p class="mb-3"> Select a {{claimsType | titleCase}} Provider to bulk add services for this claim.</p>
+            <p class="mb-3"> Select a {{claimsType | titlecase}} Provider to bulk add services for this claim.</p>
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
                     <div class="combotable_search_list new_refund_Search new_claims_Search mb-3">
@@ -19,7 +19,7 @@
 
                         <kendo-multicolumncombobox textField="providerFullName" valueField="vendorAddressId"
                             [fillMode]="formUiStyle.dropDownFillMode"
-                            placeholder="Search {{claimsType | titleCase}} Providers by name or TIN"
+                            placeholder="Search {{claimsType | titlecase}} Providers by name or TIN"
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="medicalProvider" (filterChange)="searchMedicalProvider($event)"
                             [data]="pharmacySearchResult$ | async" [(ngModel)]="selectedMedicalProvider"
