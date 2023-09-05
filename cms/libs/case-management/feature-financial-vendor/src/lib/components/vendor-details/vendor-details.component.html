@@ -10,7 +10,7 @@
             formControlName="providerName">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
-            Insurance Vendor name is required
+            Vendor Name is required
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -21,7 +21,7 @@
             formControlName="providerName">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
-            Pharmacy name is required
+            Pharmacy Name is required
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -64,7 +64,7 @@
               </kendo-textbox>
               <kendo-formerror
                 *ngIf="!medicalProviderForm.controls['providerName'].valid && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
-                Provider name is required
+                Provider Name is required
               </kendo-formerror>
             </kendo-floatinglabel>
           </div>
@@ -111,13 +111,12 @@
         </div>
       </div>
 
-
-
       <div class="flex-col">
-        <kendo-floatinglabel text="TIN">
-          <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" formControlName="tinNumber"
-            [maxlength]="100">
-          </kendo-textbox>
+        <kendo-floatinglabel text="TIN (optional)">
+          <kendo-maskedtextbox aria-label="TIN" 
+           [fillMode]="formUiStyle.inputFillMode" placeholder="TIN (optional)"
+           [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat">
+          </kendo-maskedtextbox> 
         </kendo-floatinglabel>
       </div>
       <div class="flex-col mt-1" *ngIf="providerType == vendorTypes.Pharmacy">
