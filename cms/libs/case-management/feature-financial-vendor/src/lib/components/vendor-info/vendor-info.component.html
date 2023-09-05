@@ -2,7 +2,7 @@
   <div class="flex-row mb-1 align-items-center">
     <div class="flex-col flex-col-6 align-items-center" kendoTooltip>
       <h2 class="title-md mb-0 text-bold">{{profileInfoTitle}}</h2>
-      <button kendoButton class="ml-2 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit Client Info"
+      <button kendoButton class="ml-2 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit Vendor Info"
         aria-label="edit client info" (click)="openEditInfoDialog();"></button>
     </div>
     <div *ngIf="providerType == vendorTypes.MedicalProviders && selectedVendorInfo$?.parentVendorId">
