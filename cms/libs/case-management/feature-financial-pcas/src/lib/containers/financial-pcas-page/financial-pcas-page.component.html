@@ -74,12 +74,16 @@
 
                   <kendo-tabstrip-tab title="Assignment Report">
                       <ng-template kendoTabContent>
-                        <div class="block-section">
-                          <cms-financial-pcas-assignment-report-list [financialPcaReportGridLoader$]="financialPcaReportLoader$" [financialPcaReportGridLists$]="financialPcaReportGridLists$"
-                          [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaReport"
-                          [sortType]="sortType" [sort]="sortFinancialPcaReportList"
-                          (loadFinancialPcaReportListEvent)="loadFinancialPcaReportListGrid($event)"></cms-financial-pcas-assignment-report-list>
-                      </div>
+                          <div class="block-section">
+                              <cms-financial-pcas-assignment-report-list
+                              [financialPcaReportGridLoader$]="financialPcaReportLoader$"
+                              [financialPcaReportGridLists$]="financialPcaReportGridLists$"
+                              [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPcaReport"
+                              [sortType]="sortType" [sort]="sortFinancialPcaReportList"
+                              (loadFinancialPcaReportListEvent)="loadFinancialPcaReportListGrid($event)"
+                              [financialPcaSubReportGridLists$]="financialPcaSubReportGridLists$"
+                              (loadFinancialPcaSubReportListEvent)="loadFinancialPcaSubReportListGrid($event)"></cms-financial-pcas-assignment-report-list>
+                          </div>
                       </ng-template>
                   </kendo-tabstrip-tab>
 
