@@ -55,6 +55,7 @@ export class FinancialPcasPageComponent implements OnInit{
   pcaCodesInfoData$ = this.pcaAssignmentsFacade.pcaCodesInfoData$;
   pcaAssignmentData$ = this.pcaAssignmentsFacade.pcaAssignmentData$;
   assignPcaResponseData$ = this.pcaAssignmentsFacade.assignPcaResponseData$;
+  pcaAssignmentPriorityUpdate$ = this.pcaAssignmentsFacade.pcaAssignmentPriorityUpdate$;
 
    pcaAssignOpenDatesListSubject = new Subject<any>();
   pcaAssignOpenDatesList$ = this.pcaAssignOpenDatesListSubject.asObservable();
@@ -187,6 +188,10 @@ export class FinancialPcasPageComponent implements OnInit{
   saveEditPcaReassignmentClicked(updateReassignmentValue:any){
     this.financialPcaFacade.updateReassignmentPca(updateReassignmentValue);
 
+  }
+  
+  pcaAssignmentPriorityUpdate(pcaAssignmentPriorityArguments:any){
+    this.pcaAssignmentsFacade.pcaAssignmentPriorityUpdate(pcaAssignmentPriorityArguments);
   }
   
 }

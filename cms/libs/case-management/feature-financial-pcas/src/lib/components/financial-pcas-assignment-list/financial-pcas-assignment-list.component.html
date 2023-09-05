@@ -13,8 +13,10 @@ aria-label="add"> Assignment</button>
                          required [data]="objectCodesData$" 
                           textField="ledgerName" valueField="objectCodeId" [valuePrimitive]="true"
                           [(ngModel)]="objectCodeIdValue"
+                          (selectionChange)="objectCodeChange($event)"
                           >
                         </kendo-dropdownlist>
+                        <kendo-formerror *ngIf="!objectCodeValid">Object is required.</kendo-formerror>
                         </kendo-floatinglabel>
                   </span>
                   <form [formGroup]="pcaAssignmentGroupForm">  
@@ -26,12 +28,13 @@ aria-label="add"> Assignment</button>
                         [fillMode]="formUiStyle.dropDownFillMode"
                         [data]="groupCodesData$" 
                         aria-label="to address"
-                        [textField]="'groupCode'"
+                        [textField]="'groupCodeDesc'"
                         [valueField]="'groupCodeId'"     
                         formControlName="groupCodes"              
                         [kendoMultiSelectSummaryTag]="5"
                         (valueChange)="groupChange($event)"
                         ></kendo-multiselect>
+                        <kendo-formerror *ngIf="!groupCodesValid">Group is required.</kendo-formerror>
                         </kendo-floatinglabel>
                   </span>
                   </form>
@@ -39,9 +42,9 @@ aria-label="add"> Assignment</button>
 
 <div class="app-c-table">
       <kendo-grid [resizable]="true" [loading]="isFinancialPcaAssignmentGridLoaderShow"  
-             [rowClass]="rowCallback" [data]="financialPcaAssignmentGridLists$ | async" (dataStateChange)="dataStateChange($event)">
-         
- 
+             [rowClass]="rowCallback" [data]="financialPcaAssignmentGridLists$ | async" (dataStateChange)="dataStateChange($event)"
+             >         
+            
             <kendo-grid-column     field=""    title="" [width]="50"   [columnMenu]="false" [sortable]="false"  class="text-center text-muted"   >
             <ng-template kendoGridCellTemplate let-dataItem>
               <span class="material-icons">drag_indicator</span>

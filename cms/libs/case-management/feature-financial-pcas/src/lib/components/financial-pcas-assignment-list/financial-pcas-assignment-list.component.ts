@@ -63,6 +63,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit  , AfterView
   @Input() pcaAssignmentData$ : any
   @Input() assignPcaResponseData$ : any
   @Input() groupCodesDataFilter$ : any
+  @Input() pcaAssignmentPriorityUpdate$ : any
 
   @Output() loadFinancialPcaAssignmentListEvent = new EventEmitter<any>();
   @Output() loadObjectCodesEvent = new EventEmitter<any>();
@@ -72,6 +73,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit  , AfterView
   @Output() getPcaAssignmentEvent = new EventEmitter<any>();
   @Output() addPcaDataEvent = new EventEmitter<any>();
   @Output() loadFinancialPcaAssignmentEvent = new EventEmitter<any>();
+  @Output() pcaAssignmentPriorityUpdateEvent = new EventEmitter<any>();
 
   public state!: State;
   sortColumn = 'vendorName';
@@ -87,6 +89,8 @@ export class FinancialPcasAssignmentListComponent implements OnInit  , AfterView
   groupCodeIdsdValue : any=[];
 
   pcaAssignmentGroupForm!: FormGroup;
+  objectCodeValid = true
+  groupCodesValid = true 
 
   gridFinancialPcaAssignmentDataSubject = new Subject<any>();
   gridFinancialPcaAssignmentData$ =  this.gridFinancialPcaAssignmentDataSubject.asObservable();
@@ -124,17 +128,21 @@ export class FinancialPcasAssignmentListComponent implements OnInit  , AfterView
   ) {}
 
   public ngAfterViewInit(): void {
-    this.currentSubscription = this.handleDragAndDrop();
+
+     //NOSONAR to to  implementation after kendo upgrade
+    //this.currentSubscription = this.handleDragAndDrop();
   }
 
   public dataStateChange(state: State): void {   
   
-    this.currentSubscription.unsubscribe();
-    this.zone.onStable.pipe(take(1)).subscribe(() => (this.currentSubscription = this.handleDragAndDrop()));
+    //NOSONAR to to  implementation after kendo upgrade
+    //this.currentSubscription.unsubscribe();     
+    //this.zone.onStable.pipe(take(1)).subscribe(() => (this.currentSubscription = this.handleDragAndDrop()));
 }
 
 public ngOnDestroy(): void {
-    this.currentSubscription.unsubscribe();
+  //NOSONAR to to  implementation after kendo upgrade
+  //this.currentSubscription.unsubscribe();
 }
 
 public rowCallback(context: RowClassArgs) {
@@ -174,10 +182,18 @@ public rowCallback(context: RowClassArgs) {
   {
   this.loadPcaEvent.emit()
   }
+
+  objectCodeChange(data : any)
+  {  
+  this.objectCodeIdValue = data?.objectCodeId
+  this.groupChange(true)
+  }
+
   groupChange($event : any)
   {   
     this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;  
     let  groupCodeIdsdValueData= []
+   
     for (const key in this.groupCodeIdsdValue) 
     {           
       groupCodeIdsdValueData.push(this.groupCodeIdsdValue[key]?.groupCodeId)     
@@ -214,21 +230,40 @@ public rowCallback(context: RowClassArgs) {
   });
  
   onOpenAddPcaAssignmentClicked(pcaAssignmentId : any): void {   
-    this.pcaAssignmentFormData = null
-    if(pcaAssignmentId != '')
-    {   
-      this.newForm = false
-    this.getPcaAssignmentEvent.emit(pcaAssignmentId)  
-    this.onPcaAssignmentFormDataCompose()
+    this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;  
+    
+    if(this.objectCodeIdValue && this.groupCodeIdsdValue.length > 0)
+    {
+       this.objectCodeValid = true
+       this.groupCodesValid = true
+        this.pcaAssignmentFormData = null
+        if(pcaAssignmentId != '')
+        {   
+          this.newForm = false
+        this.getPcaAssignmentEvent.emit(pcaAssignmentId)  
+        this.onPcaAssignmentFormDataCompose()
+        }
+        else
+        {
+          this.newForm = true
+        this.pcaAssignmentAddEditDialogService = this.dialogService.open({
+          content: this.addEditPcaAssignmentDialogTemplate,
+          cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+        });
+      }
     }
     else
     {
-      this.newForm = true
-    this.pcaAssignmentAddEditDialogService = this.dialogService.open({
-      content: this.addEditPcaAssignmentDialogTemplate,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    });
-  }
+      if(!this.objectCodeIdValue)
+      {
+          this.objectCodeValid = false
+      }
+
+      if(this.groupCodeIdsdValue.length == 0)
+      {
+        this.groupCodesValid = false
+      }
+    }
   }
   
   onPcaAssignmentFormDataCompose()
@@ -272,84 +307,120 @@ public rowCallback(context: RowClassArgs) {
     this.pcaChangeEvent.emit()
   }
 
-  private handleDragAndDrop(): Subscription {    
-    let initialPriority = 0 
-    let newPriority = 0
-    let pcaAssignmentId = ''
-    const sub = new Subscription(() => {});
-    let draggedItemIndex : any;
+  private handleDragAndDrop(): Subscription 
+  {       
+    //NOSONAR to to  implementation after kendo upgrade
+        let initialPriority = 0 
+        let newPriority = 0
+        let pcaAssignmentId = ''
+        const sub = new Subscription(() => {});
+        let draggedItemIndex : any;      
+        let priorityEmitted = false
+        const tableRows = Array.from(document.querySelectorAll('.k-grid tr'));
+        tableRows.forEach((item) => {
+            this.renderer.setAttribute(item, 'draggable', 'true');
+            const dragStart = fromEvent<DragEvent>(item, 'dragstart');
+            const dragOver = fromEvent(item, 'dragover');
+            const dragEnd = fromEvent(item, 'dragend');
 
-    const tableRows = Array.from(document.querySelectorAll('.k-grid tr'));
-    tableRows.forEach((item) => {
-        this.renderer.setAttribute(item, 'draggable', 'true');
-        const dragStart = fromEvent<DragEvent>(item, 'dragstart');
-        const dragOver = fromEvent(item, 'dragover');
-        const dragEnd = fromEvent(item, 'dragend');
-
-        sub.add(
-            dragStart
-                .pipe(
-                    tap(({ dataTransfer }) => {
-                        try {
-                            const dragImgEl = document.createElement('span');
-                            dragImgEl.setAttribute(
-                                'style',
-                                'position: absolute; display: block; top: 0; left: 0; width: 0; height: 0;'
-                            );
-                            document.body.appendChild(dragImgEl);
-                            if(dataTransfer)
-                            {
-                              dataTransfer.setDragImage(dragImgEl, 0, 0);
+            sub.add(
+                dragStart
+                    .pipe(
+                        tap(({ dataTransfer }) => {
+                            try {
+                                const dragImgEl = document.createElement('span');
+                                dragImgEl.setAttribute(
+                                    'style',
+                                    'position: absolute; display: block; top: 0; left: 0; width: 0; height: 0;'
+                                );
+                                document.body.appendChild(dragImgEl);
+                                if(dataTransfer)
+                                {
+                                  dataTransfer.setDragImage(dragImgEl, 0, 0);
+                                }
+                                
+                            } catch (err) {
+                                // IE doesn't support setDragImage
                             }
-                            
-                        } catch (err) {
-                            // IE doesn't support setDragImage
-                        }
-                        try {
-                            // Firefox won't drag without setting data
-                            if(dataTransfer)
-                            {
-                              dataTransfer.setData('application/json', '');
+                            try {
+                                // Firefox won't drag without setting data
+                                if(dataTransfer)
+                                {
+                                  dataTransfer.setData('application/json', '');
+                                }
+                            } catch (err) {
+                                // IE doesn't support MIME types in setData
                             }
-                        } catch (err) {
-                            // IE doesn't support MIME types in setData
-                        }
+                        })
+                    )
+                    .subscribe(({ target }) => {
+                        const row: HTMLTableRowElement = <HTMLTableRowElement>target;
+                        draggedItemIndex = row.rowIndex;
+                        const dataItem = this.gridDataResult.data[draggedItemIndex];
+                        dataItem.dragging = true;
+                        initialPriority = dataItem?.priority   
+                        pcaAssignmentId = dataItem?.pcaAssignmentId   
                     })
-                )
-                .subscribe(({ target }) => {
-                    const row: HTMLTableRowElement = <HTMLTableRowElement>target;
-                    draggedItemIndex = row.rowIndex;
-                    const dataItem = this.gridDataResult.data[draggedItemIndex];
-                    dataItem.dragging = true;
-                    initialPriority = dataItem?.priority                    
+            );
+
+            sub.add(
+                dragOver.subscribe((e: any) => {
+                    e.preventDefault();
+                    debugger
+                    const dataItem = this.gridDataResult.data.splice(draggedItemIndex, 1)[0];
+                    const dropIndex = closest(e.target, tableRow).rowIndex;
+                    const dropItem = this.gridDataResult.data[dropIndex];                
+                    draggedItemIndex = dropIndex;
+                    this.zone.run(() => this.gridDataResult.data.splice(dropIndex, 0, dataItem));
                 })
-        );
+            );
 
-        sub.add(
-            dragOver.subscribe((e: any) => {
-                e.preventDefault();
-                const dataItem = this.gridDataResult.data.splice(draggedItemIndex, 1)[0];
-                const dropIndex = closest(e.target, tableRow).rowIndex;
-                const dropItem = this.gridDataResult.data[dropIndex];                
-                draggedItemIndex = dropIndex;
-                this.zone.run(() => this.gridDataResult.data.splice(dropIndex, 0, dataItem));
-            })
-        );
+            sub.add(
+                dragEnd.subscribe((e: any) => {
+                    e.preventDefault();                
+                    const dataItem = this.gridDataResult.data[draggedItemIndex];
+                    dataItem.dragging = false;
+                    newPriority = dataItem?.priority                  
+                    
+                    if(initialPriority !== newPriority && pcaAssignmentId && newPriority > 0 && priorityEmitted === false)
+                    {            
+                        this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;  
+                        let  groupCodeIdsdValueData= []
+                        for (const key in this.groupCodeIdsdValue) 
+                        {           
+                          groupCodeIdsdValueData.push(this.groupCodeIdsdValue[key]?.groupCodeId)     
+                        }
+                        const pcaAssignmentPriorityArguments = 
+                        {
+                          objectId : this.objectCodeIdValue,
+                          groupIds : groupCodeIdsdValueData,
+                          newPriority : newPriority,
+                          pcaAssignmentId : pcaAssignmentId
+                        }
+                        this.isFinancialPcaAssignmentGridLoaderShow = true;     
+                        this.pcaAssignmentPriorityUpdateEvent.emit(pcaAssignmentPriorityArguments) 
+                        priorityEmitted = true
+                        this.onPcaAssignmentPriorityUpdate() 
+                    }             
+                })
+            );
+        });
 
-        sub.add(
-            dragEnd.subscribe((e: any) => {
-                e.preventDefault();                
-                const dataItem = this.gridDataResult.data[draggedItemIndex];
-                dataItem.dragging = false;
-                newPriority = dataItem?.priority
-                pcaAssignmentId = dataItem?.Priority
-                debugger
-            })
-        );
-    });
+        return sub;
+    }
 
-    return sub;
-}
+  onPcaAssignmentPriorityUpdate()
+  {
+    this.pcaAssignmentPriorityUpdate$.pipe(first((response: any ) => response != null))
+    .subscribe((response: any) =>
+    {
+      if(response?.status ?? false)
+      {      
+        this.groupChange(true)
+      }
+  
+    })
+  }
 }
  
  
