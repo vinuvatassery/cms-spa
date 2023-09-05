@@ -21,7 +21,7 @@
 
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="coverageDates" title="Coverage Dates" [width]="100">
+    <kendo-grid-column field="serviceStartDate" title="Coverage Dates" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.serviceStartDate | date:'MM/dd/yyyy'}} - {{dataItem.serviceEndDate | date:'MM/dd/yyyy'}}
         </ng-template>

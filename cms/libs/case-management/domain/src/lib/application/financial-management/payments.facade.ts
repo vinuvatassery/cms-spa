@@ -10,6 +10,7 @@ import { PaymentsDataService } from '../../infrastructure/financial-management/p
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { PaymentDetail } from '../../entities/financial-management/Payment-details';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentsFacade {
@@ -68,7 +69,7 @@ export class PaymentsFacade {
   ) { }
 
   /** Public methods **/
-  loadPaymentsListGrid(vendorId: string, paginationParameters: State) {
+  loadPaymentsListGrid(vendorId: string, paginationParameters: GridFilterParam) {
     this.paymentBatchLoaderSubject.next(true);
     this.paymentsDataService.loadPaymentsListService(vendorId, paginationParameters).subscribe({
       next: (dataResponse: any) => {
