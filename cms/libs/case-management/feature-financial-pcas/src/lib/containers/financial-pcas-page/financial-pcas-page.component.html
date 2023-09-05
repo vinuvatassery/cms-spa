@@ -55,7 +55,7 @@
                         </ng-template>
                     </kendo-tabstrip-tab>
                     <kendo-tabstrip-tab title="PCA Reassignment">
-                        <ng-template kendoTabTitle> PCA Reassignment <span class="tab-batch-notify">{{pcaReassignmentCount}}</span></ng-template>
+                        <ng-template kendoTabTitle> PCA Reassignment <span class="tab-batch-notify">{{pcaReassignmentCount$ | async}}</span></ng-template>
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-financial-pcas-reassignment-list  [financialPcaReassignmentGridLists$]="financialPcaReassignmentGridLists$"

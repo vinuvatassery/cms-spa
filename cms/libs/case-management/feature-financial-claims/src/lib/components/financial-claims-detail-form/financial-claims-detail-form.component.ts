@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { EntityTypeCode, FinancialClaimsFacade, FinancialProvider, PaymentMethodCode, FinancialClaims } from '@cms/case-management/domain';
+import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -195,7 +195,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     if(!searchText || searchText.length == 0){
       return;
     }
-    this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider);
+    this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
   }
   onCPTCodeValueChange(event: any, index: number) {
     let service = event;
@@ -311,7 +311,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       paymentRequestId: this.isEdit ? this.paymentRequestId : null,
       paymentMethodCode: this.isSpotsPayment ? PaymentMethodCode.SPOTS : PaymentMethodCode.ACH,
-      serviceSubTypeCode: this.claimsType == this.financialProvider ? FinancialProvider.MedicalClaim : FinancialProvider.DentalClaim,
+      serviceSubTypeCode: this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
       tpainvoice: [{}],
     };
     for (let element of formValues.claimService) {
@@ -355,7 +355,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   public saveData(data: any) {
     this.loaderService.show();
-    this.financialClaimsFacade.saveMedicalClaim(data, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider).subscribe({
+    this.financialClaimsFacade.saveMedicalClaim(data, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim).subscribe({
       next: (response: any) => {
         this.loaderService.hide();
         if (!response) {
@@ -384,7 +384,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   public update(data: any) {
     this.isSubmitted = true;
     this.loaderService.show();
-    this.financialClaimsFacade.updateMedicalClaim(data, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider).subscribe({
+    this.financialClaimsFacade.updateMedicalClaim(data, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim).subscribe({
       next: (response: any) => {
         this.loaderService.hide();
         if (!response) {
@@ -413,7 +413,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   getMedicalClaimByPaymentRequestId() {
     this.loaderService.show();
     this.financialClaimsFacade
-      .getMedicalClaimByPaymentRequestId(this.paymentRequestId, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider)
+      .getMedicalClaimByPaymentRequestId(this.paymentRequestId, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim)
       .subscribe({
         next: (val) => {
           const clients = [
@@ -426,6 +426,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
             {
               vendorId: val.vendorId,
               providerFullName: val.vendorName,
+              vendorAddressId: val.vendorAddressId
             },
           ];
           this.financialClaimsFacade.clientSubject.next(clients);
