@@ -73,7 +73,11 @@ export class PcaAssignmentsFacade {
   loadFinancialPcaAssignmentListGrid(pcaAssignmentGridArguments :any) {
     this.pcaAssignmentsDataService.loadFinancialPcaAssignmentListService(pcaAssignmentGridArguments).subscribe({
       next: (dataResponse) => {
-        this.financialPcaAssignmentDataSubject.next(dataResponse);
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+        this.financialPcaAssignmentDataSubject.next(gridView);
         this.hideLoader();
       },
       error: (err) => {

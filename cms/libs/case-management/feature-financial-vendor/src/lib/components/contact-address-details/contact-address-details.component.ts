@@ -15,6 +15,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   @Input() vendorId: any;
   @Input() VendorContactId: any;
   @Output() isContactDetailPopupClose = new EventEmitter<any>();
+  @Output() editDeactivateClicked = new EventEmitter<any>();
   SpecialHandlingLength = 100;
   mailCodes: any[] = [];
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -32,6 +33,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   public sort = this.vendocontactsFacade.sort;
   public state!: any;
   isContactAddressDeactivateShow = false
+  descriptionCounter:number=500;
   filters = "";
   @Output() ContactUpdated = new EventEmitter<boolean>();
   showLoader() {
@@ -82,10 +84,11 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   public save() {
     this.isSubmitted = true;
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
-    this.AddContactForm.value.forEach((element:any, i: number) => {
-      this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
-    }); 
+    
     if (this.contactForm.valid) {
+       this.AddContactForm.value.forEach((element:any, i: number) => {
+      this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
+    });
       this.loaderService.show();
       this.vendocontactsFacade.saveContactAddress(this.contactForm.value).subscribe({
         next: (response: any) => {
@@ -120,11 +123,10 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
           if (response) {
             this.contactFacade.showHideSnackBar(
               SnackBarNotificationType.SUCCESS,
-              'Contact  Updated successfully'
+              'Contact Updated successfully'
             );
             this.ContactUpdated.emit(true);
             this.loaderService.hide();
-            this.contactFacade.hideLoader();
             this.isContactDetailPopupClose.emit(true);
           }
         },
@@ -212,5 +214,16 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       this.isVisible = false;
     }
     this.cd.detectChanges();
+  }
+   onKeyPress(event: KeyboardEvent) {
+    return (event.charCode > 64 && 
+      event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)||event.charCode==32
+  }
+  onDescriptionValueChange(event: any): void {
+    this.descriptionCounter = event.length;
+  }
+  deactivatePaymentAddressContact()
+  {
+    this.editDeactivateClicked.emit(this.contactAddress);
   }
 }

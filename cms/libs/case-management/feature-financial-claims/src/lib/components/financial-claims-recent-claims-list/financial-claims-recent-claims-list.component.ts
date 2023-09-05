@@ -21,7 +21,7 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   @Input() vendorId: any;
   @Input() clientId: any;
   @Input() claimsType: any;
-
+  dentalOrMedicalServiceField:any;
   public state!: any;
   sortColumn = 'Entry Date';
   sortDir = 'Ascending';
@@ -36,92 +36,21 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
   recentClaimListDataSubject = new Subject<any>();
   recentClaimListData$ =  this.recentClaimListDataSubject.asObservable();
-
+  
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   addRemoveColumns="Default Columns"
-  columns : any = {
-    invoiceId:"Invoice ID",
-    serviceStartDate:"Service Start Date",
-    serviceEndDate:"Service End Date",
-    cptCode:"CPT Code",
-    medicalService:"Medical Service",
-    serviceCost:"Service Cost",
-    amountDue:"Amount Due",
-    paymentTypeDesc:"Payment Type",
-    clientAnnualTotal:"Client Annual Total",
-    clientBalance:"Client Balance",
-    entryDate:"Entry Date",
-    paymentStatusDesc:"Payment Status"   
-  }
-  
-  dropDowncolumns : any = [
-    {
-      "columnCode": "invoiceId",
-      "columnDesc": "Invoice ID"    
-    },
-    {
-      "columnCode": "serviceStartDate",
-      "columnDesc": "Service Start Date"        
-    },
-    {
-      "columnCode": "serviceEndDate",
-      "columnDesc": "Service End Date"     
-    }
-    ,
-    {
-      "columnCode": "cptCode",
-      "columnDesc": "CPT Code"         
-    }
-    ,
-    {
-      "columnCode": "medicalService",
-      "columnDesc": "Medical Service"         
-    }
-    ,
-    {
-      "columnCode": "serviceCost",
-      "columnDesc": "Service Cost"         
-    }
-    ,
-    {
-      "columnCode": "amountDue",
-      "columnDesc": "Amount Due"         
-    }
-    ,
-    {
-      "columnCode": "paymentTypeDesc",
-      "columnDesc": "Payment Type"         
-    }
-    ,
-    {
-      "columnCode": "clientAnnualTotal",
-      "columnDesc": "Client Annual Total"         
-    }
-    ,
-    {
-      "columnCode": "clientBalance",
-      "columnDesc": "Client Balance"         
-    }
-    ,
-    {
-      "columnCode": "entryDate",
-      "columnDesc": "Entry Date"         
-    }
-    ,
-    {
-      "columnCode": "paymentStatusDesc",
-      "columnDesc": "Payment Status"         
-    }
-  ]
+  columns : any;  
+  dropDowncolumns : any;
   isFinancialClaimsRecentClaimGridLoaderShow = false;
 
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly financialClaimsFacade: FinancialClaimsFacade
   ) { }
-  ngOnInit(): void {
+  ngOnInit(): void { 
+    this.loadColumnsData();   
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
@@ -311,5 +240,84 @@ loadFinancialRecentClaimListGrid() {
     this.state.searchValue = '';
     this.state.selectedColumn = '';
     this.state.columnName = '';
+  }
+
+  private loadColumnsData()
+  {
+    this.dentalOrMedicalServiceField= this.claimsType == "dental" ? "Dental Service":"Medical Service";
+    this.columns = {
+      invoiceId:"Invoice ID",
+      serviceStartDate:"Service Start Date",
+      serviceEndDate:"Service End Date",
+      cptCode:"CPT Code",
+      medicalService:this.dentalOrMedicalServiceField,
+      serviceCost:"Service Cost",
+      amountDue:"Amount Due",
+      paymentTypeDesc:"Payment Type",
+      clientAnnualTotal:"Client Annual Total",
+      clientBalance:"Client Balance",
+      entryDate:"Entry Date",
+      paymentStatusDesc:"Payment Status"   
+    }
+
+    this.dropDowncolumns = [
+      {
+        "columnCode": "invoiceId",
+        "columnDesc": "Invoice ID"    
+      },
+      {
+        "columnCode": "serviceStartDate",
+        "columnDesc": "Service Start Date"        
+      },
+      {
+        "columnCode": "serviceEndDate",
+        "columnDesc": "Service End Date"     
+      }
+      ,
+      {
+        "columnCode": "cptCode",
+        "columnDesc": "CPT Code"         
+      }
+      ,
+      {
+        "columnCode": "medicalService",
+        "columnDesc": this.dentalOrMedicalServiceField         
+      }
+      ,
+      {
+        "columnCode": "serviceCost",
+        "columnDesc": "Service Cost"         
+      }
+      ,
+      {
+        "columnCode": "amountDue",
+        "columnDesc": "Amount Due"         
+      }
+      ,
+      {
+        "columnCode": "paymentTypeDesc",
+        "columnDesc": "Payment Type"         
+      }
+      ,
+      {
+        "columnCode": "clientAnnualTotal",
+        "columnDesc": "Client Annual Total"         
+      }
+      ,
+      {
+        "columnCode": "clientBalance",
+        "columnDesc": "Client Balance"         
+      }
+      ,
+      {
+        "columnCode": "entryDate",
+        "columnDesc": "Entry Date"         
+      }
+      ,
+      {
+        "columnCode": "paymentStatusDesc",
+        "columnDesc": "Payment Status"         
+      }
+    ]
   }
 }

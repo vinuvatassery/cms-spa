@@ -68,9 +68,15 @@ export class FinancialPcaFacade {
   private financialPcaReportDataSubject = new Subject<any>();
   financialPcaReportData$ = this.financialPcaReportDataSubject.asObservable();
 
+  private financialPcaSubReportDataSubject = new Subject<any>();
+  financialPcaSubReportData$ = this.financialPcaSubReportDataSubject.asObservable();
+
 
   private getPcaAssignmentByIdSubject = new Subject<any>();
   getPcaAssignmentById$ = this.getPcaAssignmentByIdSubject.asObservable();
+
+  private pcaReassignmentByFundSourceIdSubject = new Subject<any>();
+  pcaReassignmentByFundSourceId$ = this.pcaReassignmentByFundSourceIdSubject.asObservable();
 
     /** Public properties **/
 
@@ -225,6 +231,33 @@ export class FinancialPcaFacade {
       },
     });
   }
+
+  loadFinancialPcaSubReportListGrid(
+    objecCodeGroupCodeId:string,
+    skipCount: number,
+    maxResultCount: number
+  ) {
+    this.financialPcaDataService
+      .loadFinancialPcaSubReportListService(
+        objecCodeGroupCodeId,
+        skipCount,
+        maxResultCount
+      )
+      .subscribe({
+        next: (dataResponse) => {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.financialPcaSubReportDataSubject.next(gridView);
+          this.hideLoader();
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.hideLoader();
+        },
+      });
+  }
   pcaReassignmentCount(){
     return this.financialPcaDataService.pcaReassignmentCount();
   }
@@ -236,6 +269,34 @@ export class FinancialPcaFacade {
         this.getPcaAssignmentByIdSubject.next(response);
         this.hideLoader();
       
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+  updateReassignmentPca(pcaModel: PcaDetails) {
+    this.showLoader();
+    this.financialPcaDataService.updateReassignmentPca(pcaModel).subscribe({
+      next: (response) => {
+        this.pcaActionIsSuccessSubject.next('save');
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+  getPcaReassignmentByFundSourceId(fundingSourceId: string) {
+    this.showLoader();
+    this.financialPcaDataService.getPcaReassignmentByFundSourceId(fundingSourceId).subscribe({
+      next: (response) => {
+        this.pcaReassignmentByFundSourceIdSubject.next(response);
+        this.hideLoader();
+
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);

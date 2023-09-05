@@ -445,7 +445,6 @@ export class FinancialClaimsBatchesLogListsComponent
     this.financialClaimsFacade.deleteClaims$
       .pipe(first((deleteResponse: any) => deleteResponse != null))
       .subscribe((deleteResponse: any) => {
-        debugger
         if (deleteResponse!=null) {
           this.isDeleteClaimClosed=false;
           this.deleteClaimsDialog.close()

@@ -33,7 +33,7 @@ export class FinancialFundingSourcesDetailsComponent implements OnInit {
   fundingSourceForm = this.formBuilder.group({
     fundingSourceId: [null],
     fundingSourceCode: ['', Validators.required],
-    fundingDesc: ['', Validators.required],
+    fundingDesc: ['', Validators.required]
   })
   isSubmitted = false;
 

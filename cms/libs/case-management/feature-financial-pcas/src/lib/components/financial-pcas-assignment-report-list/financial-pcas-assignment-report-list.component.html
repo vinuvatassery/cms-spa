@@ -23,7 +23,7 @@
 
 <!-- Sorted Info -->
 <div class="table-sorted-info">
-  Sorted {{sortDir}} by <span class="sort-items">  {{sortColumn}} </span>
+  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
   <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
   <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
   <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
@@ -93,8 +93,7 @@
         {{dataItem.openDate | date:'MM/dd/YYYY'}}
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <common-grid-cell-date-range-filter field="openDate" [filter]="filter"
-          [filterService]="filterService">
+        <common-grid-cell-date-range-filter field="openDate" [filter]="filter" [filterService]="filterService">
         </common-grid-cell-date-range-filter>
       </ng-template>
     </kendo-grid-column>
@@ -104,8 +103,7 @@
         {{dataItem.closeDate | date:'MM/dd/YYYY'}}
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <common-grid-cell-date-range-filter field="closeDate" [filter]="filter"
-          [filterService]="filterService">
+        <common-grid-cell-date-range-filter field="closeDate" [filter]="filter" [filterService]="filterService">
         </common-grid-cell-date-range-filter>
       </ng-template>
     </kendo-grid-column>
@@ -152,30 +150,12 @@
           </p>
         </div>
       </div>
-
-      <kendo-grid [resizable]="true" [data]="financialPcaReportGridListsSubGrid$ | async">
-        <!-- financialPcaReportGridLists$ | async -->
-        <kendo-grid-column field="priority" title="Priority" [width]="100"> </kendo-grid-column>
-
-        <kendo-grid-column field="pca" title="PCA #" [width]="100"> </kendo-grid-column>
-
-        <kendo-grid-column field="ay" title="AY" [width]="80"> </kendo-grid-column>
-
-        <kendo-grid-column field="openDate" title="Open Date" [width]="120"> </kendo-grid-column>
-
-        <kendo-grid-column field="closeDate" title="Close Date" [width]="120"> </kendo-grid-column>
-
-        <kendo-grid-column field="amountAssigned" title="Amount Assigned" [width]="170">
-          <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="tableamountview"> <strong>$</strong> {{dataItem.amountAssigned}}</span>
-          </ng-template> </kendo-grid-column>
-        <kendo-grid-column field="amountRemaining" title="Amount Remaining" [width]="180"> <ng-template
-            kendoGridCellTemplate let-dataItem>
-            <span class="tableamountview"> <strong>$</strong> {{dataItem.amountRemaining}}</span>
-          </ng-template> </kendo-grid-column>
-      </kendo-grid>
-
-
+      <cms-financial-pcas-assignment-sub-report-list
+        [pageSizes]="pageSizes"
+        [objecCodeGroupCodeId]="dataItem?.objecCodeGroupCodeId"
+        [financialPcaSubReportGridLists$]="financialPcaSubReportGridLists$"
+        (loadFinancialPcaSubReportListEvent)=loadFinancialPcaSubReportListGrid($event)>
+      </cms-financial-pcas-assignment-sub-report-list>
     </div>
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">

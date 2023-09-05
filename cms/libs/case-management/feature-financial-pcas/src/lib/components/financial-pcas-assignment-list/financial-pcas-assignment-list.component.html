@@ -1,7 +1,7 @@
 <!-- Table Top Filter, Search and Export -->
 
 <button kendoButton icon="add" [primary]="true"
-(click)="onOpenAddPcaAssignmentClicked(addEditPcaAssignmentDialogTemplate,'00000000-0000-0000-0000-000000000000')" class="add-new-button search-with-addbtn"
+(click)="onOpenAddPcaAssignmentClicked('')" class="add-new-button search-with-addbtn"
 aria-label="add"> Assignment</button> 
 <p class="mt-2">Select object and group below to load the grid data</p>
 <section class="flex-row mb-1">
@@ -50,22 +50,25 @@ aria-label="add"> Assignment</button>
           <kendo-grid-column field="priority" title="Priority" [width]="70" [columnMenu]="false" [sortable]="false">
           </kendo-grid-column>
             <kendo-grid-column field="pca" title="PCA" [width]="100"> </kendo-grid-column>
-            <kendo-grid-column field="object" title="Object" [width]="180"> </kendo-grid-column>           
-            <kendo-grid-column field="amount" title="Amount" [width]="140"> <ng-template kendoGridCellTemplate let-dataItem>
-                  <span class="tableamountview"> <strong>$</strong> {{dataItem.amount}}</span>
-                </ng-template> </kendo-grid-column>
-
+            <kendo-grid-column field="groupCodeDesc" title="Group(s)" [width]="180"> </kendo-grid-column>      
             <kendo-grid-column field="openDate" title="Open Date" [width]="140">
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                        {{dataItem.openDate | date:'MM/dd/YYYY'}}
+                      </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="closeDate" title="Close Date" [width]="120"> </kendo-grid-column>
+            <kendo-grid-column field="closeDate" title="Close Date" [width]="120"> 
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                        {{dataItem.closeDate | date:'MM/dd/YYYY'}}
+                      </ng-template>
+            </kendo-grid-column>
             <kendo-grid-column field="totalAmount" title="Total Amount" [width]="180"> <ng-template kendoGridCellTemplate let-dataItem>
                   <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmount}}</span>
                 </ng-template>  </kendo-grid-column>
             <kendo-grid-column field="amountUsed" title="Amount Used" [width]="140">  <ng-template kendoGridCellTemplate let-dataItem>
-                  <span class="tableamountview"> <strong>$</strong> {{dataItem.amountUsed}}</span>
+                  <span class="tableamountview"> <strong>$</strong> {{dataItem.amountSpent}}</span>
                 </ng-template> </kendo-grid-column>
             <kendo-grid-column field="amountLeft" title="Amount Left" [width]="140">  <ng-template kendoGridCellTemplate let-dataItem>
-                  <span class="tableamountview"> <strong>$</strong> {{dataItem.amountLeft}}</span>
+                  <span class="tableamountview"> <strong>$</strong> {{dataItem.balanceAmount}}</span>
                 </ng-template> </kendo-grid-column>
          
 
@@ -79,7 +82,7 @@ aria-label="add"> Assignment</button>
                       <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                         <ng-container>
                           <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                            [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                            [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem?.pcaAssignmentId)">
                             <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                             <label> {{ buttondataItem.text }} </label>
                           </button>
@@ -116,11 +119,5 @@ aria-label="add"> Assignment</button>
       (loadPcaEvent)="onLoadPcaEvent($event)"
       (addPcaDataEvent)="addPcaData($event)">
       </cms-financial-pcas-assignment-form>
-
-</ng-template>
-
-<ng-template #removePcaAssignmentDialogTemplate>
-      <cms-financial-pcas-assignment-remove (closeRemovePcaAssignmentClickedEvent)="onCloseRemovePcaAssignmentClicked($event)">
-      </cms-financial-pcas-assignment-remove>
 
 </ng-template>

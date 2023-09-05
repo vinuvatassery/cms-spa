@@ -7,3 +7,11 @@ export interface PcaDetails {
     totalAmount: number
     fundingSourceId: string
   }
+  export interface UpdatePcaDetails{
+    openDate: string
+    closeDate: string
+    assignmentAmount: number
+    pcaAssignmentId:string
+    UnlimitedFlag:string
+    pcaId:string  
+  }

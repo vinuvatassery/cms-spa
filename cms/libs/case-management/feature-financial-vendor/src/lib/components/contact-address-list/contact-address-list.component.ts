@@ -73,7 +73,7 @@ export class ContactAddressListComponent implements OnChanges {
   public contactAddressActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Contact',
+      text: 'Edit',
       icon: 'edit',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -84,7 +84,7 @@ export class ContactAddressListComponent implements OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Deactivate Contact',
+      text: 'Deactivate',
       icon: 'block',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -96,7 +96,7 @@ export class ContactAddressListComponent implements OnChanges {
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Contact',
+      text: 'Delete',
       icon: 'delete',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -232,7 +232,6 @@ export class ContactAddressListComponent implements OnChanges {
   }
 contactUpdated(res:boolean)
 {
-  debugger
 if(res)
 {
   this.vendocontactsFacade.loadcontacts(this.VendorAddressId,
@@ -282,4 +281,11 @@ if(res)
     }
   }
 
+  onEditDeactivateContactClicked(event:any)
+  {
+    if (event?.vendorContactId) {
+      this.VendorContactId = event?.vendorContactId;
+      this.clickOpenDeactivateContactAddressDetails();
+    }
+  }
 }

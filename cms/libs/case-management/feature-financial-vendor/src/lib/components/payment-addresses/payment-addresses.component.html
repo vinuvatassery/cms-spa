@@ -36,7 +36,11 @@
                 <kendo-grid-column field="state" title="State" [width]="100">   </kendo-grid-column>
                 <kendo-grid-column field="zip" title="Zip" [width]="100">   </kendo-grid-column>
                 <kendo-grid-column field="specialHandlingDesc" title="Special Handling" [width]="120">   </kendo-grid-column>
-                <kendo-grid-column field="effectiveDates" title="Effective Dates" [width]="120">   </kendo-grid-column>
+                <kendo-grid-column field="effectiveDate" title="Effective Dates" [width]="120">  
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                    {{dataItem.effectiveDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}  
+                   </ng-template>   
+                </kendo-grid-column>
                 <kendo-grid-column [sortable]="false" field="creatorId" title="By" [width]="70">
                     <ng-template kendoGridCellTemplate let-dataItem>
                       <button
@@ -61,7 +65,7 @@
                       </kendo-popover>
                     </ng-template>
                   </kendo-grid-column>
-                  <kendo-grid-column [sortable]="false" field="Option" title=" " [columnMenu]="false" [width]="60" class="text-center">
+                  <kendo-grid-column [sortable]="false" field="Option" title="Options" [columnMenu]="false" [width]="80" class="text-center">
                     <ng-template kendoGridCellTemplate let-dataItem>
                         <kendo-dropdownbutton [data]="paymentAddressActions" icon="more-vertical"
                             class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -71,6 +75,7 @@
                             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate
                                 let-buttondataItem>
                                 <ng-container>
+                                  <div *ngIf="dataItem.activeFlag ==='Y' ; else deactivateButton">
                                     <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                                         [class]="buttondataItem.buttonType" aria-hidden="false"
 
@@ -80,7 +85,21 @@
                                             [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                                         <label> {{ buttondataItem.text }} </label>
                                     </button>
+                                  </div>
                                 </ng-container>
+                                <ng-template #deactivateButton>
+                                  <div *ngIf="buttondataItem.text !== 'Deactivate Address'">
+                                    <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                                    [class]="buttondataItem.buttonType" aria-hidden="false"
+
+                                    (click)="handleOptionClick(dataItem,buttondataItem.type)"
+                                    >
+                                    <span class="material-icons"
+                                        [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                                    <label> {{ buttondataItem.text }} </label>
+                                </button>
+                                  </div>
+                                </ng-template>
                             </ng-template>
                         </kendo-dropdownbutton>
                     </ng-template>
@@ -139,6 +158,12 @@
 class="app-c-modal app-c-modal-md app-c-modal-np">
 <kendo-dialog-titlebar class="text-normal" (close)="clickCloseAddContactDetails()"> Add Contact(s) </kendo-dialog-titlebar>
 <cms-contact-address-details [vendorId]="vendorId" (isContactDetailPopupClose)="onClose($event)"></cms-contact-address-details>
+</kendo-dialog>
+<kendo-dialog *ngIf="isContactAddressDeactivateShow" (close)="clickCloseDeactivateContactAddress()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar> Deactivate contact?</kendo-dialog-titlebar>
+  <cms-contacts-deactivate (closeDeactivateContactAddress)="onDeactiveCancel($event)"
+    [VendorContactId]="vendorId"> </cms-contacts-deactivate>
 </kendo-dialog>
 <kendo-dialog *ngIf="isPaymentAddressDetailShow" (close)="clickCloseAddEditPaymentAddressDetails()"
 class="app-c-modal app-c-modal-md app-c-modal-np">
