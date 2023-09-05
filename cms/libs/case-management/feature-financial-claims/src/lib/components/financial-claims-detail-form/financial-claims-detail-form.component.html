@@ -117,10 +117,11 @@
 
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
-                    <div class=" mb-3">
+                   
                         <ng-container formArrayName="claimService">
                             <ng-container *ngFor="let contact of AddClaimServicesForm.controls; let i=index">
                                 <ng-container [formGroupName]="i">
+                                    <div class=" mb-3">
                                     <div class="flex-space-bw align-items-center">
                                         <h4 class="mar-0">SERVICE {{i+1}}</h4>
                                         <button class="" kendoButton fillMode="flat" themeColor="error"
@@ -231,7 +232,7 @@
 
                                             <kendo-floatinglabel text="Service Cost" class="amount-with-symbol">
                                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                                                <kendo-numerictextbox aria-label="CTP Code"
+                                                <kendo-numerictextbox aria-label="CTP Code"  [spinners]="false"
                                                     [fillMode]="formUiStyle.inputFillMode" format="#.000"
                                                     formControlName="serviceCost">
                                                 </kendo-numerictextbox>
@@ -244,7 +245,7 @@
                                         <div class="flex-col flex-col-6">
                                             <kendo-floatinglabel text="Amount Due" class="amount-with-symbol">
                                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                                                <kendo-numerictextbox aria-label="PCA Code"
+                                                <kendo-numerictextbox aria-label="PCA Code"  [spinners]="false"
                                                     [fillMode]="formUiStyle.inputFillMode" formControlName="amountDue"
                                                     format="#.000">
                                                 </kendo-numerictextbox>
@@ -275,11 +276,11 @@
                                             </kendo-floatinglabel>
                                         </div>
                                     </div>
-
+                                </div>
                                 </ng-container>
                             </ng-container>
                         </ng-container>
-                    </div>
+                   
                 </div>
             </div>
             <hr class="row-border" />
