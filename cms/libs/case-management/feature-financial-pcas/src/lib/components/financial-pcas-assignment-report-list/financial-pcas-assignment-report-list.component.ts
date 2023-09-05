@@ -256,7 +256,7 @@ export class FinancialPcasAssignmentReportListComponent
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.filter = stateData?.filter?.filters;
     this.setFilterBy(true, '', this.filter);
-    if (!this.filteredByColumnDesc.includes('status')) this.selectedStatus = '';
+    if (!this.filteredByColumnDesc.includes('Status')) this.selectedStatus = '';
     this.loadFinancialPcaReportListGrid();
   }
 
