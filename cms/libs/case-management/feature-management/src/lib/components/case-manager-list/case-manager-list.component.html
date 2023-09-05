@@ -28,7 +28,7 @@
         </kendo-grid-column>
         <kendo-grid-column field="pNumber" title="PNumber" [width]="100" *ngIf="managementTab"></kendo-grid-column>
         <kendo-grid-column field="domainCode" title="Domain" [width]="100" *ngIf="managementTab || isCerForm"></kendo-grid-column>
-        <kendo-grid-column field="assisterGroup" title="Assister Group" [width]="100"
+        <kendo-grid-column field="assisterGroup" title="Assister Group" [width]="160"
           *ngIf="managementTab"></kendo-grid-column>
         <kendo-grid-column *ngIf="managementTab" field="assignmentStartDate" title="Effective Date" [width]="100"
          >
@@ -37,7 +37,7 @@
             {{dataItem.assignmentEndDate | date: 'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column title="Assigning Case Manager" [width]="100" *ngIf="managementTab"></kendo-grid-column>
+        <kendo-grid-column title="Assigning Case Manager" [width]="180" *ngIf="managementTab"></kendo-grid-column>
         <kendo-grid-column field="city" title="City" [width]="100" *ngIf="managementTab"></kendo-grid-column>
         <kendo-grid-column field="county" title="County" [width]="100" *ngIf="managementTab"></kendo-grid-column>
         <kendo-grid-column field="creatorId" title="By" [width]="60" [sortable]="false" *ngIf="managementTab">
