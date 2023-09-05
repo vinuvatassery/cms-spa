@@ -78,6 +78,7 @@ export class LovFacade {
   private documentTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
   private documentSubTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
   private paymentMethodTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private paymentStausSubject = new BehaviorSubject<Lov[]>([]);
   private paymentRunDateSubject = new BehaviorSubject<Lov[]>([]);
   private lovPaymentMethodVendorSubject = new BehaviorSubject<Lov[]>([]);
   private lovPaymentRunDateSubject = new BehaviorSubject<Lov[]>([]);
@@ -119,7 +120,7 @@ export class LovFacade {
   applicantInfolov$=this.lovApplicantInfoSubject.asObservable();
   addressType$ = this.lovAddressTypeSubject.asObservable();
   showLoaderOnAddressType$ = this.showLoaderOnAddressType.asObservable();
-  lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();  
+  lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();
   eligibilityStatus$ = this.eligibilityStatusSubject.asObservable();
   eligibilityStatusCp$ = this.eligibilityStatusCpSubject.asObservable();
   showLoaderOnEligibilityStatus$ = this.showLoaderOnEligibilityStatusSubject.asObservable();
@@ -135,12 +136,13 @@ export class LovFacade {
   documentTypeCodeSubject$ = this.documentTypeCodeSubject.asObservable();
   documentSubTypeCodeSubject$ = this.documentSubTypeCodeSubject.asObservable();
   paymentMethodType$ = this.paymentMethodTypeSubject.asObservable();
+  paymentStaus$ = this.paymentStausSubject.asObservable();
   paymentRunDates$ = this.paymentRunDateSubject.asObservable();
 
-  
-  
+
+
   paymentMethodVendorlov$ = this.lovPaymentMethodVendorSubject.asObservable();
-  paymentRunDatelov$ = this.lovPaymentRunDateSubject.asObservable();  
+  paymentRunDatelov$ = this.lovPaymentRunDateSubject.asObservable();
 
 
 
@@ -525,7 +527,7 @@ getAddressTypeLovs(): void {
 getApplicantInfoLovs(): void {
   const lovTypeArr = Object.values(ApplicantInfoLovType);
   const lovTypes = lovTypeArr.toString();
-  let raceIdentityArr : any = [];
+  const raceIdentityArr : any = [];
   this.lovDataService.getLovsbyTypes(lovTypes).subscribe({
     next: (lovResponse) => {
       lovResponse.forEach((element:any) => {
@@ -677,6 +679,17 @@ getDocumentSubTypeLovs(parentCode : string) {
     this.lovDataService.getLovsbyType(LovType.PaymentMethodCode).subscribe({
       next: (lovResponse) => {
         this.paymentMethodTypeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+  getPaymentStatusLov(): void {
+    this.lovDataService.getLovsbyType(LovType.PaymentStatusCode).subscribe({
+      next: (lovResponse) => {
+        this.paymentStausSubject.next(lovResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)

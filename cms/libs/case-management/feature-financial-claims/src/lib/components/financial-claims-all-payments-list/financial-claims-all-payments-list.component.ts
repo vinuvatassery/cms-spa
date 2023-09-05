@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute, Router } from '@angular/router';
-import {  GridDataResult } from '@progress/kendo-angular-grid';
+import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -20,6 +20,7 @@ import {
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-financial-claims-all-payments-list',
@@ -192,13 +193,23 @@ export class FinancialClaimsAllPaymentsListComponent
     },
   ];
 
+  selectedPaymentStatus: string | null = null;
+  selectedpaymentMethod: string | null = null;
+  paymentMethodType$ = this.lovFacade.paymentMethodType$;
+  paymentStaus$ = this.lovFacade.paymentStaus$;
+  paymentMethodTypes: any = [];
+  paymentStauses: any = [];
+
   constructor(
     private route: Router,
     private dialogService: DialogService,
-    public activeRoute: ActivatedRoute
+    public activeRoute: ActivatedRoute,
+    private readonly lovFacade: LovFacade
   ) {}
 
   ngOnInit(): void {
+    this.getPaymentMethodLov();
+    this.getPaymentStatusLov();
     this.loadFinancialClaimsAllPaymentsListGrid();
   }
   ngOnChanges(): void {
@@ -209,6 +220,34 @@ export class FinancialClaimsAllPaymentsListComponent
     };
 
     this.loadFinancialClaimsAllPaymentsListGrid();
+  }
+
+  private getPaymentMethodLov() {
+    this.lovFacade.getPaymentMethodLov();
+    this.paymentMethodType$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentMethodTypes = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+  }
+
+  private getPaymentStatusLov() {
+    this.lovFacade.getPaymentStatusLov();
+    this.paymentStaus$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentStauses = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
   }
 
   private loadFinancialClaimsAllPaymentsListGrid(): void {
@@ -291,7 +330,8 @@ export class FinancialClaimsAllPaymentsListComponent
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir = this.sort[0]?.dir === this.sortType ? 'Ascending' : 'Descending';
+    this.sortDir =
+      this.sort[0]?.dir === this.sortType ? 'Ascending' : 'Descending';
 
     this.sortColumn = this.columns[stateData.sort[0]?.field];
 
@@ -307,7 +347,12 @@ export class FinancialClaimsAllPaymentsListComponent
     } else {
       this.filter = '';
       this.isFiltered = false;
+      this.filteredBy=''
     }
+    if (!this.filteredBy.includes('Payment Method'))
+      this.selectedpaymentMethod = null;
+    if (!this.filteredBy.includes('Payment Status'))
+      this.selectedPaymentStatus = '';
     this.loadFinancialClaimsAllPaymentsListGrid();
   }
 
@@ -342,6 +387,25 @@ export class FinancialClaimsAllPaymentsListComponent
     this.sort = this.sortColumn;
 
     this.loadFinancialClaimsAllPaymentsListGrid();
+  }
+
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (field === 'paymentStatusDesc') this.selectedPaymentStatus = value;
+    if (field === 'paymentMethodDesc') this.selectedpaymentMethod = value;
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'and',
+    });
   }
 
   gridDataHandle() {
