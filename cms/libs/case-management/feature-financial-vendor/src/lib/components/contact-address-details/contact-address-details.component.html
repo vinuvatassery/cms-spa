@@ -29,7 +29,7 @@
             </div>
             <div class="flex-col">
               <kendo-floatinglabel text="Contact Name">
-                <kendo-textbox aria-label="Contact Name" formControlName="contactName"  [maxlength]="200" (keypress)="onKeyPress($event)" 
+                <kendo-textbox aria-label="Contact Name" formControlName="contactName"  [maxlength]="200" (keypress)="onKeyPress($event.charCode)"
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>
@@ -38,7 +38,7 @@
             </div>
             <div class="flex-col">
               <kendo-floatinglabel text="Description (Optional)">
-                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" (keypress)="onKeyPress($event)"  [maxlength]="500" (valueChange)="onDescriptionValueChange($event)" formControlName="contactDesc"
+                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" (keypress)="onKeyPress($event.charCode)"  [maxlength]="500" (valueChange)="onDescriptionValueChange($event)" formControlName="contactDesc"
                   resizable="vertical">
              
   <kendo-textarea-suffix class="justify-content-end">

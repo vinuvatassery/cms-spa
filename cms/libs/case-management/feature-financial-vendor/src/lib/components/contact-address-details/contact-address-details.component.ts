@@ -201,9 +201,9 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     }
     this.cd.detectChanges();
   }
-   onKeyPress(event: KeyboardEvent) {
-    return (event.charCode > 64 && 
-      event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)||event.charCode==32
+   onKeyPress(event:number) {
+    return (event > 64 && 
+      event < 91) || (event > 96 && event < 123)||event==32
   }
   onDescriptionValueChange(event: any): void {
     this.descriptionCounter = event.length;
