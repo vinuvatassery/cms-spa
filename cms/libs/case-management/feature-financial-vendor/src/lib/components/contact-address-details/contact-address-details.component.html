@@ -122,10 +122,14 @@
         </button>
       </div>
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel deactivation"
           (click)="onCancel()">
           Cancel
         </button>
+        <button kendoButton [primary]="true" look="outline" aria-label="deactivate contact"
+        (click)="onDeactivateContactClick()" *ngIf="this.contactAddress.vendorContactId!=null" >
+        Deactivate
+      </button>
 
         <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="save()" *ngIf="this.contactAddress.vendorContactId==null" >
             Add
@@ -136,3 +140,10 @@
       </div>
     </div>
   </kendo-dialog-actions>
+
+  <kendo-dialog *ngIf="isContactAddressDeactivateShow" (close)="clickCloseDeactivateContactAddress()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar> Deactivate contact?</kendo-dialog-titlebar>
+  <cms-contacts-deactivate (closeDeactivateContactAddress)="onDeactiveCancel($event)"
+    [VendorContactId]="this.contactAddress.vendorContactId"> </cms-contacts-deactivate>
+</kendo-dialog>

@@ -32,6 +32,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   public gridSkipCount = this.vendocontactsFacade.skipCount;
   public sort = this.vendocontactsFacade.sort;
   public state!: any;
+  isContactAddressDeactivateShow = false
   descriptionCounter:number=500;
   filters = "";
   @Output() ContactUpdated = new EventEmitter<boolean>();
@@ -113,11 +114,10 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   public update() {    
     this.isSubmitted = true;
-    this.AddContactForm.value.forEach((element:any, i: number) => {  
-      this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
-    }); 
     if (this.contactForm.controls['vendorContacts'].valid) {
       this.loaderService.show();
+      let vendorContacts= this.contactForm.value.vendorContacts[0];
+      vendorContacts.preferredFlag = vendorContacts.preferredFlag ? "Y" :"N"
       this.vendocontactsFacade.updateContactAddress(this.contactForm.value.vendorContacts[0]).subscribe({
         next: (response: any) => {
           if (response) {
@@ -181,6 +181,20 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     });
     this.AddContactForm.push(addContactForm);
     this.cd.detectChanges();
+  }
+
+  onDeactivateContactClick(){ 
+    this.isContactAddressDeactivateShow = true;
+  }
+
+  clickCloseDeactivateContactAddress() {
+    this.isContactAddressDeactivateShow = false;
+  }
+
+  onDeactiveCancel(isCancel: any) {
+    if (isCancel) { 
+      this.clickCloseDeactivateContactAddress()
+    }
   }
 
   removeContact(i: number) {
