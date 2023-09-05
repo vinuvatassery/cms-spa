@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** internal libraries **/
+import { GridFilterParam } from '../../entities/grid-filter-param';
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { InsuranceProviderDataService } from '../../infrastructure/financial-management/insurance-provider.data.service';
@@ -86,12 +87,10 @@ export class InsuranceProviderFacade {
   loadProviderClientsListGrid(
     providerId:any,
     tabCode:any,
-    skipCount: number,
-    maxResultCount: number,
-    sort: string,
-    sortType: string){
+    params: GridFilterParam
+    ){
     this.gridLoaderVisibilitySubject.next(true);
-    this.insuranceProviderDataService.loadProviderClientsListGrid(providerId,tabCode, skipCount,maxResultCount,sort,sortType).subscribe({
+    this.insuranceProviderDataService.loadProviderClientsListGrid(providerId,tabCode, params).subscribe({
       next: (dataResponse) => {
         const gridView = {
           data: dataResponse['items'],
