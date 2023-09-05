@@ -11,11 +11,11 @@ import {
   ViewChild,
   ChangeDetectorRef,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State    
+  State
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -51,14 +51,14 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   @Input() batchId: any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
-  @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>(); 
+  @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();
   entityId: any;
   public isBreakoutPanelShow:boolean=true;
   amountTotal:any;
   warrantTotal:any;
   paymentToReconcileCount:any;
   public state!: State;
-  public currentDate =  new Date(); 
+  public currentDate =  new Date();
   sortColumn = 'batch';
   sortDir = 'Ascending';
   columnsReordered = false;
@@ -85,10 +85,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   datePaymentReconciled:any;
   datePaymentSend:any;
-  tAreaCessationMaxLength:any=200; 
-  datePaymentReconciledRequired= false; 
-  paymentSentDateRequired= false; 
-  noteRequired= false; 
+  tAreaCessationMaxLength:any=200;
+  datePaymentReconciledRequired= false;
+  paymentSentDateRequired= false;
+  noteRequired= false;
   pageValidationMessage:any=null;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   providerTitle:any = 'Medical Provider';
@@ -101,25 +101,25 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
     private readonly cd: ChangeDetectorRef, public intl: IntlService, private configurationProvider: ConfigurationProvider) {
-    
+
     }
-  
+
   ngOnInit(): void {
     if(this.claimsType === 'dental'){
       this.providerTitle = 'Dental Provider';
     }
-    this.isBreakoutPanelShow=false; 
+    this.isBreakoutPanelShow=false;
     this.loadReconcileListGrid();
     const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
         entityId : this.entityId,
-        claimsType: this.claimsType,  
+        claimsType: this.claimsType,
         amountTotal : 0,
         warrantTotal : 0,
         warrantNbr : "",
         paymentToReconcileCount : 0
-      } 
+      }
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
   }
   ngOnChanges(): void {
@@ -155,10 +155,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       sortType: sortTypeValue,
       filter : this.filter === undefined?null:this.filter
     };
-    this.loadReconcileListEvent.emit(gridDataRefinerValue);    
+    this.loadReconcileListEvent.emit(gridDataRefinerValue);
   }
- 
-  
+
+
   onChange(data: any) {
     this.defaultGridState();
     const stateData = this.state;
@@ -183,11 +183,11 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     this.sortValueBatch = stateData.sort[0]?.field ?? this.sortValueBatch;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir = this.sortBatch[0]?.dir === 'asc' ? 'Ascending' : 'Descending'; 
-    this.filter = stateData?.filter?.filters; 
+    this.sortDir = this.sortBatch[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.filter = stateData?.filter?.filters;
 
     this.loadReconcileListGrid();
-    
+
   }
 
   // updating the pagination infor based on dropdown selection
@@ -354,7 +354,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     else {
       this.reconcilePaymentGridUpdatedResult.forEach((item: any) => {
         if (item.checkNbr !== null && item.checkNbr !== '' && item.checkNbr !== null) {
-          item.paymentReconciledDate = this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value;        
+          item.paymentReconciledDate = this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value;
           item.datePaymentRecInValid = false;
           item.datePaymentRecInValidMsg = null;
         }
@@ -449,7 +449,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     this.calculateCharacterCount(dataItem)
     this.assignRowDataToMainList(dataItem);
   }
-  
+
   private tAreaVariablesInitiation(dataItem: any) {
     dataItem.forEach((dataItem: any) => {
       this.calculateCharacterCount(dataItem);
@@ -591,10 +591,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
     this.isSaveClicked = true;
     this.validateReconcileGridRecord();
-    let isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid);
-    let datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
-    let datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
-    let totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length;
+    const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid);
+    const datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
+    const datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
+    const totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length;
     if (isValid.length > 0) {
       this.pageValidationMessage = "validation errors found, please review each page for errors " +
         totalCount + " is the total number of validation errors found.";
@@ -606,7 +606,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         data. paymentReconciledDate =  this.intl.formatDate(data.paymentReconciledDate, this.dateFormat);
         data. paymentSentDate =  this.intl.formatDate(data.paymentSentDate, this.dateFormat);
       })
-      
+
     }
     if (isValid.length <= 0 && this.selectedReconcileDataRows.length>0) {
       this.printAuthorizationDialog = this.dialogService.open({
@@ -618,7 +618,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       this.pageValidationMessage = "No data for reconcile and print";
     }
   }
- 
+
   onPrintAuthorizationCloseClicked(result: any) {
     if (result) {
       this.printAuthorizationDialog.close();
@@ -642,22 +642,21 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     onRowSelection(grid:any, selection:any)
     {
       const data = selection.selectedRows[0].dataItem;
-      this.batchId=this.batchId;
-      this.entityId = data.entityId;          
+      this.entityId = data.entityId;
       this.isBreakoutPanelShow=true;
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
         entityId : data.entityId,
-        claimsType: this.claimsType,  
+        claimsType: this.claimsType,
         amountTotal : data.amountTotal,
         warrantTotal : data.amountPaid,
         warrantNbr : data.checkNbr,
         paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
-      } 
-      this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);    
+      }
+      this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
     }
-    
+
     loadReconcilePaymentSummary(ReconcilePaymentResponseDto:any)
     {
       this.loadReconcileBreakoutSummaryEvent.emit(ReconcilePaymentResponseDto);
@@ -671,8 +670,8 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       batchId: event.batchId,
       entityId: event.entityId,
       claimsType:event.claimsType,
-      skipCount:event.skipCount, 
-      pageSize:event.pagesize, 
+      skipCount:event.skipCount,
+      pageSize:event.pagesize,
       sort:event.sortColumn,
       sortType:event.sortType,
       filter:event.filter
