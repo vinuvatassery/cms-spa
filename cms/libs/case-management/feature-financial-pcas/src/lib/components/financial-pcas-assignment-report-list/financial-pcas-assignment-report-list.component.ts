@@ -140,14 +140,19 @@ export class FinancialPcasAssignmentReportListComponent
 
   ngAfterViewInit() {
     this.grid.filter = {
+      logic: 'and',
       filters: [
         {
-          field: 'status',
-          operator: 'eq',
-          value: 'Active',
+          filters: [
+            {
+              field: 'status',
+              operator: 'eq',
+              value: 'Active',
+            },
+          ],
+          logic: 'and',
         },
       ],
-      logic: 'and',
     };
     this.initializePcaPage();
   }
