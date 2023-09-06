@@ -22,13 +22,11 @@ export class FinancialFundingSourcesRemoveComponent {
   }
   onRemoveOrCancelClick(isDelete : boolean)
   {  
-    const fundingScourceDeleteConfirmParams =
+    const deleteFundingSourceConfirmParams =
     {
       isDelete : isDelete ,
       fundingSourceId : this.fundingSourceId
     }
-    console.log(fundingScourceDeleteConfirmParams)
-
-    this.removeConfirmEvent.emit(fundingScourceDeleteConfirmParams);
+    this.removeConfirmEvent.emit(deleteFundingSourceConfirmParams);
   }
 }

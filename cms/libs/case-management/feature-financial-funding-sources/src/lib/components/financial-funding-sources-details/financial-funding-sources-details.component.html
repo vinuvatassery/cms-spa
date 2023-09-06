@@ -15,7 +15,7 @@
           <kendo-textarea-suffix class="justify-content-end">
             <span class="counter">{{ FundingSourceCounter }}</span>
           </kendo-textarea-suffix>
-          <kendo-formerror *ngIf="fundingSourceForm.hasError('required','fundingSourceCode') && isSubmitted">Funding source code is Required
+          <kendo-formerror *ngIf="fundingSourceForm.hasError('required','fundingSourceCode') && isSubmitted">Funding source is required.
           </kendo-formerror>
         </div>
         <div class="flex-col mb-1">
@@ -30,7 +30,7 @@
           <kendo-textarea-suffix class="justify-content-end">
             <span class="counter">{{ FundingDescriptionCounter }}</span>
           </kendo-textarea-suffix>
-          <kendo-formerror *ngIf="fundingSourceForm.hasError('required','FundingDesc') && isSubmitted">funding source description is Required
+          <kendo-formerror *ngIf="fundingSourceForm.hasError('required','fundingDesc') && isSubmitted">Funding Name is required.
           </kendo-formerror>
         </div>
       </div>

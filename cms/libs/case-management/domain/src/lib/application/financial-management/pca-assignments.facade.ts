@@ -38,6 +38,9 @@ export class PcaAssignmentsFacade {
 
     private financialPcaAssignmentDataSubject = new Subject<any>();
     financialPcaAssignmentData$ = this.financialPcaAssignmentDataSubject.asObservable();
+
+    private pcaAssignmentPriorityUpdateSubject = new Subject<any>();
+    pcaAssignmentPriorityUpdate$ = this.pcaAssignmentPriorityUpdateSubject.asObservable();
      
   /** Public properties **/
  
@@ -70,10 +73,28 @@ export class PcaAssignmentsFacade {
     private readonly loaderService: LoaderService
   ) { }
 
+  pcaAssignmentPriorityUpdate(pcaAssignmentPriorityArguments :any) {
+    this.pcaAssignmentsDataService.pcaAssignmentPriorityUpdate(pcaAssignmentPriorityArguments).subscribe({
+      next: (updatedResponse) => {       
+        this.pcaAssignmentPriorityUpdateSubject.next(updatedResponse);
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, updatedResponse?.message)
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+
   loadFinancialPcaAssignmentListGrid(pcaAssignmentGridArguments :any) {
     this.pcaAssignmentsDataService.loadFinancialPcaAssignmentListService(pcaAssignmentGridArguments).subscribe({
       next: (dataResponse) => {
-        this.financialPcaAssignmentDataSubject.next(dataResponse);
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+        this.financialPcaAssignmentDataSubject.next(gridView);
         this.hideLoader();
       },
       error: (err) => {

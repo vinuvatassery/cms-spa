@@ -314,10 +314,10 @@ export class FinancialClaimsBatchesLogListsComponent
     this.route.navigate([this.route.url, 'items']);
   }
 
-  paymentClickHandler(paymentRequestId: string) {
+  paymentClickHandler(dataItem: any) {
     const batchId = this.activeRoute.snapshot.queryParams['bid'];
     this.route.navigate([this.route.url.split('?')[0], 'items'], {
-      queryParams: { bid: batchId, pid: paymentRequestId },
+      queryParams: { bid: batchId, pid: dataItem.paymentRequestId,eid:dataItem.vendorAddressId },
     });
   }
 
@@ -445,7 +445,6 @@ export class FinancialClaimsBatchesLogListsComponent
     this.financialClaimsFacade.deleteClaims$
       .pipe(first((deleteResponse: any) => deleteResponse != null))
       .subscribe((deleteResponse: any) => {
-        debugger
         if (deleteResponse!=null) {
           this.isDeleteClaimClosed=false;
           this.deleteClaimsDialog.close()
@@ -490,7 +489,7 @@ export class FinancialClaimsBatchesLogListsComponent
         if (exist === 0) {
           this.selectedDataRows.PrintAdviceLetterSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
         }
-     
+
     }
 
   }

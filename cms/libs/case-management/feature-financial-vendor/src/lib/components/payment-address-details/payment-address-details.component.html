@@ -2,7 +2,7 @@
 
     <section class="k-dialog-body">
         <p class="text-muted mb-2">
-            All fields are required unless otherwise stated.
+            Add a payment or physical address and contacts for that address. All fields are required unless otherwise stated.
         </p>
         <div class="flex-row">
             <div class="flex-col">
@@ -17,7 +17,7 @@
 
             <div class="flex-col">
                 <kendo-floatinglabel text="Name on Check">
-                    <kendo-textbox aria-label="Name on Check" formControlName="nameOnCheck"
+                    <kendo-textbox aria-label="Name on Check" formControlName="nameOnCheck" [maxlength]="200"
                         [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textbox>
                 </kendo-floatinglabel>
@@ -26,8 +26,8 @@
             </div>
 
             <div class="flex-col">
-                <kendo-floatinglabel text="Name on Envelop">
-                    <kendo-textbox aria-label="Name on Envelop" formControlName="nameOnEnvelope"
+                <kendo-floatinglabel text="Name on Envelope">
+                    <kendo-textbox aria-label="Name on Envelop" formControlName="nameOnEnvelope" [maxlength]="200"
                         [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textbox>
                 </kendo-floatinglabel>
@@ -36,23 +36,23 @@
             </div>
             <div class="flex-col">
                 <kendo-floatinglabel text="Address Line 1">
-                    <kendo-textbox aria-label="Address Line 1" formControlName="address1"
+                    <kendo-textbox aria-label="Address Line 1" formControlName="address1" [maxlength]="200"
                         [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['address1'].valid">Address is
-                    required'.</kendo-formerror>
+                    required.</kendo-formerror>
             </div>
             <div class="flex-col">
                 <kendo-floatinglabel text="Address Line 2 (optional)">
-                    <kendo-textbox aria-label="Address Line 2 (optional)" formControlName="address2"
+                    <kendo-textbox aria-label="Address Line 2 (optional)" formControlName="address2" [maxlength]="50"
                         [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textbox>
                 </kendo-floatinglabel>
             </div>
             <div class="flex-col">
                 <kendo-floatinglabel text="City">
-                    <kendo-textbox aria-label="City" formControlName="cityCode" [fillMode]="formUiStyle.inputFillMode">
+                    <kendo-textbox aria-label="City" formControlName="cityCode" [fillMode]="formUiStyle.inputFillMode" [maxlength]="50">
                     </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['cityCode'].valid">City is
@@ -85,7 +85,7 @@
                    value="Y" name="physicalAddressFlag" id="physicalAddressFlagno"
                    (change)="OncheckboxClick($event)" formControlName="physicalAddressFlag"
                   />
-                  <label class="k-checkbox-label" for="PreferredFlagYes">This is the pharmacies physical address</label
+                  <label class="k-checkbox-label" for="PreferredFlagYes">This is the pharmacy's physical address</label
                   >
                 </span>
               </div>
@@ -104,7 +104,7 @@
                             <kendo-label class="k-radio-label" text="{{item.lovDesc}}" for="{{item.lovDesc}}"></kendo-label>
                         </span>
                     </div>
-                    <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['paymentMethodCode'].valid">a selection is required.</kendo-formerror>
+                    <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['paymentMethodCode'].valid">A selection is required.</kendo-formerror>
                 </fieldset>
             </div>
             <div *ngIf="tabCode === financialVendorProviderTabCode.InsuranceVendors" class="flex-col flex-col-6">
@@ -113,7 +113,7 @@
                         valueField="lovCode" [fillMode]="formUiStyle.dropDownFillMode" [valuePrimitive]="true" >
                     </kendo-dropdownlist>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['paymentRunDateMonthly'].valid">a selection is required.</kendo-formerror>
+                <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['paymentRunDateMonthly'].valid">A selection is required.</kendo-formerror>
             </div>
             <div *ngIf="tabCode === financialVendorProviderTabCode.InsuranceVendors" class="flex-col flex-col-6 mt-4">
                 <kendo-label> Of each Month</kendo-label>
@@ -141,8 +141,8 @@
                     </div>
                 </fieldset>
                 <kendo-formerror
-                    *ngIf="formIsSubmitted && !paymentAddressForm.controls['acceptsCombinedPaymentsFlag'].valid">a
-                    selection is required.</kendo-formerror>
+                    *ngIf="formIsSubmitted && !paymentAddressForm.controls['acceptsCombinedPaymentsFlag'].valid">
+                    A selection is required.</kendo-formerror>
             </div>
 
             <div class="flex-col mt-1" *ngIf="tabCode === financialVendorProviderTabCode.InsuranceVendors">
@@ -166,8 +166,8 @@
 
                     </div>
                 </fieldset>
-                <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['acceptsReportsFlag'].valid">a
-                    selection is required.</kendo-formerror>
+                <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['acceptsReportsFlag'].valid">
+                    A selection is required.</kendo-formerror>
             </div>
             <div class="flex-col flex-col-12">
                 <kendo-floatinglabel text="Special Handling (optional)">
@@ -196,6 +196,7 @@
 
           <div>
             <button
+              [disabled] ="billingAddress?.activeFlag === statusFlag.No"
               *ngIf="isEdit"
               kendoButton
               [primary]="true"
@@ -209,7 +210,7 @@
             <div class="justify-content-end">
                 <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail" (click)="closeModal(true)"> Cancel
                 </button>
-                <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="submit()"> {{isEdit ? 'Update' : 'Save' }}
+                <button kendoButton [primary]="true" aria-label="Update or add phone detail" (click)="submit()"> {{isEdit ? 'Update' : 'Add' }}
                 </button>
             </div>
         </div>

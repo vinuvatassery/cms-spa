@@ -53,15 +53,21 @@
                                  formControlName="openDate" >
                         </kendo-datepicker>
                   </kendo-floatinglabel>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked &&!pcaReassignmentForm.controls['openDate'].valid">Open Date is required.</kendo-formerror>
 
             </div>
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Close Date">
                         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                               formatPlaceholder="formatPattern" placeholder="" 
-                               formControlName="closeDate" >
+                               formControlName="closeDate"
+                               (keyup)="dateValidate()"
+                               (valueChange)="dateValidate()" >
                         </kendo-datepicker>
                   </kendo-floatinglabel>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked &&!pcaReassignmentForm.controls['closeDate'].valid && !pcaReassignmentForm.controls['closeDate'].hasError('incorrect')"> Close Date is required.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && pcaReassignmentForm.controls['closeDate'].hasError('incorrect')"> Close Date is before the Open Date
+                  </kendo-formerror>
 
             </div>
       </div>
@@ -74,11 +80,14 @@
                                [fillMode]="formUiStyle.inputFillMode" formControlName="assignmentAmount">
                         </kendo-numerictextbox>
                   </kendo-floatinglabel>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked &&!pcaReassignmentForm.controls['assignmentAmount'].valid">Assignment Amount is required.</kendo-formerror>
+                  
+
 
             </div>
             <div class="flex-col mt-2">
                   <span class="app-checkboxwidtext-wrapper">
-                        <input type="checkbox" kendoCheckBox aria-labelledby="Unlimited" id="Unlimited"  formControlName="unlimited" />
+                        <input type="checkbox" kendoCheckBox aria-labelledby="Unlimited" id="Unlimited"  formControlName="unlimited"  />
                         <label class="k-checkbox-label" for="Unlimited" >Unlimited</label>
                   </span>
             </div>
@@ -94,7 +103,7 @@
                         (click)="closeEditPcaReassignmentClicked()">
                         Cancel
                   </button>
-                  <button kendoButton [primary]="true" aria-label="Save" *ngIf="!isViewGridOptionClicked">
+                  <button kendoButton [primary]="true" aria-label="Save" *ngIf="!isViewGridOptionClicked " (click)="saveEditPcaReassignmentClicked()">
                         Save
                   </button>
             </div>

@@ -24,6 +24,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
   @Input() batchId: any;
   @Input() printOption: boolean = false;
   @Input() isSaveClicked!: boolean;
+  @Input() claimsType:any;
 
   /** Output properties  **/
   @Output() onClosePrintAdviceLetterEvent = new EventEmitter<any>();
@@ -65,7 +66,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
 
   loadPrintLetterContent(request:any) {
     this.loaderService.show();
-    this.financialClaimsFacade.loadPrintAdviceLetterData(this.batchId,request)
+    this.financialClaimsFacade.loadPrintAdviceLetterData(this.batchId,request,this.claimsType)
       .subscribe({
         next: (data: any[]) => {
           if (data.length > 0) {
@@ -154,7 +155,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
 
   generateAndPrintAdviceLetter(request:any) {
     this.loaderService.show();
-    this.financialClaimsFacade.viewAdviceLetterData(this.batchId,request)
+    this.financialClaimsFacade.viewAdviceLetterData(this.batchId,request,this.claimsType)
       .subscribe({
         next: (data: any) => {
           if (data) {
@@ -175,7 +176,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
   reconcilePaymentsAndPrintAdviceLetter() {
     this.loaderService.show();
     let reconcileData = this.reconcilePaymentsData(this.finalPrintList);
-    this.financialClaimsFacade.reconcilePaymentsAndLoadPrintLetterContent(this.batchId, reconcileData)
+    this.financialClaimsFacade.reconcilePaymentsAndLoadPrintLetterContent(this.batchId, reconcileData,this.claimsType)
       .subscribe({
         next: (data: any) => {
           if (data) {

@@ -52,16 +52,16 @@
             {{dataItem.address1}} {{dataItem.address2}} {{dataItem.city+' '+dataItem.stateCode+' '+dataItem.zip}}
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="fax" title="Fax" [width]="70" [sortable]="false" [columnMenu]="false"
+        <kendo-grid-column field="fax" title="Fax" [width]="120" [sortable]="false" [columnMenu]="false"
           *ngIf="managementTab">
         </kendo-grid-column>
-        <kendo-grid-column *ngIf="managementTab" field="startDate" title="Effective Date" [width]="100"
+        <kendo-grid-column *ngIf="managementTab" field="startDate" title="Effective Date" [width]="120"
           >
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.startDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="creatorId" title="By" [width]="80" [sortable]="false" *ngIf="managementTab">
+        <kendo-grid-column field="creatorId" title="By" [width]="80" class="text-center" [sortable]="false" *ngIf="managementTab">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button *ngIf="dataItem?.creatorId" kendoButton [primary]="true" class="avatar-sm-btn c-default"
               kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">

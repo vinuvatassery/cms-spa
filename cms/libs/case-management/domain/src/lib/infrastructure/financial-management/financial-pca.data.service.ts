@@ -2,7 +2,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** External libraries **/
-import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { GridFilterParam } from '../../entities/grid-filter-param';
 import { PcaDetails } from '../../entities/financial-management/pca-details';
@@ -36,7 +35,7 @@ export class FinancialPcaDataService {
     };
 
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/report`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/reports`,
       PcaAssignmentsPageAndSortedRequestDto
     );
   }
@@ -70,8 +69,29 @@ export class FinancialPcaDataService {
     )
   }
 
+  loadFinancialPcaSubReportListService(
+    objecCodeGroupCodeId:string,
+    skipCount: number,
+    maxResultCount: number
+  ) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/${objecCodeGroupCodeId}/reports?SortType=asc&Sorting=priority&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`
+    );
+  }
+
   getPcaAssignmentById(pcaAssignmentId:any){
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/${pcaAssignmentId}`);
    }
+   getPcaReassignmentByFundSourceId(fundingSourceId:any){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/${fundingSourceId}`);
+   }
+   updateReassignmentPca(pcaModel: PcaDetails) {
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments`,
+      pcaModel
+    );
+  }
+
 }

@@ -1,15 +1,18 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
-  SimpleChanges, OnChanges,  ViewEncapsulation,
-  ChangeDetectorRef
+  OnChanges,
+  SimpleChanges,
+  ViewEncapsulation
 } from '@angular/core';
-import { VendorContactsFacade, ContactResponse } from '@cms/case-management/domain';
-import { ConfigurationProvider, LoaderService} from '@cms/shared/util-core';
+import { ContactResponse, VendorContactsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'cms-contact-address-list',
   templateUrl: './contact-address-list.component.html',
@@ -23,17 +26,17 @@ export class ContactAddressListComponent implements OnChanges {
   isContactAddressDeleteShow = false;
   isContactAddressDetailShow = false;
   isContactsDetailShow = false;
-  public formUiStyle : UIFormStyle = new UIFormStyle(); 
-  VendorContactId:any;
-  VendorContactAddressId: string="";
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  VendorContactId: any;
+  VendorContactAddressId = '';
   @Input() VendorAddressId: any;
   public state!: any;
-  filters = "";
+  filters :any= "";
   sortColumn = "";
   sortDir = "";
   columnsReordered = false;
-  filteredBy = "";
-  searchValue = "";
+  filteredBy = '';
+  searchValue = '';
   isFiltered = false;
   public sortValue = this.vendocontactsFacade.sortValue;
   public sortType = this.vendocontactsFacade.sortType;
@@ -41,39 +44,22 @@ export class ContactAddressListComponent implements OnChanges {
   public gridSkipCount = this.vendocontactsFacade.skipCount;
   public sort = this.vendocontactsFacade.sort;
   selectedColumn!: any;
+  columnChangeDesc = 'Default Columns';
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   gridColumns : any ={
-    prescriptionFillDate : "Fill Date",
-    pharmacyName : "Pharmacy",
-    drugName: "Drug",
-    brandName: "Brand Name",
-    ndc: "NDC",
-    qty: "Qty",
-    reversalDate: "Reversal Date",
-    clientGroup: "Client Group",
-    payType: "Pay Type",
-    transType: "Trans Type",
-    payAmount: "Pay Amount",
-    ingrdCost: "Ingrd Cost",
-    phmFee: "Pfm Fee",
-    totalDrug: "Total Drug",
-    pbmFee: "PBM Fee",
-    revenue: "Revenue",
-    uc: "U & c",
-    entryDate: "Entry Date",
-    createdId: "By"
-  }
-  showLoader() {
-    this.loaderService.show();
-  }
-  hideLoader() {
-    this.loaderService.hide();
+    contactName : "Name",
+    contactDesc : "Description",
+    phoneNbr: "Phone Number",
+    faxNbr: "Fax Number",
+    emailAddress: "Email Address",
+    effectiveDate: "Effective Date",
+    creatorId: "By"
   }
 
   public contactAddressActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Contact',
+      text: 'Edit',
       icon: 'edit',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -84,19 +70,18 @@ export class ContactAddressListComponent implements OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Deactivate Contact',
+      text: 'Deactivate',
       icon: 'block',
       click: (data: any): void => {
         if (data?.vendorContactId) {
           this.VendorContactId = data?.vendorContactId;
           this.clickOpenDeactivateContactAddressDetails();
         }
-
       },
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Contact',
+      text: 'Delete',
       icon: 'delete',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -106,20 +91,44 @@ export class ContactAddressListComponent implements OnChanges {
       },
     },
   ];
-  contacts$ =this.vendocontactsFacade.contacts$;
-  constructor(private readonly vendocontactsFacade: VendorContactsFacade, private cd: ChangeDetectorRef, private readonly loaderService: LoaderService,    public readonly  intl: IntlService,
-    private readonly configurationProvider: ConfigurationProvider) { }
+  contacts$ = this.vendocontactsFacade.contacts$;
 
-  ngOnChanges(changes: SimpleChanges) { 
+  constructor(
+    private readonly vendocontactsFacade: VendorContactsFacade,
+    private cd: ChangeDetectorRef,
+    private readonly loaderService: LoaderService,
+    public readonly intl: IntlService,
+    private readonly configurationProvider: ConfigurationProvider
+  ) {}
+
+  showLoader() {
+    this.loaderService.show();
+  }
+  hideLoader() {
+    this.loaderService.hide();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
     this.defaultGridState();
-    this.vendocontactsFacade.loadcontacts(this.VendorAddressId,
+    this.vendocontactsFacade.loadcontacts(
+      this.VendorAddressId,
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType,
       this.filters
-      );    
-  
+      );
+
+  }
+  rowClass = (args: any) => ({
+    "table-row-disabled": (!args.dataItem.assigned),
+  });
+  onColumnReorder($event: any) {
+    this.columnsReordered = true;
+  }
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
   clickOpenAddEditContactAddressDetails() {
     this.isContactsDetailShow = true;
@@ -143,28 +152,29 @@ export class ContactAddressListComponent implements OnChanges {
 
   onCancelPopup(isCancel: any) {
     if (isCancel) {
-      this.vendocontactsFacade.loadcontacts(this.VendorAddressId,
+      this.vendocontactsFacade.loadcontacts(
+        this.VendorAddressId,
         this.state?.skip ?? 0,
         this.state?.take ?? 0,
         this.sortValue,
         this.sortType,
         this.filters
-        ); 
+      );
       this.clickCloseDeleteContactAddress();
     }
   }
 
   onDeactiveCancel(isCancel: any) {
     if (isCancel) {
-      this.vendocontactsFacade.loadcontacts(this.VendorAddressId,
+      this.vendocontactsFacade.loadcontacts(
+        this.VendorAddressId,
         this.state?.skip ?? 0,
         this.state?.take ?? 0,
         this.sortValue,
         this.sortType,
         this.filters
-        ); 
+      );
       this.clickCloseDeactivateContactAddress();
-
     }
   }
 
@@ -174,65 +184,65 @@ export class ContactAddressListComponent implements OnChanges {
   pageselectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
-    this.vendocontactsFacade.loadcontacts(this.VendorAddressId,
+    this.vendocontactsFacade.loadcontacts(
+      this.VendorAddressId,
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType,
       this.filters
-      ); 
+    );
   }
 
   public dataStateChange(stateData: any): void {
-    this.filters = JSON.stringify(stateData.filter?.filters)
+    this.filters = JSON.stringify(stateData.filter?.filters);
     this.state = stateData;
     this.setGridState(stateData);
-    this.vendocontactsFacade.loadcontacts(this.VendorAddressId,
+    this.vendocontactsFacade.loadcontacts(
+      this.VendorAddressId,
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType,
       this.filters
-      ); 
+    );
   }
-   filterChange(filter: CompositeFilterDescriptor): void {
+  filterChange(filter: CompositeFilterDescriptor): void {
     this.filters = JSON.stringify(filter);
   }
-  setToDefault()
-  {
+  setToDefault() {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
-      sortType:this.sortType,
+      sortType: this.sortType,
       selectedColumn: 'ALL',
       columnName: '',
-      searchValue: ''
-      };
-    this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
-    this.sortDir = this.sort[0]?.dir === 'desc'? 'Descending': "";
-    this.filters = "";
-    this.selectedColumn = "ALL";
-    this.searchValue = "";
+      searchValue: '',
+    };
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
+    this.filters = '';
+    this.selectedColumn = 'ALL';
+    this.searchValue = '';
     this.isFiltered = false;
     this.columnsReordered = false;
   }
 
-  defaultGridState(){
+  defaultGridState() {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
-      sortType:this.sortType,
-      filters:{logic:'and',filters:[]},
+      sortType: this.sortType,
+      filters: { logic: 'and', filters: [] },
       selectedColumn: 'ALL',
       columnName: '',
-      searchValue: ''
-      };
+      searchValue: '',
+    };
   }
 contactUpdated(res:boolean)
 {
-  debugger
 if(res)
 {
   this.vendocontactsFacade.loadcontacts(this.VendorAddressId,
@@ -249,8 +259,8 @@ if(res)
 
     const filters = stateData.filter?.filters ?? [];
 
-    for (let val of filters) {
-      if (val.field === 'prescriptionFillDate' || val.field === 'entryDate') {
+    for (const val of filters) {
+      if (val.field === 'startDate') {
         this.intl.formatDate(val.value, this.dateFormat);
       }
     }
@@ -259,27 +269,35 @@ if(res)
     this.filteredBy = filterList.toString();
 
     if (filters.length > 0) {
-      const filterListData = filters.map((filter:any) => this.gridColumns[filter?.filters[0]?.field]);
+      const filterListData = filters.map(
+        (filter: any) => this.gridColumns[filter?.filters[0]?.field]
+      );
       this.isFiltered = true;
       this.filteredBy = filterListData.toString();
       this.cd.detectChanges();
-    }
-    else {
+    } else {
       this.isFiltered = false;
     }
 
     this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? "";
-    this.sortType = stateData.sort[0]?.dir ?? "";
+    this.sortValue = stateData.sort[0]?.field ?? '';
+    this.sortType = stateData.sort[0]?.dir ?? '';
     this.state = stateData;
     this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
-    this.sortDir = "";
-    if(this.sort[0]?.dir === 'asc'){
+    this.sortDir = '';
+    if (this.sort[0]?.dir === 'asc') {
       this.sortDir = 'Ascending';
     }
-    if(this.sort[0]?.dir === 'desc'){
+    if (this.sort[0]?.dir === 'desc') {
       this.sortDir = 'Descending';
     }
   }
 
+  onEditDeactivateContactClicked(event:any)
+  {
+    if (event?.vendorContactId) {
+      this.VendorContactId = event?.vendorContactId;
+      this.clickOpenDeactivateContactAddressDetails();
+    }
+  }
 }
