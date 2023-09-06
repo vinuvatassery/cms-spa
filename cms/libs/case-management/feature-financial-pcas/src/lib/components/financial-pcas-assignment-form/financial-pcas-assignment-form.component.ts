@@ -1,57 +1,241 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-pcas-assignment-form',
   templateUrl: './financial-pcas-assignment-form.component.html',
   styleUrls: ['./financial-pcas-assignment-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPcasAssignmentFormComponent {
+export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, AfterViewChecked{
+
+  @Input() groupCodesData$ : any
+  @Input() objectCodesData$ : any
+  @Input() pcaCodesData$ : any
+  @Input() pcaAssignOpenDatesList$ : any
+  @Input() pcaAssignCloseDatesList$ : any
+  @Input() objectCodeIdValue : any
+  @Input() groupCodeIdsdValue : any=[];
+  @Input() pcaCodesInfoData$ : any
+  @Input() pcaAssignmentData$ : any
+  @Input() pcaAssignmentFormDataModel$ : any
+  @Input() newForm : any
+  @Input() groupCodesDataFilter : any
+
+  groupCodeIdsdValueData : any=[];
+
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Output() closeAddEditPcaAssignmentClickedEvent = new EventEmitter();
-  objectList = [
+  @Output() pcaChangeEvent = new EventEmitter<any>();
+  @Output() loadPcaEvent = new EventEmitter<any>();
+  @Output() addPcaDataEvent = new EventEmitter<any>();
+
+  pcaAssignmentForm!: FormGroup;
+  pcaCodesInfo : any
+  pcaCodeInfo : any
+  objectCodeControl! : FormControl
+  editPca = false
+  constructor(  
+    private readonly ref: ChangeDetectorRef,
+    private formBuilder: FormBuilder,
+    public intl: IntlService
+  ) {}  
+  ngOnInit(): void {   
+    this.loadPcaEvent.emit()
+    this.getPcaInfoData()
+
+    if(this.newForm === true)
     {
-      lovDesc:'Pharmacy - 4955',
-      lovCode: 4955
-    },
-    {
-      lovDesc:'Third Party (TPA) - 4956',
-      lovCode: 4956
-    },
-    {
-      lovDesc:'Insurance Premiums - 4957',
-      lovCode: 4957
-    },
-  ]
-  groupList = [
-    {
-      lovDesc:'Group I',
-      lovCode: 1
-    },
-    {
-      lovDesc:'Group II',
-      lovCode: 2
-    },
-    {
-      lovDesc:'UPP',
-      lovCode: 3
-    },
-    {
-      lovDesc:'Bridge',
-      lovCode: 4
-    },
-    {
-      lovDesc:'Group 1 INS Gap',
-      lovCode: 5
-    },
-    {
-      lovDesc:'Group 2 INS Gap',
-      lovCode: 6
-    },
+      
+    this.composePcaAssignmentForm()
+    }
+  }
+
+
+  ngOnChanges(changes: SimpleChanges): void {
     
-  ]
+     
+     if(this.pcaAssignmentFormDataModel$?.pcaAssignmentId)
+     { 
+      this.composePcaAssignmentEditForm()
+     }
+  }
   
+  getPcaInfoData()
+  {       
+    
+    this.pcaCodesInfoData$?.pipe()
+    .subscribe((data : any) =>
+    {
+      this.pcaCodesInfo = data
+      
+    
+     }  )   
+  }
   closeAddEditPcaAssignmentClicked() {
     this.closeAddEditPcaAssignmentClickedEvent.emit(true);
+  }
+
+  private composePcaAssignmentForm()
+  {
+    this.editPca =false
+        if(!this.pcaAssignmentFormDataModel$?.pcaAssignmentId)
+        {  
+          this.pcaAssignmentForm = this.formBuilder.group({     
+            pcaAssignmentId : [''],
+            objectCode: ['', Validators.required],
+            groupCodes: [[], Validators.required],
+            pcaId: ['', Validators.required],
+            openDate: ['', Validators.required],
+            closeDate: ['', Validators.required],
+            amount: [0, Validators.required],
+            unlimited: [false],
+            ay : ['']
+          });  
+          debugger
+          this.pcaAssignmentForm.patchValue(
+            {     
+              objectCode:  this.objectCodeIdValue ,     
+              groupCodes :  this.groupCodeIdsdValue
+            }
+          )    
+      this.pcaAssignmentForm.controls['objectCode'].disable();
+
+      this.pcaAssignmentForm.controls['groupCodes'].disable();
+
+      this.pcaAssignmentForm.controls['ay'].disable();     
+    }
+     
+  }
+
+  private composePcaAssignmentEditForm()
+  {    
+      if(!this.pcaAssignmentForm)
+      {
+        this.pcaAssignmentForm = this.formBuilder.group({     
+          pcaAssignmentId : [''],
+          objectCode: ['', Validators.required],
+          groupCodes: [[], Validators.required],
+          pcaId: ['', Validators.required],
+          openDate: ['', Validators.required],
+          closeDate: ['', Validators.required],
+          amount: [0, Validators.required],
+          unlimited: [false],
+          ay : ['']
+        });  
+      }
+        if(this.pcaAssignmentFormDataModel$?.pcaAssignmentId)
+        {       
+          
+          this.pcaAssignmentForm.reset()
+          let groupCodeIdsAssignedValue : any=[];   
+          this.editPca = true      
+          this.onPcaChange(this.pcaAssignmentFormDataModel$?.pcaId)    
+          this.pcaAssignmentForm.controls['pcaId'].disable();
+          
+          Object.values(this.groupCodesDataFilter).forEach((key : any) => {  
+                     
+              if(this.pcaAssignmentFormDataModel$.groupCodeIds.split(',').filter((x:any)=>x=== key.groupCodeId).length > 0)
+              {
+                groupCodeIdsAssignedValue.push(key)
+              }            
+            })
+            
+
+            this.pcaAssignmentForm.controls['objectCode'].disable();
+
+            this.pcaAssignmentForm.controls['groupCodes'].disable();
+ 
+            this.pcaAssignmentForm.controls['ay'].disable();     
+           
+            if(this.pcaAssignmentFormDataModel$?.unlimited === true)
+            {
+              this.pcaAssignmentForm.controls['amount'].disable();  
+            }
+            
+            this.pcaAssignmentForm.patchValue(
+              {     
+                pcaAssignmentId:  this.pcaAssignmentFormDataModel$?.pcaAssignmentId ,  
+                objectCode:  this.pcaAssignmentFormDataModel$?.objectCodeId,     
+                pcaId: this.pcaAssignmentFormDataModel$?.pcaId, 
+                openDate: this.pcaAssignmentFormDataModel$?.openDate,
+                closeDate: this.pcaAssignmentFormDataModel$?.closeDate,
+                amount: this.pcaAssignmentFormDataModel$?.amount,
+                unlimited: this.pcaAssignmentFormDataModel$?.unlimited,
+                groupCodes : groupCodeIdsAssignedValue               
+              }
+            )
+           
+           
+        }
+   
+  }
+  ngAfterViewChecked(){
+    //your code to update the model
+    this.ref.detectChanges();
+ }
+  onPcaAssignmentFormSubmit()
+  {    
+    this.pcaAssignmentForm.markAllAsTouched();
+    if(this.pcaAssignmentForm.valid)
+    {
+
+      const groupCodes= this.pcaAssignmentForm?.controls["groupCodes"].value
+      this.groupCodeIdsdValueData= []
+      for (const key in groupCodes) 
+      {           
+        this.groupCodeIdsdValueData.push(groupCodes[key]?.groupCodeId)     
+      }
+      const pcaAssignmentData =
+      {
+        pcaAssignmentId: this.pcaAssignmentForm?.controls["pcaAssignmentId"].value
+                         =='' ? "00000000-0000-0000-0000-000000000000" :  
+                         this.pcaAssignmentForm?.controls["pcaAssignmentId"].value,          
+        objectCodeId: this.pcaAssignmentForm?.controls["objectCode"].value,  
+        pcaId: this.pcaAssignmentForm?.controls["pcaId"].value,  
+        openDate: this.pcaAssignmentForm?.controls["openDate"].value,  
+        closeDate: this.pcaAssignmentForm?.controls["closeDate"].value,  
+        amount: this.pcaAssignmentForm?.controls["amount"].value,  
+        unlimitedFlag: this.pcaAssignmentForm?.controls["unlimited"].value === true ? 'Y' : 'N',  
+        groupCodeIds : this.groupCodeIdsdValueData,  
+      }
+      this.addPcaDataEvent.emit(pcaAssignmentData)
+    }
+  }
+
+
+  unlimitedCheckChange($event : any)
+  {   
+   const unlimited = this.pcaAssignmentForm.controls['unlimited'].value
+
+   if(unlimited === true)
+   {
+    this.pcaAssignmentForm.patchValue(
+      {    
+        amount :  0
+      }
+    )
+    this.pcaAssignmentForm.controls['amount'].disable();
+   }
+   else
+   {
+    this.pcaAssignmentForm.controls['amount'].enable();
+   }
+  }
+
+
+
+  onPcaChange(data : any)
+  {    
+    this.pcaCodeInfo = this.pcaCodesInfo?.find((x : any)=>x.pcaId==data)
+
+    this.pcaAssignmentForm.patchValue(
+      {     
+        ay:  this.pcaCodeInfo?.ay ?? ''}    
+    )
+   
   }
 }

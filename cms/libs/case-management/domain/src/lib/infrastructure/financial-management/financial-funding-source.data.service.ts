@@ -33,11 +33,19 @@ export class FinancialFundingSourceDataService {
     skipcount: number,
     maxResultCount: number,
     sort: string,
-    sortType: string
+    sortType: string,
+    filter:any
   ){
-    return this.http.get<any>(
+    const filterRequestBody = {
+      skipcount:skipcount,
+      maxResultCount:maxResultCount,
+      sort:sort,
+      sortType:sortType,
+      filter:filter
+    }
+    return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/funding-sources?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+        `/financial-management/funding-sources/list`,filterRequestBody
     );
   }
   addFundingSource(fundingSource: any) {
@@ -58,5 +66,8 @@ export class FinancialFundingSourceDataService {
   loadFundingSourceLookup( ) {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/funding-sources/lookup`);
+  }
+  removeFundingSource(fundingSourceId: string) {
+    return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/funding-sources/${fundingSourceId}`);
   }
 }

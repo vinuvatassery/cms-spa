@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { EntityTypeCode, FinancialClaimsFacade, FinancialProvider, PaymentMethodCode, FinancialClaims } from '@cms/case-management/domain';
+import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -42,7 +42,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   clientId:any;
   vendorName:any;
   clientName:any;
+  isPrintDenailLetterClicked = false;
   @Input() claimsType: any;
+  @Input() printDenialLetterData: any;
+  private printLetterDialog: any;
   isRecentClaimShow = false;
   clientSearchResult = [
     {
@@ -156,7 +159,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.showExceedMaxBenefitException$.subscribe(data => {
       if(data)
       {
-        debugger;
         this.AddExceptionForm.at(data?.indexNumber).get('exceedMaxBenefitExceptionFlag')?.setValue(data?.flag);
         this.AddClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? "EMB" : '')
         this.AddClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
@@ -210,7 +212,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   searchMedicalProvider(searchText: any) {
-    this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider);
+    if(!searchText || searchText.length == 0){
+      return;
+    }
+    this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
   }
   onCPTCodeValueChange(event: any, index: number) {
     let service = event;
@@ -360,13 +365,15 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     let bodyData = {
       clientId: formValues.client.clientId,
       vendorId: formValues.medicalProvider.vendorId,
+      vendorAddressId: formValues.medicalProvider.vendorAddressId,
       claimNbr: formValues.invoiceId,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       paymentRequestId: this.isEdit ? this.paymentRequestId : null,
       paymentMethodCode: this.isSpotsPayment ? PaymentMethodCode.SPOTS : PaymentMethodCode.ACH,
-      serviceSubTypeCode: this.claimsType == this.financialProvider ? "MEDICAL" : "DENTAL",
-      tpainvoice: [{}],
+      serviceSubTypeCode: this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
+      tpaInvoice: [{}],
     };
+    let checkDeniedClaim = false;
     for (let element of formValues.claimService) {
       let service = {
         vendorId: bodyData.vendorId,
@@ -398,9 +405,19 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         );
         return;
       }
-      bodyData.tpainvoice.push(service);
+      if(service.exceptionFlag === StatusFlag.Yes && !service.exceptionReasonCode)
+      {
+        checkDeniedClaim = true;
+      }
+      bodyData.tpaInvoice.push(service);
     }
-    bodyData.tpainvoice.splice(0, 1);
+    bodyData.tpaInvoice.splice(0, 1);
+    if(checkDeniedClaim)
+    {
+      this.printDenialLetterData = bodyData;
+      this.onPrintDenialLetterOpen();
+      return;
+    }
     if (!this.isEdit) {
       this.saveData(bodyData);
     } else {
@@ -410,7 +427,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   public saveData(data: any) {
     this.loaderService.show();
-    this.financialClaimsFacade.saveMedicalClaim(data, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider).subscribe({
+    this.financialClaimsFacade.saveMedicalClaim(data, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim).subscribe({
       next: (response: any) => {
         this.loaderService.hide();
         if (!response) {
@@ -439,7 +456,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   public update(data: any) {
     this.isSubmitted = true;
     this.loaderService.show();
-    this.financialClaimsFacade.updateMedicalClaim(data, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider).subscribe({
+    this.financialClaimsFacade.updateMedicalClaim(data, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim).subscribe({
       next: (response: any) => {
         this.loaderService.hide();
         if (!response) {
@@ -468,7 +485,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   getMedicalClaimByPaymentRequestId() {
     this.loaderService.show();
     this.financialClaimsFacade
-      .getMedicalClaimByPaymentRequestId(this.paymentRequestId, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider)
+      .getMedicalClaimByPaymentRequestId(this.paymentRequestId, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim)
       .subscribe({
         next: (val) => {
           const clients = [
@@ -481,6 +498,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
             {
               vendorId: val.vendorId,
               providerFullName: val.vendorName,
+              vendorAddressId: val.vendorAddressId
             },
           ];
           this.financialClaimsFacade.clientSubject.next(clients);
@@ -498,7 +516,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
           this.paymentRequestId = val.paymentRequestId;
           this.cd.detectChanges();
           this.loaderService.hide();
-          this.setFormValues(val.tpainvoice);
+          this.setFormValues(val.tpaInvoice);
         },
         error: (err) => {
           this.loaderService.hide();
@@ -537,7 +555,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       {
         this.setExceptionFormValues(exceptionForm,serviceForm);
       }
-      
+
     }
     this.cd.detectChanges();
   }
@@ -604,9 +622,9 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     {
       let totalServiceCost = 0;
       this.AddClaimServicesForm.controls.forEach((element, index) => {
-          totalServiceCost += + element.get('serviceCost')?.value;
+          totalServiceCost += + element.get('amountDue')?.value;
       });
-      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider);
+      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
       this.exceedMaxBenefitFlag = this.financialClaimsFacade.serviceCostFlag;
     }
   }
@@ -621,6 +639,21 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   getExceptionFormValue(controlName: string, index: any)
   {
     return this.AddExceptionForm.at(index).get(controlName)?.value
+  }
+  public onPrintDenialLetterOpen(){
+   this.isPrintDenailLetterClicked = true;
+   this.cd.detectChanges();
+  }
+  onPrintDenialLetterClosed(status:any){
+    this.isPrintDenailLetterClicked = false;
+    if(status)
+    {
+      if (!this.isEdit) {
+        this.saveData(this.printDenialLetterData);
+      } else {
+        this.update(this.printDenialLetterData);
+      }
+    }
   }
 }
 

@@ -54,7 +54,7 @@
           </ng-template>
         </kendo-grid-column>
 
-        <kendo-grid-column field="brandName" title="Brand Name" [width]="100">
+        <kendo-grid-column field="brandName" title="Brand Name" [width]="140">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
               [extra]="false" operator="eq">
@@ -90,7 +90,7 @@
           </ng-template>
         </kendo-grid-column>
 
-        <kendo-grid-column field="reversalDate" title="Reversal Date" [width]="100" [format]="{ date: 'MM-dd-yyyy' }"
+        <kendo-grid-column field="reversalDate" title="Reversal Date" [width]="120" [format]="{ date: 'MM-dd-yyyy' }"
           filter="date">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.entryDate | date:'MM/dd/yyyy'}}

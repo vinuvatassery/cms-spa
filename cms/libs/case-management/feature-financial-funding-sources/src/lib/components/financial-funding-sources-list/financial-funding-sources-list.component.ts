@@ -12,11 +12,12 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
-  CompositeFilterDescriptor,
-  State,
-} from '@progress/kendo-data-query';
+  GridDataResult,
+  FilterService
+} from '@progress/kendo-angular-grid';
+
+import { CompositeFilterDescriptor} from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
 @Component({
   selector: 'cms-financial-funding-sources-list',
@@ -24,7 +25,6 @@ import { Observable, Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialFundingSourcesListComponent implements OnChanges {
-
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addEditFundingSourceDialogTemplate', { read: TemplateRef })
   addEditFundingSourceDialogTemplate!: TemplateRef<any>;
@@ -44,8 +44,10 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
   @Input() fundingSourceList$!: Observable<any>;
   @Output() loadFinancialFundingSourcesListEvent = new EventEmitter<any>();
   @Output() removeFundingSourceClick = new EventEmitter<string>();
+  @Input() removeFundingSource$ :any
   isRemoveFundingSourceClicked$ = new Subject();
-  public state!: State;
+  public gridFilter: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  public state!: any;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
   columnsReordered = false;
@@ -55,7 +57,16 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  columnName: string = '';
+  columns: any = {
+    fundingSourceCode:"Funding Source",
+    fundingDesc:"Funding Name",
+  };
+  columnDroplist : any = {
+    ALL: "ALL",
+    FundingSourceCode:"fundingSourceCode",
+    FundingDesc:"fundingDesc"
+  }
   gridFinancialFundingSourcesDataSubject = new Subject<any>();
 
   columnDropListSubject = new Subject<any[]>();
@@ -65,8 +76,8 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
   removeFundingOpened = false;
   isEditFundingSource = false;
   addEditFundingDialog: any;
-  removeFundingDialog: any;;
-  selectFundingSourceId!: string;;
+  removeFundingDialog: any;
+  selectFundingSourceId!: string;
   public processGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -75,7 +86,10 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
       click: (data: any): void => {
         if (!this.editFundingOpened) {
           this.editFundingOpened = true;
-          this.onAddEditFundingSourceOpenClicked(this.addEditFundingSourceDialogTemplate, data);
+          this.onAddEditFundingSourceOpenClicked(
+            this.addEditFundingSourceDialogTemplate,
+            data
+          );
         }
       },
     },
@@ -86,18 +100,19 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
       click: (data: any): void => {
         if (!this.removeFundingOpened) {
           this.removeFundingOpened = true;
-          this.onRemoveFundingSourceOpenClicked(this.removeFundingSourceDialogTemplate)
+          this.onRemoveFundingSourceOpenClicked(
+            this.removeFundingSourceDialogTemplate
+          );
         }
       },
     },
   ];
 
-
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService
-  ) { }
+  ) {}
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -113,44 +128,43 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
-      this.sortType
+      this.sortType,
+      this.filter
     );
   }
   loadFundingSourceFacade(
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
-    sortTypeValue: string
+    sortTypeValue: string,
+    filter: any
   ) {
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter: this.filter ? this.filter : null,
     };
     this.loadFinancialFundingSourcesListEvent.emit(gridDataRefinerValue);
   }
 
-  onChange(data: any) {
+  onChange(event: any) {
     this.defaultGridState();
-
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
+    this.columnName = this.state.columnName = this.columnDroplist[this.selectedColumn];
+    this.sortColumn = this.columns[this.selectedColumn];
+    this.filter = {logic:'and',filters:[{
+      "filters": [
+          {
+              "field": this.columnDroplist[this.selectedColumn] ?? "clientFullName",
+              "operator": "startswith",
+              "value": event
+          }
       ],
-    };
-    const stateData = this.state;
-    stateData.filter = this.filterData;
+      "logic": "and"
+  }]}
+  let stateData = this.state
+  stateData.filter = this.filter
     this.dataStateChange(stateData);
   }
 
@@ -159,20 +173,103 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
-      filter: { logic: 'and', filters: [] },
+      filters: { logic: 'and', filters: [] },
+      selectedColumn: 'ALL',
+      columnName: '',
+      searchValue: '',
     };
+  }
+  public setGridState(stateData: any): void {
+    this.state = stateData;
+
+    const filters = stateData.filter?.filters ?? [];
+
+    const filterList = this.state?.filter?.filters ?? [];
+    this.filter = JSON.stringify(filterList);
+
+    if (filters.length > 0) {
+      const filterListData = filters.map((filter:any) => this.columns[filter?.filters[0]?.field]);
+      this.isFiltered = true;
+      this.filteredBy = filterListData.toString();
+      this.cdr.detectChanges();
+    }
+    else {
+      this.filter = "";
+      this.columnName = "";
+      this.isFiltered = false;
+    }
+
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? "";
+    this.sortType = stateData.sort[0]?.dir ?? "";
+    this.state = stateData;
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+    this.sortDir = "";
+    if(this.sort[0]?.dir === 'asc'){
+      this.sortDir = 'Ascending';
+    }
+    if(this.sort[0]?.dir === 'desc'){
+      this.sortDir = 'Descending';
+    }
+    this.loadFinancialFundingSourceFacadeListGrid();
+  }
+  filterChange(filter: CompositeFilterDescriptor): void {
+    this.gridFilter = filter;
+  }
+  groupFilterChange(value: any, filterService: FilterService): void {
+    filterService.filter({
+      filters: [
+        {
+          field: 'group',
+          operator: 'eq',
+          value: value.lovDesc,
+        },
+      ],
+      logic: 'or',
+    });
+  }
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value.lovDesc,
+        },
+      ],
+      logic: 'or',
+    });
   }
 
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
 
-  dataStateChange(stateData: any): void {
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+  public dataStateChange(stateData: any): void {
+    if (stateData.filter?.filters.length > 0) {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.columnName = stateFilter.field;
+
+      this.filter = stateFilter.value;
+
+      this.isFiltered = true;
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.isFiltered = true;
+      this.filteredBy = filterList.toString();
+    } else {
+      this.filter = '';
+      this.columnName = '';
+      this.isFiltered = false;
+    }
     this.state = stateData;
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.setGridState(stateData);
     this.loadFinancialFundingSourceFacadeListGrid();
   }
 
@@ -183,19 +280,14 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
     this.loadFinancialFundingSourceFacadeListGrid();
   }
 
-  public filterChange(filter: CompositeFilterDescriptor): void {
-    this.filterData = filter;
-  }
-
- 
-
   public rowClass = (args: any) => ({
-    "table-row-disabled": (args.dataItem.isActive),
+    'table-row-disabled': args.dataItem.isActive,
   });
 
-
-  public onAddEditFundingSourceOpenClicked(template: TemplateRef<unknown>, dataItem: any): void {
-
+  public onAddEditFundingSourceOpenClicked(
+    template: TemplateRef<unknown>,
+    dataItem: any
+  ): void {
     this.addEditFundingDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
@@ -206,18 +298,22 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
     if (result) {
       this.editFundingOpened = false;
       this.addEditFundingDialog.close();
+      this.loadFinancialFundingSourceFacadeListGrid();
     }
   }
 
   addFundingSource(event: any) {
     this.onAddFundingSourceEvent.emit(event)
+    this.loadFinancialFundingSourceFacadeListGrid();
   }
 
   updateFundingSource(event: any) {
-    this.onUpdateFundingSourceEvent.emit(event)
+    this.onUpdateFundingSourceEvent.emit(event);
   }
 
-  public onRemoveFundingSourceOpenClicked(template: TemplateRef<unknown>): void {
+  public onRemoveFundingSourceOpenClicked(
+    template: TemplateRef<unknown>
+  ): void {
     this.removeFundingDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
@@ -230,6 +326,26 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
       this.removeFundingDialog.close();
     }
   }
+removeFundingSourceEvent(fundingSoruceId: any) {
+  this.removeFundingSourceClick.emit(fundingSoruceId);
+  this.removeFundingOpened = false;
+
 }
-
-
+removeFundingSource(dataItem: any) {
+  if (dataItem?.isDelete === true) {
+    this.removeFundingSourceEvent(this.selectFundingSourceId);
+    this.removeFundingDialog.close();
+    this.removeFundingSource$.subscribe((_ :any)=>{
+      this.loadFinancialFundingSourceFacadeListGrid();
+    })
+  }
+  else{
+    this.removeFundingDialog.close();
+  }
+  this.loadFinancialFundingSourceFacadeListGrid();
+}
+removedClick(fundingId:any)
+{
+  this.selectFundingSourceId = fundingId
+}
+}

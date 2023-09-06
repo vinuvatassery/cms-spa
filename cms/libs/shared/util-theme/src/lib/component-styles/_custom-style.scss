@@ -1217,3 +1217,31 @@ color: $app-primary-font-color;
 .exp_button-text{
   font-style: normal;
 }
+
+.vendor_header_container, .popover-banner-container{
+  .info-banners{
+    .cvp_three_dot_drop_btn > .k-button{
+      padding: 0px;
+      width: 24px;
+      height: 24px;
+      margin-left: 8px;
+    }
+   }
+}
+
+.notice-view{
+.number-list, .ProseMirror{
+  padding: 0px;
+}
+.k-editor-content{
+  min-height: 60vh;
+  font-family: inherit;
+}
+iframe{
+ 
+  min-height: 60vh;
+  body{
+    font-family: $font-family;
+  }
+}
+}

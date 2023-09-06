@@ -7,9 +7,9 @@ import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Pharmacy } from '../../entities/client-pharmacy';
 import { ClientCase } from '../../entities/client-case';
-import { FinancialProvider } from '../../enums/financial-provider.enum';
 import { BatchClaim } from '../../entities/financial-management/batch-claim';
 import { GridFilterParam } from '../../entities/grid-filter-param';
+import { ServiceSubTypeCode } from '../../enums/service-sub-type-code';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsDataService {
@@ -359,32 +359,32 @@ export class FinancialClaimsDataService {
     ]);
   }
 
-  loadReconcilePaymentBreakoutSummaryService(data:any): Observable<any> {  
+  loadReconcilePaymentBreakoutSummaryService(data:any): Observable<any> {
     const ReconcilePaymentResponseDto =
     {
       BatchId : data.batchId,
-      EntityId : data.entityId,    
+      EntityId : data.entityId,
       AmountTotal : data.amountTotal,
       WarrantTotal : data.warrantTotal,
       WarrantNbr : data.warrantNbr,
       PaymentToReconcileCount : data.paymentToReconcileCount
-    }  
+    }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/payment-reconcile-summary`,ReconcilePaymentResponseDto
     );
   }
 
-  loadReconcilePaymentBreakoutListService(data:any): Observable<any> { 
+  loadReconcilePaymentBreakoutListService(data:any): Observable<any> {
     const BreakoutPanelPageAndSortedRequestDto =
     {
       BatchId : data.batchId,
-      EntityId : data.entityId,    
+      EntityId : data.entityId,
       SortType : data.sortType,
       Sorting : data.sort,
       SkipCount : data.skipCount,
       MaxResultCount : data.pageSize,
       Filter : data.filter
-    }  
+    }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/payment-reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto
     );
@@ -392,7 +392,7 @@ export class FinancialClaimsDataService {
 
   getMedicalClaimByPaymentRequestId(paymentRequestId: any, typeCode: string) {
     let path;
-    if (typeCode == FinancialProvider.MedicalProvider) {
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
       path = 'financial-management/claims/medical';
     } else {
       path = 'financial-management/claims/dental';
@@ -409,7 +409,7 @@ export class FinancialClaimsDataService {
   }
 
   searchPharmacies(searchText: string, typeCode: string) {
-    if (typeCode == FinancialProvider.MedicalProvider) {
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
       return this.http.get<Pharmacy[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/SearchText=${searchText}`
       );
@@ -429,7 +429,7 @@ export class FinancialClaimsDataService {
 
   saveMedicalClaim(claim: any, typeCode: string) {
     let path;
-    if (typeCode == FinancialProvider.MedicalProvider) {
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
       path = 'financial-management/claims/medical/save';
     } else {
       path = 'financial-management/claims/dental/save';
@@ -442,7 +442,7 @@ export class FinancialClaimsDataService {
 
   updateMedicalClaim(claim: any, typeCode: string) {
     let path;
-    if (typeCode == FinancialProvider.MedicalProvider) {
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
       path = 'financial-management/claims/medical';
     } else {
       path = 'financial-management/claims/dental';
@@ -488,23 +488,23 @@ export class FinancialClaimsDataService {
     );
   }
 
-  getPrintAdviceLetterData(batchId:any,selectedProviders: any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/batches/${batchId}/print-advice-letter`,selectedProviders);
+  getPrintAdviceLetterData(batchId:any,selectedProviders: any, claimsType:any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/print-advice-letter`,selectedProviders);
   }
 
-  reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/batches/${batchId}/reconcile-payments`,reconcileData);
+  reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any, claimsType:any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/reconcile-payments`,reconcileData);
   }
 
-  viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any) {
+  viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, claimsType:any) {
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/batches/${batchId}/print-advice-letter/download`, printAdviceLetterData,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/download-advice-letter`, printAdviceLetterData,
       { responseType: 'blob' }
     );
   }
   CheckExceededMaxBenefit(serviceCost: number, clientId: number, typeCode : string ) {
     let path;
-    if (typeCode == FinancialProvider.MedicalProvider) {
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
       path = 'financial-management/claims/medical';
     } else {
       path = 'financial-management/claims/dental';

@@ -412,13 +412,12 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   }
 
   onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>): void {
-    this.addEditClaimsFormDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-full add_claims_modal',
-    });
+    this.isEdit = false;
+    this.openAddEditClaimDialoge();
   }
   modalCloseAddEditClaimsFormModal(result: any) {
     if (result) {
+      this.loadFinancialClaimsProcessListGrid();
       this.addEditClaimsFormDialog.close();
     }
   }
@@ -492,6 +491,13 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   onClaimClick(dataitem: any){
     this.isEdit = true;
     this.paymentRequestId = dataitem.paymentRequestId;
-    this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog);
+    this.openAddEditClaimDialoge();
+  }
+
+  openAddEditClaimDialoge(){
+    this.addEditClaimsFormDialog = this.dialogService.open({
+      content: this.addEditClaimsDialog,
+      cssClass: 'app-c-modal app-c-modal-full add_claims_modal',
+    });
   }
 }

@@ -51,6 +51,7 @@ import { ContactAddressListComponent } from './components/contact-address-list/c
 import { CaseManagementFeatureCommunicationModule } from '@cms/case-management/feature-communication';
 import { FinancialSendLetterComponent } from './components/financial-send-letter/financial-send-letter.component';
 import { FinancialSendEmailComponent } from './components/financial-send-email/financial-send-email.component';
+import { ProductivityToolsFeatureNotificationModule } from '@cms/productivity-tools/feature-notification';
 @NgModule({
   imports: [
     CaseManagementDomainModule,
@@ -60,7 +61,8 @@ import { FinancialSendEmailComponent } from './components/financial-send-email/f
     CaseManagementFeatureFinancialVendorRoutingModule,
     ProductivityToolsFeatureTodoModule,
     ProductivityToolsFeatureEventLogModule,
-    CaseManagementFeatureCommunicationModule
+    CaseManagementFeatureCommunicationModule,
+    ProductivityToolsFeatureNotificationModule
   ],
   declarations: [
     FinancialVendorPageComponent,
@@ -106,7 +108,8 @@ import { FinancialSendEmailComponent } from './components/financial-send-email/f
     FinancialInsurancePlanListComponent,
     VendorContactComponent,
     FinancialSendLetterComponent,
-    FinancialSendEmailComponent
+    FinancialSendEmailComponent,
+    
   ],
   exports: [
     FinancialVendorPageComponent,

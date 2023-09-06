@@ -254,10 +254,12 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
     this.filteredByColumnDesc = '';
     if (isFromGrid) {
       if (filter.length > 0) {
-        const filteredColumns = this.filter?.map((f: any) =>
-          f.filters?.map((fld: any) =>
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters?.filter((fld:any)=> fld.value)?.map((fld: any) =>
             this.gridColumns[fld.field])
-        );
+          return ([...new Set(filteredColumns)]);
+        });
+
         this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
       }
       return;
@@ -283,7 +285,7 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
   });
 
   columnChange(event: ColumnVisibilityChangeEvent) {
-    const columnsRemoved = event?.columns.filter(x=> x.hidden).length
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
     this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 

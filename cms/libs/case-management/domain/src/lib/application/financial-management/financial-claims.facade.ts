@@ -346,21 +346,17 @@ export class FinancialClaimsFacade {
   }
 
   loadReconcilePaymentBreakoutSummary(data:any){
-    this.showLoader();
     this.financialClaimsDataService.loadReconcilePaymentBreakoutSummaryService(data).subscribe({
       next: (dataResponse) => {
         this.reconcileBreakoutSummaryDataSubject.next(dataResponse);
-        this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader();
       },
     });
   }
 
   loadReconcilePaymentBreakoutListGrid(data:any) {
-    this.showLoader();
     data.filter=JSON.stringify(data.filter);
     this.financialClaimsDataService
       .loadReconcilePaymentBreakoutListService(data)
@@ -374,11 +370,9 @@ export class FinancialClaimsFacade {
             };
             this.reconcilePaymentBreakoutListDataSubject.next(gridView);
           }
-          this.hideLoader();
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-          this.hideLoader();
         },
       });
   }
@@ -458,7 +452,7 @@ export class FinancialClaimsFacade {
     return this.financialClaimsDataService.searchPharmacies(searchText, typeCode).subscribe({
       next: (response: Pharmacy[]) => {
         response?.forEach((vendor:any) => {
-          vendor.providerFullName = `${vendor.vendorName ?? ''} #${vendor.vendorNbr ?? ''} ${vendor.address1 ?? ''} ${vendor.address2 ?? ''} ${vendor.cityCode ?? ''} ${vendor.stateCode ?? ''} ${vendor.zip ?? ''}`;
+          vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
         });
         this.pharmaciesSubject.next(response);
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
@@ -472,7 +466,6 @@ export class FinancialClaimsFacade {
   }
 
 loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
-    this.showLoader();
     recentClaimsPageAndSortedRequestDto.filter = JSON.stringify(recentClaimsPageAndSortedRequestDto.filter);
     this.financialClaimsDataService.loadRecentClaimListService(recentClaimsPageAndSortedRequestDto).subscribe({
       next: (dataResponse) => {
@@ -484,11 +477,9 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
           };
           this.recentClaimListDataSubject.next(gridView);
         }
-       this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
-        this.hideLoader();
       },
     });
   }
@@ -632,16 +623,16 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       });
   }
 
-  loadPrintAdviceLetterData(batchId:any,printAdviceLetterData: any) {
-    return this.financialClaimsDataService.getPrintAdviceLetterData(batchId,printAdviceLetterData);
+  loadPrintAdviceLetterData(batchId:any,printAdviceLetterData: any,claimsType:any) {
+    return this.financialClaimsDataService.getPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
   }
 
-  reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any) {
-    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData);
+  reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any,claimsType:any) {
+    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData,claimsType);
 }
 
-viewAdviceLetterData(batchId:any,printAdviceLetterData: any) {
-  return this.financialClaimsDataService.viewPrintAdviceLetterData(batchId,printAdviceLetterData);
+viewAdviceLetterData(batchId:any,printAdviceLetterData: any, claimsType:any) {
+  return this.financialClaimsDataService.viewPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
 }
 loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, typeCode : string){
   this.showLoader();
@@ -660,5 +651,4 @@ loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, 
   })
   this.hideLoader();
 }
-
 }

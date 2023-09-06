@@ -114,7 +114,7 @@
   position: sticky;
   top: 0;
   background: $white;
-  z-index: 4;
+  z-index: 102;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1411764706);
 
 }
@@ -130,5 +130,9 @@
 .vendor-profile-tabs{
   .k-tabstrip-items-wrapper{
     box-shadow: 0 4px 5px #00000024;
+    position: sticky;
+    top: 142px;
+    z-index: 102;
+    background: #ffffff;
 }
 }

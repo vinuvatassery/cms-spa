@@ -300,13 +300,13 @@
                         <div> <span><strong>Amount Total:</strong> $&nbsp;{{reconcileBreakoutSummary$?.amountTotal |
                               kendoNumber:'n2'}}</span>
                         <span class="ml-2"><strong>Warrant Total:</strong></span> <span class="ml-2"
-                              *ngIf="isBreakoutPanelShow; else searchByBatchTemplate">$&nbsp;{{reconcileBreakoutSummary$.warrantTotal
+                              *ngIf="isBreakoutPanelShow; else searchByBatchTemplate">$&nbsp;{{reconcileBreakoutSummary$?.warrantTotal
                               | kendoNumber: 'n2'}}</span>
                         <ng-template #searchByBatchTemplate>
                               <span class="ml-2">$&nbsp;{{0 | kendoNumber: 'n2'}}</span>
                         </ng-template>
                   </div>
-                  <div><span>{{ isBreakoutPanelShow ? reconcileBreakoutSummary$.paymentToReconcileCount : 0}} payment(s)
+                  <div><span>{{ isBreakoutPanelShow ? reconcileBreakoutSummary$?.paymentToReconcileCount : 0}} payment(s)
                               to
                               reconcile</span>
                         <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="close">
@@ -343,6 +343,7 @@
   [items]="selectedReconcileDataRows"
   [batchId]="batchId"
   (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+  [claimsType]="claimsType"
   ></cms-financial-claims-print-authorization>
     </ng-template>
 

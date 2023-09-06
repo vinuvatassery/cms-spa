@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ClaimsFacade } from '@cms/case-management/domain';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { Router } from '@angular/router';
 @Component({
   selector: 'cms-financial-pharmacy-claims',
   templateUrl: './financial-pharmacy-claims.component.html',
@@ -28,7 +29,9 @@ export class FinancialPharmacyClaimsComponent {
   claimsGridViewLoader$ = this.claimsFacade.claimsDataLoader$;
    
    /** Constructor **/
-   constructor(private readonly claimsFacade: ClaimsFacade) {}
+   constructor(private readonly claimsFacade: ClaimsFacade,
+    private readonly router: Router,
+    ) {}
    
   ngOnInit(): void {
     this.initializePaging();
@@ -65,5 +68,9 @@ export class FinancialPharmacyClaimsComponent {
   
   loadClaimsListGrid() {
     this.claimsFacade.loadClaimsListGrid(this.vendorId, this.state);
+  }
+
+  onClientNameClicked(clientDetails: any) {
+    this.router.navigate([`/case-management/cases/case360/${clientDetails?.clientId}`]);
   }
 }

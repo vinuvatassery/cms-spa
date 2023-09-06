@@ -1,31 +1,45 @@
 /** Angular **/
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Input,
-  OnChanges,
+  Input,  
+  NgZone,  
+  OnDestroy,  
   OnInit,
   Output,
+  Renderer2,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridDataResult, RowClassArgs } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, Subscription, first, fromEvent, take, tap } from 'rxjs';
+const tableRow = (node : any) => node.tagName.toLowerCase() === 'tr';
+
+const closest = (node :any, predicate : any) =>
+ {
+    while (node && !predicate(node)) {
+        node = node.parentNode;
+    }
+
+    return node;
+    };
 @Component({
   selector: 'cms-financial-pcas-assignment-list',
   templateUrl: './financial-pcas-assignment-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPcasAssignmentListComponent implements OnInit, OnChanges {
+
+export class FinancialPcasAssignmentListComponent implements OnInit  , AfterViewInit, OnDestroy{
   @ViewChild('addEditPcaAssignmentDialogTemplate', { read: TemplateRef })
   addEditPcaAssignmentDialogTemplate!: TemplateRef<any>;
   @ViewChild('removePcaAssignmentDialogTemplate', { read: TemplateRef })
@@ -37,12 +51,30 @@ export class FinancialPcasAssignmentListComponent implements OnInit, OnChanges {
   isFinancialPcaAssignmentGridLoaderShow = false;
   isEditAssignmentClosed = false;
   isRemoveAssignmentClosed = false;
-  @Input() pageSizes: any;
-  @Input() sortValue: any;
-  @Input() sortType: any;
-  @Input() sort: any;
+  pcaAssignmentFormData : any
+  
   @Input() financialPcaAssignmentGridLists$: any;
+  @Input() objectCodesData$:any
+  @Input() groupCodesData$:any
+  @Input() pcaCodesData$:any
+  @Input() pcaAssignOpenDatesList$ : any
+  @Input() pcaAssignCloseDatesList$ : any
+  @Input() pcaCodesInfoData$ : any
+  @Input() pcaAssignmentData$ : any
+  @Input() assignPcaResponseData$ : any
+  @Input() groupCodesDataFilter$ : any
+  @Input() pcaAssignmentPriorityUpdate$ : any
+
   @Output() loadFinancialPcaAssignmentListEvent = new EventEmitter<any>();
+  @Output() loadObjectCodesEvent = new EventEmitter<any>();
+  @Output() loadGroupCodesEvent = new EventEmitter<any>();
+  @Output() pcaChangeEvent = new EventEmitter<any>();
+  @Output() loadPcaEvent = new EventEmitter<any>();
+  @Output() getPcaAssignmentEvent = new EventEmitter<any>();
+  @Output() addPcaDataEvent = new EventEmitter<any>();
+  @Output() loadFinancialPcaAssignmentEvent = new EventEmitter<any>();
+  @Output() pcaAssignmentPriorityUpdateEvent = new EventEmitter<any>();
+
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -53,213 +85,342 @@ export class FinancialPcasAssignmentListComponent implements OnInit, OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
+  objectCodeIdValue! : any
+  groupCodeIdsdValue : any=[];
+
+  pcaAssignmentGroupForm!: FormGroup;
+  objectCodeValid = true
+  groupCodesValid = true 
 
   gridFinancialPcaAssignmentDataSubject = new Subject<any>();
-  gridFinancialPcaAssignmentData$ =
-    this.gridFinancialPcaAssignmentDataSubject.asObservable();
+  gridFinancialPcaAssignmentData$ =  this.gridFinancialPcaAssignmentDataSubject.asObservable();
+
+  pcaAssignmentFormDataSubject = new Subject<any>();
+  pcaAssignmentFormDataModel$ =  this.pcaAssignmentFormDataSubject.asObservable();
+
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  editButtonClicked = false
+  newForm = false
   public gridMoreActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit',
       icon: 'edit',
-      click: (data: any): void => {
-        if (!this.isEditAssignmentClosed) {
+      click: (data: any): void => {        
+        if (!this.editButtonClicked) {           
+          this.editButtonClicked =true        
           this.isEditAssignmentClosed = true; 
-          this.onOpenAddPcaAssignmentClicked(this.addEditPcaAssignmentDialogTemplate);
+          this.onOpenAddPcaAssignmentClicked(data);
         }
       },
     },
   ];
-
-  objectList = [
-    {
-      lovDesc:'Pharmacy - 4955',
-      lovCode: 4955
-    },
-    {
-      lovDesc:'Third Party (TPA) - 4956',
-      lovCode: 4956
-    },
-    {
-      lovDesc:'Insurance Premiums - 4957',
-      lovCode: 4957
-    },
-  ]
-
-  groupList = [
-    {
-      lovDesc:'Group I',
-      lovCode: 1
-    },
-    {
-      lovDesc:'Group II',
-      lovCode: 2
-    },
-    {
-      lovDesc:'UPP',
-      lovCode: 3
-    },
-    {
-      lovDesc:'Bridge',
-      lovCode: 4
-    },
-    {
-      lovDesc:'Group 1 INS Gap',
-      lovCode: 5
-    },
-    {
-      lovDesc:'Group 2 INS Gap',
-      lovCode: 6
-    },
-  ]
+  
+  private currentSubscription!: Subscription;
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private formBuilder: FormBuilder,
+    private renderer: Renderer2, private zone: NgZone
   ) {}
 
+  public ngAfterViewInit(): void {
+
+     //NOSONAR to to  implementation after kendo upgrade
+    //this.currentSubscription = this.handleDragAndDrop();
+  }
+
+  public dataStateChange(state: State): void {   
+  
+    //NOSONAR to to  implementation after kendo upgrade
+    //this.currentSubscription.unsubscribe();     
+    //this.zone.onStable.pipe(take(1)).subscribe(() => (this.currentSubscription = this.handleDragAndDrop()));
+}
+
+public ngOnDestroy(): void {
+  //NOSONAR to to  implementation after kendo upgrade
+  //this.currentSubscription.unsubscribe();
+}
+
+public rowCallback(context: RowClassArgs) {
+  return {
+      dragging: context.dataItem.dragging
+  };
+}
   ngOnInit(): void {
-    this.loadFinancialPcaAssignmentListGrid();
-  }
-  ngOnChanges(): void {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
-
-    this.loadFinancialPcaAssignmentListGrid();
-  }
-
-  private loadFinancialPcaAssignmentListGrid(): void {
-    this.loadPcaAssignment(
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType
-    );
-  }
-  loadPcaAssignment(
-    skipCountValue: number,
-    maxResultCountValue: number,
-    sortValue: string,
-    sortTypeValue: string
-  ) {
-    this.isFinancialPcaAssignmentGridLoaderShow = true;
-    const gridDataRefinerValue = {
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
-    };
-    this.loadFinancialPcaAssignmentListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
+    this.loadObjectCodesEvent.emit()
+    this.loadGroupCodesEvent.emit()  
+   
+    this.onPcaChangeEvent()
+    this.pcaAssignmentGroupForm = this.formBuilder.group({    
+   
+      groupCodes:[[]],
+   
+    });
   }
 
-  onChange(data: any) {
-    this.defaultGridState();
+  addPcaData(pcaAssignmentData : any)
+  {
+  this.addPcaDataEvent.emit(pcaAssignmentData)
 
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
-    const stateData = this.state;
-    stateData.filter = this.filterData;
-    this.dataStateChange(stateData);
+  this.assignPcaResponseData$.pipe(first((deleteResponse: any ) => deleteResponse != null))
+  .subscribe((dependentData: any) =>
+  {
+    if(dependentData?.status ?? false)
+    {
+      this.onCloseAddEditPcaAssignmentClicked(true)
+      this.groupChange(true)
+    }
+
+  })
   }
 
-  defaultGridState() {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-      filter: { logic: 'and', filters: [] },
-    };
+  onLoadPcaEvent($event :  any)
+  {
+  this.loadPcaEvent.emit()
+  }
+
+  objectCodeChange(data : any)
+  {  
+  this.objectCodeIdValue = data?.objectCodeId
+  this.groupChange(true)
+  }
+
+  groupChange($event : any)
+  {   
+    this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;  
+    let  groupCodeIdsdValueData= []
+   
+    for (const key in this.groupCodeIdsdValue) 
+    {           
+      groupCodeIdsdValueData.push(this.groupCodeIdsdValue[key]?.groupCodeId)     
+    }
+    if(this.groupCodeIdsdValue.length > 0 && this.objectCodeIdValue) 
+    {
+      this.isFinancialPcaAssignmentGridLoaderShow = true;
+      const pcaAssignmentGridArguments = 
+      {
+        objectId : this.objectCodeIdValue,
+        groupIds : groupCodeIdsdValueData
+      }
+
+      this.loadFinancialPcaAssignmentEvent.emit(pcaAssignmentGridArguments)
+      this.gridDataHandle();
+    }
   }
 
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
 
-  dataStateChange(stateData: any): void {
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
-    this.state = stateData;
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadFinancialPcaAssignmentListGrid();
-  }
-
-  // updating the pagination infor based on dropdown selection
-  pageSelectionChange(data: any) {
-    this.state.take = data.value;
-    this.state.skip = 0;
-    this.loadFinancialPcaAssignmentListGrid();
-  }
-
-  public filterChange(filter: CompositeFilterDescriptor): void {
-    this.filterData = filter;
-  }
-
   gridDataHandle() {
     this.financialPcaAssignmentGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridFinancialPcaAssignmentDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) {
-        this.isFinancialPcaAssignmentGridLoaderShow = false;
-      }
+      this.gridDataResult = data;    
+      this.gridFinancialPcaAssignmentDataSubject.next(this.gridDataResult);     
+        this.isFinancialPcaAssignmentGridLoaderShow = false;     
+        this.dataStateChange(this.state);
     });
-    this.isFinancialPcaAssignmentGridLoaderShow = false;
+   
   }
   public rowClass = (args:any) => ({
     "table-row-disabled": (!args.dataItem.isActive),
   });
  
-  onOpenAddPcaAssignmentClicked(template: TemplateRef<unknown>): void {
-    this.pcaAssignmentAddEditDialogService = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    });
+  onOpenAddPcaAssignmentClicked(pcaAssignmentId : any): void {   
+    this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;  
+    
+    if(this.objectCodeIdValue && this.groupCodeIdsdValue.length > 0)
+    {
+       this.objectCodeValid = true
+       this.groupCodesValid = true
+        this.pcaAssignmentFormData = null
+        if(pcaAssignmentId != '')
+        {   
+          this.newForm = false
+        this.getPcaAssignmentEvent.emit(pcaAssignmentId)  
+        this.onPcaAssignmentFormDataCompose()
+        }
+        else
+        {
+          this.newForm = true
+        this.pcaAssignmentAddEditDialogService = this.dialogService.open({
+          content: this.addEditPcaAssignmentDialogTemplate,
+          cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+        });
+      }
+    }
+    else
+    {
+      if(!this.objectCodeIdValue)
+      {
+          this.objectCodeValid = false
+      }
+
+      if(this.groupCodeIdsdValue.length == 0)
+      {
+        this.groupCodesValid = false
+      }
+    }
+  }
+  
+  onPcaAssignmentFormDataCompose()
+  {
+    this.pcaAssignmentData$?.pipe(first((existPcaData: any ) => existPcaData?.pcaAssignmentId != null))
+    .subscribe((existPcaData: any) =>
+    {  
+        if(existPcaData?.pcaAssignmentId)
+        {
+         this.pcaAssignmentFormData =
+          {     
+            pcaAssignmentId:  existPcaData?.pcaAssignmentId ,  
+            objectCodeId:  existPcaData?.objectCodeId,     
+            pcaId: existPcaData?.pcaId, 
+            openDate: existPcaData?.openDate,
+            closeDate: existPcaData?.closeDate,
+            amount: existPcaData?.totalAmount,
+            unlimited: (existPcaData?.unlimitedFlag === 'Y') ,
+            groupCodeIds: existPcaData?.groupCodeIds                    
+          }
+          //this.pcaAssignmentFormDataSubject.next(pcaAssignmentFormData)
+          this.pcaAssignmentAddEditDialogService = this.dialogService.open({
+            content: this.addEditPcaAssignmentDialogTemplate,
+            cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+          });
+       
+        
+      }
+     })
   }
   onCloseAddEditPcaAssignmentClicked(result: any) {
     if (result) { 
       this.isEditAssignmentClosed = false;
+      this.editButtonClicked = false
       this.pcaAssignmentAddEditDialogService.close();
     }
   }
 
-  onRemovePcaAssignmentClicked(template: TemplateRef<unknown>): void {
-    this.pcaAssignmentRemoveDialogService = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    });
+  onPcaChangeEvent()
+  {
+    this.pcaChangeEvent.emit()
   }
-  onCloseRemovePcaAssignmentClicked(result: any) {
-    if (result) { 
-      this.isRemoveAssignmentClosed = false;
-      this.pcaAssignmentRemoveDialogService.close();
+
+  private handleDragAndDrop(): Subscription 
+  {       
+    //NOSONAR to to  implementation after kendo upgrade
+        let initialPriority = 0 
+        let newPriority = 0
+        let pcaAssignmentId = ''
+        const sub = new Subscription(() => {});
+        let draggedItemIndex : any;      
+        let priorityEmitted = false
+        const tableRows = Array.from(document.querySelectorAll('.k-grid tr'));
+        tableRows.forEach((item) => {
+            this.renderer.setAttribute(item, 'draggable', 'true');
+            const dragStart = fromEvent<DragEvent>(item, 'dragstart');
+            const dragOver = fromEvent(item, 'dragover');
+            const dragEnd = fromEvent(item, 'dragend');
+
+            sub.add(
+                dragStart
+                    .pipe(
+                        tap(({ dataTransfer }) => {
+                            try {
+                                const dragImgEl = document.createElement('span');
+                                dragImgEl.setAttribute(
+                                    'style',
+                                    'position: absolute; display: block; top: 0; left: 0; width: 0; height: 0;'
+                                );
+                                document.body.appendChild(dragImgEl);
+                                if(dataTransfer)
+                                {
+                                  dataTransfer.setDragImage(dragImgEl, 0, 0);
+                                }
+                                
+                            } catch (err) {
+                                // IE doesn't support setDragImage
+                            }
+                            try {
+                                // Firefox won't drag without setting data
+                                if(dataTransfer)
+                                {
+                                  dataTransfer.setData('application/json', '');
+                                }
+                            } catch (err) {
+                                // IE doesn't support MIME types in setData
+                            }
+                        })
+                    )
+                    .subscribe(({ target }) => {
+                        const row: HTMLTableRowElement = <HTMLTableRowElement>target;
+                        draggedItemIndex = row.rowIndex;
+                        const dataItem = this.gridDataResult.data[draggedItemIndex];
+                        dataItem.dragging = true;
+                        initialPriority = dataItem?.priority   
+                        pcaAssignmentId = dataItem?.pcaAssignmentId   
+                    })
+            );
+
+            sub.add(
+                dragOver.subscribe((e: any) => {
+                    e.preventDefault();
+                    debugger
+                    const dataItem = this.gridDataResult.data.splice(draggedItemIndex, 1)[0];
+                    const dropIndex = closest(e.target, tableRow).rowIndex;
+                    const dropItem = this.gridDataResult.data[dropIndex];                
+                    draggedItemIndex = dropIndex;
+                    this.zone.run(() => this.gridDataResult.data.splice(dropIndex, 0, dataItem));
+                })
+            );
+
+            sub.add(
+                dragEnd.subscribe((e: any) => {
+                    e.preventDefault();                
+                    const dataItem = this.gridDataResult.data[draggedItemIndex];
+                    dataItem.dragging = false;
+                    newPriority = dataItem?.priority                  
+                    
+                    if(initialPriority !== newPriority && pcaAssignmentId && newPriority > 0 && priorityEmitted === false)
+                    {            
+                        this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;  
+                        let  groupCodeIdsdValueData= []
+                        for (const key in this.groupCodeIdsdValue) 
+                        {           
+                          groupCodeIdsdValueData.push(this.groupCodeIdsdValue[key]?.groupCodeId)     
+                        }
+                        const pcaAssignmentPriorityArguments = 
+                        {
+                          objectId : this.objectCodeIdValue,
+                          groupIds : groupCodeIdsdValueData,
+                          newPriority : newPriority,
+                          pcaAssignmentId : pcaAssignmentId
+                        }
+                        this.isFinancialPcaAssignmentGridLoaderShow = true;     
+                        this.pcaAssignmentPriorityUpdateEvent.emit(pcaAssignmentPriorityArguments) 
+                        priorityEmitted = true
+                        this.onPcaAssignmentPriorityUpdate() 
+                    }             
+                })
+            );
+        });
+
+        return sub;
     }
+
+  onPcaAssignmentPriorityUpdate()
+  {
+    this.pcaAssignmentPriorityUpdate$.pipe(first((response: any ) => response != null))
+    .subscribe((response: any) =>
+    {
+      if(response?.status ?? false)
+      {      
+        this.groupChange(true)
+      }
+  
+    })
   }
-
-
 }
  
  

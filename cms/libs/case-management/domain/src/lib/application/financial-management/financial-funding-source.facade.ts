@@ -28,6 +28,7 @@ export class FinancialFundingSourceFacade {
   private financialFundingSourceFacadeDataSubject = new Subject<any>();
   private addFundingSourceSubject = new Subject<any>();
   private updateFundingSourceSubject = new Subject<any>();
+   private removeFundingSourceSubject = new Subject<any>();
   private fundingSourceListSubject = new BehaviorSubject<any>([]);
   fundingSourceList$ = this.fundingSourceListSubject.asObservable();
 
@@ -35,7 +36,7 @@ export class FinancialFundingSourceFacade {
 
   addFundingSource$ = this.addFundingSourceSubject.asObservable();
   updateFundingSource$ = this.updateFundingSourceSubject.asObservable();
-
+  removeFundingSource$ = this.removeFundingSourceSubject.asObservable();
   private fundingSourceLookupSubject = new Subject<any>();
   fundingSourceLookup$ = this.fundingSourceLookupSubject.asObservable();
 
@@ -90,7 +91,7 @@ export class FinancialFundingSourceFacade {
       next: (dataResponse) => {
         this.addFundingSourceSubject.next(dataResponse);
         this.hideLoader();
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, `Added funding source successfully`);
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, dataResponse?.message);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
@@ -105,7 +106,7 @@ export class FinancialFundingSourceFacade {
       next: (dataResponse) => {
         this.updateFundingSourceSubject.next(dataResponse);
         this.hideLoader();
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, `Updated funding source successfully`);
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, dataResponse?.message);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
@@ -127,13 +128,15 @@ export class FinancialFundingSourceFacade {
     skipcount: number,
     maxResultCount: number,
     sort: string,
-    sortType: string){
+    sortType: string,
+    filter:any,){
       this.showLoader();
     this.financialFundingSourceDataService.loadFundingSourceList(
         skipcount,
         maxResultCount,
         sort,
         sortType,
+        filter
     ).subscribe({
       next: (dataResponse) => {
         if (dataResponse) {
@@ -150,4 +153,19 @@ export class FinancialFundingSourceFacade {
       },
     });
   }
+  removeFundingSource(fundingSourceId: string): void {
+    this.showLoader();
+    this.financialFundingSourceDataService.removeFundingSource(fundingSourceId).subscribe({
+      next: (deleteResponse) => {
+        if (deleteResponse ?? false) {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, deleteResponse.message)
+          this.removeFundingSourceSubject.next(deleteResponse)
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
 }
