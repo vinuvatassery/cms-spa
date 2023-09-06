@@ -23,7 +23,7 @@ export class FinancialPcasPageComponent implements OnInit{
   sortType = this.financialPcaFacade.sortType;
   pageSizes = this.financialPcaFacade.gridPageSizes;
   gridSkipCount = this.financialPcaFacade.skipCount;
-  pcaReassignmentCount!: number;
+  pcaReassignmentCount$ = this.financialPcaFacade.pcaReassignmentCount$;
 
   sortValueFinancialPcaSetup = this.financialPcaFacade.sortValueFinancialPcaSetup;
   sortPcaSetupList = this.financialPcaFacade.sortPcaSetupList;
@@ -68,18 +68,8 @@ export class FinancialPcasPageComponent implements OnInit{
     private readonly pcaAssignmentsFacade : PcaAssignmentsFacade   
   ) { }
   ngOnInit(): void {
-    this.PcaReassignmetCount();
-  }
-
-  PcaReassignmetCount() {
-    this.financialPcaFacade.pcaReassignmentCount().subscribe({
-      next: (val)=>{
-        this.pcaReassignmentCount = val;
-      },
-    })
-  }
-
-
+    this.financialPcaFacade.pcaReassignmentCount();
+  }  
 
   loadFinancialPcaSetupListGrid(event: GridFilterParam) {
     this.financialPcaFacade.loadFinancialPcaSetupListGrid(event);
