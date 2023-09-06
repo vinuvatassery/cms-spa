@@ -23,7 +23,7 @@
             {{ dataItem.termDate | date:'MM/dd/yyyy' }}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="20" class="text-center">
+    <kendo-grid-column field="Option" title="Option" [columnMenu]="false"  [sortable]="false" [width]="20" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton [data]="actionsButtons" icon="more-vertical"
                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"

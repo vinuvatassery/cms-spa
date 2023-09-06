@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { PaymentsFacade } from '@cms/case-management/domain';
-import { SortDescriptor, State } from '@progress/kendo-data-query';
+import { GridFilterParam, PaymentsFacade } from '@cms/case-management/domain';
+import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { FilterService } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'cms-financial-payments',
   templateUrl: './financial-payments.component.html',
@@ -11,14 +12,17 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class FinancialPaymentComponent {
   /** Input Properties **/
   @Input() vendorId!: string;
-  public formUiStyle: UIFormStyle = new UIFormStyle();
+  formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  public sortValue = this.paymentsFacade.sortValue;
-  public sortType = this.paymentsFacade.sortType;
-  public pageSizes = this.paymentsFacade.gridPageSizes;
-  public gridSkipCount = this.paymentsFacade.skipCount;
-  public sort: SortDescriptor[] = [{ field: 'BatchName', dir: 'asc'}];
-  public state!: State;
+  sortValue = 'batchName';
+  sortType = this.paymentsFacade.sortType;
+  pageSizes = this.paymentsFacade.gridPageSizes;
+  gridSkipCount = this.paymentsFacade.skipCount;
+  sort: SortDescriptor[] = [{ field: 'BatchName', dir: 'asc' }];
+  state!: State;
+  filter!: any;
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  paymentStatusFilter = '';
   paymentBatchesGridView$ = this.paymentsFacade.paymentBatches$;
   paymentBatchLoader$ = this.paymentsFacade.paymentBatchLoader$;
 
@@ -32,6 +36,17 @@ export class FinancialPaymentComponent {
       GroupID: 'XXXXXX',
       PaymentID: 'XXXXXX',
     },
+  ];
+
+  paymentStatusList = [
+    'SUBMITTED',
+    'PENDING_APPROVAL',
+    'DENIED',
+    'MANAGER_APPROVED',
+    'PAYMENT_REQUESTED',
+    'ONHOLD',
+    'FAILED',
+    'PAID',
   ];
 
   /** Constructor **/
@@ -59,12 +74,39 @@ export class FinancialPaymentComponent {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.filter = stateData?.filter?.filters;
     this.state = stateData;
     this.loadPaymentsListGrid();
   }
 
+  filterChange(filter: CompositeFilterDescriptor): void {
+    this.filterData = filter;
+  }
+
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (field === 'paymentStatus') {
+      this.paymentStatusFilter = value;
+    }
+
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'or',
+    });
+  }
+
   loadPaymentsListGrid() {
-    this.paymentsFacade.loadPaymentsListGrid(this.vendorId, this.state);
+    const params = new GridFilterParam(this.state.skip, this.state.take, this.sortValue, this.sortType, JSON.stringify(this.filter))
+    this.paymentsFacade.loadPaymentsListGrid(this.vendorId, params);
   }
 
 }
