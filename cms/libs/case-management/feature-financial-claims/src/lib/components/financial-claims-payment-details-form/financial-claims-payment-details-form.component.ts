@@ -34,7 +34,7 @@ import { Subscription } from 'rxjs';
   paymentPanel!:PaymentPanel;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   paymentPanelDataSubscription!: Subscription;
-  @Input() vendorId:any;
+  @Input() vendorAddressId:any;
   @Input() batchId:any ;
   @Input() paymentPanelDetails:any;
   @Output() closePaymentDetailFormClickedEvent = new EventEmitter();

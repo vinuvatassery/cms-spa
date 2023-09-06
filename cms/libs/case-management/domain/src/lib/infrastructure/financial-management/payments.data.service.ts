@@ -60,13 +60,13 @@ export class PaymentsDataService {
     ]);
   }
 
-  loadPaymentPanel(vendorId: any, batchId: any) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/batches/${batchId}`);
+  loadPaymentPanel(vendorAddressId: any, batchId: any) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorAddressId}/batches/${batchId}`);
   }
-  updatePaymentPanel(vendorId: any, batchId: any, paymentPanel: any) {
+  updatePaymentPanel(vendorAddressId: any, batchId: any, paymentPanel: any) {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/financial-management/vendors/${vendorId}/batches/${batchId}`
+      `/financial-management/vendors/${vendorAddressId}/batches/${batchId}`
       , paymentPanel);
   }
 

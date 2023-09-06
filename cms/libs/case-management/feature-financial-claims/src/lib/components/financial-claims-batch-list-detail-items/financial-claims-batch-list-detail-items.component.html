@@ -262,7 +262,7 @@
 
 
 <ng-template #paymentDetailsFromTemplate>
-      <cms-financial-claims-payment-details-form [paymentPanelDetails] ="paymentPanelDetails"[vendorId]="vendorId"
+      <cms-financial-claims-payment-details-form [paymentPanelDetails] ="paymentPanelDetails"[vendorAddressId]="vendorAddressId"
       (updatePaymentPanel)="updatePaymentPanelRecord($event)"
       [batchId]="batchId" (closePaymentDetailFormClickedEvent)="onClosePaymentDetailFormClicked($event)"></cms-financial-claims-payment-details-form>
 </ng-template>
