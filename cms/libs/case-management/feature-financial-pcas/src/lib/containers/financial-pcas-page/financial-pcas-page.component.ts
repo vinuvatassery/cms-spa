@@ -49,11 +49,13 @@ export class FinancialPcasPageComponent implements OnInit{
   pcaReassignmentByFundSourceId$ = this.financialPcaFacade.pcaReassignmentByFundSourceId$;
   objectCodesData$ = this.pcaAssignmentsFacade.objectCodesData$;
   groupCodesData$ = this.pcaAssignmentsFacade.groupCodesData$;
+  groupCodesDataFilter$ = this.pcaAssignmentsFacade.groupCodesData$;
   pcaCodesData$ = this.pcaAssignmentsFacade.pcaCodesData$;
   pcaDatesData$ = this.pcaAssignmentsFacade.pcaDatesData$;
   pcaCodesInfoData$ = this.pcaAssignmentsFacade.pcaCodesInfoData$;
   pcaAssignmentData$ = this.pcaAssignmentsFacade.pcaAssignmentData$;
   assignPcaResponseData$ = this.pcaAssignmentsFacade.assignPcaResponseData$;
+  pcaAssignmentPriorityUpdate$ = this.pcaAssignmentsFacade.pcaAssignmentPriorityUpdate$;
 
    pcaAssignOpenDatesListSubject = new Subject<any>();
   pcaAssignOpenDatesList$ = this.pcaAssignOpenDatesListSubject.asObservable();
@@ -176,6 +178,10 @@ export class FinancialPcasPageComponent implements OnInit{
   saveEditPcaReassignmentClicked(updateReassignmentValue:any){
     this.financialPcaFacade.updateReassignmentPca(updateReassignmentValue);
 
+  }
+  
+  pcaAssignmentPriorityUpdate(pcaAssignmentPriorityArguments:any){
+    this.pcaAssignmentsFacade.pcaAssignmentPriorityUpdate(pcaAssignmentPriorityArguments);
   }
   
 }

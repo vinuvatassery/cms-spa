@@ -41,14 +41,17 @@
                                 [pcaAssignCloseDatesList$]="pcaAssignCloseDatesList$ | async"  
                                 [pcaCodesInfoData$]="pcaCodesInfoData$"     
                                 [pcaAssignmentData$]="pcaAssignmentData$"      
-                                [assignPcaResponseData$]="assignPcaResponseData$"               
+                                [assignPcaResponseData$]="assignPcaResponseData$"     
+                                [groupCodesDataFilter$]="groupCodesDataFilter$ | async"     
+                                [pcaAssignmentPriorityUpdate$]="pcaAssignmentPriorityUpdate$"     
                                 (loadObjectCodesEvent)="loadObjectCodes()"
                                 (loadGroupCodesEvent)="loadGroupCodes()"                                                          
                                 (pcaChangeEvent)="loadPcaDates()"
                                 (loadPcaEvent)="loadPcaCodes()"
                                 (getPcaAssignmentEvent)="getPcaAssignment($event)"
                                 (addPcaDataEvent)="assignPca($event)"
-                                (loadFinancialPcaAssignmentEvent)="loadFinancialPcaAssignmentListGrid($event)">
+                                (loadFinancialPcaAssignmentEvent)="loadFinancialPcaAssignmentListGrid($event)"
+                                (pcaAssignmentPriorityUpdateEvent)="pcaAssignmentPriorityUpdate($event)">
                                 ></cms-financial-pcas-assignment-list>
                               
                             </div>
