@@ -248,7 +248,7 @@ export class FinancialPremiumsBatchesLogListsComponent
 
   navToReconcilePayments(event: any) {
     this.route.navigate([
-      '/financial-management/premiums/'+ this.premiumsType +'batch/reconcile-payments',
+      '/financial-management/premiums/'+ this.premiumsType +'/batch/reconcile-payments',
     ]);
   }
   public onPreviewSubmitPaymentOpenClicked(

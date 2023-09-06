@@ -1,13 +1,23 @@
-<kendo-grid   
-[resizable]="true" [pageSize]="state.take" [pageable]="true" [skip]="state.skip" [groupable]="false"
-        [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort" [pageable]="true"
-        [data]="contacts$| async" (dataStateChange)="dataStateChange($event)"
-        [sortable]="true"
-        [columnMenu]="{filter: true }"
->
+<kendo-grid [loading]="false" 
+            [pageSize]="state.take"
+            [skip]="state.skip" 
+            [pageable]="true" 
+            [sortable]="true" 
+            [groupable]="false" 
+            [reorderable]="true"
+            [resizable]="true" 
+            [columnMenu]="{ filter: true }" 
+            [sort]="state.sort"
+            [rowClass]="rowClass"
+            [data]="contacts$ | async" 
+            [filter]="state.filter"
+            (dataStateChange)="dataStateChange($event)" 
+            (filterChange)="filterChange($event)"
+            (columnReorder)="onColumnReorder($event)"
+            (columnVisibilityChange)="columnChange($event)">
 >
 
-  <kendo-grid-column field="contactName" title="Name" [width]="100" >
+  <kendo-grid-column [sticky]="true" field="contactName" title="Name" [width]="100" >
     <ng-template kendoGridCellTemplate let-dataItem> 
       <span class="preferred-phoneNo posi_relative" title="Preferred Contact" *ngIf=" dataItem.preferredFlag === 'Y'&&dataItem.activeFlag === 'Y'">
         <span
@@ -21,21 +31,52 @@
         {{ dataItem.contactName }}
       </button>
  
-    </ng-template> </kendo-grid-column>
-  <kendo-grid-column field="contactDesc" title="Description" [width]="100"> </kendo-grid-column>
-  <kendo-grid-column field="phoneNbr" title="Phone Number" [width]="60">
-    <ng-template kendoGridCellTemplate let-dataItem>
-      {{ dataItem.phoneNbr | phone }}
-    </ng-template> 
-  </kendo-grid-column>
- 
-  <kendo-grid-column field="faxNbr" title="Fax Number" [width]="60"> 
-    <ng-template kendoGridCellTemplate let-dataItem>
-      {{ dataItem.faxNbr | phone }}
-    </ng-template> 
-  </kendo-grid-column>
-  <kendo-grid-column field="emailAddress" title="Email Address" [width]="60"> </kendo-grid-column>
-  <kendo-grid-column field="effectiveDate" title="Effective Date" [width]="60">
+    </ng-template>
+    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+      <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+           <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+           <kendo-filter-eq-operator></kendo-filter-eq-operator>
+           <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+           <kendo-filter-contains-operator></kendo-filter-contains-operator>
+       </kendo-grid-string-filter-menu>
+   </ng-template>
+ </kendo-grid-column>
+  <kendo-grid-column field="contactDesc" title="Description" [width]="100">
+    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+      <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+           <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+           <kendo-filter-eq-operator></kendo-filter-eq-operator>
+           <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+           <kendo-filter-contains-operator></kendo-filter-contains-operator>
+       </kendo-grid-string-filter-menu>
+   </ng-template>
+ </kendo-grid-column>
+ <kendo-grid-column field="phoneNbr" title="Phone Number" [width]="60"> <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+  <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+       <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+       <kendo-filter-eq-operator></kendo-filter-eq-operator>
+       <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+       <kendo-filter-contains-operator></kendo-filter-contains-operator>
+   </kendo-grid-string-filter-menu>
+</ng-template> </kendo-grid-column>
+<kendo-grid-column field="faxNbr" title="Fax Number" [width]="60"> <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+  <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+       <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+       <kendo-filter-eq-operator></kendo-filter-eq-operator>
+       <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+       <kendo-filter-contains-operator></kendo-filter-contains-operator>
+   </kendo-grid-string-filter-menu>
+</ng-template> </kendo-grid-column>
+
+  <kendo-grid-column field="emailAddress" title="Email Address" [width]="60"> <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+    <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+         <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+         <kendo-filter-eq-operator></kendo-filter-eq-operator>
+         <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+         <kendo-filter-contains-operator></kendo-filter-contains-operator>
+     </kendo-grid-string-filter-menu>
+ </ng-template> </kendo-grid-column>
+  <kendo-grid-column field="startDate" title="Effective Date" [width]="60">
     <ng-template kendoGridCellTemplate let-dataItem>
       <span *ngIf="dataItem.activeFlag == 'Y' ;else endDateBlock">
         {{dataItem.startDate | date:'MM/dd/yyyy'}}
@@ -43,10 +84,15 @@
       <ng-template #endDateBlock>
         {{dataItem.startDate | date:'MM/dd/yyyy'}} {{ (dataItem.endDate) ? ' - '+ (dataItem.endDate |
         date:'MM/dd/yyyy') : ''}}
-      </ng-template>
+      </ng-template>     
+     
     </ng-template>
+    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+      <common-grid-cell-date-range-filter field="startDate" [filter]="filter" [filterService]="filterService">
+      </common-grid-cell-date-range-filter>
+    </ng-template> 
   </kendo-grid-column>
-  <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false">
+  <kendo-grid-column field="creatorId" title="By" [filterable]="false" [width]="50" [sortable]="false">
     <ng-template kendoGridCellTemplate let-dataItem>
       <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
         [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
@@ -59,7 +105,7 @@
       </kendo-popover>
     </ng-template>
   </kendo-grid-column>
-  <kendo-grid-column field="Option" title="Options" [columnMenu]="false" [width]="60" class="text-center">
+  <kendo-grid-column [sticky]="true" field="" title="Options" [columnMenu]="false" [width]="60" class="text-center">
     <ng-template kendoGridCellTemplate let-dataItem>
       <kendo-dropdownbutton [data]="contactAddressActions" icon="more-vertical"
         class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"

@@ -41,21 +41,24 @@
                                 [pcaAssignCloseDatesList$]="pcaAssignCloseDatesList$ | async"  
                                 [pcaCodesInfoData$]="pcaCodesInfoData$"     
                                 [pcaAssignmentData$]="pcaAssignmentData$"      
-                                [assignPcaResponseData$]="assignPcaResponseData$"               
+                                [assignPcaResponseData$]="assignPcaResponseData$"     
+                                [groupCodesDataFilter$]="groupCodesDataFilter$ | async"     
+                                [pcaAssignmentPriorityUpdate$]="pcaAssignmentPriorityUpdate$"     
                                 (loadObjectCodesEvent)="loadObjectCodes()"
                                 (loadGroupCodesEvent)="loadGroupCodes()"                                                          
                                 (pcaChangeEvent)="loadPcaDates()"
                                 (loadPcaEvent)="loadPcaCodes()"
                                 (getPcaAssignmentEvent)="getPcaAssignment($event)"
                                 (addPcaDataEvent)="assignPca($event)"
-                                (loadFinancialPcaAssignmentEvent)="loadFinancialPcaAssignmentListGrid($event)">
+                                (loadFinancialPcaAssignmentEvent)="loadFinancialPcaAssignmentListGrid($event)"
+                                (pcaAssignmentPriorityUpdateEvent)="pcaAssignmentPriorityUpdate($event)">
                                 ></cms-financial-pcas-assignment-list>
                               
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
                     <kendo-tabstrip-tab title="PCA Reassignment">
-                        <ng-template kendoTabTitle> PCA Reassignment <span class="tab-batch-notify">{{pcaReassignmentCount}}</span></ng-template>
+                        <ng-template kendoTabTitle> PCA Reassignment <span class="tab-batch-notify">{{pcaReassignmentCount$ | async}}</span></ng-template>
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-financial-pcas-reassignment-list  [financialPcaReassignmentGridLists$]="financialPcaReassignmentGridLists$"

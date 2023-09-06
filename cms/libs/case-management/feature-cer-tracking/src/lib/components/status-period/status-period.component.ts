@@ -1,10 +1,11 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, TemplateRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, TemplateRef, ViewChild } from '@angular/core';
 /** Facades **/
 import { CaseFacade, StatusPeriodFacade, ClientEligibilityFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { GridComponent } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'case-management-status-period',
   templateUrl: './status-period.component.html',
@@ -19,6 +20,7 @@ export class StatusPeriodComponent implements OnInit {
 
     @Output() loadStatusPeriodEvent  = new EventEmitter<any>();
   /** Public properties **/
+  @ViewChild(GridComponent) statusGrid!: GridComponent;
   StatusPeriod$ = this.statusPeriodFacade.statusPeriod$;
   public expandedDetailKeys: number[] = [1];
   public sortValue = this.statusPeriodFacade.sortValue;
@@ -83,6 +85,7 @@ export class StatusPeriodComponent implements OnInit {
       }
       this.cdr.detectChanges();
     });
+    this.fetchStatusPeriodDetails();
   }
 
   pageSelectionChange(data: any) {
@@ -113,6 +116,16 @@ export class StatusPeriodComponent implements OnInit {
       pagesize: maxResultCountValue
     };
     this.loadStatusPeriodEvent.next(gridDataRefinerValue);
+  }
+
+  fetchStatusPeriodDetails() {
+    this.StatusPeriod$.subscribe((res: any) => {
+      if(res['data'].length > 0) {
+        res['data'].forEach((x:any, index: number) => {
+          this.statusGrid.collapseRow(index);
+        });
+      }
+    })
   }
 
   onStatusPeriodDetailClosed(result: any) {

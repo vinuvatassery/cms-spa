@@ -10,6 +10,7 @@ import { ConfigurationProvider, LoaderService} from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'cms-contact-address-list',
   templateUrl: './contact-address-list.component.html',
@@ -28,7 +29,7 @@ export class ContactAddressListComponent implements OnChanges {
   VendorContactAddressId: string="";
   @Input() VendorAddressId: any;
   public state!: any;
-  filters = "";
+  filters :any= "";
   sortColumn = "";
   sortDir = "";
   columnsReordered = false;
@@ -41,27 +42,16 @@ export class ContactAddressListComponent implements OnChanges {
   public gridSkipCount = this.vendocontactsFacade.skipCount;
   public sort = this.vendocontactsFacade.sort;
   selectedColumn!: any;
+  columnChangeDesc = 'Default Columns';
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   gridColumns : any ={
-    prescriptionFillDate : "Fill Date",
-    pharmacyName : "Pharmacy",
-    drugName: "Drug",
-    brandName: "Brand Name",
-    ndc: "NDC",
-    qty: "Qty",
-    reversalDate: "Reversal Date",
-    clientGroup: "Client Group",
-    payType: "Pay Type",
-    transType: "Trans Type",
-    payAmount: "Pay Amount",
-    ingrdCost: "Ingrd Cost",
-    phmFee: "Pfm Fee",
-    totalDrug: "Total Drug",
-    pbmFee: "PBM Fee",
-    revenue: "Revenue",
-    uc: "U & c",
-    entryDate: "Entry Date",
-    createdId: "By"
+    contactName : "Name",
+    contactDesc : "Description",
+    phoneNbr: "Phone Number",
+    faxNbr: "Fax Number",
+    emailAddress: "Email Address",
+    effectiveDate: "Effective Date",
+    creatorId: "By"
   }
   showLoader() {
     this.loaderService.show();
@@ -120,6 +110,16 @@ export class ContactAddressListComponent implements OnChanges {
       this.filters
       );    
   
+  }
+  rowClass = (args: any) => ({
+    "table-row-disabled": (!args.dataItem.assigned),
+  });
+  onColumnReorder($event: any) {
+    this.columnsReordered = true;
+  }
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
   clickOpenAddEditContactAddressDetails() {
     this.isContactsDetailShow = true;
@@ -249,7 +249,7 @@ if(res)
     const filters = stateData.filter?.filters ?? [];
 
     for (let val of filters) {
-      if (val.field === 'prescriptionFillDate' || val.field === 'entryDate') {
+      if (val.field === 'startDate') {
         this.intl.formatDate(val.value, this.dateFormat);
       }
     }
