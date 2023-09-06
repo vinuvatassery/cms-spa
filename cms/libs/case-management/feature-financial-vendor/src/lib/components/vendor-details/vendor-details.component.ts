@@ -163,7 +163,7 @@ fillFormData(){
 
       this.medicalProviderForm.controls['city']
         .setValidators([
-          Validators.required,
+          Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
         ]);
       this.medicalProviderForm.controls['city'].updateValueAndValidity();
 
@@ -175,19 +175,19 @@ fillFormData(){
 
       this.medicalProviderForm.controls['zip']
         .setValidators([
-          Validators.required,
+          Validators.required,Validators.required,Validators.pattern('^[A-Za-z0-9 \-]+$')
         ]);
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();
 
       this.medicalProviderForm.controls['nameOnCheck']
       .setValidators([
-        Validators.required,
+        Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
       ]);
     this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
 
     this.medicalProviderForm.controls['nameOnEnvolop']
     .setValidators([
-      Validators.required,
+      Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
     ]);
       this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
 
@@ -488,5 +488,8 @@ onMailCodeChange( )
     {
       this.onChange();
    }
+}
+get MedicalProviderForm() {
+  return this.medicalProviderForm.controls as any;
 }
 }
