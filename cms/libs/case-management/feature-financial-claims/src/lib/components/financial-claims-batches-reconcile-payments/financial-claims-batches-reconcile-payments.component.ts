@@ -53,9 +53,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();
   entityId: any;
   public isBreakoutPanelShow:boolean=true;
-  amountTotal:any;
-  warrantTotal:any;
-  paymentToReconcileCount:any;
   public state!: State;
   public currentDate =  new Date();
   sortColumn = 'batch';
@@ -657,9 +654,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     loadReconcilePaymentSummary(ReconcilePaymentResponseDto:any)
     {
       this.loadReconcileBreakoutSummaryEvent.emit(ReconcilePaymentResponseDto);
-      this.amountTotal=this.reconcileBreakoutSummary$.amountTotal;
-      this.paymentToReconcileCount=this.reconcileBreakoutSummary$.paymentToReconcileCount;
-      this.warrantTotal=this.reconcileBreakoutSummary$.warrantTotal;
     }
 
   loadReconcilePaymentBreakOutGridList(event: any) {
