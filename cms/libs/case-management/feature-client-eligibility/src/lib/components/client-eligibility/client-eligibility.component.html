@@ -39,7 +39,7 @@
         <span *ngIf="question.questionCode==reviewQuestionCode.hivStatus && checkQuestionDocuments(question.questionCode)==false">
           <p class="mt-1 mb-1">Client does not have proof of HIV</p> 
          </span>
-        <kendo-formerror *ngIf="formSubmited && !question.responseAnswerId">{{question.questionDesc}} response is
+        <kendo-formerror *ngIf="formSubmited && !question.responseAnswerId"> <span class="material-icons"> error </span> {{question.questionDesc}} response is
           required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-4 text-right">
@@ -68,15 +68,15 @@
             </button>
           </kendo-buttongroup>
         </div>
-        <kendo-formerror *ngIf="formSubmited && !child.responseAnswerId">{{child.questionDesc}} response is
+        <kendo-formerror *ngIf="formSubmited && !child.responseAnswerId"><span class="material-icons"> error </span> {{child.questionDesc}} response is
           required.</kendo-formerror>
         <div class="flex-col">
           <kendo-floatinglabel text="Exception Note">
             <kendo-textarea [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="child.notes"
               [ngModelOptions]="{standalone: true}" aria-label="exception note description" name="Exception Note"
               [rows]="5" [cols]="40" (blur)="notesChanged()">
-            </kendo-textarea>
-            <kendo-formhint class="justify-content-end">{{child.notes?.length}}/250</kendo-formhint>
+              <kendo-textarea-suffix class="justify-content-end"> {{child.notes?.length}}/250</kendo-textarea-suffix>
+            </kendo-textarea> 
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="formSubmited && child.answerCode==='YES' && child.notes?.length<1">Exception Note is required.</kendo-formerror>
         </div>

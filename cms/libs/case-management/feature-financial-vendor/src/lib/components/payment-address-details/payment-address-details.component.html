@@ -17,7 +17,7 @@
 
             <div class="flex-col">
                 <kendo-floatinglabel text="Name on Check">
-                    <kendo-textbox aria-label="Name on Check" formControlName="nameOnCheck"
+                    <kendo-textbox aria-label="Name on Check" formControlName="nameOnCheck" [maxlength]="200"
                         [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textbox>
                 </kendo-floatinglabel>
@@ -27,7 +27,7 @@
 
             <div class="flex-col">
                 <kendo-floatinglabel text="Name on Envelope">
-                    <kendo-textbox aria-label="Name on Envelope" formControlName="nameOnEnvelope"
+                    <kendo-textbox aria-label="Name on Envelop" formControlName="nameOnEnvelope" [maxlength]="200"
                         [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textbox>
                 </kendo-floatinglabel>
@@ -36,7 +36,7 @@
             </div>
             <div class="flex-col">
                 <kendo-floatinglabel text="Address Line 1">
-                    <kendo-textbox aria-label="Address Line 1" formControlName="address1"
+                    <kendo-textbox aria-label="Address Line 1" formControlName="address1" [maxlength]="200"
                         [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textbox>
                 </kendo-floatinglabel>
@@ -45,14 +45,14 @@
             </div>
             <div class="flex-col">
                 <kendo-floatinglabel text="Address Line 2 (optional)">
-                    <kendo-textbox aria-label="Address Line 2 (optional)" formControlName="address2"
+                    <kendo-textbox aria-label="Address Line 2 (optional)" formControlName="address2" [maxlength]="50"
                         [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textbox>
                 </kendo-floatinglabel>
             </div>
             <div class="flex-col">
                 <kendo-floatinglabel text="City">
-                    <kendo-textbox aria-label="City" formControlName="cityCode" [fillMode]="formUiStyle.inputFillMode">
+                    <kendo-textbox aria-label="City" formControlName="cityCode" [fillMode]="formUiStyle.inputFillMode" [maxlength]="50">
                     </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['cityCode'].valid">City is
@@ -85,7 +85,7 @@
                    value="Y" name="physicalAddressFlag" id="physicalAddressFlagno"
                    (change)="OncheckboxClick($event)" formControlName="physicalAddressFlag"
                   />
-                  <label class="k-checkbox-label" for="PreferredFlagYes">This is the pharmacies physical address</label
+                  <label class="k-checkbox-label" for="PreferredFlagYes">This is the pharmacy's physical address</label
                   >
                 </span>
               </div>
@@ -196,6 +196,7 @@
 
           <div>
             <button
+              [disabled] ="billingAddress?.activeFlag === statusFlag.No"
               *ngIf="isEdit"
               kendoButton
               [primary]="true"

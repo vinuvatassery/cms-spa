@@ -24,7 +24,12 @@
         </kendo-grid-column>
         <kendo-grid-column field="clientId" title="ID" [width]="150">
         </kendo-grid-column>
+        <kendo-grid-column field="urn" title="URN" [width]="150">
+        </kendo-grid-column>
         <kendo-grid-column field="preferredContact" title="Preferred Contact" [width]="150">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.preferredContact?.includes('@') ? dataItem.preferredContact : dataItem.preferredContact | phone}}
+          </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="status" title="Status" [width]="150">
         </kendo-grid-column>

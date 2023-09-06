@@ -81,6 +81,9 @@ export class FinancialPcaFacade {
   private pcaReassignmentByFundSourceIdSubject = new Subject<any>();
   pcaReassignmentByFundSourceId$ = this.pcaReassignmentByFundSourceIdSubject.asObservable();
 
+  private pcaReassignmentCountSubject = new Subject<any>()
+  pcaReassignmentCount$ = this.pcaReassignmentCountSubject.asObservable();
+
     /** Public properties **/
 
   // handling the snackbar & loader
@@ -261,8 +264,16 @@ export class FinancialPcaFacade {
         },
       });
   }
+
   pcaReassignmentCount(){
-    return this.financialPcaDataService.pcaReassignmentCount();
+    this.financialPcaDataService.pcaReassignmentCount().subscribe({
+      next:(count: any) => {
+        this.pcaReassignmentCountSubject.next(count);
+      },
+      error: (err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
   }
 
   getPcaAssignmentById(pcaAssignmentId: string) {

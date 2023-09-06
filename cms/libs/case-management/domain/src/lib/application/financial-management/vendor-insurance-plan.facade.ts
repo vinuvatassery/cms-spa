@@ -9,6 +9,7 @@ import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { VendorInsurancePlanDataService } from '../../infrastructure/financial-management/vendor-insurance-plan.data.service';
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class VendorInsurancePlanFacade {
@@ -60,7 +61,7 @@ export class VendorInsurancePlanFacade {
   ) { }
 
   /** Public methods **/
-  loadVendorInsuranceProviderListGrid(vendorId: string, pageParameters: State) {
+  loadVendorInsuranceProviderListGrid(vendorId: string, pageParameters: GridFilterParam) {
     this.vendorInsuranceGridLoaderSubject.next(true);
     this.vendorInsurancePlanDataService.loadVendorInsuranceProviderListGrid(vendorId, pageParameters).subscribe({
       next: (dataResponse: any) => {

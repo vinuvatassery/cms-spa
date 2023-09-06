@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList } from '@angular/core';
-import { PaymentsFacade,BillingAddressFacade,VendorContactsFacade, ContactResponse ,FinancialVendorTypeCode, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { PaymentsFacade,BillingAddressFacade,VendorContactsFacade, ContactResponse ,FinancialVendorTypeCode, FinancialVendorProviderTabCode, StatusFlag } from '@cms/case-management/domain';
 import { State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
@@ -117,7 +117,9 @@ export class PaymentAddressesComponent {
       sort: this.sort,
     };
   }
-
+  public rowClass = (args:any) => ({
+    "table-row-disabled": (args.dataItem.activeFlag != StatusFlag.Yes),
+  });
   pageSelectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
