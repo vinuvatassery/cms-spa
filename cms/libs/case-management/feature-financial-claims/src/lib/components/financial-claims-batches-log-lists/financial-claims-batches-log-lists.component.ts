@@ -489,7 +489,7 @@ export class FinancialClaimsBatchesLogListsComponent
         if (exist === 0) {
           this.selectedDataRows.PrintAdviceLetterSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
         }
-     
+
     }
 
   }

@@ -111,7 +111,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     };
     this.gridDataHandle();
     this.loadReconcileListGrid();
-    this.isBreakoutPanelShow=false;     
+    this.isBreakoutPanelShow=false;
     const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
@@ -584,10 +584,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
     this.isSaveClicked = true;
     this.validateReconcileGridRecord();
-    let isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid);
-    let datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
-    let datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
-    let totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length;
+    const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid);
+    const datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
+    const datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
+    const totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length;
     if (isValid.length > 0) {
       this.pageValidationMessage = "validation errors found, please review each page for errors " +
         totalCount + " is the total number of validation errors found.";
@@ -610,7 +610,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
         cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
       });
     }
-   
+
   }
 
   onPrintAuthorizationCloseClicked(result: any) {
