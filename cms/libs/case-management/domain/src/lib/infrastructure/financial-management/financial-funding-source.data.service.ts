@@ -68,6 +68,6 @@ export class FinancialFundingSourceDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/funding-sources/lookup`);
   }
   removeFundingSource(fundingSourceId: string) {
-    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/funding-sources/${fundingSourceId}`);
+    return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/funding-sources/${fundingSourceId}`);
   }
 }

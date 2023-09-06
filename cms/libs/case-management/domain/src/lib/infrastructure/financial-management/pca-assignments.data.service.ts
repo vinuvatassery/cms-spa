@@ -44,4 +44,9 @@ export class PcaAssignmentsDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/${pcaAssignmentId}`);
   }
 
+  pcaAssignmentPriorityUpdate(pcaAssignmentPriorityArguments : any) {
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/priority`,pcaAssignmentPriorityArguments);
+  }
+
 }

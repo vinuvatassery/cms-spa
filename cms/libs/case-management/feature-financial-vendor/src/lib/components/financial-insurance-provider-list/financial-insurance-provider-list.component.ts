@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { VendorInsurancePlanFacade } from '@cms/case-management/domain';
-import { State } from '@progress/kendo-data-query';
+import { GridFilterParam, VendorInsurancePlanFacade } from '@cms/case-management/domain';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 @Component({
   selector: 'cms-financial-insurance-provider-list',
   templateUrl: './financial-insurance-provider-list.component.html',
@@ -23,6 +23,8 @@ export class FinancialInsuranceProviderListComponent implements OnInit  {
   public gridSkipCount = this.vendorInsurancePlanFacade.skipCount;
   public sort = this.vendorInsurancePlanFacade.sort;
   public state!: State;
+  filter!: any;
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   vendorInsurancePlanGridView$ = this.vendorInsurancePlanFacade.vendorInsurancePlanData$;
   gridLoader$= this.vendorInsurancePlanFacade.vendorInsuranceGridLoader$;
 
@@ -97,11 +99,19 @@ export class FinancialInsuranceProviderListComponent implements OnInit  {
   public dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.state = stateData;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.filter = stateData?.filter?.filters;
     this.loadVendorInsuranceProviderListGrid();
   }
 
+  filterChange(filter: CompositeFilterDescriptor): void {
+    this.filterData = filter;
+  }
+
   loadVendorInsuranceProviderListGrid() {
-    this.vendorInsurancePlanFacade.loadVendorInsuranceProviderListGrid(this.vendorId, this.state);
+    const params = new GridFilterParam(this.state.skip, this.state.take, this.sortValue, this.sortType, JSON.stringify(this.filter))
+    this.vendorInsurancePlanFacade.loadVendorInsuranceProviderListGrid(this.vendorId, params);
   }
 
   clickOpenAddEditInsurancePlanDetails() {

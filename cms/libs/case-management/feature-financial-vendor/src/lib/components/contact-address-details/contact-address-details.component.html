@@ -28,8 +28,8 @@
               </button>
             </div>
             <div class="flex-col">
-              <kendo-floatinglabel text=" Name">
-                <kendo-textbox aria-label="Contact Name" formControlName="contactName" [maxlength]="200" (keypress)="onKeyPress($event)" 
+              <kendo-floatinglabel text="Contact Name">
+                <kendo-textbox aria-label="Contact Name" formControlName="contactName"  [maxlength]="200" (keypress)="onKeyPress($event.charCode)"
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>
@@ -38,7 +38,7 @@
             </div>
             <div class="flex-col">
               <kendo-floatinglabel text="Description (Optional)">
-                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" (keypress)="onKeyPress($event)"  [maxlength]="500" (valueChange)="onDescriptionValueChange($event)" formControlName="contactDesc"
+                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" (keypress)="onKeyPress($event.charCode)"  [maxlength]="500" (valueChange)="onDescriptionValueChange($event)" formControlName="contactDesc"
                   resizable="vertical">
              
   <kendo-textarea-suffix class="justify-content-end">
@@ -59,8 +59,8 @@
               </kendo-formerror>
             </div>
             <div class="flex-col mb-1">
-              <kendo-floatinglabel text="Fax (optional)">
-                <kendo-maskedtextbox [maxlength]="10" aria-label="Fax (optional)" placeholder="Fax (optional)" mask="(999) 000-0000" [fillMode]="formUiStyle.inputFillMode"
+              <kendo-floatinglabel text="Fax Number (optional)">
+                <kendo-maskedtextbox [maxlength]="10" aria-label="Fax Number (optional)" placeholder="Fax (optional)" mask="(999) 000-0000" [fillMode]="formUiStyle.inputFillMode"
                 formControlName="faxNbr">
             </kendo-maskedtextbox>
               </kendo-floatinglabel>
@@ -109,11 +109,27 @@
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
+      <div>
+        <button
+        *ngIf="this.contactAddress.vendorContactId!=null"
+          kendoButton
+          [primary]="true"
+          look="flat"
+          aria-label="deactivate"
+          (click)="deactivatePaymentAddressContact()"
+        >
+          Deactivate
+        </button>
+      </div>
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"
+        <button kendoButton [primary]="true" look="outline" aria-label="cancel deactivation"
           (click)="onCancel()">
           Cancel
         </button>
+        <button kendoButton [primary]="true" look="outline" aria-label="deactivate contact"
+        (click)="onDeactivateContactClick()" *ngIf="this.contactAddress.vendorContactId!=null" >
+        Deactivate
+      </button>
 
         <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="save()" *ngIf="this.contactAddress.vendorContactId==null" >
             Add
@@ -124,3 +140,10 @@
       </div>
     </div>
   </kendo-dialog-actions>
+
+  <kendo-dialog *ngIf="isContactAddressDeactivateShow" (close)="clickCloseDeactivateContactAddress()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar> Deactivate contact?</kendo-dialog-titlebar>
+  <cms-contacts-deactivate (closeDeactivateContactAddress)="onDeactiveCancel($event)"
+    [VendorContactId]="this.contactAddress.vendorContactId"> </cms-contacts-deactivate>
+</kendo-dialog>

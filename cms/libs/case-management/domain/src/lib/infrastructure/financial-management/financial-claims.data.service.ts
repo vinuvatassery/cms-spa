@@ -7,9 +7,9 @@ import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Pharmacy } from '../../entities/client-pharmacy';
 import { ClientCase } from '../../entities/client-case';
-import { FinancialProvider } from '../../enums/financial-provider.enum';
 import { BatchClaim } from '../../entities/financial-management/batch-claim';
 import { GridFilterParam } from '../../entities/grid-filter-param';
+import { ServiceSubTypeCode } from '../../enums/service-sub-type-code';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsDataService {
@@ -392,7 +392,7 @@ export class FinancialClaimsDataService {
 
   getMedicalClaimByPaymentRequestId(paymentRequestId: any, typeCode: string) {
     let path;
-    if (typeCode == FinancialProvider.MedicalProvider) {
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
       path = 'financial-management/claims/medical';
     } else {
       path = 'financial-management/claims/dental';
@@ -409,7 +409,7 @@ export class FinancialClaimsDataService {
   }
 
   searchPharmacies(searchText: string, typeCode: string) {
-    if (typeCode == FinancialProvider.MedicalProvider) {
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
       return this.http.get<Pharmacy[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/SearchText=${searchText}`
       );
@@ -429,7 +429,7 @@ export class FinancialClaimsDataService {
 
   saveMedicalClaim(claim: any, typeCode: string) {
     let path;
-    if (typeCode == FinancialProvider.MedicalProvider) {
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
       path = 'financial-management/claims/medical/save';
     } else {
       path = 'financial-management/claims/dental/save';
@@ -442,7 +442,7 @@ export class FinancialClaimsDataService {
 
   updateMedicalClaim(claim: any, typeCode: string) {
     let path;
-    if (typeCode == FinancialProvider.MedicalProvider) {
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
       path = 'financial-management/claims/medical';
     } else {
       path = 'financial-management/claims/dental';
@@ -498,7 +498,7 @@ export class FinancialClaimsDataService {
 
   viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, claimsType:any) {
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/print-advice-letter/download`, printAdviceLetterData,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/download-advice-letter`, printAdviceLetterData,
       { responseType: 'blob' }
     );
   }

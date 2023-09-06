@@ -32,6 +32,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
   specialHandling = '';
   specialHandlingCharachtersCount!: number;
   specialHandlingCounter!: string;
+  statusFlag : any = StatusFlag;
 
   /** Constructor**/
   constructor(
@@ -187,7 +188,13 @@ export class PaymentAddressDetailsComponent implements OnInit {
     this.addUpdateBillingAddress(this.vendorId, formValues).subscribe({
       next: (resp) => {
         if (resp) {
-          this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment Address Added Successfully')
+          if (!this.isEdit) {
+            this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment address added successfully!')
+          }
+          else
+          {
+            this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment address updated successfully!')
+          }
         }
         this.billingAddressFacade.hideLoader();
         this.vendorContactFacade.loadVendorAllContacts(this.vendorId);

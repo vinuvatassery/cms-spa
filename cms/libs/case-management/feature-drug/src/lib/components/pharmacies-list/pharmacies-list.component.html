@@ -14,7 +14,7 @@
        [reorderable]="true"
       [columnMenu]="{ filter: true }"
        [sort]="state.sort">
-        <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="180" [sticky]="true">
+        <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="220" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <div class="d-flex align-items center pos-rel" kendoTooltip>
               <span class="preferred-phoneNo" title="Primacy Pharmacy Name" *ngIf="dataItem.priorityCode === priority && dataItem.activeFlag === 'Y'">
@@ -23,11 +23,11 @@
               <span class="pl-3">{{ dataItem.pharmacyName }}</span></div>
             </ng-template></kendo-grid-column>
         <kendo-grid-column field="tin" title="TIN" [width]="80"></kendo-grid-column>
-        <kendo-grid-column field="phone" title="Phone Number" [width]="130"></kendo-grid-column>
+        <kendo-grid-column field="phone" title="Phone Number" [width]="150"></kendo-grid-column>
         <kendo-grid-column field="fax" title="Fax Number" [width]="130"></kendo-grid-column>
-        <kendo-grid-column field="mailCode" title="Mail Codes" [width]="100"></kendo-grid-column>
+        <kendo-grid-column field="mailCode" title="Mail Codes" [width]="130"></kendo-grid-column>
         <kendo-grid-column field="address" title="Address" [width]="200"></kendo-grid-column>
-        <kendo-grid-column field="npi" title="NPI" [width]="200"></kendo-grid-column>
+        <kendo-grid-column field="npi" title="NPI" [width]="160"></kendo-grid-column>
         <kendo-grid-column field="effectiveDate" title="Effective Date" [width]="120">
           <ng-template kendoGridCellTemplate let-dataItem>
             <span *ngIf="dataItem.activeFlag == 'Y' ;else endDateBlock">
@@ -38,7 +38,7 @@
             </ng-template>
         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="100" [sticky]="true">
+        <kendo-grid-column field="by" title="By"  class="text-center"  [width]="75" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
