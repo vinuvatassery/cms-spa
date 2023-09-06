@@ -194,9 +194,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   searchMedicalProvider(searchText: any) {
     if(!searchText || searchText.length == 0){
       return;
-    }
+    }    
     this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
   }
+
   onCPTCodeValueChange(event: any, index: number) {
     let service = event;
     let ctpCodeIsvalid = this.AddClaimServicesForm.at(index) as FormGroup;
@@ -208,12 +209,29 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     });
     this.calculateMedicadeRate(index);
   }
+
   searchcptcode(cptcode: any) {
+    if(!cptcode || cptcode.length == 0){
+      return;
+    }
     this.financialClaimsFacade.searchcptcode(cptcode);
   }
 
-  loadClientBySearchText(searchText: any) {
-    this.financialClaimsFacade.loadClientBySearchText(searchText);
+  onPaymentTypeValueChange(cptCodeObject : any, index: number){ 
+    const serviceForm = this.AddClaimServicesForm.at(index) as FormGroup;
+    let cptCode = serviceForm.controls['cptCode'].value; 
+    if (cptCodeObject !== 'FULL_PAY' && cptCode.length > 0) {      
+        serviceForm.controls['amountDue'].setValue(0);
+    }
+  }
+
+  loadClientBySearchText(clientSearchText: any) {
+    if(!clientSearchText || clientSearchText.length == 0){
+      return;
+    }
+    clientSearchText = clientSearchText.replace("/", "-");
+    clientSearchText = clientSearchText.replace("/", "-");
+    this.financialClaimsFacade.loadClientBySearchText(clientSearchText);
   }
 
   get AddClaimServicesForm(): FormArray {
@@ -486,8 +504,8 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     if (paymentType == 'FULL_PAY') {
       const medicadeRate = serviceForm.controls['medicadeRate'].value ?? 0;
       let amoundDue = serviceForm.controls['amountDue'].value ?? 0;
-      if (medicadeRate > 0 && amoundDue > 0) {
-        amoundDue = medicadeRate * 0.25 + amoundDue;
+      if (medicadeRate > 0) {
+        amoundDue = (medicadeRate * 0.25) + medicadeRate;
         serviceForm.controls['amountDue'].setValue(amoundDue);
       }
     }
