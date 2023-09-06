@@ -54,7 +54,7 @@
       [data]="batchLogGridLists$ | async"   (filterChange)="filterChange($event)" filterable="menu" [filter]="state.filter">   
       <kendo-grid-column field="paymentNbr" title="Item #" [width]="150">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button aria-label="Item" (click)="paymentClickHandler(dataItem.paymentRequestId)" kendoButton look="flat" class="card-link-button">
+          <button aria-label="Item" (click)="paymentClickHandler(dataItem)" kendoButton look="flat" class="card-link-button">
             {{ dataItem.paymentNbr }}
           </button>
         </ng-template>

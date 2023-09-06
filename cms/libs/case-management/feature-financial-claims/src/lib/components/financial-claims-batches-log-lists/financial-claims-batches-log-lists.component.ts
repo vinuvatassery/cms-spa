@@ -314,10 +314,10 @@ export class FinancialClaimsBatchesLogListsComponent
     this.route.navigate([this.route.url, 'items']);
   }
 
-  paymentClickHandler(paymentRequestId: string) {
+  paymentClickHandler(dataItem: any) {
     const batchId = this.activeRoute.snapshot.queryParams['bid'];
     this.route.navigate([this.route.url.split('?')[0], 'items'], {
-      queryParams: { bid: batchId, pid: paymentRequestId },
+      queryParams: { bid: batchId, pid: dataItem.paymentRequestId,eid:dataItem.vendorAddressId },
     });
   }
 
