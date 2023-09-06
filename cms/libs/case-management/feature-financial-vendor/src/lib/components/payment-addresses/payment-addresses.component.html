@@ -13,7 +13,7 @@
         <div class="app-c-table">
             <kendo-grid #grid  [resizable]="true" [loading]="isPaymentsAddressGridLoaderShow" [pageSize]="state.take" [pageable]="true"
             [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-            [columnMenu]="{ filter: false }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [navigable]="true" [data]="paymentsAddressGridView$ | async"   (detailCollapse)="onDetailCollapse($event)"
+            [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [navigable]="true" [data]="paymentsAddressGridView$ | async"   (detailCollapse)="onDetailCollapse($event)"
             (detailExpand)="onDetailExpand($event)" (columnVisibilityChange)="columnChange($event)" [rowClass]="rowClass">
 
                 <kendo-grid-column field="mailCode" title="Mail Code" [width]="150">
