@@ -259,7 +259,7 @@ if(res)
 
     const filters = stateData.filter?.filters ?? [];
 
-    for (let val of filters) {
+    for (const val of filters) {
       if (val.field === 'startDate') {
         this.intl.formatDate(val.value, this.dateFormat);
       }
