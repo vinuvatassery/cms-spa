@@ -120,7 +120,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
       this.loaderService.show();
       let vendorContacts= this.contactForm.value.vendorContacts[0];
       vendorContacts.preferredFlag = vendorContacts.preferredFlag ? "Y" :"N"
-      this.vendocontactsFacade.updateContactAddress(this.contactForm.value.vendorContacts[0]).subscribe({
+      this.vendorContactsFacade.updateContactAddress(this.contactForm.value.vendorContacts[0]).subscribe({
         next: (response: any) => {
           if (response) {
             this.contactFacade.showHideSnackBar(
