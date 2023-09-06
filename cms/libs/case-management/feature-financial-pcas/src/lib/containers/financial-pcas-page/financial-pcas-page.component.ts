@@ -23,7 +23,7 @@ export class FinancialPcasPageComponent implements OnInit{
   sortType = this.financialPcaFacade.sortType;
   pageSizes = this.financialPcaFacade.gridPageSizes;
   gridSkipCount = this.financialPcaFacade.skipCount;
-  pcaReassignmentCount!: number;
+  pcaReassignmentCount$ = this.financialPcaFacade.pcaReassignmentCount$;
 
   sortValueFinancialPcaSetup = this.financialPcaFacade.sortValueFinancialPcaSetup;
   sortPcaSetupList = this.financialPcaFacade.sortPcaSetupList;
@@ -49,11 +49,13 @@ export class FinancialPcasPageComponent implements OnInit{
   pcaReassignmentByFundSourceId$ = this.financialPcaFacade.pcaReassignmentByFundSourceId$;
   objectCodesData$ = this.pcaAssignmentsFacade.objectCodesData$;
   groupCodesData$ = this.pcaAssignmentsFacade.groupCodesData$;
+  groupCodesDataFilter$ = this.pcaAssignmentsFacade.groupCodesData$;
   pcaCodesData$ = this.pcaAssignmentsFacade.pcaCodesData$;
   pcaDatesData$ = this.pcaAssignmentsFacade.pcaDatesData$;
   pcaCodesInfoData$ = this.pcaAssignmentsFacade.pcaCodesInfoData$;
   pcaAssignmentData$ = this.pcaAssignmentsFacade.pcaAssignmentData$;
   assignPcaResponseData$ = this.pcaAssignmentsFacade.assignPcaResponseData$;
+  pcaAssignmentPriorityUpdate$ = this.pcaAssignmentsFacade.pcaAssignmentPriorityUpdate$;
 
    pcaAssignOpenDatesListSubject = new Subject<any>();
   pcaAssignOpenDatesList$ = this.pcaAssignOpenDatesListSubject.asObservable();
@@ -68,18 +70,8 @@ export class FinancialPcasPageComponent implements OnInit{
     private readonly pcaAssignmentsFacade : PcaAssignmentsFacade   
   ) { }
   ngOnInit(): void {
-    this.PcaReassignmetCount();
-  }
-
-  PcaReassignmetCount() {
-    this.financialPcaFacade.pcaReassignmentCount().subscribe({
-      next: (val)=>{
-        this.pcaReassignmentCount = val;
-      },
-    })
-  }
-
-
+    this.financialPcaFacade.pcaReassignmentCount();
+  }  
 
   loadFinancialPcaSetupListGrid(event: GridFilterParam) {
     this.financialPcaFacade.loadFinancialPcaSetupListGrid(event);
@@ -186,6 +178,10 @@ export class FinancialPcasPageComponent implements OnInit{
   saveEditPcaReassignmentClicked(updateReassignmentValue:any){
     this.financialPcaFacade.updateReassignmentPca(updateReassignmentValue);
 
+  }
+  
+  pcaAssignmentPriorityUpdate(pcaAssignmentPriorityArguments:any){
+    this.pcaAssignmentsFacade.pcaAssignmentPriorityUpdate(pcaAssignmentPriorityArguments);
   }
   
 }

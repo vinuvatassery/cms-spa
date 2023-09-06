@@ -12,6 +12,7 @@ export class FundingSourcePageComponent {
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
   addFundingSource$ = this.financialFundingSourceFacade.addFundingSource$
   updateFundingSource$ = this.financialFundingSourceFacade.updateFundingSource$
+  removeFundingSource$ = this.financialFundingSourceFacade.removeFundingSource$
   claimsType: any;
   fundingSourceList$ = this.financialFundingSourceFacade.fundingSourceList$;
   sortType = this.financialFundingSourceFacade.sortType;

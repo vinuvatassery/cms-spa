@@ -18,7 +18,7 @@
             Total Monthly Income
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="incomeTypeCodeDesc" title="Income Type" [width]="130">
+        <kendo-grid-column field="incomeTypeCodeDesc" title="Income Type" [width]="140">
         </kendo-grid-column>
         <kendo-grid-column
           field="incomeAmt"
@@ -71,7 +71,7 @@
         <kendo-grid-column
           field="incomeNote"
           title="Financial Justification or Income Note"
-          [width]="150"
+          [width]="160"
           [sortable]="false"
         >
           <ng-template
@@ -85,7 +85,7 @@
         <kendo-grid-column
           field="monthlyIncome"
           title="Monthly Income"
-          [width]="100"
+          [width]="120"
           format="{0:c2}"
           [sticky]="true"
         >
@@ -185,7 +185,7 @@
  </ng-template>
       </kendo-grid>
     </div>
-    <kendo-formerror *ngIf="!isIncomeAvailable"> A Response is required.</kendo-formerror>
+    <kendo-formerror *ngIf="!isIncomeAvailable"><span class="material-icons"> error </span> A Response is required.</kendo-formerror>
     <div
       class="block-section mt-1 text-right"
       *ngIf="!isAddIncomeButtonAndFooterNoteDisplay && !isClientProfileTab"
@@ -216,7 +216,7 @@
     <h5 class="text-capital align-items-center">Dependents' Proof of School</h5>
     <div class="app-c-table">
       <kendo-grid [data]="dependentsProofofSchools" [resizable]="true">
-        <kendo-grid-column field="name" title="Name" [width]="130">
+        <kendo-grid-column field="name" title="Name" [width]="140">
         </kendo-grid-column>
         <kendo-grid-column *ngIf="!isClientProfileTab" field="age" title="Age" [width]="130">
         </kendo-grid-column>
