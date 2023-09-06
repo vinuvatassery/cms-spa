@@ -17,7 +17,7 @@
 
       <div class="flex-col" *ngIf="providerType == vendorTypes.Pharmacy">
         <kendo-floatinglabel text="Pharmacy Name">
-          <kendo-textbox aria-label="Pharmacy Name" [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="Pharmacy Name"  [maxlength]="500" [fillMode]="formUiStyle.inputFillMode"
             formControlName="providerName">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
@@ -114,7 +114,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="TIN (optional)">
           <kendo-maskedtextbox aria-label="TIN" 
-           [fillMode]="formUiStyle.inputFillMode" placeholder="TIN (optional)"
+           [fillMode]="formUiStyle.inputFillMode"  [maxlength]="9" placeholder="TIN (optional)"
            [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat">
           </kendo-maskedtextbox> 
         </kendo-floatinglabel>
@@ -173,7 +173,7 @@
       <!-- stop the Name on check and Name on envelop to not show on manufacturer -->
       <div class="flex-col" *ngIf="providerType != vendorTypes.Manufacturers">
         <kendo-floatinglabel text="Name on Check">
-          <kendo-textbox aria-label="Name on Check" [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="Name on Check"  [maxlength]="200" [fillMode]="formUiStyle.inputFillMode"
             formControlName="nameOnCheck">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['nameOnCheck'].valid && isValidateForm">
@@ -184,7 +184,7 @@
 
       <div class="flex-col" *ngIf="providerType != vendorTypes.Manufacturers">
         <kendo-floatinglabel text="Name on Envelop">
-          <kendo-textbox aria-label="Name on Envelop" [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="Name on Envelop"  [maxlength]="200" [fillMode]="formUiStyle.inputFillMode"
             formControlName="nameOnEnvolop">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['nameOnEnvolop'].valid && isValidateForm">
@@ -194,7 +194,7 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Address Line 1">
-          <kendo-textbox aria-label="Address Line 1" [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="Address Line 1"   [maxlength]="200" [fillMode]="formUiStyle.inputFillMode"
             formControlName="addressLine1">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['addressLine1'].valid && isValidateForm">
@@ -204,14 +204,14 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="Address Line 2 (optional)">
-          <kendo-textbox aria-label="Address Line 2 (optional)" [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="Address Line 2 (optional)"  [maxlength]="50" [fillMode]="formUiStyle.inputFillMode"
             formControlName="addressLine2">
           </kendo-textbox>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="City">
-          <kendo-textbox aria-label="City" [fillMode]="formUiStyle.inputFillMode" formControlName="city">
+          <kendo-textbox aria-label="City"  [maxlength]="50" [fillMode]="formUiStyle.inputFillMode" formControlName="city">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['city'].valid && isValidateForm">
             City is required
