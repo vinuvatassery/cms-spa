@@ -122,7 +122,6 @@ export class LovFacade {
   addressType$ = this.lovAddressTypeSubject.asObservable();
   showLoaderOnAddressType$ = this.showLoaderOnAddressType.asObservable();
   lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();
-  lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();
   eligibilityStatus$ = this.eligibilityStatusSubject.asObservable();
   eligibilityStatusCp$ = this.eligibilityStatusCpSubject.asObservable();
   showLoaderOnEligibilityStatus$ = this.showLoaderOnEligibilityStatusSubject.asObservable();
