@@ -122,14 +122,13 @@ export class FinancialClaimsBatchesLogListsComponent
             "This claim cannot be deleted"
           );
         }else{
-          if (!this.isDeleteClaimClosed) {
             this.isUnBatchClaimsClosed = false;
             this.isDeleteClaimClosed = true;
             this.onSingleClaimDelete(data.paymentRequestId.split(','));
             this.onDeleteClaimsOpenClicked(
               this.deleteClaimsConfirmationDialogTemplate
             );
-          }
+          
         }
        
       },
