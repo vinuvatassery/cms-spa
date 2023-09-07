@@ -45,22 +45,17 @@
   [resizable]="true"
   [loading]="isFinancialClaimsProcessGridLoaderShow"
    [groupable]="false"
-    [navigable]="isProcessGridExpand"
+    [navigable]="!isProcessGridExpand"
   (dataStateChange)="dataStateChange($event)"
   (filterChange)="filterChange($event)" [selectable]="selectableSettings"
     [data]="gridFinancialClaimsProcessData$ | async"
     kendoGridSelectBy="paymentRequestId"
     (selectedKeysChange)="selectedKeysChange($event)"
-    [(selectedKeys)]="selectedProcessClaims">>
+    [(selectedKeys)]="selectedProcessClaims">
 
-    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand"
-        [headerClass]="{ 'text-center': true }"
-        [class]="{ 'text-center': true }"
-        [resizable]="false"
-        [columnMenu]="false"
-        [showSelectAll]="true"
-      [width]="40" 
-      ></kendo-grid-checkbox-column>
+    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [headerClass]="{ 'text-center': true }"
+      [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true" [width]="40"
+      [locked]="true"></kendo-grid-checkbox-column>
     <kendo-grid-column field="invoiceNbr"  title="Invoice ID" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -227,14 +222,13 @@
       </ng-template>
     </kendo-grid-column>
 
-    <div *kendoGridDetailTemplate="let dataItem">
-    <cms-financial-claims-invoice-list
-    [paymentRequestId]="dataItem?.paymentRequestId"
-    [financialInvoiceList$]="financialClaimsInvoice$"
-    [sort]="sortValueFinancialInvoices"
-    (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)></cms-financial-claims-invoice-list>
-    </div>
-
+    <ng-container *ngIf="isProcessGridExpand">
+      <div *kendoGridDetailTemplate="let dataItem">
+        <cms-financial-claims-invoice-list [paymentRequestId]="dataItem?.paymentRequestId"
+          [financialInvoiceList$]="financialClaimsInvoice$" [sort]="sortValueFinancialInvoices"
+          (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)></cms-financial-claims-invoice-list>
+      </div>
+    </ng-container>
 
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">

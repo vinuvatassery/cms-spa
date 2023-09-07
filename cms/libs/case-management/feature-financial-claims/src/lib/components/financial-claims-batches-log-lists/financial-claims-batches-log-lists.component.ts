@@ -21,7 +21,7 @@ import { Observable, Subject, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { FinancialClaimsFacade, PaymentBatchName } from '@cms/case-management/domain';
-import { NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-financial-claims-batches-log-lists',
   templateUrl: './financial-claims-batches-log-lists.component.html',
@@ -118,8 +118,9 @@ export class FinancialClaimsBatchesLogListsComponent
         if(data.paymentStatusCode=="PAID")
         {
           this.notificationSnackbarService.manageSnackBar(
-            SnackBarNotificationType.WARNING,
-            "This claim cannot be deleted"
+            SnackBarNotificationType.ERROR,
+            "This claim cannot be deleted",
+            NotificationSource.UI
           );
         }else{
             this.isUnBatchClaimsClosed = false;
