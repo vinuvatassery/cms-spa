@@ -6,11 +6,11 @@
     </div>
     <div class="flex-col mt-1">
       <div class="app-c-table">
-        <kendo-grid [resizable]="true" [loading]="isContactsGridLoaderShow" [pageSize]="state.take" [pageable]="true"
+        <kendo-grid (columnReorder)="columnReorder($event)" [resizable]="true" [loading]="isContactsGridLoaderShow" [pageSize]="state.take" [pageable]="true"
         [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-        [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [data]="contactsGridView$ | async">
+        [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [data]="contactsGridView$ | async" (columnVisibilityChange)="columnChange($event)">
 
-          <kendo-grid-column field="name" title="Name" [width]="150">
+          <kendo-grid-column field="name" title="Name" [width]="150" [sticky]="true">
           </kendo-grid-column>
 
           <kendo-grid-column field="jobTitle" title="Job Title" [width]="150">
@@ -35,7 +35,7 @@
               </kendo-popover>
             </ng-template>
           </kendo-grid-column>
-          <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="75" class="text-center">
+          <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="75" class="text-center" [sticky]="true">
             <ng-template kendoGridCellTemplate let-dataItem>
               <kendo-dropdownbutton [data]="contactsActions" icon="more-vertical" class="TableActionPopup app-dropdown-action more_action_wid"
                 buttonClass="k-icon-button" aria-label="more actions" title="More option"
