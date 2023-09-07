@@ -247,8 +247,8 @@ loadFinancialRecentClaimListGrid() {
     this.dentalOrMedicalServiceField= this.claimsType == "dental" ? "Dental Service":"Medical Service";
     this.columns = {
       invoiceId:"Invoice ID",
-      serviceStartDate:"Service Start Date",
-      serviceEndDate:"Service End Date",
+      serviceStartDate:"Service Start",
+      serviceEndDate:"Service End",
       cptCode:"CPT Code",
       medicalService:this.dentalOrMedicalServiceField,
       serviceCost:"Service Cost",
@@ -267,11 +267,11 @@ loadFinancialRecentClaimListGrid() {
       },
       {
         "columnCode": "serviceStartDate",
-        "columnDesc": "Service Start Date"        
+        "columnDesc": "Service Start"        
       },
       {
         "columnCode": "serviceEndDate",
-        "columnDesc": "Service End Date"     
+        "columnDesc": "Service End"     
       }
       ,
       {

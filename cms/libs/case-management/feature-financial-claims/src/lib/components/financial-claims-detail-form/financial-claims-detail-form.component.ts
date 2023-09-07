@@ -280,6 +280,11 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   onClientValueChange(event: any) {
     this.clientCaseEligibilityId = event.clientCaseEligibilityId;
+    this.clientId = event.clientId;
+    this.clientName = event.clientFullName;
+    if (this.clientId != null && this.vendorId != null) {
+      this.isRecentClaimShow = true;
+    }
   }
 
   removeService(i: number) {
@@ -530,17 +535,11 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     }
     return `0/${this.textMaxLength}`;
   }
-  providerValueChange($event: any) {
+  
+  onProviderValueChange($event: any) {
     this.isRecentClaimShow = false;
-    this.vendorId = $event.providerId;
-    this.vendorName = $event.providerFullName;
-  }
-  clientValueChange($event: any) {
-    this.clientId = $event.clientId;
-    this.clientName = $event.clientFullName;
-    if (this.clientId != null && this.vendorId != null) {
-      this.isRecentClaimShow = true;
-    }
-  }
+    this.vendorId = $event.vendorId;
+    this.vendorName = $event.vendorName;
+  }  
 }
 
