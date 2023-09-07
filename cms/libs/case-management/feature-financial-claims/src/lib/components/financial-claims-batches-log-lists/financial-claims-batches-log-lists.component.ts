@@ -21,6 +21,7 @@ import { Observable, Subject, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { FinancialClaimsFacade, PaymentBatchName } from '@cms/case-management/domain';
+import { NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-financial-claims-batches-log-lists',
   templateUrl: './financial-claims-batches-log-lists.component.html',
@@ -114,14 +115,23 @@ export class FinancialClaimsBatchesLogListsComponent
       text: 'Delete Claims',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.isDeleteClaimClosed) {
-          this.isUnBatchClaimsClosed = false;
-          this.isDeleteClaimClosed = true;
-          this.onSingleClaimDelete(data.paymentRequestId.split(','));
-          this.onDeleteClaimsOpenClicked(
-            this.deleteClaimsConfirmationDialogTemplate
+        if(data.paymentStatusCode=="PAID")
+        {
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.WARNING,
+            "This claim cannot be deleted"
           );
+        }else{
+          if (!this.isDeleteClaimClosed) {
+            this.isUnBatchClaimsClosed = false;
+            this.isDeleteClaimClosed = true;
+            this.onSingleClaimDelete(data.paymentRequestId.split(','));
+            this.onDeleteClaimsOpenClicked(
+              this.deleteClaimsConfirmationDialogTemplate
+            );
+          }
         }
+       
       },
     },
   ];
@@ -189,12 +199,14 @@ export class FinancialClaimsBatchesLogListsComponent
   selectedDataRows: any;
   selectedCount: number = 0;
   disablePrwButton:boolean= true;
+  deletemodelbody:string="This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch";
   /** Constructor **/
   constructor(
     private route: Router,
     private dialogService: DialogService,
     public activeRoute: ActivatedRoute,
-    private readonly financialClaimsFacade: FinancialClaimsFacade
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
   ) {}
 
   ngOnInit(): void {
