@@ -81,6 +81,7 @@ export class LovFacade {
   private paymentRunDateSubject = new BehaviorSubject<Lov[]>([]);
   private lovPaymentMethodVendorSubject = new BehaviorSubject<Lov[]>([]);
   private lovPaymentRunDateSubject = new BehaviorSubject<Lov[]>([]);
+  private lovYesOrNoSubject = new BehaviorSubject<Lov[]>([]);
 
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
@@ -119,7 +120,7 @@ export class LovFacade {
   applicantInfolov$=this.lovApplicantInfoSubject.asObservable();
   addressType$ = this.lovAddressTypeSubject.asObservable();
   showLoaderOnAddressType$ = this.showLoaderOnAddressType.asObservable();
-  lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();  
+  lovClientPhoneDeviceType$=this.lovClientPhoneDeviceTypeSubject.asObservable();
   eligibilityStatus$ = this.eligibilityStatusSubject.asObservable();
   eligibilityStatusCp$ = this.eligibilityStatusCpSubject.asObservable();
   showLoaderOnEligibilityStatus$ = this.showLoaderOnEligibilityStatusSubject.asObservable();
@@ -137,11 +138,11 @@ export class LovFacade {
   paymentMethodType$ = this.paymentMethodTypeSubject.asObservable();
   paymentRunDates$ = this.paymentRunDateSubject.asObservable();
 
-  
-  
-  paymentMethodVendorlov$ = this.lovPaymentMethodVendorSubject.asObservable();
-  paymentRunDatelov$ = this.lovPaymentRunDateSubject.asObservable();  
 
+
+  paymentMethodVendorlov$ = this.lovPaymentMethodVendorSubject.asObservable();
+  paymentRunDatelov$ = this.lovPaymentRunDateSubject.asObservable();
+  yesOrNoLov$ = this.lovYesOrNoSubject.asObservable();
 
 
         /** Public methods **/
@@ -714,7 +715,16 @@ getDocumentSubTypeLovs(parentCode : string) {
       },
     });
   }
-
+  getYesOrNoLovs(): void {
+    this.lovDataService.getLovsbyType(LovType.YesOrNo).subscribe({
+      next: (resp) => {
+        this.lovYesOrNoSubject.next(resp);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      },
+    });
+  }
 }
 
 

@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList } from '@angular/core';
 import { PaymentsFacade,BillingAddressFacade,VendorContactsFacade, ContactResponse ,FinancialVendorTypeCode, FinancialVendorProviderTabCode, StatusFlag } from '@cms/case-management/domain';
-import { State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
-import { GridComponent } from '@progress/kendo-angular-grid';
+import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
 import { take } from 'rxjs';
+import { LovFacade } from '@cms/system-config/domain';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 
 @Component({
@@ -41,20 +44,42 @@ export class PaymentAddressesComponent {
   @ViewChildren(GridComponent) private grid !: QueryList<GridComponent>;
   IsAddContactDisabled:boolean=true;
   isContactAddressDeactivateShow = false;
+  public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
+  paymentRunDateMonthlyValue = null;
+  paymentMethodValue = null;
+  paymentMethodVendorlov$ = this.lovFacade.paymentMethodVendorlov$;
+  paymentRunDatelov$ = this.lovFacade.paymentRunDatelov$;
+  yesOrNoLov$ = this.lovFacade.yesOrNoLov$;
+  paymentMethodVendorlovs:any=[];
+  paymentRunDatelovs:any=[];
+  yesOrNoLovs:any=[];
+  filters:any=[];
+  filteredBy = "";
+  isFiltered = false;
+  sortColumn: any;
+  sortDir = "";
+  columnsReordered = false;
+  searchValue = "";
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   paymentAddressInnerGridLists = [
     {
-      Name: 'FName LName',
-      Description: 'FName LName',
-      PremiumAmount: '500.00',
-      PhoneNumber: 'XXXXXX',
-      FaxNumber: 'XXXXXX',
-      EmailAddress: 'XXXXXX',
-      EffectiveDate: 'XXXXXX',
-      by: 'XX',
+      mailCode: 'Mail Code',
+      nameOnCheck: 'Name on Check',
+      nameOnEnvelope: 'Name on Envelope',
+      paymentMethodCode: 'Payment Method',
+      paymentRunDateMonthly: 'Payment Run Date',
+      acceptsCombinedPaymentsFlag: 'Accept Combined Payments?',
+      acceptsReportsFlag: 'Accepts Reports?',
+      address1: 'Address 1',
+      address2: 'Address 2',
+      cityCode: 'City',
+      state: 'State',
+      zip: 'Zip',
+      specialHandlingDesc: 'Special Handling',
+      effectiveDate: 'Effective Dates',
+      creatorId: 'By'
     },
   ];
-
-
 
   public paymentAddressActions = [
     {
@@ -86,10 +111,24 @@ export class PaymentAddressesComponent {
   ];
   contactResponse: ContactResponse[] = [];
   /** Constructor **/
-  constructor(private readonly paymentsFacade: PaymentsFacade,private readonly paymentBillingFacade: BillingAddressFacade,private readonly vendorcontactFacade: VendorContactsFacade,private route: ActivatedRoute, private readonly cdr: ChangeDetectorRef) { }
+  constructor(private readonly paymentsFacade: PaymentsFacade,
+    private readonly paymentBillingFacade: BillingAddressFacade,
+    private readonly vendorcontactFacade: VendorContactsFacade,
+    private route: ActivatedRoute,
+    private readonly cdr: ChangeDetectorRef,
+    private readonly lovFacade: LovFacade,
+    public readonly  intl: IntlService,
+    private readonly configurationProvider: ConfigurationProvider)
+    { }
 
 
   ngOnInit(): void {
+    this.lovFacade.getVendorPaymentRunDatesLovs();
+    this.lovFacade.getVendorPaymentMethodLovs();
+    this.lovFacade.getYesOrNoLovs();
+    this.loadVendorPaymentRunDatesLovs()
+    this.loadVenderPaymentMethodsLovs();
+    this.loadYesOrNoLovs();
     this.vendorcontactFacade.loadMailCodes(this.vendorId);
     this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {
       if(mailCode.length>0)
@@ -133,10 +172,12 @@ export class PaymentAddressesComponent {
 
   }
   public dataStateChange(stateData: any): void {
+    this.filters = JSON.stringify(stateData.filter?.filters)
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
+    this.setGridState(stateData);
     this.loadPaymentsAddressListGrid();
   }
 
@@ -148,7 +189,8 @@ export class PaymentAddressesComponent {
       this.sortValue,
       this.sortType,
       this.vendorId,
-      this.isShowHistoricalData
+      this.isShowHistoricalData,
+      this.filters
     );
   }
 
@@ -276,5 +318,85 @@ export class PaymentAddressesComponent {
     if (isCancel) {
       this.clickCloseDeactivateContactAddress();
     }
+  }
+
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value:value.lovCode
+      }],
+        logic: "or"
+    });
+  }
+
+  private loadYesOrNoLovs() {
+    this.yesOrNoLov$
+    .subscribe({
+      next: (data: any) => {
+        this.yesOrNoLovs=data;
+      }
+    });
+  }
+
+  private loadVenderPaymentMethodsLovs() {
+    this.paymentMethodVendorlov$
+    .subscribe({
+      next: (data: any) => {
+        this.paymentMethodVendorlovs=data;
+      }
+    });
+  }
+
+  private loadVendorPaymentRunDatesLovs() {
+    this.paymentRunDatelov$
+    .subscribe({
+      next: (data: any) => {
+        this.paymentRunDatelovs=data;
+      }
+    });
+  }
+
+  public setGridState(stateData: any): void {
+    this.state = stateData;
+
+    const filters = stateData.filter?.filters ?? [];
+
+    for (let val of filters) {
+      if (val.field === 'effectiveDate') {
+        this.intl.formatDate(val.value, this.dateFormat);
+      }
+    }
+    const filterList = this.state?.filter?.filters ?? [];
+    this.filters = JSON.stringify(filterList);
+    this.filteredBy = filterList.toString();
+
+    if (filters.length > 0) {
+      const filterListData = filters.map((filter:any) => this.paymentAddressInnerGridLists[filter?.filters[0]?.field]);
+      this.isFiltered = true;
+      this.filteredBy = filterListData.toString();
+      this.cdr.detectChanges();
+    }
+    else {
+      this.isFiltered = false;
+    }
+
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? "";
+    this.sortType = stateData.sort[0]?.dir ?? "";
+    this.state = stateData;
+    this.sortColumn = this.paymentAddressInnerGridLists[stateData.sort[0]?.field];
+    this.sortDir = "";
+    if(this.sort[0]?.dir === 'asc'){
+      this.sortDir = 'Ascending';
+    }
+    if(this.sort[0]?.dir === 'desc'){
+      this.sortDir = 'Descending';
+    }
+  }
+
+  filterChange(filter: CompositeFilterDescriptor): void {
+    this.filters = JSON.stringify(filter);
   }
 }

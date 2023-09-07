@@ -48,4 +48,5 @@ export enum LovType {
     PaymentMethodCode = 'PAYMENT_METHOD',
     PaymentRunDate = 'PAYMENT_RUN_DATE',
     PaymentMethodVendor = 'PAYMENT_METHOD',
+    YesOrNo = 'YES_OR_NO'
   }

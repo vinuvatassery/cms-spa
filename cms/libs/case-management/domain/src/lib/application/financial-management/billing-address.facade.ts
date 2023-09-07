@@ -97,7 +97,8 @@ export class BillingAddressFacade {
     sort: string,
     sortType: string,
     vendorId: any,
-    isShowHistoricalData:boolean=false
+    isShowHistoricalData:boolean=false,
+    filters:any
   ) {
     this.showLoader();
 
@@ -111,7 +112,8 @@ export class BillingAddressFacade {
         sort,
         sortType,
         vendorId,
-        isShowHistoricalData
+        isShowHistoricalData,
+        filters
       )
       .subscribe({
         next: (dataResponse) => {

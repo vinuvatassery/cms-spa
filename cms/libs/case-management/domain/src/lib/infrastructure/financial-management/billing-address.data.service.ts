@@ -38,9 +38,9 @@ export class BillingAddressDataService {
     ]);
   }
 
-  loadBillingPaymentsAddressListService(vendorTypeCode: string, skipcount: number, maxResultCount: number, sort: string, sortType: string, vendorId: any, isShowHistoricalData:boolean=false) : Observable<any> {
+  loadBillingPaymentsAddressListService(vendorTypeCode: string, skipcount: number, maxResultCount: number, sort: string, sortType: string, vendorId: any, isShowHistoricalData:boolean=false, filters:any) : Observable<any> {
     return this.http.get<any>(
-     `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/address?isShowHistoricalData=${isShowHistoricalData}&VendorId=${vendorId}&VendorTypeCode=${vendorTypeCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
+     `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/address?isShowHistoricalData=${isShowHistoricalData}&VendorId=${vendorId}&VendorTypeCode=${vendorTypeCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&Filter=${filters}`
     );
   }
 
