@@ -197,7 +197,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
       },
     },
   ];
-
+  deletemodelbody="This action cannot be undone, but you may add a claim at any time.";
   /** Constructor **/
   constructor(
     private dialogService: DialogService,
