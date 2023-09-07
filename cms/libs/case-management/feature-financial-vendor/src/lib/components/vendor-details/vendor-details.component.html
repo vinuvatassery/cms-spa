@@ -1,6 +1,10 @@
 <section class="k-dialog-body">
   <div [formGroup]="medicalProviderForm">
-    <p class="text-muted mb-2">
+    <p *ngIf="providerType == vendorTypes.InsuranceVendors" class="text-muted mb-2">
+      All fields are required unless otherwise stated. 
+      You may view and edit the vendor's profile once it is added.
+    </p>
+    <p *ngIf="providerType != vendorTypes.InsuranceVendors" class="text-muted mb-2">
       All fields are required unless otherwise stated.
     </p>
     <div class="flex-row">
@@ -183,8 +187,8 @@
       </div>
 
       <div class="flex-col" *ngIf="providerType != vendorTypes.Manufacturers">
-        <kendo-floatinglabel text="Name on Envelop">
-          <kendo-textbox aria-label="Name on Envelop" [fillMode]="formUiStyle.inputFillMode"
+        <kendo-floatinglabel text="Name on Envelope">
+          <kendo-textbox aria-label="Name on Envelope" [fillMode]="formUiStyle.inputFillMode"
             formControlName="nameOnEnvolop">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['nameOnEnvolop'].valid && isValidateForm">
