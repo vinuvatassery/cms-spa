@@ -51,7 +51,10 @@ export class FinancialClaimsBatchesLogListsComponent
   onlyPrintAdviceLetter: boolean = true;
   currentPrintAdviceLetterGridFilter:any;
   printAdviceLetterResult :any;
-
+  private addClientRecentClaimsDialog: any;
+  vendorId:any;
+  clientId:any;
+  clientName:any;
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -504,5 +507,29 @@ export class FinancialClaimsBatchesLogListsComponent
 
     }
 
+  }
+
+  clientRecentClaimsModalClicked(
+    template: TemplateRef<unknown>,
+    data: any
+  ): void {
+    this.addClientRecentClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+      animation: {
+        direction: 'up',
+        type: 'slide',
+        duration: 200,
+      },
+    });
+    this.vendorId=data.vendorId;
+    this.clientId=data.clientId;
+    this.clientName=data.clientFullName;
+  }
+
+  closeRecentClaimsModal(result: any) {
+    if (result) {
+      this.addClientRecentClaimsDialog.close();
+    }
   }
 }
