@@ -163,30 +163,32 @@ export class FinancialPcasReassignmentListComponent
    this.allnotassignpcslist=this.notselectedpcspcs.filter((obj:any) =>
    String(obj.pcaCode).includes(text)||String(obj.fundingSourceCode).includes(text))
 debugger
-   // if(text){ 
-    //   this.showInputLoader = true;
-    //   this.filterManager.next(text);
-    // }
+
   }
-  onClientSelected(event: any,data:any) {
-    
+  onClientSelected(event: any,data:any) {    
     debugger
     if (event) {
-let obj={"PcaId":event.pcaId,"pcaAssignmentId":data.pcaAssignmentId,"pcaCode":event.pcaCode};
-this.reassignpcas.push(obj);
-debugger
-this.allnotassignpcslist=this.notselectedpcspcs;
+             let obj={"PcaId":event.pcaId,"pcaAssignmentId":data.pcaAssignmentId,"pcaCode":event.pcaCode};
+             this.reassignpcas.push(obj);
+             debugger
+            //  var idx = this.allnotassignpcslist.findIndex((x:any)=>x.pcaCode==event.pcaCode);
+            //  debugger
+            //  if (idx !== -1)
+            //   {
+            //       debugger
+            //       this.allnotassignpcslist.splice(idx, 1);
+            //   }
     }
   }
   onClientSelected1(event: any) {
     
     debugger
     if (event) {
-let obj={"PcaId":event.pcaId,"pcaAssignmentId":event.pcaAssignmentId};
-this.reassignpcas.push(obj);
-debugger
-this.allnotassignpcslist=this.notselectedpcspcs;
-    }
+         let obj={"PcaId":event.pcaId,"pcaAssignmentId":event.pcaAssignmentId};
+        this.reassignpcas.push(obj);
+         debugger
+         this.allnotassignpcslist=this.notselectedpcspcs;
+        }
   }
   private loadFinancialPcaReassignmentListGrid(): void {
     this.loadPcaReassignment(
