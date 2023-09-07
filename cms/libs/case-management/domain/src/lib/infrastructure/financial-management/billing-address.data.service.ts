@@ -39,9 +39,8 @@ export class BillingAddressDataService {
   }
 
   loadBillingPaymentsAddressListService(params:any) : Observable<any> {
-    return this.http.get<any>(
-     `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/address?isShowHistoricalData=${params.isShowHistoricalData}&VendorId=${params.vendorId}&VendorTypeCode=${params.vendorTypeCode}&SortType=${params.sortType}&Sorting=${params.sort}&SkipCount=${params.skipcount}&MaxResultCount=${params.maxResultCount}&Filter=${params.filters}`
-    );
+    return this.http.post<any>(
+     `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/address?isShowHistoricalData=${params.isShowHistoricalData}&VendorId=${params.vendorId}&VendorTypeCode=${params.vendorTypeCode}&SortType=${params.sortType}&Sorting=${params.sort}&SkipCount=${params.skipcount}&MaxResultCount=${params.maxResultCount}&Filter=${params.filters}`, null);
   }
 
   getPaymentsAddressContacts(addressId: string) {
