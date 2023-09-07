@@ -104,5 +104,10 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   onExpand(event:any) {
     this.invoiceFacade.loadPaymentRequestServices(event.dataItem,this.vendorId,this.tabCode)   
   } 
+  
+  onInvoiceClicked(dataItem : any){   
+    this.router.navigate([`/financial-management/claims/${this.claimsType}/batch/items`],
+    { queryParams :{ bid: dataItem.batchId, ino:dataItem.invoiceNbr }});
+  }
 
 }
