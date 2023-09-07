@@ -59,8 +59,9 @@
         [resizable]="false"
         [columnMenu]="false"
         [showSelectAll]="true"
-      [width]="40"></kendo-grid-checkbox-column>
-    <kendo-grid-column field="invoiceNbr" title="Invoice ID" [width]="160">
+      [width]="40" 
+      ></kendo-grid-checkbox-column>
+    <kendo-grid-column field="invoiceNbr"  title="Invoice ID" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -274,7 +275,7 @@
     (click)="onBatchClaimsGridSelectedCancelClicked()" *ngIf="isDeleteBatchClosed || isProcessBatchClosed"> Cancel
   </button>
 
-  <button kendoButton kendoButton class="k-error-button" aria-label="Delete" *ngIf="isDeleteBatchClosed" [disabled]="!selectedProcessClaims.length"
+  <button kendoButton kendoButton class="{{selectedProcessClaims.length?'k-error-button':''}}" aria-label="Delete" *ngIf="isDeleteBatchClosed" [disabled]="!selectedProcessClaims.length"
     (click)="onDeleteClaimsOpenClicked(deleteClaimsConfirmationDialog)"> <span class="material-icons mr-1"
       aria-label="Delete"> delete</span> Delete </button>
 
