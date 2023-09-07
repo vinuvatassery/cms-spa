@@ -13,7 +13,7 @@
 
              <ng-template kendoGridCellTemplate let-dataItem>
                 <button aria-label="Batch name" kendoButton look="flat" class="card-link-button"
-                  >
+               >
                   {{ dataItem.invoiceNbr }}
                 </button>
               </ng-template>
@@ -22,7 +22,7 @@
               <kendo-grid-column field="batchName" title="Batch #" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
                       <button aria-label="Batch name" kendoButton look="flat" class="card-link-button"
-                      (click)="onBatchClicked()">
+                      (click)="onBatchClicked(dataItem.batchId)">
                         {{ dataItem.batchName }}
                       </button>
                     </ng-template>
