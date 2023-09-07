@@ -182,16 +182,18 @@ export class PaymentAddressesComponent {
   }
 
   loadPaymentsAddressListGrid() {
-    this.paymentBillingFacade.loadPaymentsAddressListGrid(
-      this.tabCode,
-      this.state.skip ?? 0,
-      this.state.take ?? 0,
-      this.sortValue,
-      this.sortType,
-      this.vendorId,
-      this.isShowHistoricalData,
-      this.filters
-    );
+    const paymentAddressListParams = {
+      vendorTypeCode: this.tabCode,
+      skipcount: this.state.skip ?? 0,
+      maxResultCount: this.state.take ?? 0,
+      sort: this.sortValue,
+      sortType: this.sortType,
+      vendorId: this.vendorId,
+      isShowHistoricalData: this.isShowHistoricalData,
+      filters: this.filters
+    };
+
+    this.paymentBillingFacade.loadPaymentsAddressListGrid(paymentAddressListParams);
   }
 
 
