@@ -23,7 +23,7 @@
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="medicalProvider" (filterChange)="searchMedicalProvider($event)"
                             [data]="pharmacySearchResult$ | async" [(ngModel)]="selectedMedicalProvider"
-                            >
+                            (valueChange)="onProviderValueChange($event)">
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>

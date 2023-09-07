@@ -69,12 +69,7 @@
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="providerName" title="Provider Name" [width]="160">
-        <ng-template kendoGridCellTemplate let-dataItem>
-          <button aria-label="vendor" kendoButton look="flat" class="card-link-button"
-          (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog, dataItem)">
-            {{ dataItem.providerName }}
-          </button>
-        </ng-template>
+        
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -105,6 +100,12 @@
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="clientFullName" title="Client Name" [width]="180">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button aria-label="clientFullName" kendoButton look="flat" class="card-link-button"
+          (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog, dataItem)">
+            {{ dataItem.clientFullName }}
+          </button>
+        </ng-template>
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
