@@ -35,7 +35,7 @@ export class FinancialPcaDataService {
     };
 
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/report`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/reports`,
       PcaAssignmentsPageAndSortedRequestDto
     );
   }
