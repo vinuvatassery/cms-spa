@@ -368,8 +368,7 @@ public rowCallback(context: RowClassArgs) {
                     e.preventDefault();
                     debugger
                     const dataItem = this.gridDataResult.data.splice(draggedItemIndex, 1)[0];
-                    const dropIndex = closest(e.target, tableRow).rowIndex;
-                    this.gridDataResult.data[dropIndex];                
+                    const dropIndex = closest(e.target, tableRow).rowIndex;              
                     draggedItemIndex = dropIndex;
                     this.zone.run(() => this.gridDataResult.data.splice(dropIndex, 0, dataItem));
                 })
