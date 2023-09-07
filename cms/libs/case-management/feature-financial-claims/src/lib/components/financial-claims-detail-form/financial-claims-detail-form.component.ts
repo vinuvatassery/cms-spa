@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode } from '@cms/case-management/domain';
+import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -200,7 +200,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   onCPTCodeValueChange(event: any, index: number) {
     let service = event;
-    let ctpCodeIsvalid = this.AddClaimServicesForm.at(index) as FormGroup;
+    let ctpCodeIsvalid = this.addClaimServicesForm.at(index) as FormGroup;
     ctpCodeIsvalid.patchValue({
       cptCode: service.cptCode1,
       serviceDescription: service.serviceDesc != undefined ? service.serviceDesc : '',
@@ -218,9 +218,9 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   onPaymentTypeValueChange(cptCodeObject : any, index: number){ 
-    const serviceForm = this.AddClaimServicesForm.at(index) as FormGroup;
+    const serviceForm = this.addClaimServicesForm.at(index) as FormGroup;
     let cptCode = serviceForm.controls['cptCode'].value; 
-    if (cptCodeObject !== 'FULL_PAY' && cptCode.length > 0) {      
+    if (cptCodeObject !== PaymentRequestType.FullPay && cptCode.length > 0) {      
         serviceForm.controls['amountDue'].setValue(0);
     }
   }
@@ -234,7 +234,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.financialClaimsFacade.loadClientBySearchText(clientSearchText);
   }
 
-  get AddClaimServicesForm(): FormArray {
+  get addClaimServicesForm(): FormArray {
     return this.claimForm.get('claimService') as FormArray;
   }
 
@@ -275,7 +275,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         Validators.required,
       ]),
     });
-    this.AddClaimServicesForm.push(claimForm);
+    this.addClaimServicesForm.push(claimForm);
   }
 
   onClientValueChange(event: any) {
@@ -283,21 +283,21 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   removeService(i: number) {
-    this.AddClaimServicesForm.removeAt(i);
+    this.addClaimServicesForm.removeAt(i);
   }
 
   IsServiceStartDateValid(index: any) {
-    let startDateIsvalid = this.AddClaimServicesForm.at(index) as FormGroup;
+    let startDateIsvalid = this.addClaimServicesForm.at(index) as FormGroup;
     return startDateIsvalid.controls['serviceStartDate'].status == 'INVALID';
   }
 
   isControlValid(controlName: string, index: any) {
-    let control = this.AddClaimServicesForm.at(index) as FormGroup;
+    let control = this.addClaimServicesForm.at(index) as FormGroup;
     return control.controls[controlName].status == 'INVALID';
   }
 
   onDateChange(index: any) {
-    let serviceFormData = this.AddClaimServicesForm.at(index) as FormGroup;
+    let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
     this.isStartEndDateValid(startDate, endDate);
@@ -478,7 +478,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     for (let i = 0; i < services.length; i++) {
       let service = services[i];
       this.addClaimServiceGroup();
-      let serviceForm = this.AddClaimServicesForm.at(i) as FormGroup;
+      let serviceForm = this.addClaimServicesForm.at(i) as FormGroup;
       serviceForm.controls['cptCode'].setValue(service.cptCode);
       serviceForm.controls['serviceStartDate'].setValue(
         new Date(service.serviceStartDate)
@@ -499,9 +499,9 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   calculateMedicadeRate(index: number) {
-    const serviceForm = this.AddClaimServicesForm.at(index) as FormGroup;
+    const serviceForm = this.addClaimServicesForm.at(index) as FormGroup;
     let paymentType = serviceForm.controls['paymentType'].value;
-    if (paymentType == 'FULL_PAY') {
+    if (paymentType == PaymentRequestType.FullPay) {
       const medicadeRate = serviceForm.controls['medicadeRate'].value ?? 0;
       let amoundDue = serviceForm.controls['amountDue'].value ?? 0;
       if (medicadeRate > 0) {
