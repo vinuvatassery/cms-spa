@@ -120,6 +120,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   @Input() paymentRequestId: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
   readonly financialProvider = 'medical';
+  endDateGreaterThanStartDate: boolean = false;
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
@@ -310,11 +311,13 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   isStartEndDateValid(startDate: any, endDate: any): boolean {
     if (startDate != "" && endDate != "" && startDate > endDate) {
-      this.financialClaimsFacade.errorShowHideSnackBar(
-        'Start date must less than end date'
-      );
+      this.endDateGreaterThanStartDate = true;
+      // this.financialClaimsFacade.errorShowHideSnackBar(
+      //   'Start date must less than end date'
+      // );
       return false;
     }
+    this.endDateGreaterThanStartDate = false;
     return true;
   }
 

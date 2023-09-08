@@ -62,7 +62,7 @@
                         </span>
                         <kendo-multicolumncombobox [data]="clientSearchResult$ | async" textField="clientFullName"
                             valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
-                            placeholder="Search Client Name, ID, or SSN"
+                            placeholder="Search Client Name, ID, or SSN or DOB"
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="client" (filterChange)="loadClientBySearchText($event)"
                             (valueChange)="onClientValueChange($event)" [(ngModel)]="selectedClient">
@@ -85,7 +85,8 @@
                             </kendo-combobox-column>
                             <kendo-combobox-column [width]="125">
                                 <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                    <span class=" text-muted"> <em>DOB:</em> {{ dataItem.dob | date: 'MM/dd/yyyy'}}</span>
+                                    <span class=" text-muted"> <em>DOB:</em> {{ dataItem.dob | date:
+                                        'MM/dd/yyyy'}}</span>
                                 </ng-template>
                             </kendo-combobox-column>
                         </kendo-multicolumncombobox>
@@ -118,11 +119,11 @@
 
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
-                   
-                        <ng-container formArrayName="claimService">
-                            <ng-container *ngFor="let contact of addClaimServicesForm.controls; let i=index">
-                                <ng-container [formGroupName]="i">
-                                    <div class=" mb-3">
+
+                    <ng-container formArrayName="claimService">
+                        <ng-container *ngFor="let contact of addClaimServicesForm.controls; let i=index">
+                            <ng-container [formGroupName]="i">
+                                <div class=" mb-3">
                                     <div class="flex-space-bw align-items-center">
                                         <h4 class="mar-0">SERVICE {{i+1}}</h4>
                                         <button class="" kendoButton fillMode="flat" themeColor="error"
@@ -151,6 +152,10 @@
                                                     (valueChange)="onDateChange(i)">
                                                 </kendo-datepicker>
                                             </kendo-floatinglabel>
+                                            <kendo-formerror *ngIf="endDateGreaterThanStartDate"
+                                                class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                                    aria-hidden="false">info</span>Service End date must be equal to or greater than start date
+                                            </kendo-formerror>
                                             <kendo-formerror
                                                 *ngIf="(isControlValid('serviceEndDate', i) && isSubmitted)"
                                                 class="d-flex align-items-center"> <span class="material-icons mr-1"
@@ -234,8 +239,8 @@
 
                                             <kendo-floatinglabel text="Service Cost" class="amount-with-symbol">
                                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                                                <kendo-numerictextbox aria-label="Service Cost"  [spinners]="false"
-                                                    [fillMode]="formUiStyle.inputFillMode" format="#.000"
+                                                <kendo-numerictextbox aria-label="Service Cost" [spinners]="false"
+                                                    [fillMode]="formUiStyle.inputFillMode" format="#.00"
                                                     formControlName="serviceCost">
                                                 </kendo-numerictextbox>
                                             </kendo-floatinglabel>
@@ -247,9 +252,9 @@
                                         <div class="flex-col flex-col-6">
                                             <kendo-floatinglabel text="Amount Due" class="amount-with-symbol">
                                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                                                <kendo-numerictextbox aria-label="Amount Due"  [spinners]="false"
+                                                <kendo-numerictextbox aria-label="Amount Due" [spinners]="false"
                                                     [fillMode]="formUiStyle.inputFillMode" formControlName="amountDue"
-                                                    format="#.000">
+                                                    format="#.00">
                                                 </kendo-numerictextbox>
                                             </kendo-floatinglabel>
                                             <kendo-formerror *ngIf="(isControlValid('amountDue',i) && isSubmitted)"
@@ -265,7 +270,7 @@
                                                     Exception</a></kendo-formerror>
                                         </div>
                                     </div>
-                                    <div class="flex-row">
+                                    <!-- <div class="flex-row">
                                         <div class="flex-col">
                                             <kendo-floatinglabel text="Reason For Exception">
                                                 <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
@@ -277,12 +282,12 @@
                                                 </kendo-textarea>
                                             </kendo-floatinglabel>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
-                                </ng-container>
                             </ng-container>
                         </ng-container>
-                   
+                    </ng-container>
+
                 </div>
             </div>
             <hr class="row-border" />
