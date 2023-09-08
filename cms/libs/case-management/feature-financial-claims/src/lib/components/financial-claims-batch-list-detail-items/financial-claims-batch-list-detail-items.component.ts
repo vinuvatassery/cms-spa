@@ -38,7 +38,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   @Input() sort: any;
   @Input() batchItemsGridLists$: any;
   @Input() paymentPanelData$:any;
-  @Input() vendorId:any;
+  @Input() vendorAddressId:any;
   @Input() batchId:any;
   @Input() itemsListGridLoader$!: Observable<boolean>;
   @Input() paymentDetails$!: Observable<PaymentDetail>;

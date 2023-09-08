@@ -34,7 +34,7 @@ import { Subscription } from 'rxjs';
   paymentPanel!:PaymentPanel;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   paymentPanelDataSubscription!: Subscription;
-  @Input() vendorId:any;
+  @Input() vendorAddressId:any;
   @Input() batchId:any ;
   @Input() paymentPanelDetails:any;
   @Output() closePaymentDetailFormClickedEvent = new EventEmitter();
@@ -98,11 +98,13 @@ import { Subscription } from 'rxjs';
     }
   }
   startDateOnChange() {
+    debugger
     if (this.medicalClaimPaymentForm.controls['datePaymentSent'].value !== null) {
       this.endDateOnChange();
     }
   }
   endDateOnChange() {
+  debugger
     this.medicalClaimPaymentForm.markAllAsTouched();
     this.paymentDateIsGreaterThanReconciledDate = true;
     if (this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value === null) {
@@ -126,10 +128,14 @@ import { Subscription } from 'rxjs';
 
       if (startDate > endDate) {
         this.medicalClaimPaymentForm.controls['datePaymentSent'].setErrors({ 'incorrect': true });
-        this.paymentDateIsGreaterThanReconciledDate = false;
+        this.paymentDateIsGreaterThanReconciledDate = true;
+      }
+      else if(endDate > new Date()){
+        this.medicalClaimPaymentForm.controls['datePaymentSent'].setErrors({ 'incorrect': true });
+        this.datePaymentSentValidator = true;
       }
       else {
-        this.paymentDateIsGreaterThanReconciledDate = true;
+        this.paymentDateIsGreaterThanReconciledDate = false;
         this.medicalClaimPaymentForm.controls['datePaymentSent'].setErrors(null);
         this.endDateMin = this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value;
       }
@@ -138,6 +144,10 @@ import { Subscription } from 'rxjs';
 
 
   validateModel(){
+    debugger;
+    if (this.medicalClaimPaymentForm.controls['datePaymentSent'].value === null) {
+     this.paymentDateIsGreaterThanReconciledDate = false;
+    }
     this.medicalClaimPaymentForm.markAllAsTouched();
     this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValidators([
       Validators.required,

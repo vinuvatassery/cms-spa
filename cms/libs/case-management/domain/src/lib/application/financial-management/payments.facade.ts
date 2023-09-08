@@ -103,8 +103,8 @@ export class PaymentsFacade {
       },
     });
   }
-  loadPaymentPanel(vendorId:any,batchId:any):any{
-    this.paymentsDataService.loadPaymentPanel(vendorId,batchId).subscribe({
+  loadPaymentPanel(vendorAddressId:any,batchId:any):any{
+    this.paymentsDataService.loadPaymentPanel(vendorAddressId,batchId).subscribe({
       next: (dataResponse) => {
         this.paymentPanelSubject.next(dataResponse);
         this.hideLoader();
@@ -115,8 +115,8 @@ export class PaymentsFacade {
       },
     });
   }
-  updatePaymentPanel(vendorId:any,batchId:any,paymentPanel:any){
-    return this.paymentsDataService.updatePaymentPanel(vendorId,batchId,paymentPanel)
+  updatePaymentPanel(vendorAddressId:any,batchId:any,paymentPanel:any){
+    return this.paymentsDataService.updatePaymentPanel(vendorAddressId,batchId,paymentPanel)
   }
 
   loadPaymentDetails(paymentId: string, type: string){
