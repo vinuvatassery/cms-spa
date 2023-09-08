@@ -47,7 +47,7 @@ export class FinancialClaimsFacade {
     field: this.sortValueFinancialClaimsBatch,
   }];
 
-  public sortValueFinancialClaimsPayments = 'batch';
+  public sortValueFinancialClaimsPayments = 'batchNumber';
   public sortPaymentsList: SortDescriptor[] = [
     {
       field: this.sortValueFinancialClaimsPayments,
@@ -285,15 +285,18 @@ export class FinancialClaimsFacade {
   }
 
 
-  loadFinancialClaimsAllPaymentsListGrid(){
-    this.financialClaimsDataService.loadFinancialClaimsAllPaymentsListService().subscribe({
+  loadFinancialClaimsAllPaymentsListGrid(skipCount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string, claimsType : string){
+    filter = JSON.stringify(filter);
+    this.financialClaimsDataService.loadFinancialClaimsAllPaymentsListService(skipCount, maxResultCount, sort, sortType, filter, claimsType).subscribe({
       next: (dataResponse) => {
-        this.financialClaimsAllPaymentsDataSubject.next(dataResponse);
-        this.hideLoader();
+        const gridView = {
+          data: dataResponse["items"],
+          total: dataResponse["totalCount"]
+        };
+        this.financialClaimsAllPaymentsDataSubject.next(gridView);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader();
       },
     });
   }

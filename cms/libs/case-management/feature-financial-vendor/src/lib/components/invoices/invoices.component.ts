@@ -8,7 +8,7 @@ import { State } from '@progress/kendo-data-query';
 import { Subscription } from 'rxjs';
 
 /** Facade **/
-import { InvoiceFacade } from '@cms/case-management/domain';
+import { FinancialVendorProviderTabCode, InvoiceFacade } from '@cms/case-management/domain';
 import { GridComponent } from '@progress/kendo-angular-grid';
 
 @Component({
@@ -35,11 +35,15 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   @Input() vendorId: any;
   @ViewChild(GridComponent)
   invoiceGrid!: GridComponent;
+  claimsType: any = 'dental';
 
    /** Constructor **/
    constructor(private readonly invoiceFacade: InvoiceFacade,private readonly router: Router) {}
 
   ngOnInit(): void {
+    if(this.tabCode === FinancialVendorProviderTabCode.MedicalProvider){
+      this.claimsType = 'medical';
+    } 
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
@@ -92,11 +96,18 @@ export class InvoicesComponent implements OnInit, OnDestroy {
       
   }
 
-  onBatchClicked() {
-    this.router.navigate([`/financial-management/medical-claims`]);    
+  onBatchClicked(batchId : any) {
+    this.router.navigate([`/financial-management/claims/${this.claimsType}/batch`],
+    { queryParams :{bid: batchId}});
   } 
 
   onExpand(event:any) {
     this.invoiceFacade.loadPaymentRequestServices(event.dataItem,this.vendorId,this.tabCode)   
   } 
+  
+  onInvoiceClicked(dataItem : any){   
+    this.router.navigate([`/financial-management/claims/${this.claimsType}/batch/items`],
+    { queryParams :{ bid: dataItem.batchId, ino:dataItem.invoiceNbr }});
+  }
+
 }

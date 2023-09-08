@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode } from '@cms/case-management/domain';
+import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -160,8 +160,8 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       if(data)
       {
         this.AddExceptionForm.at(data?.indexNumber).get('exceedMaxBenefitExceptionFlag')?.setValue(data?.flag);
-        this.AddClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? "EMB" : '')
-        this.AddClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? "EMB" : '')
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
         this.cd.detectChanges();
       }
     });
@@ -217,9 +217,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     }
     this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
   }
+
   onCPTCodeValueChange(event: any, index: number) {
     let service = event;
-    let ctpCodeIsvalid = this.AddClaimServicesForm.at(index) as FormGroup;
+    let ctpCodeIsvalid = this.addClaimServicesForm.at(index) as FormGroup;
     ctpCodeIsvalid.patchValue({
       cptCode: service.cptCode1,
       serviceDescription: service.serviceDesc != undefined ? service.serviceDesc : '',
@@ -228,15 +229,32 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     });
     this.calculateMedicadeRate(index);
   }
+
   searchcptcode(cptcode: any) {
+    if(!cptcode || cptcode.length == 0){
+      return;
+    }
     this.financialClaimsFacade.searchcptcode(cptcode);
   }
 
-  loadClientBySearchText(searchText: any) {
-    this.financialClaimsFacade.loadClientBySearchText(searchText);
+  onPaymentTypeValueChange(cptCodeObject : any, index: number){
+    const serviceForm = this.addClaimServicesForm.at(index) as FormGroup;
+    let cptCode = serviceForm.controls['cptCode'].value;
+    if (cptCodeObject !== PaymentRequestType.FullPay && cptCode.length > 0) {
+        serviceForm.controls['amountDue'].setValue(0);
+    }
   }
 
-  get AddClaimServicesForm(): FormArray {
+  loadClientBySearchText(clientSearchText: any) {
+    if(!clientSearchText || clientSearchText.length == 0){
+      return;
+    }
+    clientSearchText = clientSearchText.replace("/", "-");
+    clientSearchText = clientSearchText.replace("/", "-");
+    this.financialClaimsFacade.loadClientBySearchText(clientSearchText);
+  }
+
+  get addClaimServicesForm(): FormArray {
     return this.claimForm.get('claimService') as FormArray;
   }
   get AddExceptionForm(): FormArray {
@@ -287,7 +305,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       ]),
       exceedMaxBenefitExceptionFlag: new FormControl(false),
     });
-    this.AddClaimServicesForm.push(claimForm);
+    this.addClaimServicesForm.push(claimForm);
     this.addExceptionForm();
   }
   addExceptionForm()
@@ -302,25 +320,30 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   onClientValueChange(event: any) {
     this.clientCaseEligibilityId = event.clientCaseEligibilityId;
+    this.clientId = event.clientId;
+    this.clientName = event.clientFullName;
+    if (this.clientId != null && this.vendorId != null) {
+      this.isRecentClaimShow = true;
+    }
   }
 
   removeService(i: number) {
-    this.AddClaimServicesForm.removeAt(i);
+    this.addClaimServicesForm.removeAt(i);
     this.AddExceptionForm.removeAt(i);
   }
 
   IsServiceStartDateValid(index: any) {
-    let startDateIsvalid = this.AddClaimServicesForm.at(index) as FormGroup;
+    let startDateIsvalid = this.addClaimServicesForm.at(index) as FormGroup;
     return startDateIsvalid.controls['serviceStartDate'].status == 'INVALID';
   }
 
   isControlValid(controlName: string, index: any) {
-    let control = this.AddClaimServicesForm.at(index) as FormGroup;
+    let control = this.addClaimServicesForm.at(index) as FormGroup;
     return control.controls[controlName].status == 'INVALID';
   }
 
   onDateChange(index: any) {
-    let serviceFormData = this.AddClaimServicesForm.at(index) as FormGroup;
+    let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
     this.isStartEndDateValid(startDate, endDate);
@@ -337,16 +360,16 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
   setExceptionValidation()
   {
-    this.AddClaimServicesForm.controls.forEach((element, index) => {
+    this.addClaimServicesForm.controls.forEach((element, index) => {
       if(this.AddExceptionForm.at(index).get('showMaxBenefitExceptionReason')?.value)
       {
-        this.AddClaimServicesForm.at(index).get('reasonForException')?.setValidators(Validators.required);
-        this.AddClaimServicesForm.at(index).get('reasonForException')?.updateValueAndValidity();
+        this.addClaimServicesForm.at(index).get('reasonForException')?.setValidators(Validators.required);
+        this.addClaimServicesForm.at(index).get('reasonForException')?.updateValueAndValidity();
       }
       else
       {
-        this.AddClaimServicesForm.at(index).get('reasonForException')?.removeValidators(Validators.required);
-        this.AddClaimServicesForm.at(index).get('reasonForException')?.updateValueAndValidity();
+        this.addClaimServicesForm.at(index).get('reasonForException')?.removeValidators(Validators.required);
+        this.addClaimServicesForm.at(index).get('reasonForException')?.updateValueAndValidity();
       }
   });
   this.cd.detectChanges();
@@ -532,7 +555,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     for (let i = 0; i < services.length; i++) {
       let service = services[i];
       this.addClaimServiceGroup();
-      let serviceForm = this.AddClaimServicesForm.at(i) as FormGroup;
+      let serviceForm = this.addClaimServicesForm.at(i) as FormGroup;
       serviceForm.controls['cptCode'].setValue(service.cptCode);
       serviceForm.controls['serviceStartDate'].setValue(
         new Date(service.serviceStartDate)
@@ -573,13 +596,13 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   calculateMedicadeRate(index: number) {
-    const serviceForm = this.AddClaimServicesForm.at(index) as FormGroup;
+    const serviceForm = this.addClaimServicesForm.at(index) as FormGroup;
     let paymentType = serviceForm.controls['paymentType'].value;
-    if (paymentType == 'FULL_PAY') {
+    if (paymentType == PaymentRequestType.FullPay) {
       const medicadeRate = serviceForm.controls['medicadeRate'].value ?? 0;
       let amoundDue = serviceForm.controls['amountDue'].value ?? 0;
-      if (medicadeRate > 0 && amoundDue > 0) {
-        amoundDue = medicadeRate * 0.25 + amoundDue;
+      if (medicadeRate > 0) {
+        amoundDue = (medicadeRate * 0.25) + medicadeRate;
         serviceForm.controls['amountDue'].setValue(amoundDue);
       }
     }
@@ -604,10 +627,11 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     }
     return `0/${this.textMaxLength}`;
   }
-  providerValueChange($event: any) {
+
+  onProviderValueChange($event: any) {
     this.isRecentClaimShow = false;
-    this.vendorId = $event.providerId;
-    this.vendorName = $event.providerFullName;
+    this.vendorId = $event.vendorId;
+    this.vendorName = $event.vendorName;
   }
   clientValueChange($event: any) {
     this.clientId = $event.clientId;
@@ -621,7 +645,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     if(formValues.client.clientId)
     {
       let totalServiceCost = 0;
-      this.AddClaimServicesForm.controls.forEach((element, index) => {
+      this.addClaimServicesForm.controls.forEach((element, index) => {
           totalServiceCost += + element.get('amountDue')?.value;
       });
       this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);

@@ -4,46 +4,84 @@
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
-      <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc"
-        valueField="columnCode">
+      <kendo-dropdownlist
+            aria-label="All Columns"
+            [fillMode]="formUiStyle.dropDownFillMode"
+            textField="columnDesc"
+            valueField="columnName"
+            [data]="searchColumnList"
+            [valuePrimitive]="true"
+            [(ngModel)]="selectedSearchColumn"
+            (valueChange)="searchColumnChangeHandler($event)">
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
   <span class="filter-section_items filter--search">
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
-      <kendo-textbox aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode">
-      </kendo-textbox>
-
+          <kendo-textbox
+                aria-label="Search case"
+                rounded="medium"
+                [fillMode]="formUiStyle.inputFillMode"
+                [(ngModel)]="searchText"
+                (afterValueChanged)="onSearch($event)"> </kendo-textbox>
     </kendo-floatinglabel>
-  </span>
+</span>
 </section>
+<div class="table-sorted-info">
+  <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning || showNumberSearchWarning">
+        <span class="material-icons" aria-label="search-warning" aria-hidden="true">
+              warning
+        </span>
+        <span *ngIf="showDateSearchWarning">
+              The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
+        </span>
+        <span *ngIf="showNumberSearchWarning">
+              PCA/AY # allow only numbers.
+        </span>
+  </span>
+</div>
 
 
 
 <!-- Sorted Info -->
 <div class="table-sorted-info">
-  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
-  <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
-  <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
+  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
+  <span class="sort-items" *ngIf="!filteredByColumnDesc">No Filters</span>
+  <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
+  <span class="sort-items">{{columnChangeDesc}}</span>
   <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
-  <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
-    <a>Set to Default</a>
+  <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="restGrid()">
+        <a>Set to Default</a>
   </button>
 </div>
 
 
 <div class="app-c-table">
-  <kendo-grid [resizable]="true" [loading]="isFinancialPcaReportGridLoaderShow" [pageSize]="state.take"
-    [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-    [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
-    (filterChange)="filterChange($event)" [data]="gridFinancialPcaReportData$ | async">
+  <kendo-grid
+    [loading]="(financialPcaReportGridLoader$ | async) === true"
+    [pageSize]="state.take"
+    [skip]="state.skip"
+    [pageable]="true"
+    [sortable]="true"
+    [groupable]="false"
+    [reorderable]="true"
+    [resizable]="true"
+    [columnMenu]="{ filter: true }"
+    [sort]="state.sort"
+    [rowClass]="rowClass"
+    [data]="financialPcaReportGridLists$ | async"
+    [filter]="state.filter"
+    (dataStateChange)="dataStateChange($event)"
+    (filterChange)="filterChange($event)"
+    (columnReorder)="onColumnReorder($event)"
+    (columnVisibilityChange)="columnChange($event)">
     <!-- financialPcaReportGridLists$ | async -->
 
     <kendo-grid-column field="status" title="Status" [width]="100">
       <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter"
         let-filterService="filterService">
-        <kendo-dropdownlist [data]="['Active', 'Inactive']" [valuePrimitive]="true"
+        <kendo-dropdownlist [(ngModel)]="selectedStatus" [data]="['Active', 'Inactive']" [valuePrimitive]="true"
           (valueChange)="dropdownFilterChange('status',$event, filterService)">
         </kendo-dropdownlist>
       </ng-template>
