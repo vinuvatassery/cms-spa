@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DrugCategoryCode } from '@cms/case-management/domain';
-import { State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { FilterService } from '@progress/kendo-angular-grid';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-financial-drugs',
@@ -31,6 +33,16 @@ export class FinancialDrugsComponent {
   isDrugsGridLoaderShow = false;
   public state!: State;
   dialogTitle = "Add";
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  filters:any=[];
+  filteredBy = "";
+  isFiltered = false;
+  sortColumn: any;
+  sortDir = "";
+  columnsReordered = false;
+  searchValue = "";
+  yesOrNoLovs:any=[];
+  yesOrNoLov$ = this.lovFacade.yesOrNoLov$;
 
   public emailBillingAddressActions = [
     {
@@ -59,11 +71,20 @@ export class FinancialDrugsComponent {
     },
   ];
 
-
+  gridColumns: { [key: string]: string } = {
+    ndcNbr: 'NDC',
+    brandName: 'Brand Name',
+    drugName: 'Drug Name',
+    deliveryMethodCode: 'Delivery Method',
+    hiv: 'HIV Drugs?',
+    hepatitis: 'Hep Drugs?',
+    opportunisticInfection: 'OI Drugs?'
+  };
 
    /** Constructor **/
    constructor(private route: ActivatedRoute,
     private readonly ref: ChangeDetectorRef,
+    private readonly lovFacade: LovFacade
    ) {}
 
 
@@ -144,5 +165,71 @@ export class FinancialDrugsComponent {
 
   public columnChange(e: any) {
     this.ref.detectChanges();
+  }
+
+  filterChange(filter: CompositeFilterDescriptor): void {
+    this.filterData = filter;
+  }
+
+  onColumnReorder($event: any) {
+    this.columnsReordered = true;
+  }
+
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value:value.lovCode
+      }],
+        logic: "or"
+    });
+  }
+
+  private loadYesOrNoLovs() {
+    this.yesOrNoLov$
+    .subscribe({
+      next: (data: any) => {
+        this.yesOrNoLovs=data;
+      }
+    });
+  }
+
+  public setGridState(stateData: any): void {
+    this.state = stateData;
+
+    const filters = stateData.filter?.filters ?? [];
+
+    // for (let val of filters) {
+    //   if (val.field === 'effectiveDate') {
+    //     this.intl.formatDate(val.value, this.dateFormat);
+    //   }
+    // }
+    const filterList = this.state?.filter?.filters ?? [];
+    this.filters = JSON.stringify(filterList);
+    this.filteredBy = filterList.toString();
+
+    if (filters.length > 0) {
+      const filterListData = filters.map((filter:any) => this.gridColumns[filter?.filters[0]?.field]);
+      this.isFiltered = true;
+      this.filteredBy = filterListData.toString();
+      this.ref.detectChanges();
+    }
+    else {
+      this.isFiltered = false;
+    }
+
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? "";
+    this.sortType = stateData.sort[0]?.dir ?? "";
+    this.state = stateData;
+    this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
+    this.sortDir = "";
+    if(this.sort[0]?.dir === 'asc'){
+      this.sortDir = 'Ascending';
+    }
+    if(this.sort[0]?.dir === 'desc'){
+      this.sortDir = 'Descending';
+    }
   }
 }
