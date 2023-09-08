@@ -83,6 +83,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   public save() {
     this.isSubmitted = true;
+    this.contactForm.markAllAsTouched();
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
     
     if (this.contactForm.valid) {
