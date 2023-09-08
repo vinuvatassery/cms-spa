@@ -489,7 +489,7 @@ onMailCodeChange( )
       this.onChange();
    }
 }
-get MedicalProviderForm() {
+get medicalProviderFormControls() {
   return this.medicalProviderForm.controls as any;
 }
 }

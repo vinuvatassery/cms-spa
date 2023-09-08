@@ -176,10 +176,10 @@
           <kendo-textbox aria-label="Name on Check"  [maxlength]="200" [fillMode]="formUiStyle.inputFillMode"
             formControlName="nameOnCheck">
           </kendo-textbox>
-          <kendo-formerror *ngIf="MedicalProviderForm?.nameOnCheck.errors?.required && isValidateForm">
+          <kendo-formerror *ngIf="medicalProviderFormControls?.nameOnCheck.errors?.required && isValidateForm">
             Name on Check is required
           </kendo-formerror>
-          <kendo-formerror *ngIf="MedicalProviderForm?.nameOnCheck.errors?.pattern">
+          <kendo-formerror *ngIf="medicalProviderFormControls?.nameOnCheck.errors?.pattern">
             Special characters and numeric valus are not allowed 
           </kendo-formerror>
         </kendo-floatinglabel>
@@ -190,10 +190,10 @@
           <kendo-textbox aria-label="Name on Envelop"  [maxlength]="200" [fillMode]="formUiStyle.inputFillMode"
             formControlName="nameOnEnvolop">
           </kendo-textbox>
-          <kendo-formerror *ngIf="MedicalProviderForm?.nameOnEnvolop.errors?.required && isValidateForm">
+          <kendo-formerror *ngIf="medicalProviderFormControls?.nameOnEnvolop.errors?.required && isValidateForm">
             Name on Envelop is required
           </kendo-formerror>
-          <kendo-formerror *ngIf="MedicalProviderForm?.nameOnEnvolop.errors?.pattern">
+          <kendo-formerror *ngIf="medicalProviderFormControls?.nameOnEnvolop.errors?.pattern">
             Special characters and numeric valus are not allowed 
           </kendo-formerror>
         </kendo-floatinglabel>
@@ -219,10 +219,10 @@
         <kendo-floatinglabel text="City">
           <kendo-textbox aria-label="City"  [maxlength]="50" [fillMode]="formUiStyle.inputFillMode" formControlName="city">
           </kendo-textbox>
-          <kendo-formerror *ngIf="MedicalProviderForm?.city.errors?.required && isValidateForm">
+          <kendo-formerror *ngIf="medicalProviderFormControls?.city.errors?.required && isValidateForm">
             City is required
           </kendo-formerror>
-          <kendo-formerror *ngIf="MedicalProviderForm?.city.errors?.pattern">
+          <kendo-formerror *ngIf="medicalProviderFormControls?.city.errors?.pattern">
             Special characters and numeric valus are not allowed 
           </kendo-formerror>
         </kendo-floatinglabel>
@@ -242,10 +242,10 @@
         <kendo-floatinglabel text="Zip">
           <kendo-textbox aria-label="Zip" [fillMode]="formUiStyle.inputFillMode" formControlName="zip">
           </kendo-textbox>
-          <kendo-formerror *ngIf="MedicalProviderForm?.zip.errors?.required && isValidateForm">
+          <kendo-formerror *ngIf="medicalProviderFormControls?.zip.errors?.required && isValidateForm">
             Zip Code is required
           </kendo-formerror>
-          <kendo-formerror *ngIf="MedicalProviderForm?.zip.errors?.pattern">
+          <kendo-formerror *ngIf="medicalProviderFormControls?.zip.errors?.pattern">
             Special characters and numeric valus are not allowed 
           </kendo-formerror>
         </kendo-floatinglabel>
