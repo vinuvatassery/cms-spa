@@ -729,7 +729,7 @@ getDocumentSubTypeLovs(parentCode : string) {
     });
   }
   getYesOrNoLovs(): void {
-    this.lovDataService.getLovsbyType(LovType.StatusCode).subscribe({
+    this.lovDataService.getLovsbyType(LovType.AcceptPaymentsReports).subscribe({
       next: (resp) => {
         this.lovYesOrNoSubject.next(resp);
       },
