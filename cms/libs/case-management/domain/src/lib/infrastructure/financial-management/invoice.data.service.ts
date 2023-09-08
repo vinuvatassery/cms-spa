@@ -15,9 +15,12 @@ export class InvoiceDataService {
   /** Public methods **/
  
   loadInvoiceListService(vendorId:any,state:any,tabCode:any,sortValue:any,sortType:any) {  
-    return this.http.get<any>(      
+    const filter = state.filter === null? '' :JSON.stringify(state.filter?.filters);
+    return this.http.post<any>(      
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/invoices?vendorId=${vendorId}&tabCode=${tabCode}&skipCount=
-      ${state.skip}&maxResultCount=${state.take}&SortType=${sortType}&Sorting=${sortValue}`);      
+      ${state.skip}&maxResultCount=${state.take}&SortType=${sortType}&Sorting=${sortValue}&Filter=${filter}`,null);   
+      
+     
     }
     loadPaymentRequestServices(dataItem:any,vendorId:any,vendorType:any) {  
     return this.http.get<any>(      

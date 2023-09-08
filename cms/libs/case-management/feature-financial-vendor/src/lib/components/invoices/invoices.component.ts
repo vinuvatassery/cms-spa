@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 /** External libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subscription } from 'rxjs';
 
 /** Facade **/
@@ -36,18 +36,22 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   @ViewChild(GridComponent)
   invoiceGrid!: GridComponent;
   claimsType: any = 'dental';
-
+  filter!: any;
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
    /** Constructor **/
    constructor(private readonly invoiceFacade: InvoiceFacade,private readonly router: Router) {}
 
   ngOnInit(): void {
+    debugger;
     if(this.tabCode === FinancialVendorProviderTabCode.MedicalProvider){
       this.claimsType = 'medical';
     } 
     this.state = {
       skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value
+      take: this.pageSizes[0]?.value,
+      filter : this.filter === undefined?null:this.filter
     };
+    
     this.loadInvoiceListGrid();
     this.isInvoiceLoadingSubscription = this.isInvoiceLoading$.subscribe((data:boolean)=>{
       this.isInvoiceGridLoaderShow = data;
@@ -59,6 +63,7 @@ export class InvoicesComponent implements OnInit, OnDestroy {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
+      filter : this.filter === undefined?null:this.filter
     };
   }
 
@@ -67,6 +72,7 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   }
 
   public dataStateChange(stateData: any): void {
+    debugger;
     this.collapseAll(this.state?.take);
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
@@ -81,6 +87,10 @@ export class InvoicesComponent implements OnInit, OnDestroy {
     }
   }
 
+  public filterChange(filter: CompositeFilterDescriptor): void {
+    this.filterData = filter;
+  }
+  
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
@@ -88,6 +98,7 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   }
 
   loadInvoiceListGrid() {
+    debugger;
     this.invoiceFacade.loadInvoiceListGrid(this.vendorId,this.state,this.tabCode,this.sortValue,this.sortType);
   }
 
