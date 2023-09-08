@@ -77,10 +77,12 @@
                         <span class="k-input-prefix custom-currencysymbol"> $ </span>
                         <kendo-numerictextbox  aria-label="Object Amount" [spinners]="false"
                               class="input-icon-right" placeholder="00.00"
+                              (valueChange)="amountValidate()"
                                [fillMode]="formUiStyle.inputFillMode" formControlName="assignmentAmount">
                         </kendo-numerictextbox>
                   </kendo-floatinglabel>
-                  <kendo-formerror *ngIf=" !isViewGridOptionClicked &&!pcaReassignmentForm.controls['assignmentAmount'].valid">Assignment Amount is required.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked &&!pcaReassignmentForm.controls['assignmentAmount'].valid && !pcaReassignmentForm.controls['assignmentAmount'].hasError('incorrect')">Assignment Amount is required.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && pcaReassignmentForm.controls['assignmentAmount'].hasError('incorrect')">Assignment Amount must be equal to or less than the Remaining PCA balance </kendo-formerror>
                   
 
 

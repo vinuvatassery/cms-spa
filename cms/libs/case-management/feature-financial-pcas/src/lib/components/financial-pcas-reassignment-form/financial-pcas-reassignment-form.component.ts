@@ -93,6 +93,15 @@ constructor(private formBuilder:FormBuilder){
       this.pcaReassignmentForm.controls['closeDate'].setErrors({ 'incorrect': true })
     }
   }
+  amountValidate()
+  {
+    const pcaAmmounnt = this.pcaReassignmentByFundSource.pcaAmount;
+    const reassignmentAmount = this.pcaReassignmentForm.controls['assignmentAmount'].value;
+    if (reassignmentAmount > pcaAmmounnt && reassignmentAmount ) 
+    {
+      this.pcaReassignmentForm.controls['assignmentAmount'].setErrors({ 'incorrect': true })
+    }
+  }
  
 }
 
