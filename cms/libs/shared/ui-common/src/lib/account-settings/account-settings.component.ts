@@ -2,8 +2,7 @@ import { Component, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/
 import { UIFormStyle } from '@cms/shared/ui-tpa';   
 @Component({
   selector: 'common-account-settings',
-  templateUrl: './account-settings.component.html',
-  styleUrls: ['./account-settings.component.scss'],
+  templateUrl: './account-settings.component.html', 
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
