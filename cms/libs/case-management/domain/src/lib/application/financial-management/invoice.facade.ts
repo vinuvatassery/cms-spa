@@ -61,7 +61,6 @@ export class InvoiceFacade {
 
   /** Public methods **/
   loadInvoiceListGrid(vendorId:any,state:any,tabCode:any,sortValue:any,sortType:any){
-    debugger;
     this.isInvoiceLoadingSubject.next(true);
     this.invoiceDataService.loadInvoiceListService(vendorId,state,tabCode,sortValue,sortType).subscribe({
       next: (dataResponse) => {

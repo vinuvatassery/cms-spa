@@ -42,7 +42,6 @@ export class InvoicesComponent implements OnInit, OnDestroy {
    constructor(private readonly invoiceFacade: InvoiceFacade,private readonly router: Router) {}
 
   ngOnInit(): void {
-    debugger;
     if(this.tabCode === FinancialVendorProviderTabCode.MedicalProvider){
       this.claimsType = 'medical';
     } 
@@ -72,7 +71,6 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   }
 
   public dataStateChange(stateData: any): void {
-    debugger;
     this.collapseAll(this.state?.take);
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
@@ -98,7 +96,6 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   }
 
   loadInvoiceListGrid() {
-    debugger;
     this.invoiceFacade.loadInvoiceListGrid(this.vendorId,this.state,this.tabCode,this.sortValue,this.sortType);
   }
 
