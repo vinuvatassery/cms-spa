@@ -170,7 +170,7 @@
         </kendo-floatinglabel>
       </div>
 
-      <!-- stop the Name on check and Name on envelop to not show on manufacturer -->
+      <!-- stop the Name on check and Name on envelope to not show on manufacturer -->
       <div class="flex-col" *ngIf="providerType != vendorTypes.Manufacturers">
         <kendo-floatinglabel text="Name on Check">
           <kendo-textbox aria-label="Name on Check" [fillMode]="formUiStyle.inputFillMode"
@@ -183,12 +183,12 @@
       </div>
 
       <div class="flex-col" *ngIf="providerType != vendorTypes.Manufacturers">
-        <kendo-floatinglabel text="Name on Envelop">
-          <kendo-textbox aria-label="Name on Envelop" [fillMode]="formUiStyle.inputFillMode"
+        <kendo-floatinglabel text="Name on Envelope">
+          <kendo-textbox aria-label="Name on Envelope" [fillMode]="formUiStyle.inputFillMode"
             formControlName="nameOnEnvolop">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['nameOnEnvolop'].valid && isValidateForm">
-            Name on Envelop is required
+            Name on Envelope is required
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
