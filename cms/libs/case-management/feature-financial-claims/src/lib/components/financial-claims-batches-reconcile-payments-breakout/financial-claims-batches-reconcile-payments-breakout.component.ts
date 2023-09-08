@@ -20,7 +20,6 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
   @Input() sort: any;
   @Input() reconcilePaymentBreakoutList$ :any;
   @Input() claimsType: any;
-  //@Input() isBreakoutPanelShow:boolean=false;
   @Input() batchId:any;
   @Input() entityId:any;
   @Output() loadReconcilePaymentBreakOutGridEvent = new EventEmitter<any>();
@@ -30,7 +29,7 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
   private addClientRecentClaimsDialog: any;
   public state!: any;
   public formUiStyle : UIFormStyle = new UIFormStyle();   
-  sortColumn = 'invoiceNbr';
+  sortColumn = 'entryDate';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
