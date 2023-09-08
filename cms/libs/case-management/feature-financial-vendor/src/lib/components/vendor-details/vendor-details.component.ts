@@ -179,17 +179,21 @@ fillFormData(){
         ]);
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();
 
-      this.medicalProviderForm.controls['nameOnCheck']
-      .setValidators([
-        Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
-      ]);
-    this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
+      if (this.providerType == this.vendorTypes.Manufacturers) {
+        this.medicalProviderForm.controls['nameOnCheck'].setValidators([
+          Validators.nullValidator,
+        ]);
+        this.medicalProviderForm.controls[
+          'nameOnCheck'
+        ].updateValueAndValidity();
 
-    this.medicalProviderForm.controls['nameOnEnvolop']
-    .setValidators([
-      Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
-    ]);
-      this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
+        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([
+          Validators.nullValidator,
+        ]);
+        this.medicalProviderForm.controls[
+          'nameOnEnvolop'
+        ].updateValueAndValidity();
+      }
 
     }
 
