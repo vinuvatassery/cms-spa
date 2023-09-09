@@ -338,6 +338,7 @@ export class FinancialPcaFacade {
     this.showLoader();
     this.financialPcaDataService.pcareassignment(data).subscribe({
       next: (response) => {
+        this.pcaReassignmentCount();
         this.pcaActionIsSuccessSubject.next('reassignment');
         this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
