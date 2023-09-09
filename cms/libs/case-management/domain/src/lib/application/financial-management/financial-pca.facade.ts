@@ -322,9 +322,9 @@ export class FinancialPcaFacade {
       },
     });
   }
-  getpcaunassignments(){
+  getPcaunAssignments(){
     this.notpcaDataSubject.next(null);
-    this.financialPcaDataService.getpcaunassignments().subscribe({
+    this.financialPcaDataService.getPcaunAssignments().subscribe({
       next: (response) => {
         this.notpcaDataSubject.next(response);
       },
@@ -336,7 +336,7 @@ export class FinancialPcaFacade {
 
   pcareassignment(data: any) {
     this.showLoader();
-    this.financialPcaDataService.pcareassignment(data).subscribe({
+    this.financialPcaDataService.pcaReassignment(data).subscribe({
       next: (response) => {
         this.pcaReassignmentCount();
         this.pcaActionIsSuccessSubject.next('reassignment');

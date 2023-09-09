@@ -71,8 +71,7 @@ export class FinancialPcasPageComponent implements OnInit{
     private readonly pcaAssignmentsFacade : PcaAssignmentsFacade   
   ) { }
   ngOnInit(): void {
-    this.financialPcaFacade.pcaReassignmentCount();
-    this.financialPcaFacade.getpcaunassignments();
+    this.financialPcaFacade.pcaReassignmentCount();   
   }  
 
   loadFinancialPcaSetupListGrid(event: GridFilterParam) {

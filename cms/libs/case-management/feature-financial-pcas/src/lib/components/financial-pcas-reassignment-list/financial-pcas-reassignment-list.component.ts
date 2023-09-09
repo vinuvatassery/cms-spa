@@ -111,6 +111,7 @@ export class FinancialPcasReassignmentListComponent
   ) {}
 
   ngOnInit(): void {
+    this.financialPcaFacade.getPcaunAssignments();
     this.notAssignPcaLists$.subscribe((res:any)=>{
       this.allNotAssignedPcaSList=res;
       this.notSelectedPcaS=this.allNotAssignedPcaSList;
@@ -119,6 +120,7 @@ export class FinancialPcasReassignmentListComponent
     this.financialPcaFacade.pcaActionIsSuccess$.subscribe((res:string)=>{
       if(res=='reassignment')
       {
+        this.financialPcaFacade.pcaReassignmentCount();   
         this.loadFinancialPcaReassignmentListGrid();
       }
     })
@@ -288,7 +290,7 @@ export class FinancialPcasReassignmentListComponent
               {                  
                  this.reAssignPcaS.splice(isPcAalreadySelected, 1);
               }
-                 let obj={"caId":event.pcaId,"pcaAssignmentId":data.pcaAssignmentId,"pcaCode":event.pcaCode};
+                 let obj={"pcaId":event.pcaId,"pcaAssignmentId":data.pcaAssignmentId,"pcaCode":event.pcaCode};
              this.reAssignPcaS.push(obj);
   }
   onPcaReassignmentClicked(action: any) {
