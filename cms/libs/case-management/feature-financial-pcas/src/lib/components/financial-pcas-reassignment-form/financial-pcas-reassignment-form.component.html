@@ -100,12 +100,16 @@
 </div>
 <kendo-dialog-actions>
       <div class="justify-content-between">
-            <div class="justify-content-end">
+            <div class="justify-content-end">    
                   <button kendoButton [primary]="true" look="outline" aria-label="cancel"
                         (click)="closeEditPcaReassignmentClicked()">
                         Cancel
                   </button>
-                  <button kendoButton [primary]="true" aria-label="Save" *ngIf="!isViewGridOptionClicked " (click)="saveEditPcaReassignmentClicked()">
+                  <button  *ngIf="showEditButton"  kendoButton [primary]="true"  aria-label="Edit"
+                  (click)="onEditButtonClicked()">
+                  Edit
+                 </button>
+                  <button kendoButton [primary]="true" aria-label="Save" *ngIf="!isViewGridOptionClicked" (click)="saveEditPcaReassignmentClicked()">
                         Save
                   </button>
             </div>
