@@ -33,10 +33,13 @@
       <div class="flex-col" *ngIf="providerType == vendorTypes.Manufacturers">
         <kendo-floatinglabel text="Manufacturer Name">
           <kendo-textbox aria-label="Manufacturer name" [fillMode]="formUiStyle.inputFillMode"
-            formControlName="providerName">
+            formControlName="providerName" [maxlength]="500">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
             Manufacturer name is required
+          </kendo-formerror>
+          <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.pattern">
+            Special characters and numeric valus are not allowed 
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -84,7 +87,7 @@
             [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
             <kendo-floatinglabel text="Provider First Name">
               <kendo-textbox aria-label="Provider First Name" [fillMode]="formUiStyle.inputFillMode"
-                formControlName="firstName">
+                formControlName="firstName" [maxlength]="50">
               </kendo-textbox>
               <kendo-formerror
                 *ngIf="!medicalProviderForm.controls['firstName'].valid && !medicalProviderForm.controls['firstName'].disabled && isValidateForm">
@@ -96,7 +99,7 @@
             [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
             <kendo-floatinglabel text="Provider Last Name">
               <kendo-textbox aria-label="Provider Last Name" [fillMode]="formUiStyle.inputFillMode"
-                formControlName="lastName">
+                formControlName="lastName" [maxlength]="50">
               </kendo-textbox>
               <kendo-formerror
                 *ngIf="!medicalProviderForm.controls['lastName'].valid && !medicalProviderForm.controls['lastName'].disabled && isValidateForm">
