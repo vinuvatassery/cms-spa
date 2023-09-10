@@ -149,6 +149,13 @@ fillFormData(){
         this.medicalProviderForm.controls['lastName'].updateValueAndValidity();
       }
     }
+    else if(this.providerType == this.vendorTypes.Manufacturers) {
+      this.medicalProviderForm.controls['providerName']
+      .setValidators([
+        Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
+      ]);
+      this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
+    }
     else {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
