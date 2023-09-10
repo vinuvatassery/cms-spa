@@ -43,6 +43,9 @@ export class FinancialDrugsComponent {
   searchValue = "";
   yesOrNoLovs:any=[];
   yesOrNoLov$ = this.lovFacade.yesOrNoLov$;
+  hivValue = null;
+  hepaValue = null;
+  oppoValue = null;
 
   public emailBillingAddressActions = [
     {
@@ -90,6 +93,8 @@ export class FinancialDrugsComponent {
 
 
   ngOnInit(): void {
+    this.lovFacade.getYesOrNoLovs();
+    this.loadYesOrNoLovs();
     this.vendorId = this.route.snapshot.queryParams['v_id'];
   }
 
@@ -113,6 +118,7 @@ export class FinancialDrugsComponent {
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
+    this.setGridState(stateData);
     this.loadDrugsListGrid();
   }
 
@@ -158,6 +164,7 @@ export class FinancialDrugsComponent {
         pageSize: maxResultCountValue,
         sortColumn: sortValue,
         sortType: sortTypeValue,
+        filters:this.filters
       };
      this.loadDrugListEvent.emit(gridDataRefinerValue);
   }
@@ -168,6 +175,7 @@ export class FinancialDrugsComponent {
   }
 
   filterChange(filter: CompositeFilterDescriptor): void {
+    debugger;
     this.filterData = filter;
   }
 
@@ -176,6 +184,7 @@ export class FinancialDrugsComponent {
   }
 
   dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    debugger;
     filterService.filter({
         filters: [{
           field: field,
@@ -184,6 +193,16 @@ export class FinancialDrugsComponent {
       }],
         logic: "or"
     });
+
+    if(field == "hiv"){
+      this.hivValue = value;
+    }
+    if(field == "hepatitis"){
+      this.hepaValue = value;
+    }
+    if(field == "opportunisticInfection"){
+      this.oppoValue = value;
+    }
   }
 
   private loadYesOrNoLovs() {
@@ -196,6 +215,7 @@ export class FinancialDrugsComponent {
   }
 
   public setGridState(stateData: any): void {
+    debugger;
     this.state = stateData;
 
     const filters = stateData.filter?.filters ?? [];
