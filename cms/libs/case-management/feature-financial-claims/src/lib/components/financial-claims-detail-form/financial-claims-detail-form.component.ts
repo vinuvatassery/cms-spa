@@ -43,6 +43,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   clientName:any;
   @Input() claimsType: any;
   isRecentClaimShow = false;
+  isShowReasonForException = false;
   clientSearchResult = [
     {
       clientId: '12',
@@ -321,9 +322,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   isStartEndDateValid(startDate: any, endDate: any): boolean {
     if (startDate != "" && endDate != "" && startDate > endDate) {
       this.endDateGreaterThanStartDate = true;
-      // this.financialClaimsFacade.errorShowHideSnackBar(
-      //   'Start date must less than end date'
-      // );
       return false;
     }
     this.currentFormControl.controls['serviceEndDate'].setErrors(null);

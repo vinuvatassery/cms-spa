@@ -62,7 +62,7 @@
                         </span>
                         <kendo-multicolumncombobox [data]="clientSearchResult$ | async" textField="clientFullName"
                             valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
-                            placeholder="Search Client Name, ID, or SSN or DOB"
+                            placeholder="Search Client Name, ID, SSN or DOB"
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="client" (filterChange)="loadClientBySearchText($event)"
                             (valueChange)="onClientValueChange($event)" [(ngModel)]="selectedClient">
@@ -152,11 +152,6 @@
                                                     (valueChange)="onDateChange(i)">
                                                 </kendo-datepicker>
                                             </kendo-floatinglabel>
-                                            <!-- <kendo-formerror *ngIf="endDateGreaterThanStartDate"
-                                                class="d-flex align-items-center"> <span class="material-icons mr-1"
-                                                    aria-hidden="false">info</span>Service End date must be equal to or
-                                                greater than start date
-                                            </kendo-formerror> -->
                                             <kendo-formerror
                                                 *ngIf="(isControlValid('serviceEndDate', i) && isSubmitted)"
                                                 class="d-flex align-items-center"> <span class="material-icons mr-1"
@@ -277,7 +272,7 @@
                                                     Exception</a></kendo-formerror>
                                         </div>
                                     </div>
-                                    <!-- <div class="flex-row">
+                                    <div class="flex-row" *ngIf="isShowReasonForException">
                                         <div class="flex-col">
                                             <kendo-floatinglabel text="Reason For Exception">
                                                 <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
@@ -289,7 +284,7 @@
                                                 </kendo-textarea>
                                             </kendo-floatinglabel>
                                         </div>
-                                    </div> -->
+                                    </div>
                                 </div>
                             </ng-container>
                         </ng-container>
