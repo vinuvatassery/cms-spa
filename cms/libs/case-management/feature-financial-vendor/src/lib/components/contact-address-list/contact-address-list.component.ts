@@ -47,10 +47,8 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   public sort = this.vendocontactsFacade.sort;
   selectedColumn!: any;
   columnChangeDesc = 'Default Columns';
-
   contacts$ = new BehaviorSubject<any>([]);
   loader$ = new BehaviorSubject<boolean>(false);
-
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   gridColumns: any = {
     contactName: "Name",
