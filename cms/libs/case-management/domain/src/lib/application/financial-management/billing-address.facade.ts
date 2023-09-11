@@ -90,29 +90,13 @@ export class BillingAddressFacade {
 
   }
 
-  loadPaymentsAddressListGrid(
-    vendorTypeCode: string,
-    skipcount: number,
-    maxResultCount: number,
-    sort: string,
-    sortType: string,
-    vendorId: any,
-    isShowHistoricalData:boolean=false
-  ) {
+  loadPaymentsAddressListGrid(paymentAddressListParams:any) {
     this.showLoader();
 
     this.searchLoaderVisibilitySubject.next(true);
 
     this.billingAddressDataService
-      .loadBillingPaymentsAddressListService(
-        vendorTypeCode,
-        skipcount,
-        maxResultCount,
-        sort,
-        sortType,
-        vendorId,
-        isShowHistoricalData
-      )
+      .loadBillingPaymentsAddressListService(paymentAddressListParams)
       .subscribe({
         next: (dataResponse) => {
           this.billingAddressDataSubject.next(dataResponse);

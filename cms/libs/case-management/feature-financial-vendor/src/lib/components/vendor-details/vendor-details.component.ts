@@ -149,6 +149,13 @@ fillFormData(){
         this.medicalProviderForm.controls['lastName'].updateValueAndValidity();
       }
     }
+    else if(this.providerType == this.vendorTypes.Manufacturers) {
+      this.medicalProviderForm.controls['providerName']
+      .setValidators([
+        Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
+      ]);
+      this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
+    }
     else {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
@@ -163,7 +170,7 @@ fillFormData(){
 
       this.medicalProviderForm.controls['city']
         .setValidators([
-          Validators.required,
+          Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
         ]);
       this.medicalProviderForm.controls['city'].updateValueAndValidity();
 
@@ -175,21 +182,25 @@ fillFormData(){
 
       this.medicalProviderForm.controls['zip']
         .setValidators([
-          Validators.required,
+          Validators.required,Validators.required,Validators.pattern('^[A-Za-z0-9 \-]+$')
         ]);
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();
 
-      this.medicalProviderForm.controls['nameOnCheck']
-      .setValidators([
-        Validators.required,
-      ]);
-    this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
+      if (this.providerType == this.vendorTypes.Manufacturers) {
+        this.medicalProviderForm.controls['nameOnCheck'].setValidators([
+          Validators.nullValidator,
+        ]);
+        this.medicalProviderForm.controls[
+          'nameOnCheck'
+        ].updateValueAndValidity();
 
-    this.medicalProviderForm.controls['nameOnEnvolop']
-    .setValidators([
-      Validators.required,
-    ]);
-      this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
+        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([
+          Validators.nullValidator,
+        ]);
+        this.medicalProviderForm.controls[
+          'nameOnEnvolop'
+        ].updateValueAndValidity();
+      }
 
     }
 
@@ -488,5 +499,8 @@ onMailCodeChange( )
     {
       this.onChange();
    }
+}
+get medicalProviderFormControls() {
+  return this.medicalProviderForm.controls as any;
 }
 }
