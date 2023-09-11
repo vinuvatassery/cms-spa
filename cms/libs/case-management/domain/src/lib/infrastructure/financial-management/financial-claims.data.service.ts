@@ -439,4 +439,24 @@ export class FinancialClaimsDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/exceeded-limit?servicesCost=${serviceCost}&clientId=${clientId}`
     );
   }
+  CheckIneligibleException(startDtae: any,endDate: any, clientId: number, typeCode : string ) {
+    let path;
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
+      path = 'financial-management/claims/medical';
+    } else {
+      path = 'financial-management/claims/dental';
+    }
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/check-ineligible?startDate=${startDtae}?endDate=${endDate}&clientId=${clientId}`
+    );
+  }
+  checkBridgeUppEception(startDtae: any,endDate: any, clientId: number,cptCode:any, typeCode : string ) {
+    let path;
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
+      path = 'financial-management/claims/medical';
+    } else {
+      path = 'financial-management/claims/dental';
+    }
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/check-bridge-upp?startDate=${startDtae}?endDate=${endDate}&clientId=${clientId}&cptCode=${cptCode}`
+    );
+  }
 }

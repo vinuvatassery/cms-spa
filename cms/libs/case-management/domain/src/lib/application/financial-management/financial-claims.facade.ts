@@ -93,7 +93,12 @@ export class FinancialClaimsFacade {
 
   public serviceCostFlag = false;
   private showExceedMaxBenefitExceptionSubject = new Subject<any>();
+  private showIneligibleExceptionSubject = new Subject<any>();
+  private showBridgeUppExceptionSubject = new Subject<any>();
   showExceedMaxBenefitException$ = this.showExceedMaxBenefitExceptionSubject.asObservable();
+  showIneligibleException$ = this.showIneligibleExceptionSubject.asObservable();
+  showBridgeUppException$ = this.showBridgeUppExceptionSubject.asObservable();
+
 
   private financialClaimsProcessDataSubject = new Subject<any>();
   financialClaimsProcessData$ =
@@ -647,6 +652,40 @@ loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, 
         indexNumber: indexNumber
       }
       this.showExceedMaxBenefitExceptionSubject.next(response);
+    },
+    error: (err:any) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+    },
+  })
+  this.hideLoader();
+}
+CheckIneligibleException(startDtae: any,endDate: any, clientId: number, indexNumber: any, typeCode : string){
+  this.showLoader();
+  this.financialClaimsDataService.CheckIneligibleException(startDtae,endDate,clientId,typeCode).subscribe({
+    next: (data:any)=>{
+      const flag =  data;
+      let response = {
+        flag: flag,
+        indexNumber: indexNumber
+      }
+      this.showIneligibleExceptionSubject.next(response);
+    },
+    error: (err:any) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+    },
+  })
+  this.hideLoader();
+}
+checkBridgeUppEception(startDtae: any,endDate: any, clientId: number,cptCode:any, indexNumber: any, typeCode : string){
+  this.showLoader();
+  this.financialClaimsDataService.checkBridgeUppEception(startDtae,endDate,clientId,cptCode,typeCode).subscribe({
+    next: (data:any)=>{
+      const flag =  data;
+      let response = {
+        flag: flag,
+        indexNumber: indexNumber
+      }
+      this.showBridgeUppExceptionSubject.next(response);
     },
     error: (err:any) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
