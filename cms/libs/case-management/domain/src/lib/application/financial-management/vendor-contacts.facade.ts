@@ -94,22 +94,11 @@ export class VendorContactsFacade {
   }
   loadcontacts(vendorAddressId:string, skip: any, pageSize: any, sortBy: any, sortType: any, filters:any)
   {
-    this.showLoader();
-    this.vendorcontactsDataService.loadcontacts(vendorAddressId,skip,pageSize, sortBy, sortType, filters).subscribe({
-      next:(res:any)=>{
-        const gridView: any = {
-          data: res.items,
-          total:res.totalCount,
-        };
-      this.contactsSubject.next(gridView);
-      this.hideLoader();
-      },
-      error:(err:any)=>{
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-     this.hideLoader();
-      }
-    })
+   return  this.vendorcontactsDataService.loadcontacts(vendorAddressId,skip,pageSize, sortBy, sortType, filters)
   }
+
+  
+
   saveContactAddress(contactAddress: any) {
 
     this.showLoader();
