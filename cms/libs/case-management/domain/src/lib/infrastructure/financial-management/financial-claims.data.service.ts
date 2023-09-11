@@ -459,4 +459,14 @@ export class FinancialClaimsDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/check-bridge-upp?startDate=${startDtae}?endDate=${endDate}&clientId=${clientId}&cptCode=${cptCode}`
     );
   }
+  checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any, typeCode : string ) {
+    let path;
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
+      path = 'financial-management/claims/medical';
+    } else {
+      path = 'financial-management/claims/dental';
+    }
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/check-duplicate-payment?startDate=${startDtae}?endDate=${endDate}&vendorId=${vendorId}&totalAmountDue=${totalAmountDue}`
+    );
+  }
 }

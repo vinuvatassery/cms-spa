@@ -95,9 +95,12 @@ export class FinancialClaimsFacade {
   private showExceedMaxBenefitExceptionSubject = new Subject<any>();
   private showIneligibleExceptionSubject = new Subject<any>();
   private showBridgeUppExceptionSubject = new Subject<any>();
+  private showDuplicatePaymentExceptionSubject = new Subject<any>();
   showExceedMaxBenefitException$ = this.showExceedMaxBenefitExceptionSubject.asObservable();
   showIneligibleException$ = this.showIneligibleExceptionSubject.asObservable();
   showBridgeUppException$ = this.showBridgeUppExceptionSubject.asObservable();
+  showDuplicatePaymentException$ = this.showDuplicatePaymentExceptionSubject.asObservable();
+
 
 
   private financialClaimsProcessDataSubject = new Subject<any>();
@@ -686,6 +689,23 @@ checkBridgeUppEception(startDtae: any,endDate: any, clientId: number,cptCode:any
         indexNumber: indexNumber
       }
       this.showBridgeUppExceptionSubject.next(response);
+    },
+    error: (err:any) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+    },
+  })
+  this.hideLoader();
+}
+checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any, indexNumber: any, typeCode : string){
+  this.showLoader();
+  this.financialClaimsDataService.checkDuplicatePaymentException(startDtae,endDate,vendorId,totalAmountDue,typeCode).subscribe({
+    next: (data:any)=>{
+      const flag =  data;
+      let response = {
+        flag: flag,
+        indexNumber: indexNumber
+      }
+      this.showDuplicatePaymentExceptionSubject.next(response);
     },
     error: (err:any) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
