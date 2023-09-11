@@ -164,13 +164,15 @@
                                      formatPlaceholder="formatPattern"  placeholder="Date Pmt. Reconciled" >                                          
                                   </kendo-datepicker>
                                   <kendo-formerror *ngIf="dataItem.datePaymentRecInValid">{{dataItem.datePaymentRecInValidMsg}}</kendo-formerror>
-                              </ng-template>
-                              <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-                                          [extra]="false" operator="eq">
-                                          <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                                  </kendo-grid-string-filter-menu>
-                                  </ng-template>
+                              </ng-template>                            
+                                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                                    <common-grid-cell-date-range-filter
+                                      [field]="'paymentReconciledDate'"
+                                      [filter]="filter"
+                                      [filterService]="filterService"
+                                    >
+                                    </common-grid-cell-date-range-filter>
+                                    </ng-template>
                         </kendo-grid-column>
                           <kendo-grid-column field="paymentSentDate" title="Date Pmt. Sent" [width]="160">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
@@ -184,11 +186,12 @@
                                   <kendo-formerror *ngIf="dataItem.datePaymentSentInValid">{{dataItem.datePaymentSentInValidMsg}}</kendo-formerror>
                               </ng-template>
                               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-                                          [extra]="false" operator="eq">
-                                          <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                                  </kendo-grid-string-filter-menu>
-                                  </ng-template>
+                                    <common-grid-cell-date-range-filter
+                                      [field]="'paymentSentDate'"
+                                      [filter]="filter"
+                                      [filterService]="filterService">
+                                    </common-grid-cell-date-range-filter>
+                                    </ng-template>
                         </kendo-grid-column>                   
 
                         <kendo-grid-column field="amountPaid" title="Pmt. Amount" [width]="180">
@@ -201,10 +204,7 @@
                               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                                     <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                                           [extra]="false" operator="eq">
-                                          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
                                           <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                                          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                                          <kendo-filter-contains-operator></kendo-filter-contains-operator>
                                   </kendo-grid-string-filter-menu>
                                   </ng-template>
                         </kendo-grid-column>
@@ -297,16 +297,16 @@
       <div class="bottom-fixed-wrapper ">
             <div class="sub-fix-bar">
                   <div class="flex-sp-btn">
-                        <div> <span><strong>Amount Total:</strong> $&nbsp;{{reconcileBreakoutSummary$?.amountTotal |
+                        <div> <span><strong>Amount Total:</strong> $&nbsp;{{reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.amountTotal |
                               kendoNumber:'n2'}}</span>
                         <span class="ml-2"><strong>Warrant Total:</strong></span> <span class="ml-2"
-                              *ngIf="isBreakoutPanelShow; else searchByBatchTemplate">$&nbsp;{{reconcileBreakoutSummary$?.warrantTotal
+                              *ngIf="isBreakoutPanelShow; else searchByBatchTemplate">$&nbsp;{{reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.warrantTotal
                               | kendoNumber: 'n2'}}</span>
                         <ng-template #searchByBatchTemplate>
                               <span class="ml-2">$&nbsp;{{0 | kendoNumber: 'n2'}}</span>
                         </ng-template>
                   </div>
-                  <div><span>{{ isBreakoutPanelShow ? reconcileBreakoutSummary$?.paymentToReconcileCount : 0}} payment(s)
+                  <div><span>{{ isBreakoutPanelShow ? reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.paymentToReconcileCount : 0}} payment(s)
                               to
                               reconcile</span>
                         <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="close" title="Close">
@@ -336,7 +336,7 @@
 
 
 <ng-template #PrintAuthorizationDialog>
-      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Advice Letter(s)</kendo-dialog-titlebar>
+      <kendo-dialog-titlebar class="text-normal" (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Advice Letter(s)</kendo-dialog-titlebar>
       <cms-financial-claims-print-authorization
   [printOption]="onlyPrintAdviceLetter"
   [isSaveClicked]="isSaveClicked"

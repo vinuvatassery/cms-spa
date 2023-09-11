@@ -32,6 +32,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
   specialHandling = '';
   specialHandlingCharachtersCount!: number;
   specialHandlingCounter!: string;
+  statusFlag : any = StatusFlag;
 
   /** Constructor**/
   constructor(
@@ -106,6 +107,12 @@ export class PaymentAddressDetailsComponent implements OnInit {
       newAddContactForm: this.formBuilder.array([]),
     });
 
+    this.paymentAddressForm.controls['zip']
+        .setValidators([
+          Validators.required,Validators.required,Validators.pattern('^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)$')
+        ]);
+      this.paymentAddressForm.controls['zip'].updateValueAndValidity();
+
     if (this.tabCode === FinancialVendorProviderTabCode.InsuranceVendors) {
       this.paymentAddressForm.addControl('acceptsReportsFlag', new FormControl('', [Validators.required]))
       this.paymentAddressForm.addControl('acceptsCombinedPaymentsFlag', new FormControl('', [Validators.required]))
@@ -124,6 +131,11 @@ export class PaymentAddressDetailsComponent implements OnInit {
       this.paymentAddressForm.addControl('physicalAddressFlag', new FormControl(''))
     }
   }
+
+  get paymentAddressFormControls() {
+    return this.paymentAddressForm.controls as any;
+  }
+
   private setAddressTypeCode() {
     switch (this.tabCode) {
       case FinancialVendorProviderTabCode.Manufacturers:
@@ -186,7 +198,13 @@ export class PaymentAddressDetailsComponent implements OnInit {
     this.addUpdateBillingAddress(this.vendorId, formValues).subscribe({
       next: (resp) => {
         if (resp) {
-          this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment Address Added Successfully')
+          if (!this.isEdit) {
+            this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment address added successfully!')
+          }
+          else
+          {
+            this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment address updated successfully!')
+          }
         }
         this.billingAddressFacade.hideLoader();
         this.closeModal('saved');

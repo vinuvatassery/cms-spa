@@ -1,15 +1,16 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges, AfterViewChecked } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { first } from 'rxjs';
+
 
 @Component({
   selector: 'cms-financial-pcas-assignment-form',
   templateUrl: './financial-pcas-assignment-form.component.html',
   styleUrls: ['./financial-pcas-assignment-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPcasAssignmentFormComponent implements OnInit{
+export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, AfterViewChecked{
 
   @Input() groupCodesData$ : any
   @Input() objectCodesData$ : any
@@ -20,6 +21,9 @@ export class FinancialPcasAssignmentFormComponent implements OnInit{
   @Input() groupCodeIdsdValue : any=[];
   @Input() pcaCodesInfoData$ : any
   @Input() pcaAssignmentData$ : any
+  @Input() pcaAssignmentFormDataModel$ : any
+  @Input() newForm : any
+  @Input() groupCodesDataFilter : any
 
   groupCodeIdsdValueData : any=[];
 
@@ -39,13 +43,38 @@ export class FinancialPcasAssignmentFormComponent implements OnInit{
     private formBuilder: FormBuilder,
     public intl: IntlService
   ) {}  
-  ngOnInit(): void {
-    this.composePcaAssignmentForm()
+  ngOnInit(): void {   
     this.loadPcaEvent.emit()
     this.getPcaInfoData()
+
+    if(this.newForm === true)
+    {
+      
+    this.composePcaAssignmentForm()
+    }
   }
 
+
+  ngOnChanges(changes: SimpleChanges): void {
+    
+     
+     if(this.pcaAssignmentFormDataModel$?.pcaAssignmentId)
+     { 
+      this.composePcaAssignmentEditForm()
+     }
+  }
   
+  getPcaInfoData()
+  {       
+    
+    this.pcaCodesInfoData$?.pipe()
+    .subscribe((data : any) =>
+    {
+      this.pcaCodesInfo = data
+      
+    
+     }  )   
+  }
   closeAddEditPcaAssignmentClicked() {
     this.closeAddEditPcaAssignmentClickedEvent.emit(true);
   }
@@ -53,70 +82,101 @@ export class FinancialPcasAssignmentFormComponent implements OnInit{
   private composePcaAssignmentForm()
   {
     this.editPca =false
-      this.pcaAssignmentForm = this.formBuilder.group({     
-        pcaAssignmentId : [''],
-        objectCode: ['', Validators.required],
-        groupCodes: [[], Validators.required],
-        pcaId: ['', Validators.required],
-        openDate: ['', Validators.required],
-        closeDate: ['', Validators.required],
-        amount: [0, Validators.required],
-        unlimited: [false],
-        ay : ['']
-      });  
-
-      this.pcaAssignmentForm.patchValue(
-        {     
-          objectCode:  this.objectCodeIdValue ,     
-          groupCodes :  this.groupCodeIdsdValue
-        }
-      )   
-
+        if(!this.pcaAssignmentFormDataModel$?.pcaAssignmentId)
+        {  
+          this.pcaAssignmentForm = this.formBuilder.group({     
+            pcaAssignmentId : [''],
+            objectCode: ['', Validators.required],
+            groupCodes: [[], Validators.required],
+            pcaId: ['', Validators.required],
+            openDate: ['', Validators.required],
+            closeDate: ['', Validators.required],
+            amount: [0, Validators.required],
+            unlimited: [false],
+            ay : ['']
+          });  
+          debugger
+          this.pcaAssignmentForm.patchValue(
+            {     
+              objectCode:  this.objectCodeIdValue ,     
+              groupCodes :  this.groupCodeIdsdValue
+            }
+          )    
       this.pcaAssignmentForm.controls['objectCode'].disable();
 
       this.pcaAssignmentForm.controls['groupCodes'].disable();
 
       this.pcaAssignmentForm.controls['ay'].disable();     
+    }
+     
   }
 
   private composePcaAssignmentEditForm()
   {    
-    this.pcaAssignmentData$?.pipe(first((existPcaData: any ) => existPcaData?.pcaAssignmentId != null))
-    .subscribe((existPcaData: any) =>
-    {  
-      
-        if(existPcaData?.pcaAssignmentId)
+      if(!this.pcaAssignmentForm)
+      {
+        this.pcaAssignmentForm = this.formBuilder.group({     
+          pcaAssignmentId : [''],
+          objectCode: ['', Validators.required],
+          groupCodes: [[], Validators.required],
+          pcaId: ['', Validators.required],
+          openDate: ['', Validators.required],
+          closeDate: ['', Validators.required],
+          amount: [0, Validators.required],
+          unlimited: [false],
+          ay : ['']
+        });  
+      }
+        if(this.pcaAssignmentFormDataModel$?.pcaAssignmentId)
         {       
+          
+          this.pcaAssignmentForm.reset()
           let groupCodeIdsAssignedValue : any=[];   
           this.editPca = true      
-          this.onPcaChange(existPcaData?.pcaId)    
+          this.onPcaChange(this.pcaAssignmentFormDataModel$?.pcaId)    
           this.pcaAssignmentForm.controls['pcaId'].disable();
           
-          Object.values(this.groupCodeIdsdValue).forEach((key : any) => {  
+          Object.values(this.groupCodesDataFilter).forEach((key : any) => {  
                      
-              if(existPcaData.groupCodeIds.split(',').filter((x:any)=>x=== key.groupCodeId).length > 0)
+              if(this.pcaAssignmentFormDataModel$.groupCodeIds.split(',').filter((x:any)=>x=== key.groupCodeId).length > 0)
               {
                 groupCodeIdsAssignedValue.push(key)
               }            
             })
             
+
+            this.pcaAssignmentForm.controls['objectCode'].disable();
+
+            this.pcaAssignmentForm.controls['groupCodes'].disable();
+ 
+            this.pcaAssignmentForm.controls['ay'].disable();     
+           
+            if(this.pcaAssignmentFormDataModel$?.unlimited === true)
+            {
+              this.pcaAssignmentForm.controls['amount'].disable();  
+            }
+            
             this.pcaAssignmentForm.patchValue(
               {     
-                pcaAssignmentId:  existPcaData?.pcaAssignmentId ?? 0,  
-                objectCode:  existPcaData?.objectCodeId ?? 0,     
-                pcaId: existPcaData?.pcaId, 
-                openDate: existPcaData?.openDate,
-                closeDate: existPcaData?.closeDate,
-                amount: existPcaData?.totalAmount,
-                unlimited: (existPcaData?.unlimitedFlag === 'Y'),
+                pcaAssignmentId:  this.pcaAssignmentFormDataModel$?.pcaAssignmentId ,  
+                objectCode:  this.pcaAssignmentFormDataModel$?.objectCodeId,     
+                pcaId: this.pcaAssignmentFormDataModel$?.pcaId, 
+                openDate: this.pcaAssignmentFormDataModel$?.openDate,
+                closeDate: this.pcaAssignmentFormDataModel$?.closeDate,
+                amount: this.pcaAssignmentFormDataModel$?.amount,
+                unlimited: this.pcaAssignmentFormDataModel$?.unlimited,
                 groupCodes : groupCodeIdsAssignedValue               
               }
             )
-          
+           
+           
         }
-    })
+   
   }
-
+  ngAfterViewChecked(){
+    //your code to update the model
+    this.ref.detectChanges();
+ }
   onPcaAssignmentFormSubmit()
   {    
     this.pcaAssignmentForm.markAllAsTouched();
@@ -166,16 +226,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit{
    }
   }
 
-  getPcaInfoData()
-  {       
-    
-    this.pcaCodesInfoData$?.pipe()
-    .subscribe((data : any) =>
-    {
-      this.pcaCodesInfo = data
-      this.composePcaAssignmentEditForm()
-     }  )   
-  }
+
 
   onPcaChange(data : any)
   {    

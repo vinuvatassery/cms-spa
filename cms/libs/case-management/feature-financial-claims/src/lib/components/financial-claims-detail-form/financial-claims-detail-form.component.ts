@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { EntityTypeCode, FinancialClaimsFacade, FinancialProvider, PaymentMethodCode, FinancialClaims } from '@cms/case-management/domain';
+import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -192,11 +192,15 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   searchMedicalProvider(searchText: any) {
-    this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider);
+    if(!searchText || searchText.length == 0){
+      return;
+    }    
+    this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
   }
+
   onCPTCodeValueChange(event: any, index: number) {
     let service = event;
-    let ctpCodeIsvalid = this.AddClaimServicesForm.at(index) as FormGroup;
+    let ctpCodeIsvalid = this.addClaimServicesForm.at(index) as FormGroup;
     ctpCodeIsvalid.patchValue({
       cptCode: service.cptCode1,
       serviceDescription: service.serviceDesc != undefined ? service.serviceDesc : '',
@@ -205,15 +209,32 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     });
     this.calculateMedicadeRate(index);
   }
+
   searchcptcode(cptcode: any) {
+    if(!cptcode || cptcode.length == 0){
+      return;
+    }
     this.financialClaimsFacade.searchcptcode(cptcode);
   }
 
-  loadClientBySearchText(searchText: any) {
-    this.financialClaimsFacade.loadClientBySearchText(searchText);
+  onPaymentTypeValueChange(cptCodeObject : any, index: number){ 
+    const serviceForm = this.addClaimServicesForm.at(index) as FormGroup;
+    let cptCode = serviceForm.controls['cptCode'].value; 
+    if (cptCodeObject !== PaymentRequestType.FullPay && cptCode.length > 0) {      
+        serviceForm.controls['amountDue'].setValue(0);
+    }
   }
 
-  get AddClaimServicesForm(): FormArray {
+  loadClientBySearchText(clientSearchText: any) {
+    if(!clientSearchText || clientSearchText.length == 0){
+      return;
+    }
+    clientSearchText = clientSearchText.replace("/", "-");
+    clientSearchText = clientSearchText.replace("/", "-");
+    this.financialClaimsFacade.loadClientBySearchText(clientSearchText);
+  }
+
+  get addClaimServicesForm(): FormArray {
     return this.claimForm.get('claimService') as FormArray;
   }
 
@@ -254,29 +275,34 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         Validators.required,
       ]),
     });
-    this.AddClaimServicesForm.push(claimForm);
+    this.addClaimServicesForm.push(claimForm);
   }
 
   onClientValueChange(event: any) {
     this.clientCaseEligibilityId = event.clientCaseEligibilityId;
+    this.clientId = event.clientId;
+    this.clientName = event.clientFullName;
+    if (this.clientId != null && this.vendorId != null) {
+      this.isRecentClaimShow = true;
+    }
   }
 
   removeService(i: number) {
-    this.AddClaimServicesForm.removeAt(i);
+    this.addClaimServicesForm.removeAt(i);
   }
 
   IsServiceStartDateValid(index: any) {
-    let startDateIsvalid = this.AddClaimServicesForm.at(index) as FormGroup;
+    let startDateIsvalid = this.addClaimServicesForm.at(index) as FormGroup;
     return startDateIsvalid.controls['serviceStartDate'].status == 'INVALID';
   }
 
   isControlValid(controlName: string, index: any) {
-    let control = this.AddClaimServicesForm.at(index) as FormGroup;
+    let control = this.addClaimServicesForm.at(index) as FormGroup;
     return control.controls[controlName].status == 'INVALID';
   }
 
   onDateChange(index: any) {
-    let serviceFormData = this.AddClaimServicesForm.at(index) as FormGroup;
+    let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
     this.isStartEndDateValid(startDate, endDate);
@@ -303,12 +329,13 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     let bodyData = {
       clientId: formValues.client.clientId,
       vendorId: formValues.medicalProvider.vendorId,
+      vendorAddressId: formValues.medicalProvider.vendorAddressId,
       claimNbr: formValues.invoiceId,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       paymentRequestId: this.isEdit ? this.paymentRequestId : null,
       paymentMethodCode: this.isSpotsPayment ? PaymentMethodCode.SPOTS : PaymentMethodCode.ACH,
-      serviceSubTypeCode: this.claimsType == this.financialProvider ? "MEDICAL" : "DENTAL",
-      tpainvoice: [{}],
+      serviceSubTypeCode: this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
+      tpaInvoice: [{}],
     };
     for (let element of formValues.claimService) {
       let service = {
@@ -339,9 +366,9 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         );
         return;
       }
-      bodyData.tpainvoice.push(service);
+      bodyData.tpaInvoice.push(service);
     }
-    bodyData.tpainvoice.splice(0, 1);
+    bodyData.tpaInvoice.splice(0, 1);
     if (!this.isEdit) {
       this.saveData(bodyData);
     } else {
@@ -351,7 +378,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   public saveData(data: any) {
     this.loaderService.show();
-    this.financialClaimsFacade.saveMedicalClaim(data, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider).subscribe({
+    this.financialClaimsFacade.saveMedicalClaim(data, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim).subscribe({
       next: (response: any) => {
         this.loaderService.hide();
         if (!response) {
@@ -380,7 +407,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   public update(data: any) {
     this.isSubmitted = true;
     this.loaderService.show();
-    this.financialClaimsFacade.updateMedicalClaim(data, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider).subscribe({
+    this.financialClaimsFacade.updateMedicalClaim(data, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim).subscribe({
       next: (response: any) => {
         this.loaderService.hide();
         if (!response) {
@@ -409,7 +436,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   getMedicalClaimByPaymentRequestId() {
     this.loaderService.show();
     this.financialClaimsFacade
-      .getMedicalClaimByPaymentRequestId(this.paymentRequestId, this.claimsType == this.financialProvider ? FinancialProvider.MedicalProvider : FinancialProvider.DentalProvider)
+      .getMedicalClaimByPaymentRequestId(this.paymentRequestId, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim)
       .subscribe({
         next: (val) => {
           const clients = [
@@ -422,6 +449,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
             {
               vendorId: val.vendorId,
               providerFullName: val.vendorName,
+              vendorAddressId: val.vendorAddressId
             },
           ];
           this.financialClaimsFacade.clientSubject.next(clients);
@@ -439,7 +467,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
           this.paymentRequestId = val.paymentRequestId;
           this.cd.detectChanges();
           this.loaderService.hide();
-          this.setFormValues(val.tpainvoice);
+          this.setFormValues(val.tpaInvoice);
         },
         error: (err) => {
           this.loaderService.hide();
@@ -455,7 +483,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     for (let i = 0; i < services.length; i++) {
       let service = services[i];
       this.addClaimServiceGroup();
-      let serviceForm = this.AddClaimServicesForm.at(i) as FormGroup;
+      let serviceForm = this.addClaimServicesForm.at(i) as FormGroup;
       serviceForm.controls['cptCode'].setValue(service.cptCode);
       serviceForm.controls['serviceStartDate'].setValue(
         new Date(service.serviceStartDate)
@@ -476,13 +504,13 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   calculateMedicadeRate(index: number) {
-    const serviceForm = this.AddClaimServicesForm.at(index) as FormGroup;
+    const serviceForm = this.addClaimServicesForm.at(index) as FormGroup;
     let paymentType = serviceForm.controls['paymentType'].value;
-    if (paymentType == 'FULL_PAY') {
+    if (paymentType == PaymentRequestType.FullPay) {
       const medicadeRate = serviceForm.controls['medicadeRate'].value ?? 0;
       let amoundDue = serviceForm.controls['amountDue'].value ?? 0;
-      if (medicadeRate > 0 && amoundDue > 0) {
-        amoundDue = medicadeRate * 0.25 + amoundDue;
+      if (medicadeRate > 0) {
+        amoundDue = (medicadeRate * 0.25) + medicadeRate;
         serviceForm.controls['amountDue'].setValue(amoundDue);
       }
     }
@@ -507,17 +535,11 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     }
     return `0/${this.textMaxLength}`;
   }
-  providerValueChange($event: any) {
+  
+  onProviderValueChange($event: any) {
     this.isRecentClaimShow = false;
-    this.vendorId = $event.providerId;
-    this.vendorName = $event.providerFullName;
-  }
-  clientValueChange($event: any) {
-    this.clientId = $event.clientId;
-    this.clientName = $event.clientFullName;
-    if (this.clientId != null && this.vendorId != null) {
-      this.isRecentClaimShow = true;
-    }
-  }
+    this.vendorId = $event.vendorId;
+    this.vendorName = $event.vendorName;
+  }  
 }
 

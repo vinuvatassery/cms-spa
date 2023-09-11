@@ -15,7 +15,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   @Input() vendorId: any;
   @Input() VendorContactId: any;
   @Output() isContactDetailPopupClose = new EventEmitter<any>();
-  @Output() editDeactivateClicked = new EventEmitter<any>();
+
   SpecialHandlingLength = 100;
   mailCodes: any[] = [];
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -32,6 +32,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   public gridSkipCount = this.vendocontactsFacade.skipCount;
   public sort = this.vendocontactsFacade.sort;
   public state!: any;
+  isContactAddressDeactivateShow = false
   descriptionCounter:number=500;
   filters = "";
   @Output() ContactUpdated = new EventEmitter<boolean>();
@@ -82,6 +83,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   public save() {
     this.isSubmitted = true;
+    this.contactForm.markAllAsTouched();
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
     
     if (this.contactForm.valid) {
@@ -113,11 +115,10 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   public update() {    
     this.isSubmitted = true;
-    this.AddContactForm.value.forEach((element:any, i: number) => {  
-      this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
-    }); 
     if (this.contactForm.controls['vendorContacts'].valid) {
       this.loaderService.show();
+      let vendorContacts= this.contactForm.value.vendorContacts[0];
+      vendorContacts.preferredFlag = vendorContacts.preferredFlag ? "Y" :"N"
       this.vendocontactsFacade.updateContactAddress(this.contactForm.value.vendorContacts[0]).subscribe({
         next: (response: any) => {
           if (response) {
@@ -183,6 +184,20 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     this.cd.detectChanges();
   }
 
+  onDeactivateContactClick(){ 
+    this.isContactAddressDeactivateShow = true;
+  }
+
+  clickCloseDeactivateContactAddress() {
+    this.isContactAddressDeactivateShow = false;
+  }
+
+  onDeactiveCancel(isCancel: any) {
+    if (isCancel) { 
+      this.clickCloseDeactivateContactAddress()
+    }
+  }
+
   removeContact(i: number) {
     this.AddContactForm.removeAt(i);
   }
@@ -201,15 +216,12 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     }
     this.cd.detectChanges();
   }
-   onKeyPress(event: KeyboardEvent) {
-    return (event.charCode > 64 && 
-      event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)||event.charCode==32
+   onKeyPress(event:number) {
+    return (event > 64 && 
+      event < 91) || (event > 96 && event < 123)||event==32
   }
   onDescriptionValueChange(event: any): void {
     this.descriptionCounter = event.length;
   }
-  deactivatePaymentAddressContact()
-  {
-    this.editDeactivateClicked.emit(this.contactAddress);
-  }
+
 }

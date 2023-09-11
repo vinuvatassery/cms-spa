@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { State } from '@progress/kendo-data-query';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentsDataService {
@@ -16,9 +17,9 @@ export class PaymentsDataService {
   /** Public methods **/
 
 
-  loadPaymentsListService(vendorId: string, paginationParameters: State) {
-    const sorting = this.getSortingParams(paginationParameters);
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/payment-batches?SkipCount=${paginationParameters?.skip}&MaxResultCount=${paginationParameters?.take}${sorting}`);
+  loadPaymentsListService(vendorId: string, paginationParameters: GridFilterParam) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/payment-batches`
+      , paginationParameters);
   }
 
   loadPaymentBatchSubListService(batchId: string, paginationParameters: State) {
@@ -29,7 +30,6 @@ export class PaymentsDataService {
   getSortingParams(paginationParameters: State) {
     let sorting = '';
     if (paginationParameters?.sort && paginationParameters?.sort?.length > 0 && paginationParameters?.sort[0]) {
-    console.log(paginationParameters?.sort[0]);
       sorting = `&Sorting=${paginationParameters?.sort[0]?.field}&SortType=${paginationParameters?.sort[0]?.dir ?? 'asc'}`;
     }
 
@@ -60,17 +60,17 @@ export class PaymentsDataService {
     ]);
   }
 
-  loadPaymentPanel(vendorId:any,batchId:any){
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/batches/${batchId}`);
+  loadPaymentPanel(vendorAddressId: any, batchId: any) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorAddressId}/batches/${batchId}`);
   }
-  updatePaymentPanel(vendorId:any,batchId:any,paymentPanel:any){
+  updatePaymentPanel(vendorAddressId: any, batchId: any, paymentPanel: any) {
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}`+
-      `/financial-management/vendors/${vendorId}/batches/${batchId}`     
-    ,paymentPanel);
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/financial-management/vendors/${vendorAddressId}/batches/${batchId}`
+      , paymentPanel);
   }
- 
-  loadPaymentDetails(paymentId: string, type: string){
+
+  loadPaymentDetails(paymentId: string, type: string) {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payments/${paymentId}?type=${type}`);
   }
 }

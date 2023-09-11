@@ -4,11 +4,11 @@ import { Router } from '@angular/router';
 
 /** External libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subscription } from 'rxjs';
 
 /** Facade **/
-import { InvoiceFacade } from '@cms/case-management/domain';
+import { FinancialVendorProviderTabCode, InvoiceFacade } from '@cms/case-management/domain';
 import { GridComponent } from '@progress/kendo-angular-grid';
 
 @Component({
@@ -35,15 +35,22 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   @Input() vendorId: any;
   @ViewChild(GridComponent)
   invoiceGrid!: GridComponent;
-
+  claimsType: any = 'dental';
+  filter!: any;
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
    /** Constructor **/
    constructor(private readonly invoiceFacade: InvoiceFacade,private readonly router: Router) {}
 
   ngOnInit(): void {
+    if(this.tabCode === FinancialVendorProviderTabCode.MedicalProvider){
+      this.claimsType = 'medical';
+    } 
     this.state = {
       skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value
+      take: this.pageSizes[0]?.value,
+      filter : this.filter === undefined?null:this.filter
     };
+    
     this.loadInvoiceListGrid();
     this.isInvoiceLoadingSubscription = this.isInvoiceLoading$.subscribe((data:boolean)=>{
       this.isInvoiceGridLoaderShow = data;
@@ -55,6 +62,7 @@ export class InvoicesComponent implements OnInit, OnDestroy {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
+      filter : this.filter === undefined?null:this.filter
     };
   }
 
@@ -77,6 +85,10 @@ export class InvoicesComponent implements OnInit, OnDestroy {
     }
   }
 
+  public filterChange(filter: CompositeFilterDescriptor): void {
+    this.filterData = filter;
+  }
+  
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
@@ -92,11 +104,18 @@ export class InvoicesComponent implements OnInit, OnDestroy {
       
   }
 
-  onBatchClicked() {
-    this.router.navigate([`/financial-management/medical-claims`]);    
+  onBatchClicked(batchId : any) {
+    this.router.navigate([`/financial-management/claims/${this.claimsType}/batch`],
+    { queryParams :{bid: batchId}});
   } 
 
   onExpand(event:any) {
     this.invoiceFacade.loadPaymentRequestServices(event.dataItem,this.vendorId,this.tabCode)   
   } 
+  
+  onInvoiceClicked(dataItem : any){   
+    this.router.navigate([`/financial-management/claims/${this.claimsType}/batch/items`],
+    { queryParams :{ bid: dataItem.batchId, ino:dataItem.invoiceNbr }});
+  }
+
 }

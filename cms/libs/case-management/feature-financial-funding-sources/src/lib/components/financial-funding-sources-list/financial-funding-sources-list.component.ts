@@ -44,6 +44,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
   @Input() fundingSourceList$!: Observable<any>;
   @Output() loadFinancialFundingSourcesListEvent = new EventEmitter<any>();
   @Output() removeFundingSourceClick = new EventEmitter<string>();
+  @Input() removeFundingSource$ :any
   isRemoveFundingSourceClicked$ = new Subject();
   public gridFilter: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   public state!: any;
@@ -328,11 +329,15 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
 removeFundingSourceEvent(fundingSoruceId: any) {
   this.removeFundingSourceClick.emit(fundingSoruceId);
   this.removeFundingOpened = false;
+
 }
 removeFundingSource(dataItem: any) {
   if (dataItem?.isDelete === true) {
     this.removeFundingSourceEvent(this.selectFundingSourceId);
     this.removeFundingDialog.close();
+    this.removeFundingSource$.subscribe((_ :any)=>{
+      this.loadFinancialFundingSourceFacadeListGrid();
+    })
   }
   else{
     this.removeFundingDialog.close();

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, OnInit, Component, ChangeDetectorRef, Input } from '@angular/core';
+import { ChangeDetectionStrategy, OnInit, Component, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, PaymentPanel, PaymentsFacade, GridFilterParam } from '@cms/case-management/domain';
@@ -28,8 +28,8 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   claimsType: any;
   currentUrl:any
   paymentPanelData$ = this.paymentFacade.paymentPanelData$;
-  @Input() vendorId:any;
-  @Input() batchId:any;
+  vendorAddressId:any;
+  batchId:any;
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
   ddlStates$ = this.contactFacade.ddlStates$;
@@ -69,8 +69,8 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   }
 
   private getQueryParams() {
-    this.vendorId = this.route.snapshot.params['vendorId'];
-    this.batchId = this.route.snapshot.params['batchId'];
+    this.vendorAddressId = this.route.snapshot.queryParams['eid'];
+    this.batchId = this.route.snapshot.queryParams['bid'];
   }
 
 
@@ -81,11 +81,11 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   }
 
   loadPaymentPanel(event:any=null){
-    this.paymentFacade.loadPaymentPanel(this.vendorId,this.batchId);    
+    this.paymentFacade.loadPaymentPanel(this.vendorAddressId,this.batchId);    
   }
   updatePaymentPanel(paymentPanel:PaymentPanel){
     this.paymentFacade.showLoader();
-    this.paymentFacade.updatePaymentPanel(this.vendorId,this.batchId, paymentPanel).subscribe({
+    this.paymentFacade.updatePaymentPanel(this.vendorAddressId,this.batchId, paymentPanel).subscribe({
         next: (response: any) => {        
           this.paymentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
           this.paymentFacade.hideLoader();  

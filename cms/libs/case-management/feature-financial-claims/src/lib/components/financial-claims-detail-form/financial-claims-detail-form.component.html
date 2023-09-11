@@ -17,12 +17,13 @@
                             class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
                         </span>
 
-                        <kendo-multicolumncombobox textField="providerFullName" valueField="vendorId"
+                        <kendo-multicolumncombobox textField="providerFullName" valueField="vendorAddressId"
                             [fillMode]="formUiStyle.dropDownFillMode"
-                            placeholder="Search Medical Providers by name or TIN"
+                            placeholder="Search {{claimsType | titlecase}} Providers by name or TIN"
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="medicalProvider" (filterChange)="searchMedicalProvider($event)"
-                            [data]="pharmacySearchResult$ | async" [(ngModel)]="selectedMedicalProvider">
+                            [data]="pharmacySearchResult$ | async" [(ngModel)]="selectedMedicalProvider"
+                            (valueChange)="onProviderValueChange($event)">
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
@@ -84,7 +85,7 @@
                             </kendo-combobox-column>
                             <kendo-combobox-column [width]="125">
                                 <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                    <span class=" text-muted"> <em>DOB:</em> {{ dataItem.dob}}</span>
+                                    <span class=" text-muted"> <em>DOB:</em> {{ dataItem.dob | date: 'MM/dd/yyyy'}}</span>
                                 </ng-template>
                             </kendo-combobox-column>
                         </kendo-multicolumncombobox>
@@ -119,7 +120,7 @@
                 <div class="flex-col flex-col-6">
                    
                         <ng-container formArrayName="claimService">
-                            <ng-container *ngFor="let contact of AddClaimServicesForm.controls; let i=index">
+                            <ng-container *ngFor="let contact of addClaimServicesForm.controls; let i=index">
                                 <ng-container [formGroupName]="i">
                                     <div class=" mb-3">
                                     <div class="flex-space-bw align-items-center">
@@ -171,7 +172,8 @@
                                                     [fillMode]="formUiStyle.dropDownFillMode"
                                                     [data]="paymentRequestType$ | async" valueField="lovCode"
                                                     textField="lovDesc" [valuePrimitive]="true"
-                                                    [loading]="(paymentRequestType$ | async)?.length===0">
+                                                    [loading]="(paymentRequestType$ | async)?.length===0"
+                                                    (valueChange)="onPaymentTypeValueChange($event, i)">
 
                                                 </kendo-dropdownlist>
                                             </kendo-floatinglabel>
@@ -232,7 +234,7 @@
 
                                             <kendo-floatinglabel text="Service Cost" class="amount-with-symbol">
                                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                                                <kendo-numerictextbox aria-label="CTP Code"  [spinners]="false"
+                                                <kendo-numerictextbox aria-label="Service Cost"  [spinners]="false"
                                                     [fillMode]="formUiStyle.inputFillMode" format="#.000"
                                                     formControlName="serviceCost">
                                                 </kendo-numerictextbox>
@@ -245,7 +247,7 @@
                                         <div class="flex-col flex-col-6">
                                             <kendo-floatinglabel text="Amount Due" class="amount-with-symbol">
                                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                                                <kendo-numerictextbox aria-label="PCA Code"  [spinners]="false"
+                                                <kendo-numerictextbox aria-label="Amount Due"  [spinners]="false"
                                                     [fillMode]="formUiStyle.inputFillMode" formControlName="amountDue"
                                                     format="#.000">
                                                 </kendo-numerictextbox>

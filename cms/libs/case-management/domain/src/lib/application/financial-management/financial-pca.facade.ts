@@ -68,6 +68,9 @@ export class FinancialPcaFacade {
   private financialPcaReportDataSubject = new Subject<any>();
   financialPcaReportData$ = this.financialPcaReportDataSubject.asObservable();
 
+  private financialPcaReportLoaderSubject = new BehaviorSubject<any>(false);
+  financialPcaReportLoader$ = this.financialPcaReportLoaderSubject.asObservable();
+
   private financialPcaSubReportDataSubject = new Subject<any>();
   financialPcaSubReportData$ = this.financialPcaSubReportDataSubject.asObservable();
 
@@ -77,6 +80,9 @@ export class FinancialPcaFacade {
 
   private pcaReassignmentByFundSourceIdSubject = new Subject<any>();
   pcaReassignmentByFundSourceId$ = this.pcaReassignmentByFundSourceIdSubject.asObservable();
+
+  private pcaReassignmentCountSubject = new Subject<any>()
+  pcaReassignmentCount$ = this.pcaReassignmentCountSubject.asObservable();
 
     /** Public properties **/
 
@@ -131,7 +137,7 @@ export class FinancialPcaFacade {
     sortType: string,
     filter: string
   ) {
-    filter = JSON.stringify(filter);
+    this.financialPcaReportLoaderSubject.next(true)
     this.financialPcaDataService
       .loadFinancialPcaReportListService(
         skipcount,
@@ -147,11 +153,11 @@ export class FinancialPcaFacade {
             total: dataResponse['totalCount'],
           };
           this.financialPcaReportDataSubject.next(gridView);
-          this.hideLoader();
+          this.financialPcaReportLoaderSubject.next(false)
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-          this.hideLoader();
+          this.financialPcaReportLoaderSubject.next(false)
         },
       });
   }
@@ -258,8 +264,16 @@ export class FinancialPcaFacade {
         },
       });
   }
+
   pcaReassignmentCount(){
-    return this.financialPcaDataService.pcaReassignmentCount();
+    this.financialPcaDataService.pcaReassignmentCount().subscribe({
+      next:(count: any) => {
+        this.pcaReassignmentCountSubject.next(count);
+      },
+      error: (err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
   }
 
   getPcaAssignmentById(pcaAssignmentId: string) {
@@ -268,7 +282,7 @@ export class FinancialPcaFacade {
       next: (response) => {
         this.getPcaAssignmentByIdSubject.next(response);
         this.hideLoader();
-      
+
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);

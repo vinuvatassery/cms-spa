@@ -21,6 +21,7 @@ import { Observable, Subject, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { FinancialClaimsFacade, PaymentBatchName } from '@cms/case-management/domain';
+import { NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-financial-claims-batches-log-lists',
   templateUrl: './financial-claims-batches-log-lists.component.html',
@@ -50,7 +51,10 @@ export class FinancialClaimsBatchesLogListsComponent
   onlyPrintAdviceLetter: boolean = true;
   currentPrintAdviceLetterGridFilter:any;
   printAdviceLetterResult :any;
-
+  private addClientRecentClaimsDialog: any;
+  vendorId:any;
+  clientId:any;
+  clientName:any;
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -114,14 +118,23 @@ export class FinancialClaimsBatchesLogListsComponent
       text: 'Delete Claims',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.isDeleteClaimClosed) {
-          this.isUnBatchClaimsClosed = false;
-          this.isDeleteClaimClosed = true;
-          this.onSingleClaimDelete(data.paymentRequestId.split(','));
-          this.onDeleteClaimsOpenClicked(
-            this.deleteClaimsConfirmationDialogTemplate
+        if(data.paymentStatusCode=="PAID")
+        {
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.ERROR,
+            "This claim cannot be deleted",
+            NotificationSource.UI
           );
+        }else{
+            this.isUnBatchClaimsClosed = false;
+            this.isDeleteClaimClosed = true;
+            this.onSingleClaimDelete(data.paymentRequestId.split(','));
+            this.onDeleteClaimsOpenClicked(
+              this.deleteClaimsConfirmationDialogTemplate
+            );
+          
         }
+       
       },
     },
   ];
@@ -189,12 +202,14 @@ export class FinancialClaimsBatchesLogListsComponent
   selectedDataRows: any;
   selectedCount: number = 0;
   disablePrwButton:boolean= true;
+  deletemodelbody:string="This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch";
   /** Constructor **/
   constructor(
     private route: Router,
     private dialogService: DialogService,
     public activeRoute: ActivatedRoute,
-    private readonly financialClaimsFacade: FinancialClaimsFacade
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
   ) {}
 
   ngOnInit(): void {
@@ -314,10 +329,10 @@ export class FinancialClaimsBatchesLogListsComponent
     this.route.navigate([this.route.url, 'items']);
   }
 
-  paymentClickHandler(paymentRequestId: string) {
+  paymentClickHandler(dataItem: any) {
     const batchId = this.activeRoute.snapshot.queryParams['bid'];
     this.route.navigate([this.route.url.split('?')[0], 'items'], {
-      queryParams: { bid: batchId, pid: paymentRequestId },
+      queryParams: { bid: batchId, pid: dataItem.paymentRequestId,eid:dataItem.vendorAddressId },
     });
   }
 
@@ -489,8 +504,32 @@ export class FinancialClaimsBatchesLogListsComponent
         if (exist === 0) {
           this.selectedDataRows.PrintAdviceLetterSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
         }
-     
+
     }
 
+  }
+
+  clientRecentClaimsModalClicked(
+    template: TemplateRef<unknown>,
+    data: any
+  ): void {
+    this.addClientRecentClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+      animation: {
+        direction: 'up',
+        type: 'slide',
+        duration: 200,
+      },
+    });
+    this.vendorId=data.vendorId;
+    this.clientId=data.clientId;
+    this.clientName=data.clientFullName;
+  }
+
+  closeRecentClaimsModal(result: any) {
+    if (result) {
+      this.addClientRecentClaimsDialog.close();
+    }
   }
 }
