@@ -98,13 +98,11 @@ import { Subscription } from 'rxjs';
     }
   }
   startDateOnChange() {
-    
     if (this.medicalClaimPaymentForm.controls['datePaymentSent'].value !== null) {
       this.endDateOnChange();
     }
   }
   endDateOnChange() {
-  
     this.medicalClaimPaymentForm.markAllAsTouched();
     this.paymentDateIsGreaterThanReconciledDate = true;
     if (this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value === null) {
@@ -144,7 +142,6 @@ import { Subscription } from 'rxjs';
 
 
   validateModel(){
-    
     if (this.medicalClaimPaymentForm.controls['datePaymentSent'].value === null) {
      this.paymentDateIsGreaterThanReconciledDate = false;
     }
