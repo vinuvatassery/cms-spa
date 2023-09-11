@@ -62,7 +62,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="tin" title="Tin"  [width]="80">
+    <kendo-grid-column field="tin" title="TIN"  [width]="80">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -92,7 +92,7 @@
     </kendo-grid-column>
 
     <kendo-grid-column field="unreconciledClaims" title="Unreconciled Claims" [width]="100"  format="0"
-      *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy ||vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
+      *ngIf="vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -131,7 +131,8 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="clients" title="Clients" [width]="100"  format="0"
+    <kendo-grid-column field="clients" title="{{vendorTypeCode===financeVendorTypeCodes.InsuranceVendors?
+      'Clients' : '# of Clients'}}" [width]="100"  format="0"
     [sticky]="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors"
     *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors
     || vendorTypeCode===financeVendorTypeCodes.Pharmacy">
@@ -143,6 +144,16 @@
       </ng-template>
     </kendo-grid-column>
    
+    <kendo-grid-column field="unreconciledClaims" title="Unreconciled Claims" [width]="100"  format="0"
+    *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy">
+    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+      <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+        [extra]="false" operator="eq">
+        <kendo-filter-eq-operator></kendo-filter-eq-operator>
+      </kendo-grid-numeric-filter-menu>
+    </ng-template>
+  </kendo-grid-column>
+
     <kendo-grid-column field="totalDrugs" title="Total Drugs" [width]="100"  format="0"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -153,7 +164,7 @@
       </ng-template>
     </kendo-grid-column>  
 
-    <kendo-grid-column field="mailCode" title="Mail Codes" [width]="100"  [sortable]="false"  
+    <kendo-grid-column field="mailCode" title="Mail Code" [width]="100"  [sortable]="false"  
       *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
       
@@ -173,7 +184,7 @@
     </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="npiNbr" title="Npi Number" [width]="100" *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy">
+    <kendo-grid-column field="npiNbr" title="NPI" [width]="100" *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">

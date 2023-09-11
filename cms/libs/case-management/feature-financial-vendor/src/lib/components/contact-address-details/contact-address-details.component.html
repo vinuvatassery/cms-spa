@@ -33,7 +33,7 @@
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>
-              <kendo-formerror *ngIf="isContactNameValid(i)&&isSubmitted">Contact Name is
+              <kendo-formerror *ngIf="isContactNameValid(i)&&isSubmitted">A Contact Name is
                 required</kendo-formerror>
             </div>
             <div class="flex-col">
@@ -109,27 +109,17 @@
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
-      <div>
-        <button
-        *ngIf="this.contactAddress.vendorContactId!=null"
-          kendoButton
-          [primary]="true"
-          look="flat"
-          aria-label="deactivate"
-          (click)="deactivatePaymentAddressContact()"
-        >
-          Deactivate
-        </button>
-      </div>
+      
+      <button kendoButton [primary]="true"  look="flat" aria-label="deactivate contact"
+      (click)="onDeactivateContactClick()" *ngIf="this.contactAddress.vendorContactId!=null" >
+      Deactivate
+    </button>
+
       <div class="justify-content-end">
         <button kendoButton [primary]="true" look="outline" aria-label="cancel deactivation"
           (click)="onCancel()">
           Cancel
         </button>
-        <button kendoButton [primary]="true" look="outline" aria-label="deactivate contact"
-        (click)="onDeactivateContactClick()" *ngIf="this.contactAddress.vendorContactId!=null" >
-        Deactivate
-      </button>
 
         <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="save()" *ngIf="this.contactAddress.vendorContactId==null" >
             Add

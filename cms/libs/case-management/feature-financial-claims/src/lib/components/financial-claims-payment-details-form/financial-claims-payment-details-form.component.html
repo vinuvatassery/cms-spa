@@ -10,7 +10,7 @@
             formControlName="datePaymentReconciled"  format="MM-dd-yyyy"
             formatPlaceholder="formatPattern" (select)="dateValidate($event,'RECONCILED')" (keyup)="dateValidate($event,'RECONCILED')"
             placeholder="" (valueChange)="startDateOnChange()"></kendo-datepicker>
-            <kendo-formerror *ngIf="dateReconciledValidator">Future dates not allowed.</kendo-formerror>
+            <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['datePaymentReconciled'].valid  && dateReconciledValidator">Future dates not allowed.</kendo-formerror>
             <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['datePaymentReconciled'].valid && !dateReconciledValidator">Date payment reconciled is required.</kendo-formerror>
           </kendo-floatinglabel> 
         </div>
@@ -21,10 +21,10 @@
             formatPlaceholder="formatPattern" (select)="dateValidate($event,'PAYMENT_SENT')" (keyup)="dateValidate($event,'PAYMENT_SENT')"
             (blur)="endDateOnChange()" [min]="endDateMin" (focus)="changeMinDate()"
             placeholder=""></kendo-datepicker>
-            <kendo-formerror *ngIf="datePaymentSentValidator">Future dates not allowed.</kendo-formerror>
-            <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].valid && !datePaymentSentValidator && paymentDateIsGreaterThanReconciledDate ">Date payment sent is required.</kendo-formerror>
+            <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].valid && datePaymentSentValidator">Future dates not allowed.</kendo-formerror>
+            <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].valid && !datePaymentSentValidator && !paymentDateIsGreaterThanReconciledDate ">Date payment sent is required.</kendo-formerror>
             <kendo-formerror
-              *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].valid && !paymentDateIsGreaterThanReconciledDate ">End date cannot be prior to the Start Date.</kendo-formerror>
+              *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].valid && !datePaymentSentValidator && paymentDateIsGreaterThanReconciledDate ">Date cannot be prior to date payment is reconciled.</kendo-formerror>
           </kendo-floatinglabel>   
   
         </div>

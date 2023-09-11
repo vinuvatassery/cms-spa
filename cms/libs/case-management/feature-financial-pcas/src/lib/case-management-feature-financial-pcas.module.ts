@@ -4,11 +4,11 @@ import { RouterModule } from '@angular/router';
 import { CaseManagementFeatureFinancialPcasRoutingModule } from './case-management-feature-financial-pcas.routing.module';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
-import { FinancialPcasPageComponent } from './containers/financial-pcas-page/financial-pcas-page.component'; 
+import { FinancialPcasPageComponent } from './containers/financial-pcas-page/financial-pcas-page.component';
 import { FinancialPcasAssignmentListComponent } from './components/financial-pcas-assignment-list/financial-pcas-assignment-list.component';
 import { FinancialPcasSetupListComponent } from './components/financial-pcas-setup-list/financial-pcas-setup-list.component';
 import { FinancialPcasReassignmentListComponent } from './components/financial-pcas-reassignment-list/financial-pcas-reassignment-list.component';
-import { FinancialPcasAssignmentReportListComponent } from './components/financial-pcas-assignment-report-list/financial-pcas-assignment-report-list.component'; 
+import { FinancialPcasAssignmentReportListComponent } from './components/financial-pcas-assignment-report-list/financial-pcas-assignment-report-list.component';
 import { FinancialPcasSetupFormComponent } from './components/financial-pcas-setup-form/financial-pcas-setup-form.component';
 import { FinancialPcasSetupRemoveComponent } from './components/financial-pcas-setup-remove/financial-pcas-setup-remove.component';
 import { FinancialPcasReassignmentFormComponent } from './components/financial-pcas-reassignment-form/financial-pcas-reassignment-form.component';
@@ -27,7 +27,7 @@ import { FinancialPcasAssignmentSubReportListComponent } from './components/fina
     CaseManagementFeatureFinancialPcasRoutingModule,
   ],
   declarations: [
-    FinancialPcasPageComponent, 
+    FinancialPcasPageComponent,
     FinancialPcasAssignmentListComponent,
     FinancialPcasSetupListComponent,
     FinancialPcasReassignmentListComponent,
@@ -43,7 +43,7 @@ import { FinancialPcasAssignmentSubReportListComponent } from './components/fina
     FinancialPcasAssignmentSubReportListComponent
   ],
   exports: [
- 
+
     FinancialPcasAssignmentListComponent,
     FinancialPcasSetupListComponent,
     FinancialPcasReassignmentListComponent,
@@ -56,7 +56,7 @@ import { FinancialPcasAssignmentSubReportListComponent } from './components/fina
     FinancialPcasAssignmentRemoveComponent,
     FinancialPcasAssignmentReportAlertComponent,
     FinancialPcasAssignmentReportPreviewSubmitComponent,
- 
+
   ],
 })
 export class CaseManagementFeatureFinancialPcasModule {}

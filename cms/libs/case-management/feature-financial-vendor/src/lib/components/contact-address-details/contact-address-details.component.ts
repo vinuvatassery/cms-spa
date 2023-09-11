@@ -15,7 +15,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   @Input() vendorId: any;
   @Input() VendorContactId: any;
   @Output() isContactDetailPopupClose = new EventEmitter<any>();
-  @Output() editDeactivateClicked = new EventEmitter<any>();
+
   SpecialHandlingLength = 100;
   mailCodes: any[] = [];
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -83,6 +83,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   public save() {
     this.isSubmitted = true;
+    this.contactForm.markAllAsTouched();
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
 
     if (this.contactForm.valid) {
@@ -225,8 +226,5 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   onDescriptionValueChange(event: any): void {
     this.descriptionCounter = event.length;
   }
-  deactivatePaymentAddressContact()
-  {
-    this.editDeactivateClicked.emit(this.contactAddress);
-  }
+
 }

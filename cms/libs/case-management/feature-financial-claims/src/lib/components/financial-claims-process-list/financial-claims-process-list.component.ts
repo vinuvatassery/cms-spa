@@ -183,6 +183,9 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
       buttonType: 'btn-h-primary',
       text: 'Edit Claims',
       icon: 'edit',
+      click:(claim : any): void => {        
+        this.onClaimClick(claim);
+      }
     },
     {
       buttonType: 'btn-h-danger',
@@ -194,7 +197,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
       },
     },
   ];
-
+  deletemodelbody="This action cannot be undone, but you may add a claim at any time.";
   /** Constructor **/
   constructor(
     private dialogService: DialogService,
@@ -489,6 +492,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   }
 
   onClaimClick(dataitem: any){
+    if(!dataitem.vendorId.length) return;
     this.isEdit = true;
     this.paymentRequestId = dataitem.paymentRequestId;
     this.openAddEditClaimDialoge();

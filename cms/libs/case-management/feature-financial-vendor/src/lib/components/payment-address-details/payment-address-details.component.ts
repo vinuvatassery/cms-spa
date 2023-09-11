@@ -108,6 +108,12 @@ export class PaymentAddressDetailsComponent implements OnInit {
       newAddContactForm: this.formBuilder.array([]),
     });
 
+    this.paymentAddressForm.controls['zip']
+        .setValidators([
+          Validators.required,Validators.required,Validators.pattern('^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)$')
+        ]);
+      this.paymentAddressForm.controls['zip'].updateValueAndValidity();
+
     if (this.tabCode === FinancialVendorProviderTabCode.InsuranceVendors) {
       this.paymentAddressForm.addControl('acceptsReportsFlag', new FormControl('', [Validators.required]))
       this.paymentAddressForm.addControl('acceptsCombinedPaymentsFlag', new FormControl('', [Validators.required]))
@@ -126,6 +132,11 @@ export class PaymentAddressDetailsComponent implements OnInit {
       this.paymentAddressForm.addControl('physicalAddressFlag', new FormControl(''))
     }
   }
+
+  get paymentAddressFormControls() {
+    return this.paymentAddressForm.controls as any;
+  }
+
   private setAddressTypeCode() {
     switch (this.tabCode) {
       case FinancialVendorProviderTabCode.Manufacturers:
