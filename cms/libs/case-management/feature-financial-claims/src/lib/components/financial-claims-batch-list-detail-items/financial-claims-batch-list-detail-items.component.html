@@ -2,7 +2,7 @@
       <section class="app-l-mainTittle">
             <div class="d-flex" *ngIf="(paymentDetails$ | async) as payment; else loading">
                   <button aria-label="back to vendor refund" kendoButton look="flat" class="mr-1"
-                        (click)="backToBatchLog($event)"> <span class="material-icons">
+                        (click)="backToBatchLog($event)" title="Go Back"> <span class="material-icons">
                               arrow_back </span> </button>
                   <h1 class="maintitle_withicon text-bold">Item #{{payment.paymentNbr}}  </h1>
             </div>
