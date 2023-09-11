@@ -429,7 +429,7 @@ export class FinancialClaimsDataService {
       { responseType: 'blob' }
     );
   }
-  CheckExceededMaxBenefit(serviceCost: number, clientId: number, typeCode : string ) {
+  checkExceededMaxBenefit(serviceCost: number, clientId: number, typeCode : string ) {
     let path;
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
       path = 'financial-management/claims/medical';

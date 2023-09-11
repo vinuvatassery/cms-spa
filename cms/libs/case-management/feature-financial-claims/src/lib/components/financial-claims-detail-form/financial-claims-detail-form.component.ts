@@ -159,7 +159,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.showExceedMaxBenefitException$.subscribe(data => {
       if(data)
       {
-        this.AddExceptionForm.at(data?.indexNumber).get('exceedMaxBenefitExceptionFlag')?.setValue(data?.flag);
+        this.addExceptionForm.at(data?.indexNumber).get('exceedMaxBenefitExceptionFlag')?.setValue(data?.flag);
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? "EMB" : '')
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
         this.cd.detectChanges();
@@ -257,7 +257,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   get addClaimServicesForm(): FormArray {
     return this.claimForm.get('claimService') as FormArray;
   }
-  get AddExceptionForm(): FormArray {
+  get addExceptionForm(): FormArray {
     return this.claimForm.get('exceptionArray') as FormArray;
   }
 
@@ -306,16 +306,16 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       exceedMaxBenefitExceptionFlag: new FormControl(false),
     });
     this.addClaimServicesForm.push(claimForm);
-    this.addExceptionForm();
+    this.addClaimExceptionForm();
   }
-  addExceptionForm()
+  addClaimExceptionForm()
   {
     let exceptionForm = this.formBuilder.group({
       exceedMaxBenefitExceptionFlag: new FormControl(false),
       showMaxBenefitExceptionReason: new FormControl(false),
       maxBenefitExceptionFlagText: new FormControl(this.isExcededMaxBanifitButtonText)
     });
-    this.AddExceptionForm.push(exceptionForm);
+    this.addExceptionForm.push(exceptionForm);
   }
 
   onClientValueChange(event: any) {
@@ -329,7 +329,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   removeService(i: number) {
     this.addClaimServicesForm.removeAt(i);
-    this.AddExceptionForm.removeAt(i);
+    this.addExceptionForm.removeAt(i);
   }
 
   IsServiceStartDateValid(index: any) {
@@ -361,7 +361,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   setExceptionValidation()
   {
     this.addClaimServicesForm.controls.forEach((element, index) => {
-      if(this.AddExceptionForm.at(index).get('showMaxBenefitExceptionReason')?.value)
+      if(this.addExceptionForm.at(index).get('showMaxBenefitExceptionReason')?.value)
       {
         this.addClaimServicesForm.at(index).get('reasonForException')?.setValidators(Validators.required);
         this.addClaimServicesForm.at(index).get('reasonForException')?.updateValueAndValidity();
@@ -573,7 +573,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       serviceForm.controls['cptCodeId'].setValue(service.cptCodeId);
       serviceForm.controls['exceptionFlag'].setValue(service.exceptionFlag);
       serviceForm.controls['exceptionTypeCode'].setValue(service.exceptionTypeCode);
-      let exceptionForm = this.AddExceptionForm.at(i) as FormGroup;
+      let exceptionForm = this.addExceptionForm.at(i) as FormGroup;
       if(serviceForm.controls['exceptionFlag'].value === StatusFlag.Yes)
       {
         this.setExceptionFormValues(exceptionForm,serviceForm);
@@ -653,16 +653,16 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     }
   }
   onMakeExceptionClick(controlName: string,index: any) {
-    this.AddExceptionForm.at(index).get(controlName)?.setValue(!this.AddExceptionForm.at(index).get(controlName)?.value);
-    if (this.AddExceptionForm.at(index).get(controlName)?.value) {
-      this.AddExceptionForm.at(index).get('maxBenefitExceptionFlagText')?.setValue("Don't Make Exception");
+    this.addExceptionForm.at(index).get(controlName)?.setValue(!this.addExceptionForm.at(index).get(controlName)?.value);
+    if (this.addExceptionForm.at(index).get(controlName)?.value) {
+      this.addExceptionForm.at(index).get('maxBenefitExceptionFlagText')?.setValue("Don't Make Exception");
     } else {
-      this.AddExceptionForm.at(index).get('maxBenefitExceptionFlagText')?.setValue("Make Exception");
+      this.addExceptionForm.at(index).get('maxBenefitExceptionFlagText')?.setValue("Make Exception");
     }
   }
   getExceptionFormValue(controlName: string, index: any)
   {
-    return this.AddExceptionForm.at(index).get(controlName)?.value
+    return this.addExceptionForm.at(index).get(controlName)?.value
   }
   public onPrintDenialLetterOpen(){
    this.isPrintDenailLetterClicked = true;
