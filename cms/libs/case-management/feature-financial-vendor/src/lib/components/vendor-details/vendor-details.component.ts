@@ -173,6 +173,9 @@ fillFormData(){
           Validators.required,
         ]);
       this.medicalProviderForm.controls['mailCode'].updateValueAndValidity();
+      }else{
+        this.medicalProviderForm.controls['mailCode'].clearValidators();
+      this.medicalProviderForm.controls['mailCode'].updateValueAndValidity();
       }
     }
  
