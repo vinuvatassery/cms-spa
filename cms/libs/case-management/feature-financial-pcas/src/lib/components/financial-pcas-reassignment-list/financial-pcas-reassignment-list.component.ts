@@ -111,7 +111,7 @@ export class FinancialPcasReassignmentListComponent
   ) {}
 
   ngOnInit(): void {
-    this.financialPcaFacade.getPcaunAssignments();
+    this.financialPcaFacade.getPcaUnAssignments();
     this.notAssignPcaLists$.subscribe((res:any)=>{
       this.allNotAssignedPcaSList=res;
       this.notSelectedPcaS=this.allNotAssignedPcaSList;
@@ -295,7 +295,7 @@ export class FinancialPcasReassignmentListComponent
   }
   onPcaReassignmentClicked(action: any) {
     this.pcaReassignmentConfirmationDialogService.close();
-    this.financialPcaFacade.pcareassignment(this.reAssignPcaS);
+    this.financialPcaFacade.pcaReassignment(this.reAssignPcaS);
 }
 
 onclick(data:any)
