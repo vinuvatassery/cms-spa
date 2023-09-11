@@ -121,6 +121,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
   readonly financialProvider = 'medical';
   endDateGreaterThanStartDate: boolean = false;
+  currentFormControl!: FormGroup<any>;
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
@@ -306,7 +307,15 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
-    this.isStartEndDateValid(startDate, endDate);
+    let result = this.isStartEndDateValid(startDate, endDate);
+    
+    if(!result)
+    this.isEndDateValid(index);
+  }
+
+  isEndDateValid(index:any){
+    this.currentFormControl = this.addClaimServicesForm.at(index) as FormGroup;
+    this.currentFormControl.controls['serviceEndDate'].setErrors({'incorrect':true});
   }
 
   isStartEndDateValid(startDate: any, endDate: any): boolean {
@@ -317,6 +326,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       // );
       return false;
     }
+    this.currentFormControl.controls['serviceEndDate'].setErrors(null);
     this.endDateGreaterThanStartDate = false;
     return true;
   }

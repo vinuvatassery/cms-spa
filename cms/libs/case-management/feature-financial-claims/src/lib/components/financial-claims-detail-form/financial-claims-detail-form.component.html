@@ -152,14 +152,21 @@
                                                     (valueChange)="onDateChange(i)">
                                                 </kendo-datepicker>
                                             </kendo-floatinglabel>
-                                            <kendo-formerror *ngIf="endDateGreaterThanStartDate"
+                                            <!-- <kendo-formerror *ngIf="endDateGreaterThanStartDate"
                                                 class="d-flex align-items-center"> <span class="material-icons mr-1"
-                                                    aria-hidden="false">info</span>Service End date must be equal to or greater than start date
-                                            </kendo-formerror>
+                                                    aria-hidden="false">info</span>Service End date must be equal to or
+                                                greater than start date
+                                            </kendo-formerror> -->
                                             <kendo-formerror
                                                 *ngIf="(isControlValid('serviceEndDate', i) && isSubmitted)"
                                                 class="d-flex align-items-center"> <span class="material-icons mr-1"
                                                     aria-hidden="false">info</span>Service End Date is required
+                                            </kendo-formerror>
+                                            <kendo-formerror
+                                                *ngIf=" endDateGreaterThanStartDate && currentFormControl.controls['serviceEndDate'].hasError('incorrect')"
+                                                class="d-flex align-items-center">
+                                                <span class="material-icons mr-1" aria-hidden="false">info</span>Service
+                                                End date must be equal to or greater than start date
                                             </kendo-formerror>
                                         </div>
                                         <div class="ml-2">
