@@ -1,0 +1,33 @@
+ 
+<!-- Provider -->
+<div class=" ">
+      <div class="flex-col flex-space-bw align-items-center">
+            <h5 class="title-md mb-0 text-capital">Providers</h5>
+
+      </div>
+      <div class="flex-col mt-1">
+            <div class="app-c-table">
+                  Grid Comes Here
+            </div>
+      </div>
+      <div class="flex-col mt-1">
+            <button kendoButton [primary]="true" icon="add" aria-label="add address"
+                  (click)="clickOpenAddEditProvidersDetails()">
+                  Provider
+            </button>
+
+            <button  (click)="clickOpenRemoveProviders()">Remove</button>
+      </div>
+</div>
+
+<kendo-dialog *ngIf="isProvidersDetailShow" (close)="clickCloseAddEditProvidersDetails()"
+      class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar (close)="clickCloseAddEditProvidersDetails()"> Add/Edit Provider
+      </kendo-dialog-titlebar>
+      <cms-financial-clinic-provider-details> </cms-financial-clinic-provider-details>
+</kendo-dialog>
+<kendo-dialog *ngIf="isProvidersRemoveShow" (close)="clickCloseRemoveProviders()"
+      class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar> Remove Provider?</kendo-dialog-titlebar>
+      <cms-financial-clinic-provider-remove> </cms-financial-clinic-provider-remove>
+</kendo-dialog>
