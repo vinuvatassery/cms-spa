@@ -22,6 +22,7 @@ export class FinancialPcasReassignmentFormComponent implements  OnInit {
 
   pcaList:string[] = [] 
   selectedValue: any;
+  showEditButton =false;
 
 constructor(private formBuilder:FormBuilder){
 
@@ -54,6 +55,7 @@ constructor(private formBuilder:FormBuilder){
         amountSpent: res.amountSpent
      });
      if(this.isViewGridOptionClicked){
+     this.showEditButton = true;
      this.pcaReassignmentForm.controls['openDate'].disable();
      this.pcaReassignmentForm.controls['closeDate'].disable();
      this.pcaReassignmentForm.controls['unlimited'].disable();
@@ -64,7 +66,16 @@ constructor(private formBuilder:FormBuilder){
      this.pcaReassignmentForm.controls['openDate'].setValue(new Date(this.pcaReassignmentByFundSource.openDate));
      this.pcaReassignmentForm.controls['closeDate'].setValue(new Date(this.pcaReassignmentByFundSource.closeDate));  
     })
+  }
 
+  onEditButtonClicked(){
+    this.showEditButton= false
+    this.pcaReassignmentForm.controls['openDate'].enable();
+    this.pcaReassignmentForm.controls['closeDate'].enable();
+    this.pcaReassignmentForm.controls['unlimited'].enable();
+    this.pcaReassignmentForm.controls['pcaRemainingAmount'].enable();
+    this.pcaReassignmentForm.controls['assignmentAmount'].enable();
+    this.isViewGridOptionClicked = false;
   }
   closeEditPcaReassignmentClicked() {
     this.closeEditPcaReassignmentClickedEvent.emit(true);
@@ -91,6 +102,15 @@ constructor(private formBuilder:FormBuilder){
     const startDate = this.pcaReassignmentForm.controls['openDate'].value;
     if (endDate <= startDate && this.pcaReassignmentForm.controls['closeDate'].value) {
       this.pcaReassignmentForm.controls['closeDate'].setErrors({ 'incorrect': true })
+    }
+  }
+  amountValidate()
+  {
+    const pcaAmmounnt = this.pcaReassignmentByFundSource.pcaAmount;
+    const reassignmentAmount = this.pcaReassignmentForm.controls['assignmentAmount'].value;
+    if (reassignmentAmount > pcaAmmounnt && reassignmentAmount ) 
+    {
+      this.pcaReassignmentForm.controls['assignmentAmount'].setErrors({ 'incorrect': true })
     }
   }
  

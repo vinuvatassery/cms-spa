@@ -77,10 +77,12 @@
                         <span class="k-input-prefix custom-currencysymbol"> $ </span>
                         <kendo-numerictextbox  aria-label="Object Amount" [spinners]="false"
                               class="input-icon-right" placeholder="00.00"
+                              (valueChange)="amountValidate()"
                                [fillMode]="formUiStyle.inputFillMode" formControlName="assignmentAmount">
                         </kendo-numerictextbox>
                   </kendo-floatinglabel>
-                  <kendo-formerror *ngIf=" !isViewGridOptionClicked &&!pcaReassignmentForm.controls['assignmentAmount'].valid">Assignment Amount is required.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked &&!pcaReassignmentForm.controls['assignmentAmount'].valid && !pcaReassignmentForm.controls['assignmentAmount'].hasError('incorrect')">Assignment Amount is required.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && pcaReassignmentForm.controls['assignmentAmount'].hasError('incorrect')">Assignment Amount must be equal to or less than the Remaining PCA balance </kendo-formerror>
                   
 
 
@@ -98,12 +100,16 @@
 </div>
 <kendo-dialog-actions>
       <div class="justify-content-between">
-            <div class="justify-content-end">
+            <div class="justify-content-end">    
                   <button kendoButton [primary]="true" look="outline" aria-label="cancel"
                         (click)="closeEditPcaReassignmentClicked()">
                         Cancel
                   </button>
-                  <button kendoButton [primary]="true" aria-label="Save" *ngIf="!isViewGridOptionClicked " (click)="saveEditPcaReassignmentClicked()">
+                  <button  *ngIf="showEditButton"  kendoButton [primary]="true"  aria-label="Edit"
+                  (click)="onEditButtonClicked()">
+                  Edit
+                 </button>
+                  <button kendoButton [primary]="true" aria-label="Save" *ngIf="!isViewGridOptionClicked" (click)="saveEditPcaReassignmentClicked()">
                         Save
                   </button>
             </div>
