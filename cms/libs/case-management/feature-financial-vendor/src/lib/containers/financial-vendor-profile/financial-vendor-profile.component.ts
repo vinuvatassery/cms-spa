@@ -126,7 +126,6 @@ export class FinancialVendorProfileComponent implements OnInit {
   }
 
   loadDrugList(event: any) {
-    debugger;
     this.state = {
       skip: event.skipCount,
       take: event.pageSize

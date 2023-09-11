@@ -73,31 +73,6 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
     };
   }
 
-  // getError(control: AbstractControl | null, errorName: string): boolean {
-  //   return control?.hasError(errorName) ?? false;
-  // }
-
-  // updateDrugTypeValidity() {
-  //   const hivSelected = this.drugForm.get('hiv')?.value;
-  //   const hepatitisSelected = this.drugForm.get('hepatitis')?.value;
-  //   const opportunisticInfectionSelected = this.drugForm.get('opportunisticInfection')?.value;
-
-  //   const atLeastOneSelected = hivSelected || hepatitisSelected || opportunisticInfectionSelected;
-
-  //   if (atLeastOneSelected) {
-  //     this.drugForm.controls['hiv'].setErrors(null);
-  //     this.drugForm.controls['hepatitis'].setErrors(null);
-  //     this.drugForm.controls['opportunisticInfection'].setErrors(null);
-  //   } else {
-  //     this.drugForm.controls['hiv'].setErrors({ required: true });
-  //     this.drugForm.controls['hepatitis'].setErrors({ required: true });
-  //     this.drugForm.controls['opportunisticInfection'].setErrors({ required: true });
-  //   }
-
-  //   return atLeastOneSelected;
-  // }
-
-
   public Update() {
     this.isSubmitted = true;
   }
@@ -107,7 +82,6 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
     const res = this.checkValidations();
     this.isSubmitted = true;
     if(res){
-      debugger;
       this.onCancelClick();
     }
   }
