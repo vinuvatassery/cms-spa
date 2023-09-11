@@ -46,6 +46,7 @@ export class FinancialDrugsComponent {
   hivValue = null;
   hepaValue = null;
   oppoValue = null;
+  columnName: any = "";
 
   public emailBillingAddressActions = [
     {
@@ -175,7 +176,6 @@ export class FinancialDrugsComponent {
   }
 
   filterChange(filter: CompositeFilterDescriptor): void {
-    debugger;
     this.filterData = filter;
   }
 
@@ -184,7 +184,6 @@ export class FinancialDrugsComponent {
   }
 
   dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
-    debugger;
     filterService.filter({
         filters: [{
           field: field,
@@ -215,28 +214,41 @@ export class FinancialDrugsComponent {
   }
 
   public setGridState(stateData: any): void {
-    debugger;
     this.state = stateData;
 
     const filters = stateData.filter?.filters ?? [];
-
-    // for (let val of filters) {
-    //   if (val.field === 'effectiveDate') {
-    //     this.intl.formatDate(val.value, this.dateFormat);
-    //   }
-    // }
     const filterList = this.state?.filter?.filters ?? [];
-    this.filters = JSON.stringify(filterList);
-    this.filteredBy = filterList.toString();
 
-    if (filters.length > 0) {
+    if(filterList.length > 0)
+    {
+      const filterList = []
+      for (const filter of stateData.filter.filters) {
+        const field = filter.filters[0].field;
+
+        const existingIndex = filterList.findIndex((x) => {
+          if (x.filters.length > 0 && x.filters[0].field === field) {
+            return true;
+          }
+          return false;
+        });
+
+        if (existingIndex !== -1) {
+          filterList.splice(existingIndex, 1);
+        }
+        filterList.push(filter);
+      }
       const filterListData = filters.map((filter:any) => this.gridColumns[filter?.filters[0]?.field]);
-      this.isFiltered = true;
+
+      this.filters = JSON.stringify(filterList);
       this.filteredBy = filterListData.toString();
-      this.ref.detectChanges();
+      this.isFiltered =true;
     }
-    else {
-      this.isFiltered = false;
+    else
+    {
+      this.filteredBy = filterList.toString();
+      this.filters = "";
+      this.isFiltered = false
+      this.columnName = "";
     }
 
     this.sort = stateData.sort;
