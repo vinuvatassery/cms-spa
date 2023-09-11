@@ -75,7 +75,7 @@ export class FinancialDrugsComponent {
     },
   ];
 
-  gridColumns: { [key: string]: string } = {
+  column: any = {
     ndcNbr: 'NDC',
     brandName: 'Brand Name',
     drugName: 'Drug Name',
@@ -217,8 +217,20 @@ export class FinancialDrugsComponent {
     this.state = stateData;
 
     const filters = stateData.filter?.filters ?? [];
-    const filterList = this.state?.filter?.filters ?? [];
+    this.removeIdenticalFilters(stateData,filters);
 
+
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? "";
+    this.sortType = stateData.sort[0]?.dir ?? "";
+    this.state = stateData;
+    this.sortColumn = this.column[stateData.sort[0]?.field];
+    this.sortDir = (this.sort[0]?.dir === 'desc') ? 'Descending' : 'Ascending' ;
+  }
+
+  removeIdenticalFilters(stateData:any, filters:any){
+
+    const filterList = this.state?.filter?.filters ?? [];
     if(filterList.length > 0)
     {
       const filterList = []
@@ -237,7 +249,7 @@ export class FinancialDrugsComponent {
         }
         filterList.push(filter);
       }
-      const filterListData = filters.map((filter:any) => this.gridColumns[filter?.filters[0]?.field]);
+      const filterListData = filters.map((filter:any) => this.column[filter?.filters[0]?.field]);
 
       this.filters = JSON.stringify(filterList);
       this.filteredBy = filterListData.toString();
@@ -249,19 +261,6 @@ export class FinancialDrugsComponent {
       this.filters = "";
       this.isFiltered = false
       this.columnName = "";
-    }
-
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? "";
-    this.sortType = stateData.sort[0]?.dir ?? "";
-    this.state = stateData;
-    this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
-    this.sortDir = "";
-    if(this.sort[0]?.dir === 'asc'){
-      this.sortDir = 'Ascending';
-    }
-    if(this.sort[0]?.dir === 'desc'){
-      this.sortDir = 'Descending';
     }
   }
 }
