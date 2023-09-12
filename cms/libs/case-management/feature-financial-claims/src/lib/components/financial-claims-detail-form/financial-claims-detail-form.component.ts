@@ -379,9 +379,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       exceptionFlag: new FormControl(
         StatusFlag.No
       ),
-      exceptionTypeCode: new FormControl(
-        StatusFlag.No
-      ),
+      exceptionTypeCode: new FormControl(''),
       medicadeRate: new FormControl(this.medicalClaimServices.medicadeRate),
       paymentRequestId: new FormControl(),
       tpaInvoiceId: new FormControl(),
@@ -461,7 +459,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
   setExceptionValidation()
   {
-    if(this.claimForm.controls['providerNotEligibleExceptionFlag'].value)
+    if(this.claimForm.controls['showProviderNotEligibleExceptionReason'].value)
     {
       this.claimForm.controls['parentReasonForException'].setValidators(Validators.required);
       this.claimForm.controls['parentReasonForException'].updateValueAndValidity();
@@ -499,7 +497,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       return;
     }
     let formValues = this.claimForm.value;
-
+    debugger;
     let bodyData = {
       clientId: formValues.client.clientId,
       vendorId: formValues.medicalProvider.vendorId,
@@ -629,6 +627,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       .getMedicalClaimByPaymentRequestId(this.paymentRequestId, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim)
       .subscribe({
         next: (val) => {
+          debugger;
           const clients = [
             {
               clientId: val.clientId,
@@ -985,6 +984,11 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       }
     }
     return true;
+  }
+  onAmountDueChange(index:any)
+  {
+    this.loadServiceCostMethod(index);
+    this.checkDuplicatePaymentException(index);
   }
 }
 
