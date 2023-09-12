@@ -10,12 +10,7 @@
             [columnMenu]="{ filter: false }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [data]="claimsGridView$ | async">
 
                 <kendo-grid-column field="batchName" title="Batch #" [width]="150">
-                  <ng-template kendoGridCellTemplate let-dataItem>
-                    <button aria-label="Batch" kendoButton look="flat" class="card-link-button"
-                      (click)="onBatchClicked(dataItem)">
-                      {{ dataItem.batchName }}
-                    </button>
-                  </ng-template>    </kendo-grid-column> 
+                </kendo-grid-column> 
                 <kendo-grid-column field="batchNumber" title="Item #" [width]="100"> </kendo-grid-column>
                 <kendo-grid-column field="clientFullName" title="Client Name" [width]="170">
                   <ng-template kendoGridCellTemplate let-dataItem>
