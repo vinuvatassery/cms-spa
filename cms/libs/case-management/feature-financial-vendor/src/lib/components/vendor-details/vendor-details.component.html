@@ -9,9 +9,9 @@
     </p>
     <div class="flex-row">
       <div class="flex-col" *ngIf="providerType == vendorTypes.InsuranceVendors">
-        <kendo-floatinglabel text="Insurance Vendor Name">
+        <kendo-floatinglabel text="Vendor Name">
           <kendo-textbox aria-label="Provider Name" [fillMode]="formUiStyle.inputFillMode"
-            formControlName="providerName">
+            formControlName="providerName" [maxlength]="500">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
             Vendor Name is required
