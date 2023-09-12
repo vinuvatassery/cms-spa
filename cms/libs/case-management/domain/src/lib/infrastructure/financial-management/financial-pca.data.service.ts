@@ -101,7 +101,7 @@ export class FinancialPcaDataService {
   }
   pcaReassignment(data: any) {
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/pca-reassignment`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/bulk-reassignments`,
       data
     );
   }
