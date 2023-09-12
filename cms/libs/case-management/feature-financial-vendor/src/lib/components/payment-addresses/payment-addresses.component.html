@@ -256,8 +256,8 @@
                   </ng-template>
               </kendo-grid-column>
 
-                <div *kendoGridDetailTemplate="let dataItem">
-                  <cms-contact-address-list [VendorAddressId]="VendorAddressId"></cms-contact-address-list>
+                  <div *kendoGridDetailTemplate="let dataItem">
+                    <cms-contact-address-list [vendorId]="vendorId" [VendorAddressId]="VendorAddressId"></cms-contact-address-list>
 
                   </div>
 
@@ -325,11 +325,11 @@ class="app-c-modal app-c-modal-md app-c-modal-np">
 
 <kendo-dialog *ngIf="isPaymentAddressDeactivateShow" (close)="clickCloseDeactivatePaymentAddress(false)" class="app-c-modal app-c-modal-sm app-c-modal-np">
 <kendo-dialog-titlebar> Deactivate Payment Address?</kendo-dialog-titlebar>
-<cms-payment-address-deactivate [addressId]="addressId" (closeDeactivatePaymentAddress)="clickCloseDeactivatePaymentAddress($event)"></cms-payment-address-deactivate>
+<cms-payment-address-deactivate [addressId]="addressId" [vendorId]="vendorId" (closeDeactivatePaymentAddress)="clickCloseDeactivatePaymentAddress($event)"></cms-payment-address-deactivate>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isPaymentAddressDeleteShow" (close)="clickCloseDeletePaymentAddress(false)"
 class="app-c-modal app-c-modal-sm app-c-modal-np">
 <kendo-dialog-titlebar> Delete Payment Address?</kendo-dialog-titlebar>
-<cms-payment-address-delete [addressId]="addressId" (closeDeletePaymentAddress)="clickCloseDeletePaymentAddress($event)"> </cms-payment-address-delete>
+<cms-payment-address-delete [addressId]="addressId" [vendorId]="vendorId" (closeDeletePaymentAddress)="clickCloseDeletePaymentAddress($event)"> </cms-payment-address-delete>
 </kendo-dialog>

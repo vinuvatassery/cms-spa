@@ -30,6 +30,7 @@ export class ContactAddressListComponent implements OnChanges {
   VendorContactId: any;
   VendorContactAddressId = '';
   @Input() VendorAddressId: any;
+  @Input() vendorId:any;
   public state!: any;
   filters :any= "";
   sortColumn = "";
