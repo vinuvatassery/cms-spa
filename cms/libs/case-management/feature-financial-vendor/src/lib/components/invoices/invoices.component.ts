@@ -41,6 +41,7 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   filter!: any;
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   claimStatus:any;
+  paymentStatusLovSubscription!:Subscription;
    /** Constructor **/
    constructor(private readonly invoiceFacade: InvoiceFacade,private readonly router: Router,
     private readonly lovFacade: LovFacade,) {}
@@ -75,10 +76,11 @@ export class InvoicesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.isInvoiceLoadingSubscription.unsubscribe();
+    this.paymentStatusLovSubscription.unsubscribe();
   }
 
   claimStatusSubscription(){
-    this.claimStatus$.subscribe(data=>{
+    this.paymentStatusLovSubscription = this.claimStatus$.subscribe(data=>{
       this.claimStatus = data;
     });
   }
