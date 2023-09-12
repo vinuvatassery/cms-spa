@@ -33,6 +33,7 @@ export class VendorContactsFacade {
   /** Private properties **/
   private contactsDataSubject = new BehaviorSubject<any>([]);
   private contactsSubject = new BehaviorSubject<any>([]);
+  private allContactsSubject = new BehaviorSubject<any>([]);
   private deActiveContactAddressSubject = new BehaviorSubject<boolean>(false);
   private removeContactAddressSubject = new BehaviorSubject<boolean>(false);
   private mailCodeSubject = new Subject<any>();
@@ -40,6 +41,7 @@ export class VendorContactsFacade {
   /** Public properties **/
   contactsData$ = this.contactsDataSubject.asObservable();
   contacts$ = this.contactsSubject.asObservable();
+  allContacts$ = this.allContactsSubject.asObservable();
 
   deActiveContactAddressObs = this.deActiveContactAddressSubject.asObservable();
   removeContactAddressObs = this.removeContactAddressSubject.asObservable();
@@ -193,6 +195,21 @@ export class VendorContactsFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
+  }
+
+  loadVendorAllContacts(vendorId:string)
+  {
+    this.showLoader();
+    this.vendorcontactsDataService.loadVendorAllContacts(vendorId).subscribe({
+      next:(res:any)=>{
+      this.allContactsSubject.next(res);
+      this.hideLoader();
+      },
+      error:(err:any)=>{
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+     this.hideLoader();
+      }
+    })
   }
 }
 
