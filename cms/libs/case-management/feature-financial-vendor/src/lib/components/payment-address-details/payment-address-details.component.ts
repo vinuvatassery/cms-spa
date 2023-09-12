@@ -33,6 +33,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
   specialHandlingCharachtersCount!: number;
   specialHandlingCounter!: string;
   statusFlag : any = StatusFlag;
+  specialCharAdded: boolean = false;
 
   /** Constructor**/
   constructor(
@@ -238,6 +239,27 @@ export class PaymentAddressDetailsComponent implements OnInit {
       this.paymentAddressForm.patchValue({physicalAddressFlag: null});
     }
     this.cdr.detectChanges();
+  }
+  restrictSpecialChar(event: any) {
+    const status = ((event.charCode > 64 && event.charCode < 91) ||
+      (event.charCode > 96 && event.charCode < 123) ||
+      event.charCode == 8 || event.charCode == 32 ||
+      (event.charCode >= 48 && event.charCode <= 57) ||
+      event.charCode == 45);
+    if (status) {
+      this.paymentAddressForm.controls['mailCode'].setErrors(null);
+      this.paymentAddressForm.controls['nameOnEnvelope'].setErrors(null);
+      this.paymentAddressForm.controls['zip'].setErrors(null);
+
+      this.specialCharAdded = false;
+    }
+    else {
+      this.paymentAddressForm.controls['mailCode'].setErrors({ 'incorrect': true });
+      this.paymentAddressForm.controls['nameOnEnvelope'].setErrors({ 'incorrect': true });
+      this.paymentAddressForm.controls['zip'].setErrors({ 'incorrect': true });
+      this.specialCharAdded = true;
+    }
+    return status;
   }
 
 }
