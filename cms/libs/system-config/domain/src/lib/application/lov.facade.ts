@@ -83,7 +83,7 @@ export class LovFacade {
   private lovPaymentMethodVendorSubject = new BehaviorSubject<Lov[]>([]);
   private lovPaymentRunDateSubject = new BehaviorSubject<Lov[]>([]);
   private lovYesOrNoSubject = new BehaviorSubject<Lov[]>([]);
-
+  private lovClaimStatusSubject = new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -145,6 +145,7 @@ export class LovFacade {
   paymentMethodVendorlov$ = this.lovPaymentMethodVendorSubject.asObservable();
   paymentRunDatelov$ = this.lovPaymentRunDateSubject.asObservable();
   yesOrNoLov$ = this.lovYesOrNoSubject.asObservable();
+  claimStatus$ = this.lovClaimStatusSubject.asObservable()
 
 
         /** Public methods **/
@@ -732,6 +733,16 @@ getDocumentSubTypeLovs(parentCode : string) {
     this.lovDataService.getLovsbyType(LovType.AcceptPaymentsReports).subscribe({
       next: (resp) => {
         this.lovYesOrNoSubject.next(resp);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      },
+    });
+  }
+  getClaimStatusLovs(): void {
+    this.lovDataService.getLovsbyType(LovType.ClaimStatus).subscribe({
+      next: (resp) => {
+        this.lovClaimStatusSubject.next(resp);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR,err)

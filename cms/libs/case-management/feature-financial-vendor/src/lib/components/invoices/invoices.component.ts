@@ -9,7 +9,8 @@ import { Subscription } from 'rxjs';
 
 /** Facade **/
 import { FinancialVendorProviderTabCode, InvoiceFacade } from '@cms/case-management/domain';
-import { GridComponent } from '@progress/kendo-angular-grid';
+import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-invoices',
@@ -30,6 +31,7 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   invoiceGridView$ = this.invoiceFacade.invoiceData$;
   providerId:any;
   isInvoiceLoading$=  this.invoiceFacade.isInvoiceLoading$
+  claimStatus$ = this.lovFacade.claimStatus$
   isInvoiceLoadingSubscription!:Subscription;
   @Input() tabCode: any;
   @Input() vendorId: any;
@@ -38,10 +40,14 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   claimsType: any = 'dental';
   filter!: any;
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  claimStatus:any;
    /** Constructor **/
-   constructor(private readonly invoiceFacade: InvoiceFacade,private readonly router: Router) {}
+   constructor(private readonly invoiceFacade: InvoiceFacade,private readonly router: Router,
+    private readonly lovFacade: LovFacade,) {}
 
   ngOnInit(): void {
+    this.claimStatusSubscription();
+    this.lovFacade.getClaimStatusLovs();
     if(this.tabCode === FinancialVendorProviderTabCode.MedicalProvider){
       this.claimsType = 'medical';
     } 
@@ -55,6 +61,7 @@ export class InvoicesComponent implements OnInit, OnDestroy {
     this.isInvoiceLoadingSubscription = this.isInvoiceLoading$.subscribe((data:boolean)=>{
       this.isInvoiceGridLoaderShow = data;
     })
+
   }
 
   ngOnChanges(): void {
@@ -70,6 +77,22 @@ export class InvoicesComponent implements OnInit, OnDestroy {
     this.isInvoiceLoadingSubscription.unsubscribe();
   }
 
+  claimStatusSubscription(){
+    this.claimStatus$.subscribe(data=>{
+      this.claimStatus = data;
+    });
+  }
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value:value.lovCode
+      }],
+        logic: "or"
+    });
+  }
+  
   public dataStateChange(stateData: any): void {
     this.collapseAll(this.state?.take);
     this.sort = stateData.sort;
@@ -112,10 +135,4 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   onExpand(event:any) {
     this.invoiceFacade.loadPaymentRequestServices(event.dataItem,this.vendorId,this.tabCode)   
   } 
-  
-  onInvoiceClicked(dataItem : any){   
-    this.router.navigate([`/financial-management/claims/${this.claimsType}/batch/items`],
-    { queryParams :{ bid: dataItem.batchId, ino:dataItem.invoiceNbr }});
-  }
-
 }
