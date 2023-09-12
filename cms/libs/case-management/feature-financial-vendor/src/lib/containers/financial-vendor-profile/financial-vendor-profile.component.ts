@@ -72,7 +72,7 @@ export class FinancialVendorProfileComponent implements OnInit {
         break;
       case FinancialVendorProviderTabCode.InsuranceVendors:
         this.vendorTypeCode = FinancialVendorTypeCode.InsuranceVendors
-        this.profileInfoTitle = 'Insurance Vendor Info';
+        this.profileInfoTitle = 'Vendor Info';
         break;
       case FinancialVendorProviderTabCode.MedicalProvider:
         this.vendorTypeCode = FinancialVendorTypeCode.MedicalProviders

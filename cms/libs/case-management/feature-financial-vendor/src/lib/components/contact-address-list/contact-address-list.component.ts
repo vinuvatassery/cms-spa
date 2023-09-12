@@ -2,8 +2,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
@@ -30,6 +32,7 @@ export class ContactAddressListComponent implements OnChanges {
   VendorContactId: any;
   VendorContactAddressId = '';
   @Input() VendorAddressId: any;
+  @Output() refreshPaymentAddressList: EventEmitter<any> = new EventEmitter<any>();
   public state!: any;
   filters :any= "";
   sortColumn = "";
@@ -175,6 +178,7 @@ export class ContactAddressListComponent implements OnChanges {
         this.filters
       );
       this.clickCloseDeactivateContactAddress();
+      this.refreshPaymentAddressList.emit();
     }
   }
 
