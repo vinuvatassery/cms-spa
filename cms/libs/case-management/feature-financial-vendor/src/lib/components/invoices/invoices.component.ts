@@ -31,7 +31,7 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   invoiceGridView$ = this.invoiceFacade.invoiceData$;
   providerId:any;
   isInvoiceLoading$=  this.invoiceFacade.isInvoiceLoading$
-  claimStatus$ = this.lovFacade.claimStatus$
+  claimStatus$ = this.lovFacade.paymentStatus$
   isInvoiceLoadingSubscription!:Subscription;
   @Input() tabCode: any;
   @Input() vendorId: any;
@@ -47,7 +47,7 @@ export class InvoicesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.claimStatusSubscription();
-    this.lovFacade.getClaimStatusLovs();
+    this.lovFacade.getPaymentStatusLov();
     if(this.tabCode === FinancialVendorProviderTabCode.MedicalProvider){
       this.claimsType = 'medical';
     } 
