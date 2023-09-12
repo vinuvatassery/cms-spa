@@ -46,7 +46,9 @@ export class PaymentAddressesComponent {
   isContactAddressDeactivateShow = false;
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
   paymentRunDateMonthlyValue = null;
-  paymentMethodValue = null;
+  paymentMethodCodeValue = null;
+  acceptsCombinedPaymentsFlagValue = null;
+  acceptsReportsFlagValue = null;
   paymentMethodVendorlov$ = this.lovFacade.paymentMethodVendorlov$;
   paymentRunDatelov$ = this.lovFacade.paymentRunDatelov$;
   yesOrNoLov$ = this.lovFacade.yesOrNoLov$;
@@ -60,6 +62,7 @@ export class PaymentAddressesComponent {
   sortDir = "";
   columnsReordered = false;
   searchValue = "";
+  columnName: any = "";
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   paymentAddressInnerGridLists = [
     {
@@ -323,6 +326,7 @@ export class PaymentAddressesComponent {
   }
 
   dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+
     filterService.filter({
         filters: [{
           field: field,
@@ -331,6 +335,19 @@ export class PaymentAddressesComponent {
       }],
         logic: "or"
     });
+
+    if(field == "paymentMethodCode"){
+      this.paymentMethodCodeValue = value;
+    }
+    if(field == "PaymentRunDateMonthly"){
+      this.paymentRunDateMonthlyValue = value;
+    }
+    if(field == "acceptsCombinedPaymentsFlag"){
+      this.acceptsCombinedPaymentsFlagValue = value;
+    }
+    if(field == "acceptsReportsFlag"){
+      this.acceptsReportsFlagValue = value;
+    }
   }
 
   private loadYesOrNoLovs() {
@@ -364,15 +381,12 @@ export class PaymentAddressesComponent {
     this.state = stateData;
 
     const filters = stateData.filter?.filters ?? [];
-
+    this.removeIdenticalFilters(stateData,filters);
     for (let val of filters) {
       if (val.field === 'effectiveDate') {
         this.intl.formatDate(val.value, this.dateFormat);
       }
     }
-    const filterList = this.state?.filter?.filters ?? [];
-    this.filters = JSON.stringify(filterList);
-    this.filteredBy = filterList.toString();
 
     if (filters.length > 0) {
       const filterListData = filters.map((filter:any) => this.paymentAddressInnerGridLists[filter?.filters[0]?.field]);
@@ -390,15 +404,47 @@ export class PaymentAddressesComponent {
     this.state = stateData;
     this.sortColumn = this.paymentAddressInnerGridLists[stateData.sort[0]?.field];
     this.sortDir = "";
-    if(this.sort[0]?.dir === 'asc'){
-      this.sortDir = 'Ascending';
-    }
-    if(this.sort[0]?.dir === 'desc'){
-      this.sortDir = 'Descending';
-    }
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
   }
 
   filterChange(filter: CompositeFilterDescriptor): void {
     this.filters = JSON.stringify(filter);
+  }
+
+  onColumnReorder($event: any) {
+    this.columnsReordered = true;
+  }
+
+  removeIdenticalFilters(stateData:any, filters:any){
+    const filterList = this.state?.filter?.filters ?? [];
+    if(filterList.length > 0)
+    {
+      const filterList = []
+      for (const filter of stateData.filter.filters) {
+        const field = filter.filters[0].field;
+
+        const existingIndex = filterList.findIndex((x) => {
+          if (x.filters.length > 0 && x.filters[0].field === field) {
+            return true;
+          }
+          return false;
+        });
+
+        if (existingIndex !== -1) {
+          filterList.splice(existingIndex, 1);
+        }
+        filterList.push(filter);
+      }
+
+      this.filters = JSON.stringify(filterList);
+      this.filteredBy = filterList.toString();
+      this.isFiltered =true;
+    }
+    else
+    {
+      this.filters = "";
+      this.isFiltered = false
+      this.columnName = "";
+    }
   }
 }

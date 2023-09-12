@@ -24,7 +24,7 @@ export class VendorHeaderToolsComponent {
   private newReminderDetailsDialog : any;
   emailScreenName = ScreenType.FinancialManagementVendorPageEmail;
   letterScreenName = ScreenType.FinancialManagementVendorPageLetter;
-  contacts$ = this.vendorContactFacade.contacts$;
+  contacts$ = this.vendorContactFacade.allContacts$;
   mailCodes$ = this.vendorContactFacade.mailCodes$;
   emailSubscription$ = new Subscription();
   reloadSubscription$ = new Subscription();
@@ -95,24 +95,36 @@ export class VendorHeaderToolsComponent {
     this.vendorTypeCode = this.activeRoute.snapshot.queryParams['tab_code'];
     this.initialize();
     this.getVendorTypeCode();
+    this.addEmailSubscription();
   }
 
   private initialize() {
     this.loadMailingAddress();
+    this.loadEmailAddress();
     this.refreshButtonList();
   }
 
-  private addEmailSubscription() {
-    this.vendorContactFacade.contacts$.subscribe((resp) => {
-      const preferredContact = resp.find((contact: any) => contact.preferredFlag === "Y" && contact.emailAddress?.trim());
-      const contactWithValidEmail = resp.find((contact: any) => contact.emailAddress && contact.emailAddress.trim());
-      this.toEmail = [];
-      if (preferredContact) {
-        this.toEmail = [preferredContact.emailAddress.trim()];
-        this.sendActions[1].isVisible = true;
-      } else if (contactWithValidEmail) {
-        this.toEmail = [contactWithValidEmail.emailAddress.trim()];
-        this.sendActions[1].isVisible = true;
+  loadEmailAddress(){
+    this.vendorContactFacade.loadVendorAllContacts(this.vendorId);
+  }
+
+  addEmailSubscription() {
+    this.vendorContactFacade.allContacts$.subscribe((resp) => {
+      if(resp.length!=0){
+        const preferredContact = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.preferredFlag === "Y" && contact.emailAddress?.trim());
+        const contactWithValidEmail = resp.find((contact: any) => contact?.activeFlag === "Y" && contact.emailAddress && contact.emailAddress.trim());
+        this.toEmail = [];
+        if (preferredContact) {
+          this.toEmail = [preferredContact.emailAddress.trim()];
+          this.sendActions[1].isVisible = true;
+        } else if (contactWithValidEmail) {
+          this.toEmail = [contactWithValidEmail.emailAddress.trim()];
+          this.sendActions[1].isVisible = true;
+        }
+      }
+      else {
+        this.toEmail = [];
+        this.sendActions[1].isVisible = false;
       }
       this.refreshButtonList();
       this.ref.detectChanges();
@@ -200,23 +212,11 @@ export class VendorHeaderToolsComponent {
       }
     }
 
-    loadEmailAddress() {
-      this.vendorContactFacade.mailCodes$.subscribe((resp) => {
-        if (resp && resp.length > 0) {
-          const selectedAddress = resp.find((address:any) => address.preferredFlag === "Y") || resp[0];
-          this.vendorAddressId = selectedAddress.vendorAddressId;
-          this.addEmailSubscription();
-        }
-        this.ref.detectChanges();
-      });
-    }
-
     loadMailingAddress() {
       this.vendorContactFacade.loadMailCodes(this.vendorId);
-      this.loadEmailAddress();
     }
 
-    getVendorTypeCode() { 
+    getVendorTypeCode() {
       switch (this.vendorTypeCode) {
         case FinancialVendorProviderTabCode.Manufacturers:
           this.emailSubject = CommunicationEventTypeCode.ManufacturerSubject;
@@ -229,10 +229,22 @@ export class VendorHeaderToolsComponent {
           this.communicationLetterTypeCode = CommunicationEventTypeCode.InsuranceVendorLetter;
           break;
         case FinancialVendorProviderTabCode.MedicalProvider:
-          this.emailSubject = CommunicationEventTypeCode.MedicalProviderSubject
+          this.emailSubject = CommunicationEventTypeCode.MedicalProviderSubject;
           this.communicationEmailTypeCode = CommunicationEventTypeCode.MedicalProviderEmail;
           this.communicationLetterTypeCode = CommunicationEventTypeCode.MedicalProviderLetter;
           break;
+        case FinancialVendorProviderTabCode.DentalProvider:
+          this.emailSubject = CommunicationEventTypeCode.DentalProviderSubject;
+          this.communicationEmailTypeCode = CommunicationEventTypeCode.DentalProviderEmail;
+          this.communicationLetterTypeCode = CommunicationEventTypeCode.DentalProviderLetter;
+          break;
+        case FinancialVendorProviderTabCode.Pharmacy:
+          this.emailSubject = CommunicationEventTypeCode.PharmacySubject;
+          this.communicationEmailTypeCode = CommunicationEventTypeCode.PharmacyEmail;
+          this.communicationLetterTypeCode = CommunicationEventTypeCode.PharmacyLetter;
+          break;
       }
+    }
+    onSendMenuClick(){
     }
 }
