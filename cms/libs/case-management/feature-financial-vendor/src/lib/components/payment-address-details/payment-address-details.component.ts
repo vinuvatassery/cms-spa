@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, OnInit, Component, EventEmitter, Output, Input, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import {  AddressTypeCode, BillingAddressFacade, ContactFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, StatusFlag } from '@cms/case-management/domain';
+import {  AddressTypeCode, BillingAddressFacade, ContactFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, StatusFlag, VendorContactsFacade } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
@@ -42,7 +42,8 @@ export class PaymentAddressDetailsComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly activatedRoute: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
-  ) { }
+    private readonly vendorContactFacade: VendorContactsFacade)
+    { }
 
   ngOnInit(): void {
     this.vendorId = this.activatedRoute.snapshot.queryParams['v_id'];
@@ -207,6 +208,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
           }
         }
         this.billingAddressFacade.hideLoader();
+        this.vendorContactFacade.loadVendorAllContacts(this.vendorId);
         this.closeModal('saved');
       },
       error: (err) => {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { BillingAddressFacade } from '@cms/case-management/domain';
+import { BillingAddressFacade, VendorContactsFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-payment-address-deactivate',
@@ -8,10 +8,11 @@ import { BillingAddressFacade } from '@cms/case-management/domain';
 })
 export class PaymentAddressDeactivateComponent {
   @Input() addressId: any;
+  @Input() vendorId: any;
   @Output() closeDeactivatePaymentAddress = new EventEmitter<boolean>();
 
 
-  constructor(private readonly billingAddressFacade: BillingAddressFacade, private readonly cdr: ChangeDetectorRef) {}
+  constructor(private readonly vendorContactFacade: VendorContactsFacade, private readonly billingAddressFacade: BillingAddressFacade, private readonly cdr: ChangeDetectorRef) {}
 
   deactivatePaymentAddress(): void {
     this.cdr.detectChanges();
@@ -22,6 +23,7 @@ export class PaymentAddressDeactivateComponent {
         } else {
           this.onCloseDeactivatePaymentAddressClicked(false);
         }
+        this.vendorContactFacade.loadVendorAllContacts(this.vendorId);
       },
       error: (error) => {
         this.onCloseDeactivatePaymentAddressClicked(false);
