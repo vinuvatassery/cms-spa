@@ -37,6 +37,10 @@ export class SideNavigationComponent implements OnInit {
     this.getMenuCount();    
   }
 
+  ngOnDestroy(){
+    this.financialPcaFacade.pcaReassignmentCount$.subscribe().unsubscribe();
+  }
+
   /** Internal event methods **/
   onSubMenuClicked(index: number) {
     this.subMenuExpandStatus[index] = !(this.subMenuExpandStatus[index] ?? false);
