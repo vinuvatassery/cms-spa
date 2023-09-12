@@ -436,7 +436,7 @@ export class FinancialClaimsDataService {
     } else {
       path = 'financial-management/claims/dental';
     }
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/exceeded-limit?servicesCost=${serviceCost}&clientId=${clientId}`
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/exceeded-limit-check?servicesCost=${serviceCost}&clientId=${clientId}`
     );
   }
 }
