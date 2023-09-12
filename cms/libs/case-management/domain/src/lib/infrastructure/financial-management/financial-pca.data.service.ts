@@ -69,13 +69,22 @@ export class FinancialPcaDataService {
     )
   }
 
-  loadFinancialPcaSubReportListService(
-    objecCodeGroupCodeId:string,
-    skipCount: number,
-    maxResultCount: number
-  ) {
-    return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/${objecCodeGroupCodeId}/reports?SortType=asc&Sorting=priority&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}`
+  loadFinancialPcaSubReportListService(data:any){ 
+
+    const PcaAssignmentsSubReportPageAndSortedRequestDto =
+    {
+      ObjectId : data.objectId,
+      GroupIds : data.groupIds,
+      pcaAssignmentId : data.pcaAssignmentId,
+      amountAssigned : data.amountAssigned,
+      amountRemaining : data.amountRemaining,
+      Sorting : "priority",
+      SkipCount : data.skipCount,
+      MaxResultCount : data.maxResultCount,
+      SortType : "asc"
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/sub-reports`,PcaAssignmentsSubReportPageAndSortedRequestDto
     );
   }
 

@@ -3,4 +3,8 @@
 [reconcileGridLists$]="reconcileGridLists$"
 [pageSizes]="pageSizes" [sortValue]="sortValue"
 [sortType]="sortType" [sort]="sort" 
-(loadReconcileListEvent)="loadReconcileListGrid($event)"></cms-financial-premiums-batches-reconcile-payments>
+(loadReconcileListEvent)="loadReconcileListGrid($event)"
+[reconcileBreakoutSummary$]="reconcileBreakoutSummary$ | async"
+[reconcileBreakoutList$]="reconcileBreakoutList$"
+(loadReconcileBreakoutSummaryEvent)="loadReconcileBreakoutSummary($event)"
+(loadReconcilePaymentBreakoutListEvent)="loadReconcilePaymentBreakoutList($event)"></cms-financial-premiums-batches-reconcile-payments>

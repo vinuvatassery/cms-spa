@@ -473,4 +473,36 @@ export class FinancialPremiumsDataService {
       
     ]);
   }
+
+  loadInsurancePremiumBreakoutSummaryService(data:any){
+    const ReconcilePaymentResponseDto =
+    {
+      BatchId : data.batchId,
+      EntityId : data.entityId,
+      AmountTotal : data.amountTotal,
+      WarrantTotal : data.warrantTotal,
+      WarrantNbr : data.warrantNbr,
+      PaymentToReconcileCount : data.paymentToReconcileCount
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${data.premiumsType}/payment-reconcile-summary`,ReconcilePaymentResponseDto
+    );
+  }
+
+  loadInsurancePremiumBreakoutListService(data:any){
+    const BreakoutPanelPageAndSortedRequestDto =
+    {
+      BatchId : data.batchId,
+      EntityId : data.entityId,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${data.premiumsType}/payment-reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto
+    );
+  }
+
 }

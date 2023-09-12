@@ -238,17 +238,9 @@ export class FinancialPcaFacade {
     });
   }
 
-  loadFinancialPcaSubReportListGrid(
-    objecCodeGroupCodeId:string,
-    skipCount: number,
-    maxResultCount: number
-  ) {
+  loadFinancialPcaSubReportListGrid(data: any){
     this.financialPcaDataService
-      .loadFinancialPcaSubReportListService(
-        objecCodeGroupCodeId,
-        skipCount,
-        maxResultCount
-      )
+      .loadFinancialPcaSubReportListService(data)
       .subscribe({
         next: (dataResponse) => {
           const gridView = {

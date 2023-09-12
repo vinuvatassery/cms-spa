@@ -15,7 +15,11 @@ import { Subject } from 'rxjs';
 export class FinancialPcasAssignmentSubReportListComponent implements OnChanges {
 
   @Input() pageSizes: any;
-  @Input() objecCodeGroupCodeId: any;
+  @Input() objectId: any;
+  @Input() groupIds: any;
+  @Input() pcaAssignmentId: any;
+  @Input() amountAssigned: any;
+  @Input() amountRemaining: any;
   @Input() financialPcaSubReportGridLists$: any;
   sort: any = "priority";
   isFinancialPcaSubReportGridLoaderShow = false;
@@ -35,21 +39,8 @@ export class FinancialPcasAssignmentSubReportListComponent implements OnChanges 
     this.loadPcasAssignmentSubGrid();
   }
 
-  loadPcasAssignmentSubReport(
-    objecCodeGroupCodeId: string,
-    skipCountValue: number,
-    maxResultCountValue: number,
-    sortValue: string,
-    sortTypeValue: string
-  ) {
-    const gridDataRefinerValue = {
-      objecCodeGroupCodeId: objecCodeGroupCodeId,
-      skipCount: skipCountValue,
-      maxResultCount: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue
-    };
-    this.loadFinancialPcaSubReportListEvent.emit(gridDataRefinerValue);
+  loadPcasAssignmentSubReport(data:any) {
+    this.loadFinancialPcaSubReportListEvent.emit(data);
     this.gridDataHandle();
   }
 
@@ -64,13 +55,17 @@ export class FinancialPcasAssignmentSubReportListComponent implements OnChanges 
   }
 
   loadPcasAssignmentSubGrid() {
-    this.loadPcasAssignmentSubReport(
-      this.objecCodeGroupCodeId,
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sort,
-      this.sortType
-    );
+    this.loadPcasAssignmentSubReport({
+      objectId          :this.objectId,
+      groupIds          :this.groupIds,
+      pcaAssignmentId   :this.pcaAssignmentId,
+      amountAssigned    :this.amountAssigned,
+      amountRemaining   :this.amountRemaining,
+      skipCount         :this.state?.skip ?? 0,
+      maxResultCount    :this.state?.take ?? 0,
+      sortColumn        :this.sort,
+      sortType          :this.sortType
+    });
   }
 
   pageSelectionChange(data: any) {
@@ -99,7 +94,5 @@ export class FinancialPcasAssignmentSubReportListComponent implements OnChanges 
       sort: this.sort,
       filter: { logic: 'and', filters: [] },
     };
-  }
-
-  
+  }  
 }
