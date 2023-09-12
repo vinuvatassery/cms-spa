@@ -72,17 +72,17 @@ export class FinancialClaimsAllPaymentsListComponent
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Refund',
+      text: 'Edit Claim',
       icon: 'edit',
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'UnAllPayments Refund',
+      text: 'Unbatch Claim',
       icon: 'undo',
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Refund',
+      text: 'Delete Claim',
       icon: 'delete',
     },
   ];

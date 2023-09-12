@@ -58,9 +58,9 @@ export class DrugsFacade {
   ) { }
 
   /** Public methods **/
-  loadDrugsListGrid(vendorId:string, skipCount: number, maxResultCount: number, sort: string, sortType: string) {
+  loadDrugsListGrid(vendorId:string, skipCount: number, maxResultCount: number, sort: string, sortType: string, filters: any) {
     this.showLoader();
-    this.drugsDataService.loadDrugList(vendorId,skipCount,maxResultCount,sort,sortType).subscribe({
+    this.drugsDataService.loadDrugList(vendorId,skipCount,maxResultCount,sort,sortType,filters).subscribe({
       next: (dataResponse) => {
         this.drugsDataSubject.next(dataResponse);
 

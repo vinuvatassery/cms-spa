@@ -8,11 +8,17 @@ export enum CommunicationEventTypeCode {
     ManufacturerSubject = "Manufacturer Email",
     MedicalProviderSubject = "Medical Provider Email",
     InsuranceVendorSubject = "Insurance Vendor Email",
+    DentalProviderSubject = "Dental Provider Email",
+    PharmacySubject = "Pharmacy Email",
     CopyOfSignedApplication="COPY_OF_SIGNED_APPLICATION",
     ManufacuterLetter="MANUFACTURER_LETTER",
     ManufacturerEmail="MANUFACTURER_EMAIL",
     InsuranceVendorLetter="INSURANCE_VENDOR_LETTER",
     InsuranceVendorEmail="INSURANCE_VENDOR_EMAIL",
     MedicalProviderLetter="MEDICAL_PROVIDER_LETTER",
-    MedicalProviderEmail="MEDICAL_PROVIDER_EMAIL"
+    MedicalProviderEmail="MEDICAL_PROVIDER_EMAIL",
+    PharmacyLetter="PHARMACY_LETTER",
+    PharmacyEmail="PHARMACY_EMAIL",
+    DentalProviderLetter="DENTAL_PROVIDER_LETTER",
+    DentalProviderEmail="DENTAL_PROVIDER_EMAIL"
   }
