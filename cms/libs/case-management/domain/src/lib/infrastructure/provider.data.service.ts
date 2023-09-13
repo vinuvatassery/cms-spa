@@ -142,4 +142,9 @@ export class ProviderDataService {
       },
     ]);
   }
+
+  searchProvider(searchText: string) {
+    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/search/${searchText}`);
+
+  }
 }
