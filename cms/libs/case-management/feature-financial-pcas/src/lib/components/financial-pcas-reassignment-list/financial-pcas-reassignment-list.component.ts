@@ -75,6 +75,7 @@ export class FinancialPcasReassignmentListComponent
   allNotAssignedPcaSList:any;
   notSelectedPcaS:any;
   selectedPcaData:any;
+  
   public gridMoreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -144,6 +145,7 @@ export class FinancialPcasReassignmentListComponent
       this.sortType
     );
   }
+
   loadPcaReassignment(
     skipCountValue: number,
     maxResultCountValue: number,
@@ -231,7 +233,6 @@ export class FinancialPcasReassignmentListComponent
     );
     this.isFinancialPcaReassignmentGridLoaderShow = false;
   }
-
  
   onOpenViewEditPcaReassignmentClicked(template: TemplateRef<unknown>,data:any): void {
     this.pcaReassignmentAddEditDialogService = this.dialogService.open({
@@ -240,6 +241,7 @@ export class FinancialPcasReassignmentListComponent
     });
     this.editPcaReassignmentItem = data;
   }
+
   onCloseEditPcaReassignmentClicked(result: any) {
     if (result) {
       this.isViewGridOptionClicked = false;
@@ -254,6 +256,7 @@ export class FinancialPcasReassignmentListComponent
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
+
   onCloseConfirmationPcaReassignmentClicked(result: any) {
     if (result) {
       this.pcaReassignmentConfirmationDialogService.close();
@@ -263,6 +266,7 @@ export class FinancialPcasReassignmentListComponent
   getPcaAssignmentById(pcaAssignmentId:any){
     this.getPcaAssignmentByIdEvent.emit(pcaAssignmentId);
   }
+
   saveEditPcaReassignmentClicked(updateReassignmentValue:any){
     this.updatePcaAssignmentByEvent.emit(updateReassignmentValue);
     this.isViewGridOptionClicked = false;
@@ -270,6 +274,7 @@ export class FinancialPcasReassignmentListComponent
     this.pcaReassignmentAddEditDialogService.close();
 
   }
+
   onSearchTextChange(text : any,data:any)
   {     
      let  pcaCodes=this.reAssignPcaS.find((x:any)=>x.pcaAssignmentId==data.pcaAssignmentId);
@@ -319,6 +324,9 @@ public itemDisabled(itemArgs:any)
     }else{
       return false
     }
+  }
 
+  isUnlimitedFlag(flag : string){
+    return flag == "Y";
   }
 }
