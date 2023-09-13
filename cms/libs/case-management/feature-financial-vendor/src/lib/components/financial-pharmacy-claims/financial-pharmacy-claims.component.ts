@@ -73,4 +73,5 @@ export class FinancialPharmacyClaimsComponent {
   onClientNameClicked(clientDetails: any) {
     this.router.navigate([`/case-management/cases/case360/${clientDetails?.clientId}`]);
   }
+
 }

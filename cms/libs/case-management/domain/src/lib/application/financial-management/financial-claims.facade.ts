@@ -651,7 +651,7 @@ loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, 
     next: (serviceCostResponse:any)=>{
       this.serviceCostFlag =  serviceCostResponse;
       let response = {
-        flag: serviceCostResponse,
+        flag: serviceCostResponse?.status == 0 ? false : true,
         indexNumber: indexNumber
       }
       this.showExceedMaxBenefitExceptionSubject.next(response);

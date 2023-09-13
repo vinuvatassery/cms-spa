@@ -149,6 +149,13 @@ fillFormData(){
         this.medicalProviderForm.controls['lastName'].updateValueAndValidity();
       }
     }
+    else if(this.providerType == this.vendorTypes.Manufacturers) {
+      this.medicalProviderForm.controls['providerName']
+      .setValidators([
+        Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
+      ]);
+      this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
+    }
     else {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
@@ -163,7 +170,7 @@ fillFormData(){
 
       this.medicalProviderForm.controls['city']
         .setValidators([
-          Validators.required,
+          Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
         ]);
       this.medicalProviderForm.controls['city'].updateValueAndValidity();
 
@@ -175,21 +182,25 @@ fillFormData(){
 
       this.medicalProviderForm.controls['zip']
         .setValidators([
-          Validators.required,
+          Validators.required,Validators.required,Validators.pattern('^[A-Za-z0-9 \-]+$')
         ]);
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();
 
-      this.medicalProviderForm.controls['nameOnCheck']
-      .setValidators([
-        Validators.required,
-      ]);
-    this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
+      if (this.providerType == this.vendorTypes.Manufacturers) {
+        this.medicalProviderForm.controls['nameOnCheck'].setValidators([
+          Validators.nullValidator,
+        ]);
+        this.medicalProviderForm.controls[
+          'nameOnCheck'
+        ].updateValueAndValidity();
 
-    this.medicalProviderForm.controls['nameOnEnvolop']
-    .setValidators([
-      Validators.required,
-    ]);
-      this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
+        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([
+          Validators.nullValidator,
+        ]);
+        this.medicalProviderForm.controls[
+          'nameOnEnvolop'
+        ].updateValueAndValidity();
+      }
 
     }
 
@@ -202,7 +213,7 @@ fillFormData(){
       this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();
 
     }
-    this.medicalProviderForm.controls
+
     if (this.providerType == this.vendorTypes.InsuranceVendors) {
 
       this.medicalProviderForm.controls['paymentRunDate']
@@ -221,10 +232,10 @@ fillFormData(){
         .setValidators([
           Validators.required,
         ]);
-      this.medicalProviderForm.controls['isAcceptReports'].updateValueAndValidity();      
+      this.medicalProviderForm.controls['isAcceptReports'].updateValueAndValidity();
     }
 
-    for (let index = 0; index < this.AddContactForm.length; index++) {       
+    for (let index = 0; index < this.AddContactForm.length; index++) {
       (this.AddContactForm.controls[index] as FormGroup).controls['isCheckContactNameValid'].setValue(true);
     }
 
@@ -442,7 +453,7 @@ fillFormData(){
     this.medicalProviderForm.controls['city']
         .setValidators([]);
       this.medicalProviderForm.controls['city'].updateValueAndValidity();
-      
+
       this.medicalProviderForm.controls['state']
         .setValidators([ ]);
       this.medicalProviderForm.controls['state'].updateValueAndValidity();
@@ -458,13 +469,13 @@ fillFormData(){
     this.medicalProviderForm.controls['nameOnEnvolop']
     .setValidators([]);
       this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
-    } 
-  
+    }
+
 }
 onMailCodeChange( )
  {
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
-    if (mailCode.length >0) 
+    if (mailCode.length >0)
     {
       this.medicalProviderForm.controls['addressLine1'].setValidators([Validators.required,]);
       this.medicalProviderForm.controls['addressLine1'].updateValueAndValidity();
@@ -488,5 +499,8 @@ onMailCodeChange( )
     {
       this.onChange();
    }
+}
+get medicalProviderFormControls() {
+  return this.medicalProviderForm.controls as any;
 }
 }

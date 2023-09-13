@@ -2,7 +2,7 @@
       <section class="app-l-mainTittle">
             <div class="d-flex">
                   <button aria-label="back to vendor refund" kendoButton look="flat" class="mr-1"
-                        (click)="navToBatchDetails($event)"> <span class="material-icons">
+                        (click)="navToBatchDetails($event)" title="Go Back"> <span class="material-icons">
                               arrow_back </span> </button>
                   <h1 class="maintitle_withicon text-bold">Reconcile Payments </h1>
             </div>
@@ -309,7 +309,7 @@
                   <div><span>{{ isBreakoutPanelShow ? reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.paymentToReconcileCount : 0}} payment(s)
                               to
                               reconcile</span>
-                        <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="close">
+                        <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="close" title="Close">
                               <span class="material-icons" aria-label="close" aria-hidden="true"
                                     (click)="toggleBreakoutPanel()">close</span>
                         </button>
@@ -336,7 +336,7 @@
 
 
 <ng-template #PrintAuthorizationDialog>
-      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Advice Letter(s)</kendo-dialog-titlebar>
+      <kendo-dialog-titlebar class="text-normal" (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Advice Letter(s)</kendo-dialog-titlebar>
       <cms-financial-claims-print-authorization
   [printOption]="onlyPrintAdviceLetter"
   [isSaveClicked]="isSaveClicked"

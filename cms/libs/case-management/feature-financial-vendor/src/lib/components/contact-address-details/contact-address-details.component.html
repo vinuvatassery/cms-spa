@@ -33,7 +33,7 @@
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>
-              <kendo-formerror *ngIf="isContactNameValid(i)&&isSubmitted">Contact Name is
+              <kendo-formerror *ngIf="isContactNameValid(i)&&isSubmitted">A Contact Name is
                 required</kendo-formerror>
             </div>
             <div class="flex-col">
@@ -50,8 +50,11 @@
             </div>
             <div class="flex-col">
               <kendo-floatinglabel text="Phone Number (optional)">             
-                <kendo-maskedtextbox [maxlength]="10"  placeholder="Phone Number (optional)"  mask="(999) 000-0000" aria-label="Phone Number (optional)" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="phoneNbr">
+                <kendo-maskedtextbox [maxlength]="10"  placeholder="Phone Number (optional)"  [mask]="inputMask" aria-label="Phone Number (optional)" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="phoneNbr"
+          (focus)="applyMask()"
+          (blur)="resetMask()"
+         >
       </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="isSubmitted && getContactControl(i, 'phoneNbr')?.errors?.['pattern']">
@@ -60,8 +63,10 @@
             </div>
             <div class="flex-col mb-1">
               <kendo-floatinglabel text="Fax Number (optional)">
-                <kendo-maskedtextbox [maxlength]="10" aria-label="Fax Number (optional)" placeholder="Fax (optional)" mask="(999) 000-0000" [fillMode]="formUiStyle.inputFillMode"
-                formControlName="faxNbr">
+                <kendo-maskedtextbox [maxlength]="10" aria-label="Fax Number (optional)" placeholder="Fax (optional)" [mask]="inputMask" [fillMode]="formUiStyle.inputFillMode"
+                formControlName="faxNbr"
+                (focus)="applyMask()"
+                (blur)="resetMask()">
             </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="isSubmitted && getContactControl(i, 'faxNbr')?.errors?.['pattern']">

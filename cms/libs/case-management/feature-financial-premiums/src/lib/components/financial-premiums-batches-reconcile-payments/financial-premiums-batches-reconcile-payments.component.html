@@ -2,7 +2,7 @@
       <section class="app-l-mainTittle">
             <div class="d-flex">
                   <button aria-label="back to vendor refund" kendoButton look="flat" class="mr-1"
-                        (click)="onLeavePageOpenClicked(leavePageDialogTemplate)"> <span class="material-icons">
+                        (click)="onLeavePageOpenClicked(leavePageDialogTemplate)" title="Go back"> <span class="material-icons">
                               arrow_back </span> </button>
                   <h1 class="maintitle_withicon text-bold">Reconcile Payments </h1>
             </div>
@@ -80,11 +80,12 @@
 
 
                   <div class="app-c-table">
-                        <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take"
+                        <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take" #grid
                               [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
                               [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
                               [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
-                              [data]="reconcileGridLists$ | async">
+                              [data]="reconcileGridLists$ | async"
+                              (selectionChange)="onRowSelection(grid, $event)">
                               <kendo-grid-checkbox-column [sticky]="true" title="Print Notice" [columnMenu]="false" [showSelectAll]="false"
                                     [width]="80"></kendo-grid-checkbox-column>
                               <kendo-grid-column field="vendorName" title="Insurance Vendor" [width]="160">
@@ -150,15 +151,34 @@
             </section>
       </section>
 
-      <div class="bottom-fixed-wrapper">
+      <div class="bottom-fixed-wrapper">            
             <div class="sub-fix-bar">
                   <div class="flex-sp-btn">
-                        <div> <span><strong>Amount Total:</strong> $13,000.00</span> <span class="ml-2"><strong>Warrant Total:</strong> $13,000.00</span></div>
-                        <div>0 payment(s) to reconcile, 0 notice(s) to be sent</div>
+                        <div> <span><strong>Amount Total:</strong> $&nbsp;{{reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.amountTotal |
+                              kendoNumber:'n2'}}</span>
+                        <span class="ml-2"><strong>Warrant Total:</strong></span> <span class="ml-2"
+                              *ngIf="isBreakoutPanelShow; else searchByBatchTemplate">$&nbsp;{{reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.warrantTotal
+                              | kendoNumber: 'n2'}}</span>
+                        <ng-template #searchByBatchTemplate>
+                              <span class="ml-2">$&nbsp;{{0 | kendoNumber: 'n2'}}</span>
+                        </ng-template>
                   </div>
-                 
-                  <div>
-                        <cms-financial-premiums-batches-reconcile-payments-breakout></cms-financial-premiums-batches-reconcile-payments-breakout>
+                  <div><span>{{ isBreakoutPanelShow ? reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.paymentToReconcileCount : 0}} payment(s)
+                              to
+                              reconcile</span>
+                        <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="close">
+                              <span class="material-icons" aria-label="close" aria-hidden="true"
+                                    (click)="toggleBreakoutPanel()">close</span>
+                        </button>
+                  </div>
+                  </div>   
+
+                  <div *ngIf="isBreakoutPanelShow">
+                        <cms-financial-premiums-batches-reconcile-payments-breakout
+                        [pageSizes]="pageSizes" [sortValue]="sortValue" [premiumsType]="premiumsType"
+                        [sortType]="sortType" [sort]="sort"  [batchId]="batchId" [entityId]="entityId"    
+                        [reconcileBreakoutList$]="reconcileBreakoutList$"
+                        (loadReconcilePaymentBreakOutGridEvent)="loadReconcilePaymentBreakOutGridList($event)"></cms-financial-premiums-batches-reconcile-payments-breakout>
                   </div>
             </div>
             <div class="text-right flex-gap">
@@ -173,7 +193,7 @@
 
 
 <ng-template #PrintAuthorizationDialog>
-      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Authorization(s)</kendo-dialog-titlebar>
+      <kendo-dialog-titlebar  class="text-normal" (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Authorization(s)</kendo-dialog-titlebar>
     <cms-financial-premiums-print-authorization></cms-financial-premiums-print-authorization>
     </ng-template>
 

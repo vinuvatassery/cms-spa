@@ -1,6 +1,6 @@
 <kendo-dialog-titlebar (close)="closeAddEditClaimsFormModalClicked()">
     <section class="app-l-mainTittle">
-        <h1 class="maintitle_withicon text-bold">{{title}} Claims</h1>
+        <h1 class="maintitle_withicon text-bold">{{title}} Claim</h1>
     </section>
 </kendo-dialog-titlebar>
 <section class="add_main_popup_screen">
@@ -159,7 +159,7 @@
                                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
                                                     aria-label="Service Start Date" format="MM/dd/yyyy"
                                                     formatPlaceholder="formatPattern" formControlName="serviceStartDate"
-                                                    (valueChange)="onDateChange(i)">
+                                                    (valueChange)="onDateChange(i)"   placeholder="">
                                                 </kendo-datepicker>
                                             </kendo-floatinglabel>
                                             <kendo-formerror
@@ -172,7 +172,7 @@
                                             <kendo-floatinglabel text="Service End Date">
                                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
                                                     aria-label="Service End Date" format="MM/dd/yyyy"
-                                                    formatPlaceholder="formatPattern" formControlName="serviceEndDate"
+                                                    formatPlaceholder="formatPattern"   placeholder="" formControlName="serviceEndDate"
                                                     (valueChange)="onDateChange(i)">
                                                 </kendo-datepicker>
                                             </kendo-floatinglabel>
@@ -246,7 +246,7 @@
                                                 </kendo-autocomplete>
                                                 <kendo-formerror *ngIf="(isControlValid('cptCode', i) && isSubmitted)"
                                                     class="d-flex align-items-center"> <span class="material-icons mr-1"
-                                                        aria-hidden="false">info</span>CTP Code is
+                                                        aria-hidden="false">info</span>CPT Code is
                                                     required
                                                 </kendo-formerror>
                                             </kendo-floatinglabel>

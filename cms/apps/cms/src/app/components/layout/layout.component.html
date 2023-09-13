@@ -2,7 +2,7 @@
 <common-loader-component></common-loader-component>
 
 <h1 hidden>CMS</h1>
-<section class="app-l-header" role="header" >
+<section class="app-l-header" role="header" kendoTooltip>
   <div class="header_menu-left_most_section"  >
     <button class="mobile-menu-icon" (click)="openMobileMenu()" *ifPermission='["Layout_Logo_View_Only"]'> <span class="material-icons">
       menu
@@ -55,8 +55,8 @@
     </div>
   </section>
   <section class="app-l-body-container"  [class.menuSectionToggled]="isSideMenuToggled">
-    <section class="app-l-body">
-      <ng-content select="[body]"></ng-content>
+    <section class="app-l-body" kendoTooltip>
+      <ng-content select="[body]" ></ng-content>
     </section>
   </section>
 </section>

@@ -79,32 +79,38 @@ export class SendLetterComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter)
-    {
-      this.isButtonVisible=false;
-      this.vendorContactFacade.mailCodes$.subscribe((resp) => {
-        if (resp && resp.length > 0) {
-          const selectedAddress = resp.find((address:any) => address.preferredFlag === "Y") || resp[0];
-          this.mailingAddress = selectedAddress;
-        }
-        this.ref.detectChanges();
-      });
+    if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter) {
+      this.loadMailCodes();
     }
     else {
-      this.contactFacade.mailingAddress$.subscribe((resp) => {
-        if (resp) {
-          this.mailingAddress = resp;
-        }
-        this.ref.detectChanges();
-      });
-      this.loadCurrentSession();
+      this.loadVendorMailingAddress();
     }
-    if (this.data) {
-      this.isNewLetterClicked = true;
-    } else {
-      this.isNewLetterClicked = false;
-    }
+    this.isNewLetterClicked =  this.data ? true : false;
     this.loadDropdownLetterTemplates();
+  }
+
+  private loadMailCodes() {
+    this.isButtonVisible = false;
+    this.vendorContactFacade.mailCodes$.subscribe((resp) => {
+      if (resp && resp.length > 0) {
+        let selectedAddress = resp.find((address: any) => address?.activeFlag === "Y" && address.preferredFlag === "Y");
+        if (!selectedAddress) {
+          selectedAddress = resp.find((address: any) => address?.activeFlag === "Y");
+        }
+        this.mailingAddress = selectedAddress;
+      }
+      this.ref.detectChanges();
+    });
+  }
+
+  private loadVendorMailingAddress() {
+    this.contactFacade.mailingAddress$.subscribe((resp) => {
+      if (resp) {
+        this.mailingAddress = resp;
+      }
+      this.ref.detectChanges();
+    });
+    this.loadCurrentSession();
   }
 
   private loadCurrentSession() {

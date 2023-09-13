@@ -2,24 +2,28 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
+  Output,
+  OnInit,
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
 import { ContactResponse, VendorContactsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
+import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'cms-contact-address-list',
   templateUrl: './contact-address-list.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContactAddressListComponent implements OnChanges {
+export class ContactAddressListComponent implements OnInit, OnChanges {
   contactResponse: ContactResponse[] = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isContactAddressDeactivateShow = false;
@@ -30,8 +34,10 @@ export class ContactAddressListComponent implements OnChanges {
   VendorContactId: any;
   VendorContactAddressId = '';
   @Input() VendorAddressId: any;
+  @Output() refreshPaymentAddressList: EventEmitter<any> = new EventEmitter<any>();
+  @Input() vendorId:any;
   public state!: any;
-  filters :any= "";
+  filters: any = "";
   sortColumn = "";
   sortDir = "";
   columnsReordered = false;
@@ -45,10 +51,12 @@ export class ContactAddressListComponent implements OnChanges {
   public sort = this.vendocontactsFacade.sort;
   selectedColumn!: any;
   columnChangeDesc = 'Default Columns';
+  contacts$ = new BehaviorSubject<any>([]);
+  loader$ = new BehaviorSubject<boolean>(false);
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  gridColumns : any ={
-    contactName : "Name",
-    contactDesc : "Description",
+  gridColumns: any = {
+    contactName: "Name",
+    contactDesc: "Description",
     phoneNbr: "Phone Number",
     faxNbr: "Fax Number",
     emailAddress: "Email Address",
@@ -91,15 +99,16 @@ export class ContactAddressListComponent implements OnChanges {
       },
     },
   ];
-  contacts$ = this.vendocontactsFacade.contacts$;
 
   constructor(
     private readonly vendocontactsFacade: VendorContactsFacade,
     private cd: ChangeDetectorRef,
     private readonly loaderService: LoaderService,
     public readonly intl: IntlService,
-    private readonly configurationProvider: ConfigurationProvider
-  ) {}
+    private readonly configurationProvider: ConfigurationProvider,
+    private loggingService: LoggingService,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+  ) { }
 
   showLoader() {
     this.loaderService.show();
@@ -108,8 +117,13 @@ export class ContactAddressListComponent implements OnChanges {
     this.loaderService.hide();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.defaultGridState();
+  ngOnInit(): void {
+    this.initializeGrid();
+  }
+
+  initializeGrid() {
+    this.contacts$.next({ data: [], total: 0 });
+    this.loader$.next(false);
     this.vendocontactsFacade.loadcontacts(
       this.VendorAddressId,
       this.state?.skip ?? 0,
@@ -117,8 +131,27 @@ export class ContactAddressListComponent implements OnChanges {
       this.sortValue,
       this.sortType,
       this.filters
-      );
+    ).subscribe({
+      next: (res: any) => {
+        const gridView: any = {
+          data: res.items,
+          total: res.totalCount,
+        };
+        this.contacts$.next(gridView);
+        this.loader$.next(false);
+      },
+      error: (err: any) => {
+        this.loader$.next(false);
+        this.loggingService.logException(err)
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
 
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.defaultGridState();
+    this.initializeGrid();
   }
   rowClass = (args: any) => ({
     "table-row-disabled": (!args.dataItem.assigned),
@@ -175,6 +208,7 @@ export class ContactAddressListComponent implements OnChanges {
         this.filters
       );
       this.clickCloseDeactivateContactAddress();
+      this.refreshPaymentAddressList.emit();
     }
   }
 
@@ -241,19 +275,17 @@ export class ContactAddressListComponent implements OnChanges {
       searchValue: '',
     };
   }
-contactUpdated(res:boolean)
-{
-if(res)
-{
-  this.vendocontactsFacade.loadcontacts(this.VendorAddressId,
-    this.state?.skip ?? 0,
-    this.state?.take ?? 0,
-    this.sortValue,
-    this.sortType,
-    this.filters
-    );
-}
-}
+  contactUpdated(res: boolean) {
+    if (res) {
+      this.vendocontactsFacade.loadcontacts(this.VendorAddressId,
+        this.state?.skip ?? 0,
+        this.state?.take ?? 0,
+        this.sortValue,
+        this.sortType,
+        this.filters
+      );
+    }
+  }
   public setGridState(stateData: any): void {
     this.state = stateData;
 
@@ -293,8 +325,7 @@ if(res)
     }
   }
 
-  onEditDeactivateContactClicked(event:any)
-  {
+  onEditDeactivateContactClicked(event: any) {
     if (event?.vendorContactId) {
       this.VendorContactId = event?.vendorContactId;
       this.clickOpenDeactivateContactAddressDetails();
