@@ -4,7 +4,7 @@
     <case-management-case-navigation [routes$]="routes$" [completeStaus$]="completeStaus$" [workflowType]="workflowType"
       [navigationEvent]="workflowNavigationEvent" (workflowChange)="applyWorkflowChanges($event)" [currentSession]="currentSession">
     </case-management-case-navigation>
-    <button class="createcase-mobile-menu-btn  createbtn-close" (click)="openInnerLeftMenu()"> <span class="material-icons">
+    <button class="createcase-mobile-menu-btn  createbtn-close" (click)="openInnerLeftMenu()" title="Open Menu"> <span class="material-icons">
       menu_open
       </span>
   </button> 
@@ -16,7 +16,7 @@
 
       <common-bread-crumb></common-bread-crumb>
       <div class="casetopsection-rightside">
-        <button class="createcase-mobile-menu-btn" (click)="openInnerLeftMenu()"> <span class="material-icons">
+        <button class="createcase-mobile-menu-btn" title="Open Left Menu" (click)="openInnerLeftMenu()"> <span class="material-icons">
             list
           </span>
         </button>
