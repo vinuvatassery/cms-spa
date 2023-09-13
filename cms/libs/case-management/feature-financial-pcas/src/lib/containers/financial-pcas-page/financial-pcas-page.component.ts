@@ -57,7 +57,7 @@ export class FinancialPcasPageComponent implements OnInit{
   pcaAssignmentData$ = this.pcaAssignmentsFacade.pcaAssignmentData$;
   assignPcaResponseData$ = this.pcaAssignmentsFacade.assignPcaResponseData$;
   pcaAssignmentPriorityUpdate$ = this.pcaAssignmentsFacade.pcaAssignmentPriorityUpdate$;
-
+  notAssignPcsLists$ = this.financialPcaFacade.notpcaData$;
    pcaAssignOpenDatesListSubject = new Subject<any>();
   pcaAssignOpenDatesList$ = this.pcaAssignOpenDatesListSubject.asObservable();
 
@@ -71,7 +71,7 @@ export class FinancialPcasPageComponent implements OnInit{
     private readonly pcaAssignmentsFacade : PcaAssignmentsFacade   
   ) { }
   ngOnInit(): void {
-    this.financialPcaFacade.pcaReassignmentCount();
+    this.financialPcaFacade.pcaReassignmentCount();   
   }  
 
   loadFinancialPcaSetupListGrid(event: GridFilterParam) {
@@ -162,8 +162,8 @@ export class FinancialPcasPageComponent implements OnInit{
     }
   }
 
-  loadFinancialPcaSubReportListGrid(data:any) {
-    this.financialPcaFacade.loadFinancialPcaSubReportListGrid(data?.objecCodeGroupCodeId,data?.skipCount, data?.maxResultCount);
+  loadFinancialPcaSubReportListGrid(data:any) {    
+    this.financialPcaFacade.loadFinancialPcaSubReportListGrid(data);
   }
 
   getPcaAssignmentById(fundingSourceId:any){
