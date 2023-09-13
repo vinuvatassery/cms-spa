@@ -10,6 +10,16 @@
       </div>
   </div>
   <div class="flex-col mt-1">
+      <div class="table-sorted-info">
+        Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
+        <span class="sort-items" *ngIf="!filteredByColumnDesc">No Filters</span>
+        <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
+        <span class="sort-items">{{columnChangeDesc}}</span>
+        <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
+        <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="restGrid()">
+              <a>Set to Default</a>
+        </button>
+      </div>
       <div class="app-c-table">
           <kendo-grid #grid
           [resizable]="true"
@@ -290,7 +300,7 @@
              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
                [valueField]="'value'" aria-label="Rows Per Page" id="RowsPerPage"  [valuePrimitive]="true" [(value)]="state.take"
-               (selectionChange)="pageSelectionchange($event)"></kendo-dropdownlist>
+               (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
              <kendo-pager-info> </kendo-pager-info>
              <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
            </div>

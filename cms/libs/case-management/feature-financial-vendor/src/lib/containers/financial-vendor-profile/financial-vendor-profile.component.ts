@@ -32,7 +32,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   selectedVendorInfo$ = this.financialVendorFacade.selectedVendor$;
   vendorProfile$ = this.financialVendorFacade.vendorProfile$
   vendorProfileSpecialHandling$ = this.financialVendorFacade.vendorProfileSpecialHandling$
-  filters:any=[];
+  filter:any=[];
 
   constructor(private activeRoute: ActivatedRoute, private financialVendorFacade : FinancialVendorFacade,
               private readonly drugsFacade: DrugsFacade) {}
@@ -121,7 +121,7 @@ export class FinancialVendorProfileComponent implements OnInit {
       this.state.take ?? 0,
       this.sortValue,
       this.sortType,
-      this.filters ?? []
+      this.filter ?? []
     );
   }
 
@@ -132,7 +132,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     };
     this.sortValue = event.sortColumn;
     this.sortType = event.sortType;
-    this.filters = event.filters;
+    this.filter = event.filters;
     this.loadDrugsListGrid();
   }
 
