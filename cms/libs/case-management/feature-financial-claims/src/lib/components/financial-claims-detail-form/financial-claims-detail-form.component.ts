@@ -1,3 +1,4 @@
+import { StatusFlag } from './../../../../../domain/src/lib/enums/status-flag.enum';
 import {
   Component,
   ChangeDetectionStrategy,
@@ -41,7 +42,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   clientId:any;
   vendorName:any;
   clientName:any;
+  isPrintDenailLetterClicked = false;
   @Input() claimsType: any;
+  @Input() printDenialLetterData: any;
+  private printLetterDialog: any;
   isRecentClaimShow = false;
   isShowReasonForException = false;
   clientSearchResult = [
@@ -117,6 +121,13 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   isSpotsPayment!: boolean;
   textMaxLength: number = 300;
 
+  isExcededMaxBeniftFlag = false;
+  isExcededMaxBanifitButtonText = 'Make Exception';
+  claimFlagExceptionCounter!: string;
+  claimFlagExceptionText = '';
+  checkservicescastvalue:any
+  exceedMaxBenefitFlag!:boolean ;
+  showExceedMaxBenefitException$ = this.financialClaimsFacade.showExceedMaxBenefitException$;
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
@@ -148,7 +159,15 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.activatedRoute.params.subscribe(data => {
       this.claimsType = data['type']
     });
-
+    this.showExceedMaxBenefitException$.subscribe(data => {
+      if(data)
+      {
+        this.addExceptionForm.at(data?.indexNumber).get('exceedMaxBenefitExceptionFlag')?.setValue(data?.flag);
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? "EMB" : '')
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
+        this.cd.detectChanges();
+      }
+    });
 
     if (!this.isEdit && this.claimsType == this.financialProvider) {
       this.title = 'Add Medical';
@@ -191,13 +210,14 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       invoiceId: [this.invoiceId, Validators.required],
       paymentRequestId: [this.paymentRequestId],
       claimService: new FormArray([]),
+      exceptionArray : new FormArray([])
     });
   }
 
   searchMedicalProvider(searchText: any) {
     if(!searchText || searchText.length == 0){
       return;
-    }    
+    }
     this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
   }
 
@@ -220,10 +240,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.financialClaimsFacade.searchcptcode(cptcode);
   }
 
-  onPaymentTypeValueChange(cptCodeObject : any, index: number){ 
+  onPaymentTypeValueChange(cptCodeObject : any, index: number){
     const serviceForm = this.addClaimServicesForm.at(index) as FormGroup;
-    let cptCode = serviceForm.controls['cptCode'].value; 
-    if (cptCodeObject !== PaymentRequestType.FullPay && cptCode.length > 0) {      
+    let cptCode = serviceForm.controls['cptCode'].value;
+    if (cptCodeObject !== PaymentRequestType.FullPay && cptCode.length > 0) {
         serviceForm.controls['amountDue'].setValue(0);
     }
   }
@@ -239,6 +259,9 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   get addClaimServicesForm(): FormArray {
     return this.claimForm.get('claimService') as FormArray;
+  }
+  get addExceptionForm(): FormArray {
+    return this.claimForm.get('exceptionArray') as FormArray;
   }
 
   addClaimServiceGroup() {
@@ -271,14 +294,31 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       reasonForException: new FormControl(
         this.medicalClaimServices.reasonForException
       ),
+      exceptionFlag: new FormControl(
+        StatusFlag.No
+      ),
+      exceptionTypeCode: new FormControl(
+        StatusFlag.No
+      ),
       medicadeRate: new FormControl(this.medicalClaimServices.medicadeRate),
       paymentRequestId: new FormControl(),
       tpaInvoiceId: new FormControl(),
       cptCodeId: new FormControl(this.medicalClaimServices.cptCodeId, [
         Validators.required,
       ]),
+      exceedMaxBenefitExceptionFlag: new FormControl(false),
     });
     this.addClaimServicesForm.push(claimForm);
+    this.addClaimExceptionForm();
+  }
+  addClaimExceptionForm()
+  {
+    let exceptionForm = this.formBuilder.group({
+      exceedMaxBenefitExceptionFlag: new FormControl(false),
+      showMaxBenefitExceptionReason: new FormControl(false),
+      maxBenefitExceptionFlagText: new FormControl(this.isExcededMaxBanifitButtonText)
+    });
+    this.addExceptionForm.push(exceptionForm);
   }
 
   onClientValueChange(event: any) {
@@ -292,6 +332,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   removeService(i: number) {
     this.addClaimServicesForm.removeAt(i);
+    this.addExceptionForm.removeAt(i);
   }
 
   IsServiceStartDateValid(index: any) {
@@ -328,9 +369,27 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.endDateGreaterThanStartDate = false;
     return true;
   }
+  setExceptionValidation()
+  {
+    this.addClaimServicesForm.controls.forEach((element, index) => {
+      if(this.addExceptionForm.at(index).get('showMaxBenefitExceptionReason')?.value)
+      {
+        this.addClaimServicesForm.at(index).get('reasonForException')?.setValidators(Validators.required);
+        this.addClaimServicesForm.at(index).get('reasonForException')?.updateValueAndValidity();
+      }
+      else
+      {
+        this.addClaimServicesForm.at(index).get('reasonForException')?.removeValidators(Validators.required);
+        this.addClaimServicesForm.at(index).get('reasonForException')?.updateValueAndValidity();
+      }
+  });
+  this.cd.detectChanges();
+  }
 
   save() {
+    this.setExceptionValidation();
     this.isSubmitted = true;
+
     if (!this.claimForm.valid) {
       this.claimForm.markAllAsTouched()
       return;
@@ -348,6 +407,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       serviceSubTypeCode: this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
       tpaInvoice: [{}],
     };
+    let checkDeniedClaim = false;
     for (let element of formValues.claimService) {
       let service = {
         vendorId: bodyData.vendorId,
@@ -364,6 +424,8 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         ServiceDesc: element.serviceDescription,
         exceptionReasonCode: element.reasonForException,
         tpaInvoiceId: element.tpaInvoiceId,
+        exceptionFlag: element.exceptionFlag,
+        exceptionTypeCode: element.exceptionTypeCode
       };
       if (
         !this.isStartEndDateValid(
@@ -377,9 +439,19 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         );
         return;
       }
+      if(service.exceptionFlag === StatusFlag.Yes && !service.exceptionReasonCode)
+      {
+        checkDeniedClaim = true;
+      }
       bodyData.tpaInvoice.push(service);
     }
     bodyData.tpaInvoice.splice(0, 1);
+    if(checkDeniedClaim)
+    {
+      this.printDenialLetterData = bodyData;
+      this.onPrintDenialLetterOpen();
+      return;
+    }
     if (!this.isEdit) {
       this.saveData(bodyData);
     } else {
@@ -510,8 +582,28 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       serviceForm.controls['reasonForException'].setValue(service.exceptionReasonCode);
       serviceForm.controls['cptCode'].setValue(service.cptCode);
       serviceForm.controls['cptCodeId'].setValue(service.cptCodeId);
+      serviceForm.controls['exceptionFlag'].setValue(service.exceptionFlag);
+      serviceForm.controls['exceptionTypeCode'].setValue(service.exceptionTypeCode);
+      let exceptionForm = this.addExceptionForm.at(i) as FormGroup;
+      if(serviceForm.controls['exceptionFlag'].value === StatusFlag.Yes)
+      {
+        this.setExceptionFormValues(exceptionForm,serviceForm);
+      }
+
     }
     this.cd.detectChanges();
+  }
+  setExceptionFormValues(exceptionform:FormGroup , serviceForm : FormGroup)
+  {
+    if(serviceForm.controls['exceptionTypeCode'].value === "EMB")
+    {
+      exceptionform.controls['exceedMaxBenefitExceptionFlag'].setValue(true);
+      if(serviceForm.controls['reasonForException'].value)
+      {
+        exceptionform.controls['showMaxBenefitExceptionReason'].setValue(true);
+        exceptionform.controls['maxBenefitExceptionFlagText'].setValue("Don't Make Exception");
+      }
+    }
   }
 
   calculateMedicadeRate(index: number) {
@@ -546,11 +638,57 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     }
     return `0/${this.textMaxLength}`;
   }
-  
+
   onProviderValueChange($event: any) {
     this.isRecentClaimShow = false;
     this.vendorId = $event.vendorId;
     this.vendorName = $event.vendorName;
-  }  
+  }
+  clientValueChange($event: any) {
+    this.clientId = $event.clientId;
+    this.clientName = $event.clientFullName;
+    if (this.clientId != null && this.vendorId != null) {
+      this.isRecentClaimShow = true;
+    }
+  }
+  loadServiceCostMethod(index:number){
+    const formValues = this.claimForm.value
+    if(formValues.client.clientId)
+    {
+      let totalServiceCost = 0;
+      this.addClaimServicesForm.controls.forEach((element, index) => {
+          totalServiceCost += + element.get('amountDue')?.value;
+      });
+      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.exceedMaxBenefitFlag = this.financialClaimsFacade.serviceCostFlag;
+    }
+  }
+  onMakeExceptionClick(controlName: string,index: any) {
+    this.addExceptionForm.at(index).get(controlName)?.setValue(!this.addExceptionForm.at(index).get(controlName)?.value);
+    if (this.addExceptionForm.at(index).get(controlName)?.value) {
+      this.addExceptionForm.at(index).get('maxBenefitExceptionFlagText')?.setValue("Don't Make Exception");
+    } else {
+      this.addExceptionForm.at(index).get('maxBenefitExceptionFlagText')?.setValue("Make Exception");
+    }
+  }
+  getExceptionFormValue(controlName: string, index: any)
+  {
+    return this.addExceptionForm.at(index).get(controlName)?.value
+  }
+  public onPrintDenialLetterOpen(){
+   this.isPrintDenailLetterClicked = true;
+   this.cd.detectChanges();
+  }
+  onPrintDenialLetterClosed(status:any){
+    this.isPrintDenailLetterClicked = false;
+    if(status)
+    {
+      if (!this.isEdit) {
+        this.saveData(this.printDenialLetterData);
+      } else {
+        this.update(this.printDenialLetterData);
+      }
+    }
+  }
 }
 

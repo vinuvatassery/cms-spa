@@ -72,17 +72,17 @@ export class FinancialClaimsAllPaymentsListComponent
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Refund',
+      text: 'Edit Claim',
       icon: 'edit',
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'UnAllPayments Refund',
+      text: 'Unbatch Claim',
       icon: 'undo',
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Refund',
+      text: 'Delete Claim',
       icon: 'delete',
     },
   ];
@@ -196,7 +196,7 @@ export class FinancialClaimsAllPaymentsListComponent
   selectedPaymentStatus: string | null = null;
   selectedpaymentMethod: string | null = null;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
-  paymentStaus$ = this.lovFacade.paymentStaus$;
+  paymentStatus$ = this.lovFacade.paymentStatus$;
   paymentMethodTypes: any = [];
   paymentStauses: any = [];
 
@@ -238,7 +238,7 @@ export class FinancialClaimsAllPaymentsListComponent
 
   private getPaymentStatusLov() {
     this.lovFacade.getPaymentStatusLov();
-    this.paymentStaus$.subscribe({
+    this.paymentStatus$.subscribe({
       next: (data: any) => {
         data.forEach((item: any) => {
           item.lovDesc = item.lovDesc.toUpperCase();

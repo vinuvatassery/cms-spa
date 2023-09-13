@@ -11,11 +11,28 @@
   </div>
   <div class="flex-col mt-1">
       <div class="app-c-table">
-          <kendo-grid #grid  [resizable]="true" [loading]="isPaymentsAddressGridLoaderShow" [pageSize]="state.take" [pageable]="true"
-          [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-          [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [navigable]="true" [data]="paymentsAddressGridView$ | async"   (detailCollapse)="onDetailCollapse($event)"
-          (detailExpand)="onDetailExpand($event)" (columnVisibilityChange)="columnChange($event)" [rowClass]="rowClass"
-          (filterChange)="filterChange($event)">
+          <kendo-grid #grid
+          [resizable]="true"
+          [loading]="isPaymentsAddressGridLoaderShow"
+          [pageSize]="state.take"
+          [pageable]="true"
+          [sortable]="true"
+          [skip]="state.skip"
+          [groupable]="false"
+          [reorderable]="true"
+          [resizable]="true"
+          [columnMenu]="{ filter: true }"
+          [sort]="state.sort"
+          (dataStateChange)="dataStateChange($event)"
+
+          [data]="paymentsAddressGridView$ | async"
+          (detailCollapse)="onDetailCollapse($event)"
+          (detailExpand)="onDetailExpand($event)"
+          (columnVisibilityChange)="columnChange($event)"
+          [rowClass]="rowClass"
+          (filterChange)="filterChange($event)"
+          [filter]="state.filter"
+          (columnReorder)="onColumnReorder($event)">
 
               <kendo-grid-column field="mailCode" title="Mail Code" [width]="150">
                 <ng-template kendoGridCellTemplate let-dataItem>
@@ -63,6 +80,7 @@
                   [data]="paymentMethodVendorlovs"
                   textField="lovDesc"
                   valueField="lovCode"
+                  [value]="paymentMethodCodeValue"
                   (valueChange)="dropdownFilterChange('paymentMethodCode',$event, filterService)"
                   >
                   </kendo-dropdownlist>
@@ -78,7 +96,8 @@
                 [data]="paymentRunDatelovs"
                 textField="lovDesc"
                 valueField="lovCode"
-                (valueChange)="dropdownFilterChange('PaymentRunDateMonthly',$event, filterService)"
+                [value]="paymentRunDateMonthlyValue"
+                (valueChange)="dropdownFilterChange('paymentRunDateMonthly',$event, filterService)"
                 >
                   </kendo-dropdownlist>
                 </ng-template>
@@ -96,6 +115,7 @@
                   [data]="yesOrNoLovs"
                   textField="lovDesc"
                   valueField="lovCode"
+                  [value]="acceptsCombinedPaymentsFlagValue"
                   (valueChange)="dropdownFilterChange('acceptsCombinedPaymentsFlag',$event, filterService)"
                   >
                   </kendo-dropdownlist>
@@ -114,6 +134,7 @@
                   [data]="yesOrNoLovs"
                   textField="lovDesc"
                   valueField="lovCode"
+                  [value]="acceptsReportsFlagValue"
                   (valueChange)="dropdownFilterChange('acceptsReportsFlag',$event, filterService)"
                   >
                   </kendo-dropdownlist>
@@ -256,10 +277,10 @@
                   </ng-template>
               </kendo-grid-column>
 
-                <div *kendoGridDetailTemplate="let dataItem">
-                  <cms-contact-address-list [VendorAddressId]="VendorAddressId"></cms-contact-address-list>
-
-                  </div>
+                  <div *kendoGridDetailTemplate="let dataItem">
+                    <cms-contact-address-list [VendorAddressId]="dataItem.vendorAddressId"
+                    (refreshPaymentAddressList)="loadPaymentsAddressListGrid()"></cms-contact-address-list>
+                    </div>
 
                       <!-- grid Pagination template -->
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
@@ -325,11 +346,11 @@ class="app-c-modal app-c-modal-md app-c-modal-np">
 
 <kendo-dialog *ngIf="isPaymentAddressDeactivateShow" (close)="clickCloseDeactivatePaymentAddress(false)" class="app-c-modal app-c-modal-sm app-c-modal-np">
 <kendo-dialog-titlebar> Deactivate Payment Address?</kendo-dialog-titlebar>
-<cms-payment-address-deactivate [addressId]="addressId" (closeDeactivatePaymentAddress)="clickCloseDeactivatePaymentAddress($event)"></cms-payment-address-deactivate>
+<cms-payment-address-deactivate [addressId]="addressId" [vendorId]="vendorId" (closeDeactivatePaymentAddress)="clickCloseDeactivatePaymentAddress($event)"></cms-payment-address-deactivate>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isPaymentAddressDeleteShow" (close)="clickCloseDeletePaymentAddress(false)"
 class="app-c-modal app-c-modal-sm app-c-modal-np">
 <kendo-dialog-titlebar> Delete Payment Address?</kendo-dialog-titlebar>
-<cms-payment-address-delete [addressId]="addressId" (closeDeletePaymentAddress)="clickCloseDeletePaymentAddress($event)"> </cms-payment-address-delete>
+<cms-payment-address-delete [addressId]="addressId" [vendorId]="vendorId" (closeDeletePaymentAddress)="clickCloseDeletePaymentAddress($event)"> </cms-payment-address-delete>
 </kendo-dialog>

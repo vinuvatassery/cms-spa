@@ -44,14 +44,12 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
   createDrugForm(){
     this.drugForm = this.formBuilder.group({
       manufacturer: [{ value: this.drug.manufacturer, disabled: false }],
-      ndcNbr: [this.drug.ndcNbr, Validators.required],
+      ndcNbr: [this.drug.ndcNbr, [Validators.required, Validators.maxLength(13)]],
       vendorId: [this.drug.vendorId],
       deliveryMethodCode: [this.drug.deliveryMethodCode, Validators.required],
-      drugName: [this.drug.drugName, Validators.required],
-      brandName: [this.drug.brandName, Validators.required],
-      hiv: [false, this.atLeastOneDrugTypeSelected()],
-      hepatitis: [false, this.atLeastOneDrugTypeSelected()],
-      opportunisticInfection: [false, this.atLeastOneDrugTypeSelected()]
+      drugName: [this.drug.drugName, [Validators.required, Validators.maxLength(200)]],
+      brandName: [this.drug.brandName, [Validators.required, Validators.maxLength(200)]],
+      drugType: ['Not Applicable']
     });
   }
 
@@ -74,31 +72,6 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
       return null;
     };
   }
-
-  getError(control: AbstractControl | null, errorName: string): boolean {
-    return control?.hasError(errorName) ?? false;
-  }
-
-  updateDrugTypeValidity() {
-    const hivSelected = this.drugForm.get('hiv')?.value;
-    const hepatitisSelected = this.drugForm.get('hepatitis')?.value;
-    const opportunisticInfectionSelected = this.drugForm.get('opportunisticInfection')?.value;
-
-    const atLeastOneSelected = hivSelected || hepatitisSelected || opportunisticInfectionSelected;
-
-    if (atLeastOneSelected) {
-      this.drugForm.controls['hiv'].setErrors(null);
-      this.drugForm.controls['hepatitis'].setErrors(null);
-      this.drugForm.controls['opportunisticInfection'].setErrors(null);
-    } else {
-      this.drugForm.controls['hiv'].setErrors({ required: true });
-      this.drugForm.controls['hepatitis'].setErrors({ required: true });
-      this.drugForm.controls['opportunisticInfection'].setErrors({ required: true });
-    }
-
-    return atLeastOneSelected;
-  }
-
 
   public Update() {
     this.isSubmitted = true;

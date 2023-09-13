@@ -91,6 +91,10 @@ export class FinancialClaimsFacade {
     field: this.sortValueRecentClaimList,
   }];
 
+  public serviceCostFlag = false;
+  private showExceedMaxBenefitExceptionSubject = new Subject<any>();
+  showExceedMaxBenefitException$ = this.showExceedMaxBenefitExceptionSubject.asObservable();
+
   private financialClaimsProcessDataSubject = new Subject<any>();
   financialClaimsProcessData$ =
     this.financialClaimsProcessDataSubject.asObservable();
@@ -632,5 +636,22 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
 
 viewAdviceLetterData(batchId:any,printAdviceLetterData: any, claimsType:any) {
   return this.financialClaimsDataService.viewPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
+}
+loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, typeCode : string){
+  this.showLoader();
+  this.financialClaimsDataService.checkExceededMaxBenefit(serviceCost,clientId, typeCode).subscribe({
+    next: (serviceCostResponse:any)=>{
+      this.serviceCostFlag =  serviceCostResponse;
+      let response = {
+        flag: serviceCostResponse?.status == 0 ? false : true,
+        indexNumber: indexNumber
+      }
+      this.showExceedMaxBenefitExceptionSubject.next(response);
+    },
+    error: (err:any) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+    },
+  })
+  this.hideLoader();
 }
 }

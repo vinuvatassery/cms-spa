@@ -1,6 +1,6 @@
 <kendo-dialog-titlebar (close)="closeAddEditClaimsFormModalClicked()">
     <section class="app-l-mainTittle">
-        <h1 class="maintitle_withicon text-bold">{{title}} Claims</h1>
+        <h1 class="maintitle_withicon text-bold">{{title}} Claim</h1>
     </section>
 </kendo-dialog-titlebar>
 <section class="add_main_popup_screen">
@@ -135,7 +135,7 @@
                                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
                                                     aria-label="Service Start Date" format="MM/dd/yyyy"
                                                     formatPlaceholder="formatPattern" formControlName="serviceStartDate"
-                                                    (valueChange)="onDateChange(i)">
+                                                    (valueChange)="onDateChange(i)"   placeholder="">
                                                 </kendo-datepicker>
                                             </kendo-floatinglabel>
                                             <kendo-formerror
@@ -148,7 +148,7 @@
                                             <kendo-floatinglabel text="Service End Date">
                                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
                                                     aria-label="Service End Date" format="MM/dd/yyyy"
-                                                    formatPlaceholder="formatPattern" formControlName="serviceEndDate"
+                                                    formatPlaceholder="formatPattern"   placeholder="" formControlName="serviceEndDate"
                                                     (valueChange)="onDateChange(i)">
                                                 </kendo-datepicker>
                                             </kendo-floatinglabel>
@@ -205,7 +205,7 @@
                                                 </kendo-autocomplete>
                                                 <kendo-formerror *ngIf="(isControlValid('cptCode', i) && isSubmitted)"
                                                     class="d-flex align-items-center"> <span class="material-icons mr-1"
-                                                        aria-hidden="false">info</span>CTP Code is
+                                                        aria-hidden="false">info</span>CPT Code is
                                                     required
                                                 </kendo-formerror>
                                             </kendo-floatinglabel>
@@ -244,6 +244,7 @@
                                                 <kendo-numerictextbox aria-label="Service Cost" [spinners]="false"
                                                     [fillMode]="formUiStyle.inputFillMode" format="#.00"
                                                     formControlName="serviceCost">
+
                                                 </kendo-numerictextbox>
                                             </kendo-floatinglabel>
                                             <kendo-formerror *ngIf="(isControlValid('serviceCost',i) && isSubmitted)"
@@ -264,12 +265,13 @@
                                                     aria-hidden="false">info</span>Amount Due is required
                                             </kendo-formerror>
                                         </div>
-                                        <div class="ml-2">
-                                            <kendo-formerror *ngIf="false" class="align-items-center">
-                                                <span class="material-icons mr-1" aria-hidden="false">info</span> Client
-                                                exceeded maximum
-                                                benefits. <a kendoButton class="ml-1 card-link-button">Make
-                                                    Exception</a></kendo-formerror>
+                                        <div class="ml-2" *ngIf="getExceptionFormValue('exceedMaxBenefitExceptionFlag',i)" >
+                                            <kendo-formerror class="align-items-center"> <span
+                                                    class="material-icons mr-1" aria-hidden="false">info</span> Client
+                                                exceeded maximum benefits. <a kendoButton class="ml-1 card-link-button"
+                                                    (click)="onMakeExceptionClick('showMaxBenefitExceptionReason',i)">{{getExceptionFormValue('maxBenefitExceptionFlagText',i)}}
+                                                </a>
+                                            </kendo-formerror>
                                         </div>
                                     </div>
                                     <div class="flex-row" *ngIf="isShowReasonForException">
@@ -283,6 +285,10 @@
                                                     </kendo-textarea-suffix>
                                                 </kendo-textarea>
                                             </kendo-floatinglabel>
+                                            <kendo-formerror *ngIf="(isControlValid('reasonForException',i) && isSubmitted)"
+                                            class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                                aria-hidden="false">info</span>Reason For Exception is required
+                                        </kendo-formerror>
                                         </div>
                                     </div>
                                 </div>
@@ -328,3 +334,12 @@
         <span class="ml-2">1 service(s) to be added</span>
     </div>
 </div>
+<!-- Deactivate Popup-->
+<kendo-dialog
+  *ngIf="isPrintDenailLetterClicked"
+  (close)="onPrintDenialLetterClosed(false)"
+  class="app-c-modal app-c-modal-sm app-c-modal-np"
+  title="Print Denial Letter"
+>
+ <cms-financial-claims-print-denial-letter (modalCloseEvent)="onPrintDenialLetterClosed($event)" ></cms-financial-claims-print-denial-letter>
+</kendo-dialog>
