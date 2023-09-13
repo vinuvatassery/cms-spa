@@ -278,9 +278,9 @@
               </kendo-grid-column>
 
                   <div *kendoGridDetailTemplate="let dataItem">
-                    <cms-contact-address-list [VendorAddressId]="dataItem.vendorAddressId"></cms-contact-address-list>
-
-                  </div>
+                    <cms-contact-address-list [VendorAddressId]="dataItem.vendorAddressId"
+                    (refreshPaymentAddressList)="loadPaymentsAddressListGrid()"></cms-contact-address-list>
+                    </div>
 
                       <!-- grid Pagination template -->
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"

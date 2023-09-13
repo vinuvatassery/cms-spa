@@ -15,13 +15,13 @@ export class ContactsDeactivateComponent {
   private readonly vendorContactsFacade: VendorContactsFacade
 ) {
 }
-  onCloseDeactivateContactAddressClicked() {
-    this.closeDeactivateContactAddress.emit(true);
+  onCloseDeactivateContactAddressClicked(deactivate: boolean) {
+    this.closeDeactivateContactAddress.emit(deactivate);
   }
   deactiveContactAddress(){
     this.vendorContactsFacade.deactiveContactAddress(this.VendorContactId).then((isDeavtivated:any) =>{
       if(isDeavtivated){
-        this.onCloseDeactivateContactAddressClicked();
+        this.onCloseDeactivateContactAddressClicked(isDeavtivated);
         this.vendorContactsFacade.loadVendorAllContacts(this.vendorId);
       }
     })

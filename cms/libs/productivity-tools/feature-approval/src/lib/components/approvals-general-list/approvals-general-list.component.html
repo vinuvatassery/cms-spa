@@ -5,10 +5,10 @@
         <common-user-profile-card> </common-user-profile-card>
       </ng-template>
     </kendo-popover>
-    <kendo-panelbar (collapse)="onPanelCollapse($event)" (expand)="onPanelExpand($event)">
-      <kendo-panelbar-item>
+    <kendo-panelbar >
+      <kendo-panelbar-item >
         <ng-template kendoPanelBarItemTitle>
-          <div class="flex-row rw-100">
+          <div class="flex-row rw-100" (click)="$event.stopPropagation();">
             <div class="flex-col flex-col-6">
               <h5>Request for Case Re-Assignment</h5>
               <p>XX/XX/XXXX by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
@@ -64,8 +64,8 @@
       </kendo-panelbar-item>
       <kendo-panelbar-item>
         <ng-template kendoPanelBarItemTitle>
-          <div class="flex-row rw-100">
-            <div class="flex-col flex-col-6">
+          <div class="flex-row rw-100" (click)="$event.stopPropagation();">
+            <div class="flex-col flex-col-6" >
               <h5>Request for Case Re-Assignment</h5>
               <p>XX/XX/XXXX by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
                   aria-label="modified by" kendoButton look="flat" class="card-link-button">
@@ -170,7 +170,7 @@
       </kendo-panelbar-item>
       <kendo-panelbar-item>
         <ng-template kendoPanelBarItemTitle>
-          <div class="flex-row rw-100">
+          <div class="flex-row rw-100" (click)="$event.stopPropagation();">
             <div class="flex-col flex-col-6">
               <h5>Rent Subsidy Calculation Submission - Sarah Phillips</h5>
               <p>1 hr ago by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
@@ -244,7 +244,7 @@
 
       <kendo-panelbar-item>
         <ng-template kendoPanelBarItemTitle>
-          <div class="flex-row rw-100">
+          <div class="flex-row rw-100" (click)="$event.stopPropagation();">
             <div class="flex-col flex-col-6">
               <h5>Rent Subsidy Calculation Submission - Sarah Phillips</h5>
               <p>1 hr ago by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
