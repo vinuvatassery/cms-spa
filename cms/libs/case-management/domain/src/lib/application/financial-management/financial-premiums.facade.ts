@@ -56,6 +56,13 @@ export class FinancialPremiumsFacade {
     field: this.sortValueReconcile,
   }];
 
+  public sortValueReconcilePaymentBreakout = 'invoiceNbr';
+  public sortReconcilePaymentBreakoutList: SortDescriptor[] = [
+    {
+      field: this.sortValueReconcilePaymentBreakout,
+    },
+  ];
+
   private financialPremiumsProcessDataSubject = new Subject<any>();
   financialPremiumsProcessData$ = this.financialPremiumsProcessDataSubject.asObservable();
 
@@ -76,6 +83,13 @@ export class FinancialPremiumsFacade {
 
   private premiumsListDataSubject =  new Subject<any>();
   premiumsListData$ = this.premiumsListDataSubject.asObservable();
+
+  private reconcileBreakoutListDataSubject =  new Subject<any>();
+  reconcileBreakoutList$ = this.reconcileBreakoutListDataSubject.asObservable();
+
+  private reconcileBreakoutSummaryDataSubject = new Subject<any>();
+  reconcileBreakoutSummary$ =this.reconcileBreakoutSummaryDataSubject.asObservable();
+  
   /** Private properties **/
  
   /** Public properties **/
@@ -207,4 +221,36 @@ export class FinancialPremiumsFacade {
       },
     });  
   }
+
+  loadInsurancePremiumBreakoutSummary(data:any){
+    this.financialPremiumsDataService.loadInsurancePremiumBreakoutSummaryService(data).subscribe({
+      next: (dataResponse) => {
+        this.reconcileBreakoutSummaryDataSubject.next(dataResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+      },
+    });
+  }
+  
+  loadInsurancePremiumBreakoutList(data:any) {
+    data.filter=JSON.stringify(data.filter);
+    this.financialPremiumsDataService
+      .loadInsurancePremiumBreakoutListService(data)
+      .subscribe({
+        next: (dataResponse) => {
+          this.reconcileBreakoutListDataSubject.next(dataResponse);
+          if (dataResponse) {
+            const gridView = {
+              data: dataResponse['items'],
+              total: dataResponse['totalCount'],
+            };
+            this.reconcileBreakoutListDataSubject.next(gridView);
+          }
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+    }
 }

@@ -167,7 +167,7 @@ $pagination-height : 48px;
 
   .k-grid-content-sticky {
     border-color: material-color($hive-neutral-palette, 200);
-    box-shadow: 3px $size-xx 9px material-color($hive-neutral-palette, 600);
+    box-shadow: 3px $size-xx 10px material-color($hive-neutral-palette, 600);
 
     +.k-grid-content-sticky {
       box-shadow: none;

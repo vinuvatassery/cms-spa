@@ -1,24 +1,24 @@
-<kendo-grid [loading]="false" 
+<kendo-grid [loading]="false"
             [pageSize]="state.take"
-            [skip]="state.skip" 
-            [pageable]="true" 
-            [sortable]="true" 
-            [groupable]="false" 
+            [skip]="state.skip"
+            [pageable]="true"
+            [sortable]="true"
+            [groupable]="false"
             [reorderable]="true"
-            [resizable]="true" 
-            [columnMenu]="{ filter: true }" 
+            [resizable]="true"
+            [columnMenu]="{ filter: true }"
             [sort]="state.sort"
             [rowClass]="rowClass"
-            [data]="contacts$ | async" 
+            [data]="contacts$ | async"
             [filter]="state.filter"
-            (dataStateChange)="dataStateChange($event)" 
+            (dataStateChange)="dataStateChange($event)"
             (filterChange)="filterChange($event)"
             (columnReorder)="onColumnReorder($event)"
             (columnVisibilityChange)="columnChange($event)">
 >
 
   <kendo-grid-column [sticky]="true" field="contactName" title="Name" [width]="100" >
-    <ng-template kendoGridCellTemplate let-dataItem> 
+    <ng-template kendoGridCellTemplate let-dataItem>
       <span class="preferred-phoneNo posi_relative" title="Preferred Contact" *ngIf=" dataItem.preferredFlag === 'Y'&&dataItem.activeFlag === 'Y'">
         <span
           class="material-icons icon-size-md"
@@ -30,7 +30,7 @@
       <button aria-label="name" kendoButton look="flat" class="card-link-button">
         {{ dataItem.contactName }}
       </button>
- 
+
     </ng-template>
     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
       <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
@@ -92,13 +92,13 @@
       <ng-template #endDateBlock>
         {{dataItem.startDate | date:'MM/dd/yyyy'}} {{ (dataItem.endDate) ? ' - '+ (dataItem.endDate |
         date:'MM/dd/yyyy') : ''}}
-      </ng-template>     
-     
+      </ng-template>
+
     </ng-template>
     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
       <common-grid-cell-date-range-filter field="startDate" [filter]="filter" [filterService]="filterService">
       </common-grid-cell-date-range-filter>
-    </ng-template> 
+    </ng-template>
   </kendo-grid-column>
   <kendo-grid-column field="creatorId" title="By" [filterable]="false" [width]="50" [sortable]="false">
     <ng-template kendoGridCellTemplate let-dataItem>
@@ -120,7 +120,7 @@
         aria-label="more actions" title="More option" [popupSettings]="{ popupClass: popupClassAction,  animate: true }">
         <span hidden> More Option</span>
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
-          <ng-container>
+          <ng-container *ngIf="(dataItem.activeFlag == 'N' && buttondataItem.text == 'Delete') || (dataItem.activeFlag == 'Y')">
             <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
               aria-hidden="false" (click)="buttondataItem.click(dataItem)">
               <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
@@ -154,19 +154,19 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar> Deactivate contact?</kendo-dialog-titlebar>
   <cms-contacts-deactivate (closeDeactivateContactAddress)="onDeactiveCancel($event)"
-    [VendorContactId]="VendorContactId"> </cms-contacts-deactivate>
+    [VendorContactId]="VendorContactId" [vendorId]="vendorId"> </cms-contacts-deactivate>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isContactAddressDeleteShow" (close)="clickCloseDeleteContactAddress()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar> Delete contact?</kendo-dialog-titlebar>
-  <cms-contacts-delete (closeDeleteContactAddress)="onCancelPopup($event)" [VendorContactId]="VendorContactId">
+  <cms-contacts-delete (closeDeleteContactAddress)="onCancelPopup($event)" [VendorContactId]="VendorContactId" [vendorId]="vendorId">
   </cms-contacts-delete>
 </kendo-dialog>
 <kendo-dialog *ngIf="isContactsDetailShow" (close)="clickCloseAddEditContactsDetails()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar (close)="clickCloseAddEditContactsDetails()">Edit contact
   </kendo-dialog-titlebar>
-  <cms-contact-address-details [VendorContactId]="VendorContactId"  (editDeactivateContactClicked)="onEditDeactivateContactClicked($event)"
+  <cms-contact-address-details [VendorContactId]="VendorContactId"  [vendorId]="vendorId" (editDeactivateContactClicked)="onEditDeactivateContactClicked($event)"
     (isContactDetailPopupClose)="clickCloseAddEditContactsDetails()"  (ContactUpdated)=contactUpdated($event)> </cms-contact-address-details>
 </kendo-dialog>

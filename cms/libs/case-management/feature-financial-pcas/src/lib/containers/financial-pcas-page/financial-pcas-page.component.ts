@@ -162,8 +162,8 @@ export class FinancialPcasPageComponent implements OnInit{
     }
   }
 
-  loadFinancialPcaSubReportListGrid(data:any) {
-    this.financialPcaFacade.loadFinancialPcaSubReportListGrid(data?.objecCodeGroupCodeId,data?.skipCount, data?.maxResultCount);
+  loadFinancialPcaSubReportListGrid(data:any) {    
+    this.financialPcaFacade.loadFinancialPcaSubReportListGrid(data);
   }
 
   getPcaAssignmentById(fundingSourceId:any){
