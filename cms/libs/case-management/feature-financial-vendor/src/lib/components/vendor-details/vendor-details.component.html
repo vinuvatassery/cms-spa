@@ -59,8 +59,11 @@
                 </ng-template>
               </kendo-autocomplete>
               <kendo-formerror
-                *ngIf="!medicalProviderForm.controls['providerName'].valid && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
+                *ngIf="medicalProviderFormControls?.providerName.errors?.required && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
                 Clinic Name is required
+              </kendo-formerror>
+              <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.maxlength">
+                Clinic Name cannot be more than 500 characters 
               </kendo-formerror>
             </kendo-floatinglabel>
           </div>
