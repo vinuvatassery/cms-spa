@@ -366,7 +366,7 @@ public rowCallback(context: RowClassArgs) {
             sub.add(
                 dragOver.subscribe((e: any) => {
                     e.preventDefault();
-                    debugger
+                    
                     const dataItem = this.gridDataResult.data.splice(draggedItemIndex, 1)[0];
                     const dropIndex = closest(e.target, tableRow).rowIndex;              
                     draggedItemIndex = dropIndex;

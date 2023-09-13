@@ -51,7 +51,8 @@
                               (getPcaAssignmentEvent)="getPcaAssignment($event)"
                               (addPcaDataEvent)="assignPca($event)"
                               (loadFinancialPcaAssignmentEvent)="loadFinancialPcaAssignmentListGrid($event)"
-                              (pcaAssignmentPriorityUpdateEvent)="pcaAssignmentPriorityUpdate($event)">
+                              (pcaAssignmentPriorityUpdateEvent)="pcaAssignmentPriorityUpdate($event)"
+                              >
                               ></cms-financial-pcas-assignment-list>
 
                           </div>
@@ -68,6 +69,7 @@
                               (updatePcaAssignmentByEvent)="saveEditPcaReassignmentClicked($event)"
                               (getPcaAssignmentByIdEvent)="getPcaAssignmentById($event)"
                               [getPcaAssignmentById$]="getPcaAssignmentById$"
+                              [notAssignPcaLists$]="notAssignPcsLists$"
                               ></cms-financial-pcas-reassignment-list>
 
 
