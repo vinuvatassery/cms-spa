@@ -125,7 +125,10 @@
         <div class="block-section">
 
           <div class="client-profile-outlet">
-          <cms-financial-clinic-provider-list></cms-financial-clinic-provider-list>
+          <cms-financial-clinic-provider-list 
+          [pageSizes]="providerLispageSizes" [sortValue]="providerLissortValue"
+          [sortType]="providerLissortType" [sort]="providerLissort" 
+          (loadProviderListEvent)="loadProviderList($event)" [providerList$]="providerList$"></cms-financial-clinic-provider-list>
           </div>
         </div>
       </ng-template>
