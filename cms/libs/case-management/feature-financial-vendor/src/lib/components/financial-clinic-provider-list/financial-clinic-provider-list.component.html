@@ -204,7 +204,7 @@
       class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar (close)="clickCloseAddEditProvidersDetails()"> Add/Edit Provider
       </kendo-dialog-titlebar>
-      <cms-financial-clinic-provider-details> </cms-financial-clinic-provider-details>
+      <cms-financial-clinic-provider-details [ParentVendorId]="ParentVendorId"> </cms-financial-clinic-provider-details>
 </kendo-dialog>
 <kendo-dialog *ngIf="isProvidersRemoveShow" (close)="clickCloseRemoveProviders()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">

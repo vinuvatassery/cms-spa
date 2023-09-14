@@ -50,7 +50,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   searchText = '';
   @Input() providerList$:any
   @Output() loadProviderListEvent = new EventEmitter<any>();
-@Input() ParentVendorId :any
+  @Input() ParentVendorId :any
   public processGridActions = [
     {
       buttonType: 'btn-h-danger',

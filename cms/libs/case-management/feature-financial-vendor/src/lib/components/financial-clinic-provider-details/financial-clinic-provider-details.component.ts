@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import {  FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {  ProviderFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -16,6 +16,8 @@ export class FinancialClinicProviderDetailsComponent {
   providerForm!: FormGroup;
   selectedprovider!: any;
   selectedTin: any;
+  proId='';
+  @Input() ParentVendorId :any
   public formUiStyle: UIFormStyle = new UIFormStyle();
   searchProvider$ = this.providerFacade.searchProvider$;
   providerLoaderVisibility$ =
@@ -34,18 +36,18 @@ export class FinancialClinicProviderDetailsComponent {
       tin: [this.selectedTin, Validators.required],
     })
   }
-
   onProviderNameValueChange(event: any) 
-  {
+  { 
     let service = event;
     let providerValid = this.providerForm as FormGroup;
     providerValid.patchValue({
       providerName: service.providerName,
       tin: service.tin,
-      providerId: service.vendorId,
+      providerId: service.providerId,
     });
     this.providerForm.controls["provider"].setValue(event.providerName)
     this.providerForm.controls["tin"].setValue(event.tin);
+    this.proId=service.providerId;
     this.changeDetector.detectChanges();
   }
 
@@ -56,7 +58,11 @@ export class FinancialClinicProviderDetailsComponent {
     this.providerFacade.searchProvider(searchText);
   }
 
-  saveprovider(provider: any) {
-    this.providerFacade.addProvider(provider)
+  saveprovider() {
+    let data = {
+      ParentVendorId: this.ParentVendorId,
+      vendorId:this.proId
+    }
+    this.providerFacade.addProvider(data)
   }
 }  
