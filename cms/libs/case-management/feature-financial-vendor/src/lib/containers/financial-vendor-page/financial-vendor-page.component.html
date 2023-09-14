@@ -69,24 +69,7 @@
                 (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
               </div>
             </ng-template>
-          </kendo-tabstrip-tab>
-
-          <kendo-tabstrip-tab title="Dental Providers" *ifPermission='["Financial_DentalProvider_Tab"]'
-          [selected]="selectedVendorType===financeVendorTypeCodes.DentalProviders" >
-            <ng-template kendoTabContent>
-              <div class="block-section ">
-                 
-                <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.DentalProvider"
-                [financeTabTypeCode]="financeManagementTabs.DentalProvider"
-                [vendorTypeCode]="financeVendorTypeCodes.DentalProviders"
-                [vendorsList$]="vendorsList$"
-                [pageSizes]="pageSizes" [sortValue]="sortValue"
-                [sortType]="sortType" [sort]="sort" 
-                (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
-                (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
-              </div>
-            </ng-template>
-          </kendo-tabstrip-tab>
+          </kendo-tabstrip-tab>         
 
           <kendo-tabstrip-tab title="Insurance Vendors" *ifPermission='["Financial_InsuranceVendors_Tab"]'
           [selected]="selectedVendorType===financeVendorTypeCodes.InsuranceVendors" >
