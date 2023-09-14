@@ -31,6 +31,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   columnsReordered = false;
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   
+  popupClassAction = 'TableActionPopup app-dropdown-action-list';
   searchColumnList: { columnName: string, columnDesc: string }[] = [
     { columnName: 'ALL', columnDesc: 'All Columns' },
     { columnName: 'vendorName', columnDesc: 'Vendor Name' },
@@ -49,6 +50,17 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   searchText = '';
   @Input() providerList$:any
   @Output() loadProviderListEvent = new EventEmitter<any>();
+@Input() ParentVendorId :any
+  public processGridActions = [
+    {
+      buttonType: 'btn-h-danger',
+      text: 'Remove',
+      icon: 'delete',
+      click: (data: any): void => {
+    },
+  }
+  ];
+
 
 
   private searchSubject = new Subject<string>();
@@ -107,6 +119,13 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     this.setFilterBy(false, searchValue, []);
     this.searchSubject.next(searchValue);
   }
+
+  pageSelectionChange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadProviderListGrid();
+  }
+
 
   onColumnReorder($event: any) {
     this.columnsReordered = true;
