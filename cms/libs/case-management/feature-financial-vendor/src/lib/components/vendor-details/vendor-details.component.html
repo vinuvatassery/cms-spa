@@ -252,7 +252,7 @@
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Zip">
-          <kendo-textbox aria-label="Zip" [fillMode]="formUiStyle.inputFillMode" formControlName="zip">
+          <kendo-textbox aria-label="Zip" [fillMode]="formUiStyle.inputFillMode" formControlName="zip" [maxlength]="10">
           </kendo-textbox>
           <kendo-formerror *ngIf="medicalProviderFormControls?.zip.errors?.required && isValidateForm">
             Zip Code is required
@@ -467,7 +467,7 @@
           <div class="flex-col mb-1 ">
             <kendo-floatinglabel text="Email Address (optional)">
               <kendo-textbox aria-label="Email Address (optional)" [fillMode]="formUiStyle.inputFillMode"
-                formControlName="email">
+                formControlName="email" [maxlength]="200">
               </kendo-textbox>
             </kendo-floatinglabel>
           </div>

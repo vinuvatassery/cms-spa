@@ -133,15 +133,7 @@ export class PaymentAddressesComponent {
     this.loadVenderPaymentMethodsLovs();
     this.loadYesOrNoLovs();
     this.vendorcontactFacade.loadMailCodes(this.vendorId);
-    this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {
-      if(mailCode.length>0)
-      {
-        this.IsAddContactDisabled=false;
-        this.cdr.detectChanges();
-      }else{
-        this.IsAddContactDisabled=true;
-      }
-    })
+    this.checkMailCode();
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
@@ -149,6 +141,17 @@ export class PaymentAddressesComponent {
     this.tabCode = this.route.snapshot.queryParams['tab_code'];
     this.getTabCode();
     this.loadPaymentsAddressListGrid();
+  }
+
+  private checkMailCode() {
+    this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {
+      if (mailCode.length > 0) {
+        this.IsAddContactDisabled = false;
+        this.cdr.detectChanges();
+      } else {
+        this.IsAddContactDisabled = true;
+      }
+    });
   }
 
   ngOnChanges(): void {
@@ -260,8 +263,11 @@ export class PaymentAddressesComponent {
   }
   clickCloseDeletePaymentAddress(isSuccess: boolean): void {
     this.isPaymentAddressDeleteShow = false;
-    if (isSuccess)
+    if (isSuccess) {
+      this.vendorcontactFacade.loadMailCodes(this.vendorId);
+      this.checkMailCode();
       this.loadPaymentsAddressListGrid();
+    }
   }
 
   getTabCode() {
@@ -445,6 +451,13 @@ export class PaymentAddressesComponent {
       this.filters = "";
       this.isFiltered = false
       this.columnName = "";
+    }
+  }
+  paymentAddressAdded(event:any)
+  {
+    if(event == true){
+      this.vendorcontactFacade.loadMailCodes(this.vendorId);
+      this.checkMailCode();
     }
   }
 }
