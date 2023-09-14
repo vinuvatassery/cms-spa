@@ -33,7 +33,12 @@ export class FinancialVendorProfileComponent implements OnInit {
   vendorProfile$ = this.financialVendorFacade.vendorProfile$
   vendorProfileSpecialHandling$ = this.financialVendorFacade.vendorProfileSpecialHandling$
   filters:any=[];
-
+   providerList$ = this.financialVendorFacade.providerList$
+   providerLispageSizes = this.financialVendorFacade.gridPageSizes;
+   providerLissortValue = this.financialVendorFacade.sortValue;
+   providerLissortType = this.financialVendorFacade.sortType;
+   providerLissort = this.financialVendorFacade.sort;
+  
   constructor(private activeRoute: ActivatedRoute, private financialVendorFacade : FinancialVendorFacade,
               private readonly drugsFacade: DrugsFacade) {}
 
@@ -139,4 +144,9 @@ export class FinancialVendorProfileComponent implements OnInit {
   loadVendorDetailList(){
     this.financialVendorFacade.loadVendorList(this.vendorTypeCode);
   }
+
+  loadProviderList(data :any){
+    this.financialVendorFacade.getProviderList(data)
+  }
+
 }
