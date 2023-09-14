@@ -80,7 +80,7 @@
                   </kendo-grid-string-filter-menu>
                 </ng-template>
               </kendo-grid-column>
-              <kendo-grid-column *ngIf="(tabCode !== financialVendorType.Manufacturers)" field="paymentMethod" title="Payment Method" [width]="150">
+              <kendo-grid-column *ngIf="(tabCode !== financialVendorType.Manufacturers)" field="paymentMethodCode" title="Payment Method" [width]="150">
                 <ng-template kendoGridFilterMenuTemplate
                   let-column="column"
                   let-filter="filter"
@@ -96,7 +96,10 @@
                   </kendo-dropdownlist>
               </ng-template>
               </kendo-grid-column>
-              <kendo-grid-column *ngIf="(tabCode === financialVendorType.InsuranceVendors)" field="paymentRunDateMonthlyDesc" title="Payment Run Date" [width]="150">
+              <kendo-grid-column *ngIf="(tabCode === financialVendorType.InsuranceVendors)" field="paymentRunDateMonthly" title="Payment Run Date" [width]="150">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{ dataItem.paymentRunDateMonthlyDesc }}
+                </ng-template>
                 <ng-template kendoGridFilterMenuTemplate
                 let-column="column"
                 let-filter="filter"

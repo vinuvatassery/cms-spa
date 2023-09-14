@@ -387,7 +387,7 @@ export class PaymentAddressesComponent {
     if(field == "paymentMethodCode"){
       this.paymentMethodCodeValue = value;
     }
-    if(field == "PaymentRunDateMonthly"){
+    if(field == "paymentRunDateMonthly"){
       this.paymentRunDateMonthlyValue = value;
     }
     if(field == "acceptsCombinedPaymentsFlag"){
