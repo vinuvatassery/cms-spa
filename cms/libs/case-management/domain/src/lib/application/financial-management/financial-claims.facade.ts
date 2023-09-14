@@ -436,6 +436,10 @@ export class FinancialClaimsFacade {
     );
   }
 
+  getPcaCode(params: any){
+    return this.financialClaimsDataService.getPcaCode(params);
+  }
+
   public updateMedicalClaim(data: any, typeCode : string){
     return this.financialClaimsDataService.updateMedicalClaim(data,typeCode).pipe(
       catchError((err: any) => {
