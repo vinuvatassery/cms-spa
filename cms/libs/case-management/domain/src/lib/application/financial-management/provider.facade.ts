@@ -60,9 +60,6 @@ export class ProviderFacade {
     ({
       next: (response: any[]) => 
       {
-        response?.forEach((searchTexts: any) => {
-          searchTexts.VendorName = `${searchTexts.VendorName ?? ''}`;
-        });
         this.searchProviderSubject.next(response);
         this.hideLoader();
       },
