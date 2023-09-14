@@ -84,6 +84,10 @@ export class FinancialPcaFacade {
   private pcaReassignmentCountSubject = new Subject<any>()
   pcaReassignmentCount$ = this.pcaReassignmentCountSubject.asObservable();
 
+  private notPcaDataSubject = new Subject<PcaDetails | null>();
+  notpcaData$ = this.notPcaDataSubject.asObservable()
+
+
     /** Public properties **/
 
   // handling the snackbar & loader
@@ -238,17 +242,9 @@ export class FinancialPcaFacade {
     });
   }
 
-  loadFinancialPcaSubReportListGrid(
-    objecCodeGroupCodeId:string,
-    skipCount: number,
-    maxResultCount: number
-  ) {
+  loadFinancialPcaSubReportListGrid(data: any){
     this.financialPcaDataService
-      .loadFinancialPcaSubReportListService(
-        objecCodeGroupCodeId,
-        skipCount,
-        maxResultCount
-      )
+      .loadFinancialPcaSubReportListService(data)
       .subscribe({
         next: (dataResponse) => {
           const gridView = {
@@ -318,4 +314,33 @@ export class FinancialPcaFacade {
       },
     });
   }
+  getPcaUnAssignments(){
+    this.notPcaDataSubject.next(null);
+    this.financialPcaDataService.getPcaUnAssignments().subscribe({
+      next: (response) => {
+        this.notPcaDataSubject.next(response);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  pcaReassignment(data: any) {
+    this.showLoader();
+    this.financialPcaDataService.pcaReassignment(data).subscribe({
+      next: (response) => {
+        this.pcaReassignmentCount();
+        this.pcaActionIsSuccessSubject.next('reassignment');
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+ 
+    
+   }
 }

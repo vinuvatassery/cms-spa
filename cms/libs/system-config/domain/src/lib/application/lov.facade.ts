@@ -78,11 +78,11 @@ export class LovFacade {
   private documentTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
   private documentSubTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
   private paymentMethodTypeSubject = new BehaviorSubject<Lov[]>([]);
-  private paymentStausSubject = new BehaviorSubject<Lov[]>([]);
+  private paymentStatusSubject = new BehaviorSubject<Lov[]>([]);
   private paymentRunDateSubject = new BehaviorSubject<Lov[]>([]);
   private lovPaymentMethodVendorSubject = new BehaviorSubject<Lov[]>([]);
   private lovPaymentRunDateSubject = new BehaviorSubject<Lov[]>([]);
-
+  private lovYesOrNoSubject = new BehaviorSubject<Lov[]>([]);
       /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
@@ -136,14 +136,14 @@ export class LovFacade {
   documentTypeCodeSubject$ = this.documentTypeCodeSubject.asObservable();
   documentSubTypeCodeSubject$ = this.documentSubTypeCodeSubject.asObservable();
   paymentMethodType$ = this.paymentMethodTypeSubject.asObservable();
-  paymentStaus$ = this.paymentStausSubject.asObservable();
+  paymentStatus$ = this.paymentStatusSubject.asObservable();
   paymentRunDates$ = this.paymentRunDateSubject.asObservable();
 
 
 
   paymentMethodVendorlov$ = this.lovPaymentMethodVendorSubject.asObservable();
   paymentRunDatelov$ = this.lovPaymentRunDateSubject.asObservable();
-
+  yesOrNoLov$ = this.lovYesOrNoSubject.asObservable();
 
 
         /** Public methods **/
@@ -689,7 +689,7 @@ getDocumentSubTypeLovs(parentCode : string) {
   getPaymentStatusLov(): void {
     this.lovDataService.getLovsbyType(LovType.PaymentStatusCode).subscribe({
       next: (lovResponse) => {
-        this.paymentStausSubject.next(lovResponse);
+        this.paymentStatusSubject.next(lovResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
@@ -727,7 +727,16 @@ getDocumentSubTypeLovs(parentCode : string) {
       },
     });
   }
-
+  getYesOrNoLovs(): void {
+    this.lovDataService.getLovsbyType(LovType.AcceptPaymentsReports).subscribe({
+      next: (resp) => {
+        this.lovYesOrNoSubject.next(resp);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      },
+    });
+  }
 }
 
 

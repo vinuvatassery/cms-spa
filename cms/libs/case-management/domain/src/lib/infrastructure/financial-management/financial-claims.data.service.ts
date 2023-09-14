@@ -429,4 +429,14 @@ export class FinancialClaimsDataService {
       { responseType: 'blob' }
     );
   }
+  checkExceededMaxBenefit(serviceCost: number, clientId: number, typeCode : string ) {
+    let path;
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
+      path = 'financial-management/claims/medical';
+    } else {
+      path = 'financial-management/claims/dental';
+    }
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/exceeded-limit-check?servicesCost=${serviceCost}&clientId=${clientId}`
+    );
+  }
 }

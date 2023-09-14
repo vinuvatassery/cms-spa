@@ -26,15 +26,16 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   isSubmitted: boolean = false;
   isVisible: any;
   preferedContact:any;
-  public sortValue = this.vendocontactsFacade.sortValue;
-  public sortType = this.vendocontactsFacade.sortType;
-  public pageSizes = this.vendocontactsFacade.gridPageSizes;
-  public gridSkipCount = this.vendocontactsFacade.skipCount;
-  public sort = this.vendocontactsFacade.sort;
+  public sortValue = this.vendorContactsFacade.sortValue;
+  public sortType = this.vendorContactsFacade.sortType;
+  public pageSizes = this.vendorContactsFacade.gridPageSizes;
+  public gridSkipCount = this.vendorContactsFacade.skipCount;
+  public sort = this.vendorContactsFacade.sort;
   public state!: any;
   isContactAddressDeactivateShow = false
   descriptionCounter:number=500;
   filters = "";
+  inputMask: any = '';
   @Output() ContactUpdated = new EventEmitter<boolean>();
   showLoader() {
     this.loaderService.show();
@@ -45,7 +46,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   constructor(
     private formBuilder: FormBuilder,
     private contactFacade: ContactFacade,
-    private vendocontactsFacade: VendorContactsFacade,
+    private vendorContactsFacade: VendorContactsFacade,
     private readonly paymentsFacade: PaymentsFacade,
     private readonly loaderService: LoaderService,
     private cd: ChangeDetectorRef
@@ -62,7 +63,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
 
-    this.vendocontactsFacade.mailCodes$.subscribe((mailCode: any) => {
+    this.vendorContactsFacade.mailCodes$.subscribe((mailCode: any) => {
       this.mailCodes = mailCode;
       this.cd.detectChanges();
     })
@@ -72,7 +73,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     if (this.VendorContactId != undefined) {
       this.contactAddress = this.VendorContactId;
     } else {
-      this.vendocontactsFacade.loadMailCodes(this.vendorId);
+      this.vendorContactsFacade.loadMailCodes(this.vendorId);
     }
     this.onToggleAddNewContactClick();
   }
@@ -83,42 +84,45 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   public save() {
     this.isSubmitted = true;
+    this.contactForm.markAllAsTouched();
     this.contactForm.controls['vendorId'].setValue(this.vendorId);
-    
+
     if (this.contactForm.valid) {
-       this.AddContactForm.value.forEach((element:any, i: number) => {
-      this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
-    });
-      this.loaderService.show();
-      this.vendocontactsFacade.saveContactAddress(this.contactForm.value).subscribe({
-        next: (response: any) => {
-          if (response) {
-            this.contactFacade.showHideSnackBar(
-              SnackBarNotificationType.SUCCESS,
-              'Contact  added successfully'
-            );
-            this.contactFacade.hideLoader();
-            this.isContactDetailPopupClose.emit(true);
-          }
-        },
-        error: (error: any) => {
-          this.loaderService.hide();
-          this.contactFacade.showHideSnackBar(
-            SnackBarNotificationType.ERROR,
-            error
-          );
-        },
+        this.AddContactForm.value.forEach((element:any, i: number) => {
+        this.AddContactForm.at(i).patchValue({preferredFlag: element.preferredFlag?"Y":"N"})
       });
+      if (this.contactForm.valid) {
+        this.loaderService.show();
+        this.vendorContactsFacade.saveContactAddress(this.contactForm.value).subscribe({
+          next: (response: any) => {
+            if (response) {
+              this.contactFacade.showHideSnackBar(
+                SnackBarNotificationType.SUCCESS,
+                'Contact  added successfully'
+              );
+              this.contactFacade.hideLoader();
+              this.isContactDetailPopupClose.emit(true);
+              this.vendorContactsFacade.loadVendorAllContacts(this.vendorId);
+            }
+          },
+          error: (error: any) => {
+            this.loaderService.hide();
+            this.contactFacade.showHideSnackBar(
+              SnackBarNotificationType.ERROR,
+              error
+            );
+          },
+        });
+      }
     }
   }
-
-  public update() {    
+  public update() {
     this.isSubmitted = true;
     if (this.contactForm.controls['vendorContacts'].valid) {
       this.loaderService.show();
       let vendorContacts= this.contactForm.value.vendorContacts[0];
       vendorContacts.preferredFlag = vendorContacts.preferredFlag ? "Y" :"N"
-      this.vendocontactsFacade.updateContactAddress(this.contactForm.value.vendorContacts[0]).subscribe({
+      this.vendorContactsFacade.updateContactAddress(this.contactForm.value.vendorContacts[0]).subscribe({
         next: (response: any) => {
           if (response) {
             this.contactFacade.showHideSnackBar(
@@ -128,6 +132,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
             this.ContactUpdated.emit(true);
             this.loaderService.hide();
             this.isContactDetailPopupClose.emit(true);
+            this.vendorContactsFacade.loadVendorAllContacts(this.vendorId);
           }
         },
         error: (error: any) => {
@@ -183,7 +188,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     this.cd.detectChanges();
   }
 
-  onDeactivateContactClick(){ 
+  onDeactivateContactClick(){
     this.isContactAddressDeactivateShow = true;
   }
 
@@ -192,7 +197,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   }
 
   onDeactiveCancel(isCancel: any) {
-    if (isCancel) { 
+    if (isCancel) {
       this.clickCloseDeactivateContactAddress()
     }
   }
@@ -206,7 +211,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     if (isChecked) {
       this.AddContactForm.value.forEach((element:any, i: number) => {
         this.AddContactForm.at(i).patchValue({preferredFlag: false})
-      });    
+      });
       this.AddContactForm.at(index).patchValue({preferredFlag: true})
       this.isVisible = true;
     } else {
@@ -216,11 +221,23 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     this.cd.detectChanges();
   }
    onKeyPress(event:number) {
-    return (event > 64 && 
+    return (event > 64 &&
       event < 91) || (event > 96 && event < 123)||event==32
   }
   onDescriptionValueChange(event: any): void {
     this.descriptionCounter = event.length;
   }
-
+  applyMask() {
+    this.inputMask = '(999) 000-0000'; 
+  }
+  resetMask() {
+    let phoneResult = this.AddContactForm.get('phoneNbr')?.value
+    if (!phoneResult) {
+      this.inputMask = '';
+    }
+    let faxResult = this.AddContactForm.get('faxNbr')?.value
+    if(faxResult){
+      this.inputMask = '';
+    }
+  }
 }

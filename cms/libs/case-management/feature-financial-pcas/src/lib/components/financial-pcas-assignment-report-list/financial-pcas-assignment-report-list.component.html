@@ -174,7 +174,7 @@
 
     <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="50" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button kendoButton themeColor="primary" fillMode="flat" class="clear-icon-btn" aria-label="Edit Reminder"
+        <button kendoButton themeColor="primary" fillMode="flat" class="clear-icon-btn" aria-label="Edit Reminder"  (click)="editAssignmentReport(dataItem.objectId, dataItem.groupsCoveredIds)"
           title="Edit Reminder">
           <span class="material-icons"> edit </span>
         </button>
@@ -190,7 +190,11 @@
       </div>
       <cms-financial-pcas-assignment-sub-report-list
         [pageSizes]="pageSizes"
-        [objecCodeGroupCodeId]="dataItem?.objecCodeGroupCodeId"
+        [objectId]="dataItem?.objectId"
+        [groupIds]="dataItem?.groupsCoveredIds"
+        [pcaAssignmentId]="dataItem?.pcaAssigmentId"       
+        [amountAssigned]="dataItem?.amountAssigned"
+        [amountRemaining]="dataItem?.amountRemaining"
         [financialPcaSubReportGridLists$]="financialPcaSubReportGridLists$"
         (loadFinancialPcaSubReportListEvent)=loadFinancialPcaSubReportListGrid($event)>
       </cms-financial-pcas-assignment-sub-report-list>

@@ -7,22 +7,24 @@ import { VendorContactsFacade } from '@cms/case-management/domain';
 })
 export class ContactsDeactivateComponent {
   @Input() VendorContactId:any;
+  @Input() vendorId:any;
   @Output() closeDeactivateContactAddress = new EventEmitter();
 
  /** Constructor **/
  constructor(
-  private readonly vendocontactsFacade: VendorContactsFacade
+  private readonly vendorContactsFacade: VendorContactsFacade
 ) {
 }
-  onCloseDeactivateContactAddressClicked() {
-    this.closeDeactivateContactAddress.emit(true);
+  onCloseDeactivateContactAddressClicked(deactivate: boolean) {
+    this.closeDeactivateContactAddress.emit(deactivate);
   }
   deactiveContactAddress(){
-    this.vendocontactsFacade.deactiveContactAddress(this.VendorContactId).then((isDeavtivated:any) =>{
+    this.vendorContactsFacade.deactiveContactAddress(this.VendorContactId).then((isDeavtivated:any) =>{
       if(isDeavtivated){
-        this.onCloseDeactivateContactAddressClicked();
-      } 
+        this.onCloseDeactivateContactAddressClicked(isDeavtivated);
+        this.vendorContactsFacade.loadVendorAllContacts(this.vendorId);
+      }
     })
   }
- 
+
 }

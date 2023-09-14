@@ -8,17 +8,19 @@
             <div class="flex-col">
                 <kendo-floatinglabel text="Mail Code">
                     <kendo-textbox [maxlength]="3" aria-label="Mail Code" formControlName="mailCode"
-                        [fillMode]="formUiStyle.inputFillMode">
+                        [fillMode]="formUiStyle.inputFillMode"
+                        (keypress)="restrictSpecialChar($event.charCode)">
                     </kendo-textbox>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['mailCode'].valid">Mail Code is
+                <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['mailCode'].valid ">Mail Code is
                     required.</kendo-formerror>
             </div>
 
             <div class="flex-col">
                 <kendo-floatinglabel text="Name on Check">
                     <kendo-textbox aria-label="Name on Check" formControlName="nameOnCheck" [maxlength]="200"
-                        [fillMode]="formUiStyle.inputFillMode">
+                        [fillMode]="formUiStyle.inputFillMode"
+                        (keypress)="onKeyPress($event.charCode)">
                     </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['nameOnCheck'].valid">Name on
@@ -28,10 +30,11 @@
             <div class="flex-col">
                 <kendo-floatinglabel text="Name on Envelope">
                     <kendo-textbox aria-label="Name on Envelop" formControlName="nameOnEnvelope" [maxlength]="200"
-                        [fillMode]="formUiStyle.inputFillMode">
+                        [fillMode]="formUiStyle.inputFillMode"
+                        (keypress)="onKeyPress($event.charCode)">
                     </kendo-textbox>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['nameOnEnvelope'].valid">Name on
+                <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['nameOnEnvelope'].valid ">Name on
                     Envelope is required.</kendo-formerror>
             </div>
             <div class="flex-col">
@@ -52,7 +55,8 @@
             </div>
             <div class="flex-col">
                 <kendo-floatinglabel text="City">
-                    <kendo-textbox aria-label="City" formControlName="cityCode" [fillMode]="formUiStyle.inputFillMode" [maxlength]="50">
+                    <kendo-textbox aria-label="City" formControlName="cityCode" [fillMode]="formUiStyle.inputFillMode" [maxlength]="50"
+                    (keypress)="onKeyPress($event.charCode)">
                     </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['cityCode'].valid">City is
@@ -68,7 +72,8 @@
                     required.</kendo-formerror>
             </div>
             <div class="flex-col flex-col-6">
-                <kendo-floatinglabel text="Zip">
+                <kendo-floatinglabel text="Zip"
+                (keypress)="restrictSpecialChar($event.charCode)">
                     <kendo-textbox [maxlength]="10" aria-label="Zip" formControlName="zip" [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textbox>
                 </kendo-floatinglabel>

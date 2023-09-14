@@ -4,12 +4,13 @@ import { Router } from '@angular/router';
 
 /** External libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subscription } from 'rxjs';
 
 /** Facade **/
-import { InvoiceFacade } from '@cms/case-management/domain';
-import { GridComponent } from '@progress/kendo-angular-grid';
+import { FinancialVendorProviderTabCode, InvoiceFacade } from '@cms/case-management/domain';
+import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-invoices',
@@ -30,24 +31,38 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   invoiceGridView$ = this.invoiceFacade.invoiceData$;
   providerId:any;
   isInvoiceLoading$=  this.invoiceFacade.isInvoiceLoading$
+  claimStatus$ = this.lovFacade.paymentStatus$
   isInvoiceLoadingSubscription!:Subscription;
   @Input() tabCode: any;
   @Input() vendorId: any;
   @ViewChild(GridComponent)
   invoiceGrid!: GridComponent;
-
+  claimsType: any = 'dental';
+  filter!: any;
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  claimStatus:any;
+  paymentStatusLovSubscription!:Subscription;
    /** Constructor **/
-   constructor(private readonly invoiceFacade: InvoiceFacade,private readonly router: Router) {}
+   constructor(private readonly invoiceFacade: InvoiceFacade,private readonly router: Router,
+    private readonly lovFacade: LovFacade,) {}
 
   ngOnInit(): void {
+    this.claimStatusSubscription();
+    this.lovFacade.getPaymentStatusLov();
+    if(this.tabCode === FinancialVendorProviderTabCode.MedicalProvider){
+      this.claimsType = 'medical';
+    } 
     this.state = {
       skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value
+      take: this.pageSizes[0]?.value,
+      filter : this.filter === undefined?null:this.filter
     };
+    
     this.loadInvoiceListGrid();
     this.isInvoiceLoadingSubscription = this.isInvoiceLoading$.subscribe((data:boolean)=>{
       this.isInvoiceGridLoaderShow = data;
     })
+
   }
 
   ngOnChanges(): void {
@@ -55,13 +70,31 @@ export class InvoicesComponent implements OnInit, OnDestroy {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
+      filter : this.filter === undefined?null:this.filter
     };
   }
 
   ngOnDestroy(): void {
     this.isInvoiceLoadingSubscription.unsubscribe();
+    this.paymentStatusLovSubscription.unsubscribe();
   }
 
+  claimStatusSubscription(){
+    this.paymentStatusLovSubscription = this.claimStatus$.subscribe(data=>{
+      this.claimStatus = data;
+    });
+  }
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value:value.lovCode
+      }],
+        logic: "or"
+    });
+  }
+  
   public dataStateChange(stateData: any): void {
     this.collapseAll(this.state?.take);
     this.sort = stateData.sort;
@@ -77,6 +110,10 @@ export class InvoicesComponent implements OnInit, OnDestroy {
     }
   }
 
+  public filterChange(filter: CompositeFilterDescriptor): void {
+    this.filterData = filter;
+  }
+  
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
@@ -92,8 +129,9 @@ export class InvoicesComponent implements OnInit, OnDestroy {
       
   }
 
-  onBatchClicked() {
-    this.router.navigate([`/financial-management/medical-claims`]);    
+  onBatchClicked(batchId : any) {
+    this.router.navigate([`/financial-management/claims/${this.claimsType}/batch`],
+    { queryParams :{bid: batchId}});
   } 
 
   onExpand(event:any) {

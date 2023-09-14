@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, OnInit, Component, EventEmitter, Output, Input, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import {  AddressTypeCode, BillingAddressFacade, ContactFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, StatusFlag } from '@cms/case-management/domain';
+import {  AddressTypeCode, BillingAddressFacade, ContactFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, StatusFlag, VendorContactsFacade } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
@@ -33,6 +33,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
   specialHandlingCharachtersCount!: number;
   specialHandlingCounter!: string;
   statusFlag : any = StatusFlag;
+  specialCharAdded: boolean = false;
 
   /** Constructor**/
   constructor(
@@ -42,7 +43,8 @@ export class PaymentAddressDetailsComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly activatedRoute: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
-  ) { }
+    private readonly vendorContactFacade: VendorContactsFacade)
+    { }
 
   ngOnInit(): void {
     this.vendorId = this.activatedRoute.snapshot.queryParams['v_id'];
@@ -107,6 +109,12 @@ export class PaymentAddressDetailsComponent implements OnInit {
       newAddContactForm: this.formBuilder.array([]),
     });
 
+    this.paymentAddressForm.controls['zip']
+        .setValidators([
+          Validators.required,Validators.required,Validators.pattern('^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)$')
+        ]);
+      this.paymentAddressForm.controls['zip'].updateValueAndValidity();
+
     if (this.tabCode === FinancialVendorProviderTabCode.InsuranceVendors) {
       this.paymentAddressForm.addControl('acceptsReportsFlag', new FormControl('', [Validators.required]))
       this.paymentAddressForm.addControl('acceptsCombinedPaymentsFlag', new FormControl('', [Validators.required]))
@@ -125,6 +133,11 @@ export class PaymentAddressDetailsComponent implements OnInit {
       this.paymentAddressForm.addControl('physicalAddressFlag', new FormControl(''))
     }
   }
+
+  get paymentAddressFormControls() {
+    return this.paymentAddressForm.controls as any;
+  }
+
   private setAddressTypeCode() {
     switch (this.tabCode) {
       case FinancialVendorProviderTabCode.Manufacturers:
@@ -196,6 +209,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
           }
         }
         this.billingAddressFacade.hideLoader();
+        this.vendorContactFacade.loadVendorAllContacts(this.vendorId);
         this.closeModal('saved');
       },
       error: (err) => {
@@ -228,5 +242,17 @@ export class PaymentAddressDetailsComponent implements OnInit {
     }
     this.cdr.detectChanges();
   }
-
+  restrictSpecialChar(event:number) {
+    return (
+      (event >= 48 && event <= 57) || 
+      (event > 64 && event < 91) ||   
+      (event > 96 && event < 123) ||  
+      event == 8 ||                 
+      event == 45                   
+    );
+  }
+  onKeyPress(event:number) {
+    return (event > 64 &&
+      event < 91) || (event > 96 && event < 123)||event==32
+  }
 }

@@ -126,10 +126,14 @@ import { Subscription } from 'rxjs';
 
       if (startDate > endDate) {
         this.medicalClaimPaymentForm.controls['datePaymentSent'].setErrors({ 'incorrect': true });
-        this.paymentDateIsGreaterThanReconciledDate = false;
+        this.paymentDateIsGreaterThanReconciledDate = true;
+      }
+      else if(endDate > new Date()){
+        this.medicalClaimPaymentForm.controls['datePaymentSent'].setErrors({ 'incorrect': true });
+        this.datePaymentSentValidator = true;
       }
       else {
-        this.paymentDateIsGreaterThanReconciledDate = true;
+        this.paymentDateIsGreaterThanReconciledDate = false;
         this.medicalClaimPaymentForm.controls['datePaymentSent'].setErrors(null);
         this.endDateMin = this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value;
       }
@@ -138,6 +142,9 @@ import { Subscription } from 'rxjs';
 
 
   validateModel(){
+    if (this.medicalClaimPaymentForm.controls['datePaymentSent'].value === null) {
+     this.paymentDateIsGreaterThanReconciledDate = false;
+    }
     this.medicalClaimPaymentForm.markAllAsTouched();
     this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValidators([
       Validators.required,

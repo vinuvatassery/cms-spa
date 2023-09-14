@@ -6,9 +6,9 @@
       <button kendoButton class="k-icon-button small-i-btn" title="New Reminder" aria-label="New Reminder" (click)="onNewReminderClicked(NewReminderTemplate)">
         <span class="material-icons" role="button" aria-label="New Reminder" aria-hidden="true">add_alarm</span>
       </button>
-      <kendo-dropdownbutton [data]="buttonList" class="TableActionPopup app-dropdown-action k-border-s-dropdown"
-        buttonClass="k-flat-button" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-        Send
+        <kendo-dropdownbutton [data]="buttonList" class="TableActionPopup app-dropdown-action k-border-s-dropdown"
+    (click)="onSendMenuClick()" buttonClass="k-flat-button" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+    Send
         <span class="material-icons" aria-label="expand" aria-hidden="true" role="menuitem">arrow_right</span>
         <ng-template class="app-dropdown-action-list" kendoSplitButtonItemTemplate let-dataItem>
           <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"

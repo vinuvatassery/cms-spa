@@ -45,22 +45,18 @@
   [resizable]="true"
   [loading]="isFinancialClaimsProcessGridLoaderShow"
    [groupable]="false"
-    [navigable]="isProcessGridExpand"
+    [navigable]="!isProcessGridExpand"
   (dataStateChange)="dataStateChange($event)"
   (filterChange)="filterChange($event)" [selectable]="selectableSettings"
     [data]="gridFinancialClaimsProcessData$ | async"
     kendoGridSelectBy="paymentRequestId"
     (selectedKeysChange)="selectedKeysChange($event)"
-    [(selectedKeys)]="selectedProcessClaims">>
+    [(selectedKeys)]="selectedProcessClaims">
 
-    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand"
-        [headerClass]="{ 'text-center': true }"
-        [class]="{ 'text-center': true }"
-        [resizable]="false"
-        [columnMenu]="false"
-        [showSelectAll]="true"
-      [width]="40"></kendo-grid-checkbox-column>
-    <kendo-grid-column field="invoiceNbr" title="Invoice ID" [width]="160">
+    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [headerClass]="{ 'text-center': true }"
+      [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true" [width]="40"
+      [locked]="true"></kendo-grid-checkbox-column>
+    <kendo-grid-column field="invoiceNbr"  title="Invoice ID" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -226,14 +222,13 @@
       </ng-template>
     </kendo-grid-column>
 
-    <div *kendoGridDetailTemplate="let dataItem">
-    <cms-financial-claims-invoice-list
-    [paymentRequestId]="dataItem?.paymentRequestId"
-    [financialInvoiceList$]="financialClaimsInvoice$"
-    [sort]="sortValueFinancialInvoices"
-    (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)></cms-financial-claims-invoice-list>
-    </div>
-
+    <ng-container *ngIf="isProcessGridExpand">
+      <div *kendoGridDetailTemplate="let dataItem">
+        <cms-financial-claims-invoice-list [paymentRequestId]="dataItem?.paymentRequestId"
+          [financialInvoiceList$]="financialClaimsInvoice$" [sort]="sortValueFinancialInvoices"
+          (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)></cms-financial-claims-invoice-list>
+      </div>
+    </ng-container>
 
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">
@@ -274,7 +269,7 @@
     (click)="onBatchClaimsGridSelectedCancelClicked()" *ngIf="isDeleteBatchClosed || isProcessBatchClosed"> Cancel
   </button>
 
-  <button kendoButton kendoButton class="k-error-button" aria-label="Delete" *ngIf="isDeleteBatchClosed" [disabled]="!selectedProcessClaims.length"
+  <button kendoButton kendoButton class="{{selectedProcessClaims.length?'k-error-button':''}}" aria-label="Delete" *ngIf="isDeleteBatchClosed" [disabled]="!selectedProcessClaims.length"
     (click)="onDeleteClaimsOpenClicked(deleteClaimsConfirmationDialog)"> <span class="material-icons mr-1"
       aria-label="Delete"> delete</span> Delete </button>
 
@@ -286,7 +281,7 @@
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
     <div class="btn-inner-block" (click)="onClickOpenAddEditClaimsFromModal(addEditClaimsDialog)">
       <span class="material-icons" aria-label="New Claims" aria-hidden="false">add</span>
-      New Claims
+      New Claim
     </div>
     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
@@ -304,7 +299,7 @@
 </ng-template>
 <ng-template #deleteClaimsConfirmationDialog>
   <cms-financial-claims-delete-claims
-    (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)" (isModalDeletedClaimsButtonClicked)="onModalBatchDeletingClaimsButtonClicked($event)" [selectedProcessClaimsCount] = "selectedProcessClaims.length"></cms-financial-claims-delete-claims>
+    (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)" (isModalDeletedClaimsButtonClicked)="onModalBatchDeletingClaimsButtonClicked($event)" [selectedProcessClaimsCount] = "selectedProcessClaims.length" [deletemodelbody]="deletemodelbody"></cms-financial-claims-delete-claims>
 </ng-template>
 <ng-template #addEditClaimsDialog>
   <cms-financial-claims-detail-form
