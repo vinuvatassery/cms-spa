@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnI
 import { FinancialVendorTypeCode, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';  
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
+import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subject, debounceTime } from 'rxjs';
@@ -103,7 +103,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   }
 
   searchColumnChangeHandler(value: string) {
-    this.filter = [];value
+    this.filter = [];
     this.showNumberSearchWarning = (['tin']).includes(value);
     this.showDateSearchWarning = value === 'closeDate';
     if (this.searchText) {
@@ -208,7 +208,6 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
         ...param
       }
     this.loadProviderListEvent.emit(providerQuery);
- //   this.gridDataHandle();
   }
 
   filterChange(filter: CompositeFilterDescriptor): void {
