@@ -170,6 +170,7 @@
       gap: 6px;
       padding: 14px 8px;
 
+
       .material-icons {
         font-size: $font-size-l;
       }
@@ -182,10 +183,10 @@
     }
 
     label {
-      // font-family: $font-family-bold;
-      font-size: $font-size-l;
-      font-weight: 600;
+      font-family: $font-family-bold;
+      font-size: $font-size-l; 
       text-shadow: none;
+
     }
   }
 

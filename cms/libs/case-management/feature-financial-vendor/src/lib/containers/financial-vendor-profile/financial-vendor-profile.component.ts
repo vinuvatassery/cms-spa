@@ -39,6 +39,8 @@ export class FinancialVendorProfileComponent implements OnInit {
    providerLissortType = this.financialVendorFacade.sortType;
    providerLissort = this.financialVendorFacade.sort;
   
+  filters:any=[];
+
   constructor(private activeRoute: ActivatedRoute, private financialVendorFacade : FinancialVendorFacade,
               private readonly drugsFacade: DrugsFacade) {}
 
@@ -65,7 +67,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
     this.providerId = this.activeRoute.snapshot.queryParams['prv_id'];
     this.tabCode = this.activeRoute.snapshot.queryParams['tab_code'];
-    
+
     this.loadVendorInfo();
     if(this.vendorId && this.tabCode)
     {
@@ -79,7 +81,7 @@ export class FinancialVendorProfileComponent implements OnInit {
         break;
       case FinancialVendorProviderTabCode.InsuranceVendors:
         this.vendorTypeCode = FinancialVendorTypeCode.InsuranceVendors
-        this.profileInfoTitle = 'Insurance Vendor Info';
+        this.profileInfoTitle = 'Vendor Info';
         break;
       case FinancialVendorProviderTabCode.MedicalProvider:
         this.vendorTypeCode = FinancialVendorTypeCode.MedicalProviders
@@ -125,7 +127,8 @@ export class FinancialVendorProfileComponent implements OnInit {
       this.state.skip ?? 0,
       this.state.take ?? 0,
       this.sortValue,
-      this.sortType
+      this.sortType,
+      this.filters ?? []
     );
   }
 
@@ -136,6 +139,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     };
     this.sortValue = event.sortColumn;
     this.sortType = event.sortType;
+    this.filters = event.filters;
     this.loadDrugsListGrid();
   }
 

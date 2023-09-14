@@ -15,15 +15,17 @@ export class FinancialPremiumsReconcilePageComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
-   sortValue = this.financialPremiumsFacade.sortValueReconcile;
-   sortType = this.financialPremiumsFacade.sortType;
-   pageSizes = this.financialPremiumsFacade.gridPageSizes;
-   gridSkipCount = this.financialPremiumsFacade.skipCount;
-   sort = this.financialPremiumsFacade.sortReconcileList;
-   state!: State;
-   reconcileGridLists$ = this.financialPremiumsFacade.reconcileDataList$;
-
-   
+  sortValue = this.financialPremiumsFacade.sortValueReconcilePaymentBreakout;
+  sortType = this.financialPremiumsFacade.sortType;
+  pageSizes = this.financialPremiumsFacade.gridPageSizes;
+  gridSkipCount = this.financialPremiumsFacade.skipCount;
+  sort = this.financialPremiumsFacade.sortReconcilePaymentBreakoutList;
+  sortValueBatch = this.financialPremiumsFacade.sortValueReconcile;
+  sortBatch = this.financialPremiumsFacade.sortReconcileList;
+  state!: State;
+  reconcileGridLists$ = this.financialPremiumsFacade.reconcileDataList$;
+  reconcileBreakoutSummary$ = this.financialPremiumsFacade.reconcileBreakoutSummary$;
+  reconcileBreakoutList$ = this.financialPremiumsFacade.reconcileBreakoutList$;
   premiumType: any;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
@@ -52,5 +54,17 @@ export class FinancialPremiumsReconcilePageComponent implements OnInit {
 
   loadReconcileListGrid(event: any) { 
     this.financialPremiumsFacade.loadReconcileListGrid();
+  }
+
+  loadReconcileBreakoutSummary(event: any)
+  {
+    event.premiumsType=this.premiumType;
+    this.financialPremiumsFacade.loadInsurancePremiumBreakoutSummary(event);
+  }
+
+  loadReconcilePaymentBreakoutList(event: any)
+  {
+    event.premiumsType=this.premiumType;
+    this.financialPremiumsFacade.loadInsurancePremiumBreakoutList(event);
   }
 }
