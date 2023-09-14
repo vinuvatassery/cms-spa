@@ -1,8 +1,8 @@
 <div class="account-settings-wrapper">
   <section class="as_body">
     <div class="asb_left-block">
-      <div class="flex-row">
-        <div class="flex-col justify-content-center">
+      <div class="flex-row pb-3">
+        <div class="flex-col justify-content-center avatar-section">
           <div class="app-c-avatar avatar-xlg">
             <img src="../assets/images/avatar-1.png" alt="Profile Avatar" class="profile-avatar" hidden />
             <span class="profile-text-avatar">AK</span>
@@ -22,13 +22,13 @@
         <div class="flex-col text-center">
           <p>Client may see your photo from their portal</p>
         </div>
-        <div class="flex-col">
+        <div class="flex-col user-info-sec">
           <h3 class="text-center">Amber Smith</h3>
           <p class="text-center">Housing Supervisor</p>
           <p class="text-center">OHOP</p>
         </div>
         <div class="flex-col app-popover-body">
-          <h5 class="app-card-heading">Contact</h5>
+
           <p class="app-card-details">
             <span class="material-icons">email</span>
             <a href="mailto:aj.com">exampleemail@gmail.com</a>
@@ -45,6 +45,10 @@
             <span class="material-icons">location_pin</span>
             455 LARKSPUR DR APT 23 BAVIERA CA 92908‑4601
           </p>
+          <p class="app-card-details">
+            <span class="material-icons">event</span>
+            <span>Monday to Friday 8:00 AM - 5:00 PM (Onsite)</span>
+          </p>
         </div>
       </div>
     </div>
@@ -53,145 +57,245 @@
       <div class="accountsetting-form-wrapper">
         <div class="form-innercontainer">
           <h3>Personal Information</h3>
-          <div class="flex-row">
-            <div class="flex-col flex-col-5">
-              <kendo-floatinglabel class="k-form" text="First Name">
-                <kendo-textbox placeholder="First Name" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
+          <div class=" ac-block">
+            <div class="flex-row">
+              <div class="flex-col flex-col-5">
+                <kendo-floatinglabel class="k-form" text="First Name">
+                  <kendo-textbox placeholder="First Name" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                </kendo-floatinglabel>
+              </div>
+              <div class="flex-col flex-col-5">
+                <kendo-floatinglabel class="k-form" text="Last Name">
+                  <kendo-textbox placeholder="Last Name" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                </kendo-floatinglabel>
+              </div>
+              <div class="flex-col flex-col-2">
+                <kendo-floatinglabel class="k-form" text="Initials">
+                  <kendo-textbox placeholder="Initials" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                </kendo-floatinglabel>
+              </div>
             </div>
-            <div class="flex-col flex-col-5">
-              <kendo-floatinglabel class="k-form" text="Last Name">
-                <kendo-textbox placeholder="Last Name" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
+            <div class="flex-row">
+              <div class="flex-col-5 flex-col">
+                <kendo-floatinglabel class="k-form" text="Pronouns">
+                  <kendo-textbox placeholder="Pronouns" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                </kendo-floatinglabel>
+              </div>
+
             </div>
-            <div class="flex-col flex-col-2">
-              <kendo-floatinglabel class="k-form" text="Initials">
-                <kendo-textbox placeholder="Initials" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
+            <div class="flex-row">
+              <div class="flex-col-5 flex-col">
+                <kendo-floatinglabel class="k-form" text="Job Title">
+                  <kendo-textbox placeholder="Job Title" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                </kendo-floatinglabel>
+              </div>
             </div>
-            <div class="flex-col flex-col-5">
-              <kendo-floatinglabel class="k-form" text="Pronouns">
-                <kendo-textbox placeholder="Pronouns" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
+            <div class="flex-row">
+              <div class="flex-col-5 flex-col">
+                <kendo-floatinglabel class="k-form" text="PNumber or ORNumber">
+                  <kendo-textbox placeholder="PNumber or ORNumber" [fillMode]="formUiStyle.inputFillMode">
+                  </kendo-textbox>
+                </kendo-floatinglabel>
+              </div>
             </div>
-            <div class="flex-col flex-col-5">
-              <kendo-floatinglabel class="k-form" text="Job Title">
-                <kendo-textbox placeholder="Job Title" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-5">
-              <kendo-floatinglabel class="k-form" text="PNumber or ORNumber">
-                <kendo-textbox placeholder="PNumber or ORNumber" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
+
           </div>
         </div>
         <div class="form-innercontainer">
           <h3>Contact Information</h3>
-          <h5>Email, Phone & Fax</h5>
-          <div class="flex-row">
-            
-            <div class="flex-col flex-col-5">
-              <kendo-floatinglabel class="k-form" text="Email Address">
-                <kendo-textbox placeholder="Email Address" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
+
+          <div class="ac-block">
+
+
+            <div class="ac-block-fields mb-4">
+              <h5>Email, Phone & Fax</h5>
+              <div class="flex-row">
+                <div class="flex-col flex-col-5">
+                  <kendo-floatinglabel class="k-form" text="Email Address">
+                    <kendo-textbox placeholder="Email Address" [fillMode]="formUiStyle.inputFillMode">
+                    </kendo-textbox>
+                  </kendo-floatinglabel>
+                </div>
+              </div>
+              <div class="flex-row">
+                <div class="flex-col flex-col-5">
+                  <kendo-floatinglabel class="k-form" text="Phone Number">
+                    <kendo-textbox placeholder="Phone Number" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                  </kendo-floatinglabel>
+                </div>
+
+                <div class="flex-col flex-col-5">
+                  <span class="app-checkboxwidtext-wrapper mt-4">
+                    <input type="checkbox" kendoCheckBox aria-labelledby="smstextok" id="smstextok" />
+                    <label class="k-checkbox-label" for="smstextok">SMS Text OK</label>
+                  </span>
+                </div>
+              </div>
+              <div class="flex-row">
+                <div class="flex-col flex-col-5">
+                  <kendo-floatinglabel class="k-form" text="Fax Number(Optional)">
+                    <kendo-textbox placeholder="Fax Number(Optional)" [fillMode]="formUiStyle.inputFillMode">
+                    </kendo-textbox>
+                  </kendo-floatinglabel>
+                </div>
+              </div>
+
             </div>
-            <div class="flex-col flex-col-5">
-              <kendo-floatinglabel class="k-form" text="Phone Number">
-                <kendo-textbox placeholder="Phone Number" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
+
+
+
+            <div class="ac-block-fields">
+              <h5>ADDRESS</h5>
+              <div class="flex-row">
+                <div class="flex-col flex-col-5">
+                  <kendo-floatinglabel class="k-form" text="Address Line 1 (Optional)">
+                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                  </kendo-floatinglabel>
+                </div>
+              </div>
+              <div class="flex-row">
+                <div class="flex-col flex-col-5">
+                  <kendo-floatinglabel class="k-form" text="Address Line 2 (Optional)">
+                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                  </kendo-floatinglabel>
+                </div>
+              </div>
+              <div class="flex-row">
+                <div class="flex-col flex-col-5">
+                  <kendo-floatinglabel class="k-form" text="City">
+                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                  </kendo-floatinglabel>
+                </div>
+              </div>
+              <div class="flex-row">
+                <div class="flex-col flex-col-5">
+                  <div class="flex-row">
+                    <div class="flex-col flex-col-6">
+                      <kendo-floatinglabel class="k-form" text="State">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.inputFillMode"> </kendo-dropdownlist>
+                      </kendo-floatinglabel>
+                    </div>
+                    <div class="flex-col flex-col-6">
+                      <kendo-floatinglabel class="k-form" text="Zip">
+                        <kendo-textbox [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                      </kendo-floatinglabel>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="flex-row">
+                <div class="flex-col flex-col-5">
+                  <kendo-floatinglabel class="k-form" text="Country">
+                    <kendo-textbox placeholder="Country" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                  </kendo-floatinglabel>
+                </div>
+              </div>
             </div>
-            <div class="flex-col flex-col-5">
-              <kendo-floatinglabel class="k-form" text="Fax Number(Optional)">
-                <kendo-textbox placeholder="Fax Number(Optional)" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-5">
-              <kendo-floatinglabel class="k-form" text="Mobile">
-                <kendo-textbox placeholder="Mobile" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-5">
-              <kendo-floatinglabel class="k-form" text="Address Line 1">
-                <kendo-textbox placeholder="Address Line 1" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-5">
-              <kendo-floatinglabel class="k-form" text="Address Line 2 (Optional)">
-                <kendo-textbox placeholder="Address Line 2 (Optional)" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-5">
-              <kendo-floatinglabel class="k-form" text="City">
-                <kendo-textbox placeholder="City" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-5">
-              <kendo-floatinglabel class="k-form" text="State">
-                <kendo-textbox placeholder="State" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-5">
-              <kendo-floatinglabel class="k-form" text="Zip">
-                <kendo-textbox placeholder="Zip" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-5">
-              <kendo-floatinglabel class="k-form" text="Country">
-                <kendo-textbox placeholder="Country" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
+
           </div>
         </div>
         <div class="form-innercontainer">
           <h3>Weekly Schedule</h3>
-          <h5>Days & Hours</h5>
-          <div class="flex-row">
+
+          <div class="ac-block">
+            <div class="ac-block-fields ">
+              <h5>Days & Hours</h5>
+              <div class="flex-row mb-1">
+                <div class="flex-col flex-col-4">
+                  <kendo-floatinglabel
+                  text="Ethnic Identity" 
+                >
+                
+        
+                <kendo-multiselect
+                aria-label="Racial Identity"
+                [checkboxes]="{ checkOnClick: true, enabled: true }"
+                formControlName="RaceAndEthnicity"
+                #racialidentity
+                [autoClose]="true"
+                [fillMode]="formUiStyle.dropDownFillMode"
+                [data]="listItems"
+                [textField]="'lovDesc'"
+                [valueField]="'lovCode'" 
+                [kendoMultiSelectSummaryTag]="2" 
+              >
           
-            <div class="flex-col flex-col-4">
-              <kendo-floatinglabel class="k-form" text="Message">
-                <kendo-textbox placeholder="Message" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
+            </kendo-multiselect>
+                </kendo-floatinglabel>
+           
+                </div>
+                <div class="flex-col flex-col-2">
+                  <kendo-floatinglabel class="k-form" text="Start Time">
+                    <kendo-timepicker format="hh:mm a"  [fillMode]="formUiStyle.inputFillMode" [value]="time"></kendo-timepicker>
+                  </kendo-floatinglabel>
+                </div>
+                <div class="flex-col flex-col-2">
+                  <kendo-floatinglabel class="k-form" text="End Time">
+                    <kendo-timepicker format="hh:mm a" [fillMode]="formUiStyle.inputFillMode" [value]="time"></kendo-timepicker>
+                  </kendo-floatinglabel>
+                </div>
+                <div class="flex-col flex-col-4">
+                  <kendo-floatinglabel class="k-form" text="Onsite or Telecommute">
+                    <kendo-dropdownlist placeholder="Message" [fillMode]="formUiStyle.inputFillMode"> </kendo-dropdownlist>
+                  </kendo-floatinglabel>
+                </div>
+              </div>
+              <div class="flex-row mb-1">
+                <div class="flex-col flex-col-4">
+                  <kendo-floatinglabel
+                  text="Ethnic Identity" 
+                >
+                
+        
+                <kendo-multiselect
+                aria-label="Racial Identity"
+                [checkboxes]="{ checkOnClick: true, enabled: true }"
+                formControlName="RaceAndEthnicity"
+                #racialidentity
+                [autoClose]="true"
+                [fillMode]="formUiStyle.dropDownFillMode"
+                [data]="listItems"
+                [textField]="'lovDesc'"
+                [valueField]="'lovCode'" 
+                [kendoMultiSelectSummaryTag]="2" 
+              >
+          
+            </kendo-multiselect>
+                </kendo-floatinglabel>
+           
+                </div>
+                <div class="flex-col flex-col-2">
+                  <kendo-floatinglabel class="k-form" text="Start Time">
+                    <kendo-timepicker format="hh:mm a"  [fillMode]="formUiStyle.inputFillMode" [value]="time"></kendo-timepicker>
+                  </kendo-floatinglabel>
+                </div>
+                <div class="flex-col flex-col-2">
+                  <kendo-floatinglabel class="k-form" text="End Time">
+                    <kendo-timepicker format="hh:mm a" [fillMode]="formUiStyle.inputFillMode" [value]="time"></kendo-timepicker>
+                  </kendo-floatinglabel>
+                </div>
+                <div class="flex-col flex-col-4">
+                  <kendo-floatinglabel class="k-form" text="Onsite or Telecommute">
+                    <kendo-dropdownlist placeholder="Message" [fillMode]="formUiStyle.inputFillMode"> </kendo-dropdownlist>
+                  </kendo-floatinglabel>
+                </div>
+              </div>
+
+              <button kendoButton [primary]="true" look="flat" class="mt-1" aria-label="SCHEDULE OUT OF OFFICE" > SCHEDULE OUT OF OFFICE </button>
             </div>
-            <div class="flex-col flex-col-2">
-              <kendo-floatinglabel class="k-form" text="Message">
-                <kendo-textbox placeholder="Message" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-2">
-              <kendo-floatinglabel class="k-form" text="Message">
-                <kendo-textbox placeholder="Message" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-4">
-              <kendo-floatinglabel class="k-form" text="Message">
-                <kendo-textbox placeholder="Message" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div> 
-          </div>
-          <div class="flex-row">
-            <div class="flex-col flex-col-4">
-              <kendo-floatinglabel class="k-form" text="Message">
-                <kendo-textbox placeholder="Message" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-2">
-              <kendo-floatinglabel class="k-form" text="Message">
-                <kendo-textbox placeholder="Message" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-2">
-              <kendo-floatinglabel class="k-form" text="Message">
-                <kendo-textbox placeholder="Message" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
-            <div class="flex-col flex-col-4">
-              <kendo-floatinglabel class="k-form" text="Message">
-                <kendo-textbox placeholder="Message" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-              </kendo-floatinglabel>
-            </div> 
+          
           </div>
         </div>
+        <div class="form-innercontainer">
+          <h3>Weekly Schedule</h3>
+          <div class="ac-block">
+            <div class="ac-block-fields ">
+              <kendo-switch class="mr-1" ></kendo-switch> Receive emails about notification, to do items and other important tasks
+              </div>
+              </div>
+          </div>
       </div>
     </div>
   </section>

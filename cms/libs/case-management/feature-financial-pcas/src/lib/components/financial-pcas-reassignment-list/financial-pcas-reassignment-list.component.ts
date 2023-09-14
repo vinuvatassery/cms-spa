@@ -20,6 +20,8 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+import { FormBuilder } from '@angular/forms';
+import { FinancialPcaFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-pcas-reassignment-list',
   templateUrl: './financial-pcas-reassignment-list.component.html',
@@ -66,8 +68,13 @@ export class FinancialPcasReassignmentListComponent
   editPcaReassignmentItem: any;
   @Output() getPcaAssignmentByIdEvent = new EventEmitter<any>();
   @Output() updatePcaAssignmentByEvent = new EventEmitter<any>();
-  @Input() getPcaAssignmentById$ :any
-  
+  @Input() getPcaAssignmentById$ :any;
+  @Input() notAssignPcaLists$: any;
+  inputvalue!:string;
+  reAssignPcaS:any[]=[];
+  allNotAssignedPcaSList:any;
+  notSelectedPcaS:any;
+  selectedPcaData:any;
   public gridMoreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -95,35 +102,30 @@ export class FinancialPcasReassignmentListComponent
     },
   ]; 
 
-  pcaLists =[
-    {
-      id: 1,
-      name: 'Name Name Name`',
-      remainingAmt: '2343243.333',
-      closeDate: 'MM/DD/YYYY',
-    },
-    {
-      id: 2,
-      name: 'Name Name Name`',
-      remainingAmt: '2343243.333',
-      closeDate: 'MM/DD/YYYY',
-    },
-    {
-      id: 3,
-      name: 'Name Name Name`',
-      remainingAmt: '2343243.333',
-      closeDate: 'MM/DD/YYYY',
-    }
-  ]
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private financialPcaFacade:FinancialPcaFacade,
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit(): void {
-    this.loadFinancialPcaReassignmentListGrid();
+    this.financialPcaFacade.getPcaUnAssignments();
+    this.notAssignPcaLists$.subscribe((res:any)=>{
+      this.allNotAssignedPcaSList=res;
+      this.notSelectedPcaS=this.allNotAssignedPcaSList;
+      this.loadFinancialPcaReassignmentListGrid();
+    })
+    this.financialPcaFacade.pcaActionIsSuccess$.subscribe((res:string)=>{
+      if(res=='reassignment')
+      {
+        this.financialPcaFacade.pcaReassignmentCount();   
+        this.loadFinancialPcaReassignmentListGrid();
+      }
+    })
   }
+  
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -161,7 +163,6 @@ export class FinancialPcasReassignmentListComponent
 
   onChange(data: any) {
     this.defaultGridState();
-
     this.filterData = {
       logic: 'and',
       filters: [
@@ -204,7 +205,6 @@ export class FinancialPcasReassignmentListComponent
     this.loadFinancialPcaReassignmentListGrid();
   }
 
-  // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
@@ -268,6 +268,57 @@ export class FinancialPcasReassignmentListComponent
     this.isViewGridOptionClicked = false;
     this.isEditGridOptionClicked = false;
     this.pcaReassignmentAddEditDialogService.close();
+
+  }
+  onSearchTextChange(text : any,data:any)
+  {     
+     let  pcaCodes=this.reAssignPcaS.find((x:any)=>x.pcaAssignmentId==data.pcaAssignmentId);
+     if(text!=pcaCodes.pcaCode)
+           {
+            let idx = this.reAssignPcaS.findIndex((x:any)=>x.pcaCode==pcaCodes.pcaCode);
+            if (idx !== -1) {
+              this.reAssignPcaS.splice(idx, 1);
+          }
+      this.allNotAssignedPcaSList=this.notSelectedPcaS;    }
+   this.allNotAssignedPcaSList=this.notSelectedPcaS.filter((obj:any) =>
+                         String(obj.pcaCode).includes(text)||String(obj.fundingSourceCode).includes(text))
+  }
+
+  onClientSelected(event: any,data:any) {  
+          let isPcAalreadySelected = this.reAssignPcaS.findIndex((x:any)=>x.pcaAssignmentId==data.pcaAssignmentId);
+              if (isPcAalreadySelected !== -1)
+              {                  
+                 this.reAssignPcaS.splice(isPcAalreadySelected, 1);
+              }
+                 let obj={"pcaId":event.pcaId,"pcaAssignmentId":data.pcaAssignmentId,"pcaCode":event.pcaCode};
+             this.reAssignPcaS.push(obj);
+  }
+  onPcaReassignmentClicked(action: any) {
+    this.pcaReassignmentConfirmationDialogService.close();
+    this.financialPcaFacade.pcaReassignment(this.reAssignPcaS);
+}
+
+onclick(data:any)
+  {  
+     this.selectedPcaData=data;
+  }
+
+public itemDisabled(itemArgs:any)
+  {       
+    if(this.selectedPcaData ==undefined)
+    return false;
+    else if(this.selectedPcaData.unlimitedFlag=='Y')
+    return false
+    else if(itemArgs.dataItem.pcaRemainingAmount<this.selectedPcaData.originalAmount)
+    {
+      return true;
+    }
+    else if(this.reAssignPcaS.findIndex((x:any)=>x.pcaCode==itemArgs.dataItem.pcaCode)!==-1)
+    {
+      return true;
+    }else{
+      return false
+    }
 
   }
 }

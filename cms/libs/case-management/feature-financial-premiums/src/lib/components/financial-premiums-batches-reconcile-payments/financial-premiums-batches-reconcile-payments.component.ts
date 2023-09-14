@@ -41,6 +41,13 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   @Input() sort: any;
   @Input() reconcileGridLists$: any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
+  @Input() reconcileBreakoutSummary$:any;
+  @Input() reconcileBreakoutList$ :any;
+  @Input() batchId: any;
+  entityId: any;
+  public isBreakoutPanelShow:boolean=true;
+  @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
+  @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -64,6 +71,18 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   
   ngOnInit(): void {
     this.loadReconcileListGrid();
+    this.isBreakoutPanelShow=false;
+    const ReconcilePaymentResponseDto =
+      {
+        batchId : this.batchId,
+        entityId : this.entityId,
+        premiumsType: this.premiumsType,
+        amountTotal : 0,
+        warrantTotal : 0,
+        warrantNbr : "",
+        paymentToReconcileCount : 0
+      }
+      this.loadIPBreakoutSummary(ReconcilePaymentResponseDto);
   }
   ngOnChanges(): void {
     this.state = {
@@ -202,5 +221,50 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     }
   }
  
+  toggleBreakoutPanel()
+    {
+      this.isBreakoutPanelShow=!this.isBreakoutPanelShow;
+      if(!this.isBreakoutPanelShow)
+      {
+        this.reconcileBreakoutSummary$.warrantTotal=0;
+        this.reconcileBreakoutSummary$.paymentToReconcileCount=0;
+      }
+    }
+
+  onRowSelection(grid:any, selection:any)
+    {
+      const data = selection.selectedRows[0].dataItem;
+      this.isBreakoutPanelShow=true;
+      this.entityId=data.entityId;
+      const ReconcilePaymentResponseDto =
+      {
+        batchId : this.batchId,
+        entityId : data.entityId,
+        premiumsType: this.premiumsType,
+        amountTotal : data.amountTotal,
+        warrantTotal : data.amountPaid,
+        warrantNbr : data.checkNbr,
+        paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
+      }
+      this.loadIPBreakoutSummary(ReconcilePaymentResponseDto);
+    }
+
+    loadIPBreakoutSummary(ReconcilePaymentResponseDto:any)
+    {
+      this.loadReconcileBreakoutSummaryEvent.emit(ReconcilePaymentResponseDto);
+    }
+
+    loadReconcilePaymentBreakOutGridList(event: any) {
+    this.loadReconcilePaymentBreakoutListEvent.emit({
+      batchId: event.batchId,
+      entityId: event.entityId,
+      premiumsType:event.premiumsType,
+      skipCount:event.skipCount,
+      pageSize:event.pagesize,
+      sort:event.sortColumn,
+      sortType:event.sortType,
+      filter:event.filter
+    });
+  }
 }
 

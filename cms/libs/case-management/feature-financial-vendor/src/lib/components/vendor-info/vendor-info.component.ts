@@ -72,6 +72,9 @@ export class VendorInfoComponent implements OnInit {
     else if (this.providerType == this.vendorTypes.MedicalProviders) {
       this.editTitlePrefix = 'Medical ';
     }
+    else if (this.providerType == this.vendorTypes.InsuranceVendors) {
+      this.editTitlePrefix = 'Insurance ';
+    }
   }
 
   openEditInfoDialog() {

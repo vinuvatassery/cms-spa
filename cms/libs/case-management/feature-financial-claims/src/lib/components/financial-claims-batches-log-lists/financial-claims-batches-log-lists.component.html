@@ -1,7 +1,7 @@
    <div class=" pt-0">
           <section class="app-l-mainTittle">
               <div class="d-flex" *ngIf="(paymentBatchName$ | async) as batch; else loading">
-                  <button aria-label="back to vendor refund" kendoButton look="flat" class="mr-1" (click)="backToBatch($event)"> <span
+                  <button aria-label="back to vendor refund" title="Go back" kendoButton look="flat" class="mr-1" (click)="backToBatch($event)"> <span
                       class="material-icons">
                       arrow_back </span> </button>
               <h1 class="maintitle_withicon text-bold">Batch # {{batch.batchName}}</h1>

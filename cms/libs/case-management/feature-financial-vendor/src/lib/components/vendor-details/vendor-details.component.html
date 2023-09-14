@@ -9,9 +9,9 @@
     </p>
     <div class="flex-row">
       <div class="flex-col" *ngIf="providerType == vendorTypes.InsuranceVendors">
-        <kendo-floatinglabel text="Insurance Vendor Name">
+        <kendo-floatinglabel text="Vendor Name">
           <kendo-textbox aria-label="Provider Name" [fillMode]="formUiStyle.inputFillMode"
-            formControlName="providerName">
+            formControlName="providerName" [maxlength]="500">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
             Vendor Name is required
@@ -59,8 +59,11 @@
                 </ng-template>
               </kendo-autocomplete>
               <kendo-formerror
-                *ngIf="!medicalProviderForm.controls['providerName'].valid && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
+                *ngIf="medicalProviderFormControls?.providerName.errors?.required && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
                 Clinic Name is required
+              </kendo-formerror>
+              <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.maxlength">
+                Clinic Name cannot be more than 500 characters 
               </kendo-formerror>
             </kendo-floatinglabel>
           </div>
@@ -121,7 +124,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="TIN (optional)">
           <kendo-maskedtextbox aria-label="TIN" 
-           [fillMode]="formUiStyle.inputFillMode"  [maxlength]="9" placeholder="TIN (optional)"
+           [fillMode]="formUiStyle.inputFillMode"  [maxlength]="10" placeholder="TIN (optional)"
            [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat">
           </kendo-maskedtextbox> 
         </kendo-floatinglabel>
@@ -177,7 +180,7 @@
         </kendo-floatinglabel>
       </div>
 
-      <!-- stop the Name on check and Name on envelop to not show on manufacturer -->
+      <!-- stop the Name on check and Name on envelope to not show on manufacturer -->
       <div class="flex-col" *ngIf="providerType != vendorTypes.Manufacturers">
         <kendo-floatinglabel text="Name on Check">
           <kendo-textbox aria-label="Name on Check"  [maxlength]="200" [fillMode]="formUiStyle.inputFillMode"
@@ -193,12 +196,14 @@
       </div>
 
       <div class="flex-col" *ngIf="providerType != vendorTypes.Manufacturers">
-        <kendo-floatinglabel text="Name on Envelop">
-          <kendo-textbox aria-label="Name on Envelop"  [maxlength]="200" [fillMode]="formUiStyle.inputFillMode"
+ 
+        <kendo-floatinglabel text="Name on Envelope">
+          <kendo-textbox aria-label="Name on Envelope"  [maxlength]="200" [fillMode]="formUiStyle.inputFillMode"
             formControlName="nameOnEnvolop">
           </kendo-textbox>
           <kendo-formerror *ngIf="medicalProviderFormControls?.nameOnEnvolop.errors?.required && isValidateForm">
-            Name on Envelop is required
+            Name on Envelope is required
+ 
           </kendo-formerror>
           <kendo-formerror *ngIf="medicalProviderFormControls?.nameOnEnvolop.errors?.pattern">
             Special characters and numeric valus are not allowed 
