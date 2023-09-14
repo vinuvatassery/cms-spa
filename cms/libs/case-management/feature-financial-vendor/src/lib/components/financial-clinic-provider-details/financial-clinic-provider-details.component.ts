@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ProviderFacade } from '@cms/case-management/domain';
+import {  FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {  ProviderFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -17,9 +17,11 @@ export class FinancialClinicProviderDetailsComponent {
   selectedprovider!: any;
   selectedTin: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  searchProvider$ = this.ProviderFacade.searchProvider$;
+  searchProvider$ = this.providerFacade.searchProvider$;
+  providerLoaderVisibility$ =
+  this.providerFacade.providerLoaderVisibility$;
 
-  constructor(private readonly ProviderFacade: ProviderFacade,
+  constructor(private readonly providerFacade: ProviderFacade,
     private formBuilder: FormBuilder,
     private readonly changeDetector: ChangeDetectorRef,
   ) {
@@ -44,7 +46,6 @@ export class FinancialClinicProviderDetailsComponent {
     });
     this.providerForm.controls["provider"].setValue(event.providerName)
     this.providerForm.controls["tin"].setValue(event.tin);
-    this.providerForm.controls["providerId"].setValue(event.providerId);
     this.changeDetector.detectChanges();
   }
 
@@ -52,10 +53,10 @@ export class FinancialClinicProviderDetailsComponent {
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.ProviderFacade.searchProvider(searchText);
+    this.providerFacade.searchProvider(searchText);
   }
 
   saveprovider(provider: any) {
-    this.ProviderFacade.addProvider(provider)
+    this.providerFacade.addProvider(provider)
   }
 }  

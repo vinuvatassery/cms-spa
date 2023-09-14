@@ -7,15 +7,17 @@
             <div class="flex-row" >
                  
                   <div class="flex-col">
-                        <kendo-floatinglabel text="Provider Name">
+                        <kendo-floatinglabel text="Provider Name" class="inline-search-loader">
+                              <span *ngIf="providerLoaderVisibility$ | async"
+                              class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
                               <span class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
                               <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" 
                                    [data]="searchProvider$ | async" formcontrolName="provider"
                                    valueField="providerName"
+                                   [value]="selectedprovider"
                                     [filterable]="true"
                                     placeholder=""
                                     (filterChange)="searchprovider($event)"
-                                    [(ngModel)]="selectedprovider"
                                     [popupSettings]="{popupClass: 'healthcaresearch-list auto-complete-with-template', animate: true, appendTo:'component' }">
                                     <ng-template kendoAutoCompleteItemTemplate let-dataItem>
                                           <span class="pr-1" (click)="onProviderNameValueChange(dataItem)">{{

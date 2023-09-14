@@ -25,6 +25,8 @@ export class ProviderFacade {
   serviceData$ = this.serviceDataSubject.asObservable();
   invoiceData$ = this.invoiceDataSubject.asObservable();
   isInvoiceLoading$ = this.isInvoiceLoadingSubject.asObservable();
+  private providerLoaderVisibilitySubject = new Subject<boolean>;
+  providerLoaderVisibility$ =this.providerLoaderVisibilitySubject.asObservable();
   searchProvider$=this.searchProviderSubject.asObservable();  
   removeprovider$=this.removeprovidersubject.asObservable();
   AddproviderNew$=this.AddproviderNewSubject.asObservable();
