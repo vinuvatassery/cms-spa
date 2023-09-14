@@ -143,8 +143,18 @@ export class ProviderDataService {
     ]);
   }
 
-  searchProvider(searchText: string) {
-    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/search/${searchText}`);
-
+  searchProvider(searchText: string) 
+  {
+    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/search/SearchText=${searchText}`);
   }
+  removeprovider(providerId: any) 
+  {
+    return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/delink-clinic/${providerId}`);
+  }
+  addProvider(provider:any)
+  {   
+    return this.http.patch(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/link-clinic`,provider);
+  }
+    
 }
+

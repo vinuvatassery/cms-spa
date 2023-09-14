@@ -9,7 +9,7 @@
           <button kendoButton [primary]="true" aria-label="cancel remove" look="outline" >
             Cancel
           </button>
-          <button kendoButton class="k-error-button" aria-label="remove" >
+          <button kendoButton class="k-error-button" aria-label="remove" (click)="removeproviderEvent($event)">
             Remove
           </button>
         </div>

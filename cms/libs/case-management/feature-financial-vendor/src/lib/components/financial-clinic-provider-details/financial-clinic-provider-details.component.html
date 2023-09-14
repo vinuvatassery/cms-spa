@@ -9,6 +9,7 @@
                               <span class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
                               <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" placeholder="Clinic Name"
                                     [filterable]="true"
+                                    (filterChange)="searchprovider($event)"
                                     [popupSettings]="{popupClass: 'healthcaresearch-list auto-complete-with-template', animate: true, appendTo:'component' }">
                               </kendo-autocomplete>
                         </kendo-floatinglabel>
@@ -30,7 +31,7 @@
                   <div class="justify-content-end">
                         <button kendoButton [primary]="true" aria-label="cancel employer" look="outline"> Cancel
                         </button>
-                        <button kendoButton [primary]="true" aria-label="add new employer"> Add </button>
+                        <button kendoButton [primary]="true" aria-label="add new employer" (click)="saveprovider($event)"> Add </button>
                   </div>
             </div>
       </kendo-dialog-actions>
