@@ -291,7 +291,7 @@
               </kendo-grid-column>
 
                   <div *kendoGridDetailTemplate="let dataItem">
-                    <cms-contact-address-list [VendorAddressId]="dataItem.vendorAddressId"
+                    <cms-contact-address-list [VendorAddressId]="dataItem.vendorAddressId" [vendorId]="vendorId"
                     (refreshPaymentAddressList)="loadPaymentsAddressListGrid()"></cms-contact-address-list>
                     </div>
 
