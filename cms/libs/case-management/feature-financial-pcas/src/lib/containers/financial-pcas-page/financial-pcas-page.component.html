@@ -6,7 +6,7 @@
       </section>
       <section class="app-l-client-wrapper">
           <section class="app-l-wrapper">
-              <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+              <kendo-tabstrip #tabStrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
                   class="app-c-tab">
                   <kendo-tabstrip-tab title="PCA Setup" [selected]="true">
                       <ng-template kendoTabContent>
@@ -52,12 +52,15 @@
                               (addPcaDataEvent)="assignPca($event)"
                               (loadFinancialPcaAssignmentEvent)="loadFinancialPcaAssignmentListGrid($event)"
                               (pcaAssignmentPriorityUpdateEvent)="pcaAssignmentPriorityUpdate($event)"
+                              [assignmentInfo]="assignmentInfo"
+                              (resetAssignmentInfoObject)="resetAssignmentInfo()"
                               >
                               ></cms-financial-pcas-assignment-list>
 
                           </div>
                       </ng-template>
                   </kendo-tabstrip-tab>
+
                   <kendo-tabstrip-tab title="PCA Reassignment">
                       <ng-template kendoTabTitle> PCA Reassignment <span class="tab-batch-notify">{{pcaReassignmentCount$ | async}}</span></ng-template>
                       <ng-template kendoTabContent>
@@ -87,7 +90,8 @@
                           [sortType]="sortType" [sort]="sortFinancialPcaReportList"
                           (loadFinancialPcaReportListEvent)="loadFinancialPcaReportListGrid($event)"
                           [financialPcaSubReportGridLists$]="financialPcaSubReportGridLists$"
-                          (loadFinancialPcaSubReportListEvent)="loadFinancialPcaSubReportListGrid($event)"></cms-financial-pcas-assignment-report-list>
+                          (loadFinancialPcaSubReportListEvent)="loadFinancialPcaSubReportListGrid($event)"
+                          (editButtonClick)="onAssignmentReportEditClick($event)"></cms-financial-pcas-assignment-report-list>
                       </div>
                       </ng-template>
                   </kendo-tabstrip-tab>
