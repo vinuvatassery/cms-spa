@@ -40,8 +40,8 @@ export class FinancialVendorProfileComponent implements OnInit {
    providerLissort = this.financialVendorFacade.sort;
   
   filters:any=[];
-
-  constructor(private activeRoute: ActivatedRoute, private financialVendorFacade : FinancialVendorFacade,
+  
+  constructor(private activeRoute: ActivatedRoute,private financialVendorFacade : FinancialVendorFacade,
               private readonly drugsFacade: DrugsFacade) {}
 
   ngOnInit(): void {
@@ -150,5 +150,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   loadProviderList(data :any){
     this.financialVendorFacade.getProviderList(data)
   }
-
+  removeProvider(providerId: any) {
+   this.financialVendorFacade.removeProvider(providerId);
+  }
 }

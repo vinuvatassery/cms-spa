@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FinancialVendorTypeCode, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';  
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -16,7 +16,7 @@ import { Subject, debounceTime } from 'rxjs';
 export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   isProvidersDetailShow = false;
   isProvidersRemoveShow = false;
-
+  selectProviderId!: string;
   gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
     vendorName:"Vendor Name",
@@ -48,9 +48,12 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   columnChangeDesc = 'Default Columns'
   public state!: State;
   searchText = '';
+
+  
   @Input() providerList$:any
   @Output() loadProviderListEvent = new EventEmitter<any>();
-@Input() ParentVendorId :any
+  @Output() removeProviderClick = new EventEmitter<any>();
+  @Input() ParentVendorId :any
   public processGridActions = [
     {
       buttonType: 'btn-h-danger',
@@ -72,7 +75,8 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
 
   constructor(
     private readonly intl: IntlService,
-    private readonly configProvider: ConfigurationProvider
+    private readonly configProvider: ConfigurationProvider,
+    private readonly changeDetector: ChangeDetectorRef
   ) { }
 
   
@@ -103,7 +107,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   }
 
   searchColumnChangeHandler(value: string) {
-    this.filter = [];
+    this.filter = [];value
     this.showNumberSearchWarning = (['tin']).includes(value);
     this.showDateSearchWarning = value === 'closeDate';
     if (this.searchText) {
@@ -194,7 +198,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     this.addSearchSubjectSubscription();
   }
 
-  private loadProviderListGrid(): void {
+   loadProviderListGrid(): void {
   
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
@@ -274,12 +278,28 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     this.isProvidersDetailShow = false;
   }
 
- 
 
   clickOpenRemoveProviders() {
     this.isProvidersRemoveShow = true;
   }
   clickCloseRemoveProviders() {
     this.isProvidersRemoveShow = false;
+  }
+  removeProvider() {
+      this.removePoviderEvent(this.selectProviderId);
+      this.clickCloseRemoveProviders();
+   }
+
+   removedClick(vendorId:any)
+   {
+     this.selectProviderId = vendorId
+     this.clickOpenRemoveProviders();
+   }
+   removePoviderEvent(providerId: any) {
+    this.removeProviderClick.emit(providerId);
+    this.clickCloseRemoveProviders();
+    this.changeDetector.detectChanges();
+    this.loadProviderListGrid();
+     
   }
 }
