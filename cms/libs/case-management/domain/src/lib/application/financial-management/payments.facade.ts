@@ -17,7 +17,7 @@ export class PaymentsFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'address1';
+  public sortValue = 'mailCode';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
@@ -81,7 +81,7 @@ export class PaymentsFacade {
         this.paymentBatchLoaderSubject.next(false);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err); 
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.paymentBatchLoaderSubject.next(false);
       },
     });

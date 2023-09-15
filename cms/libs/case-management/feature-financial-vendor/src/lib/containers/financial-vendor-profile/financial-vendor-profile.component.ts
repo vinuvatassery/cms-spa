@@ -38,9 +38,9 @@ export class FinancialVendorProfileComponent implements OnInit {
    providerLissortValue = this.financialVendorFacade.sortValue;
    providerLissortType = this.financialVendorFacade.sortType;
    providerLissort = this.financialVendorFacade.sort;
-  
-  filters:any=[];
-  
+
+  filter:any=[];
+
   constructor(private activeRoute: ActivatedRoute,private financialVendorFacade : FinancialVendorFacade,
               private readonly drugsFacade: DrugsFacade) {}
 
@@ -128,7 +128,7 @@ export class FinancialVendorProfileComponent implements OnInit {
       this.state.take ?? 0,
       this.sortValue,
       this.sortType,
-      this.filters ?? []
+      this.filter ?? []
     );
   }
 
@@ -139,7 +139,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     };
     this.sortValue = event.sortColumn;
     this.sortType = event.sortType;
-    this.filters = event.filters;
+    this.filter = event.filters;
     this.loadDrugsListGrid();
   }
 
