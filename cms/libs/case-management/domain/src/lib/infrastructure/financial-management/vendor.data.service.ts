@@ -126,6 +126,6 @@ export class FinancialVendorDataService {
   }
 
   getProvidersList(providerPageAndSortedRequest:any) {
-      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/related-vendors`, providerPageAndSortedRequest);   
+      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/childrens`, providerPageAndSortedRequest);   
   }
 }

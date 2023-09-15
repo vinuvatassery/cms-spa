@@ -34,7 +34,7 @@ export class FinancialVendorFacade {
   private vendorsListSubject = new BehaviorSubject<any>([]);
   vendorDetails$ = this.vendorsListSubject.asObservable();
 
-  private providerListSubject = new BehaviorSubject<any>([]);
+  private providerListSubject = new Subject<any>();
   providerList$ = this.providerListSubject.asObservable();
   public selectedVendorType = FinancialVendorTypeCode.Manufacturers
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
