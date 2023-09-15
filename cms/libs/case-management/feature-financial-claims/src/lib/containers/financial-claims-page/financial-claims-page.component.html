@@ -18,7 +18,8 @@
                                 [sortValueFinancialInvoices]="sortValueFinancialInvoices"
                                 [financialClaimsInvoice$]="financialClaimsInvoice$"
                                 (loadFinancialClaimsProcessListEvent)="loadFinancialClaimsProcessListGrid($event)"
-                                (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)></cms-financial-claims-process-list>
+                                (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)
+                                (exportGridDataEvent)="exportClaimsProcessGridData()"></cms-financial-claims-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

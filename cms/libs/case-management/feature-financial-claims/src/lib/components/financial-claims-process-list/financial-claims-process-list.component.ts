@@ -54,6 +54,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   @Input() financialClaimsInvoice$: any;
   @Output() loadFinancialClaimsProcessListEvent = new EventEmitter<any>();
   @Output() loadFinancialClaimsInvoiceListEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
+  
   public state!: State;
   sortColumn = 'Invoice ID';
   sortDir = 'Ascending';
@@ -503,5 +505,9 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
       content: this.addEditClaimsDialog,
       cssClass: 'app-c-modal app-c-modal-full add_claims_modal',
     });
+  }
+
+  onClickedExport(){
+    this.exportGridDataEvent.emit()    
   }
 }
