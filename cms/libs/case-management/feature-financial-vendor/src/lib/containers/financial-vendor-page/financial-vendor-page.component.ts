@@ -66,6 +66,7 @@ export class FinancialVendorPageComponent implements OnInit {
   sortType = this.financialVendorFacade.sortType;
   sort = this.financialVendorFacade.sort;
   selectedVendorType = this.financialVendorFacade.selectedVendorType
+  exportButtonShow$ = this.documentFacade.exportButtonShow$
   constructor(private caseFacade: CaseFacade, private financialVendorFacade: FinancialVendorFacade,
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,

@@ -107,7 +107,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   }
 
   searchColumnChangeHandler(value: string) {
-    this.filter = [];value
+    this.filter = [];
     this.showNumberSearchWarning = (['tin']).includes(value);
     this.showDateSearchWarning = value === 'closeDate';
     if (this.searchText) {
