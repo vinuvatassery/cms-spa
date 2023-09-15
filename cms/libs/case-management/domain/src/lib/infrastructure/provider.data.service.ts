@@ -141,7 +141,5 @@ export class ProviderDataService {
         EntryDate: '12-27-2022',
       },
     ]);
-  }
-    
+  }   
 }
-

@@ -212,7 +212,6 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
         ...param
       }
     this.loadProviderListEvent.emit(providerQuery);
- //   this.gridDataHandle();
   }
 
   filterChange(filter: CompositeFilterDescriptor): void {
