@@ -20,7 +20,7 @@ export class VendorsListComponent implements OnChanges , OnInit{
 @Input() sortType : any;
 @Input() sort : any;
 @Input() vendorsList$ : any
-
+showExportLoader = false;
 @Output() loadFinancialVendorsListEvent = new EventEmitter<any>();
 @Output() exportGridDataEvent = new EventEmitter<any>();
 
@@ -352,7 +352,7 @@ public filterChange(filter: CompositeFilterDescriptor): void {
     "preferred-yellow": (args.dataItem.preferredFlag === 'Y' && this.vendorTypeCode === 'PHARMACY'),
   });
 
-  onClickedExport(){
+  onClickedExport(){ 
     this.exportGridDataEvent.emit(true)    
   }
 }
