@@ -21,8 +21,6 @@ export class FinancialClinicProviderDetailsComponent {
   @Output() closeProviderEvent = new EventEmitter();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   searchProvider$ = this.providerFacade.searchProvider$;
-  providerLoaderVisibility$ =
-  this.providerFacade.providerLoaderVisibility$;
   isValidateForm: boolean = false;
   constructor(private readonly providerFacade: ProviderFacade,
     private formBuilder: FormBuilder,
