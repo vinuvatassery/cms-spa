@@ -318,7 +318,7 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button kendoButton aria-label="cancel" [primary]="true" look="flat">
-          Client Profile <span class="material-icons ml-1">
+          Client Profile <span class="material-icons ml-1" (click)="onClientClicked(clientId)">
             chevron_right
           </span>
         </button>

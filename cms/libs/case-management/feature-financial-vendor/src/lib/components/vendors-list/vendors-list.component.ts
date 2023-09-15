@@ -23,7 +23,7 @@ export class VendorsListComponent implements OnChanges , OnInit{
 
 @Output() loadFinancialVendorsListEvent = new EventEmitter<any>();
 @Output() exportGridDataEvent = new EventEmitter<any>();
-
+showExportLoader = false;
 vndorId! : string
 public  state!: State
 groupData:any=[]
@@ -353,6 +353,6 @@ public filterChange(filter: CompositeFilterDescriptor): void {
   });
 
   onClickedExport(){
-    this.exportGridDataEvent.emit(true)    
+    this.exportGridDataEvent.emit()    
   }
 }
