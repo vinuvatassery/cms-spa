@@ -18,7 +18,8 @@
                                 [sortValueFinancialInvoices]="sortValueFinancialInvoices"
                                 [financialClaimsInvoice$]="financialClaimsInvoice$"
                                 (loadFinancialClaimsProcessListEvent)="loadFinancialClaimsProcessListGrid($event)"
-                                (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)></cms-financial-claims-process-list>
+                                (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)
+                                (exportGridDataEvent)="exportClaimsProcessGridData()"></cms-financial-claims-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -29,7 +30,8 @@
                                 <cms-financial-claims-batches-list  [claimsType]="claimsType" [financialClaimsBatchGridLists$]="financialClaimsBatchGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsBatch"
                                 [sortType]="sortType" [sort]="sortBatchList"
-                                (loadFinancialClaimsBatchListEvent)="loadFinancialClaimsBatchListGrid($event)"></cms-financial-claims-batches-list>
+                                (loadFinancialClaimsBatchListEvent)="loadFinancialClaimsBatchListGrid($event)"
+                                (exportGridDataEvent)="exportClaimsBatchGridData()"></cms-financial-claims-batches-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -39,7 +41,8 @@
                                 <cms-financial-claims-all-payments-list [claimsType]="claimsType" [financialClaimsAllPaymentsGridLists$]="financialClaimsAllPaymentsGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList"
-                                (loadFinancialClaimsAllPaymentsListEvent)="loadFinancialClaimsAllPaymentsListGrid($event)"></cms-financial-claims-all-payments-list>
+                                (loadFinancialClaimsAllPaymentsListEvent)="loadFinancialClaimsAllPaymentsListGrid($event)"
+                                (exportGridDataEvent)="exportClaimsPaymentsGridData()"></cms-financial-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

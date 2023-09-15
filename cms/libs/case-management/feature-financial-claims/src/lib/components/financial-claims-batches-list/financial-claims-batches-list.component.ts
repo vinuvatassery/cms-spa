@@ -33,6 +33,8 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
   @Input() sort: any;
   @Input() financialClaimsBatchGridLists$: any;
   @Output() loadFinancialClaimsBatchListEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
+  
   public state!: State;
   sortColumn = 'Batch #';
   sortDir = 'Ascending';
@@ -251,6 +253,10 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
   navToBatchDetails(data : any){   
     this.route.navigate([`/financial-management/claims/${this.claimsType}/batch`],
     { queryParams :{bid: data?.paymentRequestBatchId}});
+  }
+
+  onClickedExport(){
+    this.exportGridDataEvent.emit()    
   }
 
 }
