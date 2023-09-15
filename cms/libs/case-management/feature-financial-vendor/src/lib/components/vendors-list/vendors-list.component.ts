@@ -4,7 +4,7 @@ import { FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
-import { Subject, first } from 'rxjs';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-financial-vendors-list',
   templateUrl: './vendors-list.component.html',
