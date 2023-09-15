@@ -489,4 +489,9 @@ export class FinancialClaimsAllPaymentsListComponent
       this.printAuthorizationDialog.close();
     }
   }
+
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.closeRecentClaimsModal(true);
+  }
 }

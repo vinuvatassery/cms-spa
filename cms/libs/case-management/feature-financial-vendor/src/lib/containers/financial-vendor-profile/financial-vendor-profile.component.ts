@@ -32,9 +32,16 @@ export class FinancialVendorProfileComponent implements OnInit {
   selectedVendorInfo$ = this.financialVendorFacade.selectedVendor$;
   vendorProfile$ = this.financialVendorFacade.vendorProfile$
   vendorProfileSpecialHandling$ = this.financialVendorFacade.vendorProfileSpecialHandling$
-  filters:any=[];
 
-  constructor(private activeRoute: ActivatedRoute, private financialVendorFacade : FinancialVendorFacade,
+   providerList$ = this.financialVendorFacade.providerList$
+   providerLispageSizes = this.financialVendorFacade.gridPageSizes;
+   providerLissortValue = this.financialVendorFacade.sortValue;
+   providerLissortType = this.financialVendorFacade.sortType;
+   providerLissort = this.financialVendorFacade.sort;
+
+  filter:any=[];
+
+  constructor(private activeRoute: ActivatedRoute,private financialVendorFacade : FinancialVendorFacade,
               private readonly drugsFacade: DrugsFacade) {}
 
   ngOnInit(): void {
@@ -121,7 +128,7 @@ export class FinancialVendorProfileComponent implements OnInit {
       this.state.take ?? 0,
       this.sortValue,
       this.sortType,
-      this.filters ?? []
+      this.filter ?? []
     );
   }
 
@@ -132,11 +139,18 @@ export class FinancialVendorProfileComponent implements OnInit {
     };
     this.sortValue = event.sortColumn;
     this.sortType = event.sortType;
-    this.filters = event.filters;
+    this.filter = event.filters;
     this.loadDrugsListGrid();
   }
 
   loadVendorDetailList(){
     this.financialVendorFacade.loadVendorList(this.vendorTypeCode);
+  }
+
+  loadProviderList(data :any){
+    this.financialVendorFacade.getProviderList(data)
+  }
+  removeProvider(providerId: any) {
+   this.financialVendorFacade.removeProvider(providerId);
   }
 }

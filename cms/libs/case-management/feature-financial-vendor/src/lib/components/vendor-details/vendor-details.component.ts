@@ -162,6 +162,8 @@ fillFormData(){
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
+    this.validateMailCode()
+ 
     if (mailCode) {
                this.medicalProviderForm.controls['addressLine1']
         .setValidators([
@@ -240,6 +242,25 @@ fillFormData(){
       (this.AddContactForm.controls[index] as FormGroup).controls['isCheckContactNameValid'].setValue(true);
     }
 
+  }
+  validateMailCode() {
+    if(this.providerType == this.vendorTypes.DentalProviders){
+      let address1 =  this.medicalProviderForm.controls['addressLine1'].value;   
+      let city =  this.medicalProviderForm.controls['city'].value;   
+      let state =  this.medicalProviderForm.controls['state'].value;   
+      let zip =  this.medicalProviderForm.controls['zip'].value;
+  
+      if(address1 || city || state || zip){
+        this.medicalProviderForm.controls['mailCode']
+        .setValidators([
+          Validators.required,
+        ]);
+      this.medicalProviderForm.controls['mailCode'].updateValueAndValidity();
+      }else{
+        this.medicalProviderForm.controls['mailCode'].clearValidators();
+      this.medicalProviderForm.controls['mailCode'].updateValueAndValidity();
+      }
+    }
   }
 
   getPaymentMethods() {
