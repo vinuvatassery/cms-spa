@@ -22,6 +22,12 @@ export class FinancialVendorFacade {
   private clinicVendorLoaderSubject = new Subject<any>();  /** Public properties **/
   private providePanelSubject = new Subject<any>();
   private updateProviderPanelSubject = new Subject<any>();
+  private AddproviderNewSubject= new BehaviorSubject<any>([]);
+  private searchProviderSubject= new BehaviorSubject<any>([]);
+  private removeprovidersubject=new BehaviorSubject<any>([]);
+  searchProvider$=this.searchProviderSubject.asObservable();  
+  removeprovider$=this.removeprovidersubject.asObservable();
+  AddproviderNew$=this.AddproviderNewSubject.asObservable();
   vendorsList$ = this.vendorsSubject.asObservable();
   selectedVendor$ = this.selectedVendorSubject.asObservable();
   vendorProfile$ = this.vendorProfileSubject.asObservable();
@@ -219,6 +225,68 @@ export class FinancialVendorFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+  searchProvider(searchText: string)
+  {
+    this.showLoader();
+    return this.financialVendorDataService.searchProvider(searchText).subscribe
+    ({
+      next: (response: any[]) => 
+      {
+        this.searchProviderSubject.next(response);
+        this.hideLoader();
+      },
+      error: (err) => 
+      {
+       this.hideLoader();
+        this.showHideSnackBar(
+          SnackBarNotificationType.ERROR,
+        err
+        );
+        this.loggingService.logException(err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+      },
+    });
+  }
+  removeProvider(providerId: any): void 
+  {
+    this.showLoader();
+    this.financialVendorDataService.removeprovider(providerId).subscribe
+    ({
+      next: (deleteResponse) =>
+      {
+        if (deleteResponse ?? false) 
+        {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, deleteResponse.message)
+          this.removeprovidersubject.next(deleteResponse)
+        }
+      },
+      error: (err) => 
+      {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+  addProvider(provider:any) 
+  {
+    this.showLoader();
+    this.financialVendorDataService.addProvider(provider).subscribe
+    ({
+      next: (addNewdependentsResponse) => 
+      {
+        if (addNewdependentsResponse) 
+        {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'New provider Added Successfully')
+        }
+        this. AddproviderNewSubject.next(addNewdependentsResponse);
+        this.hideLoader();
+      },
+      error: (err) =>
+      {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }

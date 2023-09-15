@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, ProviderFacade } from '@cms/case-management/domain';
+import { DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 
@@ -39,7 +39,7 @@ export class FinancialVendorProfileComponent implements OnInit {
    providerLissortType = this.financialVendorFacade.sortType;
    providerLissort = this.financialVendorFacade.sort;
   
-  constructor(private activeRoute: ActivatedRoute, private providerFacade: ProviderFacade,private financialVendorFacade : FinancialVendorFacade,
+  constructor(private activeRoute: ActivatedRoute,private financialVendorFacade : FinancialVendorFacade,
               private readonly drugsFacade: DrugsFacade) {}
 
   ngOnInit(): void {
@@ -149,7 +149,6 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.financialVendorFacade.getProviderList(data)
   }
   removeProvider(providerId: any) {
-    debugger;
-   this.providerFacade.removeProvider(providerId);
+   this.financialVendorFacade.removeProvider(providerId);
   }
 }

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import {  FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import {  ProviderFacade } from '@cms/case-management/domain';
+import {  FinancialVendorFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
 @Component({
@@ -21,9 +21,9 @@ export class FinancialClinicProviderDetailsComponent {
   @Output() closeProviderEvent = new EventEmitter();
   @Output() loadProviderListEvent = new EventEmitter();
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  searchProvider$ = this.providerFacade.searchProvider$;
+  searchProvider$ = this.financialVendorFacade.searchProvider$;
   isValidateForm: boolean = false;
-  constructor(private readonly providerFacade: ProviderFacade,
+  constructor(private financialVendorFacade : FinancialVendorFacade,
     private formBuilder: FormBuilder,
     private readonly changeDetector: ChangeDetectorRef,
   ) {
@@ -62,7 +62,7 @@ export class FinancialClinicProviderDetailsComponent {
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.providerFacade.searchProvider(searchText);
+    this.financialVendorFacade.searchProvider(searchText);
   }
 
   saveprovider() {
@@ -76,10 +76,10 @@ export class FinancialClinicProviderDetailsComponent {
     if (this.providerForm.valid){
       if(data)  
       {
-        this.providerFacade.addProvider(data);
+        this.financialVendorFacade.addProvider(data);
         this.closeProviderPopup();
       }
-      this.providerFacade.addProvider(data);
+      this.financialVendorFacade.addProvider(data);
       this.loadProviderListEvent.emit(true);
      }
   }

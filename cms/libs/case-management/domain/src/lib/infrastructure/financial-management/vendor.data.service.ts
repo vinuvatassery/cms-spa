@@ -128,4 +128,16 @@ export class FinancialVendorDataService {
   getProvidersList(providerPageAndSortedRequest:any) {
       return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/children`, providerPageAndSortedRequest);   
   }
+  searchProvider(searchText: string) 
+  {
+    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/search/${searchText}`);
+  }
+  removeprovider(providerId: any) 
+  {
+    return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${providerId}/delink-clinic`);
+  }
+  addProvider(provider:any)
+  {   
+    return this.http.patch(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/link-clinic`,provider);
+  }
 }

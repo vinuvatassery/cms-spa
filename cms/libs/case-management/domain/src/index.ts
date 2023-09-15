@@ -207,7 +207,6 @@ export * from './lib/application/workflow.facade';
 export * from './lib/application/client-document-facade';
 export * from './lib/application/prescription-drug.facade';
 export * from './lib/application/vendor.facade';
-export * from './lib/application/financial-management/provider.facade';
 export * from './lib/application/insurance-plan.facade';
 export * from './lib/application/health-insurance-policy.facade';
 export * from './lib/application/review-question-answer.facade';

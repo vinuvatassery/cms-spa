@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FinancialVendorTypeCode, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';  
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -75,7 +75,8 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
 
   constructor(
     private readonly intl: IntlService,
-    private readonly configProvider: ConfigurationProvider
+    private readonly configProvider: ConfigurationProvider,
+    private readonly changeDetector: ChangeDetectorRef
   ) { }
 
   
@@ -299,6 +300,8 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     debugger;
     this.removeProviderClick.emit(providerId);
     this.clickCloseRemoveProviders();
+    this.changeDetector.detectChanges();
      this.loadProviderListGrid();
+     
   }
 }
