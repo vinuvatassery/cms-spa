@@ -17,6 +17,7 @@
                                 [sortType]="sortType" [sort]="sortProcessList"
                                 [sortValueFinancialInvoices]="sortValueFinancialInvoices"
                                 [financialClaimsInvoice$]="financialClaimsInvoice$"
+                                [exportButtonShow$]="exportButtonShow$"         
                                 (loadFinancialClaimsProcessListEvent)="loadFinancialClaimsProcessListGrid($event)"
                                 (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)></cms-financial-claims-process-list>
                             </div>
@@ -29,6 +30,7 @@
                                 <cms-financial-claims-batches-list  [claimsType]="claimsType" [financialClaimsBatchGridLists$]="financialClaimsBatchGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsBatch"
                                 [sortType]="sortType" [sort]="sortBatchList"
+                                [exportButtonShow$]="exportButtonShow$"         
                                 (loadFinancialClaimsBatchListEvent)="loadFinancialClaimsBatchListGrid($event)"></cms-financial-claims-batches-list>
                             </div>
                         </ng-template>
@@ -39,6 +41,7 @@
                                 <cms-financial-claims-all-payments-list [claimsType]="claimsType" [financialClaimsAllPaymentsGridLists$]="financialClaimsAllPaymentsGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList"
+                                [exportButtonShow$]="exportButtonShow$"         
                                 (loadFinancialClaimsAllPaymentsListEvent)="loadFinancialClaimsAllPaymentsListGrid($event)"></cms-financial-claims-all-payments-list>
                             </div>
                         </ng-template>

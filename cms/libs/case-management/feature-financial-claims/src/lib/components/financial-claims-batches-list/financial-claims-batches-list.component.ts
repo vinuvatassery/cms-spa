@@ -32,6 +32,8 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialClaimsBatchGridLists$: any;
+  @Input() exportButtonShow$ : any
+
   @Output() loadFinancialClaimsBatchListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'Batch #';
@@ -44,7 +46,7 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
   claimType: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  showExportLoader = false;
   gridFinancialClaimsBatchDataSubject = new Subject<any>();
   gridFinancialClaimsBatchData$ = this.gridFinancialClaimsBatchDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();

@@ -9,7 +9,7 @@ import { State } from '@progress/kendo-data-query';
 import { FinancialClaimsFacade } from '@cms/case-management/domain';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {  filter } from 'rxjs';
-import { LoggingService } from '@cms/shared/util-core';
+import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-financial-claims-page',
   templateUrl: './financial-claims-page.component.html',
@@ -24,6 +24,7 @@ export class FinancialClaimsPageComponent implements OnInit {
   sortType = this.financialClaimsFacade.sortType;
   pageSizes = this.financialClaimsFacade.gridPageSizes;
   gridSkipCount = this.financialClaimsFacade.skipCount;
+  exportButtonShow$ = this.documentFacade.exportButtonShow$
 
   sortValueFinancialClaimsProcess =
     this.financialClaimsFacade.sortValueFinancialClaimsProcess;
@@ -51,6 +52,7 @@ export class FinancialClaimsPageComponent implements OnInit {
     private readonly activatedRoute: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
     private loggingService: LoggingService,
+    private documentFacade :  DocumentFacade
   ) {}
 
   ngOnInit(): void {

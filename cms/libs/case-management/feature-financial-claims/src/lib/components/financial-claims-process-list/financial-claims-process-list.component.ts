@@ -53,6 +53,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   @Input() sortValueFinancialInvoices: any;
   @Input() financialClaimsProcessGridLists$: any;
   @Input() financialClaimsInvoice$: any;
+  @Input() exportButtonShow$ : any
+
   @Output() loadFinancialClaimsProcessListEvent = new EventEmitter<any>();
   @Output() loadFinancialClaimsInvoiceListEvent = new EventEmitter<any>();
   public state!: State;
@@ -65,7 +67,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  showExportLoader = false;
   gridFinancialClaimsProcessDataSubject = new Subject<any>();
   gridFinancialClaimsProcessData$ =
     this.gridFinancialClaimsProcessDataSubject.asObservable();

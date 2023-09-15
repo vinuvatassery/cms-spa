@@ -43,6 +43,8 @@ export class FinancialClaimsAllPaymentsListComponent
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialClaimsAllPaymentsGridLists$: any;
+  @Input() exportButtonShow$ : any
+
   @Output() loadFinancialClaimsAllPaymentsListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batchNumber';
@@ -54,7 +56,7 @@ export class FinancialClaimsAllPaymentsListComponent
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  showExportLoader = false;
   gridFinancialClaimsAllPaymentsDataSubject = new Subject<any>();
   gridFinancialClaimsAllPaymentsData$ =
     this.gridFinancialClaimsAllPaymentsDataSubject.asObservable();
