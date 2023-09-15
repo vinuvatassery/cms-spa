@@ -87,6 +87,7 @@ export class FinancialClaimsPageComponent implements OnInit {
   }
 
   loadFinancialClaimsBatchListGrid(data: any) {
+    debugger
     this.dataExportParameters = data
     this.financialClaimsFacade.loadFinancialClaimsBatchListGrid( data?.skipCount,   data?.pagesize, data?.sortColumn, data?.sortType,data?.filter,this.claimsType);
   }
@@ -105,14 +106,54 @@ export class FinancialClaimsPageComponent implements OnInit {
       const vendorPageAndSortedRequest =
       {
         SortType : data?.sortType,
-        Sorting : data?.sort,
+        Sorting : data?.sortColumn,
         SkipCount : data?.skipcount,
         MaxResultCount : data?.maxResultCount,
         Filter : filter
       }
-     let fileName = this.claimsType+' claims'
+     let fileName = (this.claimsType[0].toUpperCase() + this.claimsType.substr(1).toLowerCase()) +' Claims'
 
       this.documentFacade.getExportFile(vendorPageAndSortedRequest,`claims/${this.claimsType}` , fileName)
+    }
+  }
+
+  exportClaimsBatchGridData(){
+    
+    const data = this.dataExportParameters
+    if(data){
+    const  filter = JSON.stringify(data?.filter);
+
+      const vendorPageAndSortedRequest =
+      {
+        SortType : data?.sortType,
+        Sorting : data?.sortColumn,
+        SkipCount : data?.skipcount,
+        MaxResultCount : data?.maxResultCount,
+        Filter : filter
+      }
+     let fileName = (this.claimsType[0].toUpperCase() + this.claimsType.substr(1).toLowerCase())  +' Claims Batches'
+
+      this.documentFacade.getExportFile(vendorPageAndSortedRequest,`claims/${this.claimsType}/batches` , fileName)
+    }
+  }
+
+  exportClaimsPaymentsGridData(){
+    
+    const data = this.dataExportParameters
+    if(data){
+    const  filter = JSON.stringify(data?.filter);
+
+      const vendorPageAndSortedRequest =
+      {
+        SortType : data?.sortType,
+        Sorting : data?.sortColumn,
+        SkipCount : data?.skipcount,
+        MaxResultCount : data?.maxResultCount,
+        Filter : filter
+      }
+     let fileName = (this.claimsType[0].toUpperCase() + this.claimsType.substr(1).toLowerCase())  +' Claims Payments'
+
+      this.documentFacade.getExportFile(vendorPageAndSortedRequest,`claims/${this.claimsType}/payments` , fileName)
     }
   }
 } 
