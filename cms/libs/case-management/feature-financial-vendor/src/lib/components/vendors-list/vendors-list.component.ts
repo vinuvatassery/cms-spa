@@ -353,6 +353,6 @@ public filterChange(filter: CompositeFilterDescriptor): void {
   });
 
   onClickedExport(){
-    this.exportGridDataEvent.emit(true)    
+    this.exportGridDataEvent.emit()    
   }
 }

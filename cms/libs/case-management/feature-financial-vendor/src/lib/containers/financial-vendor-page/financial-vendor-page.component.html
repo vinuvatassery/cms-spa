@@ -30,10 +30,10 @@
                 [vendorTypeCode]="financeVendorTypeCodes.Manufacturers"
                 [vendorsList$]="vendorsList$"
                 [pageSizes]="pageSizes" [sortValue]="sortValue"
-                [sortType]="sortType" [sort]="sort" 
+                [sortType]="sortType" [sort]="sort"
                 (removeProviderClick)="removeProvider($event)"
                 (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
-                (exportGridDataEvent)="exportGridData($event)"></cms-financial-vendors-list>
+                (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
@@ -50,7 +50,7 @@
                 [pageSizes]="pageSizes" [sortValue]="sortValue"
                 [sortType]="sortType" [sort]="sort" 
                 (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
-                (exportGridDataEvent)="exportGridData($event)"></cms-financial-vendors-list>
+                (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
@@ -67,10 +67,10 @@
                 [pageSizes]="pageSizes" [sortValue]="sortValue"
                 [sortType]="sortType" [sort]="sort" 
                 (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
-                (exportGridDataEvent)="exportGridData($event)"></cms-financial-vendors-list>
+                (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
               </div>
             </ng-template>
-          </kendo-tabstrip-tab>
+          </kendo-tabstrip-tab>         
 
           <kendo-tabstrip-tab title="Insurance Vendors" *ifPermission='["Financial_InsuranceVendors_Tab"]'
           [selected]="selectedVendorType===financeVendorTypeCodes.InsuranceVendors" >
@@ -84,7 +84,7 @@
                  [pageSizes]="pageSizes" [sortValue]="sortValue"
                  [sortType]="sortType" [sort]="sort" 
                  (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
-                 (exportGridDataEvent)="exportGridData($event)"></cms-financial-vendors-list>
+                 (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
@@ -101,7 +101,7 @@
                  [pageSizes]="pageSizes" [sortValue]="sortValue"
                  [sortType]="sortType" [sort]="sort" 
                  (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
-                 (exportGridDataEvent)="exportGridData($event)"></cms-financial-vendors-list>
+                 (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
               </div>
             </ng-template>
           </kendo-tabstrip-tab>
