@@ -1,0 +1,37 @@
+<form class="k-form">
+      <section class="k-dialog-body">
+            <p class="text-muted mb-1">
+                  All fields are required unless otherwise stated.
+            </p>
+            <div class="flex-row">
+                  <div class="flex-col">
+                        <kendo-floatinglabel text="Clinic Name">
+                              <span class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+                              <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" placeholder="Clinic Name"
+                                    [filterable]="true"
+                                    [popupSettings]="{popupClass: 'healthcaresearch-list auto-complete-with-template', animate: true, appendTo:'component' }">
+                              </kendo-autocomplete>
+                        </kendo-floatinglabel>
+                  </div>
+                  <div class="flex-col mb-1">
+
+                        <kendo-floatinglabel text="Tin">
+                              <kendo-textbox aria-label="Tin" [fillMode]="formUiStyle.inputFillMode">
+                              </kendo-textbox>
+                        </kendo-floatinglabel>
+                  </div>
+            </div>
+      </section>
+      <kendo-dialog-actions>
+            <div class="justify-content-between mt-2">
+                  <div>
+
+                  </div>
+                  <div class="justify-content-end">
+                        <button kendoButton [primary]="true" aria-label="cancel employer" look="outline"> Cancel
+                        </button>
+                        <button kendoButton [primary]="true" aria-label="add new employer"> Add </button>
+                  </div>
+            </div>
+      </kendo-dialog-actions>
+</form>

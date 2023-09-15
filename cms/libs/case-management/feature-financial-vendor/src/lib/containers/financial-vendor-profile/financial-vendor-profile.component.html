@@ -109,6 +109,20 @@
         </div>
       </ng-template>
     </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="Provider" *ngIf="(tabCode === financeManagementTabs.MedicalProvider || tabCode === financeManagementTabs.DentalProvider) && vendorTypeCode ==='CLINIC'">
+      <ng-template kendoTabContent>
+        <div class="block-section">
+
+          <div class="client-profile-outlet">
+          <cms-financial-clinic-provider-list 
+          [pageSizes]="providerLispageSizes" [sortValue]="providerLissortValue"
+          [sortType]="providerLissortType" [sort]="providerLissort" 
+          [ParentVendorId]="vendorId"
+          (loadProviderListEvent)="loadProviderList($event)" [providerList$]="providerList$"></cms-financial-clinic-provider-list>
+          </div>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
   </kendo-tabstrip>
 
 </section>

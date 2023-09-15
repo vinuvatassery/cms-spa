@@ -34,6 +34,8 @@ export class FinancialVendorFacade {
   private vendorsListSubject = new BehaviorSubject<any>([]);
   vendorDetails$ = this.vendorsListSubject.asObservable();
 
+  private providerListSubject = new Subject<any>();
+  providerList$ = this.providerListSubject.asObservable();
   public selectedVendorType = FinancialVendorTypeCode.Manufacturers
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'vendorName'
@@ -194,6 +196,25 @@ export class FinancialVendorFacade {
         if (reponse) {
           this.hideLoader();
           this.vendorsListSubject.next(reponse);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  getProviderList(providerPageAndSortedRequest :any){
+    this.showLoader();
+    this.financialVendorDataService.getProvidersList(providerPageAndSortedRequest).subscribe({
+      next: (response: any) => {
+        if (response) {
+          const gridView = {
+            data: response["items"],
+            total:response["totalCount"]
+          };
+          this.hideLoader();
+          this.providerListSubject.next(gridView);
         }
       },
       error: (err) => {
