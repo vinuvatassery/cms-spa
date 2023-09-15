@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FinancialVendorTypeCode, GridFilterParam, ProviderFacade } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';  
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
@@ -75,7 +75,6 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
 
   constructor(
     private readonly intl: IntlService,
-    private providerFacade: ProviderFacade,
     private readonly configProvider: ConfigurationProvider
   ) { }
 
@@ -207,7 +206,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
       this.sortType,
       JSON.stringify(this.filter));
       const providerQuery={
-        vendorId:'4D4ADDA9-44DE-4301-A4EC-22F118D50681',
+        vendorId:'5CEDE881-6338-4AF9-A5A7-9EEDE95C3696',
         vendorTypeCode :FinancialVendorTypeCode.Clinic,
         ...param
       }
@@ -299,8 +298,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
    removePoviderEvent(providerId: any) {
     debugger;
     this.removeProviderClick.emit(providerId);
-    //this.providerFacade.removeProvider(providerId);
+    this.clickCloseRemoveProviders();
      this.loadProviderListGrid();
-     this.clickCloseRemoveProviders();
   }
 }

@@ -129,6 +129,7 @@
           [pageSizes]="providerLispageSizes" [sortValue]="providerLissortValue"
           [sortType]="providerLissortType" [sort]="providerLissort" 
           [ParentVendorId]="vendorId"
+          (removeProviderClick)="removeProvider($event)"
           (loadProviderListEvent)="loadProviderList($event)" [providerList$]="providerList$"></cms-financial-clinic-provider-list>
           </div>
         </div>
