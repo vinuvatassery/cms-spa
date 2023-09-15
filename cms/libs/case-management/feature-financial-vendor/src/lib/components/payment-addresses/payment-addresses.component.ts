@@ -455,7 +455,7 @@ export class PaymentAddressesComponent {
   }
   paymentAddressAdded(event:any)
   {
-    if(event == true){
+    if(event){
       this.vendorcontactFacade.loadMailCodes(this.vendorId);
       this.checkMailCode();
     }

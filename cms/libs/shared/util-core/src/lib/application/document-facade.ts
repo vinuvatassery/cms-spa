@@ -5,7 +5,6 @@ import { LoggingService } from '../api/services/logging.service';
 import { NotificationSnackbarService } from '../application/services/notification-snackbar-service';
 import { SnackBarNotificationType } from '../enums/snack-bar-notification-type.enum';
 import { DocumentDataService } from '../infrastructure/document.data.service';
-import { Subject } from 'rxjs';
 /** External libraries **/
 
 @Injectable({ providedIn: 'root' })
