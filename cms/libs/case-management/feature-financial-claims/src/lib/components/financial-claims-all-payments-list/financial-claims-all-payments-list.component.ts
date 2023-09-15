@@ -46,6 +46,8 @@ export class FinancialClaimsAllPaymentsListComponent
   @Input() exportButtonShow$ : any
 
   @Output() loadFinancialClaimsAllPaymentsListEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
+  
   public state!: State;
   sortColumn = 'batchNumber';
   sortDir = 'Ascending';
@@ -490,6 +492,10 @@ export class FinancialClaimsAllPaymentsListComponent
     if (result) {
       this.printAuthorizationDialog.close();
     }
+  }
+
+  onClickedExport(){
+    this.exportGridDataEvent.emit()    
   }
 
   onClientClicked(clientId: any) {
