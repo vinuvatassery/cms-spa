@@ -8,8 +8,6 @@ export class FinancialClinicProviderRemoveComponent {
   @Input() vendorId = '';
   @Output() closeRemoveProviderEvent = new EventEmitter();
   @Output() removeConfirmEvent = new EventEmitter<any>();
-  constructor()
-   {}
   removeproviderEvent() {
      this.removeConfirmEvent.emit(this.vendorId);
   }

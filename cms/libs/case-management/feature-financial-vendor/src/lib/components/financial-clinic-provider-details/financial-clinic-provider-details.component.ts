@@ -46,7 +46,7 @@ export class FinancialClinicProviderDetailsComponent {
   onProviderNameValueChange(event: any) 
   { 
     let service = event;
-    let providerValid = this.providerForm as FormGroup;
+    let providerValid = this.providerForm;
     providerValid.patchValue({
       providerName: service.providerName,
       tin: service.tin,

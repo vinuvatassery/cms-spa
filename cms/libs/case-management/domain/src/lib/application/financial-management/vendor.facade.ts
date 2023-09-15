@@ -231,8 +231,7 @@ export class FinancialVendorFacade {
   searchProvider(searchText: string)
   {
     this.showLoader();
-    return this.financialVendorDataService.searchProvider(searchText).subscribe
-    ({
+    return this.financialVendorDataService.searchProvider(searchText).subscribe({
       next: (response: any[]) => 
       {
         this.searchProviderSubject.next(response);
@@ -254,8 +253,7 @@ export class FinancialVendorFacade {
   removeProvider(providerId: any): void 
   {
     this.showLoader();
-    this.financialVendorDataService.removeprovider(providerId).subscribe
-    ({
+    this.financialVendorDataService.removeprovider(providerId).subscribe({
       next: (deleteResponse) =>
       {
         if (deleteResponse ?? false) 
@@ -273,8 +271,7 @@ export class FinancialVendorFacade {
   addProvider(provider:any) 
   {
     this.showLoader();
-    this.financialVendorDataService.addProvider(provider).subscribe
-    ({
+    this.financialVendorDataService.addProvider(provider).subscribe({
       next: (addNewdependentsResponse : any) => 
       {
         if (addNewdependentsResponse) 
