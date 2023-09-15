@@ -1,6 +1,7 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -53,6 +54,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   @Input() sortValueFinancialInvoices: any;
   @Input() financialClaimsProcessGridLists$: any;
   @Input() financialClaimsInvoice$: any;
+  @Input() exportButtonShow$ : any
+
   @Output() loadFinancialClaimsProcessListEvent = new EventEmitter<any>();
   @Output() loadFinancialClaimsInvoiceListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
@@ -67,7 +70,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  showExportLoader = false;
   gridFinancialClaimsProcessDataSubject = new Subject<any>();
   gridFinancialClaimsProcessData$ =
     this.gridFinancialClaimsProcessDataSubject.asObservable();
@@ -205,7 +208,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   constructor(
     private readonly route: Router,
     private dialogService: DialogService,
-    private readonly financialClaimsFacade: FinancialClaimsFacade
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly  cdr : ChangeDetectorRef
   ) {
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -510,7 +514,19 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   }
 
   onClickedExport(){
+    this.showExportLoader = true
     this.exportGridDataEvent.emit()    
+    
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {        
+        this.showExportLoader = false
+        this.cdr.detectChanges()
+      }
+
+    })
   }
 
   onClientClicked(clientId: any) {

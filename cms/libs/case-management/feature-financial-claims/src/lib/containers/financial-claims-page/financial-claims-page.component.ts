@@ -25,6 +25,7 @@ export class FinancialClaimsPageComponent implements OnInit {
   sortType = this.financialClaimsFacade.sortType;
   pageSizes = this.financialClaimsFacade.gridPageSizes;
   gridSkipCount = this.financialClaimsFacade.skipCount;
+  exportButtonShow$ = this.documentFacade.exportButtonShow$
 
   sortValueFinancialClaimsProcess =
     this.financialClaimsFacade.sortValueFinancialClaimsProcess;

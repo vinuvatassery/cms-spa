@@ -5,8 +5,6 @@ import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
-import { IntlService } from '@progress/kendo-angular-intl';
-import { ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 
 @Component({

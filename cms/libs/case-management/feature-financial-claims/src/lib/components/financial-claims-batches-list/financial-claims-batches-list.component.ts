@@ -3,6 +3,7 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -32,6 +33,8 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialClaimsBatchGridLists$: any;
+  @Input() exportButtonShow$ : any
+
   @Output() loadFinancialClaimsBatchListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   
@@ -46,7 +49,7 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
   claimType: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  showExportLoader = false;
   gridFinancialClaimsBatchDataSubject = new Subject<any>();
   gridFinancialClaimsBatchData$ = this.gridFinancialClaimsBatchDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
@@ -94,7 +97,8 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
       "columnDesc": "Total Amount Reconciled"     
     }]
   /** Constructor **/
-  constructor(private route: Router, public activeRoute: ActivatedRoute) {}
+  constructor(private route: Router, public activeRoute: ActivatedRoute,
+    private readonly  cdr : ChangeDetectorRef) {}
 
 
   ngOnChanges(): void {
@@ -256,7 +260,19 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
   }
 
   onClickedExport(){
+    this.showExportLoader = true
     this.exportGridDataEvent.emit()    
+    
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {        
+        this.showExportLoader = false
+        this.cdr.detectChanges()
+      }
+
+    })
   }
 
 }

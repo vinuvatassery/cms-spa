@@ -17,6 +17,7 @@
                                 [sortType]="sortType" [sort]="sortProcessList"
                                 [sortValueFinancialInvoices]="sortValueFinancialInvoices"
                                 [financialClaimsInvoice$]="financialClaimsInvoice$"
+                                [exportButtonShow$]="exportButtonShow$"         
                                 (loadFinancialClaimsProcessListEvent)="loadFinancialClaimsProcessListGrid($event)"
                                 (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)
                                 (exportGridDataEvent)="exportClaimsProcessGridData()"></cms-financial-claims-process-list>
@@ -30,6 +31,7 @@
                                 <cms-financial-claims-batches-list  [claimsType]="claimsType" [financialClaimsBatchGridLists$]="financialClaimsBatchGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsBatch"
                                 [sortType]="sortType" [sort]="sortBatchList"
+                                [exportButtonShow$]="exportButtonShow$"         
                                 (loadFinancialClaimsBatchListEvent)="loadFinancialClaimsBatchListGrid($event)"
                                 (exportGridDataEvent)="exportClaimsBatchGridData()"></cms-financial-claims-batches-list>
                             </div>
@@ -41,6 +43,7 @@
                                 <cms-financial-claims-all-payments-list [claimsType]="claimsType" [financialClaimsAllPaymentsGridLists$]="financialClaimsAllPaymentsGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList"
+                                [exportButtonShow$]="exportButtonShow$"         
                                 (loadFinancialClaimsAllPaymentsListEvent)="loadFinancialClaimsAllPaymentsListGrid($event)"
                                 (exportGridDataEvent)="exportClaimsPaymentsGridData()"></cms-financial-claims-all-payments-list>
                             </div>
