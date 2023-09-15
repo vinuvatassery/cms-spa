@@ -134,10 +134,10 @@ export class FinancialVendorDataService {
   }
   removeprovider(providerId: any) 
   {
-    return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${providerId}/delink-clinic`);
+    return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${providerId}`);
   }
   addProvider(provider:any)
   {   
-    return this.http.patch(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/link-clinic`,provider);
+    return this.http.patch(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors`,provider);
   }
 }

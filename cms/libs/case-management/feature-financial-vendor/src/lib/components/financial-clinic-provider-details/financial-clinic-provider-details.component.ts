@@ -17,7 +17,7 @@ export class FinancialClinicProviderDetailsComponent {
   selectedprovider!: any;
   selectedTin: any;
   proId='';
-  @Input() ParentVendorId :any
+  @Input() parentVendorId :any
   @Output() closeProviderEvent = new EventEmitter();
   @Output() loadProviderListEvent = new EventEmitter();
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -68,7 +68,7 @@ export class FinancialClinicProviderDetailsComponent {
   saveprovider() {
     let data = 
     {
-      ParentVendorId: this.ParentVendorId,
+      ParentVendorId: this.parentVendorId,
       vendorId:this.proId
     }
     this.isValidateForm = true

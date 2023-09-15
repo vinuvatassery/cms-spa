@@ -22,12 +22,12 @@ export class FinancialVendorFacade {
   private clinicVendorLoaderSubject = new Subject<any>();  /** Public properties **/
   private providePanelSubject = new Subject<any>();
   private updateProviderPanelSubject = new Subject<any>();
-  private AddproviderNewSubject= new Subject<any>();
+  private addProviderNewSubject= new Subject<any>();
   private searchProviderSubject= new Subject<any>();
   private removeprovidersubject=new Subject<any>();
   searchProvider$=this.searchProviderSubject.asObservable();  
   removeprovider$=this.removeprovidersubject.asObservable();
-  AddproviderNew$=this.AddproviderNewSubject.asObservable();
+  addProviderNew$=this.addProviderNewSubject.asObservable();
   vendorsList$ = this.vendorsSubject.asObservable();
   selectedVendor$ = this.selectedVendorSubject.asObservable();
   vendorProfile$ = this.vendorProfileSubject.asObservable();
@@ -278,7 +278,7 @@ export class FinancialVendorFacade {
         {
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS, addNewdependentsResponse.message)
         }
-        this. AddproviderNewSubject.next(addNewdependentsResponse);
+        this. addProviderNewSubject.next(addNewdependentsResponse);
         this.hideLoader();
       },
       error: (err) =>
