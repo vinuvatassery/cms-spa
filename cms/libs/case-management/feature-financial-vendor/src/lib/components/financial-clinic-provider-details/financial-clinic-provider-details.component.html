@@ -43,7 +43,7 @@
 
                   </div>
                   <div class="justify-content-end">
-                        <button kendoButton [primary]="true" aria-label="cancel employer" look="outline"> Cancel
+                        <button kendoButton [primary]="true" aria-label="cancel employer" (click)="closeProviderPopup()" look="outline"> Cancel
                         </button>
                         <button kendoButton [primary]="true" aria-label="add new employer" (click)="saveprovider()"> Add </button>
                   </div>

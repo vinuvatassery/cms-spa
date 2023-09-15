@@ -18,6 +18,7 @@ export class FinancialClinicProviderDetailsComponent {
   selectedTin: any;
   proId='';
   @Input() ParentVendorId :any
+  @Output() closeProviderEvent = new EventEmitter();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   searchProvider$ = this.providerFacade.searchProvider$;
   providerLoaderVisibility$ =
@@ -59,10 +60,18 @@ export class FinancialClinicProviderDetailsComponent {
   }
 
   saveprovider() {
-    let data = {
+    let data = 
+    {
       ParentVendorId: this.ParentVendorId,
       vendorId:this.proId
     }
-    this.providerFacade.addProvider(data)
+    if(data)
+    {
+      this.providerFacade.addProvider(data);
+      this.closeProviderPopup();
+    }
+  }
+  closeProviderPopup(){
+    this.closeProviderEvent.emit(true);
   }
 }  
