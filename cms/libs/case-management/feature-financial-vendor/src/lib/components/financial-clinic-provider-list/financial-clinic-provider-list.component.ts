@@ -198,7 +198,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     this.addSearchSubjectSubscription();
   }
 
-  public loadProviderListGrid(): void {
+  private loadProviderListGrid(): void {
   
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
@@ -207,7 +207,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
       this.sortType,
       JSON.stringify(this.filter));
       const providerQuery={
-        vendorId:'5CEDE881-6338-4AF9-A5A7-9EEDE95C3696',
+        vendorId:this.ParentVendorId,
         vendorTypeCode :FinancialVendorTypeCode.Clinic,
         ...param
       }

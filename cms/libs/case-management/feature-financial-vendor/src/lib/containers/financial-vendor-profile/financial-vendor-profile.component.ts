@@ -32,6 +32,13 @@ export class FinancialVendorProfileComponent implements OnInit {
   selectedVendorInfo$ = this.financialVendorFacade.selectedVendor$;
   vendorProfile$ = this.financialVendorFacade.vendorProfile$
   vendorProfileSpecialHandling$ = this.financialVendorFacade.vendorProfileSpecialHandling$
+
+   providerList$ = this.financialVendorFacade.providerList$
+   providerLispageSizes = this.financialVendorFacade.gridPageSizes;
+   providerLissortValue = this.financialVendorFacade.sortValue;
+   providerLissortType = this.financialVendorFacade.sortType;
+   providerLissort = this.financialVendorFacade.sort;
+  
   filters:any=[];
    providerList$ = this.financialVendorFacade.providerList$
    providerLispageSizes = this.financialVendorFacade.gridPageSizes;
