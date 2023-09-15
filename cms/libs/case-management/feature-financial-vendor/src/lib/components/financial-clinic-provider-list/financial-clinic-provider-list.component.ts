@@ -287,7 +287,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   }
   removeProvider(dataItem: any) {
       this.removePoviderEvent(this.selectProviderId);
-      this.clickOpenRemoveProviders();
+      this.clickCloseRemoveProviders();
    }
 
    removedClick(vendorId:any)
