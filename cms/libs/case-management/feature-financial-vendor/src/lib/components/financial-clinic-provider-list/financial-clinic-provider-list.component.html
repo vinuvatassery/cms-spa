@@ -152,7 +152,8 @@
                 <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                   <ng-container>
                     <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                      [class]="buttondataItem.buttonType" aria-hidden="false">
+                      [class]="buttondataItem.buttonType" aria-hidden="false"
+                      (click)="removedClick(dataItem.vendorId); buttondataItem.click(dataItem)" >
                       <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                       <label> {{ buttondataItem.text }} </label>
                     </button>
@@ -195,8 +196,6 @@
                   (click)="clickOpenAddEditProvidersDetails()">
                   Provider
             </button>
-
-            <button  (click)="clickOpenRemoveProviders()">Remove</button>
       </div>
 </div>
 
@@ -211,5 +210,7 @@
 <kendo-dialog *ngIf="isProvidersRemoveShow" (close)="clickCloseRemoveProviders()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar> Remove Provider?</kendo-dialog-titlebar>
-      <cms-financial-clinic-provider-remove> </cms-financial-clinic-provider-remove>
+      <cms-financial-clinic-provider-remove (closeRemoveProviderEvent)="clickCloseRemoveProviders()" 
+      (removeConfirmEvent)="removeProvider($event)"
+      [vendorId]="selectProviderId"> </cms-financial-clinic-provider-remove>
 </kendo-dialog>

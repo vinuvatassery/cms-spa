@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FinancialVendorTypeCode, GridFilterParam } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode, GridFilterParam, ProviderFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';  
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
@@ -16,7 +16,7 @@ import { Subject, debounceTime } from 'rxjs';
 export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   isProvidersDetailShow = false;
   isProvidersRemoveShow = false;
-
+  selectProviderId!: string;
   gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
     vendorName:"Vendor Name",
@@ -48,8 +48,11 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   columnChangeDesc = 'Default Columns'
   public state!: State;
   searchText = '';
+
+  
   @Input() providerList$:any
   @Output() loadProviderListEvent = new EventEmitter<any>();
+  @Output() removeProviderClick = new EventEmitter<any>();
   @Input() ParentVendorId :any
   public processGridActions = [
     {
@@ -72,6 +75,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
 
   constructor(
     private readonly intl: IntlService,
+    private providerFacade: ProviderFacade,
     private readonly configProvider: ConfigurationProvider
   ) { }
 
@@ -281,5 +285,22 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   }
   clickCloseRemoveProviders() {
     this.isProvidersRemoveShow = false;
+  }
+  removeProvider(dataItem: any) {
+      this.removePoviderEvent(this.selectProviderId);
+      this.clickOpenRemoveProviders();
+   }
+
+   removedClick(vendorId:any)
+   {
+     this.selectProviderId = vendorId
+     this.clickOpenRemoveProviders();
+   }
+   removePoviderEvent(providerId: any) {
+    debugger;
+    this.removeProviderClick.emit(providerId);
+    //this.providerFacade.removeProvider(providerId);
+     this.loadProviderListGrid();
+     this.clickCloseRemoveProviders();
   }
 }

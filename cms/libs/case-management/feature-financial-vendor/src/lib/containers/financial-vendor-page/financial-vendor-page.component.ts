@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CaseFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
+import { CaseFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, ProviderFacade, SearchHeaderType } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
@@ -67,6 +67,7 @@ export class FinancialVendorPageComponent implements OnInit {
   sort = this.financialVendorFacade.sort;
   selectedVendorType = this.financialVendorFacade.selectedVendorType
   constructor(private caseFacade: CaseFacade, private financialVendorFacade: FinancialVendorFacade,
+    private providerFacade: ProviderFacade,
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
     private reminderFacade: ReminderFacade) {
@@ -204,5 +205,9 @@ export class FinancialVendorPageComponent implements OnInit {
     if(data){
       this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Files Exported Successfully')
     }
+  }
+  removeProvider(providerId: any) {
+    debugger;
+   this.providerFacade.removeProvider(providerId);
   }
 }

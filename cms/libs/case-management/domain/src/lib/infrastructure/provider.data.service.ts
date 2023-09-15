@@ -149,7 +149,7 @@ export class ProviderDataService {
   }
   removeprovider(providerId: any) 
   {
-    return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/delink-clinic/${providerId}`);
+    return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${providerId}/delink-clinic`);
   }
   addProvider(provider:any)
   {   

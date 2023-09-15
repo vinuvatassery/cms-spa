@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import {  FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {  FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {  ProviderFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
@@ -23,20 +23,27 @@ export class FinancialClinicProviderDetailsComponent {
   searchProvider$ = this.providerFacade.searchProvider$;
   providerLoaderVisibility$ =
   this.providerFacade.providerLoaderVisibility$;
-
+  isValidateForm: boolean = false;
   constructor(private readonly providerFacade: ProviderFacade,
     private formBuilder: FormBuilder,
     private readonly changeDetector: ChangeDetectorRef,
   ) {
     this.initproviderform();
   }
+  ngOnInit() {
+    this.initproviderform();
+    }  
 
   initproviderform() {
     this.providerForm = this.formBuilder.group({
-      provider: [this.selectProviderId, Validators.required],
-      tin: [this.selectedTin, Validators.required],
+      provider: new FormControl('', [Validators.required]),
+      tin: new FormControl('', []),
     })
   }
+  get ProviderFormControls() {
+    return this.providerForm.controls as any;
+  }
+
   onProviderNameValueChange(event: any) 
   { 
     let service = event;
@@ -65,11 +72,16 @@ export class FinancialClinicProviderDetailsComponent {
       ParentVendorId: this.ParentVendorId,
       vendorId:this.proId
     }
-    if(data)
-    {
+    this.isValidateForm = true
+
+    if (this.providerForm.valid){
+      if(data)  
+      {
+        this.providerFacade.addProvider(data);
+        this.closeProviderPopup();
+      }
       this.providerFacade.addProvider(data);
-      this.closeProviderPopup();
-    }
+     }
   }
   closeProviderPopup(){
     this.closeProviderEvent.emit(true);

@@ -24,6 +24,8 @@
                                               dataItem.providerName}}</span>
                                       </ng-template>
                               </kendo-autocomplete>
+                              <kendo-formerror *ngIf="ProviderFormControls?.provider.errors?.required && isValidateForm"> provider  is required
+                                  </kendo-formerror>
                         </kendo-floatinglabel>
                   </div>
                   <div class="flex-col mb-1">

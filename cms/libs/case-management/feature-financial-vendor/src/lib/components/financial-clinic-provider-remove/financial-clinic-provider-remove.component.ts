@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ProviderFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-clinic-provider-remove',
@@ -6,10 +6,15 @@ import { ProviderFacade } from '@cms/case-management/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialClinicProviderRemoveComponent {
+  @Input() vendorId = '';
+  @Output() closeRemoveProviderEvent = new EventEmitter();
+  @Output() removeConfirmEvent = new EventEmitter<any>();
   constructor( private readonly ProviderFacade: ProviderFacade)
    {}
-  removeproviderEvent(providerId: any) {
-    if (providerId!=null)
-    this.ProviderFacade.removeprovider(providerId);
+  removeproviderEvent() {
+     this.removeConfirmEvent.emit(this.vendorId);
+  }
+  closeRemovePopup(){
+    this.closeRemoveProviderEvent.emit(true);
   }
 }

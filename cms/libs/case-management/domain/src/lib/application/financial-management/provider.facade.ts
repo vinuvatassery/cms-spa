@@ -78,7 +78,7 @@ export class ProviderFacade {
       },
     });
   }
-  removeprovider(providerId: any): void 
+  removeProvider(providerId: any): void 
   {
     this.showLoader();
     this.providerDataService.removeprovider(providerId).subscribe
