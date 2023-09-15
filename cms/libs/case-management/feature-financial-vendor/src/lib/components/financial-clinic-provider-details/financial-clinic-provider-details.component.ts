@@ -80,6 +80,7 @@ export class FinancialClinicProviderDetailsComponent {
         this.closeProviderPopup();
       }
       this.financialVendorFacade.addProvider(data);
+      this.changeDetector.detectChanges();
       this.loadProviderListEvent.emit(true);
      }
   }

@@ -275,11 +275,11 @@ export class FinancialVendorFacade {
     this.showLoader();
     this.financialVendorDataService.addProvider(provider).subscribe
     ({
-      next: (addNewdependentsResponse) => 
+      next: (addNewdependentsResponse : any) => 
       {
         if (addNewdependentsResponse) 
         {
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'New provider Added Successfully')
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, addNewdependentsResponse.message)
         }
         this. AddproviderNewSubject.next(addNewdependentsResponse);
         this.hideLoader();
