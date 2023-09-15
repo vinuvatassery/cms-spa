@@ -12,9 +12,10 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Component({
   selector: 'cms-financial-claims-detail-form',
@@ -135,6 +136,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   duplicatePaymentPriorityArray = ['ineligibleExceptionFlag', 'exceedMaxBenefitExceptionFlag'];
   oldInvoicePriorityArray = ['ineligibleExceptionFlag', 'exceedMaxBenefitExceptionFlag', 'duplicatePaymentExceptionFlag'];
   bridgeUppPriorityArray = ['ineligibleExceptionFlag', 'exceedMaxBenefitExceptionFlag', 'duplicatePaymentExceptionFlag', 'oldInvoiceExceptionFlag'];
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
 
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
@@ -147,6 +149,8 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     private readonly loaderService: LoaderService,
     private lovFacade: LovFacade,
     private readonly activatedRoute: ActivatedRoute,
+    private intl: IntlService,
+    private configurationProvider: ConfigurationProvider,
   ) {
     this.initMedicalClaimObject();
     this.initClaimForm();
@@ -912,10 +916,13 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
   checkIneligibleEception(startDate:any, endDate:any, index:number)
   {
+    debugger;
     const formValues = this.claimForm.value
     if (startDate && endDate && formValues.client?.clientId) {
-      startDate.setHours(0,0,0,0);
-      endDate.setHours(0,0,0,0);
+      // startDate.setHours(0,0,0,0);
+      // endDate.setHours(0,0,0,0);
+      startDate = this.intl.formatDate(startDate,  this.dateFormat ) ;
+      endDate = this.intl.formatDate(endDate,  this.dateFormat ) ;
       this.financialClaimsFacade.CheckIneligibleException(startDate,endDate, formValues.client?.clientId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
@@ -944,13 +951,11 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       return;
     }
     const serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
-    const startDate = serviceFormData.controls['serviceStartDate'].value;
-    const endDate = serviceFormData.controls['serviceEndDate'].value;
+    const startDate = this.intl.formatDate(serviceFormData.controls['serviceStartDate'].value,  this.dateFormat );
+    const endDate = this.intl.formatDate(serviceFormData.controls['serviceEndDate'].value,  this.dateFormat ) ;
     const dueAmount = serviceFormData.controls['amountDue'].value;
     const vendorId = this.claimForm.value?.medicalProvider?.vendorId
     if (startDate && endDate && dueAmount && vendorId) {
-      startDate.setHours(0,0,0,0);
-      endDate.setHours(0,0,0,0);
       this.financialClaimsFacade.checkDuplicatePaymentException(startDate,endDate, vendorId,dueAmount, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
@@ -960,7 +965,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       return;
     }
     const formValues = this.claimForm.value
-    if(formValues.client.clientId)
+    if(formValues.client?.clientId)
     {
       let totalServiceCost = 0;
       this.addClaimServicesForm.controls.forEach((element, index) => {

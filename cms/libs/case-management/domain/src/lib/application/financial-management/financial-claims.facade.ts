@@ -668,7 +668,7 @@ CheckIneligibleException(startDtae: any,endDate: any, clientId: number, indexNum
     next: (data:any)=>{
       const flag =  data;
       let response = {
-        flag: flag,
+        flag: flag?.status == 0 ? false : true,
         indexNumber: indexNumber
       }
       this.showIneligibleExceptionSubject.next(response);
@@ -702,7 +702,7 @@ checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalA
     next: (data:any)=>{
       const flag =  data;
       let response = {
-        flag: flag,
+        flag: flag?.status == 0 ? false : true,
         indexNumber: indexNumber
       }
       this.showDuplicatePaymentExceptionSubject.next(response);

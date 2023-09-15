@@ -446,7 +446,7 @@ export class FinancialClaimsDataService {
     } else {
       path = 'financial-management/claims/dental';
     }
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/check-ineligible?startDate=${startDtae}?endDate=${endDate}&clientId=${clientId}`
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/ineligibility?startDate=${startDtae}&endDate=${endDate}&clientId=${clientId}`
     );
   }
   checkBridgeUppEception(startDtae: any,endDate: any, clientId: number,cptCode:any, typeCode : string ) {
@@ -466,7 +466,7 @@ export class FinancialClaimsDataService {
     } else {
       path = 'financial-management/claims/dental';
     }
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/check-duplicate-payment?startDate=${startDtae}?endDate=${endDate}&vendorId=${vendorId}&totalAmountDue=${totalAmountDue}`
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/duplicate-payment?serviceStartDate=${startDtae}&serviceEndDate=${endDate}&vendorId=${vendorId}&amount=${totalAmountDue}`
     );
   }
 }
