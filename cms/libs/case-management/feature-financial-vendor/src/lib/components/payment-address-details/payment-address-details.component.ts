@@ -33,6 +33,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
   specialHandlingCharachtersCount!: number;
   specialHandlingCounter!: string;
   statusFlag : any = StatusFlag;
+  specialCharAdded: boolean = false;
 
   /** Constructor**/
   constructor(
@@ -241,5 +242,17 @@ export class PaymentAddressDetailsComponent implements OnInit {
     }
     this.cdr.detectChanges();
   }
-
+  restrictSpecialChar(event:number) {
+    return (
+      (event >= 48 && event <= 57) || 
+      (event > 64 && event < 91) ||   
+      (event > 96 && event < 123) ||  
+      event == 8 ||                 
+      event == 45                   
+    );
+  }
+  onKeyPress(event:number) {
+    return (event > 64 &&
+      event < 91) || (event > 96 && event < 123)||event==32
+  }
 }

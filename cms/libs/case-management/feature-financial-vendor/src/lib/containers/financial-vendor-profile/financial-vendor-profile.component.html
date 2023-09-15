@@ -4,7 +4,7 @@
 (loadSpecialHandlingEvent)="loadSpecialHandling()"></cms-vendor-profile-header>
 
 <section class="vendor-profile-tabs">
-  <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab">
+  <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab" [keepTabContent]="true">
     <kendo-tabstrip-tab title="{{profileInfoTitle}}" [selected]="true">
       <ng-template kendoTabContent>
         <div class="block-section">

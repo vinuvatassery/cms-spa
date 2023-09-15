@@ -32,7 +32,7 @@ export class VendorDetailsComponent implements OnInit {
   clinicNameNotApplicable: boolean = false;
   firstLastNameNotApplicable: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  tinMaskFormat: string = '00-0000000';
+  tinMaskFormat: string = '0 00-0000000';
   specialhandlingCounter!: string;
   specialHandlingCharachtersCount!: number;
   specialHandlingMaxLength = 100;
@@ -139,7 +139,7 @@ fillFormData(){
     this.medicalProviderForm.markAllAsTouched();
     if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders) {
       if (!this.clinicNameNotApplicable) {
-        this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
+        this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
       }
       if (!this.firstLastNameNotApplicable) {
@@ -157,7 +157,7 @@ fillFormData(){
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
     else {
-      this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
+      this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
@@ -376,7 +376,7 @@ fillFormData(){
     this.medicalProviderForm.markAllAsTouched();
     if (this.vendorTypes.DentalProviders == this.providerType || this.vendorTypes.MedicalProviders == this.providerType) {
       if (this.vendorDetails.vendorName) {
-        this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
+        this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
       }
       else {
@@ -387,7 +387,7 @@ fillFormData(){
       }
     }
     else {
-      this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
+      this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
   }

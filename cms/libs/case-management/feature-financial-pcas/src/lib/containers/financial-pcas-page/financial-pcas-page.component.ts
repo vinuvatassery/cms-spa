@@ -3,11 +3,13 @@ import {
 
   Component,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialFundingSourceFacade, FinancialPcaFacade, PcaAssignmentsFacade, GridFilterParam, PcaDetails } from '@cms/case-management/domain';
 import { Subject } from 'rxjs';
+import { TabStripComponent } from '@progress/kendo-angular-layout';
 
 @Component({
   selector: 'cms-financial-pcas-page',
@@ -17,6 +19,7 @@ import { Subject } from 'rxjs';
 export class FinancialPcasPageComponent implements OnInit{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
+  @ViewChild('tabStrip') tabStrip!: TabStripComponent;
 
   claimsType: any;
   state!: State;
@@ -57,22 +60,23 @@ export class FinancialPcasPageComponent implements OnInit{
   pcaAssignmentData$ = this.pcaAssignmentsFacade.pcaAssignmentData$;
   assignPcaResponseData$ = this.pcaAssignmentsFacade.assignPcaResponseData$;
   pcaAssignmentPriorityUpdate$ = this.pcaAssignmentsFacade.pcaAssignmentPriorityUpdate$;
-
+  notAssignPcsLists$ = this.financialPcaFacade.notpcaData$;
    pcaAssignOpenDatesListSubject = new Subject<any>();
   pcaAssignOpenDatesList$ = this.pcaAssignOpenDatesListSubject.asObservable();
 
    pcaAssignCloseDatesListSubject = new Subject<any>();
   pcaAssignCloseDatesList$ = this.pcaAssignCloseDatesListSubject.asObservable();
   getPcaAssignmentById$ = this.financialPcaFacade.getPcaAssignmentById$;
-  
+  assignmentInfo:any = null;
+
   constructor(
     private readonly financialPcaFacade: FinancialPcaFacade,
     private readonly fundingSourceFacade: FinancialFundingSourceFacade,
-    private readonly pcaAssignmentsFacade : PcaAssignmentsFacade   
+    private readonly pcaAssignmentsFacade : PcaAssignmentsFacade
   ) { }
   ngOnInit(): void {
     this.financialPcaFacade.pcaReassignmentCount();
-  }  
+  }
 
   loadFinancialPcaSetupListGrid(event: GridFilterParam) {
     this.financialPcaFacade.loadFinancialPcaSetupListGrid(event);
@@ -129,16 +133,16 @@ export class FinancialPcasPageComponent implements OnInit{
     {
       const pcaAssignmentData =
       {
-        pcaAssignmentId: assignPcaRequest?.pcaAssignmentId,     
-        openDate: assignPcaRequest?.openDate,  
-        closeDate: assignPcaRequest?.closeDate,  
-        amount: assignPcaRequest?.amount,  
-        unlimitedFlag: assignPcaRequest?.unlimitedFlag       
+        pcaAssignmentId: assignPcaRequest?.pcaAssignmentId,
+        openDate: assignPcaRequest?.openDate,
+        closeDate: assignPcaRequest?.closeDate,
+        amount: assignPcaRequest?.amount,
+        unlimitedFlag: assignPcaRequest?.unlimitedFlag
       }
      this.pcaAssignmentsFacade.editAssignedPca(pcaAssignmentData)
     }
     else
-    {    
+    {
       this.pcaAssignmentsFacade.assignPca(assignPcaRequest)
     }
   }
@@ -148,12 +152,12 @@ export class FinancialPcasPageComponent implements OnInit{
   }
 
   getPcaDatesList()
-  {        
+  {
    this.pcaDatesData$?.pipe()
    .subscribe((data: any) =>
-   {  
+   {
     this.pcaAssignOpenDatesListSubject.next(data?.pcaAssignOpenDatesList)
-    this.pcaAssignCloseDatesListSubject.next(data?.pcaAssignCloseDatesList)        
+    this.pcaAssignCloseDatesListSubject.next(data?.pcaAssignCloseDatesList)
    })
   }
   removePca(pcaId: string) {
@@ -163,7 +167,7 @@ export class FinancialPcasPageComponent implements OnInit{
   }
 
   loadFinancialPcaSubReportListGrid(data:any) {
-    this.financialPcaFacade.loadFinancialPcaSubReportListGrid(data?.objecCodeGroupCodeId,data?.skipCount, data?.maxResultCount);
+    this.financialPcaFacade.loadFinancialPcaSubReportListGrid(data);
   }
 
   getPcaAssignmentById(fundingSourceId:any){
@@ -175,16 +179,24 @@ export class FinancialPcasPageComponent implements OnInit{
   updateReassignmentPca(updateReassignmentData:any){
     this.financialPcaFacade.updateReassignmentPca(updateReassignmentData);
   }
-  
+
   saveEditPcaReassignmentClicked(updateReassignmentValue:any){
     this.financialPcaFacade.updateReassignmentPca(updateReassignmentValue);
 
   }
-  
+
   pcaAssignmentPriorityUpdate(pcaAssignmentPriorityArguments:any){
     this.pcaAssignmentsFacade.pcaAssignmentPriorityUpdate(pcaAssignmentPriorityArguments);
   }
-  
+
+  onAssignmentReportEditClick(data:any) {
+    this.assignmentInfo = data;
+    this.tabStrip.selectTab(1);
+  }
+
+  resetAssignmentInfo(){
+    this.assignmentInfo = null;
+  }
 }
 
 

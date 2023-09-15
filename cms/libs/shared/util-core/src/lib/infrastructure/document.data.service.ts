@@ -1,5 +1,5 @@
 /** Angular **/
-import { Injectable } from '@angular/core';
+import {  Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConfigurationProvider } from '../shared-util-core.module';
 
@@ -10,7 +10,8 @@ import { ConfigurationProvider } from '../shared-util-core.module';
 export class DocumentDataService {
     /** Constructor**/
     constructor(private readonly http: HttpClient,
-        private configurationProvider: ConfigurationProvider) { }
+        private configurationProvider: ConfigurationProvider
+       ) { }
 
     /** pubic methods**/
 
@@ -19,5 +20,13 @@ export class DocumentDataService {
           `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${clientDocumentId}/content`
          , {
             responseType: 'blob'} );
+    }
+
+    getExportFile(pageAndSortedRequest : any, path : string ) 
+    {       
+      return this.http.post(
+        `${this.configurationProvider.appSettings.caseApiUrl}/data-management/export/${path}`, pageAndSortedRequest,
+        {responseType: 'blob'}
+      )
     }
 }
