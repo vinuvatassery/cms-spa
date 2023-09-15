@@ -197,7 +197,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     this.addSearchSubjectSubscription();
   }
 
-  private loadProviderListGrid(): void {
+  public loadProviderListGrid(): void {
   
     const param = new GridFilterParam(
       this.state?.skip ?? 0,

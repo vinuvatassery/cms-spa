@@ -19,6 +19,7 @@ export class FinancialClinicProviderDetailsComponent {
   proId='';
   @Input() ParentVendorId :any
   @Output() closeProviderEvent = new EventEmitter();
+  @Output() loadProviderListEvent = new EventEmitter();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   searchProvider$ = this.providerFacade.searchProvider$;
   isValidateForm: boolean = false;
@@ -79,6 +80,7 @@ export class FinancialClinicProviderDetailsComponent {
         this.closeProviderPopup();
       }
       this.providerFacade.addProvider(data);
+      this.loadProviderListEvent.emit(true);
      }
   }
   closeProviderPopup(){
