@@ -14,7 +14,8 @@
                 <div class="flex-col">
                     <kendo-floatinglabel text=" Name">
                         <kendo-textbox aria-label="Contact Name" [fillMode]="formUiStyle.inputFillMode" [maxlength]="200"
-                            formControlName="contactName">
+                            formControlName="contactName"
+                            (keypress)="onKeyPress($event.charCode)">
                         </kendo-textbox>
                     </kendo-floatinglabel>
                     <p class="text-muted mb-2">
