@@ -203,7 +203,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
       this.sortType,
       JSON.stringify(this.filter));
       const providerQuery={
-        vendorId:'4D4ADDA9-44DE-4301-A4EC-22F118D50681',
+        vendorId:this.ParentVendorId,
         vendorTypeCode :FinancialVendorTypeCode.Clinic,
         ...param
       }
