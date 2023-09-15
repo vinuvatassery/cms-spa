@@ -152,7 +152,7 @@ fillFormData(){
     else if(this.providerType == this.vendorTypes.Manufacturers) {
       this.medicalProviderForm.controls['providerName']
       .setValidators([
-        Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
+        Validators.required,Validators.required,Validators.pattern('^[A-Za-z ]+$')
       ]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
@@ -170,7 +170,7 @@ fillFormData(){
 
       this.medicalProviderForm.controls['city']
         .setValidators([
-          Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
+          Validators.required,Validators.required,Validators.pattern('^[A-Za-z ]+$')
         ]);
       this.medicalProviderForm.controls['city'].updateValueAndValidity();
 

@@ -38,10 +38,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.financialClaimsFacade.CPTCodeSearchLoaderVisibility$;
   pharmacySearchResult$ = this.financialClaimsFacade.pharmacies$;
   searchCTPCode$ = this.financialClaimsFacade.searchCTPCode$;
-  vendorId:any;
-  clientId:any;
-  vendorName:any;
-  clientName:any;
+  vendorId: any;
+  clientId: any;
+  vendorName: any;
+  clientName: any;
   isPrintDenailLetterClicked = false;
   @Input() claimsType: any;
   @Input() printDenialLetterData: any;
@@ -124,8 +124,8 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   isExcededMaxBanifitButtonText = 'Make Exception';
   claimFlagExceptionCounter!: string;
   claimFlagExceptionText = '';
-  checkservicescastvalue:any
-  exceedMaxBenefitFlag!:boolean ;
+  checkservicescastvalue: any
+  exceedMaxBenefitFlag!: boolean;
   showExceedMaxBenefitException$ = this.financialClaimsFacade.showExceedMaxBenefitException$;
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
@@ -157,8 +157,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       this.claimsType = data['type']
     });
     this.showExceedMaxBenefitException$.subscribe(data => {
-      if(data)
-      {
+      if (data) {
         this.addExceptionForm.at(data?.indexNumber).get('exceedMaxBenefitExceptionFlag')?.setValue(data?.flag);
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? "EMB" : '')
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
@@ -207,12 +206,12 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       invoiceId: [this.invoiceId, Validators.required],
       paymentRequestId: [this.paymentRequestId],
       claimService: new FormArray([]),
-      exceptionArray : new FormArray([])
+      exceptionArray: new FormArray([])
     });
   }
 
   searchMedicalProvider(searchText: any) {
-    if(!searchText || searchText.length == 0){
+    if (!searchText || searchText.length == 0) {
       return;
     }
     this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
@@ -231,22 +230,22 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   searchcptcode(cptcode: any) {
-    if(!cptcode || cptcode.length == 0){
+    if (!cptcode || cptcode.length == 0) {
       return;
     }
     this.financialClaimsFacade.searchcptcode(cptcode);
   }
 
-  onPaymentTypeValueChange(cptCodeObject : any, index: number){
+  onPaymentTypeValueChange(cptCodeObject: any, index: number) {
     const serviceForm = this.addClaimServicesForm.at(index) as FormGroup;
     let cptCode = serviceForm.controls['cptCode'].value;
     if (cptCodeObject !== PaymentRequestType.FullPay && cptCode.length > 0) {
-        serviceForm.controls['amountDue'].setValue(0);
+      serviceForm.controls['amountDue'].setValue(0);
     }
   }
 
   loadClientBySearchText(clientSearchText: any) {
-    if(!clientSearchText || clientSearchText.length == 0){
+    if (!clientSearchText || clientSearchText.length == 0) {
       return;
     }
     clientSearchText = clientSearchText.replace("/", "-");
@@ -308,8 +307,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.addClaimServicesForm.push(claimForm);
     this.addClaimExceptionForm();
   }
-  addClaimExceptionForm()
-  {
+  addClaimExceptionForm() {
     let exceptionForm = this.formBuilder.group({
       exceedMaxBenefitExceptionFlag: new FormControl(false),
       showMaxBenefitExceptionReason: new FormControl(false),
@@ -318,12 +316,14 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.addExceptionForm.push(exceptionForm);
   }
 
-  onClientValueChange(event: any) {
-    this.clientCaseEligibilityId = event.clientCaseEligibilityId;
-    this.clientId = event.clientId;
-    this.clientName = event.clientFullName;
-    if (this.clientId != null && this.vendorId != null) {
-      this.isRecentClaimShow = true;
+  onClientValueChange(client: any) {
+    if (client != undefined) {
+      this.clientCaseEligibilityId = client.clientCaseEligibilityId;
+      this.clientId = client.clientId;
+      this.clientName = client.clientFullName;
+      if (this.clientId != null && this.vendorId != null) {
+        this.isRecentClaimShow = true;
+      }
     }
   }
 
@@ -358,21 +358,18 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     }
     return true;
   }
-  setExceptionValidation()
-  {
+  setExceptionValidation() {
     this.addClaimServicesForm.controls.forEach((element, index) => {
-      if(this.addExceptionForm.at(index).get('showMaxBenefitExceptionReason')?.value)
-      {
+      if (this.addExceptionForm.at(index).get('showMaxBenefitExceptionReason')?.value) {
         this.addClaimServicesForm.at(index).get('reasonForException')?.setValidators(Validators.required);
         this.addClaimServicesForm.at(index).get('reasonForException')?.updateValueAndValidity();
       }
-      else
-      {
+      else {
         this.addClaimServicesForm.at(index).get('reasonForException')?.removeValidators(Validators.required);
         this.addClaimServicesForm.at(index).get('reasonForException')?.updateValueAndValidity();
       }
-  });
-  this.cd.detectChanges();
+    });
+    this.cd.detectChanges();
   }
 
   save() {
@@ -428,15 +425,13 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         );
         return;
       }
-      if(service.exceptionFlag === StatusFlag.Yes && !service.exceptionReasonCode)
-      {
+      if (service.exceptionFlag === StatusFlag.Yes && !service.exceptionReasonCode) {
         checkDeniedClaim = true;
       }
       bodyData.tpaInvoice.push(service);
     }
     bodyData.tpaInvoice.splice(0, 1);
-    if(checkDeniedClaim)
-    {
+    if (checkDeniedClaim) {
       this.printDenialLetterData = bodyData;
       this.onPrintDenialLetterOpen();
       return;
@@ -574,21 +569,17 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       serviceForm.controls['exceptionFlag'].setValue(service.exceptionFlag);
       serviceForm.controls['exceptionTypeCode'].setValue(service.exceptionTypeCode);
       let exceptionForm = this.addExceptionForm.at(i) as FormGroup;
-      if(serviceForm.controls['exceptionFlag'].value === StatusFlag.Yes)
-      {
-        this.setExceptionFormValues(exceptionForm,serviceForm);
+      if (serviceForm.controls['exceptionFlag'].value === StatusFlag.Yes) {
+        this.setExceptionFormValues(exceptionForm, serviceForm);
       }
 
     }
     this.cd.detectChanges();
   }
-  setExceptionFormValues(exceptionform:FormGroup , serviceForm : FormGroup)
-  {
-    if(serviceForm.controls['exceptionTypeCode'].value === "EMB")
-    {
+  setExceptionFormValues(exceptionform: FormGroup, serviceForm: FormGroup) {
+    if (serviceForm.controls['exceptionTypeCode'].value === "EMB") {
       exceptionform.controls['exceedMaxBenefitExceptionFlag'].setValue(true);
-      if(serviceForm.controls['reasonForException'].value)
-      {
+      if (serviceForm.controls['reasonForException'].value) {
         exceptionform.controls['showMaxBenefitExceptionReason'].setValue(true);
         exceptionform.controls['maxBenefitExceptionFlagText'].setValue("Don't Make Exception");
       }
@@ -628,10 +619,12 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     return `0/${this.textMaxLength}`;
   }
 
-  onProviderValueChange($event: any) {
-    this.isRecentClaimShow = false;
-    this.vendorId = $event.vendorId;
-    this.vendorName = $event.vendorName;
+  onProviderValueChange(provider: any) {
+    if (provider != undefined) {
+      this.isRecentClaimShow = false;
+      this.vendorId = provider.vendorId;
+      this.vendorName = provider.vendorName;
+    }
   }
   clientValueChange($event: any) {
     this.clientId = $event.clientId;
@@ -640,19 +633,18 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       this.isRecentClaimShow = true;
     }
   }
-  loadServiceCostMethod(index:number){
+  loadServiceCostMethod(index: number) {
     const formValues = this.claimForm.value
-    if(formValues.client.clientId)
-    {
+    if (formValues.client.clientId) {
       let totalServiceCost = 0;
       this.addClaimServicesForm.controls.forEach((element, index) => {
-          totalServiceCost += + element.get('amountDue')?.value;
+        totalServiceCost += + element.get('amountDue')?.value;
       });
-      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost, formValues.client.clientId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
       this.exceedMaxBenefitFlag = this.financialClaimsFacade.serviceCostFlag;
     }
   }
-  onMakeExceptionClick(controlName: string,index: any) {
+  onMakeExceptionClick(controlName: string, index: any) {
     this.addExceptionForm.at(index).get(controlName)?.setValue(!this.addExceptionForm.at(index).get(controlName)?.value);
     if (this.addExceptionForm.at(index).get(controlName)?.value) {
       this.addExceptionForm.at(index).get('maxBenefitExceptionFlagText')?.setValue("Don't Make Exception");
@@ -660,18 +652,16 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       this.addExceptionForm.at(index).get('maxBenefitExceptionFlagText')?.setValue("Make Exception");
     }
   }
-  getExceptionFormValue(controlName: string, index: any)
-  {
+  getExceptionFormValue(controlName: string, index: any) {
     return this.addExceptionForm.at(index).get(controlName)?.value
   }
-  public onPrintDenialLetterOpen(){
-   this.isPrintDenailLetterClicked = true;
-   this.cd.detectChanges();
+  public onPrintDenialLetterOpen() {
+    this.isPrintDenailLetterClicked = true;
+    this.cd.detectChanges();
   }
-  onPrintDenialLetterClosed(status:any){
+  onPrintDenialLetterClosed(status: any) {
     this.isPrintDenailLetterClicked = false;
-    if(status)
-    {
+    if (status) {
       if (!this.isEdit) {
         this.saveData(this.printDenialLetterData);
       } else {
