@@ -22,6 +22,7 @@ import {
 } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subject, first } from 'rxjs';
+import { Router } from '@angular/router';
 @Component({
   selector: 'cms-financial-claims-process-list',
   templateUrl: './financial-claims-process-list.component.html',
@@ -202,6 +203,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   deletemodelbody="This action cannot be undone, but you may add a claim at any time.";
   /** Constructor **/
   constructor(
+    private readonly route: Router,
     private dialogService: DialogService,
     private readonly financialClaimsFacade: FinancialClaimsFacade
   ) {
@@ -509,5 +511,10 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
 
   onClickedExport(){
     this.exportGridDataEvent.emit()    
+  }
+
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.closeRecentClaimsModal(true);
   }
 }
