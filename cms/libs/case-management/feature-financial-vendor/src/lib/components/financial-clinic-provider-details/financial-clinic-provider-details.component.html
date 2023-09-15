@@ -7,10 +7,7 @@
             <div class="flex-row" >
                  
                   <div class="flex-col">
-                        <kendo-floatinglabel text="Provider Name" class="inline-search-loader">
-                              <span *ngIf="providerLoaderVisibility$ | async"
-                              class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                              <span class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+                        <kendo-floatinglabel text="Provider Name" >
                               <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" 
                                    [data]="searchProvider$ | async" formcontrolName="provider"
                                    valueField="providerName"
