@@ -119,8 +119,6 @@ export class FinancialDrugsComponent {
    /** Constructor **/
    constructor(private route: ActivatedRoute,
     private readonly ref: ChangeDetectorRef,
-    private readonly intl: IntlService,
-    private readonly configProvider: ConfigurationProvider,
      private readonly lovFacade: LovFacade
    ) {}
 
