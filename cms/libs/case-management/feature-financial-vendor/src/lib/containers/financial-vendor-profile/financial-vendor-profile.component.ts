@@ -40,11 +40,6 @@ export class FinancialVendorProfileComponent implements OnInit {
    providerLissort = this.financialVendorFacade.sort;
   
   filters:any=[];
-   providerList$ = this.financialVendorFacade.providerList$
-   providerLispageSizes = this.financialVendorFacade.gridPageSizes;
-   providerLissortValue = this.financialVendorFacade.sortValue;
-   providerLissortType = this.financialVendorFacade.sortType;
-   providerLissort = this.financialVendorFacade.sort;
   
   constructor(private activeRoute: ActivatedRoute,private financialVendorFacade : FinancialVendorFacade,
               private readonly drugsFacade: DrugsFacade) {}
