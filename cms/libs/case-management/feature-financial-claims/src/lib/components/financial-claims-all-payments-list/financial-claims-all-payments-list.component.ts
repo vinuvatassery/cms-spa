@@ -1,6 +1,7 @@
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -208,7 +209,8 @@ export class FinancialClaimsAllPaymentsListComponent
     private route: Router,
     private dialogService: DialogService,
     public activeRoute: ActivatedRoute,
-    private readonly lovFacade: LovFacade
+    private readonly lovFacade: LovFacade,
+    private readonly  cdr : ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -495,7 +497,19 @@ export class FinancialClaimsAllPaymentsListComponent
   }
 
   onClickedExport(){
+    this.showExportLoader = true
     this.exportGridDataEvent.emit()    
+    
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {        
+        this.showExportLoader = false
+        this.cdr.detectChanges()
+      }
+
+    })
   }
 
   onClientClicked(clientId: any) {

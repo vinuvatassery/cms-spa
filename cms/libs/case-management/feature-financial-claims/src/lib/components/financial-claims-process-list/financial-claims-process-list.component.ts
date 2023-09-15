@@ -1,6 +1,7 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -207,7 +208,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   constructor(
     private readonly route: Router,
     private dialogService: DialogService,
-    private readonly financialClaimsFacade: FinancialClaimsFacade
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly  cdr : ChangeDetectorRef
   ) {
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -512,7 +514,19 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   }
 
   onClickedExport(){
+    this.showExportLoader = true
     this.exportGridDataEvent.emit()    
+    
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {        
+        this.showExportLoader = false
+        this.cdr.detectChanges()
+      }
+
+    })
   }
 
   onClientClicked(clientId: any) {
