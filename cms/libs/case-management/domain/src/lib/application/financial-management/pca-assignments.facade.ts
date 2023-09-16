@@ -91,7 +91,7 @@ export class PcaAssignmentsFacade {
     this.pcaAssignmentsDataService.loadFinancialPcaAssignmentListService(pcaAssignmentGridArguments).subscribe({
       next: (dataResponse) => {
         const gridView: any = {
-          data: dataResponse['items'],
+          data: dataResponse['items']?.sort((a : any, b : any) => (a?.priority < b?.priority) ? -1 : 1),
           total: dataResponse?.totalCount,
         };
         this.financialPcaAssignmentDataSubject.next(gridView);
