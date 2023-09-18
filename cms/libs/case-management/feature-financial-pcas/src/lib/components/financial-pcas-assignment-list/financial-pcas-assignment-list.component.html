@@ -2,15 +2,15 @@
 
 <button kendoButton icon="add" [primary]="true"
 (click)="onOpenAddPcaAssignmentClicked('')" class="add-new-button search-with-addbtn"
-aria-label="add"> Assignment</button> 
+aria-label="add"> Assignment</button>
 <p class="mt-2">Select object and group below to load the grid data</p>
 <section class="flex-row mb-1">
-           
+
                   <span class="flex-col flex-col-3">
                         <kendo-floatinglabel text="Object">
                         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
                         placeholder="Object"
-                         required [data]="objectCodesData$" 
+                         required [data]="objectCodesData$"
                           textField="ledgerName" valueField="objectCodeId" [valuePrimitive]="true"
                           [(ngModel)]="objectCodeIdValue"
                           (selectionChange)="objectCodeChange($event)"
@@ -19,18 +19,18 @@ aria-label="add"> Assignment</button>
                         <kendo-formerror *ngIf="!objectCodeValid">Object is required.</kendo-formerror>
                         </kendo-floatinglabel>
                   </span>
-                  <form [formGroup]="pcaAssignmentGroupForm">  
+                  <form [formGroup]="pcaAssignmentGroupForm">
                   <span class="flex-col flex-col-9">
                         <kendo-floatinglabel text="Group">
-                        <kendo-multiselect 
+                        <kendo-multiselect
                         class="fixed-height-input"
                         [checkboxes]="{ checkOnClick: true, enabled: true }"
                         [fillMode]="formUiStyle.dropDownFillMode"
-                        [data]="groupCodesData$" 
+                        [data]="groupCodesData$"
                         aria-label="to address"
                         [textField]="'groupCodeDesc'"
-                        [valueField]="'groupCodeId'"     
-                        formControlName="groupCodes"              
+                        [valueField]="'groupCodeId'"
+                        formControlName="groupCodes"
                         [kendoMultiSelectSummaryTag]="5"
                         (valueChange)="groupChange($event)"
                         ></kendo-multiselect>
@@ -41,10 +41,10 @@ aria-label="add"> Assignment</button>
 </section>
 
 <div class="app-c-table">
-      <kendo-grid [resizable]="true" [loading]="isFinancialPcaAssignmentGridLoaderShow"  
+      <kendo-grid [resizable]="true" [loading]="isFinancialPcaAssignmentGridLoaderShow"
              [rowClass]="rowCallback" [data]="financialPcaAssignmentGridLists$ | async" (dataStateChange)="dataStateChange($event)"
-             >         
-            
+             >
+
             <kendo-grid-column     field=""    title="" [width]="50"   [columnMenu]="false" [sortable]="false"  class="text-center text-muted"   >
             <ng-template kendoGridCellTemplate let-dataItem>
               <span class="material-icons">drag_indicator</span>
@@ -53,13 +53,13 @@ aria-label="add"> Assignment</button>
           <kendo-grid-column field="priority" title="Priority" [width]="70" [columnMenu]="false" [sortable]="false">
           </kendo-grid-column>
             <kendo-grid-column field="pca" title="PCA" [width]="100"> </kendo-grid-column>
-            <kendo-grid-column field="groupCodeDesc" title="Group(s)" [width]="180"> </kendo-grid-column>      
+            <kendo-grid-column field="groupCodeDesc" title="Group(s)" [width]="180"> </kendo-grid-column>
             <kendo-grid-column field="openDate" title="Open Date" [width]="140">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         {{dataItem.openDate | date:'MM/dd/YYYY'}}
                       </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="closeDate" title="Close Date" [width]="120"> 
+            <kendo-grid-column field="closeDate" title="Close Date" [width]="120">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         {{dataItem.closeDate | date:'MM/dd/YYYY'}}
                       </ng-template>
@@ -73,7 +73,7 @@ aria-label="add"> Assignment</button>
             <kendo-grid-column field="amountLeft" title="Amount Left" [width]="140">  <ng-template kendoGridCellTemplate let-dataItem>
                   <span class="tableamountview"> <strong>$</strong> {{dataItem.balanceAmount}}</span>
                 </ng-template> </kendo-grid-column>
-         
+
 
             <kendo-grid-column field="Option"  title=" "  [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
@@ -111,17 +111,17 @@ aria-label="add"> Assignment</button>
       <cms-financial-pcas-assignment-form
       [objectCodeIdValue]="objectCodeIdValue"
       [groupCodeIdsdValue]="groupCodeIdsdValue"
-      [groupCodesData$]="groupCodesData$"   
-      [objectCodesData$]="objectCodesData$"   
+      [groupCodesData$]="groupCodesData$"
+      [objectCodesData$]="objectCodesData$"
       [pcaCodesData$]="pcaCodesData$"
-      [pcaAssignOpenDatesList$]="pcaAssignOpenDatesList$"       
-      [pcaAssignCloseDatesList$]="pcaAssignCloseDatesList$"  
-      [pcaCodesInfoData$]="pcaCodesInfoData$"    
-      [pcaAssignmentData$]="pcaAssignmentData$"  
+      [pcaAssignOpenDatesList$]="pcaAssignOpenDatesList$"
+      [pcaAssignCloseDatesList$]="pcaAssignCloseDatesList$"
+      [pcaCodesInfoData$]="pcaCodesInfoData$"
+      [pcaAssignmentData$]="pcaAssignmentData$"
       [newForm]="newForm"
-      [pcaAssignmentFormDataModel$]="pcaAssignmentFormData"   
+      [pcaAssignmentFormDataModel$]="pcaAssignmentFormData"
       [groupCodesDataFilter]="groupCodesDataFilter$"
-      (closeAddEditPcaAssignmentClickedEvent)="onCloseAddEditPcaAssignmentClicked($event)"    
+      (closeAddEditPcaAssignmentClickedEvent)="onCloseAddEditPcaAssignmentClicked($event)"
       (loadPcaEvent)="onLoadPcaEvent($event)"
       (addPcaDataEvent)="addPcaData($event)">
       </cms-financial-pcas-assignment-form>
