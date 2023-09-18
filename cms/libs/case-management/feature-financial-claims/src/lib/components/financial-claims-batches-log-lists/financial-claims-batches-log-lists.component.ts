@@ -175,7 +175,7 @@ export class FinancialClaimsBatchesLogListsComponent
         icon: 'undo',
         disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
         click: (data: any): void => {
-          debugger
+          
           if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
             if (!this.isUnBatchClaimsClosed) {
               this.isUnBatchClaimsClosed = true;
@@ -189,7 +189,7 @@ export class FinancialClaimsBatchesLogListsComponent
         text: 'Delete Claims',
         icon: 'delete',
         click: (data: any): void => {
-          if(data.paymentStatusCode=="PAID")
+          if([PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
           {
             this.notificationSnackbarService.manageSnackBar(
               SnackBarNotificationType.ERROR,
