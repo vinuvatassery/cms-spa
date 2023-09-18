@@ -20,10 +20,11 @@ export class VendorsListComponent implements OnChanges , OnInit{
 @Input() sortType : any;
 @Input() sort : any;
 @Input() vendorsList$ : any
+@Input() exportButtonShow$ : any
 
 @Output() loadFinancialVendorsListEvent = new EventEmitter<any>();
 @Output() exportGridDataEvent = new EventEmitter<any>();
-
+showExportLoader = false;
 vndorId! : string
 public  state!: State
 groupData:any=[]
@@ -353,6 +354,18 @@ public filterChange(filter: CompositeFilterDescriptor): void {
   });
 
   onClickedExport(){
-    this.exportGridDataEvent.emit(true)    
+    this.showExportLoader = true
+    this.exportGridDataEvent.emit()    
+
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {        
+        this.showExportLoader = false
+        this.cdr.detectChanges()
+      }
+
+    })
   }
 }
