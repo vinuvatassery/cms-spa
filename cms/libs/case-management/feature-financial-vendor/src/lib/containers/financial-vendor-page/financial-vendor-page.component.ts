@@ -118,7 +118,7 @@ export class FinancialVendorPageComponent implements OnInit {
   }
 
   loadFinancialVendorsList(data: any) {    
-    this.financialVendorFacade.selectedVendorType = data?.vendorTypeCode
+    this.financialVendorFacade.selectedVendorType = data?.vendorTypeCode.includes('CLINIC') ? data?.vendorTypeCode.split(',')[0] : data?.vendorTypeCode;
     this.dataExportParameters = data
     this.financialVendorFacade.getVendors(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.vendorTypeCode, data?.filter)
   }
