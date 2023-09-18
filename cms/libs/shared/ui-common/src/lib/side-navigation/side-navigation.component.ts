@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 /** Internal Library **/
 import { NavigationMenu, NavigationMenuFacade } from '@cms/system-config/domain';
-import { MenuBagde } from '../enums/menu-badge.enum';
+import { MenuBadge } from '../enums/menu-badge.enum';
 
 @Component({
   selector: 'cms-side-navigation',
@@ -22,8 +22,8 @@ export class SideNavigationComponent implements OnInit {
     { key: "PENDING_APPROVALS", value: 2 },
     { key: "TO_DO_ITEMS", value: 5 },
     { key: "DIRECT_MESSAGES", value: 10 },
-    { key: MenuBagde.financialManagement, value: 0 },
-    { key: MenuBagde.fundsAndPcas, value: 0 },
+    { key: MenuBadge.financialManagement, value: 0 },
+    { key: MenuBadge.fundsAndPcas, value: 0 },
   ];
   /** Constructor **/
   constructor(private readonly router: Router,
@@ -84,8 +84,8 @@ export class SideNavigationComponent implements OnInit {
   
     private subscribeToReassignPcaCount(){
       this.navigationMenuFacade.pcaReassignmentCount$.subscribe((count) => {
-        this.setBadgeValue(MenuBagde.financialManagement, count);
-        this.setBadgeValue(MenuBagde.fundsAndPcas, count);    
+        this.setBadgeValue(MenuBadge.financialManagement, count);
+        this.setBadgeValue(MenuBadge.fundsAndPcas, count);    
       });    
     }
   

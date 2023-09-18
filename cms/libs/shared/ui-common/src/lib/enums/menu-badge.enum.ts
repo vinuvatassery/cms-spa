@@ -1,4 +1,4 @@
-export enum MenuBagde {
+export enum MenuBadge {
     financialManagement = "FINANCIAL_MANAGEMENT",
     fundsAndPcas = "FUNDSANDPCAS"
 }
