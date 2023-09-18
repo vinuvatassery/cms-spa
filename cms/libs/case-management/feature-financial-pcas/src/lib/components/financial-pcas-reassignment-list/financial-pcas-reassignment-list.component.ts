@@ -20,8 +20,8 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { FormBuilder } from '@angular/forms';
 import { FinancialPcaFacade } from '@cms/case-management/domain';
+import { NavigationMenuFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-pcas-reassignment-list',
   templateUrl: './financial-pcas-reassignment-list.component.html',
@@ -105,10 +105,9 @@ export class FinancialPcasReassignmentListComponent
 
   /** Constructor **/
   constructor(
-    private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
     private financialPcaFacade:FinancialPcaFacade,
-    private formBuilder: FormBuilder
+    private readonly navigationMenuFacade: NavigationMenuFacade    
   ) {}
 
   ngOnInit(): void {
@@ -121,7 +120,7 @@ export class FinancialPcasReassignmentListComponent
     this.financialPcaFacade.pcaActionIsSuccess$.subscribe((res:string)=>{
       if(res=='reassignment')
       {
-        this.financialPcaFacade.pcaReassignmentCount();   
+        this.navigationMenuFacade.pcaReassignmentCount();   
         this.loadFinancialPcaReassignmentListGrid();
       }
     })

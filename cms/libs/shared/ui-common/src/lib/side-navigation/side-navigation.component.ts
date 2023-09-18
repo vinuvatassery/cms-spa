@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 /** Internal Library **/
 import { NavigationMenu, NavigationMenuFacade } from '@cms/system-config/domain';
-import {FinancialPcaFacade } from '@cms/case-management/domain';
 import { MenuBagde } from '../enums/menu-badge.enum';
 
 @Component({
@@ -16,7 +15,7 @@ export class SideNavigationComponent implements OnInit {
   isProductivityMenuActivated = false;
   subMenuExpandStatus: boolean[] = [];
   menus$ = this.navigationMenuFacade.navigationMenu$;
-  pcaReassignmentCount$ = this.financialPcaFacade.pcaReassignmentCount$;
+  pcaReassignmentCount$ = this.navigationMenuFacade.pcaReassignmentCount$;
   //add menu badges on this variable
   menuBadges = [
     { key: "PRODUCTIVITY_TOOLS", value: 17 },
@@ -28,8 +27,7 @@ export class SideNavigationComponent implements OnInit {
   ];
   /** Constructor **/
   constructor(private readonly router: Router,
-    private readonly navigationMenuFacade: NavigationMenuFacade,
-    private readonly financialPcaFacade: FinancialPcaFacade) { }
+    private readonly navigationMenuFacade: NavigationMenuFacade) { }
 
   /** Lifecycle events **/
   ngOnInit(): void {
@@ -38,7 +36,7 @@ export class SideNavigationComponent implements OnInit {
   }
 
   ngOnDestroy(){
-    this.financialPcaFacade.pcaReassignmentCount$.subscribe().unsubscribe();
+    this.navigationMenuFacade.pcaReassignmentCount$.subscribe().unsubscribe();
   }
 
   /** Internal event methods **/
@@ -75,7 +73,7 @@ export class SideNavigationComponent implements OnInit {
     }
   
     private getPcaAssignmentMenuCount(){
-      this.financialPcaFacade.pcaReassignmentCount();
+      this.navigationMenuFacade.pcaReassignmentCount();
       this.subscribeToReassignPcaCount();
     }
   
@@ -85,7 +83,7 @@ export class SideNavigationComponent implements OnInit {
     }
   
     private subscribeToReassignPcaCount(){
-      this.financialPcaFacade.pcaReassignmentCount$.subscribe((count) => {
+      this.navigationMenuFacade.pcaReassignmentCount$.subscribe((count) => {
         this.setBadgeValue(MenuBagde.financialManagement, count);
         this.setBadgeValue(MenuBagde.fundsAndPcas, count);    
       });    
