@@ -137,6 +137,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   oldInvoicePriorityArray = ['ineligibleExceptionFlag', 'exceedMaxBenefitExceptionFlag', 'duplicatePaymentExceptionFlag'];
   bridgeUppPriorityArray = ['ineligibleExceptionFlag', 'exceedMaxBenefitExceptionFlag', 'duplicatePaymentExceptionFlag', 'oldInvoiceExceptionFlag'];
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  providerTin: any;
 
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
@@ -775,6 +776,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
   onSpotsPaymentChange(check: any) {
     this.isSpotsPayment = check.currentTarget.checked;
+    if(this.claimForm.controls['providerNotEligibleExceptionFlag'].value && this.vendorId)
+    {
+      this.checkProviderNotEligibleException(this.providerTin);
+    }
   }
 
   serviceDescCharCount(i: number) {
@@ -797,6 +802,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.isRecentClaimShow = false;
     this.vendorId = $event.vendorId;
     this.vendorName = $event.vendorName;
+    this.providerTin = $event;
     this.checkProviderNotEligibleException($event);
   }
   clientValueChange($event: any) {
@@ -869,7 +875,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         return;
       }
     });
-    if(!$event.tin && !this.isSpotsPayment)
+    if(!$event?.tin && !this.isSpotsPayment)
     {
       this.addExceptionForm.reset();
       this.claimForm.controls['providerNotEligibleExceptionFlag']?.setValue(true);

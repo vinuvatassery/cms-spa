@@ -685,7 +685,7 @@ checkBridgeUppEception(startDtae: any,endDate: any, clientId: number,cptCode:any
     next: (data:any)=>{
       const flag =  data;
       let response = {
-        flag: flag,
+        flag: flag?.status == 0 ? false : true,
         indexNumber: indexNumber
       }
       this.showBridgeUppExceptionSubject.next(response);
