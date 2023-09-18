@@ -449,6 +449,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     if(this.isStartEndDateValid(startDate, endDate))
     {
       this.checkIneligibleEception(startDate,endDate,index);
+      this.checkDuplicatePaymentException(index);
     }
 
   }
@@ -925,8 +926,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     debugger;
     const formValues = this.claimForm.value
     if (startDate && endDate && formValues.client?.clientId) {
-      // startDate.setHours(0,0,0,0);
-      // endDate.setHours(0,0,0,0);
       startDate = this.intl.formatDate(startDate,  this.dateFormat ) ;
       endDate = this.intl.formatDate(endDate,  this.dateFormat ) ;
       this.financialClaimsFacade.CheckIneligibleException(startDate,endDate, formValues.client?.clientId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
@@ -939,14 +938,22 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       return;
     }
     const serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
-    const startDate = serviceFormData.controls['serviceStartDate'].value;
-    const endDate = serviceFormData.controls['serviceEndDate'].value;
+    let startDate = serviceFormData.controls['serviceStartDate'].value;
+    let endDate = serviceFormData.controls['serviceEndDate'].value;
     const ctpCodeIsvalid = this.addClaimServicesForm.at(index) as FormGroup;
     const cptCode = ctpCodeIsvalid?.controls['cptCode'].value
     const clientId = this.claimForm.value?.client?.clientId
+    if(startDate && endDate)
+    {
+      startDate = this.intl.formatDate(startDate,  this.dateFormat ) ;
+      endDate = this.intl.formatDate(endDate,  this.dateFormat ) ;
+    }
+    else
+    {
+      startDate = null;
+      endDate = null;
+    }
     if (cptCode && clientId) {
-      startDate.setHours(0,0,0,0);
-      endDate.setHours(0,0,0,0);
       this.financialClaimsFacade.checkBridgeUppEception(startDate,endDate, clientId,cptCode, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
