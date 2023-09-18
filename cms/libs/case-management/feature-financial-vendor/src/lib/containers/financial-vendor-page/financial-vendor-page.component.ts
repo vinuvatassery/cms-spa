@@ -15,7 +15,7 @@ export class FinancialVendorPageComponent implements OnInit {
   isVendorDetailFormShow = false;
   medicalProviderForm: FormGroup;
   providerTypeCode: string = '';
-  
+
   isShowMedicalProvider: boolean = false;
   isShowDentalProvider: boolean = false;
   isShowInsuranceProvider: boolean = false;
@@ -75,7 +75,7 @@ export class FinancialVendorPageComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit() {
-    this.caseFacade.enableSearchHeader(SearchHeaderType.VendorSearch);
+    this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
   }
 
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
@@ -115,7 +115,7 @@ export class FinancialVendorPageComponent implements OnInit {
     this.isVendorDetailFormShow = false;
   }
 
-  loadFinancialVendorsList(data: any) {    
+  loadFinancialVendorsList(data: any) {
     this.financialVendorFacade.selectedVendorType = data?.vendorTypeCode
     this.financialVendorFacade.getVendors(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.vendorTypeCode, data?.filter)
   }
