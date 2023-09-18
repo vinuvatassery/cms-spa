@@ -20,7 +20,7 @@
       <kendo-grid-column field="paymentNbr" title="Item #" [width]="150">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button aria-label="Item" (click)="paymentClickHandler(dataItem.paymentRequestId)" kendoButton look="flat" class="card-link-button">
-            {{ dataItem.paymentNbr }}
+            {{ dataItem.itemNbr }}
           </button>
         </ng-template>
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService" format="0">
