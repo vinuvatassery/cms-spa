@@ -15,7 +15,7 @@ export class DrugsFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'brandName';
+  public sortValue = 'ndcNbr';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [{
     field: this.sortValue,

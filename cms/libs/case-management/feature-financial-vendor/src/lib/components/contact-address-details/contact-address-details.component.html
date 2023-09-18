@@ -52,8 +52,7 @@
               <kendo-floatinglabel text="Phone Number (optional)">             
                 <kendo-maskedtextbox [maxlength]="10"  placeholder="Phone Number (optional)"  [mask]="inputMask" aria-label="Phone Number (optional)" [fillMode]="formUiStyle.inputFillMode"
           formControlName="phoneNbr"
-          (focus)="applyMask()"
-          (blur)="resetMask()"
+          [maskOnFocus]="true"
          >
       </kendo-maskedtextbox>
               </kendo-floatinglabel>
@@ -65,8 +64,7 @@
               <kendo-floatinglabel text="Fax Number (optional)">
                 <kendo-maskedtextbox [maxlength]="10" aria-label="Fax Number (optional)" placeholder="Fax (optional)" [mask]="inputMask" [fillMode]="formUiStyle.inputFillMode"
                 formControlName="faxNbr"
-                (focus)="applyMask()"
-                (blur)="resetMask()">
+                [maskOnFocus]="true">
             </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="isSubmitted && getContactControl(i, 'faxNbr')?.errors?.['pattern']">

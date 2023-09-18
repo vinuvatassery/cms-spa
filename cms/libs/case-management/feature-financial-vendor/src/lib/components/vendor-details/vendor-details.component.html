@@ -59,8 +59,11 @@
                 </ng-template>
               </kendo-autocomplete>
               <kendo-formerror
-                *ngIf="!medicalProviderForm.controls['providerName'].valid && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
+                *ngIf="medicalProviderFormControls?.providerName.errors?.required && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
                 Clinic Name is required
+              </kendo-formerror>
+              <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.maxlength">
+                Clinic Name cannot be more than 500 characters 
               </kendo-formerror>
             </kendo-floatinglabel>
           </div>
@@ -121,7 +124,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="TIN (optional)">
           <kendo-maskedtextbox aria-label="TIN" 
-           [fillMode]="formUiStyle.inputFillMode"  [maxlength]="9" placeholder="TIN (optional)"
+           [fillMode]="formUiStyle.inputFillMode"  [maxlength]="10" placeholder="TIN (optional)"
            [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat">
           </kendo-maskedtextbox> 
         </kendo-floatinglabel>
@@ -174,6 +177,9 @@
           <kendo-textbox aria-label="Mail Code"  (valueChange)="onChange()" (keyup)="onMailCodeChange()"  [fillMode]="formUiStyle.inputFillMode" formControlName="mailCode"
             [maxlength]="3">
           </kendo-textbox>
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['mailCode'].valid && isValidateForm">
+            Mail code is required
+          </kendo-formerror>
         </kendo-floatinglabel>
       </div>
 

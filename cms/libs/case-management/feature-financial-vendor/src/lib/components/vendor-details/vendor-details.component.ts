@@ -32,7 +32,7 @@ export class VendorDetailsComponent implements OnInit {
   clinicNameNotApplicable: boolean = false;
   firstLastNameNotApplicable: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  tinMaskFormat: string = '00-0000000';
+  tinMaskFormat: string = '0 00-0000000';
   specialhandlingCounter!: string;
   specialHandlingCharachtersCount!: number;
   specialHandlingMaxLength = 100;
@@ -139,7 +139,7 @@ fillFormData(){
     this.medicalProviderForm.markAllAsTouched();
     if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders) {
       if (!this.clinicNameNotApplicable) {
-        this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
+        this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
       }
       if (!this.firstLastNameNotApplicable) {
@@ -157,10 +157,12 @@ fillFormData(){
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
     else {
-      this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
+      this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
+    this.validateMailCode()
+ 
     if (mailCode) {
                this.medicalProviderForm.controls['addressLine1']
         .setValidators([
@@ -239,6 +241,25 @@ fillFormData(){
       (this.AddContactForm.controls[index] as FormGroup).controls['isCheckContactNameValid'].setValue(true);
     }
 
+  }
+  validateMailCode() {
+    if(this.providerType == this.vendorTypes.DentalProviders){
+      let address1 =  this.medicalProviderForm.controls['addressLine1'].value;   
+      let city =  this.medicalProviderForm.controls['city'].value;   
+      let state =  this.medicalProviderForm.controls['state'].value;   
+      let zip =  this.medicalProviderForm.controls['zip'].value;
+  
+      if(address1 || city || state || zip){
+        this.medicalProviderForm.controls['mailCode']
+        .setValidators([
+          Validators.required,
+        ]);
+      this.medicalProviderForm.controls['mailCode'].updateValueAndValidity();
+      }else{
+        this.medicalProviderForm.controls['mailCode'].clearValidators();
+      this.medicalProviderForm.controls['mailCode'].updateValueAndValidity();
+      }
+    }
   }
 
   getPaymentMethods() {
@@ -376,7 +397,7 @@ fillFormData(){
     this.medicalProviderForm.markAllAsTouched();
     if (this.vendorTypes.DentalProviders == this.providerType || this.vendorTypes.MedicalProviders == this.providerType) {
       if (this.vendorDetails.vendorName) {
-        this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
+        this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
       }
       else {
@@ -387,7 +408,7 @@ fillFormData(){
       }
     }
     else {
-      this.medicalProviderForm.controls['providerName'].setValidators([Validators.required]);
+      this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
   }
