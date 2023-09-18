@@ -53,7 +53,9 @@
                         (filterChange)="onPcaChange($event)" >
                         </kendo-dropdownlist>
                   </kendo-floatinglabel>
-
+                  <kendo-formerror *ngIf="pcaAssignmentFormControls?.pcaId?.errors?.required && formSubmitted">
+                        PCA is required
+                  </kendo-formerror>
             </div>
             <div class="flex-col flex-col-4">
                   <kendo-floatinglabel text="AY">
@@ -93,7 +95,10 @@
                                     formControlName="openDate">
             
                                     </kendo-dropdownlist>
-                              </kendo-floatinglabel>            
+                              </kendo-floatinglabel>       
+                              <kendo-formerror *ngIf="pcaAssignmentFormControls?.openDate?.errors?.required && formSubmitted">
+                                    Open Date is required
+                              </kendo-formerror>     
                         </div>
                   </kendo-floatinglabel>
 
@@ -112,7 +117,9 @@
             
                                     </kendo-dropdownlist>
                               </kendo-floatinglabel>
-            
+                              <kendo-formerror *ngIf="pcaAssignmentFormControls?.closeDate?.errors?.required && formSubmitted">
+                                    Close Date is required
+                              </kendo-formerror>   
                         </div>
                   </kendo-floatinglabel>
 
@@ -126,7 +133,9 @@
                               class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
                         </kendo-numerictextbox>
                   </kendo-floatinglabel>
-
+                  <kendo-formerror *ngIf="pcaAssignmentFormControls?.amount?.errors?.required && formSubmitted">
+                        Amount is required
+                  </kendo-formerror>   
             </div>
             <div class="flex-col flex-col-6 mt-2">
                   <span class="app-checkboxwidtext-wrapper">

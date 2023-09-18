@@ -222,17 +222,42 @@ public rowCallback(context: RowClassArgs) {
   objectCodeChange(data : any)
   {
   this.objectCodeIdValue = data?.objectCodeId
+  if(this.objectCodeIdValue)
+    {
+      this.objectCodeValid = true
+    }
+    if(this.groupCodeIdsdValue.length > 0)
+    {
+      this.groupCodesValid = true
+    }
+    else
+    {
+      this.groupCodesValid = false
+    }
   this.groupChange(true)
   }
 
   groupChange($event : any)
-  {
+  {    
     this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;
     let  groupCodeIdsdValueData= []
 
     for (const key in this.groupCodeIdsdValue)
     {
       groupCodeIdsdValueData.push(this.groupCodeIdsdValue[key]?.groupCodeId)
+    }
+
+    if(this.objectCodeIdValue)
+    {
+      this.objectCodeValid = true
+    }
+    if(this.groupCodeIdsdValue.length > 0)
+    {
+      this.groupCodesValid = true
+    }
+    else
+    {
+      this.groupCodesValid = false
     }
     if(this.groupCodeIdsdValue.length > 0 && this.objectCodeIdValue)
     {
@@ -244,6 +269,7 @@ public rowCallback(context: RowClassArgs) {
       }
 
       this.loadFinancialPcaAssignmentEvent.emit(pcaAssignmentGridArguments)
+     
       this.gridDataHandle();
     }
   }
