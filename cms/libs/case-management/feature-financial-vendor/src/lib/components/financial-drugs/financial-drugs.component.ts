@@ -129,7 +129,7 @@ export class FinancialDrugsComponent {
   }
 
   ngOnChanges(): void {
-    this.initializeGrid();
+    this.initializeGrid(false);
     this.loadDrugsListGrid();
   }
 
@@ -231,7 +231,7 @@ export class FinancialDrugsComponent {
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.column[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
-    this.initializeGrid();
+    this.initializeGrid(true);
     this.loadDrugsListGrid();
     this.hivValue = this.hepaValue = this.oppoValue = null;
   }
@@ -266,12 +266,14 @@ export class FinancialDrugsComponent {
     this.filterData = filter;
   }
 
-  private initializeGrid() {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: [{ field: this.sortValue, dir: this.sortType }],
-    };
+   private initializeGrid(resetState:boolean) {
+    if (this.state == undefined || resetState) {
+       this.state = {
+        skip: 0,
+        take: this.pageSizes[0]?.value,
+        sort: [{ field: this.sortValue, dir: this.sortType }],
+      };
+    }
   }
 
   private setFilterBy(
