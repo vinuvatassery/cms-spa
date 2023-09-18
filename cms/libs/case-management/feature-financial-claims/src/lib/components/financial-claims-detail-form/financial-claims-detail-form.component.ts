@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType } from '@cms/case-management/domain';
+import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType, ExceptionTypeCode } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoaderService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -192,7 +192,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   checkExceptions()
   {
     this.showExceedMaxBenefitException$.subscribe(data => {
-      debugger;
       if(data)
       {
         if(data?.flag)
@@ -201,20 +200,19 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
           this.addExceptionForm.at(data?.indexNumber).get('maxBenefitExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
         }
         this.addExceptionForm.at(data?.indexNumber).get('exceedMaxBenefitExceptionFlag')?.setValue(data?.flag);
-        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? "EMB" : '')
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.ExceedMaxBenefits : '')
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
         this.cd.detectChanges();
       }
     });
     this.showIneligibleException$.subscribe(data => {
-      debugger;
       if(data?.flag)
       {
 
         this.resetExceptionFields(data?.indexNumber);
         this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
         this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlag')?.setValue(data?.flag);
-        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? "I" : '')
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.Ineligible : '')
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
         this.cd.detectChanges();
       }
@@ -223,20 +221,20 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         let serviceFormData = this.addClaimServicesForm.at(data?.indexNumber) as FormGroup;
         let startDate = serviceFormData.controls['serviceStartDate'].value;
         let endDate = serviceFormData.controls['serviceEndDate'].value;
+        this.checkDuplicatePaymentException(data?.indexNumber);
         this.checkOldInvoiceException(startDate,endDate, data?.indexNumber);
       }
     });
     this.showBridgeUppException$.subscribe(data => {
       if(data)
       {
-        debugger;
         if(data?.flag)
         {
           this.resetExceptionFields(data?.indexNumber);
           this.addExceptionForm.at(data?.indexNumber).get('bridgeUppExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
         }
         this.addExceptionForm.at(data?.indexNumber).get('bridgeUppExceptionFlag')?.setValue(data?.flag);
-        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? "BU" : '')
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.BridgeUpp : '')
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
         this.cd.detectChanges();
       }
@@ -244,14 +242,13 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.showDuplicatePaymentException$.subscribe(data => {
       if(data)
       {
-        debugger;
         if(data?.flag)
         {
           this.resetExceptionFields(data?.indexNumber);
           this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
         }
         this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlag')?.setValue(data?.flag);
-        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? "DP" : '')
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.DuplicatePayment : '')
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
         this.cd.detectChanges();
       }
@@ -442,14 +439,12 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   onDateChange(index: any) {
-    debugger;
     let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
     if(this.isStartEndDateValid(startDate, endDate))
     {
       this.checkIneligibleEception(startDate,endDate,index);
-      this.checkDuplicatePaymentException(index);
     }
 
   }
@@ -503,7 +498,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       return;
     }
     let formValues = this.claimForm.value;
-    debugger;
     let bodyData = {
       clientId: formValues.client.clientId,
       vendorId: formValues.medicalProvider.vendorId,
@@ -526,8 +520,8 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         claimNbr: element.invoiceId,
         clientCaseEligibilityId: this.clientCaseEligibilityId,
         cptCode: element.cptCode,
-        serviceStartDate: element.serviceStartDate,
-        serviceEndDate: element.serviceEndDate,
+        serviceStartDate: this.intl.formatDate(element.serviceStartDate,  this.dateFormat ),
+        serviceEndDate: this.intl.formatDate(element.serviceEndDate,  this.dateFormat ),
         PaymentTypeCode: element.paymentType,
         serviceCost: element.serviceCost,
         entityTypeCode: EntityTypeCode.Vendor,
@@ -557,7 +551,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       bodyData.tpaInvoice.push(service);
     }
     bodyData.tpaInvoice.splice(0, 1);
-    if(checkDeniedClaim)
+    if(checkDeniedClaim || (bodyData?.exceptionFlag === StatusFlag.Yes && !bodyData?.exceptionReasonCode))
     {
       this.printDenialLetterData = bodyData;
       this.onPrintDenialLetterOpen();
@@ -633,7 +627,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       .getMedicalClaimByPaymentRequestId(this.paymentRequestId, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim)
       .subscribe({
         next: (val) => {
-          debugger;
           const clients = [
             {
               clientId: val.clientId,
@@ -659,7 +652,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
           this.claimForm.controls['parentReasonForException'].setValue(val.exceptionReasonCode);
           this.claimForm.controls['parentExceptionFlag'].setValue(val.exceptionFlag);
           this.claimForm.controls['parentExceptionTypeCode'].setValue(val.exceptionTypeCode);
-          if(val.exceptionFlag === StatusFlag.Yes && val.exceptionTypeCode == "PNE")
+          if(val.exceptionFlag === StatusFlag.Yes && val.exceptionTypeCode == ExceptionTypeCode.ProviderIneligible)
           {
             this.claimForm.controls['providerNotEligibleExceptionFlag'].setValue(true);
             if(this.claimForm.controls['parentReasonForException'].value)
@@ -720,7 +713,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
   setExceptionFormValues(exceptionform:FormGroup , serviceForm : FormGroup)
   {
-    if(serviceForm.controls['exceptionTypeCode'].value === "EMB")
+    if(serviceForm.controls['exceptionTypeCode'].value === ExceptionTypeCode.ExceedMaxBenefits)
     {
       exceptionform.controls['exceedMaxBenefitExceptionFlag'].setValue(true);
       if(serviceForm.controls['reasonForException'].value)
@@ -729,11 +722,11 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         exceptionform.controls['maxBenefitExceptionFlagText'].setValue("Don't Make Exception");
       }
     }
-    if(serviceForm.controls['exceptionTypeCode'].value === "I")
+    if(serviceForm.controls['exceptionTypeCode'].value === ExceptionTypeCode.Ineligible)
     {
       exceptionform.controls['ineligibleExceptionFlag'].setValue(true);
     }
-    if(serviceForm.controls['exceptionTypeCode'].value === "OI")
+    if(serviceForm.controls['exceptionTypeCode'].value === ExceptionTypeCode.OldInvoice)
     {
       exceptionform.controls['OldInvoiceExceptionFlag'].setValue(true);
       if(serviceForm.controls['reasonForException'].value)
@@ -742,7 +735,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         exceptionform.controls['oldInvoiceExceptionFlagText'].setValue("Don't Make Exception");
       }
     }
-    if(serviceForm.controls['exceptionTypeCode'].value === "DP")
+    if(serviceForm.controls['exceptionTypeCode'].value === ExceptionTypeCode.DuplicatePayment)
     {
       exceptionform.controls['duplicatePaymentExceptionFlag'].setValue(true);
       if(serviceForm.controls['reasonForException'].value)
@@ -751,7 +744,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         exceptionform.controls['duplicatePaymentExceptionFlagText'].setValue("Don't Make Exception");
       }
     }
-    if(serviceForm.controls['exceptionTypeCode'].value === "BU")
+    if(serviceForm.controls['exceptionTypeCode'].value === ExceptionTypeCode.BridgeUpp)
     {
       exceptionform.controls['bridgeUppExceptionFlag'].setValue(true);
       if(serviceForm.controls['reasonForException'].value)
@@ -880,7 +873,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     {
       this.addExceptionForm.reset();
       this.claimForm.controls['providerNotEligibleExceptionFlag']?.setValue(true);
-      this.claimForm.controls['parentExceptionTypeCode'].setValue("PNE");
+      this.claimForm.controls['parentExceptionTypeCode'].setValue(ExceptionTypeCode.ProviderIneligible);
       this.claimForm.controls['parentExceptionFlag']?.setValue(StatusFlag.Yes);
     }
     else
@@ -893,7 +886,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
   checkOldInvoiceException(serviceStartDate:any, serviceEndDate:any, index:number)
   {
-    debugger;
     if(!this.checkPriority(this.oldInvoicePriorityArray,index,'providerNotEligibleExceptionFlag'))
     {
       return;
@@ -909,7 +901,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         this.resetExceptionFields(index);
         this.addExceptionForm.at(index).get('oldInvoiceExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
         this.addExceptionForm.at(index).get('oldInvoiceExceptionFlag')?.setValue(true);
-        this.addClaimServicesForm.at(index).get('exceptionTypeCode')?.setValue("OI")
+        this.addClaimServicesForm.at(index).get('exceptionTypeCode')?.setValue(ExceptionTypeCode.OldInvoice)
         this.addClaimServicesForm.at(index).get('exceptionFlag')?.setValue(StatusFlag.Yes)
       }
       else
@@ -923,7 +915,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
   checkIneligibleEception(startDate:any, endDate:any, index:number)
   {
-    debugger;
     const formValues = this.claimForm.value
     if (startDate && endDate && formValues.client?.clientId) {
       startDate = this.intl.formatDate(startDate,  this.dateFormat ) ;
@@ -990,7 +981,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
   checkPriority(exceptionControls:any, indexNumber:any, parentExceptionControl:string|null) : boolean
   {
-    debugger;
     if(parentExceptionControl && this.claimForm.controls[parentExceptionControl].value )
     {
       return false;
