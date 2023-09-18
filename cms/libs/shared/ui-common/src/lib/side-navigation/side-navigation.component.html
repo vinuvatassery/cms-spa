@@ -7,7 +7,7 @@
         {{menu.icon}}
       </span>
       <span class="sidebar-menu_label" attr.aria-label="{{ menu.name }}">
-        {{ menu.name }} <span *ngIf="menu?.hasBadge" class="sidebar-menu_label-badge"> {{ getBadge(menu.code)}} </span>
+        {{ menu.name }} <span *ngIf="menu?.hasBadge && isShowBadge(menu.code)" class="sidebar-menu_label-badge"> {{ getBadge(menu.code)}} </span>
       </span>
     </a>
 
@@ -30,7 +30,7 @@
           <p class="submenu_list_heading" attr.aria-label="{{ subMenu.name }}"
             *ngIf="isMenuHeadingVisible(subMenu.subMenus, menu.filterText) || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1">
             {{ subMenu.name | uppercase }}
-            <span *ngIf="subMenu?.hasBadge"> ({{ getBadge(subMenu.code)}}) </span>
+            <span *ngIf="subMenu?.hasBadge && isShowBadge(subMenu.code)"> ({{ getBadge(subMenu.code)}}) </span>
           </p>
 
           <div class="submenu_list_container" *ngFor="let sprSubMenu of subMenu.subMenus"
