@@ -349,10 +349,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
-    let result = this.isStartEndDateValid(startDate, endDate);
-    
-    if(!result)
-    this.isEndDateValid(index);
+    this.isStartEndDateValid(startDate, endDate);
   }
 
   isEndDateValid(index:any){
@@ -360,15 +357,21 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.currentFormControl.controls['serviceEndDate'].setErrors({'incorrect':true});
   }
 
+  isStartEndDateError(index : any){
+    let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
+    let startDate = serviceFormData.controls['serviceStartDate'].value;
+    let endDate = serviceFormData.controls['serviceEndDate'].value;
+    return this.isStartEndDateValid(startDate, endDate);
+  }
+
   isStartEndDateValid(startDate: any, endDate: any): boolean {
     if (startDate != "" && endDate != "" && startDate > endDate) {
       this.endDateGreaterThanStartDate = true;
       return false;
     }
-    this.currentFormControl.controls['serviceEndDate'].setErrors(null);
-    this.endDateGreaterThanStartDate = false;
     return true;
   }
+
   setExceptionValidation()
   {
     this.addClaimServicesForm.controls.forEach((element, index) => {

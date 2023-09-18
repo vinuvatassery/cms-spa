@@ -158,7 +158,7 @@
                                                     aria-hidden="false">info</span>Service End Date is required
                                             </kendo-formerror>
                                             <kendo-formerror
-                                                *ngIf=" endDateGreaterThanStartDate && currentFormControl.controls['serviceEndDate'].hasError('incorrect')"
+                                                *ngIf="(!isStartEndDateError(i))"
                                                 class="d-flex align-items-center">
                                                 <span class="material-icons mr-1" aria-hidden="false">info</span>Service
                                                 End date must be equal to or greater than start date
