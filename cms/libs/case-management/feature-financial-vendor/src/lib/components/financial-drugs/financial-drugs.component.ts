@@ -33,7 +33,7 @@ export class FinancialDrugsComponent {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isDrugsGridLoaderShow = false;
   public state!: State;
-  dialogTitle = "Add";
+  dialogTitle = "Add New";
   filters:any=[];
   isFiltered = false;
   yesOrNoLovs:any=[];
