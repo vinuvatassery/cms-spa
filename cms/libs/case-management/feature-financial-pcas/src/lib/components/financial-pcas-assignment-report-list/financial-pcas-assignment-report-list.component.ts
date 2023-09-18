@@ -11,6 +11,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -45,6 +46,7 @@ export class FinancialPcasAssignmentReportListComponent
   @Input() financialPcaReportGridLoader$: any;
   @Output() loadFinancialPcaReportListEvent = new EventEmitter<any>();
   @Output() loadFinancialPcaSubReportListEvent = new EventEmitter<any>();
+  @Output() editButtonClick: EventEmitter<any> = new EventEmitter<any>();
   public state!: State;
   columnsReordered = false;
 
@@ -128,7 +130,8 @@ export class FinancialPcasAssignmentReportListComponent
   constructor(
     private dialogService: DialogService,
     private readonly configProvider: ConfigurationProvider,
-    private readonly intl: IntlService
+    private readonly intl: IntlService,
+    private readonly  : Router,
   ) {}
   ngOnChanges(): void {
     this.initializePCAGrid();
@@ -396,5 +399,10 @@ export class FinancialPcasAssignmentReportListComponent
 
   loadFinancialPcaSubReportListGrid(data: any) {
     this.loadFinancialPcaSubReportListEvent.emit(data);
+  }
+
+  editAssignmentReport(objectId:any, groupsCoveredIdsList:any){
+    const data = { objectId: objectId, groupsCoveredIdsList: groupsCoveredIdsList };
+    this.editButtonClick.emit(data);
   }
 }

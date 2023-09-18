@@ -53,6 +53,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   @Input() printDenialLetterData: any;
   private printLetterDialog: any;
   isRecentClaimShow = false;
+  isShowReasonForException = false;
   pcaExceptionDialogService: any;
   chosenPcaForReAssignment: any;
   clientSearchResult = [
@@ -139,6 +140,8 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   @Input() paymentRequestId: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
   readonly financialProvider = 'medical';
+  endDateGreaterThanStartDate: boolean = false;
+  currentFormControl!: FormGroup<any>;
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
@@ -358,15 +361,26 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.isStartEndDateValid(startDate, endDate);
   }
 
+  isEndDateValid(index:any){
+    this.currentFormControl = this.addClaimServicesForm.at(index) as FormGroup;
+    this.currentFormControl.controls['serviceEndDate'].setErrors({'incorrect':true});
+  }
+
+  isStartEndDateError(index : any){
+    let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
+    let startDate = serviceFormData.controls['serviceStartDate'].value;
+    let endDate = serviceFormData.controls['serviceEndDate'].value;
+    return this.isStartEndDateValid(startDate, endDate);
+  }
+
   isStartEndDateValid(startDate: any, endDate: any): boolean {
     if (startDate != "" && endDate != "" && startDate > endDate) {
-      this.financialClaimsFacade.errorShowHideSnackBar(
-        'Start date must less than end date'
-      );
+      this.endDateGreaterThanStartDate = true;
       return false;
     }
     return true;
   }
+
   setExceptionValidation() {
     this.addClaimServicesForm.controls.forEach((element, index) => {
       if (this.addExceptionForm.at(index).get('showMaxBenefitExceptionReason')?.value) {

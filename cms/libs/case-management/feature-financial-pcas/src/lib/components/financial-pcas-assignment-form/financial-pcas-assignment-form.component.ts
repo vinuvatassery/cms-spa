@@ -38,12 +38,14 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
   pcaCodeInfo : any
   objectCodeControl! : FormControl
   editPca = false
+  formSubmitted =false
   constructor(  
     private readonly ref: ChangeDetectorRef,
     private formBuilder: FormBuilder,
     public intl: IntlService
   ) {}  
   ngOnInit(): void {   
+    this.formSubmitted = false
     this.loadPcaEvent.emit()
     this.getPcaInfoData()
 
@@ -78,6 +80,9 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
   closeAddEditPcaAssignmentClicked() {
     this.closeAddEditPcaAssignmentClickedEvent.emit(true);
   }
+  get pcaAssignmentFormControls() {
+    return (this.pcaAssignmentForm)?.controls as any;
+  }
 
   private composePcaAssignmentForm()
   {
@@ -91,7 +96,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
             pcaId: ['', Validators.required],
             openDate: ['', Validators.required],
             closeDate: ['', Validators.required],
-            amount: [0, Validators.required],
+            amount: ['', Validators.required],
             unlimited: [false],
             ay : ['']
           });  
@@ -179,6 +184,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
  }
   onPcaAssignmentFormSubmit()
   {    
+    this.formSubmitted = true
     this.pcaAssignmentForm.markAllAsTouched();
     if(this.pcaAssignmentForm.valid)
     {
