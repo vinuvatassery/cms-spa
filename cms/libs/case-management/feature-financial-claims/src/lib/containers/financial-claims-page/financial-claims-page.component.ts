@@ -88,7 +88,7 @@ export class FinancialClaimsPageComponent implements OnInit {
   }
 
   loadFinancialClaimsBatchListGrid(data: any) {
-    debugger
+    
     this.dataExportParameters = data
     this.financialClaimsFacade.loadFinancialClaimsBatchListGrid( data?.skipCount,   data?.pagesize, data?.sortColumn, data?.sortType,data?.filter,this.claimsType);
   }

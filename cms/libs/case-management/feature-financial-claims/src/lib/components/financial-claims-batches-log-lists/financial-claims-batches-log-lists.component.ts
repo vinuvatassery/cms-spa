@@ -20,7 +20,7 @@ import {
 import { Observable, Subject, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
-import { FinancialClaimsFacade, PaymentBatchName } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, PaymentBatchName, PaymentStatusCode } from '@cms/case-management/domain';
 import { NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-financial-claims-batches-log-lists',
@@ -55,6 +55,7 @@ export class FinancialClaimsBatchesLogListsComponent
   vendorId:any;
   clientId:any;
   clientName:any;
+  PaymentStatusList = [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved];
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -95,49 +96,6 @@ export class FinancialClaimsBatchesLogListsComponent
     },
   ];
 
-  public batchLogGridActions = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Edit Claims',
-      icon: 'edit',
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Unbatch Claims',
-      icon: 'undo',
-      click: (data: any): void => {
-        if (!this.isUnBatchClaimsClosed) {
-          this.isUnBatchClaimsClosed = true;
-          this.selected = data;
-          this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
-        }
-      },
-    },
-    {
-      buttonType: 'btn-h-danger',
-      text: 'Delete Claims',
-      icon: 'delete',
-      click: (data: any): void => {
-        if(data.paymentStatusCode=="PAID")
-        {
-          this.notificationSnackbarService.manageSnackBar(
-            SnackBarNotificationType.ERROR,
-            "This claim cannot be deleted",
-            NotificationSource.UI
-          );
-        }else{
-            this.isUnBatchClaimsClosed = false;
-            this.isDeleteClaimClosed = true;
-            this.onSingleClaimDelete(data.paymentRequestId.split(','));
-            this.onDeleteClaimsOpenClicked(
-              this.deleteClaimsConfirmationDialogTemplate
-            );
-          
-        }
-       
-      },
-    },
-  ];
   @Input() claimsType: any;
   @Input() batchId: any;
   @Input() pageSizes: any;
@@ -203,6 +161,55 @@ export class FinancialClaimsBatchesLogListsComponent
   selectedCount: number = 0;
   disablePrwButton:boolean= true;
   deletemodelbody:string="This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch";
+
+  getBatchLogGridActions(dataItem: any){
+    return [
+      {
+        buttonType: 'btn-h-primary',
+        text: 'Edit Claims',
+        icon: 'edit'
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'Unbatch Claims',
+        icon: 'undo',
+        disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
+        click: (data: any): void => {
+          
+          if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
+            if (!this.isUnBatchClaimsClosed) {
+              this.isUnBatchClaimsClosed = true;
+              this.selected = data;
+              this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+            }
+        },
+      },
+      {
+        buttonType: 'btn-h-danger',
+        text: 'Delete Claims',
+        icon: 'delete',
+        click: (data: any): void => {
+          if([PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
+          {
+            this.notificationSnackbarService.manageSnackBar(
+              SnackBarNotificationType.ERROR,
+              "This claim cannot be deleted",
+              NotificationSource.UI
+            );
+          }else{
+              this.isUnBatchClaimsClosed = false;
+              this.isDeleteClaimClosed = true;
+              this.onSingleClaimDelete(data.paymentRequestId.split(','));
+              this.onDeleteClaimsOpenClicked(
+                this.deleteClaimsConfirmationDialogTemplate
+              );
+
+          }
+
+        },
+      },
+    ];
+  }
   /** Constructor **/
   constructor(
     private route: Router,
