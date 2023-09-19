@@ -27,7 +27,7 @@
                 <div class="flex-col mb-1">
                     <kendo-floatinglabel text="Description (Optional)">
                         <kendo-textbox aria-label="Description (Optional)" [fillMode]="formUiStyle.inputFillMode" [maxlength]="500"
-                            formControlName="description">
+                            formControlName="description" (keypress)="onKeyPress($event.charCode)">
                         </kendo-textbox>
                     </kendo-floatinglabel>
                 </div>
