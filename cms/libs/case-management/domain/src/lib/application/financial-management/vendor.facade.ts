@@ -228,10 +228,10 @@ export class FinancialVendorFacade {
       },
     });
   }
-  searchProvider(searchText: string)
+  searchProvider(payload: any)
   {
     this.showLoader();
-    return this.financialVendorDataService.searchProvider(searchText).subscribe({
+    return this.financialVendorDataService.searchProvider(payload).subscribe({
       next: (response: any[]) => 
       {
         this.searchProviderSubject.next(response);

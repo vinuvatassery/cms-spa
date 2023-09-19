@@ -206,7 +206,7 @@
       <cms-financial-clinic-provider-details 
       (closeProviderEvent)="clickCloseAddEditProvidersDetails()"
       (loadProviderListEvent)="loadProviderListGrid()" 
-      [parentVendorId]="ParentVendorId"> </cms-financial-clinic-provider-details>
+      [parentVendorId]="ParentVendorId" [vendorTypeCode]="vendorTypeCode"> </cms-financial-clinic-provider-details>
 </kendo-dialog>
 <kendo-dialog *ngIf="isProvidersRemoveShow" (close)="clickCloseRemoveProviders()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">

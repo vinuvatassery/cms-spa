@@ -48,12 +48,13 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   columnChangeDesc = 'Default Columns'
   public state!: State;
   searchText = '';
-
-  
   @Input() providerList$:any
   @Output() loadProviderListEvent = new EventEmitter<any>();
   @Output() removeProviderClick = new EventEmitter<any>();
   @Input() ParentVendorId :any
+  @Input() vendorTypeCode :any
+  @Input() removeprovider$ : any
+  @Input() addProviderNew$ : any
   public processGridActions = [
     {
       buttonType: 'btn-h-danger',
@@ -82,6 +83,9 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   
   ngOnInit(): void {
     this.initializeProviderPage();
+    this.addProviderNew$.subscribe((_ : any)=>{
+      this.loadProviderListGrid()
+    })
   }
   
   ngOnChanges(): void {
@@ -208,7 +212,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
       JSON.stringify(this.filter));
       const providerQuery={
         vendorId:this.ParentVendorId,
-        vendorTypeCode :FinancialVendorTypeCode.Clinic,
+        vendorTypeCode :this.vendorTypeCode,
         ...param
       }
     this.loadProviderListEvent.emit(providerQuery);
@@ -287,6 +291,9 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   }
   removeProvider() {
       this.removePoviderEvent(this.selectProviderId);
+      this.removeprovider$.subscribe((_:any)=>{
+        this.loadProviderListGrid()
+      })
       this.clickCloseRemoveProviders();
    }
 
@@ -299,7 +306,5 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     this.removeProviderClick.emit(providerId);
     this.clickCloseRemoveProviders();
     this.changeDetector.detectChanges();
-    this.loadProviderListGrid();
-     
   }
 }
