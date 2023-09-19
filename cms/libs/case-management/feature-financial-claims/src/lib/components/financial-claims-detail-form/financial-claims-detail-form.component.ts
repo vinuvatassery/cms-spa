@@ -263,13 +263,19 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   addClaimServiceGroup() {
+    let startDate;
+    let endDate;
+    if(this.addClaimServicesForm.length > 0){
+        startDate = this.addClaimServicesForm.at(0).get('serviceStartDate')?.value;
+        endDate = this.addClaimServicesForm.at(0).get('serviceEndDate')?.value;
+      }
     let claimForm = this.formBuilder.group({
       serviceStartDate: new FormControl(
-        this.medicalClaimServices.serviceStartDate,
+        startDate ? startDate : this.medicalClaimServices.serviceStartDate,
         [Validators.required]
       ),
       serviceEndDate: new FormControl(
-        this.medicalClaimServices.serviceEndDate,
+        endDate ? endDate : this.medicalClaimServices.serviceEndDate,
         [Validators.required]
       ),
       paymentType: new FormControl(this.medicalClaimServices.paymentType, [
