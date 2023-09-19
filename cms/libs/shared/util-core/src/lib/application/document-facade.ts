@@ -10,6 +10,9 @@ import { DocumentDataService } from '../infrastructure/document.data.service';
 @Injectable({ providedIn: 'root' })
 export class DocumentFacade {
 
+    private exportButtonShowSubject = new Subject<any>();
+    exportButtonShow$ = this.exportButtonShowSubject.asObservable();
+
     /** Constructor**/
     constructor(
         private readonly documentDataService: DocumentDataService,
@@ -58,6 +61,7 @@ export class DocumentFacade {
           next: (response: any) => {
             if (response) {                   
                const fileUrl = window.URL.createObjectURL(response);
+               this.exportButtonShowSubject.next(true)    
               const documentName = fileName+'.xlsx';         
                const downloadLink = document.createElement('a');
               downloadLink.href = fileUrl;
@@ -65,7 +69,8 @@ export class DocumentFacade {
                downloadLink.click();               
             }
           },
-          error: (err) => {           
+          error: (err) => {     
+            this.exportButtonShowSubject.next(true)          
             this.showSnackBar(SnackBarNotificationType.ERROR, err)
           },
         });

@@ -177,6 +177,9 @@
           <kendo-textbox aria-label="Mail Code"  (valueChange)="onChange()" (keyup)="onMailCodeChange()"  [fillMode]="formUiStyle.inputFillMode" formControlName="mailCode"
             [maxlength]="3">
           </kendo-textbox>
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['mailCode'].valid && isValidateForm">
+            Mail code is required
+          </kendo-formerror>
         </kendo-floatinglabel>
       </div>
 

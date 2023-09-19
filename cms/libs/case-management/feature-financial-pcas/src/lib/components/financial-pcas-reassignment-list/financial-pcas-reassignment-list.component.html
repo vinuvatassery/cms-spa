@@ -73,7 +73,9 @@
                                 type="checkbox"
                                 kendoCheckBox
                                 id="unlimited"
-                                aria-label="unlimited"
+                                aria-label="unlimited"                            
+                                disabled
+                                [checked]="isUnlimitedFlag(dataItem.unlimitedFlag)"
                               />
                            
                             </span>
