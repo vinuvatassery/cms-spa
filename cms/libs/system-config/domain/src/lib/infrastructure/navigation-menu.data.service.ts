@@ -19,4 +19,10 @@ export class NavigationMenuService {
         `/system-config/menu`
     );
   }
+
+  pcaReassignmentCount(){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/count`
+    )
+  }
 }

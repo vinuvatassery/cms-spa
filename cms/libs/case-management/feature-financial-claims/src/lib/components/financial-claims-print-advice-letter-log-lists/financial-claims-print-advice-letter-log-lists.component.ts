@@ -206,7 +206,7 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
   paymentClickHandler(paymentRequestId: string){
     const batchId = this.activeRoute.snapshot.queryParams['bid'];
     this.route.navigate([this.route.url.split('?')[0] , 'items'], {
-      queryParams: { bid: batchId, iid: paymentRequestId}
+      queryParams: { bid: batchId, pid: paymentRequestId}
     }); 
   }
 
