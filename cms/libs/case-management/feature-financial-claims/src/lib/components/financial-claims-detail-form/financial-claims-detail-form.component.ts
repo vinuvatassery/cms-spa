@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType } from '@cms/case-management/domain';
+import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType, FinancialPcaFacade } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -151,7 +151,8 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     private readonly activatedRoute: ActivatedRoute,
     private dialogService: DialogService,
     private readonly intl: IntlService,
-    private readonly configProvider: ConfigurationProvider
+    private readonly configProvider: ConfigurationProvider,
+    private readonly financialPcaFacade: FinancialPcaFacade
   ) {
     this.initMedicalClaimObject();
     this.initClaimForm();
@@ -495,7 +496,8 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       clientCaseEligibilityId: claim.clientCaseEligibilityId,
       claimAmount: totalAmountDue,
       serviceStartDate: minServiceStartDate,
-      serviceEndDate: maxServiceEndDate
+      serviceEndDate: maxServiceEndDate,
+      paymentRequestId: this.isEdit ? claim.paymentRequestId : null,
     };
     this.loaderService.show();
     this.financialClaimsFacade.getPcaCode(request)
@@ -543,9 +545,11 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
             SnackBarNotificationType.ERROR,
             'An error occure whilie adding claim'
           );
+          this.pcaExceptionDialogService.close();
         } else {
           this.closeAddEditClaimsFormModalClicked();
           this.pcaExceptionDialogService.close();
+          this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
             'Claim added successfully'
@@ -573,9 +577,11 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
             SnackBarNotificationType.ERROR,
             'An error occure whilie updating claim'
           );
+          this.pcaExceptionDialogService.close();
         } else {
           this.closeAddEditClaimsFormModalClicked();
           this.pcaExceptionDialogService.close();
+          this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
             'Claim updated successfully'
@@ -752,11 +758,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   onPrintDenialLetterClosed(status: any) {
     this.isPrintDenailLetterClicked = false;
     if (status) {
-      if (!this.isEdit) {
-        this.saveData(this.printDenialLetterData);
-      } else {
-        this.update(this.printDenialLetterData);
-      }
+      this.getPcaCode(this.printDenialLetterData);
     }
   }
 

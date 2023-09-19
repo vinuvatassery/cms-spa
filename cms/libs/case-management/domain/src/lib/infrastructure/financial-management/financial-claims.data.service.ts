@@ -369,7 +369,7 @@ export class FinancialClaimsDataService {
 
   getPcaCode(params: any){
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/pca-code`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/pca-code`,
       params
     );
   }
