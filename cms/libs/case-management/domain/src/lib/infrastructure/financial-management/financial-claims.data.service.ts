@@ -367,6 +367,13 @@ export class FinancialClaimsDataService {
     );
   }
 
+  getPcaCode(params: any){
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/pca-code`,
+      params
+    );
+  }
+
   updateMedicalClaim(claim: any, typeCode: string) {
     let path;
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
