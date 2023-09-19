@@ -73,7 +73,7 @@
           || medicalProviderForm.value.vendorTypeCode == 'DENTAL_CLINIC')">
             <kendo-floatinglabel text="Provider Name">
               <kendo-textbox aria-label="Provider Name" [fillMode]="formUiStyle.inputFillMode"
-                formControlName="providerName">
+                formControlName="providerName" [maxlength]="500">
               </kendo-textbox>
               <kendo-formerror
                 *ngIf="!medicalProviderForm.controls['providerName'].valid && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
