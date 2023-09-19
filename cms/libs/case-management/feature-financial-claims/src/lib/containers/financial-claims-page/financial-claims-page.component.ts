@@ -9,7 +9,7 @@ import { State } from '@progress/kendo-data-query';
 import { FinancialClaimsFacade } from '@cms/case-management/domain';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {  filter } from 'rxjs';
-import { LoggingService } from '@cms/shared/util-core';
+import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-financial-claims-page',
   templateUrl: './financial-claims-page.component.html',
@@ -20,10 +20,12 @@ export class FinancialClaimsPageComponent implements OnInit {
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
   claimsType: any;
+  dataExportParameters! : any
 
   sortType = this.financialClaimsFacade.sortType;
   pageSizes = this.financialClaimsFacade.gridPageSizes;
   gridSkipCount = this.financialClaimsFacade.skipCount;
+  exportButtonShow$ = this.documentFacade.exportButtonShow$
 
   sortValueFinancialClaimsProcess =
     this.financialClaimsFacade.sortValueFinancialClaimsProcess;
@@ -51,6 +53,7 @@ export class FinancialClaimsPageComponent implements OnInit {
     private readonly activatedRoute: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
     private loggingService: LoggingService,
+    private documentFacade :  DocumentFacade
   ) {}
 
   ngOnInit(): void {
@@ -75,6 +78,7 @@ export class FinancialClaimsPageComponent implements OnInit {
   }
 
   loadFinancialClaimsProcessListGrid(data: any) {
+    this.dataExportParameters = data
     this.financialClaimsFacade.loadFinancialClaimsProcessListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType,data?.filter,this.claimsType);
   }
 
@@ -84,11 +88,73 @@ export class FinancialClaimsPageComponent implements OnInit {
   }
 
   loadFinancialClaimsBatchListGrid(data: any) {
-
+    
+    this.dataExportParameters = data
     this.financialClaimsFacade.loadFinancialClaimsBatchListGrid( data?.skipCount,   data?.pagesize, data?.sortColumn, data?.sortType,data?.filter,this.claimsType);
   }
 
   loadFinancialClaimsAllPaymentsListGrid(data: any) {
+    this.dataExportParameters = data
     this.financialClaimsFacade.loadFinancialClaimsAllPaymentsListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.filter, this.claimsType);
   }
-}
+
+
+  exportClaimsProcessGridData(){
+    const data = this.dataExportParameters
+    if(data){
+    const  filter = JSON.stringify(data?.filter);
+
+      const vendorPageAndSortedRequest =
+      {
+        SortType : data?.sortType,
+        Sorting : data?.sortColumn,
+        SkipCount : data?.skipcount,
+        MaxResultCount : data?.maxResultCount,
+        Filter : filter
+      }
+     let fileName = (this.claimsType[0].toUpperCase() + this.claimsType.substr(1).toLowerCase()) +' Claims'
+
+      this.documentFacade.getExportFile(vendorPageAndSortedRequest,`claims/${this.claimsType}` , fileName)
+    }
+  }
+
+  exportClaimsBatchGridData(){
+    
+    const data = this.dataExportParameters
+    if(data){
+    const  filter = JSON.stringify(data?.filter);
+
+      const vendorPageAndSortedRequest =
+      {
+        SortType : data?.sortType,
+        Sorting : data?.sortColumn,
+        SkipCount : data?.skipcount,
+        MaxResultCount : data?.maxResultCount,
+        Filter : filter
+      }
+     let fileName = (this.claimsType[0].toUpperCase() + this.claimsType.substr(1).toLowerCase())  +' Claims Batches'
+
+      this.documentFacade.getExportFile(vendorPageAndSortedRequest,`claims/${this.claimsType}/batches` , fileName)
+    }
+  }
+
+  exportClaimsPaymentsGridData(){
+    
+    const data = this.dataExportParameters
+    if(data){
+    const  filter = JSON.stringify(data?.filter);
+
+      const vendorPageAndSortedRequest =
+      {
+        SortType : data?.sortType,
+        Sorting : data?.sortColumn,
+        SkipCount : data?.skipcount,
+        MaxResultCount : data?.maxResultCount,
+        Filter : filter
+      }
+     let fileName = (this.claimsType[0].toUpperCase() + this.claimsType.substr(1).toLowerCase())  +' Claims Payments'
+
+      this.documentFacade.getExportFile(vendorPageAndSortedRequest,`claims/${this.claimsType}/payments` , fileName)
+    }
+  }
+} 

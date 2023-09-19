@@ -10,6 +10,7 @@ import { State } from '@progress/kendo-data-query';
 import { FinancialFundingSourceFacade, FinancialPcaFacade, PcaAssignmentsFacade, GridFilterParam, PcaDetails } from '@cms/case-management/domain';
 import { Subject } from 'rxjs';
 import { TabStripComponent } from '@progress/kendo-angular-layout';
+import { NavigationMenuFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-financial-pcas-page',
@@ -26,7 +27,7 @@ export class FinancialPcasPageComponent implements OnInit{
   sortType = this.financialPcaFacade.sortType;
   pageSizes = this.financialPcaFacade.gridPageSizes;
   gridSkipCount = this.financialPcaFacade.skipCount;
-  pcaReassignmentCount$ = this.financialPcaFacade.pcaReassignmentCount$;
+  pcaReassignmentCount$ = this.navigationMenuFacade.pcaReassignmentCount$;
 
   sortValueFinancialPcaSetup = this.financialPcaFacade.sortValueFinancialPcaSetup;
   sortPcaSetupList = this.financialPcaFacade.sortPcaSetupList;
@@ -72,10 +73,12 @@ export class FinancialPcasPageComponent implements OnInit{
   constructor(
     private readonly financialPcaFacade: FinancialPcaFacade,
     private readonly fundingSourceFacade: FinancialFundingSourceFacade,
-    private readonly pcaAssignmentsFacade : PcaAssignmentsFacade
+    private readonly pcaAssignmentsFacade : PcaAssignmentsFacade,
+    private readonly navigationMenuFacade: NavigationMenuFacade
   ) { }
+  
   ngOnInit(): void {
-    this.financialPcaFacade.pcaReassignmentCount();
+    this.navigationMenuFacade.pcaReassignmentCount();
   }
 
   loadFinancialPcaSetupListGrid(event: GridFilterParam) {
