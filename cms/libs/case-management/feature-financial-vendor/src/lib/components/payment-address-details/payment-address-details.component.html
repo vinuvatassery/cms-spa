@@ -9,13 +9,15 @@
                 <kendo-floatinglabel text="Mail Code">
                     <kendo-textbox [maxlength]="3" aria-label="Mail Code" formControlName="mailCode"
                         [fillMode]="formUiStyle.inputFillMode"
-                        (keypress)="restrictSpecialChar($event.charCode)">
+                        (keypress)="restrictSpecialChar($event.charCode)"
+                        (keyup)="onMailCodeKeyUp()"
+                        (valueChange)="onMailCodeKeyUp()" >
                     </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['mailCode'].valid ">Mail Code is
                     required.</kendo-formerror>
+               <kendo-formerror *ngIf="mailCodeLengthError">The mail code should not be less than 3.</kendo-formerror>
             </div>
-
             <div class="flex-col">
                 <kendo-floatinglabel text="Name on Check">
                     <kendo-textbox aria-label="Name on Check" formControlName="nameOnCheck" [maxlength]="200"
