@@ -90,7 +90,7 @@
                         </span>
                         <kendo-multicolumncombobox [data]="clientSearchResult$ | async" textField="clientFullName"
                             valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
-                            placeholder="Search Client Name, ID, or SSN"
+                            placeholder="Search Client Name, ID, SSN or DOB"
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="client" (filterChange)="loadClientBySearchText($event)"
                             (valueChange)="onClientValueChange($event)" [(ngModel)]="selectedClient">
@@ -113,7 +113,8 @@
                             </kendo-combobox-column>
                             <kendo-combobox-column [width]="125">
                                 <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                    <span class=" text-muted"> <em>DOB:</em> {{ dataItem.dob | date: 'MM/dd/yyyy'}}</span>
+                                    <span class=" text-muted"> <em>DOB:</em> {{ dataItem.dob | date:
+                                        'MM/dd/yyyy'}}</span>
                                 </ng-template>
                             </kendo-combobox-column>
                         </kendo-multicolumncombobox>
@@ -147,10 +148,10 @@
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
 
-                        <ng-container formArrayName="claimService">
-                            <ng-container *ngFor="let contact of addClaimServicesForm.controls; let i=index">
-                                <ng-container [formGroupName]="i">
-                                    <div class=" mb-3">
+                    <ng-container formArrayName="claimService">
+                        <ng-container *ngFor="let contact of addClaimServicesForm.controls; let i=index">
+                            <ng-container [formGroupName]="i">
+                                <div class=" mb-3">
                                     <div class="flex-space-bw align-items-center">
                                         <h4 class="mar-0">SERVICE {{i+1}}</h4>
                                         <button class="" kendoButton fillMode="flat" themeColor="error"
@@ -183,6 +184,12 @@
                                                 *ngIf="(isControlValid('serviceEndDate', i) && isSubmitted)"
                                                 class="d-flex align-items-center"> <span class="material-icons mr-1"
                                                     aria-hidden="false">info</span>Service End Date is required
+                                            </kendo-formerror>
+                                            <kendo-formerror
+                                                *ngIf="(!isStartEndDateError(i))"
+                                                class="d-flex align-items-center">
+                                                <span class="material-icons mr-1" aria-hidden="false">info</span>Service
+                                                End date must be equal to or greater than start date
                                             </kendo-formerror>
                                         </div>
                                         <div class="ml-2">
@@ -311,8 +318,8 @@
 
                                             <kendo-floatinglabel text="Service Cost" class="amount-with-symbol">
                                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                                                <kendo-numerictextbox aria-label="Service Cost"  [spinners]="false"
-                                                    [fillMode]="formUiStyle.inputFillMode" format="#.000"
+                                                <kendo-numerictextbox aria-label="Service Cost" [spinners]="false"
+                                                    [fillMode]="formUiStyle.inputFillMode" format="#.00"
                                                     formControlName="serviceCost">
 
                                                 </kendo-numerictextbox>
@@ -325,9 +332,9 @@
                                         <div class="flex-col flex-col-6">
                                             <kendo-floatinglabel text="Amount Due" class="amount-with-symbol">
                                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                                                <kendo-numerictextbox aria-label="Amount Due"  [spinners]="false"
+                                                <kendo-numerictextbox aria-label="Amount Due" [spinners]="false"
                                                     [fillMode]="formUiStyle.inputFillMode" formControlName="amountDue"
-                                                    format="#.000"  (blur)="onAmountDueChange(i)">
+                                                    format="#.00"  (blur)="onAmountDueChange(i)">
                                                 </kendo-numerictextbox>
                                             </kendo-floatinglabel>
                                             <kendo-formerror *ngIf="(isControlValid('amountDue',i) && isSubmitted)"
@@ -370,9 +377,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                </ng-container>
                             </ng-container>
                         </ng-container>
+                    </ng-container>
 
                 </div>
             </div>
