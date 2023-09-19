@@ -259,7 +259,6 @@ export class PaymentAddressDetailsComponent implements OnInit {
   } 
   onMailCodeKeyUp() {
     let mailCode = this.paymentAddressForm.controls['mailCode'].value;
-  debugger;
     if (mailCode.length !== 3 && mailCode !="") {
       this.mailCodeLengthError = true;
     } 

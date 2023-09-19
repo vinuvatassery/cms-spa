@@ -16,7 +16,7 @@
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['mailCode'].valid ">Mail Code is
                     required.</kendo-formerror>
-               <kendo-formerror *ngIf="mailCodeLengthError">The mail code should not be less than 3.</kendo-formerror>
+               <kendo-formerror *ngIf="mailCodeLengthError">Mail code must contain 3 character.</kendo-formerror>
             </div>
             <div class="flex-col">
                 <kendo-floatinglabel text="Name on Check">
