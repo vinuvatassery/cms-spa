@@ -124,17 +124,17 @@ dropDowncolumns : any = [
     "columnDesc": "Clients"   ,
     "vendorTypeCode":["INSURANCE_VENDOR","PHARMACY"],
   }
-  , 
+  ,
   {
     "columnCode": "totalDrugs",
     "columnDesc": "Total Drugs"   ,
     "vendorTypeCode": ["MANUFACTURERS"],
-  }, 
+  },
   {
     "columnCode": "address",
     "columnDesc": "Address"   ,
     "vendorTypeCode":  ["MANUFACTURERS","DENTAL_PROVIDER","MEDICAL_PROVIDER"],
-  }, 
+  },
   {
     "columnCode": "NpiNbr",
     "columnDesc": "Npi Number"   ,
@@ -145,7 +145,7 @@ dropDowncolumns : any = [
     "columnCode": "mailCode",
     "columnDesc": "Mail Code"   ,
     "vendorTypeCode":  ["MANUFACTURERS","DENTAL_PROVIDER","MEDICAL_PROVIDER"],
-  } 
+  }
   ,
   {
     "columnCode": "physicalAddress",
@@ -163,7 +163,7 @@ ngOnChanges(): void {
     sort: this.sort
     };
   if(this.vendorTypeCode)
-  {    
+  {
     switch(this.vendorTypeCode)
     {
       case FinancialVendorTypeCode.Manufacturers:
@@ -182,7 +182,7 @@ ngOnChanges(): void {
 }
 
 ngOnInit(): void {
-  this.bindDropdownClumns() 
+  this.bindDropdownClumns()
   if(!this.selectedColumn)
       {
         this.selectedColumn = "vendorName";
@@ -191,7 +191,7 @@ ngOnInit(): void {
 
 
 private bindDropdownClumns()
-{    
+{
   this.dropDowncolumns = this.dropDowncolumns.filter((x : any)=>x.vendorTypeCode.includes(this.vendorTypeCode) || x.vendorTypeCode === 'ALL')
 }
 
@@ -203,7 +203,7 @@ private loadFinancialVendorsList(): void {
   this.loadVendors(this.state?.skip ?? 0 ,this.state?.take ?? 0,this.sortValue , this.sortType)
 }
 loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : string , sortTypeValue : string)
- {  
+ {
   this.loader = true;
    const gridDataRefinerValue =
    {
@@ -211,10 +211,12 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
      pagesize : maxResultCountValue,
      sortColumn : sortValue,
      sortType : sortTypeValue,
-     vendorTypeCode : this.vendorTypeCode,
+     vendorTypeCode : (this.vendorTypeCode == this.financeVendorTypeCodes.MedicalProviders 
+      || this.vendorTypeCode == this.financeVendorTypeCodes.DentalProviders) 
+      ? this.vendorTypeCode + ',' + this.vendorTypeCode.split('_')[0] + '_CLINIC' : this.vendorTypeCode ,
      filter : this.state?.["filter"]?.["filters"] ?? []
-   }   
-   
+   }
+
    this.loadFinancialVendorsListEvent.emit(gridDataRefinerValue)
    this.gridDataHandle()
  }
@@ -224,7 +226,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     const query = {
       queryParams: {
         v_id: vendorId ,
-        tab_code :  this.financeTabTypeCode      
+        tab_code :  this.financeTabTypeCode
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query )
@@ -240,7 +242,9 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     {
       operator = "eq"
     }
-   
+    if(this.selectedColumn ==='mailCode')
+      operator = "contains"
+
 
     this.filterData = {logic:'and',filters:[{
       "filters": [
@@ -252,7 +256,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
       ],
       "logic": "and"
   }]}
-  let stateData = this.state
+  const stateData = this.state
   stateData.filter = this.filterData
   this.dataStateChange(stateData);
   }
@@ -304,7 +308,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
 // updating the pagination infor based on dropdown selection
 pageselectionchange(data: any) {
   this.state.take = data.value;
-  this.state.skip = 0; 
+  this.state.skip = 0;
   this.loadFinancialVendorsList()
 }
 
@@ -317,7 +321,7 @@ public filterChange(filter: CompositeFilterDescriptor): void {
 
     this.vendorsList$.subscribe((data: GridDataResult) => {
 
-      this.gridDataResult = data    
+      this.gridDataResult = data
       this.gridVendorsDataSubject.next(this.gridDataResult);
       this.vendorNameTitleDataSubject.next(this.vendorNameTitle)
         if (data?.total >= 0 || data?.total === -1) {
@@ -329,24 +333,24 @@ public filterChange(filter: CompositeFilterDescriptor): void {
 
   setToDefault()
   {
-   
+
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,  
+      sort: this.sort,
       };
-  
+
     this.sortColumn = 'Vendor Name';
-    this.sortDir = 'Ascending';    
-    this.filter = "";    
+    this.sortDir = 'Ascending';
+    this.filter = "";
     this.searchValue = "";
     this.isFiltered = false;
     this.columnsReordered = false;
-    
+
     this.sortValue  = 'vendorName';
     this.sortType  = 'asc'
     this.sort  = this.sortColumn;
-  
+
     this.loadFinancialVendorsList();
   }
   public rowClass = (args:any) => ({
@@ -355,13 +359,13 @@ public filterChange(filter: CompositeFilterDescriptor): void {
 
   onClickedExport(){
     this.showExportLoader = true
-    this.exportGridDataEvent.emit()    
+    this.exportGridDataEvent.emit()
 
     this.exportButtonShow$
     .subscribe((response: any) =>
     {
       if(response)
-      {        
+      {
         this.showExportLoader = false
         this.cdr.detectChanges()
       }

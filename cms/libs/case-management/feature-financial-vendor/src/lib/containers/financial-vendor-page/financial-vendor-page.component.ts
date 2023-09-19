@@ -15,7 +15,7 @@ export class FinancialVendorPageComponent implements OnInit {
   isVendorDetailFormShow = false;
   medicalProviderForm: FormGroup;
   providerTypeCode: string = '';
-  
+
   isShowMedicalProvider: boolean = false;
   isShowDentalProvider: boolean = false;
   isShowInsuranceProvider: boolean = false;
@@ -77,7 +77,7 @@ export class FinancialVendorPageComponent implements OnInit {
   dataExportParameters! : any
   /** Lifecycle hooks **/
   ngOnInit() {
-    this.caseFacade.enableSearchHeader(SearchHeaderType.VendorSearch);   
+    this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
   }
 
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
@@ -117,8 +117,8 @@ export class FinancialVendorPageComponent implements OnInit {
     this.isVendorDetailFormShow = false;
   }
 
-  loadFinancialVendorsList(data: any) {    
-    this.financialVendorFacade.selectedVendorType = data?.vendorTypeCode
+  loadFinancialVendorsList(data: any) {
+    this.financialVendorFacade.selectedVendorType = data?.vendorTypeCode.includes('CLINIC') ? data?.vendorTypeCode.split(',')[0] : data?.vendorTypeCode;
     this.dataExportParameters = data
     this.financialVendorFacade.getVendors(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.vendorTypeCode, data?.filter)
   }
@@ -218,28 +218,28 @@ export class FinancialVendorPageComponent implements OnInit {
         Filter : filter
       }
      let fileName = ''
-      switch(data?.vendorTypeCode) { 
-        case FinancialVendorTypeCode.Manufacturers: { 
-          fileName = 'Manufacturers'; 
-           break; 
-        } 
-        case FinancialVendorTypeCode.DentalProviders: { 
-          fileName = 'Dental Providers'; 
-           break; 
-        } 
-        case FinancialVendorTypeCode.InsuranceVendors: { 
-          fileName = 'Insurance Vendors'; 
-           break; 
-        } 
-        case FinancialVendorTypeCode.MedicalProviders: { 
-          fileName = 'Medical Providers'; 
-           break; 
-        } 
-        case FinancialVendorTypeCode.Pharmacy: { 
-          fileName = 'Pharmacy'; 
-           break; 
-        } 
-     } 
+      switch(data?.vendorTypeCode) {
+        case FinancialVendorTypeCode.Manufacturers: {
+          fileName = 'Manufacturers';
+           break;
+        }
+        case FinancialVendorTypeCode.DentalProviders: {
+          fileName = 'Dental Providers';
+           break;
+        }
+        case FinancialVendorTypeCode.InsuranceVendors: {
+          fileName = 'Insurance Vendors';
+           break;
+        }
+        case FinancialVendorTypeCode.MedicalProviders: {
+          fileName = 'Medical Providers';
+           break;
+        }
+        case FinancialVendorTypeCode.Pharmacy: {
+          fileName = 'Pharmacy';
+           break;
+        }
+     }
       this.documentFacade.getExportFile(vendorPageAndSortedRequest,'vendors' , fileName)
     }
   }

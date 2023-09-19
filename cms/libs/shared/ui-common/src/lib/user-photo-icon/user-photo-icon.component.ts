@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserDataService, UserManagementFacade } from '@cms/system-config/domain';
 import { Subject } from 'rxjs';
@@ -10,64 +10,60 @@ import { Subject } from 'rxjs';
   styleUrls: ['./user-photo-icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+export class UserPhotoIconComponent implements OnChanges {
+  @Input() userId!: any;
 
-export class UserPhotoIconComponent implements OnInit{
+  imageLoaderVisible = true;
+  userData!: any;
+  userImageSubject = new Subject<any>();
+  userByIdSubject = new Subject<any>();
 
-   @Input() userId !: any    
-
-  imageLoaderVisible =true;
-  userData! : any
-   userImageSubject = new Subject<any>(); 
-   userByIdSubject = new Subject<any>();   
-
-    /** Constructor**/
-    constructor(     
-      private userManagementFacade : UserManagementFacade,
-      private readonly userDataService: UserDataService
-    ) {}
-
+  /** Constructor**/
+  constructor(
+    private userManagementFacade: UserManagementFacade,
+    private readonly userDataService: UserDataService
+  ) {}
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {  
-   this.loadprofilePhoto();  
-   this.loadprofileData();      
- }
 
-    loadprofilePhoto()
-    {   
-      if(this.userId)
-      {   
-          this.userDataService.getUserImage(this.userId).subscribe({
-            next: (userImageResponse : any) => {        
-              this.userImageSubject.next(userImageResponse);
-            },
-            error: (err) => {        
-              this.userManagementFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
-            },
-          });
-        
-      
-      }
+  ngOnChanges(): void {
+    this.loadprofilePhoto();
+    this.loadprofileData();
+  }
+
+  loadprofilePhoto() {
+    if (this.userId) {
+      this.userDataService.getUserImage(this.userId).subscribe({
+        next: (userImageResponse: any) => {
+          this.userImageSubject.next(userImageResponse);
+        },
+        error: (err) => {
+          this.userManagementFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            err
+          );
+        },
+      });
     }
-   
-    loadprofileData()
-    { 
-      if(this.userId)
-      {   
-        this.userDataService.getUserById(this.userId).subscribe({
-          next: (userDataResponse : any) => {        
-            this.userByIdSubject.next(userDataResponse);
-          },
-          error: (err) => {
-            this.userManagementFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
-          },
-        });
-      }  
+  }
+
+  loadprofileData() {
+    if (this.userId) {
+      this.userDataService.getUserById(this.userId).subscribe({
+        next: (userDataResponse: any) => {
+          this.userByIdSubject.next(userDataResponse);
+        },
+        error: (err) => {
+          this.userManagementFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            err
+          );
+        },
+      });
     }
-   
-    onLoad()
-    {    
-     this.imageLoaderVisible = false;
-    }
-  
- }
+  }
+
+  onLoad() {
+    this.imageLoaderVisible = false;
+  }
+}
