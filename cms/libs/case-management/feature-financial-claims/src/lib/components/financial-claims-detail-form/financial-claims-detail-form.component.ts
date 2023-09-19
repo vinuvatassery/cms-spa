@@ -932,7 +932,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     if (startDate && endDate && formValues.client?.clientId) {
       startDate = this.intl.formatDate(startDate,  this.dateFormat ) ;
       endDate = this.intl.formatDate(endDate,  this.dateFormat ) ;
-      this.financialClaimsFacade.CheckIneligibleException(startDate,endDate, formValues.client?.clientId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.checkIneligibleException(startDate,endDate, formValues.client?.clientId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
   checkBridgeUppEception(index:number)

@@ -647,7 +647,7 @@ viewAdviceLetterData(batchId:any,printAdviceLetterData: any, claimsType:any) {
 }
 loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, typeCode : string){
   this.showLoader();
-  this.financialClaimsDataService.CheckExceededMaxBenefit(serviceCost,clientId, typeCode).subscribe({
+  this.financialClaimsDataService.checkExceededMaxBenefit(serviceCost,clientId, typeCode).subscribe({
     next: (serviceCostResponse:any)=>{
       this.serviceCostFlag =  serviceCostResponse;
       let response = {
@@ -662,9 +662,9 @@ loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, 
   })
   this.hideLoader();
 }
-CheckIneligibleException(startDtae: any,endDate: any, clientId: number, indexNumber: any, typeCode : string){
+checkIneligibleException(startDtae: any,endDate: any, clientId: number, indexNumber: any, typeCode : string){
   this.showLoader();
-  this.financialClaimsDataService.CheckIneligibleException(startDtae,endDate,clientId,typeCode).subscribe({
+  this.financialClaimsDataService.checkIneligibleException(startDtae,endDate,clientId,typeCode).subscribe({
     next: (data:any)=>{
       const flag =  data;
       let response = {
