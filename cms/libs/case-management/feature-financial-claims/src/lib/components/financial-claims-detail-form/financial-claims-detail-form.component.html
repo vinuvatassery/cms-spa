@@ -53,8 +53,11 @@
                           <kendo-formerror class="align-items-center"> <span
                                   class="material-icons mr-1" aria-hidden="false">info</span> Provider not eligible.
                                   <a kendoButton class="ml-1 card-link-button"
-                                  (click)="onMakeParentExceptionClick('showProviderNotEligibleExceptionReason')">{{getParentExceptionFormValue('providerNotEligibleExceptionFlagText')}}
-                              </a>
+                                    (click)="onMakeParentExceptionClick('showProviderNotEligibleExceptionReason')">{{getParentExceptionFormValue('providerNotEligibleExceptionFlagText')}}
+                                  </a>
+                                  <a kendoButton class="ml-1 card-link-button"
+                                   >{{vendorName??''}}
+                                  </a>
                           </kendo-formerror>
                           <div class="flex-row" *ngIf="getParentExceptionFormValue('showProviderNotEligibleExceptionReason')">
                             <div class="flex-col">
