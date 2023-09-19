@@ -102,7 +102,7 @@
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Invoice ID">
                         <kendo-textbox aria-label="Invoice ID" [fillMode]="formUiStyle.inputFillMode"
-                            formControlName="invoiceId" [maxlength]="20">
+                            formControlName="invoiceId" [maxlength]="200">
                         </kendo-textbox>
                     </kendo-floatinglabel>
                     <kendo-formerror *ngIf="(!claimForm.controls['invoiceId'].valid) && isSubmitted"
@@ -135,7 +135,7 @@
                                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
                                                     aria-label="Service Start Date" format="MM/dd/yyyy"
                                                     formatPlaceholder="formatPattern" formControlName="serviceStartDate"
-                                                    (valueChange)="onDateChange(i)"   placeholder="">
+                                                      placeholder="">
                                                 </kendo-datepicker>
                                             </kendo-floatinglabel>
                                             <kendo-formerror
@@ -149,7 +149,7 @@
                                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
                                                     aria-label="Service End Date" format="MM/dd/yyyy"
                                                     formatPlaceholder="formatPattern"   placeholder="" formControlName="serviceEndDate"
-                                                    (valueChange)="onDateChange(i)">
+                                                    >
                                                 </kendo-datepicker>
                                             </kendo-floatinglabel>
                                             <kendo-formerror
@@ -158,7 +158,7 @@
                                                     aria-hidden="false">info</span>Service End Date is required
                                             </kendo-formerror>
                                             <kendo-formerror
-                                                *ngIf="(!isStartEndDateError(i))"
+                                                *ngIf="(isStartEndDateError(i))"
                                                 class="d-flex align-items-center">
                                                 <span class="material-icons mr-1" aria-hidden="false">info</span>Service
                                                 End date must be equal to or greater than start date

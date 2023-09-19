@@ -132,7 +132,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   @Input() paymentRequestId: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
   readonly financialProvider = 'medical';
-  endDateGreaterThanStartDate: boolean = false;
   currentFormControl!: FormGroup<any>;
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
@@ -181,7 +180,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
     if (this.isEdit) {
       this.title = 'Edit';
-      this.addOrEdit = 'Edit';
+      this.addOrEdit = 'Update';
       this.getMedicalClaimByPaymentRequestId();
     }
   }
@@ -343,30 +342,21 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   isControlValid(controlName: string, index: any) {
     let control = this.addClaimServicesForm.at(index) as FormGroup;
     return control.controls[controlName].status == 'INVALID';
-  }
-
-  onDateChange(index: any) {
-    let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
-    let startDate = serviceFormData.controls['serviceStartDate'].value;
-    let endDate = serviceFormData.controls['serviceEndDate'].value;
-    this.isStartEndDateValid(startDate, endDate);
-  }
-
-  isEndDateValid(index:any){
-    this.currentFormControl = this.addClaimServicesForm.at(index) as FormGroup;
-    this.currentFormControl.controls['serviceEndDate'].setErrors({'incorrect':true});
-  }
+  } 
 
   isStartEndDateError(index : any){
     let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
-    return this.isStartEndDateValid(startDate, endDate);
+    if (startDate != "" && endDate != "" && startDate > endDate) {      
+      serviceFormData.get('serviceEndDate')?.setErrors({invalid : true});
+      return true;
+    }    
+    return false;
   }
 
   isStartEndDateValid(startDate: any, endDate: any): boolean {
     if (startDate != "" && endDate != "" && startDate > endDate) {
-      this.endDateGreaterThanStartDate = true;
       return false;
     }
     return true;
