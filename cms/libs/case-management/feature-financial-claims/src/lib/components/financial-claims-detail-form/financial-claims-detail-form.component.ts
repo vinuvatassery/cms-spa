@@ -675,7 +675,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
               this.claimForm.controls['providerNotEligibleExceptionFlagText'].setValue("Don't Make Exception");
             }
           }
-          this.claimForm.controls['']
           this.isSpotsPayment = val.isSpotsPayment;
           this.invoiceId = val.claimNbr;
           this.clientCaseEligibilityId = val.clientCaseEligibilityId;
