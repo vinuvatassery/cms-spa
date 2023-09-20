@@ -76,6 +76,7 @@ export class VendorDetailsComponent implements OnInit {
     this.medicalProviderForm.controls['tinNumber'].setValue(this.vendorDetails.tin);
     this.medicalProviderForm.controls['npiNbr'].setValue(this.vendorDetails.npiNbr);
     this.medicalProviderForm.controls['parentVendorId'].setValue(this.vendorDetails.parentVendorId);
+    this.medicalProviderForm.controls['vendorTypeCode'].setValue(this.vendorDetails.vendorTypeCode);
     if (this.vendorDetails.preferredFlag != null) {
       let flag = this.vendorDetails.preferredFlag == 'Y' ? true : false
       this.medicalProviderForm.controls['isPreferedPharmacy'].setValue(flag);
@@ -395,7 +396,8 @@ fillFormData(){
 
   validateEditForm() {
     this.medicalProviderForm.markAllAsTouched();
-    if (this.vendorTypes.DentalProviders == this.providerType || this.vendorTypes.MedicalProviders == this.providerType) {
+    if (this.vendorTypes.DentalProviders == this.providerType || this.vendorTypes.MedicalProviders == this.providerType 
+      || this.vendorTypes.DentalClinic == this.providerType || this.vendorTypes.MedicalClinic == this.providerType) {
       if (this.vendorDetails.vendorName) {
         this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();

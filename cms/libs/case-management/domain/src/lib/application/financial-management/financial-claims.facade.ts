@@ -239,7 +239,7 @@ export class FinancialClaimsFacade {
         this.financialClaimsProcessDataSubject.next(gridView);
         this.hideLoader();
       },
-      error: (err) => {
+      error: (err) => {        
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
         this.hideLoader();
       },
@@ -434,6 +434,10 @@ export class FinancialClaimsFacade {
         return of(false);
       })
     );
+  }
+
+  getPcaCode(params: any){
+    return this.financialClaimsDataService.getPcaCode(params);
   }
 
   public updateMedicalClaim(data: any, typeCode : string){
