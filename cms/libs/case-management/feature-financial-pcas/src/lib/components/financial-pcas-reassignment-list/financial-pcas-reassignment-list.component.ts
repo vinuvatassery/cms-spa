@@ -1,7 +1,6 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
