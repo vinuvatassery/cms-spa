@@ -114,7 +114,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
 
     this.paymentAddressForm.controls['zip']
         .setValidators([
-          Validators.required,Validators.required,Validators.pattern('^[A-Za-z0-9 \-]+$')
+          Validators.required,Validators.required
         ]);
       this.paymentAddressForm.controls['zip'].updateValueAndValidity();
 
