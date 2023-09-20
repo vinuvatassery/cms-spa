@@ -48,10 +48,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   clientId: any;
   vendorName: any;
   clientName: any;
-  vendorId: any;
-  clientId: any;
-  vendorName: any;
-  clientName: any;
   isPrintDenailLetterClicked = false;
   @Input() claimsType: any;
   @Input() printDenialLetterData: any;
