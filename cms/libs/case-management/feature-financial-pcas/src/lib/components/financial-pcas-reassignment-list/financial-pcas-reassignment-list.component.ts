@@ -74,7 +74,7 @@ export class FinancialPcasReassignmentListComponent
   allNotAssignedPcaSList:any;
   notSelectedPcaS:any;
   selectedPcaData:any;
-  
+
   public gridMoreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -82,7 +82,7 @@ export class FinancialPcasReassignmentListComponent
       icon: 'visibility',
       click: (data: any): void => {
         if (!this.isViewGridOptionClicked) {
-          this.isViewGridOptionClicked = true; 
+          this.isViewGridOptionClicked = true;
           this.isEditGridOptionClicked=false;
           this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate,data);
         }
@@ -94,19 +94,19 @@ export class FinancialPcasReassignmentListComponent
       icon: 'edit',
       click: (data: any): void => {
         if (!this.isEditGridOptionClicked) {
-          this.isEditGridOptionClicked = true; 
+          this.isEditGridOptionClicked = true;
           this.isViewGridOptionClicked = false;
           this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate,data);
         }
       },
     },
-  ]; 
+  ];
 
   /** Constructor **/
   constructor(
     private dialogService: DialogService,
     private financialPcaFacade:FinancialPcaFacade,
-    private readonly navigationMenuFacade: NavigationMenuFacade    
+    private readonly navigationMenuFacade: NavigationMenuFacade
   ) {}
 
   ngOnInit(): void {
@@ -119,12 +119,12 @@ export class FinancialPcasReassignmentListComponent
     this.financialPcaFacade.pcaActionIsSuccess$.subscribe((res:string)=>{
       if(res=='reassignment')
       {
-        this.navigationMenuFacade.pcaReassignmentCount();   
+        this.navigationMenuFacade.pcaReassignmentCount();
         this.loadFinancialPcaReassignmentListGrid();
       }
     })
   }
-  
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -231,7 +231,7 @@ export class FinancialPcasReassignmentListComponent
     );
     this.isFinancialPcaReassignmentGridLoaderShow = false;
   }
- 
+
   onOpenViewEditPcaReassignmentClicked(template: TemplateRef<unknown>,data:any): void {
     this.pcaReassignmentAddEditDialogService = this.dialogService.open({
       content: template,
@@ -274,7 +274,7 @@ export class FinancialPcasReassignmentListComponent
   }
 
   onSearchTextChange(text : any,data:any)
-  {     
+  {
      let  pcaCodes=this.reAssignPcaS.find((x:any)=>x.pcaAssignmentId==data.pcaAssignmentId);
      if(text!=pcaCodes.pcaCode)
            {
@@ -287,10 +287,10 @@ export class FinancialPcasReassignmentListComponent
                          String(obj.pcaCode).includes(text)||String(obj.fundingSourceCode).includes(text))
   }
 
-  onClientSelected(event: any,data:any) {  
+  onClientSelected(event: any,data:any) {
           let isPcAalreadySelected = this.reAssignPcaS.findIndex((x:any)=>x.pcaAssignmentId==data.pcaAssignmentId);
               if (isPcAalreadySelected !== -1)
-              {                  
+              {
                  this.reAssignPcaS.splice(isPcAalreadySelected, 1);
               }
                  let obj={"pcaId":event.pcaId,"pcaAssignmentId":data.pcaAssignmentId,"pcaCode":event.pcaCode};
@@ -302,12 +302,12 @@ export class FinancialPcasReassignmentListComponent
 }
 
 onclick(data:any)
-  {  
+  {
      this.selectedPcaData=data;
   }
 
 public itemDisabled(itemArgs:any)
-  {       
+  {
     if(this.selectedPcaData ==undefined)
     return false;
     else if(this.selectedPcaData.unlimitedFlag=='Y')
