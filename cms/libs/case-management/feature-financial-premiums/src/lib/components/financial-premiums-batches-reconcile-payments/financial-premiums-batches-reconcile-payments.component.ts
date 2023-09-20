@@ -23,6 +23,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { PremiumType } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-premiums-batches-reconcile-payments',
   templateUrl: './financial-premiums-batches-reconcile-payments.component.html',
@@ -91,8 +92,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     private readonly cd: ChangeDetectorRef, private configurationProvider: ConfigurationProvider, public intl: IntlService) {}
   
   ngOnInit(): void {
-    debugger
-    if(this.premiumsType === 'dental'){
+    if(this.premiumsType === PremiumType.Dental){
       this.providerTitle = 'Dental Provider';
     }
     this.state = {
@@ -116,7 +116,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       this.loadIPBreakoutSummary(ReconcilePaymentResponseDto);
   }
   ngOnChanges(): void {
-    debugger
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -171,7 +170,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   }
 
   dataStateChange(stateData: any): void {
-    debugger;
     this.sortBatch = stateData.sort;
     this.sortValueBatch = stateData.sort[0]?.field ?? this.sortValueBatch;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -182,7 +180,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   }
 
   pageSelectionChange(data: any) {
-    debugger;
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadReconcileListGrid();
@@ -193,12 +190,12 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     if (ifExist !== undefined) {
       this.reconcilePaymentGridUpdatedResult.forEach((item: any, index: number) => {
         if (item.paymentRequestId === ifExist.paymentRequestId) {
-          this.reconcilePaymentGridUpdatedResult[index].paymentRequestId = dataItem.paymentRequestId;
-          this.reconcilePaymentGridUpdatedResult[index].clientId = dataItem.clientId;
-          this.reconcilePaymentGridUpdatedResult[index].paymentReconciledDate = dataItem.paymentReconciledDate;
-          this.reconcilePaymentGridUpdatedResult[index].paymentSentDate = dataItem.paymentSentDate;
-          this.reconcilePaymentGridUpdatedResult[index].checkNbr = dataItem.checkNbr;
-          this.reconcilePaymentGridUpdatedResult[index].comments = dataItem.comments;
+          this.reconcilePaymentGridUpdatedResult[index].paymentRequestId = dataItem?.paymentRequestId;
+          this.reconcilePaymentGridUpdatedResult[index].clientId = dataItem?.clientId;
+          this.reconcilePaymentGridUpdatedResult[index].paymentReconciledDate = dataItem?.paymentReconciledDate;
+          this.reconcilePaymentGridUpdatedResult[index].paymentSentDate = dataItem?.paymentSentDate;
+          this.reconcilePaymentGridUpdatedResult[index].checkNbr = dataItem?.checkNbr;
+          this.reconcilePaymentGridUpdatedResult[index].comments = dataItem?.comments;
           this.reconcilePaymentGridUpdatedResult[index].datePaymentRecInValid = dataItem?.datePaymentRecInValid;
           this.reconcilePaymentGridUpdatedResult[index].datePaymentRecInValidMsg = dataItem?.datePaymentRecInValidMsg;
           this.reconcilePaymentGridUpdatedResult[index].datePaymentSentInValid = dataItem?.datePaymentSentInValid;
