@@ -40,12 +40,12 @@
         <tbody>
           <tr>
             <td>{{profileInfoTitle.split(' ')[0]}} Name</td>
-            <td *ngIf="(providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders) && (!!selectedVendorInfo$?.parentVendorId)">
+            <td *ngIf="(!!selectedVendorInfo$ && (selectedVendorInfo$.vendorTypeCode == vendorTypes.MedicalProviders || selectedVendorInfo$.vendorTypeCode == vendorTypes.DentalProviders))">
               {{selectedVendorInfo$?.firstName + ' ' + selectedVendorInfo$?.lastName}}
             </td>
-            <td *ngIf="!selectedVendorInfo$?.parentVendorId">
+            <td *ngIf="!(!!selectedVendorInfo$ && (selectedVendorInfo$.vendorTypeCode == vendorTypes.MedicalProviders || selectedVendorInfo$.vendorTypeCode == vendorTypes.DentalProviders))">
               {{selectedVendorInfo$?.vendorName}}
-              <span *ngIf="providerType == vendorTypes.DentalProviders"> (Parent)</span>
+              <span *ngIf="selectedVendorInfo$?.vendorTypeCode == 'DENTAL_CLINIC'">(Parent)</span>
             </td>
           </tr>
           <tr>

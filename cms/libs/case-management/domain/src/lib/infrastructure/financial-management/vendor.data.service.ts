@@ -128,9 +128,9 @@ export class FinancialVendorDataService {
   getProvidersList(providerPageAndSortedRequest:any) {
       return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/children`, providerPageAndSortedRequest);   
   }
-  searchProvider(searchText: string) 
+  searchProvider(payload: any) 
   {
-    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/search/${searchText}`);
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/search`,payload);
   }
   removeprovider(providerId: any) 
   {

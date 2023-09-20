@@ -18,6 +18,7 @@ export class FinancialClinicProviderDetailsComponent {
   selectedTin: any;
   proId='';
   @Input() parentVendorId :any
+  @Input() vendorTypeCode :any
   @Output() closeProviderEvent = new EventEmitter();
   @Output() loadProviderListEvent = new EventEmitter();
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -62,7 +63,11 @@ export class FinancialClinicProviderDetailsComponent {
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.financialVendorFacade.searchProvider(searchText);
+    let payload ={
+      SearchText : searchText,
+      VendorTypeCode : this.vendorTypeCode
+    }
+    this.financialVendorFacade.searchProvider(payload);
   }
 
   saveprovider() {

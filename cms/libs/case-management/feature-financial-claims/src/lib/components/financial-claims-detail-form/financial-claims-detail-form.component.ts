@@ -7,14 +7,17 @@ import {
   Input,
   ChangeDetectorRef,
   OnInit,
+  ViewChild,
+  TemplateRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType, ExceptionTypeCode } from '@cms/case-management/domain';
+import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType, FinancialPcaFacade, ExceptionTypeCode } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { LoaderService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
 
 @Component({
@@ -23,6 +26,8 @@ import { IntlService } from '@progress/kendo-angular-intl';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialClaimsDetailFormComponent implements OnInit {
+  @ViewChild('pcaExceptionDialogTemplate', { read: TemplateRef })
+  pcaExceptionDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
   claimsListData$ = this.financialClaimsFacade.claimsListData$;
@@ -39,16 +44,18 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.financialClaimsFacade.CPTCodeSearchLoaderVisibility$;
   pharmacySearchResult$ = this.financialClaimsFacade.pharmacies$;
   searchCTPCode$ = this.financialClaimsFacade.searchCTPCode$;
-  vendorId:any;
-  clientId:any;
-  vendorName:any;
-  clientName:any;
+  vendorId: any;
+  clientId: any;
+  vendorName: any;
+  clientName: any;
   isPrintDenailLetterClicked = false;
   @Input() claimsType: any;
   @Input() printDenialLetterData: any;
   private printLetterDialog: any;
   isRecentClaimShow = false;
   isShowReasonForException = false;
+  pcaExceptionDialogService: any;
+  chosenPcaForReAssignment: any;
   clientSearchResult = [
     {
       clientId: '12',
@@ -126,8 +133,8 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   isExcededMaxBanifitButtonText = 'Make Exception';
   claimFlagExceptionCounter!: string;
   claimFlagExceptionText = '';
-  checkservicescastvalue:any
-  exceedMaxBenefitFlag!:boolean ;
+  checkservicescastvalue: any
+  exceedMaxBenefitFlag!: boolean;
   showExceedMaxBenefitException$ = this.financialClaimsFacade.showExceedMaxBenefitException$;
   showIneligibleException$ = this.financialClaimsFacade.showIneligibleException$;
   showBridgeUppException$ = this.financialClaimsFacade.showBridgeUppException$;
@@ -137,7 +144,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   duplicatePaymentPriorityArray = ['ineligibleExceptionFlag', 'exceedMaxBenefitExceptionFlag'];
   oldInvoicePriorityArray = ['ineligibleExceptionFlag', 'exceedMaxBenefitExceptionFlag', 'duplicatePaymentExceptionFlag'];
   bridgeUppPriorityArray = ['ineligibleExceptionFlag', 'exceedMaxBenefitExceptionFlag', 'duplicatePaymentExceptionFlag', 'oldInvoiceExceptionFlag'];
-  dateFormat = this.configurationProvider.appSettings.dateFormat;
+  dateFormat = this.configProvider.appSettings.dateFormat;
   providerTin: any;
 
   @Input() isEdit: any;
@@ -153,8 +160,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     private readonly loaderService: LoaderService,
     private lovFacade: LovFacade,
     private readonly activatedRoute: ActivatedRoute,
-    private intl: IntlService,
-    private configurationProvider: ConfigurationProvider,
+    private dialogService: DialogService,
+    private readonly intl: IntlService,
+    private readonly configProvider: ConfigurationProvider,
+    private readonly financialPcaFacade: FinancialPcaFacade
   ) {
     this.initMedicalClaimObject();
     this.initClaimForm();
@@ -211,7 +220,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.showIneligibleException$.subscribe(data => {
       if(data?.flag)
       {
-
         this.resetExceptionFields(data?.indexNumber);
         this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
         this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlag')?.setValue(data?.flag);
@@ -221,6 +229,9 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       }
       else
       {
+        this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlag')?.setValue(data?.flag);
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.Ineligible : '')
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
         let serviceFormData = this.addClaimServicesForm.at(data?.indexNumber) as FormGroup;
         let startDate = serviceFormData.controls['serviceStartDate'].value;
         let endDate = serviceFormData.controls['serviceEndDate'].value;
@@ -301,7 +312,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   searchMedicalProvider(searchText: any) {
-    if(!searchText || searchText.length == 0){
+    if (!searchText || searchText.length == 0) {
       return;
     }
     this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
@@ -321,22 +332,22 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   searchcptcode(cptcode: any) {
-    if(!cptcode || cptcode.length == 0){
+    if (!cptcode || cptcode.length == 0) {
       return;
     }
     this.financialClaimsFacade.searchcptcode(cptcode);
   }
 
-  onPaymentTypeValueChange(cptCodeObject : any, index: number){
+  onPaymentTypeValueChange(cptCodeObject: any, index: number) {
     const serviceForm = this.addClaimServicesForm.at(index) as FormGroup;
     let cptCode = serviceForm.controls['cptCode'].value;
     if (cptCodeObject !== PaymentRequestType.FullPay && cptCode.length > 0) {
-        serviceForm.controls['amountDue'].setValue(0);
+      serviceForm.controls['amountDue'].setValue(0);
     }
   }
 
   loadClientBySearchText(clientSearchText: any) {
-    if(!clientSearchText || clientSearchText.length == 0){
+    if (!clientSearchText || clientSearchText.length == 0) {
       return;
     }
     clientSearchText = clientSearchText.replace("/", "-");
@@ -494,16 +505,15 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         this.addClaimServicesForm.at(index).get('reasonForException')?.setValidators(Validators.required);
         this.addClaimServicesForm.at(index).get('reasonForException')?.updateValueAndValidity();
       }
-      else
-      {
+      else {
         this.addClaimServicesForm.at(index).get('reasonForException')?.removeValidators(Validators.required);
         this.addClaimServicesForm.at(index).get('reasonForException')?.updateValueAndValidity();
       }
-  });
-  this.cd.detectChanges();
+    });
+    this.cd.detectChanges();
   }
 
-  save() {
+  save(isPcaAssigned: boolean) {
     this.setExceptionValidation();
     this.isSubmitted = true;
 
@@ -524,6 +534,9 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       exceptionTypeCode: formValues.parentExceptionTypeCode,
       exceptionReasonCode: formValues.parentReasonForException,
       serviceSubTypeCode: this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
+      pcaCode: null,
+      pcaAssignmentId: null,
+      isPcaReassignmentNeeded: null,
       tpaInvoice: [{}],
     };
     let checkDeniedClaim = false;
@@ -558,8 +571,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         );
         return;
       }
-      if(service.exceptionFlag === StatusFlag.Yes && !service.exceptionReasonCode)
-      {
+      if (service.exceptionFlag === StatusFlag.Yes && !service.exceptionReasonCode) {
         checkDeniedClaim = true;
       }
       bodyData.tpaInvoice.push(service);
@@ -571,10 +583,75 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       this.onPrintDenialLetterOpen();
       return;
     }
+
+    if (!isPcaAssigned) {
+      this.getPcaCode(bodyData);
+    }
+    else {
+      if (this.chosenPcaForReAssignment) {
+        bodyData.pcaCode = this.chosenPcaForReAssignment?.pcaCode;
+        bodyData.pcaAssignmentId = this.chosenPcaForReAssignment?.pcaAssignmentId;
+        bodyData.isPcaReassignmentNeeded = this.chosenPcaForReAssignment?.isReAssignmentNeeded;
+      }
+
+      this.saveClaim(bodyData);
+    }
+  }
+
+  getMinServiceStartDate(arr: any) {
+    const timestamps = arr.map((a: any) => new Date(a.serviceStartDate));
+    return this.intl.formatDate(new Date(Math.min(...timestamps)), this.configProvider?.appSettings?.dateFormat);
+  };
+
+  getMinServiceEndDate(arr: any) {
+    const timestamps = arr.map((a: any) => new Date(a.serviceEndDate));
+    return this.intl.formatDate(new Date(Math.max(...timestamps)), this.configProvider?.appSettings?.dateFormat);
+  };
+
+  private getPcaCode(claim: any) {
+    const totalAmountDue = (claim.tpaInvoice as []).reduce((acc, cur) => acc + (cur as any)?.amountDue ?? 0, 0);
+    const minServiceStartDate = this.getMinServiceStartDate(claim.tpaInvoice);
+    const maxServiceEndDate = this.getMinServiceEndDate(claim.tpaInvoice);
+    const request = {
+      clientCaseEligibilityId: claim.clientCaseEligibilityId,
+      claimAmount: totalAmountDue,
+      serviceStartDate: minServiceStartDate,
+      serviceEndDate: maxServiceEndDate,
+      paymentRequestId: this.isEdit ? claim.paymentRequestId : null,
+    };
+    this.loaderService.show();
+    this.financialClaimsFacade.getPcaCode(request)
+      .subscribe({
+        next: (response: any) => {
+          this.loaderService.hide();
+          if (response) {
+            if (response?.isReAssignmentNeeded ?? true) {
+              this.chosenPcaForReAssignment = response;
+              this.onPcaReportAlertClicked(this.pcaExceptionDialogTemplate);
+              return;
+            }
+
+            claim.pcaCode = response?.pcaCode;
+            claim.pcaAssignmentId = response?.pcaAssignmentId;
+            claim.isPcaReassignmentNeeded = response?.isReAssignmentNeeded;
+            this.saveClaim(claim);
+          }
+        },
+        error: (error: any) => {
+          this.loaderService.hide();
+          this.financialClaimsFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+        },
+      });
+  }
+
+  saveClaim(claim: any) {
     if (!this.isEdit) {
-      this.saveData(bodyData);
+      this.saveData(claim);
     } else {
-      this.update(bodyData);
+      this.update(claim);
     }
   }
 
@@ -588,8 +665,11 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
             SnackBarNotificationType.ERROR,
             'An error occure whilie adding claim'
           );
+          this.pcaExceptionDialogService.close();
         } else {
           this.closeAddEditClaimsFormModalClicked();
+          this.pcaExceptionDialogService.close();
+          this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
             'Claim added successfully'
@@ -617,8 +697,11 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
             SnackBarNotificationType.ERROR,
             'An error occure whilie updating claim'
           );
+          this.pcaExceptionDialogService.close();
         } else {
           this.closeAddEditClaimsFormModalClicked();
+          this.pcaExceptionDialogService.close();
+          this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
             'Claim updated successfully'
@@ -729,8 +812,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     if(serviceForm.controls['exceptionTypeCode'].value === ExceptionTypeCode.ExceedMaxBenefits)
     {
       exceptionform.controls['exceedMaxBenefitExceptionFlag'].setValue(true);
-      if(serviceForm.controls['reasonForException'].value)
-      {
+      if (serviceForm.controls['reasonForException'].value) {
         exceptionform.controls['showMaxBenefitExceptionReason'].setValue(true);
         exceptionform.controls['maxBenefitExceptionFlagText'].setValue("Don't Make Exception");
       }
@@ -846,20 +928,33 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   {
     return this.addExceptionForm.at(index).get(controlName)?.value
   }
-  public onPrintDenialLetterOpen(){
-   this.isPrintDenailLetterClicked = true;
-   this.cd.detectChanges();
+  public onPrintDenialLetterOpen() {
+    this.isPrintDenailLetterClicked = true;
+    this.cd.detectChanges();
   }
-  onPrintDenialLetterClosed(status:any){
+  onPrintDenialLetterClosed(status: any) {
     this.isPrintDenailLetterClicked = false;
     if(status)
     {
-      if (!this.isEdit) {
-        this.saveData(this.printDenialLetterData);
-      } else {
-        this.update(this.printDenialLetterData);
-      }
+      this.getPcaCode(this.printDenialLetterData);
     }
+  }
+  onPcaReportAlertClicked(template: TemplateRef<unknown>): void {
+    this.pcaExceptionDialogService = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  onPcaAlertCloseClicked(result: any) {
+    if (result) {
+      this.pcaExceptionDialogService.close();
+    }
+  }
+
+  onConfirmPcaAlertClicked(chosenPca: any) {
+    this.chosenPcaForReAssignment = chosenPca;
+    this.save(true);
   }
   getParentExceptionFormValue(controlName:string)
   {
