@@ -124,7 +124,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="TIN (optional)">
           <kendo-maskedtextbox aria-label="TIN" 
-           [fillMode]="formUiStyle.inputFillMode"  [maxlength]="10" placeholder="TIN (optional)"
+           [fillMode]="formUiStyle.inputFillMode"  [maxlength]="9" placeholder="TIN (optional)"
            [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat">
           </kendo-maskedtextbox> 
         </kendo-floatinglabel>
@@ -446,7 +446,7 @@
           <div class="flex-col mb-1">
             <kendo-floatinglabel text="Description (Optional)">
               <kendo-textbox aria-label="Description (Optional)" [fillMode]="formUiStyle.inputFillMode"
-                formControlName="description">
+                formControlName="description" [maxlength]="500">
               </kendo-textbox>
             </kendo-floatinglabel>
           </div>

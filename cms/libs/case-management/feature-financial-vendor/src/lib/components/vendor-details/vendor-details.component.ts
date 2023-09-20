@@ -32,7 +32,7 @@ export class VendorDetailsComponent implements OnInit {
   clinicNameNotApplicable: boolean = false;
   firstLastNameNotApplicable: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  tinMaskFormat: string = '0 00-0000000';
+  tinMaskFormat: string = '0 00-000000';
   specialhandlingCounter!: string;
   specialHandlingCharachtersCount!: number;
   specialHandlingMaxLength = 100;
