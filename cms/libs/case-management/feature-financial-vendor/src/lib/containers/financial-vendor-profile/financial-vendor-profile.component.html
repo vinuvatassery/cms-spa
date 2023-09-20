@@ -110,7 +110,7 @@
       </ng-template>
     </kendo-tabstrip-tab>
 
-    <kendo-tabstrip-tab title="Contacts">
+    <kendo-tabstrip-tab title="Contacts" *ngIf="tabCode !== financeManagementTabs.Pharmacy">
       <ng-template kendoTabContent>
         <div class="block-section">
 
