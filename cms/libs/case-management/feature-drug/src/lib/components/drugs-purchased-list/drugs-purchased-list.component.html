@@ -92,7 +92,7 @@
         <kendo-grid-column field="reversalDate" title="Reversal Date" [width]="120" [format]="{ date: 'MM-dd-yyyy' }"
           filter="date">
           <ng-template kendoGridCellTemplate let-dataItem>
-            {{dataItem.entryDate | date:'MM/dd/yyyy'}}
+            {{dataItem.reversalDate | date:'MM/dd/yyyy'}}
           </ng-template>
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <common-grid-cell-date-range-filter [field]="'entryDate'" [filter]="filter" [filterService]="filterService">
