@@ -16,7 +16,6 @@ import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
