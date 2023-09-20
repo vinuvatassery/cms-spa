@@ -446,17 +446,17 @@ export class FinancialClaimsDataService {
     } else {
       path = 'financial-management/claims/dental';
     }
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/ineligibility-check?startDate=${startDtae}&endDate=${endDate}&clientId=${clientId}`
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/eligibility-check?startDate=${startDtae}&endDate=${endDate}&clientId=${clientId}`
     );
   }
-  checkBridgeUppEception(startDtae: any,endDate: any, clientId: number,cptCode:any, typeCode : string ) {
+  checkGroupException(startDtae: any,endDate: any, clientId: number,cptCode:any, typeCode : string ) {
     let path;
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
       path = 'financial-management/claims/medical';
     } else {
       path = 'financial-management/claims/dental';
     }
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/bridge-upp-check?startDate=${startDtae}&endDate=${endDate}&clientId=${clientId}&cptCode=${cptCode}`
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/group-check?startDate=${startDtae}&endDate=${endDate}&clientId=${clientId}&cptCode=${cptCode}`
     );
   }
   checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any, typeCode : string ) {

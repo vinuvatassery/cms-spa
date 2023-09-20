@@ -679,9 +679,9 @@ checkIneligibleException(startDtae: any,endDate: any, clientId: number, indexNum
   })
   this.hideLoader();
 }
-checkBridgeUppEception(startDtae: any,endDate: any, clientId: number,cptCode:any, indexNumber: any, typeCode : string){
+checkGroupException(startDtae: any,endDate: any, clientId: number,cptCode:any, indexNumber: any, typeCode : string){
   this.showLoader();
-  this.financialClaimsDataService.checkBridgeUppEception(startDtae,endDate,clientId,cptCode,typeCode).subscribe({
+  this.financialClaimsDataService.checkGroupException(startDtae,endDate,clientId,cptCode,typeCode).subscribe({
     next: (data:any)=>{
       const flag =  data;
       let response = {

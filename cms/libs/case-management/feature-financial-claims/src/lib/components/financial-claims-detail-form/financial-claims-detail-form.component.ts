@@ -958,7 +958,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       endDate = null;
     }
     if (cptCode && clientId) {
-      this.financialClaimsFacade.checkBridgeUppEception(startDate,endDate, clientId,cptCode, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.checkGroupException(startDate,endDate, clientId,cptCode, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
   checkDuplicatePaymentException(index:number)
