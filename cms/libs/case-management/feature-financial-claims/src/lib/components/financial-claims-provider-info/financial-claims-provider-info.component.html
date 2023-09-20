@@ -124,7 +124,7 @@
                             </kendo-formerror>
                           
                         </div>
-                        <div class="flex-col flex-col-6 mt-1">
+                        <div class="flex-col  mt-1">
                         
                             <kendo-dropdownlist 
                             aria-label="State" 
@@ -140,7 +140,7 @@
                             <kendo-formerror *ngIf="addressForm?.hasError('required','stateCode') && isSubmitted">State is Required
                             </kendo-formerror>
                         </div>
-                        <div class="flex-col flex-col-6 mt-1">
+                        <div class="flex-col  mt-1">
                             <kendo-textbox aria-label="Zip" placeholder="Zip"  [fillMode]="formUiStyle.inputFillMode"
                              formControlName="zip" [maxlength]="10">
                             </kendo-textbox>
@@ -166,17 +166,21 @@
             </tr>
 
         </ng-container>
-
-               <tr formArrayName="contacts" *ngFor="let contact of contactsArray.controls; let i=index">
-                <ng-container [formGroupName]="i">
+               <tr formArrayName="contacts" *ngFor="let contact of contactsArray.controls; let i=index">              
+                <ng-container [formGroupName]="i">            
                 <td>
-                     <div class="flex-row fiel-column-label"><strong>Contact {{i+1}} Name</strong> </div>
+                     <div class="flex-row fiel-column-label"><strong>contact {{i+1}} </strong></div>
+                     <div class="flex-row fiel-column-label"><strong>Name</strong> </div>
                  
-                     <div class="flex-row fiel-column-label"><strong>Contact {{i+1}} Phone</strong> </div>
+                     <div class="flex-row fiel-column-label"><strong>Phone</strong> </div>
                     
-                     <div class="flex-row fiel-column-label"><strong>Contact {{i+1}} Email</strong> </div>
+                     <div class="flex-row fiel-column-label"><strong>Email</strong> </div>
                 </td>
                 <td>
+                    <div class="flex-col mt-1" style="visibility: hidden;"> 
+                    <kendo-textbox aria-label="Name" [fillMode]="formUiStyle.inputFillMode" >
+                    </kendo-textbox>
+                </div>
                     <div class="flex-col mt-1"  >
                         <kendo-textbox aria-label="Name" [fillMode]="formUiStyle.inputFillMode"  formControlName="contactName"  id="{{'contactName'+i}}">
                         </kendo-textbox>
@@ -206,7 +210,6 @@
                 </td>
             </ng-container>
             </tr>
-      
        
         </table>
     </ng-container>
