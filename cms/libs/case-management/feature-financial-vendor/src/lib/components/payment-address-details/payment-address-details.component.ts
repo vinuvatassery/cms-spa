@@ -35,6 +35,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
   specialHandlingCounter!: string;
   statusFlag : any = StatusFlag;
   specialCharAdded: boolean = false;
+  @Output() paymentAddressAdded = new EventEmitter<any>();
   mailCodeLengthError: boolean=false;
 
   /** Constructor**/
@@ -201,6 +202,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
     this.billingAddressFacade.showLoader();
     this.addUpdateBillingAddress(this.vendorId, formValues).subscribe({
       next: (resp) => {
+        this.paymentAddressAdded.emit(true)
         if (resp) {
           if (!this.isEdit) {
             this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment address added successfully!')

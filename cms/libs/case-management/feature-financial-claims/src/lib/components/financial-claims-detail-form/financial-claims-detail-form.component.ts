@@ -151,7 +151,6 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   @Input() paymentRequestId: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
   readonly financialProvider = 'medical';
-  endDateGreaterThanStartDate: boolean = false;
   currentFormControl!: FormGroup<any>;
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
@@ -197,7 +196,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
 
     if (this.isEdit) {
       this.title = 'Edit';
-      this.addOrEdit = 'Edit';
+      this.addOrEdit = 'Update';
       this.getMedicalClaimByPaymentRequestId();
     }
   }
@@ -363,13 +362,19 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
 
   addClaimServiceGroup() {
+    let startDate;
+    let endDate;
+    if(this.addClaimServicesForm.length > 0){
+        startDate = this.addClaimServicesForm.at(0).get('serviceStartDate')?.value;
+        endDate = this.addClaimServicesForm.at(0).get('serviceEndDate')?.value;
+      }
     let claimForm = this.formBuilder.group({
       serviceStartDate: new FormControl(
-        this.medicalClaimServices.serviceStartDate,
+        startDate ? startDate : this.medicalClaimServices.serviceStartDate,
         [Validators.required]
       ),
       serviceEndDate: new FormControl(
-        this.medicalClaimServices.serviceEndDate,
+        endDate ? endDate : this.medicalClaimServices.serviceEndDate,
         [Validators.required]
       ),
       paymentType: new FormControl(this.medicalClaimServices.paymentType, [
@@ -428,12 +433,14 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.addExceptionForm.push(exceptionForm);
   }
 
-  onClientValueChange(event: any) {
-    this.clientCaseEligibilityId = event.clientCaseEligibilityId;
-    this.clientId = event.clientId;
-    this.clientName = event.clientFullName;
-    if (this.clientId != null && this.vendorId != null) {
-      this.isRecentClaimShow = true;
+  onClientValueChange(client: any) {
+    if (client != undefined) {
+      this.clientCaseEligibilityId = client.clientCaseEligibilityId;
+      this.clientId = client.clientId;
+      this.clientName = client.clientFullName;
+      if (this.clientId != null && this.vendorId != null) {
+        this.isRecentClaimShow = true;
+      }
     }
   }
 
@@ -472,12 +479,15 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
-    return this.isStartEndDateValid(startDate, endDate);
+    if (startDate != "" && endDate != "" && startDate > endDate) {      
+      serviceFormData.get('serviceEndDate')?.setErrors({invalid : true});
+      return true;
+    }    
+    return false;
   }
 
   isStartEndDateValid(startDate: any, endDate: any): boolean {
     if (startDate != "" && endDate != "" && startDate > endDate) {
-      this.endDateGreaterThanStartDate = true;
       return false;
     }
     return true;
