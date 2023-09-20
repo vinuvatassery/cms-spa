@@ -32,6 +32,8 @@ export class FinancialVendorProfileComponent implements OnInit {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   selectedVendorInfo$ = this.financialVendorFacade.selectedVendor$;
   vendorProfile$ = this.financialVendorFacade.vendorProfile$
+  removeprovider$ = this.financialVendorFacade.removeprovider$
+  addProviderNew$ = this.financialVendorFacade.addProviderNew$
   vendorProfileSpecialHandling$ = this.financialVendorFacade.vendorProfileSpecialHandling$
 
    providerList$ = this.financialVendorFacade.providerList$
@@ -41,6 +43,7 @@ export class FinancialVendorProfileComponent implements OnInit {
    providerLissort = this.financialVendorFacade.sort;
 
   filter:any=[];
+  isClinicalVendor=false;
 
   constructor(private activeRoute: ActivatedRoute,private financialVendorFacade : FinancialVendorFacade,
               private readonly drugsFacade: DrugsFacade) {}
@@ -74,7 +77,9 @@ export class FinancialVendorProfileComponent implements OnInit {
     {
       this.loadFinancialVendorProfile(this.vendorId)
     }
+  }
 
+  setVendorTypeCode(vendorProfile: any) {
     switch (this.tabCode) {
       case FinancialVendorProviderTabCode.Manufacturers:
         this.vendorTypeCode = FinancialVendorTypeCode.Manufacturers
@@ -97,8 +102,9 @@ export class FinancialVendorProfileComponent implements OnInit {
         this.profileInfoTitle = 'Pharmacy Info';
         break;
     }
+     this.isClinicalVendor = (vendorProfile.vendorTypeCode == FinancialVendorTypeCode.DentalClinic) || 
+     (vendorProfile.vendorTypeCode == FinancialVendorTypeCode.MedicalClinic)
   }
-
   loadVendorInfo() {
     this.financialVendorFacade.getVendorDetails(this.vendorId);
   }
@@ -110,9 +116,13 @@ export class FinancialVendorProfileComponent implements OnInit {
   loadSpecialHandling() {
     this.financialVendorFacade.getVendorProfileSpecialHandling(this.vendorId);
   }
+  
   loadFinancialVendorProfile(vendorId : string)
   {
     this.financialVendorFacade.getVendorProfile(vendorId,this.tabCode)
+    this.vendorProfile$.subscribe(vendorProfile =>{
+      this.setVendorTypeCode(vendorProfile)
+    })
   }
 
   onVendorEditSuccess(status: boolean) {

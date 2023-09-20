@@ -42,6 +42,7 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   claimStatus:any;
   paymentStatusLovSubscription!:Subscription;
+  paymentStatusDesc=null;
    /** Constructor **/
    constructor(private readonly invoiceFacade: InvoiceFacade,private readonly router: Router,
     private readonly lovFacade: LovFacade,) {}
@@ -93,6 +94,10 @@ export class InvoicesComponent implements OnInit, OnDestroy {
       }],
         logic: "or"
     });
+
+    if(field == "paymentStatusCode"){
+      this.paymentStatusDesc = value;
+    }
   }
   
   public dataStateChange(stateData: any): void {
@@ -101,6 +106,7 @@ export class InvoicesComponent implements OnInit, OnDestroy {
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
+    this.filter = stateData?.filter?.filters;
     this.loadInvoiceListGrid();
   }
 
