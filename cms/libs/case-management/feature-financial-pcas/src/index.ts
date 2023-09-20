@@ -20,8 +20,6 @@ export * from './lib/components/financial-pcas-assignment-form/financial-pcas-as
 
 export * from './lib/components/financial-pcas-assignment-remove/financial-pcas-assignment-remove.component';
 
-export * from './lib/components/financial-pcas-assignment-report-alert/financial-pcas-assignment-report-alert.component';
-
 export * from './lib/components/financial-pcas-assignment-report-preview-submit/financial-pcas-assignment-report-preview-submit.component';
 
 

@@ -7,14 +7,18 @@ import {
   Input,
   ChangeDetectorRef,
   OnInit,
+  ViewChild,
+  TemplateRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType } from '@cms/case-management/domain';
+import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType, FinancialPcaFacade } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Component({
   selector: 'cms-financial-claims-detail-form',
@@ -22,6 +26,8 @@ import { ActivatedRoute } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialClaimsDetailFormComponent implements OnInit {
+  @ViewChild('pcaExceptionDialogTemplate', { read: TemplateRef })
+  pcaExceptionDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
   claimsListData$ = this.financialClaimsFacade.claimsListData$;
@@ -42,12 +48,18 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   clientId: any;
   vendorName: any;
   clientName: any;
+  vendorId: any;
+  clientId: any;
+  vendorName: any;
+  clientName: any;
   isPrintDenailLetterClicked = false;
   @Input() claimsType: any;
   @Input() printDenialLetterData: any;
   private printLetterDialog: any;
   isRecentClaimShow = false;
   isShowReasonForException = false;
+  pcaExceptionDialogService: any;
+  chosenPcaForReAssignment: any;
   clientSearchResult = [
     {
       clientId: '12',
@@ -140,6 +152,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     private readonly loaderService: LoaderService,
     private lovFacade: LovFacade,
     private readonly activatedRoute: ActivatedRoute,
+    private dialogService: DialogService,
+    private readonly intl: IntlService,
+    private readonly configProvider: ConfigurationProvider,
+    private readonly financialPcaFacade: FinancialPcaFacade
   ) {
     this.initMedicalClaimObject();
     this.initClaimForm();
@@ -368,8 +384,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     return true;
   }
 
-  setExceptionValidation()
-  {
+  setExceptionValidation() {
     this.addClaimServicesForm.controls.forEach((element, index) => {
       if (this.addExceptionForm.at(index).get('showMaxBenefitExceptionReason')?.value) {
         this.addClaimServicesForm.at(index).get('reasonForException')?.setValidators(Validators.required);
@@ -383,7 +398,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  save() {
+  save(isPcaAssigned: boolean) {
     this.setExceptionValidation();
     this.isSubmitted = true;
 
@@ -402,6 +417,9 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       paymentRequestId: this.isEdit ? this.paymentRequestId : null,
       paymentMethodCode: this.isSpotsPayment ? PaymentMethodCode.SPOTS : PaymentMethodCode.ACH,
       serviceSubTypeCode: this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
+      pcaCode: null,
+      pcaAssignmentId: null,
+      isPcaReassignmentNeeded: null,
       tpaInvoice: [{}],
     };
     let checkDeniedClaim = false;
@@ -447,10 +465,75 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       this.onPrintDenialLetterOpen();
       return;
     }
+
+    if (!isPcaAssigned) {
+      this.getPcaCode(bodyData);
+    }
+    else {
+      if (this.chosenPcaForReAssignment) {
+        bodyData.pcaCode = this.chosenPcaForReAssignment?.pcaCode;
+        bodyData.pcaAssignmentId = this.chosenPcaForReAssignment?.pcaAssignmentId;
+        bodyData.isPcaReassignmentNeeded = this.chosenPcaForReAssignment?.isReAssignmentNeeded;
+      }
+
+      this.saveClaim(bodyData);
+    }
+  }
+
+  getMinServiceStartDate(arr: any) {
+    const timestamps = arr.map((a: any) => new Date(a.serviceStartDate));
+    return this.intl.formatDate(new Date(Math.min(...timestamps)), this.configProvider?.appSettings?.dateFormat);
+  };
+
+  getMinServiceEndDate(arr: any) {
+    const timestamps = arr.map((a: any) => new Date(a.serviceEndDate));
+    return this.intl.formatDate(new Date(Math.max(...timestamps)), this.configProvider?.appSettings?.dateFormat);
+  };
+
+  private getPcaCode(claim: any) {
+    const totalAmountDue = (claim.tpaInvoice as []).reduce((acc, cur) => acc + (cur as any)?.amountDue ?? 0, 0);
+    const minServiceStartDate = this.getMinServiceStartDate(claim.tpaInvoice);
+    const maxServiceEndDate = this.getMinServiceEndDate(claim.tpaInvoice);
+    const request = {
+      clientCaseEligibilityId: claim.clientCaseEligibilityId,
+      claimAmount: totalAmountDue,
+      serviceStartDate: minServiceStartDate,
+      serviceEndDate: maxServiceEndDate,
+      paymentRequestId: this.isEdit ? claim.paymentRequestId : null,
+    };
+    this.loaderService.show();
+    this.financialClaimsFacade.getPcaCode(request)
+      .subscribe({
+        next: (response: any) => {
+          this.loaderService.hide();
+          if (response) {
+            if (response?.isReAssignmentNeeded ?? true) {
+              this.chosenPcaForReAssignment = response;
+              this.onPcaReportAlertClicked(this.pcaExceptionDialogTemplate);
+              return;
+            }
+
+            claim.pcaCode = response?.pcaCode;
+            claim.pcaAssignmentId = response?.pcaAssignmentId;
+            claim.isPcaReassignmentNeeded = response?.isReAssignmentNeeded;
+            this.saveClaim(claim);
+          }
+        },
+        error: (error: any) => {
+          this.loaderService.hide();
+          this.financialClaimsFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+        },
+      });
+  }
+
+  saveClaim(claim: any) {
     if (!this.isEdit) {
-      this.saveData(bodyData);
+      this.saveData(claim);
     } else {
-      this.update(bodyData);
+      this.update(claim);
     }
   }
 
@@ -464,8 +547,11 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
             SnackBarNotificationType.ERROR,
             'An error occure whilie adding claim'
           );
+          this.pcaExceptionDialogService.close();
         } else {
           this.closeAddEditClaimsFormModalClicked();
+          this.pcaExceptionDialogService.close();
+          this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
             'Claim added successfully'
@@ -493,8 +579,11 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
             SnackBarNotificationType.ERROR,
             'An error occure whilie updating claim'
           );
+          this.pcaExceptionDialogService.close();
         } else {
           this.closeAddEditClaimsFormModalClicked();
+          this.pcaExceptionDialogService.close();
+          this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
             'Claim updated successfully'
@@ -673,12 +762,26 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   onPrintDenialLetterClosed(status: any) {
     this.isPrintDenailLetterClicked = false;
     if (status) {
-      if (!this.isEdit) {
-        this.saveData(this.printDenialLetterData);
-      } else {
-        this.update(this.printDenialLetterData);
-      }
+      this.getPcaCode(this.printDenialLetterData);
     }
+  }
+
+  onPcaReportAlertClicked(template: TemplateRef<unknown>): void {
+    this.pcaExceptionDialogService = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  onPcaAlertCloseClicked(result: any) {
+    if (result) {
+      this.pcaExceptionDialogService.close();
+    }
+  }
+
+  onConfirmPcaAlertClicked(chosenPca: any) {
+    this.chosenPcaForReAssignment = chosenPca;
+    this.save(true);
   }
 }
 
