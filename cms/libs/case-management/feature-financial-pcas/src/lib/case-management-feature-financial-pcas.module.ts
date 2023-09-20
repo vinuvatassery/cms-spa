@@ -15,7 +15,6 @@ import { FinancialPcasReassignmentFormComponent } from './components/financial-p
 import { FinancialPcasReassignmentConfirmationComponent } from './components/financial-pcas-reassignment-confirmation/financial-pcas-reassignment-confirmation.component';
 import { FinancialPcasAssignmentFormComponent } from './components/financial-pcas-assignment-form/financial-pcas-assignment-form.component';
 import { FinancialPcasAssignmentRemoveComponent } from './components/financial-pcas-assignment-remove/financial-pcas-assignment-remove.component';
-import { FinancialPcasAssignmentReportAlertComponent } from './components/financial-pcas-assignment-report-alert/financial-pcas-assignment-report-alert.component';
 import { FinancialPcasAssignmentReportPreviewSubmitComponent } from './components/financial-pcas-assignment-report-preview-submit/financial-pcas-assignment-report-preview-submit.component';
 import { FinancialPcasAssignmentSubReportListComponent } from './components/financial-pcas-assignment-sub-report-list/financial-pcas-assignment-sub-report-list.component';
 @NgModule({
@@ -38,7 +37,7 @@ import { FinancialPcasAssignmentSubReportListComponent } from './components/fina
     FinancialPcasReassignmentConfirmationComponent,
     FinancialPcasAssignmentFormComponent,
     FinancialPcasAssignmentRemoveComponent,
-    FinancialPcasAssignmentReportAlertComponent,
+    //FinancialPcasAssignmentReportAlertComponent,
     FinancialPcasAssignmentReportPreviewSubmitComponent,
     FinancialPcasAssignmentSubReportListComponent
   ],
@@ -54,7 +53,7 @@ import { FinancialPcasAssignmentSubReportListComponent } from './components/fina
     FinancialPcasReassignmentConfirmationComponent,
     FinancialPcasAssignmentFormComponent,
     FinancialPcasAssignmentRemoveComponent,
-    FinancialPcasAssignmentReportAlertComponent,
+    //FinancialPcasAssignmentReportAlertComponent,
     FinancialPcasAssignmentReportPreviewSubmitComponent,
 
   ],

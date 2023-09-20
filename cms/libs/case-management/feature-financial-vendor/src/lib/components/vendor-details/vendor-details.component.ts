@@ -32,7 +32,7 @@ export class VendorDetailsComponent implements OnInit {
   clinicNameNotApplicable: boolean = false;
   firstLastNameNotApplicable: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  tinMaskFormat: string = '0 00-0000000';
+  tinMaskFormat: string = '0 00-000000';
   specialhandlingCounter!: string;
   specialHandlingCharachtersCount!: number;
   specialHandlingMaxLength = 100;
@@ -153,7 +153,7 @@ fillFormData(){
     else if(this.providerType == this.vendorTypes.Manufacturers) {
       this.medicalProviderForm.controls['providerName']
       .setValidators([
-        Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
+        Validators.required,Validators.required,Validators.pattern('^[A-Za-z ]+$')
       ]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
@@ -173,7 +173,7 @@ fillFormData(){
 
       this.medicalProviderForm.controls['city']
         .setValidators([
-          Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
+          Validators.required,Validators.required,Validators.pattern('^[A-Za-z ]+$')
         ]);
       this.medicalProviderForm.controls['city'].updateValueAndValidity();
 
