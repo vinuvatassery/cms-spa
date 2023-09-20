@@ -47,8 +47,36 @@
                         </kendo-multicolumncombobox>
                         <kendo-formerror *ngIf="(!claimForm.controls['medicalProvider'].valid) && isSubmitted"
                             class="d-flex align-items-center"> <span class="material-icons mr-1"
-                                aria-hidden="false">info</span> Provider is required</kendo-formerror>
-
+                                aria-hidden="false">info</span> Provider is required
+                        </kendo-formerror>
+                        <div *ngIf="getParentExceptionFormValue('providerNotEligibleExceptionFlag')" >
+                          <kendo-formerror class="align-items-center"> <span
+                                  class="material-icons mr-1" aria-hidden="false">info</span> Provider not eligible.
+                                  <a kendoButton class="ml-1 card-link-button"
+                                    (click)="onMakeParentExceptionClick('showProviderNotEligibleExceptionReason')">{{getParentExceptionFormValue('providerNotEligibleExceptionFlagText')}}
+                                  </a>
+                                  <a kendoButton class="ml-1 card-link-button"
+                                   >{{vendorName??''}}
+                                  </a>
+                          </kendo-formerror>
+                          <div class="flex-row" *ngIf="getParentExceptionFormValue('showProviderNotEligibleExceptionReason')">
+                            <div class="flex-col">
+                                <kendo-floatinglabel text="Reason For Exception">
+                                    <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
+                                        aria-label="Reason For Exception" [maxlength]="textMaxLength"
+                                        formControlName="parentReasonForException">
+                                        <kendo-textarea-suffix class="justify-content-end">
+                                            <span class="tareacounter"></span>
+                                        </kendo-textarea-suffix>
+                                    </kendo-textarea>
+                                </kendo-floatinglabel>
+                                <kendo-formerror *ngIf="!claimForm.controls['parentReasonForException'].valid && isSubmitted"
+                                class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                    aria-hidden="false">info</span>Reason For Exception is required
+                            </kendo-formerror>
+                            </div>
+                        </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -165,13 +193,36 @@
                                             </kendo-formerror>
                                         </div>
                                         <div class="ml-2">
-                                            <kendo-formerror *ngIf="false" class="d-flex align-items-center">
+                                            <kendo-formerror *ngIf="getExceptionFormValue('oldInvoiceExceptionFlag',i)" class="d-flex align-items-center">
                                                 <span class="material-icons mr-1" aria-hidden="false">info</span>
                                                 Invoice is over 1 year old. <a kendoButton
-                                                    class="ml-1 card-link-button">Make
-                                                    Exception</a></kendo-formerror>
+                                                    class="ml-1 card-link-button" (click)="onMakeExceptionClick('oldInvoiceExceptionReason',i)">
+                                                    {{getExceptionFormValue('oldInvoiceExceptionFlagText',i)}}
+                                                  </a></kendo-formerror>
+                                            <kendo-formerror *ngIf="getExceptionFormValue('ineligibleExceptionFlag',i)" class="d-flex align-items-center">
+                                              <span class="material-icons mr-1" aria-hidden="false">info</span>
+                                              Client not eligible for these dates. Claim status will automatically be Denied.
+                                            </kendo-formerror>
                                         </div>
+
                                     </div>
+                                    <div class="flex-row" *ngIf="getExceptionFormValue('oldInvoiceExceptionReason',i)">
+                                      <div class="flex-col">
+                                          <kendo-floatinglabel text="Reason For Exception">
+                                              <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
+                                                  aria-label="Reason For Exception" [maxlength]="textMaxLength"
+                                                  formControlName="reasonForException">
+                                                  <kendo-textarea-suffix class="justify-content-end">
+                                                      <span class="tareacounter"> {{reasonCharCount(i)}}</span>
+                                                  </kendo-textarea-suffix>
+                                              </kendo-textarea>
+                                          </kendo-floatinglabel>
+                                          <kendo-formerror *ngIf="(isControlValid('reasonForException',i) && isSubmitted)"
+                                          class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                              aria-hidden="false">info</span>Reason For Exception is required
+                                      </kendo-formerror>
+                                      </div>
+                                  </div>
                                     <div class="flex-row">
                                         <div class="flex-col flex-col-4">
                                             <kendo-floatinglabel text="Payment Type">
@@ -217,7 +268,33 @@
                                                 </kendo-textbox>
                                             </kendo-floatinglabel>
                                         </div>
+                                        <div class="ml-2">
+                                          <kendo-formerror *ngIf="getExceptionFormValue('bridgeUppExceptionFlag',i)" class="d-flex align-items-center">
+                                              <span class="material-icons mr-1" aria-hidden="false">info</span>
+                                              Client not eligible. <a kendoButton
+                                                  class="ml-1 card-link-button" (click)="onMakeExceptionClick('bridgeUppExceptionReason',i)">
+                                                  {{getExceptionFormValue('bridgeUppExceptionFlagText',i)}}
+                                                </a></kendo-formerror>
+
+                                        </div>
                                     </div>
+                                    <div class="flex-row" *ngIf="getExceptionFormValue('bridgeUppExceptionReason',i)">
+                                      <div class="flex-col">
+                                          <kendo-floatinglabel text="Reason For Exception">
+                                              <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
+                                                  aria-label="Reason For Exception" [maxlength]="textMaxLength"
+                                                  formControlName="reasonForException">
+                                                  <kendo-textarea-suffix class="justify-content-end">
+                                                      <span class="tareacounter"> {{reasonCharCount(i)}}</span>
+                                                  </kendo-textarea-suffix>
+                                              </kendo-textarea>
+                                          </kendo-floatinglabel>
+                                          <kendo-formerror *ngIf="(isControlValid('reasonForException',i) && isSubmitted)"
+                                          class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                              aria-hidden="false">info</span>Reason For Exception is required
+                                      </kendo-formerror>
+                                      </div>
+                                  </div>
                                     <div class="flex-row">
                                         <div class="flex-col">
                                             <kendo-floatinglabel text="Service Description">
@@ -257,7 +334,7 @@
                                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
                                                 <kendo-numerictextbox aria-label="Amount Due" [spinners]="false"
                                                     [fillMode]="formUiStyle.inputFillMode" formControlName="amountDue"
-                                                    format="#.00">
+                                                    format="#.00"  (blur)="onAmountDueChange(i)">
                                                 </kendo-numerictextbox>
                                             </kendo-floatinglabel>
                                             <kendo-formerror *ngIf="(isControlValid('amountDue',i) && isSubmitted)"
@@ -273,8 +350,16 @@
                                                 </a>
                                             </kendo-formerror>
                                         </div>
+                                        <div class="ml-2" *ngIf="getExceptionFormValue('duplicatePaymentExceptionFlag',i)" >
+                                          <kendo-formerror class="align-items-center"> <span
+                                                  class="material-icons mr-1" aria-hidden="false">info</span> Duplicate Payment. <a kendoButton class="ml-1 card-link-button"
+                                                  (click)="onMakeExceptionClick('duplicatePaymentExceptionReason',i)">{{getExceptionFormValue('duplicatePaymentExceptionFlagText',i)}}
+                                              </a>
+                                          </kendo-formerror>
+                                      </div>
                                     </div>
-                                    <div class="flex-row" *ngIf="isShowReasonForException">
+                                    <div class="flex-row" *ngIf="getExceptionFormValue('showMaxBenefitExceptionReason',i)
+                                    || getExceptionFormValue('duplicatePaymentExceptionReason',i)">
                                         <div class="flex-col">
                                             <kendo-floatinglabel text="Reason For Exception">
                                                 <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
@@ -338,7 +423,6 @@
   *ngIf="isPrintDenailLetterClicked"
   (close)="onPrintDenialLetterClosed(false)"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Print Denial Letter"
 >
  <cms-financial-claims-print-denial-letter (modalCloseEvent)="onPrintDenialLetterClosed($event)" ></cms-financial-claims-print-denial-letter>
 </kendo-dialog>
