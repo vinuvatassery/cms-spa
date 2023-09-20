@@ -126,6 +126,8 @@ export * from './lib/enums/esign-status-code.enum';
 export * from './lib/enums/communication-event-type-code.enum';
 export * from './lib/enums/financial-provider.enum';
 export * from './lib/enums/payment-method-code.enum';
+export * from './lib/enums/exception-type.enum';
+export * from './lib/enums/payment-status-code.enum'
 export * from './lib/enums/premium-type.enum';
 
 /** Data services **/
