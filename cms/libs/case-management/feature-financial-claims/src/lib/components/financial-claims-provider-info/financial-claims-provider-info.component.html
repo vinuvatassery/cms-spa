@@ -146,6 +146,9 @@
                             </kendo-textbox>
                             <kendo-formerror *ngIf="addressForm?.hasError('required','zip') && isSubmitted">Zip is Required
                             </kendo-formerror>
+                            <kendo-formerror *ngIf="isSubmitted && addressForm?.hasError('pattern','zip')">
+                                Invalid Zip Code format. 
+                        </kendo-formerror>
                         </div>
 
                     </div>
@@ -178,8 +181,7 @@
                 </td>
                 <td>
                     <div class="flex-col mt-1" style="visibility: hidden;"> 
-                    <kendo-textbox aria-label="Name" [fillMode]="formUiStyle.inputFillMode" >
-                    </kendo-textbox>
+                 
                 </div>
                     <div class="flex-col mt-1"  >
                         <kendo-textbox aria-label="Name" [fillMode]="formUiStyle.inputFillMode"  formControlName="contactName"  id="{{'contactName'+i}}">
