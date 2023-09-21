@@ -77,7 +77,6 @@ export class ClientsComponent implements OnInit, OnChanges{
   }
   loadClientsListGrid()
   {
-    debugger;
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,

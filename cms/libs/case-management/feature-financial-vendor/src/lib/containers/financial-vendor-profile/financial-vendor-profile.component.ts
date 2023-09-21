@@ -79,7 +79,6 @@ export class FinancialVendorProfileComponent implements OnInit {
   }
 
   setVendorTypeCode(vendorProfile: any) {
-    debugger;
     switch (this.tabCode) {
       case FinancialVendorProviderTabCode.Manufacturers:
         this.vendorTypeCode = FinancialVendorTypeCode.Manufacturers
