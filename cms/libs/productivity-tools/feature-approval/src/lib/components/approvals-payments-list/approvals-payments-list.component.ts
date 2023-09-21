@@ -19,7 +19,6 @@ import {
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
-import { PendingApprovalPaymentFacade } from '@cms/productivity-tools/domain';
 
 @Component({
   selector: 'productivity-tools-approvals-payments-list',
@@ -63,8 +62,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   /** Constructor **/
   constructor(private route: Router, 
     private dialogService: DialogService,
-    private lovFacade: LovFacade,
-    private pendingApprovalPaymentFacade: PendingApprovalPaymentFacade) {}
+    private lovFacade: LovFacade) {}
 
   ngOnInit(): void {
     this.loadApprovalPaymentsListGrid();
