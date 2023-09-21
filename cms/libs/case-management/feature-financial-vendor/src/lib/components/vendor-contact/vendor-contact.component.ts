@@ -88,7 +88,7 @@ export class VendorContactComponent {
   removeContact(i: number) {
     this.AddContactForm.removeAt(i);
   }
-  onKeyPress(event:number) {
+  restrictSpecialChar(event:number) {
     return (event > 64 &&
       event < 91) || (event > 96 && event < 123)||event==32
   }
