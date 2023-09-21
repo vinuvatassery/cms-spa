@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, OnChanges} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, OnChanges, ChangeDetectorRef} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { InsuranceProviderFacade, GridFilterParam } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
@@ -38,7 +38,7 @@ export class ClientsComponent implements OnInit, OnChanges{
   statusValue = null;
   /** Constructor **/
   constructor(private readonly insuranceProviderFacade: InsuranceProviderFacade,private readonly router: Router,
-    private readonly lovFacade: LovFacade) {}
+    private readonly lovFacade: LovFacade, private readonly  cdr :ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.lovFacade.getGroupLovs();
@@ -77,6 +77,7 @@ export class ClientsComponent implements OnInit, OnChanges{
   }
   loadClientsListGrid()
   {
+    debugger;
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -120,5 +121,8 @@ export class ClientsComponent implements OnInit, OnChanges{
     if(field == "status"){
       this.statusValue = value;
     }
+  }
+  public columnChange() {
+    this.cdr.detectChanges();
   }
 }
