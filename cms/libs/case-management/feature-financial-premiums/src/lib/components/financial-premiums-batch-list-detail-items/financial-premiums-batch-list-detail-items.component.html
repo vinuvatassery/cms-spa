@@ -24,23 +24,23 @@
                               <button aria-label="edit" kendoButton look="flat" class="edit-btn card-link-button" (click)="onPaymentDetailFormClicked(paymentDetailsFromTemplate)" > Edit </button>
                         <div class="flex-col flex-col-2">
                               <small>Date Payment Reconciled</small>
-                              <p>XX/XX/XXXX</p>
+                              <p>{{premiumPaymentDetails?.paymentStatusDate | date:'dd/MM/yyyy'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Date Payment Sent</small>
-                              <p>XX/XX/XXXX</p>
+                              <p>{{premiumPaymentDetails?.sentDate | date:'dd/MM/yyyy'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Payment Amount</small>
-                              <p>$X,XXX.XX</p>
+                              <p>{{premiumPaymentDetails?.amountPaid | currency:'USD':'$'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Warrant Number</small>
-                              <p>XXXXXXXXXX</p>
+                              <p>{{premiumPaymentDetails?.checkNbr}}</p>
                         </div>
                         <div class="flex-col flex-col-4">
                               <small>Note</small> 
-                              <p>Lorem ipsum dolor set icus unum omg hello</p>
+                              <p>{{premiumPaymentDetails?.notes}}</p>
                         </div>
                   </div>
                   </div>
@@ -184,7 +184,7 @@
 
 
 <ng-template #paymentDetailsFromTemplate>
-      <cms-financial-premiums-payment-details-form
+      <cms-financial-premiums-payment-details-form [paymentDetailsForm]=""
             (closePaymentDetailFormClickedEvent)="onClosePaymentDetailFormClicked($event)"></cms-financial-premiums-payment-details-form>
 </ng-template>
 

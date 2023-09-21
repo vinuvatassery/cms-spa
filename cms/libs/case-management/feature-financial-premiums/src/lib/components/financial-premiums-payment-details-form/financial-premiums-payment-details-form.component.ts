@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Output, 
   EventEmitter,
+  Input,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
@@ -13,8 +14,10 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class FinancialPremiumsPaymentDetailsFormComponent {  
   public formUiStyle: UIFormStyle = new UIFormStyle()
 
+  @Input() paymentDetailsForm!: any;
   @Output() closePaymentDetailFormClickedEvent = new EventEmitter();
 
+  isValidateForm!: boolean;
  
   closePaymentDetailClicked() {
     this.closePaymentDetailFormClickedEvent.emit(true);

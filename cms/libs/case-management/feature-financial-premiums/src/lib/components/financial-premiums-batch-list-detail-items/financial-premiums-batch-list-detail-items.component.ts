@@ -8,7 +8,8 @@ import {
   OnChanges,
   Output,
   TemplateRef,
-  ViewChild
+  ViewChild,
+  ChangeDetectorRef
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {  GridDataResult } from '@progress/kendo-angular-grid';
@@ -36,6 +37,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   removePremiumFromTemplate!: TemplateRef<any>;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogItemsGridLoaderShow = false;
+  @Input() paymentData$:any;
   @Input() premiumsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -53,6 +55,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
+  premiumPaymentDetails: any;
   providerDetailsDialog: any;
   paymentDetailsDialog: any;
   editPremiumsFormDialog: any;
@@ -104,7 +107,10 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
     },
   ];
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService, public activeRoute: ActivatedRoute) {}
+  constructor(private route: Router, 
+    private dialogService: DialogService,
+    public activeRoute: ActivatedRoute,
+    private readonly cd: ChangeDetectorRef) {}
   
   ngOnInit(): void {   
     this.loadBatchLogItemsListGrid();
@@ -115,7 +121,10 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
+    this.paymentData$.subscribe((data: any)=>{
+      this.premiumPaymentDetails = data;
+      this.cd.detectChanges();
+    })
     this.loadBatchLogItemsListGrid();
   }
 
