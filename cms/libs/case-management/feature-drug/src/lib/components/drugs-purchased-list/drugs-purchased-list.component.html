@@ -5,8 +5,7 @@
       <input type="checkbox" Checked="isOnlyPremiumsWith12Months" kendoCheckBox
         aria-labelledby="drugspremiumsWithinLast12Months" [(ngModel)]="isPermiumWithinLastTwelveMonthsData"
         (ngModelChange)="onClickLoadDrugsPurchasedData()" id="DrugspremiumsWithinLast12Months" />
-      <label class="k-checkbox-label" for="DrugspremiumsWithinLast12Months">Show only premiums within the last 12
-        months</label>
+      <label class="k-checkbox-label" for="DrugspremiumsWithinLast12Months">Show only drugs purchased within the last 12 months</label>
     </span>
   </div>
   <div class="flex-col mt-1">
@@ -93,7 +92,7 @@
         <kendo-grid-column field="reversalDate" title="Reversal Date" [width]="120" [format]="{ date: 'MM-dd-yyyy' }"
           filter="date">
           <ng-template kendoGridCellTemplate let-dataItem>
-            {{dataItem.entryDate | date:'MM/dd/yyyy'}}
+            {{dataItem.reversalDate | date:'MM/dd/yyyy'}}
           </ng-template>
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <common-grid-cell-date-range-filter [field]="'entryDate'" [filter]="filter" [filterService]="filterService">
