@@ -11,6 +11,7 @@ import { State } from '@progress/kendo-data-query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialVendorProfileComponent implements OnInit {
+  drugDataLoader$ = this.drugsFacade.drugDataLoader$;
   drugsData$ = this.drugsFacade.drugsData$;
   pageSizes = this.drugsFacade.gridPageSizes;
   sortValue = this.drugsFacade.sortValue;

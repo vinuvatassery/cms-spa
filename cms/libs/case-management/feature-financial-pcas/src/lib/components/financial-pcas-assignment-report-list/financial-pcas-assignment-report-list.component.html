@@ -172,7 +172,7 @@
 
     <kendo-grid-column field="groupsCovered" title="Groups Covered" [width]="160"> </kendo-grid-column>
 
-    <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="50" class="text-center">
+    <kendo-grid-column field="Option" title="Edit" [sortable]="false" [columnMenu]="false" [width]="50" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button kendoButton themeColor="primary" fillMode="flat" class="clear-icon-btn" aria-label="Edit Reminder"  (click)="editAssignmentReport(dataItem.objectId, dataItem.groupsCoveredIds)"
           title="Edit Reminder">
@@ -231,10 +231,6 @@
 
   </kendo-grid>
 </div>
-
-
-<button (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentReportDialogTemplate)">Preview & Submit
-  Payment</button>
 
 <ng-template #previewSubmitPaymentReportDialogTemplate>
   <cms-financial-pcas-assignment-report-preview-submit
