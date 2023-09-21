@@ -51,7 +51,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   public sort = this.vendocontactsFacade.sort;
   selectedColumn!: any;
   columnChangeDesc = 'Default Columns';
-  contacts$ = new BehaviorSubject<any>([]);
+  contacts$ = this.vendocontactsFacade.contacts$;
   loader$ = new BehaviorSubject<boolean>(false);
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   gridColumns: any = {
@@ -122,8 +122,6 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   }
 
   initializeGrid() {
-    this.contacts$.next({ data: [], total: 0 });
-    this.loader$.next(false);
     this.vendocontactsFacade.loadcontacts(
       this.VendorAddressId,
       this.state?.skip ?? 0,
@@ -131,21 +129,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
       this.sortValue,
       this.sortType,
       this.filters
-    ).subscribe({
-      next: (res: any) => {
-        const gridView: any = {
-          data: res.items,
-          total: res.totalCount,
-        };
-        this.contacts$.next(gridView);
-        this.loader$.next(false);
-      },
-      error: (err: any) => {
-        this.loader$.next(false);
-        this.loggingService.logException(err)
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
-      },
-    })
+    );
 
   }
 

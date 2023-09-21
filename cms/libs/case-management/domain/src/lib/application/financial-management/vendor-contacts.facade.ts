@@ -96,10 +96,30 @@ export class VendorContactsFacade {
   }
   loadcontacts(vendorAddressId:string, skip: any, pageSize: any, sortBy: any, sortType: any, filters:any)
   {
-   return  this.vendorcontactsDataService.loadcontacts(vendorAddressId,skip,pageSize, sortBy, sortType, filters)
+    this.vendorcontactsDataService.loadcontacts(vendorAddressId,skip,pageSize, sortBy, sortType, filters).subscribe
+    ({
+
+      next: (dataResponse) => {
+        this.contactsSubject.next(dataResponse);
+
+        if (dataResponse) {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.contactsSubject.next(gridView);
+        }
+        this.hideLoader();
+      },
+      error: (err: any) => {
+        this.loggingService.logException(err)
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
+
   }
 
-  
+
 
   saveContactAddress(contactAddress: any) {
 
