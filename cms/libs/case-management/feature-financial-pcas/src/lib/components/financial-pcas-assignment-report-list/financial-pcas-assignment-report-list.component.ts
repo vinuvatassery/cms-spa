@@ -33,13 +33,10 @@ import { Subject, debounceTime } from 'rxjs';
 export class FinancialPcasAssignmentReportListComponent
   implements OnInit, OnChanges, OnDestroy
 {
-  @ViewChild('alertPcaReportDialogTemplate', { read: TemplateRef })
-  alertPcaReportDialogTemplate!: TemplateRef<any>;
   @ViewChild(GridComponent) grid!: GridComponent;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isFinancialPcaReportGridLoaderShow = false;
-  pcaReportAlertDialogService: any;
   PreviewSubmitPaymenttDialogService: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -306,17 +303,6 @@ export class FinancialPcasAssignmentReportListComponent
     });
   }
 
-  onPcaReportAlertClicked(template: TemplateRef<unknown>): void {
-    this.pcaReportAlertDialogService = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    });
-  }
-  onClosePcaReportAlertClicked(result: any) {
-    if (result) {
-      this.pcaReportAlertDialogService.close();
-    }
-  }
   public onPreviewSubmitPaymentOpenClicked(
     template: TemplateRef<unknown>
   ): void {

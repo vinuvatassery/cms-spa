@@ -7,7 +7,7 @@ import {
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
 /** External libraries **/
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 /** Internal libraries **/
 import { NavigationMenuService } from '../infrastructure/navigation-menu.data.service';
 import { NavigationMenu } from '../entities/navigation-menu';
@@ -19,6 +19,9 @@ export class NavigationMenuFacade {
 
   /** Public properties **/
   navigationMenu$ = this.navigationMenuSubject.asObservable();
+
+  private pcaReassignmentCountSubject = new Subject<any>()
+  pcaReassignmentCount$ = this.pcaReassignmentCountSubject.asObservable();
 
   /** constructor **/
   constructor(
@@ -57,4 +60,16 @@ export class NavigationMenuFacade {
       },
     });
   }
+
+  pcaReassignmentCount(){
+    this.navigationMenuService.pcaReassignmentCount().subscribe({
+      next:(count: any) => {
+        this.pcaReassignmentCountSubject.next(count);
+      },
+      error: (err: any) => {
+        //this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
 }

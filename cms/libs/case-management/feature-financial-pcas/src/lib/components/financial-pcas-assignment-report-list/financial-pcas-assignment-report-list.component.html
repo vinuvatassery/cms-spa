@@ -236,15 +236,6 @@
 <button (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentReportDialogTemplate)">Preview & Submit
   Payment</button>
 
-
-<button (click)="onPcaReportAlertClicked(alertPcaReportDialogTemplate)">alert</button>
-
-<ng-template #alertPcaReportDialogTemplate>
-  <cms-financial-pcas-assignment-report-alert
-    (closePcaReportAlertClickedEvent)="onClosePcaReportAlertClicked($event)"></cms-financial-pcas-assignment-report-alert>
-</ng-template>
-
-
 <ng-template #previewSubmitPaymentReportDialogTemplate>
   <cms-financial-pcas-assignment-report-preview-submit
     (previewSubmitPaymentCloseClicked)="onPreviewSubmitPaymentCloseClicked($event)"></cms-financial-pcas-assignment-report-preview-submit>

@@ -169,15 +169,7 @@ export class PaymentAddressesComponent {
     this.loadVenderPaymentMethodsLovs();
     this.loadYesOrNoLovs();
     this.vendorcontactFacade.loadMailCodes(this.vendorId);
-    this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {
-      if(mailCode.length>0)
-      {
-        this.IsAddContactDisabled=false;
-        this.cdr.detectChanges();
-      }else{
-        this.IsAddContactDisabled=true;
-      }
-    })
+    this.checkMailCode();
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
@@ -187,9 +179,20 @@ export class PaymentAddressesComponent {
     this.loadPaymentsAddressListGrid();
   }
 
+  private checkMailCode() {
+    this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {
+      if (mailCode.length > 0) {
+        this.IsAddContactDisabled = false;
+        this.cdr.detectChanges();
+      } else {
+        this.IsAddContactDisabled = true;
+      }
+    });
+  }
+
   ngOnChanges(): void {
     this.vendorcontactFacade.loadMailCodes(this.vendorId);
-    this.initializeGrid();
+    this.initializeGrid(false);
     this.loadPaymentsAddressListGrid();
   }
   public rowClass = (args:any) => ({
@@ -284,8 +287,11 @@ export class PaymentAddressesComponent {
   }
   clickCloseDeletePaymentAddress(isSuccess: boolean): void {
     this.isPaymentAddressDeleteShow = false;
-    if (isSuccess)
+    if (isSuccess) {
+      this.vendorcontactFacade.loadMailCodes(this.vendorId);
+      this.checkMailCode();
       this.loadPaymentsAddressListGrid();
+    }
   }
 
   getTabCode() {
@@ -410,7 +416,7 @@ export class PaymentAddressesComponent {
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.column[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
-    this.initializeGrid();
+    this.initializeGrid(true);
     this.loadPaymentsAddressListGrid();
     this.paymentMethodCodeValue = this.paymentRunDateMonthlyValue = this.acceptsCombinedPaymentsFlagValue = this.acceptsReportsFlagValue = null;
   }
@@ -445,12 +451,14 @@ export class PaymentAddressesComponent {
     this.filterData = filter;
   }
 
-  private initializeGrid() {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: [{ field: this.sortValue, dir: this.sortType }],
-    };
+  private initializeGrid(resetState:boolean) {
+    if (this.state == undefined || resetState) {
+       this.state = {
+        skip: 0,
+        take: this.pageSizes[0]?.value,
+        sort: [{ field: this.sortValue, dir: this.sortType }],
+      };
+    }
   }
 
   private setFilterBy(
@@ -471,6 +479,13 @@ export class PaymentAddressesComponent {
         this.filteredByColumnDesc =
           [...new Set(filteredColumns)]?.sort()?.join(', ') ?? '';
       }
+    }
+  }
+  paymentAddressAdded(event:any)
+  {
+    if(event){
+      this.vendorcontactFacade.loadMailCodes(this.vendorId);
+      this.checkMailCode();
     }
   }
 }

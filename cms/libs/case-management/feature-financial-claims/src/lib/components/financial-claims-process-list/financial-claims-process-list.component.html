@@ -209,7 +209,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="50" class="text-center" [sortable]="false" >
+    <kendo-grid-column field="Option" title="Options" [columnMenu]="false" [width]="70" class="text-center" [sortable]="false" >
       <ng-template kendoGridCellTemplate let-dataItem>
         <kendo-dropdownbutton [data]="processGridActions" icon="more-vertical"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -316,7 +316,7 @@
 </ng-template>
 
 <ng-template #clientRecentClaimsDialog>
-  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)">Recent Claims for {{clientName}}</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"> <h4 class="text-upper">  Recent Claims for {{clientName}} </h4> </kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
       (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>
