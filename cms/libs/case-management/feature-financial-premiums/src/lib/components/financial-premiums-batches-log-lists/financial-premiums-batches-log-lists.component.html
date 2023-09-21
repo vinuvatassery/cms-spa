@@ -223,3 +223,14 @@
     </div>
   </kendo-dialog-actions>
 </ng-template>
+
+<ng-template #PrintAuthorizationDialogTemplate>
+  <kendo-dialog-titlebar  class="text-normal"  (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Advice Letter(s)</kendo-dialog-titlebar>
+  <cms-financial-premiums-print-authorization
+  [printOption]="onlyPrintAdviceLetter"
+  [items]="selectedDataRows"
+  [batchId]="batchId"
+  [claimsType] ="claimsType"
+  (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+  ></cms-financial-premiums-print-authorization>
+  </ng-template>

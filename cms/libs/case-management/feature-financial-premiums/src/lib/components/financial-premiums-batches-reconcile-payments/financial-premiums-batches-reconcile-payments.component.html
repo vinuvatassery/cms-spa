@@ -84,7 +84,7 @@
                               [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
                               [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
                               [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
-                              [data]="reconcileGridLists$ | async"
+                              [data]="reconcileGridLists"
                               (selectionChange)="onRowSelection(grid, $event)">
                               <kendo-grid-checkbox-column [sticky]="true" title="Print Notice" [columnMenu]="false" [showSelectAll]="false"
                                     [width]="80"></kendo-grid-checkbox-column>
@@ -194,7 +194,13 @@
 
 <ng-template #PrintAuthorizationDialog>
       <kendo-dialog-titlebar  class="text-normal" (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Authorization(s)</kendo-dialog-titlebar>
-    <cms-financial-premiums-print-authorization></cms-financial-premiums-print-authorization>
+    <cms-financial-premiums-print-authorization
+      [printOption]="onlyPrintAdviceLetter"
+      [isSaveClicked]="isSaveClicked"
+      [items]="reconcileGridLists"
+      [batchId]="batchId"
+      (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+      [claimsType]="claimsType"></cms-financial-premiums-print-authorization>
     </ng-template>
 
     

@@ -439,4 +439,8 @@ export class FinancialClaimsDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/exceeded-limit-check?servicesCost=${serviceCost}&clientId=${clientId}`
     );
   }
+
+  loadMedicalPremiumPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, claimsType: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/batches/${batchId}/print-advice-letter`, printAdviceLetterData);
+  }
 }

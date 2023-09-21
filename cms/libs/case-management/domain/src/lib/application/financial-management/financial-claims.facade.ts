@@ -654,4 +654,8 @@ loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, 
   })
   this.hideLoader();
 }
+
+loadMedicalPremiumPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, claimsType: any) {
+  return this.financialClaimsDataService.loadMedicalPremiumPrintAdviceLetterData(batchId, printAdviceLetterData, claimsType);
+}
 }

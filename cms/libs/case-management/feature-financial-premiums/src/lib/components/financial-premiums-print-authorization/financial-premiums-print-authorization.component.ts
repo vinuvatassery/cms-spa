@@ -1,5 +1,9 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+	/** Internal Libraries **/
+import {FinancialClaimsFacade } from '@cms/case-management/domain';
+/** External Libraries **/
+import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-financial-premiums-print-authorization',
   templateUrl: './financial-premiums-print-authorization.component.html', 
@@ -11,18 +15,58 @@ export class FinancialPremiumsPrintAuthorizationComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   finalPrintList!: any[];
   printCount: number = 0;
+  reconcileCount: number = 0;
+  returnResultFinalPrintList!: any[];
+  printAdviceLetterData: any
 
     /** Input properties **/
-  @Input() items!: any[];
+  @Input() items!: any;
   @Input() printOption: boolean = false;
+  @Input() batchId: any;
+  @Input() claimsType:any;
+  @Input() isSaveClicked!: boolean;
 
   /** Output properties  **/
   @Output() onClosePrintAdviceLetterEvent = new EventEmitter<any>();
 
+    /** Constructor **/
+    constructor(
+      private readonly loaderService: LoaderService,
+      private readonly loggingService: LoggingService,
+      private readonly notificationSnackbarService : NotificationSnackbarService,
+      private readonly ref: ChangeDetectorRef,
+      private readonly financialClaimsFacade: FinancialClaimsFacade) { }
   // printLetterCount: number = this.items.length;
+  // ngOnInit(): void {
+  //   this.finalPrintList = this.items;
+  //   this.getPrintLetterCount();
+  // }
+
   ngOnInit(): void {
-    this.finalPrintList = this.items;
-    this.getPrintLetterCount();
+    this.batchId = 'B395CB55-FADD-4D2A-BE37-54AA98C3F68D';
+    this.claimsType = 'MEDICAL PRMIUM';
+    if(this.items['print']){
+      this.loadPrintLetterContent(this.items);
+    }
+    else
+    {
+      this.finalPrintList = this.items;
+      this.printAdviceLetterData = this.loadPrintLetterModelData();
+      this.loadPrintLetterContent(this.printAdviceLetterData);
+    }
+  }
+
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
+    }
+    this.notificationSnackbarService.manageSnackBar(type, subtitle)
+    this.hideLoader();
+  }
+
+  hideLoader() {
+    this.loaderService.hide();
   }
 
   onClosePrintAdviceLetterClicked() {
@@ -53,5 +97,114 @@ export class FinancialPremiumsPrintAuthorizationComponent {
 
   getPrintLetterCount(){
     this.printCount = this.items.length;
+  }
+
+  onPrintAdviceLetterClicked(buttonText: string) {
+    if (buttonText == 'PRINT') {
+      this.items.PrintAdviceLetterUnSelected =  this.items.PrintAdviceLetterUnSelected.filter((x:any)=>x.selected);
+      this.items.PrintAdviceLetterSelected =  this.items.PrintAdviceLetterSelected.filter((x:any)=>x.selected);
+      this.generateAndPrintAdviceLetter(this.items);
+    } else {
+      this.reconcilePaymentsAndPrintAdviceLetter();
+    }
+  }
+
+  generateAndPrintAdviceLetter(request:any) {
+    this.loaderService.show();
+    this.financialClaimsFacade.viewAdviceLetterData(this.batchId, request, this.claimsType)
+      .subscribe({
+        next: (data: any) => {
+          if (data) {
+            const fileUrl = window.URL.createObjectURL(data);
+            window.open(fileUrl, "_blank");
+            this.ref.detectChanges();
+          }
+          this.loaderService.hide();
+        },
+        error: (err: Error) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  reconcilePaymentsAndPrintAdviceLetter() {
+    this.loaderService.show();
+    let reconcileData = this.reconcilePaymentsData(this.finalPrintList);
+    this.financialClaimsFacade.reconcilePaymentsAndLoadPrintLetterContent(this.batchId, reconcileData,this.claimsType)
+      .subscribe({
+        next: (data: any) => {
+          if (data) {
+            let printReconcileRecords = this.printAdviceLetterData?.PrintAdviceLetterGenerateInfo?.filter((x: any) => x.isPrintAdviceLetter === true)
+            let request = { 'PrintAdviceLetterGenerateInfo': printReconcileRecords, 'batchId': this.printAdviceLetterData.batchId };
+            this.generateAndPrintAdviceLetter(request);
+            this.ref.detectChanges();
+          }
+          this.loaderService.hide();
+        },
+        error: (err: Error) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  reconcilePaymentsData(selectedPrintList: any[]) {
+    let selectedProviders: any = [];
+    selectedPrintList.forEach(item => {
+      let selectedProvider = {
+        checkRequestId: item.checkRequestId,
+        vendorId: item.vendorId,
+        entityId: item.entityId,
+        paymentReconciledDate: item.paymentReconciledDate,
+        paymentSentDate: item.paymentSentDate,
+        checkNbr: item.checkNbr,
+        comments: item.comments,
+        paymentRequestId: item.paymentRequestId
+      };
+      selectedProviders.push(selectedProvider);
+    });
+    return selectedProviders;
+  }
+
+  loadPrintLetterContent(request:any) {
+    this.loaderService.show();
+    this.financialClaimsFacade.loadMedicalPremiumPrintAdviceLetterData(this.batchId,request,this.claimsType)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            data.forEach((result, index: number) => {
+              result.paymentNbr = index + 1;
+            });
+
+            this.returnResultFinalPrintList = data;
+            this.printCount = this.returnResultFinalPrintList.filter(x => x.isPrintAdviceLetter === true).length;
+            this.reconcileCount = this.returnResultFinalPrintList.length
+            this.ref.detectChanges();
+          }
+          this.loaderService.hide();
+        },
+        error: (err: Error) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  loadPrintLetterModelData() {
+    let PrintAdviceLetterInfo: any = [];
+    this.finalPrintList.forEach(item => {
+      this.printAdviceLetterData = {       
+      batchId:this.batchId,
+      PrintAdviceLetterGenerateInfo:[]
+    };
+    PrintAdviceLetterInfo.push({'vendorId':item.vendorId,'paymentRequestId':item.paymentRequestId,
+    'vendorAddressId':item.entityId,'clientId':item.clientId,'isPrintAdviceLetter':item.isPrintAdviceLetter});
+    });
+    this.printAdviceLetterData.PrintAdviceLetterGenerateInfo = PrintAdviceLetterInfo;
+    return this.printAdviceLetterData;
   }
 }
