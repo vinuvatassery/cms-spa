@@ -87,7 +87,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="pcaCode" title="PCA #" [width]="100">
+    <kendo-grid-column field="pcaCode" title="PCA #" [width]="120">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -98,13 +98,10 @@
 
     <kendo-grid-column field="objectName" title="Object" [width]="220">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-          [extra]="false" operator="eq">
-          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-          <kendo-filter-eq-operator></kendo-filter-eq-operator>
-          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-          <kendo-filter-contains-operator></kendo-filter-contains-operator>
-        </kendo-grid-string-filter-menu>
+        <kendo-dropdownlist [data]="objectCodesData"
+        textField="ledgerName" valueField="ledgerName" [(ngModel)]="selectedObjectCode" [valuePrimitive]="true"
+        (valueChange)="dropdownFilterChange('objectName',$event, filterService)">
+      </kendo-dropdownlist>
       </ng-template>
     </kendo-grid-column>
 
@@ -123,6 +120,9 @@
           [extra]="false" operator="eq">
           <kendo-filter-eq-operator></kendo-filter-eq-operator>
         </kendo-grid-numeric-filter-menu>
+      </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span>AY{{dataItem.ay}}</span>
       </ng-template>
     </kendo-grid-column>
 
@@ -192,7 +192,7 @@
         [pageSizes]="pageSizes"
         [objectId]="dataItem?.objectId"
         [groupIds]="dataItem?.groupsCoveredIds"
-        [pcaAssignmentId]="dataItem?.pcaAssigmentId"       
+        [pcaAssignmentId]="dataItem?.pcaAssigmentId"
         [amountAssigned]="dataItem?.amountAssigned"
         [amountRemaining]="dataItem?.amountRemaining"
         [financialPcaSubReportGridLists$]="financialPcaSubReportGridLists$"

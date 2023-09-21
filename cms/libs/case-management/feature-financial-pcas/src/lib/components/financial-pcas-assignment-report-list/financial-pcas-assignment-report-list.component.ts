@@ -7,12 +7,13 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { GridFilterParam } from '@cms/case-management/domain';
+import { GridFilterParam, PcaAssignmentsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -30,7 +31,7 @@ import { Subject, debounceTime } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPcasAssignmentReportListComponent
-  implements OnChanges, AfterViewInit, OnDestroy
+  implements OnInit, OnChanges, OnDestroy
 {
   @ViewChild('alertPcaReportDialogTemplate', { read: TemplateRef })
   alertPcaReportDialogTemplate!: TemplateRef<any>;
@@ -53,6 +54,9 @@ export class FinancialPcasAssignmentReportListComponent
   public state!: State;
   columnsReordered = false;
 
+  objectCodesData = [];
+  selectedObjectCode = '';
+
   gridColumns: any = {
     status: 'Status',
     pcaCode: 'PCA #',
@@ -71,6 +75,10 @@ export class FinancialPcasAssignmentReportListComponent
     {
       columnName: 'ALL',
       columnDesc: 'All Columns',
+    },
+    {
+      columnName: 'status',
+      columnDesc: 'Status',
     },
     {
       columnName: 'pcaCode',
@@ -107,20 +115,10 @@ export class FinancialPcasAssignmentReportListComponent
 
   //filtering
   filteredBy = '';
-  filter: any = [
-    {
-      filters: [
-        {
-          field: 'status',
-          operator: 'eq',
-          value: 'active',
-        },
-      ],
-      logic: 'and',
-    },
-  ];
-  filteredByColumnDesc = 'Status';
-  selectedStatus = 'Active';
+  filter: any = [];
+
+  filteredByColumnDesc = '';
+  selectedStatus = '';
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   showDateSearchWarning = false;
   showNumberSearchWarning = false;
@@ -134,34 +132,36 @@ export class FinancialPcasAssignmentReportListComponent
     private dialogService: DialogService,
     private readonly configProvider: ConfigurationProvider,
     private readonly intl: IntlService,
-    private readonly  : Router,
+    private readonly: Router,
+    private readonly pcaAssignmentsFacade: PcaAssignmentsFacade
   ) {}
+
+  ngOnInit() {
+    this.loadObjectCodes();
+    this.initializePcaPage();
+  }
+
   ngOnChanges(): void {
     this.initializePCAGrid();
     this.loadFinancialPcaReportListGrid();
   }
 
-  ngAfterViewInit() {
-    this.grid.filter = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: 'status',
-              operator: 'eq',
-              value: 'Active',
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
-    this.initializePcaPage();
-  }
-
   ngOnDestroy(): void {
     this.searchSubject.complete();
+  }
+
+  private loadObjectCodes() {
+    this.pcaAssignmentsFacade.loadObjectCodes();
+    this.pcaAssignmentsFacade.objectCodesData$.subscribe({
+      next: (data: any) => {
+        this.objectCodesData = data.map(
+          (el: any) =>
+            (el.ledgerName = el.ledgerName
+              .substring(0, el.ledgerName.lastIndexOf(' '))
+              .trim())
+        );
+      },
+    });
   }
 
   /* Public methods */
@@ -265,6 +265,7 @@ export class FinancialPcasAssignmentReportListComponent
     this.filter = stateData?.filter?.filters;
     this.setFilterBy(true, '', this.filter);
     if (!this.filteredByColumnDesc.includes('Status')) this.selectedStatus = '';
+    if (!this.filteredByColumnDesc.includes('Object')) this.selectedObjectCode = '';
     this.loadFinancialPcaReportListGrid();
   }
 
@@ -293,7 +294,6 @@ export class FinancialPcasAssignmentReportListComponent
     value: any,
     filterService: FilterService
   ): void {
-    this.selectedStatus = value;
     filterService.filter({
       filters: [
         {
@@ -415,8 +415,11 @@ export class FinancialPcasAssignmentReportListComponent
     this.loadFinancialPcaSubReportListEvent.emit(data);
   }
 
-  editAssignmentReport(objectId:any, groupsCoveredIdsList:any){
-    const data = { objectId: objectId, groupsCoveredIdsList: groupsCoveredIdsList };
+  editAssignmentReport(objectId: any, groupsCoveredIdsList: any) {
+    const data = {
+      objectId: objectId,
+      groupsCoveredIdsList: groupsCoveredIdsList,
+    };
     this.editButtonClick.emit(data);
   }
 }
