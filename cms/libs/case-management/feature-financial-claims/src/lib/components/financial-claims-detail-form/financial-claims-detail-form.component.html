@@ -19,7 +19,7 @@
 
                         <kendo-multicolumncombobox textField="providerFullName" valueField="vendorAddressId"
                             [fillMode]="formUiStyle.dropDownFillMode"
-                            placeholder="Search {{claimsType | titlecase}} Providers by name or TIN"
+                            placeholder="Search {{claimsType | titlecase}} Providers by name , TIN or Mail Code"
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="medicalProvider" (filterChange)="searchMedicalProvider($event)"
                             [data]="pharmacySearchResult$ | async" [(ngModel)]="selectedMedicalProvider"
@@ -130,7 +130,7 @@
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Invoice ID">
                         <kendo-textbox aria-label="Invoice ID" [fillMode]="formUiStyle.inputFillMode"
-                            formControlName="invoiceId">
+                            formControlName="invoiceId" [maxlength]="200">
                         </kendo-textbox>
                     </kendo-floatinglabel>
                     <kendo-formerror *ngIf="(!claimForm.controls['invoiceId'].valid) && isSubmitted"
@@ -163,7 +163,7 @@
                                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
                                                     aria-label="Service Start Date" format="MM/dd/yyyy"
                                                     formatPlaceholder="formatPattern" formControlName="serviceStartDate"
-                                                    (valueChange)="onDateChange(i)"   placeholder="">
+                                                      placeholder="" (valueChange)="onDateChange(i)">
                                                 </kendo-datepicker>
                                             </kendo-floatinglabel>
                                             <kendo-formerror
@@ -177,7 +177,8 @@
                                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
                                                     aria-label="Service End Date" format="MM/dd/yyyy"
                                                     formatPlaceholder="formatPattern"   placeholder="" formControlName="serviceEndDate"
-                                                    (valueChange)="onDateChange(i)">
+                                                    (valueChange)="onDateChange(i)"
+                                                    >
                                                 </kendo-datepicker>
                                             </kendo-floatinglabel>
                                             <kendo-formerror
@@ -186,7 +187,7 @@
                                                     aria-hidden="false">info</span>Service End Date is required
                                             </kendo-formerror>
                                             <kendo-formerror
-                                                *ngIf="(!isStartEndDateError(i))"
+                                                *ngIf="(isStartEndDateError(i))"
                                                 class="d-flex align-items-center">
                                                 <span class="material-icons mr-1" aria-hidden="false">info</span>Service
                                                 End date must be equal to or greater than start date
@@ -389,21 +390,14 @@
                     <span class="material-icons" aria-label="New Claims" aria-hidden="false">add</span>
                     New Service</button>
             </div>
-            <div>
-                <span class="app-checkboxwidtext-wrapper">
-                    <input type="checkbox" kendoCheckBox aria-labelledby="applyChangesToMailingAddress"
-                        id="isSpotsPaymentInput" [checked]="isSpotsPayment" (change)="onSpotsPaymentChange($event)" />
-                    <label class="k-checkbox-label" for="isSpotsPaymentInput">
-                        <strong>This is a SPOTS payment</strong></label>
-                </span>
-            </div>
+
 
         </div>
     </div>
 </section>
 <div class="add_new_fixed_bottom">
     <div *ngIf="isRecentClaimShow">
-        <h5>Recent Claims for this {{clientName}} and {{vendorName}}</h5>
+        <h4 class="text-upper">Recent Claims for this {{clientName}} and {{vendorName}}</h4>
         <div class="add_new_fixed_bottom_grid_section">
             <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId"
                 [claimsType]="claimsType"></cms-financial-claims-recent-claims-list>
