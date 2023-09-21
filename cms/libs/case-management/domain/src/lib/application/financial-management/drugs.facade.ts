@@ -23,7 +23,7 @@ export class DrugsFacade {
 
   private drugsDataSubject = new Subject<any>();
   drugsData$ = this.drugsDataSubject.asObservable();
-  private drugDataLoaderSubject = new BehaviorSubject<any>(false);
+  private drugDataLoaderSubject = new Subject<any>();
   drugDataLoader$ = this.drugDataLoaderSubject.asObservable();
   /** Private properties **/
 
