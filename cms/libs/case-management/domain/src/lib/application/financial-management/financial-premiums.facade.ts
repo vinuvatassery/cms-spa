@@ -196,17 +196,20 @@ export class FinancialPremiumsFacade {
       },
     });  
   }
-  loadReconcileListGrid(){
-    this.financialPremiumsDataService.loadReconcileListService().subscribe({
-      next: (dataResponse) => {
-        this.batchReconcileDataSubject.next(dataResponse);
-        this.hideLoader();
+  loadReconcileListGrid(batchId:any,premiumType:any,event:any){ 
+    this.financialPremiumsDataService.loadReconcileListService(batchId,premiumType,event).subscribe({
+      next: (dataResponse:any) => {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.batchReconcileDataSubject.next(gridView);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
       },
-    });  
+    });
+
   }
   
   loadPremiumsListGrid(){

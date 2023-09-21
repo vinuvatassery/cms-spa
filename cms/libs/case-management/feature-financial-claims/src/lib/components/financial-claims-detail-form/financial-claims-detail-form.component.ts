@@ -479,10 +479,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
-    if (startDate != "" && endDate != "" && startDate > endDate) {      
+    if (startDate != "" && endDate != "" && startDate > endDate) {
       serviceFormData.get('serviceEndDate')?.setErrors({invalid : true});
       return true;
-    }    
+    }
     return false;
   }
 
@@ -547,7 +547,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       pcaCode: null,
       pcaAssignmentId: null,
       isPcaReassignmentNeeded: null,
-      tpaInvoice: [{}],
+      tpaInvoices: [{}],
     };
     let checkDeniedClaim = false;
     for (let element of formValues.claimService) {
@@ -584,9 +584,9 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       if (service.exceptionFlag === StatusFlag.Yes && !service.exceptionReasonCode) {
         checkDeniedClaim = true;
       }
-      bodyData.tpaInvoice.push(service);
+      bodyData.tpaInvoices.push(service);
     }
-    bodyData.tpaInvoice.splice(0, 1);
+    bodyData.tpaInvoices.splice(0, 1);
     if(checkDeniedClaim || (bodyData?.exceptionFlag === StatusFlag.Yes && !bodyData?.exceptionReasonCode))
     {
       this.printDenialLetterData = bodyData;
@@ -619,9 +619,9 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   };
 
   private getPcaCode(claim: any) {
-    const totalAmountDue = (claim.tpaInvoice as []).reduce((acc, cur) => acc + (cur as any)?.amountDue ?? 0, 0);
-    const minServiceStartDate = this.getMinServiceStartDate(claim.tpaInvoice);
-    const maxServiceEndDate = this.getMinServiceEndDate(claim.tpaInvoice);
+    const totalAmountDue = (claim.tpaInvoices as []).reduce((acc, cur) => acc + (cur as any)?.amountDue ?? 0, 0);
+    const minServiceStartDate = this.getMinServiceStartDate(claim.tpaInvoices);
+    const maxServiceEndDate = this.getMinServiceEndDate(claim.tpaInvoices);
     const request = {
       clientCaseEligibilityId: claim.clientCaseEligibilityId,
       claimAmount: totalAmountDue,
@@ -774,7 +774,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
           this.paymentRequestId = val.paymentRequestId;
           this.cd.detectChanges();
           this.loaderService.hide();
-          this.setFormValues(val.tpaInvoice);
+          this.setFormValues(val.tpaInvoices);
         },
         error: (err) => {
           this.loaderService.hide();
