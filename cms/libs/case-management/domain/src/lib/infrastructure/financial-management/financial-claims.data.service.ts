@@ -97,7 +97,7 @@ export class FinancialClaimsDataService {
   }
 
   loadReconcileListService(batchId:any,claimsType:any,paginationParameters:any){
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/reconcile-payments`,paginationParameters);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/${batchId}/reconcile-payments`,paginationParameters);
   }
   loadClaimsListService() {
     return of([
@@ -297,7 +297,7 @@ export class FinancialClaimsDataService {
       PaymentToReconcileCount : data.paymentToReconcileCount
     }
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/payment-reconcile-summary`,ReconcilePaymentResponseDto
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/payments/payment-reconcile-summary`,ReconcilePaymentResponseDto
     );
   }
 
@@ -313,7 +313,7 @@ export class FinancialClaimsDataService {
       Filter : data.filter
     }
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/payment-reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/payments/payment-reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto
     );
   }
 
@@ -367,6 +367,13 @@ export class FinancialClaimsDataService {
     );
   }
 
+  getPcaCode(params: any){
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca/pca-code`,
+      params
+    );
+  }
+
   updateMedicalClaim(claim: any, typeCode: string) {
     let path;
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
@@ -416,16 +423,16 @@ export class FinancialClaimsDataService {
   }
 
   getPrintAdviceLetterData(batchId:any,selectedProviders: any, claimsType:any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/print-advice-letter`,selectedProviders);
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/${batchId}/print-advice-letter`,selectedProviders);
   }
 
   reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any, claimsType:any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/reconcile-payments`,reconcileData);
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/${batchId}/reconcile-payments`,reconcileData);
   }
 
   viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, claimsType:any) {
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${batchId}/download-advice-letter`, printAdviceLetterData,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/${batchId}/download-advice-letter`, printAdviceLetterData,
       { responseType: 'blob' }
     );
   }
@@ -437,6 +444,36 @@ export class FinancialClaimsDataService {
       path = 'financial-management/claims/dental';
     }
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/exceeded-limit-check?servicesCost=${serviceCost}&clientId=${clientId}`
+    );
+  }
+  checkIneligibleException(startDtae: any,endDate: any, clientId: number, typeCode : string ) {
+    let path;
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
+      path = 'financial-management/claims/medical';
+    } else {
+      path = 'financial-management/claims/dental';
+    }
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/eligibility-check?startDate=${startDtae}&endDate=${endDate}&clientId=${clientId}`
+    );
+  }
+  checkGroupException(startDtae: any,endDate: any, clientId: number,cptCode:any, typeCode : string ) {
+    let path;
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
+      path = 'financial-management/claims/medical';
+    } else {
+      path = 'financial-management/claims/dental';
+    }
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/group-check?startDate=${startDtae}&endDate=${endDate}&clientId=${clientId}&cptCode=${cptCode}`
+    );
+  }
+  checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any, typeCode : string ) {
+    let path;
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
+      path = 'financial-management/claims/medical';
+    } else {
+      path = 'financial-management/claims/dental';
+    }
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/duplicate-payment-check?serviceStartDate=${startDtae}&serviceEndDate=${endDate}&vendorId=${vendorId}&amount=${totalAmountDue}`
     );
   }
 }

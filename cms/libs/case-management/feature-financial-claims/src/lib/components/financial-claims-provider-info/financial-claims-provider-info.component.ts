@@ -40,7 +40,7 @@ export class FinancialClaimsProviderInfoComponent {
       address2: [''],
       cityCode: ['', Validators.required],
       stateCode: ['', Validators.required],
-      zip: ['', Validators.required],
+      zip: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]],
       specialHandlingDesc: [''],
       mailCode: [{ value: '', disabled: true }]
     }),

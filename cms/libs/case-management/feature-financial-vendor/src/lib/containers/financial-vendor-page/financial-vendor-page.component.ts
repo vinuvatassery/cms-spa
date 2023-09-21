@@ -117,8 +117,8 @@ export class FinancialVendorPageComponent implements OnInit {
     this.isVendorDetailFormShow = false;
   }
 
-  loadFinancialVendorsList(data: any) {
-    this.financialVendorFacade.selectedVendorType = data?.vendorTypeCode
+  loadFinancialVendorsList(data: any) {    
+    this.financialVendorFacade.selectedVendorType = data?.vendorTypeCode.includes('CLINIC') ? data?.vendorTypeCode.split(',')[0] : data?.vendorTypeCode;
     this.dataExportParameters = data
     this.financialVendorFacade.getVendors(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.vendorTypeCode, data?.filter)
   }
@@ -218,7 +218,7 @@ export class FinancialVendorPageComponent implements OnInit {
         Filter : filter
       }
      let fileName = ''
-      switch(data?.vendorTypeCode) {
+      switch(this.financialVendorFacade.selectedVendorType) {
         case FinancialVendorTypeCode.Manufacturers: {
           fileName = 'Manufacturers';
            break;

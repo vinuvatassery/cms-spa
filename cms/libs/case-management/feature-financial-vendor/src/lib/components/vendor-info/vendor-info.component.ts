@@ -123,6 +123,7 @@ export class VendorInfoComponent implements OnInit {
       lastName:[],
       providerName: [''],
       parentVendorId: [''],
+      vendorTypeCode: [''],
       tinNumber: [''],
       paymentMethod: [''],
       specialHandling: [''],
