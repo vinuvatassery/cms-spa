@@ -84,8 +84,7 @@
             </div>
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Open Date">
-                        <div class="flex-col flex-col-12">
-                              <kendo-floatinglabel >
+                         
                                     <kendo-dropdownlist  [fillMode]="formUiStyle.inputFillMode"
                                     [data]="pcaAssignOpenDatesList$"
                                     textField="dateValue"
@@ -95,18 +94,17 @@
                                     formControlName="openDate">
             
                                     </kendo-dropdownlist>
-                              </kendo-floatinglabel>       
+                                
                               <kendo-formerror *ngIf="pcaAssignmentFormControls?.openDate?.errors?.required && formSubmitted">
                                     Open Date is required
                               </kendo-formerror>     
-                        </div>
+                       
                   </kendo-floatinglabel>
 
             </div>
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Close Date">
-                        <div class="flex-col flex-col-12">
-                              <kendo-floatinglabel >
+                        
                                     <kendo-dropdownlist  [fillMode]="formUiStyle.inputFillMode"
                                     [data]="pcaAssignCloseDatesList$"
                                     textField="dateValue"
@@ -116,11 +114,11 @@
                                     formControlName="closeDate">
             
                                     </kendo-dropdownlist>
-                              </kendo-floatinglabel>
+                               
                               <kendo-formerror *ngIf="pcaAssignmentFormControls?.closeDate?.errors?.required && formSubmitted">
                                     Close Date is required
                               </kendo-formerror>   
-                        </div>
+                        
                   </kendo-floatinglabel>
 
             </div>
