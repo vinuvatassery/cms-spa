@@ -1,6 +1,5 @@
 /** Angular **/
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -10,7 +9,7 @@ import {
   OnInit,
   Output,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { GridFilterParam, PcaAssignmentsFacade } from '@cms/case-management/domain';
