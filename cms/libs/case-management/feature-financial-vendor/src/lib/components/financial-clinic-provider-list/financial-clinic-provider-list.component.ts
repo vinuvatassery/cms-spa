@@ -83,9 +83,6 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   
   ngOnInit(): void {
     this.initializeProviderPage();
-    this.addProviderNew$.subscribe((_ : any)=>{
-      this.loadProviderListGrid()
-    })
   }
   
   ngOnChanges(): void {
@@ -203,7 +200,6 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   }
 
    loadProviderListGrid(): void {
-  
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,

@@ -36,6 +36,7 @@
           <div class="client-profile-outlet">
             <cms-financial-drugs
             (loadDrugListEvent)="loadDrugList($event)"
+            [drugDataLoader$]="drugDataLoader$"
             [drugsData$]="drugsData$"
             [pageSizes]="pageSizes"
             [sortValue]="sortValue"
@@ -125,9 +126,9 @@
         <div class="block-section">
 
           <div class="client-profile-outlet">
-          <cms-financial-clinic-provider-list 
+          <cms-financial-clinic-provider-list
           [pageSizes]="providerLispageSizes" [sortValue]="providerLissortValue"
-          [sortType]="providerLissortType" [sort]="providerLissort" 
+          [sortType]="providerLissortType" [sort]="providerLissort"
           [ParentVendorId]="vendorId"
           (removeProviderClick)="removeProvider($event)"
           (loadProviderListEvent)="loadProviderList($event)" 

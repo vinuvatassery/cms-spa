@@ -3,9 +3,11 @@
 <div class="align-items-center mat-form-no-b-space bg-white">
     <span class="text-bold" for="eemploymentep">Payment Request Type:&nbsp;</span>
     <div class="fmly-epdorpdown">
-        <kendo-dropdownlist class="epdropdown" aria-label="EligibilityPeriods"
-            [fillMode]="formUiStyle.dropDownFillMode">
-        </kendo-dropdownlist>
+
+        <kendo-dropdownlist formControlName="paymentTypeCode" aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"
+                                [data]="pendingApprovalPaymentType$ | async" valueField="lovCode" textField="lovDesc" [valuePrimitive]="true"
+                                [loading]="(pendingApprovalPaymentType$ | async)?.length===0">                        
+         </kendo-dropdownlist>
     </div>
 </div>
 <section class="table-filter-section mat-form-no-b-space bg-white">
