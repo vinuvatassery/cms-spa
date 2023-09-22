@@ -84,7 +84,7 @@
                               [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
                               [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
                               [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
-                              [data]="reconcileGridLists"
+                              [data]="reconcileGridLists$ | async"
                               (selectionChange)="onRowSelection(grid, $event)">
                               <kendo-grid-checkbox-column [sticky]="true" title="Print Notice" [columnMenu]="false" [showSelectAll]="false"
                                     [width]="80"></kendo-grid-checkbox-column>

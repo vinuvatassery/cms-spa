@@ -181,39 +181,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     this.filterData = filter;
   }
 
-  reconcileGridLists = [
-    {
-      type: 14534,
-      clientName:'Cheque',
-      vendorName: 'Very Nice Provider 1',
-      refundWarrant:'1234', 
-      refundAmount:'1000', 
-      depositDate:'09/20/2023', 
-      depositMethod:'Test', 
-      indexCode:'12', 
-      // serviceCount:'1', 
-      // totalCost:'1000', 
-      // amountDue:'500', 
-      // paymentStatusCode:'InProgress', 
-      // by: 'by',
-      vendorId: '3F111CFD-906B-4F56-B7E2-7FCE5A563C36',
-      paymentRequestId: '012D6618-C464-41C1-852D-03584075A17B',
-      paymentRequestBatchId: '1B9F14A7-A983-44A9-BDC9-9B85716BE4DD'
-    },
-    {
-      type: 837534,
-      clientName:'ACH',
-      vendorName: 'Very Nice Provider 2',
-      refundWarrant:'123445', 
-      refundAmount:'2000', 
-      depositDate:'09/19/2023', 
-      depositMethod:'Test1', 
-      indexCode:'13', 
-      vendorId: '433D134A-99D4-4A67-9A7D-8773190035CD',
-      paymentRequestId: 'AF1338C1-A6CC-4E76-8741-B9ABA59ABC99',
-      paymentRequestBatchId: '1B9F14A7-A983-44A9-BDC9-9B85716BE4DD'
-    }
-  ];
   gridDataHandle() {
     this.reconcileGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;

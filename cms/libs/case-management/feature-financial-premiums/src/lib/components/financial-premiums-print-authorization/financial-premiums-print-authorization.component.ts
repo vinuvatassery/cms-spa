@@ -43,8 +43,6 @@ export class FinancialPremiumsPrintAuthorizationComponent {
   // }
 
   ngOnInit(): void {
-    this.batchId = 'B395CB55-FADD-4D2A-BE37-54AA98C3F68D';
-    this.claimsType = 'MEDICAL PRMIUM';
     if(this.items['print']){
       this.loadPrintLetterContent(this.items);
     }
@@ -202,7 +200,7 @@ export class FinancialPremiumsPrintAuthorizationComponent {
       PrintAdviceLetterGenerateInfo:[]
     };
     PrintAdviceLetterInfo.push({'vendorId':item.vendorId,'paymentRequestId':item.paymentRequestId,
-    'vendorAddressId':item.entityId,'clientId':item.clientId,'isPrintAdviceLetter':item.isPrintAdviceLetter});
+    'vendorAddressId':item.entityId,'clientId':item.clientId,'isPrintAdviceLetter':item.isPrintAdviceLetter, 'checkNbr':item.checkNbr});
     });
     this.printAdviceLetterData.PrintAdviceLetterGenerateInfo = PrintAdviceLetterInfo;
     return this.printAdviceLetterData;
