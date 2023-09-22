@@ -18,9 +18,10 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { PaymentDetail, PaymentPanel } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-premiums-batch-list-detail-items',
   templateUrl: './financial-premiums-batch-list-detail-items.component.html', 
@@ -44,7 +45,15 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchItemsGridLists$: any;
+  @Input() vendorAddressId:any;
+  @Input() batchId:any ;
+  @Input() paymentDetails$!: Observable<PaymentDetail>;
   @Output() loadBatchItemsListEvent = new EventEmitter<any>();
+  @Output()  updatePaymentPanel  = new EventEmitter<PaymentPanel>();
+  @Output() getProviderPanelEvent = new EventEmitter<any>();
+  @Output() updateProviderProfileEvent = new EventEmitter<any>();
+  @Output() onEditProviderProfileEvent = new EventEmitter<any>();
+ 
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
