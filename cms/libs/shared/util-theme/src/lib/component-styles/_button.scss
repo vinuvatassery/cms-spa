@@ -20,8 +20,8 @@
     border-color: $app-primary;
     &.k-state-disabled,
     &.k-disabled {
-      border-color: material-color($hive-neutral-palette, 600) !important;      
-      color: material-color($hive-neutral-palette, 600) !important;
+      border-color: var(--hive-neutral-palette-600) !important;      
+      color: var(--hive-neutral-palette-600) !important;
     }
   }
   &.k-primary,
@@ -33,19 +33,19 @@
     border-color: $app-primary;
     &:hover,
     &:active {
-      background: material-color($hive-primary-palette, 800) !important;
-      background-color: material-color($hive-primary-palette, 800) !important;
+      background: var(--hive-primary-palette-800) !important;
+      background-color: var(--hive-primary-palette-800) !important;
       color: $white !important;
     }
     &:focus,
     &.k-focus {
-      background: material-color($hive-primary-palette, 900) !important;
-      background-color: material-color($hive-primary-palette, 900) !important;
+      background: var(--hive-primary-palette-900) !important;
+      background-color: var(--hive-primary-palette-900) !important;
       color: $white !important;
     }
     &.k-state-disabled,
     &.k-disabled {
-      background: material-color($hive-neutral-palette, 50) !important;
+      background: var(--hive-neutral-palette-50) !important;
       color: $black-30 !important;
     }
 
@@ -74,20 +74,20 @@
   }
 
   &.k-button-solid-error{
-    background-color: material-color($hive-error-palette, 800) !important;
-    border-color:material-color($hive-error-palette, 800) !important;
+    background-color: var(--hive-error-palette-800) !important;
+    border-color:var(--hive-error-palette-800) !important;
     color: $white;
   }
   &.k-button-flat-error{
-    color:material-color($hive-error-palette, 800) !important;
+    color:var(--hive-error-palette-800) !important;
   }
   &.k-danger-link {
-    color: material-color($hive-error-palette, 800) !important;
+    color: var(--hive-error-palette-800) !important;
     background: transparent;
     &.k-state-disabled,
     &.k-disabled {
-      background: material-color($hive-neutral-palette, 50) !important;      
-      color: material-color($hive-neutral-palette, 600) !important;
+      background: var(--hive-neutral-palette-50) !important;      
+      color: var(--hive-neutral-palette-600) !important;
     }
   }
 
@@ -99,7 +99,7 @@
   }
 
   &.k-warn-link {
-    color: material-color($hive-warn-palette, 800) !important;
+    color: var(--hive-warn-palette-800) !important;
     background: transparent !important;
   }
 
@@ -123,10 +123,10 @@
       margin-right: 4px;
     }
     &.k-button-flat-success {
-      color: material-color($hive-success-palette, 500) !important;
+      color: var(--hive-success-palette-500) !important;
     }
     &.k-button-flat-error {
-      color: material-color($hive-error-palette, 400) !important;
+      color: var(--hive-error-palette-400) !important;
     }
     &.no-ul {
       text-decoration: none;
@@ -165,10 +165,10 @@
     }
 
     &.icon-hover-primary {
-      color: material-color($hive-neutral-palette, 600);
+      color: var(--hive-neutral-palette-600);
 
       span {
-        color: material-color($hive-neutral-palette, 600);
+        color: var(--hive-neutral-palette-600);
       }
 
       &:hover {
@@ -196,7 +196,7 @@
     &.k-button-flat-error{
       color: rgba($color: $black-30, $alpha: 0.5) !important;
       &:hover{
-      color:material-color($hive-error-palette, 800) !important;
+      color:var(--hive-error-palette-800) !important;
       }
     }
   
@@ -220,14 +220,14 @@
   }
 
   &.k-error-button {
-    background: material-color($hive-error-palette, 800);
-    background-color: material-color($hive-error-palette, 800);
+    background: var(--hive-error-palette-800);
+    background-color: var(--hive-error-palette-800);
     color: $white;
     font-family: $font-family-medium;
 
     &.k-state-disabled {
-      background: material-color($hive-neutral-palette, 50) !important;
-      background-color: material-color($hive-neutral-palette, 50) !important;
+      background: var(--hive-neutral-palette-50) !important;
+      background-color: var(--hive-neutral-palette-50) !important;
       color: $black-30 !important;
     }
   }
@@ -258,14 +258,14 @@
   &.btn-h-warn {
     &:hover,
     &:active {
-      color: material-color($hive-warn-palette, 600) !important;
+      color: var(--hive-warn-palette-600) !important;
     }
   }
 
   &.btn-h-danger {
     &:hover,
     &:active {
-      color: material-color($hive-error-palette, 800) !important;
+      color: var(--hive-error-palette-800) !important;
       opacity: 1;
     }
   }
@@ -293,13 +293,13 @@
 
     &:hover,
     &:active {
-      background: material-color($hive-primary-palette, 800) !important;
-      background-color: material-color($hive-primary-palette, 800) !important;
+      background: var(--hive-primary-palette-800) !important;
+      background-color: var(--hive-primary-palette-800) !important;
       color: $white !important;
     }
 
     &.k-state-disabled {
-      background: material-color($hive-neutral-palette, 50) !important;
+      background: var(--hive-neutral-palette-50) !important;
       color: $black-30 !important;
     }
   }
@@ -309,7 +309,7 @@
   box-shadow: none;
 
   .k-toggle-button {
-    background: material-color($hive-neutral-palette, 100);
+    background: var(--hive-neutral-palette-100);
     text-transform: capitalize;
 
     &.k-state-selected,
@@ -321,7 +321,7 @@
         opacity: 0;
       }
       &.select-error{
-        background: material-color($hive-error-palette, 800) !important;
+        background: var(--hive-error-palette-800) !important;
       }
     }
   }
@@ -336,7 +336,7 @@
 }
 .k-selected{
   &.select-error{
-    background: material-color($hive-error-palette, 800) !important;
+    background: var(--hive-error-palette-800) !important;
     color: $white;
   }
   &.select-primary{
@@ -369,14 +369,14 @@
       margin-left: 0px;
       &.k-focus,
       &:focus {
-        background: material-color($hive-primary-palette, 400) !important;
+        background: var(--hive-primary-palette-400) !important;
       }
       span {
         color: $white;
       }
     }
     &.k-disabled {
-      background: material-color($hive-neutral-palette, 50) !important;
+      background: var(--hive-neutral-palette-50) !important;
       color: $black-30 !important;
       .k-icon {
         color: $black-30 !important;
@@ -387,15 +387,15 @@
     }
     &.k-focus,
     &:focus {
-      background: material-color($hive-primary-palette, 400) !important;
+      background: var(--hive-primary-palette-400) !important;
     }
   }
   &.k-focus,
   &:focus {
     .k-button {
-      background: material-color($hive-primary-palette, 400) !important;
+      background: var(--hive-primary-palette-400) !important;
       &.k-disabled {
-        background: material-color($hive-neutral-palette, 50) !important;
+        background: var(--hive-neutral-palette-50) !important;
         color: $black-30 !important;
         .k-icon {
           color: $black-30 !important;
@@ -424,8 +424,8 @@
   .k-button-solid-base {
     transition: 0.2s;
     &:hover {
-      background: material-color($hive-primary-palette, 800) !important;
-      background-color: material-color($hive-primary-palette, 800) !important;
+      background: var(--hive-primary-palette-800) !important;
+      background-color: var(--hive-primary-palette-800) !important;
       color: $white !important;
     }
   }
@@ -433,8 +433,8 @@
   .k-split-button-arrow {
     transition: 0.2s;
     &:hover {
-      background: material-color($hive-primary-palette, 800) !important;
-      background-color: material-color($hive-primary-palette, 800) !important;
+      background: var(--hive-primary-palette-800) !important;
+      background-color: var(--hive-primary-palette-800) !important;
       color: $white !important;
     }
   }

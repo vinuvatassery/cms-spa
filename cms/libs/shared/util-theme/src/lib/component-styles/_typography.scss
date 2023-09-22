@@ -20,10 +20,10 @@ b {
   color: $app-primary;
 }
 .text-red-dark {
-  color: material-color($hive-error-palette, 900);
+  color: var(--hive-error-palette-900);
 }
 .text-canyon-dark {
-  color: material-color($hive-canyon-palette, 900);
+  color: var(--hive-canyon-palette-900);
 }
 .text-underline {
   text-decoration: underline;
@@ -34,7 +34,7 @@ b {
   transition: .2s;
   &:hover {
     color: $app-primary;
-    background-color: material-color($hive-primary-palette, 50);
+    background-color: var(--hive-primary-palette-50);
   }
 }
 a {
@@ -44,7 +44,7 @@ a {
   &:hover,
   &.visited,
   &:focus {
-    color: darken($app-primary, 20%);
+    // color: darken($app-primary, 20%);
   }
 }
 .text-capital {

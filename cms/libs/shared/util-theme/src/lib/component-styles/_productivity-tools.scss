@@ -22,7 +22,7 @@
       cursor: pointer;
       transition: ease-in all 0.4s;
       &:hover {
-        background: material-color($hive-neutral-palette, 100);
+        background: var(--hive-neutral-palette-100);
       }
       &:first-child {
         border-top-width: 1px;
@@ -53,7 +53,7 @@
           .k-button {
             // width: $size-xxxx;
             // height: $size-xxxx;
-            color: material-color($hive-neutral-palette, 800); 
+            color: var(--hive-neutral-palette-800); 
             box-shadow: none;
             border-radius: 50%;
             overflow: hidden;
@@ -76,31 +76,31 @@
         }
       }
       &.red-item-block {
-        background: material-color($hive-error-palette, 100);
+        background: var(--hive-error-palette-100);
         transition: ease-in all 0.4s;
         .due-item-heading,
         .due-item-details {
-          color: material-color($hive-error-palette, 900);
+          color: var(--hive-error-palette-900);
         }
         &:hover {
-          background: material-color($hive-error-palette, 200);
+          background: var(--hive-error-palette-200);
         }
         .item-list-icon {
-          color: material-color($hive-error-palette, 900);
+          color: var(--hive-error-palette-900);
         }
       }
       &.canyon-item-block {
-        background: material-color($hive-canyon-palette, 100);
+        background: var(--hive-canyon-palette-100);
         transition: ease-in all 0.4s;
         .due-item-heading,
         .due-item-details {
-          color: material-color($hive-canyon-palette, 900);
+          color: var(--hive-canyon-palette-900);
         }
         &:hover {
-          background: material-color($hive-canyon-palette, 200);
+          background: var(--hive-canyon-palette-200);
         }
         .item-list-icon {
-          color: material-color($hive-canyon-palette, 900);
+          color: var(--hive-canyon-palette-900);
         }
       }
     }

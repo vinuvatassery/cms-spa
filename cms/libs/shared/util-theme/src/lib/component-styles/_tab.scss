@@ -92,8 +92,8 @@
 
   &.app-c-sub-tab {
     .k-tabstrip-items-wrapper {
-      box-shadow: 0px 4px 6px material-color($hive-neutral-palette, 200);
-      border-bottom: 1px solid material-color($hive-neutral-palette, 200);
+      box-shadow: 0px 4px 6px var(--hive-neutral-palette-200);
+      border-bottom: 1px solid var(--hive-neutral-palette-200);
       .k-tabstrip-items {
         margin-left: $size-xxx;
         .k-link {

@@ -3,9 +3,9 @@
 .app-l-header {
   width: 100%;
   background: $white;
-  box-shadow: $size-0 $size-m $size-xx rgb(61 69 76 / 30%);
+  box-shadow: $size-0 $size-m $size-xx rgba(61, 69, 76, 30%);
   border-bottom: 1px solid $theme-border;
-  padding: $size-xx $size-xx * 2;
+  padding: $size-xx calc($size-xx * 2);
   position: fixed;
   top: $size-0;
   z-index: 104;
@@ -46,7 +46,10 @@
         color: $app-primary;
       }
       &:hover{
-        background:material-color($hive-primary-palette, 50) ;
+        background:var(--hive-primary-palette-50) ;
+        // background:material-color($hive-primary-palette, 50) ;
+
+        
       }
     }
   }
@@ -99,8 +102,8 @@
         border-radius: $border-radius-xlg;
         padding: $size-m;
         padding: $size-m $size-s;
-        height: $size-xxx + $size-s;
-        min-width: $size-xxx + $size-s;
+        height: calc($size-xxx + $size-s);
+        min-width: calc($size-xxx + $size-s);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -190,7 +193,7 @@
     opacity: 0.8;
     margin-bottom: $size-xl;
     &:hover {
-      background: material-color($hive-neutral-palette, 100) !important;
+      background: var(--hive-neutral-palette-100) !important;
       opacity: 1;
     }
     .k-button-text{
@@ -209,7 +212,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border: 1px solid lighten($theme-border, 5%);
+      // border: 1px solid lighten($theme-border, 5%);
       border-bottom-width: $size-0;
       padding: $size-m $size-xx $size-m $size-m;
       gap: $size-xxx;
@@ -217,7 +220,7 @@
       transition: ease-in all 0.4s;
       cursor: default;
       &:hover {
-        background: lighten($app-primary-lighten, 30%);
+        // background: lighten($app-primary-lighten, 30%);
       }
       &:last-child {
         border-bottom-width: 1px;
@@ -245,7 +248,7 @@
           padding-right: $size-m;
           word-break: break-all;
           &.file-size {
-            min-width: $size-xxxx * 3;
+            min-width: calc($size-xxxx * 3);
             padding-left: $size-xx;
           }
         }
@@ -259,7 +262,7 @@
 /*No Notification*/
 .no-notification-container {
   text-align: center;
-  padding: $size-xxxx ($size-xxxx + $size-xxxx);
+  padding: $size-xxxx calc($size-xxxx + $size-xxxx);
   .k-icon {
     font-size: $font-size-xxx;
     margin-bottom: $size-xxx;
@@ -292,7 +295,7 @@ max-width: 400px;
     }
     &.unread-item {
       border-left: $size-m solid $app-primary;
-      background: material-color($hive-primary-palette, 50);
+      background: var(--hive-primary-palette-50);
       .card-type-icon {
         .material-icons {
           color: $app-primary !important;

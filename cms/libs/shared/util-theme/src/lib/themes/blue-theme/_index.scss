@@ -1,42 +1,59 @@
 /* Kendo UI Theme Variable Import */
-@import '@progress/kendo-theme-material/scss/variables.scss';
+//  @import '@progress/kendo-theme-material/scss/variables.scss';
 
 /* Custom Color Palette */
 @import 'palette';
 
-$primary: material-color($hive-primary-palette, 500) !default;
-$app-primary: material-color($hive-primary-palette, 500) !default;
-$app-primary-variant: material-color($hive-primary-palette, 300) !default;
-$app-primary-lighten: material-color($hive-primary-palette, 200) !default;
-$app-primary-darken: material-color($hive-primary-palette, 600) !default;
-$secondary: material-color($hive-warn-palette, 500) !default;
+$primary: var(--hive-primary-palette-500);
+$app-primary: var(--hive-primary-palette-500);
 
-$primary-contrast: material-color($hive-primary-palette, 500) !default;
-$secondary-contrast: material-color($hive-warn-palette, 500) !default;
-$tertiary: material-color($hive-neutral-palette, 500) !default;
-$tertiary-contrast:material-color($hive-neutral-palette, 500) !default;
+$app-primary-variant: var(--hive-primary-palette-300) !default;
+$app-primary-lighten: var(--hive-primary-palette-200) !default;
+$app-primary-darken: var(--hive-primary-palette-600) !default;
+$secondary: var(-hive-warn-palette-500) !default;
+
+$primary-contrast: var(--hive-primary-palette-500) !default;
+$secondary-contrast: var(--hive-warn-palette--500) !default;
+$tertiary: var(--hive-neutral-palette-500) !default;
+$tertiary-contrast:var(--hive-neutral-palette-500) !default;
+
+
+// $app-primary-variant: material-color(#{$hive-primary-palette}, 300) !default;
+// $app-primary-lighten: material-color(#{$hive-primary-palette}, 200) !default;
+// $app-primary-darken: material-color(#{$hive-primary-palette}, 600) !default;
+// $secondary: material-color(#{$hive-warn-palette}, 500) !default;
+
+// $primary-contrast: material-color(#{$hive-primary-palette}, 500) !default;
+// $secondary-contrast: material-color(#{$hive-warn-palette}, 500) !default;
+// $tertiary: material-color(#{$hive-neutral-palette}, 500) !default;
+// $tertiary-contrast:material-color(#{$hive-neutral-palette}, 500) !default;
+
+
 
 $primary-palette-name: $app-primary !important;
-$secondary-palette-name: $secondary !important;
-$theme-type: $app-primary-lighten !important;
+ $secondary-palette-name: $secondary !important;
+  $theme-type: $app-primary-lighten !important;
 
 $info: #a22c23;
 $success: #0f8552;
 $warning: #935c01;
-$error: $error-color-1;
+$error:$error-color-1;
 $dark: get-base-hue(gray, 800);
 $anchor-link: $app-primary;
 
+ 
+
+
 // Kendo Variable to customize colors
-// $kendo-input-bg :$white;
+// $kendo-input-bg :#{$white;
 // $kendo-input-text: #656565;
 // $kendo-input-border : rgba(255, 0, 0, 0.08);
 // $kendo-input-hover-bg :#ffffff;
 // $kendo-input-hover-text : #656565;
-// $kendo-input-hover-border: $primary;
-// $kendo-input-focus-bg: $primary;
-// $kendo-input-focus-text: $primary;
-// $kendo-input-focus-border: $primary;
+// $kendo-input-hover-border: #{$primary;
+// $kendo-input-focus-bg: #{$primary};
+// $kendo-input-focus-text: #{$primary;
+// $kendo-input-focus-border: #{$primary};
 
 /* importing App Component Styles*/
 @import '../../component-styles/app-style.scss';

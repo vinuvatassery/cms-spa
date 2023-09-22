@@ -36,7 +36,7 @@
       }
     }
     .sms-variable-search_close {
-      color: material-color($hive-neutral-palette, 600);
+      color: var(--hive-neutral-palette-600);
       font-size: 13px;
       margin-left: 0;
       .material-icons {
@@ -53,7 +53,7 @@
     overflow: visible;
     width: 100%;
     float: left;
-    background: material-color($hive-neutral-palette, 100);
+    background: var(--hive-neutral-palette-100);
     border: 1px solid $theme-border;
     .k-panelbar-header {
       .k-link {
@@ -61,12 +61,12 @@
         display: flex;
         justify-content: space-between;
         padding: $size-l $size-xl;
-        color: lighten($black-3, 20%);
+        // color: lighten($black-3, 20%);
         cursor: pointer;
         &.k-selected {
-          background-color: material-color($hive-primary-palette, 200);
+          background-color: var(--hive-primary-palette-200);
           &:hover, &.k-focus{
-          background-color: material-color($hive-primary-palette, 300);
+          background-color: var(--hive-primary-palette-300);
   
           }
         }
@@ -91,11 +91,11 @@
           background: $black-e;
           span {
             font-size: $font-size-l;
-            color: material-color($hive-neutral-palette, 900);
+            color: var(--hive-neutral-palette-900);
           }
         }
         .attachment-item_size {
-          color: lighten($black-3, 20%);
+          // color: lighten($black-3, 20%);
           font-size: $font-size-s;
           margin: $size-0 $size-m;
         }
