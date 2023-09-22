@@ -102,7 +102,7 @@ export class FinancialVendorProfileComponent implements OnInit {
         this.profileInfoTitle = 'Pharmacy Info';
         break;
     }
-     this.isClinicalVendor = (vendorProfile.vendorTypeCode == FinancialVendorTypeCode.DentalClinic) || 
+     this.isClinicalVendor = (vendorProfile.vendorTypeCode == FinancialVendorTypeCode.DentalClinic) ||
      (vendorProfile.vendorTypeCode == FinancialVendorTypeCode.MedicalClinic)
   }
   loadVendorInfo() {
@@ -116,7 +116,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   loadSpecialHandling() {
     this.financialVendorFacade.getVendorProfileSpecialHandling(this.vendorId);
   }
-  
+
   loadFinancialVendorProfile(vendorId : string)
   {
     this.financialVendorFacade.getVendorProfile(vendorId,this.tabCode)
