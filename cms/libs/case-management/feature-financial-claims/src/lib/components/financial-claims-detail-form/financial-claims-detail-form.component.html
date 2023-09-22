@@ -23,7 +23,8 @@
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="medicalProvider" (filterChange)="searchMedicalProvider($event)"
                             [data]="pharmacySearchResult$ | async" [(ngModel)]="selectedMedicalProvider"
-                            (valueChange)="onProviderValueChange($event)">
+                            (valueChange)="onProviderValueChange($event)"
+                            (blur)="showNarrowDownServicesList()">
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
@@ -93,7 +94,8 @@
                             placeholder="Search Client Name, ID, SSN or DOB"
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="client" (filterChange)="loadClientBySearchText($event)"
-                            (valueChange)="onClientValueChange($event)" [(ngModel)]="selectedClient">
+                            (valueChange)="onClientValueChange($event)" [(ngModel)]="selectedClient"
+                            (blur)="showNarrowDownServicesList()">
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
@@ -143,7 +145,7 @@
 
         </div>
 
-        <div class="add_new_bottom_section">
+        <div class="add_new_bottom_section" *ngIf="narrowDownServicesList">
 
             <div class="flex-row">
                 <div class="flex-col flex-col-6">

@@ -137,6 +137,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   claimFlagExceptionText = '';
   checkservicescastvalue: any
   exceedMaxBenefitFlag!: boolean;
+  narrowDownServicesList: boolean =false;
   showExceedMaxBenefitException$ = this.financialClaimsFacade.showExceedMaxBenefitException$;
   showIneligibleException$ = this.financialClaimsFacade.showIneligibleException$;
   showBridgeUppException$ = this.financialClaimsFacade.showBridgeUppException$;
@@ -455,9 +456,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       if (this.clientId != null && this.vendorId != null) {
         this.isRecentClaimShow = true;
       }
+      this.narrowDownServicesList= true ;
     }
   }
-
   removeService(i: number) {
     this.addClaimServicesForm.removeAt(i);
     this.addExceptionForm.removeAt(i);
@@ -1139,6 +1140,18 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.showIneligibleSubscription.unsubscribe();
     this.showBridgeUppSubscription.unsubscribe();
     this.showDuplicatePaymentSubscription.unsubscribe();
+  }
+  showNarrowDownServicesList(){
+    if(this.claimForm.controls['medicalProvider'].value &&  this.claimForm.controls['client'].value)
+    {
+      this.narrowDownServicesList = true;
+    }
+    else
+    {
+      this.narrowDownServicesList= false;
+      this.isRecentClaimShow =false;
+      
+    }
   }
 }
 
