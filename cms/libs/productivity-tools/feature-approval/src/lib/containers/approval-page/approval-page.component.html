@@ -23,7 +23,7 @@
       </ng-template>
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Payments">
-      <ng-template kendoTabTitle> Payments  <span class="tab-batch-notify">4</span></ng-template>
+      <ng-template kendoTabTitle> Payments  <span class="tab-batch-notify">{{pendingApprovalCount$ | async}}</span></ng-template>
       <ng-template kendoTabContent>
         <div class="nm-20 approval_container">
         <productivity-tools-approvals-payments-list

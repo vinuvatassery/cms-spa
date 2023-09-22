@@ -84,19 +84,18 @@
 
       <kendo-grid-column field="vendorName" title="Vendor Name" [width]="100"> 
             <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                  <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
+                  <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                       <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
                        <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                   </kendo-grid-numeric-filter-menu>
+                       <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                       <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                   </kendo-grid-string-filter-menu>
                </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="tin" title="TIN" [width]="80">
             <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                   <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
                         <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                        <kendo-filter-gt-operator></kendo-filter-gt-operator>
-                        <kendo-filter-gte-operator></kendo-filter-gte-operator>
-                        <kendo-filter-lt-operator></kendo-filter-lt-operator>
-                        <kendo-filter-lte-operator></kendo-filter-lte-operator>
                   </kendo-grid-numeric-filter-menu>
               </ng-template>
       </kendo-grid-column>
@@ -113,7 +112,11 @@
       </kendo-grid-column>
       <kendo-grid-column field="effectiveDate" title="Effective Date" [width]="100">
             <ng-template kendoGridCellTemplate let-dataItem>
-              {{dataItem.effectiveDate |date:'MM/dd/YYYY hh:mm:ss'}}
+              {{dataItem.effectiveDate | date:'MM/dd/yyyy'}}
+          </ng-template>
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <common-grid-cell-date-range-filter [field]="'effectiveDate'" [filter]="filter" [filterService]="filterService">
+            </common-grid-cell-date-range-filter>
           </ng-template>
           </kendo-grid-column>
 
@@ -140,6 +143,14 @@
                 </ng-template>
               </kendo-popover>
             </ng-template>
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                  <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                       <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                       <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                       <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                       <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                   </kendo-grid-string-filter-menu>
+               </ng-template>
           </kendo-grid-column>
 
           <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="50" class="text-center">
@@ -206,7 +217,7 @@
       <cms-financial-clinic-provider-details 
       (closeProviderEvent)="clickCloseAddEditProvidersDetails()"
       (loadProviderListEvent)="loadProviderListGrid()" 
-      [parentVendorId]="ParentVendorId" [vendorTypeCode]="vendorTypeCode"> </cms-financial-clinic-provider-details>
+      [parentVendorId]="ParentVendorId" [addProviderNew$]="addProviderNew$" [vendorTypeCode]="vendorTypeCode"> </cms-financial-clinic-provider-details>
 </kendo-dialog>
 <kendo-dialog *ngIf="isProvidersRemoveShow" (close)="clickCloseRemoveProviders()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">

@@ -9,6 +9,7 @@ import {
   OnInit,
   ViewChild,
   TemplateRef,
+  OnDestroy
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
@@ -19,13 +20,14 @@ import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-claims-detail-form',
   templateUrl: './financial-claims-detail-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsDetailFormComponent implements OnInit {
+export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   @ViewChild('pcaExceptionDialogTemplate', { read: TemplateRef })
   pcaExceptionDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -146,6 +148,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   bridgeUppPriorityArray = ['ineligibleExceptionFlag', 'exceedMaxBenefitExceptionFlag', 'duplicatePaymentExceptionFlag', 'oldInvoiceExceptionFlag'];
   dateFormat = this.configProvider.appSettings.dateFormat;
   providerTin: any;
+  private showExceedMaxBenefitSubscription !: Subscription;
+  private showIneligibleSubscription !: Subscription;
+  private showBridgeUppSubscription !: Subscription;
+  private showDuplicatePaymentSubscription !: Subscription;
 
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
@@ -202,7 +208,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
   checkExceptions()
   {
-    this.showExceedMaxBenefitException$.subscribe(data => {
+    this.showExceedMaxBenefitSubscription = this.showExceedMaxBenefitException$.subscribe(data => {
       if(data)
       {
         if(data?.flag)
@@ -216,7 +222,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         this.cd.detectChanges();
       }
     });
-    this.showIneligibleException$.subscribe(data => {
+    this.showIneligibleSubscription = this.showIneligibleException$.subscribe(data => {
       if(data?.flag)
       {
         this.resetExceptionFields(data?.indexNumber);
@@ -231,14 +237,11 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlag')?.setValue(data?.flag);
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.Ineligible : '')
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
-        let serviceFormData = this.addClaimServicesForm.at(data?.indexNumber) as FormGroup;
-        let startDate = serviceFormData.controls['serviceStartDate'].value;
-        let endDate = serviceFormData.controls['serviceEndDate'].value;
         this.checkDuplicatePaymentException(data?.indexNumber);
-        this.checkOldInvoiceException(startDate,endDate, data?.indexNumber);
+        this.checkOldInvoiceException(data?.indexNumber);
       }
     });
-    this.showBridgeUppException$.subscribe(data => {
+    this.showBridgeUppSubscription = this.showBridgeUppException$.subscribe(data => {
       if(data)
       {
         if(data?.flag)
@@ -252,7 +255,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         this.cd.detectChanges();
       }
     });
-    this.showDuplicatePaymentException$.subscribe(data => {
+    this.showDuplicatePaymentSubscription = this.showDuplicatePaymentException$.subscribe(data => {
       if(data)
       {
         if(data?.flag)
@@ -587,7 +590,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       bodyData.tpaInvoices.push(service);
     }
     bodyData.tpaInvoices.splice(0, 1);
-    if(checkDeniedClaim || (bodyData?.exceptionFlag === StatusFlag.Yes && !bodyData?.exceptionReasonCode))
+    if((checkDeniedClaim || (bodyData?.exceptionFlag === StatusFlag.Yes && !bodyData?.exceptionReasonCode)) && !isPcaAssigned)
     {
       this.printDenialLetterData = bodyData;
       this.onPrintDenialLetterOpen();
@@ -1002,12 +1005,15 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     }
     this.cd.detectChanges();
   }
-  checkOldInvoiceException(serviceStartDate:any, serviceEndDate:any, index:number)
+  checkOldInvoiceException(index:number)
   {
     if(!this.checkPriority(this.oldInvoicePriorityArray,index,'providerNotEligibleExceptionFlag'))
     {
       return;
     }
+    const serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
+    const serviceStartDate = serviceFormData.controls['serviceStartDate'].value;
+    const serviceEndDate = serviceFormData.controls['serviceEndDate'].value;
     if(serviceEndDate && serviceStartDate)
     {
       let today = new Date();
@@ -1115,6 +1121,12 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   {
     this.loadServiceCostMethod(index);
     this.checkDuplicatePaymentException(index);
+  }
+  ngOnDestroy(): void {
+    this.showExceedMaxBenefitSubscription.unsubscribe();
+    this.showIneligibleSubscription.unsubscribe();
+    this.showBridgeUppSubscription.unsubscribe();
+    this.showDuplicatePaymentSubscription.unsubscribe();
   }
 }
 
