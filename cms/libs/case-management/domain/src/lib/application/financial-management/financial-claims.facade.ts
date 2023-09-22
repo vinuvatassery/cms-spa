@@ -717,8 +717,4 @@ checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalA
   })
   this.hideLoader();
 }
-
-loadMedicalPremiumPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, claimsType: any) {
-  return this.financialClaimsDataService.loadMedicalPremiumPrintAdviceLetterData(batchId, printAdviceLetterData, claimsType);
-}
 }

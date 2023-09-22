@@ -476,8 +476,4 @@ export class FinancialClaimsDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/duplicate-payment-check?serviceStartDate=${startDtae}&serviceEndDate=${endDate}&vendorId=${vendorId}&amount=${totalAmountDue}`
     );
   }
-
-  loadMedicalPremiumPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, claimsType: any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/batches/${batchId}/print-advice-letter`, printAdviceLetterData);
-  }
 }

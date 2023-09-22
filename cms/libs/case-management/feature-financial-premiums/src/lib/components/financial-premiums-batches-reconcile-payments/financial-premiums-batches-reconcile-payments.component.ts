@@ -84,10 +84,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   public currentDate =  new Date();
   datePaymentReconciledRequired= false;
   paymentSentDateRequired= false;
-  isSaveClicked : boolean = false;
   tAreaCessationMaxLength:any=200;
   pageValidationMessage:any=null;
-  selectedReconcileDataRows: any[] = [];
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   providerTitle:any = 'Medical Provider';
 

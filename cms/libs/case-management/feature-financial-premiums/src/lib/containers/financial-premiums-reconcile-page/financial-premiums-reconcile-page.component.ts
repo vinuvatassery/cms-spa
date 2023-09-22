@@ -5,6 +5,7 @@ import {FinancialPremiumsFacade, GridFilterParam } from '@cms/case-management/do
 import { Router,  NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs';
 import { LoggingService } from '@cms/shared/util-core';
+import { FinancialClaimsFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-financial-premiums-reconcile-page',
@@ -28,8 +29,10 @@ export class FinancialPremiumsReconcilePageComponent implements OnInit {
   reconcileBreakoutList$ = this.financialPremiumsFacade.reconcileBreakoutList$;
   batchId:any;
   premiumType: any;
+  claimsType: any;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly router: Router,
     private readonly cdr: ChangeDetectorRef,
     private loggingService: LoggingService,
@@ -37,7 +40,8 @@ export class FinancialPremiumsReconcilePageComponent implements OnInit {
     
   ) {}
   ngOnInit(): void {
-    this.premiumType =this.financialPremiumsFacade.getPremiumType(this.router)
+    this.premiumType =this.financialPremiumsFacade.getPremiumType(this.router);
+    this.claimsType = this.financialClaimsFacade.getClaimsType(this.router);
     this.addNavigationSubscription();
     this.getQueryParams();
   }

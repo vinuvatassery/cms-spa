@@ -256,4 +256,16 @@ export class FinancialPremiumsFacade {
         },
       });
     }
+
+  loadMedicalPremiumPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, claimsType: any) {
+    return this.financialPremiumsDataService.loadMedicalPremiumPrintAdviceLetterData(batchId, printAdviceLetterData, claimsType);
+  }
+
+  reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any,claimsType:any) {
+    return this.financialPremiumsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData,claimsType);
+}
+
+viewAdviceLetterData(batchId:any,printAdviceLetterData: any, claimsType:any) {
+  return this.financialPremiumsDataService.viewPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
+}
 }

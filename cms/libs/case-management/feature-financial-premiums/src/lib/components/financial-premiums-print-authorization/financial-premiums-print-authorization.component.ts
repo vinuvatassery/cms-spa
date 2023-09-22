@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 	/** Internal Libraries **/
-import {FinancialClaimsFacade } from '@cms/case-management/domain';
+import { FinancialPremiumsFacade } from '@cms/case-management/domain';
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 @Component({
@@ -35,12 +35,7 @@ export class FinancialPremiumsPrintAuthorizationComponent {
       private readonly loggingService: LoggingService,
       private readonly notificationSnackbarService : NotificationSnackbarService,
       private readonly ref: ChangeDetectorRef,
-      private readonly financialClaimsFacade: FinancialClaimsFacade) { }
-  // printLetterCount: number = this.items.length;
-  // ngOnInit(): void {
-  //   this.finalPrintList = this.items;
-  //   this.getPrintLetterCount();
-  // }
+      private readonly financialPremiumsFacade: FinancialPremiumsFacade) { }
 
   ngOnInit(): void {
     if(this.items['print']){
@@ -57,9 +52,9 @@ export class FinancialPremiumsPrintAuthorizationComponent {
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
-      this.loggingService.logException(err)
+      this.loggingService.logException(err);
     }
-    this.notificationSnackbarService.manageSnackBar(type, subtitle)
+    this.notificationSnackbarService.manageSnackBar(type, subtitle);
     this.hideLoader();
   }
 
@@ -109,7 +104,7 @@ export class FinancialPremiumsPrintAuthorizationComponent {
 
   generateAndPrintAdviceLetter(request:any) {
     this.loaderService.show();
-    this.financialClaimsFacade.viewAdviceLetterData(this.batchId, request, this.claimsType)
+    this.financialPremiumsFacade.viewAdviceLetterData(this.batchId, request, this.claimsType)
       .subscribe({
         next: (data: any) => {
           if (data) {
@@ -130,7 +125,7 @@ export class FinancialPremiumsPrintAuthorizationComponent {
   reconcilePaymentsAndPrintAdviceLetter() {
     this.loaderService.show();
     let reconcileData = this.reconcilePaymentsData(this.finalPrintList);
-    this.financialClaimsFacade.reconcilePaymentsAndLoadPrintLetterContent(this.batchId, reconcileData,this.claimsType)
+    this.financialPremiumsFacade.reconcilePaymentsAndLoadPrintLetterContent(this.batchId, reconcileData,this.claimsType)
       .subscribe({
         next: (data: any) => {
           if (data) {
@@ -169,7 +164,7 @@ export class FinancialPremiumsPrintAuthorizationComponent {
 
   loadPrintLetterContent(request:any) {
     this.loaderService.show();
-    this.financialClaimsFacade.loadMedicalPremiumPrintAdviceLetterData(this.batchId,request,this.claimsType)
+    this.financialPremiumsFacade.loadMedicalPremiumPrintAdviceLetterData(this.batchId,request,this.claimsType)
       .subscribe({
         next: (data: any[]) => {
           if (data.length > 0) {
