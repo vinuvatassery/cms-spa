@@ -14,6 +14,11 @@
                                 <cms-financial-premiums-process-list   [premiumsType]="premiumType"   [financialPremiumsProcessGridLists$]="financialPremiumsProcessGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPremiumsProcess"
                                 [sortType]="sortType" [sort]="sortProcessList" 
+                                [insurancePlans$]="insurancePlans$"
+                                [insurancePlansLoader$]="insurancePlansLoader$"
+                                [insuranceCoverageDates$]="insuranceCoverageDates$"
+                                [insuranceCoverageDatesLoader$]="insuranceCoverageDatesLoader$"
+                                (clientChangeEvent)="loadInsurancePlans($event)"
                                 (loadFinancialPremiumsProcessListEvent)="loadFinancialPremiumsProcessListGrid($event)"></cms-financial-premiums-process-list>
                             </div>
                         </ng-template>

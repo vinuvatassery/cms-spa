@@ -11,6 +11,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { ClientInsurancePlans } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
@@ -19,7 +20,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 @Component({
   selector: 'cms-financial-premiums-process-list',
   templateUrl: './financial-premiums-process-list.component.html', 
@@ -55,6 +56,11 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialPremiumsProcessGridLists$: any;
+  @Input() insurancePlans$!: Observable<ClientInsurancePlans[]>;
+  @Input() insurancePlansLoader$: any;
+  @Input() insuranceCoverageDates$: any;
+  @Input() insuranceCoverageDatesLoader$: any;
+  @Output() clientChangeEvent = new EventEmitter<any>();
   @Output() loadFinancialPremiumsProcessListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'vendorName';
@@ -280,7 +286,7 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
   onClickOpenAddPremiumsFromModal(template: TemplateRef<unknown>): void {
     this.addPremiumsFormDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-lg-100 app-c-modal-np',
     });
   }
   modalCloseAddPremiumsFormModal(result: any) {
@@ -321,6 +327,10 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
     if (result) { 
       this.addClientRecentPremiumsDialog.close();
     }
+  }
+
+  loadInsurancePlans(clientId: number){
+    this.clientChangeEvent.emit(clientId);
   }
  
 }

@@ -4,6 +4,9 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { Observable } from 'rxjs';
+import { InsurancePlan } from '../../entities/insurance-plan';
+import { ClientInsurancePlans } from '../../entities/financial-management/client-insurance-plan';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsDataService {
@@ -465,6 +468,18 @@ export class FinancialPremiumsDataService {
     }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${data.premiumsType}/payments/payment-reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto
+    );
+  }
+
+  loadInsurancePlans(clientId: number): Observable<ClientInsurancePlans[]>{
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/plans`
+    );
+  }
+
+  loadInsurancePlansCoverageDates(clientId: number){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/converge-dates`
     );
   }
 

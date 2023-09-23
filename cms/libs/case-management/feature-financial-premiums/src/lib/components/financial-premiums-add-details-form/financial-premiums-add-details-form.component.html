@@ -1,80 +1,206 @@
 
 <kendo-dialog-titlebar (close)="closeAddPremiumClicked()"> Add Premium</kendo-dialog-titlebar>
-
-
 <section class="k-dialog-body">
       <p class="text-muted mb-1">  Search for a client to add their premium payment(s). If a client has multiple insurance plans, select which ones to add. </p>
-
-      
       <div class="flex-row">
             <div class="flex-col">
                 <div class="combotable_search_list  combo-search-wrapper mb-3">
                     <span class="material-icons global-search-icon" aria-label="search" aria-hidden="true">search</span>
-                    <span *ngIf="isShownSearchLoader"
-                        class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                  
-                        <kendo-multicolumncombobox [data]="providerSearchResult" textField="fullName"
-                        valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
-                        placeholder="Search Client Name, ID Number, DOB, or SSN"
-                        [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-                        formControlName="itemSelected">
+                    <span *ngIf="clientSearchLoader$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+                        <kendo-multicolumncombobox 
+                            autofocusfield
+                            placeholder="Search Client Name, ID Number, DOB, or SSN"
+                            textField="clientFullName"
+                            valueField="clientId" 
+                            class="'k-invalid': showClientRequiredValidation"
+                            [fillMode]="formUiStyle.dropDownFillMode"
+                            [filterable]="true"
+                            [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" 
+                            [data]="clients$ | async"
+                            (filterChange)="loadClients($event)"
+                            (valueChange)="clientChanged($event)"
+                            [(ngModel)]="selectedClient"
+                        >
                         <button kendoButton fillMode="clear" icon="image"></button>
-
                         <kendo-combobox-column >
                             <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                <span>{{ dataItem.fullName }}</span>
+                                <span>{{ dataItem.clientFullName }}</span>
                             </ng-template>
                         </kendo-combobox-column>
                         <kendo-combobox-column [width]="100">
                               <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                  <span class="text-muted">ID:{{ dataItem.clientId }}</span>
+                                  <span class="text-muted"><em> ID:</em>{{ dataItem.clientId }}</span>
                               </ng-template>
                           </kendo-combobox-column>
-                          <kendo-combobox-column [width]="80">
+                          <kendo-combobox-column [width]="120">
                               <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                  <span class="text-muted">{{ dataItem.status }}</span>
+                                  <span class="text-muted">{{ dataItem.caseStatus }}</span>
                               </ng-template>
                           </kendo-combobox-column>
 
                         <kendo-combobox-column [width]="140">
                             <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                <span class="text-muted"><em> DOB:</em> {{ dataItem.dob }}</span>
+                                <span class="text-muted"><em> DOB:</em> {{ dataItem.dob | date: 'MM/dd/yyyy' }}</span>
                             </ng-template>
                         </kendo-combobox-column>
                         <kendo-combobox-column [width]="160">
                               <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                  <span class="text-muted"><em> SSN:</em> {{ dataItem.ssn }}</span>
+                                  <span class="text-muted"><em> SSN:</em> {{ dataItem.ssn | ssn }}</span>
                               </ng-template>
                           </kendo-combobox-column>
 
                     </kendo-multicolumncombobox>
+                    <kendo-formerror class="d-flex align-items-center" *ngIf="showClientRequiredValidation">                    
+                        <span class="material-icons mr-1" aria-hidden="false">info</span>  Client is required
+                    </kendo-formerror>
                 </div>
             </div>
         </div>
         <div>
             <div class="app-c-table">
-                  <kendo-grid [resizable]="true"  
-                         [sortable]="true"   
-                       [resizable]="true"
-                          
-                        [data]="addPremiumGridLists$ | async">
-                        <kendo-grid-checkbox-column   [showSelectAll]="true"  [width]="40"></kendo-grid-checkbox-column>
-                        <kendo-grid-column field="insuranceCarrier" title="Insurance Carrier" [width]="160">
-                            
+                  <kendo-grid 
+                    [resizable]="true"  
+                    [sortable]="true"   
+                    [resizable]="true"
+                    [isDetailExpanded]="expandRows"
+                    [data]="insurancePlans$ | async"
+                    [loading]="(insurancePlansLoader$ | async) == true"
+                    [data]="addPremiumGridLists$ | async">
+                        <kendo-grid-column  title="" [width]="80">
+                            <ng-template kendoGridCellTemplate let-dataItem>                  
+                                  <input type="checkbox" id="insurancePlan" name="insurancePlan"
+                                  aria-labelledby="insurancePlan" kendoCheckBox [(ngModel)]="dataItem.isPlanSelected"
+                                  />                                 
+                            </ng-template>
                         </kendo-grid-column>
-                         
-                        <kendo-grid-column field="planName" title="Plan Name" [width]="180">
+                        <kendo-grid-column field="vendorName" title="Vendor" [width]="180">
                         </kendo-grid-column>
-                        <kendo-grid-column field="type" title="Insurance Type" [width]="160">
+                        <kendo-grid-column field="carrierName" title="Insurance Carrier" [width]="160">
                         </kendo-grid-column>
-                        <kendo-grid-column field="dates" title="Coverage Dates" [width]="160">
+                        <kendo-grid-column field="insurancePlanName" title="Plan Name" [width]="180">
                         </kendo-grid-column>
-                        <kendo-grid-column field="amount" title="Premium Amount" [width]="160">
+                        <kendo-grid-column field="healthInsuranceType" title="Insurance Type" [width]="160">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="" title="Option" [columnMenu]="false" [width]="40" class="text-center" >
                             <ng-template kendoGridCellTemplate let-dataItem>
-                                <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmount}}</span>
-                              </ng-template> 
-                        </kendo-grid-column>
-                        
+                              <kendo-dropdownbutton [data]="insurancePlansAction" icon="more-vertical"
+                                class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
+                                aria-label="more actions" title="More option"
+                                [popupSettings]="{ popupClass: popupClassAction, animate: true }"
+                                *ngIf="!dataItem?.coverages || dataItem?.coverages?.length === 0">
+                                <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+                                  <ng-container>
+                                    <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                                      [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                                      <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                                      <label> {{ buttondataItem.text }} </label>
+                                    </button>
+                                  </ng-container>  </ng-template>
+                              </kendo-dropdownbutton>
+                            </ng-template>
+                          </kendo-grid-column>
+                        <ng-template kendoGridDetailTemplate let-dataItem let-policyId="dataItem.clientInsurancePolicyId">
+                            <kendo-grid 
+                            [resizable]="true"  
+                            [sortable]="true"   
+                            [resizable]="true"  
+                            [data]="dataItem.coverages" 
+                            class="vert-top"                   
+                            >
+                            <kendo-grid-column field="coverageDates" title="Coverage Date" [width]="100">
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">   
+                                    <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
+                                        placeholder="Coverage Date"
+                                        [data]="coverageDateList"
+                                        textField="converageDate" 
+                                        valueField="converageStartDate" 
+                                        [valuePrimitive]="true"
+                                        [(ngModel)]="dataItem.coverageDates"
+                                        (valueChange)="coverageDatesValueChanges(policyId, dataItem, $event)"
+                                        >
+                                    </kendo-dropdownlist>
+                                     <kendo-formerror *ngIf="dataItem.coverageDateRequired">
+                                        Coverage Date is required
+                                    </kendo-formerror>
+                                    <kendo-formerror *ngIf="dataItem.coverageDatesExist">
+                                        Premium already exist
+                                    </kendo-formerror>
+                                 <!-- <kendo-formerror class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                      aria-hidden="false">info</span> Premium already exist!
+                              </kendo-formerror> -->
+                                </ng-template>
+                            </kendo-grid-column>
+                            <kendo-grid-column field="premiumAmount" title="Premium Amount" [width]="80">
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                    <kendo-numerictextbox 
+                                    [autoCorrect]="true"
+                                    [spinners]="false"
+                                    aria-label="Premium Amount" 
+                                    class="input-icon-right" 
+                                    placeholder="00.00"     
+                                    [fillMode]="formUiStyle.inputFillMode"
+                                    format="c2" 
+                                    [min]="0"
+                                    [decimals]="2"
+                                    [maxlength]="15"
+                                    [(ngModel)]="dataItem.premiumAmount"
+                                    (valueChange)="premiumAmountValuesChanges(dataItem, $event)"
+                                    >
+                                </kendo-numerictextbox>
+                                <kendo-formerror *ngIf="dataItem.premiumAmountRequired">
+                                    Premium Amount is required
+                                </kendo-formerror>
+                                </ng-template>
+                            </kendo-grid-column>
+                            <kendo-grid-column field="comment" title="Comment" [width]="100">
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">   
+                                    <kendo-textarea 
+                                    aria-label="Comment" 
+                                    [maxlength]="100" 
+                                    [rows]="1"
+                                    [fillMode]="formUiStyle.inputFillMode"
+                                    resizable="none"                                                                
+                                    (valueChange)="commentCounterChange(dataItem, $event)"
+                                    [(ngModel)]="dataItem.comment"
+                                    > 
+                                    <kendo-textarea-suffix class="justify-content-end">
+                                          <span class="counter">{{ dataItem.commentCount }}</span>
+                                    </kendo-textarea-suffix>
+                              </kendo-textarea>
+                                </ng-template>
+                            </kendo-grid-column>
+                            <kendo-grid-column field="exception" title="Exception Reason" [width]="100">
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">   
+                                    <kendo-textarea 
+                                    aria-label="Exception Reason" 
+                                    [maxlength]="100" 
+                                    [rows]="1"
+                                    [fillMode]="formUiStyle.inputFillMode"
+                                    resizable="none"                                                                
+                                    (valueChange)="exceptionReasonCounterChange(dataItem, $event)"
+                                    [(ngModel)]="dataItem.exceptionReason"> 
+                                    <kendo-textarea-suffix class="justify-content-end">
+                                          <span class="counter">{{ dataItem.exceptionReasonCount }}</span>
+                                    </kendo-textarea-suffix>
+                              </kendo-textarea>
+                                <!-- <kendo-formerror >
+                                Exception Reason is required
+                              </kendo-formerror> -->
+                                </ng-template>
+                            </kendo-grid-column>
+                            <kendo-grid-column title="Option" [width]="30" class="text-center">
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                    <button kendoButton fillMode="flat"  class="clear-icon-btn ml-3" themeColor="error"  aria-label="Delete " title="Delete"  (click)="removeCoverage(policyId, dataItem)">
+                                        <span class="material-icons">  delete   </span>
+                                    </button>
+                                </ng-template>
+                              </kendo-grid-column>
+                        </kendo-grid>
+                        <br/>
+                            <button kendoButton [primary]="true" icon="add"  aria-label="add pharmacy" (click)="addCoverage(dataItem)">
+                            Premium
+                            </button>
+                          </ng-template>
                          <ng-template kendoGridLoadingTemplate>
                               <common-grid-loader-component></common-grid-loader-component>
                         </ng-template>
@@ -103,7 +229,7 @@
           >
             Cancel
           </button>
-          <button kendoButton [primary]="true" aria-label="Add"  >
+          <button kendoButton [primary]="true" aria-label="Add" (click)="save()"   >
               Add
           </button>
         </div>

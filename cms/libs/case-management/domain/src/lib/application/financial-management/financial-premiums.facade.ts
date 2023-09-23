@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  Subject } from 'rxjs';
+import {  BehaviorSubject, Subject } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -89,6 +89,18 @@ export class FinancialPremiumsFacade {
 
   private reconcileBreakoutSummaryDataSubject = new Subject<any>();
   reconcileBreakoutSummary$ =this.reconcileBreakoutSummaryDataSubject.asObservable();
+
+  private insurancePlansSubject = new Subject<any>();
+  insurancePlans$ =this.insurancePlansSubject.asObservable();
+
+  private insurancePlansLoaderSubject = new BehaviorSubject<any>(false);
+  insurancePlansLoader$ =this.insurancePlansLoaderSubject.asObservable();
+
+  private insuranceCoverageDatesSubject = new Subject<any>();
+  insuranceCoverageDates$ =this.insuranceCoverageDatesSubject.asObservable();
+
+  private insuranceCoverageDatesLoaderSubject = new BehaviorSubject<any>(false);
+  insuranceCoverageDatesLoader$ =this.insuranceCoverageDatesSubject.asObservable();
   
   /** Private properties **/
  
@@ -255,5 +267,36 @@ export class FinancialPremiumsFacade {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       });
+    }
+
+    loadInsurancePlans(clientId: number){
+      this.insurancePlansLoaderSubject.next(true);
+      this.financialPremiumsDataService.loadInsurancePlans(clientId)
+      .subscribe({
+        next: (dataResponse) => {
+            this.insurancePlansLoaderSubject.next(false);
+            this.insurancePlansSubject.next(dataResponse);
+            this.loadInsurancePlansCoverageDates(clientId);
+        },
+        error: (err) => {
+          this.insurancePlansLoaderSubject.next(false);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+
+    loadInsurancePlansCoverageDates(clientId: number){
+      this.insuranceCoverageDatesLoaderSubject.next(true);
+      this.financialPremiumsDataService.loadInsurancePlansCoverageDates(clientId)
+      .subscribe({
+        next: (dataResponse) => {
+            this.insuranceCoverageDatesLoaderSubject.next(false);
+            this.insuranceCoverageDatesSubject.next(dataResponse);
+        },
+        error: (err) => {
+          this.insuranceCoverageDatesLoaderSubject.next(false);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
     }
 }

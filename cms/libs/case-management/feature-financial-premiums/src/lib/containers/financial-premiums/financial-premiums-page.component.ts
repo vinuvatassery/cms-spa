@@ -38,6 +38,10 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.financialPremiumsBatchData$;
   financialPremiumsAllPaymentsGridLists$ =
     this.financialPremiumsFacade.financialPremiumsAllPaymentsData$;
+   insurancePlans$= this.financialPremiumsFacade.insurancePlans$;
+   insurancePlansLoader$= this.financialPremiumsFacade.insurancePlansLoader$;
+   insuranceCoverageDates$= this.financialPremiumsFacade.insuranceCoverageDates$;
+   insuranceCoverageDatesLoader$= this.financialPremiumsFacade.insuranceCoverageDatesLoader$;
     
   premiumType: any;
   constructor(
@@ -75,5 +79,13 @@ export class FinancialPremiumsPageComponent implements OnInit {
 
   loadFinancialPremiumsAllPaymentsListGrid(event: any) {
     this.financialPremiumsFacade.loadFinancialPremiumsAllPaymentsListGrid();
+  }
+
+  loadInsurancePlans(clientId: number){
+    this.financialPremiumsFacade.loadInsurancePlans(clientId);
+  }
+
+  loadInsurancePlansCoverageDates(clientId: number){
+    this.financialPremiumsFacade.loadInsurancePlansCoverageDates(clientId);
   }
 }
