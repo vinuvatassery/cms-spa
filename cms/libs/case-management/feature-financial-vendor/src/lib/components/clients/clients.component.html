@@ -23,9 +23,10 @@
       [data]="providerClientGridView$ | async"
       [filter]="state.filter"
       (dataStateChange)="dataStateChange($event)"
-      (filterChange)="filterChange($event)">
+      (filterChange)="filterChange($event)"
+      (columnVisibilityChange)="columnChange()">
 
-        <kendo-grid-column field="clientName" title="Client Name" [width]="150">
+        <kendo-grid-column field="clientName" title="Client Name" [width]="150"  [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button aria-label="Client name" kendoButton look="flat" class="card-link-button"
             (click)="onClientClicked(dataItem.clientId)">

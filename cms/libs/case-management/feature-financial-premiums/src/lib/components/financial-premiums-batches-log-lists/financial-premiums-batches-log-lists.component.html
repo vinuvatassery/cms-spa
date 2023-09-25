@@ -34,11 +34,14 @@
       </section>
       <!-- Sorted Info -->
       <div class="table-sorted-info">
-        Sorted Descending by <span class="sort-items"> Source </span>
-        <span class="sort-items">No Filters</span>
-        <span class="sort-items">Filtered by Vendor Name</span>
-        <span class="sort-items">Default Columns</span>
-        <span class="sort-items">Columns Re-ordered</span>
+        Sorted {{sortDir}} by <span class="sort-items">  {{sortColumn}} </span>
+        <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
+        <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
+        <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
+        <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
+        <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+          <a>Set to Default</a>
+        </button>
       </div>
 
 
@@ -49,33 +52,127 @@
           [selectable]="true" [data]="batchLogGridLists$ | async">
           <kendo-grid-checkbox-column  [columnMenu]="false" [showSelectAll]="true"
             [width]="40"></kendo-grid-checkbox-column>
-          <kendo-grid-column field="vendorName" title="Item #" [width]="160">
-
+          <kendo-grid-column field="itemNbr" title="Item #" [width]="160">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+              <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
+                   <kendo-filter-eq-operator></kendo-filter-eq-operator>
+               </kendo-grid-numeric-filter-menu>
+           </ng-template>
           </kendo-grid-column>
-          <kendo-grid-column field="insuranceVendor" title="Insurance Vendor" [width]="200">
+          <kendo-grid-column field="vendorName" title="Insurance Vendor" [width]="200">
             <ng-template kendoGridCellTemplate let-dataItem>
               <button aria-label="Insurance Vendor" kendoButton look="flat" class="card-link-button">
-                {{ dataItem.insuranceVendor }}
+                {{ dataItem.vendorName }}
               </button>
-            </ng-template> </kendo-grid-column>
+            </ng-template>
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+              <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                   <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                   <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                   <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                   <kendo-filter-contains-operator></kendo-filter-contains-operator>
+               </kendo-grid-string-filter-menu>
+           </ng-template>
+          </kendo-grid-column>
 
-          <kendo-grid-column field="clientName" title="Item Count" [width]="160">
-           
+          <kendo-grid-column field="serviceCount" title="Item Count" [width]="160">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+              <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+              </kendo-grid-numeric-filter-menu>
+          </ng-template>
           </kendo-grid-column>
-          <kendo-grid-column field="refundWarrant" title="Total Amount" [width]="150">  <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="tableamountview"> <strong>$</strong> {{dataItem.refundWarrant}}</span>
-          </ng-template> </kendo-grid-column>
-          <kendo-grid-column field="refundAmount" title="Accepts reports?" [width]="180"> </kendo-grid-column>
-          <kendo-grid-column field="depositDate" title="Date Pmt. Requested" [width]="180"> </kendo-grid-column>
-          <kendo-grid-column field="depositMethod" title="Date Pmt. Sent" [width]="200">
+          <kendo-grid-column field="serviceCost" title="Total Amount" [width]="150">  <ng-template kendoGridCellTemplate let-dataItem>         
+            <span class="tableamountview"> {{dataItem.serviceCost | kendoNumber : "c"}}</span>
+          </ng-template>
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                  <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                  <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                  <kendo-filter-lte-operator></kendo-filter-lte-operator>
+            </kendo-grid-numeric-filter-menu>
+        </ng-template>
+        </kendo-grid-column>
+          <kendo-grid-column field="acceptsReports" title="Accepts reports?" [width]="180">
+            <ng-template kendoGridCellTemplate let-dataItem>             
+                {{ dataItem.acceptsReports === 'Y' ? 'Yes' : 'No' }}             
+            </ng-template> 
+            <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter" let-filterService="filterService">
+              <kendo-dropdownlist   [data]="yesOrNoLovs"   textField="lovDesc" valueField="lovCode"  [value]="acceptReportValue"
+              (valueChange)="dropdownFilterChange('acceptsReports',$event, filterService)">
+              </kendo-dropdownlist>
+            </ng-template>
           </kendo-grid-column>
-          <kendo-grid-column field="indexCode" title="Pmt. Method" [width]="140"> </kendo-grid-column>
-          <kendo-grid-column field="pca" title="Pmt. Status" [width]="140"> </kendo-grid-column>
-          <kendo-grid-column field="grant" title="PCA" [width]="120"> </kendo-grid-column>
-          <kendo-grid-column field="vp" title="Mail Code" [width]="140"> </kendo-grid-column>
+          <kendo-grid-column field="paymentRequestedDate" title="Date Pmt. Requested" [width]="180"> 
+            <ng-template kendoGridCellTemplate let-dataItem>
+              {{dataItem.paymentRequestedDate | date:'MM/dd/yyyy'}}
+          </ng-template>
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <common-grid-cell-date-range-filter
+              [field]="'paymentRequestedDate'"
+              [filter]="filter"
+              [filterService]="filterService"
+            >
+            </common-grid-cell-date-range-filter>
+      </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="paymentSentDate" title="Date Pmt. Sent" [width]="200">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              {{dataItem.paymentSentDate | date:'MM/dd/yyyy'}}
+          </ng-template>
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <common-grid-cell-date-range-filter
+              [field]="'paymentSentDate'"
+              [filter]="filter"
+              [filterService]="filterService"
+            >
+            </common-grid-cell-date-range-filter>
+      </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="paymentMethodCode" title="Pmt. Method" [width]="140">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+              <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                   <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                   <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                   <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                   <kendo-filter-contains-operator></kendo-filter-contains-operator>
+               </kendo-grid-string-filter-menu>
+           </ng-template> </kendo-grid-column>
+          <kendo-grid-column field="paymentStatusCode" title="Pmt. Status" [width]="140"> 
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+              <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                   <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                   <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                   <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                   <kendo-filter-contains-operator></kendo-filter-contains-operator>
+               </kendo-grid-string-filter-menu>
+           </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="pca" title="PCA" [width]="120">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+              <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
+                   <kendo-filter-eq-operator></kendo-filter-eq-operator>
+               </kendo-grid-numeric-filter-menu>
+           </ng-template>  
+          </kendo-grid-column>
+          <kendo-grid-column field="mailCode" title="Mail Code" [width]="140">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+              <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                   <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                   <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                   <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                   <kendo-filter-contains-operator></kendo-filter-contains-operator>
+               </kendo-grid-string-filter-menu>
+           </ng-template> </kendo-grid-column>
  
 
-          <kendo-grid-column field="Option" title=" "  [columnMenu]="false" [width]="50"
+          <kendo-grid-column field="Option" title="Options"  [columnMenu]="false" [width]="70"
             class="text-center">
             <ng-template kendoGridCellTemplate let-dataItem>
               <kendo-dropdownbutton [data]="batchLogGridActions" icon="more-vertical"
@@ -95,7 +192,7 @@
               </kendo-dropdownbutton>
             </ng-template>
           </kendo-grid-column>
-          <div *kendoGridDetailTemplate="let dataItem">
+          <!-- <div *kendoGridDetailTemplate="let dataItem">
             <kendo-grid [resizable]="true" [navigable]="true" [data]="dataItem.invoiceServices"
               [loading]="dataItem.IsInvoiceServiceLoader">
       
@@ -120,7 +217,7 @@
               <kendo-grid-column field="paymentTypeDesc" title="Payment ID" [width]="140"> </kendo-grid-column>
                
             </kendo-grid>
-          </div>
+          </div> -->
 
           <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
             let-currentPage="currentPage">
@@ -223,3 +320,14 @@
     </div>
   </kendo-dialog-actions>
 </ng-template>
+
+<ng-template #PrintAuthorizationDialogTemplate>
+  <kendo-dialog-titlebar  class="text-normal"  (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Advice Letter(s)</kendo-dialog-titlebar>
+  <cms-financial-premiums-print-authorization
+  [printOption]="onlyPrintAdviceLetter"
+  [items]="selectedDataRows"
+  [batchId]="batchId"
+  [premiumsType] ="premiumsType"
+  (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+  ></cms-financial-premiums-print-authorization>
+  </ng-template>

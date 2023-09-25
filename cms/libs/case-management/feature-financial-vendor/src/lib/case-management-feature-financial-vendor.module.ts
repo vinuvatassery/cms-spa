@@ -35,13 +35,13 @@ import { FinancialDrugsDetailsComponent } from './components/financial-drugs-det
 import { FinancialDrugsDeactivateComponent } from './components/financial-drugs-deactivate/financial-drugs-deactivate.component';
 import { FinancialDrugsReassignComponent } from './components/financial-drugs-reassign/financial-drugs-reassign.component';
 import { FinancialInsuranceProviderComponent } from './components/financial-insurance-provider/financial-insurance-provider.component';
-import {FinancialInsurancePlanDetailsComponent} from './components/financial-insurance-plan-details/financial-insurance-plan-details.component';
-import {FinancialInsurancePlanDeleteComponent} from './components/financial-insurance-plan-delete/financial-insurance-plan-delete.component';
-import {FinancialInsurancePlanDeactivateComponent} from './components/financial-insurance-plan-deactivate/financial-insurance-plan-deactivate.component';
-import {PaymentAddressDetailsComponent} from './components/payment-address-details/payment-address-details.component';
-import {PaymentAddressDeactivateComponent} from './components/payment-address-deactivate/payment-address-deactivate.component';
-import {PaymentAddressDeleteComponent} from './components/payment-address-delete/payment-address-delete.component';
-import {VendorContactComponent} from './components/vendor-contact/vendor-contact.component';
+import { FinancialInsurancePlanDetailsComponent } from './components/financial-insurance-plan-details/financial-insurance-plan-details.component';
+import { FinancialInsurancePlanDeleteComponent } from './components/financial-insurance-plan-delete/financial-insurance-plan-delete.component';
+import { FinancialInsurancePlanDeactivateComponent } from './components/financial-insurance-plan-deactivate/financial-insurance-plan-deactivate.component';
+import { PaymentAddressDetailsComponent } from './components/payment-address-details/payment-address-details.component';
+import { PaymentAddressDeactivateComponent } from './components/payment-address-deactivate/payment-address-deactivate.component';
+import { PaymentAddressDeleteComponent } from './components/payment-address-delete/payment-address-delete.component';
+import { VendorContactComponent } from './components/vendor-contact/vendor-contact.component';
 import { ProductivityToolsFeatureEventLogModule } from '@cms/productivity-tools/feature-event-log';
 import { VendorSpecialHandlingComponent } from './components/vendor-special-handling/vendor-special-handling.component';
 import { FinancialPaymentBatchSubListComponent } from './components/financial-payment-sub-list/financial-payment-sub-list.component';
@@ -52,6 +52,9 @@ import { CaseManagementFeatureCommunicationModule } from '@cms/case-management/f
 import { FinancialSendLetterComponent } from './components/financial-send-letter/financial-send-letter.component';
 import { FinancialSendEmailComponent } from './components/financial-send-email/financial-send-email.component';
 import { ProductivityToolsFeatureNotificationModule } from '@cms/productivity-tools/feature-notification';
+import { FinancialClinicProviderListComponent } from './components/financial-clinic-provider-list/financial-clinic-provider-list.component';
+import { FinancialClinicProviderRemoveComponent } from './components/financial-clinic-provider-remove/financial-clinic-provider-remove.component';
+import { FinancialClinicProviderDetailsComponent } from './components/financial-clinic-provider-details/financial-clinic-provider-details.component';
 @NgModule({
   imports: [
     CaseManagementDomainModule,
@@ -62,7 +65,7 @@ import { ProductivityToolsFeatureNotificationModule } from '@cms/productivity-to
     ProductivityToolsFeatureTodoModule,
     ProductivityToolsFeatureEventLogModule,
     CaseManagementFeatureCommunicationModule,
-    ProductivityToolsFeatureNotificationModule
+    ProductivityToolsFeatureNotificationModule,
   ],
   declarations: [
     FinancialVendorPageComponent,
@@ -109,7 +112,9 @@ import { ProductivityToolsFeatureNotificationModule } from '@cms/productivity-to
     VendorContactComponent,
     FinancialSendLetterComponent,
     FinancialSendEmailComponent,
-    
+    FinancialClinicProviderListComponent,
+    FinancialClinicProviderRemoveComponent,
+    FinancialClinicProviderDetailsComponent,
   ],
   exports: [
     FinancialVendorPageComponent,
@@ -152,9 +157,9 @@ import { ProductivityToolsFeatureNotificationModule } from '@cms/productivity-to
     ContactAddressListComponent,
     VendorSpecialHandlingComponent,
     FinancialPaymentBatchSubListComponent,
-    FinancialInsurancePlanListComponent
-    ,FinancialSendLetterComponent,
-    FinancialSendEmailComponent
+    FinancialInsurancePlanListComponent,
+    FinancialSendLetterComponent,
+    FinancialSendEmailComponent,
   ],
 })
 export class CaseManagementFeatureFinancialVendorModule {}

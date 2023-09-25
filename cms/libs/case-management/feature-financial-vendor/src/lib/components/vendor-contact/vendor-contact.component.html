@@ -13,8 +13,9 @@
 
                 <div class="flex-col">
                     <kendo-floatinglabel text=" Name">
-                        <kendo-textbox aria-label="Contact Name" [fillMode]="formUiStyle.inputFillMode" [maxlength]="40"
-                            formControlName="contactName">
+                        <kendo-textbox aria-label="Contact Name" [fillMode]="formUiStyle.inputFillMode" [maxlength]="200"
+                            formControlName="contactName"
+                            (keypress)="restrictSpecialChar($event.charCode)">
                         </kendo-textbox>
                     </kendo-floatinglabel>
                     <p class="text-muted mb-2">
@@ -26,7 +27,7 @@
                 <div class="flex-col mb-1">
                     <kendo-floatinglabel text="Description (Optional)">
                         <kendo-textbox aria-label="Description (Optional)" [fillMode]="formUiStyle.inputFillMode" [maxlength]="500"
-                            formControlName="description">
+                            formControlName="description" (keypress)="restrictSpecialChar($event.charCode)">
                         </kendo-textbox>
                     </kendo-floatinglabel>
                 </div>

@@ -125,5 +125,19 @@ export class FinancialVendorDataService {
     );
   }
 
-
+  getProvidersList(providerPageAndSortedRequest:any) {
+      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/children`, providerPageAndSortedRequest);   
+  }
+  searchProvider(payload: any) 
+  {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/search`,payload);
+  }
+  removeprovider(providerId: any) 
+  {
+    return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${providerId}`);
+  }
+  addProvider(provider:any)
+  {   
+    return this.http.patch(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors`,provider);
+  }
 }

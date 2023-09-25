@@ -1,6 +1,7 @@
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -43,7 +44,11 @@ export class FinancialClaimsAllPaymentsListComponent
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialClaimsAllPaymentsGridLists$: any;
+  @Input() exportButtonShow$ : any
+
   @Output() loadFinancialClaimsAllPaymentsListEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
+  
   public state!: State;
   sortColumn = 'batchNumber';
   sortDir = 'Ascending';
@@ -54,7 +59,7 @@ export class FinancialClaimsAllPaymentsListComponent
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  showExportLoader = false;
   gridFinancialClaimsAllPaymentsDataSubject = new Subject<any>();
   gridFinancialClaimsAllPaymentsData$ =
     this.gridFinancialClaimsAllPaymentsDataSubject.asObservable();
@@ -204,7 +209,8 @@ export class FinancialClaimsAllPaymentsListComponent
     private route: Router,
     private dialogService: DialogService,
     public activeRoute: ActivatedRoute,
-    private readonly lovFacade: LovFacade
+    private readonly lovFacade: LovFacade,
+    private readonly  cdr : ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -488,5 +494,26 @@ export class FinancialClaimsAllPaymentsListComponent
     if (result) {
       this.printAuthorizationDialog.close();
     }
+  }
+
+  onClickedExport(){
+    this.showExportLoader = true
+    this.exportGridDataEvent.emit()    
+    
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {        
+        this.showExportLoader = false
+        this.cdr.detectChanges()
+      }
+
+    })
+  }
+
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.closeRecentClaimsModal(true);
   }
 }

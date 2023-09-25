@@ -17,6 +17,13 @@
 
     </kendo-floatinglabel>
   </span>
+  <span class="right-overlay-export">
+    <button kendoButton [primary]="true" look="flat" class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
+      <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
+      
+      <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
+    </button>
+  </span>
 </section>
 
   <!-- Sorted Info -->
@@ -181,7 +188,7 @@
           </kendo-popover>
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column field="Option" title="Options"  [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
+      <kendo-grid-column field="Option" title="Options"  [sticky]="true" [columnMenu]="false" [width]="70" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
           <kendo-dropdownbutton [data]="allPaymentsGridActions" icon="more-vertical"
             class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -279,7 +286,7 @@
     </ng-template>
 
     <ng-template #clientRecentClaimsDialog>
-      <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)">Recent Claims for {{clientName}}</kendo-dialog-titlebar>
+      <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">Recent Claims for {{clientName}}</h4></kendo-dialog-titlebar>
       <section class="k-dialog-body">
         <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
           (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>
@@ -288,7 +295,7 @@
         <div class="justify-content-between">
           <div class="justify-content-end">
             <button kendoButton aria-label="cancel" [primary]="true" look="flat">
-              Client Profile <span class="material-icons ml-1">
+              Client Profile <span class="material-icons ml-1" (click)="onClientClicked(clientId)">
                 chevron_right
               </span>
             </button>

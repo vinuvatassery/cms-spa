@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList } from '@angular/core';
+import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { PaymentsFacade,BillingAddressFacade,VendorContactsFacade, ContactResponse ,FinancialVendorTypeCode, FinancialVendorProviderTabCode, StatusFlag } from '@cms/case-management/domain';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -17,12 +17,13 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentAddressesComponent {
+  @ViewChild(GridComponent) gridConfig!: GridComponent;
   @Input() vendorId: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isPaymentsAddressGridLoaderShow = false;
   public sortValue = this.paymentsFacade.sortValue;
-  public sortType = this.paymentsFacade.sortType;
+  public sortType: any = this.paymentsFacade.sortType;
   public pageSizes = this.paymentsFacade.gridPageSizes;
   public gridSkipCount = this.paymentsFacade.skipCount;
   public sort = this.paymentsFacade.sort;
@@ -55,34 +56,69 @@ export class PaymentAddressesComponent {
   paymentMethodVendorlovs:any=[];
   paymentRunDatelovs:any=[];
   yesOrNoLovs:any=[];
-  filters:any=[];
-  filteredBy = "";
   isFiltered = false;
-  sortColumn: any;
-  sortDir = "";
-  columnsReordered = false;
   searchValue = "";
   columnName: any = "";
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  paymentAddressInnerGridLists = [
-    {
-      mailCode: 'Mail Code',
-      nameOnCheck: 'Name on Check',
-      nameOnEnvelope: 'Name on Envelope',
-      paymentMethodCode: 'Payment Method',
-      paymentRunDateMonthly: 'Payment Run Date',
-      acceptsCombinedPaymentsFlag: 'Accept Combined Payments?',
-      acceptsReportsFlag: 'Accepts Reports?',
-      address1: 'Address 1',
-      address2: 'Address 2',
-      cityCode: 'City',
-      state: 'State',
-      zip: 'Zip',
-      specialHandlingDesc: 'Special Handling',
-      effectiveDate: 'Effective Dates',
-      creatorId: 'By'
-    },
-  ];
+  column:any =
+  {
+    mailCode: 'Mail Code',
+    nameOnCheck: 'Name on Check',
+    nameOnEnvelope: 'Name on Envelope',
+    paymentMethodCode: 'Payment Method',
+    paymentRunDateMonthly: 'Payment Run Date',
+    acceptsCombinedPaymentsFlag: 'Accept Combined Payments?',
+    acceptsReportsFlag: 'Accepts Reports?',
+    address1: 'Address 1',
+    address2: 'Address 2',
+    cityCode: 'City',
+    state: 'State',
+    zip: 'Zip',
+    specialHandlingDesc: 'Special Handling',
+    effectiveDate: 'Effective Dates',
+    creatorId: 'By'
+  };
+
+ //Column Options Standard Properties
+ columnsReordered = false;
+
+ //sorting
+ sortColumn = 'mailCode';
+ sortColumnDesc = 'Mail Code';
+ sortDir = 'Ascending';
+
+ //filtering
+ filteredBy = '';
+ filter: any = [
+   {
+     filters: [],
+     logic: 'and',
+   },
+ ];
+
+ filteredByColumnDesc = '';
+ selectedStatus = 'Active';
+ filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+ columnChangeDesc = 'Default Columns';
+
+ ngAfterViewInit() {
+   this.gridConfig.filter = {
+     logic: 'and',
+     filters: [
+       {
+         filters: [],
+         logic: 'and',
+       },
+     ],
+   };
+   this.state = {
+    skip: 0,
+    take: this.pageSizes[0]?.value,
+    sort: [{ field: this.sortValue, dir: this.sortType }],
+  };
+   this.loadPaymentsAddressListGrid();
+  }
+
 
   public paymentAddressActions = [
     {
@@ -133,15 +169,7 @@ export class PaymentAddressesComponent {
     this.loadVenderPaymentMethodsLovs();
     this.loadYesOrNoLovs();
     this.vendorcontactFacade.loadMailCodes(this.vendorId);
-    this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {
-      if(mailCode.length>0)
-      {
-        this.IsAddContactDisabled=false;
-        this.cdr.detectChanges();
-      }else{
-        this.IsAddContactDisabled=true;
-      }
-    })
+    this.checkMailCode();
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
@@ -151,18 +179,26 @@ export class PaymentAddressesComponent {
     this.loadPaymentsAddressListGrid();
   }
 
+  private checkMailCode() {
+    this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {
+      if (mailCode.length > 0) {
+        this.IsAddContactDisabled = false;
+        this.cdr.detectChanges();
+      } else {
+        this.IsAddContactDisabled = true;
+      }
+    });
+  }
+
   ngOnChanges(): void {
     this.vendorcontactFacade.loadMailCodes(this.vendorId);
-    this.state = {
-      skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
+    this.initializeGrid(false);
+    this.loadPaymentsAddressListGrid();
   }
   public rowClass = (args:any) => ({
     "table-row-disabled": (args.dataItem.activeFlag != StatusFlag.Yes),
   });
-  pageSelectionchange(data: any) {
+  pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadPaymentsAddressListGrid();
@@ -174,15 +210,6 @@ export class PaymentAddressesComponent {
     this.VendorAddressId=e.dataItem.vendorAddressId;
 
   }
-  public dataStateChange(stateData: any): void {
-    this.filters = JSON.stringify(stateData.filter?.filters)
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
-    this.state = stateData;
-    this.setGridState(stateData);
-    this.loadPaymentsAddressListGrid();
-  }
 
   loadPaymentsAddressListGrid() {
     const paymentAddressListParams = {
@@ -193,7 +220,7 @@ export class PaymentAddressesComponent {
       sortType: this.sortType,
       vendorId: this.vendorId,
       isShowHistoricalData: this.isShowHistoricalData,
-      filters: this.filters
+      filters: JSON.stringify(this.filter)
     };
 
     this.paymentBillingFacade.loadPaymentsAddressListGrid(paymentAddressListParams);
@@ -260,8 +287,11 @@ export class PaymentAddressesComponent {
   }
   clickCloseDeletePaymentAddress(isSuccess: boolean): void {
     this.isPaymentAddressDeleteShow = false;
-    if (isSuccess)
+    if (isSuccess) {
+      this.vendorcontactFacade.loadMailCodes(this.vendorId);
+      this.checkMailCode();
       this.loadPaymentsAddressListGrid();
+    }
   }
 
   getTabCode() {
@@ -313,9 +343,6 @@ export class PaymentAddressesComponent {
   {
     this.handleOptionClick(event,'Deactivate');
   }
-  public columnChange(e: any) {
-    this.cdr.detectChanges();
-  }
   clickCloseDeactivateContactAddress() {
     this.isContactAddressDeactivateShow = false;
   }
@@ -325,31 +352,7 @@ export class PaymentAddressesComponent {
     }
   }
 
-  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
-
-    filterService.filter({
-        filters: [{
-          field: field,
-          operator: "eq",
-          value:value.lovCode
-      }],
-        logic: "or"
-    });
-
-    if(field == "paymentMethodCode"){
-      this.paymentMethodCodeValue = value;
-    }
-    if(field == "PaymentRunDateMonthly"){
-      this.paymentRunDateMonthlyValue = value;
-    }
-    if(field == "acceptsCombinedPaymentsFlag"){
-      this.acceptsCombinedPaymentsFlagValue = value;
-    }
-    if(field == "acceptsReportsFlag"){
-      this.acceptsReportsFlagValue = value;
-    }
-  }
-
+  //Column Options Standard Implementation
   private loadYesOrNoLovs() {
     this.yesOrNoLov$
     .subscribe({
@@ -377,74 +380,112 @@ export class PaymentAddressesComponent {
     });
   }
 
-  public setGridState(stateData: any): void {
-    this.state = stateData;
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value:value.lovCode
+      }],
+        logic: "or"
+    });
 
-    const filters = stateData.filter?.filters ?? [];
-    this.removeIdenticalFilters(stateData,filters);
-    for (let val of filters) {
-      if (val.field === 'effectiveDate') {
-        this.intl.formatDate(val.value, this.dateFormat);
-      }
+    if(field == "paymentMethodCode"){
+      this.paymentMethodCodeValue = value;
     }
-
-    if (filters.length > 0) {
-      const filterListData = filters.map((filter:any) => this.paymentAddressInnerGridLists[filter?.filters[0]?.field]);
-      this.isFiltered = true;
-      this.filteredBy = filterListData.toString();
-      this.cdr.detectChanges();
+    if(field == "paymentRunDateMonthly"){
+      this.paymentRunDateMonthlyValue = value;
     }
-    else {
-      this.isFiltered = false;
+    if(field == "acceptsCombinedPaymentsFlag"){
+      this.acceptsCombinedPaymentsFlagValue = value;
     }
-
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? "";
-    this.sortType = stateData.sort[0]?.dir ?? "";
-    this.state = stateData;
-    this.sortColumn = this.paymentAddressInnerGridLists[stateData.sort[0]?.field];
-    this.sortDir = "";
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    if(field == "acceptsReportsFlag"){
+      this.acceptsReportsFlagValue = value;
+    }
+  }
+  public columnChange(e: any) {
+    this.cdr.detectChanges();
   }
 
-  filterChange(filter: CompositeFilterDescriptor): void {
-    this.filters = JSON.stringify(filter);
+  restGrid() {
+    this.sortValue = 'mailCode';
+    this.sortType = 'asc';
+    this.sortColumn = 'mailCode';
+    this.sortDir = 'Ascending';
+    this.filter = [];
+    this.filteredByColumnDesc = '';
+    this.sortColumnDesc = this.column[this.sortValue];
+    this.columnChangeDesc = 'Default Columns';
+    this.initializeGrid(true);
+    this.loadPaymentsAddressListGrid();
+    this.paymentMethodCodeValue = this.paymentRunDateMonthlyValue = this.acceptsCombinedPaymentsFlagValue = this.acceptsReportsFlagValue = null;
+  }
+
+  defaultGridState() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      filter: { logic: 'and', filters: [] },
+    };
   }
 
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
 
-  removeIdenticalFilters(stateData:any, filters:any){
-    const filterList = this.state?.filter?.filters ?? [];
-    if(filterList.length > 0)
-    {
-      const filterList = []
-      for (const filter of stateData.filter.filters) {
-        const field = filter.filters[0].field;
+  dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.state = stateData;
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumnDesc = this.column[this.sortValue];
+    this.filter = stateData?.filter?.filters;
+    this.setFilterBy(true, '', this.filter);
+    if (!this.filteredByColumnDesc.includes('Status')) this.selectedStatus = '';
+    this.loadPaymentsAddressListGrid();
+  }
 
-        const existingIndex = filterList.findIndex((x) => {
-          if (x.filters.length > 0 && x.filters[0].field === field) {
-            return true;
-          }
-          return false;
+  filterChange(filter: CompositeFilterDescriptor): void {
+    this.filterData = filter;
+  }
+
+  private initializeGrid(resetState:boolean) {
+    if (this.state == undefined || resetState) {
+       this.state = {
+        skip: 0,
+        take: this.pageSizes[0]?.value,
+        sort: [{ field: this.sortValue, dir: this.sortType }],
+      };
+    }
+  }
+
+  private setFilterBy(
+    isFromGrid: boolean,
+    searchValue: any = '',
+    filter: any = []
+  ) {
+    this.filteredByColumnDesc = '';
+    if (isFromGrid) {
+      if (filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters
+            ?.filter((fld: any) => fld.value)
+            ?.map((fld: any) => this.column[fld.field]);
+          return [...new Set(filteredColumns)];
         });
 
-        if (existingIndex !== -1) {
-          filterList.splice(existingIndex, 1);
-        }
-        filterList.push(filter);
+        this.filteredByColumnDesc =
+          [...new Set(filteredColumns)]?.sort()?.join(', ') ?? '';
       }
-
-      this.filters = JSON.stringify(filterList);
-      this.filteredBy = filterList.toString();
-      this.isFiltered =true;
     }
-    else
-    {
-      this.filters = "";
-      this.isFiltered = false
-      this.columnName = "";
+  }
+  paymentAddressAdded(event:any)
+  {
+    if(event){
+      this.vendorcontactFacade.loadMailCodes(this.vendorId);
+      this.checkMailCode();
     }
   }
 }

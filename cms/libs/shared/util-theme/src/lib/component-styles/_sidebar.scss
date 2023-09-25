@@ -118,8 +118,7 @@ cms-sidenav {
           background: $badge-alerts;
           color: $white !important;
           border-radius: $border-radius-sm;
-          padding: $size-s $size-m;
-          min-width: $font-size-xlg + $font-size-s;
+          padding: $size-s $size-m; 
           font-family: $font-family-bold;
           margin-left: $size-l;
         }

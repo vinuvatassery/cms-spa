@@ -35,7 +35,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   isContactAddressDeactivateShow = false
   descriptionCounter:number=500;
   filters = "";
-  inputMask: any = '';
+  inputMask ='(999) 000-0000';
   @Output() ContactUpdated = new EventEmitter<boolean>();
   showLoader() {
     this.loaderService.show();
@@ -226,18 +226,5 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   }
   onDescriptionValueChange(event: any): void {
     this.descriptionCounter = event.length;
-  }
-  applyMask() {
-    this.inputMask = '(999) 000-0000'; 
-  }
-  resetMask() {
-    let phoneResult = this.AddContactForm.get('phoneNbr')?.value
-    if (!phoneResult) {
-      this.inputMask = '';
-    }
-    let faxResult = this.AddContactForm.get('faxNbr')?.value
-    if(faxResult){
-      this.inputMask = '';
-    }
   }
 }

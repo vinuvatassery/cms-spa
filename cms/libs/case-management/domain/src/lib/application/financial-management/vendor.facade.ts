@@ -22,6 +22,12 @@ export class FinancialVendorFacade {
   private clinicVendorLoaderSubject = new Subject<any>();  /** Public properties **/
   private providePanelSubject = new Subject<any>();
   private updateProviderPanelSubject = new Subject<any>();
+  private addProviderNewSubject= new Subject<any>();
+  private searchProviderSubject= new Subject<any>();
+  private removeprovidersubject=new Subject<any>();
+  searchProvider$=this.searchProviderSubject.asObservable();  
+  removeprovider$=this.removeprovidersubject.asObservable();
+  addProviderNew$=this.addProviderNewSubject.asObservable();
   vendorsList$ = this.vendorsSubject.asObservable();
   selectedVendor$ = this.selectedVendorSubject.asObservable();
   vendorProfile$ = this.vendorProfileSubject.asObservable();
@@ -34,6 +40,8 @@ export class FinancialVendorFacade {
   private vendorsListSubject = new BehaviorSubject<any>([]);
   vendorDetails$ = this.vendorsListSubject.asObservable();
 
+  private providerListSubject = new Subject<any>();
+  providerList$ = this.providerListSubject.asObservable();
   public selectedVendorType = FinancialVendorTypeCode.Manufacturers
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'vendorName'
@@ -198,6 +206,84 @@ export class FinancialVendorFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
+  getProviderList(providerPageAndSortedRequest :any){
+    this.showLoader();
+    this.financialVendorDataService.getProvidersList(providerPageAndSortedRequest).subscribe({
+      next: (response: any) => {
+        if (response) {
+          const gridView = {
+            data: response["items"],
+            total:response["totalCount"]
+          };
+          this.hideLoader();
+          this.providerListSubject.next(gridView);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+  searchProvider(payload: any)
+  {
+    this.showLoader();
+    return this.financialVendorDataService.searchProvider(payload).subscribe({
+      next: (response: any[]) => 
+      {
+        this.searchProviderSubject.next(response);
+        this.hideLoader();
+      },
+      error: (err) => 
+      {
+       this.hideLoader();
+        this.showHideSnackBar(
+          SnackBarNotificationType.ERROR,
+        err
+        );
+        this.loggingService.logException(err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+      },
+    });
+  }
+  removeProvider(providerId: any): void 
+  {
+    this.showLoader();
+    this.financialVendorDataService.removeprovider(providerId).subscribe({
+      next: (deleteResponse) =>
+      {
+        if (deleteResponse ?? false) 
+        {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, deleteResponse.message)
+          this.removeprovidersubject.next(deleteResponse)
+        }
+      },
+      error: (err) => 
+      {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+  addProvider(provider:any) 
+  {
+    this.showLoader();
+    this.financialVendorDataService.addProvider(provider).subscribe({
+      next: (addNewdependentsResponse : any) => 
+      {
+        if (addNewdependentsResponse) 
+        {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, addNewdependentsResponse.message)
+        }
+        this. addProviderNewSubject.next(addNewdependentsResponse);
+        this.hideLoader();
+      },
+      error: (err) =>
+      {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }

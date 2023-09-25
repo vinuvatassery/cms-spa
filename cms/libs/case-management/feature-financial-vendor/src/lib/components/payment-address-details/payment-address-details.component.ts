@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, OnInit, Component, EventEmitter, Output, Input, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {  AddressTypeCode, BillingAddressFacade, ContactFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, StatusFlag, VendorContactsFacade } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
@@ -17,6 +17,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
   @Output() editDeactivateClicked = new EventEmitter<any>();
   @Input() isEdit!: any
   @Input() billingAddress!: any
+  isValidateForm: boolean = false;
   specialHandlingLength = 100;
   ddlStates$ = this.contactFacade.ddlStates$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -34,6 +35,8 @@ export class PaymentAddressDetailsComponent implements OnInit {
   specialHandlingCounter!: string;
   statusFlag : any = StatusFlag;
   specialCharAdded: boolean = false;
+  @Output() paymentAddressAdded = new EventEmitter<any>();
+  mailCodeLengthError: boolean=false;
 
   /** Constructor**/
   constructor(
@@ -111,7 +114,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
 
     this.paymentAddressForm.controls['zip']
         .setValidators([
-          Validators.required,Validators.required,Validators.pattern('^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)$')
+          Validators.required,Validators.required
         ]);
       this.paymentAddressForm.controls['zip'].updateValueAndValidity();
 
@@ -199,6 +202,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
     this.billingAddressFacade.showLoader();
     this.addUpdateBillingAddress(this.vendorId, formValues).subscribe({
       next: (resp) => {
+        this.paymentAddressAdded.emit(true)
         if (resp) {
           if (!this.isEdit) {
             this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment address added successfully!')
@@ -242,26 +246,26 @@ export class PaymentAddressDetailsComponent implements OnInit {
     }
     this.cdr.detectChanges();
   }
-  restrictSpecialChar(event: any) {
-    const status = ((event.charCode > 64 && event.charCode < 91) ||
-      (event.charCode > 96 && event.charCode < 123) ||
-      event.charCode == 8 || event.charCode == 32 ||
-      (event.charCode >= 48 && event.charCode <= 57) ||
-      event.charCode == 45);
-    if (status) {
-      this.paymentAddressForm.controls['mailCode'].setErrors(null);
-      this.paymentAddressForm.controls['nameOnEnvelope'].setErrors(null);
-      this.paymentAddressForm.controls['zip'].setErrors(null);
-
-      this.specialCharAdded = false;
-    }
-    else {
-      this.paymentAddressForm.controls['mailCode'].setErrors({ 'incorrect': true });
-      this.paymentAddressForm.controls['nameOnEnvelope'].setErrors({ 'incorrect': true });
-      this.paymentAddressForm.controls['zip'].setErrors({ 'incorrect': true });
-      this.specialCharAdded = true;
-    }
-    return status;
+  restrictSpecialChar(event:number) {
+    return (
+      (event >= 48 && event <= 57) || 
+      (event > 64 && event < 91) ||   
+      (event > 96 && event < 123) ||  
+      event == 8 ||                 
+      event == 45                   
+    );
   }
-
-}
+  onKeyPress(event:number) {
+    return (event > 64 &&
+      event < 91) || (event > 96 && event < 123)||event==32
+  } 
+  onMailCodeKeyUp() {
+    let mailCode = this.paymentAddressForm.controls['mailCode'].value;
+    if (mailCode.length !== 3 && mailCode !="") {
+      this.mailCodeLengthError = true;
+    } 
+    else if (mailCode.length <=0 || mailCode.length==3){ 
+      this.mailCodeLengthError = false;
+    } 
+ }
+ }

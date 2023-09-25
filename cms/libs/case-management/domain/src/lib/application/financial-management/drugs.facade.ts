@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
@@ -15,7 +15,7 @@ export class DrugsFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'brandName';
+  public sortValue = 'ndcNbr';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
@@ -23,7 +23,8 @@ export class DrugsFacade {
 
   private drugsDataSubject = new Subject<any>();
   drugsData$ = this.drugsDataSubject.asObservable();
-
+  private drugDataLoaderSubject = new Subject<any>();
+  drugDataLoader$ = this.drugDataLoaderSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -59,7 +60,7 @@ export class DrugsFacade {
 
   /** Public methods **/
   loadDrugsListGrid(vendorId:string, skipCount: number, maxResultCount: number, sort: string, sortType: string, filters: any) {
-    this.showLoader();
+    this.drugDataLoaderSubject.next(true);
     this.drugsDataService.loadDrugList(vendorId,skipCount,maxResultCount,sort,sortType,filters).subscribe({
       next: (dataResponse) => {
         this.drugsDataSubject.next(dataResponse);
@@ -70,16 +71,18 @@ export class DrugsFacade {
             total: dataResponse['totalCount'],
           };
           this.drugsDataSubject.next(gridView);
+          this.drugDataLoaderSubject.next(false);
         }
-        this.hideLoader();
       },
       error: (err) => {
         this.drugsDataSubject.next(false);
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
-        this.hideLoader();
+        this.drugDataLoaderSubject.next(false);
       },
     });
 
 
   }
+
+
 }

@@ -11,6 +11,7 @@ import { State } from '@progress/kendo-data-query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialVendorProfileComponent implements OnInit {
+  drugDataLoader$ = this.drugsFacade.drugDataLoader$;
   drugsData$ = this.drugsFacade.drugsData$;
   pageSizes = this.drugsFacade.gridPageSizes;
   sortValue = this.drugsFacade.sortValue;
@@ -31,10 +32,20 @@ export class FinancialVendorProfileComponent implements OnInit {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   selectedVendorInfo$ = this.financialVendorFacade.selectedVendor$;
   vendorProfile$ = this.financialVendorFacade.vendorProfile$
+  removeprovider$ = this.financialVendorFacade.removeprovider$
+  addProviderNew$ = this.financialVendorFacade.addProviderNew$
   vendorProfileSpecialHandling$ = this.financialVendorFacade.vendorProfileSpecialHandling$
-  filters:any=[];
 
-  constructor(private activeRoute: ActivatedRoute, private financialVendorFacade : FinancialVendorFacade,
+   providerList$ = this.financialVendorFacade.providerList$
+   providerLispageSizes = this.financialVendorFacade.gridPageSizes;
+   providerLissortValue = this.financialVendorFacade.sortValue;
+   providerLissortType = this.financialVendorFacade.sortType;
+   providerLissort = this.financialVendorFacade.sort;
+
+  filter:any=[];
+  isClinicalVendor=false;
+
+  constructor(private activeRoute: ActivatedRoute,private financialVendorFacade : FinancialVendorFacade,
               private readonly drugsFacade: DrugsFacade) {}
 
   ngOnInit(): void {
@@ -66,7 +77,9 @@ export class FinancialVendorProfileComponent implements OnInit {
     {
       this.loadFinancialVendorProfile(this.vendorId)
     }
+  }
 
+  setVendorTypeCode(vendorProfile: any) {
     switch (this.tabCode) {
       case FinancialVendorProviderTabCode.Manufacturers:
         this.vendorTypeCode = FinancialVendorTypeCode.Manufacturers
@@ -89,8 +102,9 @@ export class FinancialVendorProfileComponent implements OnInit {
         this.profileInfoTitle = 'Pharmacy Info';
         break;
     }
+     this.isClinicalVendor = (vendorProfile.vendorTypeCode == FinancialVendorTypeCode.DentalClinic) ||
+     (vendorProfile.vendorTypeCode == FinancialVendorTypeCode.MedicalClinic)
   }
-
   loadVendorInfo() {
     this.financialVendorFacade.getVendorDetails(this.vendorId);
   }
@@ -102,9 +116,13 @@ export class FinancialVendorProfileComponent implements OnInit {
   loadSpecialHandling() {
     this.financialVendorFacade.getVendorProfileSpecialHandling(this.vendorId);
   }
+
   loadFinancialVendorProfile(vendorId : string)
   {
     this.financialVendorFacade.getVendorProfile(vendorId,this.tabCode)
+    this.vendorProfile$.subscribe(vendorProfile =>{
+      this.setVendorTypeCode(vendorProfile)
+    })
   }
 
   onVendorEditSuccess(status: boolean) {
@@ -121,7 +139,7 @@ export class FinancialVendorProfileComponent implements OnInit {
       this.state.take ?? 0,
       this.sortValue,
       this.sortType,
-      this.filters ?? []
+      this.filter ?? []
     );
   }
 
@@ -132,11 +150,18 @@ export class FinancialVendorProfileComponent implements OnInit {
     };
     this.sortValue = event.sortColumn;
     this.sortType = event.sortType;
-    this.filters = event.filters;
+    this.filter = event.filters;
     this.loadDrugsListGrid();
   }
 
   loadVendorDetailList(){
     this.financialVendorFacade.loadVendorList(this.vendorTypeCode);
+  }
+
+  loadProviderList(data :any){
+    this.financialVendorFacade.getProviderList(data)
+  }
+  removeProvider(providerId: any) {
+   this.financialVendorFacade.removeProvider(providerId);
   }
 }

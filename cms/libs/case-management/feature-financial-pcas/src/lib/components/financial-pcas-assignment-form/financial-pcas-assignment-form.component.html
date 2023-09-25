@@ -53,7 +53,9 @@
                         (filterChange)="onPcaChange($event)" >
                         </kendo-dropdownlist>
                   </kendo-floatinglabel>
-
+                  <kendo-formerror *ngIf="pcaAssignmentFormControls?.pcaId?.errors?.required && formSubmitted">
+                        PCA is required
+                  </kendo-formerror>
             </div>
             <div class="flex-col flex-col-4">
                   <kendo-floatinglabel text="AY">
@@ -82,8 +84,7 @@
             </div>
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Open Date">
-                        <div class="flex-col flex-col-12">
-                              <kendo-floatinglabel >
+                         
                                     <kendo-dropdownlist  [fillMode]="formUiStyle.inputFillMode"
                                     [data]="pcaAssignOpenDatesList$"
                                     textField="dateValue"
@@ -93,15 +94,17 @@
                                     formControlName="openDate">
             
                                     </kendo-dropdownlist>
-                              </kendo-floatinglabel>            
-                        </div>
+                                
+                              <kendo-formerror *ngIf="pcaAssignmentFormControls?.openDate?.errors?.required && formSubmitted">
+                                    Open Date is required
+                              </kendo-formerror>     
+                       
                   </kendo-floatinglabel>
 
             </div>
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Close Date">
-                        <div class="flex-col flex-col-12">
-                              <kendo-floatinglabel >
+                        
                                     <kendo-dropdownlist  [fillMode]="formUiStyle.inputFillMode"
                                     [data]="pcaAssignCloseDatesList$"
                                     textField="dateValue"
@@ -111,9 +114,11 @@
                                     formControlName="closeDate">
             
                                     </kendo-dropdownlist>
-                              </kendo-floatinglabel>
-            
-                        </div>
+                               
+                              <kendo-formerror *ngIf="pcaAssignmentFormControls?.closeDate?.errors?.required && formSubmitted">
+                                    Close Date is required
+                              </kendo-formerror>   
+                        
                   </kendo-floatinglabel>
 
             </div>
@@ -126,7 +131,9 @@
                               class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
                         </kendo-numerictextbox>
                   </kendo-floatinglabel>
-
+                  <kendo-formerror *ngIf="pcaAssignmentFormControls?.amount?.errors?.required && formSubmitted">
+                        Amount is required
+                  </kendo-formerror>   
             </div>
             <div class="flex-col flex-col-6 mt-2">
                   <span class="app-checkboxwidtext-wrapper">

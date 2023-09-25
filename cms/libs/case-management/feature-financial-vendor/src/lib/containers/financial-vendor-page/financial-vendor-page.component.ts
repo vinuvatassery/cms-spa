@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@
 import { CaseFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ReminderFacade } from '@cms/productivity-tools/domain';
 
 @Component({
@@ -15,7 +15,7 @@ export class FinancialVendorPageComponent implements OnInit {
   isVendorDetailFormShow = false;
   medicalProviderForm: FormGroup;
   providerTypeCode: string = '';
-  
+
   isShowMedicalProvider: boolean = false;
   isShowDentalProvider: boolean = false;
   isShowInsuranceProvider: boolean = false;
@@ -66,16 +66,18 @@ export class FinancialVendorPageComponent implements OnInit {
   sortType = this.financialVendorFacade.sortType;
   sort = this.financialVendorFacade.sort;
   selectedVendorType = this.financialVendorFacade.selectedVendorType
+  exportButtonShow$ = this.documentFacade.exportButtonShow$
   constructor(private caseFacade: CaseFacade, private financialVendorFacade: FinancialVendorFacade,
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
-    private reminderFacade: ReminderFacade) {
+    private reminderFacade: ReminderFacade,
+    private documentFacade :  DocumentFacade) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
-
+  dataExportParameters! : any
   /** Lifecycle hooks **/
   ngOnInit() {
-    this.caseFacade.enableSearchHeader(SearchHeaderType.VendorSearch);
+    this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
   }
 
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
@@ -115,8 +117,9 @@ export class FinancialVendorPageComponent implements OnInit {
     this.isVendorDetailFormShow = false;
   }
 
-  loadFinancialVendorsList(data: any) {    
-    this.financialVendorFacade.selectedVendorType = data?.vendorTypeCode
+  loadFinancialVendorsList(data: any) {
+    this.financialVendorFacade.selectedVendorType = data?.vendorTypeCode.includes('CLINIC') ? data?.vendorTypeCode.split(',')[0] : data?.vendorTypeCode;
+    this.dataExportParameters = data
     this.financialVendorFacade.getVendors(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.vendorTypeCode, data?.filter)
   }
 
@@ -200,9 +203,44 @@ export class FinancialVendorPageComponent implements OnInit {
   }
 
 
-  exportGridData(data: any){
+  exportGridData(){
+    const data = this.dataExportParameters
     if(data){
-      this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Files Exported Successfully')
+    const  filter = JSON.stringify(data?.filter);
+
+      const vendorPageAndSortedRequest =
+      {
+        vendorTypeCode: data?.vendorTypeCode,
+        SortType : data?.sortType,
+        Sorting : data?.sortColumn,
+        SkipCount : data?.skipCount,
+        MaxResultCount : data?.pagesize,
+        Filter : filter
+      }
+     let fileName = ''
+      switch(this.financialVendorFacade.selectedVendorType) {
+        case FinancialVendorTypeCode.Manufacturers: {
+          fileName = 'Manufacturers';
+           break;
+        }
+        case FinancialVendorTypeCode.DentalProviders: {
+          fileName = 'Dental Providers';
+           break;
+        }
+        case FinancialVendorTypeCode.InsuranceVendors: {
+          fileName = 'Insurance Vendors';
+           break;
+        }
+        case FinancialVendorTypeCode.MedicalProviders: {
+          fileName = 'Medical Providers';
+           break;
+        }
+        case FinancialVendorTypeCode.Pharmacy: {
+          fileName = 'Pharmacy';
+           break;
+        }
+     }
+      this.documentFacade.getExportFile(vendorPageAndSortedRequest,'vendors' , fileName)
     }
   }
 }

@@ -14,10 +14,13 @@ import { Router } from '@angular/router';
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State
+  State,
+  filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { LovFacade } from '@cms/system-config/domain';
+
 @Component({
   selector: 'productivity-tools-approvals-payments-list',
   templateUrl: './approvals-payments-list.component.html', 
@@ -58,23 +61,31 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   approvalsPaymentsGridUpdatedResult: any=[];
   selectedApprovalSendbackDataRows: any[] = [];
   /* Vikas Work End */
+  selectedPaymentType: any;
 
   gridApprovalPaymentsDataSubject = new Subject<any>();
   gridApprovalPaymentsBatchData$ = this.gridApprovalPaymentsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+
+  
   
   private depositDetailsDialog: any;
+
+  pendingApprovalPaymentType$ = this.lovFacade.pendingApprovalPaymentType$;
   
   /** Constructor **/
   constructor(private route: Router, 
-    private dialogService: DialogService,private readonly cd: ChangeDetectorRef) {}
+    private dialogService: DialogService,private readonly cd: ChangeDetectorRef,
+    private lovFacade: LovFacade) {}
 
   ngOnInit(): void {
     this.gridDataHandle();
     this.loadApprovalPaymentsListGrid();
+    this.lovFacade.getPandingApprovalPaymentTypeLov();
   }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -116,10 +127,10 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       sortColumn: sortValue,
       sortType: sortTypeValue,
     };
-    this.loadApprovalsPaymentsGridEvent.emit(gridDataRefinerValue);
+    let selectedPaymentType = this.selectedPaymentType;
+    this.loadApprovalsPaymentsGridEvent.emit({gridDataRefinerValue, selectedPaymentType});
   }
 
-  
   onChange(data: any) {
     this.defaultGridState();
 
@@ -176,6 +187,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.filterData = filter;
   }
 
+  
+
   onDepositDetailClicked(  template: TemplateRef<unknown>): void {   
     this.depositDetailsDialog = this.dialogService.open({
       content: template,
@@ -186,8 +199,14 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
   }
+
   onCloseDepositDetailClicked(){
     this.depositDetailsDialog.close();
+  }
+
+  onPaymentTypeCodeValueChange(paymentSubTypeCode: any){
+    this.selectedPaymentType = paymentSubTypeCode;
+    this.loadApprovalPaymentsListGrid();
   }
 
   onRowLevelApproveClicked(dataItem: any, control: any, rowIndex: any)

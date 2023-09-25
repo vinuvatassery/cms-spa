@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DrugCategoryCode } from '@cms/case-management/domain';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { FilterService } from '@progress/kendo-angular-grid';
+import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
 import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -14,6 +14,8 @@ import { LovFacade } from '@cms/system-config/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialDrugsComponent {
+  @ViewChild(GridComponent) grid!: GridComponent;
+  @Input() drugDataLoader$: any;
   @Input() drugsData$!: Observable<any>;
   @Input() vendorDetails$!: Observable<any>;
   @Input() pageSizes : any;
@@ -32,21 +34,49 @@ export class FinancialDrugsComponent {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isDrugsGridLoaderShow = false;
   public state!: State;
-  dialogTitle = "Add";
-  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  dialogTitle = "Add New";
   filters:any=[];
-  filteredBy = "";
   isFiltered = false;
-  sortColumn: any;
-  sortDir = "";
-  columnsReordered = false;
-  searchValue = "";
   yesOrNoLovs:any=[];
   yesOrNoLov$ = this.lovFacade.yesOrNoLov$;
+  deliveryMethodLovs:any=[];
+  deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
   hivValue = null;
   hepaValue = null;
   oppoValue = null;
+  deliveryMethodValue = null;
   columnName: any = "";
+
+  column: any = {
+    ndcNbr: 'NDC',
+    brandName: 'Brand Name',
+    drugName: 'Drug Name',
+    deliveryMethodDesc: 'Delivery Method',
+    hiv: 'HIV Drugs?',
+    hepatitis: 'Hep Drugs?',
+    opportunisticInfection: 'OI Drugs?'
+  };
+
+  //Column Standards
+  columnsReordered = false;
+
+  //sorting
+  sortColumn = 'ndcNbr';
+  sortColumnDesc = 'NDC';
+  sortDir = 'Ascending';
+
+  //filtering
+  filteredBy = '';
+  filter: any = [
+    {
+      filters: [],
+      logic: 'and',
+    },
+  ];
+  filteredByColumnDesc = '';
+  selectedStatus = 'Active';
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  columnChangeDesc = 'Default Columns';
 
   public emailBillingAddressActions = [
     {
@@ -75,51 +105,43 @@ export class FinancialDrugsComponent {
     },
   ];
 
-  column: any = {
-    ndcNbr: 'NDC',
-    brandName: 'Brand Name',
-    drugName: 'Drug Name',
-    deliveryMethodCode: 'Delivery Method',
-    hiv: 'HIV Drugs?',
-    hepatitis: 'Hep Drugs?',
-    opportunisticInfection: 'OI Drugs?'
-  };
+  ngAfterViewInit() {
+    this.grid.filter = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [],
+          logic: 'and',
+        },
+      ],
+    };
+    this.loadDrugsListGrid();
+  }
 
    /** Constructor **/
    constructor(private route: ActivatedRoute,
     private readonly ref: ChangeDetectorRef,
-    private readonly lovFacade: LovFacade
+     private readonly lovFacade: LovFacade
    ) {}
 
 
 
   ngOnInit(): void {
     this.lovFacade.getYesOrNoLovs();
+    this.lovFacade.getDeliveryMethodLovs();
     this.loadYesOrNoLovs();
+    this.loadDeliveryMethodLovs();
     this.vendorId = this.route.snapshot.queryParams['v_id'];
   }
 
   ngOnChanges(): void {
-    this.state = {
-      skip: this.gridSkipCount,
-      take: this.state?.take ?? this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
+    this.initializeGrid(false);
     this.loadDrugsListGrid();
   }
 
-  pageSelectionchange(data: any) {
+  pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
-    this.loadDrugsListGrid();
-  }
-
-  public dataStateChange(stateData: any): void {
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
-    this.state = stateData;
-    this.setGridState(stateData);
     this.loadDrugsListGrid();
   }
 
@@ -165,23 +187,12 @@ export class FinancialDrugsComponent {
         pageSize: maxResultCountValue,
         sortColumn: sortValue,
         sortType: sortTypeValue,
-        filters:this.filters
+        filters: JSON.stringify(this.filter)
       };
      this.loadDrugListEvent.emit(gridDataRefinerValue);
   }
 
-
-  public columnChange(e: any) {
-    this.ref.detectChanges();
-  }
-
-  filterChange(filter: CompositeFilterDescriptor): void {
-    this.filterData = filter;
-  }
-
-  onColumnReorder($event: any) {
-    this.columnsReordered = true;
-  }
+  //Column Options Standard Implementation
 
   dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
     filterService.filter({
@@ -202,6 +213,13 @@ export class FinancialDrugsComponent {
     if(field == "opportunisticInfection"){
       this.oppoValue = value;
     }
+    if(field == "deliveryMethodDesc"){
+      this.deliveryMethodValue = value;
+    }
+  }
+
+  public columnChange(e: any) {
+    this.ref.detectChanges();
   }
 
   private loadYesOrNoLovs() {
@@ -213,54 +231,87 @@ export class FinancialDrugsComponent {
     });
   }
 
-  public setGridState(stateData: any): void {
-    this.state = stateData;
-
-    const filters = stateData.filter?.filters ?? [];
-    this.removeIdenticalFilters(stateData,filters);
-
-
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? "";
-    this.sortType = stateData.sort[0]?.dir ?? "";
-    this.state = stateData;
-    this.sortColumn = this.column[stateData.sort[0]?.field];
-    this.sortDir = (this.sort[0]?.dir === 'desc') ? 'Descending' : 'Ascending' ;
+  private loadDeliveryMethodLovs() {
+    this.deliveryMethodLov$
+    .subscribe({
+      next: (data: any) => {
+        this.deliveryMethodLovs=data;
+      }
+    });
   }
 
-  removeIdenticalFilters(stateData:any, filters:any){
+  restGrid() {
+    this.sortValue = 'ndcNbr';
+    this.sortType = 'asc';
+    this.sortColumn = 'ndcNbr';
+    this.sortDir = 'Ascending';
+    this.filter = [];
+    this.filteredByColumnDesc = '';
+    this.sortColumnDesc = this.column[this.sortValue];
+    this.columnChangeDesc = 'Default Columns';
+    this.initializeGrid(true);
+    this.loadDrugsListGrid();
+    this.hivValue = this.hepaValue = this.oppoValue = this.deliveryMethodValue = null;
+  }
 
-    const filterList = this.state?.filter?.filters ?? [];
-    if(filterList.length > 0)
-    {
-      const filterList = []
-      for (const filter of stateData.filter.filters) {
-        const field = filter.filters[0].field;
+  defaultGridState() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      filter: { logic: 'and', filters: [] },
+    };
+  }
 
-        const existingIndex = filterList.findIndex((x) => {
-          if (x.filters.length > 0 && x.filters[0].field === field) {
-            return true;
-          }
-          return false;
+  onColumnReorder($event: any) {
+    this.columnsReordered = true;
+  }
+
+  dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.state = stateData;
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumnDesc = this.column[this.sortValue];
+    this.filter = stateData?.filter?.filters;
+    this.setFilterBy(true, '', this.filter);
+    if (!this.filteredByColumnDesc.includes('Status')) this.selectedStatus = '';
+    this.loadDrugsListGrid();
+  }
+
+  filterChange(filter: CompositeFilterDescriptor): void {
+    this.filterData = filter;
+  }
+
+   private initializeGrid(resetState:boolean) {
+    if (this.state == undefined || resetState) {
+       this.state = {
+        skip: 0,
+        take: this.pageSizes[0]?.value,
+        sort: [{ field: this.sortValue, dir: this.sortType }],
+      };
+    }
+  }
+
+  private setFilterBy(
+    isFromGrid: boolean,
+    searchValue: any = '',
+    filter: any = []
+  ) {
+    this.filteredByColumnDesc = '';
+    if (isFromGrid) {
+      if (filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters
+            ?.filter((fld: any) => fld.value)
+            ?.map((fld: any) => this.column[fld.field]);
+          return [...new Set(filteredColumns)];
         });
 
-        if (existingIndex !== -1) {
-          filterList.splice(existingIndex, 1);
-        }
-        filterList.push(filter);
+        this.filteredByColumnDesc =
+          [...new Set(filteredColumns)]?.sort()?.join(', ') ?? '';
       }
-      const filterListData = filters.map((filter:any) => this.column[filter?.filters[0]?.field]);
-
-      this.filters = JSON.stringify(filterList);
-      this.filteredBy = filterListData.toString();
-      this.isFiltered =true;
-    }
-    else
-    {
-      this.filteredBy = filterList.toString();
-      this.filters = "";
-      this.isFiltered = false
-      this.columnName = "";
     }
   }
 }
