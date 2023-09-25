@@ -19,7 +19,6 @@ import {
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
-import { PendingApprovalPaymentFacade } from '@cms/productivity-tools/domain';
 
 @Component({
   selector: 'productivity-tools-approvals-payments-list',

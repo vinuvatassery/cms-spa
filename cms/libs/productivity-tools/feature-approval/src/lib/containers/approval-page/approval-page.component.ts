@@ -50,14 +50,6 @@ export class ApprovalPageComponent  {
     if(!gridDataValue.selectedPaymentType || gridDataValue.selectedPaymentType.length == 0){
       return;
     }
-    const paymentApprovalGridSetupDto =
-    {
-      SortType : gridDataValue.sortType,
-      Sorting : gridDataValue.sort,
-      SkipCount : gridDataValue.skipcount,
-      MaxResultCount : gridDataValue.maxResultCount,
-      Filter : gridDataValue.filter
-    }
     this.pendingApprovalPaymentFacade.getPendingApprovalPaymentGrid(gridDataValue , gridDataValue.selectedPaymentType)
   }
   loadImportedClaimsGrid(event: any): void {
