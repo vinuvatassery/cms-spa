@@ -11,6 +11,7 @@ import { State } from '@progress/kendo-data-query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialVendorProfileComponent implements OnInit {
+  drugDataLoader$ = this.drugsFacade.drugDataLoader$;
   drugsData$ = this.drugsFacade.drugsData$;
   pageSizes = this.drugsFacade.gridPageSizes;
   sortValue = this.drugsFacade.sortValue;
@@ -101,7 +102,7 @@ export class FinancialVendorProfileComponent implements OnInit {
         this.profileInfoTitle = 'Pharmacy Info';
         break;
     }
-     this.isClinicalVendor = (vendorProfile.vendorTypeCode == FinancialVendorTypeCode.DentalClinic) || 
+     this.isClinicalVendor = (vendorProfile.vendorTypeCode == FinancialVendorTypeCode.DentalClinic) ||
      (vendorProfile.vendorTypeCode == FinancialVendorTypeCode.MedicalClinic)
   }
   loadVendorInfo() {
@@ -115,7 +116,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   loadSpecialHandling() {
     this.financialVendorFacade.getVendorProfileSpecialHandling(this.vendorId);
   }
-  
+
   loadFinancialVendorProfile(vendorId : string)
   {
     this.financialVendorFacade.getVendorProfile(vendorId,this.tabCode)

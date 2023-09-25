@@ -15,6 +15,7 @@ import { LovFacade } from '@cms/system-config/domain';
 })
 export class FinancialDrugsComponent {
   @ViewChild(GridComponent) grid!: GridComponent;
+  @Input() drugDataLoader$: any;
   @Input() drugsData$!: Observable<any>;
   @Input() vendorDetails$!: Observable<any>;
   @Input() pageSizes : any;
@@ -38,16 +39,19 @@ export class FinancialDrugsComponent {
   isFiltered = false;
   yesOrNoLovs:any=[];
   yesOrNoLov$ = this.lovFacade.yesOrNoLov$;
+  deliveryMethodLovs:any=[];
+  deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
   hivValue = null;
   hepaValue = null;
   oppoValue = null;
+  deliveryMethodValue = null;
   columnName: any = "";
 
   column: any = {
     ndcNbr: 'NDC',
     brandName: 'Brand Name',
     drugName: 'Drug Name',
-    deliveryMethodCode: 'Delivery Method',
+    deliveryMethodDesc: 'Delivery Method',
     hiv: 'HIV Drugs?',
     hepatitis: 'Hep Drugs?',
     opportunisticInfection: 'OI Drugs?'
@@ -124,7 +128,9 @@ export class FinancialDrugsComponent {
 
   ngOnInit(): void {
     this.lovFacade.getYesOrNoLovs();
+    this.lovFacade.getDeliveryMethodLovs();
     this.loadYesOrNoLovs();
+    this.loadDeliveryMethodLovs();
     this.vendorId = this.route.snapshot.queryParams['v_id'];
   }
 
@@ -207,6 +213,9 @@ export class FinancialDrugsComponent {
     if(field == "opportunisticInfection"){
       this.oppoValue = value;
     }
+    if(field == "deliveryMethodDesc"){
+      this.deliveryMethodValue = value;
+    }
   }
 
   public columnChange(e: any) {
@@ -222,6 +231,15 @@ export class FinancialDrugsComponent {
     });
   }
 
+  private loadDeliveryMethodLovs() {
+    this.deliveryMethodLov$
+    .subscribe({
+      next: (data: any) => {
+        this.deliveryMethodLovs=data;
+      }
+    });
+  }
+
   restGrid() {
     this.sortValue = 'ndcNbr';
     this.sortType = 'asc';
@@ -233,7 +251,7 @@ export class FinancialDrugsComponent {
     this.columnChangeDesc = 'Default Columns';
     this.initializeGrid(true);
     this.loadDrugsListGrid();
-    this.hivValue = this.hepaValue = this.oppoValue = null;
+    this.hivValue = this.hepaValue = this.oppoValue = this.deliveryMethodValue = null;
   }
 
   defaultGridState() {
