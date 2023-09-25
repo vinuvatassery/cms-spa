@@ -46,6 +46,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
+  selectedPaymentType: any;
 
   gridApprovalPaymentsDataSubject = new Subject<any>();
   gridApprovalPaymentsBatchData$ = this.gridApprovalPaymentsDataSubject.asObservable();
@@ -68,6 +69,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.loadApprovalPaymentsListGrid();
     this.lovFacade.getPandingApprovalPaymentTypeLov();
   }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -111,11 +113,11 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       sortColumn: sortValue,
       sortType: sortTypeValue,
     };
-    this.loadApprovalsPaymentsGridEvent.emit(gridDataRefinerValue);
+    let selectedPaymentType = this.selectedPaymentType;
+    this.loadApprovalsPaymentsGridEvent.emit({gridDataRefinerValue, selectedPaymentType});
     this.gridDataHandle();
   }
 
-  
   onChange(data: any) {
     this.defaultGridState();
 
@@ -173,7 +175,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   }
 
   gridDataHandle() {
-    this.approvalsPaymentsLists$.subscribe((data: GridDataResult) => {
+    this.approvalsPaymentsLists$.subscribe((data: any) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
@@ -197,7 +199,13 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
   }
+
   onCloseDepositDetailClicked(){
     this.depositDetailsDialog.close();
+  }
+
+  onPaymentTypeCodeValueChange(paymentSubTypeCode: any){
+    this.selectedPaymentType = paymentSubTypeCode;
+    this.loadApprovalPaymentsListGrid();
   }
 }

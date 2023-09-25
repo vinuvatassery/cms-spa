@@ -4,9 +4,10 @@
     <span class="text-bold" for="eemploymentep">Payment Request Type:&nbsp;</span>
     <div class="fmly-epdorpdown">
 
-        <kendo-dropdownlist formControlName="paymentTypeCode" aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"
+        <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"
                                 [data]="pendingApprovalPaymentType$ | async" valueField="lovCode" textField="lovDesc" [valuePrimitive]="true"
-                                [loading]="(pendingApprovalPaymentType$ | async)?.length===0">                        
+                                [loading]="(pendingApprovalPaymentType$ | async)?.length===0"
+                                (valueChange)="onPaymentTypeCodeValueChange($event)">                        
          </kendo-dropdownlist>
     </div>
 </div>
@@ -49,48 +50,29 @@
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
         [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
         (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
-        [data]="approvalsPaymentsLists$ | async">
+        [data]="gridApprovalPaymentsBatchData$ | async">
 
-        <kendo-grid-column field="Attention" title="Attention" [width]="120"> </kendo-grid-column>
         <kendo-grid-column field="viewPmtsInBatch" title="View Pmts In Batch" [width]="120">
             <ng-template kendoGridCellTemplate let-dataItem>
                 <button aria-label="View Pmts In Batch" title="View" kendoButton look="flat" class="card-link-button">
                     <span class="material-icons"> plagiarism </span>
                 </button>
-
             </ng-template>
-        </kendo-grid-column>
-        <kendo-grid-column field="batch" title="Batch" [width]="180">
+        </kendo-grid-column>        
+        <kendo-grid-column field="batchName" title="Batch" [width]="180">
             <ng-template kendoGridCellTemplate let-dataItem>
                 <button aria-label="Batch" kendoButton look="flat" class="card-link-button">
-                    {{ dataItem.batch }}
+                    {{ dataItem.batchName }}
                 </button>
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="providerCount" title="Provider Count" [width]="120"> </kendo-grid-column>
-        <kendo-grid-column field="dateApprovalRequest" title="Date Approval Request" [width]="160"> </kendo-grid-column>
-        <kendo-grid-column field="serviceDate" title="Service Date" [width]="120"> </kendo-grid-column>
-        <kendo-grid-column field="Schedule" title="Schedule" [width]="120"> </kendo-grid-column>
-        <kendo-grid-column field="category" title="Category" [width]="100"> </kendo-grid-column>
-        <kendo-grid-column field="expenseType" title="Expense Type" [width]="150"> </kendo-grid-column>
-        <kendo-grid-column field="typeOfUtility" title="Type of Utility" [width]="150"> </kendo-grid-column>
-        <kendo-grid-column field="amount" title="Amount" [width]="120"> </kendo-grid-column>
-        <kendo-grid-column field="fundingSource" title="Funding Source" [width]="120"> </kendo-grid-column>
-        <kendo-grid-column field="paymentMethod" title="Payment Method" [width]="150"> </kendo-grid-column>
-        <kendo-grid-column field="frequency" title="Frequency" [width]="120"> </kendo-grid-column>
-        <kendo-grid-column field="serviceProvider" title="Service Provider" [width]="150">
-            <ng-template kendoGridCellTemplate let-dataItem>
-                <button aria-label="service Provider" kendoButton look="flat" class="card-link-button">
-                    {{ dataItem.serviceProvider }}
-                </button>
-            </ng-template>
-        </kendo-grid-column>
-        <kendo-grid-column field="status" title="Status" [width]="120"> </kendo-grid-column>
-        <kendo-grid-column field="URN" title="URN" [width]="120"> </kendo-grid-column>
-        <kendo-grid-column field="clientNumber" title="Client Number" [width]="120"> </kendo-grid-column>
-        <kendo-grid-column field="name" title="Name" [width]="120"> </kendo-grid-column>
-        <kendo-grid-column field="pcaCode" title="PCA Code" [width]="120"> </kendo-grid-column>
-        <kendo-grid-column field="glAccount" title="GL Account" [width]="120"> </kendo-grid-column>
+        <kendo-grid-column field="totalAmountDue" title="Total Amount" [width]="160"> </kendo-grid-column>
+        <kendo-grid-column field="providerCount" title="Carrier Count" [width]="120"> </kendo-grid-column>
+        <kendo-grid-column field="totalPayments" title="Pmt Count" [width]="120"> </kendo-grid-column>
+        <kendo-grid-column field="totalClaims" title="Premium Count" [width]="100"> </kendo-grid-column>
+        <kendo-grid-column field="creationTime" title="Date Approval Requested" [width]="150"> </kendo-grid-column>
+        
         <kendo-grid-column field=" " title="Send Back | Approve" [width]="210" [sticky]="true">
             <ng-template kendoGridCellTemplate let-dataItem>
                 <kendo-buttongroup selection="single">

@@ -7,9 +7,11 @@ import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNot
 export class PendingApprovalPaymentFacade {
   /** Private properties **/
   private pendingApprovalCountSubject = new Subject<any>();
+  private pendingApprovalGridSubject = new Subject<any>();
 
   /** Public properties **/
   pendingApprovalCount$ = this.pendingApprovalCountSubject.asObservable();
+  pendingApprovalGrid$ = this.pendingApprovalGridSubject.asObservable();
 
   constructor(
     private readonly PendingApprovalPaymentService: PendingApprovalPaymentService,
@@ -53,4 +55,23 @@ export class PendingApprovalPaymentFacade {
       }
     );
   }
+  
+  getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string) {
+
+    this.PendingApprovalPaymentService.getPendingApprovalPaymentGrid(gridSetupData ,serviceSubType).subscribe(
+      {
+        next: (dataResponse: any) => {
+          const gridView = {
+            data: dataResponse["items"],
+            total: dataResponse["totalCount"]
+          };
+            this.pendingApprovalGridSubject.next(gridView);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        },
+      }
+    );
+  }
+
 }

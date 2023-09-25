@@ -31,9 +31,9 @@ export class ApprovalPageComponent  {
 
   state!: State;
   approvalsGeneralLists$ = this.approvalFacade.approvalsGeneralList$; 
-  approvalsPaymentsLists$ = this.approvalFacade.approvalsPaymentsList$;
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.pendingApprovalPaymentFacade.pendingApprovalCount$;
+  approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$
 
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,     
@@ -42,13 +42,15 @@ export class ApprovalPageComponent  {
                 this.pendingApprovalPaymentFacade.getAllPendingApprovalPaymentCount()
               }
 
- 
    loadApprovalsGeneralGrid(event: any): void {
     this.approvalFacade.loadApprovalsGeneral();
   }
 
-  loadApprovalsPaymentsGrid(event: any): void {
-    this.approvalFacade.loadApprovalsPayments();
+  loadApprovalsPaymentsGrid(gridDataValue : any): void {
+    if(!gridDataValue.selectedPaymentType || gridDataValue.selectedPaymentType.length == 0){
+      return;
+    }
+    this.pendingApprovalPaymentFacade.getPendingApprovalPaymentGrid(gridDataValue , gridDataValue.selectedPaymentType)
   }
   loadImportedClaimsGrid(event: any): void {
     this.approvalFacade.loadImportedClaimsLists();
