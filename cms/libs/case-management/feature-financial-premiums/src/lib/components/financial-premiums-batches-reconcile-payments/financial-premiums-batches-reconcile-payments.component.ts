@@ -52,7 +52,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   @Input() batchId: any;
   @Input() sortValueBatch: any;
   @Input() sortBatch: any;
-  @Input() claimsType: any;
   entityId: any;
   public isBreakoutPanelShow:boolean=true;
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();

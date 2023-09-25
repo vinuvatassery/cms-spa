@@ -44,7 +44,6 @@ export class FinancialPremiumsBatchesLogListsComponent
   removePremiumsDialog: any;
   addClientRecentPremiumsDialog: any; 
   acceptReportValue = null
-
   yesOrNoLovs:any=[];
   onlyPrintAdviceLetter: boolean = true;
   printAuthorizationDialog: any;
@@ -128,7 +127,6 @@ export class FinancialPremiumsBatchesLogListsComponent
   @Input() batchLogGridLists$: any;
   @Output() loadBatchLogListEvent = new EventEmitter<any>();
   @Input() batchId: any;
-  @Input() claimsType: any;
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
   public state!: State;
 

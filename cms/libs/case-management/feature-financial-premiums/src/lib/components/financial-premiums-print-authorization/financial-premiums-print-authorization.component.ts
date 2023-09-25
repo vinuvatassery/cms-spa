@@ -82,27 +82,6 @@ export class FinancialPremiumsPrintAuthorizationComponent {
       this.selectUnSelectPayment.emit({'selected':event.target.checked,'vendorAddressId':item.vendorAddressId});
     }
   }
-  // onCheckboxChange(event: any, item: any): void {
-  //   item.isChecked = event.target.checked;
-  //   if(this.printOption){
-  //     if(item.isChecked)
-  //     {
-  //     this.finalPrintList.push(item);
-  //     }
-  //     else{
-  //       this.finalPrintList = this.finalPrintList.filter(element => element.item !== item.item);
-  //     }
-  //   }else{
-  //     if(item.isChecked)
-  //     {
-  //     this.finalPrintList.push(item);
-  //     }
-  //     else{
-  //       this.finalPrintList = this.finalPrintList.filter(element => element.warrantNumber !== item.warrantNumber);
-  //     }
-  //   }
-  //   this.printCount = this.finalPrintList.length;
-  // }
 
   getPrintLetterCount(){
     this.printCount = this.items.length;
