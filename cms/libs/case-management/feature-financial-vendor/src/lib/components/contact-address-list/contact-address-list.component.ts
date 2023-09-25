@@ -209,6 +209,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
       );
       this.clickCloseDeactivateContactAddress();
       this.refreshPaymentAddressList.emit();
+      this.initializeGrid();
     }
   }
 

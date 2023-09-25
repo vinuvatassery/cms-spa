@@ -18,8 +18,10 @@ export class FinancialClinicProviderDetailsComponent {
   selectedTin: any;
   proId='';
   @Input() parentVendorId :any
+  @Input() vendorTypeCode :any
   @Output() closeProviderEvent = new EventEmitter();
   @Output() loadProviderListEvent = new EventEmitter();
+  @Input() addProviderNew$ : any
   public formUiStyle: UIFormStyle = new UIFormStyle();
   searchProvider$ = this.financialVendorFacade.searchProvider$;
   isValidateForm: boolean = false;
@@ -62,7 +64,11 @@ export class FinancialClinicProviderDetailsComponent {
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.financialVendorFacade.searchProvider(searchText);
+    let payload ={
+      SearchText : searchText,
+      VendorTypeCode : this.vendorTypeCode
+    }
+    this.financialVendorFacade.searchProvider(payload);
   }
 
   saveprovider() {
@@ -72,16 +78,18 @@ export class FinancialClinicProviderDetailsComponent {
       vendorId:this.proId
     }
     this.isValidateForm = true
-
     if (this.providerForm.valid){
+      
       if(data)  
       {
         this.financialVendorFacade.addProvider(data);
-        this.closeProviderPopup();
+        this.addProviderNew$.subscribe((_ : any)=>{
+          this.loadProviderListEvent.emit();
+          this.closeProviderPopup();
+        })
       }
-      this.financialVendorFacade.addProvider(data);
       this.changeDetector.detectChanges();
-      this.loadProviderListEvent.emit(true);
+     
      }
   }
   closeProviderPopup(){

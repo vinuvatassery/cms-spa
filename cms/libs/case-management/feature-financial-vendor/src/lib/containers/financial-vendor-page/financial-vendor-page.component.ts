@@ -218,7 +218,7 @@ export class FinancialVendorPageComponent implements OnInit {
         Filter : filter
       }
      let fileName = ''
-      switch(data?.vendorTypeCode) {
+      switch(this.financialVendorFacade.selectedVendorType) {
         case FinancialVendorTypeCode.Manufacturers: {
           fileName = 'Manufacturers';
            break;

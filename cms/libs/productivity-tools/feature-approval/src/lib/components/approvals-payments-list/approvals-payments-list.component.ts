@@ -18,6 +18,8 @@ import {
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { LovFacade } from '@cms/system-config/domain';
+
 @Component({
   selector: 'productivity-tools-approvals-payments-list',
   templateUrl: './approvals-payments-list.component.html', 
@@ -50,15 +52,21 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+
+  
   
   private depositDetailsDialog: any;
+
+  pendingApprovalPaymentType$ = this.lovFacade.pendingApprovalPaymentType$;
   
   /** Constructor **/
   constructor(private route: Router, 
-    private dialogService: DialogService) {}
+    private dialogService: DialogService,
+    private lovFacade: LovFacade) {}
 
   ngOnInit(): void {
     this.loadApprovalPaymentsListGrid();
+    this.lovFacade.getPandingApprovalPaymentTypeLov();
   }
   ngOnChanges(): void {
     this.state = {

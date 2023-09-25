@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FinancialVendorTypeCode, GridFilterParam } from '@cms/case-management/domain';
+import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';  
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
@@ -48,12 +48,13 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   columnChangeDesc = 'Default Columns'
   public state!: State;
   searchText = '';
-
-  
   @Input() providerList$:any
   @Output() loadProviderListEvent = new EventEmitter<any>();
   @Output() removeProviderClick = new EventEmitter<any>();
   @Input() ParentVendorId :any
+  @Input() vendorTypeCode :any
+  @Input() removeprovider$ : any
+  @Input() addProviderNew$ : any
   public processGridActions = [
     {
       buttonType: 'btn-h-danger',
@@ -199,7 +200,6 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   }
 
    loadProviderListGrid(): void {
-  
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -208,7 +208,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
       JSON.stringify(this.filter));
       const providerQuery={
         vendorId:this.ParentVendorId,
-        vendorTypeCode :FinancialVendorTypeCode.Clinic,
+        vendorTypeCode :this.vendorTypeCode,
         ...param
       }
     this.loadProviderListEvent.emit(providerQuery);
@@ -287,6 +287,9 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   }
   removeProvider() {
       this.removePoviderEvent(this.selectProviderId);
+      this.removeprovider$.subscribe((_:any)=>{
+        this.loadProviderListGrid()
+      })
       this.clickCloseRemoveProviders();
    }
 
@@ -299,7 +302,5 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     this.removeProviderClick.emit(providerId);
     this.clickCloseRemoveProviders();
     this.changeDetector.detectChanges();
-    this.loadProviderListGrid();
-     
   }
 }

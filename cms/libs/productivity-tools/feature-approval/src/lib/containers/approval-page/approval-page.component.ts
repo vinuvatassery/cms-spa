@@ -3,7 +3,7 @@ import { Component,  ChangeDetectionStrategy } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
-import { ApprovalFacade } from '@cms/productivity-tools/domain';
+import { ApprovalFacade, PendingApprovalPaymentFacade } from '@cms/productivity-tools/domain';
 import { ReminderNotificationSnackbarService, ReminderSnackBarNotificationType } from '@cms/shared/util-core';
 import { NotificationService } from '@progress/kendo-angular-notification';
 @Component({
@@ -33,9 +33,14 @@ export class ApprovalPageComponent  {
   approvalsGeneralLists$ = this.approvalFacade.approvalsGeneralList$; 
   approvalsPaymentsLists$ = this.approvalFacade.approvalsPaymentsList$;
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
+  pendingApprovalCount$ = this.pendingApprovalPaymentFacade.pendingApprovalCount$;
 
   /** Constructor **/
-  constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,     private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService,) {}
+  constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,     
+              private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService,
+              private pendingApprovalPaymentFacade: PendingApprovalPaymentFacade) {
+                this.pendingApprovalPaymentFacade.getAllPendingApprovalPaymentCount()
+              }
 
  
    loadApprovalsGeneralGrid(event: any): void {
