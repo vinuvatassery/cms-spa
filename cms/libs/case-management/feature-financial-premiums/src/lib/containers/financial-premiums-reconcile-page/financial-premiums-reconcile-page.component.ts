@@ -28,7 +28,6 @@ export class FinancialPremiumsReconcilePageComponent implements OnInit {
   reconcileBreakoutList$ = this.financialPremiumsFacade.reconcileBreakoutList$;
   batchId:any;
   premiumType: any;
-  claimsType: any;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
     private readonly router: Router,
