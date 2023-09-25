@@ -48,7 +48,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
-  /* Vikas Work Start */
   approveStatus:string="APPROVE";
   sendbackStatus:string="SENDBACK";
   sendbackNotesRequireMessage:string = "Send Back Notes is required.";
@@ -60,7 +59,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   approvalsPaymentsGridPagedResult:any =[];
   approvalsPaymentsGridUpdatedResult: any=[];
   selectedApprovalSendbackDataRows: any[] = [];
-  /* Vikas Work End */
+  
   selectedPaymentType: any;
 
   gridApprovalPaymentsDataSubject = new Subject<any>();
