@@ -53,6 +53,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+
+  
   
   private depositDetailsDialog: any;
 

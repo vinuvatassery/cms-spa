@@ -188,8 +188,10 @@ export class FinancialPremiumsBatchesListComponent implements OnInit, OnChanges{
     });
     this.isFinancialPremiumsBatchGridLoaderShow = false;
   }
-  navToBatchDetails(event : any){  
-    this.route.navigate(['/financial-management/premiums/' + this.premiumsType +'/batch'] ); 
+  navToBatchDetails(event : any){    
+    
+    this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch`],
+    { queryParams :{bid: '569e1a0e-4bb7-4035-9616-12649b171797'}});
   }
 
 }

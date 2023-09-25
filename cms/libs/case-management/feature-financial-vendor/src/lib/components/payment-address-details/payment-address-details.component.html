@@ -2,7 +2,7 @@
 
     <section class="k-dialog-body">
         <p class="text-muted mb-2">
-            Add a payment or physical address and contacts for that address. All fields are required unless otherwise stated.
+          All fields are required unless otherwise stated
         </p>
         <div class="flex-row">
             <div class="flex-col">
@@ -82,7 +82,7 @@
                 <kendo-formerror *ngIf="formIsSubmitted && paymentAddressFormControls?.zip.errors?.required">Zip Code is required.
                 </kendo-formerror>
                 <kendo-formerror *ngIf="formIsSubmitted && paymentAddressFormControls?.zip.errors?.pattern">
-                        Invalid Zip Code format. 
+                        Invalid Zip Code format.
                 </kendo-formerror>
             </div>
             <div *ngIf="tabCode === financialVendorProviderTabCode.Pharmacy" class="flex-col mb-1  mt-checkbox">
