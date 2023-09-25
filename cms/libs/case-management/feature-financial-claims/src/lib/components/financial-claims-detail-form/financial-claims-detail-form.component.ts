@@ -615,7 +615,6 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         SnackBarNotificationType.ERROR,
         'Start date must less than end date'
       );
-      return;
     }
   }
 

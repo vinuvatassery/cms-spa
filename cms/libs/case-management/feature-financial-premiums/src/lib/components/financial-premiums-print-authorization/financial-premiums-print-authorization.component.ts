@@ -23,11 +23,12 @@ export class FinancialPremiumsPrintAuthorizationComponent {
   @Input() items!: any;
   @Input() printOption: boolean = false;
   @Input() batchId: any;
-  @Input() claimsType:any;
+  @Input() premiumsType:any;
   @Input() isSaveClicked!: boolean;
 
   /** Output properties  **/
   @Output() onClosePrintAdviceLetterEvent = new EventEmitter<any>();
+  @Output() selectUnSelectPayment  = new EventEmitter<any>();
 
     /** Constructor **/
     constructor(
@@ -67,26 +68,41 @@ export class FinancialPremiumsPrintAuthorizationComponent {
   }
 
   onCheckboxChange(event: any, item: any): void {
-    item.isChecked = event.target.checked;
-    if(this.printOption){
-      if(item.isChecked)
-      {
-      this.finalPrintList.push(item);
-      }
-      else{
-        this.finalPrintList = this.finalPrintList.filter(element => element.item !== item.item);
-      }
-    }else{
-      if(item.isChecked)
-      {
-      this.finalPrintList.push(item);
-      }
-      else{
-        this.finalPrintList = this.finalPrintList.filter(element => element.warrantNumber !== item.warrantNumber);
-      }
+    item.isPrintAdviceLetter = event.target.checked;
+    this.printCount = this.returnResultFinalPrintList.filter(x => x.isPrintAdviceLetter === true).length;
+    this.reconcileCount = this.returnResultFinalPrintList.length;
+    if (!this.items['print']) {
+      this.printAdviceLetterData.PrintAdviceLetterGenerateInfo.forEach((value: any) => {
+        if (item.vendorId === value.vendorId) {
+          value.isPrintAdviceLetter = event.target.checked;
+        }
+      });
     }
-    this.printCount = this.finalPrintList.length;
+    if (this.items['print']) {
+      this.selectUnSelectPayment.emit({'selected':event.target.checked,'vendorAddressId':item.vendorAddressId});
+    }
   }
+  // onCheckboxChange(event: any, item: any): void {
+  //   item.isChecked = event.target.checked;
+  //   if(this.printOption){
+  //     if(item.isChecked)
+  //     {
+  //     this.finalPrintList.push(item);
+  //     }
+  //     else{
+  //       this.finalPrintList = this.finalPrintList.filter(element => element.item !== item.item);
+  //     }
+  //   }else{
+  //     if(item.isChecked)
+  //     {
+  //     this.finalPrintList.push(item);
+  //     }
+  //     else{
+  //       this.finalPrintList = this.finalPrintList.filter(element => element.warrantNumber !== item.warrantNumber);
+  //     }
+  //   }
+  //   this.printCount = this.finalPrintList.length;
+  // }
 
   getPrintLetterCount(){
     this.printCount = this.items.length;
@@ -104,7 +120,7 @@ export class FinancialPremiumsPrintAuthorizationComponent {
 
   generateAndPrintAdviceLetter(request:any) {
     this.loaderService.show();
-    this.financialPremiumsFacade.viewAdviceLetterData(this.batchId, request, this.claimsType)
+    this.financialPremiumsFacade.viewAdviceLetterData(this.batchId, request, this.premiumsType)
       .subscribe({
         next: (data: any) => {
           if (data) {
@@ -125,7 +141,7 @@ export class FinancialPremiumsPrintAuthorizationComponent {
   reconcilePaymentsAndPrintAdviceLetter() {
     this.loaderService.show();
     let reconcileData = this.reconcilePaymentsData(this.finalPrintList);
-    this.financialPremiumsFacade.reconcilePaymentsAndLoadPrintLetterContent(this.batchId, reconcileData,this.claimsType)
+    this.financialPremiumsFacade.reconcilePaymentsAndLoadPrintLetterContent(this.batchId, reconcileData,this.premiumsType)
       .subscribe({
         next: (data: any) => {
           if (data) {
@@ -164,7 +180,7 @@ export class FinancialPremiumsPrintAuthorizationComponent {
 
   loadPrintLetterContent(request:any) {
     this.loaderService.show();
-    this.financialPremiumsFacade.loadMedicalPremiumPrintAdviceLetterData(this.batchId,request,this.claimsType)
+    this.financialPremiumsFacade.loadMedicalPremiumPrintAdviceLetterData(this.batchId, request, this.premiumsType)
       .subscribe({
         next: (data: any[]) => {
           if (data.length > 0) {

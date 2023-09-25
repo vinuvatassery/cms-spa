@@ -139,8 +139,6 @@ export class FinancialClaimsPrintAuthorizationComponent {
     if (this.items['print']) {
       this.selectUnSelectPayment.emit({'selected':event.target.checked,'vendorAddressId':item.vendorAddressId});
     }
-    
-
   }
 
   onPrintAdviceLetterClicked(buttonText: string) {
