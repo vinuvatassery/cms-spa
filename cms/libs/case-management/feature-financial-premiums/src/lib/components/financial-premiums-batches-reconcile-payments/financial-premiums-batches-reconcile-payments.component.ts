@@ -66,6 +66,9 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
+  selectedReconcileDataRows: any[] = [];
+  onlyPrintAdviceLetter : boolean = false;
+  isSaveClicked : boolean = false;
 
   gridClaimsReconcileDataSubject = new Subject<any>();
   gridClaimsReconcileData$ = this.gridClaimsReconcileDataSubject.asObservable();
@@ -80,10 +83,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   public currentDate =  new Date();
   datePaymentReconciledRequired= false;
   paymentSentDateRequired= false;
-  isSaveClicked : boolean = false;
   tAreaCessationMaxLength:any=200;
   pageValidationMessage:any=null;
-  selectedReconcileDataRows: any[] = [];
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   providerTitle:any = 'Medical Provider';
 

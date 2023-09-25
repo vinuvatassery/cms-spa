@@ -44,8 +44,10 @@ export class FinancialPremiumsBatchesLogListsComponent
   removePremiumsDialog: any;
   addClientRecentPremiumsDialog: any; 
   acceptReportValue = null
-
   yesOrNoLovs:any=[];
+  onlyPrintAdviceLetter: boolean = true;
+  printAuthorizationDialog: any;
+  selectedDataRows: any;
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -124,6 +126,8 @@ export class FinancialPremiumsBatchesLogListsComponent
   @Input() sort: any;
   @Input() batchLogGridLists$: any;
   @Output() loadBatchLogListEvent = new EventEmitter<any>();
+  @Input() batchId: any;
+  @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
   public state!: State;
 
   sortColumn = 'Item #';
@@ -415,5 +419,11 @@ export class FinancialPremiumsBatchesLogListsComponent
     this.sort = this.sortColumn;
 
     this.loadBatchLogListGrid();
+  }
+
+  onPrintAuthorizationCloseClicked(result: any) {
+    if (result) {
+      this.printAuthorizationDialog.close();
+    }
   }
 }
