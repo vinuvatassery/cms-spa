@@ -1,5 +1,5 @@
 <div class="sidebar-last-visited-cases-container">
-  <button class="active-menu-toggled" aria-label="bookmark case" title="Bookmark" kendoButton look="flat">
+  <button class="active-menu-toggled" aria-label="Bookmark case" title="Bookmark" kendoButton look="flat">
     <span class="material-icons" aria-label="last visited case" aria-hidden="true">
       bookmark
     </span>
@@ -19,7 +19,7 @@
           (dragEnd)="onDragEnd($event)" [emptyItemClass]="'secession-empty-state'" [emptyText]="'There are no active sessions'">
           <ng-template let-item="item">
             <div class="last-visited-case">
-              <button aria-label="remove last visited case" (click)="deleteActiveSession(item)"
+              <button aria-label="Remove active case" (click)="deleteActiveSession(item)"
                 kendoButton icon="close" look="flat" class="last-visited-case-close"></button>
               <p class="last-visited-case-heading" (click)="onCaseClicked(item)"><strong>{{ item.clientName }}</strong>
               </p>
