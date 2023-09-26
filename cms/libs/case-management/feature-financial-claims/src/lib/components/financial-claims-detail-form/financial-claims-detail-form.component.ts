@@ -459,8 +459,14 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   }
 
   removeService(i: number) {
+    if(this.isEdit && this.addClaimServicesForm.length == 1  )
+    {
+       this.addClaimServicesForm.reset();
+    }
+    if(this.addClaimServicesForm.length > 1 ){
     this.addClaimServicesForm.removeAt(i);
     this.addExceptionForm.removeAt(i);
+    }
   }
 
   IsServiceStartDateValid(index: any) {
@@ -597,8 +603,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.onPrintDenialLetterOpen();
       return;
     }
-    this.getPCACode(isPcaAssigned, bodyData);
-  }
+    this.getPCACode(isPcaAssigned, bodyData);  
+}
 
   getPCACode(isPcaAssigned: boolean, bodyData: any){
     if (!isPcaAssigned) {
