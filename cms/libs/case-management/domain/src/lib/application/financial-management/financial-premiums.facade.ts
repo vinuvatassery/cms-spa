@@ -75,6 +75,9 @@ export class FinancialPremiumsFacade {
   private batchLogDataSubject =  new Subject<any>();
   batchLogData$ = this.batchLogDataSubject.asObservable();
 
+  private batchLogServicesDataSubject =  new Subject<any>();
+  batchLogServicesData$ = this.batchLogServicesDataSubject.asObservable();
+
   private batchReconcileDataSubject =  new Subject<any>();
   reconcileDataList$ = this.batchReconcileDataSubject.asObservable();
 
@@ -193,6 +196,24 @@ export class FinancialPremiumsFacade {
           total: dataResponse['totalCount'],
         };
         this.batchLogDataSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  }
+
+  loadPremiumServicesByPayment(premiumType : string ,paymentId : string,paginationParameters : any) {  
+    this.financialPremiumsDataService.loadPremiumServicesByPayment(premiumType ,paymentId ,paginationParameters )
+    .subscribe({
+      next: (dataResponse : any) => {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.batchLogServicesDataSubject.next(gridView);
         this.hideLoader();
       },
       error: (err) => {
