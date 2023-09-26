@@ -37,7 +37,7 @@ export class FinancialPremiumsReconcilePageComponent implements OnInit {
     
   ) {}
   ngOnInit(): void {
-    this.premiumType =this.financialPremiumsFacade.getPremiumType(this.router)
+    this.premiumType =this.financialPremiumsFacade.getPremiumType(this.router);
     this.addNavigationSubscription();
     this.getQueryParams();
   }
