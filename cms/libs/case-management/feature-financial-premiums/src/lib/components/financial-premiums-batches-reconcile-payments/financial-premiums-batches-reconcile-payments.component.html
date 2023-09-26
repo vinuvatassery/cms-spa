@@ -335,7 +335,13 @@
 
 <ng-template #PrintAuthorizationDialog>
       <kendo-dialog-titlebar  class="text-normal" (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Authorization(s)</kendo-dialog-titlebar>
-    <cms-financial-premiums-print-authorization></cms-financial-premiums-print-authorization>
+    <cms-financial-premiums-print-authorization
+      [printOption]="onlyPrintAdviceLetter"
+      [isSaveClicked]="isSaveClicked"
+      [items]="selectedReconcileDataRows"
+      [batchId]="batchId"
+      (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+      [premiumsType]="premiumsType"></cms-financial-premiums-print-authorization>
     </ng-template>
 
     

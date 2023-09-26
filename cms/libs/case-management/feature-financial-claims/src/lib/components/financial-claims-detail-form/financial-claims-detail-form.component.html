@@ -390,7 +390,14 @@
                     <span class="material-icons" aria-label="New Claims" aria-hidden="false">add</span>
                     New Service</button>
             </div>
-
+            <div>
+                <span class="app-checkboxwidtext-wrapper">
+                    <input type="checkbox" kendoCheckBox aria-labelledby="applyChangesToMailingAddress"
+                        id="isSpotsPaymentInput" [checked]="isSpotsPayment" (change)="onSpotsPaymentChange($event)" />
+                    <label class="k-checkbox-label" for="isSpotsPaymentInput">
+                        <strong>This is a SPOTS payment</strong></label>
+                </span>
+            </div>
 
         </div>
     </div>

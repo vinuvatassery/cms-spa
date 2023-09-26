@@ -104,7 +104,7 @@
       <ng-template kendoTabContent>
         <div class="block-section ">
 
-          <div class="client-profile-outlet">
+          <div class="client-profile-outlet"  *ngIf="vendorTypeCode">
             <cms-clients [vendorTypeCode]="vendorTypeCode" [providerId]="vendorId"></cms-clients>
           </div>
         </div>
@@ -131,7 +131,7 @@
           [sortType]="providerLissortType" [sort]="providerLissort"
           [ParentVendorId]="vendorId"
           (removeProviderClick)="removeProvider($event)"
-          (loadProviderListEvent)="loadProviderList($event)" 
+          (loadProviderListEvent)="loadProviderList($event)"
           [providerList$]="providerList$"
           [vendorTypeCode]="vendorTypeCode"
           [removeprovider$]="removeprovider$"

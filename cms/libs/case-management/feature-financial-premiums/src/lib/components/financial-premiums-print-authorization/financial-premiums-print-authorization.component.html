@@ -1,38 +1,21 @@
 <section class="k-dialog-body">
-      <p>{{printOption ? 'Review the advice letters and confirm which ones to print. Click "Print" when you\'re done.':'Review the advice letters and confirm which ones to print. Click Reconcile & Print" when you\'re done.'}}</p>
+      <p>{{printOption ? 'Review the advice letters and confirm which ones to print. Click "Print" when you\'re done.':'Review the advice letters and confirm which ones to print. Click "Reconcile & Print" when you\'re done.'}}</p>
       <div class="custom_scroll_view mt-2">
-            <kendo-scrollview [data]="items" [width]="width" [height]="height" [arrows]="true" [pageable]="false">
-                  <ng-template let-item="item">
-                        <div *ngIf="printOption">
+            <kendo-scrollview [data]="returnResultFinalPrintList" [width]="width" [height]="height" [arrows]="true" [pageable]="false">
+                  <ng-template let-item="item">                      
+                        <div>
                               <div class="slidertitle-bar">
-                                    <p><strong>{{item.item}}) {{item.providerName}} </strong> <label class="ml-1 text-muted">${{item.totalCost}}</label>
-                                          <label class="ml-1 text-muted"> {{item.paymentMethod}}</label></p>
+                                    <p><strong>{{item.paymentNbr}}) {{item.vendorName}} </strong> <label class="ml-1 text-muted">${{item.totalBatchAmount}}</label>
+                                          <label class="ml-1 text-muted"> {{item.paymentMethodCode}}</label></p>
                               </div>
-                              <div class="text-right mt-1">
+                              <div class="text-right mt-1 pr-2">
                                     <span class="app-checkboxwidtext-wrapper">
-                                          <input type="checkbox" [checked]="item.isChecked" (change)="onCheckboxChange($event, item)" kendoCheckBox aria-labelledby="Printauthorization" id="Printauthorization" />
+                                          <input type="checkbox" [checked]="item.isPrintAdviceLetter" (change)="onCheckboxChange($event, item)" kendoCheckBox aria-labelledby="Printauthorization" id="Printauthorization" />
                                           <label class="k-checkbox-label" for="Printauthorization">Print letter</label>
                                     </span>
                               </div>
 
-                              <div>
-                                    <label>Content Will come here</label>
-                              </div>
-                        </div>
-                        <div *ngIf="!printOption">
-                              <div class="slidertitle-bar">
-                                    <p><strong>{{item.item}}) {{item.vendorName}} </strong> <label class="ml-1 text-muted">${{item.paymentAmount}}</label>
-                                          <label class="ml-1 text-muted"> {{item.paymentMethod}}</label></p>
-                              </div>
-                              <div class="text-right mt-1">
-                                    <span class="app-checkboxwidtext-wrapper">
-                                          <input type="checkbox" [checked]="item.isChecked" (change)="onCheckboxChange($event, item)" kendoCheckBox aria-labelledby="Printauthorization" id="Printauthorization" />
-                                          <label class="k-checkbox-label" for="Printauthorization">Print letter</label>
-                                    </span>
-                              </div>
-
-                              <div>
-                                    <label>Content Will come here</label>
+                              <div [innerHTML]="item.letterContent" class="view-auth-port">
                               </div>
                         </div>
                   </ng-template>
@@ -44,12 +27,14 @@
 <kendo-dialog-actions>
       <div class="justify-content-between align-items-center">
             <div class="justify-content-end align-items-center">
-                  <span class="mr-1">{{printOption ? +printCount+' advice letter(s) to be printed' : '1 payment(s) to reconcile, ' +printCount+ 'authorization(s) to be printed'}}</span>
+                  <span class="mr-1">{{ printOption
+                        ? printCount + ' advice letter(s) to be printed'
+                        : reconcileCount + ' payment(s) to reconcile, ' + printCount + ' authorization(s) to be printed' }}</span>
 
                   <button kendoButton (click)="onClosePrintAdviceLetterClicked()" [primary]="true" look="outline" aria-label="Cancel">
                         Cancel
                   </button>
-                  <button kendoButton [disabled]="printCount == 0" [primary]="true" aria-label="Submit"> {{printOption ? 'Print' : 'Reconcile & Print'}}</button>
+                  <button kendoButton [disabled]="printCount == 0" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true" aria-label="Submit"> {{printOption ? 'Print' : 'Reconcile & Print'}}</button>
             </div>
       </div>
 </kendo-dialog-actions>

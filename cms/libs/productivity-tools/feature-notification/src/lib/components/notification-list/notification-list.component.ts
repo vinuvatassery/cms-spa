@@ -23,7 +23,7 @@ export class NotificationListComponent {
     
     {
       buttonType:"btn-h-danger",
-      text: "Discard",
+      text: "Dismiss",
       icon: "notifications_off",
       click: (): void => {
       },

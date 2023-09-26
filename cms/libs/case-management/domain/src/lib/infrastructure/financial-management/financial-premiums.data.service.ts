@@ -173,44 +173,20 @@ export class FinancialPremiumsDataService {
     ]);
   }
 
-
-  loadBatchLogListService( ) {
-    return of([
-      {
-        vendorName: 'Address `',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
-      },
-      {
-        vendorName: 'Address `',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
-        by: 'by',
-      },
-     
-    ]);
+  loadBatchName(batchId: string){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/payment-batches/${batchId}`);
   }
+
+
+  loadBatchLogListService(premiumType : string ,batchId : string,paginationParameters : any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payment-batches/${batchId}/payments`,paginationParameters);
+  }
+
+  loadPremiumServicesByPayment(premiumType : string ,paymentId : string,paginationParameters : any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payments/${paymentId}/services`,paginationParameters);
+  }
+
   loadBatchItemsListService(){
     return of([
       {
@@ -471,6 +447,20 @@ export class FinancialPremiumsDataService {
     );
   }
 
+  loadMedicalPremiumPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, premiumType: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/print-advice-letter`, printAdviceLetterData);
+  }
+
+  reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any, premiumType:any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/reconcile-payments`,reconcileData);
+  }
+
+  viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, premiumType:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/download-advice-letter`, printAdviceLetterData,
+      { responseType: 'blob' }
+    );
+  }
   loadInsurancePlans(clientId: number): Observable<ClientInsurancePlans[]>{
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/plans`
