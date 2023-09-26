@@ -7,7 +7,8 @@ import {
   OnInit,
   Output,
   TemplateRef,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import { Router } from '@angular/router';
@@ -23,6 +24,7 @@ import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approvals-payments-list',
   templateUrl: './approvals-payments-list.component.html', 
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{ 
   isSubmitApprovalPaymentItems = false;
@@ -130,6 +132,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     };
     let selectedPaymentType = this.selectedPaymentType;
     this.loadApprovalsPaymentsGridEvent.emit({gridDataRefinerValue, selectedPaymentType});
+    gridDataRefinerValue.skipCount=0;
+    gridDataRefinerValue.pagesize=99999;
     this.loadApprovalsPaymentsMainListEvent.emit({gridDataRefinerValue, selectedPaymentType});
   }
 

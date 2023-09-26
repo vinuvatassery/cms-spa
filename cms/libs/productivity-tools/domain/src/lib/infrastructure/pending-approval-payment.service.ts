@@ -34,8 +34,8 @@ export class PendingApprovalPaymentService {
     const paymentApprovalGridSetupDto = {
       SortType: gridSetupData.sortType,
       Sorting: gridSetupData.sort,
-      SkipCount: 0,
-      MaxResultCount: 99999,
+      SkipCount: gridSetupData.skipCount,
+      MaxResultCount: gridSetupData.pagesize,
       Filter: gridSetupData.filter,
     };
     return this.http.post<any>(
