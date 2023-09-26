@@ -35,26 +35,26 @@
     <div class="custom-client-tab-main-wrapper">
 
 
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.CLIENT_INFO || client_button_grp }"
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.CLIENT_INFO || client_button_grp }" aria-label="Client" 
         (click)="onTabClick(clientProfileTabs.CLIENT_INFO)" *ifPermission='["Client_Profile_Client_Tab_View_Only"]'>Client</button>
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.HEALTH_INSURANCE_STATUS || health_button_grp }"
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.HEALTH_INSURANCE_STATUS || health_button_grp }" aria-label="Health Insur." 
         (click)="onTabClick(clientProfileTabs.HEALTH_INSURANCE_STATUS)" *ifPermission='["Client_Profile_Health_Ins_Tab_View_Only"]'>
         Health Insur.</button>
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_STATUS || dental_button_grp }"
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_STATUS || dental_button_grp }" aria-label="Dental Insur." 
         (click)="onTabClick(clientProfileTabs.DENTAL_INSURANCE_STATUS)" *ifPermission='["Client_Profile_Dental_Tab_View_Only"]'>
         Dental Insur.</button>
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.DRUGS_PHARMACIES || drugs_button_grp}"
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.DRUGS_PHARMACIES || drugs_button_grp}" aria-label="Drugs" 
         (click)="onTabClick(clientProfileTabs.DRUGS_PHARMACIES)" *ifPermission='["Client_Profile_Drugs_Tab_View_Only"]'>
         Drugs</button>
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.MANAGEMENT_MANAGER || mng_button_grp}"
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.MANAGEMENT_MANAGER || mng_button_grp}" aria-label="Management" 
         (click)="onTabClick(clientProfileTabs.MANAGEMENT_MANAGER)" *ifPermission='["Client_Profile_Management_Tab_View_Only"]'>
         Management</button>
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.STATUS_PERIOD }"
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.STATUS_PERIOD }" aria-label="statuses" 
         (click)="onTabClick(clientProfileTabs.STATUS_PERIOD)" *ifPermission='["Client_Profile_Statuses_Tab_View_Only"]'> statuses</button>
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.ATTACHMENTS }"
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.ATTACHMENTS }" aria-label="Attachments" 
         (click)="onTabClick(clientProfileTabs.ATTACHMENTS)" *ifPermission='["Client_Profile_Attachments_Tab_View_Only"]'>
         Attachments</button>
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName ===clientProfileTabs.APP_HISTORY}"
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName ===clientProfileTabs.APP_HISTORY}" aria-label="App History" 
         (click)="onTabClick(clientProfileTabs.APP_HISTORY)" *ifPermission='["Client_Profile_AppHistory_Tab_View_Only_hidden"]'> App
         History</button>
 
@@ -62,73 +62,73 @@
     </div>
     <div class="custom-client-tab-inner-wrapper">
       <kendo-buttongroup *ngIf="client_button_grp">
-        <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_INFO)"
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_INFO)" 
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_INFO }"
-          *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]'>Client Info</button>
+          *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]' aria-label="Client Info" >Client Info</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_CONTACT_INFO)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_CONTACT_INFO }"
-          *ifPermission='["Client_Profile_Client_ContactInfo_Tab_View_Only"]'> Contact Info</button>
+          *ifPermission='["Client_Profile_Client_ContactInfo_Tab_View_Only"]' aria-label="Contact Info"> Contact Info</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_FAMILY_DEPENDENTS)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_FAMILY_DEPENDENTS }"
-          *ifPermission='["Client_Profile_Client_FamilyDependents_Tab_View_Only"]'> Family & Dependents</button>
+          *ifPermission='["Client_Profile_Client_FamilyDependents_Tab_View_Only"]' aria-label="Family & Dependents"> Family & Dependents</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_INCOME)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_INCOME }"
-          *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'>
+          *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]' aria-label="Income">
           Income</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_EMPLOYMENT)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_EMPLOYMENT }"
-          *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'> Employment</button>
+          *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]' aria-label="Employment"> Employment</button>
 
           <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_SMOKING_CESS)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_SMOKING_CESS }"
-          *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]'> Smoking Cessation</button>
+          *ifPermission='["Client_Profile_Client_Income_Tab_View_Only"]' aria-label="Smoking Cessation"> Smoking Cessation</button>
       </kendo-buttongroup>
       <kendo-buttongroup *ngIf="health_button_grp">
         <button kendoButton (click)="onTabClick(clientProfileTabs.HEALTH_INSURANCE_STATUS)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.HEALTH_INSURANCE_STATUS }"
-          *ifPermission='["Client_Profile_Health_Ins_Tab_View_Only"]'>Insurance Status</button>
+          *ifPermission='["Client_Profile_Health_Ins_Tab_View_Only"]' aria-label="Insurance Status">Insurance Status</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.HEALTH_INSURANCE_PREMIUM_PAYMENTS }"
-          *ifPermission='["Client_Profile_Health_Ins_Premium_Payments_Tab_View_Only"]'>Insurance Premium Payments</button>
+          *ifPermission='["Client_Profile_Health_Ins_Premium_Payments_Tab_View_Only"]' aria-label="Insurance Premium Payments">Insurance Premium Payments</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.HEALTH_INSURANCE_COPAY)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.HEALTH_INSURANCE_COPAY}"
-          *ifPermission='["Client_Profile_Health_Ins_CoPays_Deductibles_Tab_View_Only"]'> Co-Pays & Deductibles</button>
+          *ifPermission='["Client_Profile_Health_Ins_CoPays_Deductibles_Tab_View_Only"]' aria-label="Co-Pays & Deductibles"> Co-Pays & Deductibles</button>
       </kendo-buttongroup>
 
       <kendo-buttongroup *ngIf="dental_button_grp">
         <button kendoButton (click)="onTabSelect(clientProfileTabs.DENTAL_INSURANCE_STATUS)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_STATUS }"
-          *ifPermission='["Client_Profile_Dental_Insurance_Status_Tab_View_Only"]'>Insurance Status</button>
+          *ifPermission='["Client_Profile_Dental_Insurance_Status_Tab_View_Only"]' aria-label="Insurance Status">Insurance Status</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_PREMIUM_PAYMENTS }"
-          *ifPermission='["Client_Profile_Dental_Premium_Payments_Tab_View_Only"]'>Insurance Premium Payments</button>
+          *ifPermission='["Client_Profile_Dental_Premium_Payments_Tab_View_Only"]' aria-label="Insurance Premium Payments">Insurance Premium Payments</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.DENTAL_INSURANCE_COPAY)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_COPAY }"
-          *ifPermission='["Client_Profile_Dental_CoPays_Deductibles_Tab_View_Only"]'> Co-Pays & Deductibles</button>
+          *ifPermission='["Client_Profile_Dental_CoPays_Deductibles_Tab_View_Only"]' aria-label="Co-Pays & Deductibles"> Co-Pays & Deductibles</button>
       </kendo-buttongroup>
 
       <kendo-buttongroup *ngIf="drugs_button_grp">
         <button kendoButton (click)="onTabSelect(clientProfileTabs.DRUGS_PHARMACIES)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.DRUGS_PHARMACIES }"
-          *ifPermission='["Client_Profile_Drugs_Pharmacies_Tab_View_Only"]'>Pharmacies</button>
+          *ifPermission='["Client_Profile_Drugs_Pharmacies_Tab_View_Only"]' aria-label="Pharmacies">Pharmacies</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.DRUGS_PURCHASED)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.DRUGS_PURCHASED }"
-          *ifPermission='["Client_Profile_Drugs_Purchased_Tab_View_Only"]'> Drugs Purchased</button>
+          *ifPermission='["Client_Profile_Drugs_Purchased_Tab_View_Only"]' aria-label="Drugs Purchased"> Drugs Purchased</button>
       </kendo-buttongroup>
 
       <kendo-buttongroup *ngIf="mng_button_grp">
         <button kendoButton (click)="onTabSelect(clientProfileTabs.MANAGEMENT_MANAGER)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.MANAGEMENT_MANAGER }"
-          *ifPermission='["Client_Profile_Management_Manager_Tab_View_Only"]'>Case Managers</button>
+          *ifPermission='["Client_Profile_Management_Manager_Tab_View_Only"]' aria-label="Case Managers">Case Managers</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.MANAGEMENT_PROVIDER)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.MANAGEMENT_PROVIDER }"
-          *ifPermission='["Client_Profile_Management_Provider_Tab_View_Only"]'>HIV Healthcare Providers</button>
+          *ifPermission='["Client_Profile_Management_Provider_Tab_View_Only"]' aria-label="HIV Healthcare Providers">HIV Healthcare Providers</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.MANAGEMENT_CD4)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.MANAGEMENT_CD4 }"
-          *ifPermission='["Client_Profile_Management_CD4_Tab_View_Only"]'>CD4 Count</button>
+          *ifPermission='["Client_Profile_Management_CD4_Tab_View_Only"]' aria-label="CD4 Count">CD4 Count</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.MANAGEMENT_VRL)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.MANAGEMENT_VRL }"
-          *ifPermission='["Client_Profile_Management_VirtualLoad_Tab_View_Only"]'>Viral Load</button>
+          *ifPermission='["Client_Profile_Management_VirtualLoad_Tab_View_Only"]' aria-label="Viral Load">Viral Load</button>
       </kendo-buttongroup>
     </div>
 

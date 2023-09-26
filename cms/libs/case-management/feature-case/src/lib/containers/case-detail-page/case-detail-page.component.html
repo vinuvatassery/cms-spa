@@ -4,7 +4,7 @@
     <case-management-case-navigation [routes$]="routes$" [completeStaus$]="completeStaus$" [workflowType]="workflowType"
       [navigationEvent]="workflowNavigationEvent" (workflowChange)="applyWorkflowChanges($event)" [currentSession]="currentSession">
     </case-management-case-navigation>
-    <button class="createcase-mobile-menu-btn  createbtn-close" (click)="openInnerLeftMenu()" title="Open Menu"> <span class="material-icons">
+    <button class="createcase-mobile-menu-btn  createbtn-close"  aria-label="Open Menu" (click)="openInnerLeftMenu()" title="Open Menu"> <span class="material-icons">
       menu_open
       </span>
   </button> 
@@ -16,7 +16,7 @@
 
       <common-bread-crumb></common-bread-crumb>
       <div class="casetopsection-rightside">
-        <button class="createcase-mobile-menu-btn" title="Open Left Menu" (click)="openInnerLeftMenu()"> <span class="material-icons">
+        <button class="createcase-mobile-menu-btn" aria-label="Open Left Menu" title="Open Left Menu" (click)="openInnerLeftMenu()"> <span class="material-icons">
             list
           </span>
         </button>
@@ -93,10 +93,10 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button kendoButton [primary]="true" look="outline" (click)="onCloseSaveLaterClicked()"
-          aria-label="cancel new case">
+          aria-label="Cancel">
           Cancel
         </button>
-        <button kendoButton [primary]="true" (click)="onUpdateCaseStatusClicked()" aria-label="save and exit new case">
+        <button kendoButton [primary]="true" (click)="onUpdateCaseStatusClicked()" aria-label="Save and exit">
           Save & Exit
         </button>
       </div>
@@ -115,10 +115,10 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel delete"(click)="cancelDeletion()">
+        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"(click)="cancelDeletion()">
           Cancel
         </button>
-        <button kendoButton class="k-error-button" aria-label="cancel case"(click)="cancelCase()">
+        <button kendoButton class="k-error-button" aria-label="Delete"(click)="cancelCase()">
           Delete
         </button>
       </div>
@@ -137,10 +137,10 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel discard changes" (click)="cancelDiscard()">
+        <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="cancelDiscard()">
           Cancel
         </button>
-        <button kendoButton class="k-error-button" aria-label="discard changes" (click)="discardChanges()">
+        <button kendoButton class="k-error-button" aria-label="Discard" (click)="discardChanges()">
           Discard
         </button>
       </div>
@@ -171,8 +171,8 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel" (click)="closeCancelApplicationPopup()"> CANCEL </button>
-        <button aria-label="add" kendoButton [primary]="true" (click)="onContinueClick()"> CONTINUE </button>
+        <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeCancelApplicationPopup()"> CANCEL </button>
+        <button aria-label="Continue" kendoButton [primary]="true" (click)="onContinueClick()"> CONTINUE </button>
       </div>
     </div>
   </kendo-dialog-actions>

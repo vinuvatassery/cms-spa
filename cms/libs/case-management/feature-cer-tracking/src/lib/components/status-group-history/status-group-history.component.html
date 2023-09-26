@@ -5,7 +5,7 @@
     <kendo-grid-column field="groupStartDate" title="Start Date" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
             <div *ngIf="dataItem.isFutureStartDate">
-                <button aria-label="scheduled link" kendoButton look="flat" class="card-link-button"
+                <button attr.aria-label="Scheduled for {{dataItem.groupStartDate | date:'MM/dd/yyyy'}}"  kendoButton look="flat" class="card-link-button"
                     (click)="loadEligibilityChangeModal(dataItem, eligibilityGroupDetail)">
                     Scheduled for {{dataItem.groupStartDate | date:'MM/dd/yyyy'}}
                 </button>
