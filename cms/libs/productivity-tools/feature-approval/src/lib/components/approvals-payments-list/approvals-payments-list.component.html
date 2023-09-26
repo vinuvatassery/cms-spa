@@ -1,8 +1,8 @@
 <!-- Table Top Filter, Search and Export -->
 
-<div class="align-items-center mat-form-no-b-space bg-white">
-    <span class="text-bold" for="eemploymentep">Payment Request Type:&nbsp;</span>
-    <div class="fmly-epdorpdown">
+<div class="align-items-center mat-form-no-b-space bg-white mar-0 flex-row">
+    <span class="text-bold" for="eemploymentep flex-col">Payment Request Type:&nbsp;</span>
+    <div class="fmly-epdorpdown flex-col flex-col-3">
 
         <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"
                                 [data]="pendingApprovalPaymentType$ | async" valueField="lovCode" textField="lovDesc" [valuePrimitive]="true"
@@ -174,7 +174,7 @@
 
 
 <kendo-dialog *ngIf="isViewPaymentsBatchDialog" (close)="onCloseViewPaymentsBatchClicked()"
-    class="app-c-modal app-c-modal-xlg app-c-modal-np" title="View Payments in Each Batch" kendoTooltip>
+    class="app-c-modal app-c-modal-xlg" title="View Payments in Each Batch" kendoTooltip>
 
 
     <productivity-tools-approval-batch-lists [batchId] = "selectedBatchId" [currentBatch] = "selectedBatch" [batchPaymentGridList$] = "batchPaymentsList$"
