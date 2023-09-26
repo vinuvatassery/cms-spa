@@ -459,7 +459,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   }
 
   removeService(i: number) {
-    if(this.isEdit && this.addClaimServicesForm.length == 1  )
+    if(this.isEdit && this.addClaimServicesForm.length == 1)
     {
        this.addClaimServicesForm.reset();
     }
