@@ -6,7 +6,7 @@ import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
 import { Observable } from 'rxjs';
 import { InsurancePlan } from '../../entities/insurance-plan';
-import { ClientInsurancePlans } from '../../entities/financial-management/client-insurance-plan';
+import { ClientInsurancePlans, InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsDataService {
@@ -483,4 +483,17 @@ export class FinancialPremiumsDataService {
     );
   }
 
+  getExistingPremiums(clientId: number, type:string, premiums: PolicyPremiumCoverage[]): Observable<PolicyPremiumCoverage[]>{
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/${type}/premiums`,
+      premiums
+    );
+  }
+
+  savePremiums(clientId: number, type:string, premiums: InsurancePremium[]){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/${type}`,
+      premiums
+    );
+  }
 }

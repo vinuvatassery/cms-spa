@@ -18,8 +18,12 @@
                                 [insurancePlansLoader$]="insurancePlansLoader$"
                                 [insuranceCoverageDates$]="insuranceCoverageDates$"
                                 [insuranceCoverageDatesLoader$]="insuranceCoverageDatesLoader$"
+                                [actionResponse$]="actionResponse$"
+                                [existingPremiums$]="existingPremiums$"
                                 (clientChangeEvent)="loadInsurancePlans($event)"
-                                (loadFinancialPremiumsProcessListEvent)="loadFinancialPremiumsProcessListGrid($event)"></cms-financial-premiums-process-list>
+                                (loadFinancialPremiumsProcessListEvent)="loadFinancialPremiumsProcessListGrid($event)"
+                                (premiumsExistValidationEvent)="premiumExistValidation($event)"
+                                (savePremiumsEvent)="saveInsurancePremiums($event)"></cms-financial-premiums-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

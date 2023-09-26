@@ -58,6 +58,14 @@
         </div>
         <div>
             <div class="app-c-table">
+                    <kendo-formerror *ngIf="showPlanSelectionRequiredValidation"
+                     class="d-flex align-items-center"> 
+                     <span class="material-icons mr-1" aria-hidden="false">info</span> At least one plan selection is required!
+                    </kendo-formerror>
+                    <kendo-formerror *ngIf="!showPlanSelectionRequiredValidation && showPremiumRequiredValidation"
+                    class="d-flex align-items-center"> 
+                    <span class="material-icons mr-1" aria-hidden="false">info</span> Premium required!
+                   </kendo-formerror>
                   <kendo-grid 
                     [resizable]="true"  
                     [sortable]="true"   
@@ -69,7 +77,9 @@
                         <kendo-grid-column  title="" [width]="80">
                             <ng-template kendoGridCellTemplate let-dataItem>                  
                                   <input type="checkbox" id="insurancePlan" name="insurancePlan"
-                                  aria-labelledby="insurancePlan" kendoCheckBox [(ngModel)]="dataItem.isPlanSelected"
+                                  aria-labelledby="insurancePlan" kendoCheckBox 
+                                  (click)="planSelectionChange($event)"
+                                  [(ngModel)]="dataItem.isPlanSelected"                                  
                                   />                                 
                             </ng-template>
                         </kendo-grid-column>
@@ -123,11 +133,8 @@
                                         Coverage Date is required
                                     </kendo-formerror>
                                     <kendo-formerror *ngIf="dataItem.coverageDatesExist">
-                                        Premium already exist
+                                        Coverage Date already exist
                                     </kendo-formerror>
-                                 <!-- <kendo-formerror class="d-flex align-items-center"> <span class="material-icons mr-1"
-                                      aria-hidden="false">info</span> Premium already exist!
-                              </kendo-formerror> -->
                                 </ng-template>
                             </kendo-grid-column>
                             <kendo-grid-column field="premiumAmount" title="Premium Amount" [width]="80">
@@ -170,8 +177,15 @@
                                 </ng-template>
                             </kendo-grid-column>
                             <kendo-grid-column field="exception" title="Exception Reason" [width]="100">
-                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">   
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"> 
+
+                                    <kendo-formerror class="align-items-center" *ngIf="dataItem.premiumExistException"> 
+                                        <span class="material-icons mr-1" aria-hidden="false">info</span> Premium Already Exist! 
+                                        <a kendoButton class="ml-1 card-link-button" (click)="onMakeExceptionClick(dataItem)">{{dataItem.exceptionText}}</a>
+                                      </kendo-formerror> 
+
                                     <kendo-textarea 
+                                    *ngIf="dataItem.makeExceptionFlag"
                                     aria-label="Exception Reason" 
                                     [maxlength]="100" 
                                     [rows]="1"
@@ -182,10 +196,10 @@
                                     <kendo-textarea-suffix class="justify-content-end">
                                           <span class="counter">{{ dataItem.exceptionReasonCount }}</span>
                                     </kendo-textarea-suffix>
-                              </kendo-textarea>
-                                <!-- <kendo-formerror >
-                                Exception Reason is required
-                              </kendo-formerror> -->
+                                    </kendo-textarea>
+                                <kendo-formerror *ngIf="dataItem.exceptionReasonRequired && dataItem.exceptionReason.length === 0">
+                                    Exception Reason is required
+                                </kendo-formerror>
                                 </ng-template>
                             </kendo-grid-column>
                             <kendo-grid-column title="Option" [width]="30" class="text-center">
@@ -229,7 +243,7 @@
           >
             Cancel
           </button>
-          <button kendoButton [primary]="true" aria-label="Add" (click)="save()"   >
+          <button kendoButton [primary]="true" aria-label="Add" (click)="save()">
               Add
           </button>
         </div>

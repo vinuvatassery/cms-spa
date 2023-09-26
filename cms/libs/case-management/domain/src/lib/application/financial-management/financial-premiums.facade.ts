@@ -9,6 +9,7 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { FinancialPremiumsDataService } from '../../infrastructure/financial-management/financial-premiums.data.service';
 import { Router } from '@angular/router';
 import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
+import { InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
 
 
 @Injectable({ providedIn: 'root' })
@@ -101,6 +102,12 @@ export class FinancialPremiumsFacade {
 
   private insuranceCoverageDatesLoaderSubject = new BehaviorSubject<any>(false);
   insuranceCoverageDatesLoader$ =this.insuranceCoverageDatesSubject.asObservable();
+
+  private premiumActionResponseSubject = new Subject<any>();
+  premiumActionResponse$ =this.premiumActionResponseSubject.asObservable();
+
+  private existingCoverageDatesSubject = new Subject<any>();
+  existingCoverageDates$ =this.existingCoverageDatesSubject.asObservable();
   
   /** Private properties **/
  
@@ -295,6 +302,38 @@ export class FinancialPremiumsFacade {
         },
         error: (err) => {
           this.insuranceCoverageDatesLoaderSubject.next(false);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+
+    getExistingPremiums(clientId: number, type:string, premiums: PolicyPremiumCoverage[]){
+      this.insurancePlansLoaderSubject.next(true);
+      this.financialPremiumsDataService.getExistingPremiums(clientId, type, premiums)
+      .subscribe({
+        next: (dataResponse) => {
+            this.insurancePlansLoaderSubject.next(false);
+            this.existingCoverageDatesSubject.next(dataResponse);
+        },
+        error: (err) => {
+          this.insurancePlansLoaderSubject.next(false);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+
+    savePremiums(type:string, premiums: InsurancePremium[]){
+      this.showLoader();
+      const clientId = premiums[0]?.clientId;
+      this.financialPremiumsDataService.savePremiums(clientId, type, premiums)
+      .subscribe({
+        next: (response) => {
+          this.premiumActionResponseSubject.next(true);
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+        },
+        error: (err) => {
+          this.hideLoader();
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       })

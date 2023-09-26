@@ -11,7 +11,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ClientInsurancePlans } from '@cms/case-management/domain';
+import { ClientInsurancePlans, InsurancePremium, PolicyPremiumCoverage } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
@@ -60,7 +60,11 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
   @Input() insurancePlansLoader$: any;
   @Input() insuranceCoverageDates$: any;
   @Input() insuranceCoverageDatesLoader$: any;
+  @Input() actionResponse$: any;
+  @Input() existingPremiums$!: Observable<PolicyPremiumCoverage[]>;
   @Output() clientChangeEvent = new EventEmitter<any>();
+  @Output() premiumsExistValidationEvent = new EventEmitter<{ clientId: number, premiums: PolicyPremiumCoverage[] }>();
+  @Output() savePremiumsEvent = new EventEmitter<InsurancePremium[]>();
   @Output() loadFinancialPremiumsProcessListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'vendorName';
@@ -332,5 +336,12 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
   loadInsurancePlans(clientId: number){
     this.clientChangeEvent.emit(clientId);
   }
- 
+
+  savePremiums(premiums: InsurancePremium[]){
+    this.savePremiumsEvent.emit(premiums);
+  }
+
+  premiumsExistValidation(data: { clientId: number, premiums: PolicyPremiumCoverage[] } ){
+    this.premiumsExistValidationEvent.emit(data);
+  }
 }

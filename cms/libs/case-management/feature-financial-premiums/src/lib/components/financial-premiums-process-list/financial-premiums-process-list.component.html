@@ -178,8 +178,12 @@
     [insurancePlansLoader$]="insurancePlansLoader$"
     [insuranceCoverageDates$]="insuranceCoverageDates$"
     [insuranceCoverageDatesLoader$]="insuranceCoverageDatesLoader$"
+    [actionResponse$]="actionResponse$"
+    [existingPremiums$]="existingPremiums$"
     (clientChangeEvent)="loadInsurancePlans($event)"
-    (modalCloseAddPremiumsFormModal)="modalCloseAddPremiumsFormModal($event)">
+    (modalCloseAddPremiumsFormModal)="modalCloseAddPremiumsFormModal($event)"
+    (premiumsExistValidationEvent)="premiumsExistValidation($event)"
+    (savePremiumsEvent)="savePremiums($event)">
   </cms-financial-premiums-add-details-form>
 </ng-template>
 <ng-template #editPremiumsDialogTemplate>

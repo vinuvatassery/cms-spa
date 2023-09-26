@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ClientInsurancePlans, InsurancePremiumCoverage, FinancialClaimsFacade, InsurancePremium } from '@cms/case-management/domain';
+import { ClientInsurancePlans, InsurancePremiumCoverage, FinancialClaimsFacade, InsurancePremium, PolicyPremiumCoverage, InsurancePlan, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { RowArgs } from '@progress/kendo-angular-grid';
@@ -17,10 +17,14 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
   @Input() insurancePlansLoader$: any;
   @Input() insuranceCoverageDates$: any;
   @Input() insuranceCoverageDatesLoader$: any;
+  @Input() actionResponse$: any;
+  @Input() existingPremiums$!: Observable<PolicyPremiumCoverage[]>;
 
   /* Output Properties */
   @Output() clientChangeEvent = new EventEmitter<any>();
   @Output() modalCloseAddPremiumsFormModal = new EventEmitter();
+  @Output() premiumsExistValidationEvent = new EventEmitter<{ clientId: number, premiums: PolicyPremiumCoverage[] }>();
+  @Output() savePremiumsEvent = new EventEmitter<InsurancePremium[]>();
 
   /* Pubic Properties  */
   insurancePlansAction = [
@@ -43,11 +47,11 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
       }
     }
   ];
+
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   formUiStyle: UIFormStyle = new UIFormStyle();
   addPremiumGridLists$: any;
   clients$ = this.financialClaimsFacade.clients$;
-  clientSubscription = new Subscription;
   clientSearchLoader$ = new BehaviorSubject(false);
   selectedClient!: any;
   counter = '0/100';
@@ -55,7 +59,20 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
   coverageDateList: any;
   insurancePlans!: ClientInsurancePlans[];
 
+  clientSubscription = new Subscription;
+  insurancePlansSubscription = new Subscription;
+  coverageDatesSubscription = new Subscription;
+  actionResponseSubscription = new Subscription;
+  existingPremiumSubscription = new Subscription;
+
   showClientRequiredValidation = false;
+  showPlanSelectionRequiredValidation = false;
+  showPremiumRequiredValidation = false;
+  exceptionText = 'Make Exception'
+
+  /* Private Properties  */
+  private premiumExistCheckingRequired = true;
+
   /* Constructor */
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly intl: IntlService,
@@ -64,19 +81,16 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
 
   /* Life cycle events */
   ngOnInit(): void {
-    this.addClientSubscription();
-    this.insuranceCoverageDates$.subscribe((value: any) => {
-      this.coverageDateList = value;
-    })
-    this.insurancePlans$.subscribe((value: ClientInsurancePlans[]) => {
-      this.insurancePlans = value;
-    })
+    this.addSubscriptions();
   }
 
   ngOnDestroy(): void {
     this.clientSubscription.unsubscribe();
+    this.insurancePlansSubscription.unsubscribe();
+    this.coverageDatesSubscription.unsubscribe();
+    this.actionResponseSubscription.unsubscribe();
+    this.existingPremiumSubscription.unsubscribe();
   }
-
 
   /* Public Methods */
   loadClients(clientSearchText: any) {
@@ -109,12 +123,74 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
   }
 
   coverageDatesValueChanges(policyId: string, coverage: InsurancePremiumCoverage, value: any) {
+    this.premiumExistCheckingRequired = true;
     coverage.coverageDateRequired = !value
     if (value) {
       this.coverageDateExistChecking(policyId, coverage);
     }
   }
 
+  planSelectionChange(event: any) {
+    if (event?.target?.checked ?? false) {
+      this.showPlanSelectionRequiredValidation = false;
+    }
+  }
+
+  save() {
+    if (!this.selectedClient) {
+      this.showClientRequiredValidation = true;
+      return;
+    }
+
+    const selectedPlans = this.insurancePlans?.filter(i => i.isPlanSelected);
+    const isValid = this.validate(selectedPlans);
+    if (!isValid) {
+      return;
+    }
+
+    const insurancePremiums = this.getPremiumData(selectedPlans);
+    this.savePremiumsEvent.emit(insurancePremiums);
+  }
+
+  expandRows({ dataItem }: RowArgs): boolean {
+    return dataItem?.coverages && dataItem?.coverages?.length > 0;
+  }
+
+  removeCoverage(policyId: string, coverage: InsurancePremiumCoverage) {
+    const plan = this.insurancePlans.find((plan: any) => plan.clientInsurancePolicyId === policyId);
+    if (plan) {
+      const coverageIndex = plan.coverages.findIndex((cvg: any) => cvg.id === coverage.id);
+      if (coverageIndex !== -1) {
+        plan.coverages.splice(coverageIndex, 1);
+        this.coverageDateExistChecking(policyId, coverage);
+      }
+    }
+  }
+
+  addCoverage(plan: ClientInsurancePlans) {
+    if (!plan?.coverages) {
+      plan.coverages = [];
+    }
+
+    const newCoverageId = `${plan.coverages.length + 1}`;
+    const newCoverage = {
+      id: newCoverageId,
+      comment: '',
+      commentCount: '0/100',
+      exceptionReason: '',
+      exceptionReasonCount: '0/100'
+    };
+
+    plan.coverages.push(newCoverage);
+    this.showPremiumRequiredValidation = false;
+  }
+
+  onMakeExceptionClick(coverage: InsurancePremiumCoverage) {
+    coverage.makeExceptionFlag = !coverage.makeExceptionFlag
+    coverage.exceptionText = coverage.makeExceptionFlag ? "Don't Make Exception" : "Make Exception";
+  }
+
+  /* Private Methods */
   private coverageDateExistChecking(policyId: string, coverage: InsurancePremiumCoverage) {
     const plan = this.insurancePlans.find((plan: any) => plan.clientInsurancePolicyId === policyId);
     if (plan) {
@@ -136,17 +212,6 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     }
   }
 
-  save() {
-    const selectedPlans = this.insurancePlans.filter(i => i.isPlanSelected);
-    const isValid = this.validate(selectedPlans);
-    if (!isValid) {
-      return;
-    }
-
-    const insurancePremiums = this.getPremiumData(selectedPlans);
-    console.log(insurancePremiums);
-  }
-
   private getPremiumData(selectedPlans: ClientInsurancePlans[]) {
     let premiums: InsurancePremium[] = [];
     selectedPlans.forEach((plan: any) => {
@@ -159,96 +224,152 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     return premiums;
   }
 
-  private createPremium(plan: ClientInsurancePlans) {
-    let premiums: InsurancePremium[] = [];
-    plan.coverages.forEach((coverage: InsurancePremiumCoverage) => {
-
-      var firstDayOfMonth = new Date(coverage?.coverageDates ?? '')
-      var lastDayOfMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0);
-      const premium: InsurancePremium = {
+  private createPremium(plan: ClientInsurancePlans): InsurancePremium[] {
+    return plan.coverages.map((coverage: InsurancePremiumCoverage) => {
+      const firstDayOfMonth = coverage?.coverageDates ? new Date(coverage.coverageDates) : new Date();
+      const lastDayOfMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0);
+  
+      return {
+        clientId: this.selectedClient.clientId,
         clientInsurancePolicyId: plan.clientInsurancePolicyId,
-        //clientCaseEligibilityId
-        //clientCaseEligibilityGroupId
+        clientCaseEligibilityId: this.selectedClient.clientCaseEligibilityId,
         vendorId: plan.vendorId,
-        insuranceTypeCode: plan.healthInsuranceType,
-        //policyNbr
+        policyNbr: plan.insuranceIdNbr,
         clientFirstName: this.selectedClient.clientFirstName,
         clientLastName: this.selectedClient.clientLastName,
         coverageStartDate: this.intl.formatDate(firstDayOfMonth, this.configProvider?.appSettings?.dateFormat),
         coverageEndDate: this.intl.formatDate(lastDayOfMonth, this.configProvider?.appSettings?.dateFormat),
-        premiumAmount: coverage?.premiumAmount
+        premiumAmount: coverage?.premiumAmount,
+        notes: coverage?.comment,
+        exceptionFlag: coverage.premiumExistException ? StatusFlag.Yes : StatusFlag.No,
+        exceptionType: 'PREMIUM_EXIST',
+        exceptionReason: coverage.exceptionReason,
       };
-
-      premiums.push(premium);
     });
+  }
 
-    return premiums;
+  private getCoverageDates(selectedPlans: ClientInsurancePlans[]) {
+    let policyPremiumCoverages: PolicyPremiumCoverage[] = [];
+    selectedPlans?.forEach((plan: any) => {
+      plan?.coverages?.forEach((coverage: InsurancePremiumCoverage) => {
+        var firstDayOfMonth = new Date(coverage?.coverageDates ?? '')
+        var lastDayOfMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0);
+
+        const policyCoverages = {
+          clientInsurancePolicyId: plan?.clientInsurancePolicyId,
+          coverageStartDate: this.intl.formatDate(firstDayOfMonth, this.configProvider?.appSettings?.dateFormat),
+          coverageEndDate: this.intl.formatDate(lastDayOfMonth, this.configProvider?.appSettings?.dateFormat)
+        };
+        
+        policyPremiumCoverages.push(policyCoverages);
+      });
+    });
+    return policyPremiumCoverages;
   }
 
   private validate(selectedPlans: ClientInsurancePlans[]): boolean {
-    if (!this.selectedClient) {
-      this.showClientRequiredValidation = true;
+    if (selectedPlans?.length <= 0) {
+      this.showPlanSelectionRequiredValidation = true;
+      return false;
+    }
+
+    const isAnyPremiumAdded = selectedPlans?.findIndex((plan: ClientInsurancePlans) => plan?.coverages?.length > 0) !== -1;
+    if (!isAnyPremiumAdded) {
+      this.showPremiumRequiredValidation = true;
       return false;
     }
 
     selectedPlans.forEach((plan: any) => {
-      this.addCoveragesValidation(plan.coverages);
+      this.addCoveragesValidation(plan?.coverages);
     });
 
-    const isValid = selectedPlans.findIndex((plan: ClientInsurancePlans) =>
-      plan.coverages.findIndex((cvg: InsurancePremiumCoverage) =>
-        cvg.coverageDateRequired
-        || cvg.premiumAmountRequired
-        || cvg.coverageDateRequired
-        || cvg.coverageDatesExist
+    const isValid = selectedPlans?.findIndex((plan: ClientInsurancePlans) =>
+      plan?.coverages?.findIndex((cvg: InsurancePremiumCoverage) =>
+        cvg?.coverageDateRequired
+        || cvg?.premiumAmountRequired
+        || cvg?.coverageDateRequired
+        || cvg?.coverageDatesExist
+        || ((cvg?.premiumExistException ?? false) && (cvg.exceptionReasonRequired ?? false))
       ) !== -1
     ) === -1;
+
+    if (this.premiumExistCheckingRequired && isValid) {
+      const policyPremiumCoverages = this.getCoverageDates(selectedPlans);
+      this.premiumsExistValidationEvent.emit({ clientId: this.selectedClient.clientId, premiums: policyPremiumCoverages });
+      return false;
+    }
+
     return isValid;
   }
 
   private addCoveragesValidation(coverages: InsurancePremiumCoverage[]) {
-    coverages.map((cvg: InsurancePremiumCoverage) => {
-      cvg.coverageDateRequired = cvg.coverageDates == null;
-      cvg.premiumAmountRequired = cvg.premiumAmount == null;
-      //cvg.coverageDateRequired = cvg.coverageDates == null;
+    coverages?.map((cvg: InsurancePremiumCoverage) => {
+      cvg.coverageDateRequired = cvg?.coverageDates == null;
+      cvg.premiumAmountRequired = cvg?.premiumAmount == null;
+      cvg.exceptionReasonRequired = (cvg?.makeExceptionFlag ?? false) && cvg?.exceptionReason == null;
     });
   }
 
-  expandRows({ dataItem }: RowArgs): boolean {
-    return dataItem?.coverages && dataItem?.coverages?.length > 0;
+  private addSubscriptions() {
+    this.addActionRespSubscription();
+    this.addClientSubscription();
+    this.addInsurancePlansSubscription();
+    this.addCoverageDateSubscription();
+    this.addPremiumExistSubscription();
   }
 
-  removeCoverage(policyId: string, coverage: InsurancePremiumCoverage) {
-    const plan = this.insurancePlans.find((plan: any) => plan.clientInsurancePolicyId === policyId);
-    if (plan) {
-      const coverageIndex = plan.coverages.findIndex((cvg: any) => cvg.id === coverage.id);
-      if (coverageIndex !== -1) {
-        plan.coverages.splice(coverageIndex, 1);
+  private addInsurancePlansSubscription() {
+    this.insurancePlansSubscription = this.insuranceCoverageDates$.subscribe((value: any) => {
+      this.coverageDateList = value;
+    });
+  }
+
+  private addCoverageDateSubscription() {
+    this.coverageDatesSubscription = this.insurancePlans$.subscribe((value: ClientInsurancePlans[]) => {
+      this.insurancePlans = value;
+    });
+  }
+
+  private addActionRespSubscription() {
+    this.actionResponseSubscription = this.actionResponse$.subscribe((resp: boolean) => {
+      if (resp) {
+        this.closeAddPremiumClicked();
       }
-    }
+    });
   }
-
-  addCoverage(plan: ClientInsurancePlans) {
-    if (!plan?.coverages) {
-      plan.coverages = [];
-    }
-
-    const newCoverageId = `${plan.coverages.length + 1}`;
-    const newCoverage = {
-      id: newCoverageId,
-      comment: '',
-      commentCount: '0/100',
-      exceptionReason: '',
-      exceptionReasonCount: '0/100'
-    };
-
-    plan.coverages.push(newCoverage);
-  }
-
-  /* Private Methods */
   private addClientSubscription() {
     this.clientSubscription = this.clients$.subscribe((value: any) => {
       this.clientSearchLoader$.next(false);
     });
+  }
+
+  private addPremiumExistSubscription() {
+    this.existingPremiumSubscription = this.existingPremiums$.subscribe((coveragesExist: PolicyPremiumCoverage[]) => {
+      this.addExceptions(coveragesExist);
+    });
+  }
+
+  private addExceptions(coveragesExist: PolicyPremiumCoverage[]) {
+    this.premiumExistCheckingRequired = false;
+    if (coveragesExist.length > 0) {
+      this.insurancePlans?.forEach((plan: ClientInsurancePlans) => {
+        const planCoverageExist = coveragesExist?.filter((cvg: PolicyPremiumCoverage) =>
+          cvg.clientInsurancePolicyId === plan.clientInsurancePolicyId
+        );
+
+        if (planCoverageExist) {
+          planCoverageExist?.forEach((cvg: PolicyPremiumCoverage) => {
+            const planCoverage = plan?.coverages?.find((planCvg: InsurancePremiumCoverage) => planCvg.coverageDates === cvg.coverageStartDate);
+            if (planCoverage) {
+              planCoverage.premiumExistException = true;
+              planCoverage.exceptionText = 'Make Exception'
+            }
+          })
+        }
+      })
+    }
+    else {
+      this.save();
+    }
   }
 }
