@@ -30,12 +30,16 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isApprovalPaymentsGridLoaderShow = false;
+  selectedBatchId?: string | null = null;
+  selectedBatch?:any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() approvalsPaymentsLists$: any;
+  @Input() batchPaymentsList$: any;
   @Output() loadApprovalsPaymentsGridEvent = new EventEmitter<any>();
+  @Output() loadBatchPaymentGridEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -66,7 +70,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     private lovFacade: LovFacade) {}
 
   ngOnInit(): void {
-    this.loadApprovalPaymentsListGrid();
     this.lovFacade.getPandingApprovalPaymentTypeLov();
   }
 
@@ -86,11 +89,19 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.isSubmitApprovalPaymentItems = false;
   }
 
-  onOpenViewPaymentsBatchClicked(){
+  onOpenViewPaymentsBatchClicked(data?:any){
     this.isViewPaymentsBatchDialog = true;
+    this.selectedBatchId = data?.paymentRequestBatchId;
+    this.selectedBatch = data;
   }
+
   onCloseViewPaymentsBatchClicked(){
     this.isViewPaymentsBatchDialog = false;
+  }
+
+  onLoadBatchPaymentList(data?:any){
+    console.log('11-onLoadBatchPaymentList',data);
+    this.loadBatchPaymentGridEvent.emit(data);
   }
   private loadApprovalPaymentsListGrid(): void {
     this.loadApprovalPayments(

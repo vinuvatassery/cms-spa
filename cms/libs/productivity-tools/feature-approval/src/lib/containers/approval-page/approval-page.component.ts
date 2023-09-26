@@ -33,7 +33,9 @@ export class ApprovalPageComponent  {
   approvalsGeneralLists$ = this.approvalFacade.approvalsGeneralList$; 
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.pendingApprovalPaymentFacade.pendingApprovalCount$;
-  approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$
+  approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
+  batchPaymentsList$ = this.pendingApprovalPaymentFacade.batchPaymentGrid$;
+  batchPaymentsCount$ = this.pendingApprovalPaymentFacade.batchPaymentCount$;
 
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,     
@@ -58,6 +60,13 @@ export class ApprovalPageComponent  {
   notificationTriger(){
     this.approvalFacade.NotifyShowHideSnackBar(ReminderSnackBarNotificationType.LIGHT, ' Generic reminder displays at 9AM on the day of the reminder Generic reminder displays at 9AM on the day of the reminder');
     
+  }
+  loadBatchPaymentGrid(gridDataValue : any): void {
+    console.log('10-loadBatchPaymentGrid',gridDataValue);
+    if(!gridDataValue.batchId || gridDataValue.batchId.length == 0){
+      return;
+    }
+    this.pendingApprovalPaymentFacade.loadBatchPaymentGrid(gridDataValue, gridDataValue.batchId)
   }
   
 }

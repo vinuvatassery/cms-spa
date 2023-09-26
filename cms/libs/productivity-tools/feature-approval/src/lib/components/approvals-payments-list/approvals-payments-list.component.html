@@ -54,7 +54,7 @@
 
         <kendo-grid-column field="viewPmtsInBatch" title="View Pmts In Batch" [width]="120">
             <ng-template kendoGridCellTemplate let-dataItem>
-                <button aria-label="View Pmts In Batch" title="View" kendoButton look="flat" class="card-link-button">
+                <button aria-label="View Pmts In Batch" title="View" kendoButton look="flat" class="card-link-button" (click)="onOpenViewPaymentsBatchClicked(dataItem)">
                     <span class="material-icons"> plagiarism </span>
                 </button>
             </ng-template>
@@ -174,10 +174,12 @@
 
 
 <kendo-dialog *ngIf="isViewPaymentsBatchDialog" (close)="onCloseViewPaymentsBatchClicked()"
-    class="app-c-modal app-c-modal-lg app-c-modal-np" title="View Payments in Each Batch" kendoTooltip>
+    class="app-c-modal app-c-modal-xlg app-c-modal-np" title="View Payments in Each Batch" kendoTooltip>
 
 
-    <productivity-tools-approval-batch-lists></productivity-tools-approval-batch-lists>
+    <productivity-tools-approval-batch-lists [batchId] = "selectedBatchId" [currentBatch] = "selectedBatch" [batchPaymentGridList$] = "batchPaymentsList$"
+    [pageSizes]="pageSizes" [sortType]="sortType" 
+    (closeViewPaymentsBatchClickedEvent)="onCloseViewPaymentsBatchClicked()" (loadBatchPaymentListEvent)="onLoadBatchPaymentList($event)"></productivity-tools-approval-batch-lists>
 </kendo-dialog>
 
 

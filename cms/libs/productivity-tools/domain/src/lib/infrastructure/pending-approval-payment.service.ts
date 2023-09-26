@@ -29,4 +29,16 @@ export class PendingApprovalPaymentService {
         paymentApprovalGridSetupDto
     );
   }
+
+  loadBatchPaymentGrid(gridSetupData: any, batchId: string) {
+    const paymentGridSetupDto = {
+      SortType: gridSetupData.sortType,
+      Sorting: gridSetupData.sort,
+      SkipCount: gridSetupData.skipcount,
+      MaxResultCount: gridSetupData.maxResultCount,
+      Filter: gridSetupData.filter,
+    };
+    return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/payment-batches/${batchId}/payments`
+    , paymentGridSetupDto);
+  }
 }
