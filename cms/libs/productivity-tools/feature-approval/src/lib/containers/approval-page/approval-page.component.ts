@@ -34,7 +34,7 @@ export class ApprovalPageComponent  {
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.pendingApprovalPaymentFacade.pendingApprovalCount$;
   approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$
-
+  approvalsPaymentsMainLists$ = this.pendingApprovalPaymentFacade.pendingApprovalMainList$
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,     
               private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService,
@@ -58,6 +58,12 @@ export class ApprovalPageComponent  {
   notificationTriger(){
     this.approvalFacade.NotifyShowHideSnackBar(ReminderSnackBarNotificationType.LIGHT, ' Generic reminder displays at 9AM on the day of the reminder Generic reminder displays at 9AM on the day of the reminder');
     
+  }
+  loadApprovalsPaymentsMain(gridDataValue : any): void {
+    if(!gridDataValue.selectedPaymentType || gridDataValue.selectedPaymentType.length == 0){
+      return;
+    }
+    this.pendingApprovalPaymentFacade.getPendingApprovalPaymentMainList(gridDataValue , gridDataValue.selectedPaymentType)
   }
   
 }
