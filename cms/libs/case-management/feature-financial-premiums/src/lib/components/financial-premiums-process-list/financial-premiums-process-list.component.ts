@@ -11,6 +11,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { FinancialPremiumsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
@@ -20,6 +21,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+
 @Component({
   selector: 'cms-financial-premiums-process-list',
   templateUrl: './financial-premiums-process-list.component.html', 
@@ -49,6 +51,7 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isProcessGridExpand = true;
   isFinancialPremiumsProcessGridLoaderShow = false;
+  gridDataResult!: GridDataResult;
   @Input() premiumsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -65,13 +68,14 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
   isFiltered = false;
   filter!: any;
   selectedColumn!: any;
-  gridDataResult!: GridDataResult;
   isRemovePremiumGridOptionClosed = false;
   gridFinancialPremiumsProcessDataSubject = new Subject<any>();
   gridFinancialPremiumsProcessData$ =
     this.gridFinancialPremiumsProcessDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
+  medicalPremiumListSubject = new Subject<any>();
+  medicalPremiumList$ =this.medicalPremiumListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   public premiumsProcessMore = [
     {
@@ -126,12 +130,14 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
 
   /** Constructor **/
   constructor(
+  private financialPremiumsFacade : FinancialPremiumsFacade ,
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
     this.loadFinancialPremiumsProcessListGrid();
+    this.loadPremiumGridData(); 
   }
   ngOnChanges(): void {
     this.state = {
@@ -276,7 +282,6 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
     }
   }
 
-
   onClickOpenAddPremiumsFromModal(template: TemplateRef<unknown>): void {
     this.addPremiumsFormDialog = this.dialogService.open({
       content: template,
@@ -302,7 +307,6 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
     this.isRemoveBatchClosed = false;
     this.isAddPremiumClosed = false; 
     this.isBatchPremiumsClicked = false;
-  
   }
 
   clientRecentPremiumsModalClicked (template: TemplateRef<unknown>, data:any): void {
@@ -316,8 +320,23 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
       }
     });
   }
+loadPremiumGridData(){
+  debugger;
+  const gridDataRefinerValue = {
+    skipCount: 0,
+    pagesize: 5,
+    sortColumn: "",
+    sortType: "",
+  };
+  this.financialPremiumsFacade.loadMedialPremiumList(gridDataRefinerValue);
+}
+gridlistDataHandle() {
+    this.medicalPremiumList$.subscribe((data: GridDataResult) => {
+    this.gridDataResult = data;
+  });
 
-  closeRecentPremiumsModal(result: any){
+}
+closeRecentPremiumsModal(result: any){
     if (result) { 
       this.addClientRecentPremiumsDialog.close();
     }

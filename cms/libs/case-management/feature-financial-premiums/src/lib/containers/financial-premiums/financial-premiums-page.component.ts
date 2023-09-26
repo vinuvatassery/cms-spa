@@ -38,7 +38,6 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.financialPremiumsBatchData$;
   financialPremiumsAllPaymentsGridLists$ =
     this.financialPremiumsFacade.financialPremiumsAllPaymentsData$;
-    
   premiumType: any;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
@@ -76,4 +75,5 @@ export class FinancialPremiumsPageComponent implements OnInit {
   loadFinancialPremiumsAllPaymentsListGrid(event: any) {
     this.financialPremiumsFacade.loadFinancialPremiumsAllPaymentsListGrid();
   }
+
 }
