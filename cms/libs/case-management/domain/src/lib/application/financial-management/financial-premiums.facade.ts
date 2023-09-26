@@ -92,6 +92,8 @@ export class FinancialPremiumsFacade {
 
   paymentBatchNameSubject  =  new Subject<any>();
   paymentBatchName$ = this.paymentBatchNameSubject.asObservable();
+  private medicalPremiumListSubject = new Subject<any>();
+  medicalPremiumList$ = this.medicalPremiumListSubject.asObservable();
   
   /** Private properties **/
  
@@ -285,5 +287,23 @@ export class FinancialPremiumsFacade {
 
 viewAdviceLetterData(batchId:any,printAdviceLetterData: any, premiumType:any) {
   return this.financialPremiumsDataService.viewPrintAdviceLetterData(batchId, printAdviceLetterData, premiumType);
+}
+loadMedialPremiumList(providerPageAndSortedRequest :any){
+  this.showLoader();
+  this.financialPremiumsDataService.loadMedicalPremiumList(providerPageAndSortedRequest).subscribe({
+    next: (response: any) => {
+      if (response) {
+        const gridView = {
+          data: response["items"],
+          total:response["totalCount"]
+        };
+        this.hideLoader();
+        this.medicalPremiumListSubject.next(gridView);
+      }
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+    },
+  });
 }
 }
