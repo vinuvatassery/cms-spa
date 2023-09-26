@@ -29,4 +29,19 @@ export class PendingApprovalPaymentService {
         paymentApprovalGridSetupDto
     );
   }
+
+  getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string) {
+    const paymentApprovalGridSetupDto = {
+      SortType: gridSetupData.sortType,
+      Sorting: gridSetupData.sort,
+      SkipCount: 0,
+      MaxResultCount: 99999,
+      Filter: gridSetupData.filter,
+    };
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=` +
+        serviceSubType,
+        paymentApprovalGridSetupDto
+    );
+  }
 }
