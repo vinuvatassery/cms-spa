@@ -499,7 +499,7 @@ export class FinancialPremiumsDataService {
       Filter : data.filter
     }
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premium/${data.premiumsType}/client-recent-premium`,recentPremiumsPageAndSortedRequestDto
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${data.premiumsType}/client-recent-premium`,recentPremiumsPageAndSortedRequestDto
     );
   }
 }
