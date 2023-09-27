@@ -314,7 +314,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
     });
   }
 
-
   public onBatchPremiumsClicked(template: TemplateRef<unknown>): void {
     this.batchConfirmPremiumsDialog = this.dialogService.open({
       content: template,

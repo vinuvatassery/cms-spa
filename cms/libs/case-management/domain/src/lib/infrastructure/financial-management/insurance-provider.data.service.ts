@@ -30,7 +30,6 @@ export class InsuranceProviderDataService {
     providerId:any,
     tabCode:any,
     params: GridFilterParam) {
-     
   return this.http.post<any>(
     `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${providerId}/clients?vendorTypeCode=${tabCode}&SortType=${params.sortType}&Sorting=${params.sorting}&SkipCount=${params.skipCount}&MaxResultCount=${params.maxResultCount}&Filter=${params.filter?? ''}`,null);
   }

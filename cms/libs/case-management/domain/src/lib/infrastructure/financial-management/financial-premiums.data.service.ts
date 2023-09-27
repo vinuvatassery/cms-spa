@@ -177,7 +177,6 @@ export class FinancialPremiumsDataService {
   }
 
 
-
   loadBatchLogListService(premiumType : string ,batchId : string,paginationParameters : any) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payment-batches/${batchId}/payments`,paginationParameters);
   }
@@ -456,8 +455,7 @@ export class FinancialPremiumsDataService {
       { responseType: 'blob' }
     );
   }
-
-  loadMedicalPremiumList( params: GridFilterParam) {
+ loadMedicalPremiumList( params: GridFilterParam) {
     return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical?SortType=${params.sortType}&Sorting=${params.sorting}&SkipCount=${params.skipCount}&MaxResultCount=${params.maxResultCount}&Filter=${params.filter?? ''}`,null);   
 }
 }

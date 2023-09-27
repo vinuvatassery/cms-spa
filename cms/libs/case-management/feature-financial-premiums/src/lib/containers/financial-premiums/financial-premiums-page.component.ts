@@ -84,5 +84,4 @@ export class FinancialPremiumsPageComponent implements OnInit {
   loadFinancialPremiumsAllPaymentsListGrid(event: any) {
     this.financialPremiumsFacade.loadFinancialPremiumsAllPaymentsListGrid();
   }
-
 }
