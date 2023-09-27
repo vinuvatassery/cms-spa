@@ -43,14 +43,22 @@
     <span class="sort-items">Default Columns</span>
     <span class="sort-items">Columns Re-ordered</span>
 </div>
-
+<div *ngIf="pageValidationMessage !== null">
+    <div class="info-banners red-banner d-flex mt-2 mb-2">
+          <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>              
+          <div>              
+            <p > {{pageValidationMessage}} </p>                                    
+                 
+          </div>              
+     </div>
+</div>
 <!-- Case List table -->
 <div class="app-c-table">
     <kendo-grid [resizable]="true" [loading]="isApprovalPaymentsGridLoaderShow" [pageSize]="state.take"
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
         [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
         (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
-        [data]="gridApprovalPaymentsBatchData$ | async">
+        [data]="approvalsPaymentsGridPagedResult">
 
         <kendo-grid-column field="viewPmtsInBatch" title="View Pmts In Batch" [width]="120">
             <ng-template kendoGridCellTemplate let-dataItem>
@@ -74,21 +82,38 @@
         <kendo-grid-column field="creationTime" title="Date Approval Requested" [width]="150"> </kendo-grid-column>
         
         <kendo-grid-column field=" " title="Send Back | Approve" [width]="210" [sticky]="true">
-            <ng-template kendoGridCellTemplate let-dataItem>
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                 <kendo-buttongroup selection="single">
-                    <button kendoButton aria-label="proof of address yes" [toggleable]="true">Approve
-
+                    <button kendoButton aria-label="proof of address yes" [toggleable]="true" (click)="onRowLevelApproveClicked(dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'APPROVE'">Approve
                     </button>
-                    <button kendoButton aria-label="proof of address yes" [toggleable]="true">Send Back
-
+                    <button kendoButton aria-label="proof of address yes" [toggleable]="true" (click)="onRowLevelSendbackClicked(dataItem,'sendBackNotes',rowIndex)" aria-disabled="false" [selected]="dataItem.batchStatus == 'SENDBACK'">Send Back
                     </button>
                 </kendo-buttongroup>
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column [sticky]="true" field="sendBackNotes" title="Send Back Notes" [width]="240">
-            <ng-template kendoGridEditTemplate let-dataItem="dataItem" let-formGroup="formGroup">
-                <kendo-textbox></kendo-textbox>
-            </ng-template>
+        <kendo-grid-column [sticky]="true" field="sendBackNotes" title="Send Back Notes" [width]="280">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <div kendoTooltip>                                             
+                      <kendo-textarea
+                      #tareaCessation
+                      [fillMode]="formUiStyle.inputFillMode"
+                      [maxlength]="tAreaCessationMaxLength"
+                      [rows]="2"                                          
+                      resizable ="none"
+                      [(ngModel)]="dataItem.sendBackNotes"
+                      (valueChange)="sendBackNotesChange(dataItem)"
+                      aria-label="smoking cessation note"                                          
+                      title ="{{dataItem.sendBackNotes}}" [disabled]="dataItem.sendBackButtonDisabled"
+                      [ngClass]="ngDirtyInValid(dataItem,'sendBackNotes',rowIndex)"  id ="sendBackNotes{{rowIndex}}"
+                      >
+                   
+                    </kendo-textarea>
+                    <kendo-textarea-suffix class="justify-content-end">
+                      <span class="counter">{{ dataItem.tAreaCessationCounter }}</span>
+                    </kendo-textarea-suffix>
+                    <kendo-formerror *ngIf="dataItem.sendBackNotesInValid">{{dataItem.sendBackNotesInValidMsg}}</kendo-formerror>
+                </div>
+    </ng-template>
         </kendo-grid-column>
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
             let-currentPage="currentPage">
@@ -124,10 +149,10 @@
 </div>
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-    <span  class="">0 batch(es) to be approved, 0 batch(es) to be sent back</span>
+    <span  class="">{{approveBatchCount}} batch(es) to be approved, {{sendbackBatchCount}} batch(es) to be sent back</span>
     <button (click)="onDepositDetailClicked(depositDetailsDialogModal)" kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Cancel </button>
     <button kendoButton [primary]="true" look="flat" class="" aria-label="APPROVE ALL"
-        (click)="onOpenViewPaymentsBatchClicked()"> APPROVE ALL </button>
+        (click)="onApproveAllClicked()"> APPROVE ALL </button>
     <button kendoButton [primary]="true" aria-label="Submit" class=""
         (click)="onOpenSubmitApprovalPaymentItemsClicked()"> Submit </button>
 </div>

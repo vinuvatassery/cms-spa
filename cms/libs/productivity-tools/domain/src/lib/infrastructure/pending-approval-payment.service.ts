@@ -30,6 +30,21 @@ export class PendingApprovalPaymentService {
     );
   }
 
+  getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string) {
+    const paymentApprovalGridSetupDto = {
+      SortType: gridSetupData.sortType,
+      Sorting: gridSetupData.sort,
+      SkipCount: gridSetupData.skipCount,
+      MaxResultCount: gridSetupData.pagesize,
+      Filter: gridSetupData.filter,
+    };
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=` +
+        serviceSubType,
+        paymentApprovalGridSetupDto
+    );
+  }
+
   loadBatchPaymentGrid(gridSetupData: any, batchId: string) {
     const paymentGridSetupDto = {
       SortType: gridSetupData.sortType,
