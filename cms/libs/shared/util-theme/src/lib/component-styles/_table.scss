@@ -96,6 +96,9 @@ $pagination-height : 48px;
     .k-filterable {
       >.k-cell-inner .k-link {
         padding-inline-end: 8px;
+        .k-sort-icon{
+          color: rgba($white, 0.5);
+        }
       }
 
       .k-grid-column-menu {
@@ -152,6 +155,21 @@ $pagination-height : 48px;
 
           font-family: $font-family-Material-icon;
           display: inline-block;
+       
+         
+        }
+        .k-svg-i-more-vertical{
+          position: relative;
+          &::before {
+            content: "\ef4f";
+            position: absolute;
+            
+          }
+          font-family: $font-family-Material-icon;
+          display: inline-block;
+          svg  {
+            display: none
+            }
         }
       }
     }
