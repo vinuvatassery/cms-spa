@@ -352,8 +352,8 @@
                                             </kendo-formerror>
                                         </div>
                                         <div class="ml-2" *ngIf="getExceptionFormValue('duplicatePaymentExceptionFlag',i)" >
-                                          <kendo-formerror class="align-items-center"> <span
-                                                  class="material-icons mr-1" aria-hidden="false">info</span> Duplicate Payment. <a kendoButton class="ml-1 card-link-button"
+                                          <kendo-formerror class="align-items-center"> 
+                                            <span class="material-icons mr-1" aria-hidden="false">info</span> Duplicate Payment. <a kendoButton class="ml-1 card-link-button"
                                                   (click)="onMakeExceptionClick('duplicatePaymentExceptionReason',i)">{{getExceptionFormValue('duplicatePaymentExceptionFlagText',i)}}
                                               </a>
                                           </kendo-formerror>

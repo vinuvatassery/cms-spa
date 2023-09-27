@@ -49,6 +49,10 @@ export class FinancialPremiumsBatchesLogListsComponent
   clientName:any="";
 
   yesOrNoLovs:any=[];
+  onlyPrintAdviceLetter: boolean = true;
+  printAuthorizationDialog: any;
+  selectedDataRows: any;
+  isLogGridExpand = true;
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -107,6 +111,53 @@ export class FinancialPremiumsBatchesLogListsComponent
     },
   ];
 
+
+  dropDowncolumns : any = [
+    {
+      columnCode: 'itemNbr',
+      columnDesc: 'Item #',
+    },
+    {
+      columnCode: 'vendorName',
+      columnDesc: 'Insurance Vendor',
+    },
+    {
+      columnCode: 'serviceCount',
+      columnDesc: 'Item Count',
+    },
+    {
+      columnCode: 'serviceCost',
+      columnDesc: 'Total Amount',
+    },
+    {
+      columnCode: 'acceptsReports',
+      columnDesc: 'Accepts reports?',
+    },
+    {
+      columnCode: 'paymentRequestedDate',
+      columnDesc: 'Date Pmt. Requested',
+    },
+    {
+      columnCode: 'paymentSentDate',
+      columnDesc: 'Date Pmt. Sent',
+    },
+    {
+      columnCode: 'paymentMethodCode',
+      columnDesc: 'Pmt. Method',
+    },
+    {
+      columnCode: 'paymentStatusCode',
+      columnDesc: 'Pmt. Status',
+    },
+    {
+      columnCode: 'pca',
+      columnDesc: 'PCA',
+    },
+    {
+      columnCode: 'mailCode',
+      columnDesc: 'Mail Code',
+    },
+  ]
   columns : any = {
     itemNbr:"Item #",
     vendorName:"Insurance Vendor",
@@ -126,7 +177,11 @@ export class FinancialPremiumsBatchesLogListsComponent
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchLogGridLists$: any;
+  @Input() batchLogServicesData$ : any;
   @Output() loadBatchLogListEvent = new EventEmitter<any>();
+  @Input() batchId: any;
+  @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
+  @Output() loadFinancialPremiumBatchInvoiceListEvent =  new EventEmitter<any>();
   public state!: State;
 
   sortColumn = 'Item #';
@@ -139,8 +194,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   gridPremiumsBatchLogDataSubject = new Subject<any>();
-  gridPremiumsBatchLogData$ =
-    this.gridPremiumsBatchLogDataSubject.asObservable();
+  gridPremiumsBatchLogData$ = this.gridPremiumsBatchLogDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -162,6 +216,11 @@ export class FinancialPremiumsBatchesLogListsComponent
     };
 
     this.loadBatchLogListGrid();
+  }
+
+  loadFinancialPremiumBatchInvoiceList(data : any)
+  {
+     this.loadFinancialPremiumBatchInvoiceListEvent.emit(data)
   }
 
   private loadBatchLogListGrid(): void {
@@ -193,6 +252,16 @@ export class FinancialPremiumsBatchesLogListsComponent
 
   onChange(data: any) {
     this.defaultGridState();
+    let operator = 'startswith';
+    if (
+      this.selectedColumn === 'itemNbr' ||
+      this.selectedColumn === 'serviceCount' ||
+      this.selectedColumn === 'serviceCost' ||
+      this.selectedColumn === 'amountDue' ||
+      this.selectedColumn === 'balanceAmount'
+    ) {
+      operator = 'eq';
+    }
 
     this.filterData = {
       logic: 'and',
@@ -201,7 +270,7 @@ export class FinancialPremiumsBatchesLogListsComponent
           filters: [
             {
               field: this.selectedColumn ?? 'itemNbr',
-              operator: 'startswith',
+              operator: operator,
               value: data,
             },
           ],
@@ -421,6 +490,12 @@ export class FinancialPremiumsBatchesLogListsComponent
     this.sort = this.sortColumn;
 
     this.loadBatchLogListGrid();
+  }
+
+  onPrintAuthorizationCloseClicked(result: any) {
+    if (result) {
+      this.printAuthorizationDialog.close();
+    }
   }
 
   onClientClicked(clientId: any) {
