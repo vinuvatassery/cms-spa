@@ -72,7 +72,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
       event?.pagesize ?? 0,
       event?.sortColumn,
       event?.sortType,
-      JSON.stringify(event.filter));
+      event.filter);
     this.pageSizes = this.financialPremiumsFacade.gridPageSizes;
     this.financialPremiumsFacade.loadMedialPremiumList(param);
   }
