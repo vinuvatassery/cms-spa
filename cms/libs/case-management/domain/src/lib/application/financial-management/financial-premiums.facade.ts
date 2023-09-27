@@ -331,7 +331,7 @@ export class FinancialPremiumsFacade {
 viewAdviceLetterData(batchId:any,printAdviceLetterData: any, premiumType:any) {
   return this.financialPremiumsDataService.viewPrintAdviceLetterData(batchId, printAdviceLetterData, premiumType);
 }
-loadMedialPremiumList(
+loadMedicalPremiumList(
   params: GridFilterParam){
     this.showLoader();
   this.financialPremiumsDataService.loadMedicalPremiumList(params ).subscribe({

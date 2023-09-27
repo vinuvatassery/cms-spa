@@ -80,7 +80,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
       event?.sortType,
       event.filter);
     this.pageSizes = this.financialPremiumsFacade.gridPageSizes;
-    this.financialPremiumsFacade.loadMedialPremiumList(param);
+    this.financialPremiumsFacade.loadMedicalPremiumList(param);
   }
 
   loadFinancialPremiumsBatchListGrid(event: any) {
