@@ -15,7 +15,7 @@ export class PendingApprovalPaymentService {
     );
   }
 
-  getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string) {
+  getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string, level: number) {
     const paymentApprovalGridSetupDto = {
       SortType: gridSetupData.sortType,
       Sorting: gridSetupData.sort,
@@ -25,7 +25,7 @@ export class PendingApprovalPaymentService {
     };
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=` +
-        serviceSubType,
+        serviceSubType + "/level=" + level,
         paymentApprovalGridSetupDto
     );
   }

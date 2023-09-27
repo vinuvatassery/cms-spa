@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PendingApprovalPaymentService } from '../infrastructure/pending-approval-payment.service';
+import { PendingApprovalPaymentService } from '../infrastructure/pending-approval-payment.data.service';
 import { Subject } from 'rxjs';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
@@ -56,9 +56,9 @@ export class PendingApprovalPaymentFacade {
     );
   }
   
-  getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string) {
+  getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string, level: number) {
 
-    this.PendingApprovalPaymentService.getPendingApprovalPaymentGrid(gridSetupData ,serviceSubType).subscribe(
+    this.PendingApprovalPaymentService.getPendingApprovalPaymentGrid(gridSetupData ,serviceSubType, level).subscribe(
       {
         next: (dataResponse: any) => {
           const gridView = {
