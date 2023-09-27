@@ -51,6 +51,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   selectedPaymentType: any;
+  gridApprovalPaymentsBatchDataTemp:any;
 
   gridApprovalPaymentsDataSubject = new Subject<any>();
   gridApprovalPaymentsBatchData$ = this.gridApprovalPaymentsDataSubject.asObservable();
@@ -71,6 +72,10 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   ngOnInit(): void {
     this.lovFacade.getPandingApprovalPaymentTypeLov();
+    this.approvalsPaymentsLists$.subscribe((data:any)=>{
+      console.log('20',data);
+      this.gridApprovalPaymentsBatchDataTemp = data.data;
+    });
   }
 
   ngOnChanges(): void {

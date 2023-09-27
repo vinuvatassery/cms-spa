@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, OnChanges,Input, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, OnChanges,Input, Output } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
@@ -6,31 +6,24 @@ import {
   State,
   filterBy
 } from '@progress/kendo-data-query';
-import { Observable, Subject, first } from 'rxjs';
+import { Subject } from 'rxjs';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
-import { PendingApprovalPaymentFacade/*, PaymentBatchName, PaymentStatusCode*/ } from '@cms/productivity-tools/domain';
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'productivity-tools-approval-batch-lists',
-  templateUrl: './approval-batch-lists.component.html', 
-  //changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './approval-batch-lists.component.html',
 })
 export class ApprovalBatchListsComponent implements OnInit, OnChanges{
   @Input() batchId?: string | null;
   @Input() currentBatch?: any;
   @Input() pageSizes: any;
-  //pageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   @Input() sortValue: any;
   @Input() sortType: any;
-  //sortType = 'asc';
   @Input() sort: any;
-  // @Input() loader$!: Observable<boolean>;
-  //loader$!: Observable<boolean>;
   @Input() batchPaymentGridList$: any;
+  @Input() pendingApprovalPaymentFullList:any;
   @Output() closeViewPaymentsBatchClickedEvent = new EventEmitter();
   @Output() loadBatchPaymentListEvent = new EventEmitter<any>();
   public state!: State;
-  //batchPaymentGridLists$: any;
   isBatchPaymentGridLoaderShow = false;
   sortColumn = 'paymentNbr';
   sortDir = 'Ascending';
@@ -62,7 +55,6 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
     paymentStatusCode: 'Payment Status',
   };
   paymentMethods = ['CHECK', 'ACH', 'SPOTS'];
-  paymentTypes = ['PAYMENT', 'REFUND', 'COPAYMENT', 'DEDUCTIBLE', 'FULL PAY'];
   paymentStatusList = [
     'SUBMITTED',
     'PENDING_APPROVAL',
@@ -79,22 +71,10 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
   public width = "100%";
   public height = "100%";
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  items = [
-    {},{}
-  ];
 
-  // gridBatchPaymentsDataSubject = new Subject<any>();
-  // gridBatchPaymentsData$ = this.gridBatchPaymentsDataSubject.asObservable();
-  // columnDropListSubject = new Subject<any[]>();
-  // columnDropList$ = this.columnDropListSubject.asObservable();
-  // filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
-  constructor(private configurationProvider: ConfigurationProvider) {}
+  //constructor() {}
 
   ngOnInit(): void {
-    // this.sortColumnName = 'Item #';
-     //this.defaultGridState();
-    //this.loadBatchPaymentListGrid();
   }
 
   ngOnChanges(): void {
@@ -135,21 +115,18 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
       filter: this.filter,
     };
     let batchId = this.batchId;
-    console.log('12-loadBatchPayment',gridDataRefinerValue);
     this.loadBatchPaymentListEvent.emit({gridDataRefinerValue, batchId});
     this.gridDataHandle();
-    //this.currentPrintAdviceLetterGridFilter = this.filter;
   }
 
   gridDataHandle() {
     this.batchPaymentGridList$.subscribe((data: any) => {
-      console.log('2',data);
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
         this.filterData
       );
-      this.gridBatchPaymentDataSubject.next(this.gridDataResult);console.log('3',this.gridDataResult)
+      this.gridBatchPaymentDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) { 
         this.isBatchPaymentGridLoaderShow = false;
       }
@@ -162,29 +139,6 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
     const stateData = this.state;
     this.dataStateChange(stateData);
   }
-  
-  // onChange(data: any) {
-  //   this.defaultGridState();
-
-  //   this.filterData = {
-  //     logic: 'and',
-  //     filters: [
-  //       {
-  //         filters: [
-  //           {
-  //             field: this.selectedColumn ?? 'batch',
-  //             operator: 'startswith',
-  //             value: data,
-  //           },
-  //         ],
-  //         logic: 'and',
-  //       },
-  //     ],
-  //   };
-  //   const stateData = this.state;
-  //   stateData.filter = this.filterData;
-  //   this.dataStateChange(stateData);
-  // }
 
   defaultGridState() {
     this.state = {
