@@ -10,15 +10,14 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FinancialPremiumsFacade } from '@cms/case-management/domain';
+import { ClientInsurancePlans, InsurancePremium, PolicyPremiumCoverage,FinancialPremiumsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
-
+import { Observable, Subject } from 'rxjs';
 @Component({
   selector: 'cms-financial-premiums-process-list',
   templateUrl: './financial-premiums-process-list.component.html', 
@@ -55,6 +54,15 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialPremiumsProcessGridLists$: any;
+  @Input() insurancePlans$!: Observable<ClientInsurancePlans[]>;
+  @Input() insurancePlansLoader$: any;
+  @Input() insuranceCoverageDates$: any;
+  @Input() insuranceCoverageDatesLoader$: any;
+  @Input() actionResponse$: any;
+  @Input() existingPremiums$!: Observable<PolicyPremiumCoverage[]>;
+  @Output() clientChangeEvent = new EventEmitter<any>();
+  @Output() premiumsExistValidationEvent = new EventEmitter<{ clientId: number, premiums: PolicyPremiumCoverage[] }>();
+  @Output() savePremiumsEvent = new EventEmitter<InsurancePremium[]>();
   @Output() loadFinancialPremiumsProcessListEvent = new EventEmitter<any>();
   public state!: any;
   sortColumn = 'vendorName';
@@ -353,7 +361,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   onClickOpenAddPremiumsFromModal(template: TemplateRef<unknown>): void {
     this.addPremiumsFormDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-lg-100 app-c-modal-np',
     });
   }
   modalCloseAddPremiumsFormModal(result: any) {
@@ -399,5 +407,16 @@ closeRecentPremiumsModal(result: any){
       this.addClientRecentPremiumsDialog.close();
     }
   }
- 
+
+  loadInsurancePlans(clientId: number){
+    this.clientChangeEvent.emit(clientId);
+  }
+
+  savePremiums(premiums: InsurancePremium[]){
+    this.savePremiumsEvent.emit(premiums);
+  }
+
+  premiumsExistValidation(data: { clientId: number, premiums: PolicyPremiumCoverage[] } ){
+    this.premiumsExistValidationEvent.emit(data);
+  }
 }

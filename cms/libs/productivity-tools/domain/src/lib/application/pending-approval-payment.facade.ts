@@ -8,11 +8,12 @@ export class PendingApprovalPaymentFacade {
   /** Private properties **/
   private pendingApprovalCountSubject = new Subject<any>();
   private pendingApprovalGridSubject = new Subject<any>();
+  private pendingApprovalMainListSubject = new Subject<any>();
 
   /** Public properties **/
   pendingApprovalCount$ = this.pendingApprovalCountSubject.asObservable();
   pendingApprovalGrid$ = this.pendingApprovalGridSubject.asObservable();
-
+  pendingApprovalMainList$ = this.pendingApprovalMainListSubject.asObservable();
   constructor(
     private readonly PendingApprovalPaymentService: PendingApprovalPaymentService,
     private readonly loggingService : LoggingService,
@@ -74,4 +75,21 @@ export class PendingApprovalPaymentFacade {
     );
   }
 
+  getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string) {
+
+    this.PendingApprovalPaymentService.getPendingApprovalPaymentMainList(gridSetupData ,serviceSubType).subscribe(
+      {
+        next: (dataResponse: any) => {
+          const gridView = {
+            data: dataResponse["items"],
+            total: dataResponse["totalCount"]
+          };
+            this.pendingApprovalMainListSubject.next(gridView);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        },
+      }
+    );
+  }
 }

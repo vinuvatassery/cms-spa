@@ -5,6 +5,9 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
 import { GridFilterParam } from '../../entities/grid-filter-param';
+import { Observable } from 'rxjs';
+import { InsurancePlan } from '../../entities/insurance-plan';
+import { ClientInsurancePlans, InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsDataService {
@@ -179,6 +182,10 @@ export class FinancialPremiumsDataService {
 
   loadBatchLogListService(premiumType : string ,batchId : string,paginationParameters : any) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payment-batches/${batchId}/payments`,paginationParameters);
+  }
+
+  loadPremiumServicesByPayment(premiumType : string ,paymentId : string,paginationParameters : any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payments/${paymentId}/services`,paginationParameters);
   }
 
   loadBatchItemsListService(){
@@ -458,4 +465,29 @@ export class FinancialPremiumsDataService {
  loadMedicalPremiumList( params: GridFilterParam) {
     return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical?SortType=${params.sortType}&Sorting=${params.sorting}&SkipCount=${params.skipCount}&MaxResultCount=${params.maxResultCount}&Filter=${params.filter?? ''}`,null);   
 }
+  loadInsurancePlans(clientId: number): Observable<ClientInsurancePlans[]>{
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/plans`
+    );
+  }
+
+  loadInsurancePlansCoverageDates(clientId: number){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/converge-dates`
+    );
+  }
+
+  getExistingPremiums(clientId: number, type:string, premiums: PolicyPremiumCoverage[]): Observable<PolicyPremiumCoverage[]>{
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/${type}/premiums`,
+      premiums
+    );
+  }
+
+  savePremiums(clientId: number, type:string, premiums: InsurancePremium[]){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/${type}`,
+      premiums
+    );
+  }
 }

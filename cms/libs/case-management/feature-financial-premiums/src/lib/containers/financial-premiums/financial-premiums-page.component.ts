@@ -4,7 +4,7 @@ import {
   Component,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FinancialPremiumsFacade, GridFilterParam } from '@cms/case-management/domain';
+import { FinancialPremiumsFacade,GridFilterParam, InsurancePremium, PolicyPremiumCoverage } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
@@ -40,6 +40,12 @@ export class FinancialPremiumsPageComponent implements OnInit {
   financialPremiumsAllPaymentsGridLists$ =
     this.financialPremiumsFacade.financialPremiumsAllPaymentsData$;
     public sortValue = this.financialPremiumsFacade.clientsSortValue;
+  insurancePlans$ = this.financialPremiumsFacade.insurancePlans$;
+  insurancePlansLoader$ = this.financialPremiumsFacade.insurancePlansLoader$;
+  insuranceCoverageDates$ = this.financialPremiumsFacade.insuranceCoverageDates$;
+  insuranceCoverageDatesLoader$ = this.financialPremiumsFacade.insuranceCoverageDatesLoader$;
+  actionResponse$ = this.financialPremiumsFacade.premiumActionResponse$;
+  existingPremiums$ = this.financialPremiumsFacade.existingCoverageDates$;
   premiumType: any;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
@@ -47,7 +53,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
     private readonly activatedRoute: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
     private loggingService: LoggingService,
-  ) {}
+  ) { }
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(data => this.premiumType = data['type'])
     this.addNavigationSubscription();
@@ -62,7 +68,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
         },
 
         error: (err: any) => {
-           this.loggingService.logException(err);
+          this.loggingService.logException(err);
         },
       });
   }
@@ -83,5 +89,21 @@ export class FinancialPremiumsPageComponent implements OnInit {
 
   loadFinancialPremiumsAllPaymentsListGrid(event: any) {
     this.financialPremiumsFacade.loadFinancialPremiumsAllPaymentsListGrid();
+  }
+
+  loadInsurancePlans(clientId: number) {
+    this.financialPremiumsFacade.loadInsurancePlans(clientId);
+  }
+
+  loadInsurancePlansCoverageDates(clientId: number) {
+    this.financialPremiumsFacade.loadInsurancePlansCoverageDates(clientId);
+  }
+
+  premiumExistValidation(data: { clientId: number, premiums: PolicyPremiumCoverage[] }){
+    this.financialPremiumsFacade.getExistingPremiums(data.clientId, this.premiumType, data.premiums);
+  }
+
+  saveInsurancePremiums(premiums: InsurancePremium[]) {
+    this.financialPremiumsFacade.savePremiums(this.premiumType, premiums);
   }
 }
