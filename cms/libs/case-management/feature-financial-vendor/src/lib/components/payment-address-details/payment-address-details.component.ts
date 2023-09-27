@@ -248,24 +248,33 @@ export class PaymentAddressDetailsComponent implements OnInit {
   }
   restrictSpecialChar(event:number) {
     return (
-      (event >= 48 && event <= 57) || 
-      (event > 64 && event < 91) ||   
-      (event > 96 && event < 123) ||  
-      event == 8 ||                 
-      event == 45                   
+      (event >= 48 && event <= 57) ||
+      (event > 64 && event < 91) ||
+      (event > 96 && event < 123) ||
+      event == 8 ||
+      event == 45
     );
   }
   onKeyPress(event:number) {
     return (event > 64 &&
       event < 91) || (event > 96 && event < 123)||event==32
-  } 
+  }
   onMailCodeKeyUp() {
     let mailCode = this.paymentAddressForm.controls['mailCode'].value;
     if (mailCode.length !== 3 && mailCode !="") {
       this.mailCodeLengthError = true;
-    } 
-    else if (mailCode.length <=0 || mailCode.length==3){ 
+    }
+    else if (mailCode.length <=0 || mailCode.length==3){
       this.mailCodeLengthError = false;
-    } 
+    }
  }
+
+ isAlphaNumeric(event: number) {
+    return (
+      (event >= 48 && event <= 57) || // Numbers (0-9)
+      (event >= 65 && event <= 90) || // Uppercase letters (A-Z)
+      (event >= 97 && event <= 122) || // Lowercase letters (a-z)
+      event === 32 // Space
+    );
+  }
  }
