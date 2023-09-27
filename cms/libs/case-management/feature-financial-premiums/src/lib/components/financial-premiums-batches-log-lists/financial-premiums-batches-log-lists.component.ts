@@ -9,6 +9,7 @@ import {
   Output,
   TemplateRef,
   ViewChild,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
@@ -176,10 +177,14 @@ export class FinancialPremiumsBatchesLogListsComponent
   @Input() batchLogServicesData$ : any;
   @Output() loadBatchLogListEvent = new EventEmitter<any>();
   @Input() batchId: any;
+  @Input() exportButtonShow$ : any
+
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
   @Output() loadFinancialPremiumBatchInvoiceListEvent =  new EventEmitter<any>();
-  public state!: State;
+  @Output() exportGridDataEvent = new EventEmitter<any>();
 
+  public state!: State;
+  showExportLoader = false;
   sortColumn = 'Item #';
   sortDir = 'Ascending';
   columnsReordered = false;
@@ -197,7 +202,8 @@ export class FinancialPremiumsBatchesLogListsComponent
   sendReportDialog: any;
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService,
-     public activeRoute: ActivatedRoute,private readonly lovFacade: LovFacade) {}
+     public activeRoute: ActivatedRoute,private readonly lovFacade: LovFacade,
+     private readonly  cdr : ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadBatchLogListGrid();
@@ -489,5 +495,21 @@ export class FinancialPremiumsBatchesLogListsComponent
     if (result) {
       this.printAuthorizationDialog.close();
     }
+  }
+
+  onClickedExport(){
+    this.showExportLoader = true
+    this.exportGridDataEvent.emit()    
+    
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {        
+        this.showExportLoader = false
+        this.cdr.detectChanges()
+      }
+
+    })
   }
 }
