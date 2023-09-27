@@ -4,7 +4,7 @@ import {
   Component,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FinancialPremiumsFacade } from '@cms/case-management/domain';
+import { FinancialPremiumsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
@@ -20,6 +20,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
   state!: State;
+  filter!: any;
   sortType = this.financialPremiumsFacade.sortType;
   pageSizes = this.financialPremiumsFacade.gridPageSizes;
   gridSkipCount = this.financialPremiumsFacade.skipCount;
@@ -38,6 +39,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.financialPremiumsBatchData$;
   financialPremiumsAllPaymentsGridLists$ =
     this.financialPremiumsFacade.financialPremiumsAllPaymentsData$;
+    public sortValue = this.financialPremiumsFacade.clientsSortValue;
   premiumType: any;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
@@ -64,22 +66,15 @@ export class FinancialPremiumsPageComponent implements OnInit {
         },
       });
   }
-  loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any) : void{
-    const gridDataRefiner = {
-      skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount: gridDataRefinerValue.pagesize,
-      sort: gridDataRefinerValue.sortColumn,
-      sortType: gridDataRefinerValue.sortType,
-      filter:gridDataRefinerValue.filter
-    };
+  loadFinancialPremiumsProcessListGrid(event: any) : void{
+    const param = new GridFilterParam(
+      event?.skipCount ?? 0,
+      event?.pagesize ?? 0,
+      event?.sortColumn,
+      event?.sortType,
+      JSON.stringify(event.filter));
     this.pageSizes = this.financialPremiumsFacade.gridPageSizes;
-    this.financialPremiumsFacade.loadMedialPremiumList(
-      gridDataRefiner.skipcount,
-      gridDataRefiner.maxResultCount,
-      gridDataRefiner.sort,
-      gridDataRefiner.sortType,
-      gridDataRefiner.filter
-    );
+    this.financialPremiumsFacade.loadMedialPremiumList(param);
   }
 
   loadFinancialPremiumsBatchListGrid(event: any) {

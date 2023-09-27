@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsDataService {
@@ -456,18 +457,7 @@ export class FinancialPremiumsDataService {
     );
   }
 
-  loadMedicalPremiumList( skipcount: number,
-    maxResultCount: number,
-    sort: string,
-    sortType: string,
-    filter:any) {
-      const filterRequestBody = {
-        skipcount:skipcount,
-        maxResultCount:maxResultCount,
-        sort:sort,
-        sortType:sortType,
-        filter:filter
-      }
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical`, filterRequestBody);   
+  loadMedicalPremiumList( params: GridFilterParam) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical?SortType=${params.sortType}&Sorting=${params.sorting}&SkipCount=${params.skipCount}&MaxResultCount=${params.maxResultCount}&Filter=${params.filter?? ''}`,null);   
 }
 }

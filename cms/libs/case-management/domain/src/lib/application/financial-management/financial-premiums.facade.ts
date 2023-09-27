@@ -9,6 +9,7 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { FinancialPremiumsDataService } from '../../infrastructure/financial-management/financial-premiums.data.service';
 import { Router } from '@angular/router';
 import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 
 @Injectable({ providedIn: 'root' })
@@ -19,7 +20,7 @@ export class FinancialPremiumsFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueFinancialPremiumsProcess = 'invoiceID';
+  public sortValueFinancialPremiumsProcess = 'clientFullName';
   public sortProcessList: SortDescriptor[] = [{
     field: this.sortValueFinancialPremiumsProcess,
   }];
@@ -93,7 +94,10 @@ export class FinancialPremiumsFacade {
   paymentBatchNameSubject  =  new Subject<any>();
   paymentBatchName$ = this.paymentBatchNameSubject.asObservable();
 
-  
+  public clientsSortValue = 'clientFullName'
+  public clientSort: SortDescriptor[] = [{
+    field: this.clientsSortValue,
+  }];
   /** Private properties **/
  
   /** Public properties **/
@@ -288,19 +292,9 @@ viewAdviceLetterData(batchId:any,printAdviceLetterData: any, premiumType:any) {
   return this.financialPremiumsDataService.viewPrintAdviceLetterData(batchId, printAdviceLetterData, premiumType);
 }
 loadMedialPremiumList(
-  skipcount: number,
-  maxResultCount: number,
-  sort: string,
-  sortType: string,
-  filter:any,){
+  params: GridFilterParam){
     this.showLoader();
-  this.financialPremiumsDataService.loadMedicalPremiumList(
-      skipcount,
-      maxResultCount,
-      sort,
-      sortType,
-      filter
-  ).subscribe({
+  this.financialPremiumsDataService.loadMedicalPremiumList(params ).subscribe({
     next: (dataResponse) => {
       if (dataResponse) {
         this.hideLoader();
