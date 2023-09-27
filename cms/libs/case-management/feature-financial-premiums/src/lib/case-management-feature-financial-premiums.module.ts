@@ -34,6 +34,7 @@ import { FinancialPremiumsDeletePaymentComponent } from './components/financial-
 import { FinancialPremiumsLeavePageComponent } from './components/financial-premiums-leave-page/financial-premiums-leave-page.component';
 import { FinancialPremiumsSendNoticeComponent } from './components/financial-premiums-send-notice/financial-premiums-send-notice.component';
 import { FinancialPremiumsUnbatchPaymentComponent } from './components/financial-premiums-unbatch-payment/financial-premiums-unbatch-payment.component';
+import { FinancialPremiumsBatchesLogInvoiceListsComponent } from './components/financial-premiums-batches-log-invoices-lists/financial-premiums-batches-log-invoices-lists.component';
 
 @NgModule({
   imports: [
@@ -72,6 +73,7 @@ import { FinancialPremiumsUnbatchPaymentComponent } from './components/financial
     FinancialPremiumsLeavePageComponent,
     FinancialPremiumsSendNoticeComponent,
     FinancialPremiumsUnbatchPaymentComponent,
+    FinancialPremiumsBatchesLogInvoiceListsComponent
   ],
   exports: [
     FinancialPremiumsProcessListComponent,
@@ -101,6 +103,7 @@ import { FinancialPremiumsUnbatchPaymentComponent } from './components/financial
     FinancialPremiumsLeavePageComponent,
     FinancialPremiumsSendNoticeComponent,
     FinancialPremiumsUnbatchPaymentComponent,
+    FinancialPremiumsBatchesLogInvoiceListsComponent
   ],
 })
 export class CaseManagementFeatureFinancialPremiumsModule {}

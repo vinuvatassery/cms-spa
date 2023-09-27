@@ -4,6 +4,9 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { Observable } from 'rxjs';
+import { InsurancePlan } from '../../entities/insurance-plan';
+import { ClientInsurancePlans, InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsDataService {
@@ -178,6 +181,10 @@ export class FinancialPremiumsDataService {
 
   loadBatchLogListService(premiumType : string ,batchId : string,paginationParameters : any) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payment-batches/${batchId}/payments`,paginationParameters);
+  }
+
+  loadPremiumServicesByPayment(premiumType : string ,paymentId : string,paginationParameters : any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payments/${paymentId}/services`,paginationParameters);
   }
 
   loadBatchItemsListService(){
@@ -440,4 +447,43 @@ export class FinancialPremiumsDataService {
     );
   }
 
+  loadMedicalPremiumPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, premiumType: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/print-advice-letter`, printAdviceLetterData);
+  }
+
+  reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any, premiumType:any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/reconcile-payments`,reconcileData);
+  }
+
+  viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, premiumType:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/download-advice-letter`, printAdviceLetterData,
+      { responseType: 'blob' }
+    );
+  }
+  loadInsurancePlans(clientId: number): Observable<ClientInsurancePlans[]>{
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/plans`
+    );
+  }
+
+  loadInsurancePlansCoverageDates(clientId: number){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/converge-dates`
+    );
+  }
+
+  getExistingPremiums(clientId: number, type:string, premiums: PolicyPremiumCoverage[]): Observable<PolicyPremiumCoverage[]>{
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/${type}/premiums`,
+      premiums
+    );
+  }
+
+  savePremiums(clientId: number, type:string, premiums: InsurancePremium[]){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/${type}`,
+      premiums
+    );
+  }
 }
