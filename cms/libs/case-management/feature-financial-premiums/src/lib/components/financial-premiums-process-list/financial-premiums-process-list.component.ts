@@ -15,8 +15,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import {
-  CompositeFilterDescriptor,
-  filterBy,
+  CompositeFilterDescriptor
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 
@@ -389,14 +388,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
       }
     });
   }
-loadPremiumGridData(){
-  const gridDataRefinerValue = {
-    skipCount: 0,
-    pagesize: 5,
-    sortColumn: "",
-    sortType: "",
-  };
-}
 gridlistDataHandle() {
     this.medicalPremiumList$.subscribe((data: GridDataResult) => {
     this.gridDataResult = data;
