@@ -34,8 +34,8 @@ export class ApprovalPageComponent  {
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.pendingApprovalPaymentFacade.pendingApprovalCount$;
   approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$
-  batchPaymentsList$ = this.pendingApprovalPaymentFacade.batchPaymentGrid$;
-  batchPaymentsCount$ = this.pendingApprovalPaymentFacade.batchPaymentCount$;
+  batchDetailPaymentsList$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
+  batchDetailPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
   approvalsPaymentsMainLists$ = this.pendingApprovalPaymentFacade.pendingApprovalMainList$
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,     
@@ -67,12 +67,12 @@ export class ApprovalPageComponent  {
     }
     this.pendingApprovalPaymentFacade.getPendingApprovalPaymentMainList(gridDataValue , gridDataValue.selectedPaymentType)
   }
-  loadBatchPaymentGrid(gridDataValue : any): void {
+  loadBatchDetailPaymentsGrid(gridDataValue : any): void {
     console.log('10-loadBatchPaymentGrid',gridDataValue);
     if(!gridDataValue.batchId || gridDataValue.batchId.length == 0){
       return;
     }
-    this.pendingApprovalPaymentFacade.loadBatchPaymentGrid(gridDataValue, gridDataValue.batchId)
+    this.pendingApprovalPaymentFacade.getPendingApprovalBatchDetailPaymentsGrid(gridDataValue, gridDataValue.batchId)
   }
   
 }

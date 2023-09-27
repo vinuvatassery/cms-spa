@@ -40,10 +40,10 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   @Input() sort: any;
   @Input() approvalsPaymentsLists$: any;
   @Input() approvalsPaymentsMainLists$: any;
-  @Input() batchPaymentsList$: any;
+  @Input() batchDetailPaymentsList$: any;
   @Output() loadApprovalsPaymentsGridEvent = new EventEmitter<any>();
   @Output() loadApprovalsPaymentsMainListEvent = new EventEmitter<any>();
-  @Output() loadBatchPaymentGridEvent = new EventEmitter<any>();
+  @Output() loadBatchDetailPaymentsGridEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -121,9 +121,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.isViewPaymentsBatchDialog = false;
   }
 
-  onLoadBatchPaymentList(data?:any){
-    console.log('11-onLoadBatchPaymentList',data);
-    this.loadBatchPaymentGridEvent.emit(data);
+  onLoadBatchDetailPaymentsList(data?:any){
+    this.loadBatchDetailPaymentsGridEvent.emit(data);
   }
   private loadApprovalPaymentsListGrid(): void {
     this.loadApprovalPayments(

@@ -9,15 +9,15 @@ export class PendingApprovalPaymentFacade {
   private pendingApprovalCountSubject = new Subject<any>();
   private pendingApprovalGridSubject = new Subject<any>();
   private pendingApprovalMainListSubject = new Subject<any>();
-  private batchPaymentCountSubject = new Subject<any>();
-  private batchPaymentGridSubject = new Subject<any>();
+  private pendingApprovalBatchDetailPaymentsCountSubject = new Subject<any>();
+  private pendingApprovalBatchDetailPaymentsGridSubject = new Subject<any>();
 
   /** Public properties **/
   pendingApprovalCount$ = this.pendingApprovalCountSubject.asObservable();
   pendingApprovalGrid$ = this.pendingApprovalGridSubject.asObservable();
   pendingApprovalMainList$ = this.pendingApprovalMainListSubject.asObservable();
-  batchPaymentCount$ = this.batchPaymentCountSubject.asObservable();
-  batchPaymentGrid$ = this.batchPaymentGridSubject.asObservable();
+  pendingApprovalBatchDetailPaymentsCount$ = this.pendingApprovalBatchDetailPaymentsCountSubject.asObservable();
+  pendingApprovalBatchDetailPaymentsGrid$ = this.pendingApprovalBatchDetailPaymentsGridSubject.asObservable();
 
   constructor(
     private readonly PendingApprovalPaymentService: PendingApprovalPaymentService,
@@ -97,16 +97,17 @@ export class PendingApprovalPaymentFacade {
       }
     );
   }
-  loadBatchPaymentGrid(gridSetupData: any, batchId: string) {
 
-    this.PendingApprovalPaymentService.loadBatchPaymentGrid(gridSetupData, batchId).subscribe(
+  getPendingApprovalBatchDetailPaymentsGrid(gridSetupData: any, batchId: string) {
+
+    this.PendingApprovalPaymentService.getPendingApprovalBatchDetailPaymentsGrid(gridSetupData, batchId).subscribe(
       {
         next: (dataResponse: any) => {console.log(dataResponse);
           const gridView = {
             data: dataResponse["items"],
             total: dataResponse["totalCount"]
           };
-            this.batchPaymentGridSubject.next(gridView);
+            this.pendingApprovalBatchDetailPaymentsGridSubject.next(gridView);
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  

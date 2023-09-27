@@ -45,8 +45,8 @@ export class PendingApprovalPaymentService {
     );
   }
 
-  loadBatchPaymentGrid(gridSetupData: any, batchId: string) {
-    const paymentGridSetupDto = {
+  getPendingApprovalBatchDetailPaymentsGrid(gridSetupData: any, batchId: string) {
+    const batchDetailGridSetupDto = {
       SortType: gridSetupData.sortType,
       Sorting: gridSetupData.sort,
       SkipCount: gridSetupData.skipcount,
@@ -54,6 +54,6 @@ export class PendingApprovalPaymentService {
       Filter: gridSetupData.filter,
     };
     return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/payment-batches/${batchId}/payments`
-    , paymentGridSetupDto);
+    , batchDetailGridSetupDto);
   }
 }

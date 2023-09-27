@@ -19,12 +19,12 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
-  @Input() batchPaymentGridList$: any;
+  @Input() batchDetailPaymentsList$: any;
   @Input() pendingApprovalPaymentFullList:any;
   @Output() closeViewPaymentsBatchClickedEvent = new EventEmitter();
-  @Output() loadBatchPaymentListEvent = new EventEmitter<any>();
+  @Output() loadBatchDetailPaymentsListEvent = new EventEmitter<any>();
   public state!: State;
-  isBatchPaymentGridLoaderShow = false;
+  isBatchDetailPaymentsGridLoaderShow = false;
   sortColumn = 'paymentNbr';
   sortDir = 'Ascending';
   sortColumnName = '';
@@ -36,8 +36,8 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
-  gridBatchPaymentDataSubject = new Subject<any>();
-  gridBatchPaymentData$ = this.gridBatchPaymentDataSubject.asObservable();
+  gridBatchDetailPaymentsDataSubject = new Subject<any>();
+  gridBatchDetailPaymentsData$ = this.gridBatchDetailPaymentsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -106,7 +106,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isBatchPaymentGridLoaderShow = true;
+    this.isBatchDetailPaymentsGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
@@ -115,23 +115,23 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
       filter: this.filter,
     };
     let batchId = this.batchId;
-    this.loadBatchPaymentListEvent.emit({gridDataRefinerValue, batchId});
+    this.loadBatchDetailPaymentsListEvent.emit({gridDataRefinerValue, batchId});
     this.gridDataHandle();
   }
 
   gridDataHandle() {
-    this.batchPaymentGridList$.subscribe((data: any) => {
+    this.batchDetailPaymentsList$.subscribe((data: any) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
         this.filterData
       );
-      this.gridBatchPaymentDataSubject.next(this.gridDataResult);
+      this.gridBatchDetailPaymentsDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) { 
-        this.isBatchPaymentGridLoaderShow = false;
+        this.isBatchDetailPaymentsGridLoaderShow = false;
       }
     });
-    this.isBatchPaymentGridLoaderShow = false;
+    this.isBatchDetailPaymentsGridLoaderShow = false;
   }
 
   onChange(data: any) {
