@@ -456,7 +456,18 @@ export class FinancialPremiumsDataService {
     );
   }
 
-  loadMedicalPremiumList(providerPageAndSortedRequest:any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical`, providerPageAndSortedRequest);   
+  loadMedicalPremiumList( skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string,
+    filter:any) {
+      const filterRequestBody = {
+        skipcount:skipcount,
+        maxResultCount:maxResultCount,
+        sort:sort,
+        sortType:sortType,
+        filter:filter
+      }
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical`, filterRequestBody);   
 }
 }

@@ -92,8 +92,7 @@ export class FinancialPremiumsFacade {
 
   paymentBatchNameSubject  =  new Subject<any>();
   paymentBatchName$ = this.paymentBatchNameSubject.asObservable();
-  private medicalPremiumListSubject = new Subject<any>();
-  medicalPremiumList$ = this.medicalPremiumListSubject.asObservable();
+
   
   /** Private properties **/
  
@@ -288,21 +287,32 @@ export class FinancialPremiumsFacade {
 viewAdviceLetterData(batchId:any,printAdviceLetterData: any, premiumType:any) {
   return this.financialPremiumsDataService.viewPrintAdviceLetterData(batchId, printAdviceLetterData, premiumType);
 }
-loadMedialPremiumList(providerPageAndSortedRequest :any){
-  this.showLoader();
-  this.financialPremiumsDataService.loadMedicalPremiumList(providerPageAndSortedRequest).subscribe({
-    next: (response: any) => {
-      if (response) {
-        const gridView = {
-          data: response["items"],
-          total:response["totalCount"]
-        };
+loadMedialPremiumList(
+  skipcount: number,
+  maxResultCount: number,
+  sort: string,
+  sortType: string,
+  filter:any,){
+    this.showLoader();
+  this.financialPremiumsDataService.loadMedicalPremiumList(
+      skipcount,
+      maxResultCount,
+      sort,
+      sortType,
+      filter
+  ).subscribe({
+    next: (dataResponse) => {
+      if (dataResponse) {
         this.hideLoader();
-        this.medicalPremiumListSubject.next(gridView);
-      }
-    },
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+      this.financialPremiumsProcessDataSubject.next(gridView);
+    }},
     error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      this.hideLoader();
     },
   });
 }

@@ -6,7 +6,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
   TemplateRef,
   ViewChild,
@@ -27,7 +26,7 @@ import { Subject } from 'rxjs';
   templateUrl: './financial-premiums-process-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges {
+export class FinancialPremiumsProcessListComponent implements  OnChanges {
   @ViewChild('batchPremiumsConfirmationDialogTemplate', { read: TemplateRef })
   batchPremiumsConfirmationDialogTemplate!: TemplateRef<any>;
   @ViewChild('removePremiumsConfirmationDialogTemplate', { read: TemplateRef })
@@ -135,17 +134,13 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
     private dialogService: DialogService
   ) {}
 
-  ngOnInit(): void {
-    this.loadFinancialPremiumsProcessListGrid();
-    this.loadPremiumGridData(); 
-  }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
     this.loadFinancialPremiumsProcessListGrid();
   }
 
@@ -154,14 +149,16 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
-      this.sortType
+      this.sortType,
+      this.filter
     );
   }
   loadPremiumsProcess(
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
-    sortTypeValue: string
+    sortTypeValue: string,
+    filter: any
   ) {
     this.isFinancialPremiumsProcessGridLoaderShow = true;
     const gridDataRefinerValue = {
@@ -169,6 +166,7 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter: this.filter ? this.filter : null,
     };
     this.loadFinancialPremiumsProcessListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
@@ -321,14 +319,12 @@ export class FinancialPremiumsProcessListComponent implements OnInit, OnChanges 
     });
   }
 loadPremiumGridData(){
-  debugger;
   const gridDataRefinerValue = {
     skipCount: 0,
     pagesize: 5,
     sortColumn: "",
     sortType: "",
   };
-  this.financialPremiumsFacade.loadMedialPremiumList(gridDataRefinerValue);
 }
 gridlistDataHandle() {
     this.medicalPremiumList$.subscribe((data: GridDataResult) => {

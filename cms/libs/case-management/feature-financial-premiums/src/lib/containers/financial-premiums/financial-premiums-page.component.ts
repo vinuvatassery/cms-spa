@@ -64,8 +64,22 @@ export class FinancialPremiumsPageComponent implements OnInit {
         },
       });
   }
-  loadFinancialPremiumsProcessListGrid(event: any) {
-    this.financialPremiumsFacade.loadFinancialPremiumsProcessListGrid();
+  loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any) : void{
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      maxResultCount: gridDataRefinerValue.pagesize,
+      sort: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+      filter:gridDataRefinerValue.filter
+    };
+    this.pageSizes = this.financialPremiumsFacade.gridPageSizes;
+    this.financialPremiumsFacade.loadMedialPremiumList(
+      gridDataRefiner.skipcount,
+      gridDataRefiner.maxResultCount,
+      gridDataRefiner.sort,
+      gridDataRefiner.sortType,
+      gridDataRefiner.filter
+    );
   }
 
   loadFinancialPremiumsBatchListGrid(event: any) {
