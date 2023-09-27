@@ -252,24 +252,6 @@ export class FinancialPremiumsFacade {
     });
   }
 
-  loadPremiumServicesByPayment(premiumType : string ,paymentId : string,paginationParameters : any) {
-    this.financialPremiumsDataService.loadPremiumServicesByPayment(premiumType ,paymentId ,paginationParameters )
-    .subscribe({
-      next: (dataResponse : any) => {
-        const gridView = {
-          data: dataResponse['items'],
-          total: dataResponse['totalCount'],
-        };
-        this.batchLogServicesDataSubject.next(gridView);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader();
-      },
-    });
-  }
-
   loadBatchItemsListGrid(){
     this.financialPremiumsDataService.loadBatchItemsListService().subscribe({
       next: (dataResponse) => {
