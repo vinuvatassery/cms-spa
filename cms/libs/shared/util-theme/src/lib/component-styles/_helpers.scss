@@ -293,6 +293,7 @@ section {
   word-wrap: break-word;
 }
 
-// div[kendowatermarkoverlay]{
-//   display: none;
-// }
+// Watermark Disable 
+div[kendowatermarkoverlay]{
+  display: none;
+}

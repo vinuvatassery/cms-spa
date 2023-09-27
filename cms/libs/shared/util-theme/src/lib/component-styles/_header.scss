@@ -212,7 +212,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      // border: 1px solid lighten($theme-border, 5%);
+      border: 1px solid lighten($theme-border, 5%);
       border-bottom-width: $size-0;
       padding: $size-m $size-xx $size-m $size-m;
       gap: $size-xxx;
@@ -220,7 +220,7 @@
       transition: ease-in all 0.4s;
       cursor: default;
       &:hover {
-        // background: lighten($app-primary-lighten, 30%);
+        background: lighten($app-primary-lighten, 30%);
       }
       &:last-child {
         border-bottom-width: 1px;

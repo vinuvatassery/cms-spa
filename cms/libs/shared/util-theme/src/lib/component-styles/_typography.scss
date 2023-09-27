@@ -44,7 +44,7 @@ a {
   &:hover,
   &.visited,
   &:focus {
-    // color: darken($app-primary, 20%);
+    color: darken($app-primary, 20%);
   }
 }
 .text-capital {

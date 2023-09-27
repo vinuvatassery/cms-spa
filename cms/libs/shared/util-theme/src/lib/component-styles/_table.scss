@@ -108,6 +108,7 @@ $pagination-height : 48px;
         display: flex;
         border-radius: 2px;
         margin-left: 5px;
+        color:$white;
 
         &:active {
           background: $white;
@@ -249,8 +250,10 @@ $pagination-height : 48px;
     .k-filterable .k-grid-column-menu:hover {
       background: rgba($black, 0.1);
     }
-
-    .k-header {
+.k-icon-wrapper-host{
+  color: $app-primary-font-color !important;
+}
+   
       .k-sort-icon {
         color: $app-primary-font-color !important;
       }
@@ -258,7 +261,7 @@ $pagination-height : 48px;
       .k-cell-inner>.k-link {
         padding: 12px 24px;
       }
-    }
+   
 
     .k-grid-header,
     .k-grid-header-wrap {
@@ -922,3 +925,18 @@ table,
 }
 }
 
+
+
+.k-tabstrip-content
+{
+  &:focus,
+  &.k-focus{
+    outline: 0px;
+  }
+} .k-tabstrip{
+  > .k-content:focus, 
+   > .k-content.k-focus{
+    outline: 0px;
+   }
+
+}

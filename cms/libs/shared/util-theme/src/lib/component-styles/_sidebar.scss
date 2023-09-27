@@ -146,7 +146,7 @@ cms-sidenav {
 
           &:hover,
           &.active-item {
-            // background-color: darken($app-primary-darken, 5%);
+            background-color: darken($app-primary-darken, 5%);
             transition: ease-in all 0.3s;
           }
         }

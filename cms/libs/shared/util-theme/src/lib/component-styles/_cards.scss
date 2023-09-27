@@ -46,7 +46,7 @@
   &.app-c-card--border-box {
     box-shadow: 0px 3px 6px var(--hive-neutral-palette-200) !important;
     padding: $size-xlg;
-    // border: 1px solid lighten($theme-border, 5%);
+    border: 1px solid lighten($theme-border, 5%);
   }
 }
 /* Card in popover */

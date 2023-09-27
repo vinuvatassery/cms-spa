@@ -3,7 +3,7 @@
   margin: $size-0 !important;
   padding-bottom: $size-0;
   border: $size-0;
-  // border-bottom: 1px solid lighten($theme-border, 5%);
+  border-bottom: 1px solid lighten($theme-border, 5%);
   width: 100%;
 
   .k-expander-header {
@@ -130,7 +130,7 @@
 
       &:hover {
         td {
-          // background: lighten(var(--hive-neutral-palette-50), 2%);
+          background: lighten($tertiary, 2%);
         }
       }
     }
@@ -184,7 +184,7 @@
 
     label {
       font-family: $font-family-bold;
-      font-size: $font-size-l; 
+      font-size: $font-size-l;
       text-shadow: none;
 
     }
@@ -245,6 +245,7 @@
     border: $size-0;
     width: 100%;
     background: transparent;
+
     .k-panelbar-item {
       background: #FFFFFF 0% 0% no-repeat padding-box;
       box-shadow: 0px 0px 6px #00000014;
@@ -256,25 +257,27 @@
       overflow: hidden;
       color: $black;
     }
+
     .k-panelbar-header {
-      // > &:hover,
-      // > &:focus {
-      //   box-shadow: 0px 6px 6px #00000014;
-      // }
 
-      // >.k-link {
-      //   padding: 16px 16px;
-      //   align-items: flex-start;
-      //   color: $black;
+      &:hover,
+      &:focus {
+        box-shadow: 0px 6px 6px #00000014;
+      }
 
-      //   &.k-selected,
-      //   &.k-focus,
-      //   &:hover {
-      //     background: transparent;
-      //     color: $black;
+      >.k-link {
+        padding: 16px 16px;
+        align-items: flex-start;
+        color: $black;
 
-      //   }
-      // }
+        &.k-selected,
+        &.k-focus,
+        &:hover {
+          background: transparent;
+          color: $black;
+
+        }
+      }
 
       .k-grid .k-header {
         .k-link {

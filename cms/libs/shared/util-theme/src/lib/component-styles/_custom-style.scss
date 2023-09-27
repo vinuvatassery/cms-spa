@@ -182,7 +182,7 @@
       background-color: $white !important;
 
       &.sh-top-border {
-        // border-top: 1px solid darken($theme-border, 30%);
+        border-top: 1px solid darken($theme-border, 30%);
         padding: $size-xx $size-xlg;
       }
 
@@ -195,7 +195,7 @@
 
       &.heading-as-menu {
         justify-content: flex-start;
-        // border-bottom: 1px solid darken($theme-border, 30%);
+        border-bottom: 1px solid darken($theme-border, 30%);
         transition: ease-in all 0.4s;
 
         .submenutop-text {
@@ -222,7 +222,7 @@
     }
 
     .list-b-border {
-      // border-bottom: 1px solid darken($theme-border, 30%);
+      border-bottom: 1px solid darken($theme-border, 30%);
     }
 
     .user-side-profile {

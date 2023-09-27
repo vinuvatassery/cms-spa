@@ -20,7 +20,7 @@
           position: absolute;
           right: $size-m;
           top: $size-0;
-          // color: var(--hive-neutral-palette-600);
+         color: var(--hive-neutral-palette-600);
         }
         &.active-item {
           color: var(--hive-neutral-palette-600);
@@ -92,7 +92,7 @@
       display: flex;
       align-items: center;
       &.icon-filled {
-        // color: var(--hive-warn-palette-800);
+         color: var(--hive-warn-palette-800);
         color: $colored-yellow;
          
       }

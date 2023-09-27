@@ -61,7 +61,7 @@
         display: flex;
         justify-content: space-between;
         padding: $size-l $size-xl;
-        // color: lighten($black-3, 20%);
+        color: lighten($black-3, 20%);
         cursor: pointer;
         &.k-selected {
           background-color: var(--hive-primary-palette-200);
@@ -95,7 +95,7 @@
           }
         }
         .attachment-item_size {
-          // color: lighten($black-3, 20%);
+          color: lighten($black-3, 20%);
           font-size: $font-size-s;
           margin: $size-0 $size-m;
         }
