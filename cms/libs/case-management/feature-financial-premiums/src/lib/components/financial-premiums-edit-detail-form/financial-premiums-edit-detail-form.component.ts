@@ -3,17 +3,21 @@ import {
   ChangeDetectionStrategy,
   Output,
   EventEmitter,
+  Input,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialPremiumsFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-premiums-edit-detail-form',
-  templateUrl: './financial-premiums-edit-detail-form.component.html', 
+  templateUrl: './financial-premiums-edit-detail-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPremiumsEditDetailFormComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  @Input() vendorId:any;
+  @Input() clientId:any;
+  @Input() premiumsType:any;
   isShownSearchLoader = false;
   premiumsListData$ = this.financialPremiumsFacade.premiumsListData$;
   sortValue = this.financialPremiumsFacade.sortValuePremiums;
@@ -58,22 +62,22 @@ export class FinancialPremiumsEditDetailFormComponent {
     {
       providerId: '12',
       providerFullName: 'Fname Lname',
-      tin: '2434324324234', 
+      tin: '2434324324234',
     },
     {
       providerId: '12',
       providerFullName: 'Fname Lname',
-      tin: '2434324324234', 
+      tin: '2434324324234',
     },
     {
       providerId: '12',
       providerFullName: 'Fname Lname',
-      tin: '2434324324234', 
+      tin: '2434324324234',
     },
     {
       providerId: '12',
       providerFullName: 'Fname Lname',
-      tin: '2434324324234', 
+      tin: '2434324324234',
     },
   ];
 
