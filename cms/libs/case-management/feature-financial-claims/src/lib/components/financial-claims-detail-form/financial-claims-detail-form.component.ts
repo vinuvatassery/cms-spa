@@ -9,6 +9,7 @@ import {
   OnInit,
   ViewChild,
   TemplateRef,
+  OnDestroy
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
@@ -19,13 +20,14 @@ import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-claims-detail-form',
   templateUrl: './financial-claims-detail-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsDetailFormComponent implements OnInit {
+export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   @ViewChild('pcaExceptionDialogTemplate', { read: TemplateRef })
   pcaExceptionDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -146,6 +148,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   bridgeUppPriorityArray = ['ineligibleExceptionFlag', 'exceedMaxBenefitExceptionFlag', 'duplicatePaymentExceptionFlag', 'oldInvoiceExceptionFlag'];
   dateFormat = this.configProvider.appSettings.dateFormat;
   providerTin: any;
+  private showExceedMaxBenefitSubscription !: Subscription;
+  private showIneligibleSubscription !: Subscription;
+  private showBridgeUppSubscription !: Subscription;
+  private showDuplicatePaymentSubscription !: Subscription;
 
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
@@ -202,27 +208,36 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   }
   checkExceptions()
   {
-    this.showExceedMaxBenefitException$.subscribe(data => {
+    this.showExceedMaxBenefitSubscription = this.showExceedMaxBenefitException$.subscribe(data => {
       if(data)
       {
         if(data?.flag)
         {
           this.resetExceptionFields(data?.indexNumber);
           this.addExceptionForm.at(data?.indexNumber).get('maxBenefitExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
+          this.addExceptionForm.at(data?.indexNumber).get('exceedMaxBenefitExceptionFlag')?.setValue(data?.flag);
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.ExceedMaxBenefits : '')
+          this.addClaimServicesForm.at(data?.indexNumber).get('reasonForException')?.setValue('');
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
         }
-        this.addExceptionForm.at(data?.indexNumber).get('exceedMaxBenefitExceptionFlag')?.setValue(data?.flag);
-        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.ExceedMaxBenefits : '')
-        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
+        else
+        {
+          this.addExceptionForm.at(data?.indexNumber).get('exceedMaxBenefitExceptionFlag')?.setValue(data?.flag);
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.ExceedMaxBenefits : '')
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
+          this.checkDuplicatePaymentException(data?.indexNumber);
+        }
         this.cd.detectChanges();
       }
     });
-    this.showIneligibleException$.subscribe(data => {
+    this.showIneligibleSubscription = this.showIneligibleException$.subscribe(data => {
       if(data?.flag)
       {
         this.resetExceptionFields(data?.indexNumber);
         this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
         this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlag')?.setValue(data?.flag);
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.Ineligible : '')
+        this.addClaimServicesForm.at(data?.indexNumber).get('reasonForException')?.setValue('');
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
         this.cd.detectChanges();
       }
@@ -231,38 +246,37 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlag')?.setValue(data?.flag);
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.Ineligible : '')
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
-        let serviceFormData = this.addClaimServicesForm.at(data?.indexNumber) as FormGroup;
-        let startDate = serviceFormData.controls['serviceStartDate'].value;
-        let endDate = serviceFormData.controls['serviceEndDate'].value;
+        this.checkOldInvoiceException(data?.indexNumber);
         this.checkDuplicatePaymentException(data?.indexNumber);
-        this.checkOldInvoiceException(startDate,endDate, data?.indexNumber);
       }
     });
-    this.showBridgeUppException$.subscribe(data => {
+    this.showBridgeUppSubscription = this.showBridgeUppException$.subscribe(data => {
       if(data)
       {
         if(data?.flag)
         {
           this.resetExceptionFields(data?.indexNumber);
           this.addExceptionForm.at(data?.indexNumber).get('bridgeUppExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
+          this.addClaimServicesForm.at(data?.indexNumber).get('reasonForException')?.setValue('');
         }
-        this.addExceptionForm.at(data?.indexNumber).get('bridgeUppExceptionFlag')?.setValue(data?.flag);
-        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.BridgeUpp : '')
-        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
+          this.addExceptionForm.at(data?.indexNumber).get('bridgeUppExceptionFlag')?.setValue(data?.flag);
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.BridgeUpp : '')
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
         this.cd.detectChanges();
       }
     });
-    this.showDuplicatePaymentException$.subscribe(data => {
+    this.showDuplicatePaymentSubscription = this.showDuplicatePaymentException$.subscribe(data => {
       if(data)
       {
         if(data?.flag)
         {
           this.resetExceptionFields(data?.indexNumber);
           this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
+          this.addClaimServicesForm.at(data?.indexNumber).get('reasonForException')?.setValue('');
         }
-        this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlag')?.setValue(data?.flag);
-        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.DuplicatePayment : '')
-        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
+          this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlag')?.setValue(data?.flag);
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.DuplicatePayment : '')
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
         this.cd.detectChanges();
       }
     });
@@ -479,10 +493,10 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
-    if (startDate != "" && endDate != "" && startDate > endDate) {      
+    if (startDate != "" && endDate != "" && startDate > endDate) {
       serviceFormData.get('serviceEndDate')?.setErrors({invalid : true});
       return true;
-    }    
+    }
     return false;
   }
 
@@ -547,7 +561,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       pcaCode: null,
       pcaAssignmentId: null,
       isPcaReassignmentNeeded: null,
-      tpaInvoice: [{}],
+      tpaInvoices: [{}],
     };
     let checkDeniedClaim = false;
     for (let element of formValues.claimService) {
@@ -569,31 +583,24 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         exceptionFlag: element.exceptionFlag,
         exceptionTypeCode: element.exceptionTypeCode
       };
-      if (
-        !this.isStartEndDateValid(
-          service.serviceStartDate,
-          service.serviceEndDate
-        )
-      ) {
-        this.financialClaimsFacade.showHideSnackBar(
-          SnackBarNotificationType.ERROR,
-          'Start date must less than end date'
-        );
-        return;
-      }
+      this.validateStartEndDate(service.serviceStartDate,
+        service.serviceEndDate);
       if (service.exceptionFlag === StatusFlag.Yes && !service.exceptionReasonCode) {
         checkDeniedClaim = true;
       }
-      bodyData.tpaInvoice.push(service);
+      bodyData.tpaInvoices.push(service);
     }
-    bodyData.tpaInvoice.splice(0, 1);
-    if(checkDeniedClaim || (bodyData?.exceptionFlag === StatusFlag.Yes && !bodyData?.exceptionReasonCode))
+    bodyData.tpaInvoices.splice(0, 1);
+    if((checkDeniedClaim || (bodyData?.exceptionFlag === StatusFlag.Yes && !bodyData?.exceptionReasonCode)) && !isPcaAssigned)
     {
       this.printDenialLetterData = bodyData;
       this.onPrintDenialLetterOpen();
       return;
     }
+    this.getPCACode(isPcaAssigned, bodyData);
+  }
 
+  getPCACode(isPcaAssigned: boolean, bodyData: any){
     if (!isPcaAssigned) {
       this.getPcaCode(bodyData);
     }
@@ -608,6 +615,20 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     }
   }
 
+  validateStartEndDate(startDate: string, endDate: string) {
+    if (
+      !this.isStartEndDateValid(
+        startDate,
+        endDate
+      )
+    ) {
+      this.financialClaimsFacade.showHideSnackBar(
+        SnackBarNotificationType.ERROR,
+        'Start date must less than end date'
+      );
+    }
+  }
+
   getMinServiceStartDate(arr: any) {
     const timestamps = arr.map((a: any) => new Date(a.serviceStartDate));
     return this.intl.formatDate(new Date(Math.min(...timestamps)), this.configProvider?.appSettings?.dateFormat);
@@ -619,9 +640,9 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   };
 
   private getPcaCode(claim: any) {
-    const totalAmountDue = (claim.tpaInvoice as []).reduce((acc, cur) => acc + (cur as any)?.amountDue ?? 0, 0);
-    const minServiceStartDate = this.getMinServiceStartDate(claim.tpaInvoice);
-    const maxServiceEndDate = this.getMinServiceEndDate(claim.tpaInvoice);
+    const totalAmountDue = (claim.tpaInvoices as []).reduce((acc, cur) => acc + (cur as any)?.amountDue ?? 0, 0);
+    const minServiceStartDate = this.getMinServiceStartDate(claim.tpaInvoices);
+    const maxServiceEndDate = this.getMinServiceEndDate(claim.tpaInvoices);
     const request = {
       clientCaseEligibilityId: claim.clientCaseEligibilityId,
       claimAmount: totalAmountDue,
@@ -774,7 +795,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
           this.paymentRequestId = val.paymentRequestId;
           this.cd.detectChanges();
           this.loaderService.hide();
-          this.setFormValues(val.tpaInvoice);
+          this.setFormValues(val.tpaInvoices);
         },
         error: (err) => {
           this.loaderService.hide();
@@ -993,6 +1014,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
       this.claimForm.controls['providerNotEligibleExceptionFlag']?.setValue(true);
       this.claimForm.controls['parentExceptionTypeCode'].setValue(ExceptionTypeCode.ProviderIneligible);
       this.claimForm.controls['parentExceptionFlag']?.setValue(StatusFlag.Yes);
+      this.claimForm.controls['parentReasonForException']?.setValue('');
     }
     else
     {
@@ -1002,12 +1024,15 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
     }
     this.cd.detectChanges();
   }
-  checkOldInvoiceException(serviceStartDate:any, serviceEndDate:any, index:number)
+  checkOldInvoiceException(index:number)
   {
     if(!this.checkPriority(this.oldInvoicePriorityArray,index,'providerNotEligibleExceptionFlag'))
     {
       return;
     }
+    const serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
+    const serviceStartDate = serviceFormData.controls['serviceStartDate'].value;
+    const serviceEndDate = serviceFormData.controls['serviceEndDate'].value;
     if(serviceEndDate && serviceStartDate)
     {
       let today = new Date();
@@ -1021,6 +1046,7 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
         this.addExceptionForm.at(index).get('oldInvoiceExceptionFlag')?.setValue(true);
         this.addClaimServicesForm.at(index).get('exceptionTypeCode')?.setValue(ExceptionTypeCode.OldInvoice)
         this.addClaimServicesForm.at(index).get('exceptionFlag')?.setValue(StatusFlag.Yes)
+        this.addClaimServicesForm.at(index).get('reasonForException')?.setValue('');
       }
       else
       {
@@ -1114,7 +1140,12 @@ export class FinancialClaimsDetailFormComponent implements OnInit {
   onAmountDueChange(index:any)
   {
     this.loadServiceCostMethod(index);
-    this.checkDuplicatePaymentException(index);
+  }
+  ngOnDestroy(): void {
+    this.showExceedMaxBenefitSubscription.unsubscribe();
+    this.showIneligibleSubscription.unsubscribe();
+    this.showBridgeUppSubscription.unsubscribe();
+    this.showDuplicatePaymentSubscription.unsubscribe();
   }
 }
 

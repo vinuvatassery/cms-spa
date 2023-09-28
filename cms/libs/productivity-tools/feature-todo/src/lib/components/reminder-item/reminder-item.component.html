@@ -10,13 +10,26 @@
       </p>
       <p class="text-muted">10-10-2021</p>
     </div>
-    <button kendoButton themeColor="primary" (click)="onNewReminderOpenClicked()" fillMode="flat" class="clear-icon-btn"  aria-label="Edit Reminder" title="Edit Reminder">
-      <span class="material-icons">  edit </span>
-    </button>
-    <button kendoButton fillMode="flat"class="clear-icon-btn"  (click)="onDeleteReminderOpenClicked()"  themeColor="error"  aria-label="Delete Reminder" title="Delete Reminder">
-      <span class="material-icons">  delete   </span>
-    </button>
-
+    <div>
+      <kendo-dropdownbutton
+      [data]="data"
+      icon="more-vertical"
+      look="bare"
+      aria-label="more actions"
+      title="More option"
+      class="small-i-btn app-dropdown-action more_action_wid"
+      [popupSettings]="{ popupClass: popupClass1, animate: true }"
+    >
+    <span hidden> More Option</span>
+    <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+      <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+        <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+        <label>   {{ dataItem.text }} </label>
+    </button>    
+      </ng-template>
+    </kendo-dropdownbutton>
+    </div>
+ 
   </li>
 
   <li class="card-list_items unread-item" aria-label="reminder menu item">
@@ -29,12 +42,25 @@
       </p>
       <p class="text-muted">10-10-2021</p>
     </div>
-    <button kendoButton themeColor="primary"  fillMode="flat" class="clear-icon-btn"  aria-label="Edit Reminder" title="Edit Reminder">
-      <span class="material-icons">  edit </span>
-    </button>
-    <button kendoButton fillMode="flat" class="clear-icon-btn" themeColor="error"  aria-label="Delete Reminder" title="Delete Reminder">
-      <span class="material-icons">  delete   </span>
-    </button>
+    <div>
+      <kendo-dropdownbutton
+      [data]="data"
+      icon="more-vertical"
+      look="bare"
+      aria-label="more actions"
+      title="More option"
+      class="small-i-btn app-dropdown-action more_action_wid"
+      [popupSettings]="{ popupClass: popupClass1, animate: true }"
+    >
+    <span hidden> More Option</span>
+    <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+      <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+        <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+        <label>   {{ dataItem.text }} </label>
+    </button>    
+      </ng-template>
+    </kendo-dropdownbutton>
+    </div>
 
   </li>
 
@@ -48,12 +74,25 @@
       </p>
       <p class="text-muted">10-10-2021</p>
     </div>
-    <button kendoButton themeColor="primary"  fillMode="flat" class="clear-icon-btn"  aria-label="Edit Reminder" title="Edit Reminder">
-      <span class="material-icons">  edit </span>
-    </button>
-    <button kendoButton fillMode="flat" class="clear-icon-btn" themeColor="error"  aria-label="Delete Reminder" title="Delete Reminder">
-      <span class="material-icons">  delete   </span>
-    </button>
+    <div>
+      <kendo-dropdownbutton
+      [data]="data"
+      icon="more-vertical"
+      look="bare"
+      aria-label="more actions"
+      title="More option"
+      class="small-i-btn app-dropdown-action more_action_wid"
+      [popupSettings]="{ popupClass: popupClass1, animate: true }"
+    >
+    <span hidden> More Option</span>
+    <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+      <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+        <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+        <label>   {{ dataItem.text }} </label>
+    </button>    
+      </ng-template>
+    </kendo-dropdownbutton>
+    </div>
 
   </li>
   <li class="card-list_items " aria-label="reminder menu item">
@@ -66,12 +105,25 @@
       </p>
       <p class="text-muted">10-10-2021</p>
     </div>
-    <button kendoButton themeColor="primary"  fillMode="flat" class="clear-icon-btn"  aria-label="Edit Reminder" title="Edit Reminder">
-      <span class="material-icons">  edit </span>
-    </button>
-    <button kendoButton fillMode="flat" class="clear-icon-btn" themeColor="error"  aria-label="Delete Reminder" title="Delete Reminder">
-      <span class="material-icons">  delete   </span>
-    </button>
+    <div>
+      <kendo-dropdownbutton
+      [data]="data"
+      icon="more-vertical"
+      look="bare"
+      aria-label="more actions"
+      title="More option"
+      class="small-i-btn app-dropdown-action more_action_wid"
+      [popupSettings]="{ popupClass: popupClass1, animate: true }"
+    >
+    <span hidden> More Option</span>
+    <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+      <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+        <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+        <label>   {{ dataItem.text }} </label>
+    </button>    
+      </ng-template>
+    </kendo-dropdownbutton>
+    </div>
 
   </li>
   <li class="card-list_items " aria-label="reminder menu item">
@@ -84,12 +136,25 @@
       </p>
       <p class="text-muted">10-10-2021</p>
     </div>
-    <button kendoButton themeColor="primary"  fillMode="flat" class="clear-icon-btn"  aria-label="Edit Reminder" title="Edit Reminder">
-      <span class="material-icons">  edit </span>
-    </button>
-    <button kendoButton fillMode="flat" class="clear-icon-btn" themeColor="error"  aria-label="Delete Reminder" title="Delete Reminder">
-      <span class="material-icons">  delete   </span>
-    </button>
+    <div>
+      <kendo-dropdownbutton
+      [data]="data"
+      icon="more-vertical"
+      look="bare"
+      aria-label="more actions"
+      title="More option"
+      class="small-i-btn app-dropdown-action more_action_wid"
+      [popupSettings]="{ popupClass: popupClass1, animate: true }"
+    >
+    <span hidden> More Option</span>
+    <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+      <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+        <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+        <label>   {{ dataItem.text }} </label>
+    </button>    
+      </ng-template>
+    </kendo-dropdownbutton>
+    </div>
 
   </li>
   <li class="card-list_items " aria-label="reminder menu item">
@@ -102,12 +167,25 @@
       </p>
       <p class="text-muted">10-10-2021</p>
     </div>
-    <button kendoButton themeColor="primary"  fillMode="flat" class="clear-icon-btn"  aria-label="Edit Reminder" title="Edit Reminder">
-      <span class="material-icons">  edit </span>
-    </button>
-    <button kendoButton fillMode="flat" class="clear-icon-btn" themeColor="error"  aria-label="Delete Reminder" title="Delete Reminder">
-      <span class="material-icons">  delete   </span>
-    </button>
+    <div>
+      <kendo-dropdownbutton
+      [data]="data"
+      icon="more-vertical"
+      look="bare"
+      aria-label="more actions"
+      title="More option"
+      class="small-i-btn app-dropdown-action more_action_wid"
+      [popupSettings]="{ popupClass: popupClass1, animate: true }"
+    >
+    <span hidden> More Option</span>
+    <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+      <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+        <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+        <label>   {{ dataItem.text }} </label>
+    </button>    
+      </ng-template>
+    </kendo-dropdownbutton>
+    </div>
 
   </li>
   <li class="card-list_items " aria-label="reminder menu item">
@@ -120,12 +198,25 @@
       </p>
       <p class="text-muted">10-10-2021</p>
     </div>
-    <button kendoButton themeColor="primary"  fillMode="flat" class="clear-icon-btn"  aria-label="Edit Reminder" title="Edit Reminder">
-      <span class="material-icons">  edit </span>
-    </button>
-    <button kendoButton fillMode="flat" class="clear-icon-btn" themeColor="error"  aria-label="Delete Reminder" title="Delete Reminder">
-      <span class="material-icons">  delete   </span>
-    </button>
+    <div>
+      <kendo-dropdownbutton
+      [data]="data"
+      icon="more-vertical"
+      look="bare"
+      aria-label="more actions"
+      title="More option"
+      class="small-i-btn app-dropdown-action more_action_wid"
+      [popupSettings]="{ popupClass: popupClass1, animate: true }"
+    >
+    <span hidden> More Option</span>
+    <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+      <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+        <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+        <label>   {{ dataItem.text }} </label>
+    </button>    
+      </ng-template>
+    </kendo-dropdownbutton>
+    </div>
 
   </li>
   <li class="card-list_items " aria-label="reminder menu item">
@@ -138,12 +229,26 @@
       </p>
       <p class="text-muted">10-10-2021</p>
     </div>
-    <button kendoButton themeColor="primary"  fillMode="flat" class="clear-icon-btn"  aria-label="Edit Reminder" title="Edit Reminder">
-      <span class="material-icons">  edit </span>
-    </button>
-    <button kendoButton fillMode="flat" class="clear-icon-btn" themeColor="error"  aria-label="Delete Reminder" title="Delete Reminder">
-      <span class="material-icons">  delete   </span>
-    </button>
+    <div>
+      <kendo-dropdownbutton
+      [data]="data"
+      icon="more-vertical"
+      look="bare"
+      aria-label="more actions"
+      title="More option"
+      class="small-i-btn app-dropdown-action more_action_wid"
+      [popupSettings]="{ popupClass: popupClass1, animate: true }"
+    >
+    <span hidden> More Option</span>
+    <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+      <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+        <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+        <label>   {{ dataItem.text }} </label>
+    </button>    
+      </ng-template>
+    </kendo-dropdownbutton>
+    </div>
+   
 
   </li>
   <li class="card-list_items " aria-label="reminder menu item">
@@ -156,12 +261,25 @@
       </p>
       <p class="text-muted">10-10-2021</p>
     </div>
-    <button kendoButton themeColor="primary"  fillMode="flat" class="clear-icon-btn"  aria-label="Edit Reminder" title="Edit Reminder">
-      <span class="material-icons">  edit </span>
-    </button>
-    <button kendoButton fillMode="flat" class="clear-icon-btn" themeColor="error"  aria-label="Delete Reminder" title="Delete Reminder">
-      <span class="material-icons">  delete   </span>
-    </button>
+    <div>
+      <kendo-dropdownbutton
+      [data]="data"
+      icon="more-vertical"
+      look="bare"
+      aria-label="more actions"
+      title="More option"
+      class="small-i-btn app-dropdown-action more_action_wid"
+      [popupSettings]="{ popupClass: popupClass1, animate: true }"
+    >
+    <span hidden> More Option</span>
+    <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+      <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+        <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+        <label>   {{ dataItem.text }} </label>
+    </button>    
+      </ng-template>
+    </kendo-dropdownbutton>
+    </div>
 
   </li>
  

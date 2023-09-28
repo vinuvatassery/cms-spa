@@ -2,7 +2,7 @@
 
     <section class="k-dialog-body">
         <p class="text-muted mb-2">
-            Add a payment or physical address and contacts for that address. All fields are required unless otherwise stated.
+          All fields are required unless otherwise stated
         </p>
         <div class="flex-row">
             <div class="flex-col">
@@ -22,7 +22,7 @@
                 <kendo-floatinglabel text="Name on Check">
                     <kendo-textbox aria-label="Name on Check" formControlName="nameOnCheck" [maxlength]="200"
                         [fillMode]="formUiStyle.inputFillMode"
-                        (keypress)="onKeyPress($event.charCode)">
+                        (keypress)="isAlphaNumeric($event.charCode)">
                     </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['nameOnCheck'].valid">Name on
@@ -33,7 +33,7 @@
                 <kendo-floatinglabel text="Name on Envelope">
                     <kendo-textbox aria-label="Name on Envelope" formControlName="nameOnEnvelope" [maxlength]="200"
                         [fillMode]="formUiStyle.inputFillMode"
-                        (keypress)="onKeyPress($event.charCode)">
+                        (keypress)="isAlphaNumeric($event.charCode)">
                     </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['nameOnEnvelope'].valid ">Name on
@@ -58,7 +58,7 @@
             <div class="flex-col">
                 <kendo-floatinglabel text="City">
                     <kendo-textbox aria-label="City" formControlName="cityCode" [fillMode]="formUiStyle.inputFillMode" [maxlength]="50"
-                    (keypress)="onKeyPress($event.charCode)">
+                    (keypress)="isAlphaNumeric($event.charCode)">
                     </kendo-textbox>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="formIsSubmitted && !paymentAddressForm.controls['cityCode'].valid">City is
@@ -82,7 +82,7 @@
                 <kendo-formerror *ngIf="formIsSubmitted && paymentAddressFormControls?.zip.errors?.required">Zip Code is required.
                 </kendo-formerror>
                 <kendo-formerror *ngIf="formIsSubmitted && paymentAddressFormControls?.zip.errors?.pattern">
-                        Invalid Zip Code format. 
+                        Invalid Zip Code format.
                 </kendo-formerror>
             </div>
             <div *ngIf="tabCode === financialVendorProviderTabCode.Pharmacy" class="flex-col mb-1  mt-checkbox">

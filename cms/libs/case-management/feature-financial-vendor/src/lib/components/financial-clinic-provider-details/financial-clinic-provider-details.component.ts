@@ -21,6 +21,7 @@ export class FinancialClinicProviderDetailsComponent {
   @Input() vendorTypeCode :any
   @Output() closeProviderEvent = new EventEmitter();
   @Output() loadProviderListEvent = new EventEmitter();
+  @Input() addProviderNew$ : any
   public formUiStyle: UIFormStyle = new UIFormStyle();
   searchProvider$ = this.financialVendorFacade.searchProvider$;
   isValidateForm: boolean = false;
@@ -77,16 +78,18 @@ export class FinancialClinicProviderDetailsComponent {
       vendorId:this.proId
     }
     this.isValidateForm = true
-
     if (this.providerForm.valid){
+      
       if(data)  
       {
         this.financialVendorFacade.addProvider(data);
-        this.closeProviderPopup();
+        this.addProviderNew$.subscribe((_ : any)=>{
+          this.loadProviderListEvent.emit();
+          this.closeProviderPopup();
+        })
       }
-      this.financialVendorFacade.addProvider(data);
       this.changeDetector.detectChanges();
-      this.loadProviderListEvent.emit(true);
+     
      }
   }
   closeProviderPopup(){

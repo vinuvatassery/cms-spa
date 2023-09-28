@@ -5,6 +5,9 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { GridFilterParam } from '../../entities/grid-filter-param';
+import { Observable } from 'rxjs';
+import { InsurancePlan } from '../../entities/insurance-plan';
+import { ClientInsurancePlans, InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsDataService {
@@ -144,44 +147,20 @@ export class FinancialPremiumsDataService {
     ]);
   }
 
-
-  loadBatchLogListService( ) {
-    return of([
-      {
-        vendorName: 'Address `',
-        type:'address2',
-        clientName:'address2',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'address2',
-        by: 'by',
-      },
-      {
-        vendorName: 'Address `',
-        type:'address2',
-        clientName:'address2',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'address2',
-        by: 'by',
-      },
-
-    ]);
+  loadBatchName(batchId: string){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/payment-batches/${batchId}`);
   }
+
+
+  loadBatchLogListService(premiumType : string ,batchId : string,paginationParameters : any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payment-batches/${batchId}/payments`,paginationParameters);
+  }
+
+  loadPremiumServicesByPayment(premiumType : string ,paymentId : string,paginationParameters : any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payments/${paymentId}/services`,paginationParameters);
+  }
+
   loadBatchItemsListService(){
     return of([
       {
@@ -221,45 +200,8 @@ export class FinancialPremiumsDataService {
 
     ]);
   }
-
-  loadReconcileListService(){
-    return of([
-      {
-        id:1,
-        vendorName: 'Vendor Name',
-        type:'address2',
-        clientName:'address2',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'address2',
-        by: 'by',
-      },
-      {
-        id:2,
-        vendorName: 'Address `',
-        type:'address2',
-        clientName:'address2',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'address2',
-        by: 'by',
-      },
-
-    ]);
+  loadReconcileListService(batchId:any,premiumType:any,paginationParameters:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/reconcile-payments`,paginationParameters);
   }
   loadPremiumsListService( ) {
     return of([
@@ -479,4 +421,73 @@ export class FinancialPremiumsDataService {
     );
   }
 
+  loadMedicalPremiumPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, premiumType: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/print-advice-letter`, printAdviceLetterData);
+  }
+
+  reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any, premiumType:any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/reconcile-payments`,reconcileData);
+  }
+
+  viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, premiumType:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/download-advice-letter`, printAdviceLetterData,
+      { responseType: 'blob' }
+    );
+  }
+ loadMedicalPremiumList( skipcount: number,
+  maxResultCount: number,
+  sort: string,
+  sortType: string,
+  filter:any) {
+    const filterRequestBody = {
+      skipcount:skipcount,
+      maxResultCount:maxResultCount,
+      sort:sort,
+      sortType:sortType,
+      filter:filter
+    }
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/list`,filterRequestBody);
+}
+  loadInsurancePlans(clientId: number): Observable<ClientInsurancePlans[]>{
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/plans`
+    );
+  }
+
+  loadInsurancePlansCoverageDates(clientId: number){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/converge-dates`
+    );
+  }
+
+  getExistingPremiums(clientId: number, type:string, premiums: PolicyPremiumCoverage[]): Observable<PolicyPremiumCoverage[]>{
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/${type}/premiums`,
+      premiums
+    );
+  }
+
+  savePremiums(clientId: number, type:string, premiums: InsurancePremium[]){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/${type}`,
+      premiums
+    );
+  }
+
+  loadRecentPremiumListService(data:any): Observable<any> {
+    const recentPremiumsPageAndSortedRequestDto =
+    {
+      VendorId : data.vendorId,
+      ClientId : data.clientId,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${data.premiumsType}/client-recent-premium`,recentPremiumsPageAndSortedRequestDto
+    );
+  }
 }

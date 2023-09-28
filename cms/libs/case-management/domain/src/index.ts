@@ -61,6 +61,7 @@ export * from './lib/entities/manufacturer-drugs';
 export * from './lib/entities/grid-filter-param';
 export * from './lib/entities/financial-management/Payment-details';
 export * from './lib/entities/financial-management/pca-details';
+export * from './lib/entities/financial-management/client-insurance-plan';
 
 
 /** Enums **/
@@ -124,11 +125,11 @@ export * from './lib/enums/financial-claim-types';
 export * from './lib/enums/financial-premium-types';
 export * from './lib/enums/esign-status-code.enum';
 export * from './lib/enums/communication-event-type-code.enum';
-export * from './lib/enums/financial-provider.enum'
-export * from './lib/enums/payment-method-code.enum'
+export * from './lib/enums/financial-provider.enum';
+export * from './lib/enums/payment-method-code.enum';
 export * from './lib/enums/exception-type.enum';
 export * from './lib/enums/payment-status-code.enum'
-
+export * from './lib/enums/premium-type.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
