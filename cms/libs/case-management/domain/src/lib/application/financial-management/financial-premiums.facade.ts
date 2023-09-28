@@ -25,7 +25,7 @@ export class FinancialPremiumsFacade {
     field: this.sortValueFinancialPremiumsProcess,
   }];
 
-  public sortValueFinancialPremiumsBatch = 'batch';
+  public sortValueFinancialPremiumsBatch = 'batchName';
   public sortBatchList: SortDescriptor[] = [{
     field: this.sortValueFinancialPremiumsBatch,
   }];
