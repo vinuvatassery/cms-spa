@@ -46,6 +46,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
   insuranceCoverageDatesLoader$ = this.financialPremiumsFacade.insuranceCoverageDatesLoader$;
   actionResponse$ = this.financialPremiumsFacade.premiumActionResponse$;
   existingPremiums$ = this.financialPremiumsFacade.existingCoverageDates$;
+  batchingPremium$ = this.financialPremiumsFacade.batchPremium$;
   premiumType: any;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
@@ -110,5 +111,9 @@ export class FinancialPremiumsPageComponent implements OnInit {
 
   saveInsurancePremiums(premiums: InsurancePremium[]) {
     this.financialPremiumsFacade.savePremiums(this.premiumType, premiums);
+  }
+
+  OnbatchClaimsClicked(event:any){
+    this.financialPremiumsFacade.batchPremium(event, this.premiumType);
   }
 }

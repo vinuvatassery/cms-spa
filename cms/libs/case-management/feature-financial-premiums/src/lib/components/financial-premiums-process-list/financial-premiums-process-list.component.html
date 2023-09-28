@@ -32,10 +32,16 @@
   <kendo-grid [resizable]="true" [loading]="isFinancialPremiumsProcessGridLoaderShow" [pageSize]="state.take"
     [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true" [filter]="state.filter"
     [columnMenu]="{ filter: true }" [sort]="state.sort" [navigable]="isProcessGridExpand"
-    (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
-    [data]="financialPremiumsProcessGridLists$ | async">
+    (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="selectableSettings"
+    [data]="financialPremiumsProcessGridLists$ | async"   
+    kendoGridSelectBy="paymentRequestId"
+    (selectedKeysChange)="selectedKeysChange($event)"
+    [(selectedKeys)]="selectedProcessClaims">
+    
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [columnMenu]="false" [showSelectAll]="true"
-      [width]="40"></kendo-grid-checkbox-column>
+      [width]="40"  [locked]="true"></kendo-grid-checkbox-column>
+    
+    
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160"[sortable]="true"> 
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="clientName" kendoButton look="flat" class="card-link-button"
@@ -300,7 +306,9 @@
 
 <ng-template #batchPremiumsConfirmationDialogTemplate>
   <cms-financial-premiums-batch-premiums
-    (modalBatchPremiumsCloseClicked)="onModalBatchPremiumsModalClose($event)"></cms-financial-premiums-batch-premiums>
+    (modalBatchPremiumsCloseClicked)="onModalBatchPremiumsModalClose()" 
+     [selectedProcessClaimsCount] = "selectedProcessClaims.length"
+     (OnbatchClaimsClickedEvent)="OnbatchClaimsClicked()"></cms-financial-premiums-batch-premiums>
 </ng-template>
 <ng-template #removePremiumsConfirmationDialogTemplate>
   <cms-financial-premiums-remove-premiums
