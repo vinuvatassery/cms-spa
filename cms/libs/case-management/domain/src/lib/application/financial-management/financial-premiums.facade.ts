@@ -9,18 +9,19 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { FinancialPremiumsDataService } from '../../infrastructure/financial-management/financial-premiums.data.service';
 import { Router } from '@angular/router';
 import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 import { InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
 
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsFacade {
- 
+
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueFinancialPremiumsProcess = 'invoiceID';
+  public sortValueFinancialPremiumsProcess = 'clientFullName';
   public sortProcessList: SortDescriptor[] = [{
     field: this.sortValueFinancialPremiumsProcess,
   }];
@@ -64,11 +65,16 @@ export class FinancialPremiumsFacade {
     },
   ];
 
+  public sortValueRecentPremiumList = 'creationTime';
+  public sortRecentPremiumList: SortDescriptor[] = [{
+    field: this.sortValueRecentPremiumList,
+  }];
+
   private financialPremiumsProcessDataSubject = new Subject<any>();
   financialPremiumsProcessData$ = this.financialPremiumsProcessDataSubject.asObservable();
 
   private financialPremiumsBatchDataSubject =  new Subject<any>();
-  financialPremiumsBatchData$ = this.financialPremiumsBatchDataSubject.asObservable();  
+  financialPremiumsBatchData$ = this.financialPremiumsBatchDataSubject.asObservable();
 
   private financialPremiumsAllPaymentsDataSubject =  new Subject<any>();
   financialPremiumsAllPaymentsData$ = this.financialPremiumsAllPaymentsDataSubject.asObservable();
@@ -97,6 +103,10 @@ export class FinancialPremiumsFacade {
   paymentBatchNameSubject  =  new Subject<any>();
   paymentBatchName$ = this.paymentBatchNameSubject.asObservable();
 
+  public clientsSortValue = 'clientFullName'
+  public clientSort: SortDescriptor[] = [{
+    field: this.clientsSortValue,
+  }];
   private insurancePlansSubject = new Subject<any>();
   insurancePlans$ =this.insurancePlansSubject.asObservable();
 
@@ -114,14 +124,19 @@ export class FinancialPremiumsFacade {
 
   private existingCoverageDatesSubject = new Subject<any>();
   existingCoverageDates$ =this.existingCoverageDatesSubject.asObservable();
-  
+
+  private recentPremiumListDataSubject =  new Subject<any>();
+  recentPremiumGridLists$ = this.recentPremiumListDataSubject.asObservable();
+
+  private recentPremiumLoaderSubject = new Subject<any>();
+  recentPremiumLoader$ = this.recentPremiumLoaderSubject.asObservable();
   /** Private properties **/
- 
+
   /** Public properties **/
- 
+
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>(); 
+  snackbarSubject = new Subject<SnackBar>();
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
@@ -163,10 +178,10 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
-  }   
+    });
+  }
 
 
   loadFinancialPremiumsBatchListGrid(){
@@ -177,9 +192,9 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
 
 
@@ -191,9 +206,9 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
 
   loadBatchName(batchId: string){
@@ -219,12 +234,12 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
 
-  loadPremiumServicesByPayment(premiumType : string ,paymentId : string,paginationParameters : any) {  
+  loadPremiumServicesByPayment(premiumType : string ,paymentId : string,paginationParameters : any) {
     this.financialPremiumsDataService.loadPremiumServicesByPayment(premiumType ,paymentId ,paginationParameters )
     .subscribe({
       next: (dataResponse : any) => {
@@ -237,9 +252,9 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
 
   loadBatchItemsListGrid(){
@@ -250,11 +265,11 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
-  loadReconcileListGrid(batchId:any,premiumType:any,event:any){ 
+  loadReconcileListGrid(batchId:any,premiumType:any,event:any){
     this.financialPremiumsDataService.loadReconcileListService(batchId,premiumType,event).subscribe({
       next: (dataResponse:any) => {
         const gridView = {
@@ -269,7 +284,7 @@ export class FinancialPremiumsFacade {
     });
 
   }
-  
+
   loadPremiumsListGrid(){
     this.financialPremiumsDataService.loadPremiumsListService().subscribe({
       next: (dataResponse) => {
@@ -278,9 +293,9 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
 
   loadInsurancePremiumBreakoutSummary(data:any){
@@ -293,7 +308,7 @@ export class FinancialPremiumsFacade {
       },
     });
   }
-  
+
   loadInsurancePremiumBreakoutList(data:any) {
     data.filter=JSON.stringify(data.filter);
     this.financialPremiumsDataService
@@ -325,6 +340,33 @@ export class FinancialPremiumsFacade {
 
 viewAdviceLetterData(batchId:any,printAdviceLetterData: any, premiumType:any) {
   return this.financialPremiumsDataService.viewPrintAdviceLetterData(batchId, printAdviceLetterData, premiumType);
+}
+loadMedicalPremiumList(
+  skipcount: number,
+  maxResultCount: number,
+  sort: string,
+  sortType: string,
+  filter:any,){
+    this.showLoader();
+  this.financialPremiumsDataService.loadMedicalPremiumList( skipcount,
+    maxResultCount,
+    sort,
+    sortType,
+    filter ).subscribe({
+    next: (dataResponse) => {
+      if (dataResponse) {
+        this.hideLoader();
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+      this.financialPremiumsProcessDataSubject.next(gridView);
+    }},
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      this.hideLoader();
+    },
+  });
 }
 
     loadInsurancePlans(clientId: number){
@@ -388,5 +430,28 @@ viewAdviceLetterData(batchId:any,printAdviceLetterData: any, premiumType:any) {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       })
+    }
+
+
+    loadRecentPremiumListGrid(recentPremiumsPageAndSortedRequestDto:any){
+      this.recentPremiumLoaderSubject.next(true);
+      recentPremiumsPageAndSortedRequestDto.filter = JSON.stringify(recentPremiumsPageAndSortedRequestDto.filter);
+      this.financialPremiumsDataService.loadRecentPremiumListService(recentPremiumsPageAndSortedRequestDto).subscribe({
+        next: (dataResponse) => {
+          this.recentPremiumListDataSubject.next(dataResponse);
+          if (dataResponse) {
+            const gridView = {
+              data: dataResponse['items'],
+              total: dataResponse['totalCount'],
+            };
+            this.recentPremiumListDataSubject.next(gridView);
+          }
+          this.recentPremiumLoaderSubject.next(false);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+          this.recentPremiumLoaderSubject.next(false);
+        },
+      });
     }
 }
