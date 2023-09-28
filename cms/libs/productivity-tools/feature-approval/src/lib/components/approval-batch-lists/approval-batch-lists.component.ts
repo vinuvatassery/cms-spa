@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, OnChanges,Input, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, OnChanges,Input, Output, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
@@ -10,17 +10,17 @@ import { Subject } from 'rxjs';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 @Component({
   selector: 'productivity-tools-approval-batch-lists',
-  templateUrl: './approval-batch-lists.component.html',
+  templateUrl: './approval-batch-lists.component.html', 
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApprovalBatchListsComponent implements OnInit, OnChanges{
-  @Input() batchId?: string | null;
-  @Input() currentBatch?: any;
+  @Input() approvalId?: string | null;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchDetailPaymentsList$: any;
-  @Input() pendingApprovalPaymentFullList:any;
+  @Input() batchDetailModalSourceList:any;
   @Output() closeViewPaymentsBatchClickedEvent = new EventEmitter();
   @Output() loadBatchDetailPaymentsListEvent = new EventEmitter<any>();
   public state!: State;
@@ -35,12 +35,20 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
+  batchId?: string | null;
+  index: number = 0;
+  tAreaCessationMaxLength:any = 100;
 
   gridBatchDetailPaymentsDataSubject = new Subject<any>();
   gridBatchDetailPaymentsData$ = this.gridBatchDetailPaymentsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+
+  // sliderBatchDetailModalSourceData!: any[];
+
+  // sliderBatchDetailModalSourceDataSubject = new Subject<any>();
+  // sliderBatchDetailModalSourceData$ = this.sliderBatchDetailModalSourceDataSubject.asObservable();
 
   gridColumns: { [key: string]: string } = {
     paymentNbr: 'Item #',
@@ -72,9 +80,13 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
   public height = "100%";
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
-  //constructor() {}
+  constructor(private readonly cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    // this.batchDetailModalSourceList$.subscribe((response:any)=>{
+    //   console.log('ngOnInit-response',response);
+    // });
+    //this.sliderDataHandle();
   }
 
   ngOnChanges(): void {
@@ -83,9 +95,32 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
+    this.getCurrentBatchId();
     this.loadBatchPaymentListGrid();
   }
+
+  getCurrentBatchId(){
+    let index = this.batchDetailModalSourceList.findIndex((x: any) => x.approvalId === this.approvalId);
+    if (index >= 0) {
+      this.index = index;
+      this.batchId = this.batchDetailModalSourceList[index].paymentRequestBatchId;
+    }
+  }
+
+  onScrollViewItemChanged(args:any){
+    this.index = args.index;
+    this.batchId = args.item.paymentRequestBatchId;
+    this.loadBatchPaymentListGrid();
+  }
+
+  onButtonClick(args:any){
+    console.log('onButtonClick',args);
+  }
+
+  sendBackNotesChange(item: any) {
+    
+    console.log('item',item)//this.calculateCharacterCount(dataItem);
+  }  
 
   closeViewPaymentsBatchClicked() {
     this.closeViewPaymentsBatchClickedEvent.emit(true);
@@ -115,6 +150,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
       filter: this.filter,
     };
     let batchId = this.batchId;
+    console.log('loadBatchPayment-batchDetailModalSourceList',this.batchDetailModalSourceList);
     this.loadBatchDetailPaymentsListEvent.emit({gridDataRefinerValue, batchId});
     this.gridDataHandle();
   }
@@ -133,6 +169,14 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
     });
     this.isBatchDetailPaymentsGridLoaderShow = false;
   }
+
+  // sliderDataHandle(){
+  //   this.batchDetailModalSourceList$.subscribe((data:any)=>{
+  //     console.log('sliderDataHandle-data',data);
+  //     this.sliderBatchDetailModalSourceData = data;
+  //     //this.sliderBatchDetailModalSourceDataSubject.next(data);
+  //   });
+  // }
 
   onChange(data: any) {
     this.defaultGridState();

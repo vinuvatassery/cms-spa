@@ -32,7 +32,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isApprovalPaymentsGridLoaderShow = false;
-  selectedBatchId?: string | null = null;
+  selectedApprovalId?: string | null = null;
   selectedBatch?:any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -69,7 +69,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   gridApprovalPaymentsMainListDataSubject = new Subject<any>();
   gridApprovalPaymentsMainList$ = this.gridApprovalPaymentsMainListDataSubject.asObservable();
   selectedPaymentType: any;
-  gridApprovalPaymentsBatchDataTemp:any;
+  batchDetailModalSourceList:any;
 
   gridApprovalPaymentsDataSubject = new Subject<any>();
   gridApprovalPaymentsBatchData$ = this.gridApprovalPaymentsDataSubject.asObservable();
@@ -90,10 +90,10 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   ngOnInit(): void {
     this.gridDataHandle();
-    this.loadApprovalPaymentsListGrid();    this.lovFacade.getPandingApprovalPaymentTypeLov();
-    this.approvalsPaymentsLists$.subscribe((data:any)=>{
-      console.log('20',data);
-      this.gridApprovalPaymentsBatchDataTemp = data.data;
+    this.loadApprovalPaymentsListGrid();    
+    this.lovFacade.getPandingApprovalPaymentTypeLov();
+    this.gridApprovalPaymentsMainList$.subscribe((response:any)=>{
+      console.log('ngOnInit-response',response);
     });
   }
 
@@ -113,7 +113,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   onOpenViewPaymentsBatchClicked(data?:any){
     this.isViewPaymentsBatchDialog = true;
-    this.selectedBatchId = data?.paymentRequestBatchId;
+    this.selectedApprovalId = data?.approvalId;
     this.selectedBatch = data;
   }
 
@@ -514,7 +514,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   }
 
   mainListDataHandle() {
-    this.approvalsPaymentsMainLists$.subscribe((response: any) => {
+    this.approvalsPaymentsMainLists$.subscribe((response: any) => {console.log('mainListDataHandle-response',response);  
       if (response.data.length > 0) {
         this.approvalsPaymentsGridUpdatedResult=response.data.map((item:any) => ({  
           ...item,           
@@ -522,7 +522,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
           sendBackNotesInValid : false,
           batchStatus : '',
           sendBackNotes : ''
-          }));        
+          }));  console.log('mainListDataHandle-approvalsPaymentsGridUpdatedResult',this.approvalsPaymentsGridUpdatedResult);
+        this.batchDetailModalSourceList = this.approvalsPaymentsGridUpdatedResult;      
         this.gridApprovalPaymentsMainListDataSubject.next(this.approvalsPaymentsGridUpdatedResult);
       }
     });

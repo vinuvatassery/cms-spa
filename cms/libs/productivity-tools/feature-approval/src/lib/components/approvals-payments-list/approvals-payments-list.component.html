@@ -202,7 +202,7 @@
     class="app-c-modal app-c-modal-xlg" title="View Payments in Each Batch" kendoTooltip>
 
 
-    <productivity-tools-approval-batch-lists [batchId] = "selectedBatchId" [currentBatch] = "selectedBatch" [batchDetailPaymentsList$] = "batchDetailPaymentsList$" [pendingApprovalPaymentFullList] = "gridApprovalPaymentsBatchDataTemp"
+    <productivity-tools-approval-batch-lists [approvalId] = "selectedApprovalId" [batchDetailPaymentsList$] = "batchDetailPaymentsList$" [batchDetailModalSourceList] = "batchDetailModalSourceList"
     [pageSizes]="pageSizes" [sortType]="sortType" 
     (closeViewPaymentsBatchClickedEvent)="onCloseViewPaymentsBatchClicked()" (loadBatchDetailPaymentsListEvent)="onLoadBatchDetailPaymentsList($event)"></productivity-tools-approval-batch-lists>
 </kendo-dialog>

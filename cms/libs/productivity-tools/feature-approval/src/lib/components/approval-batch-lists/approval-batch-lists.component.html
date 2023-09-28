@@ -2,12 +2,13 @@
    <p>Click on the left and right navigational arrows to browse batches. Select whether to approve or send them back to the user who submitted them.</p>
 <div class="custom_scroll_view mt-2">
    <kendo-scrollview
-   [data]="pendingApprovalPaymentFullList"
+   [data]="batchDetailModalSourceList"
    [width]="width"
    [height]="height"
    [arrows]="true"
    [pageable]="false"
-   [activeIndex]="1"
+   [activeIndex]="index"
+   (itemChanged)="onScrollViewItemChanged($event)"
  >
    <ng-template let-item="item">
     <div>
@@ -16,18 +17,30 @@
       </div>
       <div class="mt-1">
         <kendo-buttongroup selection="single" class="fill_width_group_btn">
-            <button kendoButton aria-label="proof of address yes" [toggleable]="true">Approve
+            <button kendoButton aria-label="proof of address yes" [toggleable]="true" (click)="onButtonClick(item)" [selected]="item.batchStatus == 'APPROVE'">Approve
         
             </button>
-            <button kendoButton aria-label="proof of address yes" [toggleable]="true">Send Back
+            <button kendoButton aria-label="proof of address yes" [toggleable]="true" [selected]="item.batchStatus == 'SENDBACK'">Send Back
         
             </button>
         </kendo-buttongroup> 
     </div>
     <kendo-floatinglabel text="Send Back Notes">
-        <kendo-textbox aria-label="Send Back Notes" [fillMode]="formUiStyle.inputFillMode">
-        </kendo-textbox>
-    
+        <!-- <kendo-textbox aria-label="Send Back Notes" [fillMode]="formUiStyle.inputFillMode">
+        </kendo-textbox> -->
+        <kendo-textarea
+        #tareaCessation
+        [fillMode]="formUiStyle.inputFillMode"
+        [maxlength]="tAreaCessationMaxLength"
+        [rows]="2"                                          
+        resizable ="none"
+        [(ngModel)]="item.sendBackNotes"
+        (valueChange)="sendBackNotesChange(item)"
+        aria-label="smoking cessation note"                                          
+        title ="{{item.sendBackNotes}}" [disabled]="item.sendBackButtonDisabled"
+        >
+     
+      </kendo-textarea>  
     </kendo-floatinglabel> 
 
 <div class="app-c-table mt-2" (click)="$event.stopPropagation();">
