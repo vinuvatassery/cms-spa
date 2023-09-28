@@ -229,10 +229,8 @@
   }
 }
 
-.k-treeview-toggle {
-  padding: 6px;
-  border-radius: 5px;
-
+.k-treeview-toggle { 
+  border-radius: 5px; 
   &:hover {
     background: $grey-d;
   }

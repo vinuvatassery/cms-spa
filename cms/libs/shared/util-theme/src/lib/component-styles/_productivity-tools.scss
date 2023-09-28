@@ -108,7 +108,7 @@
 }
  
 .reminder_lists{
-  .k-content{
+  .k-content, .k-tabstrip-content{
     background: #f8fafb;
     max-height: calc(100vh - 100px) !important;
     overflow: auto !important; 

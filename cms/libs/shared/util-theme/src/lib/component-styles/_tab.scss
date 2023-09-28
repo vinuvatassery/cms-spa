@@ -3,7 +3,8 @@
   border-radius: $border-radius-md;
   border: 0 solid rgba(0, 0, 0, 0.125);
   box-shadow: none;
-  .k-content {
+  .k-content,
+  .k-tabstrip-content {
     overflow: visible;
     padding: $size-0;
     box-shadow: none;
@@ -102,7 +103,8 @@
         }
       }
     }
-    .k-content.k-state-active {
+    .k-content.k-state-active,
+    .k-tabstrip-content.k-state-active {
       max-height: calc(100vh - 285px);
       overflow: auto;
       padding: $size-xx $size-xlg $size-xxxx * 2;

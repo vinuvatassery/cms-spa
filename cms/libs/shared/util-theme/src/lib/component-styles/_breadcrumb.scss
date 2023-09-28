@@ -58,6 +58,10 @@
     font-size: $size-xx;
     opacity: 1;
     margin: $size-0 $size-m;
+    .k-svg-icon > svg{
+      fill: $black-3;
+      transform: rotate(-19deg);
+    }
   }
 }
 
@@ -125,9 +129,4 @@
   }
 }
 
-.breadcrumb-left{
-  .k-i-line::before{
-    content: "/";
-    color: #333333;
-  }
-}
+ 

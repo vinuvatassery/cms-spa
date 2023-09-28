@@ -263,6 +263,9 @@ $pagination-height : 48px;
         color: $app-primary-font-color !important;
 
       }
+      .k-sort-icon {
+        color: $app-primary-font-color !important;
+      }
     }
 
     .k-filterable .k-grid-column-menu:hover {
@@ -272,9 +275,7 @@ $pagination-height : 48px;
   color: $app-primary-font-color !important;
 }
    
-      .k-sort-icon {
-        color: $app-primary-font-color !important;
-      }
+ 
 
       .k-cell-inner>.k-link {
         padding: 12px 24px;
