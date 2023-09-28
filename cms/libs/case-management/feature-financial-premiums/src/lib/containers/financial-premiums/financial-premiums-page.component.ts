@@ -4,7 +4,7 @@ import {
   Component,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FinancialPremiumsFacade, InsurancePremium, PolicyPremiumCoverage } from '@cms/case-management/domain';
+import { FinancialPremiumsFacade,GridFilterParam, InsurancePremium, PolicyPremiumCoverage } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
@@ -20,6 +20,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
   state!: State;
+  filter!: any;
   sortType = this.financialPremiumsFacade.sortType;
   pageSizes = this.financialPremiumsFacade.gridPageSizes;
   gridSkipCount = this.financialPremiumsFacade.skipCount;
@@ -38,6 +39,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.financialPremiumsBatchData$;
   financialPremiumsAllPaymentsGridLists$ =
     this.financialPremiumsFacade.financialPremiumsAllPaymentsData$;
+    public sortValue = this.financialPremiumsFacade.clientsSortValue;
   insurancePlans$ = this.financialPremiumsFacade.insurancePlans$;
   insurancePlansLoader$ = this.financialPremiumsFacade.insurancePlansLoader$;
   insuranceCoverageDates$ = this.financialPremiumsFacade.insuranceCoverageDates$;
@@ -70,8 +72,20 @@ export class FinancialPremiumsPageComponent implements OnInit {
         },
       });
   }
-  loadFinancialPremiumsProcessListGrid(event: any) {
-    this.financialPremiumsFacade.loadFinancialPremiumsProcessListGrid();
+  loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any) : void{
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      pagesize: gridDataRefinerValue.pagesize,
+      sortColumn: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+      filter:gridDataRefinerValue.filter
+    };
+    this.pageSizes = this.financialPremiumsFacade.gridPageSizes;
+    this.financialPremiumsFacade.loadMedicalPremiumList( gridDataRefiner.skipcount,
+      gridDataRefiner.pagesize,
+      gridDataRefiner.sortColumn,
+      gridDataRefiner.sortType,
+      gridDataRefiner.filter);
   }
 
   loadFinancialPremiumsBatchListGrid(event: any) {

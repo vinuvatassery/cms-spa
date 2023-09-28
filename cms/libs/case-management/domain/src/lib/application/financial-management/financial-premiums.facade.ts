@@ -9,6 +9,7 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { FinancialPremiumsDataService } from '../../infrastructure/financial-management/financial-premiums.data.service';
 import { Router } from '@angular/router';
 import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 import { InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
 
 
@@ -20,7 +21,7 @@ export class FinancialPremiumsFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueFinancialPremiumsProcess = 'invoiceID';
+  public sortValueFinancialPremiumsProcess = 'clientFullName';
   public sortProcessList: SortDescriptor[] = [{
     field: this.sortValueFinancialPremiumsProcess,
   }];
@@ -102,6 +103,10 @@ export class FinancialPremiumsFacade {
   paymentBatchNameSubject  =  new Subject<any>();
   paymentBatchName$ = this.paymentBatchNameSubject.asObservable();
 
+  public clientsSortValue = 'clientFullName'
+  public clientSort: SortDescriptor[] = [{
+    field: this.clientsSortValue,
+  }];
   private insurancePlansSubject = new Subject<any>();
   insurancePlans$ =this.insurancePlansSubject.asObservable();
 
@@ -335,6 +340,33 @@ export class FinancialPremiumsFacade {
 
 viewAdviceLetterData(batchId:any,printAdviceLetterData: any, premiumType:any) {
   return this.financialPremiumsDataService.viewPrintAdviceLetterData(batchId, printAdviceLetterData, premiumType);
+}
+loadMedicalPremiumList(
+  skipcount: number,
+  maxResultCount: number,
+  sort: string,
+  sortType: string,
+  filter:any,){
+    this.showLoader();
+  this.financialPremiumsDataService.loadMedicalPremiumList( skipcount,
+    maxResultCount,
+    sort,
+    sortType,
+    filter ).subscribe({
+    next: (dataResponse) => {
+      if (dataResponse) {
+        this.hideLoader();
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+      this.financialPremiumsProcessDataSubject.next(gridView);
+    }},
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      this.hideLoader();
+    },
+  });
 }
 
     loadInsurancePlans(clientId: number){

@@ -27,8 +27,10 @@
           </kendo-floatinglabel>
         </span>
         <span class="right-overlay-export">
-          <button kendoButton [primary]="true" look="flat" class="button-lg">
-            <span class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span><i class="exp_button-text">Export</i>
+          <button kendoButton [primary]="true" look="flat" class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
+            <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
+            
+            <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
           </button>
         </span>
       </section>

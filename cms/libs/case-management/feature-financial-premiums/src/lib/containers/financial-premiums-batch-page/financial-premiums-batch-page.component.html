@@ -4,9 +4,10 @@
   [batchLogServicesData$]="batchLogServicesData$"
  [pageSizes]="pageSizes" [sortValue]="sortValue"
  [sortType]="sortType" [sort]="sort" 
+ [exportButtonShow$]="exportButtonShow$"     
  (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
  (loadFinancialPremiumBatchInvoiceListEvent)=loadFinancialPremiumBatchInvoiceList($event)
- (exportPremiumBatchesGridEvent)="exportPremiumBatchesGridData()"
+ (exportGridDataEvent)="exportPremiumBatchesGridData()"
  ></cms-financial-premiums-batches-log-lists>
 
  
