@@ -66,7 +66,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   gridDataResult!: GridDataResult;
   selectedDataRows: any[] = [];
   selectedReconcileDataRows: any[] = [];
-  selectedCount: number = 0;
   onlyPrintAdviceLetter : boolean = false;
   isSaveClicked : boolean = false;
   startItemNumber: number = 1;
@@ -595,7 +594,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
         cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
       });
     }
-
   }
 
   onPrintAuthorizationCloseClicked(result: any) {
@@ -660,6 +658,11 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     } else {
       return this.startItemNumber++;
     }
+  }
+
+  navToReconcilePayments(){
+    this.route.navigate([`/financial-management/claims/${this.claimsType}/batch`],
+    { queryParams :{bid: this.batchId}});
   }
 }
 

@@ -663,5 +663,10 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       filter:event.filter
     });
   }
+
+  navToReconcilePayments(){
+    this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch`],
+    { queryParams :{bid: this.batchId}});
+  }
 }
 
