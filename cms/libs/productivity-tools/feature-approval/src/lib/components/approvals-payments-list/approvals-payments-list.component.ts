@@ -47,7 +47,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   selectedPaymentType: any;
-
+  approverCount = 0;
+  sendBackCount = 0;
   gridApprovalPaymentsDataSubject = new Subject<any>();
   gridApprovalPaymentsBatchData$ = this.gridApprovalPaymentsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
@@ -176,6 +177,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   gridDataHandle() {
     this.approvalsPaymentsLists$.subscribe((data: any) => {
+      this.approverCount = data.approverCount;
+      this.sendBackCount = data.sendBackCount;
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,

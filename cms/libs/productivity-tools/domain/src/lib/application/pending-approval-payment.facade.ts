@@ -12,6 +12,8 @@ export class PendingApprovalPaymentFacade {
   /** Public properties **/
   pendingApprovalCount$ = this.pendingApprovalCountSubject.asObservable();
   pendingApprovalGrid$ = this.pendingApprovalGridSubject.asObservable();
+  approverCount = 0;
+  sendBackCount = 0;
 
   constructor(
     private readonly PendingApprovalPaymentService: PendingApprovalPaymentService,
@@ -61,11 +63,21 @@ export class PendingApprovalPaymentFacade {
     this.PendingApprovalPaymentService.getPendingApprovalPaymentGrid(gridSetupData ,serviceSubType, level).subscribe(
       {
         next: (dataResponse: any) => {
+          dataResponse.items.forEach((element:any) => {
+            if(element.approvalUserStatusCode === 'APPROVED'){
+              this.approverCount++;
+            }else if(element.approvalUserStatusCode === 'SEND_BACK'){
+              this.sendBackCount++;
+            }
+          });
           const gridView = {
             data: dataResponse["items"],
-            total: dataResponse["totalCount"]
+            total: dataResponse["totalCount"],
+            approverCount: this.approverCount,
+            sendBackCount:this.sendBackCount,
           };
             this.pendingApprovalGridSubject.next(gridView);
+            this.approverCount = this.sendBackCount = 0
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
