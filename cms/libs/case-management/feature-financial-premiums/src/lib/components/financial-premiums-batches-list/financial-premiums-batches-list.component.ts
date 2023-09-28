@@ -10,18 +10,17 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute, Router } from '@angular/router';
-import {  ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { GridFilterParam } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { IntlService } from '@progress/kendo-angular-intl';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy,
+  State
 } from '@progress/kendo-data-query';
 import { Subject, debounceTime } from 'rxjs';
-import { GridFilterParam } from '@cms/case-management/domain';
-import { ConfigurationProvider } from '@cms/shared/util-core';
-import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'cms-financial-premiums-batches-list',
   templateUrl: './financial-premiums-batches-list.component.html',
