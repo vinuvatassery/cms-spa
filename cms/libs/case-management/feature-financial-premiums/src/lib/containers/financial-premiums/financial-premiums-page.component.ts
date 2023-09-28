@@ -4,7 +4,7 @@ import {
   Component,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FinancialPremiumsFacade } from '@cms/case-management/domain';
+import { FinancialPremiumsFacade,GridFilterParam, InsurancePremium, PolicyPremiumCoverage } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
@@ -20,6 +20,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
   state!: State;
+  filter!: any;
   sortType = this.financialPremiumsFacade.sortType;
   pageSizes = this.financialPremiumsFacade.gridPageSizes;
   gridSkipCount = this.financialPremiumsFacade.skipCount;
@@ -38,7 +39,13 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.financialPremiumsBatchData$;
   financialPremiumsAllPaymentsGridLists$ =
     this.financialPremiumsFacade.financialPremiumsAllPaymentsData$;
-    
+    public sortValue = this.financialPremiumsFacade.clientsSortValue;
+  insurancePlans$ = this.financialPremiumsFacade.insurancePlans$;
+  insurancePlansLoader$ = this.financialPremiumsFacade.insurancePlansLoader$;
+  insuranceCoverageDates$ = this.financialPremiumsFacade.insuranceCoverageDates$;
+  insuranceCoverageDatesLoader$ = this.financialPremiumsFacade.insuranceCoverageDatesLoader$;
+  actionResponse$ = this.financialPremiumsFacade.premiumActionResponse$;
+  existingPremiums$ = this.financialPremiumsFacade.existingCoverageDates$;
   premiumType: any;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
@@ -46,7 +53,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
     private readonly activatedRoute: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
     private loggingService: LoggingService,
-  ) {}
+  ) { }
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(data => this.premiumType = data['type'])
     this.addNavigationSubscription();
@@ -61,12 +68,24 @@ export class FinancialPremiumsPageComponent implements OnInit {
         },
 
         error: (err: any) => {
-           this.loggingService.logException(err);
+          this.loggingService.logException(err);
         },
       });
   }
-  loadFinancialPremiumsProcessListGrid(event: any) {
-    this.financialPremiumsFacade.loadFinancialPremiumsProcessListGrid();
+  loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any) : void{
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      pagesize: gridDataRefinerValue.pagesize,
+      sortColumn: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+      filter:gridDataRefinerValue.filter
+    };
+    this.pageSizes = this.financialPremiumsFacade.gridPageSizes;
+    this.financialPremiumsFacade.loadMedicalPremiumList( gridDataRefiner.skipcount,
+      gridDataRefiner.pagesize,
+      gridDataRefiner.sortColumn,
+      gridDataRefiner.sortType,
+      gridDataRefiner.filter);
   }
 
   loadFinancialPremiumsBatchListGrid(event: any) {
@@ -75,5 +94,21 @@ export class FinancialPremiumsPageComponent implements OnInit {
 
   loadFinancialPremiumsAllPaymentsListGrid(event: any) {
     this.financialPremiumsFacade.loadFinancialPremiumsAllPaymentsListGrid();
+  }
+
+  loadInsurancePlans(clientId: number) {
+    this.financialPremiumsFacade.loadInsurancePlans(clientId);
+  }
+
+  loadInsurancePlansCoverageDates(clientId: number) {
+    this.financialPremiumsFacade.loadInsurancePlansCoverageDates(clientId);
+  }
+
+  premiumExistValidation(data: { clientId: number, premiums: PolicyPremiumCoverage[] }){
+    this.financialPremiumsFacade.getExistingPremiums(data.clientId, this.premiumType, data.premiums);
+  }
+
+  saveInsurancePremiums(premiums: InsurancePremium[]) {
+    this.financialPremiumsFacade.savePremiums(this.premiumType, premiums);
   }
 }
