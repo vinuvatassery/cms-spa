@@ -151,7 +151,18 @@
       }
     }
   }
-
+  &-lg-100 {
+    .k-dialog {
+      width: 100%;
+      max-width: 80%;
+      height: auto !important;
+      top: 50px;
+      @media (max-width: $breakpoint-md) {
+        width: calc(100% - 1rem);
+      }
+    }
+    justify-content: flex-start; 
+  }
   &-lg {
     .k-dialog {
       width: 700px;
