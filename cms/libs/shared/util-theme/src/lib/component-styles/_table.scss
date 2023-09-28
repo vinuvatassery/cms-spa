@@ -1,5 +1,7 @@
 $pagination-height : 48px;
-
+.vert-top tbody tr td{
+  vertical-align: baseline !important;
+}
 .app-c-table {
   overflow: auto;
   overflow-y: hidden;

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  Subject } from 'rxjs';
+import {  BehaviorSubject, Subject } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -9,6 +9,7 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { FinancialPremiumsDataService } from '../../infrastructure/financial-management/financial-premiums.data.service';
 import { Router } from '@angular/router';
 import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
+import { InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
 
 
 @Injectable({ providedIn: 'root' })
@@ -75,6 +76,9 @@ export class FinancialPremiumsFacade {
   private batchLogDataSubject =  new Subject<any>();
   batchLogData$ = this.batchLogDataSubject.asObservable();
 
+  private batchLogServicesDataSubject =  new Subject<any>();
+  batchLogServicesData$ = this.batchLogServicesDataSubject.asObservable();
+
   private batchReconcileDataSubject =  new Subject<any>();
   reconcileDataList$ = this.batchReconcileDataSubject.asObservable();
 
@@ -92,6 +96,24 @@ export class FinancialPremiumsFacade {
 
   paymentBatchNameSubject  =  new Subject<any>();
   paymentBatchName$ = this.paymentBatchNameSubject.asObservable();
+
+  private insurancePlansSubject = new Subject<any>();
+  insurancePlans$ =this.insurancePlansSubject.asObservable();
+
+  private insurancePlansLoaderSubject = new BehaviorSubject<any>(false);
+  insurancePlansLoader$ =this.insurancePlansLoaderSubject.asObservable();
+
+  private insuranceCoverageDatesSubject = new Subject<any>();
+  insuranceCoverageDates$ =this.insuranceCoverageDatesSubject.asObservable();
+
+  private insuranceCoverageDatesLoaderSubject = new BehaviorSubject<any>(false);
+  insuranceCoverageDatesLoader$ =this.insuranceCoverageDatesSubject.asObservable();
+
+  private premiumActionResponseSubject = new Subject<any>();
+  premiumActionResponse$ =this.premiumActionResponseSubject.asObservable();
+
+  private existingCoverageDatesSubject = new Subject<any>();
+  existingCoverageDates$ =this.existingCoverageDatesSubject.asObservable();
   
   /** Private properties **/
  
@@ -202,6 +224,24 @@ export class FinancialPremiumsFacade {
     });  
   }
 
+  loadPremiumServicesByPayment(premiumType : string ,paymentId : string,paginationParameters : any) {  
+    this.financialPremiumsDataService.loadPremiumServicesByPayment(premiumType ,paymentId ,paginationParameters )
+    .subscribe({
+      next: (dataResponse : any) => {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.batchLogServicesDataSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  }
+
   loadBatchItemsListGrid(){
     this.financialPremiumsDataService.loadBatchItemsListService().subscribe({
       next: (dataResponse) => {
@@ -273,5 +313,80 @@ export class FinancialPremiumsFacade {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       });
+    }
+
+  loadMedicalPremiumPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, premiumType: any) {
+    return this.financialPremiumsDataService.loadMedicalPremiumPrintAdviceLetterData(batchId, printAdviceLetterData, premiumType);
+  }
+
+  reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any, premiumType:any) {
+    return this.financialPremiumsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData, premiumType);
+}
+
+viewAdviceLetterData(batchId:any,printAdviceLetterData: any, premiumType:any) {
+  return this.financialPremiumsDataService.viewPrintAdviceLetterData(batchId, printAdviceLetterData, premiumType);
+}
+
+    loadInsurancePlans(clientId: number){
+      this.insurancePlansLoaderSubject.next(true);
+      this.financialPremiumsDataService.loadInsurancePlans(clientId)
+      .subscribe({
+        next: (dataResponse) => {
+            this.insurancePlansLoaderSubject.next(false);
+            this.insurancePlansSubject.next(dataResponse);
+            this.loadInsurancePlansCoverageDates(clientId);
+        },
+        error: (err) => {
+          this.insurancePlansLoaderSubject.next(false);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+
+    loadInsurancePlansCoverageDates(clientId: number){
+      this.insuranceCoverageDatesLoaderSubject.next(true);
+      this.financialPremiumsDataService.loadInsurancePlansCoverageDates(clientId)
+      .subscribe({
+        next: (dataResponse) => {
+            this.insuranceCoverageDatesLoaderSubject.next(false);
+            this.insuranceCoverageDatesSubject.next(dataResponse);
+        },
+        error: (err) => {
+          this.insuranceCoverageDatesLoaderSubject.next(false);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+
+    getExistingPremiums(clientId: number, type:string, premiums: PolicyPremiumCoverage[]){
+      this.insurancePlansLoaderSubject.next(true);
+      this.financialPremiumsDataService.getExistingPremiums(clientId, type, premiums)
+      .subscribe({
+        next: (dataResponse) => {
+            this.insurancePlansLoaderSubject.next(false);
+            this.existingCoverageDatesSubject.next(dataResponse);
+        },
+        error: (err) => {
+          this.insurancePlansLoaderSubject.next(false);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+
+    savePremiums(type:string, premiums: InsurancePremium[]){
+      this.showLoader();
+      const clientId = premiums[0]?.clientId;
+      this.financialPremiumsDataService.savePremiums(clientId, type, premiums)
+      .subscribe({
+        next: (response) => {
+          this.premiumActionResponseSubject.next(true);
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
     }
 }

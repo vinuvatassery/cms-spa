@@ -28,10 +28,11 @@
         <div class="nm-20 approval_container">
         <productivity-tools-approvals-payments-list
         [approvalsPaymentsLists$]="approvalsPaymentsLists$"
+        [approvalsPaymentsMainLists$]="approvalsPaymentsMainLists$"
         [pageSizes]="pageSizes" [sortValue]="sortValueApprovalPaymentsAPproval"
         [sortType]="sortType" [sort]="sortApprovalPaymentsList" 
         (loadApprovalsPaymentsGridEvent)="loadApprovalsPaymentsGrid($event)"
-
+        (loadApprovalsPaymentsMainListEvent)="loadApprovalsPaymentsMain($event)"
           class="reminder-list-modal-wrap"></productivity-tools-approvals-payments-list>
           </div>
       </ng-template>

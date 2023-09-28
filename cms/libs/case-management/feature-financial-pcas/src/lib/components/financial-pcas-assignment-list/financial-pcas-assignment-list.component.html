@@ -9,11 +9,11 @@ aria-label="add"> Assignment</button>
                   <span class="flex-col flex-col-3">
                         <kendo-floatinglabel text="Object">
                         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
-                        placeholder="Object"
-                         required [data]="objectCodesData$"
-                          textField="ledgerName" valueField="objectCodeId" [valuePrimitive]="true"
-                          [(ngModel)]="objectCodeIdValue"
-                          (selectionChange)="objectCodeChange($event)"
+                              placeholder="Object"
+                              required [data]="objectCodesData$"
+                              textField="ledgerName" valueField="objectCodeId" [valuePrimitive]="true"
+                              [(ngModel)]="objectCodeIdValue"
+                              (selectionChange)="objectCodeChange($event)"
                           >
                         </kendo-dropdownlist>
                         <kendo-formerror *ngIf="!objectCodeValid">Object is required.</kendo-formerror>
