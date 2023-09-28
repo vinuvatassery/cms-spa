@@ -4,7 +4,7 @@ import {
   Component,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FinancialPremiumsFacade } from '@cms/case-management/domain';
+import { FinancialPremiumsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
@@ -34,21 +34,25 @@ export class FinancialPremiumsPageComponent implements OnInit {
   sortPaymentsList = this.financialPremiumsFacade.sortPaymentsList;
   financialPremiumsProcessGridLists$ =
     this.financialPremiumsFacade.financialPremiumsProcessData$;
+  financialPremiumsBatchDataLoader$ =
+    this.financialPremiumsFacade.financialPremiumsBatchDataLoader$;
   financialPremiumsBatchGridLists$ =
     this.financialPremiumsFacade.financialPremiumsBatchData$;
   financialPremiumsAllPaymentsGridLists$ =
     this.financialPremiumsFacade.financialPremiumsAllPaymentsData$;
-    
+
   premiumType: any;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
-    private loggingService: LoggingService,
+    private loggingService: LoggingService
   ) {}
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(data => this.premiumType = data['type'])
+    this.activatedRoute.params.subscribe(
+      (data) => (this.premiumType = data['type'])
+    );
     this.addNavigationSubscription();
   }
   private addNavigationSubscription() {
@@ -56,12 +60,14 @@ export class FinancialPremiumsPageComponent implements OnInit {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe({
         next: () => {
-          this.activatedRoute.params.subscribe(data => this.premiumType = data['type'])
+          this.activatedRoute.params.subscribe(
+            (data) => (this.premiumType = data['type'])
+          );
           this.cdr.detectChanges();
         },
 
         error: (err: any) => {
-           this.loggingService.logException(err);
+          this.loggingService.logException(err);
         },
       });
   }
@@ -69,8 +75,11 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.loadFinancialPremiumsProcessListGrid();
   }
 
-  loadFinancialPremiumsBatchListGrid(event: any) {
-    this.financialPremiumsFacade.loadFinancialPremiumsBatchListGrid();
+  loadFinancialPremiumsBatchListGrid(data: GridFilterParam) {
+    this.financialPremiumsFacade.loadFinancialPremiumsBatchListGrid(
+      data,
+      this.premiumType
+    );
   }
 
   loadFinancialPremiumsAllPaymentsListGrid(event: any) {

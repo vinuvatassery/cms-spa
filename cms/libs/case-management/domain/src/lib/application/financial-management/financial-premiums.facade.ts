@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  Subject } from 'rxjs';
+import {  BehaviorSubject, Subject } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -9,11 +9,12 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { FinancialPremiumsDataService } from '../../infrastructure/financial-management/financial-premiums.data.service';
 import { Router } from '@angular/router';
 import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsFacade {
- 
+
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -66,8 +67,11 @@ export class FinancialPremiumsFacade {
   private financialPremiumsProcessDataSubject = new Subject<any>();
   financialPremiumsProcessData$ = this.financialPremiumsProcessDataSubject.asObservable();
 
+  private financialPremiumsBatchDataLoaderSubject = new BehaviorSubject<any>(false);
+  financialPremiumsBatchDataLoader$ = this.financialPremiumsBatchDataLoaderSubject.asObservable();
+
   private financialPremiumsBatchDataSubject =  new Subject<any>();
-  financialPremiumsBatchData$ = this.financialPremiumsBatchDataSubject.asObservable();  
+  financialPremiumsBatchData$ = this.financialPremiumsBatchDataSubject.asObservable();
 
   private financialPremiumsAllPaymentsDataSubject =  new Subject<any>();
   financialPremiumsAllPaymentsData$ = this.financialPremiumsAllPaymentsDataSubject.asObservable();
@@ -89,14 +93,14 @@ export class FinancialPremiumsFacade {
 
   private reconcileBreakoutSummaryDataSubject = new Subject<any>();
   reconcileBreakoutSummary$ =this.reconcileBreakoutSummaryDataSubject.asObservable();
-  
+
   /** Private properties **/
- 
+
   /** Public properties **/
- 
+
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>(); 
+  snackbarSubject = new Subject<SnackBar>();
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
@@ -138,24 +142,35 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
-      },
-    });  
-  }   
-
-
-  loadFinancialPremiumsBatchListGrid(){
-    this.financialPremiumsDataService.loadFinancialPremiumsBatchListService().subscribe({
-      next: (dataResponse) => {
-        this.financialPremiumsBatchDataSubject.next(dataResponse);
         this.hideLoader();
       },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
-      },
-    });  
+    });
   }
+
+
+  loadFinancialPremiumsBatchListGrid(parms: GridFilterParam, claimsType: string
+    ) {
+      this.financialPremiumsBatchDataLoaderSubject.next(true);
+      this.financialPremiumsDataService
+        .loadFinancialPremiumsBatchListService(
+          parms,
+          claimsType
+        )
+        .subscribe({
+          next: (dataResponse) => {
+            const gridView = {
+              data: dataResponse['items'],
+              total: dataResponse['totalCount'],
+            };
+            this.financialPremiumsBatchDataSubject.next(gridView);
+            this.financialPremiumsBatchDataLoaderSubject.next(false);
+          },
+          error: (err) => {
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+            this.financialPremiumsBatchDataLoaderSubject.next(false);
+          },
+        });
+    }
 
 
   loadFinancialPremiumsAllPaymentsListGrid(){
@@ -166,9 +181,9 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
 
 
@@ -180,9 +195,9 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
   loadBatchItemsListGrid(){
     this.financialPremiumsDataService.loadBatchItemsListService().subscribe({
@@ -192,9 +207,9 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
   loadReconcileListGrid(){
     this.financialPremiumsDataService.loadReconcileListService().subscribe({
@@ -204,11 +219,11 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
-  
+
   loadPremiumsListGrid(){
     this.financialPremiumsDataService.loadPremiumsListService().subscribe({
       next: (dataResponse) => {
@@ -217,9 +232,9 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
 
   loadInsurancePremiumBreakoutSummary(data:any){
@@ -232,7 +247,7 @@ export class FinancialPremiumsFacade {
       },
     });
   }
-  
+
   loadInsurancePremiumBreakoutList(data:any) {
     data.filter=JSON.stringify(data.filter);
     this.financialPremiumsDataService

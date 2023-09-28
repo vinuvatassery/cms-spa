@@ -98,6 +98,9 @@ export class FinancialPcasAssignmentReportListComponent
     },
   ];
 
+  numericColumns = ['pcaCode', 'ay'];
+  dateColumns = ['openDate', 'closeDate'];
+
   //searching
   private searchSubject = new Subject<string>();
   selectedSearchColumn = 'ALL';
@@ -119,9 +122,6 @@ export class FinancialPcasAssignmentReportListComponent
   showDateSearchWarning = false;
   showNumberSearchWarning = false;
   columnChangeDesc = 'Default Columns';
-
-  numericColumns = ['pcaCode', 'ay'];
-  dateColumns = ['openDate', 'closeDate'];
 
   /** Constructor **/
   constructor(

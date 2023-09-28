@@ -1,4 +1,4 @@
- 
+
 
 /** Angular **/
 import {
@@ -10,21 +10,26 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute, Router } from '@angular/router';
-import {  GridDataResult } from '@progress/kendo-angular-grid';
+import {  ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, debounceTime } from 'rxjs';
+import { GridFilterParam } from '@cms/case-management/domain';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'cms-financial-premiums-batches-list',
-  templateUrl: './financial-premiums-batches-list.component.html', 
+  templateUrl: './financial-premiums-batches-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPremiumsBatchesListComponent implements OnInit, OnChanges{
+export class FinancialPremiumsBatchesListComponent
+  implements OnInit, OnChanges
+{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isFinancialPremiumsBatchGridLoaderShow = false;
@@ -33,102 +38,155 @@ export class FinancialPremiumsBatchesListComponent implements OnInit, OnChanges{
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  @Input() financialPremiumsBatchGridLoader$: any;
   @Input() financialPremiumsBatchGridLists$: any;
   @Output() loadFinancialPremiumsBatchListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'batch';
-  sortDir = 'Ascending';
   columnsReordered = false;
-  filteredBy = '';
-  searchValue = '';
-  isFiltered = false;
-  filter!: any;
-  selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
   gridFinancialPremiumsBatchDataSubject = new Subject<any>();
-  gridFinancialPremiumsBatchData$ = this.gridFinancialPremiumsBatchDataSubject.asObservable();
+  gridFinancialPremiumsBatchData$ =
+    this.gridFinancialPremiumsBatchDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
-  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
-  batchClaimGridData=[
+  gridColumns: any = {
+    batchName: 'Status',
+    unbatchedPayments: 'PCA #',
+    batchedPayments: 'Object',
+    paymentsRequested: 'Object Code',
+    paymentsReconciled: 'AY',
+    totalAdjustmentsAmount: 'Open Date',
+    totalPaymentsAmount: 'Close Date'
+  };
+
+  searchColumnList: { columnName: string; columnDesc: string }[] = [
     {
-      id:1,
-      batch: '05012021_001 `',
-      ofProviders:'XX', 
-      ofClaims:'XX', 
-      pmtsRequested:'XX', 
-      pmtsReconciled:'XX', 
-      totalAmountDue:'XX,XXX.XX', 
-      totalAmountReconciled:'XX,XXX.XX',  
+      columnName: 'batchName',
+      columnDesc: 'Batch #',
     },
     {
-      id:2,
-      batch: '05012021_001 `',
-      ofProviders:'XX', 
-      ofClaims:'XX', 
-      pmtsRequested:'XX', 
-      pmtsReconciled:'XX', 
-      totalAmountDue:'XX,XXX.XX', 
-      totalAmountReconciled:'XX,XXX.XX',
-    }
+      columnName: 'unbatchedPayments',
+      columnDesc: 'Unbatched Payments',
+    },
+    {
+      columnName: 'batchedPayments',
+      columnDesc: '# of Payments in Batch',
+    },
+    {
+      columnName: 'paymentsRequested',
+      columnDesc: '# of Payments Requested',
+    },
+    {
+      columnName: 'paymentsReconciled',
+      columnDesc: '# of Payments Reconciled',
+    },
+    {
+      columnName: 'totalAdjustmentsAmount',
+      columnDesc: 'Total Amount of Adjustments',
+    },
+    {
+      columnName: 'totalPaymentsAmount',
+      columnDesc: 'Total Amount of Payments',
+    },
   ];
-  
+
+  numericColumns: any[] = ['totalPaymentsAmount', 'totalAdjustmentsAmount', 'paymentsReconciled', 'paymentsRequested', 'batchedPayments', 'unbatchedPayments'];
+  dateColumns: any[] = [];
+
+  //searching
+  private searchSubject = new Subject<string>();
+  selectedSearchColumn: null | string = null;
+  searchText: null | string = null;
+
+  //sorting
+  sortColumn = 'batchName';
+  sortColumnDesc = 'Batch #';
+  sortDir = 'Ascending';
+
+  //filtering
+  filteredBy = '';
+  filter: any = [];
+
+  filteredByColumnDesc = '';
+  selectedStatus = '';
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  showDateSearchWarning = false;
+  showNumberSearchWarning = false;
+  columnChangeDesc = 'Default Columns';
+
   /** Constructor **/
-  constructor(private route: Router,public activeRoute: ActivatedRoute ) {}
+  constructor(
+    private route: Router,
+    public activeRoute: ActivatedRoute,
+    private readonly configProvider: ConfigurationProvider,
+    private readonly intl: IntlService,
+    ) {}
 
   ngOnInit(): void {
-    this.loadFinancialPremiumsBatchListGrid();
+    this.initializePremiumsBatchPage()
   }
   ngOnChanges(): void {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
-
+    this.initializePremiumsBatchGrid();
     this.loadFinancialPremiumsBatchListGrid();
   }
 
+  /* Public methods */
 
-  private loadFinancialPremiumsBatchListGrid(): void {
-    this.loadRefundBatch(
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType
-    );
-  }
-  loadRefundBatch(
-    skipCountValue: number,
-    maxResultCountValue: number,
-    sortValue: string,
-    sortTypeValue: string
-  ) {
-    this.isFinancialPremiumsBatchGridLoaderShow = true;
-    const gridDataRefinerValue = {
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
-    };
-    this.loadFinancialPremiumsBatchListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
+  navToBatchDetails(event: any) {
+    this.route.navigate([
+      '/financial-management/premiums/' + this.premiumsType + '/batch',
+    ]);
   }
 
- 
-  onChange(data: any) {
+  searchColumnChangeHandler(value: string) {
+    this.filter = [];
+    this.showNumberSearchWarning = this.numericColumns.includes(value);
+    this.showDateSearchWarning = this.dateColumns.includes(value);
+    if (this.searchText) {
+      this.onSearch(this.searchText);
+    }
+  }
+
+  onSearch(searchValue: any) {
+    const isDateSearch = searchValue.includes('/');
+    this.showDateSearchWarning =
+      isDateSearch || this.dateColumns.includes(this.selectedSearchColumn);
+    searchValue = this.formatSearchValue(searchValue, isDateSearch);
+    if (isDateSearch && !searchValue) return;
+    this.setFilterBy(false, searchValue, []);
+    this.searchSubject.next(searchValue);
+  }
+
+  performSearch(data: any) {
     this.defaultGridState();
-
+    const operator = [...this.numericColumns, ...this.dateColumns].includes(
+      this.selectedSearchColumn
+    )
+      ? 'eq'
+      : 'startswith';
+    if (
+      this.dateColumns.includes(this.selectedSearchColumn) &&
+      !this.isValidDate(data) &&
+      data !== ''
+    ) {
+      return;
+    }
+    if (
+      this.numericColumns.includes(this.selectedSearchColumn) &&
+      isNaN(Number(data))
+    ) {
+      return;
+    }
     this.filterData = {
       logic: 'and',
       filters: [
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
+              field: this.selectedSearchColumn ?? 'batchName',
+              operator: operator,
               value: data,
             },
           ],
@@ -136,9 +194,27 @@ export class FinancialPremiumsBatchesListComponent implements OnInit, OnChanges{
         },
       ],
     };
-    let stateData = this.state;
+    const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
+  }
+
+  restGrid() {
+    this.sortValue = 'batchName';
+    this.sortType = 'asc';
+    this.initializePremiumsBatchPage();
+    this.sortColumn = 'batchName';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
+    this.filter = [];
+    this.searchText = '';
+    this.selectedSearchColumn = null;
+    this.filteredByColumnDesc = '';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.columnChangeDesc = 'Default Columns';
+    this.showDateSearchWarning = false;
+    this.showNumberSearchWarning = false;
+    this.loadFinancialPremiumsBatchListGrid();
   }
 
   defaultGridState() {
@@ -159,40 +235,152 @@ export class FinancialPremiumsBatchesListComponent implements OnInit, OnChanges{
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.filter = stateData?.filter?.filters;
+    this.setFilterBy(true, '', this.filter);
     this.loadFinancialPremiumsBatchListGrid();
   }
 
-  // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadFinancialPremiumsBatchListGrid();
   }
 
-  public filterChange(filter: CompositeFilterDescriptor): void {
+  filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
 
-  gridDataHandle() {
-    this.financialPremiumsBatchGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridFinancialPremiumsBatchDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
-        this.isFinancialPremiumsBatchGridLoaderShow = false;
-      }
-    });
-    this.isFinancialPremiumsBatchGridLoaderShow = false;
-  }
-  navToBatchDetails(event : any){  
-    this.route.navigate(['/financial-management/premiums/' + this.premiumsType +'/batch'] ); 
+  rowClass = (args: any) => ({
+    'table-row-disabled': !args.dataItem.assigned,
+  });
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter((x) => x.hidden).length;
+    this.columnChangeDesc =
+      columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'and',
+    });
+  }
+
+  onChange(data: any) {
+    this.defaultGridState();
+
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedSearchColumn ?? 'batchName',
+              operator: 'startswith',
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
+    const stateData = this.state;
+    stateData.filter = this.filterData;
+    this.dataStateChange(stateData);
+  }
+
+  /* Private methods */
+  private initializePremiumsBatchGrid() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: [{ field: 'batchName', dir: 'asc' }],
+    };
+  }
+
+
+  private initializePremiumsBatchPage() {
+    this.loadFinancialPremiumsBatchListGrid();
+    this.addSearchSubjectSubscription();
+  }
+
+  private loadFinancialPremiumsBatchListGrid(): void {
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType,
+
+      JSON.stringify(this.filter)
+    );
+    this.loadFinancialPremiumsBatchListEvent.emit(param);
+  }
+
+  private addSearchSubjectSubscription() {
+    this.searchSubject.pipe(debounceTime(300)).subscribe((searchValue) => {
+      this.performSearch(searchValue);
+    });
+  }
+
+  private setFilterBy(
+    isFromGrid: boolean,
+    searchValue: any = '',
+    filter: any = []
+  ) {
+    this.filteredByColumnDesc = '';
+    if (isFromGrid) {
+      if (filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters
+            ?.filter((fld: any) => fld.value)
+            ?.map((fld: any) => this.gridColumns[fld.field]);
+          return [...new Set(filteredColumns)];
+        });
+
+        this.filteredByColumnDesc =
+          [...new Set(filteredColumns)]?.sort()?.join(', ') ?? '';
+      }
+      return;
+    }
+
+    if (searchValue !== '') {
+      this.filteredByColumnDesc =
+        this.searchColumnList?.find(
+          (i) => i.columnName === this.selectedSearchColumn
+        )?.columnDesc ?? '';
+    }
+  }
+
+  private isValidDate = (searchValue: any) =>
+    isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(
+          new Date(searchValue),
+          this.configProvider?.appSettings?.dateFormat
+        );
+      } else {
+        return '';
+      }
+    }
+
+    return searchValue;
+  }
 }
 
 
- 
