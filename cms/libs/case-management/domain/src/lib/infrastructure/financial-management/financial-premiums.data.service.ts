@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { GridFilterParam } from '../../entities/grid-filter-param';
 import { Observable } from 'rxjs';
 import { InsurancePlan } from '../../entities/insurance-plan';
 import { ClientInsurancePlans, InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
@@ -461,6 +462,20 @@ export class FinancialPremiumsDataService {
       { responseType: 'blob' }
     );
   }
+ loadMedicalPremiumList( skipcount: number,
+  maxResultCount: number,
+  sort: string,
+  sortType: string,
+  filter:any) {
+    const filterRequestBody = {
+      skipcount:skipcount,
+      maxResultCount:maxResultCount,
+      sort:sort,
+      sortType:sortType,
+      filter:filter
+    }
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/list`,filterRequestBody);   
+}
   loadInsurancePlans(clientId: number): Observable<ClientInsurancePlans[]>{
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/plans`
