@@ -50,7 +50,6 @@ export class FinancialClaimsBatchesLogListsComponent
   deleteClaimsDialog: any;
   onlyPrintAdviceLetter: boolean = true;
   currentPrintAdviceLetterGridFilter:any;
-  printAdviceLetterResult :any;
   private addClientRecentClaimsDialog: any;
   vendorId:any;
   clientId:any;
@@ -368,6 +367,7 @@ export class FinancialClaimsBatchesLogListsComponent
   onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
     this.isPrintAdviceLetterClicked = false;
+    this.selectedDataRows = [];
   }
 
   onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
@@ -513,7 +513,6 @@ export class FinancialClaimsBatchesLogListsComponent
         }
 
     }
-
   }
 
   clientRecentClaimsModalClicked(
