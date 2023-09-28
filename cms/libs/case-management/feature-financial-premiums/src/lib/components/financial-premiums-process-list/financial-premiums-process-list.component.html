@@ -37,7 +37,13 @@
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"></kendo-grid-checkbox-column>
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160"[sortable]="true"> 
-      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button aria-label="clientName" kendoButton look="flat" class="card-link-button"
+          (click)="clientRecentClaimsModalClicked(clientRecentPremiumsDialogTemplate, dataItem)">
+          {{ dataItem.clientFullName }}
+        </button>
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">         
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
                   <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
                   <kendo-filter-eq-operator></kendo-filter-eq-operator>
