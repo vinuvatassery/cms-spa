@@ -34,8 +34,23 @@
     [columnMenu]="{ filter: true }" [sort]="state.sort" [navigable]="isProcessGridExpand"
     (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
     [data]="financialPremiumsProcessGridLists$ | async">
-    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [columnMenu]="false" [showSelectAll]="true"
-      [width]="40"></kendo-grid-checkbox-column>
+      <kendo-grid-column *ngIf="!isProcessGridExpand"  [sortable]="false" field="add" [width]="150" 
+      [sticky]="true" [sortable]="false"  [columnMenu]="false" [headerStyle]="{'text-align': 'center'}" [style]="{'text-align': 'center'}">
+        <ng-template kendoGridHeaderTemplate let-dataItem>
+            <input style="zoom: 1.2;"   
+                 type="checkbox" 
+                 name="selectAll"
+                 [(ngModel)]="selectAll"
+                 (change)="selectionAllChange()"/>
+         </ng-template> 
+         <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
+             <input style="zoom: 1.2;" 
+                 type="checkbox"
+                 [(ngModel)]="dataItem.selected"
+                 [disabled]="dataItem.acceptsCombinedPaymentsFlag === 'N'"
+                 (change)="selectionChange(dataItem,dataItem.selected)"/>
+         </ng-template>
+      </kendo-grid-column>
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160"[sortable]="true"> 
       <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">

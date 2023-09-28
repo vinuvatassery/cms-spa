@@ -95,7 +95,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   medicalPremiumListSubject = new Subject<any>();
   medicalPremiumList$ =this.medicalPremiumListSubject.asObservable();
-  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   sendReportCount: number = 0;
   isAllSelected = false;
   processGridDataList: any= [];
@@ -520,7 +519,6 @@ closeRecentPremiumsModal(result: any){
       data.forEach((element:any) => {     
         element.selected = false;    
     });
-  }
   }
 
   loadInsurancePlans(clientId: number){
