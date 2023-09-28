@@ -20,6 +20,7 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
   pageSizes = this.financialPremiumsFacade.gridPageSizes;
   gridSkipCount = this.financialPremiumsFacade.skipCount;
   sort = this.financialPremiumsFacade.sortBatchLogList;
+  exportButtonShow$ = this.documentFacade.exportButtonShow$
   state!: State;
   batchLogGridLists$ = this.financialPremiumsFacade.batchLogData$;
   batchLogServicesData$ = this.financialPremiumsFacade.batchLogServicesData$;
@@ -88,7 +89,7 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
         Filter : filter
       }
       const batchId = this.activatedRoute.snapshot.queryParams['bid'];
-     let fileName = (this.premiumType[0].toUpperCase() + this.premiumType.substr(1).toLowerCase())  +' Claims Payments'
+     let fileName = (this.premiumType[0].toUpperCase() + this.premiumType.substr(1).toLowerCase())  +' Premium Batch Payments'
 
       this.documentFacade.getExportFile(vendorPageAndSortedRequest,`premium/${this.premiumType}/payment-batches/${batchId}/payments` , fileName)
     }
