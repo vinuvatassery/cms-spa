@@ -45,6 +45,66 @@ export class FinancialPremiumsAllPaymentsListComponent
   @Input() sort: any;
   @Input() financialPremiumsAllPaymentsGridLists$: any;
   @Output() loadFinancialPremiumsAllPaymentsListEvent = new EventEmitter<any>();
+  @Input() financialPremiumPaymentLoader$: any;
+
+  dropDowncolumns: any[] = [
+    {
+      columnCode: 'itemNumber',
+      columnDesc: 'Item Number',
+    },
+    {
+      columnCode: 'batchNumber',
+      columnDesc: 'Batch Number',
+    },
+    {
+      columnCode: 'vendorTypeCode',
+      columnDesc: 'Vendor Type Code',
+    },
+    {
+      columnCode: 'itemCountInBatch',
+      columnDesc: 'Item Count In Batch',
+    },
+    {
+      columnCode: 'totalCost',
+      columnDesc: 'Total Cost',
+    },
+    {
+      columnCode: 'paymentRequestedDate',
+      columnDesc: 'Payment Requested Date',
+    },
+    {
+      columnCode: 'paymentSentDate',
+      columnDesc: 'Payment Sent Date',
+    },
+    {
+      columnCode: 'paymentMethodDesc',
+      columnDesc: 'Payment Method Desc',
+    },
+    {
+      columnCode: 'paymentStatusCode',
+      columnDesc: 'Payment Status Code',
+    },
+    {
+      columnCode: 'pcaCode',
+      columnDesc: 'PCA Code',
+    },
+    {
+      columnCode: 'mailCode',
+      columnDesc: 'Mail Code',
+    },
+    {
+      columnCode: 'clientFullName',
+      columnDesc: 'Client Full Name',
+    },
+    {
+      columnCode: 'totalDue',
+      columnDesc: 'Total Due',
+    },
+    {
+      columnCode: 'by',
+      columnDesc: 'By',
+    },
+  ];
 
   public state!: State;
   sortColumn = 'batch';

@@ -17,6 +17,8 @@ import { LoggingService } from '@cms/shared/util-core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPremiumsPageComponent implements OnInit {
+  
+  dataExportParameters! : any
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
   state!: State;
@@ -38,6 +40,8 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.financialPremiumsBatchData$;
   financialPremiumsAllPaymentsGridLists$ =
     this.financialPremiumsFacade.financialPremiumsAllPaymentsData$;
+
+    financialPremiumPaymentLoader$ = this.financialPremiumsFacade.financialPremiumPaymentLoader$;
     
   premiumType: any;
   constructor(
@@ -73,7 +77,9 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.loadFinancialPremiumsBatchListGrid();
   }
 
-  loadFinancialPremiumsAllPaymentsListGrid(event: any) {
-    this.financialPremiumsFacade.loadFinancialPremiumsAllPaymentsListGrid();
+  loadFinancialPremiumsAllPaymentsListGrid(data: any) {
+    this.dataExportParameters = data
+    this.financialPremiumsFacade.loadFinancialPremiumsAllPaymentsListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.filter);
+
   }
 }

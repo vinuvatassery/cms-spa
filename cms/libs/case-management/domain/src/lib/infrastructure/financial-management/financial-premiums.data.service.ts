@@ -1,9 +1,9 @@
 /** Angular **/
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 /** External libraries **/
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { of } from 'rxjs/internal/observable/of';
-import { ConfigurationProvider } from '@cms/shared/util-core'; 
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsDataService {
@@ -11,11 +11,9 @@ export class FinancialPremiumsDataService {
   constructor(
     private readonly http: HttpClient,
     private readonly configurationProvider: ConfigurationProvider
-  ) {}
- 
+  ) { }
 
- 
-  loadFinancialPremiumsProcessListService( ) {
+  loadFinancialPremiumsProcessListService() {
     return of([
       {
         invoiceID:1,
@@ -47,6 +45,25 @@ export class FinancialPremiumsDataService {
       },
     ]);
   }
+ 
+  loadFinancialPremiumsAllPaymentsServiceWithApi(skipcount: number, maxResultCount: number, sort: string, sortType: string, filter: string) {
+    const PaginationAndSortingDto =
+    {
+      SortType: sortType,
+      Sorting: sort,
+      SkipCount: skipcount,
+      MaxResultCount: maxResultCount,
+      Filter: filter
+    }
+    PaginationAndSortingDto.Sorting = "itemNumber";
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical-premium/payments`,
+      PaginationAndSortingDto
+    );
+
+  }
+
+
   loadFinancialPremiumsBatchListService( ) {
     return of([
       {

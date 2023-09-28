@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  Subject } from 'rxjs';
+import {  BehaviorSubject, Subject } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -62,6 +62,9 @@ export class FinancialPremiumsFacade {
       field: this.sortValueReconcilePaymentBreakout,
     },
   ];
+
+  private financialPremiumPaymentLoaderSubject = new BehaviorSubject<any>(false);
+  financialPremiumPaymentLoader$ = this.financialPremiumPaymentLoaderSubject.asObservable();
 
   private financialPremiumsProcessDataSubject = new Subject<any>();
   financialPremiumsProcessData$ = this.financialPremiumsProcessDataSubject.asObservable();
@@ -145,8 +148,7 @@ export class FinancialPremiumsFacade {
       },
     });  
   }   
-
-
+  
   loadFinancialPremiumsBatchListGrid(){
     this.financialPremiumsDataService.loadFinancialPremiumsBatchListService().subscribe({
       next: (dataResponse) => {
@@ -161,17 +163,28 @@ export class FinancialPremiumsFacade {
   }
 
 
-  loadFinancialPremiumsAllPaymentsListGrid(){
-    this.financialPremiumsDataService.loadFinancialPremiumsAllPaymentsListService().subscribe({
-      next: (dataResponse) => {
-        this.financialPremiumsAllPaymentsDataSubject.next(dataResponse);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
-      },
-    });  
+  loadFinancialPremiumsAllPaymentsListGrid(skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string,
+    filter: string){
+      
+      filter = JSON.stringify(filter);
+      this.financialPremiumPaymentLoaderSubject.next(true);
+      this.financialPremiumsDataService.loadFinancialPremiumsAllPaymentsServiceWithApi(skipcount, maxResultCount, sort, sortType, filter).subscribe({
+        next: (dataResponse) => {
+          const gridView = {
+            data: dataResponse["items"],
+            total: dataResponse["totalCount"]
+          };
+          this.financialPremiumsAllPaymentsDataSubject.next(gridView);
+          this.financialPremiumPaymentLoaderSubject.next(false);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.financialPremiumPaymentLoaderSubject.next(false);
+        },
+      });
   }
 
   loadBatchName(batchId: string){
