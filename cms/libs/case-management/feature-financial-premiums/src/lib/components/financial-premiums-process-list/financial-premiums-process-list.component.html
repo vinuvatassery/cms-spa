@@ -37,7 +37,13 @@
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"></kendo-grid-checkbox-column>
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160"[sortable]="true"> 
-      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button aria-label="clientName" kendoButton look="flat" class="card-link-button"
+          (click)="clientRecentClaimsModalClicked(clientRecentPremiumsDialogTemplate, dataItem)">
+          {{ dataItem.clientFullName }}
+        </button>
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">         
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
                   <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
                   <kendo-filter-eq-operator></kendo-filter-eq-operator>
@@ -229,7 +235,7 @@
       </ng-template>
     </kendo-grid-column>
 
- 
+
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex">
@@ -262,14 +268,13 @@
   </kendo-grid>
 </div>
 
-
 <div class="bottom-fixed-wrapper text-right flex-gap">
   <span class="">0 premiums(s) to be remove</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchPremiumsGridSelectedCancelClicked()"   *ngIf="isBatchPremiumsClicked || isRemoveBatchClosed"> Cancel
   </button>
 
-  <button kendoButton kendoButton class="k-error-button" aria-label="Remove" 
+  <button kendoButton kendoButton class="k-error-button" aria-label="Remove"
     (click)="onRemovePremiumsOpenClicked(removePremiumsConfirmationDialogTemplate)"  *ngIf="isRemoveBatchClosed"> <span class="material-icons mr-1"
       aria-label="Remove"> delete</span> Remove </button>
 
@@ -316,20 +321,20 @@
   </cms-financial-premiums-add-details-form>
 </ng-template>
 <ng-template #editPremiumsDialogTemplate>
-  <cms-financial-premiums-edit-detail-form
+  <cms-financial-premiums-edit-detail-form [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="premiumsType"
     (modalCloseEditPremiumsFormModal)="modalCloseEditPremiumsFormModal($event)"></cms-financial-premiums-edit-detail-form>
 </ng-template>
 
 <ng-template #clientRecentPremiumsDialogTemplate>
-  <kendo-dialog-titlebar (close)="closeRecentPremiumsModal($event)"><h5>Recent Premiums for Donna Summer</h5></kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="closeRecentPremiumsModal($event)"><h5 class="text-upper">Recent Premiums for {{clientName}}</h5></kendo-dialog-titlebar>
   <section class="k-dialog-body">
-    <cms-financial-premiums-recent-premiums-list
+    <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="premiumsType"
       (CloseRecentPremiumsModal)="closeRecentPremiumsModal($event)"></cms-financial-premiums-recent-premiums-list>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton aria-label="cancel" [primary]="true" look="flat">
+        <button kendoButton aria-label="cancel" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
           Client Profile <span class="material-icons ml-1">
             chevron_right
           </span>
@@ -339,3 +344,13 @@
     </div>
   </kendo-dialog-actions>
 </ng-template>
+
+<button aria-label="clientName" kendoButton look="flat" class="card-link-button" [hidden]="true"
+          (click)="clientRecentClaimsModalClicked(clientRecentPremiumsDialogTemplate, null)">
+          Client Name
+        </button>
+<br/><br/>
+<button aria-label="edit" kendoButton look="flat" class="card-link-button" [hidden]="true"
+          (click)="onEditPremiumsClick()">
+          Edit
+        </button>

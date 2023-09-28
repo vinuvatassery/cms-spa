@@ -10,6 +10,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { ClientInsurancePlans, InsurancePremium, PolicyPremiumCoverage,FinancialPremiumsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -20,7 +21,7 @@ import {
 import { Observable, Subject } from 'rxjs';
 @Component({
   selector: 'cms-financial-premiums-process-list',
-  templateUrl: './financial-premiums-process-list.component.html', 
+  templateUrl: './financial-premiums-process-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPremiumsProcessListComponent implements  OnChanges {
@@ -32,7 +33,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   editPremiumsDialogTemplate!: TemplateRef<any>;
   @ViewChild('addPremiumsDialogTemplate', { read: TemplateRef })
   addPremiumsDialogTemplate!: TemplateRef<any>;
-  
+
   public formUiStyle: UIFormStyle = new UIFormStyle();
   private removePremiumsDialog: any;
   private batchConfirmPremiumsDialog: any;
@@ -42,7 +43,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   isRemoveBatchClosed = false;
   isBatchPremiumsClicked = false;
   isRemovePremiumsOption = false;
-  isEditBatchClosed = false; 
+  isEditBatchClosed = false;
   isAddPremiumClosed = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isProcessGridExpand = true;
@@ -91,6 +92,10 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
     this.gridFinancialPremiumsProcessDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
+  vendorId:any;
+  clientId:any;
+  clientName:any="";
+
   medicalPremiumListSubject = new Subject<any>();
   medicalPremiumList$ =this.medicalPremiumListSubject.asObservable();
   public premiumsProcessMore = [
@@ -100,7 +105,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
       icon: 'add',
       click: (data: any): void => {
         if (!this.isAddPremiumClosed) {
-          this.isAddPremiumClosed = true; 
+          this.isAddPremiumClosed = true;
           this.onClickOpenAddPremiumsFromModal(this.addPremiumsDialogTemplate);
         }
       },
@@ -112,7 +117,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isRemoveBatchClosed) {
-          this.isRemoveBatchClosed = true; 
+          this.isRemoveBatchClosed = true;
           this.onBatchPremiumsGridSelectedClicked();
         }
       },
@@ -125,8 +130,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
       icon: 'edit',
       click: (data: any): void => {
         if (!this.isEditBatchClosed) {
-          this.isEditBatchClosed = true; 
-          this.onClickOpenEditPremiumsFromModal(this.editPremiumsDialogTemplate);
+          this.isEditBatchClosed = true;
+          this.onEditPremiumsClick();
         }
       },
     },
@@ -136,7 +141,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isRemovePremiumGridOptionClosed) {
-          this.isRemovePremiumGridOptionClosed = true; 
+          this.isRemovePremiumGridOptionClosed = true;
           this.onRemovePremiumsOpenClicked(this.removePremiumsConfirmationDialogTemplate);
         }
       },
@@ -148,7 +153,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   constructor(
   private financialPremiumsFacade : FinancialPremiumsFacade ,
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly route: Router
   ) {}
 
 
@@ -328,7 +334,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
     });
   }
   onModalBatchPremiumsModalClose(result: any) {
-    if (result) { 
+    if (result) {
       this.batchConfirmPremiumsDialog.close();
     }
   }
@@ -340,7 +346,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
     });
   }
   onModalRemovePremiumsModalClose(result: any) {
-    if (result) { 
+    if (result) {
       this.isRemovePremiumGridOptionClosed = false;
       this.removePremiumsDialog.close();
     }
@@ -381,7 +387,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   onBatchPremiumsGridSelectedCancelClicked() {
     this.isProcessGridExpand = true;
     this.isRemoveBatchClosed = false;
-    this.isAddPremiumClosed = false; 
+    this.isAddPremiumClosed = false;
     this.isBatchPremiumsClicked = false;
   }
 
@@ -418,5 +424,35 @@ closeRecentPremiumsModal(result: any){
 
   premiumsExistValidation(data: { clientId: number, premiums: PolicyPremiumCoverage[] } ){
     this.premiumsExistValidationEvent.emit(data);
+  }
+
+  clientRecentClaimsModalClicked(
+    template: TemplateRef<unknown>,
+    data: any
+  ): void {
+    this.addClientRecentPremiumsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+      animation: {
+        direction: 'up',
+        type: 'slide',
+        duration: 200,
+      },
+    });
+    this.vendorId="3F111CFD-906B-4F56-B7E2-7FCE5A563C36";
+    this.clientId=5;
+    this.clientName="Jason Biggs";
+  }
+
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.closeRecentPremiumsModal(true);
+  }
+
+  onEditPremiumsClick(){
+    this.vendorId="3F111CFD-906B-4F56-B7E2-7FCE5A563C36";
+    this.clientId=5;
+    this.clientName="Jason Biggs";
+    this.onClickOpenEditPremiumsFromModal(this.editPremiumsDialogTemplate);
   }
 }
