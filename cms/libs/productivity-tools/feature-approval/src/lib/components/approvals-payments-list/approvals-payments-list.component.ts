@@ -131,10 +131,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       sortType: sortTypeValue,
     };
     let selectedPaymentType = this.selectedPaymentType;
-    this.loadApprovalsPaymentsGridEvent.emit({gridDataRefinerValue, selectedPaymentType});
-    gridDataRefinerValue.skipCount=0;
-    gridDataRefinerValue.pagesize=99999;
-    this.loadApprovalsPaymentsMainListEvent.emit({gridDataRefinerValue, selectedPaymentType});
+    this.loadApprovalsPaymentsGridEvent.emit({gridDataRefinerValue, selectedPaymentType});    
   }
 
   onChange(data: any) {
@@ -179,7 +176,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadApprovalPaymentsListGrid();
+    this.loadApprovalPaymentsListGrid();    
+    this.sortByProperty();
   }
 
   // updating the pagination infor based on dropdown selection
@@ -216,7 +214,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.mainListDataHandle();   
   }
 
-  onRowLevelApproveClicked(dataItem: any, control: any, rowIndex: any)
+  onRowLevelApproveClicked(e: boolean,dataItem: any, control: any, rowIndex: any)
   {
     dataItem.approveButtonDisabled=false;
     dataItem.sendBackButtonDisabled=true;
@@ -245,7 +243,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.approveAndSendbackCount();
   }
 
-  onRowLevelSendbackClicked(dataItem: any, control: any, rowIndex: any)
+  onRowLevelSendbackClicked(e: boolean,dataItem: any, control: any, rowIndex: any)
   {
     dataItem.approveButtonDisabled=true;
     dataItem.sendBackButtonDisabled=false;
@@ -399,8 +397,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     const isValid = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.sendBackNotesInValid);
     const totalCount = isValid.length;
     if (isValid.length > 0) {
-      this.pageValidationMessage = "validation errors found, please review each page for errors " +
-        totalCount + " is the total number of validation errors found.";
+      this.pageValidationMessage = totalCount +  " validation errors found, please review each page for errors.";
     }
     else if(this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus).length <= 0){
       this.pageValidationMessage = "No data for approval";
@@ -499,6 +496,17 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   }
 
   mainListDataHandle() {
+    const gridDataRefinerValue = {
+      skipCount: 0,
+      pagesize: 99999,
+      sortColumn: this.sortValue,
+      sortType: this.sortType,
+    };
+    let selectedPaymentType = this.selectedPaymentType;
+    gridDataRefinerValue.skipCount=0;
+    gridDataRefinerValue.pagesize=99999;
+    this.loadApprovalsPaymentsMainListEvent.emit({gridDataRefinerValue, selectedPaymentType});
+
     this.approvalsPaymentsMainLists$.subscribe((response: any) => {
       if (response.data.length > 0) {
         this.approvalsPaymentsGridUpdatedResult=response.data.map((item:any) => ({  
@@ -511,5 +519,32 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
         this.gridApprovalPaymentsMainListDataSubject.next(this.approvalsPaymentsGridUpdatedResult);
       }
     });
+  }
+
+  sortByProperty() {
+    const ascending=this.sortType == "asc";
+    if(this.approvalsPaymentsGridUpdatedResult.length >=0)
+    {      
+      this.approvalsPaymentsGridUpdatedResult.sort((a: { [x: string]: any; }, b: { [x: string]: any; }) => {
+            if (ascending) {
+             return this.sortListAscendingOrder(a[this.sortValue],b[this.sortValue]) ;            
+        } else {
+          return this.sortListDescendingOrder(a[this.sortValue],b[this.sortValue]); 
+        }
+      });      
+    }
+  }
+
+  sortListAscendingOrder(a:any,b:any)
+  {
+    if(a < b){return -1;}
+    else if (a > b){return 1;}
+    else{return 0;}
+  }
+  sortListDescendingOrder(a:any,b:any)
+  {
+    if(b < a){return -1;}
+    else if (b > a){return 1;}
+    else{return 0;}
   }
 }
