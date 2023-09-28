@@ -332,9 +332,17 @@ viewAdviceLetterData(batchId:any,printAdviceLetterData: any, premiumType:any) {
   return this.financialPremiumsDataService.viewPrintAdviceLetterData(batchId, printAdviceLetterData, premiumType);
 }
 loadMedicalPremiumList(
-  params: GridFilterParam){
+  skipcount: number,
+  maxResultCount: number,
+  sort: string,
+  sortType: string,
+  filter:any,){
     this.showLoader();
-  this.financialPremiumsDataService.loadMedicalPremiumList(params ).subscribe({
+  this.financialPremiumsDataService.loadMedicalPremiumList( skipcount,
+    maxResultCount,
+    sort,
+    sortType,
+    filter ).subscribe({
     next: (dataResponse) => {
       if (dataResponse) {
         this.hideLoader();

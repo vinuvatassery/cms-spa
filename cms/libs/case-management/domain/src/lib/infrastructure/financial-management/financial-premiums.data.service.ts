@@ -462,8 +462,19 @@ export class FinancialPremiumsDataService {
       { responseType: 'blob' }
     );
   }
- loadMedicalPremiumList( params: GridFilterParam) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical?SortType=${params.sortType}&Sorting=${params.sorting}&SkipCount=${params.skipCount}&MaxResultCount=${params.maxResultCount}&Filter=${params.filter?? ''}`,null);   
+ loadMedicalPremiumList( skipcount: number,
+  maxResultCount: number,
+  sort: string,
+  sortType: string,
+  filter:any) {
+    const filterRequestBody = {
+      skipcount:skipcount,
+      maxResultCount:maxResultCount,
+      sort:sort,
+      sortType:sortType,
+      filter:filter
+    }
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/list`,filterRequestBody);   
 }
   loadInsurancePlans(clientId: number): Observable<ClientInsurancePlans[]>{
     return this.http.get<any>(

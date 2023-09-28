@@ -72,15 +72,20 @@ export class FinancialPremiumsPageComponent implements OnInit {
         },
       });
   }
-  loadFinancialPremiumsProcessListGrid(event: any) : void{
-    const param = new GridFilterParam(
-      event?.skipCount ?? 0,
-      event?.pagesize ?? 0,
-      event?.sortColumn,
-      event?.sortType,
-      event.filter);
+  loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any) : void{
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      pagesize: gridDataRefinerValue.pagesize,
+      sortColumn: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+      filter:gridDataRefinerValue.filter
+    };
     this.pageSizes = this.financialPremiumsFacade.gridPageSizes;
-    this.financialPremiumsFacade.loadMedicalPremiumList(param);
+    this.financialPremiumsFacade.loadMedicalPremiumList( gridDataRefiner.skipcount,
+      gridDataRefiner.pagesize,
+      gridDataRefiner.sortColumn,
+      gridDataRefiner.sortType,
+      gridDataRefiner.filter);
   }
 
   loadFinancialPremiumsBatchListGrid(event: any) {
