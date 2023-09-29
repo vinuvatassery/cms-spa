@@ -530,6 +530,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
           sendBackNotesInValid : false,
           batchStatus : '',
           sendBackNotes : ''
+        }));
         console.log('mainListDataHandle-approvalsPaymentsGridUpdatedResult',this.approvalsPaymentsGridUpdatedResult);
         this.batchDetailModalSourceList = this.approvalsPaymentsGridUpdatedResult;      
         this.gridApprovalPaymentsMainListDataSubject.next(this.approvalsPaymentsGridUpdatedResult);
