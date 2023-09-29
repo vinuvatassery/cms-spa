@@ -51,7 +51,6 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
-
   @Input() sortValueFinancialInvoices: any;
   @Input() financialClaimsProcessGridLists$: any;
   @Input() financialClaimsInvoice$: any;
