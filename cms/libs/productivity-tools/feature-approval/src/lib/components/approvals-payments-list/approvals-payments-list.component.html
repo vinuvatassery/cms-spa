@@ -83,12 +83,10 @@
         
         <kendo-grid-column field=" " title="Send Back | Approve" [width]="210" [sticky]="true">
             <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                <kendo-buttongroup selection="single">
-                    <button kendoButton aria-label="proof of address yes" [toggleable]="true" (click)="onRowLevelApproveClicked(dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'APPROVE'">Approve
-                    </button>
-                    <button kendoButton aria-label="proof of address yes" [toggleable]="true" (click)="onRowLevelSendbackClicked(dataItem,'sendBackNotes',rowIndex)" aria-disabled="false" [selected]="dataItem.batchStatus == 'SENDBACK'">Send Back
-                    </button>
-                </kendo-buttongroup>
+                <div class="cms-button-group">
+                    <button kendoButton (selectedChange)="onRowLevelApproveClicked($event,dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'APPROVE'" id ="approve{{rowIndex}}" [toggleable]="true" >Approve</button>
+                    <button kendoButton (selectedChange)="onRowLevelSendbackClicked($event,dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'SENDBACK'" id ="approve{{rowIndex}}" [toggleable]="true">Send Back</button>
+                </div>
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-column [sticky]="true" field="sendBackNotes" title="Send Back Notes" [width]="280">

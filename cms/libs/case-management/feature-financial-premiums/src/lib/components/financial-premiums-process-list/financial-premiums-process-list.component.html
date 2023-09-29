@@ -33,15 +33,30 @@
     [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true" [filter]="state.filter"
     [columnMenu]="{ filter: true }" [sort]="state.sort" [navigable]="isProcessGridExpand"
     (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="selectableSettings"
-    [data]="financialPremiumsProcessGridLists$ | async"   
+    [data]="financialPremiumsProcessGridLists$ | async"
     kendoGridSelectBy="paymentRequestId"
     (selectedKeysChange)="selectedKeysChange($event)"
     [(selectedKeys)]="selectedProcessClaims">
-    
-    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [columnMenu]="false" [showSelectAll]="true"
-      [width]="40"  [locked]="true"></kendo-grid-checkbox-column>
-    
-    
+    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand && !isSendReportOpened" [columnMenu]="false" [showSelectAll]="true"
+    [width]="40"  [locked]="true"></kendo-grid-checkbox-column>
+
+      <kendo-grid-column *ngIf="isSendReportOpened"  field="add" [width]="150" 
+      [sticky]="true" [sortable]="false"  [columnMenu]="false" [headerStyle]="{'text-align': 'center'}" [style]="{'text-align': 'center'}">
+        <ng-template kendoGridHeaderTemplate let-dataItem>
+            <input style="zoom: 1.2;"   
+                 type="checkbox" 
+                 name="selectAll"
+                 [(ngModel)]="selectAll"
+                 (change)="selectionAllChange()"/>
+         </ng-template> 
+         <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
+             <input style="zoom: 1.2;" 
+                 type="checkbox"
+                 [(ngModel)]="dataItem.selected"
+                 [disabled]="dataItem.acceptsCombinedPaymentsFlag === 'N'"
+                 (change)="selectionChange(dataItem,dataItem.selected)"/>
+         </ng-template>
+      </kendo-grid-column> 
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160"[sortable]="true"> 
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="clientName" kendoButton look="flat" class="card-link-button"
@@ -275,9 +290,11 @@
 </div>
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span class="">0 premiums(s) to be remove</span>
+  <span class="" *ngIf="isSendReportOpened">{{ sendReportCount}} payment(s) selected</span>
+  <span class="" *ngIf="!isProcessGridExpand">{{ selectedProcessClaims.length}} payment(s) selected</span>
+  <span class="" *ngIf="isSendReportOpened && isProcessGridExpand">0 premiums(s) to be remove</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
-    (click)="onBatchPremiumsGridSelectedCancelClicked()"   *ngIf="isBatchPremiumsClicked || isRemoveBatchClosed"> Cancel
+    (click)="onBatchPremiumsGridSelectedCancelClicked()"   *ngIf="isBatchPremiumsClicked || isRemoveBatchClosed || isSendReportOpened"> Cancel
   </button>
 
   <button kendoButton kendoButton class="k-error-button" aria-label="Remove"
@@ -287,7 +304,10 @@
   <button kendoButton [primary]="true" aria-label="Receipting Log" class=""
     (click)="onBatchPremiumsClicked(batchPremiumsConfirmationDialogTemplate)"   *ngIf="isBatchPremiumsClicked"> Batch </button>
 
-  <kendo-splitbutton  [data]="premiumsProcessMore" *ngIf="!isBatchPremiumsClicked && !isRemoveBatchClosed"
+  <button kendoButton [disabled]="sendReportCount == 0" [primary]="true" aria-label="Send Reports" class="" *ngIf="isSendReportOpened"
+    (click)="onSendReportOpenClicked(sendReportDialogTemplate)"> Send Reports </button>
+
+  <kendo-splitbutton  [data]="premiumsProcessMore" *ngIf="!isBatchPremiumsClicked && !isRemoveBatchClosed && !isSendReportOpened"
     class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
     <div class="btn-inner-block" (click)="onSplitBatchPremiumsClicked()">
@@ -304,6 +324,12 @@
   </kendo-splitbutton>
 </div>
 
+<ng-template #sendReportDialogTemplate>
+  <cms-financial-premiums-send-report
+    (sendReportCloseClickedEvent)="onSendReportCloseClicked($event)"
+    [sendReportCount]="sendReportCount"
+    [selectedSendReportList]="selectedSendReportList"></cms-financial-premiums-send-report>
+</ng-template>
 <ng-template #batchPremiumsConfirmationDialogTemplate>
   <cms-financial-premiums-batch-premiums
     (modalBatchPremiumsCloseClicked)="onModalBatchPremiumsModalClose()" 
