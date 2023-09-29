@@ -8,6 +8,7 @@ import { GridFilterParam } from '../../entities/grid-filter-param';
 import { Observable } from 'rxjs';
 import { InsurancePlan } from '../../entities/insurance-plan';
 import { ClientInsurancePlans, InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
+import { BatchPremium } from '../../entities/financial-management/batch-premium';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsDataService {
@@ -476,6 +477,11 @@ export class FinancialPremiumsDataService {
     }
     return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/list`,filterRequestBody);   
 }
+
+batchClaims(batchPremiums: BatchPremium, claimsType: string) {
+  return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${claimsType}/batch`, batchPremiums);
+}
+ 
   loadInsurancePlans(clientId: number): Observable<ClientInsurancePlans[]>{
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/plans`

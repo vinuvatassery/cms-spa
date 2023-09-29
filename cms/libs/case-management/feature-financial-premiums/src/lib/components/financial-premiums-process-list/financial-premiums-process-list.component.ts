@@ -14,10 +14,11 @@ import { Router } from '@angular/router';
 import { ClientInsurancePlans, InsurancePremium, PolicyPremiumCoverage,FinancialPremiumsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor
 } from '@progress/kendo-data-query';
+import { BatchPremium } from 'libs/case-management/domain/src/lib/entities/financial-management/batch-premium';
 import { Observable, Subject } from 'rxjs';
 @Component({
   selector: 'cms-financial-premiums-process-list',
@@ -52,6 +53,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   isFinancialPremiumsProcessGridLoaderShow = false;
   gridDataResult!: GridDataResult;
   @Input() premiumsType: any;
+  @Input() batchingPremium$: any; 
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -67,6 +69,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   @Output() premiumsExistValidationEvent = new EventEmitter<{ clientId: number, premiums: PolicyPremiumCoverage[] }>();
   @Output() savePremiumsEvent = new EventEmitter<InsurancePremium[]>();
   @Output() loadFinancialPremiumsProcessListEvent = new EventEmitter<any>();
+  @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
+  public selectedProcessClaims: any[] = [];
   public state!: any;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -169,15 +173,25 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
     },
   ];
 
-
+  public selectableSettings: SelectableSettings;
+  public checkboxOnly = true;
+  public mode: SelectableMode = 'multiple';
+  public drag = false;
+  
   /** Constructor **/
   constructor(
   private financialPremiumsFacade : FinancialPremiumsFacade ,
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
     private readonly route: Router
-  ) {}
+  ) {
 
+    this.selectableSettings = {
+      checkboxOnly: this.checkboxOnly,
+      mode: this.mode,
+      drag: this.drag,
+    };
+  }
 
   ngOnChanges(): void {
     this.state = {
@@ -356,10 +370,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
-  onModalBatchPremiumsModalClose(result: any) {
-    if (result) {
+  onModalBatchPremiumsModalClose() {
       this.batchConfirmPremiumsDialog.close();
-    }
   }
 
   public onRemovePremiumsOpenClicked(template: TemplateRef<unknown>): void {
@@ -420,15 +432,18 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
     this.isRemoveBatchClosed = false;
     this.isAddPremiumClosed = false;
     this.isBatchPremiumsClicked = false;
+    this.selectedProcessClaims = [];
     this.isSendReportOpened = false;
-    this.markAsUnChecked(this.selectedSendReportList.SelectedSendReports);
-    this.markAsUnChecked(this.selectedSendReportList.UnSelectedSendReports);
+    this.markAsUnChecked(this.selectedSendReportList?.SelectedSendReports);
+    this.markAsUnChecked(this.selectedSendReportList?.UnSelectedSendReports);
     this.markAsUnChecked(this.financialPremiumsProcessGridLists);
     this.unCheckedProcessRequest = [];
     this.checkedAndUncheckedRecordsFromSelectAll = [];
-    this.selectedSendReportList.SelectedSendReports = [];
+    if(this.selectedSendReportList){
+      this.selectedSendReportList.SelectedSendReports = [];
     this.selectedSendReportList.UnSelectedSendReports = [];
-    this.getSelectedReportCount(this.selectedSendReportList.SelectedSendReports);
+    }
+    this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports);
     this.selectAll = false;
   }
 
@@ -567,5 +582,24 @@ closeRecentPremiumsModal(result: any){
     this.clientId=5;
     this.clientName="Jason Biggs";
     this.onClickOpenEditPremiumsFromModal(this.editPremiumsDialogTemplate);
+  }
+
+  selectedKeysChange(selection: any) {
+    this.selectedProcessClaims = selection;
+    this.sendReportCount = this.selectedProcessClaims.length;
+  }
+
+  OnbatchClaimsClicked(){
+
+    const input: BatchPremium = {
+      managerId: '',
+      PaymentRequestIds: this.selectedProcessClaims,
+    };
+    this.batchingPremium$.subscribe((_:any) =>{
+      this.onModalBatchPremiumsModalClose()
+      this.loadFinancialPremiumsProcessListGrid()
+      this.onBatchPremiumsGridSelectedCancelClicked()
+    })
+    this.OnbatchClaimsClickedEvent.emit(input)
   }
 }

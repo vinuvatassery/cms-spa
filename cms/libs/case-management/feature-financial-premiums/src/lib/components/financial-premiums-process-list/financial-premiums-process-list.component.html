@@ -32,9 +32,15 @@
   <kendo-grid [resizable]="true" [loading]="isFinancialPremiumsProcessGridLoaderShow" [pageSize]="state.take"
     [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true" [filter]="state.filter"
     [columnMenu]="{ filter: true }" [sort]="state.sort" [navigable]="isProcessGridExpand"
-    (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
-    [data]="financialPremiumsProcessGridLists$ | async">
-      <kendo-grid-column *ngIf="!isProcessGridExpand"  [sortable]="false" field="add" [width]="150" 
+    (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="selectableSettings"
+    [data]="financialPremiumsProcessGridLists$ | async"
+    kendoGridSelectBy="paymentRequestId"
+    (selectedKeysChange)="selectedKeysChange($event)"
+    [(selectedKeys)]="selectedProcessClaims">
+    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand && !isSendReportOpened" [columnMenu]="false" [showSelectAll]="true"
+    [width]="40"  [locked]="true"></kendo-grid-checkbox-column>
+
+      <kendo-grid-column *ngIf="isSendReportOpened"  field="add" [width]="150" 
       [sticky]="true" [sortable]="false"  [columnMenu]="false" [headerStyle]="{'text-align': 'center'}" [style]="{'text-align': 'center'}">
         <ng-template kendoGridHeaderTemplate let-dataItem>
             <input style="zoom: 1.2;"   
@@ -50,7 +56,7 @@
                  [disabled]="dataItem.acceptsCombinedPaymentsFlag === 'N'"
                  (change)="selectionChange(dataItem,dataItem.selected)"/>
          </ng-template>
-      </kendo-grid-column>
+      </kendo-grid-column> 
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160"[sortable]="true"> 
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="clientName" kendoButton look="flat" class="card-link-button"
@@ -284,8 +290,9 @@
 </div>
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span class="" *ngIf="isSendReportOpened">{{sendReportCount}} payment(s) selected</span>
-  <span class="" *ngIf="!isSendReportOpened">0 premiums(s) to be remove</span>
+  <span class="" *ngIf="isSendReportOpened">{{ sendReportCount}} payment(s) selected</span>
+  <span class="" *ngIf="!isProcessGridExpand">{{ selectedProcessClaims.length}} payment(s) selected</span>
+  <span class="" *ngIf="isSendReportOpened && isProcessGridExpand">0 premiums(s) to be remove</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchPremiumsGridSelectedCancelClicked()"   *ngIf="isBatchPremiumsClicked || isRemoveBatchClosed || isSendReportOpened"> Cancel
   </button>
@@ -325,7 +332,9 @@
 </ng-template>
 <ng-template #batchPremiumsConfirmationDialogTemplate>
   <cms-financial-premiums-batch-premiums
-    (modalBatchPremiumsCloseClicked)="onModalBatchPremiumsModalClose($event)"></cms-financial-premiums-batch-premiums>
+    (modalBatchPremiumsCloseClicked)="onModalBatchPremiumsModalClose()" 
+     [selectedProcessClaimsCount] = "selectedProcessClaims.length"
+     (OnbatchClaimsClickedEvent)="OnbatchClaimsClicked()"></cms-financial-premiums-batch-premiums>
 </ng-template>
 <ng-template #removePremiumsConfirmationDialogTemplate>
   <cms-financial-premiums-remove-premiums
