@@ -304,7 +304,7 @@
                               <span class="ml-2">$&nbsp;{{0 | kendoNumber: 'n2'}}</span>
                         </ng-template>
                   </div>
-                  <div><span>{{ isBreakoutPanelShow ? reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.paymentToReconcileCount : 0}} payment(s)
+                  <div><span>{{ premiumReconcileCount }} payment(s)
                               to
                               reconcile</span>
                         <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="close">

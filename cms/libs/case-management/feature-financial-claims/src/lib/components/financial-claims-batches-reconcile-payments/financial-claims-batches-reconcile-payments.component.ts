@@ -92,7 +92,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     datePaymentSend: new FormControl('', []),
     note : new FormControl('', []),
   });
-
+  claimReconcileCount:any=0;
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
     private readonly cd: ChangeDetectorRef, public intl: IntlService, private configurationProvider: ConfigurationProvider) {
@@ -215,6 +215,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     else {
       this.reconcilePaymentGridUpdatedResult.push(dataItem);
     }
+    this.claimReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null).length;
   }
 
   assignPaymentReconciledDateToPagedList() {
