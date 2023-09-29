@@ -33,8 +33,9 @@ export class ApprovalPageComponent  {
   approvalsGeneralLists$ = this.approvalFacade.approvalsGeneralList$; 
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.pendingApprovalPaymentFacade.pendingApprovalCount$;
-  approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$
-  approvalsPaymentsMainLists$ = this.pendingApprovalPaymentFacade.pendingApprovalMainList$
+  approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
+  approvalsPaymentsMainLists$ = this.pendingApprovalPaymentFacade.pendingApprovalMainList$;
+  pendingApprovalSubmittedSummary$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmittedSummary$;
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,     
               private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService,
@@ -66,4 +67,8 @@ export class ApprovalPageComponent  {
     this.pendingApprovalPaymentFacade.getPendingApprovalPaymentMainList(gridDataValue , gridDataValue.selectedPaymentType)
   }
   
+  loadSubmittedSummary(events:any): void {
+    debugger;
+    this.pendingApprovalPaymentFacade.loadSubmittedSummary(events);
+  }
 }

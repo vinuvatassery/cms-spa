@@ -9,11 +9,13 @@ export class PendingApprovalPaymentFacade {
   private pendingApprovalCountSubject = new Subject<any>();
   private pendingApprovalGridSubject = new Subject<any>();
   private pendingApprovalMainListSubject = new Subject<any>();
+  private pendingApprovalSubmittedSummarySubject = new Subject<any>();
 
   /** Public properties **/
   pendingApprovalCount$ = this.pendingApprovalCountSubject.asObservable();
   pendingApprovalGrid$ = this.pendingApprovalGridSubject.asObservable();
   pendingApprovalMainList$ = this.pendingApprovalMainListSubject.asObservable();
+  pendingApprovalSubmittedSummary$ = this.pendingApprovalSubmittedSummarySubject.asObservable();
   constructor(
     private readonly PendingApprovalPaymentService: PendingApprovalPaymentService,
     private readonly loggingService : LoggingService,
@@ -85,6 +87,19 @@ export class PendingApprovalPaymentFacade {
             total: dataResponse["totalCount"]
           };
             this.pendingApprovalMainListSubject.next(gridView);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        },
+      }
+    );
+  }
+
+  loadSubmittedSummary(paymentRequestBatchIds: string[]) {
+    this.PendingApprovalPaymentService.loadSubmittedSummary(paymentRequestBatchIds).subscribe(
+      {
+        next: (paymentsSummaryResponseDto: any) => {
+            this.pendingApprovalSubmittedSummarySubject.next(paymentsSummaryResponseDto);
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
