@@ -156,7 +156,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   public checkboxOnly = true;
   public mode: SelectableMode = 'multiple';
   public drag = false;
-
   
   /** Constructor **/
   constructor(
@@ -172,8 +171,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
       drag: this.drag,
     };
   }
-
-
 
   ngOnChanges(): void {
     this.state = {
