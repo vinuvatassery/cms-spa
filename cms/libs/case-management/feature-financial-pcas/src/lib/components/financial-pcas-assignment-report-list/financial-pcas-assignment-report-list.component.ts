@@ -400,10 +400,12 @@ export class FinancialPcasAssignmentReportListComponent
     this.loadFinancialPcaSubReportListEvent.emit(data);
   }
 
-  editAssignmentReport(objectId: any, groupsCoveredIdsList: any) {
+  editAssignmentReport(objectId: any, groupsCoveredId: any) {
+   let selectedGroupCodeIds : string[] = [];
+    selectedGroupCodeIds.push(groupsCoveredId)
     const data = {
       objectId: objectId,
-      groupsCoveredIdsList: groupsCoveredIdsList,
+      groupsCoveredIdsList: selectedGroupCodeIds,
     };
     this.editButtonClick.emit(data);
   }
