@@ -215,7 +215,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     else {
       this.reconcilePaymentGridUpdatedResult.push(dataItem);
     }
-    this.claimReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null).length;
+    this.claimReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== '').length;
   }
 
   assignPaymentReconciledDateToPagedList() {

@@ -212,7 +212,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     else {
       this.reconcilePaymentGridUpdatedResult.push(dataItem);
     }
-    this.premiumReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null).length;
+    this.premiumReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== '').length;
   }
 
   assignPaymentReconciledDateToPagedList() {

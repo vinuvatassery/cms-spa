@@ -327,7 +327,7 @@
             <div class="text-right flex-gap">     
 
                   <button kendoButton [primary]="true" look="outline" class="" (click)="navToReconcilePayments()" aria-label="Cancel"> Close </button>
-                  <button kendoButton [primary]="true" aria-label="Receipting Log" class="" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
+                  <button kendoButton [primary]="true" [disabled]="claimReconcileCount == 0" aria-label="Receipting Log" class="" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
             </div>
       </div>
 </div>
