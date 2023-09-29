@@ -87,7 +87,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   pageValidationMessage:any=null;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   providerTitle:any = 'Medical Provider';
-
+  premiumReconcileCount:any =0;
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, 
     private readonly cd: ChangeDetectorRef, private configurationProvider: ConfigurationProvider, public intl: IntlService) {}
@@ -212,6 +212,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     else {
       this.reconcilePaymentGridUpdatedResult.push(dataItem);
     }
+    this.premiumReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== '').length;
   }
 
   assignPaymentReconciledDateToPagedList() {
