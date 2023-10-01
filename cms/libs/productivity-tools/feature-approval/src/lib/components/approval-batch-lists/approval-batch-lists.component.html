@@ -40,7 +40,11 @@
         title ="{{item.sendBackNotes}}" [disabled]="item.sendBackButtonDisabled"
         >
      
-      </kendo-textarea>  
+      </kendo-textarea>
+      <kendo-textarea-suffix class="justify-content-end">
+        <span class="counter">{{ item.tAreaCessationCounter }}</span>
+      </kendo-textarea-suffix>
+      <kendo-formerror *ngIf="item.sendBackNotesInValid">{{item.sendBackNotesInValidMsg}}</kendo-formerror>  
     </kendo-floatinglabel> 
 
 <div class="app-c-table mt-2" (click)="$event.stopPropagation();">
