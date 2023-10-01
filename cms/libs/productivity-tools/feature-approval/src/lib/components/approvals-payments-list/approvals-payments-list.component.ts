@@ -40,9 +40,11 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   @Input() sort: any;
   @Input() approvalsPaymentsLists$: any;
   @Input() approvalsPaymentsMainLists$: any;
+  @Input() pendingApprovalSubmittedSummary$: any;
   @Input() batchDetailPaymentsList$: any;
   @Output() loadApprovalsPaymentsGridEvent = new EventEmitter<any>();
   @Output() loadApprovalsPaymentsMainListEvent = new EventEmitter<any>();
+  @Output() loadSubmittedSummaryEvent = new EventEmitter<any>();
   @Output() loadBatchDetailPaymentsGridEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
@@ -57,6 +59,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   approveStatus:string="APPROVE";
   sendbackStatus:string="SENDBACK";
+  hasPaymentPendingApproval:boolean=false;
   sendbackNotesRequireMessage:string = "Send Back Notes is required.";
   tAreaCessationMaxLength:any=100;
   approveBatchCount:any=0;
@@ -66,8 +69,16 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   approvalsPaymentsGridPagedResult:any =[];
   approvalsPaymentsGridUpdatedResult: any=[];
   selectedApprovalSendbackDataRows: any[] = [];
+  selectedBatchIds: any = [];
+  totalAmountSubmitted:any=0;
+  requestedCheck:any=0;
+  requestedACHPayments:any=0;
+  requestedDORHoldPayments:any=0;
   gridApprovalPaymentsMainListDataSubject = new Subject<any>();
   gridApprovalPaymentsMainList$ = this.gridApprovalPaymentsMainListDataSubject.asObservable();
+
+  approvalPaymentsSubmittedSummaryDataSubject = new Subject<any>();
+  approvalPaymentsSubmittedSummaryData$ = this.approvalPaymentsSubmittedSummaryDataSubject.asObservable();
   selectedPaymentType: any;
   batchDetailModalSourceList:any;
 
@@ -226,7 +237,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   onPaymentTypeCodeValueChange(paymentSubTypeCode: any){
     this.selectedPaymentType = paymentSubTypeCode;    
     this.loadApprovalPaymentsListGrid();
-    this.mainListDataHandle();   
+    this.mainListDataHandle();  
+    this.cd.detectChanges();   
   }
 
   onRowLevelApproveClicked(e: boolean,dataItem: any, control: any, rowIndex: any)
@@ -421,8 +433,10 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       this.pageValidationMessage = "validation errors are cleared";
       this.selectedApprovalSendbackDataRows = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus);
     }
+    this.selectedBatchIds = [];
     if (isValid.length <= 0 && this.selectedApprovalSendbackDataRows.length>0) {
-      this.isSubmitApprovalPaymentItems = true;
+      this.loadSubmittedSummaryData();   
+      this.isSubmitApprovalPaymentItems = true;     
     }
   }
 
@@ -518,19 +532,22 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       sortType: this.sortType,
     };
     let selectedPaymentType = this.selectedPaymentType;
-    gridDataRefinerValue.skipCount=0;
-    gridDataRefinerValue.pagesize=99999;
     this.loadApprovalsPaymentsMainListEvent.emit({gridDataRefinerValue, selectedPaymentType});
-
+    this.approvalsPaymentsGridUpdatedResult = [];
+    this.hasPaymentPendingApproval=false;
     this.approvalsPaymentsMainLists$.subscribe((response: any) => {
-      if (response.data.length > 0) {
+      if (response.data.length > 0) {       
         this.approvalsPaymentsGridUpdatedResult=response.data.map((item:any) => ({  
           ...item,           
           sendBackNotesInValidMsg: '', 
           sendBackNotesInValid : false,
           batchStatus : '',
           sendBackNotes : ''
-        }));
+          }));  
+          this.hasPaymentPendingApproval=response.data.length > 0;
+          this.cd.detectChanges(); 
+             
+        
         console.log('mainListDataHandle-approvalsPaymentsGridUpdatedResult',this.approvalsPaymentsGridUpdatedResult);
         this.batchDetailModalSourceList = this.approvalsPaymentsGridUpdatedResult;      
         this.gridApprovalPaymentsMainListDataSubject.next(this.approvalsPaymentsGridUpdatedResult);
@@ -548,7 +565,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
         } else {
           return this.sortListDescendingOrder(a[this.sortValue],b[this.sortValue]); 
         }
-      });      
+      });   
+      this.cd.detectChanges();    
     }
   }
 
@@ -563,5 +581,22 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     if(b < a){return -1;}
     else if (b > a){return 1;}
     else{return 0;}
+  }
+
+  loadSubmittedSummaryData()
+  {
+    this.selectedApprovalSendbackDataRows.filter((x: any) => x.batchStatus == this.approveStatus).forEach((currentPage: any, index: number) => {
+      this.selectedBatchIds.push(currentPage.paymentRequestBatchId);
+    });
+    this.loadSubmittedSummaryEvent.emit(this.selectedBatchIds);    
+    this.pendingApprovalSubmittedSummary$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+        this.requestedCheck = response?.checkCount;
+        this.requestedACHPayments=response?.achCount;
+        this.requestedDORHoldPayments = response?.dorHoldCount;
+        this.totalAmountSubmitted = response?.totalAmount; 
+        this.cd.detectChanges();
+      }
+    });        
   }
 }

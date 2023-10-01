@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Output , EventEmitter, Component } from '@angular/core'; 
+import { ChangeDetectionStrategy, Output , EventEmitter, Component, Input } from '@angular/core'; 
 
 @Component({
   selector: 'cms-financial-premiums-batch-premiums',
@@ -8,8 +8,14 @@ import { ChangeDetectionStrategy, Output , EventEmitter, Component } from '@angu
 export class FinancialPremiumsBatchPremiumsComponent {
   
   @Output() modalBatchPremiumsCloseClicked = new EventEmitter();
-
+  @Output() OnbatchClaimsClickedEvent = new EventEmitter();
+  @Input() selectedProcessClaimsCount:any 
+  
   closeBatchPremiumsClicked(){
     this.modalBatchPremiumsCloseClicked.emit(true);  
+  }
+
+  OnbatchClaimsClicked(){
+    this.OnbatchClaimsClickedEvent.emit();
   }
 }

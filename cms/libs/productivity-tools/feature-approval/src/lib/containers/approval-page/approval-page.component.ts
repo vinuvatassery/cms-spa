@@ -33,10 +33,11 @@ export class ApprovalPageComponent  {
   approvalsGeneralLists$ = this.approvalFacade.approvalsGeneralList$; 
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.pendingApprovalPaymentFacade.pendingApprovalCount$;
-  approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$
+  approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
+  approvalsPaymentsMainLists$ = this.pendingApprovalPaymentFacade.pendingApprovalMainList$;
+  pendingApprovalSubmittedSummary$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmittedSummary$;
   batchDetailPaymentsList$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
   batchDetailPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
-  approvalsPaymentsMainLists$ = this.pendingApprovalPaymentFacade.pendingApprovalMainList$
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,     
               private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService,
@@ -75,4 +76,8 @@ export class ApprovalPageComponent  {
     this.pendingApprovalPaymentFacade.getPendingApprovalBatchDetailPaymentsGrid(gridDataValue, gridDataValue.batchId)
   }
   
+  loadSubmittedSummary(events:any): void {
+    debugger;
+    this.pendingApprovalPaymentFacade.loadSubmittedSummary(events);
+  }
 }

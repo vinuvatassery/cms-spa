@@ -29,11 +29,13 @@
         <productivity-tools-approvals-payments-list
         [approvalsPaymentsLists$]="approvalsPaymentsLists$"
         [approvalsPaymentsMainLists$]="approvalsPaymentsMainLists$"
+        [pendingApprovalSubmittedSummary$]="pendingApprovalSubmittedSummary$"
         [batchDetailPaymentsList$]="batchDetailPaymentsList$"
         [pageSizes]="pageSizes" [sortValue]="sortValueApprovalPaymentsAPproval"
         [sortType]="sortType" [sort]="sortApprovalPaymentsList" 
         (loadApprovalsPaymentsGridEvent)="loadApprovalsPaymentsGrid($event)"
-        (loadApprovalsPaymentsMainListEvent)="loadApprovalsPaymentsMain($event)"
+        (loadApprovalsPaymentsMainListEvent)="loadApprovalsPaymentsMain($event)"        
+        (loadSubmittedSummaryEvent)="loadSubmittedSummary($event)"
           (loadBatchDetailPaymentsGridEvent)="loadBatchDetailPaymentsGrid($event)"
           class="reminder-list-modal-wrap"></productivity-tools-approvals-payments-list>
           </div>
