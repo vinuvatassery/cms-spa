@@ -9,8 +9,7 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { FinancialPremiumsDataService } from '../../infrastructure/financial-management/financial-premiums.data.service';
 import { Router } from '@angular/router';
 import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
-import { GridFilterParam } from '../../entities/grid-filter-param';
-import { InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
+import { InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
 import { BatchPremium } from '../../entities/financial-management/batch-premium';
 
 
@@ -135,6 +134,10 @@ export class FinancialPremiumsFacade {
 
   private recentPremiumLoaderSubject = new Subject<any>();
   recentPremiumLoader$ = this.recentPremiumLoaderSubject.asObservable();
+
+  private insurancePremiumSubject = new Subject<InsurancePremiumDetails>();
+  insurancePremium$ =this.insurancePremiumSubject.asObservable();
+
   /** Private properties **/
 
   /** Public properties **/
@@ -481,4 +484,34 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
         },
       });
     }
+
+    loadPremium(type: string, premiumId: string){      
+      this.financialPremiumsDataService.loadPremium(type, premiumId)
+      .subscribe({
+        next: (dataResponse) => {
+            this.insurancePremiumSubject.next(dataResponse);
+            this.loadInsurancePlansCoverageDates(dataResponse?.clientId);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+  
+    updatePremium(type: string, premiumId: string, premiums:any){
+      this.showLoader();
+      this.financialPremiumsDataService.updatePremium(type, premiumId, premiums)
+      .subscribe({
+        next: (response) => {
+          this.premiumActionResponseSubject.next(true);
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+	
 }

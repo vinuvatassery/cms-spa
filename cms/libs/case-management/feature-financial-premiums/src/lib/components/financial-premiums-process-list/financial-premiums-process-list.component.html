@@ -356,6 +356,12 @@
 </ng-template>
 <ng-template #editPremiumsDialogTemplate>
   <cms-financial-premiums-edit-detail-form [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="premiumsType"
+  [premiumId]= "premiumId"
+  [insurancePremium$]="insurancePremium$"
+  [insuranceCoverageDates$]="insuranceCoverageDates$"
+  (loadPremiumEvent)="loadPremium($event)"
+  [actionResponse$]="actionResponse$"
+  (updatePremiumEvent)="updatePremium($event)"
     (modalCloseEditPremiumsFormModal)="modalCloseEditPremiumsFormModal($event)"></cms-financial-premiums-edit-detail-form>
 </ng-template>
 
@@ -384,7 +390,3 @@
           Client Name
         </button>
 <br/><br/>
-<button aria-label="edit" kendoButton look="flat" class="card-link-button" [hidden]="true"
-          (click)="onEditPremiumsClick()">
-          Edit
-        </button>
