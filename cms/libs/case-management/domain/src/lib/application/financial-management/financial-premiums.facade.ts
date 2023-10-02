@@ -73,7 +73,7 @@ export class FinancialPremiumsFacade {
   private financialPremiumsProcessDataSubject = new Subject<any>();
   financialPremiumsProcessData$ = this.financialPremiumsProcessDataSubject.asObservable();
 
-  private financialPremiumsBatchDataLoaderSubject = new BehaviorSubject<any>(false);
+  private financialPremiumsBatchDataLoaderSubject = new Subject<boolean>();
   financialPremiumsBatchDataLoader$ = this.financialPremiumsBatchDataLoaderSubject.asObservable();
 
   private financialPremiumsBatchDataSubject =  new Subject<any>();

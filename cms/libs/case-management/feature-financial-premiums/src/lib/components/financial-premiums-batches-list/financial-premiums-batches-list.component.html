@@ -61,7 +61,7 @@
   <!-- Case List table -->
   <div class="app-c-table">
     <kendo-grid
-    [loading]="(financialPremiumsBatchGridLoader$ | async)??false"
+    [loading]="(financialPremiumsBatchGridLoader$ | async)??true"
     [pageSize]="state.take"
     [pageable]="true"
     [sortable]="true"
