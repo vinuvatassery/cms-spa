@@ -90,16 +90,16 @@ export class PendingApprovalPaymentFacade {
     );
   }
 
-  getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string) {
+  getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string, level: number) {
 
-    this.PendingApprovalPaymentService.getPendingApprovalPaymentMainList(gridSetupData ,serviceSubType).subscribe(
+    this.PendingApprovalPaymentService.getPendingApprovalPaymentMainList(gridSetupData ,serviceSubType, level).subscribe(
       {
         next: (dataResponse: any) => {
           const gridView = {
             data: dataResponse["items"],
             total: dataResponse["totalCount"]
           };
-            this.pendingApprovalMainListSubject.next(gridView);
+          this.pendingApprovalMainListSubject.next(gridView);
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  

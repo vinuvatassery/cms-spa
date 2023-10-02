@@ -81,7 +81,7 @@ export class ApprovalPageComponent implements OnInit {
     if(!gridDataValue.selectedPaymentType || gridDataValue.selectedPaymentType.length == 0){
       return;
     }
-    this.pendingApprovalPaymentFacade.getPendingApprovalPaymentMainList(gridDataValue , gridDataValue.selectedPaymentType)
+    this.pendingApprovalPaymentFacade.getPendingApprovalPaymentMainList(gridDataValue , gridDataValue.selectedPaymentType, this.userLevel)
   }
   
   loadSubmittedSummary(events:any): void {

@@ -23,14 +23,11 @@ export class PendingApprovalPaymentService {
       MaxResultCount: gridSetupData.maxResultCount,
       Filter: gridSetupData.filter,
     };
-    return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=` +
-        serviceSubType + "/level=" + level,
-        paymentApprovalGridSetupDto
-    );
+    let url = `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=${serviceSubType}/level=${level}`;
+    return this.http.post<any>(url, paymentApprovalGridSetupDto);
   }
 
-  getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string) {
+  getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string, level: number) {
     const paymentApprovalGridSetupDto = {
       SortType: gridSetupData.sortType,
       Sorting: gridSetupData.sort,
@@ -39,8 +36,7 @@ export class PendingApprovalPaymentService {
       Filter: gridSetupData.filter,
     };
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=` +
-        serviceSubType,
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=${serviceSubType}/level=${level}`,
         paymentApprovalGridSetupDto
     );
   }
