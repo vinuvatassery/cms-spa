@@ -106,7 +106,7 @@ export class PcaAssignmentsFacade {
 
   loadObjectCodes(){
     this.pcaAssignmentsDataService.loadObjectCodes().subscribe({
-      next: (dataResponse) => {
+      next: (dataResponse) => {        
         this.objectCodesDataSubject.next(dataResponse);
         this.hideLoader();
       },
