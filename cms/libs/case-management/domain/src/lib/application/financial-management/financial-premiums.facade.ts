@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
 import { GridFilterParam } from '../../entities/grid-filter-param';
 import { InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
+import { BatchPremium } from '../../entities/financial-management/batch-premium';
 
 
 @Injectable({ providedIn: 'root' })
@@ -105,6 +106,10 @@ export class FinancialPremiumsFacade {
 
   paymentBatchNameSubject  =  new Subject<any>();
   paymentBatchName$ = this.paymentBatchNameSubject.asObservable();
+
+  batchPremiumSubject  =  new Subject<any>();
+  batchPremium$ = this.batchPremiumSubject.asObservable();
+
 
   public clientsSortValue = 'clientFullName'
   public clientSort: SortDescriptor[] = [{
@@ -381,6 +386,28 @@ loadMedicalPremiumList(
       this.hideLoader();
     },
   });
+}
+
+batchPremium(batchPremiums: BatchPremium, claimsType: string) {
+  this.showLoader();
+  return this.financialPremiumsDataService
+    .batchClaims(batchPremiums, claimsType)
+    .subscribe({
+      next: (response:any) => {
+        this.batchPremiumSubject.next(response);
+        if (response.status) {
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            response.message
+          );
+        }
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
 }
 
     loadInsurancePlans(clientId: number){
