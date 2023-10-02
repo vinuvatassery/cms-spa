@@ -4,7 +4,7 @@ import {
   Component,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FinancialPremiumsFacade,GridFilterParam, InsurancePremium, PolicyPremiumCoverage } from '@cms/case-management/domain';
+import { FinancialPremiumsFacade,InsurancePremium, PolicyPremiumCoverage } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
@@ -47,6 +47,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
   actionResponse$ = this.financialPremiumsFacade.premiumActionResponse$;
   existingPremiums$ = this.financialPremiumsFacade.existingCoverageDates$;
   batchingPremium$ = this.financialPremiumsFacade.batchPremium$;
+  insurancePremium$ = this.financialPremiumsFacade.insurancePremium$;
   premiumType: any;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
@@ -115,5 +116,13 @@ export class FinancialPremiumsPageComponent implements OnInit {
 
   OnbatchClaimsClicked(event:any){
     this.financialPremiumsFacade.batchPremium(event, this.premiumType);
+  }
+
+  loadPremium(premiumId: string){
+    this.financialPremiumsFacade.loadPremium(this.premiumType, premiumId);
+  }
+
+  updatePremium(premium:any){
+    this.financialPremiumsFacade.updatePremium(this.premiumType, premium.premiumId, premium);
   }
 }

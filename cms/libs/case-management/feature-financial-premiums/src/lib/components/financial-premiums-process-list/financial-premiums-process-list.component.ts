@@ -11,7 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { ClientInsurancePlans, InsurancePremium, PolicyPremiumCoverage,FinancialPremiumsFacade } from '@cms/case-management/domain';
+import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage,FinancialPremiumsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
@@ -65,10 +65,13 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   @Input() insuranceCoverageDatesLoader$: any;
   @Input() actionResponse$: any;
   @Input() existingPremiums$!: Observable<PolicyPremiumCoverage[]>;
+  @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
   @Output() clientChangeEvent = new EventEmitter<any>();
   @Output() premiumsExistValidationEvent = new EventEmitter<{ clientId: number, premiums: PolicyPremiumCoverage[] }>();
   @Output() savePremiumsEvent = new EventEmitter<InsurancePremium[]>();
   @Output() loadFinancialPremiumsProcessListEvent = new EventEmitter<any>();
+  @Output() loadPremiumEvent = new EventEmitter<string>();
+  @Output() updatePremiumEvent = new EventEmitter<any>();
   @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
   public selectedProcessClaims: any[] = [];
   public state!: any;
@@ -114,6 +117,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   selectedSendReportList!: any;
   isSendReportClicked = false;
   isPageCountChanged: boolean = false;
+  premiumId!:string;
+
   public premiumsProcessMore = [
     {
       buttonType: 'btn-h-primary',
@@ -158,7 +163,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
       click: (data: any): void => {
         if (!this.isEditBatchClosed) {
           this.isEditBatchClosed = true;
-          this.onEditPremiumsClick();
+          this.onEditPremiumsClick(data?.insurancePremiumId);
         }
       },
     },
@@ -618,10 +623,11 @@ closeRecentPremiumsModal(result: any){
     this.closeRecentPremiumsModal(true);
   }
 
-  onEditPremiumsClick(){
+  onEditPremiumsClick(premiumId: string){
     this.vendorId="3F111CFD-906B-4F56-B7E2-7FCE5A563C36";
     this.clientId=5;
     this.clientName="Jason Biggs";
+    this.premiumId = premiumId
     this.onClickOpenEditPremiumsFromModal(this.editPremiumsDialogTemplate);
   }
 
@@ -642,5 +648,13 @@ closeRecentPremiumsModal(result: any){
       this.onBatchPremiumsGridSelectedCancelClicked()
     })
     this.OnbatchClaimsClickedEvent.emit(input)
+  }
+
+  loadPremium(premiumId: string){
+    this.loadPremiumEvent.emit(premiumId);
+  }
+
+  updatePremium(data: any){
+    this.updatePremiumEvent.emit(data);
   }
 }
