@@ -74,7 +74,7 @@ export class FinancialPcaDataService {
     const PcaAssignmentsSubReportPageAndSortedRequestDto =
     {
       ObjectId : data.objectId,
-      GroupIds : data.groupIds,
+      GroupId : data.groupId,
       pcaAssignmentId : data.pcaAssignmentId,
       amountAssigned : data.amountAssigned,
       amountRemaining : data.amountRemaining,
