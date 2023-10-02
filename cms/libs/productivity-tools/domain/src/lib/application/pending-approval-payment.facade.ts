@@ -8,6 +8,8 @@ export class PendingApprovalPaymentFacade {
   /** Private properties **/
   private pendingApprovalCountSubject = new Subject<any>();
   private pendingApprovalGridSubject = new Subject<any>();
+  private pendingApprovalMainListSubject = new Subject<any>();
+  private pendingApprovalSubmittedSummarySubject = new Subject<any>();
 
   /** Public properties **/
   pendingApprovalCount$ = this.pendingApprovalCountSubject.asObservable();
@@ -15,6 +17,8 @@ export class PendingApprovalPaymentFacade {
   approverCount = 0;
   sendBackCount = 0;
 
+  pendingApprovalMainList$ = this.pendingApprovalMainListSubject.asObservable();
+  pendingApprovalSubmittedSummary$ = this.pendingApprovalSubmittedSummarySubject.asObservable();
   constructor(
     private readonly PendingApprovalPaymentService: PendingApprovalPaymentService,
     private readonly loggingService : LoggingService,
@@ -86,4 +90,34 @@ export class PendingApprovalPaymentFacade {
     );
   }
 
+  getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string) {
+
+    this.PendingApprovalPaymentService.getPendingApprovalPaymentMainList(gridSetupData ,serviceSubType).subscribe(
+      {
+        next: (dataResponse: any) => {
+          const gridView = {
+            data: dataResponse["items"],
+            total: dataResponse["totalCount"]
+          };
+            this.pendingApprovalMainListSubject.next(gridView);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        },
+      }
+    );
+  }
+
+  loadSubmittedSummary(paymentRequestBatchIds: string[]) {
+    this.PendingApprovalPaymentService.loadSubmittedSummary(paymentRequestBatchIds).subscribe(
+      {
+        next: (paymentsSummaryResponseDto: any) => {
+            this.pendingApprovalSubmittedSummarySubject.next(paymentsSummaryResponseDto);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        },
+      }
+    );
+  }
 }
