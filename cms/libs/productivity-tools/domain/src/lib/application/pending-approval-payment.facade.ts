@@ -117,7 +117,7 @@ export class PendingApprovalPaymentFacade {
 
     this.PendingApprovalPaymentService.getPendingApprovalBatchDetailPaymentsGrid(gridSetupData, batchId).subscribe(
       {
-        next: (dataResponse: any) => {console.log(dataResponse);
+        next: (dataResponse: any) => {
           const gridView = {
             data: dataResponse["items"],
             total: dataResponse["totalCount"]

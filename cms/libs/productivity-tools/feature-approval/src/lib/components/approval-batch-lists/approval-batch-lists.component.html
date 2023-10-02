@@ -16,35 +16,34 @@
         <p><strong>Batch # {{item.batchName}} </strong> <label class="ml-1">${{item.totalAmountDue}}</label> <label class="ml-1"> {{item.totalPayments}} payment(s)</label></p>
       </div>
       <div class="mt-1">
-        <kendo-buttongroup selection="single" class="fill_width_group_btn">
-            <button kendoButton aria-label="proof of address yes" [toggleable]="true" (click)="onButtonClick(item)" [selected]="item.batchStatus == 'APPROVE'">Approve
+        <kendo-buttongroup class="fill_width_group_btn">
+            <button kendoButton id ="approveBatch{{index}}" [toggleable]="true" [selected]="item.batchStatus == 'APPROVE'" (selectedChange)="onApproveClicked($event,item,'sendBackNote',index)">Approve
         
             </button>
-            <button kendoButton aria-label="proof of address yes" [toggleable]="true" [selected]="item.batchStatus == 'SENDBACK'">Send Back
+            <button kendoButton id ="sendBackBatch{{index}}" [toggleable]="true" [selected]="item.batchStatus == 'SENDBACK'" (selectedChange)="onSendbackClicked($event,item,'sendBackNote',index)">Send Back
         
             </button>
         </kendo-buttongroup> 
     </div>
     <kendo-floatinglabel text="Send Back Notes">
-        <!-- <kendo-textbox aria-label="Send Back Notes" [fillMode]="formUiStyle.inputFillMode">
-        </kendo-textbox> -->
         <kendo-textarea
-        #tareaCessation
+        #tareaSendBackNotes
         [fillMode]="formUiStyle.inputFillMode"
-        [maxlength]="tAreaCessationMaxLength"
+        [maxlength]="tAreaSendBackNotesMaxLength"
         [rows]="2"                                          
         resizable ="none"
         [(ngModel)]="item.sendBackNotes"
         (valueChange)="sendBackNotesChange(item)"
-        aria-label="smoking cessation note"                                          
+        aria-label="Send Back Notes"                                          
         title ="{{item.sendBackNotes}}" [disabled]="item.sendBackButtonDisabled"
+        [ngClass]="ngDirtyInValid(item,'sendBackNote',index)"  id ="sendBackNote{{index}}"
         >
      
       </kendo-textarea>
-      <kendo-textarea-suffix class="justify-content-end">
+      <kendo-textarea-suffix class="justify-content-end"> 
         <span class="counter">{{ item.tAreaCessationCounter }}</span>
       </kendo-textarea-suffix>
-      <kendo-formerror *ngIf="item.sendBackNotesInValid">{{item.sendBackNotesInValidMsg}}</kendo-formerror>  
+      <!-- <kendo-formerror *ngIf="item.sendBackNotesInValid">{{item.sendBackNotesInValidMsg}}</kendo-formerror>  -->
     </kendo-floatinglabel> 
 
 <div class="app-c-table mt-2" (click)="$event.stopPropagation();">
@@ -228,12 +227,12 @@
   <kendo-dialog-actions>
     <div class="justify-content-between align-items-center">
       <div class="justify-content-end align-items-center">
-    <span class="mr-1">0 batch(es) to be approved, 0 batch(es) to be sent back</span>
+    <span class="mr-1">{{approveBatchCount}} batch(es) to be approved, {{sendbackBatchCount}} batch(es) to be sent back</span>
 
         <button kendoButton [primary]="true" look="outline" aria-label="cancel cers" (click)="closeViewPaymentsBatchClicked()">
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="send cers">Save</button>
+        <button kendoButton [primary]="true" aria-label="send cers" (click)="onBatchModalSaveClicked()">Save</button>
       </div>
     </div>
   </kendo-dialog-actions>

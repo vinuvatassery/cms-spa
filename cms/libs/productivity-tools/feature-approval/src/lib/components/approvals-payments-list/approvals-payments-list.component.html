@@ -190,8 +190,8 @@
 
 
     <productivity-tools-approval-batch-lists [approvalId] = "selectedApprovalId" [batchDetailPaymentsList$] = "batchDetailPaymentsList$" [batchDetailModalSourceList] = "batchDetailModalSourceList"
-    [pageSizes]="pageSizes" [sortType]="sortType" 
-    (closeViewPaymentsBatchClickedEvent)="onCloseViewPaymentsBatchClicked()" (loadBatchDetailPaymentsListEvent)="onLoadBatchDetailPaymentsList($event)"></productivity-tools-approval-batch-lists>
+    [pageSizes]="pageSizes" [sortType]="sortType" [selectedPaymentType]="selectedPaymentType" (closeViewPaymentsBatchClickedEvent)="onCloseViewPaymentsBatchClicked()" (loadBatchDetailPaymentsListEvent)="onLoadBatchDetailPaymentsList($event)" 
+    (batchModalSaveClickedEvent)="onBatchModalSaveClicked($event)"></productivity-tools-approval-batch-lists>
 </kendo-dialog>
 
 

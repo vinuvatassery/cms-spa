@@ -33,7 +33,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isApprovalPaymentsGridLoaderShow = false;
   selectedApprovalId?: string | null = null;
-  selectedBatch?:any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -103,9 +102,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.gridDataHandle();
     this.loadApprovalPaymentsListGrid();    
     this.lovFacade.getPandingApprovalPaymentTypeLov();
-    this.gridApprovalPaymentsMainList$.subscribe((response:any)=>{
-      console.log('ngOnInit-response',response);
-    });
   }
 
   ngOnChanges(): void {
@@ -125,11 +121,17 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   onOpenViewPaymentsBatchClicked(data?:any){
     this.isViewPaymentsBatchDialog = true;
     this.selectedApprovalId = data?.approvalId;
-    this.selectedBatch = data;
+    this.batchDetailModalSourceList = this.approvalsPaymentsGridUpdatedResult.map((item:any)=>({...item}));
   }
 
   onCloseViewPaymentsBatchClicked(){
     this.isViewPaymentsBatchDialog = false;
+  }
+
+  onBatchModalSaveClicked(data:any){
+    this.isViewPaymentsBatchDialog = false;
+    this.approvalsPaymentsGridUpdatedResult = data.map((item:any)=>({...item}));
+    this.loadApprovalPaymentsListGrid();
   }
 
   onLoadBatchDetailPaymentsList(data?:any){
@@ -367,6 +369,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   sendBackNotesChange(dataItem: any) {
     this.calculateCharacterCount(dataItem);
+    this.assignRowDataToMainList(dataItem);
   }   
 
   ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
@@ -506,6 +509,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
           this.approvalsPaymentsGridUpdatedResult[index].sendBackNotesInValid = dataItem?.sendBackNotesInValid;
           this.approvalsPaymentsGridUpdatedResult[index].tAreaCessationCounter = dataItem?.tAreaCessationCounter;          
           this.approvalsPaymentsGridUpdatedResult[index].batchStatus = dataItem?.batchStatus;
+          this.approvalsPaymentsGridUpdatedResult[index].sendBackNotes = dataItem?.sendBackNotes;
         }
       });
     }
@@ -545,11 +549,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
           sendBackNotes : ''
           }));  
           this.hasPaymentPendingApproval=response.data.length > 0;
-          this.cd.detectChanges(); 
-             
-        
-        console.log('mainListDataHandle-approvalsPaymentsGridUpdatedResult',this.approvalsPaymentsGridUpdatedResult);
-        this.batchDetailModalSourceList = this.approvalsPaymentsGridUpdatedResult;      
+          this.cd.detectChanges();
         this.gridApprovalPaymentsMainListDataSubject.next(this.approvalsPaymentsGridUpdatedResult);
       }
     });

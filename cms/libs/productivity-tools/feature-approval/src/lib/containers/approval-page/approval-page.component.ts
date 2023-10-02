@@ -69,7 +69,6 @@ export class ApprovalPageComponent  {
     this.pendingApprovalPaymentFacade.getPendingApprovalPaymentMainList(gridDataValue , gridDataValue.selectedPaymentType)
   }
   loadBatchDetailPaymentsGrid(gridDataValue : any): void {
-    console.log('10-loadBatchPaymentGrid',gridDataValue);
     if(!gridDataValue.batchId || gridDataValue.batchId.length == 0){
       return;
     }

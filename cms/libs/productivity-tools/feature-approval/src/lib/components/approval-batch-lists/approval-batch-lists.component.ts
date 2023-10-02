@@ -21,8 +21,10 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
   @Input() sort: any;
   @Input() batchDetailPaymentsList$: any;
   @Input() batchDetailModalSourceList:any;
+  @Input() selectedPaymentType:any;
   @Output() closeViewPaymentsBatchClickedEvent = new EventEmitter();
   @Output() loadBatchDetailPaymentsListEvent = new EventEmitter<any>();
+  @Output() batchModalSaveClickedEvent = new EventEmitter<any>();
   public state!: State;
   isBatchDetailPaymentsGridLoaderShow = false;
   sortColumn = 'paymentNbr';
@@ -37,18 +39,18 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
   gridDataResult!: GridDataResult;
   batchId?: string | null;
   index: number = 0;
-  tAreaCessationMaxLength:any = 100;
+  tAreaSendBackNotesMaxLength:any = 100;
+  approveBatchCount:any=0;
+  sendbackBatchCount:any=0;
+  approveStatus:string="APPROVE";
+  sendbackStatus:string="SENDBACK";
+  sendbackNotesRequireMessage:string = "Send Back Note is required.";
 
   gridBatchDetailPaymentsDataSubject = new Subject<any>();
   gridBatchDetailPaymentsData$ = this.gridBatchDetailPaymentsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
-  // sliderBatchDetailModalSourceData!: any[];
-
-  // sliderBatchDetailModalSourceDataSubject = new Subject<any>();
-  // sliderBatchDetailModalSourceData$ = this.sliderBatchDetailModalSourceDataSubject.asObservable();
 
   gridColumns: { [key: string]: string } = {
     paymentNbr: 'Item #',
@@ -83,10 +85,10 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
   constructor(private readonly cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    // this.batchDetailModalSourceList$.subscribe((response:any)=>{
-    //   console.log('ngOnInit-response',response);
-    // });
-    //this.sliderDataHandle();
+    this.tAreaVariablesInitiation(this.batchDetailModalSourceList);
+    this.getCurrentBatchId();
+    this.loadBatchPaymentListGrid();
+    this.approveAndSendbackCount();
   }
 
   ngOnChanges(): void {
@@ -95,7 +97,6 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-    this.getCurrentBatchId();
     this.loadBatchPaymentListGrid();
   }
 
@@ -113,14 +114,124 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
     this.loadBatchPaymentListGrid();
   }
 
-  onButtonClick(args:any){
-    console.log('onButtonClick',args);
+  sendBackNotesChange(item: any) {
+    this.calculateCharacterCount(item);
+    this.assignDataToSourceList(item, this.index);
+  }
+  
+  private tAreaVariablesInitiation(item: any) {
+      this.calculateCharacterCount(item);
   }
 
-  sendBackNotesChange(item: any) {
+  calculateCharacterCount(item: any) {
+    let tAreaSendBackNotesCharactersCount = item.sendBackNotes
+      ? item.sendBackNotes.length
+      : 0;
+      item.tAreaCessationCounter = `${tAreaSendBackNotesCharactersCount}/${this.tAreaSendBackNotesMaxLength}`;
+  }
+
+  ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
+    let inValid = false;    
     
-    console.log('item',item)//this.calculateCharacterCount(dataItem);
-  }  
+    if (control === 'sendBackNote') {
+      dataItem.sendBackNotesInValid = (dataItem.batchStatus == this.sendbackStatus && dataItem.sendBackNotes.length <= 0);
+      dataItem.sendBackNotesInValidMsg = (dataItem.batchStatus == this.sendbackStatus && dataItem.sendBackNotes.length <= 0) ? this.sendbackNotesRequireMessage : "";
+      inValid =  dataItem.sendBackNotesInValid;
+    }
+    if (inValid) {
+      document.getElementById(control + rowIndex)?.classList.remove('ng-valid');
+      document.getElementById(control + rowIndex)?.classList.add('ng-invalid');
+      document.getElementById(control + rowIndex)?.classList.add('ng-dirty');
+    }
+    else {
+      document.getElementById(control + rowIndex)?.classList.remove('ng-invalid');
+      document.getElementById(control + rowIndex)?.classList.remove('ng-dirty');
+      document.getElementById(control + rowIndex)?.classList.add('ng-valid');
+    }
+    return 'ng-dirty ng-invalid';
+  }
+
+  approveAndSendbackCount()
+  {
+      this.approveBatchCount=0;
+      this.sendbackBatchCount=0;
+      this.batchDetailModalSourceList.forEach((item: any, index: number) => {        
+      this.approveBatchCount = item.batchStatus == this.approveStatus ? this.approveBatchCount + 1 : this.approveBatchCount;
+      this.sendbackBatchCount = item.batchStatus == this.sendbackStatus ? this.sendbackBatchCount + 1 : this.sendbackBatchCount;
+    });
+  }
+
+  onApproveClicked(e: boolean,dataItem: any, control: any, rowIndex: any)
+  {
+    dataItem.approveButtonDisabled=false;
+    dataItem.sendBackButtonDisabled=true;
+    dataItem.sendBackNotes="";
+    if(dataItem.batchStatus === undefined || dataItem.batchStatus === '' || dataItem.batchStatus === null)
+    {
+      dataItem.batchStatus=this.approveStatus;
+    } 
+    else if(dataItem.batchStatus == this.approveStatus)   
+    {
+      dataItem.batchStatus="";
+      dataItem.sendBackNotesInValidMsg="";
+      dataItem.sendBackNotesInValid = false;
+      dataItem.sendBackButtonDisabled=true;
+    }
+    else if(dataItem.batchStatus == this.sendbackStatus) 
+    {
+      dataItem.batchStatus=this.approveStatus;
+      dataItem.sendBackNotesInValidMsg="";
+      dataItem.sendBackNotesInValid = false;  
+      dataItem.sendBackButtonDisabled=true;
+    }
+    this.sendBackNotesChange(dataItem);
+    this.assignDataToSourceList(dataItem, rowIndex);
+    this.ngDirtyInValid(dataItem,control,rowIndex);
+    this.approveAndSendbackCount();
+  }
+
+  onSendbackClicked(e: boolean,dataItem: any, control: any, rowIndex: any)
+  {
+    dataItem.approveButtonDisabled=true;
+    dataItem.sendBackButtonDisabled=false;
+    if(dataItem.batchStatus === undefined || dataItem.batchStatus === '' || dataItem.batchStatus === null)
+    {
+      dataItem.batchStatus=this.sendbackStatus;  
+      dataItem.sendBackNotesInValidMsg= this.sendbackNotesRequireMessage;
+      dataItem.sendBackNotesInValid = true;    
+    }   
+    else if(dataItem.batchStatus == this.sendbackStatus)   
+    {
+      dataItem.batchStatus="";
+      dataItem.sendBackNotesInValidMsg="";
+      dataItem.sendBackNotesInValid = false;
+      dataItem.sendBackButtonDisabled=true;
+    }
+    else
+    {
+      dataItem.batchStatus=this.sendbackStatus;
+      dataItem.sendBackNotesInValidMsg=this.sendbackNotesRequireMessage;
+      dataItem.sendBackNotesInValid = true;
+      dataItem.sendBackButtonDisabled=false;
+    } 
+   
+    this.sendBackNotesChange(dataItem);    
+    this.assignDataToSourceList(dataItem, rowIndex);
+    this.ngDirtyInValid(dataItem,control,rowIndex);
+    this.approveAndSendbackCount(); 
+  }
+
+  assignDataToSourceList(dataItem: any, index : any) {
+          this.batchDetailModalSourceList[index].sendBackNotesInValidMsg = dataItem?.sendBackNotesInValidMsg;
+          this.batchDetailModalSourceList[index].sendBackNotesInValid = dataItem?.sendBackNotesInValid;
+          this.batchDetailModalSourceList[index].tAreaCessationCounter = dataItem?.tAreaCessationCounter;          
+          this.batchDetailModalSourceList[index].batchStatus = dataItem?.batchStatus;
+          this.batchDetailModalSourceList[index].sendBackNotes = dataItem?.sendBackNotes;
+  }
+
+  onBatchModalSaveClicked(){
+    this.batchModalSaveClickedEvent.emit(this.batchDetailModalSourceList);
+  }
 
   closeViewPaymentsBatchClicked() {
     this.closeViewPaymentsBatchClickedEvent.emit(true);
@@ -150,7 +261,6 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
       filter: this.filter,
     };
     let batchId = this.batchId;
-    console.log('loadBatchPayment-batchDetailModalSourceList',this.batchDetailModalSourceList);
     this.loadBatchDetailPaymentsListEvent.emit({gridDataRefinerValue, batchId});
     this.gridDataHandle();
   }
@@ -169,14 +279,6 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
     });
     this.isBatchDetailPaymentsGridLoaderShow = false;
   }
-
-  // sliderDataHandle(){
-  //   this.batchDetailModalSourceList$.subscribe((data:any)=>{
-  //     console.log('sliderDataHandle-data',data);
-  //     this.sliderBatchDetailModalSourceData = data;
-  //     //this.sliderBatchDetailModalSourceDataSubject.next(data);
-  //   });
-  // }
 
   onChange(data: any) {
     this.defaultGridState();
