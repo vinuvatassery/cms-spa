@@ -147,12 +147,9 @@
 </div>
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-    <span  class="">{{approverCount}} batch(es) to be approved, {{sendBackCount}} batch(es) to be sent back</span>
-    <button (click)="onDepositDetailClicked(depositDetailsDialogModal)" kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Cancel </button>
-    <button kendoButton [primary]="true" look="flat" class="" aria-label="APPROVE ALL"
-        (click)="onOpenViewPaymentsBatchClicked()"> APPROVE ALL </button>
-    <button kendoButton [primary]="true" aria-label="Submit" class=""
-        (click)="onOpenSubmitApprovalPaymentItemsClicked()"> Submit </button>
+    <span  class="">{{approveBatchCount}} batch(es) to be approved, {{sendbackBatchCount}} batch(es) to be sent back</span>    
+    <button kendoButton [primary]="true" look="flat" class="" aria-label="APPROVE ALL" (click)="onApproveAllClicked()" [disabled]="!hasPaymentPendingApproval"> APPROVE ALL </button>
+    <button kendoButton [primary]="true" aria-label="Submit" class="" (click)="onOpenSubmitApprovalPaymentItemsClicked()" [disabled]="!hasPaymentPendingApproval"> Submit </button>
 </div>
 
 <kendo-dialog *ngIf="isSubmitApprovalPaymentItems" (close)="onCloseSubmitApprovalPaymentItemsClicked()"
