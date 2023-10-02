@@ -21,8 +21,12 @@ export class FinancialPremiumsPaymentDetailsFormComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle()
 
   @Input() paymentDetailsForm!: any;
+  @Input() vendorAddressId:any;
+  @Input() batchId:any ;
+  @Input() paymentPanelDetails:any;
   @Output() closePaymentDetailFormClickedEvent = new EventEmitter();
   @Output()  updatePaymentPanel  = new EventEmitter<any>();
+
 
   isValidateForm!: boolean;
   premiumPaymentForm!: FormGroup;
@@ -71,7 +75,6 @@ export class FinancialPremiumsPaymentDetailsFormComponent {
     if(this.paymentDetailsForm.notes !== undefined && this.paymentDetailsForm?.notes !== null){
       this.premiumPaymentForm.controls['note'].setValue(this.paymentDetailsForm.notes);
     }
-
 }
 dateValidate(event: Event, type: any) {
   const todayDate = new Date();
@@ -183,7 +186,6 @@ buildPremiumPaymentForm(){
     paymentAmount: [null],
     warrantNumber: [null],      
     note: [null],
-
   });
   
 }

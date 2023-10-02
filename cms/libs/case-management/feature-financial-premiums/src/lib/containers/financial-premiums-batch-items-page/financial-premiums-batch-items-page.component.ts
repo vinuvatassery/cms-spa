@@ -1,10 +1,11 @@
 import {  ChangeDetectionStrategy,  ChangeDetectorRef,  Component, OnInit, } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import {FinancialPremiumsFacade, FinancialVendorFacade, GridFilterParam, PaymentsFacade } from '@cms/case-management/domain'; 
+import {ContactFacade, FinancialPremiumsFacade, FinancialVendorFacade, GridFilterParam, PaymentPanel, PaymentsFacade } from '@cms/case-management/domain'; 
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs';
-import { LoggingService } from '@cms/shared/util-core';
+import { LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-financial-premiums-batch-items-page',
@@ -22,11 +23,17 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
    sort = this.financialPremiumsFacade.sortBatchItemList;
    state!: State;
    batchItemsGridLists$ = this.financialPremiumsFacade.batchItemsData$;
+   batchItemsLoader$ =  this.financialPremiumsFacade.batchItemsLoader$;
    paymentDetails$ =  this.paymentFacade.paymentDetails$;
-   paymentData$ = this.paymentFacade.paymentPanelData$;
+   paymentPanelData$ = this.paymentFacade.paymentPanelData$;
    premiumType: any;
    vendorAddressId:any;
    batchId:any;
+   vendorProfile$ = this.financialVendorFacade.providePanelSubject$
+  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
+  ddlStates$ = this.contactFacade.ddlStates$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  
    constructor(
      private readonly financialPremiumsFacade: FinancialPremiumsFacade,
      private readonly router: Router,   
@@ -34,7 +41,10 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
      private loggingService: LoggingService,
      private paymentFacade: PaymentsFacade,
      private readonly route: ActivatedRoute,
-     private readonly financialVendorFacade: FinancialVendorFacade
+     private readonly financialVendorFacade: FinancialVendorFacade,
+     public contactFacade: ContactFacade,
+    public lovFacade: LovFacade,
+    
    ) {}
 
    ngOnInit(): void {
@@ -59,14 +69,35 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
        });
    }
 
+   private getQueryParams() {
+    this.vendorAddressId = this.route.snapshot.queryParams['eid'];
+    this.batchId = this.route.snapshot.queryParams['bid'];
+  }
+
   loadBatchItemListGrid(event: any) { 
     const itemId = this.route.snapshot.queryParams['pid'];
     const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
-    this.financialPremiumsFacade.loadBatchItemsListGrid();
+    this.financialPremiumsFacade.loadBatchItemsListGrid(this.batchId, itemId, params);
   }
 
   loadPaymentPanel(event:any=null){
     this.paymentFacade.loadPaymentPanel(this.vendorAddressId,this.batchId);    
+  }
+
+  updatePaymentPanel(paymentPanel:PaymentPanel){
+    this.paymentFacade.showLoader();
+    this.paymentFacade.updatePaymentPanel(this.vendorAddressId,this.batchId, paymentPanel).subscribe({
+        next: (response: any) => {        
+          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+          this.paymentFacade.hideLoader();  
+          this.loadPaymentPanel();    
+          
+        },
+        error: (err) => {       
+          this.paymentFacade.hideLoader();
+          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        }
+      });
   }
 
   loadPaymentDetails(){
@@ -82,8 +113,9 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
     this.financialVendorFacade.updateProviderPanel(event)
   }
 
-  private getQueryParams() {
-    this.vendorAddressId = this.route.snapshot.queryParams['eid'];
-    this.batchId = this.route.snapshot.queryParams['bid'];
+  OnEditProviderProfileClick(){
+    this.contactFacade.loadDdlStates()
+    this.lovFacade.getPaymentMethodLov()
   }
+
 }

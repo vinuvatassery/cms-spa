@@ -1,9 +1,21 @@
 <cms-financial-premiums-batch-list-detail-items [premiumsType]="premiumType" 
 [batchItemsGridLists$]="batchItemsGridLists$"
-[paymentData$]="paymentData$"
+[itemsListGridLoader$]="batchItemsLoader$"
+[paymentPanelData$]="paymentPanelData$"
 [paymentDetails$]="paymentDetails$"
 [vendorAddressId]="vendorAddressId"
 [batchId]="batchId"
 [pageSizes]="pageSizes" [sortValue]="sortValue"
 [sortType]="sortType" [sort]="sort" 
-(loadBatchItemsListEvent)="loadBatchItemListGrid($event)"></cms-financial-premiums-batch-list-detail-items>
+(loadBatchItemsListEvent)="loadBatchItemListGrid($event)"
+(loadPaymentPanel)="loadPaymentPanel($event)"
+(updatePaymentPanel)="updatePaymentPanel($event)"
+(getProviderPanelEvent)="getProviderPanel($event)"
+[vendorProfile$]="vendorProfile$"
+(updateProviderProfileEvent) ="updateProviderProfile($event)"
+[updateProviderPanelSubject$]="updateProviderPanelSubject$"
+[ddlStates$]="ddlStates$"
+(onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+[paymentMethodCode$]=" paymentMethodCode$">
+</cms-financial-premiums-batch-list-detail-items>
+

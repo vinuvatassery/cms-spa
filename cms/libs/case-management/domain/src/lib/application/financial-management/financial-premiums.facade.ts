@@ -10,6 +10,7 @@ import { FinancialPremiumsDataService } from '../../infrastructure/financial-man
 import { Router } from '@angular/router';
 import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
 import { InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 
 @Injectable({ providedIn: 'root' })
@@ -84,6 +85,9 @@ export class FinancialPremiumsFacade {
 
   private batchItemsDataSubject =  new Subject<any>();
   batchItemsData$ = this.batchItemsDataSubject.asObservable();
+
+  private batchItemsLoaderSubject =  new BehaviorSubject<any>(false);
+  batchItemsLoader$ = this.batchItemsLoaderSubject.asObservable();
 
   private premiumsListDataSubject =  new Subject<any>();
   premiumsListData$ = this.premiumsListDataSubject.asObservable();
@@ -224,7 +228,7 @@ export class FinancialPremiumsFacade {
     });  
   }
 
-  loadPremiumServicesByPayment(premiumType : string ,paymentId : string,paginationParameters : any) {  
+  loadPremiumServicesByPayment(premiumType : string ,paymentId : string, paginationParameters : any) {  
     this.financialPremiumsDataService.loadPremiumServicesByPayment(premiumType ,paymentId ,paginationParameters )
     .subscribe({
       next: (dataResponse : any) => {
@@ -242,15 +246,16 @@ export class FinancialPremiumsFacade {
     });  
   }
 
-  loadBatchItemsListGrid(){
-    this.financialPremiumsDataService.loadBatchItemsListService().subscribe({
+  loadBatchItemsListGrid(batchId: any, paymentId: any, params: GridFilterParam){
+    this.batchItemsLoaderSubject.next(true);
+    this.financialPremiumsDataService.loadBatchItemsListService(batchId, paymentId, params).subscribe({
       next: (dataResponse) => {
         this.batchItemsDataSubject.next(dataResponse);
-        this.hideLoader();
+        this.batchItemsLoaderSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.batchItemsLoaderSubject.next(false);
       },
     });  
   }
