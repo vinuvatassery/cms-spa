@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { PendingApprovalPaymentService } from '../infrastructure/pending-approval-payment.data.service';
 import { Subject } from 'rxjs';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ApprovalUserStatusCode } from '../enums/approval-user-status-code.enum';
 
 @Injectable({ providedIn: 'root' })
 export class PendingApprovalPaymentFacade {
@@ -68,19 +69,19 @@ export class PendingApprovalPaymentFacade {
       {
         next: (dataResponse: any) => {
           dataResponse.items.forEach((element:any) => {
-            if(element.approvalUserStatusCode === 'APPROVED'){
+            if(element.approvalUserStatusCode === ApprovalUserStatusCode.APPROVED){
               this.approverCount++;
-            }else if(element.approvalUserStatusCode === 'SEND_BACK'){
+            }else if(element.approvalUserStatusCode === ApprovalUserStatusCode.DENIED){
               this.sendBackCount++;
             }
           });
-          const gridView = {
+          const gridViewData = {
             data: dataResponse["items"],
             total: dataResponse["totalCount"],
             approverCount: this.approverCount,
             sendBackCount:this.sendBackCount,
           };
-            this.pendingApprovalGridSubject.next(gridView);
+            this.pendingApprovalGridSubject.next(gridViewData);
             this.approverCount = this.sendBackCount = 0
         },
         error: (err) => {
