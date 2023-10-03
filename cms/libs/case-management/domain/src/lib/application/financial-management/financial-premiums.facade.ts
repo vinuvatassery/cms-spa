@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
 import { InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
 import { BatchPremium } from '../../entities/financial-management/batch-premium';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 
 @Injectable({ providedIn: 'root' })
@@ -225,7 +226,7 @@ export class FinancialPremiumsFacade {
 
   loadFinancialPremiumsAllPaymentsListGrid(params: GridFilterParam, claimsType: string){
       this.financialPremiumPaymentLoaderSubject.next(true);
-      this.financialPremiumsDataService.loadFinancialPremiumsAllPaymentsServiceWithApi(params, claimsType).subscribe({
+      this.financialPremiumsDataService.loadFinancialPremiumsAllPaymentsListService(params, claimsType).subscribe({
         next: (dataResponse) => {
           const gridView = {
             data: dataResponse["items"],
@@ -507,7 +508,7 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
       });
     }
 
-    loadPremium(type: string, premiumId: string){      
+    loadPremium(type: string, premiumId: string){
       this.financialPremiumsDataService.loadPremium(type, premiumId)
       .subscribe({
         next: (dataResponse) => {
@@ -519,7 +520,7 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
         },
       })
     }
-  
+
     updatePremium(type: string, premiumId: string, premiums:any){
       this.showLoader();
       this.financialPremiumsDataService.updatePremium(type, premiumId, premiums)
@@ -535,5 +536,5 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
         },
       })
     }
-	
+
 }

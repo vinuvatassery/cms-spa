@@ -3,9 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 /** External libraries **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
 import { BatchPremium } from '../../entities/financial-management/batch-premium';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsDataService {
@@ -48,107 +49,16 @@ export class FinancialPremiumsDataService {
     ]);
   }
 
-  loadFinancialPremiumsAllPaymentsServiceWithApi(parms: GridFilterParam, claimsType: string) {
+  loadFinancialPremiumsAllPaymentsListService(parms: GridFilterParam, claimsType: string) {
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${claimsType}/all-payments`, parms
     );
   }
 
-
-
   loadFinancialPremiumsBatchListService(params: GridFilterParam, claimsType : string ) {
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${claimsType}/batches`, params
     );
-  }
-
-  loadFinancialPremiumsAllPaymentsListService( ) {
-    return of([
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA',
-        clientName:'FName LName',
-        primaryInsurance:'FName LName',
-        memberID:'FName LName',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        originalWarranty:'XXXXXX',
-        originalAmount:'XXXXXX',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'XX-XX-XXXX',
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA',
-        clientName:'FName LName',
-        primaryInsurance:'FName LName',
-        memberID:'FName LName',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        originalWarranty:'XXXXXX',
-        originalAmount:'XXXXXX',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'XX-XX-XXXX',
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA',
-        clientName:'FName LName',
-        primaryInsurance:'FName LName',
-        memberID:'FName LName',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        originalWarranty:'XXXXXX',
-        originalAmount:'XXXXXX',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'XX-XX-XXXX',
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA',
-        clientName:'FName LName',
-        primaryInsurance:'FName LName',
-        memberID:'FName LName',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        originalWarranty:'XXXXXX',
-        originalAmount:'XXXXXX',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'XX-XX-XXXX',
-        by: 'by',
-      },
-    ]);
   }
 
   loadBatchName(batchId: string){
