@@ -181,7 +181,7 @@ public rowCallback(context: RowClassArgs) {
       dragging: context.dataItem.dragging
   };
 }
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.loadObjectCodesEvent.emit()
     this.loadGroupCodesEvent.emit()
 

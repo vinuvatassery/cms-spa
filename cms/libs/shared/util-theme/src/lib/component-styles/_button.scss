@@ -548,4 +548,22 @@
     background-color: rgba($app-primary, 0.54);
   }
 } 
+
+.cms-button-group{
+  display:flex;
+  .k-toggle-button{
+    text-transform: unset;
+    &.k-selected {
+      color: $white;
+      background: $app-primary;
+      opacity: 1;
+      &::before {
+        opacity: 0;
+      }
+      &.select-error{
+        background: material-color($hive-error-palette, 800) !important;
+      }
+    }
+  }
+}
  

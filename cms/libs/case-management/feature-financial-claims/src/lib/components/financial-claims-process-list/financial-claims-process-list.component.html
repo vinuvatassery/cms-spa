@@ -61,8 +61,10 @@
     [(selectedKeys)]="selectedProcessClaims">
 
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [headerClass]="{ 'text-center': true }"
-      [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true" [width]="40"
+      [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true" 
+      [width]="40"
       [locked]="true"></kendo-grid-checkbox-column>
+      
     <kendo-grid-column field="invoiceNbr"  title="Invoice ID" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -164,7 +166,11 @@
           [extra]="false" operator="eq">
           <kendo-filter-eq-operator></kendo-filter-eq-operator>
         </kendo-grid-numeric-filter-menu>
-      </ng-template> </kendo-grid-column>
+      </ng-template> 
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span class="tableamountview"> {{dataItem.amountDue | kendoNumber : "c"}}</span>
+  </ng-template> 
+    </kendo-grid-column>
 
       <kendo-grid-column field="annualTotal" title="Client Annual Total" [width]="120">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -172,7 +178,11 @@
             [extra]="false" operator="eq">
             <kendo-filter-eq-operator></kendo-filter-eq-operator>
           </kendo-grid-numeric-filter-menu>
-        </ng-template> </kendo-grid-column>
+        </ng-template>
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span class="tableamountview"> {{dataItem.annualTotal | kendoNumber : "c"}}</span>
+       </ng-template> 
+      </kendo-grid-column>
 
         <kendo-grid-column field="balanceAmount" title="Client Balance" [width]="120">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -180,7 +190,11 @@
               [extra]="false" operator="eq">
               <kendo-filter-eq-operator></kendo-filter-eq-operator>
             </kendo-grid-numeric-filter-menu>
-          </ng-template> </kendo-grid-column>
+          </ng-template> 
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="tableamountview"> {{dataItem.balanceAmount | kendoNumber : "c"}}</span>
+         </ng-template> 
+        </kendo-grid-column>
 
     <kendo-grid-column field="paymentStatusCode" title="Payment Status" [width]="160"> 
        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
