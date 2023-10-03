@@ -9,6 +9,9 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { FinancialPremiumsDataService } from '../../infrastructure/financial-management/financial-premiums.data.service';
 import { Router } from '@angular/router';
 import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
+import { GridFilterParam } from '../../entities/grid-filter-param';
+import { InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
+import { BatchPremium } from '../../entities/financial-management/batch-premium';
 
 
 @Injectable({ providedIn: 'root' })
@@ -19,17 +22,17 @@ export class FinancialPremiumsFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueFinancialPremiumsProcess = 'invoiceID';
+  public sortValueFinancialPremiumsProcess = 'clientFullName';
   public sortProcessList: SortDescriptor[] = [{
     field: this.sortValueFinancialPremiumsProcess,
   }];
 
-  public sortValueFinancialPremiumsBatch = 'batch';
+  public sortValueFinancialPremiumsBatch = 'batchName';
   public sortBatchList: SortDescriptor[] = [{
     field: this.sortValueFinancialPremiumsBatch,
   }];
 
-  public sortValueFinancialPremiumsPayments = 'batch';
+  public sortValueFinancialPremiumsPayments = 'itemNumber';
   public sortPaymentsList: SortDescriptor[] = [{
     field: this.sortValueFinancialPremiumsPayments,
   }];
@@ -63,11 +66,19 @@ export class FinancialPremiumsFacade {
     },
   ];
 
+  public sortValueRecentPremiumList = 'creationTime';
+  public sortRecentPremiumList: SortDescriptor[] = [{
+    field: this.sortValueRecentPremiumList,
+  }];
+
   private financialPremiumPaymentLoaderSubject = new Subject<boolean>();
   financialPremiumPaymentLoader$ = this.financialPremiumPaymentLoaderSubject.asObservable();
 
   private financialPremiumsProcessDataSubject = new Subject<any>();
   financialPremiumsProcessData$ = this.financialPremiumsProcessDataSubject.asObservable();
+
+  private financialPremiumsBatchDataLoaderSubject = new Subject<boolean>();
+  financialPremiumsBatchDataLoader$ = this.financialPremiumsBatchDataLoaderSubject.asObservable();
 
   private financialPremiumsBatchDataSubject =  new Subject<any>();
   financialPremiumsBatchData$ = this.financialPremiumsBatchDataSubject.asObservable();
@@ -77,6 +88,9 @@ export class FinancialPremiumsFacade {
 
   private batchLogDataSubject =  new Subject<any>();
   batchLogData$ = this.batchLogDataSubject.asObservable();
+
+  private batchLogServicesDataSubject =  new Subject<any>();
+  batchLogServicesData$ = this.batchLogServicesDataSubject.asObservable();
 
   private batchReconcileDataSubject =  new Subject<any>();
   reconcileDataList$ = this.batchReconcileDataSubject.asObservable();
@@ -96,6 +110,37 @@ export class FinancialPremiumsFacade {
   paymentBatchNameSubject  =  new Subject<any>();
   paymentBatchName$ = this.paymentBatchNameSubject.asObservable();
 
+  batchPremiumSubject  =  new Subject<any>();
+  batchPremium$ = this.batchPremiumSubject.asObservable();
+
+
+  public clientsSortValue = 'clientFullName'
+  public clientSort: SortDescriptor[] = [{
+    field: this.clientsSortValue,
+  }];
+  private insurancePlansSubject = new Subject<any>();
+  insurancePlans$ =this.insurancePlansSubject.asObservable();
+
+  private insurancePlansLoaderSubject = new BehaviorSubject<any>(false);
+  insurancePlansLoader$ =this.insurancePlansLoaderSubject.asObservable();
+
+  private insuranceCoverageDatesSubject = new Subject<any>();
+  insuranceCoverageDates$ =this.insuranceCoverageDatesSubject.asObservable();
+
+  private insuranceCoverageDatesLoaderSubject = new BehaviorSubject<any>(false);
+  insuranceCoverageDatesLoader$ =this.insuranceCoverageDatesSubject.asObservable();
+
+  private premiumActionResponseSubject = new Subject<any>();
+  premiumActionResponse$ =this.premiumActionResponseSubject.asObservable();
+
+  private existingCoverageDatesSubject = new Subject<any>();
+  existingCoverageDates$ =this.existingCoverageDatesSubject.asObservable();
+
+  private recentPremiumListDataSubject =  new Subject<any>();
+  recentPremiumGridLists$ = this.recentPremiumListDataSubject.asObservable();
+
+  private recentPremiumLoaderSubject = new Subject<any>();
+  recentPremiumLoader$ = this.recentPremiumLoaderSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -149,29 +194,35 @@ export class FinancialPremiumsFacade {
     });
   }
 
-  loadFinancialPremiumsBatchListGrid(){
-    this.financialPremiumsDataService.loadFinancialPremiumsBatchListService().subscribe({
-      next: (dataResponse) => {
-        this.financialPremiumsBatchDataSubject.next(dataResponse);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader();
-      },
-    });
-  }
+
+  loadFinancialPremiumsBatchListGrid(parms: GridFilterParam, claimsType: string
+    ) {
+      this.financialPremiumsBatchDataLoaderSubject.next(true);
+      this.financialPremiumsDataService
+        .loadFinancialPremiumsBatchListService(
+          parms,
+          claimsType
+        )
+        .subscribe({
+          next: (dataResponse) => {
+            const gridView = {
+              data: dataResponse['items'],
+              total: dataResponse['totalCount'],
+            };
+            this.financialPremiumsBatchDataSubject.next(gridView);
+            this.financialPremiumsBatchDataLoaderSubject.next(false);
+          },
+          error: (err) => {
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+            this.financialPremiumsBatchDataLoaderSubject.next(false);
+          },
+        });
+    }
 
 
-  loadFinancialPremiumsAllPaymentsListGrid(skipcount: number,
-    maxResultCount: number,
-    sort: string,
-    sortType: string,
-    filter: string){
-
-      filter = JSON.stringify(filter);
+  loadFinancialPremiumsAllPaymentsListGrid(params: GridFilterParam, claimsType: string){
       this.financialPremiumPaymentLoaderSubject.next(true);
-      this.financialPremiumsDataService.loadFinancialPremiumsAllPaymentsServiceWithApi(skipcount, maxResultCount, sort, sortType, filter).subscribe({
+      this.financialPremiumsDataService.loadFinancialPremiumsAllPaymentsServiceWithApi(params, claimsType).subscribe({
         next: (dataResponse) => {
           const gridView = {
             data: dataResponse["items"],
@@ -206,6 +257,24 @@ export class FinancialPremiumsFacade {
           total: dataResponse['totalCount'],
         };
         this.batchLogDataSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+      },
+    });
+  }
+
+  loadPremiumServicesByPayment(premiumType : string ,paymentId : string,paginationParameters : any) {
+    this.financialPremiumsDataService.loadPremiumServicesByPayment(premiumType ,paymentId ,paginationParameters )
+    .subscribe({
+      next: (dataResponse : any) => {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.batchLogServicesDataSubject.next(gridView);
         this.hideLoader();
       },
       error: (err) => {
@@ -299,4 +368,139 @@ export class FinancialPremiumsFacade {
 viewAdviceLetterData(batchId:any,printAdviceLetterData: any, premiumType:any) {
   return this.financialPremiumsDataService.viewPrintAdviceLetterData(batchId, printAdviceLetterData, premiumType);
 }
+loadMedicalPremiumList(
+  skipcount: number,
+  maxResultCount: number,
+  sort: string,
+  sortType: string,
+  filter:any,){
+    this.showLoader();
+  this.financialPremiumsDataService.loadMedicalPremiumList( skipcount,
+    maxResultCount,
+    sort,
+    sortType,
+    filter ).subscribe({
+    next: (dataResponse) => {
+      if (dataResponse) {
+        this.hideLoader();
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+      this.financialPremiumsProcessDataSubject.next(gridView);
+    }},
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      this.hideLoader();
+    },
+  });
+}
+
+batchPremium(batchPremiums: BatchPremium, claimsType: string) {
+  this.showLoader();
+  return this.financialPremiumsDataService
+    .batchClaims(batchPremiums, claimsType)
+    .subscribe({
+      next: (response:any) => {
+        this.batchPremiumSubject.next(response);
+        if (response.status) {
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            response.message
+          );
+        }
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+}
+
+    loadInsurancePlans(clientId: number){
+      this.insurancePlansLoaderSubject.next(true);
+      this.financialPremiumsDataService.loadInsurancePlans(clientId)
+      .subscribe({
+        next: (dataResponse) => {
+            this.insurancePlansLoaderSubject.next(false);
+            this.insurancePlansSubject.next(dataResponse);
+            this.loadInsurancePlansCoverageDates(clientId);
+        },
+        error: (err) => {
+          this.insurancePlansLoaderSubject.next(false);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+
+    loadInsurancePlansCoverageDates(clientId: number){
+      this.insuranceCoverageDatesLoaderSubject.next(true);
+      this.financialPremiumsDataService.loadInsurancePlansCoverageDates(clientId)
+      .subscribe({
+        next: (dataResponse) => {
+            this.insuranceCoverageDatesLoaderSubject.next(false);
+            this.insuranceCoverageDatesSubject.next(dataResponse);
+        },
+        error: (err) => {
+          this.insuranceCoverageDatesLoaderSubject.next(false);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+
+    getExistingPremiums(clientId: number, type:string, premiums: PolicyPremiumCoverage[]){
+      this.insurancePlansLoaderSubject.next(true);
+      this.financialPremiumsDataService.getExistingPremiums(clientId, type, premiums)
+      .subscribe({
+        next: (dataResponse) => {
+            this.insurancePlansLoaderSubject.next(false);
+            this.existingCoverageDatesSubject.next(dataResponse);
+        },
+        error: (err) => {
+          this.insurancePlansLoaderSubject.next(false);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+
+    savePremiums(type:string, premiums: InsurancePremium[]){
+      this.showLoader();
+      const clientId = premiums[0]?.clientId;
+      this.financialPremiumsDataService.savePremiums(clientId, type, premiums)
+      .subscribe({
+        next: (response) => {
+          this.premiumActionResponseSubject.next(true);
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+
+
+    loadRecentPremiumListGrid(recentPremiumsPageAndSortedRequestDto:any){
+      this.recentPremiumLoaderSubject.next(true);
+      recentPremiumsPageAndSortedRequestDto.filter = JSON.stringify(recentPremiumsPageAndSortedRequestDto.filter);
+      this.financialPremiumsDataService.loadRecentPremiumListService(recentPremiumsPageAndSortedRequestDto).subscribe({
+        next: (dataResponse) => {
+          this.recentPremiumListDataSubject.next(dataResponse);
+          if (dataResponse) {
+            const gridView = {
+              data: dataResponse['items'],
+              total: dataResponse['totalCount'],
+            };
+            this.recentPremiumListDataSubject.next(gridView);
+          }
+          this.recentPremiumLoaderSubject.next(false);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+          this.recentPremiumLoaderSubject.next(false);
+        },
+      });
+    }
 }

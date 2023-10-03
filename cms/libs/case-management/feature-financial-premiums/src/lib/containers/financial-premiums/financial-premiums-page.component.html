@@ -13,8 +13,19 @@
                             <div class="block-section">
                                 <cms-financial-premiums-process-list   [premiumsType]="premiumType"   [financialPremiumsProcessGridLists$]="financialPremiumsProcessGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPremiumsProcess"
-                                [sortType]="sortType" [sort]="sortProcessList" 
-                                (loadFinancialPremiumsProcessListEvent)="loadFinancialPremiumsProcessListGrid($event)"></cms-financial-premiums-process-list>
+                                [sortType]="sortType" [sort]="sortProcessList"
+                                [insurancePlans$]="insurancePlans$"
+                                [insurancePlansLoader$]="insurancePlansLoader$"
+                                [insuranceCoverageDates$]="insuranceCoverageDates$"
+                                [insuranceCoverageDatesLoader$]="insuranceCoverageDatesLoader$"
+                                [actionResponse$]="actionResponse$"
+                                [existingPremiums$]="existingPremiums$"
+                                (clientChangeEvent)="loadInsurancePlans($event)"
+                                (loadFinancialPremiumsProcessListEvent)="loadFinancialPremiumsProcessListGrid($event)"
+                                (premiumsExistValidationEvent)="premiumExistValidation($event)"
+                                (OnbatchClaimsClickedEvent)="OnbatchClaimsClicked($event)"
+                                [batchingPremium$]="batchingPremium$"
+                                (savePremiumsEvent)="saveInsurancePremiums($event)"></cms-financial-premiums-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -22,9 +33,14 @@
                     <kendo-tabstrip-tab title="Batches">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-premiums-batches-list [premiumsType]="premiumType"  [financialPremiumsBatchGridLists$]="financialPremiumsBatchGridLists$"
-                                [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPremiumsBatch"
-                                [sortType]="sortType" [sort]="sortBatchList" 
+                                <cms-financial-premiums-batches-list
+                                [premiumsType]="premiumType"
+                                [financialPremiumsBatchGridLoader$]="financialPremiumsBatchDataLoader$"
+                                [financialPremiumsBatchGridLists$]="financialPremiumsBatchGridLists$"
+                                [pageSizes]="pageSizes"
+                                [sortValue]="sortValueFinancialPremiumsBatch"
+                                [sortType]="sortType"
+                                [sort]="sortBatchList"
                                 (loadFinancialPremiumsBatchListEvent)="loadFinancialPremiumsBatchListGrid($event)"></cms-financial-premiums-batches-list>
                             </div>
                         </ng-template>
@@ -34,7 +50,7 @@
                             <div class="block-section">
                                 <cms-financial-premiums-all-payments-list [premiumsType]="premiumType" [financialPremiumPaymentLoader$]=financialPremiumPaymentLoader$  [financialPremiumsAllPaymentsGridLists$]="financialPremiumsAllPaymentsGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPremiumsPayments"
-                                [sortType]="sortType" [sort]="sortPaymentsList" 
+                                [sortType]="sortType" [sort]="sortPaymentsList"
                                 (loadFinancialPremiumsAllPaymentsListEvent)="loadFinancialPremiumsAllPaymentsListGrid($event)"></cms-financial-premiums-all-payments-list>
                             </div>
                         </ng-template>

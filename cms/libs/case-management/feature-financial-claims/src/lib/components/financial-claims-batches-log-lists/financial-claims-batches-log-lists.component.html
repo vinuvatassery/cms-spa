@@ -310,7 +310,8 @@
           </section>
       </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
-    <span class="">0 claims(s) to be deleted</span>
+    <span class="" *ngIf="!isPrintAdviceLetterClicked">0 claims(s) to be deleted</span>
+    <span class="" *ngIf="isPrintAdviceLetterClicked">{{selectedCount}} advice letter(s) to be printed</span>
     <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAdviceLetterClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
     <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
     <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isPrintAdviceLetterClicked" [disabled]="disablePrwButton" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
