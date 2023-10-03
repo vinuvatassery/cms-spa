@@ -29,10 +29,12 @@
         <productivity-tools-approvals-payments-list
         [approvalsPaymentsLists$]="approvalsPaymentsLists$"
         [approvalsPaymentsMainLists$]="approvalsPaymentsMainLists$"
+        [pendingApprovalSubmittedSummary$]="pendingApprovalSubmittedSummary$"
         [pageSizes]="pageSizes" [sortValue]="sortValueApprovalPaymentsAPproval"
         [sortType]="sortType" [sort]="sortApprovalPaymentsList" 
         (loadApprovalsPaymentsGridEvent)="loadApprovalsPaymentsGrid($event)"
-        (loadApprovalsPaymentsMainListEvent)="loadApprovalsPaymentsMain($event)"
+        (loadApprovalsPaymentsMainListEvent)="loadApprovalsPaymentsMain($event)"        
+        (loadSubmittedSummaryEvent)="loadSubmittedSummary($event)"
           class="reminder-list-modal-wrap"></productivity-tools-approvals-payments-list>
           </div>
       </ng-template>

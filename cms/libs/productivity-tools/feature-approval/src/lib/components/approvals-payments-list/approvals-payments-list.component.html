@@ -83,12 +83,10 @@
         
         <kendo-grid-column field=" " title="Send Back | Approve" [width]="210" [sticky]="true">
             <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                <kendo-buttongroup selection="single">
-                    <button kendoButton aria-label="proof of address yes" [toggleable]="true" (click)="onRowLevelApproveClicked(dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'APPROVE'">Approve
-                    </button>
-                    <button kendoButton aria-label="proof of address yes" [toggleable]="true" (click)="onRowLevelSendbackClicked(dataItem,'sendBackNotes',rowIndex)" aria-disabled="false" [selected]="dataItem.batchStatus == 'SENDBACK'">Send Back
-                    </button>
-                </kendo-buttongroup>
+                <div class="cms-button-group">
+                    <button kendoButton (selectedChange)="onRowLevelApproveClicked($event,dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'APPROVE'" id ="approve{{rowIndex}}" [toggleable]="true" >Approve</button>
+                    <button kendoButton (selectedChange)="onRowLevelSendbackClicked($event,dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'SENDBACK'" id ="approve{{rowIndex}}" [toggleable]="true">Send Back</button>
+                </div>
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-column [sticky]="true" field="sendBackNotes" title="Send Back Notes" [width]="280">
@@ -149,14 +147,10 @@
 </div>
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-    <span  class="">{{approveBatchCount}} batch(es) to be approved, {{sendbackBatchCount}} batch(es) to be sent back</span>
-    <button (click)="onDepositDetailClicked(depositDetailsDialogModal)" kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Cancel </button>
-    <button kendoButton [primary]="true" look="flat" class="" aria-label="APPROVE ALL"
-        (click)="onApproveAllClicked()"> APPROVE ALL </button>
-    <button kendoButton [primary]="true" aria-label="Submit" class=""
-        (click)="onOpenSubmitApprovalPaymentItemsClicked()"> Submit </button>
+    <span  class="">{{approveBatchCount}} batch(es) to be approved, {{sendbackBatchCount}} batch(es) to be sent back</span>    
+    <button kendoButton [primary]="true" look="flat" class="" aria-label="APPROVE ALL" (click)="onApproveAllClicked()" [disabled]="!hasPaymentPendingApproval"> APPROVE ALL </button>
+    <button kendoButton [primary]="true" aria-label="Submit" class="" (click)="onOpenSubmitApprovalPaymentItemsClicked()" [disabled]="!hasPaymentPendingApproval"> Submit </button>
 </div>
-
 
 <kendo-dialog *ngIf="isSubmitApprovalPaymentItems" (close)="onCloseSubmitApprovalPaymentItemsClicked()"
     class="app-c-modal app-c-modal-sm app-c-modal-np" title="Submit item(s)?" kendoTooltip>
@@ -167,18 +161,11 @@
             the user who submitted them.
         </p>
 
-        <p class="mb-1">Checks to be requested: <strong>103</strong></p>
-        <p class="mb-1">ACH payments to be requested: <strong>57</strong></p>
-        <p class="mb-1">DOR Hold payments to be requested: <strong>3</strong></p>
-        <p class="mb-1">Batches to be sent back: <strong>1</strong></p>
-        <p class="mb-1">Total amount to be submitted: <strong>$XXX,XXX.XX1</strong></p>
-
-        <div>
-            <kendo-floatinglabel text="Select Manager">
-                <kendo-dropdownlist aria-label="Select Manager" [fillMode]="formUiStyle.dropDownFillMode">
-                </kendo-dropdownlist>
-            </kendo-floatinglabel>
-        </div>
+        <p class="mb-1">Checks to be requested: <strong>{{requestedCheck}}</strong></p>
+        <p class="mb-1">ACH payments to be requested: <strong>{{requestedACHPayments}}</strong></p>
+        <p class="mb-1">DOR Hold payments to be requested: <strong>{{requestedDORHoldPayments}}</strong></p>
+        <p class="mb-1">Batches to be sent back: <strong>{{sendbackBatchCount}}</strong></p>
+        <p class="mb-1">Total amount to be submitted: <strong>$ {{totalAmountSubmitted}}</strong></p>
     </section>
     <kendo-dialog-actions>
         <div class="justify-content-between">

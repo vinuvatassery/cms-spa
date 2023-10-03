@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'cms-financial-premiums-send-report',
@@ -10,4 +10,7 @@ export class FinancialPremiumsSendReportComponent {
   closeSendReportClicked() {
     this.sendReportCloseClickedEvent.emit(true);
   }
+
+  @Input() selectedSendReportList!: any;
+  @Input() sendReportCount: number = 0;
 }
