@@ -473,8 +473,6 @@ export class FinancialPremiumsBatchesLogListsComponent
         }
       });
   }
-
-
   
   public onRemovePremiumsOpenClicked(template: TemplateRef<unknown>): void {
     this.removePremiumsDialog = this.dialogService.open({
