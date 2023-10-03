@@ -92,7 +92,6 @@ export class PendingApprovalPaymentFacade {
   }
 
   getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string, level: number) {
-
     this.PendingApprovalPaymentService.getPendingApprovalPaymentMainList(gridSetupData ,serviceSubType, level).subscribe(
       {
         next: (dataResponse: any) => {
