@@ -36,6 +36,7 @@ export class ApprovalPageComponent  {
   approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
   approvalsPaymentsMainLists$ = this.pendingApprovalPaymentFacade.pendingApprovalMainList$;
   pendingApprovalSubmittedSummary$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmittedSummary$;
+  pendingApprovalSubmit$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmit$;
   batchDetailPaymentsList$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
   batchDetailPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
   /** Constructor **/
@@ -78,5 +79,9 @@ export class ApprovalPageComponent  {
   loadSubmittedSummary(events:any): void {
     debugger;
     this.pendingApprovalPaymentFacade.loadSubmittedSummary(events);
+  }
+  submitData(events:any)
+  {
+    this.pendingApprovalPaymentFacade.submitForApproval(events);
   }
 }

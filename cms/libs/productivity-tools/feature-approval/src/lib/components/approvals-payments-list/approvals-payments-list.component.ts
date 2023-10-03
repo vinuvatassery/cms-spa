@@ -19,7 +19,7 @@ import {
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade, UserDataService } from '@cms/system-config/domain';
 
 @Component({
   selector: 'productivity-tools-approvals-payments-list',
@@ -33,6 +33,9 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isApprovalPaymentsGridLoaderShow = false;
   selectedApprovalId?: string | null = null;
+  approvalPermissionCode :any;
+  loginUserId!:any;
+  @Input() pendingApprovalSubmit$: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -44,6 +47,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   @Output() loadApprovalsPaymentsGridEvent = new EventEmitter<any>();
   @Output() loadApprovalsPaymentsMainListEvent = new EventEmitter<any>();
   @Output() loadSubmittedSummaryEvent = new EventEmitter<any>();
+  @Output() submitEvent = new EventEmitter<any>();
   @Output() loadBatchDetailPaymentsGridEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
@@ -55,9 +59,9 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
-  approveStatus:string="APPROVE";
-  sendbackStatus:string="SENDBACK";
+  approvalTypeCode : any = "L1_APPROVAL";
+  approveStatus:string="APPROVED";
+  sendbackStatus:string="SEND_BACK";
   hasPaymentPendingApproval:boolean=false;
   sendbackNotesRequireMessage:string = "Send Back Notes is required.";
   tAreaCessationMaxLength:any=100;
@@ -96,9 +100,10 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   /** Constructor **/
   constructor(private route: Router, 
     private dialogService: DialogService,private readonly cd: ChangeDetectorRef,
-    private lovFacade: LovFacade) {}
+    private lovFacade: LovFacade,  private userManagementFacade: UserManagementFacade, private readonly userDataService: UserDataService) {}
 
   ngOnInit(): void {
+    this.getLoggedInUserProfile();
     this.gridDataHandle();
     this.loadApprovalPaymentsListGrid();    
     this.lovFacade.getPandingApprovalPaymentTypeLov();
@@ -113,7 +118,15 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
     this.loadApprovalPaymentsListGrid();
   }
-  
+
+  getLoggedInUserProfile(){
+    this.userDataService.getProfile$.subscribe((profile:any)=>{
+      if(profile?.length>0){
+       this.loginUserId= profile[0]?.loginUserId;
+      }
+    })
+  }
+
   onCloseSubmitApprovalPaymentItemsClicked(){
     this.isSubmitApprovalPaymentItems = false;
   }
@@ -237,7 +250,26 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   }
 
   onPaymentTypeCodeValueChange(paymentSubTypeCode: any){
-    this.selectedPaymentType = paymentSubTypeCode;    
+    this.selectedPaymentType = paymentSubTypeCode; 
+    debugger;
+    switch(this.selectedPaymentType) {
+      case "MEDICAL_CLAIM":{
+        this.approvalPermissionCode = "Medical_Claims_Manager_Approval_Approve_Or_Deny_Payment_Requests";
+         break;
+      }
+      case "PHARMACY_CLAIM": {
+        this.approvalPermissionCode = "Pharmacy_Claims_Manager_Approval_Approve_Or_Deny_Payment_Requests";
+         break;
+      }
+      case "INSURANCE_PREMIUM": {
+        this.approvalPermissionCode = "Insurance_Premium_Manager_Approval_Approve_Or_Deny_Payment_Requests";
+        break;
+     }
+      default:
+      {
+         break;
+      }
+   }
     this.loadApprovalPaymentsListGrid();
     this.mainListDataHandle();  
     this.cd.detectChanges();   
@@ -437,7 +469,9 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       this.selectedApprovalSendbackDataRows = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus);
     }
     this.selectedBatchIds = [];
+    debugger;
     if (isValid.length <= 0 && this.selectedApprovalSendbackDataRows.length>0) {
+      this.checkApprovalLimit();
       this.loadSubmittedSummaryData();   
       this.isSubmitApprovalPaymentItems = true;     
     }
@@ -596,6 +630,56 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
         this.requestedDORHoldPayments = response?.dorHoldCount;
         this.totalAmountSubmitted = response?.totalAmount; 
         this.cd.detectChanges();
+      }
+    });        
+  }
+  checkApprovalLimit()
+  {
+    debugger;
+    if(this.userManagementFacade.hasRole("FM1"))
+    {
+      this.approvalTypeCode = "L1_APPROVAL";
+    }
+    else if(this.userManagementFacade.hasRole("FM2"))
+    {
+      this.approvalTypeCode = "L2_APPROVAL";
+    }
+    const approvalLimit = this.userManagementFacade.getUserPermissionMetaData(this.approvalPermissionCode);
+    if(approvalLimit && this.approvalTypeCode === "L1_APPROVAL")
+    {
+      const limit = approvalLimit['maxApprovalAmount'];
+      if(limit && Number.parseFloat(limit) < 20000)
+      {
+        this.approvalTypeCode = "EXCEED_APPROVAL_LIMIT";
+      }
+    }
+  }
+  makeRequestData()
+  {
+    debugger;
+    let bodyData = {
+      approvalType: this.approvalTypeCode,
+      payments: [{}],
+    };
+    for (let element of this.selectedApprovalSendbackDataRows) {
+      debugger;
+      let payment = {
+        approvalId: element.approvalId,
+        approvalStatusCode: element.batchStatus,
+        sendBackNote: element.sendBackNotes ? element.sendBackNotes : null,
+        userId: this.loginUserId,
+      };
+      bodyData.payments.push(payment);
+    }
+    bodyData.payments.splice(0, 1);
+    this.submit(bodyData);
+  }
+  submit(data:any)
+  {
+    this.submitEvent.emit(data);  
+    this.pendingApprovalSubmit$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+        this.loadApprovalPayments(0, this.pageSizes[0]?.value, this.sortValue, this.sortType)
       }
     });        
   }

@@ -12,6 +12,7 @@ export class PendingApprovalPaymentFacade {
   private pendingApprovalSubmittedSummarySubject = new Subject<any>();
   private pendingApprovalBatchDetailPaymentsCountSubject = new Subject<any>();
   private pendingApprovalBatchDetailPaymentsGridSubject = new Subject<any>();
+  private pendingApprovalSubmitSubject = new Subject<any>();
 
   /** Public properties **/
   pendingApprovalCount$ = this.pendingApprovalCountSubject.asObservable();
@@ -20,6 +21,7 @@ export class PendingApprovalPaymentFacade {
   pendingApprovalSubmittedSummary$ = this.pendingApprovalSubmittedSummarySubject.asObservable();
   pendingApprovalBatchDetailPaymentsCount$ = this.pendingApprovalBatchDetailPaymentsCountSubject.asObservable();
   pendingApprovalBatchDetailPaymentsGrid$ = this.pendingApprovalBatchDetailPaymentsGridSubject.asObservable();
+  pendingApprovalSubmit$ = this.pendingApprovalSubmitSubject.asObservable();
 
   constructor(
     private readonly PendingApprovalPaymentService: PendingApprovalPaymentService,
@@ -123,6 +125,19 @@ export class PendingApprovalPaymentFacade {
             total: dataResponse["totalCount"]
           };
             this.pendingApprovalBatchDetailPaymentsGridSubject.next(gridView);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        },
+      }
+    );
+  }
+
+  submitForApproval(data: any) {
+    this.PendingApprovalPaymentService.submitForApproval(data).subscribe(
+      {
+        next: (response: any) => {
+            this.pendingApprovalSubmitSubject.next(response);
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  

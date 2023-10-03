@@ -64,4 +64,11 @@ export class PendingApprovalPaymentService {
     serviceSubType + `/${batchId}/payments`
     , batchDetailGridSetupDto);
   }
+
+  submitForApproval(data:any) {
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/submit` ,
+      data
+    );
+  }
 }

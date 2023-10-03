@@ -84,8 +84,8 @@
         <kendo-grid-column field=" " title="Send Back | Approve" [width]="210" [sticky]="true">
             <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                 <div class="cms-button-group">
-                    <button kendoButton (selectedChange)="onRowLevelApproveClicked($event,dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'APPROVE'" id ="approve{{rowIndex}}" [toggleable]="true" >Approve</button>
-                    <button kendoButton (selectedChange)="onRowLevelSendbackClicked($event,dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'SENDBACK'" id ="approve{{rowIndex}}" [toggleable]="true">Send Back</button>
+                    <button kendoButton (selectedChange)="onRowLevelApproveClicked($event,dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'APPROVED'" id ="approve{{rowIndex}}" [toggleable]="true" >Approve</button>
+                    <button kendoButton (selectedChange)="onRowLevelSendbackClicked($event,dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'SEND_BACK'" id ="approve{{rowIndex}}" [toggleable]="true">Send Back</button>
                 </div>
             </ng-template>
         </kendo-grid-column>
@@ -101,7 +101,7 @@
                       [(ngModel)]="dataItem.sendBackNotes"
                       (valueChange)="sendBackNotesChange(dataItem)"
                       aria-label="smoking cessation note"                                          
-                      title ="{{dataItem.sendBackNotes}}" [disabled]="dataItem.batchStatus == 'APPROVE'"
+                      title ="{{dataItem.sendBackNotes}}" [disabled]="dataItem.batchStatus == 'APPROVED'"
                       [ngClass]="ngDirtyInValid(dataItem,'sendBackNotes',rowIndex)"  id ="sendBackNotes{{rowIndex}}"
                       >
                    
@@ -157,23 +157,26 @@
 
     <section class="k-dialog-body newcase">
         <p class="  mb-2">
-            Approved batches will be sent to the Salem Fiscal Team via email. “Send Back” batches will be sent back to
-            the user who submitted them.
+          {{
+            approvalTypeCode === 'EXCEED_APPROVAL_LIMIT' 
+            ? 'batches exceed your maximum approval amount. Select A manager with a higher maximum approval limit needs to request the payments from the Salem Fiscal Team. "Send Back" batches will be sent to the user who submitted them.' 
+            : 'Approved batches will be sent to the Salem Fiscal Team via email. “Send Back” batches will be sent back to the user who submitted them.'
+          }}
         </p>
 
         <p class="mb-1">Checks to be requested: <strong>{{requestedCheck}}</strong></p>
         <p class="mb-1">ACH payments to be requested: <strong>{{requestedACHPayments}}</strong></p>
         <p class="mb-1">DOR Hold payments to be requested: <strong>{{requestedDORHoldPayments}}</strong></p>
         <p class="mb-1">Batches to be sent back: <strong>{{sendbackBatchCount}}</strong></p>
-        <p class="mb-1">Total amount to be submitted: <strong>$ {{totalAmountSubmitted}}</strong></p>
+        <p *ngIf="approvalTypeCode === 'EXCEED_APPROVAL_LIMIT'" class="mb-1">Total amount to be submitted: <strong>$ {{totalAmountSubmitted}}</strong></p>
     </section>
     <kendo-dialog-actions>
         <div class="justify-content-between">
             <div class="justify-content-end">
-                <button aria-label="cancel new case" kendoButton look="outline">
+                <button aria-label="cancel new case" kendoButton look="outline" (click)="onCloseSubmitApprovalPaymentItemsClicked()">
                     Cancel
                 </button>
-                <button aria-label="save and continue" kendoButton [primary]="true">
+                <button aria-label="save and continue" kendoButton [primary]="true" (click)="makeRequestData()">
                     SUBMIT
                 </button>
             </div>
