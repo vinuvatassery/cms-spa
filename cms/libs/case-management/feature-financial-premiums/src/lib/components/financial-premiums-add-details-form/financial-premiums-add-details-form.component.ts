@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ClientInsurancePlans, InsurancePremiumCoverage, FinancialClaimsFacade, InsurancePremium, PolicyPremiumCoverage, InsurancePlan, StatusFlag } from '@cms/case-management/domain';
+import { ClientInsurancePlans, InsurancePremiumCoverage, FinancialClaimsFacade, InsurancePremium, PolicyPremiumCoverage, StatusFlag } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { RowArgs } from '@progress/kendo-angular-grid';
@@ -234,6 +234,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
         clientInsurancePolicyId: plan.clientInsurancePolicyId,
         clientCaseEligibilityId: this.selectedClient.clientCaseEligibilityId,
         vendorId: plan.vendorId,
+        vendorAddressId:plan.vendorAddressId,
         policyNbr: plan.insuranceIdNbr,
         clientFirstName: this.selectedClient.clientFirstName,
         clientLastName: this.selectedClient.clientLastName,
@@ -252,8 +253,8 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     let policyPremiumCoverages: PolicyPremiumCoverage[] = [];
     selectedPlans?.forEach((plan: any) => {
       plan?.coverages?.forEach((coverage: InsurancePremiumCoverage) => {
-        var firstDayOfMonth = new Date(coverage?.coverageDates ?? '')
-        var lastDayOfMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0);
+        const firstDayOfMonth = new Date(coverage?.coverageDates ?? '')
+        const lastDayOfMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0);
 
         const policyCoverages = {
           clientInsurancePolicyId: plan?.clientInsurancePolicyId,
