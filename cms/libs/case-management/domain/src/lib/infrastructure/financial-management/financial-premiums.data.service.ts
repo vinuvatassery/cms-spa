@@ -3,11 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 /** External libraries **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { of } from 'rxjs/internal/observable/of';
-import { GridFilterParam } from '../../entities/grid-filter-param';
 import { Observable } from 'rxjs';
-import { InsurancePlan } from '../../entities/insurance-plan';
-import { ClientInsurancePlans, InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
+import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
 import { BatchPremium } from '../../entities/financial-management/batch-premium';
 
 @Injectable({ providedIn: 'root' })
@@ -500,6 +497,19 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
     }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${data.premiumsType}/client-recent-premium`,recentPremiumsPageAndSortedRequestDto
+    );
+  }
+
+  loadPremium(type: string, premiumId: string): Observable<InsurancePremiumDetails> {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/${type}/premiums/${premiumId}`
+    );
+  }
+
+  updatePremium(type: string, premiumId: string, premiums: any) {
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/${type}/premiums/${premiumId}`
+      , premiums
     );
   }
 }

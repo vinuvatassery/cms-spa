@@ -20,12 +20,15 @@
                                 [insuranceCoverageDatesLoader$]="insuranceCoverageDatesLoader$"
                                 [actionResponse$]="actionResponse$"
                                 [existingPremiums$]="existingPremiums$"
+                                [insurancePremium$]="insurancePremium$"
                                 (clientChangeEvent)="loadInsurancePlans($event)"
                                 (loadFinancialPremiumsProcessListEvent)="loadFinancialPremiumsProcessListGrid($event)"
                                 (premiumsExistValidationEvent)="premiumExistValidation($event)"
                                 (OnbatchClaimsClickedEvent)="OnbatchClaimsClicked($event)"
                                 [batchingPremium$]="batchingPremium$"
-                                (savePremiumsEvent)="saveInsurancePremiums($event)"></cms-financial-premiums-process-list>
+                                (savePremiumsEvent)="saveInsurancePremiums($event)"
+                                (updatePremiumEvent)="updatePremium($event)"
+                                (loadPremiumEvent)="loadPremium($event)"></cms-financial-premiums-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

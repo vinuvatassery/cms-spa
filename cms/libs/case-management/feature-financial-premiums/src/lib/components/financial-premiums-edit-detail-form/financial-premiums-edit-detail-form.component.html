@@ -3,7 +3,7 @@
         <h1 class="maintitle_withicon text-bold">Edit Premium </h1>
     </section>
 </kendo-dialog-titlebar>
-<section class="add_main_popup_screen">
+<section class="add_main_popup_screen" *ngIf="insurancePremium$ | async as premium">
 
 
     <div class="add_new_top_section">
@@ -19,35 +19,35 @@
                         </tr>
                         <tr>
                             <td><strong>Client Name:</strong></td>
-                            <td> Donna Summer</td>
+                            <td> {{premium.clientFullName}}</td>
                         </tr>
                         <tr>
                             <td><strong>Member ID:</strong></td>
-                            <td>000000</td>
+                            <td>{{premium.clientId}}</td>
                         </tr>
                         <tr>
                             <td><strong>Insurance Vendor:</strong></td>
-                            <td> Aetna</td>
+                            <td> {{premium.vendorName}} </td>
                         </tr>
                         <tr>
                             <td><strong>Plan Name:</strong></td>
-                            <td>Super Duper Plan I</td>
+                            <td>{{premium.insurancePlanName}} </td>
                         </tr>
                         <tr>
                             <td><strong>Insurance Type:</strong></td>
-                            <td>Off-Exchange Plan</td>
+                            <td>{{premium.healthInsuranceType}}</td>
                         </tr>
                         <tr>
                             <td><strong>Coverage Start Date:</strong></td>
-                            <td>02/01/2021</td>
+                            <td>{{premium.coverageStartDate  | date:'MM/dd/yyyy'}}</td>
                         </tr>
                         <tr>
                             <td><strong>Coverage End Date:</strong></td>
-                            <td> 02/28/2021 </td>
+                            <td> {{premium.coverageEndDate  | date:'MM/dd/yyyy'}} </td>
                         </tr>
                         <tr>
                             <td><strong>Last Premium Due Date:</strong></td>
-                            <td> 02/14/2021 </td>
+                            <td> {{premium.nextPremiumDueDate  | date:'MM/dd/yyyy'}} </td>
                         </tr>
 
 
@@ -62,16 +62,34 @@
             <div class="flex-col flex-col-3">
                 <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
                     <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                    <kendo-numerictextbox placeholder="Premium Amount" aria-label="Payment Amount" [spinners]="false"
-                        class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
+                    <kendo-numerictextbox 
+                        placeholder="Premium Amount" 
+                        aria-label="Payment Amount"
+                        class="input-icon-right" 
+                        placeholder="00.00" 
+                        [spinners]="false"
+                        [fillMode]="formUiStyle.inputFillMode" 
+                        format="c2" 
+                        [min]="0"
+                        [decimals]="2"
+                        [maxlength]="15"
+                        (valueChange)="premiumAmountChanged()"
+                        [(ngModel)]="premium.premiumAmount">
                     </kendo-numerictextbox>
+                    <kendo-formerror *ngIf="premium.premiumAmountRequired">
+                        Premium Amount is required
+                    </kendo-formerror>
                 </kendo-floatinglabel>
-
             </div>
             <div class="flex-col flex-col-3">
                 <span class="app-checkboxwidtext-wrapper mt-4">
-                    <input class="adjust-attr" type="checkbox" id="SPOTSpayment" name="chkmiddleName"
-                        aria-labelledby="SPOTSpayment" kendoCheckBox />
+                    <input 
+                        kendoCheckBox              
+                        type="checkbox" 
+                        id="spots-payment" 
+                        name="spots-payment"
+                        aria-labelledby="SPOTSpayment"
+                        [(ngModel)]="premium.isSpotsPayment"/>
                     <label class="k-checkbox-label" for="SPOTSpayment">This is a SPOTS payment</label>
                 </span>
             </div>
@@ -84,23 +102,35 @@
 
 
     <div class="add_new_bottom_section">
-
-
         <div class="flex-row">
             <div class="flex-col flex-col-6">
                 <div class=" mb-3">
+                <div  *ngFor="let adjustment of premium.premiumAdjustments;index as i">   
                     <div class="flex-space-bw align-items-center">
-                        <h4 class="mar-0">ADJUSTMENT 1</h4>
-                        <button class="" kendoButton fillMode="flat" themeColor="error">DELETE</button>
+                        <h4 class="mar-0">ADJUSTMENT {{i+1}}</h4>
+                        <button class="" kendoButton fillMode="flat" themeColor="error" (click)="deleteAdjustment(i)">DELETE</button>
                     </div>
                     <div class="flex-row counter-buttons">
                         <div class="flex-col flex-col-2">
                             <kendo-buttongroup selection="single" class="height-btn">
-                                <button kendoButton [toggleable]="false" aria-label="accept hiv verification" title="Accept"
-                                    themeColor="primary">
+                                <button 
+                                kendoButton 
+                                [toggleable]="true" 
+                                aria-label="accept hiv verification" 
+                                title="Positive"
+                                themeColor="light" 
+                                [selected]="adjustment.isPositiveAdjustment ?? true"
+                                (selectedChange)="changeAdjustmentSign(true, adjustment)">
                                     <span class="material-icons" aria-hidden="false">add</span>
                                 </button>
-                                <button kendoButton [toggleable]="false"  themeColor="light" aria-label="reject hiv verification" title="Reject">
+                                <button 
+                                kendoButton 
+                                [toggleable]="true"  
+                                themeColor="light" 
+                                aria-label="reject hiv verification" 
+                                title="Negative"
+                                [selected]="!(adjustment.isPositiveAdjustment ?? true)"
+                                (selectedChange)="changeAdjustmentSign(false, adjustment)">
                                     <span class="material-icons" aria-hidden="false">remove</span>
                                 </button>
                             </kendo-buttongroup>
@@ -108,23 +138,58 @@
                         <div class="flex-col flex-col-5">
                             <kendo-floatinglabel text="Amount" class="amount-with-symbol">
                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                                <kendo-numerictextbox placeholder="Amount" aria-label="Amount" [spinners]="false"
-                                    class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
+                                <kendo-numerictextbox 
+                                placeholder="Amount" 
+                                aria-label="Amount" 
+                                [spinners]="false"
+                                class="input-icon-right" 
+                                placeholder="00.00" 
+                                [spinners]="false"
+                                [fillMode]="formUiStyle.inputFillMode" 
+                                format="c2"                                 
+                                [decimals]="2"
+                                [maxlength]="15"
+                                [fillMode]="formUiStyle.inputFillMode"
+                                (valueChange)="adjustmentAmountChanged(adjustment)"
+                                [(ngModel)]="adjustment.adjustmentAmount"
+                               >
                                 </kendo-numerictextbox>
+                                <kendo-formerror *ngIf="adjustment.adjustmentAmountRequired">
+                                    Amount is required
+                                </kendo-formerror>
                             </kendo-floatinglabel>
                         </div>
                         <div class="flex-col flex-col-5">
                             <kendo-floatinglabel text="Coverage Dates">
-                                <kendo-dropdownlist aria-label="Coverage Dates"
-                                      [fillMode]="formUiStyle.dropDownFillMode"  >
-                                </kendo-dropdownlist>
+                                <kendo-dropdownlist 
+                                [fillMode]="formUiStyle.dropDownFillMode"
+                                placeholder="Coverage Date"
+                                [data]="coverageDateList"
+                                textField="coverageDate" 
+                                valueField="coverageStartDate"
+                                [valuePrimitive]="true"
+                                (valueChange)="adjustmentDateChanged(adjustment)"
+                                [(ngModel)]="adjustment.coverageStartDate"
+                                >
+                            </kendo-dropdownlist>
+                            <kendo-formerror *ngIf="adjustment.coverageDatesRequired">
+                                Coverage Date is required
+                            </kendo-formerror>
+                            <kendo-formerror *ngIf="adjustment.duplicateCoverage">
+                                Coverage Date already exist
+                            </kendo-formerror>
                           </kendo-floatinglabel>
                         </div>
                     </div>
+                </div>
                     <div class="mt-2">
-                        <button class="" kendoButton fillMode="flat" themeColor="primary"> <span class="material-icons"
-                                aria-label="New Premiums" aria-hidden="false">add</span> ADJUSTMENT</button>
-
+                        <button 
+                        class="" 
+                        kendoButton 
+                        fillMode="flat" 
+                        themeColor="primary"
+                        (click)="addAdjustment()"> 
+                        <span class="material-icons" aria-label="New Premiums" aria-hidden="false">add</span> ADJUSTMENT</button>
                     </div>
                 </div>
             </div>
@@ -141,7 +206,7 @@
             <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="premiumsType"></cms-financial-premiums-recent-premiums-list>
         </div>
         <div class="d-flex align-items-center mt-1">
-            <button kendoButton [primary]="true" aria-label="Confirm Selections" class=""> Add </button>
+            <button kendoButton [primary]="true" aria-label="Confirm Selections" class="" (click)="save()"> Edit </button>
             <button kendoButton [primary]="true" look="outline" class="ml-2" aria-label="Cancel"> Cancel </button>
             <span class="ml-2">1 service(s) to be added</span>
         </div>
