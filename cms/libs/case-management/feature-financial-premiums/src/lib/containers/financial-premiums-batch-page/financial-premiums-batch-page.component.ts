@@ -4,7 +4,7 @@ import { State } from '@progress/kendo-data-query';
 import {FinancialPremiumsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
-import { LoggingService } from '@cms/shared/util-core';
+import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'cms-financial-premiums-batch-page',
@@ -20,10 +20,12 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
   pageSizes = this.financialPremiumsFacade.gridPageSizes;
   gridSkipCount = this.financialPremiumsFacade.skipCount;
   sort = this.financialPremiumsFacade.sortBatchLogList;
+  exportButtonShow$ = this.documentFacade.exportButtonShow$
   state!: State;
   batchLogGridLists$ = this.financialPremiumsFacade.batchLogData$;
+  batchLogServicesData$ = this.financialPremiumsFacade.batchLogServicesData$;
   batchId!:string;
-  
+  dataExportParameters! : any
   premiumType: any;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
@@ -31,7 +33,7 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
     private readonly activatedRoute: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
     private loggingService: LoggingService,
-    
+    private documentFacade :  DocumentFacade    
   ) {}
   ngOnInit(): void {
     this.batchId =   this.activatedRoute.snapshot.queryParams['bid'];  
@@ -59,11 +61,38 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
     this.financialPremiumsFacade.loadBatchName(batchId);
   }
 
-  loadBatchLogListGrid(event: any) {
-    debugger
+  loadBatchLogListGrid(event: any) {  
+    this.dataExportParameters = event  
     const batchId = this.activatedRoute.snapshot.queryParams['bid'];
     const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
     this.financialPremiumsFacade.loadBatchLogListGrid(this.premiumType, batchId, params);
+  }
+
+
+  loadFinancialPremiumBatchInvoiceList(event: any) {        
+    const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
+    this.financialPremiumsFacade.loadPremiumServicesByPayment(this.premiumType, event.paymentRequestId, params);
+  }
+
+  exportPremiumBatchesGridData(){
+    
+    const data = this.dataExportParameters
+    if(data){
+    const  filter = JSON.stringify(data?.filter);
+
+      const vendorPageAndSortedRequest =
+      {
+        SortType : data?.sortType,
+        Sorting : data?.sortColumn,
+        SkipCount : data?.skipcount,
+        MaxResultCount : data?.maxResultCount,
+        Filter : filter
+      }
+      const batchId = this.activatedRoute.snapshot.queryParams['bid'];
+     let fileName = (this.premiumType[0].toUpperCase() + this.premiumType.substr(1).toLowerCase())  +' Premium Batch Payments'
+
+      this.documentFacade.getExportFile(vendorPageAndSortedRequest,`premium/${this.premiumType}/payment-batches/${batchId}/payments` , fileName)
+    }
   }
 
 }

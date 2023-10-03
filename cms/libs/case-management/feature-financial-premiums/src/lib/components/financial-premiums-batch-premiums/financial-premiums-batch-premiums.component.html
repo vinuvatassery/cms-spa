@@ -2,7 +2,7 @@
 
 <section class="k-dialog-body">
     <p class="text-muted mb-1"> Premiums will be batched based on each insurance carrier’s profile settings. You will not be able to add premiums to batches, but you will be able to edit, remove, and unbatch them.    </p>
-    <p class="text-muted mb-2">  Premiums to be batched: 13  </p>
+    <p class="text-muted mb-2">  Premiums to be batched: {{selectedProcessClaimsCount}} </p>
   </section>
   
   <kendo-dialog-actions>
@@ -17,7 +17,7 @@
         >
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="Batch"  >
+        <button kendoButton [primary]="true" aria-label="Batch"  (click)="OnbatchClaimsClicked()">
           Batch
         </button>
       </div>

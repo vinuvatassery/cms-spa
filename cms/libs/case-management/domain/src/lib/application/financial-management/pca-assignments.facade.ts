@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  Subject } from 'rxjs';
+import {  BehaviorSubject, Subject } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 
@@ -12,13 +12,13 @@ import { PcaAssignmentsDataService } from '../../infrastructure/financial-manage
 
 export class PcaAssignmentsFacade {
 
-    private objectCodesDataSubject = new Subject<any>();
+    private objectCodesDataSubject = new BehaviorSubject<any>([]);
     objectCodesData$ = this.objectCodesDataSubject.asObservable();
 
-    private groupCodesDataSubject = new Subject<any>();
+    private groupCodesDataSubject = new BehaviorSubject<any>([]);
     groupCodesData$ = this.groupCodesDataSubject.asObservable();
 
-    private pcaCodesDataSubject = new Subject<any>();
+    private pcaCodesDataSubject = new BehaviorSubject<any>([]);
     pcaCodesData$ = this.pcaCodesDataSubject.asObservable();
 
     private pcaCodesInfoDataSubject = new Subject<any>();
@@ -106,7 +106,7 @@ export class PcaAssignmentsFacade {
 
   loadObjectCodes(){
     this.pcaAssignmentsDataService.loadObjectCodes().subscribe({
-      next: (dataResponse) => {
+      next: (dataResponse) => {        
         this.objectCodesDataSubject.next(dataResponse);
         this.hideLoader();
       },

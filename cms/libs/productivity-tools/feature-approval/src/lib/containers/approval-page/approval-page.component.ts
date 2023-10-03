@@ -31,10 +31,11 @@ export class ApprovalPageComponent  {
 
   state!: State;
   approvalsGeneralLists$ = this.approvalFacade.approvalsGeneralList$; 
-  approvalsPaymentsLists$ = this.approvalFacade.approvalsPaymentsList$;
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.pendingApprovalPaymentFacade.pendingApprovalCount$;
-
+  approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
+  approvalsPaymentsMainLists$ = this.pendingApprovalPaymentFacade.pendingApprovalMainList$;
+  pendingApprovalSubmittedSummary$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmittedSummary$;
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,     
               private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService,
@@ -42,13 +43,15 @@ export class ApprovalPageComponent  {
                 this.pendingApprovalPaymentFacade.getAllPendingApprovalPaymentCount()
               }
 
- 
    loadApprovalsGeneralGrid(event: any): void {
     this.approvalFacade.loadApprovalsGeneral();
   }
 
-  loadApprovalsPaymentsGrid(event: any): void {
-    this.approvalFacade.loadApprovalsPayments();
+  loadApprovalsPaymentsGrid(gridDataValue : any): void {
+    if(!gridDataValue.selectedPaymentType || gridDataValue.selectedPaymentType.length == 0){
+      return;
+    }
+    this.pendingApprovalPaymentFacade.getPendingApprovalPaymentGrid(gridDataValue , gridDataValue.selectedPaymentType)
   }
   loadImportedClaimsGrid(event: any): void {
     this.approvalFacade.loadImportedClaimsLists();
@@ -57,5 +60,15 @@ export class ApprovalPageComponent  {
     this.approvalFacade.NotifyShowHideSnackBar(ReminderSnackBarNotificationType.LIGHT, ' Generic reminder displays at 9AM on the day of the reminder Generic reminder displays at 9AM on the day of the reminder');
     
   }
+  loadApprovalsPaymentsMain(gridDataValue : any): void {
+    if(!gridDataValue.selectedPaymentType || gridDataValue.selectedPaymentType.length == 0){
+      return;
+    }
+    this.pendingApprovalPaymentFacade.getPendingApprovalPaymentMainList(gridDataValue , gridDataValue.selectedPaymentType)
+  }
   
+  loadSubmittedSummary(events:any): void {
+    debugger;
+    this.pendingApprovalPaymentFacade.loadSubmittedSummary(events);
+  }
 }

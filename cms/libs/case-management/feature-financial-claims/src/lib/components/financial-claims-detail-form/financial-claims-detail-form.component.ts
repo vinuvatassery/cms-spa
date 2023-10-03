@@ -459,8 +459,14 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   }
 
   removeService(i: number) {
+    if(this.isEdit && this.addClaimServicesForm.length == 1)
+    {
+       this.addClaimServicesForm.reset();
+    }
+    if(this.addClaimServicesForm.length > 1 ){
     this.addClaimServicesForm.removeAt(i);
     this.addExceptionForm.removeAt(i);
+    }
   }
 
   IsServiceStartDateValid(index: any) {
@@ -583,18 +589,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         exceptionFlag: element.exceptionFlag,
         exceptionTypeCode: element.exceptionTypeCode
       };
-      if (
-        !this.isStartEndDateValid(
-          service.serviceStartDate,
-          service.serviceEndDate
-        )
-      ) {
-        this.financialClaimsFacade.showHideSnackBar(
-          SnackBarNotificationType.ERROR,
-          'Start date must less than end date'
-        );
-        return;
-      }
+      this.validateStartEndDate(service.serviceStartDate,
+        service.serviceEndDate);
       if (service.exceptionFlag === StatusFlag.Yes && !service.exceptionReasonCode) {
         checkDeniedClaim = true;
       }
@@ -607,7 +603,10 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.onPrintDenialLetterOpen();
       return;
     }
+    this.getPCACode(isPcaAssigned, bodyData);  
+}
 
+  getPCACode(isPcaAssigned: boolean, bodyData: any){
     if (!isPcaAssigned) {
       this.getPcaCode(bodyData);
     }
@@ -619,6 +618,20 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       }
 
       this.saveClaim(bodyData);
+    }
+  }
+
+  validateStartEndDate(startDate: string, endDate: string) {
+    if (
+      !this.isStartEndDateValid(
+        startDate,
+        endDate
+      )
+    ) {
+      this.financialClaimsFacade.showHideSnackBar(
+        SnackBarNotificationType.ERROR,
+        'Start date must less than end date'
+      );
     }
   }
 
