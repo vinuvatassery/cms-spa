@@ -12,16 +12,16 @@ import {
   OnDestroy
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { State } from '@progress/kendo-data-query';
+import { GroupResult, State } from '@progress/kendo-data-query';
 import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType, FinancialPcaFacade, ExceptionTypeCode } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
+import { Lov, LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
-
+import { groupBy } from "@progress/kendo-data-query";
 @Component({
   selector: 'cms-financial-claims-detail-form',
   templateUrl: './financial-claims-detail-form.component.html',
@@ -50,6 +50,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   clientId: any;
   vendorName: any;
   clientName: any;
+  text:any;
   isPrintDenailLetterClicked = false;
   @Input() claimsType: any;
   @Input() printDenialLetterData: any;
@@ -90,6 +91,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       dob: '23/12/2023',
     },
   ];
+
   providerSearchResult = [
     {
       providerId: '12',
@@ -148,6 +150,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   bridgeUppPriorityArray = ['ineligibleExceptionFlag', 'exceedMaxBenefitExceptionFlag', 'duplicatePaymentExceptionFlag', 'oldInvoiceExceptionFlag'];
   dateFormat = this.configProvider.appSettings.dateFormat;
   providerTin: any;
+ groupedPaymentRequestTypes: any;
+
   private showExceedMaxBenefitSubscription !: Subscription;
   private showIneligibleSubscription !: Subscription;
   private showBridgeUppSubscription !: Subscription;
@@ -158,7 +162,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
   readonly financialProvider = 'medical';
   currentFormControl!: FormGroup<any>;
-
+   data:any = [];
+   tempData:any = {};
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
     private cd: ChangeDetectorRef,
@@ -205,6 +210,27 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.addOrEdit = 'Update';
       this.getMedicalClaimByPaymentRequestId();
     }
+    
+     this.paymentRequestType$.subscribe((paymentRequestTypes) => {
+      debugger
+        if(paymentRequestTypes.length>0)
+      paymentRequestTypes[1].parentCode = paymentRequestTypes[3].parentCode = paymentRequestTypes[4].parentCode = paymentRequestTypes[0].lovCode
+      let parentRequestTypes = paymentRequestTypes.filter(x => x.parentCode == null);
+      let refactoredPaymentRequestTypeArray :Lov[] =[]
+      parentRequestTypes.forEach(x => {
+        let childPaymentRequestTypes= JSON.parse(JSON.stringify(paymentRequestTypes.filter(y => y.parentCode == x.lovCode))) as Lov[];
+       if(childPaymentRequestTypes?.length>0){
+        childPaymentRequestTypes.forEach(y => y.parentCode = x.lovDesc )
+        refactoredPaymentRequestTypeArray.push(...childPaymentRequestTypes);
+       }
+       else{
+        let noChildPaymentRequestType = JSON.parse(JSON.stringify(x))as Lov;
+        noChildPaymentRequestType.parentCode = noChildPaymentRequestType.lovDesc
+        refactoredPaymentRequestTypeArray.push(noChildPaymentRequestType)
+       }
+      })
+      this.groupedPaymentRequestTypes = groupBy(refactoredPaymentRequestTypeArray, [{ field: "parentCode" }]);
+    });
   }
   checkExceptions()
   {
@@ -1153,5 +1179,6 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.showBridgeUppSubscription.unsubscribe();
     this.showDuplicatePaymentSubscription.unsubscribe();
   }
+
 }
 
