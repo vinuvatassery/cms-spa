@@ -1,5 +1,3 @@
-
-
 /** Angular **/
 import {
   ChangeDetectionStrategy,

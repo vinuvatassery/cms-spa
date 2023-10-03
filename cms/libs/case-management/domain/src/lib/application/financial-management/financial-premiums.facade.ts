@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
-import { FinancialPremiumsDataService } from '../../infrastructure/financial-management/financial-premiums.data.service';
 import { Router } from '@angular/router';
-import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
-import { InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { BatchPremium } from '../../entities/financial-management/batch-premium';
+import { InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
 import { GridFilterParam } from '../../entities/grid-filter-param';
+import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
+import { FinancialPremiumsDataService } from '../../infrastructure/financial-management/financial-premiums.data.service';
 
 
 @Injectable({ providedIn: 'root' })
@@ -223,7 +223,6 @@ export class FinancialPremiumsFacade {
         });
     }
 
-
   loadFinancialPremiumsAllPaymentsListGrid(params: GridFilterParam, claimsType: string){
       this.financialPremiumPaymentLoaderSubject.next(true);
       this.financialPremiumsDataService.loadFinancialPremiumsAllPaymentsListService(params, claimsType).subscribe({
@@ -300,6 +299,7 @@ export class FinancialPremiumsFacade {
       },
     });
   }
+
   loadReconcileListGrid(batchId:any,premiumType:any,event:any){
     this.financialPremiumsDataService.loadReconcileListService(batchId,premiumType,event).subscribe({
       next: (dataResponse:any) => {
@@ -372,6 +372,7 @@ export class FinancialPremiumsFacade {
 viewAdviceLetterData(batchId:any,printAdviceLetterData: any, premiumType:any) {
   return this.financialPremiumsDataService.viewPrintAdviceLetterData(batchId, printAdviceLetterData, premiumType);
 }
+
 loadMedicalPremiumList(
   skipcount: number,
   maxResultCount: number,

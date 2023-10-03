@@ -9,24 +9,24 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
+import { GridFilterParam } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { LovFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   ColumnVisibilityChangeEvent,
   FilterService,
   GridDataResult,
 } from '@progress/kendo-angular-grid';
+import { IntlService } from '@progress/kendo-angular-intl';
 import {
   CompositeFilterDescriptor,
   State,
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject, debounceTime } from 'rxjs';
-import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridFilterParam } from '@cms/case-management/domain';
-import { ConfigurationProvider } from '@cms/shared/util-core';
-import { IntlService } from '@progress/kendo-angular-intl';
-import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-financial-premiums-all-payments-list',
