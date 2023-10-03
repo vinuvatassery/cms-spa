@@ -113,9 +113,9 @@ export class PendingApprovalPaymentFacade {
     );
   }
 
-  getPendingApprovalBatchDetailPaymentsGrid(gridSetupData: any, batchId: string) {
+  getPendingApprovalBatchDetailPaymentsGrid(gridSetupData: any, batchId: string, serviceSubType: string) {
 
-    this.PendingApprovalPaymentService.getPendingApprovalBatchDetailPaymentsGrid(gridSetupData, batchId).subscribe(
+    this.PendingApprovalPaymentService.getPendingApprovalBatchDetailPaymentsGrid(gridSetupData, batchId, serviceSubType).subscribe(
       {
         next: (dataResponse: any) => {
           const gridView = {

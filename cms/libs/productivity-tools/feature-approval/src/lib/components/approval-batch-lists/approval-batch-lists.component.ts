@@ -261,7 +261,8 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
       filter: this.filter,
     };
     let batchId = this.batchId;
-    this.loadBatchDetailPaymentsListEvent.emit({gridDataRefinerValue, batchId});
+    let selectedPaymentType = this.selectedPaymentType;
+    this.loadBatchDetailPaymentsListEvent.emit({gridDataRefinerValue, batchId, selectedPaymentType});
     this.gridDataHandle();
   }
 

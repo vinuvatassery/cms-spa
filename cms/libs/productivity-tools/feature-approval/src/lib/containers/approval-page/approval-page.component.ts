@@ -72,7 +72,7 @@ export class ApprovalPageComponent  {
     if(!gridDataValue.batchId || gridDataValue.batchId.length == 0){
       return;
     }
-    this.pendingApprovalPaymentFacade.getPendingApprovalBatchDetailPaymentsGrid(gridDataValue, gridDataValue.batchId)
+    this.pendingApprovalPaymentFacade.getPendingApprovalBatchDetailPaymentsGrid(gridDataValue, gridDataValue.batchId, gridDataValue.selectedPaymentType)
   }
   
   loadSubmittedSummary(events:any): void {

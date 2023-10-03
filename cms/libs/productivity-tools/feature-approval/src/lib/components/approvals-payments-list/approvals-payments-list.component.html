@@ -101,7 +101,7 @@
                       [(ngModel)]="dataItem.sendBackNotes"
                       (valueChange)="sendBackNotesChange(dataItem)"
                       aria-label="smoking cessation note"                                          
-                      title ="{{dataItem.sendBackNotes}}" [disabled]="dataItem.sendBackButtonDisabled"
+                      title ="{{dataItem.sendBackNotes}}" [disabled]="dataItem.batchStatus == 'APPROVE'"
                       [ngClass]="ngDirtyInValid(dataItem,'sendBackNotes',rowIndex)"  id ="sendBackNotes{{rowIndex}}"
                       >
                    
