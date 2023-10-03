@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
 import { PendingApprovalPaymentService } from '../infrastructure/pending-approval-payment.data.service';
-import { Subject } from 'rxjs';
+import { Subject, startWith } from 'rxjs';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ApprovalUserStatusCode } from '../enums/approval-user-status-code.enum';
 
 @Injectable({ providedIn: 'root' })
 export class PendingApprovalPaymentFacade {
   /** Private properties **/
-  private pendingApprovalCountSubject = new Subject<any>();
   private pendingApprovalGridSubject = new Subject<any>();
   private pendingApprovalMainListSubject = new Subject<any>();
   private pendingApprovalSubmittedSummarySubject = new Subject<any>();
 
   /** Public properties **/
-  pendingApprovalCount$ = this.pendingApprovalCountSubject.asObservable();
   pendingApprovalGrid$ = this.pendingApprovalGridSubject.asObservable();
   approverCount = 0;
   sendBackCount = 0;
@@ -26,7 +24,7 @@ export class PendingApprovalPaymentFacade {
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly loaderService: LoaderService,
   ) {
-
+    
   }
   
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -48,19 +46,6 @@ export class PendingApprovalPaymentFacade {
   hideLoader()
   {
     this.loaderService.hide();
-  }
-
-  getAllPendingApprovalPaymentCount() {
-    this.PendingApprovalPaymentService.getAllPendingApprovalPaymentCount().subscribe(
-      {
-        next: (count: any) => {
-            this.pendingApprovalCountSubject.next(count);
-        },
-        error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
-        },
-      }
-    );
   }
   
   getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string, level: number) {

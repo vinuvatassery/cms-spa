@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 /** Internal Library **/
-import { NavigationMenu, NavigationMenuFacade } from '@cms/system-config/domain';
+import { NavigationMenu, NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { MenuBadge } from '../enums/menu-badge.enum';
 
 @Component({
@@ -24,13 +24,17 @@ export class SideNavigationComponent implements OnInit {
     { key: "DIRECT_MESSAGES", value: 10 },
     { key: MenuBadge.financialManagement, value: 0 },
     { key: MenuBadge.fundsAndPcas, value: 0 },
+    {key : MenuBadge.pendingApprovals, value: 99}
   ];
+  userLevel = 0;
+
   /** Constructor **/
   constructor(private readonly router: Router,
-    private readonly navigationMenuFacade: NavigationMenuFacade) { }
+    private readonly navigationMenuFacade: NavigationMenuFacade,private userManagementFacade: UserManagementFacade) { }
 
   /** Lifecycle events **/
   ngOnInit(): void {
+    this.getUserRole();
     this.navigationMenuFacade.getNavigationMenu();
     this.getMenuCount();    
   }
@@ -70,6 +74,8 @@ export class SideNavigationComponent implements OnInit {
 
     private getMenuCount(){
       this.getPcaAssignmentMenuCount();
+      this.getPendingApprovalCount();
+
     }
   
     private getPcaAssignmentMenuCount(){
@@ -89,5 +95,27 @@ export class SideNavigationComponent implements OnInit {
       });    
     }
   
+    getUserRole(){
+      if(this.userManagementFacade.hasRole("FM1")){
+        this.userLevel = 1;
+        return;
+      }
+      if(this.userManagementFacade.hasRole("FM2")){
+        this.userLevel = 2;
+      }
+    }
+
+    private subscribeToPendingApprovalCount(){
+      this.navigationMenuFacade.pendingApprovalCount$.subscribe({
+        next: (val)=>{
+        this.setBadgeValue(MenuBadge.pendingApprovals, val);
+        }
+      })
+    }
+
+    private getPendingApprovalCount(){
+      this.navigationMenuFacade.getAllPendingApprovalPaymentCount(this.userLevel);
+      this.subscribeToPendingApprovalCount();
+    }
   
 }

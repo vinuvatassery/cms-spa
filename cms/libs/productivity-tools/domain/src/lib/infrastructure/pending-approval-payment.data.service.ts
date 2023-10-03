@@ -9,11 +9,7 @@ export class PendingApprovalPaymentService {
     private readonly configurationProvider: ConfigurationProvider
   ) {}
 
-  getAllPendingApprovalPaymentCount() {
-    return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/count`
-    );
-  }
+
 
   getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string, level: number) {
     const paymentApprovalGridSetupDto = {

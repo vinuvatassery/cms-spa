@@ -241,6 +241,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.selectedPaymentType = paymentSubTypeCode;    
     this.loadApprovalPaymentsListGrid();
     this.mainListDataHandle();  
+    this.gridDataHandle();
     this.cd.detectChanges();   
   }
 
@@ -320,7 +321,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   
   gridDataHandle() {
     this.approvalsPaymentsLists$.subscribe((response: any) => {
-      
+      this.approveBatchCount=response.approverCount;
+      this.sendbackBatchCount= response.sendBackCount;
       if (response.data.length > 0) {
         this.assignDataFromUpdatedResultToPagedResult(response);
         this.tAreaVariablesInitiation(this.approvalsPaymentsGridPagedResult);

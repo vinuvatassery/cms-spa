@@ -6,7 +6,7 @@ import { State } from '@progress/kendo-data-query';
 import { ApprovalFacade, PendingApprovalPaymentFacade } from '@cms/productivity-tools/domain';
 import { ReminderNotificationSnackbarService, ReminderSnackBarNotificationType } from '@cms/shared/util-core';
 import { NotificationService } from '@progress/kendo-angular-notification';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
@@ -35,19 +35,21 @@ export class ApprovalPageComponent implements OnInit {
   state!: State;
   approvalsGeneralLists$ = this.approvalFacade.approvalsGeneralList$; 
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
-  pendingApprovalCount$ = this.pendingApprovalPaymentFacade.pendingApprovalCount$;
+  pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalCount$;
   approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
   approvalsPaymentsMainLists$ = this.pendingApprovalPaymentFacade.pendingApprovalMainList$;
   pendingApprovalSubmittedSummary$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmittedSummary$;
+
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,     
               private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService,
               private pendingApprovalPaymentFacade: PendingApprovalPaymentFacade,
-              private userManagementFacade: UserManagementFacade) {                
+              private userManagementFacade: UserManagementFacade,
+              private navigationMenuFacade: NavigationMenuFacade) {                
               }
   ngOnInit(): void {
     this.getUserRole();
-    this.pendingApprovalPaymentFacade.getAllPendingApprovalPaymentCount();
+    this.navigationMenuFacade.getAllPendingApprovalPaymentCount(this.userLevel);
   }
 
    loadApprovalsGeneralGrid(event: any): void {
