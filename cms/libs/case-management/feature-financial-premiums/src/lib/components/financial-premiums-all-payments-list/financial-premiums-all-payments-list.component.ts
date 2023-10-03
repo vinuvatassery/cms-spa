@@ -58,14 +58,14 @@ export class FinancialPremiumsAllPaymentsListComponent
   gridColumns: any = {
     itemNumber: 'Item #',
     batchNumber: 'Batch #',
-    vendorTypeCode: 'Insurance Vendor',
+    vendorTypeCodeDesc: 'Insurance Vendor',
     itemCountInBatch: 'Item Count',
     totalCost: 'Total Amount',
     acceptsReportsFlag: 'Accepts reports',
     paymentRequestedDate: 'Date Payment Requested',
     paymentSentDate: 'Date Payment Sent',
     paymentMethodDesc: 'Payment Method',
-    paymentStatusCode: 'Payment Status',
+    paymentStatusDesc: 'Payment Status',
     pcaCode: 'PCA',
     mailCode: 'Mail Code',
     by: 'By',
@@ -81,7 +81,7 @@ export class FinancialPremiumsAllPaymentsListComponent
       columnDesc: 'Batch #',
     },
     {
-      columnName: 'vendorTypeCode',
+      columnName: 'vendorTypeCodeDesc',
       columnDesc: 'Insurance Vendor',
     },
     {
@@ -109,7 +109,7 @@ export class FinancialPremiumsAllPaymentsListComponent
       columnDesc: 'Payment Method',
     },
     {
-      columnName: 'paymentStatusCode',
+      columnName: 'paymentStatusDesc',
       columnDesc: 'Payment Status',
     },
     {
@@ -148,6 +148,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   columnChangeDesc = 'Default Columns';
 
   numericColumns: any[] = [
+    'itemNumber',
     'itemCountInBatch',
     'totalCost',
     'pcaCode',
@@ -326,7 +327,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   performSearch(data: any) {
     this.defaultGridState();
     const operator = [...this.numericColumns, ...this.dateColumns].includes(
-      this.selectedSearchColumn
+      this.selectedSearchColumn?? 'itemNumber'
     )
       ? 'eq'
       : 'startswith';

@@ -35,7 +35,7 @@
       The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
     </span>
     <span *ngIf="showNumberSearchWarning">
-      Item Count / Total Amount / PCA # allow only numbers.
+      Item # / Item Count / Total Amount / PCA # allow only numbers.
     </span>
   </span>
 </div>
@@ -88,10 +88,10 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="vendorTypeCode" title="Insurance Vendor" [width]="160">
+    <kendo-grid-column field="vendorTypeCodeDesc" title="Insurance Vendor" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button aria-label="vendorTypeCode" kendoButton look="flat" class="card-link-button">
-          {{ dataItem.vendorTypeCode }}
+        <button aria-label="vendorTypeCodeDesc" kendoButton look="flat" class="card-link-button">
+          {{ dataItem.vendorTypeCodeDesc }}
         </button>
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -163,11 +163,11 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="paymentStatusCode" title="Payment Status" [width]="160">
+    <kendo-grid-column field="paymentStatusDesc" title="Payment Status" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-dropdownlist [data]="paymentStauses" textField="lovDesc"
         valueField="lovDesc" [value]="selectedPaymentStatus" [valuePrimitive]="true"
-        (valueChange)="dropdownFilterChange('paymentStatusCode',$event, filterService)">
+        (valueChange)="dropdownFilterChange('paymentStatusDesc',$event, filterService)">
       </kendo-dropdownlist>
       </ng-template>
     </kendo-grid-column>
