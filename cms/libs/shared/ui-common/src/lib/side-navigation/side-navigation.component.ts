@@ -24,7 +24,7 @@ export class SideNavigationComponent implements OnInit {
     { key: "DIRECT_MESSAGES", value: 10 },
     { key: MenuBadge.financialManagement, value: 0 },
     { key: MenuBadge.fundsAndPcas, value: 0 },
-    {key : MenuBadge.pendingApprovals, value: 99}
+    {key : MenuBadge.pendingApprovals, value: 0}
   ];
   userLevel = 0;
 
@@ -33,9 +33,9 @@ export class SideNavigationComponent implements OnInit {
     private readonly navigationMenuFacade: NavigationMenuFacade,private userManagementFacade: UserManagementFacade) { }
 
   /** Lifecycle events **/
-  ngOnInit(): void {
-    this.getUserRole();
+  ngOnInit(): void {    
     this.navigationMenuFacade.getNavigationMenu();
+    this.getUserRole();
     this.getMenuCount();    
   }
 

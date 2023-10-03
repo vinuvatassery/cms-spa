@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PendingApprovalPaymentService } from '../infrastructure/pending-approval-payment.data.service';
-import { Subject, startWith } from 'rxjs';
+import { Subject } from 'rxjs';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ApprovalUserStatusCode } from '../enums/approval-user-status-code.enum';
 

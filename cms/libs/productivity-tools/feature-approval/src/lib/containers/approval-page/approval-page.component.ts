@@ -30,7 +30,7 @@ export class ApprovalPageComponent implements OnInit {
   sortImportedClaimsList = this.approvalFacade.sortImportedClaimsList;
   sortValueImportedClaimsAPproval = this.approvalFacade.sortValueImportedClaimsAPproval;
 
-  userLevel = 0;
+  userLevel = 1;
 
   state!: State;
   approvalsGeneralLists$ = this.approvalFacade.approvalsGeneralList$; 
