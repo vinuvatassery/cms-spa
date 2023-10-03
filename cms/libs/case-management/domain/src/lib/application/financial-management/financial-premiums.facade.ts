@@ -13,7 +13,7 @@ import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsFacade {
- 
+
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -63,14 +63,14 @@ export class FinancialPremiumsFacade {
     },
   ];
 
-  private financialPremiumPaymentLoaderSubject = new BehaviorSubject<any>(false);
+  private financialPremiumPaymentLoaderSubject = new Subject<boolean>();
   financialPremiumPaymentLoader$ = this.financialPremiumPaymentLoaderSubject.asObservable();
 
   private financialPremiumsProcessDataSubject = new Subject<any>();
   financialPremiumsProcessData$ = this.financialPremiumsProcessDataSubject.asObservable();
 
   private financialPremiumsBatchDataSubject =  new Subject<any>();
-  financialPremiumsBatchData$ = this.financialPremiumsBatchDataSubject.asObservable();  
+  financialPremiumsBatchData$ = this.financialPremiumsBatchDataSubject.asObservable();
 
   private financialPremiumsAllPaymentsDataSubject =  new Subject<any>();
   financialPremiumsAllPaymentsData$ = this.financialPremiumsAllPaymentsDataSubject.asObservable();
@@ -95,14 +95,14 @@ export class FinancialPremiumsFacade {
 
   paymentBatchNameSubject  =  new Subject<any>();
   paymentBatchName$ = this.paymentBatchNameSubject.asObservable();
-  
+
   /** Private properties **/
- 
+
   /** Public properties **/
- 
+
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>(); 
+  snackbarSubject = new Subject<SnackBar>();
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
@@ -144,11 +144,11 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
-  }   
-  
+    });
+  }
+
   loadFinancialPremiumsBatchListGrid(){
     this.financialPremiumsDataService.loadFinancialPremiumsBatchListService().subscribe({
       next: (dataResponse) => {
@@ -157,9 +157,9 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
 
 
@@ -168,7 +168,7 @@ export class FinancialPremiumsFacade {
     sort: string,
     sortType: string,
     filter: string){
-      
+
       filter = JSON.stringify(filter);
       this.financialPremiumPaymentLoaderSubject.next(true);
       this.financialPremiumsDataService.loadFinancialPremiumsAllPaymentsServiceWithApi(skipcount, maxResultCount, sort, sortType, filter).subscribe({
@@ -210,9 +210,9 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
 
   loadBatchItemsListGrid(){
@@ -223,11 +223,11 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
-  loadReconcileListGrid(batchId:any,premiumType:any,event:any){ 
+  loadReconcileListGrid(batchId:any,premiumType:any,event:any){
     this.financialPremiumsDataService.loadReconcileListService(batchId,premiumType,event).subscribe({
       next: (dataResponse:any) => {
         const gridView = {
@@ -242,7 +242,7 @@ export class FinancialPremiumsFacade {
     });
 
   }
-  
+
   loadPremiumsListGrid(){
     this.financialPremiumsDataService.loadPremiumsListService().subscribe({
       next: (dataResponse) => {
@@ -251,9 +251,9 @@ export class FinancialPremiumsFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.hideLoader();
       },
-    });  
+    });
   }
 
   loadInsurancePremiumBreakoutSummary(data:any){
@@ -266,7 +266,7 @@ export class FinancialPremiumsFacade {
       },
     });
   }
-  
+
   loadInsurancePremiumBreakoutList(data:any) {
     data.filter=JSON.stringify(data.filter);
     this.financialPremiumsDataService

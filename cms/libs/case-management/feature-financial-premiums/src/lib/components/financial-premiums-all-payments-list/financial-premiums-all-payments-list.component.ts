@@ -47,58 +47,70 @@ export class FinancialPremiumsAllPaymentsListComponent
   @Output() loadFinancialPremiumsAllPaymentsListEvent = new EventEmitter<any>();
   @Input() financialPremiumPaymentLoader$: any;
 
+  gridColumns: any = {
+    itemNumber: 'Item #',
+    batchNumber: 'Batch #',
+    vendorTypeCode: 'Insurance Vendor',
+    itemCountInBatch: 'Item Count',
+    totalCost: 'Total Amount',
+    acceptsReportsFlag: 'Accepts reports',
+    paymentRequestedDate: 'Date Payment Requested',
+    paymentSentDate: 'Date Payment Sent',
+    paymentMethodDesc: 'Payment Method',
+    paymentStatusCode: 'Payment Status',
+    pcaCode: 'PCA',
+    mailCode: 'Mail Code',
+    by: 'By',
+  };
+
   dropDowncolumns: any[] = [
     {
       columnCode: 'itemNumber',
-      columnDesc: 'Item Number',
+      columnDesc: 'Item #',
     },
     {
       columnCode: 'batchNumber',
-      columnDesc: 'Batch Number',
+      columnDesc: 'Batch #',
     },
     {
       columnCode: 'vendorTypeCode',
-      columnDesc: 'Vendor Type Code',
+      columnDesc: 'Insurance Vendor',
     },
     {
       columnCode: 'itemCountInBatch',
-      columnDesc: 'Item Count In Batch',
+      columnDesc: 'Item Count',
     },
     {
       columnCode: 'totalCost',
-      columnDesc: 'Total Cost',
+      columnDesc: 'Total Amount',
+    },
+    {
+      columnCode: '8acceptsReportsFlag',
+      columnDesc: 'Accepts reports',
     },
     {
       columnCode: 'paymentRequestedDate',
-      columnDesc: 'Payment Requested Date',
+      columnDesc: 'Date Payment Requested',
     },
     {
       columnCode: 'paymentSentDate',
-      columnDesc: 'Payment Sent Date',
+      columnDesc: 'Date Payment Sent',
     },
     {
       columnCode: 'paymentMethodDesc',
-      columnDesc: 'Payment Method Desc',
+      columnDesc: 'Payment Method',
     },
     {
       columnCode: 'paymentStatusCode',
-      columnDesc: 'Payment Status Code',
+      columnDesc: 'Payment Status',
     },
     {
       columnCode: 'pcaCode',
-      columnDesc: 'PCA Code',
+      columnDesc: 'PCA',
     },
     {
       columnCode: 'mailCode',
       columnDesc: 'Mail Code',
-    },
-    {
-      columnCode: 'clientFullName',
-      columnDesc: 'Client Full Name',
-    },
-    {
-      columnCode: 'totalDue',
-      columnDesc: 'Total Due',
     },
     {
       columnCode: 'by',
@@ -106,14 +118,36 @@ export class FinancialPremiumsAllPaymentsListComponent
     },
   ];
 
-  public state!: State;
-  sortColumn = 'batch';
-  sortDir = 'Ascending';
-  columnsReordered = false;
-  filteredBy = '';
+  //searching
+  private searchSubject = new Subject<string>();
+  selectedSearchColumn = 'ALL';
+  searchText = '';
   searchValue = '';
+
+  //sorting
+  sortColumn = 'pcaCode';
+  sortColumnDesc = 'PCA #';
+  sortDir = 'Ascending';
+
+  //filtering
+  filteredBy = '';
+  filter: any = [];
+
+  filteredByColumnDesc = '';
+  selectedStatus = '';
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  showDateSearchWarning = false;
+  showNumberSearchWarning = false;
+  columnChangeDesc = 'Default Columns';
+
+  numericColumns = ['itemNumber', 'itemCountInBatch', 'totalCost', 'pcaCode'];
+  dateColumns = ['paymentRequestedDate', 'paymentSentDate'];
+
+
+
+  public state!: State;
+  columnsReordered = false;
   isFiltered = false;
-  filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   gridFinancialPremiumsAllPaymentsDataSubject = new Subject<any>();
@@ -121,7 +155,6 @@ export class FinancialPremiumsAllPaymentsListComponent
     this.gridFinancialPremiumsAllPaymentsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
-  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   PreviewSubmitPaymentDialog: any;
   deletePaymentDialog: any;
   unBatchPaymentDialog: any;
@@ -130,6 +163,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   isSendReportOpened = false;
   isUnBatchPaymentOpen = false;
   isDeletePaymentOpen = false;
+
 
   public allPaymentsGridActions = [
     {
