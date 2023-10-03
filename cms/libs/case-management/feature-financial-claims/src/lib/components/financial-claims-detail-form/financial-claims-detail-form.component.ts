@@ -212,9 +212,6 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     }
     
      this.paymentRequestType$.subscribe((paymentRequestTypes) => {
-      debugger
-        if(paymentRequestTypes.length>0)
-      paymentRequestTypes[1].parentCode = paymentRequestTypes[3].parentCode = paymentRequestTypes[4].parentCode = paymentRequestTypes[0].lovCode
       let parentRequestTypes = paymentRequestTypes.filter(x => x.parentCode == null);
       let refactoredPaymentRequestTypeArray :Lov[] =[]
       parentRequestTypes.forEach(x => {
