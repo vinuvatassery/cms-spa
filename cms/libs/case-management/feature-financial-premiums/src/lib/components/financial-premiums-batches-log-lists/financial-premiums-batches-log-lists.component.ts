@@ -15,9 +15,10 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {  CompositeFilterDescriptor,  State,} from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
+import { PaymentStatusCode } from 'libs/case-management/domain/src/lib/enums/payment-status-code.enum';
 @Component({
   selector: 'cms-financial-premiums-batches-log-lists',
   templateUrl: './financial-premiums-batches-log-lists.component.html',
@@ -48,12 +49,17 @@ export class FinancialPremiumsBatchesLogListsComponent
   vendorId:any;
   clientId:any;
   clientName:any="";
-
+  PaymentStatusList = [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved];
+ 
   yesOrNoLovs:any=[];
   onlyPrintAdviceLetter: boolean = true;
   printAuthorizationDialog: any;
   selectedDataRows: any;
   isLogGridExpand = true;
+  isBulkUnBatchOpened = false;
+  @Input() unbatchPremiums$ :any
+  @Input() unbatchEntireBatch$ :any
+  selected:any
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -82,19 +88,35 @@ export class FinancialPremiumsBatchesLogListsComponent
         this.navToReconcilePayments(data);
       },
     },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Unbatch Entire Batch',
+      icon: 'undo',
+      click: (data: any): void => {
+        if (!this.isBulkUnBatchOpened) {
+          this.isBulkUnBatchOpened = true;
+          this.onUnBatchPaymentOpenClicked(this.unBatchPaymentPremiumsDialogTemplate);
+        }
+      },
+    }
   ];
 
-  public batchLogGridActions = [
-
+  public batchLogGridActions(dataItem:any){
+   return [
     {
       buttonType: 'btn-h-primary',
       text: 'UnBatch Payment',
       icon: 'undo',
+      disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
       click: (data: any): void => {
+        if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
+        {
         if (!this.isUnBatchPaymentPremiumsClosed) {
           this.isUnBatchPaymentPremiumsClosed = true;
+          this.selected = data;
           this.onUnBatchPaymentOpenClicked(this.unBatchPaymentPremiumsDialogTemplate);
         }
+      }
       },
     },
     {
@@ -111,6 +133,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       },
     },
   ];
+}
 
 
   dropDowncolumns : any = [
@@ -185,7 +208,9 @@ export class FinancialPremiumsBatchesLogListsComponent
 
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
   @Output() loadFinancialPremiumBatchInvoiceListEvent =  new EventEmitter<any>();
-  @Output() exportGridDataEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();   
+  @Output() unBatchEntireBatchEvent = new EventEmitter<any>(); 
+  @Output() unBatchPremiumEvent = new EventEmitter<any>();
 
   public state!: State;
   showExportLoader = false;
@@ -405,11 +430,52 @@ export class FinancialPremiumsBatchesLogListsComponent
 
   onUnBatchPaymentCloseClicked(result: any) {
     if (result) {
-      this.isUnBatchPaymentPremiumsClosed = false;
-      this.UnBatchPaymentDialog.close();
+      if (this.isBulkUnBatchOpened) {
+        this.handleUnbatchEntireBatch();
+        this.unBatchEntireBatchEvent.emit({
+         batchId: this.batchId,
+         premiumsType: this.premiumsType
+      });
+      } else {
+        this.handleUnbatchClaims();
+        this.unBatchPremiumEvent.emit({
+          paymentId : [this.selected.paymentRequestId],
+          premiumsType: this.premiumsType
+        })
+      }
     }
+    this.isBulkUnBatchOpened = false;
+    this.isUnBatchPaymentPremiumsClosed = false;
+    this.UnBatchPaymentDialog.close();
   }
 
+  handleUnbatchClaims() {
+    this.unbatchPremiums$
+      .pipe(first((unbatchResponse: any) => unbatchResponse != null))
+      .subscribe((unbatchResponse: any) => {
+        if (unbatchResponse ?? false) {
+          this.loadBatchLogListGrid();
+        }
+      });
+  }
+
+  handleUnbatchEntireBatch() {
+    this.unbatchEntireBatch$
+      .pipe(
+        first(
+          (unbatchEntireBatchResponse: any) =>
+            unbatchEntireBatchResponse != null
+        )
+      )
+      .subscribe((unbatchEntireBatchResponse: any) => {
+        if (unbatchEntireBatchResponse ?? false) {
+          this.loadBatchLogListGrid();
+        }
+      });
+  }
+
+
+  
   public onRemovePremiumsOpenClicked(template: TemplateRef<unknown>): void {
     this.removePremiumsDialog = this.dialogService.open({
       content: template,
