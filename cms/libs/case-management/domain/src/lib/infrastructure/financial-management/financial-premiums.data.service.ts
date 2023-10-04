@@ -543,11 +543,11 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payment-requests/unbatch`, paymentRequestIds);
   }
 
-  removeSelectedPremiums(selctedPremiumPayments: any, premiumsType: any) {
+  removeSelectedPremiums(selectedPremiumPayments: any, premiumsType: any) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumsType}/payment-requests/remove`, {
       headers,
-      body: selctedPremiumPayments
+      body: selectedPremiumPayments
     }
     );
   }
