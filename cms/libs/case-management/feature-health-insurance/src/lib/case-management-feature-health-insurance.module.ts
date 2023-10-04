@@ -30,6 +30,7 @@ import { MedicalCarrierContactInfoComponent } from './components/medical-carrier
 import { ProfileHealthInsurancePageComponent } from './containers/profile-healthe-insurance/profile-health-insurance-page.component';
 import { MedicalPremiumPaymentDetailComponent } from './components/medical-premium-payment-detail/medical-premium-payment-detail.component';
 import { DeactivateInsuranceConfirmationComponent } from './components/deactivate-medical-premium-confirmation/deactivate-medical-premium.component';
+import { CaseManagementFeatureFinancialVendorModule } from '@cms/case-management/feature-financial-vendor';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { DeactivateInsuranceConfirmationComponent } from './components/deactivat
     SharedUiCommonModule,
     SharedUiTpaModule,
     SystemConfigFeatureUserManagementModule,
+    CaseManagementFeatureFinancialVendorModule
   ],
   declarations: [
     MedicalInsuranceStatusListComponent,

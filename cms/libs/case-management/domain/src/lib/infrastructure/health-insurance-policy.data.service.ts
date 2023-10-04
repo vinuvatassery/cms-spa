@@ -287,18 +287,27 @@ export class HealthInsurancePolicyDataService {
   }
 
   loadPaymentRequest(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {
+   
     let params = new HttpParams();
     params = params.append('sorting',gridDataRefinerValue.sortColumn);
     params = params.append('sortType',gridDataRefinerValue.sortType);
      return this.http.get(    
-    `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments?statusType=${gridDataRefinerValue.type}&clientId=${clientId}&eligibilityId=${clientCaseEligibilityId}&skipCount=
+    `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments/get-permium-paymen?statusType=${gridDataRefinerValue.type}&clientId=${clientId}&eligibilityId=${clientCaseEligibilityId}&skipCount=
     ${gridDataRefinerValue.skipCount}&maxResultCount=${gridDataRefinerValue.maxResultCount}&dentalPlanFlag=${gridDataRefinerValue.dentalPlanFlag}&showTwelveMonthRecord=${gridDataRefinerValue.twelveMonthsRecords}`,{params:params});
     }
-  savePaymentRequest(paymentRequest:any){
-    return this.http.post<PaymentRequest>(
+  savePaymentRequest(paymentRequest:any){    
+    if(paymentRequest.serviceTypeCode=="INSURANCE_PREMIUM")
+    {
+ return this.http.post<PaymentRequest>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments`,
       paymentRequest
     );
+    }else{
+      return this.http.post<any>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments/Save`,
+        paymentRequest
+      );
+    }  
   }
 
   loadInsurancePoliciesByProviderId(providerId: any, clientId: any, clientCaseEligibilityId: any, isDental: any) {

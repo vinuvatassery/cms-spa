@@ -76,7 +76,6 @@ export class ApprovalPageComponent  {
   }
   
   loadSubmittedSummary(events:any): void {
-    debugger;
     this.pendingApprovalPaymentFacade.loadSubmittedSummary(events);
   }
 }

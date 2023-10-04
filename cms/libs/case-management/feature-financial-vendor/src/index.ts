@@ -47,3 +47,4 @@ export * from './lib/components/contact-address-list/contact-address-list.compon
 export * from './lib/components/contact-address-list/contact-address-list.component';
 
 export * from './lib/components/contact-address-list/contact-address-list.component';
+export * from './lib/components/vendor-details/vendor-details.component';
