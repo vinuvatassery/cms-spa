@@ -98,8 +98,8 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.loadFinancialPremiumsAllPaymentsListGrid();
   }
 
-  loadInsurancePlans(clientId: number) {
-    this.financialPremiumsFacade.loadInsurancePlans(clientId);
+  loadInsurancePlans(client: any) {
+    this.financialPremiumsFacade.loadInsurancePlans(client, this.premiumType);
   }
 
   loadInsurancePlansCoverageDates(clientId: number) {

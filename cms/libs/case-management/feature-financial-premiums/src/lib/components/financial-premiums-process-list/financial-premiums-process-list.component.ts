@@ -6,6 +6,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   Output,
   TemplateRef,
   ViewChild,
@@ -19,13 +20,13 @@ import {
   CompositeFilterDescriptor, filterBy
 } from '@progress/kendo-data-query';
 import { BatchPremium } from 'libs/case-management/domain/src/lib/entities/financial-management/batch-premium';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'cms-financial-premiums-process-list',
   templateUrl: './financial-premiums-process-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPremiumsProcessListComponent implements  OnChanges {
+export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDestroy {
   @ViewChild('batchPremiumsConfirmationDialogTemplate', { read: TemplateRef })
   batchPremiumsConfirmationDialogTemplate!: TemplateRef<any>;
   @ViewChild('removePremiumsConfirmationDialogTemplate', { read: TemplateRef })
@@ -184,6 +185,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   public checkboxOnly = true;
   public mode: SelectableMode = 'multiple';
   public drag = false;
+  actionResponseSubscription = new Subscription;
+
   
   /** Constructor **/
   constructor(
@@ -202,6 +205,12 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
 
   ngOnInit(): void {
     this.premiumGridlistDataHandle();
+    this.addActionRespSubscription();
+
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeFromActionResponse();
   }
 
   premiumGridlistDataHandle() {
@@ -448,7 +457,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
     });
   }
   modalCloseEditPremiumsFormModal(result: any) {
-    if (result) {
+    if (result && this.editPremiumsFormDialog) {
+      this.isEditBatchClosed = false;
       this.editPremiumsFormDialog.close();
     }
   }
@@ -460,7 +470,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
     });
   }
   modalCloseAddPremiumsFormModal(result: any) {
-    if (result) {
+    if (result && this.addPremiumsFormDialog) {
       this.isAddPremiumClosed = false;
       this.addPremiumsFormDialog.close();
     }
@@ -588,8 +598,8 @@ closeRecentPremiumsModal(result: any){
     });
   }
 
-  loadInsurancePlans(clientId: number){
-    this.clientChangeEvent.emit(clientId);
+  loadInsurancePlans(client: any){
+    this.clientChangeEvent.emit(client);
   }
 
   savePremiums(premiums: InsurancePremium[]){
@@ -656,5 +666,21 @@ closeRecentPremiumsModal(result: any){
 
   updatePremium(data: any){
     this.updatePremiumEvent.emit(data);
+  }
+
+  private addActionRespSubscription() {
+    this.actionResponseSubscription = this.actionResponse$.subscribe((resp: boolean) => {
+      if (resp) {
+        this.modalCloseAddPremiumsFormModal(true);
+        this.modalCloseEditPremiumsFormModal(true);
+        this.loadFinancialPremiumsProcessListGrid();
+      }
+    });
+  }
+
+  private unsubscribeFromActionResponse() {
+    if (this.actionResponseSubscription) {
+      this.actionResponseSubscription.unsubscribe();
+    }
   }
 }

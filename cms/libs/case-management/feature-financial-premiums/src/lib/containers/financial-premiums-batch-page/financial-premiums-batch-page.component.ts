@@ -24,6 +24,7 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
   state!: State;
   batchLogGridLists$ = this.financialPremiumsFacade.batchLogData$;
   batchLogServicesData$ = this.financialPremiumsFacade.batchLogServicesData$;
+  actionResponse$ = this.financialPremiumsFacade.premiumActionResponse$;
   batchId!:string;
   dataExportParameters! : any
   premiumType: any;
@@ -93,6 +94,10 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
 
       this.documentFacade.getExportFile(vendorPageAndSortedRequest,`premium/${this.premiumType}/payment-batches/${batchId}/payments` , fileName)
     }
+  }
+
+  deletePayment(paymentId: string){
+    this.financialPremiumsFacade.deletePremiumPayment(this.premiumType, paymentId);
   }
 
 }

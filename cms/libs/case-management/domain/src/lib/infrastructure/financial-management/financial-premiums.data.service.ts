@@ -480,9 +480,9 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
   return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${claimsType}/batch`, batchPremiums);
 }
  
-  loadInsurancePlans(clientId: number): Observable<ClientInsurancePlans[]>{
+  loadInsurancePlans(clientId: number, eligibilityId: string, type: string): Observable<ClientInsurancePlans[]>{
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/plans`
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/plans?eligibilityId=${eligibilityId}&type=${type}`
     );
   }
 
@@ -532,6 +532,12 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
     return this.http.put<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/${type}/premiums/${premiumId}`
       , premiums
+    );
+  }
+
+  deletePremium(type: string, paymentId: string): Observable<InsurancePremiumDetails> {
+    return this.http.delete<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${type}/payments/${paymentId}`
     );
   }
 }

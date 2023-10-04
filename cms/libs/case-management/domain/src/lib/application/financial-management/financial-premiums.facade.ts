@@ -399,14 +399,14 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
     });
 }
 
-    loadInsurancePlans(clientId: number){
+    loadInsurancePlans(client: any, type: string){
       this.insurancePlansLoaderSubject.next(true);
-      this.financialPremiumsDataService.loadInsurancePlans(clientId)
+      this.financialPremiumsDataService.loadInsurancePlans(client.clientId, client.eligibilityId, type)
       .subscribe({
         next: (dataResponse) => {
             this.insurancePlansLoaderSubject.next(false);
             this.insurancePlansSubject.next(dataResponse);
-            this.loadInsurancePlansCoverageDates(clientId);
+            this.loadInsurancePlansCoverageDates(client.clientId);
         },
         error: (err) => {
           this.insurancePlansLoaderSubject.next(false);
@@ -503,6 +503,22 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
       this.financialPremiumsDataService.updatePremium(type, premiumId, premiums)
       .subscribe({
         next: (response) => {
+          this.premiumActionResponseSubject.next(true);
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+
+   deletePremiumPayment(type: string, paymentId: string){
+      this.showLoader();
+      this.financialPremiumsDataService.deletePremium(type, paymentId)
+      .subscribe({
+        next: (response: any) => {
           this.premiumActionResponseSubject.next(true);
           this.hideLoader();
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
