@@ -155,23 +155,23 @@
     }
   }
   &.red-banner {
-    background: material-color($hive-error-palette, 100);
-    color: material-color($hive-error-palette, 900);
+    background: var(--hive-error-palette-100);
+    color: var(--hive-error-palette-900);
     a {
       color: $white;
       word-break: break-word;
     }
   }
   &.red-bg-banner {
-    background: material-color($hive-error-palette, 800);
-    color: material-color($hive-error-palette, A100);
+    background: var(--hive-error-palette-800);
+    color: var(--hive-error-palette-A100);
     a {
       color: $white;
       word-break: break-word;
     }
   }
   &.light-blue-banner {
-    background: material-color($hive-primary-palette, 400, 0.08);
+    background: var(--hive-primary-palette-400, 0.08);
     color: rgba($color: $black, $alpha: 0.87);
     padding: $size-xlg1 $size-xlg1;
     a {
@@ -180,8 +180,8 @@
     }
   }
   &.canyon-banner {
-    background: material-color($hive-canyon-palette, 100);
-    color: material-color($hive-canyon-palette, 900);
+    background: var(--hive-canyon-palette-100);
+    color: var(--hive-canyon-palette-900);
     a {
       color: $white;
       word-break: break-word;
@@ -197,7 +197,7 @@
     }
   }
   &.orange-banner {
-    background: material-color($hive-warn-palette, 200);
+    background: var(--hive-warn-palette-200);
     a {
       color: $white;
       word-break: break-word;
@@ -207,13 +207,13 @@
     cursor: pointer;
     &:hover {
       &.red-banner {
-        background: material-color($hive-error-palette, 200);
+        background: var(--hive-error-palette-200);
       }
       &.canyon-banner {
-        background: material-color($hive-canyon-palette, 200);
+        background: var(--hive-canyon-palette-200);
       }
       &.orange-banner {
-        background: material-color($hive-warn-palette, 200);
+        background: var(--hive-warn-palette-200);
       }
     }
   }
@@ -286,11 +286,11 @@
     border-top-color: $input_border !important;
     border-radius: $border-radius-sm;
     &.k-state-disabled {
-      border-color: material-color($hive-neutral-palette, 50) !important;
+      border-color: var(--hive-neutral-palette-50) !important;
     }
 
     &:hover {
-      border: 1px solid material-color($hive-neutral-palette, 900) !important;
+      border: 1px solid var(--hive-neutral-palette-900) !important;
 
       .k-textbox,
       .k-picker-wrap,
@@ -299,7 +299,7 @@
         border-radius: $border-radius-sm;
         &.k-state-disabled,
         &:disabled {
-          border: 1px solid material-color($hive-neutral-palette, 900) !important;
+          border: 1px solid var(--hive-neutral-palette-900) !important;
         }
       }
     }
@@ -458,10 +458,10 @@
       height: $size-xxxl;
       font-weight: normal;
       font-family: $font-family;
-      background: material-color($hive-neutral-palette, 100);
+      background: var(--hive-neutral-palette-100);
       z-index: 1;
       .k-select {
-        background: material-color($hive-neutral-palette, 600);
+        background: var(--hive-neutral-palette-600);
         height: $size-xl * 2;
         width: $size-xl * 2;
         padding: $size-0;
@@ -581,7 +581,7 @@
   transition: ease-in all 0.4s;
   cursor: pointer;
   &:hover {
-    background: material-color($hive-neutral-palette, 200);
+    background: var(--hive-neutral-palette-200);
   }
 }
 .block-margin-tb {
@@ -642,7 +642,7 @@
       color: $white;
     }
     &:hover {
-      background-color: material-color($hive-primary-palette, 900);
+      background-color: var(--hive-primary-palette-900);
     }
   }
 }
@@ -657,7 +657,7 @@
     transition: ease-in all 0.4s;
     &:hover,
     &:focus {
-      background-color: material-color($hive-primary-palette, 900);
+      background-color: var(--hive-primary-palette-900);
       color: $white;
     }
   } 
@@ -676,9 +676,9 @@
     color: $input_label_color;
   }
   .k-textarea.k-input{
-    background: material-color($hive-neutral-palette, 50) !important;
-    border-color: material-color($hive-neutral-palette, 50) !important;
-    border: 1px solid material-color($hive-neutral-palette, 50) !important;
+    background: var(--hive-neutral-palette-50) !important;
+    border-color: var(--hive-neutral-palette-50) !important;
+    border: 1px solid var(--hive-neutral-palette-50) !important;
     opacity: 1;
     padding-top: 8px;
     color: rgba(0, 0, 0, 0.38);
@@ -687,8 +687,8 @@
 .k-textbox {
   &:disabled {
     pointer-events: none;
-    background: material-color($hive-neutral-palette, 50) !important;
-    border-color: material-color($hive-neutral-palette, 50) !important;
+    background: var(--hive-neutral-palette-50) !important;
+    border-color: var(--hive-neutral-palette-50) !important;
   }
 }
 .k-dropdown {
@@ -697,12 +697,12 @@
   .k-disabled {
     opacity: 1;
     pointer-events: none;
-    background: material-color($hive-neutral-palette, 50) !important;
-    border-color: material-color($hive-neutral-palette, 50) !important;
+    background: var(--hive-neutral-palette-50) !important;
+    border-color: var(--hive-neutral-palette-50) !important;
     .k-input,
     .k-select {
-      background: material-color($hive-neutral-palette, 50) !important;
-      border-color: material-color($hive-neutral-palette, 50) !important;
+      background: var(--hive-neutral-palette-50) !important;
+      border-color: var(--hive-neutral-palette-50) !important;
       .k-icon {
         opacity: 0.3;
       }
@@ -713,13 +713,13 @@
   &.k-state-disabled {
     opacity: 1;
     pointer-events: none;
-    background: material-color($hive-neutral-palette, 50) !important;
-    border-color: material-color($hive-neutral-palette, 50) !important;
+    background: var(--hive-neutral-palette-50) !important;
+    border-color: var(--hive-neutral-palette-50) !important;
     .k-input:disabled,
     .k-input[disabled],
     .k-input.k-disabled {
-      background: material-color($hive-neutral-palette, 50) !important;
-      border-color: material-color($hive-neutral-palette, 100) !important;
+      background: var(--hive-neutral-palette-50) !important;
+      border-color: var(--hive-neutral-palette-100) !important;
     }
   }
 }
@@ -728,8 +728,8 @@
     opacity: 1;
     pointer-events: none;
     .k-dropzone {
-      background: material-color($hive-neutral-palette, 50) !important;
-      border-color: material-color($hive-neutral-palette, 50) !important;
+      background: var(--hive-neutral-palette-50) !important;
+      border-color: var(--hive-neutral-palette-50) !important;
       .k-button {
         opacity: 0.5;
       }
@@ -745,14 +745,14 @@ kendo-datepicker {
     background: $white;
   }
   &.k-state-disabled {
-    background: material-color($hive-neutral-palette, 50);
+    background: var(--hive-neutral-palette-50);
     opacity: 1;
     .k-select {
-      background: material-color($hive-neutral-palette, 50);
+      background: var(--hive-neutral-palette-50);
     }
   }
   &.k-state-disabled + .k-label {
-    background: material-color($hive-neutral-palette, 50);
+    background: var(--hive-neutral-palette-50);
   }
 }
 kendo-timepicker {
@@ -760,14 +760,14 @@ kendo-timepicker {
     background: $white;
   }
   &.k-state-disabled {
-    background: material-color($hive-neutral-palette, 50);
+    background: var(--hive-neutral-palette-50);
     opacity: 1;
     .k-select {
-      background: material-color($hive-neutral-palette, 50);
+      background: var(--hive-neutral-palette-50);
     }
   }
   &.k-state-disabled + .k-label {
-    background: material-color($hive-neutral-palette, 50);
+    background: var(--hive-neutral-palette-50);
   }
 }
 
@@ -776,9 +776,9 @@ kendo-timepicker {
 .k-picker-outline[disabled],
 .k-picker-outline.k-disabled,
 .k-input.k-disabled {
-  background: material-color($hive-neutral-palette, 50) !important;
-  border-color: material-color($hive-neutral-palette, 50) !important;
-  border: 1px solid material-color($hive-neutral-palette, 50) !important;
+  background: var(--hive-neutral-palette-50) !important;
+  border-color: var(--hive-neutral-palette-50) !important;
+  border: 1px solid var(--hive-neutral-palette-50) !important;
   opacity: 1;
   .k-chip-actions, .k-clear-value{
     display: none;

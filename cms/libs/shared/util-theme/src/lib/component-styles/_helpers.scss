@@ -89,10 +89,10 @@ section {
   margin-right: $size-0 !important;
 }
 .ml--3 {
-  margin-left: -$size-xxx !important;
+  margin-left: neg($size-xxx) !important;
 }
 .mr--3 {
-  margin-right: -$size-xxx !important;
+  margin-right: neg($size-xxx) !important;
 }
 .p-2 {
   padding: $size-xlg !important;
@@ -286,9 +286,14 @@ section {
 }
 
 .red-text-color{
-  color: material-color($hive-error-palette, 400);
+  color:  var(--hive-error-palette-400);
 }
 
 .break-word{
   word-wrap: break-word;
+}
+
+// Watermark Disable 
+div[kendowatermarkoverlay]{
+  display: none;
 }

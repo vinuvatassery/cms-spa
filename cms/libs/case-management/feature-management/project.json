@@ -6,10 +6,13 @@
   "prefix": "case-management",
   "targets": {
     "build": {
-      "executor": "@nrwl/angular:ng-packagr-lite",
-      "outputs": ["dist/libs/case-management/feature-management"],
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": [
+        "{workspaceRoot}/dist/libs/case-management/feature-management"
+      ],
       "options": {
-        "project": "libs/case-management/feature-management/ng-package.json"
+        "project": "libs/case-management/feature-management/ng-package.json",
+        "updateBuildableProjectDepsInPackageJson": true
       },
       "configurations": {
         "production": {
@@ -22,15 +25,17 @@
       "defaultConfiguration": "production"
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/case-management/feature-management"],
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/libs/case-management/feature-management"
+      ],
       "options": {
         "jestConfig": "libs/case-management/feature-management/jest.config.ts",
         "passWithNoTests": true
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": [
           "libs/case-management/feature-management/src/**/*.ts",

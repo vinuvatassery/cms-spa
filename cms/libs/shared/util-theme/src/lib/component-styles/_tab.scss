@@ -3,7 +3,8 @@
   border-radius: $border-radius-md;
   border: 0 solid rgba(0, 0, 0, 0.125);
   box-shadow: none;
-  .k-content {
+  .k-content,
+  .k-tabstrip-content {
     overflow: visible;
     padding: $size-0;
     box-shadow: none;
@@ -92,8 +93,8 @@
 
   &.app-c-sub-tab {
     .k-tabstrip-items-wrapper {
-      box-shadow: 0px 4px 6px material-color($hive-neutral-palette, 200);
-      border-bottom: 1px solid material-color($hive-neutral-palette, 200);
+      box-shadow: 0px 4px 6px var(--hive-neutral-palette-200);
+      border-bottom: 1px solid var(--hive-neutral-palette-200);
       .k-tabstrip-items {
         margin-left: $size-xxx;
         .k-link {
@@ -102,7 +103,8 @@
         }
       }
     }
-    .k-content.k-state-active {
+    .k-content.k-state-active,
+    .k-tabstrip-content.k-state-active {
       max-height: calc(100vh - 285px);
       overflow: auto;
       padding: $size-xx $size-xlg $size-xxxx * 2;
