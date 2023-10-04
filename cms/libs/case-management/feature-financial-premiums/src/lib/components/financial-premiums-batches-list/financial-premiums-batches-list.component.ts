@@ -130,11 +130,9 @@ export class FinancialPremiumsBatchesListComponent
   }
 
   /* Public methods */
-
-  navToBatchDetails(event: any) {
-    this.route.navigate([
-      '/financial-management/premiums/' + this.premiumsType + '/batch',
-    ]);
+  navToBatchDetails(event : any){
+    this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch`],
+    { queryParams :{bid: event.batchId}});
   }
 
   searchColumnChangeHandler(value: string) {
@@ -375,7 +373,6 @@ export class FinancialPremiumsBatchesListComponent
         return '';
       }
     }
-
     return searchValue;
   }
 }
