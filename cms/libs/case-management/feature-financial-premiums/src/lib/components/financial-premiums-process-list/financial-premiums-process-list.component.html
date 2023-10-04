@@ -37,10 +37,10 @@
     kendoGridSelectBy="paymentRequestId"
     (selectedKeysChange)="selectedKeysChange($event)"
     [(selectedKeys)]="selectedProcessClaims">
-    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand && !isSendReportOpened" [columnMenu]="false" [showSelectAll]="true"
+    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand && !isSendReportOpened && !isRemoveBatchClosed" [columnMenu]="false" [showSelectAll]="true"
     [width]="40"  [locked]="true"></kendo-grid-checkbox-column>
 
-      <kendo-grid-column *ngIf="isSendReportOpened"  field="add" [width]="150" 
+      <kendo-grid-column *ngIf="isSendReportOpened || isRemoveBatchClosed"  field="add" [width]="150" 
       [sticky]="true" [sortable]="false"  [columnMenu]="false" [headerStyle]="{'text-align': 'center'}" [style]="{'text-align': 'center'}">
         <ng-template kendoGridHeaderTemplate let-dataItem>
             <input style="zoom: 1.2;"   
@@ -291,8 +291,8 @@
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
   <span class="" *ngIf="isSendReportOpened">{{ sendReportCount}} payment(s) selected</span>
-  <span class="" *ngIf="!isProcessGridExpand && !isSendReportOpened">{{ selectedProcessClaims.length}} payment(s) selected</span>
-  <span class="" *ngIf="isProcessGridExpand">0 premiums(s) to be remove</span>
+  <span class="" *ngIf="!isProcessGridExpand && !isSendReportOpened && !isRemoveBatchClosed">{{ selectedProcessClaims.length}} payment(s) selected</span>
+  <span class="" *ngIf="isRemoveBatchClosed">{{sendReportCount}} premiums(s) to be remove</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchPremiumsGridSelectedCancelClicked()"   *ngIf="isBatchPremiumsClicked || isRemoveBatchClosed || isSendReportOpened"> Cancel
   </button>
@@ -338,7 +338,11 @@
 </ng-template>
 <ng-template #removePremiumsConfirmationDialogTemplate>
   <cms-financial-premiums-remove-premiums
-    (modalCloseRemovePremiumModal)="onModalRemovePremiumsModalClose($event)"></cms-financial-premiums-remove-premiums>
+    (modalCloseRemovePremiumModal)="onModalRemovePremiumsModalClose($event)"
+    [removePremiumsCount]="sendReportCount"
+    [premiumsType]="premiumsType"
+    [directRemoveClicked]="directRemoveClicked"
+    [selectedRemovePremiumsList]="selectedSendReportList"></cms-financial-premiums-remove-premiums>
 </ng-template>
 <ng-template #addPremiumsDialogTemplate>
   <cms-financial-premiums-add-details-form

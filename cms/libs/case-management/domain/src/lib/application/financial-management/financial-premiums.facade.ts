@@ -562,5 +562,9 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
           },
         });
     }
+
+    removeSelectedPremiums(selctedPremiumPayments: any, premiumsType: any) {
+      return this.financialPremiumsDataService.removeSelectedPremiums(selctedPremiumPayments, premiumsType);
+    }
   
 }
