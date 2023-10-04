@@ -17,7 +17,7 @@ export class PendingApprovalPaymentService {
       Sorting: gridSetupData.gridDataRefinerValue.sorting,
       SkipCount: gridSetupData.gridDataRefinerValue.skipcount,
       MaxResultCount: gridSetupData.gridDataRefinerValue.maxResultCount,
-      Filter: gridSetupData.gridDataRefinerValue.filter,
+     //Filter: gridSetupData.gridDataRefinerValue.filter,
       ColumnName : gridSetupData.gridDataRefinerValue.columnName.columnCode
     };
     let url = `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=${serviceSubType}/level=${level}`;
