@@ -468,7 +468,18 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
     if (result) {
       this.isRemovePremiumGridOptionClosed = false;
       this.removePremiumsDialog.close();
-      this.ngOnChanges();
+    }
+  }
+
+  onRemovingPremiums(result: boolean) {
+    if(result){
+      this.state = {
+        skip: 0,
+        take: this.pageSizes[0]?.value,
+        sort: this.sort,
+      };
+      this.loadFinancialPremiumsProcessListGrid();
+      this.onBatchPremiumsGridSelectedCancelClicked();
     }
   }
 

@@ -342,6 +342,7 @@
     [removePremiumsCount]="sendReportCount"
     [premiumsType]="premiumsType"
     [directRemoveClicked]="directRemoveClicked"
+    (deletedEvent)="onRemovingPremiums($event)"
     [selectedRemovePremiumsList]="selectedSendReportList"></cms-financial-premiums-remove-premiums>
 </ng-template>
 <ng-template #addPremiumsDialogTemplate>

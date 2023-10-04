@@ -545,7 +545,7 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
 
   removeSelectedPremiums(selectedPremiumPayments: any, premiumsType: any) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumsType}/payment-requests/remove`, {
+    return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumsType}/payment-requests`, {
       headers,
       body: selectedPremiumPayments
     }

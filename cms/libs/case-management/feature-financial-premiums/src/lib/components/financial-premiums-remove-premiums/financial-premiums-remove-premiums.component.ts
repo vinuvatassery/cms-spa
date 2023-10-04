@@ -15,11 +15,9 @@ import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSn
 })
 export class FinancialPremiumsRemovePremiumsComponent {
   @Output() modalCloseRemovePremiumModal = new EventEmitter();
-
-  closeRemovePremiumsClicked() {
-    this.modalCloseRemovePremiumModal.emit(true);
-  }
+  @Output() deletedEvent = new EventEmitter<boolean>();
   selctedPremiumPaymentIds: any = [];
+ 
   @Input() selectedRemovePremiumsList: any = [];
   @Input() removePremiumsCount: number = 0;
   @Input() premiumsType: any;
@@ -40,6 +38,7 @@ export class FinancialPremiumsRemovePremiumsComponent {
       .subscribe({
         next: (data: any) =>{
           if (data) {
+            this.deletedEvent.emit(true);
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Premium removed!')
             this.ref.detectChanges();
             this.closeRemovePremiumsClicked();
@@ -52,6 +51,10 @@ export class FinancialPremiumsRemovePremiumsComponent {
         this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
       },
     });
+  }
+
+  closeRemovePremiumsClicked() {
+    this.modalCloseRemovePremiumModal.emit(true);
   }
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
