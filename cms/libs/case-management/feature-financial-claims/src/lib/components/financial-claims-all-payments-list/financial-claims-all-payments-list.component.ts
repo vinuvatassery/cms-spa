@@ -1,4 +1,3 @@
-
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -11,17 +10,17 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute, Router } from '@angular/router';
-import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { LovFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { DialogService } from '@progress/kendo-angular-dialog';
-import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-financial-claims-all-payments-list',
@@ -48,7 +47,7 @@ export class FinancialClaimsAllPaymentsListComponent
 
   @Output() loadFinancialClaimsAllPaymentsListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
-  
+
   public state!: State;
   sortColumn = 'batchNumber';
   sortDir = 'Ascending';
@@ -498,13 +497,13 @@ export class FinancialClaimsAllPaymentsListComponent
 
   onClickedExport(){
     this.showExportLoader = true
-    this.exportGridDataEvent.emit()    
-    
+    this.exportGridDataEvent.emit()
+
     this.exportButtonShow$
     .subscribe((response: any) =>
     {
       if(response)
-      {        
+      {
         this.showExportLoader = false
         this.cdr.detectChanges()
       }

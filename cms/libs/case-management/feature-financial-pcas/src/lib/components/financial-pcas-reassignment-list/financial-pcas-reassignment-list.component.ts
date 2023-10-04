@@ -68,6 +68,7 @@ export class FinancialPcasReassignmentListComponent
   @Output() getPcaAssignmentByIdEvent = new EventEmitter<any>();
   @Output() updatePcaAssignmentByEvent = new EventEmitter<any>();
   @Input() getPcaAssignmentById$ :any;
+  @Output() loadPcaReassignmentListEvent = new EventEmitter();
   @Input() notAssignPcaLists$: any;
   inputvalue!:string;
   reAssignPcaS:any[]=[];
@@ -269,8 +270,8 @@ export class FinancialPcasReassignmentListComponent
     this.updatePcaAssignmentByEvent.emit(updateReassignmentValue);
     this.isViewGridOptionClicked = false;
     this.isEditGridOptionClicked = false;
-    this.pcaReassignmentAddEditDialogService.close();
-
+      this.pcaReassignmentAddEditDialogService.close();
+      this.loadPcaReassignmentListEvent.emit(true);
   }
 
   onSearchTextChange(text : any,data:any)

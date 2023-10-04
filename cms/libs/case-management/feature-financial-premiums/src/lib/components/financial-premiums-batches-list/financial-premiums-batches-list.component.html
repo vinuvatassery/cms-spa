@@ -1,58 +1,155 @@
- 
+
 
 <!-- Table Top Filter, Search and Export -->
- 
+
 <p class="mt-2"> Click on a row to view batches based on the date they were created.</p>
 <section class="table-filter-section mat-form-no-b-space">
-    <span class="filter-section_items filter--select">
-      <kendo-floatinglabel>
-        <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"  
-        textField="columnDesc" valueField="columnCode"  >
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
-    </span>
-    <span class="filter-section_items filter--search">
-      <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
-      <kendo-floatinglabel text="Search">
-        <kendo-textbox   aria-label="Search case"
-          rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-  
-      </kendo-floatinglabel>
-    </span>
-    <span class="right-overlay-export">
-      <button kendoButton [primary]="true" look="flat" class="button-lg">
-        <span class="material-icons" aria-label="export" aria-invalid="true"
-          >exit_to_app</span
-        ><i class="exp_button-text">Export</i>
-      </button>
-    </span>
-  </section>
-  
-  <!-- Sorted Info -->
-  <div class="table-sorted-info">
-    Sorted Descending by <span class="sort-items"> Source </span>
-    <span class="sort-items"  >No Filters</span>
-    <span class="sort-items"  >Filtered by Batch</span>
-    <span class="sort-items">Default Columns</span>
-    <span class="sort-items" >Columns Re-ordered</span>
-  </div>
-  
+  <span class="filter-section_items filter--select">
+    <kendo-floatinglabel>
+      <kendo-dropdownlist
+            aria-label="All Columns"
+            [fillMode]="formUiStyle.dropDownFillMode"
+            textField="columnDesc"
+            valueField="columnName"
+            [data]="searchColumnList"
+            [valuePrimitive]="true"
+            [(ngModel)]="selectedSearchColumn"
+            (valueChange)="searchColumnChangeHandler($event)">
+      </kendo-dropdownlist>
+    </kendo-floatinglabel>
+  </span>
+  <span class="filter-section_items filter--search">
+    <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
+    <kendo-floatinglabel text="Search">
+          <kendo-textbox
+                aria-label="Search case"
+                rounded="medium"
+                [fillMode]="formUiStyle.inputFillMode"
+                [(ngModel)]="searchText"
+                (afterValueChanged)="onSearch($event)"> </kendo-textbox>
+    </kendo-floatinglabel>
+</span>
+</section>
+<div class="table-sorted-info">
+  <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning || showNumberSearchWarning">
+        <span class="material-icons" aria-label="search-warning" aria-hidden="true">
+              warning
+        </span>
+        <span *ngIf="showDateSearchWarning">
+              The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
+        </span>
+        <span *ngIf="showNumberSearchWarning">
+          Unbatched Payments / # of Payments in Batch / # of Payments Requested / # of Payments Reconciled / Total Amount of Adjustments / Total Amount of Payments # allow only numbers.
+        </span>
+  </span>
+</div>
+
+
+
+<!-- Sorted Info -->
+<div class="table-sorted-info">
+  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
+  <span class="sort-items" *ngIf="!filteredByColumnDesc">No Filters</span>
+  <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
+  <span class="sort-items">{{columnChangeDesc}}</span>
+  <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
+  <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="restGrid()">
+        <a>Set to Default</a>
+  </button>
+</div>
+
   <!-- Case List table -->
   <div class="app-c-table">
-    <kendo-grid [resizable]="true" [loading]="isFinancialPremiumsBatchGridLoaderShow"  [pageSize]="state.take" [pageable]="true"
-    [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-    [columnMenu]="{ filter: true }" [sort]="state.sort"(dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [data]="financialPremiumsBatchGridLists$ | async"  [selectable]="true" 
+    <kendo-grid
+    [loading]="(financialPremiumsBatchGridLoader$ | async)??true"
+    [pageSize]="state.take"
+    [pageable]="true"
+    [sortable]="true"
+    [skip]="state.skip"
+    [groupable]="false"
+    [reorderable]="true"
+    [resizable]="true"
+    [columnMenu]="{ filter: true }"
+    [sort]="state.sort"
+    [filter]="state.filter"
+    [rowClass]="rowClass"
+    [data]="financialPremiumsBatchGridLists$ | async"
+    (dataStateChange)="dataStateChange($event)"
+    (filterChange)="filterChange($event)"
+    (columnReorder)="onColumnReorder($event)"
+    [selectable]="true"
      >
-      <kendo-grid-checkbox-column  [sticky]="true"  [columnMenu]="false" [showSelectAll]="true"  [width]="40"></kendo-grid-checkbox-column>
-      <kendo-grid-column field="batch" title="Batch #" [width]="120"> </kendo-grid-column>
-      <kendo-grid-column field="ofProviders" title="# Uncommitted Payments" [width]="140"> </kendo-grid-column> 
-      <kendo-grid-column field="ofClaims" title="# of Pmts. in Batch" [width]="140"> </kendo-grid-column>
-      <kendo-grid-column field="pmtsRequested" title="# of Pmts Requested" [width]="140"> </kendo-grid-column>
-      <kendo-grid-column field="pmtsReconciled" title="# of Pmts Reconciled" [width]="140"> </kendo-grid-column>
-      <kendo-grid-column field="totalAmountDue" title="Total Amount of Adjs." [width]="140"> </kendo-grid-column>
-      <kendo-grid-column field="totalAmount " title="Total Amount of Payments" [width]="140"> <ng-template kendoGridCellTemplate let-dataItem>
-        <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmount}}</span>
-      </ng-template> </kendo-grid-column>  
+      <kendo-grid-column field="batchName" title="Batch #" [width]="120">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button aria-label="Batch #" kendoButton look="flat" class="card-link-button"
+            (click)="navToBatchDetails(dataItem)">
+            {{ dataItem.batchName }}
+          </button>
+        </ng-template>
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="unbatchedPayments" title="Unbatched Payments" [width]="140">
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="batchedPayments" title="# of Pmts. in Batch" [width]="140">
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="paymentsRequested" title="# of Pmts Requested" [width]="140">
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="paymentsReconciled" title="# of Pmts Reconciled" [width]="140">
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="totalAdjustmentsAmount" title="Total Amount of Adjs." [width]="140">
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAdjustmentsAmount}}</span>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="totalPaymentsAmount " title="Total Amount of Payments" [width]="140">
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false"
+            operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalPaymentsAmount}}</span>
+        </ng-template>
+      </kendo-grid-column>
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"  let-currentPage="currentPage">
         <div class="grid-custom-paginationtemplates d-flex">
           <div class="d-flex align-items-center">
@@ -61,7 +158,7 @@
               [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
               [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
-            <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'"> </kendo-grid-messages>  
+            <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
           </div>
           <div class="d-flex">
             <kendo-pager-input></kendo-pager-input>
@@ -79,7 +176,7 @@
         </div>
         <p>There is no data to display.</p>
       </ng-template>
-  
+
     </kendo-grid>
   </div>
 

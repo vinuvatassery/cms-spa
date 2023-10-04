@@ -9,28 +9,21 @@ export class PendingApprovalPaymentService {
     private readonly configurationProvider: ConfigurationProvider
   ) {}
 
-  getAllPendingApprovalPaymentCount() {
-    return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/count`
-    );
-  }
 
-  getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string) {
+
+  getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string, level: number) {
     const paymentApprovalGridSetupDto = {
-      SortType: gridSetupData.sortType,
-      Sorting: gridSetupData.sort,
-      SkipCount: gridSetupData.skipcount,
-      MaxResultCount: gridSetupData.maxResultCount,
-      Filter: gridSetupData.filter,
+      SortType: gridSetupData.gridDataRefinerValue.sortType,
+      Sorting: gridSetupData.gridDataRefinerValue.sorting,
+      SkipCount: gridSetupData.gridDataRefinerValue.skipcount,
+      MaxResultCount: gridSetupData.gridDataRefinerValue.maxResultCount,
+      ColumnName : gridSetupData.gridDataRefinerValue.columnName.columnCode
     };
-        return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=` +
-        serviceSubType+`/level=1`,
-        paymentApprovalGridSetupDto
-    );
+    let url = `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=${serviceSubType}/level=${level}`;
+    return this.http.post<any>(url, paymentApprovalGridSetupDto);
   }
 
-  getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string) {
+  getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string, level: number) {
     const paymentApprovalGridSetupDto = {
       SortType: gridSetupData.sortType,
       Sorting: gridSetupData.sort,
@@ -39,8 +32,7 @@ export class PendingApprovalPaymentService {
       Filter: gridSetupData.filter,
     };
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=` +
-        serviceSubType+`/level=1`,
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=${serviceSubType}/level=${level}`,
         paymentApprovalGridSetupDto
     );
   }

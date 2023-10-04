@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { PendingApprovalPaymentService } from '../infrastructure/pending-approval-payment.service';
+import { PendingApprovalPaymentService } from '../infrastructure/pending-approval-payment.data.service';
 import { Subject } from 'rxjs';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ApprovalUserStatusCode } from '../enums/approval-user-status-code.enum';
 
 @Injectable({ providedIn: 'root' })
 export class PendingApprovalPaymentFacade {
   /** Private properties **/
-  private pendingApprovalCountSubject = new Subject<any>();
   private pendingApprovalGridSubject = new Subject<any>();
   private pendingApprovalMainListSubject = new Subject<any>();
   private pendingApprovalSubmittedSummarySubject = new Subject<any>();
@@ -14,8 +14,10 @@ export class PendingApprovalPaymentFacade {
   private pendingApprovalBatchDetailPaymentsGridSubject = new Subject<any>();
 
   /** Public properties **/
-  pendingApprovalCount$ = this.pendingApprovalCountSubject.asObservable();
   pendingApprovalGrid$ = this.pendingApprovalGridSubject.asObservable();
+  approverCount = 0;
+  sendBackCount = 0;
+
   pendingApprovalMainList$ = this.pendingApprovalMainListSubject.asObservable();
   pendingApprovalSubmittedSummary$ = this.pendingApprovalSubmittedSummarySubject.asObservable();
   pendingApprovalBatchDetailPaymentsCount$ = this.pendingApprovalBatchDetailPaymentsCountSubject.asObservable();
@@ -27,7 +29,7 @@ export class PendingApprovalPaymentFacade {
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly loaderService: LoaderService,
   ) {
-
+    
   }
   
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -50,30 +52,27 @@ export class PendingApprovalPaymentFacade {
   {
     this.loaderService.hide();
   }
-
-  getAllPendingApprovalPaymentCount() {
-    this.PendingApprovalPaymentService.getAllPendingApprovalPaymentCount().subscribe(
-      {
-        next: (count: any) => {
-            this.pendingApprovalCountSubject.next(count);
-        },
-        error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
-        },
-      }
-    );
-  }
   
-  getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string) {
+  getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string, level: number) {
 
-    this.PendingApprovalPaymentService.getPendingApprovalPaymentGrid(gridSetupData ,serviceSubType).subscribe(
+    this.PendingApprovalPaymentService.getPendingApprovalPaymentGrid(gridSetupData ,serviceSubType, level).subscribe(
       {
         next: (dataResponse: any) => {
-          const gridView = {
+          dataResponse.items.forEach((element:any) => {
+            if(element.approvalUserStatusCode === ApprovalUserStatusCode.APPROVED){
+              this.approverCount++;
+            }else if(element.approvalUserStatusCode === ApprovalUserStatusCode.DENIED){
+              this.sendBackCount++;
+            }
+          });
+          const gridViewData = {
             data: dataResponse["items"],
-            total: dataResponse["totalCount"]
+            total: dataResponse["totalCount"],
+            approverCount: this.approverCount,
+            sendBackCount:this.sendBackCount,
           };
-            this.pendingApprovalGridSubject.next(gridView);
+            this.pendingApprovalGridSubject.next(gridViewData);
+            this.approverCount = this.sendBackCount = 0
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
@@ -82,16 +81,15 @@ export class PendingApprovalPaymentFacade {
     );
   }
 
-  getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string) {
-
-    this.PendingApprovalPaymentService.getPendingApprovalPaymentMainList(gridSetupData ,serviceSubType).subscribe(
+  getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string, level: number) {
+    this.PendingApprovalPaymentService.getPendingApprovalPaymentMainList(gridSetupData ,serviceSubType, level).subscribe(
       {
         next: (dataResponse: any) => {
           const gridView = {
             data: dataResponse["items"],
             total: dataResponse["totalCount"]
           };
-            this.pendingApprovalMainListSubject.next(gridView);
+          this.pendingApprovalMainListSubject.next(gridView);
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  

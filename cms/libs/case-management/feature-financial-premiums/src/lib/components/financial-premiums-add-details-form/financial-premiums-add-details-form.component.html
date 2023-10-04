@@ -125,6 +125,7 @@
                                         textField="coverageDate" 
                                         valueField="coverageStartDate" 
                                         [valuePrimitive]="true"
+                                        [ngClass]="{'ng-invalid ng-dirty':(dataItem.coverageDateRequired || dataItem.coverageDatesExist)}"
                                         [(ngModel)]="dataItem.coverageDates"
                                         (valueChange)="coverageDatesValueChanges(policyId, dataItem, $event)"
                                         >
@@ -150,6 +151,7 @@
                                     [min]="0"
                                     [decimals]="2"
                                     [maxlength]="15"
+                                    [ngClass]="{'ng-invalid ng-dirty':dataItem.premiumAmountRequired}"
                                     [(ngModel)]="dataItem.premiumAmount"
                                     (valueChange)="premiumAmountValuesChanges(dataItem, $event)"
                                     >
@@ -190,7 +192,8 @@
                                     [maxlength]="100" 
                                     [rows]="1"
                                     [fillMode]="formUiStyle.inputFillMode"
-                                    resizable="none"                                                                
+                                    resizable="none"
+                                    [ngClass]="{'ng-invalid ng-dirty':(dataItem.exceptionReasonRequired && dataItem.exceptionReason.length === 0)}"                                                                
                                     (valueChange)="exceptionReasonCounterChange(dataItem, $event)"
                                     [(ngModel)]="dataItem.exceptionReason"> 
                                     <kendo-textarea-suffix class="justify-content-end">
