@@ -630,4 +630,8 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
       })
     }
 	
+
+    removeSelectedPremiums(selectedPremiumPayments: any, premiumsType: any) {
+      return this.financialPremiumsDataService.removeSelectedPremiums(selectedPremiumPayments, premiumsType);
+    }
 }

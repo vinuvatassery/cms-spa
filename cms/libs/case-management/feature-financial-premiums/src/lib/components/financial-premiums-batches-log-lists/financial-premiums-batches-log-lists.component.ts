@@ -64,15 +64,6 @@ export class FinancialPremiumsBatchesLogListsComponent
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Send Report',
-      icon: 'mail',
-      click: (data: any): void => {
-        this.isRequestPaymentClicked = false;
-        this.isSendReportOpened = true;
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
       text: 'Request Payments',
       icon: 'local_atm',
       click: (data: any): void => {
@@ -385,11 +376,11 @@ export class FinancialPremiumsBatchesLogListsComponent
     this.route.navigate(['/financial-management/premiums/' + this.premiumsType + '/batch/items']);
   }
 
-  navToReconcilePayments(event: any) {
-    this.route.navigate([
-      '/financial-management/premiums/' + this.premiumsType + '/batch/reconcile-payments',
-    ]);
+  navToReconcilePayments(event : any){
+    this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch/reconcile-payments`],
+    { queryParams :{bid: this.batchId}});
   }
+
   public onPreviewSubmitPaymentOpenClicked(
     template: TemplateRef<unknown>
   ): void {

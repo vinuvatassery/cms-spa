@@ -1,6 +1,6 @@
 /** Angular **/
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 /** External libraries **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, of } from 'rxjs';
@@ -440,6 +440,15 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
   loadPremiumAdjustments(type: string, paymentId: string, params: GridFilterParam) {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${type}/adjustments?paymentId=${paymentId}&type=${type}&${params.convertToQueryString()}`
+    );
+  }
+
+  removeSelectedPremiums(selectedPremiumPayments: any, premiumsType: any) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumsType}/payment-requests`, {
+      headers,
+      body: selectedPremiumPayments
+    }
     );
   }
 }
