@@ -35,6 +35,8 @@ import { FinancialPremiumsLeavePageComponent } from './components/financial-prem
 import { FinancialPremiumsSendNoticeComponent } from './components/financial-premiums-send-notice/financial-premiums-send-notice.component';
 import { FinancialPremiumsUnbatchPaymentComponent } from './components/financial-premiums-unbatch-payment/financial-premiums-unbatch-payment.component';
 import { FinancialPremiumsBatchesLogInvoiceListsComponent } from './components/financial-premiums-batches-log-invoices-lists/financial-premiums-batches-log-invoices-lists.component';
+import { PharmacyClaimsProviderInfoComponent } from 'libs/case-management/feature-financial-pharmacy-claims/src/lib/components/pharmacy-claims-provider-info/pharmacy-claims-provider-info.component';
+import { CaseManagementFeatureFinancialPharmacyClaimsModule } from '@cms/case-management/feature-financial-pharmacy-claims';
 
 @NgModule({
   imports: [
@@ -42,6 +44,7 @@ import { FinancialPremiumsBatchesLogInvoiceListsComponent } from './components/f
     SharedUiTpaModule,
     SharedUiCommonModule,
     CaseManagementFeatureFinancialPremiumsRoutingModule,
+    CaseManagementFeatureFinancialPharmacyClaimsModule
   ],
   declarations: [
     FinancialPremiumsPageComponent,
