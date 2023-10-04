@@ -385,11 +385,11 @@ export class FinancialPremiumsBatchesLogListsComponent
     this.route.navigate(['/financial-management/premiums/' + this.premiumsType + '/batch/items']);
   }
 
-  navToReconcilePayments(event: any) {
-    this.route.navigate([
-      '/financial-management/premiums/' + this.premiumsType + '/batch/reconcile-payments',
-    ]);
+  navToReconcilePayments(event : any){
+    this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch/reconcile-payments`],
+    { queryParams :{bid: this.batchId}});
   }
+
   public onPreviewSubmitPaymentOpenClicked(
     template: TemplateRef<unknown>
   ): void {
