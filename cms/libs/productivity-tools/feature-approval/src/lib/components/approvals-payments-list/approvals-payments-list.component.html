@@ -16,7 +16,7 @@
     <span class="filter-section_items filter--select">
         <kendo-floatinglabel>
             <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"
-                textField="columnDesc" valueField="columnCode" [data]="searchColumnList"
+                textField="columnDesc" valueField="columnName" [data]="searchColumnList"
                 [valuePrimitive]="true"
                 [(ngModel)]="selectedSearchColumn"
                 (valueChange)="searchColumnChangeHandler($event)">
@@ -26,7 +26,8 @@
     <span class="filter-section_items filter--search">
         <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
         <kendo-floatinglabel text="Search">
-            <kendo-textbox aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode">
+            <kendo-textbox aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
+            [(ngModel)]="searchText" (afterValueChanged)="onPendingApprovalSearch($event)">
             </kendo-textbox>
 
         </kendo-floatinglabel>

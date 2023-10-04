@@ -89,6 +89,17 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
+  gridColumns: { [key: string]: string } = {
+    ALL: 'All Columns',
+    batchName: 'Batch',
+    providerCount: 'Provider Count',
+    totalAmountDue: 'Total Amount',
+    carrierCount: 'Carrier Count',
+    totalPayments: 'Pmt Count',
+    totalClaims: 'Premium Count',
+    creationTime: 'Date Approval Requested'
+  };
+
   searchColumnList: { columnName: string, columnDesc: string }[] = [
     { columnName: 'ALL', columnDesc: 'All Columns' },
     { columnName: 'batchName', columnDesc: 'Batch' },
@@ -137,13 +148,14 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     }
   }
 
-  onPendingApprovalSearch(searchValue: any) {
+  onPendingApprovalSearch(searchValue: any) {console.log('searchValue',searchValue);
     const isDateSearch = searchValue.includes('/');
     this.showDateSearchWarning = isDateSearch || this.selectedSearchColumn === 'creationTime';
     searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
-    // this.setFilterBy(false, searchValue, []);
-    this.searchSubject.next(searchValue);
+    this.setFilterBy(false, searchValue, []);
+    //this.searchSubject.next(searchValue);
+    this.onChange(searchValue);
   }
 
   performPendingApprovalSearch(data: any) {
@@ -220,8 +232,9 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter: JSON.stringify(this.filter),
     };
-    let selectedPaymentType = this.selectedPaymentType;
+        let selectedPaymentType = this.selectedPaymentType;
     this.loadApprovalsPaymentsGridEvent.emit({gridDataRefinerValue, selectedPaymentType});    
   }
 
@@ -234,8 +247,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'batch',
-              operator: 'startswith',
+              field: this.selectedSearchColumn ?? 'batchName',
+              operator: this.selectedSearchColumn == 'creationTime'? 'eq' : 'startswith',
               value: data,
             },
           ],
@@ -267,8 +280,31 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.filter = stateData?.filter?.filters;
+    this.setFilterBy(true, '', this.filter);
     this.loadApprovalPaymentsListGrid();    
     this.sortByProperty();
+  }
+
+  private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
+    this.filteredByColumnDesc = '';
+    if (isFromGrid) {
+      if (filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters?.filter((fld:any)=> fld.value)?.map((fld: any) =>
+            this.gridColumns[fld.field])
+          return ([...new Set(filteredColumns)]);
+        });
+
+        this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
+      }
+      return;
+    }
+
+    if (searchValue !== '') {
+      this.filteredByColumnDesc = this.searchColumnList?.find(i => i.columnName === this.selectedSearchColumn)?.columnDesc ?? '';
+    }
+    console.log('this.filteredByColumnDesc',this.filteredByColumnDesc);
   }
 
   // updating the pagination infor based on dropdown selection
@@ -302,7 +338,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   onPaymentTypeCodeValueChange(paymentSubTypeCode: any){
     this.selectedPaymentType = paymentSubTypeCode;    
     this.loadApprovalPaymentsListGrid();
-    this.mainListDataHandle();  
+    this.mainListDataHandle();
+    this.selectedSearchColumn = 'ALL';  
     this.cd.detectChanges();   
   }
 
@@ -666,7 +703,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   private addSearchSubjectSubscription() {
     this.searchSubject.pipe(debounceTime(300))
       .subscribe((searchValue) => {
-        this.performPendingApprovalSearch(searchValue);
+        this.onChange(searchValue);
       });
   }
 

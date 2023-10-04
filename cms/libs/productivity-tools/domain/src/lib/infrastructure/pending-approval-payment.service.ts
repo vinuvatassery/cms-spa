@@ -23,7 +23,7 @@ export class PendingApprovalPaymentService {
       MaxResultCount: gridSetupData.maxResultCount,
       Filter: gridSetupData.filter,
     };
-    return this.http.post<any>(
+        return this.http.post<any>(
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=` +
         serviceSubType+`/level=1`,
         paymentApprovalGridSetupDto
@@ -60,7 +60,7 @@ export class PendingApprovalPaymentService {
       MaxResultCount: gridSetupData.maxResultCount,
       Filter: gridSetupData.filter,
     };
-    return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=${serviceSubType}&batchId=${batchId}/batch-detail`
+    return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/batch-details/serviceSubType=${serviceSubType}&batchId=${batchId}`
     , batchDetailGridSetupDto);
   }
 }
