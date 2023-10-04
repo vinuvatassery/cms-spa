@@ -13,11 +13,12 @@ export class PendingApprovalPaymentService {
 
   getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string, level: number) {
     const paymentApprovalGridSetupDto = {
-      SortType: gridSetupData.sortType,
-      Sorting: gridSetupData.sort,
-      SkipCount: gridSetupData.skipcount,
-      MaxResultCount: gridSetupData.maxResultCount,
-      Filter: gridSetupData.filter,
+      SortType: gridSetupData.gridDataRefinerValue.sortType,
+      Sorting: gridSetupData.gridDataRefinerValue.sorting,
+      SkipCount: gridSetupData.gridDataRefinerValue.skipcount,
+      MaxResultCount: gridSetupData.gridDataRefinerValue.maxResultCount,
+      Filter: gridSetupData.gridDataRefinerValue.filter,
+      ColumnName : gridSetupData.gridDataRefinerValue.columnName.columnCode
     };
     let url = `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=${serviceSubType}/level=${level}`;
     return this.http.post<any>(url, paymentApprovalGridSetupDto);

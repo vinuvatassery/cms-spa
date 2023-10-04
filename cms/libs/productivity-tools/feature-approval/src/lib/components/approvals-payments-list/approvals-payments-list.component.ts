@@ -90,13 +90,13 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   private depositDetailsDialog: any;
 
   pendingApprovalPaymentType$ = this.lovFacade.pendingApprovalPaymentType$;
-  
   /** Constructor **/
   constructor(private route: Router, 
     private dialogService: DialogService,private readonly cd: ChangeDetectorRef,
     private lovFacade: LovFacade) {}
 
   ngOnInit(): void {
+    //this.selectedColumn='ALL';
     this.getGridDataHandle();
     this.loadApprovalPaymentsListGrid();
     this.lovFacade.getPandingApprovalPaymentTypeLov();
@@ -142,6 +142,9 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      columnName: this.selectedColumn,
+      sorting: null,
+      filter: this.state?.["filter"]?.["filters"] ?? []
     };
     let selectedPaymentType = this.selectedPaymentType;
     this.loadApprovalsPaymentsGridEvent.emit({gridDataRefinerValue, selectedPaymentType});    
@@ -154,14 +157,14 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       logic: 'and',
       filters: [
         {
-          filters: [
+          "filters": [
             {
-              field: this.selectedColumn ?? 'batch',
-              operator: 'startswith',
-              value: data,
+              "field": this.selectedColumn ?? 'batch',
+              "operator": 'startswith',
+              "value": data,
             },
           ],
-          logic: 'and',
+          "logic": 'and',
         },
       ],
     };
@@ -188,7 +191,25 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    if(stateData.filter?.filters.length > 0)
+    {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      this.isFiltered = true;
+      const filterList = []
+      for(const filter of stateData.filter.filters)
+      {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy =  filterList.toString();
+    }
+    else
+    {
+      this.filter = "";
+      this.isFiltered = false
+    }
     this.loadApprovalPaymentsListGrid();    
     this.sortByProperty();
   }
@@ -600,5 +621,23 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
         this.cd.detectChanges();
       }
     });        
+  }
+  dropDowncolumns : any = [
+    {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
+    {
+      columnCode: 'BatchName',
+      columnDesc: 'Batch #',
+    },
+    {
+      columnCode: 'DateApprovalRequested',
+      columnDesc: 'Date Approval Requested',
+    },
+  ];
+
+  columns:any={
+
   }
 }
