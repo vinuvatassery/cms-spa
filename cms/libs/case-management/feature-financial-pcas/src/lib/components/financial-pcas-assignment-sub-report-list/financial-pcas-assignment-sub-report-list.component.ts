@@ -54,7 +54,6 @@ export class FinancialPcasAssignmentSubReportListComponent implements OnChanges 
       },
     });
     this.gridDataHandle();
-    this.gridDataHandle();
   }
 
   gridDataHandle() {
