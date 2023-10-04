@@ -4,7 +4,7 @@
     <div *ngIf="breadcrumbs$ | async as breadcrumbs" style="width: 100%">
       <kendo-breadcrumb
         [items]="breadcrumbs"
-        separatorIcon="line"
+        [separatorSVGIcon]="lIcon"
         collapseMode="wrap"
         (itemClick)="onItemClick($event)"
       ></kendo-breadcrumb>
