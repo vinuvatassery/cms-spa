@@ -203,6 +203,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
     if (this.isEdit) {
       this.title = 'Edit';
+      this.showServicesListForm = true;
       this.addOrEdit = 'Update';
       this.getMedicalClaimByPaymentRequestId();
     }
