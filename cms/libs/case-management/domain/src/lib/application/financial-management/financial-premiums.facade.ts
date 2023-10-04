@@ -16,7 +16,6 @@ import { BatchPremium } from '../../entities/financial-management/batch-premium'
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsFacade {
 
-
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
@@ -512,6 +511,10 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       })
+    }
+
+    removeSelectedPremiums(selctedPremiumPayments: any, premiumsType: any) {
+      return this.financialPremiumsDataService.removeSelectedPremiums(selctedPremiumPayments, premiumsType);
     }
 	
 }

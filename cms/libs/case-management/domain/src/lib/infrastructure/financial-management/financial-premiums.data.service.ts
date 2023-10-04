@@ -1,6 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -532,6 +532,15 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
     return this.http.put<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/${type}/premiums/${premiumId}`
       , premiums
+    );
+  }
+
+  removeSelectedPremiums(selctedPremiumPayments: any, premiumsType: any) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumsType}/payment-requests/remove`, {
+      headers,
+      body: selctedPremiumPayments
+    }
     );
   }
 }

@@ -1,15 +1,21 @@
 <kendo-dialog-titlebar (close)="closeRemovePremiumsClicked()"> Remove premiums? </kendo-dialog-titlebar>
-<section class="k-dialog-body mb-2">
+<section *ngIf="directRemoveClicked" class="k-dialog-body mb-2">
    
-        <p class="text-muted mb-1">This action cannot be undone, but you may add a premium at any time. They will still be found in the clients’ profiles. </p>
-        <p class="text-muted mb-2"> Premiums to be removed: 2  </p>
+        <p class="text-muted mb-1">The premiums will be removed from the process queue. They can still be found in the clients’ profiles. </p>
+        <p class="text-muted mb-2"> Premiums to be removed: {{removePremiumsCount}}  </p>
      
   </section>
+  <section *ngIf="!directRemoveClicked" class="k-dialog-body mb-2">
+   
+    <p class="text-muted mb-1">The premium will be removed from the process queue. It can still be found in the clients profile. </p>
+    <p class="text-muted mb-2"> Premiums to be removed: {{removePremiumsCount}}  </p>
+ 
+</section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="closeRemovePremiumsClicked()"> Cancel  </button>
-        <button kendoButton class="k-error-button" aria-label="remove">Remove  </button>
+        <button kendoButton class="k-error-button" aria-label="remove" (click)="removeSelectedPremiums()">Remove  </button>
       </div>
     </div>
   </kendo-dialog-actions>
