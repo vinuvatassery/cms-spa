@@ -26,7 +26,7 @@
               <kendo-floatinglabel [text]="textPlaceholderText">
                 <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode"
                  [data]="dropdownInutLov | async"
-                 attr.aria-label="{{textPlaceholderText}}"
+                 [attr.aria-label]="textPlaceholderText"
                 textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
                 [formControlName]="textControlerName"               
                 [disabled]="textFieldDisable" (valueChange)="onChange($event)">
@@ -42,7 +42,7 @@
         <div class="flex-col flex-col-6">
         <kendo-floatinglabel            
           [text]="otherControlerPlaceholderText" >        
-        <kendo-textbox attr.aria-label="{{otherControlerPlaceholderText}}"  
+        <kendo-textbox [attr.aria-label]="otherControlerPlaceholderText"  
           [fillMode]="formUiStyle.inputFillMode"    
           [formControlName]="otherControlerName"
           [placeholder]="otherControlerPlaceholderText"
@@ -59,7 +59,7 @@
         <div class="flex-col flex-col-6">
         <kendo-floatinglabel            
           [text]="textPlaceholderText" >        
-        <kendo-textbox attr.aria-label="{{textPlaceholderText}}"  
+        <kendo-textbox [attr.aria-label]="textPlaceholderText"  
           [fillMode]="formUiStyle.inputFillMode"
           [disabled]="textFieldDisable"       
           [formControlName]="textControlerName"
@@ -77,7 +77,7 @@
         <div class="flex-col flex-col-6">
       <kendo-floatinglabel            
         [text]="textPlaceholderText" >        
-      <kendo-numerictextbox attr.aria-label="{{textPlaceholderText}}"  
+      <kendo-numerictextbox [attr.aria-label]="textPlaceholderText"  
         [fillMode]="formUiStyle.inputFillMode"
         [disabled]="textFieldDisable"       
         [formControlName]="textControlerName"

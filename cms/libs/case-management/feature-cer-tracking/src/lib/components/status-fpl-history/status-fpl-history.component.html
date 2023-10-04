@@ -31,7 +31,7 @@
             kendoPopoverAnchor
             [popover]="onUserProfileDetailsHovered"
             showOn="hover"
-            attr.aria-label="{{dataItem.creatorId}}" 
+            [attr.aria-label]="dataItem.creatorId" 
           >
           <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
           </button>
