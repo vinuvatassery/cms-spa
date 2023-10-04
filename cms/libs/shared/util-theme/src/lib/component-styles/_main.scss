@@ -91,7 +91,7 @@ li {
 /* End layout styles*/
 /* Scroll to top */
 .scroll-to-top {
-  background: material-color($hive-neutral-palette, 200);
+  background: var(--hive-neutral-palette-200);
   padding: $size-s $size-l;
   position: fixed;
   bottom: $size-0;
@@ -99,11 +99,11 @@ li {
   display: flex;
   align-items: center;
   transition: ease-in all 0.4s;
-  color: material-color($hive-neutral-palette, 600);
+  color: var(--hive-neutral-palette-600);
   cursor: pointer;
   border-radius: $border-radius-sm $border-radius-sm $size-0 $size-0;
   z-index: 999;
   &:hover {
-    background: material-color($hive-neutral-palette, 100);
+    background: var(--hive-neutral-palette-100);
   }
 }
