@@ -160,8 +160,8 @@
                                           <ng-template kendoGridCellTemplate let-dataItem>
                                               <p><span class="tableamountview"> <strong>$</strong> {{dataItem.premiumAmt}}</span></p>
                                               <p *ngFor="let pay of dataItem.paymentDetails">
-                                                <span class="tableamountview text-muted"> <strong>+</strong> <i>{{pay.premiumAmount}}</i></span>    
-                                              </p>  
+                                                <span class="tableamountview text-muted"><i>{{pay.amountDue}}</i></span>  
+                                              </p>
                                           </ng-template> 
                                     </kendo-grid-column>  
                             
