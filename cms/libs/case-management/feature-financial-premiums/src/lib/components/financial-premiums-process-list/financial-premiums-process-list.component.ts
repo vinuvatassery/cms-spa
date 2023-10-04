@@ -6,12 +6,13 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage,FinancialPremiumsFacade } from '@cms/case-management/domain';
+import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage,FinancialPremiumsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
@@ -19,13 +20,13 @@ import {
   CompositeFilterDescriptor, filterBy
 } from '@progress/kendo-data-query';
 import { BatchPremium } from 'libs/case-management/domain/src/lib/entities/financial-management/batch-premium';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'cms-financial-premiums-process-list',
   templateUrl: './financial-premiums-process-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPremiumsProcessListComponent implements  OnChanges {
+export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDestroy {
   @ViewChild('batchPremiumsConfirmationDialogTemplate', { read: TemplateRef })
   batchPremiumsConfirmationDialogTemplate!: TemplateRef<any>;
   @ViewChild('removePremiumsConfirmationDialogTemplate', { read: TemplateRef })
@@ -66,6 +67,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   @Input() actionResponse$: any;
   @Input() existingPremiums$!: Observable<PolicyPremiumCoverage[]>;
   @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
+  @Input() adjustments$!: Observable<any>;
+  @Input() adjustmentsLoader$ !: Observable<boolean>;
   @Output() clientChangeEvent = new EventEmitter<any>();
   @Output() premiumsExistValidationEvent = new EventEmitter<{ clientId: number, premiums: PolicyPremiumCoverage[] }>();
   @Output() savePremiumsEvent = new EventEmitter<InsurancePremium[]>();
@@ -73,6 +76,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   @Output() loadPremiumEvent = new EventEmitter<string>();
   @Output() updatePremiumEvent = new EventEmitter<any>();
   @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
+  @Output() loadAdjustmentsEvent = new EventEmitter<GridFilterParam>();
   public selectedProcessClaims: any[] = [];
   public state!: any;
   sortColumn = 'vendorName';
@@ -189,6 +193,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
   public checkboxOnly = true;
   public mode: SelectableMode = 'multiple';
   public drag = false;
+  actionResponseSubscription = new Subscription;
+
   
   /** Constructor **/
   constructor(
@@ -208,6 +214,12 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
 
   ngOnInit(): void {
     this.premiumGridlistDataHandle();
+    this.addActionRespSubscription();
+
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeFromActionResponse();
   }
 
   premiumGridlistDataHandle() {
@@ -497,7 +509,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
     });
   }
   modalCloseEditPremiumsFormModal(result: any) {
-    if (result) {
+    if (result && this.editPremiumsFormDialog) {
+      this.isEditBatchClosed = false;
       this.editPremiumsFormDialog.close();
     }
   }
@@ -509,7 +522,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
     });
   }
   modalCloseAddPremiumsFormModal(result: any) {
-    if (result) {
+    if (result && this.addPremiumsFormDialog) {
       this.isAddPremiumClosed = false;
       this.addPremiumsFormDialog.close();
     }
@@ -640,8 +653,8 @@ closeRecentPremiumsModal(result: any){
     });
   }
 
-  loadInsurancePlans(clientId: number){
-    this.clientChangeEvent.emit(clientId);
+  loadInsurancePlans(client: any){
+    this.clientChangeEvent.emit(client);
   }
 
   savePremiums(premiums: InsurancePremium[]){
@@ -711,5 +724,25 @@ closeRecentPremiumsModal(result: any){
 
   updatePremium(data: any){
     this.updatePremiumEvent.emit(data);
+  }
+
+  loadAdjustments(data: any){
+    this.loadAdjustmentsEvent.emit(data);
+  }
+
+  private addActionRespSubscription() {
+    this.actionResponseSubscription = this.actionResponse$.subscribe((resp: boolean) => {
+      if (resp) {
+        this.modalCloseAddPremiumsFormModal(true);
+        this.modalCloseEditPremiumsFormModal(true);
+        this.loadFinancialPremiumsProcessListGrid();
+      }
+    });
+  }
+
+  private unsubscribeFromActionResponse() {
+    if (this.actionResponseSubscription) {
+      this.actionResponseSubscription.unsubscribe();
+    }
   }
 }
