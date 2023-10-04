@@ -12,7 +12,6 @@ import { InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage } from
 import { GridFilterParam } from '../../entities/grid-filter-param';
 import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
 import { FinancialPremiumsDataService } from '../../infrastructure/financial-management/financial-premiums.data.service';
-import { GridFilterParam } from '../../entities/grid-filter-param';
 
 
 @Injectable({ providedIn: 'root' })
