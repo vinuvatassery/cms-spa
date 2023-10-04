@@ -182,12 +182,12 @@ export class FinancialPcasPageComponent implements OnInit{
   getPcaReassignmentByFundSourceId(fundingSourceId:any){
     this.financialPcaFacade.getPcaReassignmentByFundSourceId(fundingSourceId);
   }
-  updateReassignmentPca(updateReassignmentData:any){
-    this.financialPcaFacade.updateReassignmentPca(updateReassignmentData);
-  }
+  // updateReassignmentPca(updateReassignmentData:any){
+  //   this.financialPcaFacade.updateReassignmentPca(updateReassignmentData);
+  // }
 
-  saveEditPcaReassignmentClicked(updateReassignmentValue:any){
-    this.financialPcaFacade.updateReassignmentPca(updateReassignmentValue);
+  saveEditPcaReassignmentClicked(pcaData:any){
+    this.financialPcaFacade.updateReassignmentPca(pcaData.updateReassignmentValue, pcaData.gridFilters);
 
   }
 

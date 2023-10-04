@@ -267,11 +267,22 @@ export class FinancialPcasReassignmentListComponent
   }
 
   saveEditPcaReassignmentClicked(updateReassignmentValue:any){
-    this.updatePcaAssignmentByEvent.emit(updateReassignmentValue);
+    const gridDataRefinerValue = {
+      skipCount: this.state?.skip ?? 0,
+      pagesize: this.state?.take ?? 0,
+      sortColumn: this.sortValue,
+      sortType: this.sortType,
+    };
+
+    let emitValue = {
+      updateReassignmentValue,
+      gridDataRefinerValue
+    }
+
+    this.updatePcaAssignmentByEvent.emit(emitValue);
     this.isViewGridOptionClicked = false;
     this.isEditGridOptionClicked = false;
-      this.pcaReassignmentAddEditDialogService.close();
-      this.loadPcaReassignmentListEvent.emit(true);
+    this.pcaReassignmentAddEditDialogService.close();
   }
 
   onSearchTextChange(text : any,data:any)

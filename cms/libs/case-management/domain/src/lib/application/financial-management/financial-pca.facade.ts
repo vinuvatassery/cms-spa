@@ -175,7 +175,6 @@ export class FinancialPcaFacade {
           data: dataResponse['items'],
           total: dataResponse?.totalCount,
         };
-
         this.financialPcaSetupDataSubject.next(gridView);
         this.financialPcaSetupLoaderSubject.next(false);
       },
@@ -286,11 +285,12 @@ export class FinancialPcaFacade {
       },
     });
   }
-  updateReassignmentPca(pcaModel: PcaDetails) {
+  updateReassignmentPca(pcaModel: PcaDetails, gridFilters: any) {
     this.showLoader();
-    this.financialPcaDataService.updateReassignmentPca(pcaModel).subscribe({
+    return this.financialPcaDataService.updateReassignmentPca(pcaModel).subscribe({
       next: (response) => {
         this.pcaActionIsSuccessSubject.next('save');
+        this.loadFinancialPcaReassignmentListGrid(gridFilters)
         this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
       },
