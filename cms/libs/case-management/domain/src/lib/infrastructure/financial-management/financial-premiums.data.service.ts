@@ -51,7 +51,7 @@ export class FinancialPremiumsDataService {
 
   loadFinancialPremiumsAllPaymentsListService(parms: GridFilterParam, claimsType: string) {
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${claimsType}/all-payments`, parms
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${claimsType}/payments`, parms
     );
   }
 
