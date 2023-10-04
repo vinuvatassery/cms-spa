@@ -7,6 +7,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+import { FinancialPcaFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-pcas-assignment-sub-report-list',
   templateUrl: './financial-pcas-assignment-sub-report-list.component.html',
@@ -17,19 +18,20 @@ export class FinancialPcasAssignmentSubReportListComponent implements OnChanges 
   @Input() pageSizes: any;
   @Input() objectId: any;
   @Input() groupId: any;
-  @Input() pcaAssignmentId: any;
-  @Input() amountAssigned: any;
-  @Input() amountRemaining: any;
-  @Input() financialPcaSubReportGridLists$: any;
   sort: any = "priority";
   isFinancialPcaSubReportGridLoaderShow = false;
-  @Output() loadFinancialPcaSubReportListEvent = new EventEmitter<any>();
   gridFinancialPcaSubReportDataSubject = new Subject<any>();
   gridFinancialPcaReportData$ = this.gridFinancialPcaSubReportDataSubject.asObservable();
+  financialPcaSubReportGridLists$ = new Subject<any>();
   public state!: State;
   sortType = "asc"
   gridDataResult!: GridDataResult;
   public formUiStyle: UIFormStyle = new UIFormStyle();
+
+  constructor(
+    private readonly financialPcaFacade: FinancialPcaFacade
+  ) { }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -40,7 +42,18 @@ export class FinancialPcasAssignmentSubReportListComponent implements OnChanges 
   }
 
   loadPcasAssignmentSubReport(data:any) {
-    this.loadFinancialPcaSubReportListEvent.emit(data);
+    this.financialPcaFacade.loadFinancialPcaSubReportListGrid(data).subscribe({
+      next: (dataResponse:any) => {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.financialPcaSubReportGridLists$.next(gridView);
+      },
+      error: (err:any) => {
+      },
+    });
+    this.gridDataHandle();
     this.gridDataHandle();
   }
 
@@ -58,9 +71,6 @@ export class FinancialPcasAssignmentSubReportListComponent implements OnChanges 
     this.loadPcasAssignmentSubReport({
       objectId          :this.objectId,
       groupId          :this.groupId,
-      pcaAssignmentId   :this.pcaAssignmentId,
-      amountAssigned    :this.amountAssigned,
-      amountRemaining   :this.amountRemaining,
       skipCount         :this.state?.skip ?? 0,
       maxResultCount    :this.state?.take ?? 0,
       sortColumn        :this.sort,
