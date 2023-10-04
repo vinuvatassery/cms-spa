@@ -233,17 +233,14 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
       });
     }
     //If the user is selecting the individual check boxes and changing the page count
-      if(!this.selectAll && this.isPageCountChanged){
-      // Extract the payment request ids from grid data
-      const idsToKeep: number[] = this.financialPremiumsProcessGridLists.map((item: any) => item.paymentRequestId);
-      // Remove items from selected records based on the IDs from grid data
-      for (let i = this.selectedSendReportList?.SelectedSendReports?.length - 1; i >= 0; i--) {
-        if (!idsToKeep.includes(this.selectedSendReportList?.SelectedSendReports[i].paymentRequestId)) {
-          this.selectedSendReportList?.SelectedSendReports.splice(i, 1); // Remove the item at index i
-        }
-      }
-      this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports);
-    }
+    this.handlePageCountSelectionChange();
+    //If the user click on select all header and either changing the page number or page count
+    this.pageNumberAndCountChangedInSelectAll();
+    });
+    this.ref.detectChanges();
+  }
+  
+  pageNumberAndCountChangedInSelectAll() {
     //If selecte all header checked and either the page count or the page number changed
     if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
       this.selectedSendReportList = [];
@@ -254,8 +251,20 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
       this.selectedSendReportList.SelectedSendReports = this.financialPremiumsProcessGridLists;
       this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports);
     }
-    });
-    this.ref.detectChanges();
+  }
+
+  handlePageCountSelectionChange() {
+      if(!this.selectAll && this.isPageCountChanged){
+        // Extract the payment request ids from grid data
+        const idsToKeep: number[] = this.financialPremiumsProcessGridLists.map((item: any) => item.paymentRequestId);
+        // Remove items from selected records based on the IDs from grid data
+        for (let i = this.selectedSendReportList?.SelectedSendReports?.length - 1; i >= 0; i--) {
+          if (!idsToKeep.includes(this.selectedSendReportList?.SelectedSendReports[i].paymentRequestId)) {
+            this.selectedSendReportList?.SelectedSendReports.splice(i, 1); // Remove the item at index i
+          }
+        }
+        this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports);
+      }
   }
 
   ngOnChanges(): void {
