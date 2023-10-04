@@ -137,6 +137,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   claimFlagExceptionText = '';
   checkservicescastvalue: any
   exceedMaxBenefitFlag!: boolean;
+  showServicesListForm: boolean =false;
   showExceedMaxBenefitException$ = this.financialClaimsFacade.showExceedMaxBenefitException$;
   showIneligibleException$ = this.financialClaimsFacade.showIneligibleException$;
   showBridgeUppException$ = this.financialClaimsFacade.showBridgeUppException$;
@@ -455,12 +456,18 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       if (this.clientId != null && this.vendorId != null) {
         this.isRecentClaimShow = true;
       }
+      this.showServicesListForm= true ;
     }
   }
-
   removeService(i: number) {
+    if(this.isEdit && this.addClaimServicesForm.length == 1)
+    {
+       this.addClaimServicesForm.reset();
+    }
+    if(this.addClaimServicesForm.length > 1 ){
     this.addClaimServicesForm.removeAt(i);
     this.addExceptionForm.removeAt(i);
+    }
   }
 
   IsServiceStartDateValid(index: any) {
@@ -597,8 +604,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.onPrintDenialLetterOpen();
       return;
     }
-    this.getPCACode(isPcaAssigned, bodyData);
-  }
+    this.getPCACode(isPcaAssigned, bodyData);  
+}
 
   getPCACode(isPcaAssigned: boolean, bodyData: any){
     if (!isPcaAssigned) {
@@ -1146,6 +1153,18 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.showIneligibleSubscription.unsubscribe();
     this.showBridgeUppSubscription.unsubscribe();
     this.showDuplicatePaymentSubscription.unsubscribe();
+  }
+  showHideServicesListForm(){
+    if(this.claimForm.controls['medicalProvider'].value &&  this.claimForm.controls['client'].value)
+    {
+      this.showServicesListForm = true;
+    }
+    else
+    {
+      this.showServicesListForm= false;
+      this.isRecentClaimShow =false;
+      
+    }
   }
 }
 

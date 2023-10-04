@@ -6,15 +6,17 @@
   "prefix": "cms",
   "targets": {
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/productivity-tools/feature-home"],
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/libs/productivity-tools/feature-home"
+      ],
       "options": {
         "jestConfig": "libs/productivity-tools/feature-home/jest.config.ts",
         "passWithNoTests": true
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": [
           "libs/productivity-tools/feature-home/src/**/*.ts",

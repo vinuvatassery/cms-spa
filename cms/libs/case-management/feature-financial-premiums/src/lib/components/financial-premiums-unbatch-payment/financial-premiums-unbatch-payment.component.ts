@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'cms-financial-premiums-unbatch-payment',
@@ -7,7 +7,13 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angul
 })
 export class FinancialPremiumsUnbatchPaymentComponent {
   @Output() unBatchPaymentCloseClickedEvent = new EventEmitter();
+  @Input() isBulkUnBatchOpened = false;
+  
   closeUnBatchPaymentClicked() {
+    this.unBatchPaymentCloseClickedEvent.emit(false);
+  }
+
+  UnBatchClicked() {
     this.unBatchPaymentCloseClickedEvent.emit(true);
   }
 }

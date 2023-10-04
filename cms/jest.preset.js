@@ -1,8 +1,8 @@
-const nxPreset = require('@nrwl/jest/preset').default;
+const nxPreset = require('@nx/jest/preset').default;
 
 module.exports = {
   ...nxPreset,
-  /* TODO: Update to latest Jest snapshotFormat
+  /* 2do : Update to latest Jest snapshotFormat
    * By default Nx has kept the older style of Jest Snapshot formats
    * to prevent breaking of any existing tests with snapshots.
    * It's recommend you update to the latest format.

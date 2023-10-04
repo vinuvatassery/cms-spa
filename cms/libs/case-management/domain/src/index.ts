@@ -61,6 +61,7 @@ export * from './lib/entities/manufacturer-drugs';
 export * from './lib/entities/grid-filter-param';
 export * from './lib/entities/financial-management/Payment-details';
 export * from './lib/entities/financial-management/pca-details';
+export * from './lib/entities/financial-management/client-insurance-plan';
 
 
 /** Enums **/

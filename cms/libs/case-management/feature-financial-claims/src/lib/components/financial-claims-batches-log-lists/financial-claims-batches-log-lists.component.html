@@ -1,15 +1,20 @@
    <div class=" pt-0">
-          <section class="app-l-mainTittle">
-              <div class="d-flex" *ngIf="(paymentBatchName$ | async) as batch; else loading">
+          <section class="app-l-mainTittle" *ngIf="(paymentBatchName$ | async) as batch; else loading">
+              <div class="d-flex" >
                   <button aria-label="back to vendor refund" title="Go back" kendoButton look="flat" class="mr-1" (click)="backToBatch($event)"> <span
                       class="material-icons">
                       arrow_back </span> </button>
-              <h1 class="maintitle_withicon text-bold">Batch # {{batch.batchName}}</h1>
+                  <h1 class="maintitle_withicon text-bold">Batch # {{batch.batchName}}</h1> <br />                  
               </div>
-              <ng-template #loading>
-                <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
-          </ng-template>
+              <div class="d-flex" *ngIf="batch.sendBackNotes != null">
+                <span class="app-c-badge  mt-3" aria-label=""> 
+                  {{ batch.sendBackNotes }}      
+                </span> 
+              </div>             
           </section>
+          <ng-template #loading>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+          </ng-template>
           <section class="app-l-client-wrapper ">
               <section class="app-l-wrapper">
                   <p> Click “Bulk” to execute actions for one or more claims. Click on a row to view that claim.</p>
@@ -310,7 +315,8 @@
           </section>
       </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
-    <span class="">0 claims(s) to be deleted</span>
+    <span class="" *ngIf="!isPrintAdviceLetterClicked">0 claims(s) to be deleted</span>
+    <span class="" *ngIf="isPrintAdviceLetterClicked">{{selectedCount}} advice letter(s) to be printed</span>
     <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAdviceLetterClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
     <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
     <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isPrintAdviceLetterClicked" [disabled]="disablePrwButton" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>

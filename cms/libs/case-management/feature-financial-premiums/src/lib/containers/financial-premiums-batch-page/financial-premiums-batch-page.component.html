@@ -1,7 +1,18 @@
 
- <cms-financial-premiums-batches-log-lists [premiumsType]="premiumType" [batchLogGridLists$]="batchLogGridLists$"
+ <cms-financial-premiums-batches-log-lists [premiumsType]="premiumType"
+  [batchLogGridLists$]="batchLogGridLists$"
+  [batchLogServicesData$]="batchLogServicesData$"
  [pageSizes]="pageSizes" [sortValue]="sortValue"
  [sortType]="sortType" [sort]="sort" 
- (loadBatchLogListEvent)="loadBatchLogListGrid($event)"></cms-financial-premiums-batches-log-lists>
+ [exportButtonShow$]="exportButtonShow$"     
+ (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
+ (loadFinancialPremiumBatchInvoiceListEvent)=loadFinancialPremiumBatchInvoiceList($event)
+ (exportGridDataEvent)="exportPremiumBatchesGridData()"
+ (unBatchEntireBatchEvent)="unBatchEntireBatchClick($event)"
+ (unBatchPremiumEvent)="unBatchPremiumClick($event)"
+ [unbatchPremiums$]="unbatchPremiums$"
+ [unbatchEntireBatch$]="unbatchEntireBatch$"
+ [batchId]="batchId"
+ ></cms-financial-premiums-batches-log-lists>
 
  

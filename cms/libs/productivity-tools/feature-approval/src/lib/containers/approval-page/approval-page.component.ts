@@ -33,8 +33,11 @@ export class ApprovalPageComponent  {
   approvalsGeneralLists$ = this.approvalFacade.approvalsGeneralList$; 
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.pendingApprovalPaymentFacade.pendingApprovalCount$;
-  approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$
-
+  approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
+  approvalsPaymentsMainLists$ = this.pendingApprovalPaymentFacade.pendingApprovalMainList$;
+  pendingApprovalSubmittedSummary$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmittedSummary$;
+  batchDetailPaymentsList$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
+  batchDetailPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,     
               private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService,
@@ -59,5 +62,21 @@ export class ApprovalPageComponent  {
     this.approvalFacade.NotifyShowHideSnackBar(ReminderSnackBarNotificationType.LIGHT, ' Generic reminder displays at 9AM on the day of the reminder Generic reminder displays at 9AM on the day of the reminder');
     
   }
+  loadApprovalsPaymentsMain(gridDataValue : any): void {
+    if(!gridDataValue.selectedPaymentType || gridDataValue.selectedPaymentType.length == 0){
+      return;
+    }
+    this.pendingApprovalPaymentFacade.getPendingApprovalPaymentMainList(gridDataValue , gridDataValue.selectedPaymentType)
+  }
+  loadBatchDetailPaymentsGrid(gridDataValue : any): void {
+    if(!gridDataValue.batchId || gridDataValue.batchId.length == 0){
+      return;
+    }
+    this.pendingApprovalPaymentFacade.getPendingApprovalBatchDetailPaymentsGrid(gridDataValue, gridDataValue.batchId, gridDataValue.selectedPaymentType)
+  }
   
+  loadSubmittedSummary(events:any): void {
+    debugger;
+    this.pendingApprovalPaymentFacade.loadSubmittedSummary(events);
+  }
 }

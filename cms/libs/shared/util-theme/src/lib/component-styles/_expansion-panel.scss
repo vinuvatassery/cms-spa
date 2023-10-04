@@ -81,7 +81,7 @@
 
     &.k-expanded {
       .k-expander-header {
-        background: material-color($hive-success-palette, 100);
+        background: var(--hive-success-palette-100);
         color: $app-primary;
       }
     }
@@ -130,7 +130,7 @@
 
       &:hover {
         td {
-          background: lighten(material-color($hive-neutral-palette, 50), 2%);
+          background: lighten($tertiary, 2%);
         }
       }
     }
@@ -184,7 +184,7 @@
 
     label {
       font-family: $font-family-bold;
-      font-size: $font-size-l; 
+      font-size: $font-size-l;
       text-shadow: none;
 
     }
@@ -229,10 +229,8 @@
   }
 }
 
-.k-treeview-toggle {
-  padding: 6px;
-  border-radius: 5px;
-
+.k-treeview-toggle { 
+  border-radius: 5px; 
   &:hover {
     background: $grey-d;
   }
@@ -240,7 +238,6 @@
 
 .app-c-expansion-panel-two {
   .k-panelbar {
-
     margin: $size-0 !important;
     padding-bottom: $size-0;
     border: $size-0;
@@ -261,9 +258,8 @@
 
     .k-panelbar-header {
 
-
-      >&:hover,
-      >&:focus {
+      &:hover,
+      &:focus {
         box-shadow: 0px 6px 6px #00000014;
       }
 

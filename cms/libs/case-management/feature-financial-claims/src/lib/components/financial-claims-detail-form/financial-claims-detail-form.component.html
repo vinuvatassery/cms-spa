@@ -23,7 +23,8 @@
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="medicalProvider" (filterChange)="searchMedicalProvider($event)"
                             [data]="pharmacySearchResult$ | async" [(ngModel)]="selectedMedicalProvider"
-                            (valueChange)="onProviderValueChange($event)">
+                            (valueChange)="onProviderValueChange($event)"
+                            (blur)="showHideServicesListForm()">
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
@@ -93,7 +94,8 @@
                             placeholder="Search Client Name, ID, SSN or DOB"
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="client" (filterChange)="loadClientBySearchText($event)"
-                            (valueChange)="onClientValueChange($event)" [(ngModel)]="selectedClient">
+                            (valueChange)="onClientValueChange($event)" [(ngModel)]="selectedClient"
+                            (blur)="showHideServicesListForm()">
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
@@ -143,7 +145,7 @@
 
         </div>
 
-        <div class="add_new_bottom_section">
+        <div class="add_new_bottom_section" *ngIf="showServicesListForm">
 
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
@@ -352,8 +354,8 @@
                                             </kendo-formerror>
                                         </div>
                                         <div class="ml-2" *ngIf="getExceptionFormValue('duplicatePaymentExceptionFlag',i)" >
-                                          <kendo-formerror class="align-items-center"> <span
-                                                  class="material-icons mr-1" aria-hidden="false">info</span> Duplicate Payment. <a kendoButton class="ml-1 card-link-button"
+                                          <kendo-formerror class="align-items-center"> 
+                                            <span class="material-icons mr-1" aria-hidden="false">info</span> Duplicate Payment. <a kendoButton class="ml-1 card-link-button"
                                                   (click)="onMakeExceptionClick('duplicatePaymentExceptionReason',i)">{{getExceptionFormValue('duplicatePaymentExceptionFlagText',i)}}
                                               </a>
                                           </kendo-formerror>

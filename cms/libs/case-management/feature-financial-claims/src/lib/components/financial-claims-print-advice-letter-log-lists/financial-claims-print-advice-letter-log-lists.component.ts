@@ -72,9 +72,7 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
     this.batchLogGridLists$.subscribe((response:any) =>{
         this.markAsChecked(response.data);
       this.batchLogPrintAdviceLetterPagedList = response;
-      
     })
-  
   }
 
   ngOnChanges(): void {
