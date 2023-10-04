@@ -163,7 +163,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
       click: (data: any): void => {
         if (!this.isEditBatchClosed) {
           this.isEditBatchClosed = true;
-          this.onEditPremiumsClick(data?.insurancePremiumId);
+          this.onEditPremiumsClick(data?.insurancePremiumId,data?.vendorId,data?.clientId,data.clientFullName);
         }
       },
     },
@@ -602,7 +602,7 @@ closeRecentPremiumsModal(result: any){
 
   clientRecentClaimsModalClicked(
     template: TemplateRef<unknown>,
-    data: any
+    dataItem: any
   ): void {
     this.addClientRecentPremiumsDialog = this.dialogService.open({
       content: template,
@@ -613,9 +613,9 @@ closeRecentPremiumsModal(result: any){
         duration: 200,
       },
     });
-    this.vendorId="3F111CFD-906B-4F56-B7E2-7FCE5A563C36";
-    this.clientId=5;
-    this.clientName="Jason Biggs";
+    this.vendorId=dataItem.vendorId;
+    this.clientId=dataItem.clientId;
+    this.clientName=dataItem.clientFullName;
   }
 
   onClientClicked(clientId: any) {
@@ -623,10 +623,10 @@ closeRecentPremiumsModal(result: any){
     this.closeRecentPremiumsModal(true);
   }
 
-  onEditPremiumsClick(premiumId: string){
-    this.vendorId="3F111CFD-906B-4F56-B7E2-7FCE5A563C36";
-    this.clientId=5;
-    this.clientName="Jason Biggs";
+  onEditPremiumsClick(premiumId: string,vendorId:any,clientId:any,clientName:any){
+    this.vendorId=vendorId;
+    this.clientId=clientId;
+    this.clientName=clientName;
     this.premiumId = premiumId
     this.onClickOpenEditPremiumsFromModal(this.editPremiumsDialogTemplate);
   }
