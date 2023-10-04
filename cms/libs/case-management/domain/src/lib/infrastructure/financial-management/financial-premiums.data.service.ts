@@ -7,6 +7,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable } from 'rxjs';
 import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
 import { BatchPremium } from '../../entities/financial-management/batch-premium';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsDataService {
@@ -538,6 +539,12 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
   deletePremium(type: string, paymentId: string): Observable<InsurancePremiumDetails> {
     return this.http.delete<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${type}/payments/${paymentId}`
+    );
+  }
+
+  loadPremiumAdjustments(type: string, paymentId: string, params: GridFilterParam) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${type}/adjustments?paymentId=${paymentId}&type=${type}&${params.convertToQueryString()}`
     );
   }
 }

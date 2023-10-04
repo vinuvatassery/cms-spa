@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage,FinancialPremiumsFacade } from '@cms/case-management/domain';
+import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage,FinancialPremiumsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
@@ -67,6 +67,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   @Input() actionResponse$: any;
   @Input() existingPremiums$!: Observable<PolicyPremiumCoverage[]>;
   @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
+  @Input() adjustments$!: Observable<any>;
+  @Input() adjustmentsLoader$ !: Observable<boolean>;
   @Output() clientChangeEvent = new EventEmitter<any>();
   @Output() premiumsExistValidationEvent = new EventEmitter<{ clientId: number, premiums: PolicyPremiumCoverage[] }>();
   @Output() savePremiumsEvent = new EventEmitter<InsurancePremium[]>();
@@ -74,6 +76,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   @Output() loadPremiumEvent = new EventEmitter<string>();
   @Output() updatePremiumEvent = new EventEmitter<any>();
   @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
+  @Output() loadAdjustmentsEvent = new EventEmitter<GridFilterParam>();
   public selectedProcessClaims: any[] = [];
   public state!: any;
   sortColumn = 'vendorName';
@@ -118,8 +121,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   selectedSendReportList!: any;
   isSendReportClicked = false;
   isPageCountChanged: boolean = false;
-  premiumId!:string;
-
+  premiumId!:string;  
   public premiumsProcessMore = [
     {
       buttonType: 'btn-h-primary',
@@ -666,6 +668,10 @@ closeRecentPremiumsModal(result: any){
 
   updatePremium(data: any){
     this.updatePremiumEvent.emit(data);
+  }
+
+  loadAdjustments(data: any){
+    this.loadAdjustmentsEvent.emit(data);
   }
 
   private addActionRespSubscription() {

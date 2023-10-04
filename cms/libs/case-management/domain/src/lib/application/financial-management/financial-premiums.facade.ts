@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { FinancialPremiumTypeCode } from '../../enums/financial-premium-types';
 import { InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
 import { BatchPremium } from '../../entities/financial-management/batch-premium';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 
 @Injectable({ providedIn: 'root' })
@@ -137,6 +138,12 @@ export class FinancialPremiumsFacade {
 
   private insurancePremiumSubject = new Subject<InsurancePremiumDetails>();
   insurancePremium$ =this.insurancePremiumSubject.asObservable();
+
+  private adjustmentsSubject = new Subject<any>();
+  adjustments$ =this.adjustmentsSubject.asObservable();
+
+  private adjustmentsLoaderSubject = new BehaviorSubject<boolean>(false);
+  adjustmentsLoader$ =this.adjustmentsLoaderSubject.asObservable();
 
   /** Private properties **/
 
@@ -513,6 +520,26 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
         },
       })
     }
+
+    loadPremiumAdjustments(type: string, paymentId: string, params: GridFilterParam){
+      this.adjustmentsLoaderSubject.next(true);
+      this.financialPremiumsDataService.loadPremiumAdjustments(type, paymentId, params)
+      .subscribe({
+        next: (dataResponse: any) => {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+            this.adjustmentsLoaderSubject.next(false);
+            this.adjustmentsSubject.next(gridView);
+        },
+        error: (err) => {
+          this.adjustmentsLoaderSubject.next(false);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+	
 
    deletePremiumPayment(type: string, paymentId: string){
       this.showLoader();
