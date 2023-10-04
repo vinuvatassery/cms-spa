@@ -103,11 +103,13 @@ export class UserManagementFacade {
   /** Public methods **/
   hasRole(roleCode : string) : any
   {
+    let roleCheck;
     this.userDataService.getProfile$
       .pipe(first(profile => profile[0]?.permissions != null))
-      .subscribe((profile:any)=>{ 
-      return  (profile[0]?.roleCode === roleCode)
+      .subscribe((profile:any)=>{
+        roleCheck = profile[0]?.roleCode === roleCode
       })
+      return roleCheck;
   }
 
   hasPermission(ifPermission : string[]) : any

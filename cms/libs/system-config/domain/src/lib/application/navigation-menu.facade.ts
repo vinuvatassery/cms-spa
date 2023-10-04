@@ -23,6 +23,10 @@ export class NavigationMenuFacade {
   private pcaReassignmentCountSubject = new Subject<any>()
   pcaReassignmentCount$ = this.pcaReassignmentCountSubject.asObservable();
 
+  private pendingApprovalCountSubject = new Subject<any>();
+  pendingApprovalCount$ = this.pendingApprovalCountSubject.asObservable();
+
+
   /** constructor **/
   constructor(
     private readonly navigationMenuService: NavigationMenuService,
@@ -70,6 +74,31 @@ export class NavigationMenuFacade {
         //this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
+  }
+
+  getAllPendingApprovalPaymentCount(userLevel:any) {
+    this.navigationMenuService.getAllPendingApprovalPaymentCount(userLevel)
+    .subscribe(
+      {
+        next: (count: any) => {
+            this.pendingApprovalCountSubject.next(count);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        },
+      }
+    );
+  }
+
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
+  {        
+      if(type == SnackBarNotificationType.ERROR)
+      {
+        const err= subtitle;    
+        this.loggingService.logException(err)
+      }  
+        this.notificationSnackbarService.manageSnackBar(type,subtitle)
+        this.hideLoader();   
   }
 
 }
