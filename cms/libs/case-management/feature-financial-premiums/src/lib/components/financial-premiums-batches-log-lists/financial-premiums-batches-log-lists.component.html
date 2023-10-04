@@ -286,7 +286,9 @@
 
 <ng-template #removePremiumsConfirmationDialogTemplate>
   <cms-financial-premiums-delete-payment
-    (deletePaymentCloseClickedEvent)="onModalRemovePremiumsModalClose($event)"></cms-financial-premiums-delete-payment>
+  [paymentId]="paymentId"
+  (deletePaymentEvent)="deletePremiumPayment($event)"
+  (deletePaymentCloseClickedEvent)="onModalRemovePremiumsModalClose($event)"></cms-financial-premiums-delete-payment>
 </ng-template>
 
 <ng-template #clientRecentPremiumsDialogTemplate>
