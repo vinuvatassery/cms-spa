@@ -32,6 +32,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isApprovalPaymentsGridLoaderShow = false;
+  selectedApprovalId?: string | null = null;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -39,9 +40,11 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   @Input() approvalsPaymentsLists$: any;
   @Input() approvalsPaymentsMainLists$: any;
   @Input() pendingApprovalSubmittedSummary$: any;
+  @Input() batchDetailPaymentsList$: any;
   @Output() loadApprovalsPaymentsGridEvent = new EventEmitter<any>();
   @Output() loadApprovalsPaymentsMainListEvent = new EventEmitter<any>();
   @Output() loadSubmittedSummaryEvent = new EventEmitter<any>();
+  @Output() loadBatchDetailPaymentsGridEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -76,6 +79,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   approvalPaymentsSubmittedSummaryDataSubject = new Subject<any>();
   approvalPaymentsSubmittedSummaryData$ = this.approvalPaymentsSubmittedSummaryDataSubject.asObservable();
   selectedPaymentType: any;
+  batchDetailModalSourceList:any;
 
   gridApprovalPaymentsDataSubject = new Subject<any>();
   gridApprovalPaymentsBatchData$ = this.gridApprovalPaymentsDataSubject.asObservable();
@@ -96,7 +100,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   ngOnInit(): void {
     this.gridDataHandle();
-    this.loadApprovalPaymentsListGrid();
+    this.loadApprovalPaymentsListGrid();    
     this.lovFacade.getPandingApprovalPaymentTypeLov();
   }
 
@@ -114,11 +118,24 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.isSubmitApprovalPaymentItems = false;
   }
 
-  onOpenViewPaymentsBatchClicked(){
+  onOpenViewPaymentsBatchClicked(data?:any){
     this.isViewPaymentsBatchDialog = true;
+    this.selectedApprovalId = data?.approvalId;
+    this.batchDetailModalSourceList = this.approvalsPaymentsGridUpdatedResult.map((item:any)=>({...item}));
   }
+
   onCloseViewPaymentsBatchClicked(){
     this.isViewPaymentsBatchDialog = false;
+  }
+
+  onBatchModalSaveClicked(data:any){
+    this.isViewPaymentsBatchDialog = false;
+    this.approvalsPaymentsGridUpdatedResult = data.map((item:any)=>({...item}));
+    this.loadApprovalPaymentsListGrid();
+  }
+
+  onLoadBatchDetailPaymentsList(data?:any){
+    this.loadBatchDetailPaymentsGridEvent.emit(data);
   }
   private loadApprovalPaymentsListGrid(): void {
     this.loadApprovalPayments(
@@ -352,6 +369,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   sendBackNotesChange(dataItem: any) {
     this.calculateCharacterCount(dataItem);
+    this.assignRowDataToMainList(dataItem);
   }   
 
   ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
@@ -491,6 +509,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
           this.approvalsPaymentsGridUpdatedResult[index].sendBackNotesInValid = dataItem?.sendBackNotesInValid;
           this.approvalsPaymentsGridUpdatedResult[index].tAreaCessationCounter = dataItem?.tAreaCessationCounter;          
           this.approvalsPaymentsGridUpdatedResult[index].batchStatus = dataItem?.batchStatus;
+          this.approvalsPaymentsGridUpdatedResult[index].sendBackNotes = dataItem?.sendBackNotes;
         }
       });
     }
@@ -530,8 +549,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
           sendBackNotes : ''
           }));  
           this.hasPaymentPendingApproval=response.data.length > 0;
-          this.cd.detectChanges(); 
-             
+          this.cd.detectChanges();
         this.gridApprovalPaymentsMainListDataSubject.next(this.approvalsPaymentsGridUpdatedResult);
       }
     });

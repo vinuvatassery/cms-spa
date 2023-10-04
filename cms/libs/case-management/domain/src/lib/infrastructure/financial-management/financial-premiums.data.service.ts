@@ -534,6 +534,14 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
       , premiums
     );
   }
+  
+  unbatchEntireBatch(paymentRequestBatchIds: string[], premiumType: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/unbatch`, paymentRequestBatchIds);
+  }
+
+  unbatchPremium(paymentRequestIds: string[], premiumType: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payment-requests/unbatch`, paymentRequestIds);
+  }
 
   removeSelectedPremiums(selctedPremiumPayments: any, premiumsType: any) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
