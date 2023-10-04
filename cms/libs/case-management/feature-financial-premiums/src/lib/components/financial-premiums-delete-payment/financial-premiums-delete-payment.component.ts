@@ -1,5 +1,4 @@
-import { AfterContentChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'cms-financial-premiums-delete-payment',
