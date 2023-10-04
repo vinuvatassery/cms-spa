@@ -41,7 +41,7 @@
     [width]="40"  [locked]="true"></kendo-grid-checkbox-column>
 
       <kendo-grid-column *ngIf="isSendReportOpened || isRemoveBatchClosed"  field="add" [width]="150" 
-      [sticky]="true" [sortable]="false"  [columnMenu]="false" [headerStyle]="{'text-align': 'center'}" [style]="{'text-align': 'center'}">
+      [sortable]="false"  [columnMenu]="false" [headerStyle]="{'text-align': 'center'}" [style]="{'text-align': 'center'}">
         <ng-template kendoGridHeaderTemplate let-dataItem>
             <input style="zoom: 1.2;"   
                  type="checkbox" 
@@ -237,7 +237,7 @@
         </ng-template>
       </kendo-grid-column>
 
-      <ng-container>
+      <ng-container *ngIf="!(isSendReportOpened || isRemoveBatchClosed)">
         <div *kendoGridDetailTemplate="let dataItem">
             <cms-financial-premium-adjustment
             [adjustmentId]="dataItem.paymentRequestId"
@@ -303,7 +303,7 @@
 <div class="bottom-fixed-wrapper text-right flex-gap">
   <span class="" *ngIf="isSendReportOpened">{{ sendReportCount}} payment(s) selected</span>
   <span class="" *ngIf="!isProcessGridExpand && !isSendReportOpened && !isRemoveBatchClosed">{{ selectedProcessClaims.length}} payment(s) selected</span>
-  <span class="" *ngIf="isRemoveBatchClosed">{{sendReportCount}} premiums(s) to be remove</span>
+  <span class="" *ngIf="isRemoveBatchClosed">{{sendReportCount}} premium(s) to be remove</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchPremiumsGridSelectedCancelClicked()"   *ngIf="isBatchPremiumsClicked || isRemoveBatchClosed || isSendReportOpened"> Cancel
   </button>
