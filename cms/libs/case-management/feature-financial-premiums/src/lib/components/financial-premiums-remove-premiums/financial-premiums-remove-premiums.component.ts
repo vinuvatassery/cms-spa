@@ -37,16 +37,13 @@ export class FinancialPremiumsRemovePremiumsComponent {
   removeSelectedPremiums() {
     this.loaderService.show();
     if(this.selectedRemovePremiumsList?.SelectedSendReports.length > 0){
-      // this.selectedRemovePremiumsList.SelectedSendReports.forEach((element: any) => {
-      //   this.selctedPremiumPaymentIds?.push(element.paymentRequestId);
-      // });
-      // this.selectedRemovePremiumsList.SelectedSendReports.map((item: any) => item.paymentRequestId);
       this.financialPremiumsFacade.removeSelectedPremiums(this.selectedRemovePremiumsList.SelectedSendReports, this.premiumsType)
       .subscribe({
         next: (data: any) =>{
           if (data) {
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Premium removed!')
             this.ref.detectChanges();
+            this.closeRemovePremiumsClicked();
           }
         this.loaderService.hide();
       },

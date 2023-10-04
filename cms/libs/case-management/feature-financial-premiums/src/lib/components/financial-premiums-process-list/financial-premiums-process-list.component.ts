@@ -454,6 +454,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges {
     if (result) {
       this.isRemovePremiumGridOptionClosed = false;
       this.removePremiumsDialog.close();
+      this.ngOnChanges();
     }
   }
 

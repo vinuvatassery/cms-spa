@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\cms",
+    "\\cms\\libs",
+    "\\cms\\libs\\case-management",
+    "\\cms\\libs\\case-management\\feature-financial-claims",
+    "\\cms\\libs\\case-management\\feature-financial-premiums",
+    "\\cms\\libs\\case-management\\feature-financial-premiums\\src",
+    "\\cms\\libs\\case-management\\feature-financial-premiums\\src\\lib",
+    "\\cms\\libs\\case-management\\feature-financial-premiums\\src\\lib\\components",
+    "\\cms\\libs\\case-management\\feature-financial-premiums\\src\\lib\\components\\financial-premiums-process-list"
+  ],
+  "PreviewInSolutionExplorer": false
+}
