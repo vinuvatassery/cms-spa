@@ -2,6 +2,7 @@
 $drawer-scrollbar-bg: #f8f8f8;
 $drawer-scrollbar-color: $grey-c;
 $drawer-scrollbar-hovered-color: darken($drawer-scrollbar-color, 15%);
+$drawer-scrollbar-hovered-color:  $drawer-scrollbar-color;
 $breadcrumb-size: $size-xl;
 ::-webkit-scrollbar {
   width: $breadcrumb-size;

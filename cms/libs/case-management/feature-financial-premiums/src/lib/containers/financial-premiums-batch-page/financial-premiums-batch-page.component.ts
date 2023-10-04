@@ -24,6 +24,8 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
   state!: State;
   batchLogGridLists$ = this.financialPremiumsFacade.batchLogData$;
   batchLogServicesData$ = this.financialPremiumsFacade.batchLogServicesData$;
+  unbatchPremiums$ = this.financialPremiumsFacade.unbatchPremiums$;
+  unbatchEntireBatch$ = this.financialPremiumsFacade.unbatchEntireBatch$;
   batchId!:string;
   dataExportParameters! : any
   premiumType: any;
@@ -95,4 +97,10 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
     }
   }
 
+  unBatchEntireBatchClick(event:any){
+   this.financialPremiumsFacade.unbatchEntireBatch(event.batchId,event.premiumsType)
+  }
+  unBatchPremiumClick(event:any){
+    this.financialPremiumsFacade.unbatchPremiums(event.paymentId,event.premiumsType)
+  }
 }

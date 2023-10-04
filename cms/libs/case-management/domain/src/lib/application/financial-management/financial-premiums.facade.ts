@@ -113,6 +113,11 @@ export class FinancialPremiumsFacade {
   batchPremiumSubject  =  new Subject<any>();
   batchPremium$ = this.batchPremiumSubject.asObservable();
 
+  private unbatchEntireBatchSubject =  new Subject<any>();
+  unbatchEntireBatch$ = this.unbatchEntireBatchSubject.asObservable();
+
+  private unbatchPremiumsSubject =  new Subject<any>();
+  unbatchPremiums$ = this.unbatchPremiumsSubject.asObservable();
 
   public clientsSortValue = 'clientFullName'
   public clientSort: SortDescriptor[] = [{
@@ -536,6 +541,50 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       })
+    }
+
+    unbatchEntireBatch(paymentRequestBatchIds: string[], premiumType: string) {
+      this.showLoader();
+      return this.financialPremiumsDataService
+        .unbatchEntireBatch(paymentRequestBatchIds, premiumType)
+        .subscribe({
+          next: (response:any) => {
+            this.unbatchEntireBatchSubject.next(response);
+            if (response.status) {
+              this.notificationSnackbarService.manageSnackBar(
+                SnackBarNotificationType.SUCCESS,
+                response.message
+              );
+            }
+            this.hideLoader();
+          },
+          error: (err) => {
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+            this.hideLoader();
+          },
+        });
+    }
+
+    unbatchPremiums(paymentRequestIds: string[], premiumType: string) {
+      this.showLoader();
+      return this.financialPremiumsDataService
+        .unbatchPremium(paymentRequestIds, premiumType)
+        .subscribe({
+          next: (response:any) => {
+            this.unbatchPremiumsSubject.next(response);
+            if (response.status) {
+              this.notificationSnackbarService.manageSnackBar(
+                SnackBarNotificationType.SUCCESS,
+                response.message
+              );
+            }
+            this.hideLoader();
+          },
+          error: (err) => {
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+            this.hideLoader();
+          },
+        });
     }
 
 }
