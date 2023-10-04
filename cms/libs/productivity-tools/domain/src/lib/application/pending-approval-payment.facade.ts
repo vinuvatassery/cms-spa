@@ -10,6 +10,8 @@ export class PendingApprovalPaymentFacade {
   private pendingApprovalGridSubject = new Subject<any>();
   private pendingApprovalMainListSubject = new Subject<any>();
   private pendingApprovalSubmittedSummarySubject = new Subject<any>();
+  private pendingApprovalBatchDetailPaymentsCountSubject = new Subject<any>();
+  private pendingApprovalBatchDetailPaymentsGridSubject = new Subject<any>();
 
   /** Public properties **/
   pendingApprovalGrid$ = this.pendingApprovalGridSubject.asObservable();
@@ -18,6 +20,9 @@ export class PendingApprovalPaymentFacade {
 
   pendingApprovalMainList$ = this.pendingApprovalMainListSubject.asObservable();
   pendingApprovalSubmittedSummary$ = this.pendingApprovalSubmittedSummarySubject.asObservable();
+  pendingApprovalBatchDetailPaymentsCount$ = this.pendingApprovalBatchDetailPaymentsCountSubject.asObservable();
+  pendingApprovalBatchDetailPaymentsGrid$ = this.pendingApprovalBatchDetailPaymentsGridSubject.asObservable();
+
   constructor(
     private readonly PendingApprovalPaymentService: PendingApprovalPaymentService,
     private readonly loggingService : LoggingService,
@@ -105,4 +110,23 @@ export class PendingApprovalPaymentFacade {
       }
     );
   }
+
+  getPendingApprovalBatchDetailPaymentsGrid(gridSetupData: any, batchId: string, serviceSubType: string) {
+
+    this.PendingApprovalPaymentService.getPendingApprovalBatchDetailPaymentsGrid(gridSetupData, batchId, serviceSubType).subscribe(
+      {
+        next: (dataResponse: any) => {
+          const gridView = {
+            data: dataResponse["items"],
+            total: dataResponse["totalCount"]
+          };
+            this.pendingApprovalBatchDetailPaymentsGridSubject.next(gridView);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        },
+      }
+    );
+  }
+
 }

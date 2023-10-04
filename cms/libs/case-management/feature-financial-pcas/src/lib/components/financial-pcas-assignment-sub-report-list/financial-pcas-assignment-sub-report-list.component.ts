@@ -16,7 +16,7 @@ export class FinancialPcasAssignmentSubReportListComponent implements OnChanges 
 
   @Input() pageSizes: any;
   @Input() objectId: any;
-  @Input() groupIds: any;
+  @Input() groupId: any;
   @Input() pcaAssignmentId: any;
   @Input() amountAssigned: any;
   @Input() amountRemaining: any;
@@ -57,7 +57,7 @@ export class FinancialPcasAssignmentSubReportListComponent implements OnChanges 
   loadPcasAssignmentSubGrid() {
     this.loadPcasAssignmentSubReport({
       objectId          :this.objectId,
-      groupIds          :this.groupIds,
+      groupId          :this.groupId,
       pcaAssignmentId   :this.pcaAssignmentId,
       amountAssigned    :this.amountAssigned,
       amountRemaining   :this.amountRemaining,

@@ -1,14 +1,12 @@
 /** Angular **/
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 /** External libraries **/
-import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { GridFilterParam } from '../../entities/grid-filter-param';
-import { Observable } from 'rxjs';
-import { InsurancePlan } from '../../entities/insurance-plan';
-import { ClientInsurancePlans, InsurancePremium, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
+import { Observable, of } from 'rxjs';
 import { BatchPremium } from '../../entities/financial-management/batch-premium';
+import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage } from '../../entities/financial-management/client-insurance-plan';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPremiumsDataService {
@@ -16,11 +14,9 @@ export class FinancialPremiumsDataService {
   constructor(
     private readonly http: HttpClient,
     private readonly configurationProvider: ConfigurationProvider
-  ) {}
+  ) { }
 
-
-
-  loadFinancialPremiumsProcessListService( ) {
+  loadFinancialPremiumsProcessListService() {
     return of([
       {
         invoiceID:1,
@@ -52,127 +48,17 @@ export class FinancialPremiumsDataService {
       },
     ]);
   }
-  loadFinancialPremiumsBatchListService( ) {
-    return of([
-      {
-        id:1,
-        batch: '05012021_001 `',
-        ofProviders:'XX',
-        ofPremiums:'XX',
-        pmtsRequested:'XX',
-        pmtsReconciled:'XX',
-        totalAmountDue:'XX,XXX.XX',
-        totalAmountReconciled:'XX,XXX.XX',
-      },
-      {
-        id:2,
-        batch: '05012021_001 `',
-        ofProviders:'XX',
-        ofPremiums:'XX',
-        pmtsRequested:'XX',
-        pmtsReconciled:'XX',
-        totalAmountDue:'XX,XXX.XX',
-        totalAmountReconciled:'XX,XXX.XX',
-      },
-      {
-        id:3,
-        batch: '05012021_001 `',
-        ofProviders:'XX',
-        ofPremiums:'XX',
-        pmtsRequested:'XX',
-        pmtsReconciled:'XX',
-        totalAmountDue:'XX,XXX.XX',
-        totalAmountReconciled:'XX,XXX.XX',
-      },
-    ]);
+
+  loadFinancialPremiumsAllPaymentsListService(parms: GridFilterParam, claimsType: string) {
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${claimsType}/payments`, parms
+    );
   }
-  loadFinancialPremiumsAllPaymentsListService( ) {
-    return of([
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA',
-        clientName:'FName LName',
-        primaryInsurance:'FName LName',
-        memberID:'FName LName',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        originalWarranty:'XXXXXX',
-        originalAmount:'XXXXXX',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'XX-XX-XXXX',
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA',
-        clientName:'FName LName',
-        primaryInsurance:'FName LName',
-        memberID:'FName LName',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        originalWarranty:'XXXXXX',
-        originalAmount:'XXXXXX',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'XX-XX-XXXX',
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA',
-        clientName:'FName LName',
-        primaryInsurance:'FName LName',
-        memberID:'FName LName',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        originalWarranty:'XXXXXX',
-        originalAmount:'XXXXXX',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'XX-XX-XXXX',
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA',
-        clientName:'FName LName',
-        primaryInsurance:'FName LName',
-        memberID:'FName LName',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        originalWarranty:'XXXXXX',
-        originalAmount:'XXXXXX',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'XX-XX-XXXX',
-        by: 'by',
-      },
-    ]);
+
+  loadFinancialPremiumsBatchListService(params: GridFilterParam, claimsType : string ) {
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${claimsType}/batches`, params
+    );
   }
 
   loadBatchName(batchId: string){
@@ -475,13 +361,13 @@ export class FinancialPremiumsDataService {
       sortType:sortType,
       filter:filter
     }
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/list`,filterRequestBody);   
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/list`,filterRequestBody);
 }
 
 batchClaims(batchPremiums: BatchPremium, claimsType: string) {
   return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${claimsType}/batch`, batchPremiums);
 }
- 
+
   loadInsurancePlans(clientId: number): Observable<ClientInsurancePlans[]>{
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/plans`
@@ -522,5 +408,26 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${data.premiumsType}/client-recent-premium`,recentPremiumsPageAndSortedRequestDto
     );
+  }
+
+  loadPremium(type: string, premiumId: string): Observable<InsurancePremiumDetails> {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/${type}/premiums/${premiumId}`
+    );
+  }
+
+  updatePremium(type: string, premiumId: string, premiums: any) {
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/${type}/premiums/${premiumId}`
+      , premiums
+    );
+  }
+  
+  unbatchEntireBatch(paymentRequestBatchIds: string[], premiumType: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/unbatch`, paymentRequestBatchIds);
+  }
+
+  unbatchPremium(paymentRequestIds: string[], premiumType: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payment-requests/unbatch`, paymentRequestIds);
   }
 }

@@ -2,7 +2,7 @@
   display: inline-flex;
   align-items: center;
   gap: $size-m;
-  background: material-color($hive-neutral-palette, 100);
+  background: var(--hive-neutral-palette-100);
   padding: $size-l $size-xx;
   border-radius: $border-radius-sm;
   color: $app-primary-font-color;
@@ -27,12 +27,12 @@
   }
 
   &.badge-primary {
-    background: material-color($hive-primary-palette, 500);
+    background: var(--hive-primary-palette-500);
     color: $white;
   }
 
   &.badge-error {
-    background: material-color($hive-error-palette, 500);
+    background: var(--hive-error-palette-500);
     color: $white;
   }
 
@@ -42,7 +42,7 @@
   }
 
   &.badge-warn-light {
-    background: material-color($hive-warn-palette, 400);
+    background: var(--hive-warn-palette-400);
     color: $black-3;
   }
 }
@@ -116,9 +116,9 @@
     }
 
     &.k-notification-success {
-      border-color: material-color($hive-success-palette, 500);
+      border-color: var(--hive-success-palette-500);
       color: $white;
-      background-color: material-color($hive-success-palette, 500);
+      background-color: var(--hive-success-palette-500);
 
       .k-i-success {
         &:before {
@@ -129,8 +129,8 @@
     }
 
     &.k-notification-error {
-      border-color: material-color($hive-error-palette, 400);
-      background-color: material-color($hive-error-palette, 400);
+      border-color: var(--hive-error-palette-400);
+      background-color: var(--hive-error-palette-400);
       color: $white;
 
       .k-i-error {
@@ -142,8 +142,8 @@
     }
 
     &.k-notification-warning {
-      border-color: material-color($hive-warn-palette, 400);
-      background-color: material-color($hive-warn-palette, 400);
+      border-color: var(--hive-warn-palette-400);
+      background-color: var(--hive-warn-palette-400);
       color: $black-3;
 
       .k-i-warning {
@@ -160,8 +160,8 @@
     }
 
     &.k-notification-info {
-      border-color: material-color($hive-primary-palette, 400);
-      background-color: material-color($hive-primary-palette, 400);
+      border-color: var(--hive-primary-palette-400);
+      background-color: var(--hive-primary-palette-400);
 
       .k-i-info {
         &:before {
@@ -178,7 +178,7 @@
   height: $size-m;
   display: inline-flex;
   border-radius: $border-radius-xl;
-  background: material-color($hive-primary-palette, 300);
+  background: var(--hive-primary-palette-300);
 }
 
 .app-page_loader-on {
@@ -222,11 +222,11 @@
       color: #ffffff;
 
       &::after {
-        color: material-color($hive-primary-palette, 500);
+        color: var(--hive-primary-palette-500);
       }
 
       &::before {
-        color: material-color($hive-primary-palette, 800);
+        color: var(--hive-primary-palette-800);
       }
     }
   }

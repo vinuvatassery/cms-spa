@@ -164,7 +164,7 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
       }
 
     }
-    if(!this.appInfoForm.controls[ControlPrefix.gender + GenderCode.notListed].value){
+    if(!this.appInfoForm.controls[ControlPrefix.gender + GenderCode.notListed]?.value){
       this.appInfoForm.controls[this.DescriptionField].removeValidators( Validators.required );
       this.appInfoForm.controls[this.DescriptionField].updateValueAndValidity();
     }
