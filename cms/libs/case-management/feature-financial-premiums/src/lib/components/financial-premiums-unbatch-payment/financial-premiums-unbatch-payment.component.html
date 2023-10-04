@@ -1,9 +1,9 @@
 <kendo-dialog-titlebar (close)="closeUnBatchPaymentClicked()"> Unbatch Payment?</kendo-dialog-titlebar>
 
 <section class="k-dialog-body">
-    <p class="text-muted mb-1"> This action cannot be undone. The premium(s) will be added back to the “Process” tab. You may re-batch them at any time.  </p>
+    <p class="text-muted mb-1"> This action cannot be undone. 
+      The premium(s) will be added back to the “Process” tab. You may re-batch them at any time.  </p>
  
-    <p class="text-muted mb-2">   Premium to be Unbatch: 6  </p>
   </section>
   
   <kendo-dialog-actions>
@@ -18,7 +18,7 @@
         >
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="Unbatch">
+        <button kendoButton [primary]="true" aria-label="Unbatch" (click)="UnBatchClicked()">
             Unbatch
         </button>
       </div>
