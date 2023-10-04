@@ -25,7 +25,7 @@ export class PendingApprovalPaymentService {
     };
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=` +
-        serviceSubType,
+        serviceSubType+`/level=1`,
         paymentApprovalGridSetupDto
     );
   }
@@ -40,7 +40,7 @@ export class PendingApprovalPaymentService {
     };
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=` +
-        serviceSubType,
+        serviceSubType+`/level=1`,
         paymentApprovalGridSetupDto
     );
   }
@@ -50,5 +50,17 @@ export class PendingApprovalPaymentService {
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/summary` ,
       paymentRequestBatchIds
     );
+  }
+
+  getPendingApprovalBatchDetailPaymentsGrid(gridSetupData: any, batchId: string, serviceSubType: string) {
+    const batchDetailGridSetupDto = {
+      SortType: gridSetupData.sortType,
+      Sorting: gridSetupData.sort,
+      SkipCount: gridSetupData.skipcount,
+      MaxResultCount: gridSetupData.maxResultCount,
+      Filter: gridSetupData.filter,
+    };
+    return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=${serviceSubType}&batchId=${batchId}/batch-detail`
+    , batchDetailGridSetupDto);
   }
 }

@@ -93,6 +93,9 @@ export class FinancialPcasPageComponent implements OnInit{
     this.financialPcaFacade.loadFinancialPcaReassignmentListGrid(event);
   }
 
+  loadPcaReassignmentList(data :any){
+    this.financialPcaFacade.loadFinancialPcaReassignmentListGrid(data);
+  }
   loadFinancialPcaReportListGrid(data: any) {
     this.financialPcaFacade.loadFinancialPcaReportListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.filter);
   }
