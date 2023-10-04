@@ -26,6 +26,7 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
   batchLogServicesData$ = this.financialPremiumsFacade.batchLogServicesData$;
   unbatchPremiums$ = this.financialPremiumsFacade.unbatchPremiums$;
   unbatchEntireBatch$ = this.financialPremiumsFacade.unbatchEntireBatch$;
+  actionResponse$ = this.financialPremiumsFacade.premiumActionResponse$;
   batchId!:string;
   dataExportParameters! : any
   premiumType: any;
@@ -103,4 +104,8 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
   unBatchPremiumClick(event:any){
     this.financialPremiumsFacade.unbatchPremiums(event.paymentId,event.premiumsType)
   }
+  deletePayment(paymentId: string){
+    this.financialPremiumsFacade.deletePremiumPayment(this.premiumType, paymentId);
+  }
+
 }

@@ -41,7 +41,7 @@
     [width]="40"  [locked]="true"></kendo-grid-checkbox-column>
 
       <kendo-grid-column *ngIf="isSendReportOpened"  field="add" [width]="150" 
-      [sticky]="true" [sortable]="false"  [columnMenu]="false" [headerStyle]="{'text-align': 'center'}" [style]="{'text-align': 'center'}">
+       [sortable]="false"  [columnMenu]="false" [headerStyle]="{'text-align': 'center'}" [style]="{'text-align': 'center'}">
         <ng-template kendoGridHeaderTemplate let-dataItem>
             <input style="zoom: 1.2;"   
                  type="checkbox" 
@@ -212,7 +212,7 @@
          </ng-template>
 
        </kendo-grid-column>
-       <kendo-grid-column field="creatorId" title="By" [width]="70" [columnMenu]="false" [sticky]="true">
+       <kendo-grid-column field="creatorId" title="By" [width]="70" [columnMenu]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button
             kendoButton
@@ -237,7 +237,18 @@
         </ng-template>
       </kendo-grid-column>
 
-    <kendo-grid-column field="Option" title=" " [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
+      <ng-container>
+        <div *kendoGridDetailTemplate="let dataItem">
+            <cms-financial-premium-adjustment
+            [adjustmentId]="dataItem.paymentRequestId"
+            [pageSizes]="pageSizes"
+            [adjustments$]="adjustments$"
+            [adjustmentsLoader$]="adjustmentsLoader$"
+            (loadAdjustmentsEvent)="loadAdjustments($event)">
+            </cms-financial-premium-adjustment>
+        </div>
+      </ng-container>
+    <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="50" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
         <kendo-dropdownbutton [data]="processGridActions" icon="more-vertical"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -346,7 +357,6 @@
     [insurancePlansLoader$]="insurancePlansLoader$"
     [insuranceCoverageDates$]="insuranceCoverageDates$"
     [insuranceCoverageDatesLoader$]="insuranceCoverageDatesLoader$"
-    [actionResponse$]="actionResponse$"
     [existingPremiums$]="existingPremiums$"
     (clientChangeEvent)="loadInsurancePlans($event)"
     (modalCloseAddPremiumsFormModal)="modalCloseAddPremiumsFormModal($event)"
@@ -360,7 +370,6 @@
   [insurancePremium$]="insurancePremium$"
   [insuranceCoverageDates$]="insuranceCoverageDates$"
   (loadPremiumEvent)="loadPremium($event)"
-  [actionResponse$]="actionResponse$"
   (updatePremiumEvent)="updatePremium($event)"
     (modalCloseEditPremiumsFormModal)="modalCloseEditPremiumsFormModal($event)"></cms-financial-premiums-edit-detail-form>
 </ng-template>

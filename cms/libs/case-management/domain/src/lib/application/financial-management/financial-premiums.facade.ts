@@ -150,6 +150,12 @@ export class FinancialPremiumsFacade {
   private insurancePremiumSubject = new Subject<InsurancePremiumDetails>();
   insurancePremium$ =this.insurancePremiumSubject.asObservable();
 
+  private adjustmentsSubject = new Subject<any>();
+  adjustments$ =this.adjustmentsSubject.asObservable();
+
+  private adjustmentsLoaderSubject = new BehaviorSubject<boolean>(false);
+  adjustmentsLoader$ =this.adjustmentsLoaderSubject.asObservable();
+
   /** Private properties **/
 
   /** Public properties **/
@@ -428,14 +434,14 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
     });
 }
 
-    loadInsurancePlans(clientId: number){
+    loadInsurancePlans(client: any, type: string){
       this.insurancePlansLoaderSubject.next(true);
-      this.financialPremiumsDataService.loadInsurancePlans(clientId)
+      this.financialPremiumsDataService.loadInsurancePlans(client.clientId, client.eligibilityId, type)
       .subscribe({
         next: (dataResponse) => {
             this.insurancePlansLoaderSubject.next(false);
             this.insurancePlansSubject.next(dataResponse);
-            this.loadInsurancePlansCoverageDates(clientId);
+            this.loadInsurancePlansCoverageDates(client.clientId);
         },
         error: (err) => {
           this.insurancePlansLoaderSubject.next(false);
@@ -587,4 +593,41 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
         });
     }
 
+
+    loadPremiumAdjustments(type: string, paymentId: string, params: GridFilterParam){
+      this.adjustmentsLoaderSubject.next(true);
+      this.financialPremiumsDataService.loadPremiumAdjustments(type, paymentId, params)
+      .subscribe({
+        next: (dataResponse: any) => {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+            this.adjustmentsLoaderSubject.next(false);
+            this.adjustmentsSubject.next(gridView);
+        },
+        error: (err) => {
+          this.adjustmentsLoaderSubject.next(false);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+	
+
+   deletePremiumPayment(type: string, paymentId: string){
+      this.showLoader();
+      this.financialPremiumsDataService.deletePremium(type, paymentId)
+      .subscribe({
+        next: (response: any) => {
+          this.premiumActionResponseSubject.next(true);
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response?.message);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      })
+    }
+	
 }

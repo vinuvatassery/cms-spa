@@ -73,6 +73,7 @@
                         [min]="0"
                         [decimals]="2"
                         [maxlength]="15"
+                        [ngClass]="{'ng-invalid ng-dirty':premium.premiumAmountRequired}"
                         (valueChange)="premiumAmountChanged()"
                         [(ngModel)]="premium.premiumAmount">
                     </kendo-numerictextbox>
@@ -150,6 +151,7 @@
                                 [decimals]="2"
                                 [maxlength]="15"
                                 [fillMode]="formUiStyle.inputFillMode"
+                                [ngClass]="{'ng-invalid ng-dirty':adjustment.adjustmentAmountRequired}"
                                 (valueChange)="adjustmentAmountChanged(adjustment)"
                                 [(ngModel)]="adjustment.adjustmentAmount"
                                >
@@ -168,15 +170,16 @@
                                 textField="coverageDate" 
                                 valueField="coverageStartDate"
                                 [valuePrimitive]="true"
+                                [ngClass]="{'ng-invalid ng-dirty':(adjustment.coverageDatesRequired || adjustment.duplicateCoverage)}"
                                 (valueChange)="adjustmentDateChanged(adjustment)"
                                 [(ngModel)]="adjustment.coverageStartDate"
                                 >
                             </kendo-dropdownlist>
                             <kendo-formerror *ngIf="adjustment.coverageDatesRequired">
-                                Coverage Date is required
+                                Coverage Dates is required
                             </kendo-formerror>
                             <kendo-formerror *ngIf="adjustment.duplicateCoverage">
-                                Coverage Date already exist
+                                Coverage Dates already exist
                             </kendo-formerror>
                           </kendo-floatinglabel>
                         </div>
@@ -199,7 +202,7 @@
 
 
 </section>
-<div class="add_new_fixed_bottom">
+<div class="add_new_fixed_bottom" *ngIf="insurancePremium$ | async">
     <div>
         <h5 class="text-upper">Recent Premiums for this client</h5>
         <div class="add_new_fixed_bottom_grid_section">
@@ -213,3 +216,65 @@
     </div>
 
 </div>
+<section class="add_main_popup_screen" *ngIf="!(insurancePremium$ | async)">
+    <div class="add_new_top_section">
+        <p class="mb-3"> Update the premium amount and add adjustments if needed.</p>
+        <div class="flex-row">
+            <div class="flex-col flex-col-6">
+                <div class="detail-items-with-border mt-2">
+                    <table>
+                        <caption hidden> Provider Details</caption>
+                        <tr hidden>
+                            <th>Field</th>
+                            <th> details</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Client Name:</strong></td>
+                            <td> <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Member ID:</strong></td>
+                            <td> <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Insurance Vendor:</strong></td>
+                            <td> <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Plan Name:</strong></td>
+                            <td> <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Insurance Type:</strong></td>
+                            <td> <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Coverage Start Date:</strong></td>
+                            <td> <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Coverage End Date:</strong></td>
+                            <td> <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Last Premium Due Date:</strong></td>
+                            <td> <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="flex-row">
+            <div class="flex-col flex-col-3">
+                <kendo-floatinglabel text="" class="amount-with-symbol">
+                    <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                    <kendo-skeleton shape="text" animation="pulse" width="60%" height="50px"></kendo-skeleton>
+                </kendo-floatinglabel>
+            </div>
+            <div class="flex-col mt-1">
+                <p>This will update the premium amount going forward</p>
+            </div>
+        </div>
+
+    </div>
+</section>

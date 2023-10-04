@@ -24,7 +24,6 @@ export class FinancialPremiumsEditDetailFormComponent implements OnInit, OnDestr
   @Input() premiumId!: string;
   @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
   @Input() insuranceCoverageDates$: any;
-  @Input() actionResponse$: any;
 
   /* Output Properties */
   @Output() loadPremiumEvent = new EventEmitter<string>();
@@ -47,7 +46,6 @@ export class FinancialPremiumsEditDetailFormComponent implements OnInit, OnDestr
   coverageDateList: any;
   premiumSubscription = new Subscription;
   coverageDatesSubscription = new Subscription;
-  actionResponseSubscription = new Subscription;
 
   /* Constructor */
   constructor(private readonly financialPremiumsFacade: FinancialPremiumsFacade,
@@ -60,13 +58,11 @@ export class FinancialPremiumsEditDetailFormComponent implements OnInit, OnDestr
     this.loadPremiums();
     this.addPremiumSubscription();
     this.addInsurancePlansSubscription();
-    this.addActionRespSubscription();
   }
 
   ngOnDestroy(): void {
     this.premiumSubscription.unsubscribe();
     this.coverageDatesSubscription.unsubscribe();
-    this.actionResponseSubscription.unsubscribe();
   }
 
   /* Public Methods */
@@ -201,14 +197,6 @@ export class FinancialPremiumsEditDetailFormComponent implements OnInit, OnDestr
   private addInsurancePlansSubscription() {
     this.coverageDatesSubscription = this.insuranceCoverageDates$.subscribe((value: any) => {
       this.coverageDateList = value;
-    });
-  }
-
-  private addActionRespSubscription() {
-    this.actionResponseSubscription = this.actionResponse$.subscribe((resp: boolean) => {
-      if (resp) {
-        this.closeAddEditPremiumsFormModalClicked();
-      }
     });
   }
 }
