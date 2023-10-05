@@ -18,9 +18,11 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { Subject, debounceTime } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Component({
   selector: 'productivity-tools-approvals-payments-list',
@@ -42,10 +44,12 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   @Input() approvalsPaymentsMainLists$: any;
   @Input() pendingApprovalSubmittedSummary$: any;
   @Input() batchDetailPaymentsList$: any;
+  @Input() exportButtonShow$ : any
   @Output() loadApprovalsPaymentsGridEvent = new EventEmitter<any>();
   @Output() loadApprovalsPaymentsMainListEvent = new EventEmitter<any>();
   @Output() loadSubmittedSummaryEvent = new EventEmitter<any>();
   @Output() loadBatchDetailPaymentsGridEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -90,7 +94,22 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
-  
+  gridColumns: { [key: string]: string } = {
+    ALL: 'All Columns',
+    batchName: 'Batch',
+    providerCount: 'Provider Count',
+    totalAmountDue: 'Total Amount',
+    carrierCount: 'Carrier Count',
+    totalPayments: 'Pmt Count',
+    totalClaims: 'Premium Count',
+    creationTime: 'Date Approval Requested'
+  };
+
+  filteredByColumnDesc = '';
+  showDateSearchWarning = false;
+  columnChangeDesc = 'Default Columns'
+  searchText = '';
+  showExportLoader = false;
   
   private depositDetailsDialog: any;
 
@@ -98,7 +117,9 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   /** Constructor **/
   constructor(private route: Router, 
     private dialogService: DialogService,private readonly cd: ChangeDetectorRef,
-    private lovFacade: LovFacade) {}
+    private lovFacade: LovFacade,
+    private readonly intl: IntlService,
+    private readonly configProvider: ConfigurationProvider) {}
 
   ngOnInit(): void {
     this.gridDataHandle();
@@ -176,7 +197,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
         {
           "filters": [
             {
-              "field": this.selectedColumn ?? 'batch',
+              "field": this.selectedColumn ?? 'batchName',
               "operator": 'startswith',
               "value": data,
             },
@@ -279,6 +300,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.selectedPaymentType = paymentSubTypeCode;    
     this.loadApprovalPaymentsListGrid();
     this.mainListDataHandle();  
+    this.selectedColumn = 'ALL';  
     this.gridDataHandle();
     this.cd.detectChanges();   
   }
@@ -640,7 +662,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       }
     });        
   }
-  dropDowncolumns : any = [
+  dropDownColumns : any = [
     {
       columnCode: 'ALL',
       columnDesc: 'All Columns',
@@ -657,5 +679,35 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   columns:any={
 
+  }
+
+  private isValidDate = (searchValue: any) => isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(new Date(searchValue), this.configProvider?.appSettings?.dateFormat);
+      }
+      else {
+        return '';
+      }
+    }
+
+    return searchValue;
+  }
+
+  onClickedExport(){
+    this.showExportLoader = true
+    this.exportGridDataEvent.emit()    
+    
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {        
+        this.showExportLoader = false
+        this.cd.detectChanges()
+      }
+    })
   }
 }
