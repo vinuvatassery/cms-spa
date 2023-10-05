@@ -59,7 +59,7 @@ export class FinancialPremiumsFacade {
     field: this.sortValueReconcile,
   }];
 
-  public sortValueReconcilePaymentBreakout = 'invoiceNbr';
+  public sortValueReconcilePaymentBreakout = 'creationTime';
   public sortReconcilePaymentBreakoutList: SortDescriptor[] = [
     {
       field: this.sortValueReconcilePaymentBreakout,
