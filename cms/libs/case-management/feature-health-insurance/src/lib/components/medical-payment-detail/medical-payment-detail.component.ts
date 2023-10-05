@@ -25,11 +25,13 @@ import {
   PaymentMethodCode
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import {  LovFacade } from '@cms/system-config/domain';
+import {  Lov, LovFacade } from '@cms/system-config/domain';
 
 import { SnackBarNotificationType, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
+import { groupBy } from '@progress/kendo-data-query';
+
 @Component({
   selector: 'case-management-medical-payment-detail',
   templateUrl: './medical-payment-detail.component.html',
@@ -97,6 +99,7 @@ export class MedicalPaymentDetailComponent {
   invoiceId: any;
   @Input() paymentRequestId: any;
   isExcededMaxBanifitButtonText = 'Make Exception';
+  groupedPaymentRequestTypes:any;
   /** Constructor **/
   constructor(
     private formBuilder: FormBuilder,
@@ -116,6 +119,26 @@ export class MedicalPaymentDetailComponent {
 
   /** Lifecycle hooks **/
   ngOnInit(){
+    
+    this.paymentRequestType$.subscribe((paymentRequestTypes) => {    
+      let parentRequestTypes = paymentRequestTypes.filter(x => x.parentCode == null);
+      let refactoredPaymentRequestTypeArray :Lov[] =[]
+      parentRequestTypes.forEach(x => {
+        let childPaymentRequestTypes= JSON.parse(JSON.stringify(paymentRequestTypes.filter(y => y.parentCode == x.lovCode))) as Lov[];
+       if(childPaymentRequestTypes?.length>0){
+        childPaymentRequestTypes.forEach(y => y.parentCode = x.lovDesc )
+        refactoredPaymentRequestTypeArray.push(...childPaymentRequestTypes);
+       }
+       else{
+        let noChildPaymentRequestType = JSON.parse(JSON.stringify(x))as Lov;
+        noChildPaymentRequestType.parentCode = noChildPaymentRequestType.lovDesc
+        refactoredPaymentRequestTypeArray.push(noChildPaymentRequestType)
+       }
+      })
+      this.groupedPaymentRequestTypes = groupBy(refactoredPaymentRequestTypeArray, [{ field: "parentCode" }]);
+    });
+
+  
     this.initMedicalClaimObject();
     this.buildCoPaymentForm();
    

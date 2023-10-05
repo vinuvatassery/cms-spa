@@ -115,12 +115,16 @@ readonly financialProvider = 'medical';
   saveVendorProfile(vendorProfile: any){
     this.financialVendorFacade.showLoader();
     this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
+      
       next:(response:any)=>{
+        
         this.financialVendorFacade.hideLoader();
+        this.isaddNewInsuranceProviderOpen=false;
         this.closeVendorDetailModal();
     
       },
       error:(err:any)=>{
+        
         this.financialVendorFacade.hideLoader();
      }
     });
