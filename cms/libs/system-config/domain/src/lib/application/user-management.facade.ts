@@ -109,7 +109,6 @@ export class UserManagementFacade {
     this.userDataService.getProfile$
       .pipe(first(profile => profile[0]?.permissions != null))
       .subscribe((profile:any)=>{ 
-        debugger;
         const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);  
         roleCheck = roleProfile ? true : false;
       })
@@ -153,7 +152,6 @@ export class UserManagementFacade {
     this.userDataService.getProfile$
     .pipe(first(profile => profile[0]?.permissions != null))
     .subscribe((profile:any)=>{ 
-      debugger;
       const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);  
       const permission = roleProfile?.permissions;
       if (permission?.length == 0) {

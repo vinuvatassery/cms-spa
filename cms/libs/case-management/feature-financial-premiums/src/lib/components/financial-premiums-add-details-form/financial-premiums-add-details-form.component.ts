@@ -17,7 +17,6 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
   @Input() insurancePlansLoader$: any;
   @Input() insuranceCoverageDates$: any;
   @Input() insuranceCoverageDatesLoader$: any;
-  @Input() actionResponse$: any;
   @Input() existingPremiums$!: Observable<PolicyPremiumCoverage[]>;
 
   /* Output Properties */
@@ -62,7 +61,6 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
   clientSubscription = new Subscription;
   insurancePlansSubscription = new Subscription;
   coverageDatesSubscription = new Subscription;
-  actionResponseSubscription = new Subscription;
   existingPremiumSubscription = new Subscription;
 
   showClientRequiredValidation = false;
@@ -88,7 +86,6 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     this.clientSubscription.unsubscribe();
     this.insurancePlansSubscription.unsubscribe();
     this.coverageDatesSubscription.unsubscribe();
-    this.actionResponseSubscription.unsubscribe();
     this.existingPremiumSubscription.unsubscribe();
   }
 
@@ -99,9 +96,13 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     this.financialClaimsFacade.loadClientBySearchText(clientSearchText);
   }
 
-  clientChanged(client: any) {
+  clientChanged(client: any) {    
     this.showClientRequiredValidation = !client;
-    this.clientChangeEvent.emit(client?.clientId);
+    this.clientChangeEvent.emit(
+      {
+        clientId: client?.clientId,
+        eligibilityId: client?.clientCaseEligibilityId
+      });
   }
 
   closeAddPremiumClicked() {
@@ -115,6 +116,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
 
   exceptionReasonCounterChange(coverage: any, ev: string): void {
     const charactersCount = ev.length;
+    coverage.exceptionReasonRequired = charactersCount <= 0;
     coverage.exceptionReasonCount = `${charactersCount}/100`;
   }
 
@@ -164,6 +166,8 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
         plan.coverages.splice(coverageIndex, 1);
         this.coverageDateExistChecking(policyId, coverage);
       }
+
+      this.makeAutoPlanSelection(plan);
     }
   }
 
@@ -183,11 +187,13 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
 
     plan.coverages.push(newCoverage);
     this.showPremiumRequiredValidation = false;
+    this.makeAutoPlanSelection(plan);
   }
 
   onMakeExceptionClick(coverage: InsurancePremiumCoverage) {
     coverage.makeExceptionFlag = !coverage.makeExceptionFlag
     coverage.exceptionText = coverage.makeExceptionFlag ? "Don't Make Exception" : "Make Exception";
+    if (!coverage.makeExceptionFlag) { coverage.exceptionReasonRequired = false; }
   }
 
   /* Private Methods */
@@ -228,13 +234,13 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     return plan.coverages.map((coverage: InsurancePremiumCoverage) => {
       const firstDayOfMonth = coverage?.coverageDates ? new Date(coverage.coverageDates) : new Date();
       const lastDayOfMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0);
-  
+
       return {
         clientId: this.selectedClient.clientId,
         clientInsurancePolicyId: plan.clientInsurancePolicyId,
         clientCaseEligibilityId: this.selectedClient.clientCaseEligibilityId,
         vendorId: plan.vendorId,
-        vendorAddressId:plan.vendorAddressId,
+        vendorAddressId: plan.vendorAddressId,
         policyNbr: plan.insuranceIdNbr,
         clientFirstName: this.selectedClient.clientFirstName,
         clientLastName: this.selectedClient.clientLastName,
@@ -261,7 +267,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
           coverageStartDate: this.intl.formatDate(firstDayOfMonth, this.configProvider?.appSettings?.dateFormat),
           coverageEndDate: this.intl.formatDate(lastDayOfMonth, this.configProvider?.appSettings?.dateFormat)
         };
-        
+
         policyPremiumCoverages.push(policyCoverages);
       });
     });
@@ -307,12 +313,11 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     coverages?.map((cvg: InsurancePremiumCoverage) => {
       cvg.coverageDateRequired = cvg?.coverageDates == null;
       cvg.premiumAmountRequired = cvg?.premiumAmount == null;
-      cvg.exceptionReasonRequired = (cvg?.makeExceptionFlag ?? false) && cvg?.exceptionReason == null;
+      cvg.exceptionReasonRequired = (cvg?.makeExceptionFlag ?? false) && !cvg?.exceptionReason;
     });
   }
 
   private addSubscriptions() {
-    this.addActionRespSubscription();
     this.addClientSubscription();
     this.addInsurancePlansSubscription();
     this.addCoverageDateSubscription();
@@ -331,13 +336,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     });
   }
 
-  private addActionRespSubscription() {
-    this.actionResponseSubscription = this.actionResponse$.subscribe((resp: boolean) => {
-      if (resp) {
-        this.closeAddPremiumClicked();
-      }
-    });
-  }
+
   private addClientSubscription() {
     this.clientSubscription = this.clients$.subscribe((value: any) => {
       this.clientSearchLoader$.next(false);
@@ -372,5 +371,9 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     else {
       this.save();
     }
+  }
+
+  private makeAutoPlanSelection(plan: ClientInsurancePlans) {
+    plan.isPlanSelected = plan?.coverages?.length > 0;
   }
 }

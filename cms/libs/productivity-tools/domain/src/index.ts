@@ -26,7 +26,8 @@ export * from './lib/application/reminder.facade';
 export * from './lib/application/productivity-invoice.facade';
 export * from './lib/application/pending-approval-payment.facade';
 
-/** Enums */
+/** Enums **/
+export * from './lib/enums/approval-user-status-code.enum';
 export * from './lib/enums/approval-type-code.enum';
 export * from './lib/enums/financial-manager-role-code.enum';
 export * from './lib/enums/approval-limit-permission-code.enum';

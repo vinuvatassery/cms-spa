@@ -42,8 +42,8 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
   tAreaSendBackNotesMaxLength:any = 100;
   approveBatchCount:any=0;
   sendbackBatchCount:any=0;
-  approveStatus:string="APPROVE";
-  sendbackStatus:string="SENDBACK";
+  approveStatus:string="APPROVED";
+  sendbackStatus:string="SEND_BACK";
   sendbackNotesRequireMessage:string = "Send Back Note is required.";
 
   gridBatchDetailPaymentsDataSubject = new Subject<any>();
@@ -130,27 +130,6 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
       item.tAreaCessationCounter = `${tAreaSendBackNotesCharactersCount}/${this.tAreaSendBackNotesMaxLength}`;
   }
 
-  ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
-    let inValid = false;    
-    
-    if (control === 'sendBackNote') {
-      dataItem.sendBackNotesInValid = (dataItem.batchStatus == this.sendbackStatus && dataItem.sendBackNotes.length <= 0);
-      dataItem.sendBackNotesInValidMsg = (dataItem.batchStatus == this.sendbackStatus && dataItem.sendBackNotes.length <= 0) ? this.sendbackNotesRequireMessage : "";
-      inValid =  dataItem.sendBackNotesInValid;
-    }
-    if (inValid) {
-      document.getElementById(control + rowIndex)?.classList.remove('ng-valid');
-      document.getElementById(control + rowIndex)?.classList.add('ng-invalid');
-      document.getElementById(control + rowIndex)?.classList.add('ng-dirty');
-    }
-    else {
-      document.getElementById(control + rowIndex)?.classList.remove('ng-invalid');
-      document.getElementById(control + rowIndex)?.classList.remove('ng-dirty');
-      document.getElementById(control + rowIndex)?.classList.add('ng-valid');
-    }
-    return 'ng-dirty ng-invalid';
-  }
-
   approveAndSendbackCount()
   {
       this.approveBatchCount=0;
@@ -161,63 +140,61 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
     });
   }
 
-  onApproveClicked(e: boolean,dataItem: any, control: any, rowIndex: any)
+  onApproveClicked(item: any, index: any)
   {
-    dataItem.approveButtonDisabled=false;
-    dataItem.sendBackButtonDisabled=true;
-    dataItem.sendBackNotes="";
-    if(dataItem.batchStatus === undefined || dataItem.batchStatus === '' || dataItem.batchStatus === null)
+    item.approveButtonDisabled=false;
+    item.sendBackButtonDisabled=true;
+    item.sendBackNotes="";
+    if(item.batchStatus === undefined || item.batchStatus === '' || item.batchStatus === null)
     {
-      dataItem.batchStatus=this.approveStatus;
+      item.batchStatus=this.approveStatus;
     } 
-    else if(dataItem.batchStatus == this.approveStatus)   
+    else if(item.batchStatus == this.approveStatus)   
     {
-      dataItem.batchStatus="";
-      dataItem.sendBackNotesInValidMsg="";
-      dataItem.sendBackNotesInValid = false;
-      dataItem.sendBackButtonDisabled=true;
+      item.batchStatus="";
+      item.sendBackNotesInValidMsg="";
+      item.sendBackNotesInValid = false;
+      item.sendBackButtonDisabled=true;
     }
-    else if(dataItem.batchStatus == this.sendbackStatus) 
+    else if(item.batchStatus == this.sendbackStatus) 
     {
-      dataItem.batchStatus=this.approveStatus;
-      dataItem.sendBackNotesInValidMsg="";
-      dataItem.sendBackNotesInValid = false;  
-      dataItem.sendBackButtonDisabled=true;
+      item.batchStatus=this.approveStatus;
+      item.sendBackNotesInValidMsg="";
+      item.sendBackNotesInValid = false;  
+      item.sendBackButtonDisabled=true;
     }
-    this.sendBackNotesChange(dataItem);
-    this.assignDataToSourceList(dataItem, rowIndex);
-    this.ngDirtyInValid(dataItem,control,rowIndex);
+    this.sendBackNotesChange(item);
+    this.assignDataToSourceList(item, index);
     this.approveAndSendbackCount();
   }
 
-  onSendbackClicked(e: boolean,dataItem: any, control: any, rowIndex: any)
+  onSendbackClicked(item: any, index: any)
   {
-    dataItem.approveButtonDisabled=true;
-    dataItem.sendBackButtonDisabled=false;
-    if(dataItem.batchStatus === undefined || dataItem.batchStatus === '' || dataItem.batchStatus === null)
+    item.approveButtonDisabled=true;
+    item.sendBackButtonDisabled=false;
+    if(item.batchStatus === undefined || item.batchStatus === '' || item.batchStatus === null)
     {
-      dataItem.batchStatus=this.sendbackStatus;  
-      dataItem.sendBackNotesInValidMsg= this.sendbackNotesRequireMessage;
-      dataItem.sendBackNotesInValid = true;    
+      item.batchStatus=this.sendbackStatus;  
+      item.sendBackNotesInValidMsg= this.sendbackNotesRequireMessage;
+      item.sendBackNotesInValid = true;    
     }   
-    else if(dataItem.batchStatus == this.sendbackStatus)   
+    else if(item.batchStatus == this.sendbackStatus)   
     {
-      dataItem.batchStatus="";
-      dataItem.sendBackNotesInValidMsg="";
-      dataItem.sendBackNotesInValid = false;
-      dataItem.sendBackButtonDisabled=true;
+      item.batchStatus="";
+      item.sendBackNotesInValidMsg="";
+      item.sendBackNotesInValid = false;
+      item.sendBackButtonDisabled=true;
     }
     else
     {
-      dataItem.batchStatus=this.sendbackStatus;
-      dataItem.sendBackNotesInValidMsg=this.sendbackNotesRequireMessage;
-      dataItem.sendBackNotesInValid = true;
-      dataItem.sendBackButtonDisabled=false;
+      item.batchStatus=this.sendbackStatus;
+      item.sendBackNotesInValidMsg=this.sendbackNotesRequireMessage;
+      item.sendBackNotesInValid = true;
+      item.sendBackButtonDisabled=false;
     } 
    
-    this.sendBackNotesChange(dataItem);    
-    this.assignDataToSourceList(dataItem, rowIndex);
-    this.ngDirtyInValid(dataItem,control,rowIndex);
+    this.sendBackNotesChange(item);    
+    this.assignDataToSourceList(item, index);
     this.approveAndSendbackCount(); 
   }
 

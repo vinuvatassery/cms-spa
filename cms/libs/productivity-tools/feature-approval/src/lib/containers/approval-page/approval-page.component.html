@@ -33,12 +33,14 @@
         [pendingApprovalSubmit$]="pendingApprovalSubmit$"
         [batchDetailPaymentsList$]="batchDetailPaymentsList$"
         [pageSizes]="pageSizes" [sortValue]="sortValueApprovalPaymentsAPproval"
-        [sortType]="sortType" [sort]="sortApprovalPaymentsList" 
+        [sortType]="sortType" [sort]="sortApprovalPaymentsList"
+        [exportButtonShow$]="exportButtonShow$" 
         (loadApprovalsPaymentsGridEvent)="loadApprovalsPaymentsGrid($event)"
         (submitEvent)="submitData($event)"
         (loadApprovalsPaymentsMainListEvent)="loadApprovalsPaymentsMain($event)"        
         (loadSubmittedSummaryEvent)="loadSubmittedSummary($event)"
           (loadBatchDetailPaymentsGridEvent)="loadBatchDetailPaymentsGrid($event)"
+          (exportGridDataEvent)="exportPendingApprovalGridData()"  
           class="reminder-list-modal-wrap"></productivity-tools-approvals-payments-list>
           </div>
       </ng-template>

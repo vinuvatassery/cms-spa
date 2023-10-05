@@ -198,3 +198,114 @@ $hive-canyon-palette: (
     A700: $white,
   ),
 );
+
+
+
+
+// -----------
+
+
+:root{
+  --hive-primary-palette-50 : #e0ebf2;
+  --hive-primary-palette-100: #b2cdde;
+  --hive-primary-palette-200: #7599b1;
+  --hive-primary-palette-300: #4c8ab4;
+  --hive-primary-palette-400: #0071bc;
+  --hive-primary-palette-500: #005994;
+  --hive-primary-palette-600: #004e83;
+  --hive-primary-palette-700: #004776;
+  --hive-primary-palette-800: #013a61;
+  --hive-primary-palette-900: #002e65;
+  --hive-primary-palette-A100: #95bbff;
+  --hive-primary-palette-A200: #629bff;
+  --hive-primary-palette-A400: #2f7bff;
+  --hive-primary-palette-A700: #156aff;  
+ 
+
+
+
+/* Warn Color Palette */
+ 
+  --hive-warn-palette-50: #fdf1e4;
+  --hive-warn-palette-100: #f9dcbb;
+  --hive-warn-palette-200: #f6c48e;
+  --hive-warn-palette-300: #f2ac61;
+  --hive-warn-palette-400: #ffe6af;
+  --hive-warn-palette-500: #ec891d;
+  --hive-warn-palette-600: #ea811a;
+  --hive-warn-palette-700: #e77615;
+  --hive-warn-palette-800: #e46c11;
+  --hive-warn-palette-900: #e85d3c;
+  --hive-warn-palette-A100: #ffffff;
+  --hive-warn-palette-A200: #ffe3d5;
+  --hive-warn-palette-A400: #ffc1a2;
+  --hive-warn-palette-A700: #ffaf89;
+ 
+ 
+ 
+  --hive-neutral-palette-50: #f0f0f0;
+  --hive-neutral-palette-100: #efefef;
+  --hive-neutral-palette-200: #dbdbdb;
+  --hive-neutral-palette-300: #f8fafb;
+  --hive-neutral-palette-400: #b9b9b9;
+  --hive-neutral-palette-500: #bec9d9;
+  --hive-neutral-palette-600: #83888d;
+  --hive-neutral-palette-700: #54667b;
+  --hive-neutral-palette-800: #7f7f7f;
+  --hive-neutral-palette-900: #1f1f1f;
+  --hive-neutral-palette-A100: #ffffff;
+  --hive-neutral-palette-A200: #ffe3d5;
+  --hive-neutral-palette-A400: #ffc1a2;
+  --hive-neutral-palette-A700: #ffaf89;
+ 
+ 
+ 
+  --hive-error-palette-50: #ffe0e0;
+  --hive-error-palette-100: #ffe8e6;
+  --hive-error-palette-200: #fdcccc;
+  --hive-error-palette-300: #ff4d4d;
+  --hive-error-palette-400: #c3372c;
+  --hive-error-palette-500: #ff0000;
+  --hive-error-palette-600: #ff0000;
+  --hive-error-palette-700: #ff0000;
+  --hive-error-palette-800: #a22c23;
+  --hive-error-palette-900: #7b211a;
+  --hive-error-palette-A100: #ffffff;
+  --hive-error-palette-A200: #fff2f2;
+  --hive-error-palette-A400: #ffbfbf;
+  --hive-error-palette-A700: #ffa6a6;
+ 
+ 
+ 
+  --hive-success-palette-50: #e3f0ea;
+  --hive-success-palette-100: #ddece5;
+  --hive-success-palette-200: #87c2a9;
+  --hive-success-palette-300: #57aa86;
+  --hive-success-palette-400: #33976c;
+  --hive-success-palette-500: #0f8552;
+  --hive-success-palette-600: #0d7d4b;
+  --hive-success-palette-700: #0b7241;
+  --hive-success-palette-800: #086838;
+  --hive-success-palette-900: #045528;
+  --hive-success-palette-A100: #87ffb4;
+  --hive-success-palette-A200: #54ff95;
+  --hive-success-palette-A400: #21ff75;
+  --hive-success-palette-A700: #08ff65;
+ 
+/* canyon Color Palette */
+ 
+  --hive-canyon-palette-50: #f2ebe1;
+  --hive-canyon-palette-100: #fff8e9;
+  --hive-canyon-palette-200: #f1e1c5;
+  --hive-canyon-palette-300: #b38d4d;
+  --hive-canyon-palette-400: #a37427;
+  --hive-canyon-palette-500: #935c01;
+  --hive-canyon-palette-600: #8b5401;
+  --hive-canyon-palette-700: #804a01;
+  --hive-canyon-palette-800: #764101;
+  --hive-canyon-palette-900: #623d00;
+  --hive-canyon-palette-A100: #ffbe94;
+  --hive-canyon-palette-A200: #ff9f61;
+  --hive-canyon-palette-A400: #ff802e;
+  --hive-canyon-palette-A700: #ff7114;  
+}
