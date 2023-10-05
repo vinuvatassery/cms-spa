@@ -13,8 +13,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult, RowClassArgs } from '@progress/kendo-angular-grid';
-
-import { DragTargetContainerDirective, DropTargetContainerDirective } from '@progress/kendo-angular-utils';
 import {  CompositeFilterDescriptor,  State,} from '@progress/kendo-data-query';
 import { Subject, Subscription, first } from 'rxjs';
 
@@ -22,7 +20,6 @@ import { Subject, Subscription, first } from 'rxjs';
 @Component({
   selector: 'cms-financial-pcas-assignment-list',
   templateUrl: './financial-pcas-assignment-list.component.html',
-   styleUrls: ['./financial-pcas-assignment-list.component.scss'], 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
@@ -63,9 +60,6 @@ export class FinancialPcasAssignmentListComponent implements OnInit  , OnDestroy
   @Output() addPcaDataEvent = new EventEmitter<any>();
   @Output() loadFinancialPcaAssignmentEvent = new EventEmitter<any>();
   @Output() pcaAssignmentPriorityUpdateEvent = new EventEmitter<any>();
-
-  @ViewChild('wrapper', { read: DragTargetContainerDirective })  dragTargetContainer: any;
-  @ViewChild('wrapper', { read: DropTargetContainerDirective })  dropTargetContainer: any;
 
   public state!: State;
   sortColumn = 'vendorName';
