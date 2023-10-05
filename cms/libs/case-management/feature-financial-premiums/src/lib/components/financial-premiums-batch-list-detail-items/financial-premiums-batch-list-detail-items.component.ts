@@ -20,6 +20,7 @@ import {
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { FinancialVendorFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-premiums-batch-list-detail-items',
   templateUrl: './financial-premiums-batch-list-detail-items.component.html', 
@@ -66,7 +67,17 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
- 
+  @Input() ddlStates$ :any;
+  @Output() updateProviderProfileEvent = new EventEmitter<any>();
+  @Input() vendorProfile$ :any;
+  @Input() paymentMethodCode$ :any;
+  @Output() onEditProviderProfileEvent = new EventEmitter<any>();
+  @Input() updateProviderPanelSubject$:any
+  @Output() getProviderPanelEvent = new EventEmitter<any>();
+  
+  OnEditProviderProfileClick(){
+    this.onEditProviderProfileEvent.emit()
+   }
   public batchItemGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -103,8 +114,11 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
       },
     },
   ];
+  updateProviderProfile(event:any){
+    this.updateProviderProfileEvent.emit(event)
+  }
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService, public activeRoute: ActivatedRoute) {}
+  constructor(private route: Router, private dialogService: DialogService, private readonly financialVendorFacade : FinancialVendorFacade,public activeRoute: ActivatedRoute) {}
   
   ngOnInit(): void {   
     this.loadBatchLogItemsListGrid();
@@ -222,7 +236,9 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   }
 
 
-  onViewProviderDetailClicked(  template: TemplateRef<unknown>): void {   
+  onViewProviderDetailClicked(  template: TemplateRef<unknown>): void {  
+    debugger; 
+    this.financialVendorFacade.getVendorProfile('331f5bf4-e071-40ed-8230-db2d869fcd59',"")
     this.providerDetailsDialog = this.dialogService.open({
       content: template,
       animation:{
@@ -238,7 +254,9 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
       this.providerDetailsDialog.close();
     }
   }
-
+  getProviderPanel(event:any){
+    this.getProviderPanelEvent.emit(event)
+  }
 
   onPaymentDetailFormClicked(  template: TemplateRef<unknown>): void {   
     this.paymentDetailsDialog = this.dialogService.open({

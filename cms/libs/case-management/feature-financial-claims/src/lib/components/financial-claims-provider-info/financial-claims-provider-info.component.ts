@@ -55,12 +55,15 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   ngOnInit(): void {
+    debugger;
    this.paymentRequestId= this.activeRoute.snapshot.queryParams['pid'];
     this.loadVendorInfo()
   }
 
   loadVendorInfo() {
+    debugger
     this.vendorProfile$?.subscribe(res => {
+      debugger
       this.vendorProfile = res;
       this.isEditProvider = false
     })
@@ -254,11 +257,14 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   onVendorProfileViewClicked() {
+    debugger;
     const query = {
+     
       queryParams: {
         v_id: this.vendorProfile.vendorId
       },
     };
+    debugger;
     this.route.navigate(['/financial-management/vendors/profile'], query)
     this.closeViewProviderClicked()
   }

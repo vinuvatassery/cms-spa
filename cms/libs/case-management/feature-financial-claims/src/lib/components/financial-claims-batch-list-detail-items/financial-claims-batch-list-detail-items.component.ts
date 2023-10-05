@@ -252,18 +252,22 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   }
   
   getProviderPanel(event:any){
+    debugger
     this.getProviderPanelEvent.emit(event)
   }
 
   updateProviderProfile(event:any){
+    debugger
     this.updateProviderProfileEvent.emit(event)
   }
 
   OnEditProviderProfileClick(){
+    debugger
    this.onEditProviderProfileEvent.emit()
   }
 
   private initializeGridState(){
+    debugger
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,

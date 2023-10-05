@@ -20,7 +20,7 @@ export class FinancialVendorFacade {
   private vendorProfileSpecialHandlingSubject = new Subject<any>();
   private clinicVendorSubject = new Subject<any>();
   private clinicVendorLoaderSubject = new Subject<any>();  /** Public properties **/
-  private providePanelSubject = new Subject<any>();
+  private providePanelSubject = new BehaviorSubject<any>([]);
   private updateProviderPanelSubject = new Subject<any>();
   private addProviderNewSubject= new Subject<any>();
   private searchProviderSubject= new Subject<any>();
@@ -95,15 +95,19 @@ export class FinancialVendorFacade {
     });
   }
   getVendorProfile(vendorId: string,tabCode: string): void {
+    debugger
+    alert("tab"+tabCode)
     this.showLoader();
     this.financialVendorDataService.getVendorProfile(vendorId,tabCode).subscribe({
       next: (vendorResponse: any) => {
+        debugger
         if (vendorResponse) {
           this.vendorProfileSubject.next(vendorResponse);
           this.hideLoader();
         }
       },
       error: (err) => {
+        debugger
         this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
@@ -139,6 +143,7 @@ export class FinancialVendorFacade {
   }
 
   getProviderPanel(vendorId:string){
+    debugger;
     this.showLoader();
     this.financialVendorDataService.getProviderPanel(vendorId).subscribe({
       next: (vendorsResponse: any) => {

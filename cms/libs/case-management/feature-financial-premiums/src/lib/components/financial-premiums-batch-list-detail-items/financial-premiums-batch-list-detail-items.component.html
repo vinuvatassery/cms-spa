@@ -178,8 +178,15 @@
       </ng-template>
     </kendo-popover>
 <ng-template #providerDetailsTemplate>
-      <cms-financial-claims-provider-info (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"></cms-financial-claims-provider-info>
-      <!-- <cms-financial-premiums-provider-info
+      <cms-financial-claims-provider-info
+      (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+      (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+      (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+      [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+      [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
+
+   <!--   <cms-financial-claims-provider-info (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"></cms-financial-claims-provider-info>
+       <cms-financial-premiums-provider-info
             (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"></cms-financial-premiums-provider-info> -->
 </ng-template>
 

@@ -380,7 +380,11 @@ export class FinancialPremiumsBatchesLogListsComponent
   }
 
   goToBatchItems(event: any) {
-    this.route.navigate(['/financial-management/premiums/' + this.premiumsType +'/batch/items'] );
+    debugger;
+  //  const batchId = this.activeRoute.snapshot.queryParams['bid'];
+    this.route.navigate([this.route.url.split('?')[0], 'items'], {
+      queryParams: { bid: "331f5bf4-e071-40ed-8230-db2d869fcd59", pid: "331f5bf4-e071-40ed-8230-db2d869fcd59",eid:"efe6a2bd-d8aa-4ef5-b896-8897efb02717" },
+    });
   }
 
   navToReconcilePayments(event: any) {
