@@ -103,12 +103,15 @@ export class PendingApprovalPaymentFacade {
   }
 
   loadSubmittedSummary(paymentRequestBatchIds: string[]) {
+    this.showLoader();
     this.PendingApprovalPaymentService.loadSubmittedSummary(paymentRequestBatchIds).subscribe(
       {
         next: (paymentsSummaryResponseDto: any) => {
+            this.hideLoader();
             this.pendingApprovalSubmittedSummarySubject.next(paymentsSummaryResponseDto);
         },
         error: (err) => {
+          this.hideLoader();
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
         },
       }
@@ -134,13 +137,20 @@ export class PendingApprovalPaymentFacade {
   }
 
   submitForApproval(data: any) {
+    this.showLoader();
     this.PendingApprovalPaymentService.submitForApproval(data).subscribe(
       {
         next: (response: any) => {
-            this.pendingApprovalSubmitSubject.next(response);
+          this.hideLoader();
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            response.message
+          );
+          this.pendingApprovalSubmitSubject.next(response);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err) 
         },
       }
     );

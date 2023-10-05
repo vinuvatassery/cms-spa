@@ -20,6 +20,7 @@ import {
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade, UserManagementFacade, UserDataService } from '@cms/system-config/domain';
+import { ApprovalTypeCode, FinancialManagerCode, ApprovalLimitPermissionCode, PendingApprovalPaymentTypeCode } from '@cms/productivity-tools/domain';
 
 @Component({
   selector: 'productivity-tools-approvals-payments-list',
@@ -59,7 +60,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-  approvalTypeCode : any = "L1_APPROVAL";
+  approvalTypeCode! : any;
   approveStatus:string="APPROVED";
   sendbackStatus:string="SEND_BACK";
   hasPaymentPendingApproval:boolean=false;
@@ -90,7 +91,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+  approvalTypeCodeEnum : any =  ApprovalTypeCode;
   
   
   private depositDetailsDialog: any;
@@ -251,18 +252,17 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   onPaymentTypeCodeValueChange(paymentSubTypeCode: any){
     this.selectedPaymentType = paymentSubTypeCode; 
-    debugger;
     switch(this.selectedPaymentType) {
-      case "MEDICAL_CLAIM":{
-        this.approvalPermissionCode = "Medical_Claims_Manager_Approval_Approve_Or_Deny_Payment_Requests";
+      case PendingApprovalPaymentTypeCode.MedicalClaim:{
+        this.approvalPermissionCode = ApprovalLimitPermissionCode.MedicalClaimPermissionCode;
          break;
       }
-      case "PHARMACY_CLAIM": {
-        this.approvalPermissionCode = "Pharmacy_Claims_Manager_Approval_Approve_Or_Deny_Payment_Requests";
+      case PendingApprovalPaymentTypeCode.PharmacyClaim: {
+        this.approvalPermissionCode = ApprovalLimitPermissionCode.PharmacyPermissiomCode;
          break;
       }
-      case "INSURANCE_PREMIUM": {
-        this.approvalPermissionCode = "Insurance_Premium_Manager_Approval_Approve_Or_Deny_Payment_Requests";
+      case PendingApprovalPaymentTypeCode.InsurancePremium: {
+        this.approvalPermissionCode = ApprovalLimitPermissionCode.InsurancePremiumPermissionCode;
         break;
      }
       default:
@@ -469,9 +469,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       this.selectedApprovalSendbackDataRows = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus);
     }
     this.selectedBatchIds = [];
-    debugger;
     if (isValid.length <= 0 && this.selectedApprovalSendbackDataRows.length>0) {
-      this.checkApprovalLimit();
+      this.checkApprovalLimit(this.selectedApprovalSendbackDataRows);
       this.loadSubmittedSummaryData();   
       this.isSubmitApprovalPaymentItems = true;     
     }
@@ -633,36 +632,41 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       }
     });        
   }
-  checkApprovalLimit()
+  checkApprovalLimit(payments :any)
   {
-    debugger;
-    if(this.userManagementFacade.hasRole("FM1"))
+    let role;
+    if(this.userManagementFacade.hasRole(FinancialManagerCode.FinancialManager2))
     {
-      this.approvalTypeCode = "L1_APPROVAL";
+      this.approvalTypeCode = ApprovalTypeCode.L2Approval;
+      role = FinancialManagerCode.FinancialManager2;
     }
-    else if(this.userManagementFacade.hasRole("FM2"))
+    else if(this.userManagementFacade.hasRole(FinancialManagerCode.FinancialManager1) && !role)
     {
-      this.approvalTypeCode = "L2_APPROVAL";
+      this.approvalTypeCode = ApprovalTypeCode.L1Approval;
+      role = FinancialManagerCode.FinancialManager1;
     }
-    const approvalLimit = this.userManagementFacade.getUserPermissionMetaData(this.approvalPermissionCode);
-    if(approvalLimit && this.approvalTypeCode === "L1_APPROVAL")
+    const approvalLimit = this.userManagementFacade.getUserPermissionMetaData(this.approvalPermissionCode, role);
+    if(approvalLimit && this.approvalTypeCode === ApprovalTypeCode.L1Approval)
     {
+      let approvedRequestedAmountCount = 0;
+      payments.filter((x: any) => x.batchStatus == this.approveStatus).forEach((currentPage: any, index: number) => {
+        approvedRequestedAmountCount += currentPage.totalAmountDue;
+      });
+
       const limit = approvalLimit['maxApprovalAmount'];
-      if(limit && Number.parseFloat(limit) < 20000)
+      if(limit && Number.parseFloat(limit) < approvedRequestedAmountCount)
       {
-        this.approvalTypeCode = "EXCEED_APPROVAL_LIMIT";
+        this.approvalTypeCode = ApprovalTypeCode.ExceedApprovalLimit;
       }
     }
   }
   makeRequestData()
   {
-    debugger;
     let bodyData = {
       approvalType: this.approvalTypeCode,
       payments: [{}],
     };
     for (let element of this.selectedApprovalSendbackDataRows) {
-      debugger;
       let payment = {
         approvalId: element.approvalId,
         approvalStatusCode: element.batchStatus,
@@ -679,7 +683,9 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.submitEvent.emit(data);  
     this.pendingApprovalSubmit$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
-        this.loadApprovalPayments(0, this.pageSizes[0]?.value, this.sortValue, this.sortType)
+        this.loadApprovalPayments(0, this.pageSizes[0]?.value, this.sortValue, this.sortType);
+        this.mainListDataHandle();  
+        this.isSubmitApprovalPaymentItems = false;     
       }
     });        
   }

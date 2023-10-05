@@ -109,7 +109,9 @@ export class UserManagementFacade {
     this.userDataService.getProfile$
       .pipe(first(profile => profile[0]?.permissions != null))
       .subscribe((profile:any)=>{ 
-        roleCheck = profile[0]?.roleCode === roleCode
+        debugger;
+        const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);  
+        roleCheck = roleProfile ? true : false;
       })
       return roleCheck;
   }
@@ -141,14 +143,19 @@ export class UserManagementFacade {
       return  hasPerm;
   }
 
-  getUserPermissionMetaData(permissionCode : string)
+  getUserPermissionMetaData(permissionCode : string, roleCode : any)
   {
     let permissionMetaData;
+    if(!roleCode)
+    {
+      return;
+    }
     this.userDataService.getProfile$
     .pipe(first(profile => profile[0]?.permissions != null))
     .subscribe((profile:any)=>{ 
       debugger;
-      const permission =profile[0]?.permissions 
+      const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);  
+      const permission = roleProfile?.permissions;
       if (permission?.length == 0) {
        return;
       }  

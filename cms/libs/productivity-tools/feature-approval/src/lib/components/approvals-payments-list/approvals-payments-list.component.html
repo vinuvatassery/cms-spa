@@ -158,17 +158,17 @@
     <section class="k-dialog-body newcase">
         <p class="  mb-2">
           {{
-            approvalTypeCode === 'EXCEED_APPROVAL_LIMIT' 
-            ? 'batches exceed your maximum approval amount. Select A manager with a higher maximum approval limit needs to request the payments from the Salem Fiscal Team. "Send Back" batches will be sent to the user who submitted them.' 
+            approvalTypeCode === approvalTypeCodeEnum.ExceedApprovalLimit
+            ? 'The selected batches exceed your maximum approval amount. Select A manager with a higher maximum approval limit needs to request the payments from the Salem Fiscal Team. "Send Back" batches will be sent to the user who submitted them.' 
             : 'Approved batches will be sent to the Salem Fiscal Team via email. “Send Back” batches will be sent back to the user who submitted them.'
           }}
         </p>
 
-        <p class="mb-1">Checks to be requested: <strong>{{requestedCheck}}</strong></p>
-        <p class="mb-1">ACH payments to be requested: <strong>{{requestedACHPayments}}</strong></p>
-        <p class="mb-1">DOR Hold payments to be requested: <strong>{{requestedDORHoldPayments}}</strong></p>
-        <p class="mb-1">Batches to be sent back: <strong>{{sendbackBatchCount}}</strong></p>
-        <p *ngIf="approvalTypeCode === 'EXCEED_APPROVAL_LIMIT'" class="mb-1">Total amount to be submitted: <strong>$ {{totalAmountSubmitted}}</strong></p>
+        <p *ngIf="requestedCheck > 0" class="mb-1">Checks to be requested: <strong>{{requestedCheck}}</strong></p>
+        <p *ngIf="requestedACHPayments > 0" class="mb-1">ACH payments to be requested: <strong>{{requestedACHPayments}}</strong></p>
+        <p *ngIf="requestedDORHoldPayments > 0" class="mb-1">DOR Hold payments to be requested: <strong>{{requestedDORHoldPayments}}</strong></p>
+        <p *ngIf="sendbackBatchCount > 0" class="mb-1">Batches to be sent back: <strong>{{sendbackBatchCount}}</strong></p>
+        <p *ngIf="approvalTypeCode === approvalTypeCodeEnum.ExceedApprovalLimit" class="mb-1">Total amount to be submitted: <strong>$ {{totalAmountSubmitted}}</strong></p>
     </section>
     <kendo-dialog-actions>
         <div class="justify-content-between">
