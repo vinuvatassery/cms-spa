@@ -44,10 +44,12 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   @Input() approvalsPaymentsMainLists$: any;
   @Input() pendingApprovalSubmittedSummary$: any;
   @Input() batchDetailPaymentsList$: any;
+  @Input() exportButtonShow$ : any
   @Output() loadApprovalsPaymentsGridEvent = new EventEmitter<any>();
   @Output() loadApprovalsPaymentsMainListEvent = new EventEmitter<any>();
   @Output() loadSubmittedSummaryEvent = new EventEmitter<any>();
   @Output() loadBatchDetailPaymentsGridEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -103,17 +105,11 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     creationTime: 'Date Approval Requested'
   };
 
-  searchColumnList: { columnName: string, columnDesc: string }[] = [
-    { columnName: 'ALL', columnDesc: 'All Columns' },
-    { columnName: 'batchName', columnDesc: 'Batch' },
-    { columnName: 'creationTime', columnDesc: 'Date Approval Requested' },
-  ];
-  selectedSearchColumn = 'ALL';
   filteredByColumnDesc = '';
   showDateSearchWarning = false;
   columnChangeDesc = 'Default Columns'
   searchText = '';
-  private searchSubject = new Subject<string>();
+  showExportLoader = false;
   
   private depositDetailsDialog: any;
 
@@ -129,7 +125,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.gridDataHandle();
     this.loadApprovalPaymentsListGrid();    
     this.lovFacade.getPandingApprovalPaymentTypeLov();
-    this.addSearchSubjectSubscription();
   }
 
   ngOnChanges(): void {
@@ -139,55 +134,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       sort: this.sort,
     };
 
-    this.loadApprovalPaymentsListGrid();
-  }
-
-  searchColumnChangeHandler(value: string) {
-    this.filter = [];
-    this.showDateSearchWarning = value === 'creationTime';
-    if (this.searchText) {
-      this.onPendingApprovalSearch(this.searchText);
-    }
-  }
-
-  onPendingApprovalSearch(searchValue: any) {console.log('searchValue',searchValue);
-    const isDateSearch = searchValue.includes('/');
-    this.showDateSearchWarning = isDateSearch || this.selectedSearchColumn === 'creationTime';
-    searchValue = this.formatSearchValue(searchValue, isDateSearch);
-    if (isDateSearch && !searchValue) return;
-    this.setFilterBy(false, searchValue, []);
-    //this.searchSubject.next(searchValue);
-    this.onChange(searchValue);
-  }
-
-  performPendingApprovalSearch(data: any) {
-    this.defaultGridState();
-    const operator = (['creationTime']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
-    // data = this.selectedSearchColumn === 'appropriationYear' ? data.toLowerCase().replace('ay', '') : data;
-    if (this.selectedSearchColumn === 'creationTime' && (!this.isValidDate(data) && data !== '')) {
-      return;
-    }
-    // if ((['pcaCode', 'appropriationYear']).includes(this.selectedSearchColumn) && isNaN(Number(data))) {
-    //   return;
-    // }
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedSearchColumn ?? 'batchName',
-              operator: operator,
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
-    const stateData = this.state;
-    stateData.filter = this.filterData;
-    this.dataStateChange(stateData);
     this.loadApprovalPaymentsListGrid();
   }
   
@@ -251,7 +197,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
         {
           "filters": [
             {
-              "field": this.selectedColumn ?? 'batch',
+              "field": this.selectedColumn ?? 'batchName',
               "operator": 'startswith',
               "value": data,
             },
@@ -306,27 +252,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.sortByProperty();
   }
 
-  private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
-    this.filteredByColumnDesc = '';
-    if (isFromGrid) {
-      if (filter.length > 0) {
-        const filteredColumns = this.filter?.map((f: any) => {
-          const filteredColumns = f.filters?.filter((fld:any)=> fld.value)?.map((fld: any) =>
-            this.gridColumns[fld.field])
-          return ([...new Set(filteredColumns)]);
-        });
-
-        this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
-      }
-      return;
-    }
-
-    if (searchValue !== '') {
-      this.filteredByColumnDesc = this.searchColumnList?.find(i => i.columnName === this.selectedSearchColumn)?.columnDesc ?? '';
-    }
-    console.log('this.filteredByColumnDesc',this.filteredByColumnDesc);
-  }
-
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
@@ -375,7 +300,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.selectedPaymentType = paymentSubTypeCode;    
     this.loadApprovalPaymentsListGrid();
     this.mainListDataHandle();  
-    this.selectedSearchColumn = 'ALL';  
+    this.selectedColumn = 'ALL';  
     this.gridDataHandle();
     this.cd.detectChanges();   
   }
@@ -737,7 +662,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       }
     });        
   }
-  dropDowncolumns : any = [
+  dropDownColumns : any = [
     {
       columnCode: 'ALL',
       columnDesc: 'All Columns',
@@ -756,13 +681,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   }
 
-  private addSearchSubjectSubscription() {
-    this.searchSubject.pipe(debounceTime(300))
-      .subscribe((searchValue) => {
-        this.onChange(searchValue);
-      });
-  }
-
   private isValidDate = (searchValue: any) => isNaN(searchValue) && !isNaN(Date.parse(searchValue));
 
   private formatSearchValue(searchValue: any, isDateSearch: boolean) {
@@ -776,5 +694,20 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     }
 
     return searchValue;
+  }
+
+  onClickedExport(){
+    this.showExportLoader = true
+    this.exportGridDataEvent.emit()    
+    
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {        
+        this.showExportLoader = false
+        this.cd.detectChanges()
+      }
+    })
   }
 }
