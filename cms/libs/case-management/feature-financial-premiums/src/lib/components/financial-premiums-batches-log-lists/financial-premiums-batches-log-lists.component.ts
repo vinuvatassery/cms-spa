@@ -61,6 +61,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   @Input() unbatchPremiums$ :any
   @Input() unbatchEntireBatch$ :any
   selected:any
+  noDeleteStatus=['PENDING_APPROVAL','MANAGER_APPROVED']
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',

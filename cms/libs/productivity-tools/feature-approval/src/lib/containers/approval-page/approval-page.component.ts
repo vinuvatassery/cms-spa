@@ -4,7 +4,7 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
 import { ApprovalFacade, PendingApprovalPaymentFacade } from '@cms/productivity-tools/domain';
-import { ReminderNotificationSnackbarService, ReminderSnackBarNotificationType } from '@cms/shared/util-core';
+import { ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, DocumentFacade } from '@cms/shared/util-core';
 import { NotificationService } from '@progress/kendo-angular-notification';
 import { NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
 @Component({
@@ -22,6 +22,7 @@ export class ApprovalPageComponent implements OnInit {
   sortType = this.approvalFacade.sortType;
   pageSizes = this.approvalFacade.gridPageSizes;
   gridSkipCount = this.approvalFacade.skipCount;
+  dataExportParameters! : any;
 
   sortValueGeneralAPproval = this.approvalFacade.sortValueGeneralAPproval;
   sortGeneralList = this.approvalFacade.sortGeneralList;
@@ -29,6 +30,7 @@ export class ApprovalPageComponent implements OnInit {
   sortValueApprovalPaymentsAPproval = this.approvalFacade.sortValueApprovalPaymentsAPproval;
   sortImportedClaimsList = this.approvalFacade.sortImportedClaimsList;
   sortValueImportedClaimsAPproval = this.approvalFacade.sortValueImportedClaimsAPproval;
+  exportButtonShow$ = this.documentFacade.exportButtonShow$;
 
   userLevel = 1;
 
@@ -46,7 +48,8 @@ export class ApprovalPageComponent implements OnInit {
               private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService,
               private pendingApprovalPaymentFacade: PendingApprovalPaymentFacade,
               private userManagementFacade: UserManagementFacade,
-              private navigationMenuFacade: NavigationMenuFacade) {                
+              private navigationMenuFacade: NavigationMenuFacade,
+              private documentFacade :  DocumentFacade) {                
               }
   ngOnInit(): void {
     this.getUserRole();
@@ -71,6 +74,7 @@ export class ApprovalPageComponent implements OnInit {
     if(!gridDataValue.selectedPaymentType || gridDataValue.selectedPaymentType.length == 0){
       return;
     }
+    this.dataExportParameters = gridDataValue;
     this.pendingApprovalPaymentFacade.getPendingApprovalPaymentGrid(gridDataValue , gridDataValue.selectedPaymentType, this.userLevel)
   }
   loadImportedClaimsGrid(event: any): void {
@@ -96,5 +100,24 @@ export class ApprovalPageComponent implements OnInit {
   loadSubmittedSummary(events:any): void {
     debugger;
     this.pendingApprovalPaymentFacade.loadSubmittedSummary(events);
+  }
+
+  exportPendingApprovalGridData(){
+    const data = this.dataExportParameters;
+    if(data){
+    const  filter = JSON.stringify(data?.gridDataRefinerValue.filter);
+
+      const approvalPageAndSortedRequest =
+      {
+        SortType : data?.gridDataRefinerValue.sortType,
+        Sorting : data?.gridDataRefinerValue.sortColumn,
+        SkipCount : data?.gridDataRefinerValue.skipCount,
+        MaxResultCount : data?.gridDataRefinerValue.maxResultCount,
+        Filter : filter
+      }
+     let fileName = (data.selectedPaymentType[0].toUpperCase() + data.selectedPaymentType.substr(1).toLowerCase()) +' Batches';
+
+      this.documentFacade.getExportFile(approvalPageAndSortedRequest,`batches/${data.selectedPaymentType}` , fileName);
+    }
   }
 }

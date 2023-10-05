@@ -21,8 +21,6 @@
                                 [actionResponse$]="actionResponse$"
                                 [existingPremiums$]="existingPremiums$"
                                 [insurancePremium$]="insurancePremium$"
-                                [adjustments$]="adjustments$"
-                                [adjustmentsLoader$]="adjustmentsLoader$"
                                 (clientChangeEvent)="loadInsurancePlans($event)"
                                 (loadFinancialPremiumsProcessListEvent)="loadFinancialPremiumsProcessListGrid($event)"
                                 (premiumsExistValidationEvent)="premiumExistValidation($event)"
@@ -30,8 +28,7 @@
                                 [batchingPremium$]="batchingPremium$"
                                 (savePremiumsEvent)="saveInsurancePremiums($event)"
                                 (updatePremiumEvent)="updatePremium($event)"
-                                (loadPremiumEvent)="loadPremium($event)"
-                                (loadAdjustmentsEvent)="loadAdjustments($event)"></cms-financial-premiums-process-list>
+                                (loadPremiumEvent)="loadPremium($event)"></cms-financial-premiums-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

@@ -439,7 +439,7 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
 
   loadPremiumAdjustments(type: string, paymentId: string, params: GridFilterParam) {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${type}/adjustments?paymentId=${paymentId}&type=${type}&${params.convertToQueryString()}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${type}/adjustments${params.convertToQueryString()}&paymentId=${paymentId}&type=${type}`
     );
   }
 
