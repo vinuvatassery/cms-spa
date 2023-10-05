@@ -38,10 +38,8 @@ export class FinancialVendorDataService {
   searchInsurnaceVendor(searchText: string, typeCode: string) {
     
       return this.http.get<Pharmacy[]>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/SearchText=${searchText}`
-      );
-    
-    
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/providers/SearchText=${searchText}`
+      );   
   }
 
   updateVendorDetails(details: any) {
