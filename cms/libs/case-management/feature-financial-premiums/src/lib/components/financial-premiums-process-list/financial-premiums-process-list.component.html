@@ -37,8 +37,8 @@
     kendoGridSelectBy="paymentRequestId"
     (selectedKeysChange)="selectedKeysChange($event)"
     [(selectedKeys)]="selectedProcessClaims">
-    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand && !isSendReportOpened && !isRemoveBatchClosed" [columnMenu]="false" [showSelectAll]="true"
-    [width]="40"  [locked]="true"></kendo-grid-checkbox-column>
+    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand && isBatchPremiumsClicked" [columnMenu]="false" [showSelectAll]="true"
+    [width]="40" ></kendo-grid-checkbox-column>
 
       <kendo-grid-column *ngIf="isSendReportOpened || isRemoveBatchClosed"  field="add" [width]="150" 
       [sortable]="false"  [columnMenu]="false" [headerStyle]="{'text-align': 'center'}" [style]="{'text-align': 'center'}">

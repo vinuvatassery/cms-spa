@@ -427,7 +427,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       if (this.isBulkUnBatchOpened) {
         this.handleUnbatchEntireBatch();
         this.unBatchEntireBatchEvent.emit({
-         batchId: this.batchId,
+         batchId: {paymentRequestBatchId: this.batchId},
          premiumsType: this.premiumsType
       });
       } else {
