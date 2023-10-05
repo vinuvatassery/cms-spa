@@ -4,9 +4,13 @@
     <!-- financialPcaReportGridLists$ | async -->
     <kendo-grid-column field="priority" title="Priority" [width]="100"> </kendo-grid-column>
 
-    <kendo-grid-column field="pcaCode" title="PCA #" [width]="100"> </kendo-grid-column>
+    <kendo-grid-column field="pcaCode" title="PCA" [width]="100"> </kendo-grid-column>
 
-    <kendo-grid-column field="ay" title="AY" [width]="80"> </kendo-grid-column>
+    <kendo-grid-column field="ay" title="AY#" [width]="80"> 
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span>AY{{dataItem.ay}}</span>
+      </ng-template>
+    </kendo-grid-column>
 
     <kendo-grid-column field="openDate" title="Open Date" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
