@@ -22,8 +22,8 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
   premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   specialCharAdded: boolean = false;
-  selectedMedicalProvider: any;
-  vendorId: any;
+selectedMedicalProvider: any;
+vendorId: any;
 vendorName: any;
 clientName: any;
 isRecentClaimShow = false;
@@ -76,7 +76,7 @@ readonly financialProvider = 'medical';
     if (!searchText || searchText.length == 0) {
       return;
     }
-   this.financialVendorFacade.searchInSurnaceVendor(searchText, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+   this.financialVendorFacade.searchInsurnaceVendor(searchText, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
   }
   onProviderValueChange($event: any) {
     
@@ -121,6 +121,7 @@ readonly financialProvider = 'medical';
     
       },
       error:(err:any)=>{
+        this.financialVendorFacade.hideLoader();
      }
     });
   }

@@ -4,6 +4,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 import { HealthInsurancePolicy } from '../entities/health-insurance-policy';
 import { CarrierContactInfo } from '../entities/carrier-contact-info';
 import { Observable, of } from 'rxjs';
+import { ServiceSubTypeCode } from '../enums/service-sub-type-code';
 
 @Injectable({ providedIn: 'root' })
 export class HealthInsurancePolicyDataService {
@@ -287,16 +288,25 @@ export class HealthInsurancePolicyDataService {
   }
 
   loadPaymentRequest(clientId: any, clientCaseId: any,clientCaseEligibilityId: any,gridDataRefinerValue: any) {
-   
+
     let params = new HttpParams();
     params = params.append('sorting',gridDataRefinerValue.sortColumn);
     params = params.append('sortType',gridDataRefinerValue.sortType);
-     return this.http.get(    
-    `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments/get-permium-paymen?statusType=${gridDataRefinerValue.type}&clientId=${clientId}&eligibilityId=${clientCaseEligibilityId}&skipCount=
-    ${gridDataRefinerValue.skipCount}&maxResultCount=${gridDataRefinerValue.maxResultCount}&dentalPlanFlag=${gridDataRefinerValue.dentalPlanFlag}&showTwelveMonthRecord=${gridDataRefinerValue.twelveMonthsRecords}`,{params:params});
+    if(gridDataRefinerValue.type==ServiceSubTypeCode.medicalPremium)
+    {
+      return this.http.get(    
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments/get-permium-paymen?statusType=${gridDataRefinerValue.type}&clientId=${clientId}&eligibilityId=${clientCaseEligibilityId}&skipCount=
+        ${gridDataRefinerValue.skipCount}&maxResultCount=${gridDataRefinerValue.maxResultCount}&dentalPlanFlag=${gridDataRefinerValue.dentalPlanFlag}&showTwelveMonthRecord=${gridDataRefinerValue.twelveMonthsRecords}`,{params:params});
+       
+    }else{
+      return this.http.get(    
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments?statusType=${gridDataRefinerValue.type}&clientId=${clientId}&eligibilityId=${clientCaseEligibilityId}&skipCount=
+        ${gridDataRefinerValue.skipCount}&maxResultCount=${gridDataRefinerValue.maxResultCount}&dentalPlanFlag=${gridDataRefinerValue.dentalPlanFlag}&showTwelveMonthRecord=${gridDataRefinerValue.twelveMonthsRecords}`,{params:params});
+       
+    }
     }
   savePaymentRequest(paymentRequest:any){    
-    if(paymentRequest.serviceTypeCode=="INSURANCE_PREMIUM")
+    if(paymentRequest.serviceTypeCode==ServiceSubTypeCode.insurnacePremium)
     {
  return this.http.post<PaymentRequest>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments`,

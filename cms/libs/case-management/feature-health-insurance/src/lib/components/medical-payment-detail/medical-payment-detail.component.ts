@@ -92,6 +92,11 @@ export class MedicalPaymentDetailComponent {
   this.financialClaimsFacade.CPTCodeSearchLoaderVisibility$;
   searchCTPCode$ = this.financialClaimsFacade.searchCTPCode$;
   clientCaseEligibilityId: any = null;
+  @Input() isEdit: any;
+  selectedClient: any;
+  invoiceId: any;
+  @Input() paymentRequestId: any;
+  isExcededMaxBanifitButtonText = 'Make Exception';
   /** Constructor **/
   constructor(
     private formBuilder: FormBuilder,
@@ -253,9 +258,7 @@ export class MedicalPaymentDetailComponent {
       }
     });
   }
-  @Input() isEdit: any;
-  save() {
-    
+  save() {    
     this.setExceptionValidation();
     this.isSubmitted = true;
 
@@ -669,11 +672,7 @@ export class MedicalPaymentDetailComponent {
       this.checkIneligibleEception(startDate,endDate,index);
     }
 
-  }
-  selectedClient: any;
-  invoiceId: any;
-  @Input() paymentRequestId: any;
-  isExcededMaxBanifitButtonText = 'Make Exception';
+  } 
   initClaimForm() {
     this.claimForm = this.formBuilder.group({
       medicalProvider: [this.selectedMedicalProvider, Validators.required],
