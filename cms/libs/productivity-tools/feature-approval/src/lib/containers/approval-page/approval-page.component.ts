@@ -78,6 +78,7 @@ export class ApprovalPageComponent implements OnInit {
     this.dataExportParameters = gridDataValue;
     this.pendingApprovalPaymentFacade.getPendingApprovalPaymentGrid(gridDataValue , gridDataValue.selectedPaymentType, this.userLevel)
   }
+  
   loadImportedClaimsGrid(event: any): void {
     this.approvalFacade.loadImportedClaimsLists();
   }

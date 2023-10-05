@@ -146,8 +146,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.defaultPaymentType();
     this.getLoggedInUserProfile();
     this.gridDataHandle();
-    //this.loadApprovalPaymentsListGrid(); 
-    
+    this.loadApprovalPaymentsListGrid();     
   }
 
   private defaultPaymentType() {
@@ -162,12 +161,15 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   }
 
   ngOnChanges(): void {
+    this.setGridValueAndData();
+  }
+
+  setGridValueAndData(){
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
     this.loadApprovalPaymentsListGrid();
   }
 
@@ -232,9 +234,10 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   onChange(data: any) {
     this.defaultGridState();
-    
-    let operator= "startswith"
+    this.setGridValues(data);
+  }
 
+  setGridValues( data: any) {
     this.filterData = {
       logic: 'and',
       filters: [
@@ -293,7 +296,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       this.isFiltered = false
     }
     this.loadApprovalPaymentsListGrid();
-    //this.sortByProperty();
   }
 
   // updating the pagination infor based on dropdown selection
