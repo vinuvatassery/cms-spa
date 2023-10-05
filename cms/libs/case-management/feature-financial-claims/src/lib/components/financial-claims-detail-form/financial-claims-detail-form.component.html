@@ -23,7 +23,8 @@
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="medicalProvider" (filterChange)="searchMedicalProvider($event)"
                             [data]="pharmacySearchResult$ | async" [(ngModel)]="selectedMedicalProvider"
-                            (valueChange)="onProviderValueChange($event)">
+                            (valueChange)="onProviderValueChange($event)"
+                            (blur)="showHideServicesListForm()">
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
@@ -93,7 +94,8 @@
                             placeholder="Search Client Name, ID, SSN or DOB"
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="client" (filterChange)="loadClientBySearchText($event)"
-                            (valueChange)="onClientValueChange($event)" [(ngModel)]="selectedClient">
+                            (valueChange)="onClientValueChange($event)" [(ngModel)]="selectedClient"
+                            (blur)="showHideServicesListForm()">
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
@@ -143,7 +145,7 @@
 
         </div>
 
-        <div class="add_new_bottom_section">
+        <div class="add_new_bottom_section" *ngIf="showServicesListForm">
 
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
@@ -163,7 +165,7 @@
                                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
                                                     aria-label="Service Start Date" format="MM/dd/yyyy"
                                                     formatPlaceholder="formatPattern" formControlName="serviceStartDate"
-                                                      placeholder="">
+                                                      placeholder="" (valueChange)="onDateChange(i)">
                                                 </kendo-datepicker>
                                             </kendo-floatinglabel>
                                             <kendo-formerror
@@ -177,6 +179,7 @@
                                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
                                                     aria-label="Service End Date" format="MM/dd/yyyy"
                                                     formatPlaceholder="formatPattern"   placeholder="" formControlName="serviceEndDate"
+                                                    (valueChange)="onDateChange(i)"
                                                     >
                                                 </kendo-datepicker>
                                             </kendo-floatinglabel>
@@ -226,19 +229,27 @@
                                     <div class="flex-row">
                                         <div class="flex-col flex-col-4">
                                             <kendo-floatinglabel text="Payment Type">
-                                                <kendo-dropdownlist formControlName="paymentType" aria-label="Type"
-                                                    [fillMode]="formUiStyle.dropDownFillMode"
-                                                    [data]="paymentRequestType$ | async" valueField="lovCode"
-                                                    textField="lovDesc" [valuePrimitive]="true"
-                                                    [loading]="(paymentRequestType$ | async)?.length===0"
-                                                    (valueChange)="onPaymentTypeValueChange($event, i)">
+                                                <kendo-dropdownlist
+                                                [fillMode]="formUiStyle.dropDownFillMode"
+                                                [data]="groupedPaymentRequestTypes" formControlName="paymentType" aria-label="Type"
+                                                textField ="lovDesc"
+                                                valueField="lovCode"
+                                                [valuePrimitive]="true"
+                                                (valueChange)="onPaymentTypeValueChange($event, i)">
+                                              <ng-template kendoDropDownListFixedGroupTemplate let-groupName>
+                                                <strong>{{ groupName }}</strong>
+                                              </ng-template>
 
-                                                </kendo-dropdownlist>
+                                              <ng-template kendoDropDownListGroupTemplate let-groupName>
+                                                <strong>{{ groupName }}</strong>
+                                              </ng-template>
+                                              </kendo-dropdownlist>
                                             </kendo-floatinglabel>
                                             <kendo-formerror *ngIf="(isControlValid('paymentType', i) && isSubmitted)"
                                                 class="d-flex align-items-center"> <span class="material-icons mr-1"
                                                     aria-hidden="false">info</span>Payment Type is required
                                             </kendo-formerror>
+                                            
                                         </div>
                                         <div class="flex-col flex-col-4">
                                             <kendo-floatinglabel text="CPT Code" class="inline-search-loader">
@@ -351,8 +362,8 @@
                                             </kendo-formerror>
                                         </div>
                                         <div class="ml-2" *ngIf="getExceptionFormValue('duplicatePaymentExceptionFlag',i)" >
-                                          <kendo-formerror class="align-items-center"> <span
-                                                  class="material-icons mr-1" aria-hidden="false">info</span> Duplicate Payment. <a kendoButton class="ml-1 card-link-button"
+                                          <kendo-formerror class="align-items-center"> 
+                                            <span class="material-icons mr-1" aria-hidden="false">info</span> Duplicate Payment. <a kendoButton class="ml-1 card-link-button"
                                                   (click)="onMakeExceptionClick('duplicatePaymentExceptionReason',i)">{{getExceptionFormValue('duplicatePaymentExceptionFlagText',i)}}
                                               </a>
                                           </kendo-formerror>
@@ -389,7 +400,14 @@
                     <span class="material-icons" aria-label="New Claims" aria-hidden="false">add</span>
                     New Service</button>
             </div>
-            
+            <div>
+                <span class="app-checkboxwidtext-wrapper">
+                    <input type="checkbox" kendoCheckBox aria-labelledby="applyChangesToMailingAddress"
+                        id="isSpotsPaymentInput" [checked]="isSpotsPayment" (change)="onSpotsPaymentChange($event)" />
+                    <label class="k-checkbox-label" for="isSpotsPaymentInput">
+                        <strong>This is a SPOTS payment</strong></label>
+                </span>
+            </div>
 
         </div>
     </div>

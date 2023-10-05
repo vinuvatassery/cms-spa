@@ -134,7 +134,7 @@ export class ContactDataService {
   createContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
     const fd = new FormData();
     if (contactInfo?.homeAddressProof?.document) {
-      fd.append('AddressProofDocument', contactInfo?.homeAddressProof?.document ?? '', contactInfo?.homeAddressProof?.document?.name);
+      fd.append('AddressProofDocument', contactInfo?.homeAddressProof?.document ?? null, contactInfo?.homeAddressProof?.document?.name);
     }
     this.formDataAppendObject(fd, contactInfo);
 
@@ -155,7 +155,7 @@ export class ContactDataService {
   updateContactInfo(clientId: number, clientCaseEligibilityId: string, contactInfo: ContactInfo) {
     const fd = new FormData();
     if (contactInfo?.homeAddressProof?.document) {
-      fd.append('AddressProofDocument', contactInfo?.homeAddressProof?.document ?? '', contactInfo?.homeAddressProof?.document?.name);
+      fd.append('AddressProofDocument', contactInfo?.homeAddressProof?.document ?? null, contactInfo?.homeAddressProof?.document?.name);
     }
     this.formDataAppendObject(fd, contactInfo);
 

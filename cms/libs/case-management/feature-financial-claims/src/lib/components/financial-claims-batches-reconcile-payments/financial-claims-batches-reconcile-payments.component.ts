@@ -66,7 +66,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   gridDataResult!: GridDataResult;
   selectedDataRows: any[] = [];
   selectedReconcileDataRows: any[] = [];
-  selectedCount: number = 0;
   onlyPrintAdviceLetter : boolean = false;
   isSaveClicked : boolean = false;
   startItemNumber: number = 1;
@@ -93,7 +92,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     datePaymentSend: new FormControl('', []),
     note : new FormControl('', []),
   });
-
+  claimReconcileCount:any=0;
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
     private readonly cd: ChangeDetectorRef, public intl: IntlService, private configurationProvider: ConfigurationProvider) {
@@ -216,6 +215,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     else {
       this.reconcilePaymentGridUpdatedResult.push(dataItem);
     }
+    this.claimReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== '').length;
   }
 
   assignPaymentReconciledDateToPagedList() {
@@ -488,7 +488,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
 
 
   validateReconcileGridRecord() {
-    this.reconcilePaymentGridPagedResult.data.forEach((currentPage: any, index: number) => {
+    this.reconcilePaymentGridUpdatedResult.forEach((currentPage: any, index: number) => {
       if (currentPage.checkNbr !== null
         && currentPage.checkNbr !== ''
         && currentPage.checkNbr !== undefined) {
@@ -508,48 +508,33 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
         currentPage.datePaymentSentInValidMsg = null;
       }
     });
-
-    this.updatedResultValidation();
-    this.assignPagedGridItemToUpdatedList(this.reconcilePaymentGridPagedResult.data);
-
+    this.assignUpdatedItemToPagedList();
   }
 
-  updatedResultValidation() {
-    if (this.reconcilePaymentGridUpdatedResult.length > 0) {
-      this.reconcilePaymentGridUpdatedResult.forEach((item: any, index: number) => {
-        if ((this.reconcilePaymentGridUpdatedResult[index].checkNbr !== null
-          && this.reconcilePaymentGridUpdatedResult[index].checkNbr !== ''
-          && this.reconcilePaymentGridUpdatedResult[index].checkNbr !== undefined)) {
-          this.updatedResultValidationDatePaymentReconciled(index)
-          this.updatedResultValidationDatePaymentSent(index);
+  assignUpdatedItemToPagedList() {
+    this.reconcilePaymentGridPagedResult.data.forEach((item: any) => {
+      let dataItem = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === item.paymentRequestId);
+      if (dataItem !== undefined) {
+        if (item.paymentRequestId === dataItem?.paymentRequestId) {
+          item.paymentRequestId = dataItem?.paymentRequestId;
+          item.clientId = dataItem?.clientId;
+          item.paymentReconciledDate = dataItem?.paymentReconciledDate;
+          item.paymentSentDate = dataItem?.paymentSentDate;
+          item.checkNbr = dataItem?.checkNbr;
+          item.comments = dataItem?.comments;
+          item.datePaymentRecInValid = dataItem?.datePaymentRecInValid;
+          item.datePaymentRecInValidMsg = dataItem?.datePaymentRecInValidMsg;
+          item.datePaymentSentInValid = dataItem?.datePaymentSentInValid;
+          item.datePaymentSentInValidMsg = dataItem?.datePaymentSentInValidMsg;
+          item.isPrintAdviceLetter = dataItem?.isPrintAdviceLetter;
+          item.tAreaCessationCounter = dataItem?.tAreaCessationCounter;
+          item.vendorName = dataItem?.vendorName;
+          item.amountPaid = dataItem?.amountPaid;
+          item.paymentMethodCode = dataItem?.paymentMethodCode;
         }
-        else {
-          this.reconcilePaymentGridUpdatedResult[index].datePaymentRecInValid = false;
-          this.reconcilePaymentGridUpdatedResult[index].datePaymentRecInValidMsg = null;
-          this.reconcilePaymentGridUpdatedResult[index].datePaymentSentInValid = false;
-          this.reconcilePaymentGridUpdatedResult[index].datePaymentSentInValidMsg = null;
-        }
-      });
-    }
-  }
-
-  updatedResultValidationDatePaymentReconciled(index: any) {
-    if ((this.reconcilePaymentGridUpdatedResult[index].paymentReconciledDate === null
-      && this.reconcilePaymentGridUpdatedResult[index].paymentReconciledDate === ''
-      && this.reconcilePaymentGridUpdatedResult[index].paymentReconciledDate === undefined)) {
-      this.reconcilePaymentGridUpdatedResult[index].datePaymentRecInValid = true;
-      this.reconcilePaymentGridUpdatedResult[index].datePaymentRecInValidMsg = 'Date payment reconciled is required.';
-    }
-  }
-
-  updatedResultValidationDatePaymentSent(index: any) {
-    if (this.reconcilePaymentGridUpdatedResult[index].paymentSentDate === null
-      && this.reconcilePaymentGridUpdatedResult[index].paymentSentDate === ''
-      && this.reconcilePaymentGridUpdatedResult[index].paymentSentDate === undefined) {
-      this.reconcilePaymentGridUpdatedResult[index].datePaymentSentInValid = true;
-      this.reconcilePaymentGridUpdatedResult[index].datePaymentSentInValidMsg = 'Date payment sent is required.';
-    }
-  }
+      }
+    })
+  }  
 
   ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
     let inValid = false;
@@ -610,7 +595,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
         cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
       });
     }
-
   }
 
   onPrintAuthorizationCloseClicked(result: any) {
@@ -675,6 +659,11 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     } else {
       return this.startItemNumber++;
     }
+  }
+
+  navToReconcilePayments(){
+    this.route.navigate([`/financial-management/claims/${this.claimsType}/batch`],
+    { queryParams :{bid: this.batchId}});
   }
 }
 

@@ -49,5 +49,8 @@ export enum LovType {
     PaymentRunDate = 'PAYMENT_RUN_DATE',
     PaymentMethodVendor = 'PAYMENT_METHOD',
     PaymentStatusCode = 'PAYMENT_STATUS_CODE',
-    AcceptPaymentsReports = 'ACCEPT_PAYMENTS_REPORTS'
+    AcceptPaymentsReports = 'ACCEPT_PAYMENTS_REPORTS',
+    PendingApprovalPaymentType = 'PENDING_APPROVAL_PAYMENT_TYPE',
+    DeliveryMethod = 'DELIVERY_METHOD',
+    VendorTypeCode = 'VENDOR_TYPE_CODE'
   }

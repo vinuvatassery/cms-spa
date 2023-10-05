@@ -24,3 +24,7 @@ export * from './lib/application/notification.facade';
 export * from './lib/application/direct-message.facade';
 export * from './lib/application/reminder.facade';
 export * from './lib/application/productivity-invoice.facade';
+export * from './lib/application/pending-approval-payment.facade';
+
+/** Enums **/
+export * from './lib/enums/approval-user-status-code.enum';

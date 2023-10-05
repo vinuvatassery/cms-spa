@@ -70,8 +70,8 @@
       </table>
       <!-- Last Updated by -->
       <p class="mt-1 mb1">
-        <span class="badge-dot-info bdi-left"></span> Last Updated {{selectedVendorInfo$?.lastModificationTime | date: 'MM/dd/yyyy' }}
-        by
+        <span class="badge-dot-info bdi-left"></span> Last Updated  {{selectedVendorInfo$?.lastModificationTime | date: 'MM/dd/yyyy' }}
+        by  {{selectedVendorInfo$.firstName }} {{selectedVendorInfo$.lastName}} 
         <button
           kendoButton
           [primary]="true"
@@ -96,13 +96,7 @@
     </div>
   </div>
 </div>
-<div class="mt-2">
-  <cms-billing-address-list></cms-billing-address-list>
 
-</div>
-<div class="mt-2">
-  <cms-billing-email-address-list></cms-billing-email-address-list>
-</div>
 
 <div >
 </div>

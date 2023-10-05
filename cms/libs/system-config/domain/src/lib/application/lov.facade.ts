@@ -83,7 +83,12 @@ export class LovFacade {
   private lovPaymentMethodVendorSubject = new BehaviorSubject<Lov[]>([]);
   private lovPaymentRunDateSubject = new BehaviorSubject<Lov[]>([]);
   private lovYesOrNoSubject = new BehaviorSubject<Lov[]>([]);
+  private pendingApprovalPaymentTypeSubject = new Subject<any>();
+  private lovVendorTypeCodeSubject = new Subject<any>();
+
       /** Public properties **/
+  private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
+  /** Public properties **/
   lovs$ = this.lovSubject.asObservable();
   ovcascade$ = this.lovcascadeSubject.asObservable();
   lovRelationShip$ = this.lovRelationShipSubject.asObservable();
@@ -138,12 +143,15 @@ export class LovFacade {
   paymentMethodType$ = this.paymentMethodTypeSubject.asObservable();
   paymentStatus$ = this.paymentStatusSubject.asObservable();
   paymentRunDates$ = this.paymentRunDateSubject.asObservable();
+  pendingApprovalPaymentType$ = this.pendingApprovalPaymentTypeSubject.asObservable();
 
 
 
   paymentMethodVendorlov$ = this.lovPaymentMethodVendorSubject.asObservable();
   paymentRunDatelov$ = this.lovPaymentRunDateSubject.asObservable();
   yesOrNoLov$ = this.lovYesOrNoSubject.asObservable();
+  deliveryMethodLov$ = this.lovDeliveryMethodSubject.asObservable();
+  VendorTypeCodeLov$ = this.lovVendorTypeCodeSubject.asObservable();
 
 
         /** Public methods **/
@@ -707,10 +715,22 @@ getDocumentSubTypeLovs(parentCode : string) {
       }
     });
   }
+
   getVendorPaymentMethodLovs(): void {
     this.lovDataService.getLovsbyType(LovType.PaymentMethodVendor).subscribe({
       next: (resp) => {
         this.lovPaymentMethodVendorSubject.next(resp);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      },
+    });
+  }
+
+  getVendorTypeCodeLovs(): void {
+    this.lovDataService.getLovsbyType(LovType.VendorTypeCode).subscribe({
+      next: (resp) => {
+        this.lovVendorTypeCodeSubject.next(resp);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
@@ -734,6 +754,27 @@ getDocumentSubTypeLovs(parentCode : string) {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      },
+    });
+  }
+  getDeliveryMethodLovs(): void{
+    this.lovDataService.getLovsbyType(LovType.DeliveryMethod).subscribe({
+      next: (resp) => {
+        this.lovDeliveryMethodSubject.next(resp);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+      },
+    });
+  }
+
+  getPandingApprovalPaymentTypeLov(): void {
+    this.lovDataService.getLovsbyType(LovType.PendingApprovalPaymentType).subscribe({
+      next: (lovResponse) => {
+        this.pendingApprovalPaymentTypeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }

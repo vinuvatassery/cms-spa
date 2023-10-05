@@ -74,6 +74,10 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
       "columnDesc": "# of Providers"        
     },
     {
+      "columnCode": "sendBackNotes",
+      "columnDesc": "Send Back Notes"        
+    },
+    {
       "columnCode": "totalClaims",
       "columnDesc": "# of Claims"     
     },
