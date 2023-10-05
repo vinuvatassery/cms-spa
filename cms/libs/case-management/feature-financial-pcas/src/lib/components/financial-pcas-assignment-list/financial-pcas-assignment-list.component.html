@@ -41,7 +41,8 @@ aria-label="add"> Assignment</button>
 </section>
 
       <div>
-      <kendo-grid  [kendoGridBinding]="financialPcaAssignmentGridLists$"   [rowReorderable]="true" (rowReorder)="onPriorityChange($event)">               
+      <kendo-grid  [kendoGridBinding]="financialPcaAssignmentGridLists$"  [loading]="isFinancialPcaAssignmentGridLoaderShow"
+       [rowReorderable]="true" (rowReorder)="onPriorityChange($event)">               
              <kendo-grid-rowreorder-column [width]="40"></kendo-grid-rowreorder-column>
      
           <kendo-grid-column field="priority" title="Priority" [width]="70" [columnMenu]="false" [sortable]="false">
@@ -105,41 +106,6 @@ aria-label="add"> Assignment</button>
 
       </kendo-grid>
       </div>
-<!-- <div>
-      <ul *ngIf="financialPcaAssignmentGridLists$">
-            <li>Priotity</li>
-            <li>PCA</li>
-            <li>Group</li>
-            <li>Open Date</li>
-            <li>Close Date</li>
-            <li>Total Amount</li>
-            <li>Amount Used</li>
-            <li>Amount Left</li>
-            <li>Options</li>
-      </ul>
-         
-            <kendo-sortable
-            (dragEnd)="onDragEnd($event)"
-      (dragOver)="onDragOver($event)"
-      (dragStart)="onDragStart($event)"
-            [kendoSortableBinding]="financialPcaAssignmentGridLists$"             
-            zone="innerZone">
-          
-                <ng-template let-item="item">   
-                      <ul>
-                      <li> {{item.priority}}</li>
-              <li> {{item.pca}}</li>
-              <li> {{item.groupCodeDesc}}</li>
-              <li> {{item.openDate}}</li>
-              <li> {{item.closeDate}}</li>
-              <li> {{item.totalAmount}}</li>
-              <li> {{item.totalAmount}}</li>
-              <li> {{item.balanceAmount}}</li>
-              <li> <span class="k-button-text"><span class="material-icons" aria-label="Edit">edit</span><label> Edit </label></span></li>
-              </ul>
-                </ng-template>
-            </kendo-sortable>       
-</div> -->
 
 
 <ng-template #addEditPcaAssignmentDialogTemplate>

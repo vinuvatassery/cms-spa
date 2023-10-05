@@ -41,7 +41,7 @@ export class PcaAssignmentsFacade {
 
     private pcaAssignmentPriorityUpdateSubject = new Subject<any>();
     pcaAssignmentPriorityUpdate$ = this.pcaAssignmentPriorityUpdateSubject.asObservable();
-     
+    private pcaAssignmentGridArgumentsData : any
   /** Public properties **/
  
   // handling the snackbar & loader
@@ -78,6 +78,7 @@ export class PcaAssignmentsFacade {
       next: (updatedResponse) => {       
         this.pcaAssignmentPriorityUpdateSubject.next(updatedResponse);
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, updatedResponse?.message)
+        this.loadFinancialPcaAssignmentListGrid(this.pcaAssignmentGridArgumentsData)
         this.hideLoader();
       },
       error: (err) => {
@@ -88,13 +89,9 @@ export class PcaAssignmentsFacade {
   }
 
   loadFinancialPcaAssignmentListGrid(pcaAssignmentGridArguments :any) {
+    this.pcaAssignmentGridArgumentsData = pcaAssignmentGridArguments
     this.pcaAssignmentsDataService.loadFinancialPcaAssignmentListService(pcaAssignmentGridArguments).subscribe({
-      next: (dataResponse) => {
-        const gridView: any = {
-          data: dataResponse['items']?.sort((a : any, b : any) => (a?.priority < b?.priority) ? -1 : 1),
-          total: dataResponse?.totalCount,
-        };
-        
+      next: (dataResponse) => {    
         this.financialPcaAssignmentDataSubject.next(dataResponse['items']);
         this.hideLoader();
       },
