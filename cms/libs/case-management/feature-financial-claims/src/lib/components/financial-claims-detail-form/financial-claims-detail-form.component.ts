@@ -12,16 +12,16 @@ import {
   OnDestroy
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { State } from '@progress/kendo-data-query';
+import { GroupResult, State } from '@progress/kendo-data-query';
 import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType, FinancialPcaFacade, ExceptionTypeCode } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
+import { Lov, LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
-
+import { groupBy } from "@progress/kendo-data-query";
 @Component({
   selector: 'cms-financial-claims-detail-form',
   templateUrl: './financial-claims-detail-form.component.html',
@@ -50,6 +50,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   clientId: any;
   vendorName: any;
   clientName: any;
+  text:any;
   isPrintDenailLetterClicked = false;
   @Input() claimsType: any;
   @Input() printDenialLetterData: any;
@@ -90,6 +91,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       dob: '23/12/2023',
     },
   ];
+
   providerSearchResult = [
     {
       providerId: '12',
@@ -137,6 +139,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   claimFlagExceptionText = '';
   checkservicescastvalue: any
   exceedMaxBenefitFlag!: boolean;
+  showServicesListForm: boolean =false;
   showExceedMaxBenefitException$ = this.financialClaimsFacade.showExceedMaxBenefitException$;
   showIneligibleException$ = this.financialClaimsFacade.showIneligibleException$;
   showBridgeUppException$ = this.financialClaimsFacade.showBridgeUppException$;
@@ -148,6 +151,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   bridgeUppPriorityArray = ['ineligibleExceptionFlag', 'exceedMaxBenefitExceptionFlag', 'duplicatePaymentExceptionFlag', 'oldInvoiceExceptionFlag'];
   dateFormat = this.configProvider.appSettings.dateFormat;
   providerTin: any;
+ groupedPaymentRequestTypes: any;
+
   private showExceedMaxBenefitSubscription !: Subscription;
   private showIneligibleSubscription !: Subscription;
   private showBridgeUppSubscription !: Subscription;
@@ -158,7 +163,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
   readonly financialProvider = 'medical';
   currentFormControl!: FormGroup<any>;
-
+   data:any = [];
+   tempData:any = {};
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
     private cd: ChangeDetectorRef,
@@ -205,6 +211,24 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.addOrEdit = 'Update';
       this.getMedicalClaimByPaymentRequestId();
     }
+    
+     this.paymentRequestType$.subscribe((paymentRequestTypes) => {
+      let parentRequestTypes = paymentRequestTypes.filter(x => x.parentCode == null);
+      let refactoredPaymentRequestTypeArray :Lov[] =[]
+      parentRequestTypes.forEach(x => {
+        let childPaymentRequestTypes= JSON.parse(JSON.stringify(paymentRequestTypes.filter(y => y.parentCode == x.lovCode))) as Lov[];
+       if(childPaymentRequestTypes?.length>0){
+        childPaymentRequestTypes.forEach(y => y.parentCode = x.lovDesc )
+        refactoredPaymentRequestTypeArray.push(...childPaymentRequestTypes);
+       }
+       else{
+        let noChildPaymentRequestType = JSON.parse(JSON.stringify(x))as Lov;
+        noChildPaymentRequestType.parentCode = noChildPaymentRequestType.lovDesc
+        refactoredPaymentRequestTypeArray.push(noChildPaymentRequestType)
+       }
+      })
+      this.groupedPaymentRequestTypes = groupBy(refactoredPaymentRequestTypeArray, [{ field: "parentCode" }]);
+    });
   }
   checkExceptions()
   {
@@ -455,12 +479,18 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       if (this.clientId != null && this.vendorId != null) {
         this.isRecentClaimShow = true;
       }
+      this.showServicesListForm= true ;
     }
   }
-
   removeService(i: number) {
+    if(this.isEdit && this.addClaimServicesForm.length == 1)
+    {
+       this.addClaimServicesForm.reset();
+    }
+    if(this.addClaimServicesForm.length > 1 ){
     this.addClaimServicesForm.removeAt(i);
     this.addExceptionForm.removeAt(i);
+    }
   }
 
   IsServiceStartDateValid(index: any) {
@@ -597,8 +627,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.onPrintDenialLetterOpen();
       return;
     }
-    this.getPCACode(isPcaAssigned, bodyData);
-  }
+    this.getPCACode(isPcaAssigned, bodyData);  
+}
 
   getPCACode(isPcaAssigned: boolean, bodyData: any){
     if (!isPcaAssigned) {
@@ -1146,6 +1176,18 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.showIneligibleSubscription.unsubscribe();
     this.showBridgeUppSubscription.unsubscribe();
     this.showDuplicatePaymentSubscription.unsubscribe();
+  }
+  showHideServicesListForm(){
+    if(this.claimForm.controls['medicalProvider'].value &&  this.claimForm.controls['client'].value)
+    {
+      this.showServicesListForm = true;
+    }
+    else
+    {
+      this.showServicesListForm= false;
+      this.isRecentClaimShow =false;
+      
+    }
   }
 }
 

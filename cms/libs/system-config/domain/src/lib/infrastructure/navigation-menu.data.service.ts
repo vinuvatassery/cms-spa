@@ -25,4 +25,10 @@ export class NavigationMenuService {
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/count`
     )
   }
+
+  getAllPendingApprovalPaymentCount(userLevel:any) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/count/level=${userLevel}`
+    );
+  }
 }

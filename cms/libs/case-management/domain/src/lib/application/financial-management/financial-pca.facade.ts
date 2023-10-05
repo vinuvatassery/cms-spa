@@ -243,22 +243,7 @@ export class FinancialPcaFacade {
   }
 
   loadFinancialPcaSubReportListGrid(data: any){
-    this.financialPcaDataService
-      .loadFinancialPcaSubReportListService(data)
-      .subscribe({
-        next: (dataResponse) => {
-          const gridView = {
-            data: dataResponse['items'],
-            total: dataResponse['totalCount'],
-          };
-          this.financialPcaSubReportDataSubject.next(gridView);
-          this.hideLoader();
-        },
-        error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-          this.hideLoader();
-        },
-      });
+   return this.financialPcaDataService.loadFinancialPcaSubReportListService(data);
   }
 
   pcaReassignmentCount(){

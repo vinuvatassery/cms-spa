@@ -70,15 +70,10 @@ export class FinancialPcaDataService {
   }
 
   loadFinancialPcaSubReportListService(data:any){ 
-
     const PcaAssignmentsSubReportPageAndSortedRequestDto =
     {
       ObjectId : data.objectId,
-      GroupIds : data.groupIds,
-      pcaAssignmentId : data.pcaAssignmentId,
-      amountAssigned : data.amountAssigned,
-      amountRemaining : data.amountRemaining,
-      Sorting : "priority",
+      GroupId : data.groupId,
       SkipCount : data.skipCount,
       MaxResultCount : data.maxResultCount,
       SortType : "asc"

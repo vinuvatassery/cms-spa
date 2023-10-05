@@ -96,6 +96,15 @@
       </ng-template>
     </kendo-grid-column>
 
+    <kendo-grid-column field="objectCode" title="Object Code" [width]="130">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+          [extra]="false" operator="eq">
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+        </kendo-grid-numeric-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
+
     <kendo-grid-column field="objectName" title="Object" [width]="220">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-dropdownlist [data]="objectCodesData"
@@ -105,14 +114,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="objectCode" title="Object Code" [width]="130">
-      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-          [extra]="false" operator="eq">
-          <kendo-filter-eq-operator></kendo-filter-eq-operator>
-        </kendo-grid-numeric-filter-menu>
-      </ng-template>
-    </kendo-grid-column>
+    <kendo-grid-column field="groupsCovered" title="Groups Covered" [width]="160"> </kendo-grid-column>
 
     <kendo-grid-column field="ay" title="AY" [width]="80">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -168,13 +170,11 @@
           <kendo-filter-eq-operator></kendo-filter-eq-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template>
-    </kendo-grid-column>
-
-    <kendo-grid-column field="groupsCovered" title="Groups Covered" [width]="160"> </kendo-grid-column>
+    </kendo-grid-column> 
 
     <kendo-grid-column field="Option" title="Edit" [sortable]="false" [columnMenu]="false" [width]="50" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button kendoButton themeColor="primary" fillMode="flat" class="clear-icon-btn" aria-label="Edit Reminder"  (click)="editAssignmentReport(dataItem.objectId, dataItem.groupsCoveredIds)"
+        <button kendoButton themeColor="primary" fillMode="flat" class="clear-icon-btn" aria-label="Edit Reminder"  (click)="editAssignmentReport(dataItem.objectId, dataItem.groupsCoveredId)"
           title="Edit Reminder">
           <span class="material-icons"> edit </span>
         </button>
@@ -184,19 +184,15 @@
       <div class="info-banners orange-banner d-flex">
         <span class="material-icons" aria-label="info" aria-hidden="true">info</span>
         <div>
-          <p> If the primary PCA assignment expires or is overdrawn, the following PCA will be assigned to the expenses.
+          <p> If the primary assignment expires or is overdrawn, the following PCA will be assigned to the expense.
           </p>
         </div>
       </div>
       <cms-financial-pcas-assignment-sub-report-list
         [pageSizes]="pageSizes"
         [objectId]="dataItem?.objectId"
-        [groupIds]="dataItem?.groupsCoveredIds"
-        [pcaAssignmentId]="dataItem?.pcaAssigmentId"
-        [amountAssigned]="dataItem?.amountAssigned"
-        [amountRemaining]="dataItem?.amountRemaining"
-        [financialPcaSubReportGridLists$]="financialPcaSubReportGridLists$"
-        (loadFinancialPcaSubReportListEvent)=loadFinancialPcaSubReportListGrid($event)>
+        [groupId]="dataItem?.groupsCoveredId"
+       >
       </cms-financial-pcas-assignment-sub-report-list>
     </div>
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"

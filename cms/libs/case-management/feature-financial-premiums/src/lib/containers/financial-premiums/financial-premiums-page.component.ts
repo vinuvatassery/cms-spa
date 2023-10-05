@@ -4,7 +4,7 @@ import {
   Component,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FinancialPremiumsFacade, InsurancePremium, PolicyPremiumCoverage } from '@cms/case-management/domain';
+import { FinancialPremiumsFacade, GridFilterParam, InsurancePremium, PolicyPremiumCoverage } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
@@ -17,9 +17,12 @@ import { LoggingService } from '@cms/shared/util-core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPremiumsPageComponent implements OnInit {
+
+  dataExportParameters! : any
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
   state!: State;
+  filter!: any;
   sortType = this.financialPremiumsFacade.sortType;
   pageSizes = this.financialPremiumsFacade.gridPageSizes;
   gridSkipCount = this.financialPremiumsFacade.skipCount;
@@ -34,26 +37,34 @@ export class FinancialPremiumsPageComponent implements OnInit {
   sortPaymentsList = this.financialPremiumsFacade.sortPaymentsList;
   financialPremiumsProcessGridLists$ =
     this.financialPremiumsFacade.financialPremiumsProcessData$;
+  financialPremiumsBatchDataLoader$ =
+    this.financialPremiumsFacade.financialPremiumsBatchDataLoader$;
   financialPremiumsBatchGridLists$ =
     this.financialPremiumsFacade.financialPremiumsBatchData$;
   financialPremiumsAllPaymentsGridLists$ =
     this.financialPremiumsFacade.financialPremiumsAllPaymentsData$;
+    public sortValue = this.financialPremiumsFacade.clientsSortValue;
   insurancePlans$ = this.financialPremiumsFacade.insurancePlans$;
   insurancePlansLoader$ = this.financialPremiumsFacade.insurancePlansLoader$;
   insuranceCoverageDates$ = this.financialPremiumsFacade.insuranceCoverageDates$;
   insuranceCoverageDatesLoader$ = this.financialPremiumsFacade.insuranceCoverageDatesLoader$;
   actionResponse$ = this.financialPremiumsFacade.premiumActionResponse$;
   existingPremiums$ = this.financialPremiumsFacade.existingCoverageDates$;
+  batchingPremium$ = this.financialPremiumsFacade.batchPremium$;
+  financialPremiumPaymentLoader$ = this.financialPremiumsFacade.financialPremiumPaymentLoader$;
+  insurancePremium$ = this.financialPremiumsFacade.insurancePremium$;
   premiumType: any;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
-    private loggingService: LoggingService,
-  ) { }
+    private loggingService: LoggingService
+  ) {}
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(data => this.premiumType = data['type'])
+    this.activatedRoute.params.subscribe(
+      (data) => (this.premiumType = data['type'])
+    );
     this.addNavigationSubscription();
   }
   private addNavigationSubscription() {
@@ -61,7 +72,9 @@ export class FinancialPremiumsPageComponent implements OnInit {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe({
         next: () => {
-          this.activatedRoute.params.subscribe(data => this.premiumType = data['type'])
+          this.activatedRoute.params.subscribe(
+            (data) => (this.premiumType = data['type'])
+          );
           this.cdr.detectChanges();
         },
 
@@ -70,20 +83,37 @@ export class FinancialPremiumsPageComponent implements OnInit {
         },
       });
   }
-  loadFinancialPremiumsProcessListGrid(event: any) {
-    this.financialPremiumsFacade.loadFinancialPremiumsProcessListGrid();
+  loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any) : void{
+    const gridDataRefiner = {
+      skipcount: gridDataRefinerValue.skipCount,
+      pagesize: gridDataRefinerValue.pagesize,
+      sortColumn: gridDataRefinerValue.sortColumn,
+      sortType: gridDataRefinerValue.sortType,
+      filter:gridDataRefinerValue.filter
+    };
+    this.pageSizes = this.financialPremiumsFacade.gridPageSizes;
+    this.financialPremiumsFacade.loadMedicalPremiumList( gridDataRefiner.skipcount,
+      gridDataRefiner.pagesize,
+      gridDataRefiner.sortColumn,
+      gridDataRefiner.sortType,
+      gridDataRefiner.filter);
   }
 
-  loadFinancialPremiumsBatchListGrid(event: any) {
-    this.financialPremiumsFacade.loadFinancialPremiumsBatchListGrid();
+  loadFinancialPremiumsBatchListGrid(data: GridFilterParam) {
+    this.financialPremiumsFacade.loadFinancialPremiumsBatchListGrid(
+      data,
+      this.premiumType
+    );
   }
 
-  loadFinancialPremiumsAllPaymentsListGrid(event: any) {
-    this.financialPremiumsFacade.loadFinancialPremiumsAllPaymentsListGrid();
+  loadFinancialPremiumsAllPaymentsListGrid(data: GridFilterParam) {
+    this.dataExportParameters = data
+    this.financialPremiumsFacade.loadFinancialPremiumsAllPaymentsListGrid(data, this.premiumType);
+
   }
 
-  loadInsurancePlans(clientId: number) {
-    this.financialPremiumsFacade.loadInsurancePlans(clientId);
+  loadInsurancePlans(client: any) {
+    this.financialPremiumsFacade.loadInsurancePlans(client, this.premiumType);
   }
 
   loadInsurancePlansCoverageDates(clientId: number) {
@@ -96,5 +126,17 @@ export class FinancialPremiumsPageComponent implements OnInit {
 
   saveInsurancePremiums(premiums: InsurancePremium[]) {
     this.financialPremiumsFacade.savePremiums(this.premiumType, premiums);
+  }
+
+  OnbatchClaimsClicked(event:any){
+    this.financialPremiumsFacade.batchPremium(event, this.premiumType);
+  }
+
+  loadPremium(premiumId: string){
+    this.financialPremiumsFacade.loadPremium(this.premiumType, premiumId);
+  }
+
+  updatePremium(premium:any){
+    this.financialPremiumsFacade.updatePremium(this.premiumType, premium.premiumId, premium);
   }
 }

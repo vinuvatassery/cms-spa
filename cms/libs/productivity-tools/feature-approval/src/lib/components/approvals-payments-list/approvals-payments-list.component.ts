@@ -16,10 +16,13 @@ import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
+  filterBy,
 } from '@progress/kendo-data-query';
+import { IntlService } from '@progress/kendo-angular-intl';
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Component({
   selector: 'productivity-tools-approvals-payments-list',
@@ -32,14 +35,21 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isApprovalPaymentsGridLoaderShow = false;
+  selectedApprovalId?: string | null = null;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() approvalsPaymentsLists$: any;
   @Input() approvalsPaymentsMainLists$: any;
+  @Input() pendingApprovalSubmittedSummary$: any;
+  @Input() batchDetailPaymentsList$: any;
+  @Input() exportButtonShow$ : any
   @Output() loadApprovalsPaymentsGridEvent = new EventEmitter<any>();
   @Output() loadApprovalsPaymentsMainListEvent = new EventEmitter<any>();
+  @Output() loadSubmittedSummaryEvent = new EventEmitter<any>();
+  @Output() loadBatchDetailPaymentsGridEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -48,11 +58,11 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
   approveStatus:string="APPROVE";
   sendbackStatus:string="SENDBACK";
+  hasPaymentPendingApproval:boolean=false;
   sendbackNotesRequireMessage:string = "Send Back Notes is required.";
   tAreaCessationMaxLength:any=100;
   approveBatchCount:any=0;
@@ -62,9 +72,20 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   approvalsPaymentsGridPagedResult:any =[];
   approvalsPaymentsGridUpdatedResult: any=[];
   selectedApprovalSendbackDataRows: any[] = [];
+  selectedBatchIds: any = [];
+  totalAmountSubmitted:any=0;
+  requestedCheck:any=0;
+  requestedACHPayments:any=0;
+  requestedDORHoldPayments:any=0;
   gridApprovalPaymentsMainListDataSubject = new Subject<any>();
   gridApprovalPaymentsMainList$ = this.gridApprovalPaymentsMainListDataSubject.asObservable();
+
+  approvalPaymentsSubmittedSummaryDataSubject = new Subject<any>();
+  approvalPaymentsSubmittedSummaryData$ = this.approvalPaymentsSubmittedSummaryDataSubject.asObservable();
   selectedPaymentType: any;
+  approverCount = 0;
+  sendBackCount = 0;
+  batchDetailModalSourceList:any;
 
   gridApprovalPaymentsDataSubject = new Subject<any>();
   gridApprovalPaymentsBatchData$ = this.gridApprovalPaymentsDataSubject.asObservable();
@@ -72,20 +93,52 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
-  
+  gridColumns: { [key: string]: string } = {
+    ALL: 'All Columns',
+    batchName: 'Batch',
+    providerCount: 'Provider Count',
+    totalAmountDue: 'Total Amount',
+    carrierCount: 'Carrier Count',
+    totalPayments: 'Pmt Count',
+    totalClaims: 'Premium Count',
+    creationTime: 'Date Approval Requested'
+  };
+
+  dropDownColumns : { columnCode: string, columnDesc: string }[] = [
+    {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
+    {
+      columnCode: 'BatchName',
+      columnDesc: 'Batch #',
+    },
+    {
+      columnCode: 'DateApprovalRequested',
+      columnDesc: 'Date Approval Requested',
+    },
+  ];
+
+  selectedColumn = 'ALL';
+  filteredByColumnDesc = '';
+  showDateSearchWarning = false;
+  columnChangeDesc = 'Default Columns'
+  searchText = '';
+  showExportLoader = false;
   
   private depositDetailsDialog: any;
 
   pendingApprovalPaymentType$ = this.lovFacade.pendingApprovalPaymentType$;
-  
   /** Constructor **/
   constructor(private route: Router, 
     private dialogService: DialogService,private readonly cd: ChangeDetectorRef,
-    private lovFacade: LovFacade) {}
+    private lovFacade: LovFacade,
+    private readonly intl: IntlService,
+    private readonly configProvider: ConfigurationProvider) {}
 
   ngOnInit(): void {
     this.gridDataHandle();
-    this.loadApprovalPaymentsListGrid();
+    this.loadApprovalPaymentsListGrid();    
     this.lovFacade.getPandingApprovalPaymentTypeLov();
   }
 
@@ -103,11 +156,24 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.isSubmitApprovalPaymentItems = false;
   }
 
-  onOpenViewPaymentsBatchClicked(){
+  onOpenViewPaymentsBatchClicked(data?:any){
     this.isViewPaymentsBatchDialog = true;
+    this.selectedApprovalId = data?.approvalId;
+    this.batchDetailModalSourceList = this.approvalsPaymentsGridUpdatedResult.map((item:any)=>({...item}));
   }
+
   onCloseViewPaymentsBatchClicked(){
     this.isViewPaymentsBatchDialog = false;
+  }
+
+  onBatchModalSaveClicked(data:any){
+    this.isViewPaymentsBatchDialog = false;
+    this.approvalsPaymentsGridUpdatedResult = data.map((item:any)=>({...item}));
+    this.loadApprovalPaymentsListGrid();
+  }
+
+  onLoadBatchDetailPaymentsList(data?:any){
+    this.loadBatchDetailPaymentsGridEvent.emit(data);
   }
   private loadApprovalPaymentsListGrid(): void {
     this.loadApprovalPayments(
@@ -129,12 +195,12 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      columnName: this.selectedColumn,
+      sorting: null,
+      filter: this.state?.["filter"]?.["filters"] ?? []
     };
     let selectedPaymentType = this.selectedPaymentType;
-    this.loadApprovalsPaymentsGridEvent.emit({gridDataRefinerValue, selectedPaymentType});
-    gridDataRefinerValue.skipCount=0;
-    gridDataRefinerValue.pagesize=99999;
-    this.loadApprovalsPaymentsMainListEvent.emit({gridDataRefinerValue, selectedPaymentType});
+    this.loadApprovalsPaymentsGridEvent.emit({gridDataRefinerValue, selectedPaymentType});    
   }
 
   onChange(data: any) {
@@ -144,14 +210,14 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       logic: 'and',
       filters: [
         {
-          filters: [
+          "filters": [
             {
-              field: this.selectedColumn ?? 'batch',
-              operator: 'startswith',
-              value: data,
+              "field": this.selectedColumn ?? 'BatchName',
+              "operator": 'startswith',
+              "value": data,
             },
           ],
-          logic: 'and',
+          "logic": 'and',
         },
       ],
     };
@@ -178,8 +244,27 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadApprovalPaymentsListGrid();
+    if(stateData.filter?.filters.length > 0)
+    {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      this.isFiltered = true;
+      const filterList = []
+      for(const filter of stateData.filter.filters)
+      {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy =  filterList.toString();
+    }
+    else
+    {
+      this.filter = "";
+      this.isFiltered = false
+    }
+    this.loadApprovalPaymentsListGrid();    
+    this.sortByProperty();
   }
 
   // updating the pagination infor based on dropdown selection
@@ -193,6 +278,22 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.filterData = filter;
   }
 
+  getGridDataHandle() {
+    this.approvalsPaymentsLists$.subscribe((data: any) => {
+      this.approverCount = data.approverCount;
+      this.sendBackCount = data.sendBackCount;
+      this.gridDataResult = data;
+      this.gridDataResult.data = filterBy(
+        this.gridDataResult.data,
+        this.filterData
+      );
+      this.gridApprovalPaymentsDataSubject.next(this.gridDataResult);
+      if (data?.total >= 0 || data?.total === -1) { 
+        this.isApprovalPaymentsGridLoaderShow = false;
+      }
+    });
+    this.isApprovalPaymentsGridLoaderShow = false;
+  }
   
 
   onDepositDetailClicked(  template: TemplateRef<unknown>): void {   
@@ -213,10 +314,13 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   onPaymentTypeCodeValueChange(paymentSubTypeCode: any){
     this.selectedPaymentType = paymentSubTypeCode;    
     this.loadApprovalPaymentsListGrid();
-    this.mainListDataHandle();   
+    this.mainListDataHandle();  
+    this.selectedColumn = 'ALL';  
+    this.gridDataHandle();
+    this.cd.detectChanges();   
   }
 
-  onRowLevelApproveClicked(dataItem: any, control: any, rowIndex: any)
+  onRowLevelApproveClicked(e: boolean,dataItem: any, control: any, rowIndex: any)
   {
     dataItem.approveButtonDisabled=false;
     dataItem.sendBackButtonDisabled=true;
@@ -245,7 +349,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.approveAndSendbackCount();
   }
 
-  onRowLevelSendbackClicked(dataItem: any, control: any, rowIndex: any)
+  onRowLevelSendbackClicked(e: boolean,dataItem: any, control: any, rowIndex: any)
   {
     dataItem.approveButtonDisabled=true;
     dataItem.sendBackButtonDisabled=false;
@@ -292,7 +396,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   
   gridDataHandle() {
     this.approvalsPaymentsLists$.subscribe((response: any) => {
-      
+      this.approveBatchCount=response.approverCount;
+      this.sendbackBatchCount= response.sendBackCount;
       if (response.data.length > 0) {
         this.assignDataFromUpdatedResultToPagedResult(response);
         this.tAreaVariablesInitiation(this.approvalsPaymentsGridPagedResult);
@@ -342,6 +447,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   sendBackNotesChange(dataItem: any) {
     this.calculateCharacterCount(dataItem);
+    this.assignRowDataToMainList(dataItem);
   }   
 
   ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
@@ -399,8 +505,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     const isValid = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.sendBackNotesInValid);
     const totalCount = isValid.length;
     if (isValid.length > 0) {
-      this.pageValidationMessage = "validation errors found, please review each page for errors " +
-        totalCount + " is the total number of validation errors found.";
+      this.pageValidationMessage = totalCount +  " validation errors found, please review each page for errors.";
     }
     else if(this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus).length <= 0){
       this.pageValidationMessage = "No data for approval";
@@ -409,8 +514,10 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       this.pageValidationMessage = "validation errors are cleared";
       this.selectedApprovalSendbackDataRows = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus);
     }
+    this.selectedBatchIds = [];
     if (isValid.length <= 0 && this.selectedApprovalSendbackDataRows.length>0) {
-      this.isSubmitApprovalPaymentItems = true;
+      this.loadSubmittedSummaryData();   
+      this.isSubmitApprovalPaymentItems = true;     
     }
   }
 
@@ -480,6 +587,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
           this.approvalsPaymentsGridUpdatedResult[index].sendBackNotesInValid = dataItem?.sendBackNotesInValid;
           this.approvalsPaymentsGridUpdatedResult[index].tAreaCessationCounter = dataItem?.tAreaCessationCounter;          
           this.approvalsPaymentsGridUpdatedResult[index].batchStatus = dataItem?.batchStatus;
+          this.approvalsPaymentsGridUpdatedResult[index].sendBackNotes = dataItem?.sendBackNotes;
         }
       });
     }
@@ -499,17 +607,108 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   }
 
   mainListDataHandle() {
+    const gridDataRefinerValue = {
+      skipCount: 0,
+      pagesize: 99999,
+      sortColumn: this.sortValue,
+      sortType: this.sortType,
+    };
+    let selectedPaymentType = this.selectedPaymentType;
+    this.loadApprovalsPaymentsMainListEvent.emit({gridDataRefinerValue, selectedPaymentType});
+    this.approvalsPaymentsGridUpdatedResult = [];
+    this.hasPaymentPendingApproval=false;
     this.approvalsPaymentsMainLists$.subscribe((response: any) => {
-      if (response.data.length > 0) {
+      if (response.data.length > 0) {       
         this.approvalsPaymentsGridUpdatedResult=response.data.map((item:any) => ({  
           ...item,           
           sendBackNotesInValidMsg: '', 
           sendBackNotesInValid : false,
           batchStatus : '',
           sendBackNotes : ''
-          }));        
+          }));  
+          this.hasPaymentPendingApproval=response.data.length > 0;
+          this.cd.detectChanges();
         this.gridApprovalPaymentsMainListDataSubject.next(this.approvalsPaymentsGridUpdatedResult);
       }
     });
+  }
+
+  sortByProperty() {
+    const ascending=this.sortType == "asc";
+    if(this.approvalsPaymentsGridUpdatedResult.length >=0)
+    {      
+      this.approvalsPaymentsGridUpdatedResult.sort((a: { [x: string]: any; }, b: { [x: string]: any; }) => {
+            if (ascending) {
+             return this.sortListAscendingOrder(a[this.sortValue],b[this.sortValue]) ;            
+        } else {
+          return this.sortListDescendingOrder(a[this.sortValue],b[this.sortValue]); 
+        }
+      });   
+      this.cd.detectChanges();    
+    }
+  }
+
+  sortListAscendingOrder(a:any,b:any)
+  {
+    if(a < b){return -1;}
+    else if (a > b){return 1;}
+    else{return 0;}
+  }
+  sortListDescendingOrder(a:any,b:any)
+  {
+    if(b < a){return -1;}
+    else if (b > a){return 1;}
+    else{return 0;}
+  }
+
+  loadSubmittedSummaryData()
+  {
+    this.selectedApprovalSendbackDataRows.filter((x: any) => x.batchStatus == this.approveStatus).forEach((currentPage: any, index: number) => {
+      this.selectedBatchIds.push(currentPage.paymentRequestBatchId);
+    });
+    this.loadSubmittedSummaryEvent.emit(this.selectedBatchIds);    
+    this.pendingApprovalSubmittedSummary$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+        this.requestedCheck = response?.checkCount;
+        this.requestedACHPayments=response?.achCount;
+        this.requestedDORHoldPayments = response?.dorHoldCount;
+        this.totalAmountSubmitted = response?.totalAmount; 
+        this.cd.detectChanges();
+      }
+    });        
+  }
+
+  columns:any={
+
+  }
+
+  private isValidDate = (searchValue: any) => isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(new Date(searchValue), this.configProvider?.appSettings?.dateFormat);
+      }
+      else {
+        return '';
+      }
+    }
+
+    return searchValue;
+  }
+
+  onClickedExport(){
+    this.showExportLoader = true
+    this.exportGridDataEvent.emit()    
+    
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {        
+        this.showExportLoader = false
+        this.cd.detectChanges()
+      }
+    })
   }
 }
