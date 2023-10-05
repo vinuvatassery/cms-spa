@@ -149,13 +149,6 @@ export class FinancialPremiumsFacade {
 
   private insurancePremiumSubject = new Subject<InsurancePremiumDetails>();
   insurancePremium$ =this.insurancePremiumSubject.asObservable();
-
-  private adjustmentsSubject = new Subject<any>();
-  adjustments$ =this.adjustmentsSubject.asObservable();
-
-  private adjustmentsLoaderSubject = new BehaviorSubject<boolean>(false);
-  adjustmentsLoader$ =this.adjustmentsLoaderSubject.asObservable();
-
   /** Private properties **/
 
   /** Public properties **/
@@ -436,6 +429,11 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
 
     loadInsurancePlans(client: any, type: string){
       this.insurancePlansLoaderSubject.next(true);
+      if(!client.clientId || !client.eligibilityId){
+        this.insurancePlansSubject.next([]);
+        this.insurancePlansLoaderSubject.next(false);
+        return;
+      }
       this.financialPremiumsDataService.loadInsurancePlans(client.clientId, client.eligibilityId, type)
       .subscribe({
         next: (dataResponse) => {
@@ -594,23 +592,8 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
     }
 
 
-    loadPremiumAdjustments(type: string, paymentId: string, params: GridFilterParam){
-      this.adjustmentsLoaderSubject.next(true);
-      this.financialPremiumsDataService.loadPremiumAdjustments(type, paymentId, params)
-      .subscribe({
-        next: (dataResponse: any) => {
-          const gridView = {
-            data: dataResponse['items'],
-            total: dataResponse['totalCount'],
-          };
-            this.adjustmentsLoaderSubject.next(false);
-            this.adjustmentsSubject.next(gridView);
-        },
-        error: (err) => {
-          this.adjustmentsLoaderSubject.next(false);
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        },
-      })
+    loadPremiumAdjustments(type: string, paymentId: string, params: GridFilterParam){    
+      return this.financialPremiumsDataService.loadPremiumAdjustments(type, paymentId, params);   
     }
 	
 

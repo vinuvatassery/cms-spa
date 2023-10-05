@@ -96,7 +96,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     this.financialClaimsFacade.loadClientBySearchText(clientSearchText);
   }
 
-  clientChanged(client: any) {
+  clientChanged(client: any) {    
     this.showClientRequiredValidation = !client;
     this.clientChangeEvent.emit(
       {
@@ -116,6 +116,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
 
   exceptionReasonCounterChange(coverage: any, ev: string): void {
     const charactersCount = ev.length;
+    coverage.exceptionReasonRequired = charactersCount <= 0;
     coverage.exceptionReasonCount = `${charactersCount}/100`;
   }
 
@@ -165,6 +166,8 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
         plan.coverages.splice(coverageIndex, 1);
         this.coverageDateExistChecking(policyId, coverage);
       }
+
+      this.makeAutoPlanSelection(plan);
     }
   }
 
@@ -184,11 +187,13 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
 
     plan.coverages.push(newCoverage);
     this.showPremiumRequiredValidation = false;
+    this.makeAutoPlanSelection(plan);
   }
 
   onMakeExceptionClick(coverage: InsurancePremiumCoverage) {
     coverage.makeExceptionFlag = !coverage.makeExceptionFlag
     coverage.exceptionText = coverage.makeExceptionFlag ? "Don't Make Exception" : "Make Exception";
+    if (!coverage.makeExceptionFlag) { coverage.exceptionReasonRequired = false; }
   }
 
   /* Private Methods */
@@ -308,7 +313,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     coverages?.map((cvg: InsurancePremiumCoverage) => {
       cvg.coverageDateRequired = cvg?.coverageDates == null;
       cvg.premiumAmountRequired = cvg?.premiumAmount == null;
-      cvg.exceptionReasonRequired = (cvg?.makeExceptionFlag ?? false) && cvg?.exceptionReason == null;
+      cvg.exceptionReasonRequired = (cvg?.makeExceptionFlag ?? false) && !cvg?.exceptionReason;
     });
   }
 
@@ -366,5 +371,9 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     else {
       this.save();
     }
+  }
+
+  private makeAutoPlanSelection(plan: ClientInsurancePlans) {
+    plan.isPlanSelected = plan?.coverages?.length > 0;
   }
 }

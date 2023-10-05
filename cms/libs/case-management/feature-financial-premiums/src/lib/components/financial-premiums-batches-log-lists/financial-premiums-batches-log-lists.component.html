@@ -185,6 +185,7 @@
                 <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                   <ng-container>
                     <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                    [hidden]="noDeleteStatus.includes(dataItem.paymentStatusCode) && buttondataItem.text === 'Delete Payment'"
                       [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
                       <span class="material-icons"
                         [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>

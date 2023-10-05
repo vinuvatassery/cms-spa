@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage,FinancialPremiumsFacade, GridFilterParam } from '@cms/case-management/domain';
+import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage,FinancialPremiumsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
@@ -20,7 +20,7 @@ import {
   CompositeFilterDescriptor, filterBy
 } from '@progress/kendo-data-query';
 import { BatchPremium } from 'libs/case-management/domain/src/lib/entities/financial-management/batch-premium';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, Subscription } from 'rxjs';
 @Component({
   selector: 'cms-financial-premiums-process-list',
   templateUrl: './financial-premiums-process-list.component.html',
@@ -51,7 +51,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isProcessGridExpand = true;
   sendReportDialog: any;
-  isFinancialPremiumsProcessGridLoaderShow = false;
+  gridLoaderSubject = new BehaviorSubject(false);
   gridDataResult!: GridDataResult;
   @Input() premiumsType: any;
   @Input() batchingPremium$: any; 
@@ -67,8 +67,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   @Input() actionResponse$: any;
   @Input() existingPremiums$!: Observable<PolicyPremiumCoverage[]>;
   @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
-  @Input() adjustments$!: Observable<any>;
-  @Input() adjustmentsLoader$ !: Observable<boolean>;
   @Output() clientChangeEvent = new EventEmitter<any>();
   @Output() premiumsExistValidationEvent = new EventEmitter<{ clientId: number, premiums: PolicyPremiumCoverage[] }>();
   @Output() savePremiumsEvent = new EventEmitter<InsurancePremium[]>();
@@ -76,7 +74,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   @Output() loadPremiumEvent = new EventEmitter<string>();
   @Output() updatePremiumEvent = new EventEmitter<any>();
   @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
-  @Output() loadAdjustmentsEvent = new EventEmitter<GridFilterParam>();
   public selectedProcessClaims: any[] = [];
   public state!: any;
   sortColumn = 'vendorName';
@@ -231,7 +228,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       );
       this.gridFinancialPremiumsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
-        this.isFinancialPremiumsProcessGridLoaderShow = false;
+        this.gridLoaderSubject.next(false);
       }
       this.financialPremiumsProcessGridLists = this.gridDataResult?.data;
       if(!this.selectAll)
@@ -249,6 +246,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     this.handlePageCountSelectionChange();
     //If the user click on select all header and either changing the page number or page count
     this.pageNumberAndCountChangedInSelectAll();
+    this.gridLoaderSubject.next(false);
     });
     this.ref.detectChanges();
   }
@@ -310,7 +308,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     sortTypeValue: string,
     filter: any
   ) {
-    this.isFinancialPremiumsProcessGridLoaderShow = true;
+    this.gridLoaderSubject.next(true);
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
@@ -319,7 +317,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       filter: this.filter ? this.filter : null,
     };
     this.loadFinancialPremiumsProcessListEvent.emit(gridDataRefinerValue);
-    this.isFinancialPremiumsProcessGridLoaderShow = false;
   }
   filterChange(filter: CompositeFilterDescriptor): void {
     this.gridFilter = filter;
@@ -456,7 +453,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       ],
       logic: 'or',
     });
-    this.isFinancialPremiumsProcessGridLoaderShow = false;
+    this.gridLoaderSubject.next(false);
   }
 
   public onBatchPremiumsClicked(template: TemplateRef<unknown>): void {
@@ -724,10 +721,6 @@ closeRecentPremiumsModal(result: any){
 
   updatePremium(data: any){
     this.updatePremiumEvent.emit(data);
-  }
-
-  loadAdjustments(data: any){
-    this.loadAdjustmentsEvent.emit(data);
   }
 
   private addActionRespSubscription() {
