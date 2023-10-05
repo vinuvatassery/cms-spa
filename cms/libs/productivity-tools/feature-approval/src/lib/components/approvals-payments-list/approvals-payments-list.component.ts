@@ -19,7 +19,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { Subject, debounceTime } from 'rxjs';
+import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -58,7 +58,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
   approveStatus:string="APPROVE";
@@ -105,6 +104,22 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     creationTime: 'Date Approval Requested'
   };
 
+  dropDownColumns : { columnCode: string, columnDesc: string }[] = [
+    {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
+    {
+      columnCode: 'BatchName',
+      columnDesc: 'Batch #',
+    },
+    {
+      columnCode: 'DateApprovalRequested',
+      columnDesc: 'Date Approval Requested',
+    },
+  ];
+
+  selectedColumn = 'ALL';
   filteredByColumnDesc = '';
   showDateSearchWarning = false;
   columnChangeDesc = 'Default Columns'
@@ -197,7 +212,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
         {
           "filters": [
             {
-              "field": this.selectedColumn ?? 'batchName',
+              "field": this.selectedColumn ?? 'BatchName',
               "operator": 'startswith',
               "value": data,
             },
@@ -662,20 +677,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       }
     });        
   }
-  dropDownColumns : any = [
-    {
-      columnCode: 'ALL',
-      columnDesc: 'All Columns',
-    },
-    {
-      columnCode: 'BatchName',
-      columnDesc: 'Batch #',
-    },
-    {
-      columnCode: 'DateApprovalRequested',
-      columnDesc: 'Date Approval Requested',
-    },
-  ];
 
   columns:any={
 
