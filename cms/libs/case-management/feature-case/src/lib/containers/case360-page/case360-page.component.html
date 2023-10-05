@@ -49,8 +49,8 @@
       <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.MANAGEMENT_MANAGER || mng_button_grp}" aria-label="Management" 
         (click)="onTabClick(clientProfileTabs.MANAGEMENT_MANAGER)" *ifPermission='["Client_Profile_Management_Tab_View_Only"]'>
         Management</button>
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.STATUS_PERIOD }" aria-label="statuses" 
-        (click)="onTabClick(clientProfileTabs.STATUS_PERIOD)" *ifPermission='["Client_Profile_Statuses_Tab_View_Only"]'> statuses</button>
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.STATUS_PERIOD }" aria-label="Statuses" 
+        (click)="onTabClick(clientProfileTabs.STATUS_PERIOD)" *ifPermission='["Client_Profile_Statuses_Tab_View_Only"]'> Statuses</button>
       <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.ATTACHMENTS }" aria-label="Attachments" 
         (click)="onTabClick(clientProfileTabs.ATTACHMENTS)" *ifPermission='["Client_Profile_Attachments_Tab_View_Only"]'>
         Attachments</button>

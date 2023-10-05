@@ -285,7 +285,7 @@
       <div
         *ngIf="(providerType != vendorTypes.MedicalProviders) && (providerType != vendorTypes.DentalProviders) && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy && (providerType != vendorTypes.Manufacturers)"
         class="flex-col mt-1">
-        <button kendoButton icon="add" [primary]="true" look="flat" aria-label="Add address">
+        <button kendoButton icon="add" [primary]="true" look="flat" aria-label="Address : testing">
           Address : testing
         </button>
       </div>
@@ -432,7 +432,7 @@
 
           <div class="flex-col d-flex align-iems-center justify-content-between" [formGroupName]="i">
             <h4 class="mb-0">CONTACT {{i+1}} (OPTIONAL)</h4>
-            <button kendoButton class="card-link-button no-ul text-bold k-danger-link" aria-label="delete contact"
+            <button kendoButton class="card-link-button no-ul text-bold k-danger-link" aria-label="Delete Contact"
               (click)="removeContact(i)">
               DELETE CONTACT
             </button>
@@ -493,7 +493,7 @@
         </div>
       </div>
       <div class="flex-col">
-        <button kendoButton icon="add" [primary]="true" look="flat" aria-label="Add Contact"
+        <button kendoButton icon="add" [primary]="true" look="flat" aria-label="Contact"
           (click)="onToggleAddNewContactClick()">
           Contact
         </button>
@@ -506,15 +506,15 @@
 <kendo-dialog-actions>
   <div class="justify-content-between" *ngIf="!editVendorInfo">
     <div class="justify-content-end">
-      <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"
+      <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
         (click)="closeVedorModal()"> Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="save()"> Add </button>
+      <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> Add </button>
     </div>
   </div>
   <div class="justify-content-between" *ngIf="editVendorInfo">
     <div class="justify-content-end">
-      <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"
+      <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
         (click)="closeVedorModal()"> Cancel
       </button>
       <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="updateVendorDetails()">

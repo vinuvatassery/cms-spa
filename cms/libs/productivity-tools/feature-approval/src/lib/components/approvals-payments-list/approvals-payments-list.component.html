@@ -29,8 +29,8 @@
         </kendo-floatinglabel>
     </span>
     <span class="right-btn-export">
-        <button kendoButton [primary]="true" look="flat" class="button-lg">
-            <span class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>Export
+        <button kendoButton [primary]="true" aria-label="Export"  look="flat" class="button-lg">
+            <span class="material-icons" aria-label="Export" aria-invalid="true">exit_to_app</span>Export
         </button>
     </span>
 </section>
@@ -69,7 +69,7 @@
         </kendo-grid-column>        
         <kendo-grid-column field="batchName" title="Batch" [width]="180">
             <ng-template kendoGridCellTemplate let-dataItem>
-                <button aria-label="Batch" kendoButton look="flat" class="card-link-button">
+                <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button">
                     {{ dataItem.batchName }}
                 </button>
             </ng-template>

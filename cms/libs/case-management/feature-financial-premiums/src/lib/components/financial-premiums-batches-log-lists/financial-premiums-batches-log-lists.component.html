@@ -27,7 +27,7 @@
           </kendo-floatinglabel>
         </span>
         <span class="right-overlay-export">
-          <button kendoButton [primary]="true" look="flat" class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
+          <button kendoButton [primary]="true" aria-label="Export"  look="flat" class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
             <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
             
             <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
@@ -41,7 +41,7 @@
         <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
         <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
         <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
-        <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+        <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
           <a>Set to Default</a>
         </button>
       </div>
@@ -63,7 +63,7 @@
           </kendo-grid-column>
           <kendo-grid-column field="vendorName" title="Insurance Vendor" [width]="200">
             <ng-template kendoGridCellTemplate let-dataItem>
-              <button aria-label="Insurance Vendor" kendoButton look="flat" class="card-link-button">
+              <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button">
                 {{ dataItem.vendorName }}
               </button>
             </ng-template>
@@ -246,9 +246,9 @@
   <button (click)="goToBatchItems($event)">Batch Log items</button>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     *ngIf="isRequestPaymentClicked || isSendReportOpened" (click)="onBulkOptionCancelClicked()"> Cancel </button>
-  <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isRequestPaymentClicked"
+  <button kendoButton [primary]="true" aria-label="Preview Requests" class="" *ngIf="isRequestPaymentClicked"
     (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
-  <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isSendReportOpened"
+  <button kendoButton [primary]="true" aria-label="Send Report" class="" *ngIf="isSendReportOpened"
     (click)="onSendReportOpenClicked(sendReportDialogTemplate)"> Send Report </button>
   <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action" buttonClass="k-split-button"
     [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isSendReportOpened"
@@ -298,7 +298,7 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton aria-label="cancel" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
           Client Profile <span class="material-icons ml-1">
             chevron_right
           </span>

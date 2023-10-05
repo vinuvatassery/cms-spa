@@ -12,7 +12,7 @@
             <div class="flex-col flex-col-6">
               <h5>Request for Case Re-Assignment</h5>
               <p>XX/XX/XXXX by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
-                  aria-label="modified by" kendoButton look="flat" class="card-link-button">
+                  aria-label="FName LName" kendoButton look="flat" class="card-link-button">
                   FName LName
                 </button> </p>
               <div *ngIf="isPanelExpanded">
@@ -23,9 +23,9 @@
             <div class="flex-col flex-col-6">
               <div>
                 <kendo-buttongroup selection="single">
-                  <button kendoButton aria-label="allow" (click)="approveOrDeny('A')" [toggleable]="true">Approve
+                  <button kendoButton aria-label="Approve" (click)="approveOrDeny('A')" [toggleable]="true">Approve
                   </button>
-                  <button kendoButton aria-label="deny" (click)="approveOrDeny('D')" [toggleable]="true">Deny </button>
+                  <button kendoButton aria-label="Deny" (click)="approveOrDeny('D')" [toggleable]="true">Deny </button>
                 </kendo-buttongroup>
               </div>
               <div *ngIf="ifApproveOrDeny === 'A'">
@@ -68,7 +68,7 @@
             <div class="flex-col flex-col-6" >
               <h5>Request for Case Re-Assignment</h5>
               <p>XX/XX/XXXX by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
-                  aria-label="modified by" kendoButton look="flat" class="card-link-button">
+                  aria-label="FName LName" kendoButton look="flat" class="card-link-button">
                   FName LName
                 </button> </p>
 
@@ -76,9 +76,9 @@
             <div class="flex-col flex-col-6">
               <div>
                 <kendo-buttongroup selection="single">
-                  <button kendoButton aria-label="allow" (click)="approveOrDeny('A')" [toggleable]="true">Approve
+                  <button kendoButton aria-label="Approve" (click)="approveOrDeny('A')" [toggleable]="true">Approve
                   </button>
-                  <button kendoButton aria-label="deny" (click)="approveOrDeny('D')" [toggleable]="true">Deny </button>
+                  <button kendoButton aria-label="Deny" (click)="approveOrDeny('D')" [toggleable]="true">Deny </button>
                 </kendo-buttongroup>
               </div>
 

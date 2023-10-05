@@ -21,7 +21,7 @@
           </kendo-grid-column>
               <kendo-grid-column field="batchName" title="Batch #" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                      <button aria-label="Batch name" kendoButton look="flat" class="card-link-button"
+                      <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button"
                       (click)="onBatchClicked(dataItem.batchId)">
                         {{ dataItem.batchName }}
                       </button>
@@ -39,7 +39,7 @@
             
               <kendo-grid-column field="clientName" title="Client Name" [width]="100"> 
                   <ng-template kendoGridCellTemplate let-dataItem>
-                      <button aria-label="Batch name" kendoButton look="flat" class="card-link-button"
+                      <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button"
                       (click)="onClientClicked(dataItem.clientId)">
                         {{ dataItem.clientName }}
                       </button>
@@ -165,7 +165,7 @@
                       kendoPopoverAnchor
                       [popover]="onUserProfileDetailsHovered"
                       showOn="hover"
-                      aria-label="profile avatar"
+                      [attr.aria-label]="dataItem.by"
                     >
                     <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>  
                     </button>

@@ -59,7 +59,7 @@
       </kendo-grid-column> 
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160"[sortable]="true"> 
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button aria-label="clientName" kendoButton look="flat" class="card-link-button"
+        <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
           (click)="clientRecentClaimsModalClicked(clientRecentPremiumsDialogTemplate, dataItem)">
           {{ dataItem.clientFullName }}
         </button>
@@ -221,7 +221,7 @@
             kendoPopoverAnchor
             [popover]="onUserProfileDetailsHovered"
             showOn="hover"
-            aria-label="profile avatar"
+            [attr.aria-label]="dataItem.creatorId"
           >
           <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
           </button>
@@ -301,7 +301,7 @@
     (click)="onRemovePremiumsOpenClicked(removePremiumsConfirmationDialogTemplate)"  *ngIf="isRemoveBatchClosed"> <span class="material-icons mr-1"
       aria-label="Remove"> delete</span> Remove </button>
 
-  <button kendoButton [primary]="true" aria-label="Receipting Log" class=""
+  <button kendoButton [primary]="true" aria-label="Batch" class=""
     (click)="onBatchPremiumsClicked(batchPremiumsConfirmationDialogTemplate)"   *ngIf="isBatchPremiumsClicked"> Batch </button>
 
   <button kendoButton [disabled]="sendReportCount == 0" [primary]="true" aria-label="Send Reports" class="" *ngIf="isSendReportOpened"
@@ -374,7 +374,7 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton aria-label="cancel" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
           Client Profile <span class="material-icons ml-1">
             chevron_right
           </span>
@@ -385,7 +385,7 @@
   </kendo-dialog-actions>
 </ng-template>
 
-<button aria-label="clientName" kendoButton look="flat" class="card-link-button" [hidden]="true"
+<button aria-label="Client Name" kendoButton look="flat" class="card-link-button" [hidden]="true"
           (click)="clientRecentClaimsModalClicked(clientRecentPremiumsDialogTemplate, null)">
           Client Name
         </button>

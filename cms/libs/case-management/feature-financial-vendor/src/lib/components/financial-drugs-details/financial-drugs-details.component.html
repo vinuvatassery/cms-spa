@@ -98,11 +98,11 @@
     <kendo-dialog-actions>
         <div class="justify-content-between mt-2">
             <div>
-                <button *ngIf="dialogTitle==='Edit'" kendoButton [primary]="true" look="flat" aria-label="deactivate drug"> Deactivate </button>
+                <button *ngIf="dialogTitle==='Edit'" kendoButton [primary]="true" look="flat" aria-label="Deactivate"> Deactivate </button>
             </div>
             <div class="justify-content-end">
-                <button kendoButton [primary]="true" aria-label="cancel drug" look="outline" (click)="onCancelClick()"> Cancel </button>
-                <button kendoButton [primary]="true" aria-label="add new drug" (click)="save()"> {{dialogTitle==="Add"?"Add":"Update"}} </button>
+                <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="onCancelClick()"> Cancel </button>
+                <button kendoButton [primary]="true" attr.aria-label="{{dialogTitle==='Add'?'Add':'Update'}}" (click)="save()"> {{dialogTitle==="Add"?"Add":"Update"}} </button>
             </div>
         </div>
     </kendo-dialog-actions>

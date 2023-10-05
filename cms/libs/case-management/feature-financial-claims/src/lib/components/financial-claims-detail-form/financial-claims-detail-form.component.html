@@ -25,7 +25,7 @@
                             [data]="pharmacySearchResult$ | async" [(ngModel)]="selectedMedicalProvider"
                             (valueChange)="onProviderValueChange($event)"
                             (blur)="showHideServicesListForm()">
-                            <button kendoButton fillMode="clear" icon="image"></button>
+                            <button kendoButton fillMode="clear"  icon="image"></button>
 
                             <kendo-combobox-column>
                                 <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
@@ -156,7 +156,7 @@
                                 <div class=" mb-3">
                                     <div class="flex-space-bw align-items-center">
                                         <h4 class="mar-0">SERVICE {{i+1}}</h4>
-                                        <button class="" kendoButton fillMode="flat" themeColor="error"
+                                        <button class="" kendoButton fillMode="flat" aria-label="Delete" themeColor="error"
                                             (click)="removeService(i)">DELETE</button>
                                     </div>
                                     <div class="flex-row">
@@ -388,8 +388,8 @@
             </div>
             <hr class="row-border" />
             <div class="mt-2">
-                <button class="" kendoButton fillMode="flat" themeColor="primary" (click)="addClaimServiceGroup()">
-                    <span class="material-icons" aria-label="New Claims" aria-hidden="false">add</span>
+                <button class="" kendoButton fillMode="flat" themeColor="primary" aria-label="New Service" (click)="addClaimServiceGroup()">
+                    <span class="material-icons" aria-label="New Service" aria-hidden="false">add</span>
                     New Service</button>
             </div>
             <div>
@@ -413,7 +413,7 @@
         </div>
     </div>
     <div class="d-flex align-items-center mt-1">
-        <button kendoButton [primary]="true" aria-label="Confirm Selections" class="" (click)="save(false)">
+        <button kendoButton [primary]="true" [attr.aria-label]="addOrEdit" (click)="save(false)">
             {{addOrEdit}}
         </button>
         <button kendoButton [primary]="true" look="outline" class="ml-2" aria-label="Cancel"

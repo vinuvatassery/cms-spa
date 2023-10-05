@@ -1,6 +1,6 @@
 <kendo-dialog-titlebar (close)="closeViewProviderClicked()"> {{isEditProvider ? 'Edit' : ''}} Very Nice Provider</kendo-dialog-titlebar>
 <section class="k-dialog-body newcase">
-    <button aria-label="Edit Provider Profile" kendoButton look="flat" class="card-link-button"  *ngIf="!isEditProvider" (click)="editProviderClicked()">Edit </button>
+    <button aria-label="Edit" kendoButton look="flat" class="card-link-button"  *ngIf="!isEditProvider" (click)="editProviderClicked()">Edit </button>
     <div class="detail-items-with-border mt-2 small-input-only-field">
        <table *ngIf="!isEditProvider">
               <caption hidden> Provider Details</caption>
@@ -173,7 +173,7 @@
 <kendo-dialog-actions>
     <div class="justify-content-between" *ngIf="!isEditProvider">
 
-        <button kendoButton [primary]="true" look="flat" class="" aria-label="Provider profile"> Provider profile <span
+        <button kendoButton [primary]="true" look="flat"   aria-label="Provider profile"> Provider profile <span
                 class="material-icons ml-1">
                 chevron_right
             </span></button>

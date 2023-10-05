@@ -54,7 +54,7 @@
                       [primary]="true"
                       class="btn-full-no-radius"
                       (click)="onNewFamilyMemberClicked()"
-                      aria-label="add new family member"
+                      aria-label="Add New Family Member"
                     >
                       ADD NEW FAMILY MEMBER
                     </button>
@@ -95,7 +95,7 @@
             kendoButton
             class="k-danger-link"
             *ngIf="isOpenedEditFamilyMember && !isAddFamilyMember"
-            aria-label="delete family member"
+            aria-label="Remove"
             (click)="onFormDeleteclick()"
           >
             Remove
@@ -104,12 +104,12 @@
         <div class="justify-content-end">
           <button
           kendoButton [primary]="true"  look="outline"
-            aria-label="cancel editing family member"
+            aria-label="Cancel"
             (click)="onFamilyMemberClosed()"
           >
             Cancel
           </button>
-          <button kendoButton [primary]="true" aria-label="add family member">
+          <button kendoButton [primary]="true" attr.aria-label="{{ isOpenedEditFamilyMember && !isAddFamilyMember ? 'UPDATE' : 'ADD' }}">
             {{ isOpenedEditFamilyMember && !isAddFamilyMember ? 'UPDATE' : 'ADD' }}
           </button>
         </div>
@@ -239,21 +239,21 @@
           kendoButton 
           class="k-danger-link"
           *ngIf="isOpenedEditFamilyMember && !isAddFamilyMember"
-          aria-label="delete family member"
+          aria-label="Delete"
           (click)="onFormDeleteclick()" type="button"
         >
-          DELETE
+          Delete
         </button>
       </div>
       <div class="justify-content-end">
         <button
         kendoButton [primary]="true"  look="outline"
-          aria-label="cancel adding family member"
+          aria-label="Cancel"
           (click)="onFamilyMemberClosed()"
         >
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="add family member" [disabled]="btnDisabled">
+        <button kendoButton [primary]="true" attr.aria-label="{{ isOpenedEditFamilyMember && !isAddFamilyMember ? 'UPDATE' : 'ADD' }}" [disabled]="btnDisabled">
           {{ isOpenedEditFamilyMember && !isAddFamilyMember ? 'UPDATE' : 'ADD' }}
         </button>
       </div>

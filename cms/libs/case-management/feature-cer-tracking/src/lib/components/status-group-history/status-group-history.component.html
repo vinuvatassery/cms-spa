@@ -28,8 +28,8 @@
     </kendo-grid-column>
     <kendo-grid-column field="by" title="Record Created By" [width]="80">
         <ng-template kendoGridCellTemplate let-dataItem>
-            <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-                [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avathar">
+            <button  [attr.aria-label]="dataItem.creatorId"  kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
+                [popover]="onUserProfileDetailsHovered" showOn="hover" >
                 <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
             <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
@@ -74,7 +74,7 @@
               kendoButton
               [primary]="true"
               look="outline"
-              aria-label="cancel "
+              aria-label="Cancel"
               (click)="onCancelDelete()"
             >
               Cancel
@@ -82,7 +82,7 @@
             <button
               kendoButton
               class="k-error-button"
-              aria-label="delete "
+              aria-label="Delete"
               (click)="onConfirmGroupDelete()"
             >
               DELETE

@@ -115,7 +115,7 @@
           </ng-template>
 
           </kendo-dropdownbutton>
-          <button aria-label="doc name" *ngIf="dataItem.clientDocumentId !== null && dataItem.clientDocumentId!==' '" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
+          <button [attr.aria-label]="dataItem.documentName" *ngIf="dataItem.clientDocumentId !== null && dataItem.clientDocumentId!==' '" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
             <a>{{dataItem.documentName}}</a>
           </button>
 

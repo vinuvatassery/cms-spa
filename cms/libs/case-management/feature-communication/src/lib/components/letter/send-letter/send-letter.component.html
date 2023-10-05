@@ -57,19 +57,19 @@
   <kendo-dialog-actions *ngIf="isOpenLetterTemplate">
     <div class="justify-content-between bigbtn-wrapper">
       <div class="w100">
-        <button *ngIf="isButtonVisible" kendoButton [primary]="true" look="flat" (click)="onSaveForLaterClicked()" aria-label="save for later">
+        <button *ngIf="isButtonVisible" kendoButton [primary]="true" look="flat" (click)="onSaveForLaterClicked()" aria-label="Save for Later">
           Save for Later
         </button>
-        <button *ngIf="isButtonVisible" kendoButton [primary]="true" look="flat" (click)="onPreviewLetterClicked()" aria-label="preview letter">
+        <button *ngIf="isButtonVisible" kendoButton [primary]="true" look="flat" (click)="onPreviewLetterClicked()" aria-label="Preview Letter">
           Preview Letter
         </button>
       </div>
       <div class="justify-content-end">
         <button kendoButton [primary]="true" look="outline" (click)="onCloseNewLetterClicked()"
-          aria-label="cancel letter">
+          aria-label="Cancel">
           Cancel
         </button>
-        <button kendoButton [primary]="true" (click)="onSendLetterToPrintClicked()" aria-label="send to print">
+        <button kendoButton [primary]="true" (click)="onSendLetterToPrintClicked()" aria-label="Send To Print">
           Send To Print
         </button>
       </div>
@@ -90,7 +90,7 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button kendoButton [primary]="true" (click)="onCloseSaveForLaterClicked()"
-          aria-label="confirmation for save for later">
+          aria-label="OK">
           OK
         </button>
       </div>
@@ -107,13 +107,13 @@
   <kendo-dialog-actions>
     <div class="justify-content-between bigbtn-wrapper ">
       <div class="w100">
-        <button kendoButton [primary]="true" look="flat" (click)="onSendNewLetterClicked()" aria-label="edit letter">
+        <button kendoButton [primary]="true" look="flat" (click)="onSendNewLetterClicked()" aria-label="Edit Letter">
           Edit Letter
         </button>
       </div>
       <div class="justify-content-end align-items-center">
         <span class="pr-2">3 attachment(s) to be pinned</span>
-        <button kendoButton [primary]="true" (click)="onSendLetterToPrintClicked()" aria-label="send to print">
+        <button kendoButton [primary]="true" (click)="onSendLetterToPrintClicked()" aria-label="Send To Print">
           Send To Print
         </button>
       </div>
@@ -130,13 +130,13 @@
   <kendo-dialog-actions>
     <div class="justify-content-between  ">
       <div class="w100">
-        <button kendoButton [primary]="true" look="flat" (click)="onSendNewLetterClicked()" aria-label="edit letter">
+        <button kendoButton [primary]="true" look="flat" (click)="onSendNewLetterClicked()" aria-label="Edit Letter">
           Edit Letter
         </button>
       </div>
       <div class="justify-content-end align-items-center">
         <button kendoButton [primary]="true" (click)="onSendLetterToPrintDialogClicked('Print')"
-          aria-label="print letter">
+          aria-label="Print">
           Print
         </button>
       </div>

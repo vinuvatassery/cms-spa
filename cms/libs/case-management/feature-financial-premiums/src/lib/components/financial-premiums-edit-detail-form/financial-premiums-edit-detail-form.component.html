@@ -108,7 +108,7 @@
                 <div  *ngFor="let adjustment of premium.premiumAdjustments;index as i">   
                     <div class="flex-space-bw align-items-center">
                         <h4 class="mar-0">ADJUSTMENT {{i+1}}</h4>
-                        <button class="" kendoButton fillMode="flat" themeColor="error" (click)="deleteAdjustment(i)">DELETE</button>
+                        <button class="" kendoButton fillMode="flat" aria-label="Delete" themeColor="error" (click)="deleteAdjustment(i)">DELETE</button>
                     </div>
                     <div class="flex-row counter-buttons">
                         <div class="flex-col flex-col-2">
@@ -116,7 +116,7 @@
                                 <button 
                                 kendoButton 
                                 [toggleable]="true" 
-                                aria-label="accept hiv verification" 
+                                aria-label="Positive" 
                                 title="Positive"
                                 themeColor="light" 
                                 [selected]="adjustment.isPositiveAdjustment ?? true"
@@ -127,7 +127,7 @@
                                 kendoButton 
                                 [toggleable]="true"  
                                 themeColor="light" 
-                                aria-label="reject hiv verification" 
+                                aria-label="Negative" 
                                 title="Negative"
                                 [selected]="!(adjustment.isPositiveAdjustment ?? true)"
                                 (selectedChange)="changeAdjustmentSign(false, adjustment)">
@@ -206,7 +206,7 @@
             <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="premiumsType"></cms-financial-premiums-recent-premiums-list>
         </div>
         <div class="d-flex align-items-center mt-1">
-            <button kendoButton [primary]="true" aria-label="Confirm Selections" class="" (click)="save()"> Edit </button>
+            <button kendoButton [primary]="true" aria-label="Edit" class="" (click)="save()"> Edit </button>
             <button kendoButton [primary]="true" look="outline" class="ml-2" aria-label="Cancel"> Cancel </button>
             <span class="ml-2">1 service(s) to be added</span>
         </div>
