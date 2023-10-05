@@ -15,11 +15,14 @@ import {
   SimpleChanges,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult, RowClassArgs } from '@progress/kendo-angular-grid';
+import { DragEndEvent } from '@progress/kendo-angular-sortable';
+import { DragTargetContainerDirective, DropTargetContainerDirective, DropTargetEvent } from '@progress/kendo-angular-utils';
 import {
   CompositeFilterDescriptor,
   State,
@@ -38,6 +41,7 @@ const closest = (node :any, predicate : any) =>
 @Component({
   selector: 'cms-financial-pcas-assignment-list',
   templateUrl: './financial-pcas-assignment-list.component.html',
+   styleUrls: ['./financial-pcas-assignment-list.component.scss'], 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
@@ -77,6 +81,9 @@ export class FinancialPcasAssignmentListComponent implements OnInit  , AfterView
   @Output() addPcaDataEvent = new EventEmitter<any>();
   @Output() loadFinancialPcaAssignmentEvent = new EventEmitter<any>();
   @Output() pcaAssignmentPriorityUpdateEvent = new EventEmitter<any>();
+
+  @ViewChild('wrapper', { read: DragTargetContainerDirective })  dragTargetContainer: any;
+  @ViewChild('wrapper', { read: DropTargetContainerDirective })  dropTargetContainer: any;
 
   public state!: State;
   sortColumn = 'vendorName';
@@ -237,6 +244,22 @@ public rowCallback(context: RowClassArgs) {
   this.groupChange(true)
   }
 
+  public onPriorityChange(e: any): void {
+    
+   const draggedRows = e?.draggedRows[0]?.dataItem
+   const dropTargetRow = e?.dropTargetRow?.dataItem
+  
+   const pcaAssignmentPriorityArguments =
+   {
+     objectId : this.objectCodeIdValue,
+     groupIds :  draggedRows?.groupCodeId,
+     newPriority : dropTargetRow?.priority,
+     pcaAssignmentId : draggedRows?.pcaAssignmentId
+   }
+   this.pcaAssignmentPriorityUpdateEvent.emit(pcaAssignmentPriorityArguments)
+   
+  }
+
   groupChange($event : any)
   {    
     this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;
@@ -279,12 +302,12 @@ public rowCallback(context: RowClassArgs) {
   }
 
   gridDataHandle() {
-    this.financialPcaAssignmentGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridFinancialPcaAssignmentDataSubject.next(this.gridDataResult);
-        this.isFinancialPcaAssignmentGridLoaderShow = false;
-        this.dataStateChange(this.state);
-    });
+    // this.financialPcaAssignmentGridLists$.subscribe((data: GridDataResult) => {
+    //   this.gridDataResult = data;
+    //   this.gridFinancialPcaAssignmentDataSubject.next(this.gridDataResult);
+    //     this.isFinancialPcaAssignmentGridLoaderShow = false;
+    //     this.dataStateChange(this.state);
+    // });
 
   }
   public rowClass = (args:any) => ({
@@ -481,6 +504,8 @@ public rowCallback(context: RowClassArgs) {
 
     })
   }
+
+ 
 }
 
 

@@ -33,7 +33,7 @@
                       <ng-template kendoTabContent>
                           <div class="block-section">
                               <cms-financial-pcas-assignment-list
-                              [financialPcaAssignmentGridLists$]="financialPcaAssignmentGridLists$"
+                              [financialPcaAssignmentGridLists$]="financialPcaAssignmentGridLists$ | async"
                               [objectCodesData$]="objectCodesData$ | async"
                               [groupCodesData$]="groupCodesData$ | async"
                               [pcaCodesData$]="pcaCodesData$ | async"

@@ -94,7 +94,8 @@ export class PcaAssignmentsFacade {
           data: dataResponse['items']?.sort((a : any, b : any) => (a?.priority < b?.priority) ? -1 : 1),
           total: dataResponse?.totalCount,
         };
-        this.financialPcaAssignmentDataSubject.next(gridView);
+        
+        this.financialPcaAssignmentDataSubject.next(dataResponse['items']);
         this.hideLoader();
       },
       error: (err) => {

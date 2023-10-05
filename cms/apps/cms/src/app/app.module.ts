@@ -15,6 +15,7 @@ import { SharedUiCommonModule, SideNavigationComponent } from '@cms/shared/ui-co
 import { ProductivityToolsFeatureNotificationModule } from '@cms/productivity-tools/feature-notification';
 import { CaseManagementFeatureCaseModule } from '@cms/case-management/feature-case';
 import { SystemConfigFeatureTemplateManagementModule } from '@cms/system-config/feature-template-management';
+import { UtilsModule } from "@progress/kendo-angular-utils";
 
 const COMPONENTS = [AppComponent, LayoutComponent, SideNavigationComponent];
 @NgModule({
@@ -31,6 +32,7 @@ const COMPONENTS = [AppComponent, LayoutComponent, SideNavigationComponent];
     ProductivityToolsFeatureNotificationModule,
     CaseManagementFeatureCaseModule,
     SystemConfigFeatureTemplateManagementModule,
+    UtilsModule
   ],
   providers: [ { provide: LOCALE_ID, useValue: 'en-US' } ],
   bootstrap: [AppComponent],
