@@ -1,13 +1,15 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy, Component, Input,
-  OnChanges,
+  OnChanges,ChangeDetectorRef
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { FinancialPcaFacade } from '@cms/case-management/domain';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'cms-financial-pcas-assignment-sub-report-list',
   templateUrl: './financial-pcas-assignment-sub-report-list.component.html',
@@ -27,9 +29,14 @@ export class FinancialPcasAssignmentSubReportListComponent implements OnChanges 
   sortType = "asc"
   gridDataResult!: GridDataResult;
   public formUiStyle: UIFormStyle = new UIFormStyle();
-
+  loader$ = new BehaviorSubject<boolean>(false);
   constructor(
-    private readonly financialPcaFacade: FinancialPcaFacade
+    private readonly financialPcaFacade: FinancialPcaFacade,
+    private cd: ChangeDetectorRef,
+    private readonly loaderService: LoaderService,
+    private readonly configurationProvider: ConfigurationProvider,
+    private loggingService: LoggingService,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
   ) { }
 
   ngOnChanges(): void {
@@ -42,6 +49,7 @@ export class FinancialPcasAssignmentSubReportListComponent implements OnChanges 
   }
 
   loadPcasAssignmentSubReport(data:any) {
+    this.loader$.next(false);
     this.financialPcaFacade.loadFinancialPcaSubReportListGrid(data).subscribe({
       next: (dataResponse:any) => {
         const gridView = {
@@ -49,8 +57,12 @@ export class FinancialPcasAssignmentSubReportListComponent implements OnChanges 
           total: dataResponse['totalCount'],
         };
         this.financialPcaSubReportGridLists$.next(gridView);
+        this.loader$.next(false);
       },
       error: (err:any) => {
+        this.loader$.next(false);
+        this.loggingService.logException(err)
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
     this.gridDataHandle();
@@ -104,4 +116,11 @@ export class FinancialPcasAssignmentSubReportListComponent implements OnChanges 
       filter: { logic: 'and', filters: [] },
     };
   }  
+
+  showLoader() {
+    this.loaderService.show();
+  }
+  hideLoader() {
+    this.loaderService.hide();
+  }
 }
