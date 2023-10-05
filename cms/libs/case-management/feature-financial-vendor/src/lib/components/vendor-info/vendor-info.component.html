@@ -50,8 +50,8 @@
       </table>
       <!-- Last Updated by -->
       <p class="mt-1 mb1">
-        <span class="badge-dot-info bdi-left"></span> Last Updated {{selectedVendorInfo$?.lastModificationTime | date: 'MM/dd/yyyy' }}
-        by
+        <span class="badge-dot-info bdi-left"></span> Last Updated  {{selectedVendorInfo$?.lastModificationTime | date: 'MM/dd/yyyy' }}
+        by  {{selectedVendorInfo$.firstName }} {{selectedVendorInfo$.lastName}} 
         <button
           kendoButton
           [primary]="true"

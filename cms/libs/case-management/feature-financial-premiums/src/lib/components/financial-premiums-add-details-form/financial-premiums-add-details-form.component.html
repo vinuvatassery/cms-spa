@@ -125,6 +125,7 @@
                                         textField="coverageDate" 
                                         valueField="coverageStartDate" 
                                         [valuePrimitive]="true"
+                                        [ngClass]="{'ng-invalid ng-dirty':(dataItem.coverageDateRequired || dataItem.coverageDatesExist)}"
                                         [(ngModel)]="dataItem.coverageDates"
                                         (valueChange)="coverageDatesValueChanges(policyId, dataItem, $event)"
                                         >
@@ -150,6 +151,7 @@
                                     [min]="0"
                                     [decimals]="2"
                                     [maxlength]="15"
+                                    [ngClass]="{'ng-invalid ng-dirty':dataItem.premiumAmountRequired}"
                                     [(ngModel)]="dataItem.premiumAmount"
                                     (valueChange)="premiumAmountValuesChanges(dataItem, $event)"
                                     >
@@ -178,27 +180,26 @@
                             </kendo-grid-column>
                             <kendo-grid-column field="exception" title="Exception Reason" [width]="100">
                                 <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex"> 
-
-                                    <kendo-formerror class="align-items-center" *ngIf="dataItem.premiumExistException"> 
-                                        <span class="material-icons mr-1" aria-hidden="false">info</span> Premium Already Exist! 
-                                        <a kendoButton class="ml-1 card-link-button" (click)="onMakeExceptionClick(dataItem)">{{dataItem.exceptionText}}</a>
-                                      </kendo-formerror> 
-
                                     <kendo-textarea 
                                     *ngIf="dataItem.makeExceptionFlag"
                                     aria-label="Exception Reason" 
                                     [maxlength]="100" 
                                     [rows]="1"
                                     [fillMode]="formUiStyle.inputFillMode"
-                                    resizable="none"                                                                
+                                    resizable="none"
+                                    [ngClass]="{'ng-invalid ng-dirty':dataItem.exceptionReasonRequired}"                                                                
                                     (valueChange)="exceptionReasonCounterChange(dataItem, $event)"
                                     [(ngModel)]="dataItem.exceptionReason"> 
                                     <kendo-textarea-suffix class="justify-content-end">
                                           <span class="counter">{{ dataItem.exceptionReasonCount }}</span>
                                     </kendo-textarea-suffix>
                                     </kendo-textarea>
-                                <kendo-formerror *ngIf="dataItem.exceptionReasonRequired && dataItem.exceptionReason.length === 0">
+                                <kendo-formerror  *ngIf="dataItem.exceptionReasonRequired">
                                     Exception Reason is required
+                                </kendo-formerror>
+                                <kendo-formerror class="align-items-center" *ngIf="dataItem.premiumExistException"> 
+                                        <span class="material-icons mr-1" aria-hidden="false">info</span> Premium Already Exist!                                                                             
+                                        <a kendoButton class="ml-1 card-link-button" (click)="onMakeExceptionClick(dataItem)"><u>{{dataItem.exceptionText}}</u></a>
                                 </kendo-formerror>
                                 </ng-template>
                             </kendo-grid-column>

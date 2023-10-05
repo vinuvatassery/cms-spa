@@ -4,7 +4,8 @@
   [batchLogServicesData$]="batchLogServicesData$"
  [pageSizes]="pageSizes" [sortValue]="sortValue"
  [sortType]="sortType" [sort]="sort" 
- [exportButtonShow$]="exportButtonShow$"     
+ [exportButtonShow$]="exportButtonShow$"   
+ [actionResponse$]="actionResponse$"
  (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
  (loadFinancialPremiumBatchInvoiceListEvent)=loadFinancialPremiumBatchInvoiceList($event)
  (exportGridDataEvent)="exportPremiumBatchesGridData()"
@@ -13,6 +14,7 @@
  [unbatchPremiums$]="unbatchPremiums$"
  [unbatchEntireBatch$]="unbatchEntireBatch$"
  [batchId]="batchId"
+ (deletePaymentEvent)="deletePayment($event)"
  ></cms-financial-premiums-batches-log-lists>
 
  
