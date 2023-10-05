@@ -112,8 +112,8 @@ export class FinancialPremiumsPageComponent implements OnInit {
 
   }
 
-  loadInsurancePlans(clientId: number) {
-    this.financialPremiumsFacade.loadInsurancePlans(clientId);
+  loadInsurancePlans(client: any) {
+    this.financialPremiumsFacade.loadInsurancePlans(client, this.premiumType);
   }
 
   loadInsurancePlansCoverageDates(clientId: number) {

@@ -1,6 +1,6 @@
 /** Angular **/
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 /** External libraries **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, of } from 'rxjs';
@@ -368,9 +368,9 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
   return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${claimsType}/batch`, batchPremiums);
 }
 
-  loadInsurancePlans(clientId: number): Observable<ClientInsurancePlans[]>{
+  loadInsurancePlans(clientId: number, eligibilityId: string, type: string): Observable<ClientInsurancePlans[]>{
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/plans`
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/plans?eligibilityId=${eligibilityId}&type=${type}`
     );
   }
 
@@ -429,5 +429,26 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
 
   unbatchPremium(paymentRequestIds: string[], premiumType: string) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payment-requests/unbatch`, paymentRequestIds);
+  }
+
+  deletePremium(type: string, paymentId: string): Observable<InsurancePremiumDetails> {
+    return this.http.delete<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${type}/payments/${paymentId}`
+    );
+  }
+
+  loadPremiumAdjustments(type: string, paymentId: string, params: GridFilterParam) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${type}/adjustments${params.convertToQueryString()}&paymentId=${paymentId}&type=${type}`
+    );
+  }
+
+  removeSelectedPremiums(selectedPremiumPayments: any, premiumsType: any) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumsType}/payment-requests`, {
+      headers,
+      body: selectedPremiumPayments
+    }
+    );
   }
 }

@@ -14,8 +14,8 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import {  CompositeFilterDescriptor,  State,} from '@progress/kendo-data-query';
-import { Subject, first } from 'rxjs';
+import { CompositeFilterDescriptor, State, } from '@progress/kendo-data-query';
+import { Subject, first, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
 import { PaymentStatusCode } from 'libs/case-management/domain/src/lib/enums/payment-status-code.enum';
@@ -25,8 +25,7 @@ import { PaymentStatusCode } from 'libs/case-management/domain/src/lib/enums/pay
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPremiumsBatchesLogListsComponent
-  implements OnInit, OnChanges
-{
+  implements OnInit, OnChanges  {
   @ViewChild('previewSubmitPaymentDialogTemplate', { read: TemplateRef })
   previewSubmitPaymentDialogTemplate!: TemplateRef<any>;
   @ViewChild('unBatchPaymentPremiumsDialogTemplate', { read: TemplateRef })
@@ -40,36 +39,30 @@ export class FinancialPremiumsBatchesLogListsComponent
   isRequestPaymentClicked = false;
   isSendReportOpened = false;
   isUnBatchPaymentPremiumsClosed = false;
-  isRemoveClaimClosed = false;
   PreviewSubmitPaymentDialog: any;
   UnBatchPaymentDialog: any;
   removePremiumsDialog: any;
   addClientRecentPremiumsDialog: any;
   acceptReportValue = null
-  vendorId:any;
-  clientId:any;
-  clientName:any="";
+  vendorId: any;
+  clientId: any;
+  clientName: any = "";
   PaymentStatusList = [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved];
  
-  yesOrNoLovs:any=[];
+  yesOrNoLovs: any = [];
   onlyPrintAdviceLetter: boolean = true;
   printAuthorizationDialog: any;
   selectedDataRows: any;
   isLogGridExpand = true;
+  paymentId!: any;
+  showDeleteConfirmation = false;
+  private actionResponseSubscription: Subscription | undefined;
   isBulkUnBatchOpened = false;
   @Input() unbatchPremiums$ :any
   @Input() unbatchEntireBatch$ :any
   selected:any
+  noDeleteStatus=['PENDING_APPROVAL','MANAGER_APPROVED']
   public bulkMore = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Send Report',
-      icon: 'mail',
-      click: (data: any): void => {
-        this.isRequestPaymentClicked = false;
-        this.isSendReportOpened = true;
-      },
-    },
     {
       buttonType: 'btn-h-primary',
       text: 'Request Payments',
@@ -124,11 +117,9 @@ export class FinancialPremiumsBatchesLogListsComponent
       text: 'Delete Payment',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.isRemoveClaimClosed) {
-          this.isRemoveClaimClosed = true;
-          this.onRemovePremiumsOpenClicked(
-            this.removePremiumsConfirmationDialogTemplate
-          );
+        if (data && !this.showDeleteConfirmation) {
+          this.showDeleteConfirmation = true;
+          this.onRemovePremiumsOpenClicked(data.paymentRequestId, this.removePremiumsConfirmationDialogTemplate);
         }
       },
     },
@@ -136,7 +127,7 @@ export class FinancialPremiumsBatchesLogListsComponent
 }
 
 
-  dropDowncolumns : any = [
+  dropDowncolumns: any = [
     {
       columnCode: 'itemNbr',
       columnDesc: 'Item #',
@@ -182,18 +173,18 @@ export class FinancialPremiumsBatchesLogListsComponent
       columnDesc: 'Mail Code',
     },
   ]
-  columns : any = {
-    itemNbr:"Item #",
-    vendorName:"Insurance Vendor",
-    serviceCount:"Item Count",
-    serviceCost:"Total Amount",
-    acceptsReports:"Accepts reports?",
-    paymentRequestedDate:"Date Pmt. Requested",
-    paymentSentDate:"Date Pmt. Sent",
-    paymentMethodCode:"Pmt. Method",
-    paymentStatusCode:"Pmt. Status",
-    pca:"PCA",
-    mailCode:"Mail Code"
+  columns: any = {
+    itemNbr: "Item #",
+    vendorName: "Insurance Vendor",
+    serviceCount: "Item Count",
+    serviceCost: "Total Amount",
+    acceptsReports: "Accepts reports?",
+    paymentRequestedDate: "Date Pmt. Requested",
+    paymentSentDate: "Date Pmt. Sent",
+    paymentMethodCode: "Pmt. Method",
+    paymentStatusCode: "Pmt. Status",
+    pca: "PCA",
+    mailCode: "Mail Code"
   }
   @Input() premiumsType: any;
   @Input() pageSizes: any;
@@ -201,16 +192,18 @@ export class FinancialPremiumsBatchesLogListsComponent
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchLogGridLists$: any;
-  @Input() batchLogServicesData$ : any;
+  @Input() batchLogServicesData$: any;
   @Output() loadBatchLogListEvent = new EventEmitter<any>();
   @Input() batchId: any;
-  @Input() exportButtonShow$ : any
+  @Input() exportButtonShow$: any
+  @Input() actionResponse$: any;
 
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
-  @Output() loadFinancialPremiumBatchInvoiceListEvent =  new EventEmitter<any>();
+  @Output() loadFinancialPremiumBatchInvoiceListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();   
   @Output() unBatchEntireBatchEvent = new EventEmitter<any>(); 
   @Output() unBatchPremiumEvent = new EventEmitter<any>();
+  @Output() deletePaymentEvent = new EventEmitter();
 
   public state!: State;
   showExportLoader = false;
@@ -231,13 +224,14 @@ export class FinancialPremiumsBatchesLogListsComponent
   sendReportDialog: any;
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService,
-     public activeRoute: ActivatedRoute,private readonly lovFacade: LovFacade,
-     private readonly  cdr : ChangeDetectorRef) {}
+    public activeRoute: ActivatedRoute, private readonly lovFacade: LovFacade,
+    private readonly cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.loadBatchLogListGrid();
     this.lovFacade.getYesOrNoLovs();
     this.loadYesOrNoLovs();
+    this.addActionRespSubscription();
   }
   ngOnChanges(): void {
     this.state = {
@@ -247,11 +241,11 @@ export class FinancialPremiumsBatchesLogListsComponent
     };
 
     this.loadBatchLogListGrid();
+    this.unsubscribeFromActionResponse();
   }
 
-  loadFinancialPremiumBatchInvoiceList(data : any)
-  {
-     this.loadFinancialPremiumBatchInvoiceListEvent.emit(data)
+  loadFinancialPremiumBatchInvoiceList(data: any) {
+    this.loadFinancialPremiumBatchInvoiceListEvent.emit(data)
   }
 
   private loadBatchLogListGrid(): void {
@@ -376,18 +370,18 @@ export class FinancialPremiumsBatchesLogListsComponent
   }
 
   backToBatch(event: any) {
-    this.route.navigate(['/financial-management/premiums/' + this.premiumsType] );
+    this.route.navigate(['/financial-management/premiums/' + this.premiumsType]);
   }
 
   goToBatchItems(event: any) {
-    this.route.navigate(['/financial-management/premiums/' + this.premiumsType +'/batch/items'] );
+    this.route.navigate(['/financial-management/premiums/' + this.premiumsType + '/batch/items']);
   }
 
-  navToReconcilePayments(event: any) {
-    this.route.navigate([
-      '/financial-management/premiums/'+ this.premiumsType +'/batch/reconcile-payments',
-    ]);
+  navToReconcilePayments(event : any){
+    this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch/reconcile-payments`],
+    { queryParams :{bid: this.batchId}});
   }
+
   public onPreviewSubmitPaymentOpenClicked(
     template: TemplateRef<unknown>
   ): void {
@@ -474,36 +468,41 @@ export class FinancialPremiumsBatchesLogListsComponent
       });
   }
   
-  public onRemovePremiumsOpenClicked(template: TemplateRef<unknown>): void {
+  public onRemovePremiumsOpenClicked(paymentRequestId: string, template: TemplateRef<unknown>): void {
+    this.paymentId = paymentRequestId;
     this.removePremiumsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
+
   onModalRemovePremiumsModalClose(result: any) {
     if (result) {
+      this.showDeleteConfirmation = false;
       this.removePremiumsDialog.close();
     }
   }
 
+  deletePremiumPayment(paymentId: string) {
+    this.deletePaymentEvent.emit(this.paymentId);
+  }
 
-
-  clientRecentPremiumsModalClicked (template: TemplateRef<unknown>, data: any): void {
+  clientRecentPremiumsModalClicked(template: TemplateRef<unknown>, data: any): void {
     this.addClientRecentPremiumsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
-      animation:{
+      animation: {
         direction: 'up',
-        type:'slide',
+        type: 'slide',
         duration: 200
       }
     });
-    this.vendorId="3F111CFD-906B-4F56-B7E2-7FCE5A563C36";
-    this.clientId=5;
-    this.clientName="Jason Biggs";
+    this.vendorId = "3F111CFD-906B-4F56-B7E2-7FCE5A563C36";
+    this.clientId = 5;
+    this.clientName = "Jason Biggs";
   }
 
-  closeRecentPremiumsModal(result: any){
+  closeRecentPremiumsModal(result: any) {
     if (result) {
       this.addClientRecentPremiumsDialog.close();
     }
@@ -511,14 +510,14 @@ export class FinancialPremiumsBatchesLogListsComponent
 
   private loadYesOrNoLovs() {
     this.yesOrNoLov$
-    .subscribe({
-      next: (data: any) => {
-        this.yesOrNoLovs=data;
-      }
-    });
+      .subscribe({
+        next: (data: any) => {
+          this.yesOrNoLovs = data;
+        }
+      });
   }
 
-  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+  dropdownFilterChange(field: string, value: any, filterService: FilterService): void {
 
     this.acceptReportValue = value
     this.filterData = {
@@ -573,19 +572,33 @@ export class FinancialPremiumsBatchesLogListsComponent
     this.closeRecentPremiumsModal(true);
   }
 
-  onClickedExport(){
+  onClickedExport() {
     this.showExportLoader = true
-    this.exportGridDataEvent.emit()    
-    
-    this.exportButtonShow$
-    .subscribe((response: any) =>
-    {
-      if(response)
-      {        
-        this.showExportLoader = false
-        this.cdr.detectChanges()
-      }
+    this.exportGridDataEvent.emit()
 
-    })
+    this.exportButtonShow$
+      .subscribe((response: any) => {
+        if (response) {
+          this.showExportLoader = false
+          this.cdr.detectChanges()
+        }
+
+      })
+  }
+
+  /* Private Methods */
+  private addActionRespSubscription() {
+    this.actionResponseSubscription = this.actionResponse$.subscribe((resp: boolean) => {
+      if (resp) {
+        this.onModalRemovePremiumsModalClose(true);
+        this.loadBatchLogListGrid();
+      }
+    });
+  }
+
+  private unsubscribeFromActionResponse() {
+    if (this.actionResponseSubscription) {
+      this.actionResponseSubscription.unsubscribe();
+    }
   }
 }
