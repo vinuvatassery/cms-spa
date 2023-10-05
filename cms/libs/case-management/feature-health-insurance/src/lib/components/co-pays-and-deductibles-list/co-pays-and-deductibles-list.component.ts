@@ -86,6 +86,7 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   // Loading the grid data based on pagination
 
   private loadCoPayDeductiblesData(): void {
+    
     this.loadCoPayDeductiblesList(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,

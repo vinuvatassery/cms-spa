@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { FinancialVendorFacade, FinancialVendorTypeCode, HealthInsurancePlan, ServiceSubTypeCode} from '@cms/case-management/domain';
+import { ClientProfileTabs, FinancialVendorFacade, FinancialVendorTypeCode, HealthInsurancePlan, ServiceSubTypeCode} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 
@@ -33,7 +33,7 @@ medicalProviderForm: FormGroup;
 public get vendorTypes(): typeof FinancialVendorTypeCode {
   return FinancialVendorTypeCode;
 }
-readonly financialProvider = 'medical';
+ providerName = 'Medical';
 
   buildVendorForm() {
     this.medicalProviderForm.reset();
@@ -70,13 +70,14 @@ readonly financialProvider = 'medical';
   ) {
     this.healthInsuranceForm = this.formBuilder.group({});
     this.medicalProviderForm = this.formBuilder.group({});
+
   }
   searchMedicalProvider(searchText: any) {
     
     if (!searchText || searchText.length == 0) {
       return;
     }
-   this.financialVendorFacade.searchInsurnaceVendor(searchText, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+   this.financialVendorFacade.searchInsurnaceVendor(searchText, this.claimsType == this.providerName ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
   }
   onProviderValueChange($event: any) {
     
@@ -92,7 +93,11 @@ readonly financialProvider = 'medical';
   }
   ngOnInit(): void {
     
-   
+    alert(this.ddlInsuranceType)
+    if(this.ddlInsuranceType==HealthInsurancePlan.DentalInsurance)
+    {
+      this.providerName="Dental";
+    }
 
     this.lovFacade.getPremiumFrequencyLovs();
     this.buildVendorForm();

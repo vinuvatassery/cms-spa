@@ -22,7 +22,8 @@ import {
   ExceptionTypeCode,
   PaymentRequestType,
   FinancialClaims,
-  PaymentMethodCode
+  PaymentMethodCode,
+  HealthInsurancePlan
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  Lov, LovFacade } from '@cms/system-config/domain';
@@ -73,7 +74,7 @@ export class MedicalPaymentDetailComponent {
   paymentRequest !: PaymentRequest;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   @Input() claimsType: any;
-  readonly financialProvider = 'medical';
+  financialProvider = 'medical';
   selectedMedicalProvider: any;
   isRecentClaimShow = false;
   vendorId: any;
@@ -115,11 +116,16 @@ export class MedicalPaymentDetailComponent {
     private readonly financialClaimsFacade: FinancialClaimsFacade,
   ) {
     this.copayPaymentForm = this.formBuilder.group({});
+   
   }
 
   /** Lifecycle hooks **/
   ngOnInit(){
-    
+    alert(this.tabStatus);
+    if(this.tabStatus==ClientProfileTabs.DENTAL_INSURANCE_COPAY)
+    {
+      this.financialProvider="Dental";
+    }
     this.paymentRequestType$.subscribe((paymentRequestTypes) => {    
       let parentRequestTypes = paymentRequestTypes.filter(x => x.parentCode == null);
       let refactoredPaymentRequestTypeArray :Lov[] =[]
@@ -144,10 +150,12 @@ export class MedicalPaymentDetailComponent {
    
     this.initClaimForm();
     this.commentCounterInitiation();
-    if(this.tabStatus=='hlt-ins-co-pay'){
+    if(this.tabStatus==ClientProfileTabs.DENTAL_INSURANCE_COPAY){
+      
       this.loadServiceProviderName(InsuranceStatusType.healthInsurance,'VENDOR_PAYMENT_REQUEST',this.clientId,this.caseEligibilityId);
     }
     else{
+      
       this.loadServiceProviderName(InsuranceStatusType.dentalInsurance,'VENDOR_PAYMENT_REQUEST',this.clientId,this.caseEligibilityId);
     }
     this.addClaimServiceGroup();
@@ -468,8 +476,8 @@ export class MedicalPaymentDetailComponent {
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
-  }
+      this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType !=this.tabStatus? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+ }
  
   onProviderValueChange($event: any) {
     this.isRecentClaimShow = false;

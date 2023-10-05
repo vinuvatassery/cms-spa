@@ -336,6 +336,7 @@ export class FinancialClaimsDataService {
   }
 
   searchPharmacies(searchText: string, typeCode: string) {
+    
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
       return this.http.get<Pharmacy[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/SearchText=${searchText}`

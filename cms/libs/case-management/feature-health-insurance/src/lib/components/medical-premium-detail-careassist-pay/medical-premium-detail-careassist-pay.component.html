@@ -27,10 +27,10 @@
             </div>
         </div>
         <div  *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
-            <kendo-floatinglabel text="Search {{claimsType | titlecase}} Provider by name or TIN">
+            <kendo-floatinglabel text="Search {{providerName|titlecase}} Provider by name or TIN">
     <kendo-multicolumncombobox textField="providerFullName"
         [fillMode]="formUiStyle.dropDownFillMode"
-        placeholder="Search {{claimsType | titlecase}} Provider by name or TIN"
+        placeholder="Search {{providerName | titlecase}} Provider by name or TIN"
         [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
         (filterChange)="searchMedicalProvider($event)"
         [data]="insuranceVendorsSearchResult$ | async" 
@@ -68,7 +68,7 @@
      <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceVendorAddressId'].valid && isViewContentEditable==false"
     class="d-flex align-items-center">
    
-    Vendor is required
+   {{providerName}} Vendor is required
 </kendo-formerror>
     </kendo-floatinglabel>
     <span class="fontsize_twel">Don't see the vendor you're looking for?</span>
