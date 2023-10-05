@@ -29,7 +29,7 @@
 
 
 <div class="app-c-table">
-  <kendo-grid [resizable]="true" [loading]="isFinancialPremiumsProcessGridLoaderShow" [pageSize]="state.take"
+  <kendo-grid [resizable]="true" [loading]="(gridLoaderSubject | async) === true" [pageSize]="state.take"
     [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true" [filter]="state.filter"
     [columnMenu]="{ filter: true }" [sort]="state.sort" [navigable]="isProcessGridExpand"
     (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="selectableSettings"
@@ -237,14 +237,15 @@
         </ng-template>
       </kendo-grid-column>
 
-      <ng-container *ngIf="!(isSendReportOpened || isRemoveBatchClosed)">
-        <div *kendoGridDetailTemplate="let dataItem">
+      <ng-container *ngIf="!(isSendReportOpened || isRemoveBatchClosed) && (gridLoaderSubject | async) === false">
+        <div *kendoGridDetailTemplate="let dataItem" [ngStyle]="{width:'25%'}">
+          <div class="flex-col flex-space-bw align-items-center mb-1">
+            <h4 class="title-md mb-0 text-bold">Adjustments</h4>
+          </div>
             <cms-financial-premium-adjustment
             [adjustmentId]="dataItem.paymentRequestId"
             [pageSizes]="pageSizes"
-            [adjustments$]="adjustments$"
-            [adjustmentsLoader$]="adjustmentsLoader$"
-            (loadAdjustmentsEvent)="loadAdjustments($event)">
+            [premiumsType]="premiumsType">
             </cms-financial-premium-adjustment>
         </div>
       </ng-container>

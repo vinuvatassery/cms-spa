@@ -53,8 +53,6 @@ export class FinancialPremiumsPageComponent implements OnInit {
   batchingPremium$ = this.financialPremiumsFacade.batchPremium$;
   financialPremiumPaymentLoader$ = this.financialPremiumsFacade.financialPremiumPaymentLoader$;
   insurancePremium$ = this.financialPremiumsFacade.insurancePremium$;
-  adjustments$= this.financialPremiumsFacade.adjustments$;
-  adjustmentsLoader$ = this.financialPremiumsFacade.adjustmentsLoader$;
   premiumType: any;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
@@ -140,9 +138,5 @@ export class FinancialPremiumsPageComponent implements OnInit {
 
   updatePremium(premium:any){
     this.financialPremiumsFacade.updatePremium(this.premiumType, premium.premiumId, premium);
-  }
-
-  loadAdjustments(data: any){
-    this.financialPremiumsFacade.loadPremiumAdjustments(this.premiumType, data.paymentId, data.params);
   }
 }
