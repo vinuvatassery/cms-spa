@@ -98,7 +98,6 @@ export class ApprovalPageComponent implements OnInit {
   }
   
   loadSubmittedSummary(events:any): void {
-    debugger;
     this.pendingApprovalPaymentFacade.loadSubmittedSummary(events);
   }
 
