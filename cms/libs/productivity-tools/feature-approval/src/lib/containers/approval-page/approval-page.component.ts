@@ -62,19 +62,20 @@ export class ApprovalPageComponent implements OnInit {
   }
 
   getUserRole(){
-    if(this.userManagementFacade.hasRole("FM1")){
-      this.userLevel = 1;
-      return;
-    }
     if(this.userManagementFacade.hasRole("FM2")){
       this.userLevel = 2;
+      return;
     }
+    if(this.userManagementFacade.hasRole("FM1")){
+      this.userLevel = 1;  
+    }    
   }
 
-  loadApprovalsPaymentsGrid(gridDataValue : any): void {
+  loadApprovalsPaymentsGrid(gridDataValue : any): void {    
     if(!gridDataValue.selectedPaymentType || gridDataValue.selectedPaymentType.length == 0){
       return;
     }
+    this.getUserRole();
     this.dataExportParameters = gridDataValue;
     this.pendingApprovalPaymentFacade.getPendingApprovalPaymentGrid(gridDataValue , gridDataValue.selectedPaymentType, this.userLevel)
   }
@@ -90,6 +91,7 @@ export class ApprovalPageComponent implements OnInit {
     if(!gridDataValue.selectedPaymentType || gridDataValue.selectedPaymentType.length == 0){
       return;
     }
+    this.getUserRole();
     this.pendingApprovalPaymentFacade.getPendingApprovalPaymentMainList(gridDataValue , gridDataValue.selectedPaymentType, this.userLevel)
   }
 
