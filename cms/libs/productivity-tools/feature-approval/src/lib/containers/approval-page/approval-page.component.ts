@@ -63,7 +63,7 @@ export class ApprovalPageComponent implements OnInit {
   getUserRole(){
     this.userDataService.getProfile$.subscribe((profile:any)=>{
       if(profile?.length>0){
-        if(this.userManagementFacade.hasRole(UserRoleType.Level1)){
+        if(this.userManagementFacade.hasRole(UserRoleType.Level2)){
           this.userLevel = 2;
         }
         else if(this.userManagementFacade.hasRole(UserRoleType.Level1)){
