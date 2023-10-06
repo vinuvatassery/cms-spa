@@ -9,7 +9,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { ConfigurationProvider, LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
 import { FinancialVendorDataService } from '../../infrastructure/financial-management/vendor.data.service';
 import { FinancialVendorTypeCode } from '../../enums/financial-vendor-type-code';
-import { Pharmacy } from '@cms/case-management/domain';
+import { Pharmacy } from '../../entities/client-pharmacy';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorFacade {

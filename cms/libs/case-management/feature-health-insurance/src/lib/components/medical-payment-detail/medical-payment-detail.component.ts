@@ -121,7 +121,6 @@ export class MedicalPaymentDetailComponent {
 
   /** Lifecycle hooks **/
   ngOnInit(){
-    alert(this.tabStatus);
     if(this.tabStatus==ClientProfileTabs.DENTAL_INSURANCE_COPAY)
     {
       this.financialProvider="Dental";

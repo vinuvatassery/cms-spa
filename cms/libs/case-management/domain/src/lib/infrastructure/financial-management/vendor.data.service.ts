@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { FinancialVendorProviderTabCode } from '../../enums/financial-vendor-provider-tab-code';
-import { Pharmacy } from '@cms/case-management/domain';
+import { Pharmacy } from '../../entities/client-pharmacy';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorDataService {

@@ -91,9 +91,7 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
   {
        return null;
   }
-  ngOnInit(): void {
-    
-    alert(this.ddlInsuranceType)
+  ngOnInit(): void {    
     if(this.ddlInsuranceType==HealthInsurancePlan.DentalInsurance)
     {
       this.providerName="Dental";
