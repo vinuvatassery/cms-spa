@@ -141,20 +141,16 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider) {}
 
-  ngOnInit(): void {
+   ngOnInit(): any {
     this.lovFacade.getPandingApprovalPaymentTypeLov();
     this.defaultPaymentType();
     this.getLoggedInUserProfile();
-    this.gridDataHandle();
-    this.loadApprovalPaymentsListGrid();     
   }
 
   private defaultPaymentType() {
-    this.pendingApprovalPaymentType$.subscribe({
+     this.pendingApprovalPaymentType$.subscribe({
       next: (value) => {
         this.selectedPaymentType = value[0].lovCode;
-      },
-      complete:()=> {
         this.onPaymentTypeCodeValueChange(this.selectedPaymentType);
       },
     });
@@ -170,7 +166,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-    this.loadApprovalPaymentsListGrid();
   }
 
   getLoggedInUserProfile(){
