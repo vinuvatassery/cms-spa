@@ -53,12 +53,16 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   @Input() updateProviderPanelSubject$:any
   @Input() ddlStates$ :any
   @Input() paymentMethodCode$ :any
+  @Input() exportButtonShow$ : any
+
   @Output() loadBatchItemsListEvent = new EventEmitter<any>();
   @Output() loadPaymentPanel = new EventEmitter<any>();
   @Output()  updatePaymentPanel  = new EventEmitter<PaymentPanel>();
   @Output() getProviderPanelEvent = new EventEmitter<any>();
   @Output() updateProviderProfileEvent = new EventEmitter<any>();
   @Output() onEditProviderProfileEvent = new EventEmitter<any>(); 
+  @Output() exportGridDataEvent = new EventEmitter<any>();
+
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -85,7 +89,8 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   serviceGridColumnName = ''; 
- 
+  showExportLoader = false;
+
   gridColumns : {[key: string]: string} = {
     clientFullName: 'Client Name',
     nameOnInsuranceCard: 'Name on Primary Insurance Card',
@@ -96,6 +101,41 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
     coverageDates: 'Coverage Dates',
     premiumAmount: 'premiumAmount'
   };
+
+  dropDowncolumns : any = [
+    {
+      columnCode: 'clientFullName',
+      columnDesc: 'Client Name',
+    },
+    {
+      columnCode: 'nameOnInsuranceCard',
+      columnDesc: 'Name on Primary Insurance Card',
+    },
+    {
+      columnCode: 'paymentStatus',
+      columnDesc: 'Payment Status',
+    },
+    {
+      columnCode: 'clientId',
+      columnDesc: 'Client ID',
+    },
+    {
+      columnCode: 'planName',
+      columnDesc: 'Plan Name',
+    },
+    {
+      columnCode: 'insuranceType',
+      columnDesc: 'Insurance Type',
+    },
+    {
+      columnCode: 'coverageStartDate',
+      columnDesc: 'Coverage Dates',
+    },
+    {
+      columnCode: 'premiumAmount',
+      columnDesc: 'premiumAmount',
+    }
+  ];
 
   public batchItemGridActions = [
     {
@@ -277,6 +317,22 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
       }
     });
     this.isBatchLogItemsGridLoaderShow = false;
+  }
+
+  onClickedExport(){
+    this.showExportLoader = true
+    this.exportGridDataEvent.emit()    
+    
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {        
+        this.showExportLoader = false
+        this.cd.detectChanges()
+      }
+
+    })
   }
 
   backToBatchLog(event : any){  

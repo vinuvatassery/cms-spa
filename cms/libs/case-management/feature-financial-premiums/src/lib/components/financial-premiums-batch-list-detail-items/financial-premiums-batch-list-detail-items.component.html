@@ -56,22 +56,24 @@
                               <kendo-floatinglabel>
                                     <kendo-dropdownlist aria-label="All Columns"
                                           [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc"
-                                          valueField="columnCode">
+                                          valueField="columnCode" [(ngModel)]="selectedColumn" [data]="dropDowncolumns">
                                     </kendo-dropdownlist>
                               </kendo-floatinglabel>
                         </span>
                         <span class="filter-section_items filter--search">
                               <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
                               <kendo-floatinglabel text="Search">
-                                    <kendo-textbox aria-label="Search case" rounded="medium"
-                                          [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                    <kendo-textbox aria-label="Search case" rounded="medium" [(ngModel)]="searchValue"
+                                     (afterValueChanged)="onChange($event)" [fillMode]="formUiStyle.inputFillMode">
+                                    </kendo-textbox>
 
                               </kendo-floatinglabel>
                         </span>
                         <span class="right-overlay-export">
-                              <button kendoButton [primary]="true" look="flat" class="button-lg">
-                                    <span class="material-icons" aria-label="export"
-                                          aria-invalid="true">exit_to_app</span><i class="exp_button-text">Export</i>
+                              <button kendoButton [primary]="true" look="flat" class="button-lg" (click)="onClickedExport()"
+                              [disabled]="showExportLoader">
+                                    <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>
+                                    <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
                               </button>
                         </span>
                   </section>
@@ -160,7 +162,7 @@
                                           <ng-template kendoGridCellTemplate let-dataItem>
                                               <p><span class="tableamountview"> <strong>$</strong> {{dataItem.premiumAmt}}</span></p>
                                               <p *ngFor="let pay of dataItem.paymentDetails">
-                                                <span class="tableamountview text-muted"><i>{{pay.amountDue}}</i></span>  
+                                                <span class="tableamountview text-muted"><strong>{{pay.amountDue && pay.amountDue >= 0 ? '+' : '-'}}</strong><i>{{pay.amountDue}}</i></span>  
                                               </p>
                                           </ng-template> 
                                     </kendo-grid-column>  

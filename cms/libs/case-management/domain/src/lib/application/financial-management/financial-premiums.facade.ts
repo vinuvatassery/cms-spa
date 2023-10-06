@@ -298,7 +298,7 @@ export class FinancialPremiumsFacade {
     this.batchItemsLoaderSubject.next(true);
     this.financialPremiumsDataService.loadBatchItemsListService(batchId, paymentId, params).subscribe({
       next: (dataResponse) => {
-        this.batchItemsDataSubject.next(dataResponse);
+        this.batchItemsDataSubject.next(dataResponse.items);
         this.batchItemsLoaderSubject.next(false);
       },
       error: (err) => {
