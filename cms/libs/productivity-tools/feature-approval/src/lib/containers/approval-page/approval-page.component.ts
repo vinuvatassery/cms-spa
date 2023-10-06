@@ -3,7 +3,7 @@ import { Component,  ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
-import { ApprovalFacade, PendingApprovalPaymentFacade } from '@cms/productivity-tools/domain';
+import { ApprovalFacade, PendingApprovalPaymentFacade, UserRoleType } from '@cms/productivity-tools/domain';
 import { ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, DocumentFacade } from '@cms/shared/util-core';
 import { NotificationService } from '@progress/kendo-angular-notification';
 import { NavigationMenuFacade, UserManagementFacade, UserDataService } from '@cms/system-config/domain';
@@ -63,10 +63,10 @@ export class ApprovalPageComponent implements OnInit {
   getUserRole(){
     this.userDataService.getProfile$.subscribe((profile:any)=>{
       if(profile?.length>0){
-        if(this.userManagementFacade.hasRole("FM2")){
+        if(this.userManagementFacade.hasRole(UserRoleType.Level1)){
           this.userLevel = 2;
         }
-        else if(this.userManagementFacade.hasRole("FM1")){
+        else if(this.userManagementFacade.hasRole(UserRoleType.Level1)){
           this.userLevel = 1;
         }
         this.navigationMenuFacade.getAllPendingApprovalPaymentCount(this.userLevel);
