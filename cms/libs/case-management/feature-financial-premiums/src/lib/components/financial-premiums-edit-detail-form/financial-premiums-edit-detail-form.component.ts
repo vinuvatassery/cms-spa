@@ -118,7 +118,7 @@ export class FinancialPremiumsEditDetailFormComponent implements OnInit, OnDestr
 
   duplicateCoverageCheck() {
     this.premium?.premiumAdjustments?.forEach((parent: PremiumAdjustment) => {
-      const coveragesExists = this.premium?.premiumAdjustments?.filter((child: PremiumAdjustment) => child.coverageStartDate === parent.coverageStartDate);
+      const coveragesExists = this.premium?.premiumAdjustments?.filter((child: PremiumAdjustment) => child.coverageStartDate && child.coverageStartDate === parent.coverageStartDate);
       if (coveragesExists.length > 0) {
         if (coveragesExists?.length > 1) {
           coveragesExists?.forEach((i: PremiumAdjustment) => {
