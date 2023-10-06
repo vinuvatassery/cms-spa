@@ -313,8 +313,8 @@ export class HealthInsurancePolicyDataService {
       paymentRequest
     );
     }else{
-      return this.http.post<any>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments/Save`,
+      return this.http.put<any>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments`,
         paymentRequest
       );
     }  

@@ -291,7 +291,6 @@ export class MedicalPaymentDetailComponent {
   save() {    
     this.setExceptionValidation();
     this.isSubmitted = true;
-
     if (!this.claimForm.valid) {
       this.claimForm.markAllAsTouched()
       return;
@@ -310,7 +309,7 @@ export class MedicalPaymentDetailComponent {
       exceptionTypeCode: formValues.parentExceptionTypeCode,
       exceptionReasonCode: formValues.parentReasonForException,
       serviceSubTypeCode: this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
-      pcaCode:0,
+      pcaCode:formValues.pcaCode,
       tpaInvoices: [{}],
     };
     let checkDeniedClaim = false;
@@ -332,7 +331,7 @@ export class MedicalPaymentDetailComponent {
         tpaInvoiceId: element.tpaInvoiceId,
         exceptionFlag: element.exceptionFlag,
         exceptionTypeCode: element.exceptionTypeCode,
-        pcaCode: element.pcaCode,
+        pcaCode:element.pcaCode,
         entryDate:element.entryDate
       };
       if (
