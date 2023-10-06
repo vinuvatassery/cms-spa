@@ -30,8 +30,7 @@ export class PendingApprovalPaymentService {
       Sorting: gridSetupData.sort,
       SkipCount: gridSetupData.skipCount,
       MaxResultCount: gridSetupData.pagesize,
-      ColumnName : gridSetupData.gridDataRefinerValue.columnName,
-      Filter: gridSetupData.filter,
+      Filter: JSON.stringify(gridSetupData.gridDataRefinerValue.filter),
     };
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/serviceSubType=${serviceSubType}/level=${level}`,
