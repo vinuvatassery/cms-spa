@@ -6,7 +6,7 @@ import { State } from '@progress/kendo-data-query';
 import { ApprovalFacade, PendingApprovalPaymentFacade } from '@cms/productivity-tools/domain';
 import { ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, DocumentFacade } from '@cms/shared/util-core';
 import { NotificationService } from '@progress/kendo-angular-notification';
-import { NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { NavigationMenuFacade, UserManagementFacade, UserDataService } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
@@ -35,7 +35,7 @@ export class ApprovalPageComponent implements OnInit {
   userLevel = 1;
 
   state!: State;
-  approvalsGeneralLists$ = this.approvalFacade.approvalsGeneralList$; 
+  approvalsGeneralLists$ = this.approvalFacade.approvalsGeneralList$;
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalCount$;
   approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
@@ -45,16 +45,15 @@ export class ApprovalPageComponent implements OnInit {
   batchDetailPaymentsList$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
   batchDetailPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
   /** Constructor **/
-  constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,     
+  constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,
               private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService,
               private pendingApprovalPaymentFacade: PendingApprovalPaymentFacade,
               private userManagementFacade: UserManagementFacade,
               private navigationMenuFacade: NavigationMenuFacade,
-              private documentFacade :  DocumentFacade) {                
+              private documentFacade :  DocumentFacade,  private readonly userDataService: UserDataService) {
               }
   ngOnInit(): void {
     this.getUserRole();
-    this.navigationMenuFacade.getAllPendingApprovalPaymentCount(this.userLevel);
   }
 
    loadApprovalsGeneralGrid(event: any): void {
@@ -62,36 +61,38 @@ export class ApprovalPageComponent implements OnInit {
   }
 
   getUserRole(){
-    if(this.userManagementFacade.hasRole("FM2")){
-      this.userLevel = 2;
-      return;
-    }
-    if(this.userManagementFacade.hasRole("FM1")){
-      this.userLevel = 1;  
-    }    
+    this.userDataService.getProfile$.subscribe((profile:any)=>{
+      if(profile?.length>0){
+        if(this.userManagementFacade.hasRole("FM2")){
+          this.userLevel = 2;
+        }
+        else if(this.userManagementFacade.hasRole("FM1")){
+          this.userLevel = 1;
+        }
+        this.navigationMenuFacade.getAllPendingApprovalPaymentCount(this.userLevel);
+      }
+    })
   }
 
-  loadApprovalsPaymentsGrid(gridDataValue : any): void {    
+  loadApprovalsPaymentsGrid(gridDataValue : any): void {
     if(!gridDataValue.selectedPaymentType || gridDataValue.selectedPaymentType.length == 0){
       return;
     }
-    this.getUserRole();
     this.dataExportParameters = gridDataValue;
     this.pendingApprovalPaymentFacade.getPendingApprovalPaymentGrid(gridDataValue , gridDataValue.selectedPaymentType, this.userLevel)
   }
-  
+
   loadImportedClaimsGrid(event: any): void {
     this.approvalFacade.loadImportedClaimsLists();
   }
   notificationTriger(){
     this.approvalFacade.NotifyShowHideSnackBar(ReminderSnackBarNotificationType.LIGHT, ' Generic reminder displays at 9AM on the day of the reminder Generic reminder displays at 9AM on the day of the reminder');
-    
+
   }
   loadApprovalsPaymentsMain(gridDataValue : any): void {
     if(!gridDataValue.selectedPaymentType || gridDataValue.selectedPaymentType.length == 0){
       return;
     }
-    this.getUserRole();
     this.pendingApprovalPaymentFacade.getPendingApprovalPaymentMainList(gridDataValue , gridDataValue.selectedPaymentType, this.userLevel)
   }
 
@@ -101,7 +102,7 @@ export class ApprovalPageComponent implements OnInit {
     }
     this.pendingApprovalPaymentFacade.getPendingApprovalBatchDetailPaymentsGrid(gridDataValue, gridDataValue.batchId, gridDataValue.selectedPaymentType)
   }
-  
+
   loadSubmittedSummary(events:any): void {
     this.pendingApprovalPaymentFacade.loadSubmittedSummary(events);
   }
