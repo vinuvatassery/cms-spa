@@ -80,9 +80,9 @@ export class FinancialVendorFacade {
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
     this.hideLoader();
   }
-  searchInsurnaceVendor(searchText: string, typeCode: string) {
+  searchInsurnaceVendor(searchText: string) {
     this.medicalProviderSearchLoaderVisibilitySubject.next(true);
-    return this.financialVendorDataService.searchInsurnaceVendor(searchText, typeCode).subscribe({
+    return this.financialVendorDataService.searchInsurnaceVendor(searchText).subscribe({
       next: (response: Pharmacy[]) => {
         response?.forEach((vendor:any) => {
           vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;

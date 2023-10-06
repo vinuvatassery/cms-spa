@@ -77,7 +77,7 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
     if (!searchText || searchText.length == 0) {
       return;
     }
-   this.financialVendorFacade.searchInsurnaceVendor(searchText, this.claimsType == this.providerName ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+   this.financialVendorFacade.searchInsurnaceVendor(searchText);
   }
   onProviderValueChange($event: any) {
     
