@@ -37,8 +37,8 @@
     kendoGridSelectBy="paymentRequestId"
     (selectedKeysChange)="selectedKeysChange($event)"
     [(selectedKeys)]="selectedProcessClaims">
-    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand && isBatchPremiumsClicked" [columnMenu]="false" [showSelectAll]="true"
-    [width]="40" ></kendo-grid-checkbox-column>
+    <kendo-grid-checkbox-column *ngIf="isBatchPremiumsClicked" [columnMenu]="false" [showSelectAll]="true"
+    [width]="40" [sticky]="true"></kendo-grid-checkbox-column>
 
       <kendo-grid-column *ngIf="isSendReportOpened || isRemoveBatchClosed"  field="add" [width]="150" 
       [sortable]="false"  [columnMenu]="false" [headerStyle]="{'text-align': 'center'}" [style]="{'text-align': 'center'}">
@@ -237,7 +237,7 @@
         </ng-template>
       </kendo-grid-column>
 
-      <ng-container *ngIf="!(isSendReportOpened || isRemoveBatchClosed) && (gridLoaderSubject | async) === false">
+      <ng-container *ngIf="!(isSendReportOpened || isRemoveBatchClosed || isBatchPremiumsClicked) && (gridLoaderSubject | async) === false">
         <div *kendoGridDetailTemplate="let dataItem" [ngStyle]="{width:'25%'}">
           <div class="flex-col flex-space-bw align-items-center mb-1">
             <h4 class="title-md mb-0 text-bold">Adjustments</h4>
@@ -313,7 +313,8 @@
     (click)="onRemovePremiumsOpenClicked(removePremiumsConfirmationDialogTemplate)"  *ngIf="isRemoveBatchClosed"> <span class="material-icons mr-1"
       aria-label="Remove"> delete</span> Remove </button>
 
-  <button kendoButton [primary]="true" aria-label="Receipting Log" class=""
+  <button kendoButton [primary]="true" aria-label="Receipting Log" class="" 
+  [disabled]="!selectedProcessClaims.length"
     (click)="onBatchPremiumsClicked(batchPremiumsConfirmationDialogTemplate)"   *ngIf="isBatchPremiumsClicked"> Batch </button>
 
   <button kendoButton [disabled]="sendReportCount == 0" [primary]="true" aria-label="Send Reports" class="" *ngIf="isSendReportOpened"
