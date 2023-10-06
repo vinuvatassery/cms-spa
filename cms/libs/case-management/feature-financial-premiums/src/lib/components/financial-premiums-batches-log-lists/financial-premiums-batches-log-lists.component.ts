@@ -427,7 +427,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       if (this.isBulkUnBatchOpened) {
         this.handleUnbatchEntireBatch();
         this.unBatchEntireBatchEvent.emit({
-         batchId: this.batchId,
+         batchId: {paymentRequestBatchId: this.batchId},
          premiumsType: this.premiumsType
       });
       } else {
@@ -601,4 +601,12 @@ export class FinancialPremiumsBatchesLogListsComponent
       this.actionResponseSubscription.unsubscribe();
     }
   }
+
+  paymentClickHandler(dataItem: any) {
+    const batchId = this.activeRoute.snapshot.queryParams['bid'];
+    this.route.navigate([this.route.url.split('?')[0], 'items'], {
+      queryParams: { bid: batchId, pid: dataItem.paymentRequestId,eid:dataItem.vendorAddressId },
+    });
+  }
+
 }
