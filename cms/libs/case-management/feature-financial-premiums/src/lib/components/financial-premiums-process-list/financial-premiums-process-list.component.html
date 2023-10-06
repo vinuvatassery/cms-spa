@@ -106,10 +106,10 @@
     <kendo-grid-column field="coverageStartDate" title="Coverage Dates" [width]="200">
       <ng-template kendoGridCellTemplate let-dataItem>
         <span *ngIf="dataItem.coverageEndDate == '' ;else endDateBlock">
-          {{dataItem.coverageStartDate | date:'MM/dd/yyyy'}}
+          {{dataItem.coverageStartDate | date:'MM/dd'}}
         </span>
         <ng-template #endDateBlock>
-          {{dataItem.coverageStartDate | date:'MM/dd/yyyy'}} {{ (dataItem.coverageEndDate) ? ' - '+ (dataItem.coverageEndDate | date:'MM/dd/yyyy') : ''}}
+          {{dataItem.coverageStartDate | date:'MM/dd'}} {{ (dataItem.coverageEndDate) ? ' - '+ (dataItem.coverageEndDate | date:'MM/dd') : ''}}
         </ng-template>
     </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">

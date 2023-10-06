@@ -42,8 +42,8 @@ aria-label="add"> Assignment</button>
 
       <div>
       <kendo-grid  [kendoGridBinding]="financialPcaAssignmentGridLists$"  [loading]="isFinancialPcaAssignmentGridLoaderShow"
-       [rowReorderable]="true" (rowReorder)="onPriorityChange($event)">               
-             <kendo-grid-rowreorder-column [width]="40"></kendo-grid-rowreorder-column>
+       (rowReorder)="onPriorityChange($event)">               
+           
      
           <kendo-grid-column field="priority" title="Priority" [width]="70" [columnMenu]="false" [sortable]="false">
           </kendo-grid-column>
