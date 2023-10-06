@@ -1,4 +1,4 @@
 export enum ApprovalUserStatusCode {
-  APPROVED = "APPROVED",
+  APPROVED = "PENDING",
   DENIED = 'DENIED'
 }

@@ -17,10 +17,10 @@
       </div>
       <div class="mt-1">
         <kendo-buttongroup class="fill_width_group_btn">
-            <button kendoButton id ="approveBatch{{index}}" [toggleable]="true" [selected]="item.batchStatus == 'APPROVE'" (selectedChange)="onApproveClicked(item,index)">Approve
+            <button kendoButton id ="approveBatch{{index}}" [toggleable]="true" [selected]="item.batchStatus == 'APPROVED'" (selectedChange)="onApproveClicked(item,index)">Approve
         
             </button>
-            <button kendoButton id ="sendBackBatch{{index}}" [toggleable]="true" [selected]="item.batchStatus == 'SENDBACK'" (selectedChange)="onSendbackClicked(item,index)">Send Back
+            <button kendoButton id ="sendBackBatch{{index}}" [toggleable]="true" [selected]="item.batchStatus == 'SEND_BACK'" (selectedChange)="onSendbackClicked(item,index)">Send Back
         
             </button>
         </kendo-buttongroup> 

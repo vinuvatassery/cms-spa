@@ -192,11 +192,7 @@
         [pageSizes]="pageSizes"
         [objectId]="dataItem?.objectId"
         [groupId]="dataItem?.groupsCoveredId"
-        [pcaAssignmentId]="dataItem?.pcaAssigmentId"
-        [amountAssigned]="dataItem?.amountAssigned"
-        [amountRemaining]="dataItem?.amountRemaining"
-        [financialPcaSubReportGridLists$]="financialPcaSubReportGridLists$"
-        (loadFinancialPcaSubReportListEvent)=loadFinancialPcaSubReportListGrid($event)>
+       >
       </cms-financial-pcas-assignment-sub-report-list>
     </div>
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"

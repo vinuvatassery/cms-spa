@@ -1,47 +1,29 @@
 /** Angular **/
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  NgZone,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  Renderer2,
-  SimpleChanges,
-  TemplateRef,
-  ViewChild,
+  ChangeDetectorRef,  Component,
+  EventEmitter,  Input,
+  NgZone,  OnChanges,
+  OnDestroy,  OnInit,
+  Output,  Renderer2,
+  SimpleChanges,  TemplateRef,
+  ViewChild
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult, RowClassArgs } from '@progress/kendo-angular-grid';
-import {
-  CompositeFilterDescriptor,
-  State,
-} from '@progress/kendo-data-query';
-import { Subject, Subscription, first, fromEvent, tap } from 'rxjs';
-const tableRow = (node : any) => node.tagName.toLowerCase() === 'tr';
+import {  CompositeFilterDescriptor,  State,} from '@progress/kendo-data-query';
+import { Subject, Subscription, first } from 'rxjs';
 
-const closest = (node :any, predicate : any) =>
- {
-    while (node && !predicate(node)) {
-        node = node.parentNode;
-    }
 
-    return node;
-    };
 @Component({
   selector: 'cms-financial-pcas-assignment-list',
   templateUrl: './financial-pcas-assignment-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class FinancialPcasAssignmentListComponent implements OnInit  , AfterViewInit, OnDestroy, OnChanges {
+export class FinancialPcasAssignmentListComponent implements OnInit  , OnDestroy, OnChanges {
   @ViewChild('addEditPcaAssignmentDialogTemplate', { read: TemplateRef })
   addEditPcaAssignmentDialogTemplate!: TemplateRef<any>;
   @ViewChild('removePcaAssignmentDialogTemplate', { read: TemplateRef })
@@ -56,6 +38,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit  , AfterView
   pcaAssignmentFormData : any
 
   @Input() financialPcaAssignmentGridLists$: any;
+  @Input() financialPcaAssignmentGridListsData$: any;
   @Input() objectCodesData$:any
   @Input() groupCodesData$:any
   @Input() pcaCodesData$:any
@@ -134,10 +117,6 @@ export class FinancialPcasAssignmentListComponent implements OnInit  , AfterView
   ) {
   }
 
-  public ngAfterViewInit(): void {
-     //NOSONAR to to  implementation after kendo upgrade
-    //this.currentSubscription = this.handleDragAndDrop();
-  }
 
   loadDefaultGroupCodes(){
     if(this.selectedGroupCodeList!=undefined && this.selectedGroupCodeIds.length>0){
@@ -154,13 +133,6 @@ export class FinancialPcasAssignmentListComponent implements OnInit  , AfterView
     }
   }
 
-  public dataStateChange(state: State): void {
-
-    //NOSONAR to to  implementation after kendo upgrade
-    //this.currentSubscription.unsubscribe();
-    //this.zone.onStable.pipe(take(1)).subscribe(() => (this.currentSubscription = this.handleDragAndDrop()));
-}
-
 ngOnChanges(changes: SimpleChanges) {
     if (changes['groupCodesData$']) {
       if (this.groupCodesData$ && this.groupCodesData$.length>0) {
@@ -170,9 +142,7 @@ ngOnChanges(changes: SimpleChanges) {
     }
 }
 
-public ngOnDestroy(): void {
-  //NOSONAR to to  implementation after kendo upgrade
-  //this.currentSubscription.unsubscribe();
+public ngOnDestroy(): void { 
   this.resetAssignmentInfoObject.emit();
 }
 
@@ -237,6 +207,22 @@ public rowCallback(context: RowClassArgs) {
   this.groupChange(true)
   }
 
+  public onPriorityChange(e: any): void {
+    this.isFinancialPcaAssignmentGridLoaderShow = true;
+   const draggedRows = e?.draggedRows[0]?.dataItem
+   const dropTargetRow = e?.dropTargetRow?.dataItem
+  
+   const pcaAssignmentPriorityArguments =
+   {
+     objectId : this.objectCodeIdValue,
+     groupId :  draggedRows?.groupCodeId,
+     newPriority : dropTargetRow?.priority,
+     pcaAssignmentId : draggedRows?.pcaAssignmentId
+   }
+   this.pcaAssignmentPriorityUpdateEvent.emit(pcaAssignmentPriorityArguments)
+   
+  }
+
   groupChange($event : any)
   {    
     this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;
@@ -268,8 +254,7 @@ public rowCallback(context: RowClassArgs) {
         groupIds : groupCodeIdsdValueData
       }
 
-      this.loadFinancialPcaAssignmentEvent.emit(pcaAssignmentGridArguments)
-     
+      this.loadFinancialPcaAssignmentEvent.emit(pcaAssignmentGridArguments)     
       this.gridDataHandle();
     }
   }
@@ -279,11 +264,8 @@ public rowCallback(context: RowClassArgs) {
   }
 
   gridDataHandle() {
-    this.financialPcaAssignmentGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridFinancialPcaAssignmentDataSubject.next(this.gridDataResult);
-        this.isFinancialPcaAssignmentGridLoaderShow = false;
-        this.dataStateChange(this.state);
+    this.financialPcaAssignmentGridListsData$.subscribe((data: GridDataResult) => {      
+        this.isFinancialPcaAssignmentGridLoaderShow = false;        
     });
 
   }
@@ -369,106 +351,6 @@ public rowCallback(context: RowClassArgs) {
     this.pcaChangeEvent.emit()
   }
 
-  private handleDragAndDrop(): Subscription
-  {
-    //NOSONAR to to  implementation after kendo upgrade
-        let initialPriority = 0
-        let newPriority = 0
-        let pcaAssignmentId = ''
-        const sub = new Subscription(() => {});
-        let draggedItemIndex : any;
-        let priorityEmitted = false
-        const tableRows = Array.from(document.querySelectorAll('.k-grid tr'));
-        tableRows.forEach((item) => {
-            this.renderer.setAttribute(item, 'draggable', 'true');
-            const dragStart = fromEvent<DragEvent>(item, 'dragstart');
-            const dragOver = fromEvent(item, 'dragover');
-            const dragEnd = fromEvent(item, 'dragend');
-
-            sub.add(
-                dragStart
-                    .pipe(
-                        tap(({ dataTransfer }) => {
-                            try {
-                                const dragImgEl = document.createElement('span');
-                                dragImgEl.setAttribute(
-                                    'style',
-                                    'position: absolute; display: block; top: 0; left: 0; width: 0; height: 0;'
-                                );
-                                document.body.appendChild(dragImgEl);
-                                if(dataTransfer)
-                                {
-                                  dataTransfer.setDragImage(dragImgEl, 0, 0);
-                                }
-
-                            } catch (err) {
-                                // IE doesn't support setDragImage
-                            }
-                            try {
-                                // Firefox won't drag without setting data
-                                if(dataTransfer)
-                                {
-                                  dataTransfer.setData('application/json', '');
-                                }
-                            } catch (err) {
-                                // IE doesn't support MIME types in setData
-                            }
-                        })
-                    )
-                    .subscribe(({ target }) => {
-                        const row: HTMLTableRowElement = <HTMLTableRowElement>target;
-                        draggedItemIndex = row.rowIndex;
-                        const dataItem = this.gridDataResult.data[draggedItemIndex];
-                        dataItem.dragging = true;
-                        initialPriority = dataItem?.priority
-                        pcaAssignmentId = dataItem?.pcaAssignmentId
-                    })
-            );
-
-            sub.add(
-                dragOver.subscribe((e: any) => {
-                    e.preventDefault();
-                    const dataItem = this.gridDataResult.data.splice(draggedItemIndex, 1)[0];
-                    const dropIndex = closest(e.target, tableRow).rowIndex;
-                    draggedItemIndex = dropIndex;
-                    this.zone.run(() => this.gridDataResult.data.splice(dropIndex, 0, dataItem));
-                })
-            );
-
-            sub.add(
-                dragEnd.subscribe((e: any) => {
-                    e.preventDefault();
-                    const dataItem = this.gridDataResult.data[draggedItemIndex];
-                    dataItem.dragging = false;
-                    newPriority = dataItem?.priority
-
-                    if(initialPriority !== newPriority && pcaAssignmentId && newPriority > 0 && priorityEmitted === false)
-                    {
-                        this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;
-                        let  groupCodeIdsdValueData= []
-                        for (const key in this.groupCodeIdsdValue)
-                        {
-                          groupCodeIdsdValueData.push(this.groupCodeIdsdValue[key]?.groupCodeId)
-                        }
-                        const pcaAssignmentPriorityArguments =
-                        {
-                          objectId : this.objectCodeIdValue,
-                          groupIds : groupCodeIdsdValueData,
-                          newPriority : newPriority,
-                          pcaAssignmentId : pcaAssignmentId
-                        }
-                        this.isFinancialPcaAssignmentGridLoaderShow = true;
-                        this.pcaAssignmentPriorityUpdateEvent.emit(pcaAssignmentPriorityArguments)
-                        priorityEmitted = true
-                        this.onPcaAssignmentPriorityUpdate()
-                    }
-                })
-            );
-        });
-
-        return sub;
-    }
-
   onPcaAssignmentPriorityUpdate()
   {
     this.pcaAssignmentPriorityUpdate$.pipe(first((response: any ) => response != null))
@@ -481,6 +363,8 @@ public rowCallback(context: RowClassArgs) {
 
     })
   }
+
+ 
 }
 
 

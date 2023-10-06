@@ -64,6 +64,10 @@ export class FinancialPremiumsBatchesListComponent
       columnDesc: 'Batch #',
     },
     {
+      columnName: "sendBackNotes",
+      columnDesc: "Send Back Notes"        
+    },
+    {
       columnName: 'unbatchedPayments',
       columnDesc: 'Unbatched Payments',
     },
@@ -132,7 +136,7 @@ export class FinancialPremiumsBatchesListComponent
   /* Public methods */
   navToBatchDetails(event : any){
     this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch`],
-    { queryParams :{bid: event.batchId}});
+    { queryParams :{bid: event.paymentRequestBatchId}});
   }
 
   searchColumnChangeHandler(value: string) {
