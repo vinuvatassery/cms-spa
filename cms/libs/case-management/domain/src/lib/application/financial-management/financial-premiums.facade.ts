@@ -382,12 +382,13 @@ loadMedicalPremiumList(
   maxResultCount: number,
   sort: string,
   sortType: string,
-  filter:any,){
+  filter:any,
+  premiumType: string){
   this.financialPremiumsDataService.loadMedicalPremiumList( skipcount,
     maxResultCount,
     sort,
     sortType,
-    filter ).subscribe({
+    filter,premiumType ).subscribe({
     next: (dataResponse) => {
       if (dataResponse) {
         const gridView = {
