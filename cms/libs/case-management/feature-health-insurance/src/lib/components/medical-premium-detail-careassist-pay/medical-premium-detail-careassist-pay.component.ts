@@ -115,23 +115,7 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
   closeVendorDetailModal(){
     this.isaddNewInsuranceProviderOpen = false;
   }
-  saveVendorProfile(vendorProfile: any){
-    this.financialVendorFacade.showLoader();
-    this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
-      
-      next:(response:any)=>{
-        
-        this.financialVendorFacade.hideLoader();
-        this.isaddNewInsuranceProviderOpen=false;
-        this.closeVendorDetailModal();
-    
-      },
-      error:(err:any)=>{
-        
-        this.financialVendorFacade.hideLoader();
-     }
-    });
-  }
+
   restrictSpecialChar(event: any) {
     const status = ((event.charCode > 64 && event.charCode < 91) ||
       (event.charCode > 96 && event.charCode < 123) ||
