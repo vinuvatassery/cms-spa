@@ -242,6 +242,10 @@ export class FinancialClaimsBatchesLogListsComponent
     );
   }
 
+  setNoOfRecordToBePrint(NoOfRecordToBePrint:any){
+    this.selectedCount = NoOfRecordToBePrint;
+  }
+
   loadBatchLog(
     skipCountValue: number,
     maxResultCountValue: number,
