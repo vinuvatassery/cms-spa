@@ -58,7 +58,7 @@ export class PendingApprovalPaymentService {
   }
   submitForApproval(data:any) {
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments/submit` ,
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/pending-approvals/payments` ,
       data
     );
   }
