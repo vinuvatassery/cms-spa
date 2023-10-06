@@ -58,13 +58,13 @@
 <div class="app-c-table">
     <kendo-grid [resizable]="true" [loading]="isApprovalPaymentsGridLoaderShow" [pageSize]="state.take"
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
-        [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
+        [resizable]="true" [columnMenu]="{ filter: false }" [sort]="state.sort"
         (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
         [data]="approvalsPaymentsGridPagedResult"
         [isDetailExpanded]="expandSendBackNotes"
         >
 
-        <kendo-grid-column field="viewPmtsInBatch" title="View Pmts In Batch" [width]="120" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'">
+        <kendo-grid-column [columnMenu]="false" field="viewPmtsInBatch" title="View Pmts In Batch" [width]="120" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'">
             <ng-template kendoGridCellTemplate let-dataItem>
                 <button aria-label="View Pmts In Batch" title="View" kendoButton look="flat" class="card-link-button" (click)="onOpenViewPaymentsBatchClicked(dataItem)">
                     <span class="material-icons"> plagiarism </span>

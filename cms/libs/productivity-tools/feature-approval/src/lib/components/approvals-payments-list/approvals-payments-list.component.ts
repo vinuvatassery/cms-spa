@@ -152,6 +152,24 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
      this.pendingApprovalPaymentType$.subscribe({
       next: (value) => {
         this.selectedPaymentType = value[0].lovCode;
+        switch(this.selectedPaymentType) {
+          case PendingApprovalPaymentTypeCode.MedicalClaim:{
+            this.approvalPermissionCode = ApprovalLimitPermissionCode.MedicalClaimPermissionCode;
+             break;
+          }
+          case PendingApprovalPaymentTypeCode.PharmacyClaim: {
+            this.approvalPermissionCode = ApprovalLimitPermissionCode.PharmacyPermissiomCode;
+             break;
+          }
+          case PendingApprovalPaymentTypeCode.InsurancePremium: {
+            this.approvalPermissionCode = ApprovalLimitPermissionCode.InsurancePremiumPermissionCode;
+            break;
+         }
+          default:
+          {
+             break;
+          }
+       }
         this.onPaymentTypeCodeValueChange(this.selectedPaymentType);
       },
     });
