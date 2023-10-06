@@ -20,7 +20,7 @@ export class PendingApprovalPaymentService {
       ColumnName : gridSetupData.gridDataRefinerValue.columnName,
       Filter:JSON.stringify(gridSetupData.gridDataRefinerValue.filter)
     };
-    let url = `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/payments/batches/serviceSubType=${serviceSubType}/level=${level}`;
+    let url = `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/payments/batches?serviceSubType=${serviceSubType}&level=${level}`;
     return this.http.post<any>(url, paymentApprovalGridSetupDto);
   }
 
@@ -33,7 +33,7 @@ export class PendingApprovalPaymentService {
       Filter: JSON.stringify(gridSetupData.gridDataRefinerValue.filter),
     };
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/payments/batches/serviceSubType=${serviceSubType}/level=${level}`,
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/payments/batches?serviceSubType=${serviceSubType}&level=${level}`,
         paymentApprovalGridSetupDto
     );
   }

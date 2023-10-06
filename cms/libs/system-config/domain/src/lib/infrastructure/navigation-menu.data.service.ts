@@ -28,7 +28,7 @@ export class NavigationMenuService {
 
   getAllPendingApprovalPaymentCount(userLevel:any) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/payments/count/level=${userLevel}`
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/payments/count?level=${userLevel}`
     );
   }
 }
