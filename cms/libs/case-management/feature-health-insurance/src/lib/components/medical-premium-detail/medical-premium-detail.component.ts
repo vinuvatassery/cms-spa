@@ -18,7 +18,6 @@ import {
   HealthInsurancePolicy,
   CarrierContactInfo,
   InsurancePlanFacade,
-  StatusFlag,
   HealthInsurancePlan,
   DependentTypeCode,
   PriorityCode,
@@ -29,6 +28,7 @@ import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
 import { SnackBarNotificationType, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-medical-premium-detail',

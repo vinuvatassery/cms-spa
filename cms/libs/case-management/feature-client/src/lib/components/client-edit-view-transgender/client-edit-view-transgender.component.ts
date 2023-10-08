@@ -6,7 +6,8 @@ import {
 } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompletionChecklist, StatusFlag, WorkflowFacade, TransGenderCode } from '@cms/case-management/domain';
+import { CompletionChecklist, WorkflowFacade, TransGenderCode } from '@cms/case-management/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'case-management-client-edit-view-transgender',
   templateUrl: './client-edit-view-transgender.component.html',

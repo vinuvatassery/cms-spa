@@ -1,10 +1,13 @@
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { VendorFacade, FinancialVendorTypeCode, ContactFacade, StatusFlag, AddressType, FinancialVendorFacade, FinancialVendorDataService } from '@cms/case-management/domain';
+
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
-import { ConfigurationProvider, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
+import { AddressType } from '../enums/address-type.enum';
+import { StatusFlag } from '../enums/status-flag.enum';
 @Component({
   selector: 'cms-vendor-details',
   templateUrl: './vendor-details.component.html',
@@ -18,14 +21,21 @@ export class VendorDetailsComponent implements OnInit {
   @Input() vendorDetails!: any;
   @Input() profileInfoTitle!: string;
 
+  @Input() ddlStates$!: string;
+  @Input() clinicVendorList$!: string;
+  @Input() clinicVendorLoader$!: string;
+
   @Output() saveProviderEventClicked = new EventEmitter<any>();
   @Output() closeModalEventClicked = new EventEmitter<any>();
+  
+  @Output() updateVendorDetailsClicked = new EventEmitter<any>();
+  @Output() searchClinicVendorClicked = new EventEmitter<any>();
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
   isViewContentEditable!: boolean;
   isValidateForm: boolean = false;
-  ddlStates$ = this.contactFacade.ddlStates$;
+//  ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodList: any[] = [];
   paymentRunDateList: any[] = [];
   vendorContactList: any[] = [];
@@ -38,28 +48,25 @@ export class VendorDetailsComponent implements OnInit {
   specialHandlingMaxLength = 100;
   specialHandlingTextArea = '';
   selectedClinicVendorId!: any;
-  clinicVendorList$ = this.financialVendorFacade.clinicVendorList$;
-  clinicVendorLoader$ = this.financialVendorFacade.clinicVendorLoader$;
-  constructor(
+constructor(
     private readonly formBuilder: FormBuilder,
-    private vendorFacade: VendorFacade,
-    private financialVendorFacade: FinancialVendorFacade,
-    private readonly financialVendorDataService: FinancialVendorDataService,
-    private readonly cdr: ChangeDetectorRef,
-    private readonly contactFacade: ContactFacade,
-    private lovFacade: LovFacade,
+ private readonly cdr: ChangeDetectorRef,
+  private lovFacade: LovFacade,
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
-  ) {
+    private readonly loaderService: LoaderService,
+ ) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
 
   ngOnInit(): void {
-    if (this.editVendorInfo) {
+    this.lovFacade.getPaymentRunDateLov();
+    this.lovFacade.getPaymentMethodLov();
+        if (this.editVendorInfo) {
       this.setVendorDetailFormValues();
     }
     else {
-      this.contactFacade.loadDdlStates();
+      
       this.getPaymentMethods();
       this.getPaymentRunDate();
     }
@@ -265,22 +272,22 @@ fillFormData(){
 
   getPaymentMethods() {
     this.lovFacade.getPaymentMethodLov();
-    this.vendorFacade.showLoader();
+    this.loaderService.show();
     this.lovFacade.paymentMethodType$.subscribe((paymentMethod: any) => {
       if (paymentMethod) {
         this.paymentMethodList = paymentMethod;
-        this.vendorFacade.hideLoader();
+        this.loaderService.hide();
       }
     })
   }
 
   getPaymentRunDate() {
     this.lovFacade.getPaymentRunDateLov();
-    this.vendorFacade.showLoader();
+    this.loaderService.show();
     this.lovFacade.paymentRunDates$.subscribe((paymentRunDates: any) => {
       if (paymentRunDates) {
         this.paymentRunDateList = paymentRunDates;
-        this.vendorFacade.hideLoader();
+        this.loaderService.hide();
       }
     })
   }
@@ -355,7 +362,8 @@ fillFormData(){
   searchClinic(clinicName: any) {
     if (clinicName != '') {
       this.selectedClinicVendorId = null;
-      this.financialVendorFacade.searchClinicVendor(clinicName);
+      this.searchClinicVendorClicked.emit(clinicName);
+     // this.financialVendorFacade.searchClinicVendor(clinicName);
     }
   }
 
@@ -366,7 +374,7 @@ fillFormData(){
     this.validateEditForm();
     this.isValidateForm = true;
     if (this.medicalProviderForm.valid) {
-      this.financialVendorFacade.showLoader();
+      this.loaderService.show();
       let vendorValues: any = {};
       vendorValues['vendorId'] = this.vendorDetails.vendorId;
       vendorValues['vendorName'] = this.medicalProviderForm.controls['providerName'].value;
@@ -375,23 +383,24 @@ fillFormData(){
       vendorValues['tin'] = this.medicalProviderForm.controls['tinNumber'].value;
       vendorValues['npiNbr'] = this.medicalProviderForm.controls['npiNbr'].value;
       vendorValues['preferredFlag'] = this.medicalProviderForm.controls['isPreferedPharmacy'].value ? 'Y' : 'N';
-      this.financialVendorDataService.updateVendorDetails(vendorValues).subscribe({
-        next: (resp) => {
-          if (resp) {
-            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, this.profileInfoTitle.split(' ')[0] + ' information updated.');
-            this.closeModalEventClicked.emit(true);
-          }
-          else {
-            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.WARNING, this.profileInfoTitle.split(' ')[0] + ' information not updated.');
-          }
-          this.financialVendorFacade.hideLoader();
-       },
-         error: (err) => {
-          this.financialVendorFacade.hideLoader();
-          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-         },
-       });
-      }
+      this.updateVendorDetailsClicked.next(vendorValues)
+      // this.financialVendorDataService.updateVendorDetails(vendorValues).subscribe({
+      //   next: (resp) => {
+      //     if (resp) {
+      //    //   this.notificationSnackbarService.(SnackBarNotificationType.SUCCESS, this.profileInfoTitle.split(' ')[0] + ' information updated.');
+      //       this.closeModalEventClicked.emit(true);
+      //     }
+      //     else {
+      //     //  this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.WARNING, this.profileInfoTitle.split(' ')[0] + ' information not updated.');
+      //     }
+      //     this.loaderService.hide();
+      //  },
+      //    error: (err) => {
+      //     this.loaderService.hide();
+      //    // this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      //    },
+      //  });
+       }
   }
 
   validateEditForm() {

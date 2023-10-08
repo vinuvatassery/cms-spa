@@ -2,7 +2,8 @@
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 /** Facades  **/
-import { ContactFacade, StatusFlag } from '@cms/case-management/domain';
+import { ContactFacade } from '@cms/case-management/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'case-management-phone-detail',

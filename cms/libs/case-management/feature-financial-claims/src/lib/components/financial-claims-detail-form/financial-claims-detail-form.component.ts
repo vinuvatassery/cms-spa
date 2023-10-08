@@ -1,4 +1,4 @@
-import { StatusFlag } from './../../../../../domain/src/lib/enums/status-flag.enum';
+
 import {
   Component,
   ChangeDetectionStrategy,
@@ -22,6 +22,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
 import { groupBy } from "@progress/kendo-data-query";
+import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'cms-financial-claims-detail-form',
   templateUrl: './financial-claims-detail-form.component.html',

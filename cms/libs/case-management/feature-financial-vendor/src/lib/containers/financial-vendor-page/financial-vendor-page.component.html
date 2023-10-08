@@ -125,25 +125,54 @@
   </div>
   <kendo-dialog kendoRippleContainer *ngIf="isShowMedicalProvider" (close)="closeVendorDetailModal()"
     class="app-c-modal app-c-modal-lg app-c-modal-np" title="Add New Medical Provider" kendoTooltip>
-    <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.MedicalProviders" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"></cms-vendor-details>
+    <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.MedicalProviders" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
+    [ddlStates$]="ddlStates"
+    [clinicVendorList$]="clinicVendorList"
+    [clinicVendorLoader$]="clinicVendorLoader"
+    (updateVendorDetailsClicked)="updateVendorDetailsClicked($event)"
+    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
+    ></cms-vendor-details>
   </kendo-dialog>
   
   <kendo-dialog kendoRippleContainer *ngIf="isShowDentalProvider" (close)="closeVendorDetailModal()"
     class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Dental Provider" kendoTooltip>
-    <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.DentalProviders" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"></cms-vendor-details>
+    <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.DentalProviders" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
+    [ddlStates$]="ddlStates"
+    [clinicVendorList$]="clinicVendorList"
+    [clinicVendorLoader$]="clinicVendorLoader"
+    (updateVendorDetailsClicked)="updateVendorDetailsClicked($event)"
+    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
+    ></cms-vendor-details>
   </kendo-dialog>
   
   <kendo-dialog kendoRippleContainer *ngIf="isShowInsuranceProvider" (close)="closeVendorDetailModal()"
     class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Insurance Vendor" kendoTooltip>
-    <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.InsuranceVendors" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"></cms-vendor-details>
+    <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.InsuranceVendors" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"      [ddlStates$]="ddlStates"
+    [clinicVendorList$]="clinicVendorList"
+    [clinicVendorLoader$]="clinicVendorLoader"
+    (updateVendorDetailsClicked)="updateVendorDetailsClicked($event)"
+    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
   </kendo-dialog>
   
   <kendo-dialog kendoRippleContainer *ngIf="isShowPharmacyProvider" (close)="closeVendorDetailModal()"
     class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Pharmacy" kendoTooltip>
-    <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.Pharmacy" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"></cms-vendor-details>
+    <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.Pharmacy" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
+    [ddlStates$]="ddlStates"
+    [clinicVendorList$]="clinicVendorList"
+    [clinicVendorLoader$]="clinicVendorLoader"
+    (updateVendorDetailsClicked)="updateVendorDetailsClicked($event)"
+    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
+    ></cms-vendor-details>
   </kendo-dialog>
   
   <kendo-dialog kendoRippleContainer *ngIf="isShowManufacturers" (close)="closeVendorDetailModal()"
     class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Manufacture" kendoTooltip>
-    <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.Manufacturers" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"></cms-vendor-details>
+    <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.Manufacturers" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
+     [ddlStates$]="ddlStates"
+     [clinicVendorList$]="clinicVendorList"
+     [clinicVendorLoader$]="clinicVendorLoader"
+     (updateVendorDetailsClicked)="updateVendorDetailsClicked($event)"
+     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
+     
+     ></cms-vendor-details>
   </kendo-dialog>
