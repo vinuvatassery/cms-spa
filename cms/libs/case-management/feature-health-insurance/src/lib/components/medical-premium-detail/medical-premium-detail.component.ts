@@ -280,13 +280,14 @@ this.insuranceTypeCode="DENTAL";
 
   loadHealthInsurancePolicy() {
     this.editViewSubscription = this.insurancePolicyFacade.healthInsurancePolicy$.subscribe((data: any) => {
-      this.healthInsurancePolicyCopy = data;
+    
+    debugger 
+     this.healthInsurancePolicyCopy = data;
       this.bindValues(data);
     });
   }
 
-  bindValues(healthInsurancePolicy: HealthInsurancePolicy) {
-    
+  bindValues(healthInsurancePolicy: HealthInsurancePolicy) {  
     this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(
       healthInsurancePolicy.clientInsurancePolicyId
     );
@@ -336,6 +337,9 @@ this.insuranceTypeCode="DENTAL";
     this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].setValue(
       healthInsurancePolicy.careassistPayingPremiumFlag
     );
+    this.healthInsuranceForm.controls['insuranceVendorAddressId'].setValue(
+      healthInsurancePolicy.insuranceVendorAddressId
+    );
     this.bindMedicare(healthInsurancePolicy);
 
   }
@@ -380,6 +384,9 @@ this.insuranceTypeCode="DENTAL";
       }
 
     }
+    this.healthInsuranceForm.controls['insuranceVendorAddressId'].setValue(
+      healthInsurancePolicy.insuranceVendorAddressId
+    );
     this.bindInsurance(healthInsurancePolicy);
   }
 

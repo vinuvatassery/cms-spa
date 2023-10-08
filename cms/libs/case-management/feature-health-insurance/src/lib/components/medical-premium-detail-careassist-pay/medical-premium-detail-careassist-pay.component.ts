@@ -29,7 +29,12 @@ clientName: any;
 isRecentClaimShow = false;
 providerTin: any;
 isShowInsuranceProvider: boolean = false;
+isShowMedicalProvider: boolean = false;
+isShowDentalProvider: boolean = false;
 medicalProviderForm: FormGroup;
+ddlStates:any;
+clinicVendorList:any;
+clinicVendorLoader:any;
 public get vendorTypes(): typeof FinancialVendorTypeCode {
   return FinancialVendorTypeCode;
 }
@@ -72,6 +77,22 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
     this.medicalProviderForm = this.formBuilder.group({});
 
   }
+  saveVendorProfile(vendorProfile: any){
+    this.financialVendorFacade.showLoader();
+    this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
+      
+      next:(response:any)=>{
+        
+        this.financialVendorFacade.hideLoader();
+        this.isaddNewInsuranceProviderOpen=false;
+        this.closeVendorDetailModal();
+      },
+      error:(err:any)=>{
+        
+        this.financialVendorFacade.hideLoader();
+     }
+    });
+  }
   searchMedicalProvider(searchText: any) {
     
     if (!searchText || searchText.length == 0) {
@@ -91,7 +112,10 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
   {
        return null;
   }
-  ngOnInit(): void {    
+  ngOnInit(): void {  
+    debugger
+  
+    this.financialVendorFacade.searchInsurnaceVendor("''"); 
     if(this.ddlInsuranceType==HealthInsurancePlan.DentalInsurance)
     {
       this.providerName="Dental";
@@ -113,7 +137,14 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
     }
   }
   closeVendorDetailModal(){
-    this.isaddNewInsuranceProviderOpen = false;
+    if(this.ddlInsuranceType==HealthInsurancePlan.DentalInsurance)
+    {
+      this.isShowDentalProvider=true;
+    }
+    if(this.ddlInsuranceType==HealthInsurancePlan.Medicare)
+    {
+      this.isShowMedicalProvider=true;
+    }
   }
 
   restrictSpecialChar(event: any) {
@@ -133,12 +164,33 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
     return status;
   }
   public addNewInsuranceProviderClose(): void {
-  
-    this.isaddNewInsuranceProviderOpen = false;
+    if(this.ddlInsuranceType==HealthInsurancePlan.DentalInsurance)
+    {
+      this.isShowDentalProvider=false;
+    }
+    if(this.ddlInsuranceType==HealthInsurancePlan.Medicare)
+    {
+      this.isShowMedicalProvider=false;
+    }
   }
 
   public addNewInsuranceProviderOpen(): void {
     this.buildVendorForm();
-    this.isaddNewInsuranceProviderOpen = true;
+    if(this.ddlInsuranceType==HealthInsurancePlan.DentalInsurance)
+    {
+      this.isShowDentalProvider=true;
+    }
+    if(this.ddlInsuranceType==HealthInsurancePlan.Medicare)
+    {
+      this.isShowMedicalProvider=true;
+    }
+  }
+  updateVendorDetailsClicked(data:any)
+  {
+debugger
+  }
+  searchClinicVendorClicked(data:any)
+  {
+    debugger
   }
 }
