@@ -60,6 +60,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   isBulkUnBatchOpened = false;
   @Input() unbatchPremiums$ :any
   @Input() unbatchEntireBatch$ :any
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   selected:any
   noDeleteStatus=['PENDING_APPROVAL','MANAGER_APPROVED']
   public bulkMore = [
@@ -609,4 +610,7 @@ export class FinancialPremiumsBatchesLogListsComponent
     });
   }
 
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event);
+  }
 }

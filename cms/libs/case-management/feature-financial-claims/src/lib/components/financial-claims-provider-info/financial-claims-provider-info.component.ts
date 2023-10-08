@@ -14,7 +14,7 @@ import { BehaviorSubject, Observable, take } from 'rxjs';
 @Component({
   selector: 'cms-financial-claims-provider-info',
   templateUrl: './financial-claims-provider-info.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class FinancialClaimsProviderInfoComponent {
   @Output() closeViewProviderDetailClickedEvent = new EventEmitter();

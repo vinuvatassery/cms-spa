@@ -74,6 +74,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   @Output() loadPremiumEvent = new EventEmitter<string>();
   @Output() updatePremiumEvent = new EventEmitter<any>();
   @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public selectedProcessClaims: any[] = [];
   public state!: any;
   sortColumn = 'vendorName';
@@ -218,7 +219,9 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   ngOnDestroy(): void {
     this.unsubscribeFromActionResponse();
   }
-
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event);
+  }
   premiumGridlistDataHandle() {
     this.financialPremiumsProcessGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;

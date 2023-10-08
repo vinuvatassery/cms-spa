@@ -54,7 +54,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   @Input() financialPremiumsAllPaymentsGridLists$: any;
   @Output() loadFinancialPremiumsAllPaymentsListEvent = new EventEmitter<any>();
   @Input() financialPremiumPaymentLoader$: any;
-
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   gridColumns: any = {
     itemNumber: 'Item #',
     batchNumber: 'Batch #',
@@ -649,5 +649,8 @@ export class FinancialPremiumsAllPaymentsListComponent
       this.isDeletePaymentOpen = false;
       this.deletePaymentDialog.close();
     }
+  }
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event)
   }
 }
