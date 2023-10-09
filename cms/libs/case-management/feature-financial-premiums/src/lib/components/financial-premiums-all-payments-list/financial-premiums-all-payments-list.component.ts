@@ -475,10 +475,6 @@ export class FinancialPremiumsAllPaymentsListComponent
     };
   }
 
-  private initializePremiumsPaymentsPage() {
-    this.addSearchSubjectSubscription();
-  }
-
   private loadFinancialPremiumsPaymentsListGrid(): void {
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
