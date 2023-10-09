@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CaseFacade, ContactFacade, FinancialVendorDataService, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
+import { CaseFacade, ContactFacade, FinancialClaimsFacade, FinancialVendorDataService, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType, ServiceSubTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -67,41 +67,29 @@ export class FinancialVendorPageComponent implements OnInit {
   sort = this.financialVendorFacade.sort;
   selectedVendorType = this.financialVendorFacade.selectedVendorType
   exportButtonShow$ = this.documentFacade.exportButtonShow$
-  ddlStates:any;
-  clinicVendorList:any;
- clinicVendorLoader:any;
- 
+  ddlStates=this.contactFacade.ddlStates$;
+  clinicVendorList= this.financialVendorFacade.clinicVendorList$;;
+  clinicVendorLoader= this.financialVendorFacade.clinicVendorLoader$;;
+  
   constructor(private caseFacade: CaseFacade, private financialVendorFacade: FinancialVendorFacade,
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
     private reminderFacade: ReminderFacade,
     private documentFacade :  DocumentFacade,
     private readonly contactFacade: ContactFacade,
-    private readonly financialVendorDataService: FinancialVendorDataService,) {
+    ) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
   dataExportParameters! : any
   /** Lifecycle hooks **/
   ngOnInit() {
     this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
-    this.contactFacade.loadDdlStates();
-    this.contactFacade.ddlStates$.subscribe((result:any)=>{
-      this.ddlStates=result;
-    })
-    this.financialVendorFacade.clinicVendorList$.subscribe((result:any)=>{
-      this.clinicVendorList=result;
-    })
-    this.financialVendorFacade.clinicVendorLoader$.subscribe((result:any)=>{
-      this.clinicVendorLoader=result;
-    })
+    this.contactFacade.loadDdlStates();  
   }
-  updateVendorDetailsClicked(data:any)
+  searchClinicVendorClicked(clientName:any)
   {
-debugger
-  }
-  searchClinicVendorClicked(data:any)
-  {
-    debugger
+    
+    this.financialVendorFacade.searchClinicVendor(clientName);
   }
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
     return FinancialVendorProviderTabCode;
@@ -179,7 +167,7 @@ debugger
   }
 
   saveVendorProfile(vendorProfile: any){
-    debugger
+    
     this.financialVendorFacade.showLoader();
     this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
       next:(response:any)=>{

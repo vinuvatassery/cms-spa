@@ -106,5 +106,5 @@
   <kendo-dialog-titlebar *ngIf="selectedVendorInfo$.vendorTypeCode=='MANUFACTURERS'" class="transform-none"> Edit Manufacturer Info </kendo-dialog-titlebar>
   <cms-vendor-details [editVendorInfo]="true" [vendorDetails]="selectedVendorInfo$" [providerType]="providerType"
                       [profileInfoTitle]="profileInfoTitle" [medicalProviderForm]="medicalProviderForm" (closeModalEventClicked)="closeEditModal($event)"
-                      [medicalProviderForm] = medicalProviderForm (saveProviderEventClicked)="saveVendorProfile($event)"></cms-vendor-details>
+                      [medicalProviderForm] = medicalProviderForm (saveProviderEventClicked)="saveVendorProfile($event)" (updateVendorDetailsClicked)="updateVendorDetailsClicked($event)" ></cms-vendor-details>
 </kendo-dialog>

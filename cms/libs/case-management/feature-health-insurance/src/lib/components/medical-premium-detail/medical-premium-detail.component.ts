@@ -286,7 +286,7 @@ this.insuranceTypeCode="DENTAL";
   loadHealthInsurancePolicy() {
     this.editViewSubscription = this.insurancePolicyFacade.healthInsurancePolicy$.subscribe((data: any) => {
     
-    debugger 
+     
      this.healthInsurancePolicyCopy = data;
      this.financialClaimsFacade.searchPharmacies(data.insuranceVendorAddressId,data.healthInsuranceTypeCode ==  FinancialVendorTypeCode.MedicalProviders? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
      

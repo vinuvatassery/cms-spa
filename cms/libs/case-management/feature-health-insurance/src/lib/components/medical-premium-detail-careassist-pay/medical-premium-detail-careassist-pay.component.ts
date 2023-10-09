@@ -84,12 +84,12 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
   }
 
     saveVendorProfile(vendorProfile: any){
-      debugger;
+      
       this.financialVendorFacade.showLoader();
       if(vendorProfile.vendorTypeCode=='MANUFACTURERS'){
         this.financialVendorFacade.updateManufacturerProfile(vendorProfile).subscribe({
           next:(response:any)=>{
-            debugger
+            
             this.financialVendorFacade.hideLoader();
             this.closeVendorDetailModal();
             this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Successfully Added");
@@ -102,7 +102,7 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
       else{
         this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
           next:(response:any)=>{
-            debugger
+            
             this.financialVendorFacade.hideLoader();
             this.closeVendorDetailModal();
             this.closeEditModal(true);
@@ -121,7 +121,7 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
       // }
     }
   searchMedicalProvider(searchText: any) {
-    debugger
+    
     if (!searchText || searchText.length == 0) {
       return;
     }
@@ -141,7 +141,7 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
   }
 
   ngOnInit(): void {  
-    debugger
+    
     if(this.healthInsuranceForm.value.insuranceVendorAddressId!=null)
     {
       this.searchMedicalProvider(this.healthInsuranceForm.value.insuranceVendorAddressId);
@@ -193,15 +193,12 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
     this.isShowMedicalProvider=this.claimsType==FinancialVendorTypeCode.MedicalProviders?true:false;   
     this.isShowInsuranceProvider=this.claimsType==FinancialVendorTypeCode.InsuranceVendors?true:false;   
   }
-  updateVendorDetailsClicked(data:any)
-  {
-debugger
-  }
+
   searchClinicVendorClicked(data:any)
   {
-    debugger
+    
     this.financialVendorFacade.searchClinicVendor(data);
-    debugger
+    
   }
   closeVendorDetailModal(){
     this.isShowMedicalProvider = false;

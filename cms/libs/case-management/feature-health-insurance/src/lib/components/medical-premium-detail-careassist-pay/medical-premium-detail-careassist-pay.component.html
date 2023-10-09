@@ -165,7 +165,7 @@ class="app-c-modal app-c-modal-lg app-c-modal-np" title="Add New Medical Provide
 [ddlStates$]="ddlStates"
 [clinicVendorList$]="clinicVendorList"
 [clinicVendorLoader$]="clinicVendorLoader"
-(updateVendorDetailsClicked)="updateVendorDetailsClicked($event)"
+
 (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
 ></cms-vendor-details>
 </kendo-dialog>
@@ -176,7 +176,6 @@ class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Dental Provider
 [ddlStates$]="ddlStates"
 [clinicVendorList$]="clinicVendorList"
 [clinicVendorLoader$]="clinicVendorLoader"
-(updateVendorDetailsClicked)="updateVendorDetailsClicked($event)"
 (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
 ></cms-vendor-details>
 </kendo-dialog>
@@ -186,7 +185,6 @@ class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Medical Provido
 <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.MedicalProviders" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"      [ddlStates$]="ddlStates"
 [clinicVendorList$]="clinicVendorList"
 [clinicVendorLoader$]="clinicVendorLoader"
-(updateVendorDetailsClicked)="updateVendorDetailsClicked($event)"
 (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
 </kendo-dialog>
 

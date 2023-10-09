@@ -134,7 +134,7 @@ fillFormData(){
   }
 
   save() {
-    debugger
+    
     this.validateForm();
     this.isValidateForm = true
     if (this.medicalProviderForm.valid) {
@@ -384,22 +384,7 @@ fillFormData(){
       vendorValues['npiNbr'] = this.medicalProviderForm.controls['npiNbr'].value;
       vendorValues['preferredFlag'] = this.medicalProviderForm.controls['isPreferedPharmacy'].value ? 'Y' : 'N';
       this.updateVendorDetailsClicked.next(vendorValues)
-      // this.financialVendorDataService.updateVendorDetails(vendorValues).subscribe({
-      //   next: (resp) => {
-      //     if (resp) {
-      //    //   this.notificationSnackbarService.(SnackBarNotificationType.SUCCESS, this.profileInfoTitle.split(' ')[0] + ' information updated.');
-      //       this.closeModalEventClicked.emit(true);
-      //     }
-      //     else {
-      //     //  this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.WARNING, this.profileInfoTitle.split(' ')[0] + ' information not updated.');
-      //     }
-      //     this.loaderService.hide();
-      //  },
-      //    error: (err) => {
-      //     this.loaderService.hide();
-      //    // this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-      //    },
-      //  });
+   
        }
   }
 
