@@ -65,6 +65,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   isFiltered = false;
   filter!: any;
   gridDataResult!: GridDataResult;
+  pendingApprovalGridDataaResult: any;
   approvalTypeCode! : any;
   approveStatus:string="APPROVED";
   sendbackStatus:string="SEND_BACK";
@@ -483,6 +484,11 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
         this.assignDataFromUpdatedResultToPagedResult(response);
         this.tAreaVariablesInitiation(this.approvalsPaymentsGridPagedResult);
         this.isApprovalPaymentsGridLoaderShow = false;
+        let gridData = {
+          data: response.data,
+          total: response.total
+        }
+        this.pendingApprovalGridDataaResult = gridData;
         this.gridApprovalPaymentsDataSubject.next(this.approvalsPaymentsGridPagedResult);
         if (response?.total >= 0 || response?.total === -1) {
           this.isApprovalPaymentsGridLoaderShow = false;
