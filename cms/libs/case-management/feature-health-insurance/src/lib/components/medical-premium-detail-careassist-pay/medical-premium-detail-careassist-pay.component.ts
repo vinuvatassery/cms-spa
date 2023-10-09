@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ClientProfileTabs, FinancialVendorFacade, FinancialVendorTypeCode, HealthInsurancePlan, ServiceSubTypeCode} from '@cms/case-management/domain';
+import { ClientProfileTabs, ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, FinancialVendorTypeCode, HealthInsurancePlan, ServiceSubTypeCode} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -16,7 +17,8 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
   @Input() clientId: any;
   @Input() caseEligibilityId: any;
   @Input() claimsType: any;
-  insuranceVendorsSearchResult$ = this.financialVendorFacade.insuranceVendors$;
+  @Output() saveProviderEventClicked = new EventEmitter<any>();
+  insuranceVendorsSearchResult$ = this.financialClaimsFacade.pharmacies$;
   public isaddNewInsuranceProviderOpen =false;
   InsurancePlanTypes: typeof HealthInsurancePlan = HealthInsurancePlan;
   premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
@@ -32,15 +34,15 @@ isShowInsuranceProvider: boolean = false;
 isShowMedicalProvider: boolean = false;
 isShowDentalProvider: boolean = false;
 medicalProviderForm: FormGroup;
-ddlStates:any;
-clinicVendorList:any;
-clinicVendorLoader:any;
+ddlStates=this.contactFacade.ddlStates$;
+clinicVendorList= this.financialVendorFacade.clinicVendorList$;;
+clinicVendorLoader= this.financialVendorFacade.clinicVendorLoader$;;
 public get vendorTypes(): typeof FinancialVendorTypeCode {
   return FinancialVendorTypeCode;
 }
  providerName = 'Medical';
-
   buildVendorForm() {
+   
     this.medicalProviderForm.reset();
     this.medicalProviderForm = this.formBuilder.group({
       firstName:[''],
@@ -71,34 +73,59 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
     public readonly lovFacade: LovFacade,
     private readonly formBuilder: FormBuilder,
     private financialVendorFacade: FinancialVendorFacade,
+    private financialClaimsFacade: FinancialClaimsFacade,
+    private readonly contactFacade: ContactFacade,
+    
    
   ) {
     this.healthInsuranceForm = this.formBuilder.group({});
     this.medicalProviderForm = this.formBuilder.group({});
 
   }
-  saveVendorProfile(vendorProfile: any){
-    this.financialVendorFacade.showLoader();
-    this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
-      
-      next:(response:any)=>{
-        
-        this.financialVendorFacade.hideLoader();
-        this.isaddNewInsuranceProviderOpen=false;
-        this.closeVendorDetailModal();
-      },
-      error:(err:any)=>{
-        
-        this.financialVendorFacade.hideLoader();
-     }
-    });
-  }
+
+    saveVendorProfile(vendorProfile: any){
+      debugger;
+      this.financialVendorFacade.showLoader();
+      if(vendorProfile.vendorTypeCode=='MANUFACTURERS'){
+        this.financialVendorFacade.updateManufacturerProfile(vendorProfile).subscribe({
+          next:(response:any)=>{
+            debugger
+            this.financialVendorFacade.hideLoader();
+            this.closeVendorDetailModal();
+            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Successfully Added");
+          },
+          error:(err:any)=>{
+            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+          }
+        });
+      }
+      else{
+        this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
+          next:(response:any)=>{
+            debugger
+            this.financialVendorFacade.hideLoader();
+            this.closeVendorDetailModal();
+            this.closeEditModal(true);
+            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Successfully Added");
+          },
+          error:(err:any)=>{
+            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+          }
+        });
+      }
+    }
+    closeEditModal(isEditSuccessfull: boolean) {
+      // this.openEditDailog = false;
+      // if (isEditSuccessfull) {
+      //   this.onVendorEditSuccessStatus.emit(true);
+      // }
+    }
   searchMedicalProvider(searchText: any) {
-    
+    debugger
     if (!searchText || searchText.length == 0) {
       return;
     }
-   this.financialVendorFacade.searchInsurnaceVendor(searchText);
+    this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType ==  FinancialVendorTypeCode.MedicalProviders? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
   }
   onProviderValueChange($event: any) {
     
@@ -112,10 +139,15 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
   {
        return null;
   }
+
   ngOnInit(): void {  
     debugger
+    if(this.healthInsuranceForm.value.insuranceVendorAddressId!=null)
+    {
+      this.searchMedicalProvider(this.healthInsuranceForm.value.insuranceVendorAddressId);
+    }
+    this.contactFacade.loadDdlStates();
   
-    this.financialVendorFacade.searchInsurnaceVendor("''"); 
     if(this.ddlInsuranceType==HealthInsurancePlan.DentalInsurance)
     {
       this.providerName="Dental";
@@ -123,6 +155,7 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
 
     this.lovFacade.getPremiumFrequencyLovs();
     this.buildVendorForm();
+  
   }
 
   onSameAsInsuranceIdValueChange(event: Event) {
@@ -136,17 +169,7 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
       this.healthInsuranceForm.controls['paymentIdNbr'].setValue(null);
     }
   }
-  closeVendorDetailModal(){
-    if(this.ddlInsuranceType==HealthInsurancePlan.DentalInsurance)
-    {
-      this.isShowDentalProvider=true;
-    }
-    if(this.ddlInsuranceType==HealthInsurancePlan.Medicare)
-    {
-      this.isShowMedicalProvider=true;
-    }
-  }
-
+ 
   restrictSpecialChar(event: any) {
     const status = ((event.charCode > 64 && event.charCode < 91) ||
       (event.charCode > 96 && event.charCode < 123) ||
@@ -163,27 +186,12 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
     }
     return status;
   }
-  public addNewInsuranceProviderClose(): void {
-    if(this.ddlInsuranceType==HealthInsurancePlan.DentalInsurance)
-    {
-      this.isShowDentalProvider=false;
-    }
-    if(this.ddlInsuranceType==HealthInsurancePlan.Medicare)
-    {
-      this.isShowMedicalProvider=false;
-    }
-  }
+
 
   public addNewInsuranceProviderOpen(): void {
-    this.buildVendorForm();
-    if(this.ddlInsuranceType==HealthInsurancePlan.DentalInsurance)
-    {
-      this.isShowDentalProvider=true;
-    }
-    if(this.ddlInsuranceType==HealthInsurancePlan.Medicare)
-    {
-      this.isShowMedicalProvider=true;
-    }
+    this.isShowDentalProvider=this.claimsType==FinancialVendorTypeCode.DentalProviders?true:false;   
+    this.isShowMedicalProvider=this.claimsType==FinancialVendorTypeCode.MedicalProviders?true:false;   
+    this.isShowInsuranceProvider=this.claimsType==FinancialVendorTypeCode.InsuranceVendors?true:false;   
   }
   updateVendorDetailsClicked(data:any)
   {
@@ -192,5 +200,12 @@ debugger
   searchClinicVendorClicked(data:any)
   {
     debugger
+    this.financialVendorFacade.searchClinicVendor(data);
+    debugger
+  }
+  closeVendorDetailModal(){
+    this.isShowMedicalProvider = false;
+    this.isShowDentalProvider = false;
+    this.isShowInsuranceProvider =false;
   }
 }

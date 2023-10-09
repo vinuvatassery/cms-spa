@@ -21,9 +21,9 @@ export class VendorDetailsComponent implements OnInit {
   @Input() vendorDetails!: any;
   @Input() profileInfoTitle!: string;
 
-  @Input() ddlStates$!: string;
-  @Input() clinicVendorList$!: string;
-  @Input() clinicVendorLoader$!: string;
+  @Input() ddlStates$!: any;
+  @Input() clinicVendorList$!: any;
+  @Input() clinicVendorLoader$!: any;
 
   @Output() saveProviderEventClicked = new EventEmitter<any>();
   @Output() closeModalEventClicked = new EventEmitter<any>();
@@ -134,6 +134,7 @@ fillFormData(){
   }
 
   save() {
+    debugger
     this.validateForm();
     this.isValidateForm = true
     if (this.medicalProviderForm.valid) {
@@ -363,7 +364,6 @@ fillFormData(){
     if (clinicName != '') {
       this.selectedClinicVendorId = null;
       this.searchClinicVendorClicked.emit(clinicName);
-     // this.financialVendorFacade.searchClinicVendor(clinicName);
     }
   }
 

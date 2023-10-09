@@ -15,5 +15,5 @@
     "**/*.test.ts",
     "jest.config.ts"
   ],
-  "include": ["**/*.ts", "src/lib/entities/family-and-dependent.ts", "../../shared/ui-common/src/lib/enums/address-type.enum.ts", "../../shared/ui-common/src/lib/enums/status-flag.enum.ts"]
+  "include": ["**/*.ts", "src/lib/entities/family-and-dependent.ts"]
 }

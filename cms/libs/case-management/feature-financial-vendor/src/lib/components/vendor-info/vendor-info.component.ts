@@ -89,10 +89,12 @@ export class VendorInfoComponent implements OnInit {
     }
   }
   saveVendorProfile(vendorProfile: any){
+    debugger;
     this.financialVendorFacade.showLoader();
     if(this.vendorDetail.vendorTypeCode=='MANUFACTURERS'){
       this.financialVendorFacade.updateManufacturerProfile(vendorProfile).subscribe({
         next:(response:any)=>{
+          debugger
           this.financialVendorFacade.hideLoader();
           this.closeEditModal(true);
           this.cdr.detectChanges();
@@ -105,6 +107,7 @@ export class VendorInfoComponent implements OnInit {
     else{
       this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
         next:(response:any)=>{
+          debugger
           this.financialVendorFacade.hideLoader();
           this.closeEditModal(true);
           this.cdr.detectChanges();

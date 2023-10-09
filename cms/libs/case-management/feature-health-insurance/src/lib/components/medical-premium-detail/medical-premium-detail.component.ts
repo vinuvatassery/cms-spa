@@ -21,7 +21,10 @@ import {
   HealthInsurancePlan,
   DependentTypeCode,
   PriorityCode,
-  InsuranceStatusType
+  InsuranceStatusType,
+  FinancialVendorTypeCode,
+  FinancialClaimsFacade,
+  ServiceSubTypeCode
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
@@ -127,7 +130,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   insuranceEndDateIsgreaterthanStartDate: boolean = false;
   endDateMin!: Date;
   dentalInsuranceSelectedItem = 'DENTAL_INSURANCE';
-  readonly selectedClaimType="medical";
+  selectedClaimType=FinancialVendorTypeCode.MedicalProviders;
   insuranceTypeCode:any="MEDICAL";
 
   /** Constructor **/
@@ -142,6 +145,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
+    private financialClaimsFacade: FinancialClaimsFacade,
   ) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
@@ -152,6 +156,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     
     if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) {
 this.insuranceTypeCode="DENTAL";
+         this.selectedClaimType=FinancialVendorTypeCode.DentalProviders;
       this.subscribeDentalInsurance();
       this.loadDentalInsuranceLovs();
     }
@@ -283,6 +288,8 @@ this.insuranceTypeCode="DENTAL";
     
     debugger 
      this.healthInsurancePolicyCopy = data;
+     this.financialClaimsFacade.searchPharmacies(data.insuranceVendorAddressId,data.healthInsuranceTypeCode ==  FinancialVendorTypeCode.MedicalProviders? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+     
       this.bindValues(data);
     });
   }
@@ -433,6 +440,9 @@ this.insuranceTypeCode="DENTAL";
     );
     this.healthInsuranceForm.controls['insuranceTypeCode'].setValue(
       healthInsurancePolicy.insuranceTypeCode
+    );
+    this.healthInsuranceForm.controls['vendorAddressId'].setValue(
+      healthInsurancePolicy.insuranceVendorAddressId
     );
   }
 
