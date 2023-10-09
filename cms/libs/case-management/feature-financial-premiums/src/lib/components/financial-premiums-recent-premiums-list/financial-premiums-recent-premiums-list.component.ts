@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FinancialPremiumsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
@@ -21,6 +21,8 @@ export class FinancialPremiumsRecentPremiumsListComponent {
   @Input() vendorId: any;
   @Input() clientId: any;
   @Input() premiumsType: any;
+  @Input() paymentRequestId :any
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   dentalOrMedicalServiceField:any;
   public state!: any;
   searchValue = '';
@@ -309,5 +311,9 @@ export class FinancialPremiumsRecentPremiumsListComponent {
       this.state.take = data.value;
       this.state.skip = 0;
       this.loadFinancialRecentPremiumListGrid();
+    }
+
+    onProviderNameClick(event:any){
+      this.onProviderNameClickEvent.emit(this.paymentRequestId)
     }
 }

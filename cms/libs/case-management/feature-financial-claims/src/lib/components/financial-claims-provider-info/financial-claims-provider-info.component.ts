@@ -4,6 +4,7 @@ import {
   Output,
   EventEmitter,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -50,7 +51,8 @@ export class FinancialClaimsProviderInfoComponent {
   @Input() paymentRequestId:any
   constructor(public formBuilder: FormBuilder, 
     public activeRoute: ActivatedRoute,
-    private route: Router) {
+    private route: Router,
+    private readonly changeDetectorRef: ChangeDetectorRef) {
 
   }
 
@@ -61,6 +63,7 @@ export class FinancialClaimsProviderInfoComponent {
 
   loadVendorInfo() {
     this.vendorProfile$?.subscribe(res => {
+      this.changeDetectorRef.markForCheck()
       this.vendorProfile = res;
       this.isEditProvider = false
     })
