@@ -47,7 +47,7 @@ export class FinancialClaimsProviderInfoComponent {
     contacts: new FormArray([])
   })
   isSubmitted: boolean = false
-  paymentRequestId:any
+  @Input() paymentRequestId:any
   constructor(public formBuilder: FormBuilder, 
     public activeRoute: ActivatedRoute,
     private route: Router) {
@@ -55,7 +55,7 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   ngOnInit(): void {
-   this.paymentRequestId= this.activeRoute.snapshot.queryParams['pid'];
+   this.paymentRequestId= this.paymentRequestId? this.paymentRequestId: this.activeRoute.snapshot.queryParams['pid'];
     this.loadVendorInfo()
   }
 

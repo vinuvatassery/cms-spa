@@ -77,7 +77,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
+ 
   @ViewChild('addEditClaimsDialog')
   private addEditClaimsDialog!: TemplateRef<any>;
 
@@ -532,5 +533,9 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
     this.closeRecentClaimsModal(true);
+  }
+  
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event);
   }
 }

@@ -57,7 +57,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   @Output() loadBatchDetailPaymentsGridEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'batch';
+  sortColumn = 'batchName';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -129,7 +129,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   filteredByColumnDesc = '';
   showDateSearchWarning = false;
   columnChangeDesc = 'Default Columns'
-  searchText = '';
   showExportLoader = false;
 
   private depositDetailsDialog: any;
@@ -252,6 +251,22 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.setGridValues(data);
   }
 
+  searchColumnChangeHandler(value: string) {
+    this.filter = [];
+    this.showDateSearchWarning = value === 'DateApprovalRequested';
+    if (this.searchValue) {
+      this.onApprovalSearch(this.searchValue);
+    }
+  }
+
+  onApprovalSearch(searchValue: any) {
+    const isDateSearch = searchValue.includes('/');
+    this.showDateSearchWarning = isDateSearch || this.selectedColumn === 'DateApprovalRequested';
+    searchValue = this.formatSearchValue(searchValue, this.showDateSearchWarning);
+    if (isDateSearch && !searchValue) return;
+    this.onChange(searchValue);
+  }
+
   setGridValues( data: any) {
     this.filterData = {
       logic: 'and',
@@ -260,7 +275,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
           "filters": [
             {
               "field": this.selectedColumn ?? 'BatchName',
-              "operator": 'startswith',
+              "operator": this.selectedColumn === 'DateApprovalRequested' ? 'eq' : 'startswith',
               "value": data,
             },
           ],
