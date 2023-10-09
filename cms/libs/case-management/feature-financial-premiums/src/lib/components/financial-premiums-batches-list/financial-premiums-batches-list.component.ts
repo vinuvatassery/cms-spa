@@ -64,6 +64,10 @@ export class FinancialPremiumsBatchesListComponent
       columnDesc: 'Batch #',
     },
     {
+      columnName: "sendBackNotes",
+      columnDesc: "Send Back Notes"        
+    },
+    {
       columnName: 'unbatchedPayments',
       columnDesc: 'Unbatched Payments',
     },

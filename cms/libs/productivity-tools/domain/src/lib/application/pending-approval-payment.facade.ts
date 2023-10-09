@@ -12,6 +12,7 @@ export class PendingApprovalPaymentFacade {
   private pendingApprovalSubmittedSummarySubject = new Subject<any>();
   private pendingApprovalBatchDetailPaymentsCountSubject = new Subject<any>();
   private pendingApprovalBatchDetailPaymentsGridSubject = new Subject<any>();
+  private pendingApprovalSubmitSubject = new Subject<any>();
 
   /** Public properties **/
   pendingApprovalGrid$ = this.pendingApprovalGridSubject.asObservable();
@@ -22,6 +23,7 @@ export class PendingApprovalPaymentFacade {
   pendingApprovalSubmittedSummary$ = this.pendingApprovalSubmittedSummarySubject.asObservable();
   pendingApprovalBatchDetailPaymentsCount$ = this.pendingApprovalBatchDetailPaymentsCountSubject.asObservable();
   pendingApprovalBatchDetailPaymentsGrid$ = this.pendingApprovalBatchDetailPaymentsGridSubject.asObservable();
+  pendingApprovalSubmit$ = this.pendingApprovalSubmitSubject.asObservable();
 
   constructor(
     private readonly PendingApprovalPaymentService: PendingApprovalPaymentService,
@@ -99,12 +101,15 @@ export class PendingApprovalPaymentFacade {
   }
 
   loadSubmittedSummary(paymentRequestBatchIds: string[]) {
+    this.showLoader();
     this.PendingApprovalPaymentService.loadSubmittedSummary(paymentRequestBatchIds).subscribe(
       {
         next: (paymentsSummaryResponseDto: any) => {
+            this.hideLoader();
             this.pendingApprovalSubmittedSummarySubject.next(paymentsSummaryResponseDto);
         },
         error: (err) => {
+          this.hideLoader();
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
         },
       }
@@ -124,6 +129,26 @@ export class PendingApprovalPaymentFacade {
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        },
+      }
+    );
+  }
+
+  submitForApproval(data: any) {
+    this.showLoader();
+    this.PendingApprovalPaymentService.submitForApproval(data).subscribe(
+      {
+        next: (response: any) => {
+          this.hideLoader();
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            response.message
+          );
+          this.pendingApprovalSubmitSubject.next(response);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err) 
         },
       }
     );

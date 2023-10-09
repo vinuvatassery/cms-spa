@@ -58,9 +58,9 @@ export class FinancialPremiumsAllPaymentsListComponent
   gridColumns: any = {
     itemNumber: 'Item #',
     batchNumber: 'Batch #',
-    vendorTypeCodeDesc: 'Insurance Vendor',
-    itemCountInBatch: 'Item Count',
-    totalCost: 'Total Amount',
+    providerName: 'Insurance Vendor',
+    itemsCountInBatch: 'Item Count',
+    totalDue: 'Total Amount',
     acceptsReportsFlag: 'Accepts reports',
     paymentRequestedDate: 'Date Payment Requested',
     paymentSentDate: 'Date Payment Sent',
@@ -81,15 +81,15 @@ export class FinancialPremiumsAllPaymentsListComponent
       columnDesc: 'Batch #',
     },
     {
-      columnName: 'vendorTypeCodeDesc',
+      columnName: 'providerName',
       columnDesc: 'Insurance Vendor',
     },
     {
-      columnName: 'itemCountInBatch',
+      columnName: 'itemsCountInBatch',
       columnDesc: 'Item Count',
     },
     {
-      columnName: 'totalCost',
+      columnName: 'totalDue',
       columnDesc: 'Total Amount',
     },
     {
@@ -149,8 +149,8 @@ export class FinancialPremiumsAllPaymentsListComponent
 
   numericColumns: any[] = [
     'itemNumber',
-    'itemCountInBatch',
-    'totalCost',
+    'itemsCountInBatch',
+    'totalDue',
     'pcaCode',
   ];
   dateColumns: any[] = ['paymentRequestedDate', 'paymentSentDate'];

@@ -96,7 +96,8 @@ export class FinancialPremiumsPageComponent implements OnInit {
       gridDataRefiner.pagesize,
       gridDataRefiner.sortColumn,
       gridDataRefiner.sortType,
-      gridDataRefiner.filter);
+      gridDataRefiner.filter,
+      this.premiumType);
   }
 
   loadFinancialPremiumsBatchListGrid(data: GridFilterParam) {
