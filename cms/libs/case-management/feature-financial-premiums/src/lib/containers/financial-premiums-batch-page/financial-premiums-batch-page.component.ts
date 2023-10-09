@@ -29,6 +29,7 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
   unbatchPremiums$ = this.financialPremiumsFacade.unbatchPremiums$;
   unbatchEntireBatch$ = this.financialPremiumsFacade.unbatchEntireBatch$;
   actionResponse$ = this.financialPremiumsFacade.premiumActionResponse$;
+  paymentBatchName$= this.financialPremiumsFacade.paymentBatchName$;
   batchId!:string;
   dataExportParameters! : any
   premiumType: any;
