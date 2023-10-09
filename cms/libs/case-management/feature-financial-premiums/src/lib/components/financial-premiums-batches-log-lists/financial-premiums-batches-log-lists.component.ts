@@ -98,7 +98,7 @@ export class FinancialPremiumsBatchesLogListsComponent
    return [
     {
       buttonType: 'btn-h-primary',
-      text: 'UnBatch Payment',
+      text: 'Unbatch Premium',
       icon: 'undo',
       disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
       click: (data: any): void => {

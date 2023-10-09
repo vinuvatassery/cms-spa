@@ -90,6 +90,7 @@ export class HealthInsurancePolicyFacade {
   }
 
   saveHealthInsurancePolicy(healthInsurancePolicy: HealthInsurancePolicy) {
+
     const formData = new FormData();
     if (!!healthInsurancePolicy?.copyOfInsuranceCardFile) {
       formData.append('CopyOfInsuranceCardFile', healthInsurancePolicy?.copyOfInsuranceCardFile ?? '');
@@ -261,7 +262,7 @@ export class HealthInsurancePolicyFacade {
   loadCoPaysAndDeductibles(clientId: any, clientCaseId: any, clientCaseEligibilityId: any, gridDataRefinerValue: any) {
     this.showLoader()
     this.healthInsurancePolicyService.loadPaymentRequest(clientId, clientCaseId, clientCaseEligibilityId, gridDataRefinerValue).subscribe({
-      next: (coPaysAndDeductiblesResponse: any) => {
+      next: (coPaysAndDeductiblesResponse: any) => {        
         const gridView = {
           data: coPaysAndDeductiblesResponse['items'],
           total: coPaysAndDeductiblesResponse['totalCount'],
@@ -278,6 +279,7 @@ export class HealthInsurancePolicyFacade {
   }
   loadPremiumPayments(clientId: any, clientCaseId: any, clientCaseEligibilityId: any, gridDataRefinerValue: any) {
     this.showLoader()
+    
     this.healthInsurancePolicyService.loadPaymentRequest(clientId, clientCaseId, clientCaseEligibilityId, gridDataRefinerValue).subscribe({
       next: (premiumPaymentsResponse: any) => {
         const gridView = {

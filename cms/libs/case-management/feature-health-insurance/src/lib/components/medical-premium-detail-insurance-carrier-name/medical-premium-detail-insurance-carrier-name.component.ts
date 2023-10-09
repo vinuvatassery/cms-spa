@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
-import { VendorFacade, HealthInsurancePolicyFacade, InsurancePlanFacade, InsuranceStatusType } from '@cms/case-management/domain';
+import { VendorFacade, HealthInsurancePolicyFacade, InsurancePlanFacade, InsuranceStatusType} from '@cms/case-management/domain';
 import { LoaderService } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-medical-premium-detail-insurance-carrier-name',
@@ -14,7 +14,8 @@ export class MedicalPremiumDetailInsuranceCarrierNameComponent
   @Input() healthInsuranceForm: FormGroup;
   @Input() isViewContentEditable!: boolean;
   @Input() insuranceStatus:any;
-
+  @Input() insuranceTypeCode: any;
+  @Input() claimsType: any;
   @Output() insuranceCarrierNameChange = new EventEmitter<any>();
   @Output() insuranceCarrierNameData = new EventEmitter<any>();
 public isaddNewInsuranceProviderOpen =false;
@@ -25,10 +26,12 @@ public isLoading =false;
     caseSensitive: false,
     operator: 'startsWith',
   };
-
-  constructor(
+selectedMedicalProvider: any;
+    vendorId: any;
+  
+    constructor(
     private formBuilder: FormBuilder,
-    private readonly vendorFacade: VendorFacade,
+   private readonly vendorFacade: VendorFacade,
     private readonly loaderService: LoaderService,
     private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly insurancePlanFacade:InsurancePlanFacade

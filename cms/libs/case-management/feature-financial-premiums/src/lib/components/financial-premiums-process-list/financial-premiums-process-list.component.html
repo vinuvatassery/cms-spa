@@ -37,8 +37,8 @@
     kendoGridSelectBy="paymentRequestId"
     (selectedKeysChange)="selectedKeysChange($event)"
     [(selectedKeys)]="selectedProcessClaims">
-    <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand && isBatchPremiumsClicked" [columnMenu]="false" [showSelectAll]="true"
-    [width]="40" ></kendo-grid-checkbox-column>
+    <kendo-grid-checkbox-column *ngIf="isBatchPremiumsClicked" [columnMenu]="false" [showSelectAll]="true"
+    [width]="40" [sticky]="true"></kendo-grid-checkbox-column>
 
       <kendo-grid-column *ngIf="isSendReportOpened || isRemoveBatchClosed"  field="add" [width]="150" 
       [sortable]="false"  [columnMenu]="false" [headerStyle]="{'text-align': 'center'}" [style]="{'text-align': 'center'}">
@@ -106,10 +106,10 @@
     <kendo-grid-column field="coverageStartDate" title="Coverage Dates" [width]="200">
       <ng-template kendoGridCellTemplate let-dataItem>
         <span *ngIf="dataItem.coverageEndDate == '' ;else endDateBlock">
-          {{dataItem.coverageStartDate | date:'MM/dd/yyyy'}}
+          {{dataItem.coverageStartDate | date:'MM/dd'}}
         </span>
         <ng-template #endDateBlock>
-          {{dataItem.coverageStartDate | date:'MM/dd/yyyy'}} {{ (dataItem.coverageEndDate) ? ' - '+ (dataItem.coverageEndDate | date:'MM/dd/yyyy') : ''}}
+          {{dataItem.coverageStartDate | date:'MM/dd'}} {{ (dataItem.coverageEndDate) ? ' - '+ (dataItem.coverageEndDate | date:'MM/dd') : ''}}
         </ng-template>
     </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -117,9 +117,9 @@
         </common-grid-cell-date-range-filter>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="premiumAmount" title="Premium Amount" [width]="160"> 
+    <kendo-grid-column field="premiumAmount" title="Premium Amount" [width]="100"> 
       <ng-template kendoGridCellTemplate let-dataItem>
-        <span class="tableamountview"> <strong>$</strong> {{dataItem.premiumAmount}}</span>
+        <span class="tableamountview"> {{dataItem.premiumAmount | kendoNumber : "c"}}</span>
       </ng-template> 
       <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
@@ -237,7 +237,7 @@
         </ng-template>
       </kendo-grid-column>
 
-      <ng-container *ngIf="!(isSendReportOpened || isRemoveBatchClosed) && (gridLoaderSubject | async) === false">
+      <ng-container *ngIf="!(isSendReportOpened || isRemoveBatchClosed || isBatchPremiumsClicked) && (gridLoaderSubject | async) === false">
         <div *kendoGridDetailTemplate="let dataItem" [ngStyle]="{width:'25%'}">
           <div class="flex-col flex-space-bw align-items-center mb-1">
             <h4 class="title-md mb-0 text-bold">Adjustments</h4>
@@ -313,7 +313,8 @@
     (click)="onRemovePremiumsOpenClicked(removePremiumsConfirmationDialogTemplate)"  *ngIf="isRemoveBatchClosed"> <span class="material-icons mr-1"
       aria-label="Remove"> delete</span> Remove </button>
 
-  <button kendoButton [primary]="true" aria-label="Receipting Log" class=""
+  <button kendoButton [primary]="true" aria-label="Receipting Log" class="" 
+  [disabled]="!selectedProcessClaims.length"
     (click)="onBatchPremiumsClicked(batchPremiumsConfirmationDialogTemplate)"   *ngIf="isBatchPremiumsClicked"> Batch </button>
 
   <button kendoButton [disabled]="sendReportCount == 0" [primary]="true" aria-label="Send Reports" class="" *ngIf="isSendReportOpened"
