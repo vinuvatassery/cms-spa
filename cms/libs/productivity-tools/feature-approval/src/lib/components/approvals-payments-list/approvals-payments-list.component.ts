@@ -327,6 +327,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       this.isFiltered = false
     }
     this.loadApprovalPaymentsListGrid();
+    this.sortByProperty();
   }
 
   // updating the pagination infor based on dropdown selection
@@ -705,7 +706,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       sortColumn: this.sortValue,
       sortType: this.sortType,
       columnName: this.selectedColumn,
-      sorting: null,
       filter:[]
     };
     let selectedPaymentType = this.selectedPaymentType;

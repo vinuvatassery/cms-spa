@@ -26,10 +26,10 @@ export class PendingApprovalPaymentService {
 
   getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string, level: number) {
     const paymentApprovalGridSetupDto = {
-      SortType: gridSetupData.sortType,
-      Sorting: gridSetupData.sort,
-      SkipCount: gridSetupData.skipCount,
-      MaxResultCount: gridSetupData.pagesize,
+      SortType: gridSetupData.gridDataRefinerValue.sortType,
+      Sorting: gridSetupData.gridDataRefinerValue.sort,
+      SkipCount: gridSetupData.gridDataRefinerValue.skipCount,
+      MaxResultCount: gridSetupData.gridDataRefinerValue.pagesize,
       Filter: JSON.stringify(gridSetupData.gridDataRefinerValue.filter),
     };
     return this.http.post<any>(
