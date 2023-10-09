@@ -130,6 +130,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       click: (data: any): void => {
         if (!this.isSendReportOpened) {
           this.isSendReportOpened = true; 
+          this.recordCountWhenSelectallClicked = this.totalGridRecordsCount;
           this.onBatchPremiumsGridSelectedClicked();
         }
       },
@@ -191,6 +192,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   public mode: SelectableMode = 'multiple';
   public drag = false;
   actionResponseSubscription = new Subscription;
+  recordCountWhenSelectallClicked: number = 0;
+  totalGridRecordsCount: number = 0;;
 
   
   /** Constructor **/
@@ -231,6 +234,10 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
         this.gridLoaderSubject.next(false);
       }
       this.financialPremiumsProcessGridLists = this.gridDataResult?.data;
+      if(this.recordCountWhenSelectallClicked == 0){
+        this.recordCountWhenSelectallClicked = this.gridDataResult?.total;
+        this.totalGridRecordsCount = this.gridDataResult?.total;
+      }
       if(!this.selectAll)
       {
       this.financialPremiumsProcessGridLists.forEach((item1: any) => {
@@ -260,7 +267,11 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
         eachRecord.selected = true;
       });
       this.selectedSendReportList.SelectedSendReports = this.financialPremiumsProcessGridLists;
+      if(this.isSendReportOpened){
+        this.sendReportCount = this.recordCountWhenSelectallClicked;
+      }else{
       this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports);
+      }
     }
   }
 
@@ -550,6 +561,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     }
     this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports);
     this.selectAll = false;
+    this.recordCountWhenSelectallClicked = 0;
   }
 
   clientRecentPremiumsModalClicked (template: TemplateRef<unknown>, data:any): void {
@@ -587,7 +599,7 @@ closeRecentPremiumsModal(result: any){
   }
 
   selectionChange(dataItem:any,selected:boolean){
-    this.selectAll = false;
+    // this.selectAll = false;
     if(!selected){
       this.unCheckedProcessRequest.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true});
         const index = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((item:any) => item.paymentRequestId == dataItem.paymentRequestId);
@@ -600,8 +612,13 @@ closeRecentPremiumsModal(result: any){
       this.checkedAndUncheckedRecordsFromSelectAll.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true});
     }
     this.selectedSendReportList = {'selectAll':this.selectAll,'UnSelectedSendReports':this.unCheckedProcessRequest,
-    'SelectedSendReports':this.checkedAndUncheckedRecordsFromSelectAll, 'batchId':null, 'currentSendReportsGridFilter':null}
+    'SelectedSendReports':this.checkedAndUncheckedRecordsFromSelectAll, 'batchId':null, 'currentSendReportsGridFilter':this.state.filter}
+    if(this.selectAll && this.isSendReportOpened){
+      this.recordCountWhenSelectallClicked = selected == true ? this.recordCountWhenSelectallClicked + 1 : this.recordCountWhenSelectallClicked - 1;
+      this.sendReportCount = this.recordCountWhenSelectallClicked;
+    }else{
     this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports);
+    }
     this.ref.detectChanges();
   }
 
@@ -615,8 +632,12 @@ closeRecentPremiumsModal(result: any){
       this.markAsUnChecked(this.financialPremiumsProcessGridLists);
     }
     this.selectedSendReportList = {'selectAll':this.selectAll,'UnSelectedSendReports':this.unCheckedProcessRequest,
-    'SelectedSendReports':this.checkedAndUncheckedRecordsFromSelectAll, 'batchId':null, 'currentSendReportsGridFilter':null}
+    'SelectedSendReports':this.checkedAndUncheckedRecordsFromSelectAll, 'batchId':null, 'currentSendReportsGridFilter': this.state.filter, "filter": this.filter}
+    if(this.selectAll && this.isSendReportOpened){
+      this.sendReportCount = this.recordCountWhenSelectallClicked;
+    }else{
     this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports);
+    }
     this.ref.detectChanges();
   }
 
@@ -648,6 +669,10 @@ closeRecentPremiumsModal(result: any){
       data.forEach((element:any) => {     
         element.selected = false;    
     });
+    if(!this.selectAll && this.isSendReportOpened){
+      this.sendReportCount = 0;
+      this.selectAll = false;
+    }
   }
 
   loadInsurancePlans(client: any){
