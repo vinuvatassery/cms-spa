@@ -3,13 +3,17 @@ import {
   OnInit,
   Component,
   ChangeDetectorRef,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
-import { FinancialPremiumsFacade, GridFilterParam, InsurancePremium, PolicyPremiumCoverage } from '@cms/case-management/domain';
+import { ContactFacade, FinancialPremiumsFacade, FinancialVendorFacade, GridFilterParam, InsurancePremium, PolicyPremiumCoverage } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 import { LoggingService } from '@cms/shared/util-core';
+import { LovFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
   selector: 'cms-financial-premiums-page',
@@ -54,12 +58,25 @@ export class FinancialPremiumsPageComponent implements OnInit {
   financialPremiumPaymentLoader$ = this.financialPremiumsFacade.financialPremiumPaymentLoader$;
   insurancePremium$ = this.financialPremiumsFacade.insurancePremium$;
   premiumType: any;
+  vendorProfile$ = this.financialVendorFacade.providePanelSubject$
+  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
+  ddlStates$ = this.contactFacade.ddlStates$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  providerDetailsDialog: any
+  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+  providerDetailsTemplate!: TemplateRef<any>;
+  paymentRequestId: any;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
-    private loggingService: LoggingService
+    private loggingService: LoggingService,
+    public contactFacade: ContactFacade,
+    public lovFacade: LovFacade,
+    private dialogService: DialogService,
+    private readonly financialVendorFacade : FinancialVendorFacade
+
   ) {}
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(
@@ -140,4 +157,39 @@ export class FinancialPremiumsPageComponent implements OnInit {
   updatePremium(premium:any){
     this.financialPremiumsFacade.updatePremium(this.premiumType, premium.premiumId, premium);
   }
+
+  onProviderNameClick(event:any){
+    this.paymentRequestId = event
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',  
+      }, 
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+    
+  }
+
+  onCloseViewProviderDetailClicked(result: any){
+    if(result){
+      this.providerDetailsDialog.close();
+    }
+  }
+  
+  
+  getProviderPanel(event:any){
+    this.financialVendorFacade.getProviderPanel(event)
+  }
+
+  updateProviderProfile(event:any){
+    console.log(event)
+    this.financialVendorFacade.updateProviderPanel(event)
+  }
+
+  OnEditProviderProfileClick(){
+    this.contactFacade.loadDdlStates()
+    this.lovFacade.getPaymentMethodLov()
+  }
+
 }
