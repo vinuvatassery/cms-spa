@@ -98,8 +98,8 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
     clientId: 'Client ID',
     planName: 'Plan Name',
     insuranceType: 'Insurance Type',
-    coverageDates: 'Coverage Dates',
-    premiumAmount: 'premiumAmount'
+    coverageStartDate: 'Coverage Dates',
+    premiumAmt: 'Premium Amount'
   };
 
   dropDowncolumns : any = [
@@ -132,8 +132,8 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
       columnDesc: 'Coverage Dates',
     },
     {
-      columnCode: 'premiumAmount',
-      columnDesc: 'premiumAmount',
+      columnCode: 'premiumAmt',
+      columnDesc: 'Premium Amount',
     }
   ];
 
@@ -202,9 +202,9 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'creationTime', dir: 'desc' }],
+      sort: [{ field: 'clientFullName', dir: 'desc' }],
     };
-    this.sortColumnDesc = 'Entry Date';
+    this.sortColumnDesc = 'Client Name';
   }
 
   private loadBatchLogItemsListGrid(): void {
@@ -227,6 +227,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter: this.state?.['filter']?.['filters'] ?? [],
     };
     this.loadBatchItemsListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
@@ -235,6 +236,14 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   
   onChange(data: any) {
     this.defaultGridState();
+    let operator = 'startswith';
+
+    if (
+      this.selectedColumn === 'clientId' ||
+      this.selectedColumn === 'premiumAmt'
+    ) {
+      operator = 'eq';
+    }
 
     this.filterData = {
       logic: 'and',
@@ -242,8 +251,8 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
+              field: this.selectedColumn ?? 'clientFullName',
+              operator: operator,
               value: data,
             },
           ],
@@ -277,7 +286,20 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumn = stateData.sort[0]?.field;
     this.sortColumnDesc = this.gridColumns[this.sortColumn];
-    this.filter = stateData?.filter?.filters;
+    // this.filter = stateData?.filter?.filters;
+    if (stateData.filter?.filters.length > 0) {
+      const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      this.isFiltered = true;
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.gridColumns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    } else {
+      this.filter = '';
+      this.isFiltered = false;
+    }
     this.loadBatchLogItemsListGrid();
   }
 
