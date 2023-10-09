@@ -197,7 +197,7 @@ export class FinancialPremiumsBatchesListComponent
   restGrid() {
     this.sortValue = 'batchName';
     this.sortType = 'asc';
-    this.initializePremiumsBatchPage();
+    this.initializePremiumsBatchGrid();
     this.sortColumn = 'batchName';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
@@ -308,7 +308,6 @@ export class FinancialPremiumsBatchesListComponent
 
 
   private initializePremiumsBatchPage() {
-    this.loadFinancialPremiumsBatchListGrid();
     this.addSearchSubjectSubscription();
   }
 
