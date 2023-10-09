@@ -61,7 +61,7 @@ export class FinancialPremiumsProviderInfoComponent {
   }
 
   loadVendorInfo() {
-    this.vendorProfile$?.subscribe(res => {
+    this.vendorProfile$?.subscribe((res:any) => {
       this.vendorProfile = res;
       this.isEditProvider = false
     })

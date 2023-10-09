@@ -301,7 +301,7 @@
   <kendo-dialog-titlebar (close)="closeRecentPremiumsModal($event)"><h5 class="text-upper">Recent Premiums for {{clientName}}</h5></kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="premiumsType"
-      (CloseRecentPremiumsModal)="closeRecentPremiumsModal($event)"></cms-financial-premiums-recent-premiums-list>
+      (CloseRecentPremiumsModal)="closeRecentPremiumsModal($event)" (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-recent-premiums-list>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
