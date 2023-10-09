@@ -4,6 +4,7 @@ import {
   Output,
   EventEmitter,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,7 +15,7 @@ import { BehaviorSubject, Observable, take } from 'rxjs';
 @Component({
   selector: 'cms-financial-premiums-provider-info',
   templateUrl: './financial-premiums-provider-info.component.html', 
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPremiumsProviderInfoComponent {
   @Output() closeViewProviderDetailClickedEvent = new EventEmitter();
@@ -51,7 +52,8 @@ export class FinancialPremiumsProviderInfoComponent {
 
   constructor(public formBuilder: FormBuilder, 
     public activeRoute: ActivatedRoute,
-    private route: Router) {
+    private route: Router,   
+    private readonly changeDetectorRef: ChangeDetectorRef) {
 
   }
 
@@ -62,6 +64,7 @@ export class FinancialPremiumsProviderInfoComponent {
 
   loadVendorInfo() {
     this.vendorProfile$?.subscribe((res:any) => {
+      this.changeDetectorRef.markForCheck()
       this.vendorProfile = res;
       this.isEditProvider = false
     })
