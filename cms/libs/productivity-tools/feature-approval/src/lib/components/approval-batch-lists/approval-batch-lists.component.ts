@@ -42,8 +42,8 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
   tAreaSendBackNotesMaxLength:any = 100;
   approveBatchCount:any=0;
   sendbackBatchCount:any=0;
-  approveStatus:string="APPROVE";
-  sendbackStatus:string="SENDBACK";
+  approveStatus:string="APPROVED";
+  sendbackStatus:string="SEND_BACK";
   sendbackNotesRequireMessage:string = "Send Back Note is required.";
 
   gridBatchDetailPaymentsDataSubject = new Subject<any>();

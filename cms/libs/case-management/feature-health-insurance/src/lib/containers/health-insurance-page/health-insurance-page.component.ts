@@ -131,7 +131,8 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       proofOfPremium: [''],
       copyOfInsuranceCard: [''],
       copyOfSummary: [''],
-      cerReviewType:['']
+      cerReviewType:[''],
+      insuranceVendorAddressId:['']
     });
 
   }

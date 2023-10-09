@@ -57,7 +57,7 @@
             <kendo-grid-column field="premiumAmount" title="Premium Amount" [width]="120">
               <ng-template kendoGridCellTemplate let-dataItem>
                 <span class="tableamountview"> <strong>$</strong> {{dataItem.premiumAmount | kendoNumber:
-                  'n4'}}</span>
+                  'n2'}}</span>
               </ng-template>
               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
