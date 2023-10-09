@@ -76,7 +76,12 @@
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="providerName" title="Provider Name" [width]="160">
-        
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button aria-label="providerName" kendoButton look="flat" class="card-link-button"
+          (click)="onProviderNameClick(dataItem.paymentRequestId)">
+            {{ dataItem.providerName }}
+          </button>
+        </ng-template>
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">

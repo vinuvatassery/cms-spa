@@ -94,7 +94,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
   ngOnChanges(): void {
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: this.pageSizes[2]?.value,
       sort: this.sort,
     };
     this.loadBatchPaymentListGrid();
@@ -267,7 +267,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges{
   defaultGridState() {
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: this.pageSizes[2]?.value,
       sort: this.sort,
       filter: { logic: 'and', filters: [] },
     };

@@ -94,7 +94,8 @@ export class FinancialClaimsBatchesLogListsComponent
       },
     },
   ];
-
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
+ 
   @Input() claimsType: any;
   @Input() batchId: any;
   @Input() pageSizes: any;
@@ -546,5 +547,9 @@ export class FinancialClaimsBatchesLogListsComponent
   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
     this.closeRecentClaimsModal(true);
+  }
+
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event);
   }
 }
