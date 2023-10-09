@@ -255,7 +255,6 @@ export class FinancialPremiumsAllPaymentsListComponent
     this.getVedndorTypeCodeLov();
     this.getPaymentMethodLov();
     this.getPaymentStatusLov();
-    this.initializePremiumsPaymentsPage();
   }
 
   ngOnChanges(): void {
@@ -367,7 +366,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   restGrid() {
     this.sortValue = 'itemNumber';
     this.sortType = 'asc';
-    this.initializePremiumsPaymentsPage();
+    this.initializePremiumsPaymentsGrid()
     this.sortColumn = 'itemNumber';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
@@ -474,11 +473,6 @@ export class FinancialPremiumsAllPaymentsListComponent
       take: this.pageSizes[0]?.value,
       sort: [{ field: 'itemNumber', dir: 'asc' }],
     };
-  }
-
-  private initializePremiumsPaymentsPage() {
-    this.loadFinancialPremiumsPaymentsListGrid();
-    this.addSearchSubjectSubscription();
   }
 
   private loadFinancialPremiumsPaymentsListGrid(): void {
