@@ -96,7 +96,7 @@
           </kendo-grid-string-filter-menu>
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column field="sendBackNotes" title="Send Back Notes" [width]="120"> 
+      <kendo-grid-column field="sendBackNotes" title="Send Back Notes" [width]="120">
         <ng-template kendoGridCellTemplate let-dataItem>
           <span [title]="dataItem.sendBackNotes" class="grid-line-clip"> {{ dataItem.sendBackNotes }}</span>
         </ng-template>
@@ -150,7 +150,7 @@
           </kendo-grid-numeric-filter-menu>
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAdjustmentsAmount}}</span>
+          <span class="tableamountview">{{dataItem.totalAdjustmentsAmount | kendoNumber : "c"}}</span>
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="totalPaymentsAmount " title="Total Amount of Payments" [width]="140">
@@ -161,7 +161,7 @@
           </kendo-grid-numeric-filter-menu>
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalPaymentsAmount}}</span>
+          <span class="tableamountview">{{dataItem.totalPaymentsAmount | kendoNumber : "c"}}</span>
         </ng-template>
       </kendo-grid-column>
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"  let-currentPage="currentPage">
