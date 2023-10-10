@@ -16,7 +16,7 @@
 
     <span class="filter-section_items filter--select">
         <kendo-floatinglabel>
-            <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDownColumns"
+            <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="userLevel == 2 ? dropDownColumnsLevel2 : dropDownColumnsLevel1"
                 [valuePrimitive]="true" textField="columnDesc" valueField="columnCode" [(ngModel)]="selectedColumn" (valueChange)="searchColumnChangeHandler($event)">
             </kendo-dropdownlist>
         </kendo-floatinglabel>
