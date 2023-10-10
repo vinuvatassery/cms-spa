@@ -866,4 +866,16 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   public expandSendBackNotes({ dataItem }: RowArgs): boolean {
     return dataItem.level2SendBackNotes ? true : false;
   }
+
+  navToBatchDetails(data : any){   
+    let type;
+    if(this.selectedPaymentType === PendingApprovalPaymentTypeCode.MedicalClaim)
+    {
+      type = 'medical';
+    }
+    this.route.navigate([`/financial-management/claims/${type}/batch`],
+    { queryParams :{bid: data?.paymentRequestBatchId}});
+  }
+  
+  
 }
