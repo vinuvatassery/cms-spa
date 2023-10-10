@@ -102,7 +102,8 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
       policyHolderLastName: [''],
       proofOfPremium: [''],
       copyOfInsuranceCard: [''],
-      copyOfSummary: ['']
+      copyOfSummary: [''],
+      insuranceVendorAddressId:['']
     });
 
   }

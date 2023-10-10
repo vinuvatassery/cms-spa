@@ -38,7 +38,8 @@ import { DeactivateInsuranceConfirmationComponent } from './components/deactivat
     CaseManagementFeatureHealthInsuranceRoutingModule,
     SharedUiCommonModule,
     SharedUiTpaModule,
-    SystemConfigFeatureUserManagementModule,
+    SystemConfigFeatureUserManagementModule
+    
   ],
   declarations: [
     MedicalInsuranceStatusListComponent,

@@ -1,10 +1,11 @@
-import {  ChangeDetectionStrategy,  ChangeDetectorRef,  Component, OnInit, } from '@angular/core';
+import {  ChangeDetectionStrategy,  ChangeDetectorRef,  Component, OnInit, TemplateRef, ViewChild, } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import {ContactFacade, FinancialPremiumsFacade, FinancialVendorFacade, GridFilterParam, PaymentPanel, PaymentsFacade } from '@cms/case-management/domain'; 
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs';
 import { LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -29,11 +30,15 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
    premiumType: any;
    vendorAddressId:any;
    batchId:any;
-   vendorProfile$ = this.financialVendorFacade.providePanelSubject$
-  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
-  ddlStates$ = this.contactFacade.ddlStates$;
-  paymentMethodCode$ = this.lovFacade.paymentMethodType$
   
+   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+   providerDetailsTemplate!: TemplateRef<any>;
+   paymentRequestId: any;
+   vendorProfile$ = this.financialVendorFacade.providePanelSubject$
+   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
+   ddlStates$ = this.contactFacade.ddlStates$;
+   paymentMethodCode$ = this.lovFacade.paymentMethodType$
+   providerDetailsDialog:any;
    constructor(
      private readonly financialPremiumsFacade: FinancialPremiumsFacade,
      private readonly router: Router,   
@@ -41,10 +46,10 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
      private loggingService: LoggingService,
      private paymentFacade: PaymentsFacade,
      private readonly route: ActivatedRoute,
-     private readonly financialVendorFacade: FinancialVendorFacade,
      public contactFacade: ContactFacade,
-    public lovFacade: LovFacade,
-    
+     public lovFacade: LovFacade,
+     private dialogService: DialogService,
+     private readonly financialVendorFacade : FinancialVendorFacade
    ) {}
 
    ngOnInit(): void {
@@ -105,6 +110,26 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
     this.paymentFacade.loadPaymentDetails(itemId, 'INDIVIDUAL',);
   }
 
+  onProviderNameClick(event:any){
+    this.paymentRequestId = event
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',  
+      }, 
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+    
+  }
+
+  onCloseViewProviderDetailClicked(result: any){
+    if(result){
+      this.providerDetailsDialog.close();
+    }
+  }
+  
+  
   getProviderPanel(event:any){
     this.financialVendorFacade.getProviderPanel(event)
   }

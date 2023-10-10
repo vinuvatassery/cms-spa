@@ -163,12 +163,12 @@
 <kendo-dialog-actions>
     <div class="justify-content-between">
         <div>
-            <button  *ngIf="!isPremiumPaymentAddForm" kendoButton class="k-danger-link" aria-label="delete premium payment"> Delete </button>
-            <button *ngIf="!isPremiumPaymentAddForm" kendoButton [primary]="true" look="outline" aria-label="edit premium payment"> Edit </button>
+            <button  *ngIf="!isPremiumPaymentAddForm" kendoButton class="k-danger-link" aria-label="Delete"> Delete </button>
+            <button *ngIf="!isPremiumPaymentAddForm" kendoButton [primary]="true" look="outline" aria-label="Edit"> Edit </button>
         </div>
         <div class="justify-content-end">
-            <button kendoButton [primary]="true" look="outline" aria-label="cancel premium payment"(click)="closePremiumPayment()"> Cancel  </button>
-            <button kendoButton [primary]="true" aria-label="save new premium payment" (click)="savePaymentDetailsClicked()"> Add</button>
+            <button kendoButton [primary]="true" look="outline" aria-label="Cancel"(click)="closePremiumPayment()"> Cancel  </button>
+            <button kendoButton [primary]="true" aria-label="Add" (click)="savePaymentDetailsClicked()"> Add</button>
 
         </div>
     </div>

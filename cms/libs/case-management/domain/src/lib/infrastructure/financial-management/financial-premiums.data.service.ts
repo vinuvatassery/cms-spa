@@ -319,7 +319,8 @@ export class FinancialPremiumsDataService {
   maxResultCount: number,
   sort: string,
   sortType: string,
-  filter:any) {
+  filter:any,
+  premiumType : string) {
     const filterRequestBody = {
       skipcount:skipcount,
       maxResultCount:maxResultCount,
@@ -327,7 +328,7 @@ export class FinancialPremiumsDataService {
       sortType:sortType,
       filter:filter
     }
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/list`,filterRequestBody);
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/list`,filterRequestBody);
 }
 
 batchClaims(batchPremiums: BatchPremium, claimsType: string) {

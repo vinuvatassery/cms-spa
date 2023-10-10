@@ -117,7 +117,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
   exceptionReasonCounterChange(coverage: any, ev: string): void {
     const charactersCount = ev.length;
     coverage.exceptionReasonRequired = charactersCount <= 0;
-    coverage.exceptionReasonCount = `${charactersCount}/100`;
+    coverage.exceptionReasonCount = `${charactersCount}/160`;
   }
 
   premiumAmountValuesChanges(coverage: InsurancePremiumCoverage, value: number) {
@@ -182,7 +182,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
       comment: '',
       commentCount: '0/100',
       exceptionReason: '',
-      exceptionReasonCount: '0/100'
+      exceptionReasonCount: '0/160'
     };
 
     plan.coverages.push(newCoverage);

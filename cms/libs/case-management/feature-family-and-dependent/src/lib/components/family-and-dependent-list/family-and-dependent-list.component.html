@@ -21,7 +21,7 @@
       isAddOrEditFamilyDependentDisplay ? 'Full Legal Name' : 'Name'
     }}">
     <ng-template kendoGridCellTemplate let-dataItem>
-      <button aria-label="client name" kendoButton look="flat"   class="card-link-button"
+      <button attr.aria-label="{{ dataItem.firstName + ' '+  dataItem.lastName}}" kendoButton look="flat"   class="card-link-button"
       *ngIf="dataItem.dependentClientId > 0"
       routerLink="../../cases/case360/{{ dataItem.dependentClientId }}"
       >
@@ -83,7 +83,7 @@
           kendoPopoverAnchor
           [popover]="onUserProfileDetailsHovered"
           showOn="hover"
-          aria-label="profile avathar"
+          [attr.aria-label]="dataItem.creatorId"
         >
         <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
         </button>
@@ -168,7 +168,7 @@
       [primary]="true"
       icon="add"
       (click)="onFamilyMemberClicked()"
-      aria-label="add family member"
+      aria-label="Family Member"
       [disabled]="(isReadOnly$ | async) ? true : false"
     >
       Family Member

@@ -28,8 +28,8 @@
     (click)="onToggle()"
     class="text-t-normal editor-variable-button"
     look="outline"
-    aria-label="insert a variable for email editor"
-    title="Insert variable"
+    aria-label="Insert a variable"
+    title="Insert a variable"
   >
     Insert a variable
     <span class="material-icons" aria-label="dropdown arrow" aria-hidden="true"
@@ -52,12 +52,12 @@
           kendoButton
           class="k-icon-button sms-variable-search_close"
           (click)="onSearchClosed()"
-          aria-label="close search email"
+          aria-label="Close"
           title="Close"
         >
           <span
             class="material-icons"
-            aria-label="close search email"
+            aria-label="Close"
             aria-hidden="true"
             >close</span
           >
@@ -198,11 +198,11 @@
             kendoButton
             class="attachment-item_remove k-icon-button small-i-btn"
             title="Remove Attachment"
-            aria-label="remove attachment"
+            aria-label="Remove Attachment"
           >
             <span
               class="material-icons"
-              aria-label="close attachment"
+              aria-label="Remove Attachment"
               aria-hidden="true"
               (click)="item.typeCode ==='CER_ATTACHMENT' ? removeFile(item, index) : removeAddedFile(index)"
               >close</span

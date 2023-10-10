@@ -12,15 +12,14 @@
           kendoButton
           [primary]="true"
           look="outline"
-          aria-label="cancel" 
+          aria-label="Cancel" 
           (click)="closeSendReportClicked()"
         >
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="Send"  >
+        <button kendoButton [primary]="true" aria-label="Send" (click)="onSendReportClicked()" >
             Send
         </button>
       </div>
     </div>
   </kendo-dialog-actions>
-  

@@ -6,7 +6,7 @@
                 <div class="flex-col d-flex align-iems-center justify-content-between">
                     <h4 class="mb-0">CONTACT {{i+1}} (OPTIONAL)</h4>
                     <button kendoButton class="k-danger-link"
-                        aria-label="delete contact" (click)="removeContact(i)">
+                        aria-label="Delete Contact" (click)="removeContact(i)">
                         DELETE CONTACT
                     </button>
                 </div>
@@ -76,7 +76,7 @@
 
 
         <div class="mt-1">
-            <button kendoButton icon="add" [primary]="true" look="flat" aria-label="Add Contact"
+            <button kendoButton icon="add" [primary]="true" look="flat" aria-label="Contact"
                 (click)="onToggleAddNewContactClick()">
                 Contact
             </button>

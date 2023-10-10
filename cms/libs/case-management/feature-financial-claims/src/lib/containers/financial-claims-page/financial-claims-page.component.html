@@ -20,7 +20,8 @@
                                 [exportButtonShow$]="exportButtonShow$"         
                                 (loadFinancialClaimsProcessListEvent)="loadFinancialClaimsProcessListGrid($event)"
                                 (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)
-                                (exportGridDataEvent)="exportClaimsProcessGridData()"></cms-financial-claims-process-list>
+                                (exportGridDataEvent)="exportClaimsProcessGridData()"
+                                (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-claims-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -33,7 +34,8 @@
                                 [sortType]="sortType" [sort]="sortBatchList"
                                 [exportButtonShow$]="exportButtonShow$"         
                                 (loadFinancialClaimsBatchListEvent)="loadFinancialClaimsBatchListGrid($event)"
-                                (exportGridDataEvent)="exportClaimsBatchGridData()"></cms-financial-claims-batches-list>
+                                (exportGridDataEvent)="exportClaimsBatchGridData()"
+                                (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-claims-batches-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -45,7 +47,8 @@
                                 [sortType]="sortType" [sort]="sortPaymentsList"
                                 [exportButtonShow$]="exportButtonShow$"         
                                 (loadFinancialClaimsAllPaymentsListEvent)="loadFinancialClaimsAllPaymentsListGrid($event)"
-                                (exportGridDataEvent)="exportClaimsPaymentsGridData()"></cms-financial-claims-all-payments-list>
+                                (exportGridDataEvent)="exportClaimsPaymentsGridData()"
+                                (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -53,4 +56,13 @@
             </section>
         </section>
     </div>
+    <ng-template #providerDetailsTemplate>
+        <cms-financial-claims-provider-info
+              [paymentRequestId]="paymentRequestId"
+              (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+              (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+              (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+              [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+              [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
+  </ng-template>
 </div>

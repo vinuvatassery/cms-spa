@@ -241,7 +241,7 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="profile avatar"
+              [attr.aria-label]="dataItem.creatorId"
             >
             <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>

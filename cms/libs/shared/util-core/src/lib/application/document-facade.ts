@@ -4,6 +4,7 @@ import { LoaderService } from '../application/services/app-loader.service';
 import { LoggingService } from '../api/services/logging.service';
 import { NotificationSnackbarService } from '../application/services/notification-snackbar-service';
 import { SnackBarNotificationType } from '../enums/snack-bar-notification-type.enum';
+import { ApiType } from '../enums/api-type.enum';
 import { DocumentDataService } from '../infrastructure/document.data.service';
 import { Subject } from 'rxjs';
 /** External libraries **/
@@ -57,8 +58,8 @@ export class DocumentFacade {
         })
     }
 
-    getExportFile(pageAndSortedRequest : any, path : string , fileName : string): void {           
-        this.documentDataService.getExportFile(pageAndSortedRequest,path).subscribe({
+    getExportFile(pageAndSortedRequest : any, path : string , fileName : string, apiType : string = ApiType.CaseApi): void {           
+        this.documentDataService.getExportFile(pageAndSortedRequest,path,apiType).subscribe({
           next: (response: any) => {
             if (response) {                   
                const fileUrl = window.URL.createObjectURL(response);

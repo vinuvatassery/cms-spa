@@ -15,7 +15,7 @@
                         <caption hidden> Provider Details</caption>
                         <tr hidden>
                             <th>Field</th>
-                            <th> details</th>
+                            <th> Details</th>
                         </tr>
                         <tr>
                             <td><strong>Client Name:</strong></td>
@@ -106,7 +106,7 @@
                 <div  *ngFor="let adjustment of premium.premiumAdjustments;index as i" class="mb-2">   
                     <div class="flex-space-bw align-items-center">
                         <h4 class="mar-0">ADJUSTMENT {{i+1}}</h4>
-                        <button class="" kendoButton fillMode="flat" themeColor="error" (click)="deleteAdjustment(i)">DELETE</button>
+                        <button class="" kendoButton fillMode="flat" aria-label="Delete" themeColor="error" (click)="deleteAdjustment(i)">DELETE</button>
                     </div>
                     <div class="flex-row">
                         <div class="flex-col flex-col-2">
@@ -115,7 +115,7 @@
                                 <button 
                                 kendoButton 
                                 [toggleable]="true" 
-                                aria-label="accept hiv verification" 
+                                aria-label="Positive" 
                                 title="Positive"
                                 themeColor="light" 
                                 [selected]="adjustment.isPositiveAdjustment ?? true"
@@ -126,7 +126,7 @@
                                 kendoButton 
                                 [toggleable]="true"  
                                 themeColor="light" 
-                                aria-label="reject hiv verification" 
+                                aria-label="Negative" 
                                 title="Negative"
                                 [selected]="!(adjustment.isPositiveAdjustment ?? true)"
                                 (selectedChange)="changeAdjustmentSign(false, adjustment)">
@@ -178,7 +178,7 @@
                                 Coverage Dates is required
                             </kendo-formerror>
                             <kendo-formerror *ngIf="adjustment.duplicateCoverage">
-                                Coverage Dates already exist
+                                Coverage Dates already exists
                             </kendo-formerror>
                           </kendo-floatinglabel>
                         </div>
@@ -205,10 +205,12 @@
     <div>
         <h5 class="text-upper">Recent Premiums for this client</h5>
         <div class="add_new_fixed_bottom_grid_section">
-            <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="premiumsType"></cms-financial-premiums-recent-premiums-list>
+            <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [paymentRequestId]="paymentRequestId" [clientId]="clientId" [premiumsType]="premiumsType"
+            (onProviderNameClickEvent)="onProviderNameClick($event)"
+            ></cms-financial-premiums-recent-premiums-list>
         </div>
         <div class="d-flex align-items-center mt-1">
-            <button kendoButton [primary]="true" aria-label="Confirm Selections" class="" (click)="save()"> Update </button>
+            <button kendoButton [primary]="true" aria-label="Update"  (click)="save()"> Update </button>
             <button kendoButton [primary]="true" look="outline" class="ml-2" aria-label="Cancel" (click)="closeAddEditPremiumsFormModalClicked()"> Cancel </button>
         </div>
     </div>

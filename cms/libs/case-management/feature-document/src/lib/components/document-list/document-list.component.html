@@ -41,7 +41,7 @@
                 kendoPopoverAnchor
                 [popover]="onUserProfileDetailsHovered"
                 showOn="hover"
-                aria-label="profile avatar"
+                [attr.aria-label]="dataItem.creatorId"
               >
               <common-user-photo-icon  [userId]="dataItem?.creatorId"></common-user-photo-icon>
               </button>
@@ -113,7 +113,7 @@
       <div class="flex-row">
         <div class="flex-col mt-1">
           <button kendoButton [primary]="true" icon="add" (click)="isOpenDocAttachment = true"
-          aria-label="add healthcare provider" [disabled]="(isReadOnly$ | async) ? true : false">
+          aria-label="Attachment" [disabled]="(isReadOnly$ | async) ? true : false">
           Attachment
           </button>
         </div>

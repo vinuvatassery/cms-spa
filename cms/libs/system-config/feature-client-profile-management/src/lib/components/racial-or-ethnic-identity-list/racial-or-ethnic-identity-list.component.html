@@ -14,7 +14,7 @@
       icon="add"
       kendoButton
       [primary]="true"
-      aria-label="add racial or ethnic identity"
+      aria-label="Identity"
       class="add-button-top"
       (click)="onIdentityDetailClicked()"
     >
@@ -43,8 +43,8 @@
             </kendo-floatinglabel>
           </span>
           <span>
-            <button kendoButton [primary]="true" look="flat" class="button-lg">
-              <span class="material-icons" aria-label="export" aria-invalid="true"
+            <button kendoButton [primary]="true" look="flat" aria-label="Export" class="button-lg">
+              <span class="material-icons" aria-label="Export" aria-invalid="true"
                 >exit_to_app</span
               >Export
             </button>
@@ -87,7 +87,7 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="modified by"
+              [attr.aria-label]="dataItem.modifiedBy"
             >
               <div class="app-c-avatar avatar-sm">
                 <span class="profile-text-avatar">AK</span>
@@ -154,7 +154,7 @@
         icon="add"
         kendoButton
         [primary]="true"
-        aria-label="add racial or ethnic identity"
+        aria-label="Identity"
         (click)="onIdentityDetailClicked()"
       >
         Identity
@@ -186,10 +186,10 @@
     <kendo-dialog-actions>
       <div class="justify-content-between">
         <div class="justify-content-end">
-          <button kendoButton [primary]="true" look="outline" aria-label="cancel">
+          <button kendoButton [primary]="true" look="outline" aria-label="Cancel">
             Cancel
           </button>
-          <button kendoButton [primary]="true" aria-label="deactivate">
+          <button kendoButton [primary]="true" aria-label="Deactivate">
             Deactivate
           </button>
         </div>
