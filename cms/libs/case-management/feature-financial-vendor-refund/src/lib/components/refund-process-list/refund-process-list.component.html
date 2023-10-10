@@ -17,8 +17,8 @@
     </kendo-floatinglabel>
   </span>
   <span class="right-overlay-export">
-    <button kendoButton [primary]="true" look="flat" class="button-lg">
-      <span class="material-icons" aria-label="export" aria-invalid="true"
+    <button kendoButton [primary]="true" aria-label="Export" look="flat" class="button-lg">
+      <span class="material-icons" aria-label="Export" aria-invalid="true"
         >exit_to_app</span
       ><i class="exp_button-text">Export</i>
     </button>
@@ -44,7 +44,7 @@
       [width]="40"></kendo-grid-checkbox-column>
     <kendo-grid-column field="vendorName" title="Vendor Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button aria-label="Vendor Name" kendoButton look="flat" class="card-link-button">
+        <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button">
           {{ dataItem.vendorName }}
         </button>
       </ng-template>
@@ -68,7 +68,7 @@
     <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-          [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
+          [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.by">
           <common-user-photo-icon></common-user-photo-icon>
         </button>
         <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
@@ -117,7 +117,7 @@
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Cancel </button>
 
   <button kendoButton kendoButton class="k-error-button " aria-label="Delete"> Delete </button>
-  <button kendoButton [primary]="true" aria-label="Receipting Log" class=""> Batch </button>
+  <button kendoButton [primary]="true" aria-label="Batch" class=""> Batch </button>
   <kendo-splitbutton [data]="refundProcessMore" class="app-c-split-button app-dropdown-action"
     buttonClass="k-split-button" [tabindex]="0"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">

@@ -340,12 +340,12 @@
 <kendo-dialog-actions>
     <div class="justify-content-between">
         <div>
-            <button  *ngIf="!isPaymentAddForm" kendoButton class="k-danger-link" aria-label="delete Payment"> Delete </button>
-            <button *ngIf="!isPaymentAddForm" kendoButton [primary]="true" look="outline" aria-label="edit Payment"> Edit </button>
+            <button  *ngIf="!isPaymentAddForm" kendoButton class="k-danger-link" aria-label="Delete"> Delete </button>
+            <button *ngIf="!isPaymentAddForm" kendoButton [primary]="true" look="outline" aria-label="Edit"> Edit </button>
         </div>
         <div class="justify-content-end">
-            <button kendoButton [primary]="true" look="outline" aria-label="cancel adding Payment" (click) ="closeCoPaymentDetailsOpened()"> Cancel  </button>
-            <button kendoButton [primary]="true" aria-label="add new Payment" (click)="save()"> Add</button>
+            <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click) ="closeCoPaymentDetailsOpened()"> Cancel  </button>
+            <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> Add</button>
 
         </div>
     </div>

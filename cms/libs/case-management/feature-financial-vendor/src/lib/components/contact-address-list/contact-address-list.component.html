@@ -27,7 +27,7 @@
           >star</span
         >
       </span>
-      <button aria-label="name" kendoButton look="flat" class="card-link-button">
+      <button [attr.aria-label]="dataItem.contactName" kendoButton look="flat" class="card-link-button">
         {{ dataItem.contactName }}
       </button>
 

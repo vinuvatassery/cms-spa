@@ -27,15 +27,15 @@
 <kendo-dialog-actions>
   <div class="justify-content-between">
     <div>
-      <button kendoButton class="k-danger-link" aria-label="delete employer" *ngIf="!isAdd" (click)="onRemoveEmployerConfirmationClicked()">
+      <button kendoButton class="k-danger-link" aria-label="Delete" *ngIf="!isAdd" (click)="onRemoveEmployerConfirmationClicked()">
         Delete
       </button>
     </div>
     <div class="justify-content-end">
-      <button kendoButton [primary]="true" aria-label="cancel employer" look="outline" (click)="cancelModal()">
+      <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="cancelModal()">
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="add new employer" (click)="saveEmployer()" [disabled]="btnDisabled">
+      <button kendoButton [primary]="true" attr.aria-label=" {{ isAdd ? 'Add' : 'Update ' }}" (click)="saveEmployer()" [disabled]="btnDisabled">
            {{ isAdd ? 'Add' : 'Update ' }}
       </button>
     </div>

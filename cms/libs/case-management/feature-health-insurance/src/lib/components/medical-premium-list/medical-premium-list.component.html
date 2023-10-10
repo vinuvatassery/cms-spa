@@ -36,7 +36,7 @@
         <kendo-grid-column field="FullDetail" title="Full Detail" [width]="160" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem><button kendoButton look="flat" class="card-link-button"
               (click)="handleHealthInsuranceOpenClicked('view')" (click)="handleInsuranceType(dataItem)"
-              aria-label="view medical premium">
+              aria-label="View">
               View
             </button></ng-template>
         </kendo-grid-column>
@@ -47,7 +47,7 @@
         <kendo-grid-column field="insuranceCarrierName" title="Insurance Carrier Name" [width]="150">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button kendoButton look="flat" class="card-link-button"
-              aria-label="carrier name"
+              [attr.aria-label]="dataItem.insuranceCarrierName"
               kendoPopoverAnchor
               [popover]="myPopover"
               (click)="getCarrierContactInfo(dataItem.insuranceVendorId,'')"
@@ -57,7 +57,7 @@
         </kendo-grid-column>
         <kendo-grid-column field="insurancePlanName" title="Insurance Plan Name" [width]="150">
           <ng-template kendoGridCellTemplate let-dataItem><button kendoButton look="flat" class="card-link-button"
-              aria-label="plan name"
+              [attr.aria-label]="dataItem.insurancePlanName"
               kendoPopoverAnchor
               [popover]="myPopover"
               (click)="getCarrierContactInfo(dataItem.insuranceVendorId,dataItem.insurancePlanName)"
@@ -134,7 +134,7 @@
     <div class="flex-row">
       <div class="flex-col mt-1">
         <button kendoButton [primary]="true" icon="add" (click)="handleHealthInsuranceOpenClicked('add')"
-          aria-label="add health insurance">
+          aria-label="Health Insurance">
           Health Insurance
         </button>
       </div>
@@ -184,10 +184,10 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel adding health insurance" (click)="onDeleteConfirmCloseClicked()">
+        <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="onDeleteConfirmCloseClicked()">
           Cancel
         </button>
-        <button kendoButton class="k-error-button" aria-label="delete health insurance" (click)="deleteInsurancePolicy()">
+        <button kendoButton class="k-error-button" aria-label="Delete" (click)="deleteInsurancePolicy()">
           Delete
         </button>
       </div>

@@ -70,7 +70,7 @@
             <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
               <span (click)="clientDocumentFacade.viewOrDownloadFile('view',files[0].documentId,files[0].name)">
               <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>
-                <button aria-label="doc name" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
+                <button attr.aria-label="{{ files[0].name }}" *ngIf="files[0].documentId" kendoButton look="flat" class="card-link-button"  >
                   <a>{{ files[0].name }} </a>
                 </button>
                 <br>
@@ -116,7 +116,7 @@
           </div>
           <p *ngIf="uploadedDate">Uploaded by
             <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
-            [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh aria-label="user profile">
+            [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh [attr.aria-label]="uploadedBy">
             {{uploadedBy}}
           </button>
           on {{uploadedDate | date:'MM/dd/yyyy'}}</p>
@@ -140,11 +140,11 @@
       <div class="flex-col mt-1">
         Sent {{sentDate | date:'MM-dd-yyyy'}}
         <button kendoButton class="k-primary-link text-t-normal text-underline" kendoPopoverAnchor
-          [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh aria-label="user profile">
+          [popover]="onUserProfileDetailsHovered" showOn="hover" #refresh attr.aria-label="{{hivVerificationForm.controls['requestedUserName'].value}}">
           {{hivVerificationForm.controls["requestedUserName"].value}}
         </button>
         <button kendoButton class="k-primary-link text-t-normal ml-2 text-underline" (click)="onResendRequestClicked()"
-          aria-label="re send request">
+          aria-label="Re-send Request">
           Re-send Request
         </button>
       </div>
