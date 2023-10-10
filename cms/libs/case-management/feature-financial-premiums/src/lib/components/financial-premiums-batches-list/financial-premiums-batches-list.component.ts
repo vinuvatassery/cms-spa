@@ -378,10 +378,6 @@ export class FinancialPremiumsBatchesListComponent
     }
     return searchValue;
   }
-
-  getSubString(sendBackNotes:string,len:number): string {
-    return (sendBackNotes.length>len)? sendBackNotes.substring(0, len)+'...':sendBackNotes;
-  }
 }
 
 

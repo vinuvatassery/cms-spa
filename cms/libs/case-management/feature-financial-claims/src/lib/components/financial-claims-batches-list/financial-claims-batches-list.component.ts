@@ -278,10 +278,6 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
 
     })
   }
-  
-  getSubString(sendBackNotes:string,len:number): string {
-    return (sendBackNotes.length>len)? sendBackNotes.substring(0, len)+'...':sendBackNotes;
-  }
 }
 
 
