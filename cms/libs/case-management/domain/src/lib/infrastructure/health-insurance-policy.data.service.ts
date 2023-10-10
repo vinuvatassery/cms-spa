@@ -34,7 +34,7 @@ export class HealthInsurancePolicyDataService {
   getMedicalClaimMaxbalance(clientId: number,eligibilityId:string) {
     
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/balance?ClientId=${clientId}&&eligibilityId=${eligibilityId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/balance?ClientId=${clientId}&eligibilityId=${eligibilityId}`
     );
   }
   getCarrierContactInfo(carrierId: any) {
