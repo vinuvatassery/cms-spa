@@ -285,11 +285,12 @@ this.insuranceTypeCode="DENTAL";
 
   loadHealthInsurancePolicy() {
     this.editViewSubscription = this.insurancePolicyFacade.healthInsurancePolicy$.subscribe((data: any) => {
-    
-     
      this.healthInsurancePolicyCopy = data;
-     this.financialClaimsFacade.searchPharmacies(data.insuranceVendorAddressId,data.healthInsuranceTypeCode ==  FinancialVendorTypeCode.MedicalProviders? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+     if(data.insuranceVendorAddressId!=null)
+     {      
+    this.financialClaimsFacade.searchProvidorsById(data.insuranceVendorAddressId,data.healthInsuranceTypeCode ==  FinancialVendorTypeCode.DentalProviders? ServiceSubTypeCode.dentalClaim : ServiceSubTypeCode.medicalClaim);
      
+     }
       this.bindValues(data);
     });
   }
@@ -1022,7 +1023,7 @@ this.insuranceTypeCode="DENTAL";
       x.enrolledInInsuranceFlag = StatusFlag.Yes;
       x.clientCaseEligibilityId = this.caseEligibilityId;
       x.clientId = this.clientId;
-      x.dob = x.dob.toLocaleDateString();
+      x.dob = x?.dob.toLocaleDateString();
       this.healthInsurancePolicy.othersCoveredOnPlan.push(x);
     });
     this.healthInsurancePolicy.isClientPolicyHolderFlag = this.healthInsuranceForm.value.isClientPolicyHolderFlag;

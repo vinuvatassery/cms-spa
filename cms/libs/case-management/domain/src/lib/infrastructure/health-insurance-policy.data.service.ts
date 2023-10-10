@@ -31,7 +31,12 @@ export class HealthInsurancePolicyDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy/${clientInsurancePolicyId}`
     );
   }
-
+  getMedicalClaimMaxbalance(clientId: number) {
+    
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/GetMedicalClaimMaxbalanceAsync?ClientId=${clientId}`
+    );
+  }
   getCarrierContactInfo(carrierId: any) {
     return this.http.get<CarrierContactInfo>(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/carrier/contact-info/${carrierId}`

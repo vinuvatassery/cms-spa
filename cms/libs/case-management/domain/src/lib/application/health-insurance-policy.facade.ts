@@ -29,7 +29,7 @@ export class HealthInsurancePolicyFacade {
   private premiumPaymentsSubject = new BehaviorSubject<any>([]);
   triggeredPremiumPaymentSaveSubject = new BehaviorSubject<boolean>(false);
   triggeredCoPaySaveSubject = new BehaviorSubject<boolean>(false);
-
+  private clientmaxmumbalanceSubject = new BehaviorSubject<any>([]);
   /** Public properties **/
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -49,6 +49,7 @@ export class HealthInsurancePolicyFacade {
   premiumPayments$ = this.premiumPaymentsSubject.asObservable();
   triggeredPremiumPaymentSave$ = this.triggeredPremiumPaymentSaveSubject.asObservable();
   triggeredCoPaySave$ = this.triggeredCoPaySaveSubject.asObservable();
+  clientmaxmumbalance$ = this.clientmaxmumbalanceSubject.asObservable();
 
   public dateFields: Array<string> = [
     'startDate',
@@ -136,6 +137,18 @@ export class HealthInsurancePolicyFacade {
       next: (response) => {
         this.hideLoader();
         this.healthInsurancePolicySubject.next(response);
+      },
+      error: (err) => {
+        this.hideLoader();
+      },
+    });
+  }  
+  getMedicalClaimMaxbalance(clientId: number): void {    
+    this.showLoader();
+    this.healthInsurancePolicyService.getMedicalClaimMaxbalance(clientId).subscribe({
+      next: (response) => {
+        this.hideLoader();
+        this.clientmaxmumbalanceSubject.next(response);
       },
       error: (err) => {
         this.hideLoader();

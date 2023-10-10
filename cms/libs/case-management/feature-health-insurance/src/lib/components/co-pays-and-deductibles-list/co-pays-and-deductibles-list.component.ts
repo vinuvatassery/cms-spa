@@ -34,6 +34,7 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   public gridSkipCount = this.insurancePolicyFacade.skipCount;
   carrierContactInfo!: any;
   sort!: any;
+  clientmaxmumbalance:number=0;
   /** Constructor **/
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly formBuilder: FormBuilder, private readonly cdr: ChangeDetectorRef, private caseFacade: CaseFacade,
@@ -44,6 +45,11 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   /** Lifecycle hooks **/
 
   ngOnInit(): void {
+    this.insurancePolicyFacade.getMedicalClaimMaxbalance(this.clientId);
+   this.insurancePolicyFacade.clientmaxmumbalance$.subscribe((res:any)=>{
+    
+   this.clientmaxmumbalance=res.maximumAmount;
+   })
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
