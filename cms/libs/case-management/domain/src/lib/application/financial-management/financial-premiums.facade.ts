@@ -294,9 +294,9 @@ export class FinancialPremiumsFacade {
     });
   }
 
-  loadBatchItemsListGrid(batchId: any, paymentId: any, params: GridFilterParam){
+  loadBatchItemsListGrid(batchId: any, paymentId: any, premiumType: string, params: GridFilterParam){
     this.batchItemsLoaderSubject.next(true);
-    this.financialPremiumsDataService.loadBatchItemsListService(batchId, paymentId, params).subscribe({
+    this.financialPremiumsDataService.loadBatchItemsListService(batchId, paymentId, premiumType, params).subscribe({
       next: (dataResponse) => {
         this.batchItemsDataSubject.next(dataResponse.items);
         this.batchItemsLoaderSubject.next(false);

@@ -77,7 +77,7 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
   loadBatchItemListGrid(event: any) { 
     const itemId = this.route.snapshot.queryParams['pid'];
     const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
-    this.financialPremiumsFacade.loadBatchItemsListGrid(this.batchId, itemId, params);
+    this.financialPremiumsFacade.loadBatchItemsListGrid(this.batchId, itemId, this.premiumType, params);
   }
 
   loadPaymentPanel(event:any=null){

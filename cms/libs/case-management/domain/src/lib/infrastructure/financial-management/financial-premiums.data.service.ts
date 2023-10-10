@@ -76,9 +76,9 @@ export class FinancialPremiumsDataService {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payments/${paymentId}/services`,paginationParameters);
   }
 
-  loadBatchItemsListService(batchId:string, paymentId: string, params: GridFilterParam){
+  loadBatchItemsListService(batchId:string, paymentId: string, premiumType: string, params: GridFilterParam){
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/batches/${batchId}/payments/${paymentId}`, params);
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/payments/${paymentId}`, params);
   }
   loadReconcileListService(batchId:any,premiumType:any,paginationParameters:any){
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/reconcile-payments`,paginationParameters);
