@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ClientProfileTabs, ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, FinancialVendorTypeCode, HealthInsurancePlan, ServiceSubTypeCode} from '@cms/case-management/domain';
+import {ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, FinancialVendorTypeCode, HealthInsurancePlan, ServiceSubTypeCode} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -105,7 +105,6 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
             
             this.financialVendorFacade.hideLoader();
             this.closeVendorDetailModal();
-            this.closeEditModal(true);
             this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Successfully Added");
           },
           error:(err:any)=>{
@@ -114,12 +113,7 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
         });
       }
     }
-    closeEditModal(isEditSuccessfull: boolean) {
-      // this.openEditDailog = false;
-      // if (isEditSuccessfull) {
-      //   this.onVendorEditSuccessStatus.emit(true);
-      // }
-    }
+ 
   searchMedicalProvider(searchText: any) {
     
     if (!searchText || searchText.length == 0) {

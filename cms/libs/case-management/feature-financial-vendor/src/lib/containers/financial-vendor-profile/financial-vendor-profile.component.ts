@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DrugsFacade, FinancialVendorDataService, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
-import { LoaderService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { State } from '@progress/kendo-data-query';
 
 

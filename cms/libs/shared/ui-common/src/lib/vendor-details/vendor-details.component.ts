@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@ang
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
-import { ConfigurationProvider, LoaderService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
 import { AddressType } from '../enums/address-type.enum';
@@ -35,7 +35,6 @@ export class VendorDetailsComponent implements OnInit {
 
   isViewContentEditable!: boolean;
   isValidateForm: boolean = false;
-//  ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodList: any[] = [];
   paymentRunDateList: any[] = [];
   vendorContactList: any[] = [];

@@ -22,7 +22,6 @@ import {
   PaymentRequestType,
   FinancialClaims,
   PaymentMethodCode,
-  HealthInsurancePlan
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  Lov, LovFacade } from '@cms/system-config/domain';
@@ -346,8 +345,7 @@ export class MedicalPaymentDetailComponent {
         );
         return;
       }
-      if (service.exceptionFlag === StatusFlag.Yes && !service.exceptionReasonCode) {       
-      }
+    
       bodyData.tpaInvoices.push(service);
     }
     bodyData.tpaInvoices.splice(0, 1);
