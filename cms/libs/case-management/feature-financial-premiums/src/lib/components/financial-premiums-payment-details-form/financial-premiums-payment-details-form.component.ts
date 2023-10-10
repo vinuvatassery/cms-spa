@@ -7,7 +7,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PaymentPanel } from '@cms/case-management/domain';
+import { PaymentPanel, PremiumPaymentStatus } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -80,7 +80,7 @@ dateValidate(event: Event, type: any) {
   const todayDate = new Date();
 
   switch (type.toUpperCase()) {
-    case "RECONCILED":
+    case PremiumPaymentStatus.RECONCILED:
       this.dateReconciledValidator = false;
       const datePaymentReconciled = this.premiumPaymentForm.controls['datePaymentReconciled'].value;
       if (datePaymentReconciled > todayDate) {
@@ -88,7 +88,7 @@ dateValidate(event: Event, type: any) {
         this.premiumPaymentForm.controls['datePaymentReconciled'].setErrors({ 'incorrect': true });
       }
       break;
-    case "PAYMENT_SENT":
+    case PremiumPaymentStatus.PAYMENT_SENT:
       this.datePaymentSentValidator = false;
       const datePaymentSent = this.premiumPaymentForm.controls['datePaymentSent'].value;
       if (datePaymentSent > todayDate) {
