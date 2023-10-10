@@ -93,7 +93,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
 
   gridColumns : {[key: string]: string} = {
     clientFullName: 'Client Name',
-    nameOnInsuranceCard: 'Name on Primary Insurance Card',
+    insuranceName: 'Name on Primary Insurance Card',
     paymentStatus: 'Payment Status',
     clientId: 'Client ID',
     planName: 'Plan Name',
@@ -108,7 +108,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
       columnDesc: 'Client Name',
     },
     {
-      columnCode: 'nameOnInsuranceCard',
+      columnCode: 'insuranceName',
       columnDesc: 'Name on Primary Insurance Card',
     },
     {
