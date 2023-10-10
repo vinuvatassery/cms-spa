@@ -81,7 +81,7 @@
         kendoButton
         class="k-danger-link"
         *ngIf="isEditHealthProviderValue"
-        aria-label="remove health care provider"
+        aria-label="Remove"
       >
         Remove
       </button>
@@ -91,14 +91,14 @@
         kendoButton
         [primary]="true"
         look="outline"
-        aria-label="cancel health care provider"
+        aria-label="Cancel"
       >
         Cancel
       </button>
       <button
         kendoButton
         [primary]="true"
-        aria-label="update or add health care provider"
+        attr.aria-label="{{ isEditHealthProviderValue ? 'Update' : 'Add' }}"
       >
         {{ isEditHealthProviderValue ? 'Update' : 'Add' }}
       </button>

@@ -95,10 +95,10 @@
 
       </div>    
     <div class="app-card-bottom-buttons" *ngIf="sendEmail"> 
-        <a href="mailto:userById?.emailAddress">      <button  kendoButton [primary]="true" look="flat" aria-label="RE-ASSIGN CASE"> Send Email    </button></a>
+        <a href="mailto:userById?.emailAddress">      <button  kendoButton [primary]="true" look="flat" aria-label="Send Email"> Send Email    </button></a>
     </div>
     <div class="app-card-bottom-buttons" *ngIf="reassign"> 
-      <button  kendoButton [primary]="true" look="flat" aria-label="RE-ASSIGN CASE" (click)="openBusinessPopup()">
+      <button  kendoButton [primary]="true" look="flat" aria-label="Re-assign" (click)="openBusinessPopup()">
         Re-assign
       </button>
     </div>

@@ -80,7 +80,7 @@
     <div class="justify-content-end">
       <button
         kendoButton
-        aria-label="cancel send letter"
+        aria-label="Cancel"
         [primary]="true"
         look="outline"
         (click)="onCancel()"
@@ -90,7 +90,7 @@
       <button
         kendoButton
         [primary]="true"
-        aria-label="initiate benefits"
+        [attr.aria-label]="buttonText"
         [disabled]="btnDisabled"
         (click)="save()"
       >

@@ -4,7 +4,7 @@
 <h1 hidden>CMS</h1>
 <section class="app-l-header" role="header" kendoTooltip>
   <div class="header_menu-left_most_section"  >
-    <button class="mobile-menu-icon" (click)="openMobileMenu()" *ifPermission='["Layout_Logo_View_Only"]'> <span class="material-icons">
+    <button  aria-label="Mobile Menu Icon" class="mobile-menu-icon" (click)="openMobileMenu()" *ifPermission='["Layout_Logo_View_Only"]'> <span class="material-icons">
       menu
       </span></button>
     <div class="header-logo" [routerLink]="['/']" *ifPermission='["Layout_Logo_View_Only"]'>
@@ -37,7 +37,8 @@
           class="sidebar-hamburger_button"
           kendoButton
           look="flat"
-          aria-label="side navigation"
+          aria-label="Main menu expand and collapse"
+   
         >
           <span
             class="material-icons sidebar-hamburger_icon-left"

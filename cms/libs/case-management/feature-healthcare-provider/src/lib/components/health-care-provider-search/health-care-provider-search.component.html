@@ -61,19 +61,19 @@
           [primary]="true"
           look="flat"
           (click)="onOpenBusinessLogicClicked()"        
-          aria-label="add new provider"
+          aria-label="Add New"
           *ngIf="!isEditSearchHealthProviderValue"
         >
-          ADD NEW
+          Add New
         </button>
         <button
           kendoButton
           class="k-danger-link"
           *ngIf="isEditSearchHealthProviderValue"
-          aria-label="remove provider"
+          aria-label="Remove"
           (click)="onDeleteConfirm()"
         >
-          REMOVE
+          Remove
         </button>
       </div>
       <div class="justify-content-end">
@@ -82,11 +82,11 @@
           [primary]="true"
           look="outline"
           (click)="onCloseProviderClicked()"
-          aria-label="cancel adding provider"
+          aria-label="Cancel"
         >
-          CANCEL
+          Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="add or update pharmacy"  [disabled]="btnDisabled">
+        <button kendoButton [primary]="true" attr.aria-label="{{ isEditSearchHealthProviderValue ? 'Update' : 'Add' }}"   [disabled]="btnDisabled">
           {{ isEditSearchHealthProviderValue ? 'Update' : 'Add' }}
         </button>
       </div>

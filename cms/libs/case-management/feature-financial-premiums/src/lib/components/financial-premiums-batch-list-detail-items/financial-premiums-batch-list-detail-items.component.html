@@ -1,7 +1,7 @@
 <div class=" pt-0">
       <section class="app-l-mainTittle">
             <div class="d-flex">
-                  <button aria-label="back to vendor refund" kendoButton look="flat" class="mr-1"
+                  <button aria-label="Go Back" kendoButton look="flat" class="mr-1"
                         (click)="backToBatchLog($event)" title="Go Back"> <span class="material-icons">
                               arrow_back </span> </button>
                   <h1 class="maintitle_withicon text-bold">Item # 1 </h1>
@@ -10,7 +10,7 @@
       <section class="app-l-client-wrapper ">
             <section class="app-l-wrapper">
                   <div>
-                  <p> <button aria-label="view Profile Profile"
+                  <p> <button  aria-label="view Provider Profile"
                               (click)="onViewProviderDetailClicked()" kendoButton look="flat"
                               class="mr-3 card-link-button">
                               Aetna
@@ -21,7 +21,7 @@
                   <p class="mt-2">Make adjustments to the items below as needed. Click “Confirm Changes” when you’re ready to request payment.</p>
                   <div class="grey-banner-section mt-2">
                         <div class="flex-row">
-                              <button aria-label="edit" kendoButton look="flat" class="edit-btn card-link-button" (click)="onPaymentDetailFormClicked(paymentDetailsFromTemplate)" > Edit </button>
+                              <button aria-label="Edit" kendoButton look="flat" class="edit-btn card-link-button" (click)="onPaymentDetailFormClicked(paymentDetailsFromTemplate)" > Edit </button>
                         <div class="flex-col flex-col-2">
                               <small>Date Payment Reconciled</small>
                               <p>XX/XX/XXXX</p>
@@ -62,7 +62,7 @@
                               </kendo-floatinglabel>
                         </span>
                         <span class="right-overlay-export">
-                              <button kendoButton [primary]="true" look="flat" class="button-lg">
+                              <button kendoButton [primary]="true" aria-label="Export" look="flat" class="button-lg">
                                     <span class="material-icons" aria-label="export"
                                           aria-invalid="true">exit_to_app</span><i class="exp_button-text">Export</i>
                               </button>

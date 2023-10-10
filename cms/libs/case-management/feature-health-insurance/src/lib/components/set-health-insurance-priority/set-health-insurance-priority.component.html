@@ -15,7 +15,7 @@
         [formControlName]="insurance.clientInsurancePolicyId"
         [value]="insurance.priorityCode"
         (valueChange)="onChangePriority($event,insurance)"
-        [class.ng-touched] = "formSubmitted && !form.controls[insurance.clientInsurancePolicyId]?.valid"        
+        [class.ng-touched] = "formSubmitted && !form.controls[insurance.clientInsurancePolicyId].valid"        
         [valuePrimitive]="true" valueField="lovCode" textField="lovDesc" [data]="ddlMedicalHealthPlanPriority$ | async">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
@@ -31,12 +31,12 @@
         kendoButton
         [primary]="true"
         look="outline"
-        aria-label="cancel adding priority"
+        aria-label="Cancel"
         (click)="onModalCloseClicked()"
       >
         Cancel
       </button>
-      <button kendoButton [primary]="true" (click)="prioritySave()" aria-label="save priority">
+      <button kendoButton [primary]="true" (click)="prioritySave()" [attr.aria-label]="insurancePriorityModalButtonText">
         {{insurancePriorityModalButtonText}}
       </button>
     </div>
