@@ -1,6 +1,6 @@
 <ul class="sidebar-menu" aria-label="sidebar menu">
   <li *ngFor="let menu of menus$ | async as menus; let i = index" attr.aria-label="sidebar menu item {{ menu.name }}"
-    [ngClass]="{ 'sidebar-menu_items':true, 'with-sub-menu': menu.subMenus?.length !== 0 }"
+    [ngClass]="{ 'sidebar-menu_items':true, 'with-sub-menu': menu.subMenus.length !== 0 }"
     class="new_sub_sidebar_menu">
     <a class="sub-menu-item" attr.aria-label="{{ menu.name }}" (click)="onMenuClick(menu)">
       <span class="material-icons sidebar-menu_icon" attr.aria-label="{{ menu.name }}">
