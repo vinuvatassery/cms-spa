@@ -43,4 +43,15 @@
             </section>
         </section>
     </div>
+    <ng-template #providerDetailsTemplate>
+        <cms-pharmacy-claims-provider-info
+               [vendorProfile$]="vendorProfile$" 
+               [paymentMethodCode$]="paymentMethodCode$"
+               [ddlStates$]="ddlStates$"
+               (updateProviderProfileEvent)="updateProviderProfile($event)" 
+               [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+               (getProviderPanelEvent)="getProviderPanel($event)"
+               [paymentRequestId]="paymentRequestId"
+              ></cms-pharmacy-claims-provider-info>
+  </ng-template>
 </div>
