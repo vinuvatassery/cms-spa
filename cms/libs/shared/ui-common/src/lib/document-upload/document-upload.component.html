@@ -46,7 +46,7 @@
               <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
                 <span (click)="documentFacade.viewOrDownloadFile(isFileViewable,files[0]?.documentId,files[0]?.name)">
                 <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>
-                  <button aria-label="doc name" *ngIf="files[0]?.documentId" kendoButton look="flat" class="card-link-button"  >
+                  <button [attr.aria-label]="files[0].name" *ngIf="files[0]?.documentId" kendoButton look="flat" class="card-link-button"  >
                     <a>{{ files[0].name }} </a>
                   </button>
                   <br>

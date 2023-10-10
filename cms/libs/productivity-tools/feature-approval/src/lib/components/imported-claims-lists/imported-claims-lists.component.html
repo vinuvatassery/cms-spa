@@ -26,8 +26,8 @@
         </kendo-floatinglabel>
     </span>
     <span class="right-btn-export">
-        <button kendoButton [primary]="true" look="flat" class="button-lg">
-            <span class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>Export
+        <button kendoButton [primary]="true" look="flat" aria-label="Export" class="button-lg">
+            <span class="material-icons" aria-label="Export" aria-invalid="true">exit_to_app</span>Export
         </button>
     </span>
 </section>
@@ -67,7 +67,7 @@
                 <button *ngIf="dataItem.isDelete === 'N'" kendoButton aria-label="Deny Claim"
                     class="select-primary cc-fwc" illMode="flat" [toggleable]="true">Deny
                     Claim </button>
-                <button *ngIf="dataItem.isDelete === 'Y'" kendoButton aria-label="Deny Claim"
+                <button *ngIf="dataItem.isDelete === 'Y'" kendoButton aria-label="Delete Claim"
                     class="select-error cc-fwc" illMode="flat" [toggleable]="true">Delete Claim </button>
             </ng-template>
         </kendo-grid-column>
@@ -77,28 +77,28 @@
                     <span class="material-icons">info</span>
                     The client’s insurance is not valid for the date of service. Deny the claim, or update the client’s
                     insurance in their profile.
-                    <button aria-label="GO TO PROFILE" kendoButton look="flat" class="card-link-button"> GO TO PROFILE
+                    <button aria-label="Go To Profile" kendoButton look="flat" class="card-link-button"> GO TO PROFILE
                     </button>
                 </p>
 
                 <p class="table_sub_row warning_info_row" *ngIf="dataItem.subRow.type === '02'">
                     <span class="material-icons">info</span>
                     This claim puts the client $521.62 over their max benefits. Deny the claim, or make an exception.
-                    <button aria-label="SEARCH CLIENTS" kendoButton look="flat" class="card-link-button"
+                    <button aria-label="Search Clients" kendoButton look="flat" class="card-link-button"
                         (click)="onSearchClientsDialogClicked(searchClientsDialogModal)"> SEARCH CLIENTS </button>
                 </p>
 
                 <p class="table_sub_row warning_info_row" *ngIf="dataItem.subRow.type === '03'">
                     <span class="material-icons">info</span>
                     The system could not match the Policy ID to a client. Delete the claim or match it to a client.
-                    <button aria-label="MAKE AN EXCEPTION" kendoButton look="flat" class="card-link-button"
+                    <button aria-label="Make an Exception" kendoButton look="flat" class="card-link-button"
                         (click)="onMakeExpectationClicked(expectationReasonDialogModal)"> MAKE AN
                         EXCEPTION </button>
                 </p>
                 <p class="table_sub_row warning_info_row" *ngIf="dataItem.subRow.type === '04'">
                     <span class="material-icons">info</span>
                     The system could not match the Policy ID to a client. Delete the claim or match it to a client.
-                    <button aria-label="REVIEW POSSIBLE MATCH" kendoButton look="flat" class="card-link-button"
+                    <button aria-label="Review Possible Matches" kendoButton look="flat" class="card-link-button"
                         (click)="onReviewPossibleMatchesDialogClicked(possibleMatchesDialogModal)"> REVIEW
                         POSSIBLE MATCH </button>
                 </p>
@@ -140,7 +140,7 @@
 <div class="bottom-fixed-wrapper text-right flex-gap">
     <span class="">0 claim(s) to be denied, 0 claim(s) to be deleted</span>
     <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Cancel </button>
-    <button kendoButton [primary]="true" look="flat" class="" aria-label="APPROVE ALL"> APPROVE ALL </button>
+    <button kendoButton [primary]="true" look="flat" class="" aria-label="Approve All"> APPROVE ALL </button>
     <button kendoButton [primary]="true" aria-label="Submit" class=""> Submit </button>
 </div>
 

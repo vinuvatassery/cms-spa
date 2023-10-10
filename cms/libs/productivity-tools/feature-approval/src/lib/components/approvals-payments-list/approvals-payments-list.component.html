@@ -30,7 +30,7 @@
         </kendo-floatinglabel>
     </span>
     <span class="right-overlay-export">
-        <button kendoButton kendoButton [primary]="true" look="flat" aria-label="Export" class="button-lg" (click)="onClickedExport()" [disabled]="showExportLoader">
+        <button kendoButton kendoButton [primary]="true" look="flat" aria-label="Export" class="button-lg"  (click)="onClickedExport()" [disabled]="showExportLoader">
             <span *ngIf="!showExportLoader" class="material-icons" aria-label="Export" aria-invalid="true">exit_to_app</span>
             <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
         </button>
@@ -105,7 +105,7 @@
         </kendo-grid-column>
         <kendo-grid-column *ngIf="userLevel == 2" field="firstApprovalBy" title="First Approval By" [width]="120">
             <ng-template kendoGridCellTemplate let-dataItem>  
-              <button aria-label="client name" kendoButton look="flat" class="card-link-button"  
+              <button [attr.aria-label]="dataItem.firstApprovalBy" kendoButton look="flat" class="card-link-button"  
               kendoPopoverAnchor  
               [popover]="userCard"
               showOn="hover">
@@ -132,8 +132,8 @@
         <kendo-grid-column field=" " title="Approve | Send Back" [width]="210" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'">
             <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                 <div class="cms-button-group">
-                    <button kendoButton (selectedChange)="onRowLevelApproveClicked($event,dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'APPROVED'" id ="approve{{rowIndex}}" [toggleable]="true" >Approve</button>
-                    <button kendoButton (selectedChange)="onRowLevelSendbackClicked($event,dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'SEND_BACK'" id ="approve{{rowIndex}}" [toggleable]="true">Send Back</button>
+                    <button kendoButton (selectedChange)="onRowLevelApproveClicked($event,dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'APPROVED'" aria-label="Approve" id ="approve{{rowIndex}}" [toggleable]="true" >Approve</button>
+                    <button kendoButton (selectedChange)="onRowLevelSendbackClicked($event,dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'SEND_BACK'" aria-label="Send Back" id ="approve{{rowIndex}}" [toggleable]="true">Send Back</button>
                 </div>
             </ng-template>
         </kendo-grid-column>
@@ -211,7 +211,7 @@
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
     <span  class="">{{approveBatchCount}} batch(es) to be approved, {{sendbackBatchCount}} batch(es) to be sent back</span>    
-    <button kendoButton [primary]="true" look="flat" class="" aria-label="APPROVE ALL" (click)="onApproveAllClicked()" [disabled]="!hasPaymentPendingApproval"> APPROVE ALL </button>
+    <button kendoButton [primary]="true" look="flat" class="" aria-label="Approve All" (click)="onApproveAllClicked()" [disabled]="!hasPaymentPendingApproval"> APPROVE ALL </button>
     <button kendoButton [primary]="true" aria-label="Submit" class="" (click)="onOpenSubmitApprovalPaymentItemsClicked()" [disabled]="!hasPaymentPendingApproval"> Submit </button>
 </div>
 
@@ -236,10 +236,10 @@
     <kendo-dialog-actions>
         <div class="justify-content-between">
             <div class="justify-content-end">
-                <button aria-label="cancel new case" kendoButton look="outline" (click)="onCloseSubmitApprovalPaymentItemsClicked()">
+                <button aria-label="Cancel" kendoButton look="outline" (click)="onCloseSubmitApprovalPaymentItemsClicked()">
                     Cancel
                 </button>
-                <button aria-label="save and continue" kendoButton [primary]="true" (click)="makeRequestData()">
+                <button aria-label="Submit" kendoButton [primary]="true" (click)="makeRequestData()">
                     SUBMIT
                 </button>
             </div>
@@ -263,7 +263,7 @@
 
 <ng-template #depositDetailsDialogModal>
     <kendo-dialog-titlebar (close)="onCloseDepositDetailClicked()"> Rent Deposit Details <button kendoButton
-            class="ml-1 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit " aria-label="edit"
+            class="ml-1 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit " aria-label="Edit"
             title="Edit"></button></kendo-dialog-titlebar>
     <productivity-tools-deposit-details> </productivity-tools-deposit-details>
 </ng-template>

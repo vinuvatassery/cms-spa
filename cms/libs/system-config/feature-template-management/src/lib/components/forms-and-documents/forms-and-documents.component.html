@@ -19,7 +19,7 @@
 
 
             <span class="attachments-buttons-wrap" *ngIf="dataItem.isFolder===false">
-              <button kendoButton look="flat" title="Download" aria-label="download attachment" *ngIf="dataItem.isFolder===false"
+              <button kendoButton look="flat" title="Download" aria-label="Download" *ngIf="dataItem.isFolder===false"
                 (click)="onDownloadViewFileClick('download',dataItem.documentTemplateId,dataItem.description)">
                 <span class="material-icons" aria-label="download" aria-hidden="true">file_download</span>
               </button>

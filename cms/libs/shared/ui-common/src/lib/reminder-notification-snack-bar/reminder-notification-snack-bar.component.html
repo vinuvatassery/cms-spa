@@ -20,12 +20,12 @@
             Options <span class="material-icons">   arrow_drop_down    </span>
           </kendo-dropdownbutton>
 
-          <button kendoButton themeColor="primary"  fillMode="flat"  (click)="removePreviousMessage();$event.stopPropagation()"> DISMISS</button>
+          <button kendoButton themeColor="primary" aria-label="Dismiss"  fillMode="flat"  (click)="removePreviousMessage();$event.stopPropagation()"> DISMISS</button>
         </div>
       </div>
     </div>
     <div class="reminder-col-three">
-      <button kendoButton fillMode="clear" class="snakbar-close-btn" themeColor="light"
+      <button kendoButton fillMode="clear" aria-label="Move Reminder Notification on Side" class="snakbar-close-btn" themeColor="light"
         (click)="moveSideReminderNotification();$event.stopPropagation()">
         <span class="material-icons"> chevron_right </span>
       </button>
