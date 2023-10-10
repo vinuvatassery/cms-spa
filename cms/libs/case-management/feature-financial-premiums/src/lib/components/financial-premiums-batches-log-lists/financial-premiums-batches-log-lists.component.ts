@@ -15,10 +15,13 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { CompositeFilterDescriptor, State, } from '@progress/kendo-data-query';
-import { Subject, first, Subscription } from 'rxjs';
+import { Subject, first, Subscription, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
 import { PaymentStatusCode } from 'libs/case-management/domain/src/lib/enums/payment-status-code.enum';
+import { PaymentBatchName } from '@cms/case-management/domain';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'cms-financial-premiums-batches-log-lists',
   templateUrl: './financial-premiums-batches-log-lists.component.html',
@@ -34,6 +37,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   removePremiumsConfirmationDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  showDateSearchWarning = false
   yesOrNoLov$ = this.lovFacade.yesOrNoLov$;
   isBatchLogGridLoaderShow = false;
   isRequestPaymentClicked = false;
@@ -60,6 +64,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   isBulkUnBatchOpened = false;
   @Input() unbatchPremiums$ :any
   @Input() unbatchEntireBatch$ :any
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   selected:any
   noDeleteStatus=['PENDING_APPROVAL','MANAGER_APPROVED']
   public bulkMore = [
@@ -197,6 +202,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   @Input() batchId: any;
   @Input() exportButtonShow$: any
   @Input() actionResponse$: any;
+  @Input() paymentBatchName$!: Observable<PaymentBatchName>;
 
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
   @Output() loadFinancialPremiumBatchInvoiceListEvent = new EventEmitter<any>();
@@ -225,7 +231,9 @@ export class FinancialPremiumsBatchesLogListsComponent
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService,
     public activeRoute: ActivatedRoute, private readonly lovFacade: LovFacade,
-    private readonly cdr: ChangeDetectorRef) { }
+    private readonly cdr: ChangeDetectorRef,
+    private readonly configProvider: ConfigurationProvider,
+    private readonly intl: IntlService,) { }
 
   ngOnInit(): void {
     this.loadBatchLogListGrid();
@@ -272,18 +280,42 @@ export class FinancialPremiumsBatchesLogListsComponent
       filter: this.state?.['filter']?.['filters'] ?? [],
     };
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
+ 
     this.gridDataHandle();
+  }
+
+  searchColumnChangeHandler(value: string) {
+    
+    if(value === 'paymentRequestedDate' || value === 'paymentSentDate')
+    {
+      this.showDateSearchWarning = true
+    }
+    else
+    {
+      this.showDateSearchWarning = false
+    }
+    this.filter = [];
+   
+    if (this.searchValue) {
+      this.onChange(this.searchValue);
+    }
   }
 
   onChange(data: any) {
     this.defaultGridState();
+
+    const isDateSearch = data.includes('/');
+    
+    data = this.formatSearchValue(data, isDateSearch);
+    if (isDateSearch && !data) return;
+
     let operator = 'startswith';
     if (
       this.selectedColumn === 'itemNbr' ||
       this.selectedColumn === 'serviceCount' ||
       this.selectedColumn === 'serviceCost' ||
       this.selectedColumn === 'amountDue' ||
-      this.selectedColumn === 'balanceAmount'
+      this.selectedColumn === 'balanceAmount'     
     ) {
       operator = 'eq';
     }
@@ -303,10 +335,61 @@ export class FinancialPremiumsBatchesLogListsComponent
         },
       ],
     };
+
+    if( this.selectedColumn === 'paymentRequestedDate'||
+    this.selectedColumn === 'paymentSentDate')
+    {
+      
+      this.filterData = {
+        logic: 'and',
+        filters: [
+          {
+            filters: [
+              {
+                field: this.selectedColumn ?? 'itemNbr',
+                operator: 'gte',
+                value: data+'T01:01:00.000Z',
+              },
+            ],
+            logic: 'and',
+          },
+          {
+            filters: [
+              {
+                field: this.selectedColumn ?? 'itemNbr',
+                operator: 'lte',
+                value: data+'T23:59:00.000Z',
+              },
+            ],
+            logic: 'and',
+          }
+        ],
+      };
+    } 
+
+   
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
+
+  private isValidDate = (searchValue: any) =>
+  isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+
+private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+  if (isDateSearch) {
+    if (this.isValidDate(searchValue)) {
+      return this.intl.formatDate(
+        new Date(searchValue),
+        this.configProvider?.appSettings?.dateFormat
+      );
+    } else {
+      return '';
+    }
+  }
+
+  return searchValue;
+}
 
   defaultGridState() {
     this.state = {
@@ -365,8 +448,7 @@ export class FinancialPremiumsBatchesLogListsComponent
         this.isBatchLogGridLoaderShow = false;
       }
       this.isBatchLogGridLoaderShow = false;
-    });
-    this.isBatchLogGridLoaderShow = false;
+    });    
   }
 
   backToBatch(event: any) {
@@ -609,4 +691,7 @@ export class FinancialPremiumsBatchesLogListsComponent
     });
   }
 
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event);
+  }
 }

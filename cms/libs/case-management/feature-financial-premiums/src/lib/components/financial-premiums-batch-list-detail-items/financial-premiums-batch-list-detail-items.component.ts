@@ -66,7 +66,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
- 
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public batchItemGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -222,15 +222,8 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   }
 
 
-  onViewProviderDetailClicked(  template: TemplateRef<unknown>): void {   
-    this.providerDetailsDialog = this.dialogService.open({
-      content: template,
-      animation:{
-        direction: 'left',
-        type: 'slide',  
-      }, 
-      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
-    });
+  onViewProviderDetailClicked(): void {   
+    this.onProviderNameClickEvent.emit();
   }
 
   onCloseViewProviderDetailClicked(result: any){
