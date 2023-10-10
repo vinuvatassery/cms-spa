@@ -171,7 +171,7 @@ class="app-c-modal app-c-modal-lg app-c-modal-np" title="Add New Medical Provide
 </kendo-dialog>
 
 <kendo-dialog kendoRippleContainer *ngIf="isShowDentalProvider" (close)="closeVendorDetailModal()"
-class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Dental Provider" kendoTooltip>
+class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Dental Providor" kendoTooltip>
 <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.DentalProviders" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
 [ddlStates$]="ddlStates"
 [clinicVendorList$]="clinicVendorList"
@@ -180,13 +180,6 @@ class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Dental Provider
 ></cms-vendor-details>
 </kendo-dialog>
 
-<kendo-dialog kendoRippleContainer *ngIf="isShowMedicalProvider" (close)="closeVendorDetailModal()"
-class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Medical Providor" kendoTooltip>
-<cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.MedicalProviders" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"      [ddlStates$]="ddlStates"
-[clinicVendorList$]="clinicVendorList"
-[clinicVendorLoader$]="clinicVendorLoader"
-(searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
-</kendo-dialog>
 
 
 

@@ -480,11 +480,11 @@ export class FinancialClaimsDataService {
   searchProvidorsById(VendorAddressId: string, typeCode: string) {    
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
       return this.http.get<Pharmacy[]>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/providers/medicalProviderById/${VendorAddressId}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/providers/${VendorAddressId}`
       );
     } else {
       return this.http.get<Pharmacy[]>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/dental/providers/dentalProviderById/${VendorAddressId}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/dental/providers/${VendorAddressId}`
       );
     }
   }

@@ -29,7 +29,7 @@ export class HealthInsurancePolicyFacade {
   private premiumPaymentsSubject = new BehaviorSubject<any>([]);
   triggeredPremiumPaymentSaveSubject = new BehaviorSubject<boolean>(false);
   triggeredCoPaySaveSubject = new BehaviorSubject<boolean>(false);
-  private clientmaxmumbalanceSubject = new BehaviorSubject<any>([]);
+  private clientmaxmumbalanceSubject = new Subject<any>();
   /** Public properties **/
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -143,9 +143,9 @@ export class HealthInsurancePolicyFacade {
       },
     });
   }  
-  getMedicalClaimMaxbalance(clientId: number): void {    
+  getMedicalClaimMaxbalance(clientId: number,caseEligibilityId:string): void {    
     this.showLoader();
-    this.healthInsurancePolicyService.getMedicalClaimMaxbalance(clientId).subscribe({
+    this.healthInsurancePolicyService.getMedicalClaimMaxbalance(clientId,caseEligibilityId).subscribe({
       next: (response) => {
         this.hideLoader();
         this.clientmaxmumbalanceSubject.next(response);

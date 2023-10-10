@@ -86,12 +86,12 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
     saveVendorProfile(vendorProfile: any){
       
       this.financialVendorFacade.showLoader();
-      if(vendorProfile.vendorTypeCode=='MANUFACTURERS'){
+      if(vendorProfile.vendorTypeCode==FinancialVendorTypeCode.Manufacturers){
         this.financialVendorFacade.updateManufacturerProfile(vendorProfile).subscribe({
           next:(response:any)=>{
             
             this.financialVendorFacade.hideLoader();
-            this.closeVendorDetailModal();
+           this.closeVendorDetailModal();
             this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Successfully Added");
           },
           error:(err:any)=>{
@@ -100,11 +100,12 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
         });
       }
       else{
+      this.closeVendorDetailModal();
         this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
           next:(response:any)=>{
             
             this.financialVendorFacade.hideLoader();
-            this.closeVendorDetailModal();
+           
             this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Successfully Added");
           },
           error:(err:any)=>{
@@ -183,6 +184,8 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
 
 
   public addNewInsuranceProviderOpen(): void {
+    
+    this.buildVendorForm();
     this.isShowDentalProvider=this.claimsType==FinancialVendorTypeCode.DentalProviders?true:false;   
     this.isShowMedicalProvider=this.claimsType==FinancialVendorTypeCode.MedicalProviders?true:false;   
     this.isShowInsuranceProvider=this.claimsType==FinancialVendorTypeCode.InsuranceVendors?true:false;   

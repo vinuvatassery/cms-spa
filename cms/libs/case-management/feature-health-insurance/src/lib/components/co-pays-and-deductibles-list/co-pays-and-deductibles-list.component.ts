@@ -3,10 +3,11 @@ import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter, 
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
-import {  HealthInsurancePolicyFacade, CaseFacade, ClientProfileTabs } from '@cms/case-management/domain';
+import {  HealthInsurancePolicyFacade, CaseFacade, ClientProfileTabs, PaymentRequestType } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { FilterService } from '@progress/kendo-angular-grid';
 
 @Component({
   selector: 'case-management-co-pays-and-deductibles-list',
@@ -33,8 +34,10 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   public pageSizes = this.insurancePolicyFacade.gridPageSizes;
   public gridSkipCount = this.insurancePolicyFacade.skipCount;
   carrierContactInfo!: any;
-  sort!: any;
+  sort!: any; 
   clientmaxmumbalance:number=0;
+  groupValue = null;
+  statusValue = null;
   /** Constructor **/
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly formBuilder: FormBuilder, private readonly cdr: ChangeDetectorRef, private caseFacade: CaseFacade,
@@ -45,7 +48,7 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   /** Lifecycle hooks **/
 
   ngOnInit(): void {
-    this.insurancePolicyFacade.getMedicalClaimMaxbalance(this.clientId);
+    this.insurancePolicyFacade.getMedicalClaimMaxbalance(this.clientId,this.caseEligibilityId);
    this.insurancePolicyFacade.clientmaxmumbalance$.subscribe((res:any)=>{
     
    this.clientmaxmumbalance=res.maximumAmount;
@@ -139,4 +142,6 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
       },
     });
   }
+
+  
 }

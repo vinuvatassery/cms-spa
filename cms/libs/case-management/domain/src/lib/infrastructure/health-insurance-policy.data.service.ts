@@ -31,10 +31,10 @@ export class HealthInsurancePolicyDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/insurance-policy/${clientInsurancePolicyId}`
     );
   }
-  getMedicalClaimMaxbalance(clientId: number) {
+  getMedicalClaimMaxbalance(clientId: number,eligibilityId:string) {
     
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/GetMedicalClaimMaxbalanceAsync?ClientId=${clientId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/balance?ClientId=${clientId}&&eligibilityId=${eligibilityId}`
     );
   }
   getCarrierContactInfo(carrierId: any) {
@@ -300,7 +300,7 @@ export class HealthInsurancePolicyDataService {
     if(gridDataRefinerValue.type==ServiceSubTypeCode.medicalPremium)
     {
       return this.http.get(    
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments/get-permium-paymen?statusType=${gridDataRefinerValue.type}&clientId=${clientId}&eligibilityId=${clientCaseEligibilityId}&skipCount=
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/payments/get-permium-payment?statusType=${gridDataRefinerValue.type}&clientId=${clientId}&eligibilityId=${clientCaseEligibilityId}&skipCount=
         ${gridDataRefinerValue.skipCount}&maxResultCount=${gridDataRefinerValue.maxResultCount}&dentalPlanFlag=${gridDataRefinerValue.dentalPlanFlag}&showTwelveMonthRecord=${gridDataRefinerValue.twelveMonthsRecords}`,{params:params});
        
     }else{
