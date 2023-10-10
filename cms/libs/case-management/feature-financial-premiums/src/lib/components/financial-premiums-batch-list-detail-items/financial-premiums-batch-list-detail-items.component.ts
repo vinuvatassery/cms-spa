@@ -62,7 +62,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   @Output() updateProviderProfileEvent = new EventEmitter<any>();
   @Output() onEditProviderProfileEvent = new EventEmitter<any>(); 
   @Output() exportGridDataEvent = new EventEmitter<any>();
-
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -364,15 +364,8 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   }
 
 
-  onViewProviderDetailClicked(  template: TemplateRef<unknown>): void {   
-    this.providerDetailsDialog = this.dialogService.open({
-      content: template,
-      animation:{
-        direction: 'left',
-        type: 'slide',  
-      }, 
-      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
-    });
+  onViewProviderDetailClicked(): void {   
+    this.onProviderNameClickEvent.emit();
   }
 
   onCloseViewProviderDetailClicked(result: any){
