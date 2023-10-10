@@ -74,7 +74,7 @@
                               </kendo-floatinglabel>
                         </span>
                         <span class="right-overlay-export">
-                              <button kendoButton [primary]="true" look="flat" class="button-lg">
+                              <button kendoButton [primary]="true" aria-label="Export" look="flat" class="button-lg">
                                     <span class="material-icons" aria-label="export"
                                           aria-invalid="true">exit_to_app</span><i class="exp_button-text">Export</i>
                               </button>
@@ -116,7 +116,7 @@
 
                         <kendo-grid-column field="vendorName" [title]="providerTitle" [width]="160">
                         <ng-template kendoGridCellTemplate let-dataItem>
-                              <button aria-label="Medical Provider" kendoButton look="flat"
+                              <button [attr.aria-label]="dataItem?.vendorName" kendoButton look="flat"
                                           class="card-link-button"  >
                                           {{dataItem?.vendorName}} 
                               </button>
@@ -309,7 +309,7 @@
                   <div><span *ngIf="!onlyPrintAdviceLetter">{{ claimReconcileCount }} payment(s)
                               to
                               reconcile</span>
-                        <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="close" title="Close">
+                        <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="Close" title="Close">
                               <span class="material-icons" aria-label="close" aria-hidden="true"
                                     (click)="toggleBreakoutPanel()">close</span>
                         </button>
@@ -327,7 +327,7 @@
             <div class="text-right flex-gap">     
 
                   <button kendoButton [primary]="true" look="outline" class="" (click)="navToReconcilePayments()" aria-label="Cancel"> Close </button>
-                  <button kendoButton [primary]="true" [disabled]="claimReconcileCount == 0" aria-label="Receipting Log" class="" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
+                  <button kendoButton [primary]="true" [disabled]="claimReconcileCount == 0" aria-label="Save" class="" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
             </div>
       </div>
 </div>

@@ -149,11 +149,11 @@
 <kendo-dialog-actions>
       <div class="justify-content-between">
             <div class="justify-content-end">
-                  <button kendoButton look="outline" aria-label="cancel"
+                  <button kendoButton look="outline" aria-label="Cancel"
                         (click)="closeAddEditPcaAssignmentClicked()">
                         Cancel
                   </button>
-                  <button kendoButton [primary]="true" aria-label="Add">
+                  <button kendoButton [primary]="true" attr.aria-label="{{editPca=== true ? 'UPDATE' : 'ADD'}} ">
                         {{editPca=== true ? 'UPDATE' : 'ADD'}} 
                   </button>
             </div>

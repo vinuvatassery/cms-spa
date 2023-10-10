@@ -34,7 +34,7 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="profile avathar"
+              [attr.aria-label]="dataItem.creatorId"
             >
             <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
@@ -103,7 +103,7 @@
     <!-- add employer button -->
     <div class="flex-row">
       <div class="flex-col mt-1">
-        <button *ngIf="enableAddButton" kendoButton [primary]="true" icon="add" aria-label="add employer"
+        <button *ngIf="enableAddButton" kendoButton [primary]="true" icon="add" aria-label="Employer"
           (click)="onEmployerClicked(true)" [disabled]="(isReadOnly$ | async) ? true : false">
           Employer
         </button>

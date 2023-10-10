@@ -44,7 +44,7 @@
           kendoButton
           class="k-danger-link"
           *ngIf="isEditSearchCaseManagerValue"
-          aria-label="remove provider"
+          aria-label="Remove"
           (click)="onDeleteConfirm()"
         >
           REMOVE
@@ -56,11 +56,11 @@
           [primary]="true"
           look="outline"
           (click)="onCloseCaseManagerSearchClicked()"
-          aria-label="cancel adding provider"
+          aria-label="Cancel"
         >
           CANCEL
         </button>
-        <button kendoButton [primary]="true" aria-label="add or update case manager"
+        <button kendoButton [primary]="true" attr.aria-label=" {{ isEditSearchCaseManagerValue ? 'Update' : managementTab? 'ASSIGN' : 'Add' }}"
         [disabled]="btnDisabled">
           {{ isEditSearchCaseManagerValue ? 'Update' : managementTab? 'ASSIGN' : 'Add' }}
         </button>
