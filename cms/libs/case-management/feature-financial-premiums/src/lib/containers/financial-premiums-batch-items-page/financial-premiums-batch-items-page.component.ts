@@ -1,7 +1,7 @@
 import {  ChangeDetectionStrategy,  ChangeDetectorRef,  Component, OnInit, TemplateRef, ViewChild, } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import {ContactFacade, FinancialPremiumsFacade, FinancialVendorFacade, GridFilterParam, PaymentPanel, PaymentsFacade } from '@cms/case-management/domain'; 
+import {ContactFacade, FinancialPremiumsFacade, FinancialVendorFacade, GridFilterParam, PaymentPanel, PaymentType, PaymentsFacade } from '@cms/case-management/domain'; 
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs';
 import { LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -90,24 +90,17 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
   }
 
   updatePaymentPanel(paymentPanel:PaymentPanel){
-    this.paymentFacade.showLoader();
-    this.paymentFacade.updatePaymentPanel(this.vendorAddressId,this.batchId, paymentPanel).subscribe({
-        next: (response: any) => {        
-          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
-          this.paymentFacade.hideLoader();  
-          this.loadPaymentPanel();    
-          
-        },
-        error: (err) => {       
-          this.paymentFacade.hideLoader();
-          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+    this.paymentFacade.updatePaymentPanel(this.vendorAddressId,this.batchId, paymentPanel);
+    this.paymentFacade.updatePaymentPanelResponse$.subscribe({
+        next: (response: any) => {
+          this.loadPaymentPanel();
         }
       });
   }
 
   loadPaymentDetails(){
     const itemId = this.route.snapshot.queryParams['pid'];
-    this.paymentFacade.loadPaymentDetails(itemId, 'INDIVIDUAL',);
+    this.paymentFacade.loadPaymentDetails(itemId, PaymentType.Individual);
   }
 
   onProviderNameClick(event:any){

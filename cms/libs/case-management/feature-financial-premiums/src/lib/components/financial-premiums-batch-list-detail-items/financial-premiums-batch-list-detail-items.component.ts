@@ -174,7 +174,6 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
     },
   ];
 
-  paymentStatusList = ['SUBMITTED', 'PENDING_APPROVAL', 'DENIED', 'MANAGER_APPROVED', 'PAYMENT_REQUESTED', 'ONHOLD', 'FAILED', 'PAID'];
   paymentStatusFilter = '';
   
   /** Constructor **/

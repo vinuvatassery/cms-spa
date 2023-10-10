@@ -93,17 +93,10 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
     this.paymentFacade.loadPaymentPanel(this.vendorAddressId,this.batchId);    
   }
   updatePaymentPanel(paymentPanel:PaymentPanel){
-    this.paymentFacade.showLoader();
-    this.paymentFacade.updatePaymentPanel(this.vendorAddressId,this.batchId, paymentPanel).subscribe({
-        next: (response: any) => {        
-          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
-          this.paymentFacade.hideLoader();  
-          this.loadPaymentPanel();    
-          
-        },
-        error: (err) => {       
-          this.paymentFacade.hideLoader();
-          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+    this.paymentFacade.updatePaymentPanel(this.vendorAddressId,this.batchId, paymentPanel);
+    this.paymentFacade.updatePaymentPanelResponse$.subscribe({
+        next: (response: any) => {
+          this.loadPaymentPanel();
         }
       });
   }
