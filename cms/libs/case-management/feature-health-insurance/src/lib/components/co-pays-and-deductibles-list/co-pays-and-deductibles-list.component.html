@@ -13,7 +13,7 @@
   
         <kendo-grid-column field="vendorName" title="Service Provider Name" [width]="150" [sticky]="true" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button kendoButton look="flat" class="card-link-button" aria-label="provider name" kendoPopoverAnchor
+            <button kendoButton look="flat" class="card-link-button" [attr.aria-label]="dataItem.vendorName" kendoPopoverAnchor
               [popover]="myPopover" (click)="getCarrierContactInfo(dataItem.vendorId)">
               {{ dataItem.vendorName }}
             </button></ng-template>
@@ -57,7 +57,7 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="profile avatar"
+              [attr.aria-label]="dataItem.by"
             >
             <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
@@ -108,7 +108,7 @@
     </div>
   </div>
   <div class="flex-col mt-1">
-    <button kendoButton [primary]="true" icon="add" aria-label="add medical payment"
+    <button kendoButton [primary]="true" icon="add" attr.aria-label="{{tabStatus === 'dnt-ins-co-pay' ? 'Dental Payment' :'Medical Payment'}}"
       (click)="openCoPaymentDetailsOpened()" [disabled]="(isReadOnly$ | async) ? true : false">
       {{tabStatus === 'dnt-ins-co-pay' ? 'Dental Payment' :'Medical Payment'}}
     </button>

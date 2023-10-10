@@ -98,6 +98,9 @@ export class FinancialPremiumsFacade {
   private batchItemsDataSubject =  new Subject<any>();
   batchItemsData$ = this.batchItemsDataSubject.asObservable();
 
+  private batchItemsLoaderSubject =  new BehaviorSubject<any>(false);
+  batchItemsLoader$ = this.batchItemsLoaderSubject.asObservable();
+
   private premiumsListDataSubject =  new Subject<any>();
   premiumsListData$ = this.premiumsListDataSubject.asObservable();
 
@@ -273,7 +276,7 @@ export class FinancialPremiumsFacade {
     });
   }
 
-  loadPremiumServicesByPayment(premiumType : string ,paymentId : string,paginationParameters : any) {
+  loadPremiumServicesByPayment(premiumType : string ,paymentId : string, paginationParameters : any) {  
     this.financialPremiumsDataService.loadPremiumServicesByPayment(premiumType ,paymentId ,paginationParameters )
     .subscribe({
       next: (dataResponse : any) => {
@@ -291,14 +294,16 @@ export class FinancialPremiumsFacade {
     });
   }
 
-  loadBatchItemsListGrid(){
-    this.financialPremiumsDataService.loadBatchItemsListService().subscribe({
+  loadBatchItemsListGrid(batchId: any, paymentId: any, premiumType: string, params: GridFilterParam){
+    this.batchItemsLoaderSubject.next(true);
+    this.financialPremiumsDataService.loadBatchItemsListService(batchId, paymentId, premiumType, params).subscribe({
       next: (dataResponse) => {
-        this.batchItemsDataSubject.next(dataResponse);
-        this.hideLoader();
+        this.batchItemsDataSubject.next(dataResponse.items);
+        this.batchItemsLoaderSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.batchItemsLoaderSubject.next(false);
         this.hideLoader();
       },
     });

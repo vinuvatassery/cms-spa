@@ -2,6 +2,7 @@
 import {  Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConfigurationProvider } from '../shared-util-core.module';
+import { ApiType } from '../enums/api-type.enum';
 
 
 
@@ -22,10 +23,25 @@ export class DocumentDataService {
             responseType: 'blob'} );
     }
 
-    getExportFile(pageAndSortedRequest : any, path : string ) 
-    {       
+    getExportFile(pageAndSortedRequest : any, path : string, apiType : string = ApiType.CaseApi) 
+    {
+      let apiUrl: any;
+      switch(apiType){
+        case ApiType.CaseApi:{
+          apiUrl = this.configurationProvider.appSettings.caseApiUrl;
+          break;
+        }
+        case ApiType.ProductivityToolsApi: {
+          apiUrl = this.configurationProvider.appSettings.productivityToolsApiUrl;
+          break;
+        }
+        default: {
+          apiUrl = this.configurationProvider.appSettings.caseApiUrl;
+          break;
+        }        
+      }      
       return this.http.post(
-        `${this.configurationProvider.appSettings.caseApiUrl}/data-management/export/${path}`, pageAndSortedRequest,
+        `${apiUrl}/data-management/export/${path}`, pageAndSortedRequest,
         {responseType: 'blob'}
       )
     }

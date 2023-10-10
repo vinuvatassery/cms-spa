@@ -2,10 +2,17 @@ import { Injectable } from '@angular/core';
 import { PendingApprovalPaymentService } from '../infrastructure/pending-approval-payment.data.service';
 import { Subject } from 'rxjs';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { SortDescriptor } from '@progress/kendo-data-query';
 import { ApprovalUserStatusCode } from '../enums/approval-user-status-code.enum';
 
 @Injectable({ providedIn: 'root' })
 export class PendingApprovalPaymentFacade {
+
+  public sortValueApprovalPaymentsApproval = 'batchName';
+  public sortApprovalPaymentsList: SortDescriptor[] = [{
+    field: this.sortValueApprovalPaymentsApproval,
+  }];
+
   /** Private properties **/
   private pendingApprovalGridSubject = new Subject<any>();
   private pendingApprovalMainListSubject = new Subject<any>();

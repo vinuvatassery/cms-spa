@@ -70,18 +70,18 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div *ngIf="isEditValue === true && isDeleted === false">
-        <button kendoButton look="flat" (click)="onDeactivateClicked()" aria-label="deactivate phone"
+        <button kendoButton look="flat" (click)="onDeactivateClicked()" aria-label="Deactivate"
           [disabled]="btnDisabled" type='button'>
           Deactivate
         </button>
       </div>
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"
+        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
           [disabled]="btnDisabled" (click)="onDeactivatePhoneNumberClosed()" type='button'>
           Cancel
         </button>
 
-        <button kendoButton [primary]="true" aria-label="update or add phone detail" [disabled]="btnDisabled">
+        <button kendoButton [primary]="true" attr.aria-label="{{ isEditValue ? 'Update' : 'Add' }}" [disabled]="btnDisabled">
           {{ isEditValue ? 'Update' : 'Add' }}
         </button>
       </div>

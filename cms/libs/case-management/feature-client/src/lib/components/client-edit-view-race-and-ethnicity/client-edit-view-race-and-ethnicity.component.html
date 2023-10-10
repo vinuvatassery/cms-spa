@@ -77,7 +77,7 @@
                     [id]="dataItem.lovDesc"
                     [checked]="getCheckedItems(dataItem)"
                   />
-                  <span class="k-checkbox-label" attr.aria-label="{{dataItem.lovDesc}}">{{
+                  <span class="k-checkbox-label" [attr.aria-label]="dataItem.lovDesc">{{
                     dataItem.lovDesc
                   }}</span>
                 </span>

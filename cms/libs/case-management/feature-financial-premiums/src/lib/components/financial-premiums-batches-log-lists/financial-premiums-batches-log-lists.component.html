@@ -1,12 +1,20 @@
 <div class=" pt-0">
-  <section class="app-l-mainTittle">
-    <div class="d-flex">
-      <button aria-label="back to vendor refund" kendoButton look="flat" title="Go back" class="mr-1" (click)="backToBatch($event)">
-        <span class="material-icons">
-          arrow_back </span> </button>
-      <h1 class="maintitle_withicon text-bold">Batch # 05012021_001 </h1>
+  <section class="app-l-mainTittle" *ngIf="(paymentBatchName$ | async) as batch; else loading">
+    <div class="d-flex" >
+        <button aria-label="back to vendor refund" title="Go back" kendoButton look="flat" class="mr-1" (click)="backToBatch($event)"> <span
+            class="material-icons">
+            arrow_back </span> </button>
+        <h1 class="maintitle_withicon text-bold">Batch # {{batch.batchName}}</h1> <br />                  
     </div>
-  </section>
+    <div class="d-flex" *ngIf="batch.sendBackNotes != null">
+      <span class="app-c-badge  mt-3" aria-label=""> 
+        {{ batch.sendBackNotes }}      
+      </span> 
+    </div>             
+</section>
+  <ng-template #loading>
+    <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+  </ng-template>
   <section class="app-l-client-wrapper ">
     <section class="app-l-wrapper">
       <p> Click “Bulk” to execute actions for one or more payments. Click on a row to view the individual premiums for that payment.</p>
@@ -14,7 +22,8 @@
         <span class="filter-section_items filter--select">
           <kendo-floatinglabel>
             <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
-              textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
+              textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn"
+              (valueChange)="searchColumnChangeHandler($event)">
             </kendo-dropdownlist>
           </kendo-floatinglabel>
         </span>
@@ -27,13 +36,24 @@
           </kendo-floatinglabel>
         </span>
         <span class="right-overlay-export">
-          <button kendoButton [primary]="true" look="flat" class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
+          <button kendoButton [primary]="true" aria-label="Export"  look="flat" class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
             <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
             
             <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
           </button>
         </span>
       </section>
+      <div class="table-sorted-info">
+        <span class="app-c-badge badge-warn-light" aria-label="search-warning"
+          *ngIf="showDateSearchWarning">
+          <span class="material-icons" aria-label="search-warning" aria-hidden="true">
+            warning
+          </span>
+          <span *ngIf="showDateSearchWarning">
+            The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
+          </span>          
+        </span>
+      </div>
       <!-- Sorted Info -->
       <div class="table-sorted-info">
         Sorted {{sortDir}} by <span class="sort-items">  {{sortColumn}} </span>
@@ -41,7 +61,7 @@
         <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
         <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
         <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
-        <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+        <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
           <a>Set to Default</a>
         </button>
       </div>
@@ -68,7 +88,7 @@
           </kendo-grid-column>
           <kendo-grid-column field="vendorName" title="Insurance Vendor" [width]="200">
             <ng-template kendoGridCellTemplate let-dataItem>
-              <button aria-label="Insurance Vendor" kendoButton look="flat" class="card-link-button">
+              <button  [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button" (click)="onProviderNameClick(dataItem.paymentRequestId)">
                 {{ dataItem.vendorName }}
               </button>
             </ng-template>
@@ -249,12 +269,11 @@
 </div>
 <div class="bottom-fixed-wrapper text-right flex-gap">
   <span class="">0 premiums(s) to be removed</span>
-  <button (click)="goToBatchItems($event)">Batch Log items</button>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     *ngIf="isRequestPaymentClicked || isSendReportOpened" (click)="onBulkOptionCancelClicked()"> Cancel </button>
-  <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isRequestPaymentClicked"
+  <button kendoButton [primary]="true" aria-label="Preview Requests" class="" *ngIf="isRequestPaymentClicked"
     (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
-  <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isSendReportOpened"
+  <button kendoButton [primary]="true" aria-label="Send Report" class="" *ngIf="isSendReportOpened"
     (click)="onSendReportOpenClicked(sendReportDialogTemplate)"> Send Report </button>
   <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action" buttonClass="k-split-button"
     [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isSendReportOpened"
@@ -301,12 +320,12 @@
   <kendo-dialog-titlebar (close)="closeRecentPremiumsModal($event)"><h5 class="text-upper">Recent Premiums for {{clientName}}</h5></kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="premiumsType"
-      (CloseRecentPremiumsModal)="closeRecentPremiumsModal($event)"></cms-financial-premiums-recent-premiums-list>
+      (CloseRecentPremiumsModal)="closeRecentPremiumsModal($event)" (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-recent-premiums-list>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton aria-label="cancel" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
           Client Profile <span class="material-icons ml-1">
             chevron_right
           </span>

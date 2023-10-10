@@ -5,7 +5,7 @@
 
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="150">
         <ng-template kendoGridCellTemplate let-dataItem>
-            <button aria-label="client name" kendoButton look="flat" class="card-link-button">
+            <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button">
                 {{ dataItem.clientFullName }}
             </button>
         </ng-template> </kendo-grid-column>

@@ -26,14 +26,14 @@
             <label  *ngIf="dataItem.clinicName === notApplicable"
             >{{dataItem.clinicName}}</label>
 
-              <button look="flat" class="card-link-button" (mouseover)="onClinicHover(dataItem)" kendoButton *ngIf="dataItem.clinicName !== notApplicable"
+              <button look="flat" [attr.aria-label]="dataItem.clinicName" class="card-link-button" (mouseover)="onClinicHover(dataItem)" kendoButton *ngIf="dataItem.clinicName !== notApplicable"
               kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover">{{dataItem.clinicName}}</button>
           </ng-template>
         </kendo-grid-column>
         
         <kendo-grid-column field="providerName" title="Provider Name" [width]="180">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button look="flat" class="card-link-button" kendoButton (mouseover)="onProviderHover(dataItem)"
+            <button look="flat" [attr.aria-label]="dataItem.providerName" class="card-link-button" kendoButton (mouseover)="onProviderHover(dataItem)"
               kendoPopoverAnchor [popover]="onUserProfileDetailsHovered"
               showOn="hover">{{dataItem.providerName}}</button>
           </ng-template>
@@ -64,7 +64,8 @@
         <kendo-grid-column field="creatorId" title="By" [width]="80" class="text-center" [sortable]="false" *ngIf="managementTab">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button *ngIf="dataItem?.creatorId" kendoButton [primary]="true" class="avatar-sm-btn c-default"
-              kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
+              kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover" 
+              [attr.aria-label]="dataItem.creatorId">
               <common-user-photo-icon [userId]="dataItem?.creatorId"></common-user-photo-icon>
             </button>
             <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
@@ -130,7 +131,7 @@
     <div class="flex-row">
       <div class="flex-col mt-1">
         <button kendoButton [primary]="true" icon="add" (click)="onOpenProviderSearchClicked('',false)"  *ngIf="showAddNewProvider$ | async"
-          aria-label="add healthcare provider" [disabled]="(isReadOnly$ | async) ? true : false">
+          aria-label="Provider" [disabled]="(isReadOnly$ | async) ? true : false">
           Provider
         </button>
       </div>
@@ -202,11 +203,11 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button kendoButton [primary]="true" look="outline" (click)="onBusinessInfoCloseClicked()"
-          aria-label="cancel adding provider">
-          CANCEL
+          aria-label="Cancel">
+          Cancel
         </button>
-        <button kendoButton [primary]="true" (click)="onBusinessInfoCloseClicked()" aria-label="add or update pharmacy">
-          ADD
+        <button kendoButton [primary]="true" (click)="onBusinessInfoCloseClicked()" aria-label="Add">
+          Add
         </button>
 
       </div>

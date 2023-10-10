@@ -10,11 +10,11 @@
         </div>
         <div class="flex-col">
           <div class="profile-button-wrapper">
-            <button kendoButton look="flat" class="k-primary-button btn-small">
+            <button kendoButton look="flat" aria-label="Upload photo" class="k-primary-button btn-small">
               Upload photo
             </button>
             <span class="btn-separator"></span>
-            <button kendoButton look="flat" class="k-danger-link btn-small">
+            <button kendoButton look="flat" aria-label="Remove photo" class="k-danger-link btn-small">
               Remove photo
             </button>
           </div>
@@ -283,7 +283,7 @@
                 </div>
               </div>
 
-              <button kendoButton [primary]="true" look="flat" class="mt-1" aria-label="SCHEDULE OUT OF OFFICE" > SCHEDULE OUT OF OFFICE </button>
+              <button kendoButton [primary]="true" look="flat" class="mt-1" aria-label="Schedule Out Of Office" > SCHEDULE OUT OF OFFICE </button>
             </div>
           
           </div>
@@ -300,10 +300,10 @@
     </div>
   </section>
   <section class="as_footer justify-content-end">
-    <button kendoButton [primary]="true" look="outline" area-label="cancel">
+    <button kendoButton [primary]="true" look="outline" area-label="Cancel">
       Cancel
     </button>
-    <button kendoButton [primary]="true" area-label="save account settings">
+    <button kendoButton [primary]="true" area-label="Save">
       Save
     </button>
   </section>

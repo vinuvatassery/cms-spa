@@ -54,7 +54,7 @@
                 kendoPopoverAnchor
                 [popover]="onUserProfileDetailsHovered"
                 showOn="hover"
-                aria-label="profile avatar"
+                [attr.aria-label]="dataItem.creatorId"
               >
               <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
               </button>
@@ -87,7 +87,7 @@
         [primary]="true"
         icon="add"
         (click)="openAddReferralSmokingCessationClicked()"
-        aria-label="add email address"
+        aria-label="Referral"
         [disabled]="(isReadOnly$ | async) ? true : false"
       >
         REFERRAL
@@ -129,8 +129,8 @@
         <div class="justify-content-between">
 
           <div class="justify-content-end">
-            <button  kendoButton  (click)="closeAddReferralSmokingCessationClicked()" [primary]="true"  look="outline"  aria-label="cancel " > CANCEL </button>
-            <button  aria-label="add" (click)="saveSmokingCessation()" kendoButton [primary]="true" > ADD </button>
+            <button  kendoButton  (click)="closeAddReferralSmokingCessationClicked()" [primary]="true"  look="outline"  aria-label="Cancel" > CANCEL </button>
+            <button  aria-label="Add" (click)="saveSmokingCessation()" kendoButton [primary]="true" > ADD </button>
 
           </div>
         </div>

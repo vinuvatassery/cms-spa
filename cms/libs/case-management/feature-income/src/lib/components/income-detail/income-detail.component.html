@@ -144,16 +144,16 @@
     <kendo-dialog-actions>
       <div class="justify-content-between">
         <div>
-          <button kendoButton class="k-danger-link" *ngIf="isEditValue" aria-label="delete income" (click)="onDeleteIncomeClicked()">
+          <button kendoButton class="k-danger-link" *ngIf="isEditValue" aria-label="Delete" (click)="onDeleteIncomeClicked()">
             Delete
           </button>
         </div>
         <div class="justify-content-end">
-          <button kendoButton [primary]="true" look="outline"  aria-label="cancel editing income"
+          <button kendoButton [primary]="true" look="outline"  aria-label="Cancel"
             (click)="closeIncomeDetailPoup()">
             Cancel
           </button>
-          <button kendoButton (click)="submitIncomeDetailsForm()" [primary]="true" aria-label="add income"
+          <button kendoButton (click)="submitIncomeDetailsForm()" [primary]="true" attr.aria-label="{{ isEditValue ? 'Update' : 'Add ' }}"
           [disabled]="btnDisabled">  {{ isEditValue ? 'Update' : 'Add ' }}</button>
         </div>
       </div>

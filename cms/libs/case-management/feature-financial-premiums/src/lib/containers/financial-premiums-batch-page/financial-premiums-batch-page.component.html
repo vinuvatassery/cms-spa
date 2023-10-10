@@ -1,5 +1,5 @@
 
- <cms-financial-premiums-batches-log-lists [premiumsType]="premiumType"
+ <cms-financial-premiums-batches-log-lists [premiumsType]="premiumType" [paymentBatchName$]="paymentBatchName$"
   [batchLogGridLists$]="batchLogGridLists$"
   [batchLogServicesData$]="batchLogServicesData$"
  [pageSizes]="pageSizes" [sortValue]="sortValue"
@@ -15,6 +15,15 @@
  [unbatchEntireBatch$]="unbatchEntireBatch$"
  [batchId]="batchId"
  (deletePaymentEvent)="deletePayment($event)"
+ (onProviderNameClickEvent)="onProviderNameClick($event)"
  ></cms-financial-premiums-batches-log-lists>
 
- 
+ <ng-template #providerDetailsTemplate>
+    <cms-financial-premiums-provider-info
+          [paymentRequestId]="paymentRequestId"
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
+</ng-template>

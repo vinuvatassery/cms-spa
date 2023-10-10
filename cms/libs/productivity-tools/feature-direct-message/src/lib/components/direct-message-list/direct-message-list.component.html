@@ -20,7 +20,7 @@
     <kendo-grid [data]="directMessageGridLists$ | async" [columnMenu]="true" [sortable]="true" >
       <kendo-grid-column field="from" title="From" [width]="200">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button kendoButton look="flat" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover"
+          <button [attr.aria-label]="dataItem.from" kendoButton look="flat" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover"
             aria-label="Message From">
             {{ dataItem.from }}
           </button>

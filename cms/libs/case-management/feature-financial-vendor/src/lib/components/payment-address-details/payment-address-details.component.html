@@ -211,16 +211,16 @@
               kendoButton
               [primary]="true"
               look="flat"
-              aria-label="deactivate"
+              aria-label="Deactivate"
               (click)="deactivatePaymentAddress()"
             >
               Deactivate
             </button>
           </div>
             <div class="justify-content-end">
-                <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail" (click)="closeModal(true)"> Cancel
+                <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeModal(true)"> Cancel
                 </button>
-                <button kendoButton [primary]="true" aria-label="Update or add phone detail" (click)="submit()"> {{isEdit ? 'Update' : 'Add' }}
+                <button kendoButton [primary]="true" attr.aria-label="{{isEdit ? 'Update' : 'Add' }}" (click)="submit()"> {{isEdit ? 'Update' : 'Add' }}
                 </button>
             </div>
         </div>

@@ -64,7 +64,7 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="profile avatar"
+              [attr.aria-label]="dataItem.creatorId"
             >
             <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
@@ -134,7 +134,7 @@
       [primary]="true"
       icon="add"
       (click)="onFriendOrFamilyDetailClicked(false)"
-      aria-label="add friend or family"
+      aria-label="Contact"
       [disabled]="(isReadOnly$ | async) ? true : false"
     >
     CONTACT

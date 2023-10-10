@@ -5,7 +5,7 @@
     <section class="app-l-mainTittle">
       <div class="vendor-header-top mb-1">
         <div class="d-flex">
-          <button aria-label="back to vendor list" kendoButton look="flat" title="Go Back" (click)="onBackClicked()"  title="Back"> <span
+          <button aria-label="Go Back" kendoButton look="flat" title="Go Back" (click)="onBackClicked()"  title="Back"> <span
             class="material-icons">
             arrow_back </span> </button>
         <h1 class="title_with_bld">
@@ -107,7 +107,7 @@
 
       </div>
       <div class="flex-col flex-col-2">
-        <button aria-label="More Items" kendoButton look="flat" class="card-link-button"  kendoPopoverAnchor showOn="click" [popover]="moreAlertmessage">
+        <button attr.aria-label=" {{ showMoreAlert ? 'Hide Items' : ' 2+ More Items ' }}" kendoButton look="flat" class="card-link-button"  kendoPopoverAnchor showOn="click" [popover]="moreAlertmessage">
 
 
           {{ showMoreAlert ? 'Hide Items' : ' 2+ More Items ' }}
@@ -191,7 +191,7 @@
     </div>
   </div>
 
-  <button aria-label="View More" kendoButton look="flat" class="card-link-button mt-1" (click)="onNotificationsAndRemindersOpenClicked(notificationsAndRemindersDialog)">  View More on Notification Panel </button>
+  <button aria-label="View More on Notification Panel" kendoButton look="flat" class="card-link-button mt-1" (click)="onNotificationsAndRemindersOpenClicked(notificationsAndRemindersDialog)">  View More on Notification Panel </button>
 </div>
    </ng-template>
  </kendo-popover>
