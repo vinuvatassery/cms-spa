@@ -85,7 +85,7 @@
 
       <kendo-grid-column field="vendorName" title="Provider Name" [width]="250">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button">
+          <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button" (click)="onProviderNameClick(dataItem.paymentRequestId)">
             {{ dataItem.vendorName }}
           </button>
         </ng-template>
@@ -306,6 +306,7 @@
       [pageSizes]="pageSizes"
       (loadPrintAdviceLetterEvent)="loadPrintAdviceLetterEvent($event)"
       (selectUnSelectEvent)="disablePreviewButton($event)"
+      (noOfRecordToPrintEvent)="setNoOfRecordToBePrint($event)"
       [sort]="sort" [sortValue]="sortValue"
       [sortType]="sortType"></cms-financial-claims-print-advice-letter-log-lists>
     </div>

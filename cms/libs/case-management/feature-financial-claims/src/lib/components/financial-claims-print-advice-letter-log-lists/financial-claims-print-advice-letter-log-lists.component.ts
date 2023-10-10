@@ -30,6 +30,7 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() loader$!: Observable<boolean>;
+  @Output()  noOfRecordToPrintEvent = new EventEmitter();;
   batchLogPrintAdviceLetterPagedList:any;
   isBatchLogGridLoaderShow = false;
   filter!: any;
@@ -44,6 +45,8 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
   unCheckedPaymentRequest:any=[];
   selectedDataIfSelectAllUnchecked:any=[];
   currentGridFilter:any;
+  totalRecord:any;
+  noOfRecordToPrint:any;
   gridColumns : {[key: string]: string} = {
     paymentNbr: 'Item #',
     invoiceNbr: 'Invoice ID',
@@ -64,13 +67,12 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
 
   constructor(private route: Router,private dialogService: DialogService, public activeRoute: ActivatedRoute ) {}
   
-  ngOnInit(): void { 
-    this.batchLogGridLists$.subscribe((data:any)=>{
-    });
+  ngOnInit(): void {
     this.sortColumnName = 'Item #';
     this.loadBatchLogListGrid();
     this.batchLogGridLists$.subscribe((response:any) =>{
-        this.markAsChecked(response.data);
+      this.totalRecord = response.total;
+      this.markAsChecked(response.data);
       this.batchLogPrintAdviceLetterPagedList = response;
     })
   }
@@ -102,6 +104,8 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
 
   selectionChange(dataItem:any,selected:boolean){
     if(!selected){
+      this.noOfRecordToPrint = this.noOfRecordToPrint - 1;
+      this.noOfRecordToPrintEvent.emit(this.noOfRecordToPrint);
       this.unCheckedPaymentRequest.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true});
       if(!this.selectAll){
       this.selectedDataIfSelectAllUnchecked = this.selectedDataIfSelectAllUnchecked.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
@@ -109,6 +113,8 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
       }
     }
     else{
+      this.noOfRecordToPrint = this.noOfRecordToPrint + 1;
+      this.noOfRecordToPrintEvent.emit(this.noOfRecordToPrint);
       this.unCheckedPaymentRequest = this.unCheckedPaymentRequest.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
       if(!this.selectAll){
       this.selectedDataIfSelectAllUnchecked.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true});
@@ -126,9 +132,13 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
     this.selectedDataIfSelectAllUnchecked=[];
     if(this.selectAll){
       this.markAsChecked(this.batchLogPrintAdviceLetterPagedList.data);
+      this.noOfRecordToPrint = this.totalRecord;
+      this.noOfRecordToPrintEvent.emit(this.noOfRecordToPrint);
     }
     else{
       this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
+      this.noOfRecordToPrint = 0;
+      this.noOfRecordToPrintEvent.emit(this.noOfRecordToPrint);
     }
     let returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
     'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,

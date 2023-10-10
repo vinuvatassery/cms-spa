@@ -40,16 +40,11 @@ aria-label="Assignment"> Assignment</button>
                   </form>
 </section>
 
-<div class="app-c-table">
-      <kendo-grid [resizable]="true" [loading]="isFinancialPcaAssignmentGridLoaderShow"
-             [rowClass]="rowCallback" [data]="financialPcaAssignmentGridLists$ | async" (dataStateChange)="dataStateChange($event)"
-             >
-
-            <kendo-grid-column     field=""    title="" [width]="50"   [columnMenu]="false" [sortable]="false"  class="text-center text-muted"   >
-            <ng-template kendoGridCellTemplate let-dataItem>
-              <span class="material-icons">drag_indicator</span>
-            </ng-template>
-          </kendo-grid-column>
+      <div>
+      <kendo-grid  [kendoGridBinding]="financialPcaAssignmentGridLists$"  [loading]="isFinancialPcaAssignmentGridLoaderShow"
+       [rowReorderable]="true" (rowReorder)="onPriorityChange($event)">               
+             <kendo-grid-rowreorder-column [width]="40"></kendo-grid-rowreorder-column>
+     
           <kendo-grid-column field="priority" title="Priority" [width]="70" [columnMenu]="false" [sortable]="false">
           </kendo-grid-column>
             <kendo-grid-column field="pca" title="PCA" [width]="100"> </kendo-grid-column>
@@ -110,7 +105,7 @@ aria-label="Assignment"> Assignment</button>
             </ng-template>
 
       </kendo-grid>
-</div>
+      </div>
 
 
 <ng-template #addEditPcaAssignmentDialogTemplate>

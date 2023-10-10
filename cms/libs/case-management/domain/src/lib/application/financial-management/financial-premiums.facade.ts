@@ -59,7 +59,7 @@ export class FinancialPremiumsFacade {
     field: this.sortValueReconcile,
   }];
 
-  public sortValueReconcilePaymentBreakout = 'invoiceNbr';
+  public sortValueReconcilePaymentBreakout = 'creationTime';
   public sortReconcilePaymentBreakoutList: SortDescriptor[] = [
     {
       field: this.sortValueReconcilePaymentBreakout,
@@ -382,16 +382,15 @@ loadMedicalPremiumList(
   maxResultCount: number,
   sort: string,
   sortType: string,
-  filter:any,){
-    this.showLoader();
+  filter:any,
+  premiumType: string){
   this.financialPremiumsDataService.loadMedicalPremiumList( skipcount,
     maxResultCount,
     sort,
     sortType,
-    filter ).subscribe({
+    filter,premiumType ).subscribe({
     next: (dataResponse) => {
       if (dataResponse) {
-        this.hideLoader();
         const gridView = {
           data: dataResponse['items'],
           total: dataResponse['totalCount'],
@@ -400,7 +399,6 @@ loadMedicalPremiumList(
     }},
     error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-      this.hideLoader();
     },
   });
 }
@@ -592,10 +590,10 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
     }
 
 
-    loadPremiumAdjustments(type: string, paymentId: string, params: GridFilterParam){    
-      return this.financialPremiumsDataService.loadPremiumAdjustments(type, paymentId, params);   
+    loadPremiumAdjustments(type: string, paymentId: string, params: GridFilterParam){
+      return this.financialPremiumsDataService.loadPremiumAdjustments(type, paymentId, params);
     }
-	
+
 
    deletePremiumPayment(type: string, paymentId: string){
       this.showLoader();
@@ -612,7 +610,7 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
         },
       })
     }
-	
+
 
     removeSelectedPremiums(selectedPremiumPayments: any, premiumsType: any) {
       return this.financialPremiumsDataService.removeSelectedPremiums(selectedPremiumPayments, premiumsType);

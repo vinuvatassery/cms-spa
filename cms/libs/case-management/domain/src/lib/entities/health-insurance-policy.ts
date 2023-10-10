@@ -68,9 +68,11 @@ export class HealthInsurancePolicy {
         medicareCardFileSize: number | null = null;
         medicareCardFileTypeCode: string = "";
         medicareCardFileId: string = "";
-        medicareCardFilePath: string = "";
+        medicareCardFilePath: string = "";        
         othersCoveredOnPlan: Array<Dependent> = [];
         isCerReview: boolean = false;
+        insuranceVendorAddressId: string | null = null;
+        insuranceTypeCode: string | null = null;
         //removedOthersCoveredOnPlan: Array<othersCoveredOnPlan> = [];
 }
 

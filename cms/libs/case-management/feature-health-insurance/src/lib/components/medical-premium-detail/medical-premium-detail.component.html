@@ -171,7 +171,7 @@
             [isViewContentEditable]="isViewContentEditable"
             (insuranceCarrierNameChange)="insuranceCarrierNameChange($event)"
             (insuranceCarrierNameData)="insuranceCarrierNameData($event)"
-            [insuranceStatus]="insuranceStatus"></case-management-medical-premium-detail-insurance-carrier-name>
+            [insuranceStatus]="insuranceStatus"  [insuranceTypeCode]="insuranceTypeCode"></case-management-medical-premium-detail-insurance-carrier-name>
         </div>
 
         <div class="flex-col mat-form-sm-b-space ">
@@ -203,7 +203,7 @@
           <case-management-medical-premium-detail-careassist-pay [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable" [sameAsInsuranceIdFlag]="sameAsInsuranceIdFlag"
             [ddlInsuranceType]="ddlInsuranceType"
-            [clientId]="clientId" [caseEligibilityId]="caseEligibilityId"></case-management-medical-premium-detail-careassist-pay>
+            [clientId]="clientId" [caseEligibilityId]="caseEligibilityId" [claimsType]="selectedClaimType"></case-management-medical-premium-detail-careassist-pay>
         </div>
 
       </div>

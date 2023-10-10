@@ -10,8 +10,8 @@
       <section class="app-l-client-wrapper ">
             <section class="app-l-wrapper">
                   <div>
-                  <p> <button aria-label="view Profile"
-                              (click)="onViewProviderDetailClicked(providerDetailsTemplate)" kendoButton look="flat"
+                  <p> <button  aria-label="view Provider Profile"
+                              (click)="onViewProviderDetailClicked()" kendoButton look="flat"
                               class="mr-3 card-link-button">
                               Aetna
                         </button> 
@@ -177,10 +177,6 @@
         <common-user-profile-card></common-user-profile-card>
       </ng-template>
     </kendo-popover>
-<ng-template #providerDetailsTemplate>
-      <cms-financial-premiums-provider-info
-            (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"></cms-financial-premiums-provider-info>
-</ng-template>
 
 
 <ng-template #paymentDetailsFromTemplate>

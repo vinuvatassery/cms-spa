@@ -11,3 +11,14 @@
 [reconcileBreakoutList$]="reconcileBreakoutList$"
 (loadReconcileBreakoutSummaryEvent)="loadReconcileBreakoutSummary($event)"
 (loadReconcilePaymentBreakoutListEvent)="loadReconcilePaymentBreakoutList($event)"></cms-financial-premiums-batches-reconcile-payments>
+
+<ng-template #providerDetailsTemplate>
+    <cms-financial-premiums-provider-info
+          [paymentRequestId]="paymentRequestId"
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$" 
+          (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-provider-info>
+</ng-template>

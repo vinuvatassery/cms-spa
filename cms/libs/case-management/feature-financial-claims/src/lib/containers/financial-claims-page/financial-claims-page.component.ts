@@ -3,13 +3,17 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade } from '@cms/case-management/domain';
+import { ContactFacade, FinancialClaimsFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {  filter } from 'rxjs';
 import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
+import { LovFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'cms-financial-claims-page',
   templateUrl: './financial-claims-page.component.html',
@@ -47,13 +51,28 @@ export class FinancialClaimsPageComponent implements OnInit {
     this.financialClaimsFacade.financialClaimsAllPaymentsData$;
 
     financialClaimsInvoice$ = this.financialClaimsFacade.financialClaimsInvoice$;
+
+    vendorProfile$ = this.financialVendorFacade.providePanelSubject$
+    updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
+    ddlStates$ = this.contactFacade.ddlStates$;
+    paymentMethodCode$ = this.lovFacade.paymentMethodType$
+    providerDetailsDialog: any
+    @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+    providerDetailsTemplate!: TemplateRef<any>;
+    paymentRequestId: any;
+
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
     private loggingService: LoggingService,
-    private documentFacade :  DocumentFacade
+    private documentFacade :  DocumentFacade,
+    public contactFacade: ContactFacade,
+    public lovFacade: LovFacade,
+    private dialogService: DialogService,
+    private readonly financialVendorFacade : FinancialVendorFacade
+
   ) {}
 
   ngOnInit(): void {
@@ -156,5 +175,39 @@ export class FinancialClaimsPageComponent implements OnInit {
 
       this.documentFacade.getExportFile(vendorPageAndSortedRequest,`claims/${this.claimsType}/payments` , fileName)
     }
+  }
+
+  onProviderNameClick(event:any){
+    this.paymentRequestId = event
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',  
+      }, 
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+    
+  }
+
+  onCloseViewProviderDetailClicked(result: any){
+    if(result){
+      this.providerDetailsDialog.close();
+    }
+  }
+  
+  
+  getProviderPanel(event:any){
+    this.financialVendorFacade.getProviderPanel(event)
+  }
+
+  updateProviderProfile(event:any){
+    console.log(event)
+    this.financialVendorFacade.updateProviderPanel(event)
+  }
+
+  OnEditProviderProfileClick(){
+    this.contactFacade.loadDdlStates()
+    this.lovFacade.getPaymentMethodLov()
   }
 } 

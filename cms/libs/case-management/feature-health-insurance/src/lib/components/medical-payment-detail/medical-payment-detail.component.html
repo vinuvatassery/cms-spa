@@ -1,150 +1,340 @@
 <section class="k-dialog-body">
     
-    <p class="text-muted mb-2">  All fields are required unless otherwise stated</p>
-    <form [formGroup]="copayPaymentForm">
-        <div class="flex-row">
-    
-            <div class="flex-col">
-                <kendo-floatinglabel text="Service Provider Name" >   
-                    <kendo-combobox   
-                    aria-label="Service Provider Name"
-                    [fillMode]="formUiStyle.dropDownFillMode"  
-                    [loading] = "isLoading$ | async"
-                    formControlName="vendorId"     
-                    [data]="carrierNames$ | async"   
-                    textField="vendorName" 
-                    valueField="vendorId"
-                    [valuePrimitive]="true"       
-                    [filterable]="true"     
-                    [kendoDropDownFilter]="caseOwnerfilterSettings"    
-                    (valueChange)="serviceProviderNameChange($event)" 
-                  >
-                  </kendo-combobox>
-                  </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!copayPaymentForm.controls['vendorId'].valid">Service Provider Name
-                    is required.</kendo-formerror>
-    
-            </div>
-            <div class="flex-col">
-                    <kendo-floatinglabel text="Policy" >   
-                        <kendo-combobox   
-                        aria-label="Policy"
-                        [fillMode]="formUiStyle.dropDownFillMode" 
-                        [loading] = "isInsurancePoliciesLoading" 
-                        formControlName="clientInsurancePolicyId"     
-                        [data]="insurancePoliciesList"   
-                        textField="policyValueField" 
-                        valueField="clientInsurancePolicyId"
-                        [valuePrimitive]="true"       
-                        [filterable]="true"     
-                        [kendoDropDownFilter]="caseOwnerfilterSettings"      
-                      >
-                      </kendo-combobox>
-                    
-                      </kendo-floatinglabel>
-                      <kendo-formerror *ngIf="!copayPaymentForm.controls['clientInsurancePolicyId'].valid">Policy is required.</kendo-formerror>
-            </div>
-            <div class="flex-col">
-                <kendo-floatinglabel text="Service Description">
-                    <kendo-textbox formControlName="serviceDescription" aria-label="Service Description" [disabled]="true"
-                        [fillMode]="formUiStyle.inputFillMode">
-                    </kendo-textbox>
-                </kendo-floatinglabel>
-            </div>
-            <div class="flex-col">
-                <div class="flex-row">
-                    <div class="flex-col flex-col-6">
-                        <kendo-floatinglabel text="Payment Amount" class="amount-with-symbol">
-                            <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                         
-                            <kendo-numerictextbox aria-label="premiumAmt" [spinners]="false" class="input-icon-right"
-                            placeholder="Payment Amount" placeholder="00.00" formControlName="amountRequested" 
-                            [fillMode]="formUiStyle.inputFillMode" name="premiumAmt" >    
-                            </kendo-numerictextbox>
+    <p class="text-muted mb-2">Select a {{financialProvider}} Provider to bulk add services for this claim.</p>
+    <form [formGroup]="claimForm">
+            <div class="flex-row">
+                <div class="flex-col flex-col-8">
+                    <div class="combotable_search_list new_refund_Search new_claims_Search mb-3">
+                        <kendo-floatinglabel text="Provider Name">
+                        <span *ngIf="medicalProvidersearchLoaderVisibility$ | async"
+                            class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+                        </span>
 
-                            <kendo-formerror *ngIf="!copayPaymentForm.controls['amountRequested'].valid">Payment Amount is
-                                required.</kendo-formerror>
-                        </kendo-floatinglabel>
-                    </div>
-                    <div class="flex-col flex-col-6">
-                        <kendo-floatinglabel text="Type">
-                            <kendo-dropdownlist formControlName="paymentTypeCode" aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"
-                                    [data]="paymentRequestType$ | async" valueField="lovCode" textField="lovDesc" [valuePrimitive]="true"
-                                    [loading]="(paymentRequestType$ | async)?.length===0">
-                            
-                                </kendo-dropdownlist>
-                        </kendo-floatinglabel>
-                        <kendo-formerror *ngIf="!copayPaymentForm.controls['paymentTypeCode'].valid">Type is
-                            required.</kendo-formerror>
-                    </div>
-                </div>
-            </div>
-           
-            <div class="flex-col">
-                <div class="flex-row">
-                    <div class="flex-col flex-col-6">
-                        <kendo-floatinglabel text="Service Start Date">
-                            <kendo-datepicker formControlName="serviceStartDate"
-                                [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                                aria-label="Coverage Start Date" formatPlaceholder="formatPattern" placeholder="" (valueChange)="startDateOnChange()">
-                            </kendo-datepicker>
-                        </kendo-floatinglabel>
-                           <kendo-formerror *ngIf="!copayPaymentForm.controls['serviceStartDate'].valid && !copayPaymentForm.controls['serviceStartDate'].disabled"> Service Start Date is
-                                required.</kendo-formerror>
-    
-                    </div>
-                    <div class="flex-col flex-col-6">
-                        <kendo-floatinglabel text="Service End Date">
-                            <kendo-datepicker formControlName="serviceEndDate"
-                                [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                                aria-label="Coverage End Date" formatPlaceholder="formatPattern" placeholder=""
-                                (valueChange)="endDateValueChange($event)" (blur)="endDateOnChange()">
-                            </kendo-datepicker>
-                        </kendo-floatinglabel>
-                               <kendo-formerror
-                            *ngIf="!copayPaymentForm.controls['serviceEndDate'].valid && statusEndDateIsGreaterThanStartDate && !copayPaymentForm.controls['serviceEndDate'].disabled">
-                            Service End Date is required.
+                        <kendo-multicolumncombobox textField="providerFullName" valueField="vendorAddressId"
+                            [fillMode]="formUiStyle.dropDownFillMode"
+                            placeholder="Search {{claimsType | titlecase}} Providers by name or TIN"
+                            [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
+                            formControlName="medicalProvider" (filterChange)="searchMedicalProvider($event)"
+                            [data]="pharmacySearchResult$ | async" [(ngModel)]="selectedMedicalProvider"
+                            (valueChange)="onProviderValueChange($event)">
+                            <button kendoButton fillMode="clear" icon="image"></button>
+
+                            <kendo-combobox-column>
+                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                    <span>{{ dataItem.vendorName }}</span>
+                                </ng-template>
+                            </kendo-combobox-column>
+
+                            <kendo-combobox-column>
+                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                    <span class="text-muted"><em> TIN:</em> {{ dataItem.tin }}</span>
+                                </ng-template>
+                            </kendo-combobox-column>
+
+                            <kendo-combobox-column>
+                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                    <span class="text-muted"><em> Mail Code:</em> {{ dataItem.mailCode }}</span>
+                                </ng-template>
+                            </kendo-combobox-column>
+
+                        </kendo-multicolumncombobox>
+                        <kendo-formerror *ngIf="(!claimForm.controls['medicalProvider'].valid) && isSubmitted"
+                            class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                aria-hidden="false">info</span> Service Provider Name is required
+                        </kendo-formerror>
+                        <div *ngIf="getParentExceptionFormValue('providerNotEligibleExceptionFlag')" >
+                          <kendo-formerror class="align-items-center"> <span
+                                  class="material-icons mr-1" aria-hidden="false">info</span> Provider not eligible.
+                                  <a kendoButton class="ml-1 card-link-button"
+                                    (click)="onMakeParentExceptionClick('showProviderNotEligibleExceptionReason')">{{getParentExceptionFormValue('providerNotEligibleExceptionFlagText')}}
+                                  </a>
+                                  <a kendoButton class="ml-1 card-link-button"
+                                   >{{vendorName??''}}
+                                  </a>
                           </kendo-formerror>
-                          <kendo-formerror
-                            *ngIf="!copayPaymentForm.controls['serviceEndDate'].valid && !statusEndDateIsGreaterThanStartDate && !copayPaymentForm.controls['serviceEndDate'].disabled">Service End Date must be after Start Date.
-                          </kendo-formerror>    
-                    </div>
-                </div>
-            </div>
-            <div class="flex-col">
-                <div class="flex-row">
-                    <div class="flex-col flex-col-6">
-                        <kendo-floatinglabel text="Entry Date">
-                            <kendo-datepicker formControlName="entryDate" [fillMode]="formUiStyle.dateInputFillMode"
-                                format="MM-dd-yyyy" aria-label="Entry Date" formatPlaceholder="formatPattern"
-                                placeholder="">
-                            </kendo-datepicker>
+                          <div class="flex-row" *ngIf="getParentExceptionFormValue('showProviderNotEligibleExceptionReason')">
+                            <div class="flex-col">
+                                <kendo-floatinglabel text="Reason For Exception">
+                                    <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
+                                        aria-label="Reason For Exception" [maxlength]="textMaxLength"
+                                        formControlName="parentReasonForException">
+                                        <kendo-textarea-suffix class="justify-content-end">
+                                            <span class="tareacounter"></span>
+                                        </kendo-textarea-suffix>
+                                    </kendo-textarea>
+                                </kendo-floatinglabel>
+                                <kendo-formerror *ngIf="!claimForm.controls['parentReasonForException'].valid && isSubmitted"
+                                class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                    aria-hidden="false">info</span>Reason For Exception is required
+                            </kendo-formerror>
+                            </div>
+                        </div>
+                        </div>
                         </kendo-floatinglabel>
                     </div>
-                    
                 </div>
+                <div class="flex-col flex-col-4">
+                        <kendo-floatinglabel text="Invoice ID">
+                            <kendo-textbox aria-label="Invoice ID" [fillMode]="formUiStyle.inputFillMode"
+                                formControlName="invoiceId">
+                            </kendo-textbox>
+                        </kendo-floatinglabel>
+                        <kendo-formerror *ngIf="(!claimForm.controls['invoiceId'].valid) && isSubmitted"
+                            class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                aria-hidden="false">info</span>
+                            Invoice ID is required
+                        </kendo-formerror>
+                    </div>
             </div>
-    
-            <div class="flex-col">
-                <kendo-floatinglabel text="Comment">
-                    <kendo-textarea 
-                        formControlName="comments"                         
-                        aria-label="Comment"
-                        resizable="auto"
-                        [fillMode]="formUiStyle.inputFillMode"
-                        [maxlength]="commentMaxLength"
-                        (valueChange)="commentValueChange($event)">
-                        <kendo-textarea-suffix class="justify-content-end">
-                            <span class="counter"> {{ commentCounter }}</span>
-                          </kendo-textarea-suffix>
-                    </kendo-textarea>
-                    <kendo-formerror *ngIf="!copayPaymentForm.controls['comments'].valid">Comment is
-                        required.</kendo-formerror>
-    
-                </kendo-floatinglabel>
+        <div class="flex-row">
+                <ng-container formArrayName="claimService">
+                    <ng-container *ngFor="let contact of addClaimServicesForm.controls; let i=index">
+                        <ng-container [formGroupName]="i">
+                            <div class=" mb-3">
+                                <div class="flex-space-bw align-items-center">
+                                    <h4 class="mar-0">SERVICE {{i+1}}</h4>
+                                    <button class="" kendoButton fillMode="flat" themeColor="error"
+                                        (click)="removeService(i)">DELETE</button>
+                                </div>
+                                <div class="flex-row">
+                                    <div class="flex-col flex-col-6">
+                                        <kendo-floatinglabel text="Service Start Date">
+                                            <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
+                                                aria-label="Service Start Date" format="MM/dd/yyyy"
+                                                formatPlaceholder="formatPattern" formControlName="serviceStartDate"
+                                                (valueChange)="onDateChange(i)"   placeholder="">
+                                            </kendo-datepicker>
+                                        </kendo-floatinglabel>
+                                        <kendo-formerror
+                                            *ngIf="(isControlValid('serviceStartDate', i) && isSubmitted)"
+                                            class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                                aria-hidden="false">info</span>Service Start Date is required
+                                        </kendo-formerror>
+                                    </div>
+                                    <div class="flex-col flex-col-6">
+                                        <kendo-floatinglabel text="Service End Date">
+                                            <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
+                                                aria-label="Service End Date" format="MM/dd/yyyy"
+                                                formatPlaceholder="formatPattern"   placeholder="" formControlName="serviceEndDate"
+                                                (valueChange)="onDateChange(i)">
+                                            </kendo-datepicker>
+                                        </kendo-floatinglabel>
+                                        <kendo-formerror
+                                            *ngIf="(isControlValid('serviceEndDate', i) && isSubmitted)"
+                                            class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                                aria-hidden="false">info</span>Service End Date is required
+                                        </kendo-formerror>
+                                        <kendo-formerror
+                                            *ngIf="(!isStartEndDateError(i))"
+                                            class="d-flex align-items-center">
+                                            <span class="material-icons mr-1" aria-hidden="false">info</span>Service
+                                            End date must be equal to or greater than start date
+                                        </kendo-formerror>
+                                    </div>
+                                    <div class="ml-2">
+                                        <kendo-formerror *ngIf="getExceptionFormValue('oldInvoiceExceptionFlag',i)" class="d-flex align-items-center">
+                                            <span class="material-icons mr-1" aria-hidden="false">info</span>
+                                            Invoice is over 1 year old. <a kendoButton
+                                                class="ml-1 card-link-button" (click)="onMakeExceptionClick('oldInvoiceExceptionReason',i)">
+                                                {{getExceptionFormValue('oldInvoiceExceptionFlagText',i)}}
+                                              </a></kendo-formerror>
+                                        <kendo-formerror *ngIf="getExceptionFormValue('ineligibleExceptionFlag',i)" class="d-flex align-items-center">
+                                          <span class="material-icons mr-1" aria-hidden="false">info</span>
+                                          Client not eligible for these dates. Claim status will automatically be Denied.
+                                        </kendo-formerror>
+                                    </div>
+
+                                </div>
+                                <div class="flex-row" *ngIf="getExceptionFormValue('oldInvoiceExceptionReason',i)">
+                                  <div class="flex-col flex-col-6 ">
+                                      <kendo-floatinglabel text="Reason For Exception">
+                                          <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
+                                              aria-label="Reason For Exception" [maxlength]="textMaxLength"
+                                              formControlName="reasonForException">
+                                              <kendo-textarea-suffix class="justify-content-end">
+                                                  <span class="tareacounter"> {{reasonCharCount(i)}}</span>
+                                              </kendo-textarea-suffix>
+                                          </kendo-textarea>
+                                      </kendo-floatinglabel>
+                                      <kendo-formerror *ngIf="(isControlValid('reasonForException',i) && isSubmitted)"
+                                      class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                          aria-hidden="false">info</span>Reason For Exception is required
+                                  </kendo-formerror>
+                                  </div>
+                              </div>
+                                <div class="flex-row">
+                                    <div class="flex-col flex-col-6">
+                                        <kendo-floatinglabel text="Payment Type">
+                                            <kendo-dropdownlist
+                                            [fillMode]="formUiStyle.dropDownFillMode"
+                                            [data]="groupedPaymentRequestTypes" formControlName="paymentType" aria-label="Type"
+                                            textField ="lovDesc"
+                                            valueField="lovCode"
+                                            [valuePrimitive]="true"
+                                            (valueChange)="onPaymentTypeValueChange($event, i)">
+                                          <ng-template kendoDropDownListFixedGroupTemplate let-groupName>
+                                            <strong>{{ groupName }}</strong>
+                                          </ng-template>
+
+                                          <ng-template kendoDropDownListGroupTemplate let-groupName>
+                                            <strong>{{ groupName }}</strong>
+                                          </ng-template>
+                                          </kendo-dropdownlist>
+                                        </kendo-floatinglabel>
+                                        <kendo-formerror *ngIf="(isControlValid('paymentType', i) && isSubmitted)"
+                                            class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                                aria-hidden="false">info</span>Payment Type is required
+                                        </kendo-formerror>
+                                    </div>
+                                    <div class="flex-col flex-col-6">
+                                        <kendo-floatinglabel text="CPT Code" class="inline-search-loader">
+                                            <span *ngIf="CPTCodeSearchLoaderVisibility$ | async"
+                                                class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+                                            <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode"
+                                                [data]="searchCTPCode$ | async" formControlName="cptCode"
+                                                valueField="cptCode1" [filterable]="true" [value]="selectedCPTCode"
+                                                (filterChange)="searchcptcode($event)"
+                                                [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }">
+                                                <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                                                    <span class="pr-1" (click)="onCPTCodeValueChange(dataItem,i)">{{
+                                                        dataItem.cptCode1}}</span>
+                                                </ng-template>
+                                            </kendo-autocomplete>
+                                            <kendo-formerror *ngIf="(isControlValid('cptCode', i) && isSubmitted)"
+                                                class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                                    aria-hidden="false">info</span>CPT Code is
+                                                required
+                                            </kendo-formerror>
+                                        </kendo-floatinglabel>
+                                    </div>
+                                    <div class="flex-col flex-col-6">
+                                        <kendo-floatinglabel text="PCA Code">
+                                            <kendo-textbox aria-label="PCA Code"
+                                                [fillMode]="formUiStyle.inputFillMode" formControlName="pcaCode">
+                                            </kendo-textbox>
+                                        </kendo-floatinglabel>
+                                    </div>
+                                   
+                                    <div class="ml-2">
+                                      <kendo-formerror *ngIf="getExceptionFormValue('bridgeUppExceptionFlag',i)" class="d-flex align-items-center">
+                                          <span class="material-icons mr-1" aria-hidden="false">info</span>
+                                          Client not eligible. <a kendoButton
+                                              class="ml-1 card-link-button" (click)="onMakeExceptionClick('bridgeUppExceptionReason',i)">
+                                              {{getExceptionFormValue('bridgeUppExceptionFlagText',i)}}
+                                            </a></kendo-formerror>
+
+                                    </div>
+                                </div>
+                                <div class="flex-row" *ngIf="getExceptionFormValue('bridgeUppExceptionReason',i)">
+                                  <div class="flex-col flex-col-6">
+                                      <kendo-floatinglabel text="Reason For Exception">
+                                          <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
+                                              aria-label="Reason For Exception" [maxlength]="textMaxLength"
+                                              formControlName="reasonForException">
+                                              <kendo-textarea-suffix class="justify-content-end">
+                                                  <span class="tareacounter"> {{reasonCharCount(i)}}</span>
+                                              </kendo-textarea-suffix>
+                                          </kendo-textarea>
+                                      </kendo-floatinglabel>
+                                      <kendo-formerror *ngIf="(isControlValid('reasonForException',i) && isSubmitted)"
+                                      class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                          aria-hidden="false">info</span>Reason For Exception is required
+                                  </kendo-formerror>
+                                  </div>
+                              </div>
+                                
+                                <div class="flex-row">
+                                    <div class="flex-col flex-col-6">
+
+                                        <kendo-floatinglabel text="Service Cost" class="amount-with-symbol">
+                                            <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                                            <kendo-numerictextbox aria-label="Service Cost" [spinners]="false"
+                                                [fillMode]="formUiStyle.inputFillMode" format="#.00"
+                                                formControlName="serviceCost">
+
+                                            </kendo-numerictextbox>
+                                        </kendo-floatinglabel>
+                                        <kendo-formerror *ngIf="(isControlValid('serviceCost',i) && isSubmitted)"
+                                            class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                                aria-hidden="false">info</span>Service Cost is required
+                                        </kendo-formerror>
+                                    </div>
+                                    <div class="flex-col flex-col-6">
+                                        <kendo-floatinglabel text="Amount Due" class="amount-with-symbol">
+                                            <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                                            <kendo-numerictextbox aria-label="Amount Due" [spinners]="false"
+                                                [fillMode]="formUiStyle.inputFillMode" formControlName="amountDue"
+                                                format="#.00"  (blur)="onAmountDueChange(i)">
+                                            </kendo-numerictextbox>
+                                        </kendo-floatinglabel>
+                                        <kendo-formerror *ngIf="(isControlValid('amountDue',i) && isSubmitted)"
+                                            class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                                aria-hidden="false">info</span>Amount Due is required
+                                        </kendo-formerror>
+                                    </div>
+                                    <div class="ml-2" *ngIf="getExceptionFormValue('exceedMaxBenefitExceptionFlag',i)" >
+                                        <kendo-formerror class="align-items-center"> <span
+                                                class="material-icons mr-1" aria-hidden="false">info</span> Client
+                                            exceeded maximum benefits. <a kendoButton class="ml-1 card-link-button"
+                                                (click)="onMakeExceptionClick('showMaxBenefitExceptionReason',i)">{{getExceptionFormValue('maxBenefitExceptionFlagText',i)}}
+                                            </a>
+                                        </kendo-formerror>
+                                    </div>
+                                    <div class="ml-2" *ngIf="getExceptionFormValue('duplicatePaymentExceptionFlag',i)" >
+                                      <kendo-formerror class="align-items-center"> <span
+                                              class="material-icons mr-1" aria-hidden="false">info</span> Duplicate Payment. <a kendoButton class="ml-1 card-link-button"
+                                              (click)="onMakeExceptionClick('duplicatePaymentExceptionReason',i)">{{getExceptionFormValue('duplicatePaymentExceptionFlagText',i)}}
+                                          </a>
+                                      </kendo-formerror>
+                                  </div>
+                                </div>
+                                <div class="flex-row" *ngIf="getExceptionFormValue('showMaxBenefitExceptionReason',i)
+                                || getExceptionFormValue('duplicatePaymentExceptionReason',i)">
+                                    <div class="flex-col">
+                                        <kendo-floatinglabel text="Reason For Exception">
+                                            <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
+                                                aria-label="Reason For Exception" [maxlength]="textMaxLength"
+                                                formControlName="reasonForException">
+                                                <kendo-textarea-suffix class="justify-content-end">
+                                                    <span class="tareacounter"> {{reasonCharCount(i)}}</span>
+                                                </kendo-textarea-suffix>
+                                            </kendo-textarea>
+                                        </kendo-floatinglabel>
+                                        <kendo-formerror *ngIf="(isControlValid('reasonForException',i) && isSubmitted)"
+                                        class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                            aria-hidden="false">info</span>Reason For Exception is required
+                                    </kendo-formerror>
+                                    </div>
+                                </div>
+                                <div class="flex-row">
+                                    <div class="flex-col">
+                                        <kendo-floatinglabel text="Service Description">
+                                            <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
+                                                aria-label="Service Description"
+                                                formControlName="serviceDescription" [maxlength]="textMaxLength">
+                                                <kendo-textarea-suffix class="justify-content-end">
+                                                    <span class="tareacounter"> {{serviceDescCharCount(i)}}</span>
+                                                </kendo-textarea-suffix>
+                                            </kendo-textarea>
+                                        </kendo-floatinglabel>
+                                        <kendo-formerror
+                                            *ngIf="(isControlValid('serviceDescription',i) && isSubmitted)"
+                                            class="d-flex align-items-center"> <span class="material-icons mr-1"
+                                                aria-hidden="false">info</span>Service Description is required
+                                        </kendo-formerror>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
             </div>
-        </div>
     </form>
+    <div class="mt-2">
+        <button class="" kendoButton fillMode="flat" themeColor="primary" (click)="addClaimServiceGroup()">
+            <span class="material-icons" aria-label="New Claims" aria-hidden="false">add</span>
+            New Service</button>
+    </div>
 </section>
 
 <kendo-dialog-actions>
@@ -155,7 +345,7 @@
         </div>
         <div class="justify-content-end">
             <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click) ="closeCoPaymentDetailsOpened()"> Cancel  </button>
-            <button kendoButton [primary]="true" aria-label="Add" (click)="savePaymentDetailsClicked()"> Add</button>
+            <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> Add</button>
 
         </div>
     </div>

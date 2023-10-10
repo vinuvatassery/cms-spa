@@ -116,7 +116,7 @@
                         <kendo-grid-column field="vendorName" [title]="providerTitle" [width]="160">
                         <ng-template kendoGridCellTemplate let-dataItem>
                               <button [attr.aria-label]="dataItem?.vendorName" kendoButton look="flat"
-                                          class="card-link-button"  >
+                                          class="card-link-button" (click)="onProviderNameClick(dataItem.paymentRequestId)" >
                                           {{dataItem?.vendorName}} 
                               </button>
                               </ng-template>
@@ -324,8 +324,8 @@
             </div>
             <div class="text-right flex-gap">
                   
-                  <button kendoButton [primary]="true" [disabled]="premiumReconcileCount == 0" look="outline" class="" (click)="navToReconcilePayments()" aria-label="Close"> Close </button>
-                  <button kendoButton [primary]="true" aria-label="Save" class="" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
+                  <button kendoButton [primary]="true"  look="outline" (click)="navToReconcilePayments()" aria-label="Close"> Close </button>
+                  <button kendoButton [primary]="true" [disabled]="premiumReconcileCount == 0" aria-label="Save"  (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
             </div>
       
       

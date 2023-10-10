@@ -30,7 +30,7 @@ const COMPONENTS = [AppComponent, LayoutComponent, SideNavigationComponent];
     SharedUtilOidcModule,
     ProductivityToolsFeatureNotificationModule,
     CaseManagementFeatureCaseModule,
-    SystemConfigFeatureTemplateManagementModule,
+    SystemConfigFeatureTemplateManagementModule    
   ],
   providers: [ { provide: LOCALE_ID, useValue: 'en-US' }, { provide: ICON_SETTINGS, useValue: { type: 'font' } } ],
   bootstrap: [AppComponent],

@@ -64,6 +64,10 @@ export class FinancialPremiumsBatchesListComponent
       columnDesc: 'Batch #',
     },
     {
+      columnName: "sendBackNotes",
+      columnDesc: "Send Back Notes"        
+    },
+    {
       columnName: 'unbatchedPayments',
       columnDesc: 'Unbatched Payments',
     },
@@ -132,7 +136,7 @@ export class FinancialPremiumsBatchesListComponent
   /* Public methods */
   navToBatchDetails(event : any){
     this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch`],
-    { queryParams :{bid: event.batchId}});
+    { queryParams :{bid: event.paymentRequestBatchId}});
   }
 
   searchColumnChangeHandler(value: string) {
@@ -197,7 +201,7 @@ export class FinancialPremiumsBatchesListComponent
   restGrid() {
     this.sortValue = 'batchName';
     this.sortType = 'asc';
-    this.initializePremiumsBatchPage();
+    this.initializePremiumsBatchGrid();
     this.sortColumn = 'batchName';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
@@ -308,7 +312,6 @@ export class FinancialPremiumsBatchesListComponent
 
 
   private initializePremiumsBatchPage() {
-    this.loadFinancialPremiumsBatchListGrid();
     this.addSearchSubjectSubscription();
   }
 

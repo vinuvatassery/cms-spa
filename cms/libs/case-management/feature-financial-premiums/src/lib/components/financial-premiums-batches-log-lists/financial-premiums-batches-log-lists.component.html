@@ -1,12 +1,15 @@
 <div class=" pt-0">
-  <section class="app-l-mainTittle">
+  <section class="app-l-mainTittle" *ngIf="(paymentBatchName$ | async) as batch; else loading">
     <div class="d-flex">
       <button aria-label="back to vendor refund" kendoButton look="flat" title="Go back" class="mr-1" (click)="backToBatch($event)">
         <span class="material-icons">
           arrow_back </span> </button>
-      <h1 class="maintitle_withicon text-bold">Batch # 05012021_001 </h1>
+      <h1 class="maintitle_withicon text-bold">Batch # {{batch.batchName}} </h1>
     </div>
   </section>
+  <ng-template #loading>
+    <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+  </ng-template>
   <section class="app-l-client-wrapper ">
     <section class="app-l-wrapper">
       <p> Click “Bulk” to execute actions for one or more payments. Click on a row to view the individual premiums for that payment.</p>
@@ -14,7 +17,8 @@
         <span class="filter-section_items filter--select">
           <kendo-floatinglabel>
             <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
-              textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
+              textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn"
+              (valueChange)="searchColumnChangeHandler($event)">
             </kendo-dropdownlist>
           </kendo-floatinglabel>
         </span>
@@ -34,6 +38,17 @@
           </button>
         </span>
       </section>
+      <div class="table-sorted-info">
+        <span class="app-c-badge badge-warn-light" aria-label="search-warning"
+          *ngIf="showDateSearchWarning">
+          <span class="material-icons" aria-label="search-warning" aria-hidden="true">
+            warning
+          </span>
+          <span *ngIf="showDateSearchWarning">
+            The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
+          </span>          
+        </span>
+      </div>
       <!-- Sorted Info -->
       <div class="table-sorted-info">
         Sorted {{sortDir}} by <span class="sort-items">  {{sortColumn}} </span>
@@ -55,6 +70,11 @@
           <kendo-grid-checkbox-column  [columnMenu]="false" [showSelectAll]="true" *ngIf="!isLogGridExpand"
             [width]="40"></kendo-grid-checkbox-column>
           <kendo-grid-column field="itemNbr" title="Item #" [width]="160">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <button aria-label="Item" (click)="paymentClickHandler(dataItem)" kendoButton look="flat" class="card-link-button">
+                {{ dataItem.itemNbr }}
+              </button>
+            </ng-template>
             <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
               <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
@@ -63,7 +83,7 @@
           </kendo-grid-column>
           <kendo-grid-column field="vendorName" title="Insurance Vendor" [width]="200">
             <ng-template kendoGridCellTemplate let-dataItem>
-              <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button">
+              <button  [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button" (click)="onProviderNameClick(dataItem.paymentRequestId)">
                 {{ dataItem.vendorName }}
               </button>
             </ng-template>
@@ -244,7 +264,6 @@
 </div>
 <div class="bottom-fixed-wrapper text-right flex-gap">
   <span class="">0 premiums(s) to be removed</span>
-  <button (click)="goToBatchItems($event)">Batch Log items</button>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     *ngIf="isRequestPaymentClicked || isSendReportOpened" (click)="onBulkOptionCancelClicked()"> Cancel </button>
   <button kendoButton [primary]="true" aria-label="Preview Requests" class="" *ngIf="isRequestPaymentClicked"
@@ -296,7 +315,7 @@
   <kendo-dialog-titlebar (close)="closeRecentPremiumsModal($event)"><h5 class="text-upper">Recent Premiums for {{clientName}}</h5></kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="premiumsType"
-      (CloseRecentPremiumsModal)="closeRecentPremiumsModal($event)"></cms-financial-premiums-recent-premiums-list>
+      (CloseRecentPremiumsModal)="closeRecentPremiumsModal($event)" (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-recent-premiums-list>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">

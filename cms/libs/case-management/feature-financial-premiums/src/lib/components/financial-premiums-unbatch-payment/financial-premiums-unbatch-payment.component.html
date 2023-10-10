@@ -1,8 +1,8 @@
-<kendo-dialog-titlebar (close)="closeUnBatchPaymentClicked()"> Unbatch Payment?</kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeUnBatchPaymentClicked()"> Unbatch Payment{{isBulkUnBatchOpened?'(s)':'' }}?</kendo-dialog-titlebar>
 
 <section class="k-dialog-body">
     <p class="text-muted mb-1"> This action cannot be undone. 
-      The premium(s) will be added back to the “Process” tab. You may re-batch them at any time.  </p>
+      The premium{{isBulkUnBatchOpened?'(s)':'' }} will be added back to the “Process” tab. You may re-batch them at any time.  </p>
  
   </section>
   
