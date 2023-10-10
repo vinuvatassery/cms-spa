@@ -74,6 +74,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   @Output() loadPremiumEvent = new EventEmitter<string>();
   @Output() updatePremiumEvent = new EventEmitter<any>();
   @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public selectedProcessClaims: any[] = [];
   public state!: any;
   sortColumn = 'vendorName';
@@ -167,7 +168,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       click: (data: any): void => {
         if (!this.isEditBatchClosed) {
           this.isEditBatchClosed = true;
-          this.onEditPremiumsClick(data?.insurancePremiumId,data?.vendorId,data?.clientId,data.clientFullName);
+          this.onEditPremiumsClick(data?.insurancePremiumId,data?.vendorId,data?.clientId,data.clientFullName, data?.paymentRequestId);
         }
       },
     },
@@ -191,6 +192,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   public mode: SelectableMode = 'multiple';
   public drag = false;
   actionResponseSubscription = new Subscription;
+  paymentRequestId: any;
 
   
   /** Constructor **/
@@ -218,7 +220,9 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   ngOnDestroy(): void {
     this.unsubscribeFromActionResponse();
   }
-
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event);
+  }
   premiumGridlistDataHandle() {
     this.financialPremiumsProcessGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
@@ -678,6 +682,7 @@ closeRecentPremiumsModal(result: any){
     this.vendorId=dataItem.vendorId;
     this.clientId=dataItem.clientId;
     this.clientName=dataItem.clientFullName;
+    this.paymentRequestId = dataItem.paymentRequestId
   }
 
   onClientClicked(clientId: any) {
@@ -685,11 +690,12 @@ closeRecentPremiumsModal(result: any){
     this.closeRecentPremiumsModal(true);
   }
 
-  onEditPremiumsClick(premiumId: string,vendorId:any,clientId:any,clientName:any){
+  onEditPremiumsClick(premiumId: string,vendorId:any,clientId:any,clientName:any,paymentRequestId:any){
     this.vendorId=vendorId;
     this.clientId=clientId;
     this.clientName=clientName;
-    this.premiumId = premiumId
+    this.premiumId = premiumId;
+    this.paymentRequestId = paymentRequestId;
     this.onClickOpenEditPremiumsFromModal(this.editPremiumsDialogTemplate);
   }
 
