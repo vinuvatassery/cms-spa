@@ -377,6 +377,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   onPaymentTypeCodeValueChange(paymentSubTypeCode: any){
     this.pageValidationMessage = null;
     this.selectedPaymentType = paymentSubTypeCode;
+    this.approveBatchCount= 0;
+    this.sendbackBatchCount= 0;
     switch(this.selectedPaymentType) {
       case PendingApprovalPaymentTypeCode.MedicalClaim:{
         this.approvalPermissionCode = ApprovalLimitPermissionCode.MedicalClaimPermissionCode;
@@ -478,9 +480,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   }
 
   gridDataHandle() {
-    this.approvalsPaymentsLists$.subscribe((response: any) => {
-      this.approveBatchCount=response.approverCount;
-      this.sendbackBatchCount= response.sendBackCount;
+    this.approvalsPaymentsLists$.subscribe((response: any) => {     
       if (response.data.length > 0) {
         this.assignDataFromUpdatedResultToPagedResult(response);
         this.tAreaVariablesInitiation(this.approvalsPaymentsGridPagedResult);
