@@ -5,7 +5,8 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { CompletionChecklist, StatusFlag, WorkflowFacade, SexualIdentityCode, ClientFacade, ControlPrefix } from '@cms/case-management/domain';
+import { CompletionChecklist, WorkflowFacade, SexualIdentityCode, ClientFacade, ControlPrefix } from '@cms/case-management/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';

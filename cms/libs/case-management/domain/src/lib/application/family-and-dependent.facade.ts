@@ -12,8 +12,7 @@ import { DependentDataService } from '../infrastructure/dependent.data.service';
 import { ConfigurationProvider, LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService, NotificationSource } from '@cms/shared/util-core';
 import { WorkflowFacade } from './workflow.facade';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
-import { StatusFlag } from '../enums/status-flag.enum';
-import { SnackBar } from '@cms/shared/ui-common';
+import { SnackBar ,StatusFlag} from '@cms/shared/ui-common';
 
 
 @Injectable({ providedIn: 'root' })

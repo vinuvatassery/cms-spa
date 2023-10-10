@@ -27,7 +27,6 @@ import { EntityTypeCode } from '../enums/entity-type-code.enum';
 /** Enums **/
 import { NavigationType } from '../enums/navigation-type.enum';
 import { WorkflowTypeCode } from '../enums/workflow-type.enum';
-import { StatusFlag } from '../enums/status-flag.enum';
 /** Services **/
 import { WorkflowDataService } from '../infrastructure/workflow.data.service';
 
@@ -40,6 +39,7 @@ import {
 } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { SessionData } from '../entities/session-data';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Injectable({
   providedIn: 'root',

@@ -12,7 +12,6 @@ import { CaseManagementDomainModule } from '@cms/case-management/domain';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { VendorsListComponent } from './components/vendors-list/vendors-list.component';
-import { VendorDetailsComponent } from './components/vendor-details/vendor-details.component';
 import { FinancialReminderComponent } from './components/financial-reminder/financial-reminder.component';
 import { VendorInfoComponent } from './components/vendor-info/vendor-info.component';
 import { VendorHeaderToolsComponent } from './components/vendor-header-tools/vendor-header-tools.component';
@@ -76,7 +75,6 @@ import { FinancialClinicProviderDetailsComponent } from './components/financial-
     VendorProfileHeaderComponent,
     VendorsListComponent,
     FinancialReminderComponent,
-    VendorDetailsComponent,
     VendorInfoComponent,
     VendorHeaderToolsComponent,
     PaymentAddressesComponent,
@@ -125,7 +123,6 @@ import { FinancialClinicProviderDetailsComponent } from './components/financial-
     VendorProfileHeaderComponent,
     VendorsListComponent,
     FinancialReminderComponent,
-    VendorDetailsComponent,
     VendorInfoComponent,
     VendorHeaderToolsComponent,
     PaymentAddressesComponent,
