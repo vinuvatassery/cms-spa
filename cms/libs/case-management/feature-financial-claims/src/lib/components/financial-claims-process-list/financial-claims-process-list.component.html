@@ -81,7 +81,7 @@
     <kendo-grid-column field="vendorFullName" title="Provider Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="providerName" kendoButton look="flat" class="card-link-button"
-        (click)="onClaimClick(dataItem)">
+        (click)="onClaimClick(dataItem);onProviderNameClick(dataItem.paymentRequestId)">
           {{ dataItem.vendorFullName }}
         </button>
       </ng-template>

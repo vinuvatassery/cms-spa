@@ -4,7 +4,7 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
 import { ApprovalFacade, PendingApprovalPaymentFacade, UserRoleType } from '@cms/productivity-tools/domain';
-import { ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, DocumentFacade } from '@cms/shared/util-core';
+import { ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, DocumentFacade, ApiType } from '@cms/shared/util-core';
 import { NotificationService } from '@progress/kendo-angular-notification';
 import { NavigationMenuFacade, UserManagementFacade, UserDataService } from '@cms/system-config/domain';
 @Component({
@@ -26,8 +26,8 @@ export class ApprovalPageComponent implements OnInit {
 
   sortValueGeneralAPproval = this.approvalFacade.sortValueGeneralAPproval;
   sortGeneralList = this.approvalFacade.sortGeneralList;
-  sortApprovalPaymentsList = this.approvalFacade.sortApprovalPaymentsList;
-  sortValueApprovalPaymentsAPproval = this.approvalFacade.sortValueApprovalPaymentsAPproval;
+  sortApprovalPaymentsList = this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
+  sortValueApprovalPaymentsApproval = this.pendingApprovalPaymentFacade.sortValueApprovalPaymentsApproval;
   sortImportedClaimsList = this.approvalFacade.sortImportedClaimsList;
   sortValueImportedClaimsAPproval = this.approvalFacade.sortValueImportedClaimsAPproval;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
@@ -120,13 +120,13 @@ export class ApprovalPageComponent implements OnInit {
       {
         SortType : data?.gridDataRefinerValue.sortType,
         Sorting : data?.gridDataRefinerValue.sortColumn,
-        SkipCount : data?.gridDataRefinerValue.skipCount,
+        SkipCount : data?.gridDataRefinerValue.skipcount,
         MaxResultCount : data?.gridDataRefinerValue.maxResultCount,
         Filter : filter
       }
-     let fileName = (data.selectedPaymentType[0].toUpperCase() + data.selectedPaymentType.substr(1).toLowerCase()) +' Batches';
+     let fileName = (data.selectedPaymentType[0].toUpperCase() + data.selectedPaymentType.substr(1).toLowerCase()) +'_approvals';
 
-      this.documentFacade.getExportFile(approvalPageAndSortedRequest,`batches/${data.selectedPaymentType}` , fileName);
+      this.documentFacade.getExportFile(approvalPageAndSortedRequest,`payment-batches?serviceType=${data.selectedPaymentType}&level=${this.userLevel}` , fileName, ApiType.ProductivityToolsApi);
     }
   }
 }

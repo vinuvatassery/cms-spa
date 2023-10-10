@@ -57,7 +57,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   @Output() loadBatchDetailPaymentsGridEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'batch';
+  sortColumn = 'batchName';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -110,7 +110,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     creationTime: 'Date Approval Requested'
   };
 
-  dropDownColumns : { columnCode: string, columnDesc: string }[] = [
+  dropDownColumnsLevel1 : { columnCode: string, columnDesc: string }[] = [
     {
       columnCode: 'ALL',
       columnDesc: 'All Columns',
@@ -125,11 +125,29 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     },
   ];
 
+  dropDownColumnsLevel2 : { columnCode: string, columnDesc: string }[] = [
+    {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
+    {
+      columnCode: 'BatchName',
+      columnDesc: 'Batch #',
+    },
+    {
+      columnCode: 'DateApprovalRequested',
+      columnDesc: 'Date Approval Requested',
+    },
+    {
+      columnCode: 'FirstApprovalBy',
+      columnDesc: 'First Approval By',
+    },
+  ];
+
   selectedColumn = 'ALL';
   filteredByColumnDesc = '';
   showDateSearchWarning = false;
   columnChangeDesc = 'Default Columns'
-  searchText = '';
   showExportLoader = false;
 
   private depositDetailsDialog: any;
@@ -252,6 +270,22 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.setGridValues(data);
   }
 
+  searchColumnChangeHandler(value: string) {
+    this.filter = [];
+    this.showDateSearchWarning = value === 'DateApprovalRequested';
+    if (this.searchValue) {
+      this.onApprovalSearch(this.searchValue);
+    }
+  }
+
+  onApprovalSearch(searchValue: any) {
+    const isDateSearch = searchValue.includes('/');
+    this.showDateSearchWarning = isDateSearch || this.selectedColumn === 'DateApprovalRequested';
+    searchValue = this.formatSearchValue(searchValue, this.showDateSearchWarning);
+    if (isDateSearch && !searchValue) return;
+    this.onChange(searchValue);
+  }
+
   setGridValues( data: any) {
     this.filterData = {
       logic: 'and',
@@ -260,7 +294,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
           "filters": [
             {
               "field": this.selectedColumn ?? 'BatchName',
-              "operator": 'startswith',
+              "operator": this.selectedColumn === 'DateApprovalRequested' ? 'eq' : 'startswith',
               "value": data,
             },
           ],
@@ -379,6 +413,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       }
    }
     this.selectedColumn = 'ALL';
+    this.searchValue = '';
     this.loadApprovalPaymentsListGrid();
     this.mainListDataHandle();
     this.gridDataHandle();

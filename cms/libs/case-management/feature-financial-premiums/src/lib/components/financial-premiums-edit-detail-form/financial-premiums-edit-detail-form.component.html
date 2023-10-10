@@ -205,7 +205,9 @@
     <div>
         <h5 class="text-upper">Recent Premiums for this client</h5>
         <div class="add_new_fixed_bottom_grid_section">
-            <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="premiumsType"></cms-financial-premiums-recent-premiums-list>
+            <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [paymentRequestId]="paymentRequestId" [clientId]="clientId" [premiumsType]="premiumsType"
+            (onProviderNameClickEvent)="onProviderNameClick($event)"
+            ></cms-financial-premiums-recent-premiums-list>
         </div>
         <div class="d-flex align-items-center mt-1">
             <button kendoButton [primary]="true" aria-label="Confirm Selections" class="" (click)="save()"> Update </button>

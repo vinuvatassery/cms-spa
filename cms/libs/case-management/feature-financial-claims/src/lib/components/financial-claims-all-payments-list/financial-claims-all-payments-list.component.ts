@@ -72,6 +72,8 @@ export class FinancialClaimsAllPaymentsListComponent
   vendorId: any;
   clientId: any;
   clientName: any;
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  
 
   public allPaymentsGridActions = [
     {
@@ -514,5 +516,9 @@ export class FinancialClaimsAllPaymentsListComponent
   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
     this.closeRecentClaimsModal(true);
+  }
+
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event)
   }
 }

@@ -16,15 +16,15 @@
 
     <span class="filter-section_items filter--select">
         <kendo-floatinglabel>
-            <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDownColumns"
-                [valuePrimitive]="true" textField="columnDesc" valueField="columnCode" [(ngModel)]="selectedColumn">
+            <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="userLevel == 2 ? dropDownColumnsLevel2 : dropDownColumnsLevel1"
+                [valuePrimitive]="true" textField="columnDesc" valueField="columnCode" [(ngModel)]="selectedColumn" (valueChange)="searchColumnChangeHandler($event)">
             </kendo-dropdownlist>
         </kendo-floatinglabel>
     </span>
     <span class="filter-section_items filter--search">
         <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
         <kendo-floatinglabel text="Search">
-            <kendo-textbox aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)">
+            <kendo-textbox aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="searchValue" (afterValueChanged)="onApprovalSearch($event)">
             </kendo-textbox>
 
         </kendo-floatinglabel>
@@ -36,6 +36,17 @@
         </button>
     </span>
 </section>
+
+<div class="table-sorted-info">
+    <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning">       
+          <span class="material-icons" aria-label="search-warning" aria-hidden="true">
+                warning
+          </span>
+          <span *ngIf="showDateSearchWarning">
+                The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
+          </span>
+    </span>   
+</div>
 
 <!-- Sorted Info -->
 <div class="table-sorted-info">
@@ -89,7 +100,7 @@
         <kendo-grid-column field="totalClaims" title="Premium Count" [width]="100" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM'"> </kendo-grid-column>
         <kendo-grid-column field="creationTime" title="Date Approval Requested" [width]="150" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'"> 
             <ng-template kendoGridCellTemplate let-dataItem>
-                {{dataItem.creationTime | date:'MM/dd/yyyy'}}
+                {{dataItem.dateApprovalRequested | date:'MM/dd/yyyy'}}
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-column *ngIf="userLevel == 2" field="firstApprovalBy" title="First Approval By" [width]="120">
