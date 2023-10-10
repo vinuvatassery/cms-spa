@@ -188,7 +188,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   public processGridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Claims',
+      text: 'Edit Claim',
       icon: 'edit',
       click:(claim : any): void => {        
         this.onClaimClick(claim);
@@ -196,7 +196,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Claims',
+      text: 'Delete Claim',
       icon: 'delete',
       click: (data: any): void => {
         this.onSingleClaimDelete(data.paymentRequestId.split(','));
