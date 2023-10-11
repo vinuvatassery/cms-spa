@@ -173,17 +173,29 @@ export class FinancialPharmacyClaimsFacade {
       },
     });  
   }
-  loadReconcileListGrid(){
-    this.financialPharmacyClaimsDataService.loadReconcileListService().subscribe({
-      next: (dataResponse) => {
-        this.batchReconcileDataSubject.next(dataResponse);
-        this.hideLoader();
+  loadReconcileListGrid(batchId:any,event:any){
+    // this.financialPharmacyClaimsDataService.loadReconcileListService().subscribe({
+    //   next: (dataResponse) => {
+    //     this.batchReconcileDataSubject.next(dataResponse);
+    //     this.hideLoader();
+    //   },
+    //   error: (err) => {
+    //     this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+    //     this.hideLoader(); 
+    //   },
+    // });  
+    this.financialPharmacyClaimsDataService.loadReconcileListService(batchId,event).subscribe({
+      next: (dataResponse:any) => {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.batchReconcileDataSubject.next(gridView);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
       },
-    });  
+    });
   }
   
  

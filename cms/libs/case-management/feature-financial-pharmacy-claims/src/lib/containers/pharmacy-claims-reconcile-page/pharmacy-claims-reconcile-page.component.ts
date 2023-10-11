@@ -1,7 +1,7 @@
 import {  ChangeDetectionStrategy,  Component, } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialPharmacyClaimsFacade } from '@cms/case-management/domain'; 
+import { FinancialPharmacyClaimsFacade, GridFilterParam } from '@cms/case-management/domain'; 
 
 @Component({
   selector: 'cms-pharmacy-claims-reconcile-page',
@@ -19,11 +19,13 @@ export class PharmacyClaimsReconcilePageComponent {
    sort = this.financialPharmacyClaimsFacade.sortReconcileList;
    state!: State;
    reconcileGridLists$ = this.financialPharmacyClaimsFacade.reconcileDataList$;
+   batchId:any='74033228-a222-4005-8f8d-945c403b182d';
   constructor( 
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade 
   ) {}
 
   loadReconcileListGrid(event: any) { 
-    this.financialPharmacyClaimsFacade.loadReconcileListGrid();
+    const params = new GridFilterParam(event.skipCount, event.pageSize, event.sortColumn, event.sortType, JSON.stringify(event.filter)); 
+    this.financialPharmacyClaimsFacade.loadReconcileListGrid(this.batchId,params);
   }
 }
