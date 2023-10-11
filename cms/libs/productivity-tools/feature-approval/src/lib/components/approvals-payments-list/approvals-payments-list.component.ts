@@ -347,7 +347,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       this.isFiltered = false
     }
     this.loadApprovalPaymentsListGrid();
-    //this.mainListDataHandle();
+    this.sortByProperty();
    
   }
 
@@ -749,8 +749,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
           this.cd.detectChanges();
         this.gridApprovalPaymentsMainListDataSubject.next(this.approvalsPaymentsGridUpdatedResult);
       }
-      // this.assignDataToMainListAfterSorting();
-      // this.cd.detectChanges();
     });
   }
 
@@ -901,35 +899,5 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     }
     this.route.navigate([`/financial-management/claims/${type}/batch`],
     { queryParams :{bid: data?.paymentRequestBatchId}});
-  }
-
-  assignDataToMainListAfterSorting() {    
-    this.approvalsPaymentsGridUpdatedResultDummy.filter((x: any) => x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus).forEach((dataItem: any, indexdummy: number) => {
-      let ifExist = this.approvalsPaymentsGridUpdatedResult.find((x: any) => x.approvalId === dataItem.approvalId);
-      if (ifExist !== undefined) {
-        this.approvalsPaymentsGridUpdatedResult.forEach((item: any, index: number) => {
-          if (item.approvalId === ifExist.approvalId) {
-            this.approvalsPaymentsGridUpdatedResult[index].approvalId = ifExist?.approvalId;
-            this.approvalsPaymentsGridUpdatedResult[index].paymentRequestBatchId = ifExist?.paymentRequestBatchId;
-            this.approvalsPaymentsGridUpdatedResult[index].batchName = ifExist?.batchName;
-            this.approvalsPaymentsGridUpdatedResult[index].totalAmountDue = ifExist?.totalAmountDue;
-            this.approvalsPaymentsGridUpdatedResult[index].providerCount = ifExist?.providerCount;
-            this.approvalsPaymentsGridUpdatedResult[index].totalPayments = ifExist?.totalPayments;
-            this.approvalsPaymentsGridUpdatedResult[index].totalClaims = ifExist?.totalClaims;
-            this.approvalsPaymentsGridUpdatedResult[index].sendBackNotesInValidMsg = dataItem?.sendBackNotesInValidMsg;
-            this.approvalsPaymentsGridUpdatedResult[index].sendBackNotesInValid = dataItem?.sendBackNotesInValid;
-            this.approvalsPaymentsGridUpdatedResult[index].tAreaCessationCounter = dataItem?.tAreaCessationCounter;
-            this.approvalsPaymentsGridUpdatedResult[index].batchStatus = dataItem?.batchStatus;
-            this.approvalsPaymentsGridUpdatedResult[index].sendBackNotes = dataItem?.sendBackNotes;
-          }
-        });
-      }
-    }); 
-    let response = {
-      data: this.approvalsPaymentsGridPagedResult
-    }
-    this.assignDataFromUpdatedResultToPagedResult(response);
-    this.tAreaVariablesInitiation(this.approvalsPaymentsGridPagedResult);
-    this.cd.detectChanges();
   }
 }
