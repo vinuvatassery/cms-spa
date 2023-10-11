@@ -317,7 +317,7 @@
     (click)="onBatchPremiumsGridSelectedCancelClicked()"   *ngIf="isBatchPremiumsClicked || isRemoveBatchClosed || isSendReportOpened"> Cancel
   </button>
 
-  <button kendoButton kendoButton class="k-error-button" aria-label="Remove"
+  <button kendoButton kendoButton class="k-error-button" aria-label="Remove" [disabled]="sendReportCount == 0"
     (click)="onRemovePremiumsOpenClicked(removePremiumsConfirmationDialogTemplate)"  *ngIf="isRemoveBatchClosed"> <span class="material-icons mr-1"
       aria-label="Remove"> delete</span> Remove </button>
 
