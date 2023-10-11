@@ -169,7 +169,7 @@
         [primary]="true"
         look="flat"
         (click)="onDeactivateClicked()"
-        aria-label="deactivate address"
+        aria-label="Deactivate"
       >
         Deactivate
       </button>
@@ -179,21 +179,21 @@
         kendoButton
         [primary]="true"
         look="outline"
-        aria-label="cancel address"
+        aria-label="Cancel"
         (click)="closePopup()"
       >
         CANCEL
       </button>
-      <button *ngIf="!isEditValue && !deactivateFlag && !deleteFlag" kendoButton [primary]="true" aria-label="add or update address"(click)="createAddress()">
+      <button *ngIf="!isEditValue && !deactivateFlag && !deleteFlag" kendoButton [primary]="true" aria-label="Add"(click)="createAddress()">
         ADD
       </button>
-      <button *ngIf="isEditValue" kendoButton [primary]="true" aria-label="add or update address"(click)="createAddress()">
+      <button *ngIf="isEditValue" kendoButton [primary]="true" aria-label="Update"(click)="createAddress()">
         UPDATE
       </button>
-      <button *ngIf="deleteFlag" kendoButton [primary]="true" aria-label="add or update address"(click)="deleteAndAdd()">
+      <button *ngIf="deleteFlag" kendoButton [primary]="true" aria-label="Delete & Add"(click)="deleteAndAdd()">
         DELETE & ADD
       </button>
-      <button *ngIf="deactivateFlag" kendoButton [primary]="true" aria-label="add or update address"(click)="deactivateAndAdd()">
+      <button *ngIf="deactivateFlag" kendoButton [primary]="true" aria-label="Deactivate & Add"(click)="deactivateAndAdd()">
         DEACTIVATE & ADD
       </button>
     </div>
@@ -271,7 +271,7 @@
     <div class="justify-content-between">
       <div>
         <button kendoButton [primary]="true" (click)="onAddressValidationCloseClicked(true)" look="flat"
-        aria-label="preview letter" *ngIf="!addressIsValid">
+        aria-label="Edit Address" *ngIf="!addressIsValid">
         <span class="material-icons">
           border_color</span>
       EDIT ADDRESS
@@ -280,10 +280,10 @@
       <div class="justify-content-end"> 
              
      
-        <button kendoButton [primary]="true" (click)="onAddressValidationCloseClicked(false)" aria-label="OKAY" *ngIf="!addressIsValid">
+        <button kendoButton [primary]="true" (click)="onAddressValidationCloseClicked(false)" aria-label="Use this Address" *ngIf="!addressIsValid">
           USE THIS ADDRESS
         </button>
-        <button kendoButton [primary]="true" (click)="onUseSelectedAddressClicked()"  aria-label="USE SELECTED ADDRESS" *ngIf="addressIsValid">
+        <button kendoButton [primary]="true" (click)="onUseSelectedAddressClicked()"  aria-label="Use Selected Address" *ngIf="addressIsValid">
           USE SELECTED ADDRESS
         </button>
       </div>

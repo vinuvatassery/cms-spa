@@ -18,17 +18,20 @@ import {
   HealthInsurancePolicy,
   CarrierContactInfo,
   InsurancePlanFacade,
-  StatusFlag,
   HealthInsurancePlan,
   DependentTypeCode,
   PriorityCode,
-  InsuranceStatusType
+  InsuranceStatusType,
+  FinancialVendorTypeCode,
+  FinancialClaimsFacade,
+  ServiceSubTypeCode
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
 import { SnackBarNotificationType, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-medical-premium-detail',
@@ -61,7 +64,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   @Input() caseEligibilityId: any;
   @Input() clientId: any;
   @Input() medicalHealthPlansCount: any;
-  @Input() insuranceStatus: any;
+  @Input() insuranceStatus: any; 
   @Input() isPaymentDone: any;
 
   /** Output properties **/
@@ -127,7 +130,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   insuranceEndDateIsgreaterthanStartDate: boolean = false;
   endDateMin!: Date;
   dentalInsuranceSelectedItem = 'DENTAL_INSURANCE';
-
+  selectedClaimType=FinancialVendorTypeCode.MedicalProviders;
+  insuranceTypeCode:any="MEDICAL";
 
   /** Constructor **/
   constructor(
@@ -141,6 +145,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
+    private financialClaimsFacade: FinancialClaimsFacade,
   ) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
@@ -148,11 +153,15 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.validateFormMode();
+    
     if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) {
+this.insuranceTypeCode="DENTAL";
+         this.selectedClaimType=FinancialVendorTypeCode.DentalProviders;
       this.subscribeDentalInsurance();
       this.loadDentalInsuranceLovs();
     }
     else {
+      
       this.loadHealthInsuranceLovs();
     }
     this.viewSelection();
@@ -192,6 +201,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     this.lovFacade.getDentalInsuranceTypeLovs();
   }
   private validateFormMode() {
+    
     if (this.dialogTitle === 'Add' || this.dialogTitle === 'View') {
       this.resetForm();
       this.resetValidators();
@@ -275,12 +285,17 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
 
   loadHealthInsurancePolicy() {
     this.editViewSubscription = this.insurancePolicyFacade.healthInsurancePolicy$.subscribe((data: any) => {
-      this.healthInsurancePolicyCopy = data;
+     this.healthInsurancePolicyCopy = data;
+     if(data.insuranceVendorAddressId!=null)
+     {      
+    this.financialClaimsFacade.searchProvidorsById(data.insuranceVendorAddressId,data.healthInsuranceTypeCode ==  FinancialVendorTypeCode.DentalProviders? ServiceSubTypeCode.dentalClaim : ServiceSubTypeCode.medicalClaim);
+     
+     }
       this.bindValues(data);
     });
   }
 
-  bindValues(healthInsurancePolicy: HealthInsurancePolicy) {
+  bindValues(healthInsurancePolicy: HealthInsurancePolicy) {  
     this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(
       healthInsurancePolicy.clientInsurancePolicyId
     );
@@ -330,6 +345,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].setValue(
       healthInsurancePolicy.careassistPayingPremiumFlag
     );
+    this.healthInsuranceForm.controls['insuranceVendorAddressId'].setValue(
+      healthInsurancePolicy.insuranceVendorAddressId
+    );
     this.bindMedicare(healthInsurancePolicy);
 
   }
@@ -374,6 +392,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       }
 
     }
+    this.healthInsuranceForm.controls['insuranceVendorAddressId'].setValue(
+      healthInsurancePolicy.insuranceVendorAddressId
+    );
     this.bindInsurance(healthInsurancePolicy);
   }
 
@@ -411,8 +432,18 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     this.healthInsuranceForm.controls['paymentIdNbr'].setValue(
       healthInsurancePolicy.paymentIdNbr
     );
+    
     this.healthInsuranceForm.controls['premiumAmt'].setValue(
       healthInsurancePolicy.premiumAmt
+    );
+    this.healthInsuranceForm.controls['insuranceVendorAddressId'].setValue(
+      healthInsurancePolicy.insuranceVendorAddressId
+    );
+    this.healthInsuranceForm.controls['insuranceTypeCode'].setValue(
+      healthInsurancePolicy.insuranceTypeCode
+    );
+    this.healthInsuranceForm.controls['vendorAddressId'].setValue(
+      healthInsurancePolicy.insuranceVendorAddressId
     );
   }
 
@@ -560,8 +591,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       'premiumAmt',
       'premiumFrequencyCode',
       'paymentIdNbr',
+      'insuranceVendorAddressId',
       'isClientPolicyHolderFlag',
       'othersCoveredOnPlanFlag'
+     
     ];
     const policyHolderRequiredFields: Array<string> = [
       'policyHolderFirstName',
@@ -689,7 +722,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       'insuranceIdNumber',
       'insuranceCarrierName',
       'insurancePlanName',
-      'careassistPayingPremiumFlag'
+      'careassistPayingPremiumFlag',
     ];
     if (this.medicareInsuranceInfoCheck) {
       medicarePlanRequiredFields.push(...medicareInsuranceRequiredFields);
@@ -913,6 +946,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   private populateInsurancePolicy() {
     {
       this.healthInsurancePolicy = new HealthInsurancePolicy();
+      this.healthInsurancePolicy.insuranceTypeCode = this.insuranceTypeCode;
       this.healthInsurancePolicy.clientId = this.clientId;
       this.healthInsurancePolicy.clientCaseEligibilityId = this.caseEligibilityId;
       this.healthInsurancePolicy.activeFlag = StatusFlag.Yes;
@@ -989,7 +1023,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       x.enrolledInInsuranceFlag = StatusFlag.Yes;
       x.clientCaseEligibilityId = this.caseEligibilityId;
       x.clientId = this.clientId;
-      x.dob = x.dob.toLocaleDateString();
+      x.dob = x?.dob.toLocaleDateString();
       this.healthInsurancePolicy.othersCoveredOnPlan.push(x);
     });
     this.healthInsurancePolicy.isClientPolicyHolderFlag = this.healthInsuranceForm.value.isClientPolicyHolderFlag;
@@ -1044,6 +1078,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsurancePolicy.isClientPolicyHolderFlag = null;
       this.healthInsurancePolicy.policyHolderFirstName = null;
       this.healthInsurancePolicy.policyHolderLastName = null;
+      this.healthInsurancePolicy.insuranceVendorAddressId = null;
+      this.healthInsurancePolicy.insuranceTypeCode = null;
+      
     }
 
     this.healthInsurancePolicy.isCerReview = this.isReviewPopup;
@@ -1150,6 +1187,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     else {
       this.healthInsurancePolicy.careassistPayingPremiumFlag = null;
     }
+    this.healthInsurancePolicy.insuranceVendorAddressId = this.healthInsuranceForm.controls["insuranceVendorAddressId"].value;
+    
   }
 
   /** Internal event methods **/
@@ -1273,6 +1312,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
             }
           });
       } else {
+      
         this.insurancePolicyFacade
           .saveHealthInsurancePolicy(this.healthInsurancePolicy)
           .subscribe({

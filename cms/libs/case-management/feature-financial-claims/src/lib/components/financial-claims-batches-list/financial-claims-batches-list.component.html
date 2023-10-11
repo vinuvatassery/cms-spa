@@ -20,8 +20,8 @@
       </kendo-floatinglabel>
     </span>
     <span class="right-overlay-export">
-      <button kendoButton [primary]="true" look="flat" class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
-        <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
+      <button kendoButton [primary]="true" look="flat" aria-label="Export" class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
+        <span *ngIf="!showExportLoader" class="material-icons" aria-label="Export" aria-invalid="true">exit_to_app</span>         
         
         <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
       </button>
@@ -35,7 +35,7 @@
   <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
   <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
   <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
-  <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+  <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
     <a>Set to Default</a>
   </button>
 </div>
@@ -49,7 +49,7 @@
      >     
       <kendo-grid-column field="batchName" title="Batch #" [width]="120"> 
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button aria-label="Batch #" kendoButton look="flat" class="card-link-button"
+          <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button"
             (click)="navToBatchDetails(dataItem)">
             {{ dataItem.batchName }}
           </button>
@@ -64,9 +64,9 @@
           </kendo-grid-string-filter-menu>
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column field="sendBackNotes" title="Send Back Notes" [width]="120"> 
+      <kendo-grid-column field="sendBackNotes" title="Send Back Notes" [width]="300"> 
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span [title]="dataItem.sendBackNotes" class="grid-line-clip"> {{ dataItem.sendBackNotes }}</span>
+          <span [title]="dataItem.sendBackNotes" class="grid-line-clip"> {{ (dataItem.sendBackNotes.length>50)? dataItem.sendBackNotes.substring(0, 50)+'...' : dataItem.sendBackNotes}}</span>
         </ng-template>
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"

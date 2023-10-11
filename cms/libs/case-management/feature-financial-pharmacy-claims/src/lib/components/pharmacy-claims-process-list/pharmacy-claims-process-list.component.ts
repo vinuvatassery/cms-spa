@@ -99,7 +99,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
   public processGridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Claims',
+      text: '',
       icon: 'edit',
       click: (data: any): void => {
         if (!this.isAddEditClaimMoreClose) {
@@ -110,7 +110,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Claims',
+      text: 'Delete Claim',
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isDeleteBatchMoreOptionClosed) {

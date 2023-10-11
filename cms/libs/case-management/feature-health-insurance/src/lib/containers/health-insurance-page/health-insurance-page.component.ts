@@ -5,8 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal libraries **/
-import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, StatusFlag, NavigationType } from '@cms/case-management/domain';
+import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, NavigationType } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-health-insurance-page',
@@ -131,7 +132,8 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       proofOfPremium: [''],
       copyOfInsuranceCard: [''],
       copyOfSummary: [''],
-      cerReviewType:['']
+      cerReviewType:[''],
+      insuranceVendorAddressId:['']
     });
 
   }

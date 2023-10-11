@@ -1,3 +1,4 @@
+
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -106,8 +107,9 @@ export class UserManagementFacade {
     let roleCheck;
     this.userDataService.getProfile$
       .pipe(first(profile => profile[0]?.permissions != null))
-      .subscribe((profile:any)=>{
-        roleCheck = profile[0]?.roleCode === roleCode
+      .subscribe((profile:any)=>{ 
+        const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);  
+        roleCheck = roleProfile ? true : false;
       })
       return roleCheck;
   }
@@ -137,6 +139,30 @@ export class UserManagementFacade {
         }  
       })
       return  hasPerm;
+  }
+
+  getUserPermissionMetaData(permissionCode : string, roleCode : any)
+  {
+    let permissionMetaData;
+    if(!roleCode)
+    {
+      return;
+    }
+    this.userDataService.getProfile$
+    .pipe(first(profile => profile[0]?.permissions != null))
+    .subscribe((profile:any)=>{ 
+      const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);  
+      const permission = roleProfile?.permissions;
+      if (permission?.length == 0) {
+       return;
+      }  
+      const permissiondata = permission?.find((x : any)=> x.permissionsCode === permissionCode);  
+      if(permissiondata?.metadata)
+      {
+        permissionMetaData = JSON.parse(permissiondata.metadata);
+      }
+    })
+    return permissionMetaData;
   }
 
   ///for case manager hover popup //NOSONAR 

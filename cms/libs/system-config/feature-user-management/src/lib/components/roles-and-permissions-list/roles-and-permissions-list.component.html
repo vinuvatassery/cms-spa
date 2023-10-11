@@ -14,7 +14,7 @@
     icon="add"
     kendoButton
     [primary]="true"
-    aria-label="add role"
+    aria-label="Role"
     class="add-button-top"
     (click)="onSelectRoleClicked()"
   >
@@ -85,7 +85,7 @@
           kendoPopoverAnchor
           [popover]="onUserProfileDetailsHovered"
           showOn="hover"
-          aria-label="modified by"
+          [attr.aria-label]="dataItem.modifiedBy"
         >
           <div class="app-c-avatar avatar-sm">
             <img
@@ -149,7 +149,7 @@
     icon="add"
     kendoButton
     [primary]="true"
-    aria-label="add role"
+    aria-label="Role"
     (click)="onSelectRoleClicked()"
   >
     Role
@@ -177,7 +177,7 @@
   </kendo-dialog-titlebar>
   <div class="select-option-wrapper">
     <button
-      class=""
+    aria-label="Internal Role"
       kendoButton
       look="flat"
       routerLink="/roles-and-permissions-detail"
@@ -185,7 +185,7 @@
       Internal Role
     </button>
     <button
-      class=""
+      aria-label="External Role"
       kendoButton
       look="flat"
       routerLink="/roles-and-permissions-detail"

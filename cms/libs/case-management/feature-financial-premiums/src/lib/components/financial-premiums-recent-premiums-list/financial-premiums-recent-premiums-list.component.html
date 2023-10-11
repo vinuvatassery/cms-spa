@@ -4,7 +4,7 @@
   <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
   <span class="sort-items">{{columnChangeDesc}}</span>
   <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
-  <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="restGrid()">
+  <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="restGrid()">
         <a>Set to Default</a>
   </button>
 </div>
@@ -30,6 +30,12 @@
       >
 
             <kendo-grid-column field="vendorName" title="Insurance Vendor" [width]="140">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <button aria-label="vendorName" kendoButton look="flat" class="card-link-button"
+                (click)="onProviderNameClick(dataItem.paymentRequestId)">
+                  {{ dataItem.vendorName }}
+                </button>
+              </ng-template>
               <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
                   <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
@@ -57,7 +63,7 @@
             <kendo-grid-column field="premiumAmount" title="Premium Amount" [width]="120">
               <ng-template kendoGridCellTemplate let-dataItem>
                 <span class="tableamountview"> <strong>$</strong> {{dataItem.premiumAmount | kendoNumber:
-                  'n4'}}</span>
+                  'n2'}}</span>
               </ng-template>
               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"

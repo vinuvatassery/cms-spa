@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input } from '@angular/core';
 import {
   ClientProfile, ClientFacade, Client,
-  ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender,
+  ClientCaseEligibility, ClientPronoun, ClientGender,
   ClientRace, ClientSexualIdentity, ClientCaseEligibilityFlag,
   ClientCaseEligibilityAndFlag, YesNoFlag, ControlPrefix,
   MaterialFormat, PronounCode, TransGenderCode, ApplicantInfo,
@@ -12,6 +12,7 @@ import { FormGroup, Validators } from '@angular/forms';
 import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { of } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'case-management-client-read-only-view',
   templateUrl: './client-read-only-view.component.html',

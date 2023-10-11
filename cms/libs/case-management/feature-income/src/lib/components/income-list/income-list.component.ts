@@ -6,8 +6,8 @@ import {
 import { Subject } from 'rxjs/internal/Subject';
 import { State } from '@progress/kendo-data-query';
 /** Internal Libraries **/
-import { CompletionChecklist, ScreenType, StatusFlag, WorkflowFacade, ClientDocumentFacade, IncomeFacade, FamilyAndDependentFacade, CaseFacade } from '@cms/case-management/domain';
-import { DeleteRequest, SnackBar } from '@cms/shared/ui-common';
+import { CompletionChecklist, ScreenType, WorkflowFacade, ClientDocumentFacade, IncomeFacade, FamilyAndDependentFacade, CaseFacade } from '@cms/case-management/domain';
+import { DeleteRequest, SnackBar, StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle ,UploadFileRistrictionOptions} from '@cms/shared/ui-tpa';
 import { ConfigurationProvider, LoaderService,  LoggingService,  NotificationSource,  SnackBarNotificationType,} from '@cms/shared/util-core';
 @Component({

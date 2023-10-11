@@ -5,9 +5,10 @@ import { State } from '@progress/kendo-data-query';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 /** Facades **/
-import { CompletionChecklist, HealthInsurancePolicyFacade, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, HealthInsurancePolicyFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-medical-premium-list',

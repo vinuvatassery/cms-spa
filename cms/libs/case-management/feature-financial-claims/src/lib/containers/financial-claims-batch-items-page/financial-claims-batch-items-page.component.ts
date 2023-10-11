@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, OnInit, Component, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, OnInit, Component, ChangeDetectorRef, TemplateRef, ViewChild } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, PaymentPanel, PaymentsFacade, GridFilterParam } from '@cms/case-management/domain';
@@ -6,6 +6,7 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import {  filter } from 'rxjs';
 import { LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
   selector: 'cms-financial-claims-batch-items-page',
@@ -34,6 +35,11 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+  providerDetailsTemplate!: TemplateRef<any>;
+  paymentRequestId: any;
+
+  providerDetailsDialog:any;
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly router: Router, 
@@ -43,7 +49,10 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
     private readonly route: ActivatedRoute,
     public contactFacade: ContactFacade,
     public lovFacade: LovFacade,
-    private readonly financialVendorFacade : FinancialVendorFacade
+    private readonly financialVendorFacade : FinancialVendorFacade,
+    private dialogService: DialogService,
+   
+
   ) {}
 
   ngOnInit(): void {    
@@ -84,17 +93,10 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
     this.paymentFacade.loadPaymentPanel(this.vendorAddressId,this.batchId);    
   }
   updatePaymentPanel(paymentPanel:PaymentPanel){
-    this.paymentFacade.showLoader();
-    this.paymentFacade.updatePaymentPanel(this.vendorAddressId,this.batchId, paymentPanel).subscribe({
-        next: (response: any) => {        
-          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
-          this.paymentFacade.hideLoader();  
-          this.loadPaymentPanel();    
-          
-        },
-        error: (err) => {       
-          this.paymentFacade.hideLoader();
-          this.paymentFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+    this.paymentFacade.updatePaymentPanel(this.vendorAddressId,this.batchId, paymentPanel);
+    this.paymentFacade.updatePaymentPanelResponse$.subscribe({
+        next: (response: any) => {
+          this.loadPaymentPanel();
         }
       });
   }
@@ -116,4 +118,24 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
     const itemId = this.route.snapshot.queryParams['pid'];
     this.paymentFacade.loadPaymentDetails(itemId, 'INDIVIDUAL',);
   }
-}
+
+  onProviderNameClick(event:any){
+    this.paymentRequestId = event
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',  
+      }, 
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+    
+  }
+
+  onCloseViewProviderDetailClicked(result: any){
+    if(result){
+      this.providerDetailsDialog.close();
+    }
+  }
+  
+  }

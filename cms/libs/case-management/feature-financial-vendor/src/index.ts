@@ -7,7 +7,6 @@ export * from './lib/components/clients/clients.component';
 export * from './lib/components/contacts/contacts.component';
 export * from './lib/components/vendor-profile-header/vendor-profile-header.component';
 export * from './lib/components/vendors-list/vendors-list.component';
-export * from './lib/components/vendor-details/vendor-details.component';
 export * from './lib/components/financial-reminder/financial-reminder.component';
 export * from './lib/components/vendor-info/vendor-info.component';
 export * from './lib/components/vendor-header-tools/vendor-header-tools.component';

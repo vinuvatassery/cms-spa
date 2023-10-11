@@ -786,6 +786,9 @@ kendo-timepicker {
   .k-chip-outline-base{
     border-color:rgba($color: $black, $alpha: 0.1)
   }
+  .k-input-value-text, .k-input-inner{
+    color: $black-3;
+  }
 }
  
 .small-dropdown-form {

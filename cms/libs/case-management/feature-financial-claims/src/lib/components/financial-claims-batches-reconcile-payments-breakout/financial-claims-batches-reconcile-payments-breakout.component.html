@@ -29,7 +29,7 @@
                   </kendo-grid-column>
                   <kendo-grid-column field="clientName" title="Client Name" [width]="160">
                         <ng-template kendoGridCellTemplate let-dataItem>
-                              <button aria-label="Client Name" kendoButton look="flat" class="card-link-button"
+                              <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button"
                                     (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog, dataItem)">
                                     {{ dataItem.clientName }}
                               </button>
@@ -159,7 +159,7 @@
       <kendo-dialog-actions>
             <div class="justify-content-between">
                   <div class="justify-content-end">
-                        <button kendoButton aria-label="cancel" [primary]="true" look="flat">
+                        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
                               Client Profile <span class="material-icons ml-1" (click)="onClientClicked(clientId)">
                                     chevron_right
                               </span>

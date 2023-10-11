@@ -4,10 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { catchError, first, forkJoin, mergeMap, of, Subscription, tap } from 'rxjs';
 /** Internal libraries **/
-import { WorkflowFacade, CompletionStatusFacade, EmploymentFacade, NavigationType, StatusFlag, CompletionChecklist } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, EmploymentFacade, NavigationType, CompletionChecklist } from '@cms/case-management/domain';
 import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'case-management-employment-page',
   templateUrl: './employment-page.component.html',

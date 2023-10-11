@@ -24,7 +24,7 @@
   <span *ngIf="isFiltered" class="sort-items">Filtered by {{filteredBy}}</span>
   <span class="sort-items">{{addRemoveColumns}}</span>
   <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
-  <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+  <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
     <a>Set to Default</a>
   </button>
 </div>
@@ -38,7 +38,7 @@
 
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="130" [sticky]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button aria-label="client name" kendoButton look="flat" class="card-link-button"
+        <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
           routerLink="case360/{{ dataItem.clientId }}">
           {{ dataItem.clientFullName }}
         </button>
@@ -145,7 +145,7 @@
     </kendo-grid-column>    
     <kendo-grid-column field="caseManagerName" title="Case Manager" [width]="130"> 
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button aria-label="client name" kendoButton look="flat" class="card-link-button" *ngIf="dataItem?.assignedCmId"
+        <button [attr.aria-label]="dataItem.caseManagerName" kendoButton look="flat" class="card-link-button" *ngIf="dataItem?.assignedCmId"
           kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
           {{ dataItem.caseManagerName }}
         </button>
@@ -178,7 +178,7 @@
       </ng-template> </kendo-grid-column>
     <kendo-grid-column field="caseWorkerName" title="Case Worker" [width]="130"> 
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button aria-label="client name" kendoButton look="flat" class="card-link-button" *ngIf="dataItem?.assignedCwId"
+        <button  [attr.aria-label]="dataItem.caseWorkerName" kendoButton look="flat" class="card-link-button" *ngIf="dataItem?.assignedCwId"
           kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
           {{ dataItem.caseWorkerName }}
         </button>

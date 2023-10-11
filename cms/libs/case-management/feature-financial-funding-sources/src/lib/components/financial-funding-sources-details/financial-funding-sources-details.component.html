@@ -42,7 +42,7 @@
           <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="closeDetailsFundingSourcesClicked()">
             Cancel
           </button>
-          <button kendoButton [primary]="true" aria-label="Save" (click)="addUpdateFundingSource()" >
+          <button kendoButton [primary]="true" attr.aria-label=" {{ isEditFundingSource ? 'Update' : 'Add' }}" (click)="addUpdateFundingSource()" >
                {{ isEditFundingSource ? 'Update' : 'Add' }}
           </button>
         </div>

@@ -85,7 +85,7 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="profile avatar"
+              [attr.aria-label]="dataItem.creatorId"
             >
             <common-user-photo-icon  [userId]="dataItem?.creatorId"></common-user-photo-icon>
             </button>
@@ -170,7 +170,7 @@
       [primary]="true"
       icon="add"
       (click)="onPhoneNumberDetailClicked(false,'')"
-      aria-label="add phone number"
+      aria-label="Phone Number"
       [disabled]="(isReadOnly$ | async) ? true : false"
     >
       Phone Number

@@ -38,6 +38,7 @@ import { GridCellDateRangeFilterComponent } from './grid-cell-date-range-filter/
 import { DocumentUploadComponent } from './document-upload/document-upload.component';
 import { ClientsAttachmentComponent } from './clients-attachment/clients-attachment.component';
 import { YesOrNoPipe } from './pipes/yes-or-no.pipe';
+import { VendorDetailsComponent } from './vendor-details/vendor-details.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
@@ -70,7 +71,8 @@ import { YesOrNoPipe } from './pipes/yes-or-no.pipe';
     DocumentUploadComponent,
     ClientsAttachmentComponent,
     YesOrNoPipe,
-    ReminderNotificationSnackBarComponent
+    ReminderNotificationSnackBarComponent,
+    VendorDetailsComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -101,7 +103,8 @@ import { YesOrNoPipe } from './pipes/yes-or-no.pipe';
     DocumentUploadComponent,
     ClientsAttachmentComponent,
     YesOrNoPipe,
-    ReminderNotificationSnackBarComponent
+    ReminderNotificationSnackBarComponent,
+    VendorDetailsComponent
   ],
 })
 export class SharedUiCommonModule {}

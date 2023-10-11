@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 /** External libraries **/
+import { InsurancePlan } from '../../entities/insurance-plan';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, of } from 'rxjs';
 import { BatchPremium } from '../../entities/financial-management/batch-premium';
@@ -75,44 +76,9 @@ export class FinancialPremiumsDataService {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payments/${paymentId}/services`,paginationParameters);
   }
 
-  loadBatchItemsListService(){
-    return of([
-      {
-        id:101,
-        vendorName: 'vendorName',
-        type:'address2',
-        clientName:'address2',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'address2',
-        by: 'by',
-      },
-      {
-        id:102,
-        vendorName: 'vendorName',
-        type:'address2',
-        clientName:'address2',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'address2',
-        by: 'by',
-      },
-
-    ]);
+  loadBatchItemsListService(batchId:string, paymentId: string, premiumType: string, params: GridFilterParam){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/payments/${paymentId}`, params);
   }
   loadReconcileListService(batchId:any,premiumType:any,paginationParameters:any){
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/reconcile-payments`,paginationParameters);
@@ -315,7 +281,7 @@ export class FinancialPremiumsDataService {
       PaymentToReconcileCount : data.paymentToReconcileCount
     }
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${data.premiumsType}/payments/payment-reconcile-summary`,ReconcilePaymentResponseDto
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${data.premiumsType}/payment-reconcile-summary`,ReconcilePaymentResponseDto
     );
   }
 
@@ -331,7 +297,7 @@ export class FinancialPremiumsDataService {
       Filter : data.filter
     }
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${data.premiumsType}/payments/payment-reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${data.premiumsType}/payment-reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto
     );
   }
 
@@ -353,7 +319,8 @@ export class FinancialPremiumsDataService {
   maxResultCount: number,
   sort: string,
   sortType: string,
-  filter:any) {
+  filter:any,
+  premiumType : string) {
     const filterRequestBody = {
       skipcount:skipcount,
       maxResultCount:maxResultCount,
@@ -361,7 +328,7 @@ export class FinancialPremiumsDataService {
       sortType:sortType,
       filter:filter
     }
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/list`,filterRequestBody);
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/list`,filterRequestBody);
 }
 
 batchClaims(batchPremiums: BatchPremium, claimsType: string) {

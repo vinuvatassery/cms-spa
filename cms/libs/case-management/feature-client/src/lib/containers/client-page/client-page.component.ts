@@ -27,7 +27,6 @@ import {
   ApplicantInfo,
   Client,
   ClientCaseEligibility,
-  StatusFlag,
   ClientPronoun,
   ClientGender,
   ClientRace,
@@ -49,6 +48,7 @@ import {
   SnackBarNotificationType,
   ConfigurationProvider,
 } from '@cms/shared/util-core';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-client-page',
