@@ -297,7 +297,7 @@ export class MedicalPaymentDetailComponent {
     }
     
     let formValues = this.claimForm.value;
-    debugger
+    
     let bodyData = {
       clientId: this.clientId,
       vendorId: formValues.medicalProvider.vendorId,
