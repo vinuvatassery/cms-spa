@@ -1,0 +1,60 @@
+<kendo-panelbar >
+    <kendo-panelbar-item >
+      <ng-template kendoPanelBarItemTitle>
+        <div class="flex-row rw-100" (click)="$event.stopPropagation();">
+          <div class="flex-col flex-col-6">
+            <h5>Request for Case Re-Assignment</h5>
+            <p>XX/XX/XXXX by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
+                aria-label="FName LName" kendoButton look="flat" class="card-link-button">
+                FName LName
+              </button> </p>
+            <div *ngIf="isPanelExpanded">
+              <p class="mt-1 mb-1">Regarding <a>Donna Summer</a></p>
+              <i>The client has exceeded max benefits but it is very important that we pay this invoice for them.</i>
+            </div>
+          </div>
+          <div class="flex-col flex-col-6">
+            <div>
+              <kendo-buttongroup selection="single">
+                <button kendoButton aria-label="Approve" (click)="approveOrDeny('A')" [toggleable]="true">Approve
+                </button>
+                <button kendoButton aria-label="Deny" (click)="approveOrDeny('D')" [toggleable]="true">Deny </button>
+              </kendo-buttongroup>
+            </div>
+            <div *ngIf="ifApproveOrDeny === 'A'">
+              <kendo-floatinglabel text="Send Back Notes">
+                <kendo-textbox aria-label="Send Back Notes" [fillMode]="formUiStyle.inputFillMode">
+                </kendo-textbox>
+              </kendo-floatinglabel>
+            </div>
+            <div *ngIf="ifApproveOrDeny === 'D'">
+              <kendo-floatinglabel text="New Case Worker">
+                <kendo-dropdownlist aria-label="New Case Worker" [fillMode]="formUiStyle.dropDownFillMode">
+                </kendo-dropdownlist>
+              </kendo-floatinglabel>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template kendoPanelBarContent>
+        <div>
+          <p>
+            <strong>Invoice ID:</strong>
+            <span class="mr-1"> XXXXXX </span>
+            <strong>Provider:</strong>
+            <span class="mr-1"> <a> Very Nice Provider </a> </span>
+            <strong>Client YTD:</strong>
+            <span class="mr-1"> $XX,XXX.XX </span>
+
+
+          </p>
+          <div>
+            <productivity-tools-approval-invoice></productivity-tools-approval-invoice>
+          </div>
+        </div>
+      </ng-template>
+
+    </kendo-panelbar-item>
+
+  </kendo-panelbar>
