@@ -78,6 +78,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   isApproveAllClicked : boolean = false;
   approvalsPaymentsGridPagedResult:any =[];
   approvalsPaymentsGridUpdatedResult: any=[];
+  approvalsPaymentsGridUpdatedResultDummy: any=[];
   selectedApprovalSendbackDataRows: any[] = [];
   selectedBatchIds: any = [];
   totalAmountSubmitted:any=0;
@@ -346,7 +347,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       this.isFiltered = false
     }
     this.loadApprovalPaymentsListGrid();
-    this.sortByProperty();
+    //this.mainListDataHandle();
+   
   }
 
   // updating the pagination infor based on dropdown selection
@@ -726,10 +728,12 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       sortColumn: this.sortValue,
       sortType: this.sortType,
       columnName: this.selectedColumn,
+      sorting: null,
       filter:[]
     };
     let selectedPaymentType = this.selectedPaymentType;
     this.loadApprovalsPaymentsMainListEvent.emit({gridDataRefinerValue, selectedPaymentType});
+    this.approvalsPaymentsGridUpdatedResultDummy = this.approvalsPaymentsGridUpdatedResult;
     this.approvalsPaymentsGridUpdatedResult = [];
     this.hasPaymentPendingApproval=false;
     this.approvalsPaymentsMainLists$.subscribe((response: any) => {
@@ -745,6 +749,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
           this.cd.detectChanges();
         this.gridApprovalPaymentsMainListDataSubject.next(this.approvalsPaymentsGridUpdatedResult);
       }
+      // this.assignDataToMainListAfterSorting();
+      // this.cd.detectChanges();
     });
   }
 
@@ -897,5 +903,33 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     { queryParams :{bid: data?.paymentRequestBatchId}});
   }
 
-
+  assignDataToMainListAfterSorting() {    
+    this.approvalsPaymentsGridUpdatedResultDummy.filter((x: any) => x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus).forEach((dataItem: any, indexdummy: number) => {
+      let ifExist = this.approvalsPaymentsGridUpdatedResult.find((x: any) => x.approvalId === dataItem.approvalId);
+      if (ifExist !== undefined) {
+        this.approvalsPaymentsGridUpdatedResult.forEach((item: any, index: number) => {
+          if (item.approvalId === ifExist.approvalId) {
+            this.approvalsPaymentsGridUpdatedResult[index].approvalId = ifExist?.approvalId;
+            this.approvalsPaymentsGridUpdatedResult[index].paymentRequestBatchId = ifExist?.paymentRequestBatchId;
+            this.approvalsPaymentsGridUpdatedResult[index].batchName = ifExist?.batchName;
+            this.approvalsPaymentsGridUpdatedResult[index].totalAmountDue = ifExist?.totalAmountDue;
+            this.approvalsPaymentsGridUpdatedResult[index].providerCount = ifExist?.providerCount;
+            this.approvalsPaymentsGridUpdatedResult[index].totalPayments = ifExist?.totalPayments;
+            this.approvalsPaymentsGridUpdatedResult[index].totalClaims = ifExist?.totalClaims;
+            this.approvalsPaymentsGridUpdatedResult[index].sendBackNotesInValidMsg = dataItem?.sendBackNotesInValidMsg;
+            this.approvalsPaymentsGridUpdatedResult[index].sendBackNotesInValid = dataItem?.sendBackNotesInValid;
+            this.approvalsPaymentsGridUpdatedResult[index].tAreaCessationCounter = dataItem?.tAreaCessationCounter;
+            this.approvalsPaymentsGridUpdatedResult[index].batchStatus = dataItem?.batchStatus;
+            this.approvalsPaymentsGridUpdatedResult[index].sendBackNotes = dataItem?.sendBackNotes;
+          }
+        });
+      }
+    }); 
+    let response = {
+      data: this.approvalsPaymentsGridPagedResult
+    }
+    this.assignDataFromUpdatedResultToPagedResult(response);
+    this.tAreaVariablesInitiation(this.approvalsPaymentsGridPagedResult);
+    this.cd.detectChanges();
+  }
 }
