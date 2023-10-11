@@ -889,11 +889,31 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   navToBatchDetails(data : any){
     let type;
-    if(this.selectedPaymentType === PendingApprovalPaymentTypeCode.MedicalClaim)
+    switch(data.paymentRequestSubTypeCode)
     {
-      type = 'medical';
+      case PendingApprovalPaymentTypeCode.MedicalClaim: {
+        type = 'claims/medical';
+        break;
+      }  
+      case PendingApprovalPaymentTypeCode.DentalClaim: {
+        type = 'claims/dental';
+        break;
+      }        
+      case PendingApprovalPaymentTypeCode.MedicalPremium: {
+        type = 'premiums/medical';
+        break;
+      }
+      case PendingApprovalPaymentTypeCode.DentalPremium: {
+        type = 'premiums/dental';
+        break;
+      }
+      case PendingApprovalPaymentTypeCode.Pharmacy: {
+        type = 'claims/pharmacy';
+        break;
+      }      
     }
-    this.route.navigate([`/financial-management/claims/${type}/batch`],
+
+    this.route.navigate([`/financial-management/${type}/batch`],
     { queryParams :{bid: data?.paymentRequestBatchId}});
   }
 
