@@ -27,10 +27,10 @@
             </div>
         </div>
         <div  *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
-            <kendo-floatinglabel text="Search {{providerName|titlecase}} Provider by name or TIN">
+            <kendo-floatinglabel text="Insurance Vendor Name">
     <kendo-multicolumncombobox textField="providerFullName"
         [fillMode]="formUiStyle.dropDownFillMode"
-        placeholder="Search {{providerName | titlecase}} Provider by name or TIN"
+        placeholder="Insurance Vendor Name"
         [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
         (filterChange)="searchMedicalProvider($event)"
         [data]="insuranceVendorsSearchResult$ | async" 

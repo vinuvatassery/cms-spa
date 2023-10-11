@@ -7,7 +7,6 @@ import {  HealthInsurancePolicyFacade, CaseFacade, ClientProfileTabs, PaymentRe
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { FilterService } from '@progress/kendo-angular-grid';
 
 @Component({
   selector: 'case-management-co-pays-and-deductibles-list',
