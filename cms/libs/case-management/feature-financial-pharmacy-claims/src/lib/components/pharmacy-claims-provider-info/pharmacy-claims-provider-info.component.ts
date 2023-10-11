@@ -29,9 +29,14 @@ export class PharmacyClaimsProviderInfoComponent {
   isSubmitted: boolean = false
   profileForm = this.formBuilder.group({
     tin: [''],
+    npi:[''],
+    phone:[''],
+    email:[' '],
     address: this.formBuilder.group({
       vendorAddressId: [''],
       paymentMethod: [''],
+      phone:[''],
+      email:[' '],
       address1: ['', Validators.required],
       address2: [''],
       cityCode: ['', Validators.required],
@@ -100,6 +105,9 @@ ngOnInit(): void {
       let providerPanelDto = {
         vendorId: this.vendorProfile.vendorId,
         tin: this.profileForm?.controls['tin'].value,
+        npi:this.profileForm?.controls['npi'].value,
+        phone:this.profileForm?.controls['phone'].value,
+        email:this.profileForm?.controls['email'].value,
         Address: {
           vendorAddressId: this.vendorProfile.address.vendorAddressId,
           specialHandlingDesc: this.profileForm?.controls.address.controls['specialHandlingDesc']?.value,

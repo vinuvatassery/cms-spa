@@ -16,6 +16,11 @@
                     <td> 1 {{vendorProfile.tin}}</td>
                 </tr>
                 <tr> 
+                   <tr> 
+                        <td><strong>NPI</strong></td>
+                        <td> 1 {{vendorProfile.npi}}</td>
+                    </tr>
+                    <tr> 
                     <td><strong>Mail Code</strong></td>
                     <td>{{vendorProfile.address.mailCode}}</td>
                 </tr>
@@ -23,7 +28,15 @@
                     <td><strong>Payment Method</strong></td>
                     <td> {{vendorProfile.address.paymentMethodCode}}</td>
                 </tr>
-    
+                <tr> 
+                    <td><strong>Phone</strong></td>
+                    <td> {{vendorProfile.phone}}</td>
+                </tr>
+                <tr> 
+                    <td><strong>email</strong></td>
+                    <td> {{vendorProfile.email}}</td>
+                </tr>
+            
                 <tr> 
                     <td><strong>Address</strong></td>
                     <td> <p>{{vendorProfile.address.address1}} </p>  
@@ -48,11 +61,7 @@
                       </ng-container>
                        </td>
               </tr>
-                
-    
             </table>
-    
-    
             <ng-container [formGroup]="profileForm">
             <table *ngIf="isEditProvider">
                 <caption hidden> Provider Details</caption>
@@ -63,9 +72,15 @@
                 <tr>
                     <td><strong>TIN</strong></td>
                     <td> 
-                            <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" formControlName="tin">
-                            </kendo-textbox>
-                            
+                        <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" formControlName="tin">
+                       </kendo-textbox>  
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>NPI</strong></td>
+                    <td>
+                            <kendo-textbox aria-label="NPI" [fillMode]="formUiStyle.inputFillMode" formControlName="npi">
+                            </kendo-textbox>  
                     </td>
                 </tr>
                 <ng-container formGroupName="address">
@@ -97,8 +112,20 @@
                           </div>
                     </div></td>
                 </tr>
-     
-               
+                <tr>
+                    <td><strong>Phone</strong></td>
+                    <td> 
+                            <kendo-textbox aria-label="Phone" [maxlength]="10" [fillMode]="formUiStyle.inputFillMode" formControlName="phone">
+                            </kendo-textbox>      
+                    </td>
+                </tr>
+                <tr>
+                <td><strong>Email</strong></td>
+                    <td> 
+                            <kendo-textbox aria-label="Email" [fillMode]="formUiStyle.inputFillMode" formControlName="email">
+                            </kendo-textbox> 
+                    </td>
+                </tr>
                 <tr>
                     <td><strong>Address</strong></td>
                     <td>
@@ -133,10 +160,8 @@
                                 [data]="ddlStates$ | async"
                                 textField="stateName"
                                 valueField="stateCode"
-                                [valuePrimitive]="true" placeholder="State"
-                              
-                                >
-                                </kendo-dropdownlist>
+                                [valuePrimitive]="true" placeholder="State">
+                        </kendo-dropdownlist>
                                 <kendo-formerror *ngIf="addressForm?.hasError('required','stateCode') && isSubmitted">State is Required
                                 </kendo-formerror>
                             </div>
