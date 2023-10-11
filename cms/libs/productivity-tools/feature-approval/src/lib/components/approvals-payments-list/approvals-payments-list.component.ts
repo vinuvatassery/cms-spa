@@ -78,6 +78,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   isApproveAllClicked : boolean = false;
   approvalsPaymentsGridPagedResult:any =[];
   approvalsPaymentsGridUpdatedResult: any=[];
+  approvalsPaymentsGridUpdatedResultDummy: any=[];
   selectedApprovalSendbackDataRows: any[] = [];
   selectedBatchIds: any = [];
   totalAmountSubmitted:any=0;
@@ -347,6 +348,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     }
     this.loadApprovalPaymentsListGrid();
     this.sortByProperty();
+   
   }
 
   // updating the pagination infor based on dropdown selection
@@ -726,10 +728,12 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       sortColumn: this.sortValue,
       sortType: this.sortType,
       columnName: this.selectedColumn,
+      sorting: null,
       filter:[]
     };
     let selectedPaymentType = this.selectedPaymentType;
     this.loadApprovalsPaymentsMainListEvent.emit({gridDataRefinerValue, selectedPaymentType});
+    this.approvalsPaymentsGridUpdatedResultDummy = this.approvalsPaymentsGridUpdatedResult;
     this.approvalsPaymentsGridUpdatedResult = [];
     this.hasPaymentPendingApproval=false;
     this.approvalsPaymentsMainLists$.subscribe((response: any) => {
@@ -889,13 +893,31 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   navToBatchDetails(data : any){
     let type;
-    if(this.selectedPaymentType === PendingApprovalPaymentTypeCode.MedicalClaim)
+    switch(data.paymentRequestSubTypeCode)
     {
-      type = 'medical';
+      case PendingApprovalPaymentTypeCode.MedicalClaim: {
+        type = 'claims/medical';
+        break;
+      }  
+      case PendingApprovalPaymentTypeCode.DentalClaim: {
+        type = 'claims/dental';
+        break;
+      }        
+      case PendingApprovalPaymentTypeCode.MedicalPremium: {
+        type = 'premiums/medical';
+        break;
+      }
+      case PendingApprovalPaymentTypeCode.DentalPremium: {
+        type = 'premiums/dental';
+        break;
+      }
+      case PendingApprovalPaymentTypeCode.Pharmacy: {
+        type = 'claims/pharmacy';
+        break;
+      }      
     }
-    this.route.navigate([`/financial-management/claims/${type}/batch`],
+
+    this.route.navigate([`/financial-management/${type}/batch`],
     { queryParams :{bid: data?.paymentRequestBatchId}});
   }
-
-
 }
