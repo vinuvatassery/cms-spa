@@ -656,7 +656,7 @@ closeRecentPremiumsModal(result: any){
       this.onRemovePremiumsRecordUncheckedOnSelectAll(dataItem);
     }
     this.selectedSendReportList = {'selectAll':this.selectAll,'UnSelectedSendReports':this.unCheckedProcessRequest,
-    'SelectedSendReports':this.checkedAndUncheckedRecordsFromSelectAll, 'batchId':null, 'currentSendReportsGridFilter':this.state.filter}
+    'SelectedSendReports':this.checkedAndUncheckedRecordsFromSelectAll, 'batchId':null, 'currentSendReportsGridFilter':JSON.stringify(this.state?.filter?.filters ?? [])}
     if(this.selectAll && this.isSendReportOpened){
       if(this.unCheckedProcessRequest?.length > 0){
         this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
@@ -733,7 +733,7 @@ closeRecentPremiumsModal(result: any){
       this.markAsUnChecked(this.financialPremiumsProcessGridLists);
     }
     this.selectedSendReportList = {'selectAll':this.selectAll,'UnSelectedSendReports':this.unCheckedProcessRequest,
-    'SelectedSendReports':this.checkedAndUncheckedRecordsFromSelectAll, 'batchId':null, 'currentSendReportsGridFilter': this.state.filter, "filter": this.filter}
+    'SelectedSendReports':this.checkedAndUncheckedRecordsFromSelectAll, 'batchId':null, 'currentSendReportsGridFilter': JSON.stringify(this.state?.filter?.filters ?? []) }
     if(this.selectAll && this.isSendReportOpened){
       if(this.unCheckedProcessRequest?.length > 0){
         this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
