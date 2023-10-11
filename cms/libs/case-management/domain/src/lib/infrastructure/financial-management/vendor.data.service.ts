@@ -41,6 +41,13 @@ export class FinancialVendorDataService {
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/providers/SearchText=${searchText}`
       );   
   }
+  searchProvidorsById(VendorAddressId: string) {    
+
+      return this.http.get<Pharmacy[]>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/providers/by-vendor-address/${VendorAddressId}`
+      );
+    
+  }
 
   updateVendorDetails(details: any) {
     return this.http.put<any>(

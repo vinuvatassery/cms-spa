@@ -35,7 +35,7 @@
         [(ngModel)]="item.sendBackNotes"
         (valueChange)="sendBackNotesChange(item)"
         aria-label="Send Back Notes"                                          
-        title ="{{item.sendBackNotes}}" [disabled]="item.sendBackButtonDisabled"
+        title ="{{item.sendBackNotes}}" [disabled]="item.batchStatus == 'APPROVED'"
         >
      
       </kendo-textarea>

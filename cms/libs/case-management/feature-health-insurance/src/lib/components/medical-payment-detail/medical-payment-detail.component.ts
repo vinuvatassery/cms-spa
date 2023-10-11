@@ -22,6 +22,7 @@ import {
   PaymentRequestType,
   FinancialClaims,
   PaymentMethodCode,
+  FinancialClaimTypeCode,
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  Lov, LovFacade } from '@cms/system-config/domain';
@@ -296,6 +297,7 @@ export class MedicalPaymentDetailComponent {
     }
     
     let formValues = this.claimForm.value;
+    
     let bodyData = {
       clientId: this.clientId,
       vendorId: formValues.medicalProvider.vendorId,
@@ -307,7 +309,7 @@ export class MedicalPaymentDetailComponent {
       exceptionFlag: formValues.parentExceptionFlag,
       exceptionTypeCode: formValues.parentExceptionTypeCode,
       exceptionReasonCode: formValues.parentReasonForException,
-      serviceSubTypeCode: this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
+      serviceSubTypeCode:this.financialProvider==FinancialClaimTypeCode.Medical ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
       pcaCode:formValues.pcaCode,
       tpaInvoices: [{}],
     };
