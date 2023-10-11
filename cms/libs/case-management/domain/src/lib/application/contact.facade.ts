@@ -17,7 +17,7 @@ import {
 } from '@cms/shared/util-core';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { AddressTypeCode } from '../enums/address-type-code.enum';
-import { StatusFlag } from '../enums/status-flag.enum';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Injectable({ providedIn: 'root' })
 export class ContactFacade {

@@ -1,12 +1,17 @@
 <div class=" pt-0">
   <section class="app-l-mainTittle" *ngIf="(paymentBatchName$ | async) as batch; else loading">
-    <div class="d-flex">
-      <button aria-label="back to vendor refund" kendoButton look="flat" title="Go back" class="mr-1" (click)="backToBatch($event)">
-        <span class="material-icons">
-          arrow_back </span> </button>
-      <h1 class="maintitle_withicon text-bold">Batch # {{batch.batchName}} </h1>
+    <div class="d-flex" >
+        <button aria-label="back to vendor refund" title="Go back" kendoButton look="flat" class="mr-1" (click)="backToBatch($event)"> <span
+            class="material-icons">
+            arrow_back </span> </button>
+        <h1 class="maintitle_withicon text-bold">Batch # {{batch.batchName}}</h1> <br />                  
     </div>
-  </section>
+    <div class="d-flex" *ngIf="batch.sendBackNotes != null">
+      <span class="app-c-badge  mt-3" aria-label=""> 
+        {{ batch.sendBackNotes }}      
+      </span> 
+    </div>             
+</section>
   <ng-template #loading>
     <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
   </ng-template>

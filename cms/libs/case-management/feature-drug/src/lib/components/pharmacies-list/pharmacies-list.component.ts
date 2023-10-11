@@ -12,7 +12,6 @@ import {
   DrugPharmacyFacade,
   WorkflowFacade,
   Pharmacy,
-  StatusFlag,
   CompletionChecklist,
   PriorityCode,
   CaseFacade,
@@ -21,6 +20,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
 import { LoggingService } from '@cms/shared/util-core';
+import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'case-management-pharmacies-list',
   templateUrl: './pharmacies-list.component.html',

@@ -51,7 +51,6 @@ export class FinancialPremiumsBatchesLogListsComponent
   vendorId: any;
   clientId: any;
   clientName: any = "";
-  PaymentStatusList = [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved];
  
   yesOrNoLovs: any = [];
   onlyPrintAdviceLetter: boolean = true;
@@ -67,6 +66,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   selected:any
   noDeleteStatus=['PENDING_APPROVAL','MANAGER_APPROVED']
+ 
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
