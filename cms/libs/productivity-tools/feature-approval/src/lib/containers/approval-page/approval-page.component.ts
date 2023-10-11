@@ -3,7 +3,7 @@ import { Component,  ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
-import { ApprovalFacade, PendingApprovalPaymentFacade, UserRoleType } from '@cms/productivity-tools/domain';
+import { ApprovalFacade, PendingApprovalGeneralFacade, PendingApprovalPaymentFacade, UserRoleType } from '@cms/productivity-tools/domain';
 import { ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, DocumentFacade, ApiType } from '@cms/shared/util-core';
 import { NotificationService } from '@progress/kendo-angular-notification';
 import { NavigationMenuFacade, UserManagementFacade, UserDataService } from '@cms/system-config/domain';
@@ -35,7 +35,7 @@ export class ApprovalPageComponent implements OnInit {
   userLevel = 1;
 
   state!: State;
-  approvalsGeneralLists$ = this.approvalFacade.approvalsGeneralList$;
+  approvalsGeneralLists$ = this.pendingApprovalGeneralFacade.approvalsGeneralList$;
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalCount$;
   approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
@@ -50,14 +50,15 @@ export class ApprovalPageComponent implements OnInit {
               private pendingApprovalPaymentFacade: PendingApprovalPaymentFacade,
               private userManagementFacade: UserManagementFacade,
               private navigationMenuFacade: NavigationMenuFacade,
-              private documentFacade :  DocumentFacade,  private readonly userDataService: UserDataService) {
+              private documentFacade :  DocumentFacade,  private readonly userDataService: UserDataService,
+              private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade) {
               }
   ngOnInit(): void {
     this.getUserRole();
   }
 
    loadApprovalsGeneralGrid(event: any): void {
-    this.approvalFacade.loadApprovalsGeneral();
+    this.pendingApprovalGeneralFacade.loadApprovalsGeneral();
   }
 
   getUserRole(){

@@ -83,17 +83,6 @@ export class ApprovalFacade {
   ) { }
 
   /** Public methods **/
-  loadApprovalsGeneral(): void {
-    this.approvalDataService.loadApprovalsGeneral().subscribe({
-      next: (approvalGeneralResponse) => {
-        this.approvalsGeneralSubject.next(approvalGeneralResponse);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
-
   loadApprovalsPayments(): void {
     this.approvalDataService.loadPendingPaymentsListsServices().subscribe({
       next: (approvalsPaymentsResponse) => {

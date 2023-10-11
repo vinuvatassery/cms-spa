@@ -21,6 +21,9 @@ import { ApprovalsReviewPossibleMatchesComponent } from './components/approvals-
 import { ApprovalsEditItemsComponent } from './components/approvals-edit-items/approvals-edit-items.component';
 import { ApprovalsSubmitItemsComponent } from './components/approvals-submit-items/approvals-submit-items.component';
 import { ApprovalsExpectationReasonComponent } from './components/approvals-expectation-reason/approvals-expectation-reason.component';
+import { ApprovalsGeneralListDetailCaseReassignmentComponent } from './components/approvals-general-list-detail-casereassignment/approvals-general-list-detail-casereassignment.component';
+import { ApprovalsGeneralListDetailExceptionsComponent } from './components/approvals-general-list-detail-exceptions/approvals-general-list-detail-exceptions.component';
+import { ApprovalsGeneralListDetailAddtomasterlistComponent } from './components/approvals-general-list-detail-addtomasterlist/approvals-general-list-detail-addtomasterlist.component';
 
 @NgModule({
   imports: [
@@ -45,6 +48,9 @@ import { ApprovalsExpectationReasonComponent } from './components/approvals-expe
     ApprovalsEditItemsComponent,
     ApprovalsSubmitItemsComponent,
     ApprovalsExpectationReasonComponent,
+    ApprovalsGeneralListDetailCaseReassignmentComponent,
+    ApprovalsGeneralListDetailExceptionsComponent,
+    ApprovalsGeneralListDetailAddtomasterlistComponent,
   ],
   exports: [
     ApprovalListComponent,
