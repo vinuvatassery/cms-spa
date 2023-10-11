@@ -65,6 +65,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   isFiltered = false;
   filter!: any;
   gridDataResult!: GridDataResult;
+  pendingApprovalGridDataaResult: any;
   approvalTypeCode! : any;
   approveStatus:string="APPROVED";
   sendbackStatus:string="SEND_BACK";
@@ -195,7 +196,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   }
 
   ngOnChanges(): void {
-    this.setGridValueAndData();    
+    this.setGridValueAndData();
   }
 
   setGridValueAndData(){
@@ -345,6 +346,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       this.isFiltered = false
     }
     this.loadApprovalPaymentsListGrid();
+    this.sortByProperty();
   }
 
   // updating the pagination infor based on dropdown selection
@@ -394,6 +396,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   onPaymentTypeCodeValueChange(paymentSubTypeCode: any){
     this.pageValidationMessage = null;
     this.selectedPaymentType = paymentSubTypeCode;
+    this.approveBatchCount= 0;
+    this.sendbackBatchCount= 0;
     switch(this.selectedPaymentType) {
       case PendingApprovalPaymentTypeCode.MedicalClaim:{
         this.approvalPermissionCode = ApprovalLimitPermissionCode.MedicalClaimPermissionCode;
@@ -497,8 +501,11 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
   gridDataHandle() {
     this.approvalsPaymentsLists$.subscribe((response: any) => {
-      this.approveBatchCount=response.approverCount;
-      this.sendbackBatchCount= response.sendBackCount;
+      let gridData = {
+        data: response.data,
+        total: response.total
+      }
+      this.pendingApprovalGridDataaResult = gridData;
       if (response.data.length > 0) {
         this.assignDataFromUpdatedResultToPagedResult(response);
         this.tAreaVariablesInitiation(this.approvalsPaymentsGridPagedResult);
@@ -642,7 +649,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
         currentPage.sendBackNotesInValid=false;
         currentPage.sendBackNotesInValidMsg="";
         currentPage.sendBackNotes = "";
-        currentPage.sendBackButtonDisabled=true;       
+        currentPage.sendBackButtonDisabled=true;
         this.assignRowDataToMainList(currentPage);
       });
     }
@@ -719,7 +726,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       sortColumn: this.sortValue,
       sortType: this.sortType,
       columnName: this.selectedColumn,
-      sorting: null,
       filter:[]
     };
     let selectedPaymentType = this.selectedPaymentType;
@@ -880,4 +886,16 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   public expandSendBackNotes({ dataItem }: RowArgs): boolean {
     return dataItem.level2SendBackNotes ? true : false;
   }
+
+  navToBatchDetails(data : any){
+    let type;
+    if(this.selectedPaymentType === PendingApprovalPaymentTypeCode.MedicalClaim)
+    {
+      type = 'medical';
+    }
+    this.route.navigate([`/financial-management/claims/${type}/batch`],
+    { queryParams :{bid: data?.paymentRequestBatchId}});
+  }
+
+
 }

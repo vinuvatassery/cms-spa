@@ -214,6 +214,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     }
     
      this.paymentRequestType$.subscribe((paymentRequestTypes) => {
+      paymentRequestTypes = paymentRequestTypes.sort((x,y) => x.sequenceNbr < y.sequenceNbr ? -1 : 1 )
       let parentRequestTypes = paymentRequestTypes.filter(x => x.parentCode == null);
       let refactoredPaymentRequestTypeArray :Lov[] =[]
       parentRequestTypes.forEach(x => {
@@ -637,7 +638,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     }
     else {
       if (this.chosenPcaForReAssignment) {
-        bodyData.pcaCode = this.chosenPcaForReAssignment?.pcaCode;
+        bodyData.pcaCode = this.chosenPcaForReAssignment?.pcaCode.toString();
         bodyData.pcaAssignmentId = this.chosenPcaForReAssignment?.pcaAssignmentId;
         bodyData.isPcaReassignmentNeeded = this.chosenPcaForReAssignment?.isReAssignmentNeeded;
       }
@@ -693,7 +694,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
               return;
             }
 
-            claim.pcaCode = response?.pcaCode;
+            claim.pcaCode = response?.pcaCode.toString();
             claim.pcaAssignmentId = response?.pcaAssignmentId;
             claim.isPcaReassignmentNeeded = response?.isReAssignmentNeeded;
             this.saveClaim(claim);

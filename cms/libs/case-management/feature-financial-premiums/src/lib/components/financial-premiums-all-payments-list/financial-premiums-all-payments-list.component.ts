@@ -252,6 +252,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   ) {}
 
   ngOnInit(): void {
+    this.addSearchSubjectSubscription();
     this.getVedndorTypeCodeLov();
     this.getPaymentMethodLov();
     this.getPaymentStatusLov();
@@ -314,6 +315,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   }
 
   onSearch(searchValue: any) {
+    
     const isDateSearch = searchValue.includes('/');
     this.showDateSearchWarning =
       isDateSearch || this.dateColumns.includes(this.selectedSearchColumn);

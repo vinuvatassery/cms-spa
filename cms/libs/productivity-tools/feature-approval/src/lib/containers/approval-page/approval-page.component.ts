@@ -31,6 +31,7 @@ export class ApprovalPageComponent implements OnInit {
   sortImportedClaimsList = this.approvalFacade.sortImportedClaimsList;
   sortValueImportedClaimsAPproval = this.approvalFacade.sortValueImportedClaimsAPproval;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
+  pendingApprovalPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
 
   userLevel = 1;
 
@@ -55,6 +56,11 @@ export class ApprovalPageComponent implements OnInit {
               }
   ngOnInit(): void {
     this.getUserRole();
+    this.pendingApprovalPaymentsCount$.subscribe((response:any)=>{
+      if(response){
+        this.navigationMenuFacade.getAllPendingApprovalPaymentCount(this.userLevel);
+      }
+    })
   }
 
    loadApprovalsGeneralGrid(event: any): void {
