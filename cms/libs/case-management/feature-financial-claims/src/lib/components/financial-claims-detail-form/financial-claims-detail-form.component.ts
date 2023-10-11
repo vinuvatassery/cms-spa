@@ -214,6 +214,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     }
     
      this.paymentRequestType$.subscribe((paymentRequestTypes) => {
+      paymentRequestTypes = paymentRequestTypes.sort((x,y) => x.sequenceNbr < y.sequenceNbr ? -1 : 1 )
       let parentRequestTypes = paymentRequestTypes.filter(x => x.parentCode == null);
       let refactoredPaymentRequestTypeArray :Lov[] =[]
       parentRequestTypes.forEach(x => {
