@@ -196,7 +196,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   }
 
   ngOnChanges(): void {
-    this.setGridValueAndData();    
+    this.setGridValueAndData();
   }
 
   setGridValueAndData(){
@@ -500,16 +500,16 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   }
 
   gridDataHandle() {
-    this.approvalsPaymentsLists$.subscribe((response: any) => {     
+    this.approvalsPaymentsLists$.subscribe((response: any) => {
+      let gridData = {
+        data: response.data,
+        total: response.total
+      }
+      this.pendingApprovalGridDataaResult = gridData;
       if (response.data.length > 0) {
         this.assignDataFromUpdatedResultToPagedResult(response);
         this.tAreaVariablesInitiation(this.approvalsPaymentsGridPagedResult);
         this.isApprovalPaymentsGridLoaderShow = false;
-        let gridData = {
-          data: response.data,
-          total: response.total
-        }
-        this.pendingApprovalGridDataaResult = gridData;
         this.gridApprovalPaymentsDataSubject.next(this.approvalsPaymentsGridPagedResult);
         if (response?.total >= 0 || response?.total === -1) {
           this.isApprovalPaymentsGridLoaderShow = false;
@@ -649,7 +649,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
         currentPage.sendBackNotesInValid=false;
         currentPage.sendBackNotesInValidMsg="";
         currentPage.sendBackNotes = "";
-        currentPage.sendBackButtonDisabled=true;       
+        currentPage.sendBackButtonDisabled=true;
         this.assignRowDataToMainList(currentPage);
       });
     }
@@ -887,7 +887,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     return dataItem.level2SendBackNotes ? true : false;
   }
 
-  navToBatchDetails(data : any){   
+  navToBatchDetails(data : any){
     let type;
     if(this.selectedPaymentType === PendingApprovalPaymentTypeCode.MedicalClaim)
     {
@@ -896,6 +896,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.route.navigate([`/financial-management/claims/${type}/batch`],
     { queryParams :{bid: data?.paymentRequestBatchId}});
   }
-  
-  
+
+
 }
