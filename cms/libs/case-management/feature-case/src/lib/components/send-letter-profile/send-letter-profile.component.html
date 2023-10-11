@@ -20,10 +20,10 @@
   <div class="flex-row mb-2">
     <div class="flex-col flex-col-8">
       <p class="text-bold">Status</p>
-      <p>{{clientEligibilityInfo?.eligibilityStatusCode}}</p>
+      <p>{{clientEligibilityInfo.eligibilityStatusCode}}</p>
     </div>
     <div class="flex-col flex-col-4 text-right">
-      <button [disabled] ="clientEligibilityInfo?.eligibilityStatusCode === 'DISENROLLED'"
+      <button [disabled] ="clientEligibilityInfo.eligibilityStatusCode === 'DISENROLLED'"
         kendoButton
         class="k-primary-link text-t-normal text-underline"
         (click)="onOpenEligibilityInfoClicked()"
@@ -40,7 +40,7 @@
     </div>
     <div class="flex-col flex-col-4 text-right">
       <button
-        kendoButton [disabled] ="clientEligibilityInfo?.eligibilityStatusCode === 'DISENROLLED'"
+        kendoButton [disabled] ="clientEligibilityInfo.eligibilityStatusCode === 'DISENROLLED'"
         class="k-primary-link text-t-normal text-underline"
         (click)="onOpenEligibilityInfoClicked()"
         aria-label="Edit"
@@ -57,7 +57,7 @@
     </div>
     <div class="flex-col flex-col-4 text-right">
       <button
-        kendoButton [disabled] ="clientEligibilityInfo?.eligibilityStatusCode === 'DISENROLLED'"
+        kendoButton [disabled] ="clientEligibilityInfo.eligibilityStatusCode === 'DISENROLLED'"
         class="k-primary-link text-t-normal text-underline"
         (click)="onOpenEligibilityInfoClicked()"
         aria-label="Edit"

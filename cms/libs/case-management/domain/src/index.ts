@@ -71,7 +71,6 @@ export * from './lib/enums/workflow-type.enum';
 export * from './lib/enums/case-screen-tab.enum';
 export * from './lib/enums/yes-no-flag.enum';
 export * from './lib/enums/navigation-type.enum';
-export * from './lib/enums/status-flag.enum';
 export * from './lib/enums/adjustment-operator.enum';
 export * from './lib/enums/data-point-type.enum';
 export * from './lib/enums/entity-type-code.enum';
@@ -106,7 +105,6 @@ export * from './lib/enums/verification-status-code.enum';
 export * from './lib/enums/verification-type-code.enum';
 export * from './lib/enums/provider-option.enum';
 export * from './lib/enums/client-profile-tab-titles.enum';
-export * from './lib/enums/address-type.enum';
 export * from './lib/enums/client-profile-tabs.enum';
 export * from './lib/enums/client-note-type-code.enum';
 export * from './lib/enums/eligibility-status.enum';
@@ -130,6 +128,8 @@ export * from './lib/enums/payment-method-code.enum';
 export * from './lib/enums/exception-type.enum';
 export * from './lib/enums/payment-status-code.enum'
 export * from './lib/enums/premium-type.enum';
+export * from './lib/enums/premium-payment-status.enum';
+export * from './lib/enums/payment-type.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';

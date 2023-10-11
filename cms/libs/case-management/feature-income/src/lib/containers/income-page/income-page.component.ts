@@ -5,12 +5,13 @@ import { Component, ChangeDetectionStrategy, Input, OnDestroy, OnInit, ElementRe
 /** External libraries **/
 import {catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, StatusFlag, ClientDocumentFacade, FamilyAndDependentFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, ClientDocumentFacade, FamilyAndDependentFacade } from '@cms/case-management/domain';
 import { IntlDateService,UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Validators, FormGroup, FormControl, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute, Router } from '@angular/router';
 import {ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-income-page',

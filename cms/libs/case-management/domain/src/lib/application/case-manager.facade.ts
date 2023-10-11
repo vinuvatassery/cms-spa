@@ -4,12 +4,12 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { UserDataService } from '@cms/system-config/domain';
 import { Subject } from 'rxjs';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
-import { StatusFlag } from '../enums/status-flag.enum';
 import { UserDefaultRoles } from '../enums/user-default-roles.enum';
 import { CaseManagerDataService } from '../infrastructure/case-manager.data.service';
 import { WorkflowFacade } from './workflow.facade';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Injectable({ providedIn: 'root' })
 export class CaseManagerFacade {

@@ -4,13 +4,13 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
-import { StatusFlag } from '../enums/status-flag.enum';
 
 /** External libraries **/
 
 /** Data services **/
 import { HealthcareProviderDataService } from '../infrastructure/healthcare-provider.data.service';
 import { WorkflowFacade } from './workflow.facade';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Injectable({ providedIn: 'root' })
 export class HealthcareProviderFacade {

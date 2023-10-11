@@ -31,12 +31,12 @@ import {
   ApplicantInfo,
   ClientFacade,
   CompletionChecklist,
-  StatusFlag,
   TransGenderCode,
   WorkflowFacade,
 } from '@cms/case-management/domain';
 import { UIFormStyle, IntlDateService, DataQuery } from '@cms/shared/ui-tpa';
 import { LovFacade, LovType } from '@cms/system-config/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-client-edit-view',

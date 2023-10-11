@@ -1,6 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, Output, EventEmitter, } from '@angular/core';
-import { ContactFacade, StatusFlag } from '@cms/case-management/domain';
+import { ContactFacade} from '@cms/case-management/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-deactivate-address-confirmation',

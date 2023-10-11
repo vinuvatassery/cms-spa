@@ -51,7 +51,7 @@
             <span *ngIf="clinicVendorLoader$ | async"
               class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
             <kendo-floatinglabel text="Clinic Name">
-              <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" [data]="clinicVendorList$ | async"
+              <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" [data]="clinicVendorList$ | async "
                 textField="vendorName" valueField="vendorName" formControlName="providerName" [filterable]="true"
                 placeholder="Clinic Name" (filterChange)="searchClinic($event)"
                 [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }">
@@ -252,7 +252,7 @@
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="State">
           <kendo-dropdownlist aria-label="State" [fillMode]="formUiStyle.dropDownFillMode" formControlName="state"
-            [data]="ddlStates$ | async" textField="stateName" valueField="stateCode" [valuePrimitive]="true"
+            [data]="ddlStates$| async" textField="stateName" valueField="stateCode" [valuePrimitive]="true"
             placeholder="State">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
