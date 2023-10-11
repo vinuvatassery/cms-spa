@@ -9,12 +9,13 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 /** Facades **/
-import { ContactFacade, FriendsOrFamilyContactClientProfile, StatusFlag } from '@cms/case-management/domain';
+import { ContactFacade, FriendsOrFamilyContactClientProfile } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { SnackBarNotificationType, NotificationSnackbarService, LoaderService, LoggingService } from '@cms/shared/util-core';
 import { of } from 'rxjs';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-friend-or-family-detail',

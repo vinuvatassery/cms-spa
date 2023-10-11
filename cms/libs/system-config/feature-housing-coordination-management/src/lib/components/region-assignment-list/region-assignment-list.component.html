@@ -14,7 +14,7 @@
     icon="add"
     kendoButton
     [primary]="true"
-    aria-label="add language"
+    aria-label="Region"
     class="add-button-top"
     (click)="onRegionAssignmentDetailClicked()"
  
@@ -46,8 +46,8 @@
             </kendo-floatinglabel>
           </span>
           <span>
-            <button kendoButton [primary]="true" look="flat" class="button-lg">
-              <span class="material-icons" aria-label="export" aria-invalid="true"
+            <button kendoButton [primary]="true" look="flat" aria-label="Export" class="button-lg">
+              <span class="material-icons" aria-label="Export" aria-invalid="true"
                 >exit_to_app</span
               >Export
             </button>
@@ -102,7 +102,7 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="modified by"
+              [attr.aria-label]="dataItem.modifiedBy"
             >
               <div class="app-c-avatar avatar-sm"> 
                 

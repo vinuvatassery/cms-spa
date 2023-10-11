@@ -18,12 +18,10 @@ import {
   EntityTypeCode,
   ServiceSubTypeCode,
   FinancialClaimsFacade,
-  StatusFlag,
   ExceptionTypeCode,
   PaymentRequestType,
   FinancialClaims,
   PaymentMethodCode,
-  HealthInsurancePlan
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  Lov, LovFacade } from '@cms/system-config/domain';
@@ -32,6 +30,7 @@ import { SnackBarNotificationType, ConfigurationProvider, LoggingService, Notifi
 import { IntlService } from '@progress/kendo-angular-intl';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 import { groupBy } from '@progress/kendo-data-query';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-medical-payment-detail',
@@ -346,8 +345,7 @@ export class MedicalPaymentDetailComponent {
         );
         return;
       }
-      if (service.exceptionFlag === StatusFlag.Yes && !service.exceptionReasonCode) {       
-      }
+    
       bodyData.tpaInvoices.push(service);
     }
     bodyData.tpaInvoices.splice(0, 1);

@@ -24,7 +24,7 @@
           kendoButton
           class="card-link-button ml-1 no-ul fontsize_twel"
           [disabled]="isViewContentEditable" 
-          aria-label="add new insurance carrier"
+          aria-label="Add New"
           (click)="addNewInsuranceProviderOpen()"
         > 
           ADD NEW
@@ -43,11 +43,11 @@
 <kendo-dialog-actions>
   <div class="justify-content-between">
     <div class="justify-content-end">
-      <button kendoButton [primary]="true" aria-label="Cancel add New Insurance Provider" look="outline"
+      <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
         (click)="addNewInsuranceProviderClose()">
         Cancel
       </button>
-      <button kendoButton      [primary]="true" aria-label="Add New Insurance Provider" (click)="addNewInsuranceProviderClose()">
+      <button kendoButton      [primary]="true" aria-label="Add" (click)="addNewInsuranceProviderClose()">
         Add
       </button>
     </div>

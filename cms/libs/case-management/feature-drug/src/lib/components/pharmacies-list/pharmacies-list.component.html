@@ -47,7 +47,7 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="profile avathar"
+              [attr.aria-label]="dataItem.creatorId"
             >
             <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
@@ -119,7 +119,7 @@
     </div>
     <div class="flex-row">
       <div class="flex-col mt-1">
-        <button kendoButton [primary]="true" icon="add" [disabled]="disableAddpharmacyButton((pharmaciesList$ | async))||((isReadOnly$ | async) ? true : false)" (click)="onOpenPharmacyClicked()" aria-label="add pharmacy">
+        <button kendoButton [primary]="true" icon="add" [disabled]="disableAddpharmacyButton((pharmaciesList$ | async))||((isReadOnly$ | async) ? true : false)" (click)="onOpenPharmacyClicked()" aria-label="Pharmacy">
           Pharmacy
         </button>
       </div>

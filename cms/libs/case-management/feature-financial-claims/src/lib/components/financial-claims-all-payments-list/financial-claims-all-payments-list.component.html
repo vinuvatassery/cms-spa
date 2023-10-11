@@ -10,16 +10,16 @@
     </kendo-floatinglabel>
   </span>
   <span class="filter-section_items filter--search">
-    <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
+    <span class="material-icons" aria-label="Search Cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
-      <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)" aria-label="Search case"
+      <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)" aria-label="Search Cases"
         rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
     </kendo-floatinglabel>
   </span>
   <span class="right-overlay-export">
-    <button kendoButton [primary]="true" look="flat" class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
-      <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
+    <button kendoButton [primary]="true" aria-label="Export" look="flat" class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
+      <span *ngIf="!showExportLoader" class="material-icons" aria-label="Export" aria-invalid="true">exit_to_app</span>         
       
       <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
     </button>
@@ -33,7 +33,7 @@
     <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
     <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
     <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
-    <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+    <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
       <a>Set to Default</a>
     </button>
   </div>
@@ -113,7 +113,7 @@
       </kendo-grid-column>
       <kendo-grid-column field="clientFullName" title="Client Name" [width]="180">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button aria-label="clientFullName" kendoButton look="flat" class="card-link-button"
+          <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
           (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog, dataItem)">
             {{ dataItem.clientFullName }}
           </button>
@@ -183,7 +183,7 @@
       <kendo-grid-column field="creatorId" title="By" [width]="70" [sticky]="true">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-            [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
+            [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
             <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
           </button>
           <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
@@ -251,17 +251,17 @@
 
 
   <div class="bottom-fixed-wrapper text-right flex-gap">
-      <button kendoButton [primary]="true" look="outline"   aria-label="Cancel"> Cancel </button>
-      <button kendoButton [primary]="true" aria-label="Download"    icon="download">  Download </button>
-      <button kendoButton [primary]="true" aria-label="Print"  icon="print">   Print </button>
-      <button kendoButton [primary]="true" aria-label="Receipting Log"  > Receipting Log </button>
+      <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel </button>
+      <button kendoButton [primary]="true" aria-label="Download" icon="download"> Download </button>
+      <button kendoButton [primary]="true" aria-label="Print" icon="print"> Print </button>
+      <button kendoButton [primary]="true" aria-label="Receipting Log"> Receipting Log </button>
 
     </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
       <span class="">0 claims(s) to be deleted</span>
       <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
-      <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
-      <button kendoButton [primary]="true" aria-label="Receipting Log" class="" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
+      <button kendoButton [primary]="true" aria-label="Preview Requests" class="" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
+      <button kendoButton [primary]="true" aria-label="Review" class="" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
       <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action"
         buttonClass="k-split-button" [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isPrintAuthorizationClicked"
         [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
@@ -299,7 +299,7 @@
       <kendo-dialog-actions>
         <div class="justify-content-between">
           <div class="justify-content-end">
-            <button kendoButton aria-label="cancel" [primary]="true" look="flat">
+            <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
               Client Profile <span class="material-icons ml-1" (click)="onClientClicked(clientId)">
                 chevron_right
               </span>

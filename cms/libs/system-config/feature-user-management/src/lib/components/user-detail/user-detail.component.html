@@ -37,14 +37,14 @@
 <kendo-dialog-actions>
   <div class="justify-content-between">
     <div *ngIf="isEditValue">
-      <button kendoButton [primary]="true" look="flat" (click)="onDeactivateClicked()">Deactivate</button>
+      <button kendoButton [primary]="true" aria-label="Deactivate" look="flat" (click)="onDeactivateClicked()">Deactivate</button>
     </div>
     <div class="justify-content-end">
-      <button kendoButton [primary]="true" look="outline">Cancel</button>
+      <button kendoButton [primary]="true" aria-label="Cancel" look="outline">Cancel</button>
       <button
         kendoButton
         [primary]="true"
-        aria-label="add or update users data"
+        attr.aria-label=" {{ isEditValue ? 'Update' : 'Add' }}"
       >
         {{ isEditValue ? 'Update' : 'Add' }}
       </button>

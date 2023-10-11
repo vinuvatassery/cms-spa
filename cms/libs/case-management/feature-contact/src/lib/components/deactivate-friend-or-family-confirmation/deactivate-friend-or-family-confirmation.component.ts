@@ -1,7 +1,8 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, Input,Output, EventEmitter } from '@angular/core';
 /** Facades **/
-import { ContactFacade,FriendsOrFamilyContactClientProfile,StatusFlag } from '@cms/case-management/domain';
+import { ContactFacade,FriendsOrFamilyContactClientProfile} from '@cms/case-management/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType,NotificationSnackbarService, LoaderService, LoggingService} from '@cms/shared/util-core';
 @Component({

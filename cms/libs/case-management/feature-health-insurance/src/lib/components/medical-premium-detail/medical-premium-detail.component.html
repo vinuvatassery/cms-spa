@@ -276,25 +276,25 @@
   <div class="justify-content-between">
     <div>
       <button kendoButton class="k-danger-link" *ngIf="isDeleteEnabled && !isPaymentDone" (click)="onDeleteClick()"
-        aria-label="delete medical premium">
+        aria-label="Delete">
         Delete
       </button>
       <button kendoButton [primary]="true" (click)="onRedirectModalClicked()" *ngIf="isEditViewPopup" look="outline"
-        aria-label="edit medical premium">
+        aria-label="Edit">
         Edit
       </button>
     </div>
     <div class="justify-content-end">
       <button kendoButton [primary]="true" look="outline" *ngIf="!isEditViewPopup && isOpenDdl"
-        (click)="onModalCloseClicked()" aria-label="cancel adding medical premium">
+        (click)="onModalCloseClicked()" aria-label="button">
         Cancel
       </button>
-      <button kendoButton [primary]="true" *ngIf="!isEditViewPopup && isOpenDdl" aria-label="add new medical premium"
+      <button kendoButton [primary]="true" *ngIf="!isEditViewPopup && isOpenDdl" [attr.aria-label]="buttonText"
         (click)="save()" [disabled]="btnDisabled">
         {{buttonText}}
       </button>
       <button kendoButton [primary]="true" *ngIf="isEditViewPopup" (click)="onModalCloseClicked()"
-        aria-label="close medical premium">
+        aria-label="Close">
         Close
       </button>
     </div>

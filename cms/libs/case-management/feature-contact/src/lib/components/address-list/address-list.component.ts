@@ -1,7 +1,8 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 /** facades **/
-import { ClientAddress, ContactFacade, StatusFlag, AddressType, CaseFacade } from '@cms/case-management/domain';
+import { ClientAddress, ContactFacade, CaseFacade } from '@cms/case-management/domain';
+import { AddressType, StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-address-list',

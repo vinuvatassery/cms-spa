@@ -114,7 +114,7 @@
                 <div class=" mb-3">
                     <div class="flex-space-bw align-items-center">
                         <h4 class="mar-0">Prescription 1</h4>
-                        <button class="" kendoButton fillMode="flat" themeColor="error">DELETE</button>
+                        <button aria-label="Delete" kendoButton fillMode="flat" themeColor="error">DELETE</button>
                     </div>
                     <div class="flex-row">
                         <div class="flex-col flex-col-6">
@@ -219,8 +219,8 @@
 
                     <hr class="row-border" />
                     <div class="mt-2">
-                        <button class="" kendoButton fillMode="flat" themeColor="primary"> <span class="material-icons"
-                                aria-label="New Claims" aria-hidden="false">add</span> New Prescription</button>
+                        <button aria-label="New Prescription" kendoButton fillMode="flat" themeColor="primary"> <span class="material-icons"
+                                aria-label="New Prescription" aria-hidden="false">add</span> New Prescription</button>
 
                     </div>
                 </div>
@@ -238,7 +238,7 @@
             <cms-pharmacy-claims-recent-claims-list></cms-pharmacy-claims-recent-claims-list>
         </div>
         <div class="d-flex align-items-center mt-1">
-            <button kendoButton [primary]="true" aria-label="Confirm Selections" class=""> Add </button>
+            <button kendoButton [primary]="true" aria-label="Add" class=""> Add </button>
             <button kendoButton [primary]="true" look="outline" class="ml-2" aria-label="Cancel"> Cancel </button>
             <span class="ml-2">1 service(s) to be added</span>
         </div>

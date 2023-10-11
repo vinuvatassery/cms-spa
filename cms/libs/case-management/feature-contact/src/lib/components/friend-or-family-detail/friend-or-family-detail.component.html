@@ -68,7 +68,7 @@
         kendoButton
         [primary]="true"
         look="flat"
-        aria-label="deactivate friends or family contact"
+        aria-label="Deactivate"
         (click)="deactivateContact()"
       >
         Deactivate
@@ -79,7 +79,7 @@
         kendoButton
         [primary]="true"
         look="outline"
-        aria-label="cancel adding friend or family contact"
+        aria-label="Cancel"
         (click)="closePopup()"
       >
         Cancel
@@ -87,14 +87,10 @@
       <button
         kendoButton
         [primary]="true"
-        aria-label="add friend or family contact"
+        attr.aria-label="{{ isEditValue  ? 'Update'  : 'Add' }}"
         (click)="createContact()"
       >
-      {{
-        isEditValue
-          ? 'Update'
-          : 'Add'
-      }}
+      {{ isEditValue  ? 'Update'  : 'Add' }}
       </button>
     </div>
   </div>

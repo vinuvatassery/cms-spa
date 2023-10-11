@@ -3,7 +3,7 @@
     <div class="flex-col flex-col-6 align-items-center" kendoTooltip>
       <h2 class="title-md mb-0 text-bold">{{profileInfoTitle}}</h2>
       <button kendoButton class="ml-2 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit Vendor Info"
-        aria-label="edit client info" (click)="openEditInfoDialog();"></button>
+        aria-label="Edit Vendor Info" (click)="openEditInfoDialog();"></button>
     </div>
     <div *ngIf="providerType == vendorTypes.MedicalProviders && selectedVendorInfo$?.parentVendorId">
       <span>{{selectedVendorInfo$?.vendorName}} (Parent)</span>
@@ -14,28 +14,8 @@
       <table class="info-table-custom">
         <caption hidden> {{profileInfoTitle}}</caption>
         <tr hidden>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
+          <th scope="col">Fields</th>
+          <th scope="col">Details</th> 
         </tr>
         <tbody>
           <tr>
@@ -79,7 +59,7 @@
           kendoPopoverAnchor
           [popover]="onUserProfileDetailsHovered"
           showOn="hover"
-          aria-label="profile avathar"
+          [attr.aria-label]="selectedVendorInfo$?.lastModifierId"
         >
         <common-user-photo-icon  [userId]="selectedVendorInfo$?.lastModifierId"></common-user-photo-icon>
         </button>
@@ -106,5 +86,5 @@
   <kendo-dialog-titlebar *ngIf="selectedVendorInfo$.vendorTypeCode=='MANUFACTURERS'" class="transform-none"> Edit Manufacturer Info </kendo-dialog-titlebar>
   <cms-vendor-details [editVendorInfo]="true" [vendorDetails]="selectedVendorInfo$" [providerType]="providerType"
                       [profileInfoTitle]="profileInfoTitle" [medicalProviderForm]="medicalProviderForm" (closeModalEventClicked)="closeEditModal($event)"
-                      [medicalProviderForm] = medicalProviderForm (saveProviderEventClicked)="saveVendorProfile($event)"></cms-vendor-details>
+                      [medicalProviderForm] = medicalProviderForm (saveProviderEventClicked)="saveVendorProfile($event)" (updateVendorDetailsClicked)="updateVendorDetailsClicked($event)" ></cms-vendor-details>
 </kendo-dialog>
