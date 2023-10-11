@@ -33,12 +33,10 @@ export class ApprovalFacade {
 
 
   /** Private properties **/
-  private approvalsGeneralSubject =  new Subject<any>();
   private approvalsPaymentsSubject =  new Subject<any>();
   private ImportedClaimsSubject =  new Subject<any>();
 
   /** Public properties **/
-  approvalsGeneralList$ = this.approvalsGeneralSubject.asObservable();
   approvalsPaymentsList$ = this.approvalsPaymentsSubject.asObservable();
   approvalsImportedClaimsLists$ = this.ImportedClaimsSubject.asObservable();
 
