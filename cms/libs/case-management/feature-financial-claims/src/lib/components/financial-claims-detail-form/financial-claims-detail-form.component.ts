@@ -638,7 +638,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     }
     else {
       if (this.chosenPcaForReAssignment) {
-        bodyData.pcaCode = this.chosenPcaForReAssignment?.pcaCode;
+        bodyData.pcaCode = this.chosenPcaForReAssignment?.pcaCode.toString();
         bodyData.pcaAssignmentId = this.chosenPcaForReAssignment?.pcaAssignmentId;
         bodyData.isPcaReassignmentNeeded = this.chosenPcaForReAssignment?.isReAssignmentNeeded;
       }
@@ -694,7 +694,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
               return;
             }
 
-            claim.pcaCode = response?.pcaCode;
+            claim.pcaCode = response?.pcaCode.toString();
             claim.pcaAssignmentId = response?.pcaAssignmentId;
             claim.isPcaReassignmentNeeded = response?.isReAssignmentNeeded;
             this.saveClaim(claim);
