@@ -1,4 +1,4 @@
-import { StatusFlag } from './../../../../../domain/src/lib/enums/status-flag.enum';
+
 import {
   Component,
   ChangeDetectionStrategy,
@@ -22,6 +22,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
 import { groupBy } from "@progress/kendo-data-query";
+import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'cms-financial-claims-detail-form',
   templateUrl: './financial-claims-detail-form.component.html',
@@ -213,6 +214,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     }
     
      this.paymentRequestType$.subscribe((paymentRequestTypes) => {
+      paymentRequestTypes = paymentRequestTypes.sort((x,y) => x.sequenceNbr < y.sequenceNbr ? -1 : 1 )
       let parentRequestTypes = paymentRequestTypes.filter(x => x.parentCode == null);
       let refactoredPaymentRequestTypeArray :Lov[] =[]
       parentRequestTypes.forEach(x => {

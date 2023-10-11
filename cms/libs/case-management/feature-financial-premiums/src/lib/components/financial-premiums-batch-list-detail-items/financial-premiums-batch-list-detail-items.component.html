@@ -1,7 +1,8 @@
 <div class=" pt-0">
       <section class="app-l-mainTittle">
+
             <div class="d-flex" *ngIf="(paymentDetails$ | async) as payment; else loading">
-                  <button aria-label="back to vendor refund" kendoButton look="flat" class="mr-1"
+                  <button aria-label="Go Back"  kendoButton look="flat" class="mr-1"
                         (click)="backToBatchLog($event)" title="Go Back"> <span class="material-icons">
                               arrow_back </span> </button>
                   <h1 class="maintitle_withicon text-bold">Item # {{payment.itemNbr}} </h1>
@@ -13,7 +14,7 @@
       <section class="app-l-client-wrapper ">
             <section class="app-l-wrapper">
                   <div *ngIf="(paymentDetails$ | async) as payment; else loading">
-                  <p> <button aria-label="view Profile Profile"
+                  <p> <button aria-label="view Provider Profile"
                               (click)="onViewProviderDetailClicked()" kendoButton look="flat"
                               class="mr-3 card-link-button">
                               {{payment.vendorName}}
@@ -70,9 +71,9 @@
                               </kendo-floatinglabel>
                         </span>
                         <span class="right-overlay-export">
-                              <button kendoButton [primary]="true" look="flat" class="button-lg" (click)="onClickedExport()"
+                              <button kendoButton [primary]="true" look="flat"  aria-label="Export" class="button-lg" (click)="onClickedExport()"
                               [disabled]="showExportLoader">
-                                    <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>
+                                    <span *ngIf="!showExportLoader" class="material-icons"  aria-label="Export" aria-invalid="true">exit_to_app</span>
                                     <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
                               </button>
                         </span>

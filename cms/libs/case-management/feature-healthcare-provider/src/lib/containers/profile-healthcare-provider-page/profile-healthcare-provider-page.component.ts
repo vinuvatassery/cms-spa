@@ -3,9 +3,9 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   HealthcareProviderFacade,
-  StatusFlag,
   WorkflowFacade,
 } from '@cms/case-management/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 import { LoaderService } from '@cms/shared/util-core';
 import { Subject, Subscription} from 'rxjs';
 

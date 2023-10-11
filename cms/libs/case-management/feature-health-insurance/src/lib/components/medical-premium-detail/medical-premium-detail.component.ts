@@ -18,17 +18,20 @@ import {
   HealthInsurancePolicy,
   CarrierContactInfo,
   InsurancePlanFacade,
-  StatusFlag,
   HealthInsurancePlan,
   DependentTypeCode,
   PriorityCode,
-  InsuranceStatusType
+  InsuranceStatusType,
+  FinancialVendorTypeCode,
+  FinancialClaimsFacade,
+  ServiceSubTypeCode
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
 import { SnackBarNotificationType, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-medical-premium-detail',
@@ -127,7 +130,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   insuranceEndDateIsgreaterthanStartDate: boolean = false;
   endDateMin!: Date;
   dentalInsuranceSelectedItem = 'DENTAL_INSURANCE';
-  readonly selectedClaimType="medical";
+  selectedClaimType=FinancialVendorTypeCode.MedicalProviders;
   insuranceTypeCode:any="MEDICAL";
 
   /** Constructor **/
@@ -142,6 +145,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
+    private financialClaimsFacade: FinancialClaimsFacade,
   ) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
@@ -152,6 +156,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     
     if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) {
 this.insuranceTypeCode="DENTAL";
+         this.selectedClaimType=FinancialVendorTypeCode.DentalProviders;
       this.subscribeDentalInsurance();
       this.loadDentalInsuranceLovs();
     }
@@ -280,13 +285,17 @@ this.insuranceTypeCode="DENTAL";
 
   loadHealthInsurancePolicy() {
     this.editViewSubscription = this.insurancePolicyFacade.healthInsurancePolicy$.subscribe((data: any) => {
-      this.healthInsurancePolicyCopy = data;
+     this.healthInsurancePolicyCopy = data;
+     if(data.insuranceVendorAddressId!=null)
+     {      
+    this.financialClaimsFacade.searchProvidorsById(data.insuranceVendorAddressId,data.healthInsuranceTypeCode ==  FinancialVendorTypeCode.DentalProviders? ServiceSubTypeCode.dentalClaim : ServiceSubTypeCode.medicalClaim);
+     
+     }
       this.bindValues(data);
     });
   }
 
-  bindValues(healthInsurancePolicy: HealthInsurancePolicy) {
-    
+  bindValues(healthInsurancePolicy: HealthInsurancePolicy) {  
     this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(
       healthInsurancePolicy.clientInsurancePolicyId
     );
@@ -336,6 +345,9 @@ this.insuranceTypeCode="DENTAL";
     this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].setValue(
       healthInsurancePolicy.careassistPayingPremiumFlag
     );
+    this.healthInsuranceForm.controls['insuranceVendorAddressId'].setValue(
+      healthInsurancePolicy.insuranceVendorAddressId
+    );
     this.bindMedicare(healthInsurancePolicy);
 
   }
@@ -380,6 +392,9 @@ this.insuranceTypeCode="DENTAL";
       }
 
     }
+    this.healthInsuranceForm.controls['insuranceVendorAddressId'].setValue(
+      healthInsurancePolicy.insuranceVendorAddressId
+    );
     this.bindInsurance(healthInsurancePolicy);
   }
 
@@ -426,6 +441,9 @@ this.insuranceTypeCode="DENTAL";
     );
     this.healthInsuranceForm.controls['insuranceTypeCode'].setValue(
       healthInsurancePolicy.insuranceTypeCode
+    );
+    this.healthInsuranceForm.controls['vendorAddressId'].setValue(
+      healthInsurancePolicy.insuranceVendorAddressId
     );
   }
 
@@ -1005,7 +1023,7 @@ this.insuranceTypeCode="DENTAL";
       x.enrolledInInsuranceFlag = StatusFlag.Yes;
       x.clientCaseEligibilityId = this.caseEligibilityId;
       x.clientId = this.clientId;
-      x.dob = x.dob.toLocaleDateString();
+      x.dob = x?.dob.toLocaleDateString();
       this.healthInsurancePolicy.othersCoveredOnPlan.push(x);
     });
     this.healthInsurancePolicy.isClientPolicyHolderFlag = this.healthInsuranceForm.value.isClientPolicyHolderFlag;

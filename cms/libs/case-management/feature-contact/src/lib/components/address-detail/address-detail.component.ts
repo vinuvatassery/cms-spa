@@ -10,11 +10,11 @@ import {  FormControl, FormGroup, Validators,FormBuilder } from '@angular/forms'
 import {  BehaviorSubject, of, Subscription } from 'rxjs';
 
 /** Internal Libraries **/
-import { ContactFacade, StatesInUSA, ClientAddress, StatusFlag, AddressType } from '@cms/case-management/domain';
+import { ContactFacade, StatesInUSA, ClientAddress  } from '@cms/case-management/domain';
 import { LovFacade,MailAddress,AddressValidationFacade, AddressValidation } from '@cms/system-config/domain';
 import { UIFormStyle, IntlDateService } from '@cms/shared/ui-tpa'
 import { SnackBarNotificationType,NotificationSnackbarService, ConfigurationProvider, LoaderService, LoggingService} from '@cms/shared/util-core';
-
+import {AddressType, StatusFlag} from '@cms/shared/ui-common'
 @Component({
   selector: 'case-management-address-detail',
   templateUrl: './address-detail.component.html',

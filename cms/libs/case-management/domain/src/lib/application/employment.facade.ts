@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** internal libraries **/
-import { SnackBar } from '@cms/shared/ui-common';
+import { SnackBar, StatusFlag } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 // entities library
 import { ClientEmployer } from '../entities/client-employer';
@@ -12,7 +12,7 @@ import { CompletionChecklist } from '../entities/workflow-stage-completion-statu
 /** Data services **/
 import { EmployersDataService } from '../infrastructure/employers.data.service';
 // enum  library
-import { StatusFlag } from '../enums/status-flag.enum'
+
 import { WorkflowFacade } from './workflow.facade'
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';

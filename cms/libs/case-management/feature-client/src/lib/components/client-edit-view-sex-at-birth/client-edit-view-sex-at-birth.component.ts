@@ -6,7 +6,8 @@ import {
 } from '@angular/forms';
 import {  LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompletionChecklist, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, WorkflowFacade } from '@cms/case-management/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'case-management-client-edit-view-sex-at-birth',
   templateUrl: './client-edit-view-sex-at-birth.component.html',
