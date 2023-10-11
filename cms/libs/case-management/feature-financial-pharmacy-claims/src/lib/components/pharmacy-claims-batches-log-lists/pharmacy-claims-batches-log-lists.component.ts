@@ -36,6 +36,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   reverseClaimsDialogTemplate!: TemplateRef<any>;
   @ViewChild('addEditClaimsDialog', { read: TemplateRef })
   addEditClaimsDialog!: TemplateRef<any>;
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
@@ -411,5 +412,8 @@ reverseClaimsDialog: any;
       this.isAddEditClaimMoreClose = false;
       this.addEditClaimsFormDialog.close();
     }
+  }
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event);
   }
 }

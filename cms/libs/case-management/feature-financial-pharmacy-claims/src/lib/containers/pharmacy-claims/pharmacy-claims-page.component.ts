@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialPharmacyClaimsFacade, FinancialVendorFacade } from '@cms/case-management/domain'; 
 import { LovFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'cms-pharmacy-claims-page',
   templateUrl: './pharmacy-claims-page.component.html',
@@ -17,15 +18,14 @@ export class PharmacyClaimsPageComponent {
    sortType = this.financialPharmacyClaimsFacade.sortType;
    pageSizes = this.financialPharmacyClaimsFacade.gridPageSizes;
    gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
-
    sortValuePharmacyClaimsProcess = this.financialPharmacyClaimsFacade.sortValuePharmacyClaimsProcess;
    sortProcessList = this.financialPharmacyClaimsFacade.sortProcessList;
    sortValuePharmacyClaimsBatch = this.financialPharmacyClaimsFacade.sortValuePharmacyClaimsBatch;
    sortBatchList = this.financialPharmacyClaimsFacade.sortBatchList;
    sortValuePharmacyClaimsPayments = this.financialPharmacyClaimsFacade.sortValuePharmacyClaimsPayments;
    sortPaymentsList = this.financialPharmacyClaimsFacade.sortPaymentsList;
-   
-
+   providerDetailsDialog: any
+   providerDetailsTemplate!: TemplateRef<any>;
    state!: State;
    paymentRequestId: any;
   pharmacyClaimsProcessGridLists$ =
@@ -37,7 +37,8 @@ export class PharmacyClaimsPageComponent {
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade ,
     private readonly financialVendorFacade: FinancialVendorFacade,
     private readonly lovFacade: LovFacade,
-    private readonly contactFacade: ContactFacade
+    private readonly contactFacade: ContactFacade,
+    private dialogService: DialogService,
   ) {}
 
 
@@ -46,7 +47,6 @@ export class PharmacyClaimsPageComponent {
     this.financialPharmacyClaimsFacade.loadPharmacyClaimsProcessListGrid();
   }
   
-
   loadPharmacyClaimsBatchListGrid(event: any) {
  
     this.financialPharmacyClaimsFacade.loadPharmacyClaimsBatchListGrid();
@@ -62,5 +62,16 @@ export class PharmacyClaimsPageComponent {
   }
   getProviderPanel(event:any){
     this.financialVendorFacade.getProviderPanel(event)
+  }
+  onProviderNameClick(event:any){
+    this.paymentRequestId = event
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',  
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
   }
 }

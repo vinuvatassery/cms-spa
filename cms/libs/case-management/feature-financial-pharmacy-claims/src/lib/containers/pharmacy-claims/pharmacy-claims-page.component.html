@@ -35,7 +35,8 @@
                                 <cms-pharmacy-claims-all-payments-list  [pharmacyClaimsAllPaymentsGridLists$]="pharmacyClaimsAllPaymentsGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList" 
-                                (loadPharmacyClaimsAllPaymentsListEvent)="loadPharmacyClaimsAllPaymentsListGrid($event)"></cms-pharmacy-claims-all-payments-list>
+                                (loadPharmacyClaimsAllPaymentsListEvent)="loadPharmacyClaimsAllPaymentsListGrid($event)"
+                                (providerNameClickEvent)="onProviderNameClick($event)"></cms-pharmacy-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

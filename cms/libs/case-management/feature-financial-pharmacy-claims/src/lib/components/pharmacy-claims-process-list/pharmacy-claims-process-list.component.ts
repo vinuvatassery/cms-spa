@@ -32,6 +32,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
   deleteClaimsConfirmationDialog!: TemplateRef<any>;
   @ViewChild('addEditClaimsDialog', { read: TemplateRef })
   addEditClaimsDialog!: TemplateRef<any>;
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   private deleteClaimsDialog: any;
@@ -318,5 +319,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
     if (result) {
       this.providerDetailsDialog.close();
     }
+  }
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event);
   }
 }

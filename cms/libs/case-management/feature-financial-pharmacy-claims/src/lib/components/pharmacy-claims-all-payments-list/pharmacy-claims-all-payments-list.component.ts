@@ -33,6 +33,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   deleteClaimsConfirmationDialog!: TemplateRef<any>;
   @ViewChild('addEditClaimsDialog', { read: TemplateRef })
   addEditClaimsDialog!: TemplateRef<any>;
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isPharmacyClaimsAllPaymentsGridLoaderShow = false;
@@ -279,8 +280,6 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
     }
   }
 
-
-  
   clientRecentClaimsModalClicked(
     template: TemplateRef<unknown> 
   ): void {
@@ -301,7 +300,6 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
     }
   }
 
-  
   onViewProviderDetailClicked(template: TemplateRef<unknown>): void {
     this.providerDetailsDialog = this.dialogService.open({
       content: template,
@@ -345,5 +343,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
       this.addEditClaimsFormDialog.close();
     }
   }
-
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event)
+  }
 }

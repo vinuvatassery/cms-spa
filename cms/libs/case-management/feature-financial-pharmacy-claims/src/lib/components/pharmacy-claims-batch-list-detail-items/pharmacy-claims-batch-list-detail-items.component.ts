@@ -29,13 +29,14 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogItemsGridLoaderShow = false;
-
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchItemsGridLists$: any;
   @Output() loadBatchItemsListEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  providerDetailsTemplate!: TemplateRef<any>;
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -53,6 +54,7 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  paymentRequestId: any;
   
   
   /** Constructor **/
@@ -70,7 +72,6 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
 
     this.loadBatchLogItemsListGrid();
   }
-
 
   private loadBatchLogItemsListGrid(): void {
     this.loadBatchLogItems(
@@ -174,15 +175,8 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
   }
 
 
-  onViewProviderDetailClicked(  template: TemplateRef<unknown>): void {   
-    this.providerDetailsDialog = this.dialogService.open({
-      content: template,
-      animation:{
-        direction: 'left',
-        type: 'slide',  
-      }, 
-      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
-    });
+  onViewProviderDetailClicked(): void {   
+    this.onProviderNameClickEvent.emit();
   }
 
   onCloseViewProviderDetailClicked(result: any){
@@ -190,7 +184,6 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
       this.providerDetailsDialog.close();
     }
   }
-
 
   onPaymentDetailFormClicked(  template: TemplateRef<unknown>): void {   
     this.paymentDetailsDialog = this.dialogService.open({
@@ -203,5 +196,16 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
     if(result){
       this.paymentDetailsDialog.close();
     }
+  }
+  onProviderNameClick(event:any){
+    this.paymentRequestId = event
+    this.providerDetailsDialog = this.dialogService.open({
+    content: this.providerDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',  
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
   }
 }

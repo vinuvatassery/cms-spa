@@ -39,6 +39,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit, 
   @Input() sort: any;
   @Input() reconcileGridLists$: any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -202,6 +203,9 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit, 
       if (result) {
         this.providerDetailsDialog.close();
       }
+    }
+    onProviderNameClick(event:any){
+      this.onProviderNameClickEvent.emit(event)
     }
 
   }
