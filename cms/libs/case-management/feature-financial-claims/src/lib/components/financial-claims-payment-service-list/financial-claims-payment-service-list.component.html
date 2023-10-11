@@ -34,7 +34,7 @@
     <kendo-grid-column field="creatorId" title="By" [sortable]="false" [width]="20">
         <ng-template kendoGridCellTemplate let-dataItem>
             <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-                [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
+                [popover]="onUserProfileDetailsHovered" showOn="hover" ar[attr.aria-label]="dataItem.creatorId">
                 <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
             <kendo-popover #onUserProfileDetailsHovered width="330" position="left">

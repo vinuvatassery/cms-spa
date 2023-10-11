@@ -50,13 +50,13 @@
 <kendo-dialog-actions>
     <div class="justify-content-between">
         <div>
-            <button  kendoButton  [primary]="true"  look="flat"  aria-label="add new"  >    Add New  </button>
+            <button  kendoButton  [primary]="true"  look="flat"  aria-label="Add New"  >    Add New  </button>
         </div>
         <div class="justify-content-end">
-            <button kendoButton [primary]="true" look="outline" aria-label="cancel updating priority"
+            <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
                 (click)="onCloseSelectNewPrimaryPharmaciesClicked()"> Cancel </button>
-            <button kendoButton [primary]="true" aria-label="update priority"    *ngIf="clientPharmacyDetails.actionType ==='deactivate'" (click)="onAddNewPharmacy()"> DEACTIVATE & UPDATE</button>
-            <button kendoButton [primary]="true" aria-label="update priority" *ngIf="clientPharmacyDetails.actionType ==='remove'" (click)="onRemovePharmacy()"> REMOVE & UPDATE </button>
+            <button kendoButton [primary]="true" aria-label="Deactivate & Update"    *ngIf="clientPharmacyDetails.actionType ==='deactivate'" (click)="onAddNewPharmacy()"> DEACTIVATE & UPDATE</button>
+            <button kendoButton [primary]="true" aria-label="Remove & Update" *ngIf="clientPharmacyDetails.actionType ==='remove'" (click)="onRemovePharmacy()"> REMOVE & UPDATE </button>
         </div>
     </div>
 </kendo-dialog-actions>

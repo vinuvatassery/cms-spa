@@ -15,7 +15,7 @@ import { SharedUiCommonModule, SideNavigationComponent } from '@cms/shared/ui-co
 import { ProductivityToolsFeatureNotificationModule } from '@cms/productivity-tools/feature-notification';
 import { CaseManagementFeatureCaseModule } from '@cms/case-management/feature-case';
 import { SystemConfigFeatureTemplateManagementModule } from '@cms/system-config/feature-template-management';
-
+import {ICON_SETTINGS} from "@progress/kendo-angular-icons";
 const COMPONENTS = [AppComponent, LayoutComponent, SideNavigationComponent];
 @NgModule({
   declarations: [COMPONENTS],
@@ -32,7 +32,7 @@ const COMPONENTS = [AppComponent, LayoutComponent, SideNavigationComponent];
     CaseManagementFeatureCaseModule,
     SystemConfigFeatureTemplateManagementModule    
   ],
-  providers: [ { provide: LOCALE_ID, useValue: 'en-US' } ],
+  providers: [ { provide: LOCALE_ID, useValue: 'en-US' }, { provide: ICON_SETTINGS, useValue: { type: 'font' } } ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

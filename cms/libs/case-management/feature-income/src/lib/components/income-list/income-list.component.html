@@ -60,7 +60,7 @@
         >
           <ng-template kendoGridCellTemplate let-dataItem>
             <div *ngIf="dataItem.noIncomeProofFlag != 'Y'">
-              <button aria-label="client name" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
+              <button [attr.aria-label]="dataItem.documentName" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
               <a>{{dataItem.documentName}}</a>
             </button>
 
@@ -110,7 +110,7 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="profile avathar"
+              [attr.aria-label]="dataItem.creatorId"
             >
             <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
@@ -200,7 +200,7 @@
           [primary]="true"
           icon="add"
           (click)="onIncomeClicked(false)"
-          aria-label="add income"
+          aria-label="Income"
           [disabled]="(isReadOnly$ | async) ? true : false"
         >
           Income
@@ -254,7 +254,7 @@
           </ng-template>
 
           </kendo-dropdownbutton>
-          <button aria-label="doc name" *ngIf="dataItem.clientDocumentId !== null && dataItem.clientDocumentId!==' '" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
+          <button [attr.aria-label]="dataItem.documentName" *ngIf="dataItem.clientDocumentId !== null && dataItem.clientDocumentId!==' '" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
             <a>{{dataItem.documentName}}</a>
           </button>
 
@@ -275,7 +275,7 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="profile avathar"
+              [attr.aria-label]="dataItem.creatorId"
             >
             <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>

@@ -22,11 +22,11 @@
           <span class="pr-3"><span class="text-bold">FPL:</span> {{eligibility?.fpl}}%</span>
         </span>
         <span class="card-buttons-wrap" *ngFor="let doc of getQuestionDocuments(question.questionCode);">
-          <button kendoButton look="flat" aria-label="download file" class="k-icon-button" title="Download"
+          <button kendoButton look="flat" aria-label="Download" class="k-icon-button" title="Download"
             (click)="documentFacade.viewOrDownloadFile(false,doc.clientDocumentId,doc.documentName)">
             <span class="material-icons" aria-label="download file" aria-hidden="true">file_download</span>
           </button>
-          <button kendoButton look="flat" aria-label="open in new tab" class="k-icon-button" title="Open in new tab"
+          <button kendoButton look="flat" aria-label="Open in new tab" class="k-icon-button" title="Open in new tab"
             (click)="documentFacade.viewOrDownloadFile(true,doc.clientDocumentId,doc.documentName)">
             <span class="material-icons" aria-label="open in new tab" aria-hidden="true">open_in_new</span>
           </button>
@@ -46,7 +46,7 @@
 
         <kendo-buttongroup selection="single">
           <button *ngFor="let ans of question.answers" (click)="answerClick(question,ans)" kendoButton
-            aria-label="proof of address yes" [toggleable]="true"
+            [attr.aria-label]="ans.answerDesc" [toggleable]="true"
             [selected]="ans.reviewQuestionAnswerId===question.responseAnswerId">
             {{ans.answerDesc}}
           </button>
@@ -62,7 +62,7 @@
         <div class="flex-col flex-col-4 text-right">
           <kendo-buttongroup selection="single">
             <button *ngFor="let ans of child.answers" (click)="answerClick(child,ans)" kendoButton
-              aria-label="proof of address yes" [toggleable]="true"
+            [attr.aria-label]="ans.answerDesc" [toggleable]="true"
               [selected]="ans.reviewQuestionAnswerId===child.responseAnswerId">
               {{ans.answerDesc}}
             </button>
@@ -93,7 +93,7 @@
               aria-label="note description" name="Note"
               [rows]="5" [cols]="40" (blur)="notesChanged()">
             </kendo-textarea>
-            <kendo-formhint class="justify-content-end">{{cerNote?.length}}/7500</kendo-formhint>
+            <kendo-formhint class="justify-content-end">{{cerNote.length}}/7500</kendo-formhint>
           </kendo-floatinglabel>        
         </div>
       </div>
@@ -105,10 +105,10 @@
         <h4 class="mb-0 mt-0" *ngIf="isCerForm">Is the client eligible?</h4>
       </div>
       <div class="flex-col flex-col-4 text-right">
-        <button [disabled]="acceptedApplicationStatus" kendoButton aria-label="application accepted yes" [primary]="true" (click)="isOpenAcceptanceClicked()">
+        <button [disabled]="acceptedApplicationStatus" kendoButton aria-label="Yes" [primary]="true" (click)="isOpenAcceptanceClicked()">
           Yes
         </button>
-        <button kendoButton aria-label="application accepted no" [primary]="true" class="ml-2"
+        <button kendoButton aria-label="No" [primary]="true" class="ml-2"
           (click)="isOpenDenyClicked()">
           No
         </button>
@@ -146,11 +146,11 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" aria-label="Cancel Add New Insurance Plan" look="outline"
+        <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
           (click)="denialPopupClose()">
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="Add New Insurance Plan" (click)="denialPopupClose()">
+        <button kendoButton [primary]="true" aria-label="Add" (click)="denialPopupClose()">
           Add
         </button>
       </div>

@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, OnInit, Input, EventEmitter, Output
 import { ActivatedRoute } from '@angular/router';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { FinancialVendorFacade } from '@cms/case-management/domain'
+import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { FinancialVendorDataService, FinancialVendorFacade } from '@cms/case-management/domain'
 @Component({
   selector: 'cms-vendor-info',
   templateUrl: './vendor-info.component.html',
@@ -58,7 +58,7 @@ export class VendorInfoComponent implements OnInit {
   constructor(private financialVendorFacade: FinancialVendorFacade,
     private activeRoute: ActivatedRoute,
     private readonly formBuilder: FormBuilder,
-    private readonly cdr: ChangeDetectorRef) {
+    private readonly cdr: ChangeDetectorRef,private financialVendorDataService:FinancialVendorDataService,private loaderService:LoaderService) {
       this.medicalProviderForm = this.formBuilder.group({});
   }
 
@@ -89,10 +89,12 @@ export class VendorInfoComponent implements OnInit {
     }
   }
   saveVendorProfile(vendorProfile: any){
+    
     this.financialVendorFacade.showLoader();
     if(this.vendorDetail.vendorTypeCode=='MANUFACTURERS'){
       this.financialVendorFacade.updateManufacturerProfile(vendorProfile).subscribe({
         next:(response:any)=>{
+          
           this.financialVendorFacade.hideLoader();
           this.closeEditModal(true);
           this.cdr.detectChanges();
@@ -105,6 +107,7 @@ export class VendorInfoComponent implements OnInit {
     else{
       this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
         next:(response:any)=>{
+          
           this.financialVendorFacade.hideLoader();
           this.closeEditModal(true);
           this.cdr.detectChanges();
@@ -143,5 +146,26 @@ export class VendorInfoComponent implements OnInit {
       newAddContactForm: this.formBuilder.array([
       ]),
     });
+  }
+  updateVendorDetailsClicked(vendorValues:any)
+  {
+    
+    this.financialVendorDataService.updateVendorDetails(vendorValues).subscribe({
+      next: (resp) => {
+        if (resp) {
+         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, this.profileInfoTitle.split(' ')[0] + ' information updated.');
+          this.openEditDailog=false;
+          this.cdr.detectChanges();
+        }
+        else {
+          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.WARNING, this.profileInfoTitle.split(' ')[0] + ' information not updated.');
+        }
+        this.loaderService.hide();
+     },
+       error: (err) => {
+        this.loaderService.hide();
+        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+       },
+     });
   }
 }

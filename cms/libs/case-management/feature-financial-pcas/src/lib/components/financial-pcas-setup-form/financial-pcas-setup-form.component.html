@@ -163,11 +163,11 @@
 <kendo-dialog-actions>
       <div class="justify-content-between" *ngIf="!loader">
             <div class="justify-content-end">
-                  <button kendoButton [primary]="true" look="outline" aria-label="cancel"
+                  <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
                         (click)="closeAddEditPcaSetupClicked()">
                         Cancel
                   </button>
-                  <button kendoButton [primary]="true" aria-label="Add" (click)="savePca()">
+                  <button kendoButton [primary]="true" [attr.aria-label]="saveButtonText" (click)="savePca()">
                        {{saveButtonText}}
                   </button>
             </div>

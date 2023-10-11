@@ -72,7 +72,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Claims',
+      text: 'Edit Claim',
       icon: 'edit', 
       click: (data: any): void => {
         if (!this.isAddEditClaimMoreClose) {
@@ -84,7 +84,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Claims',
+      text: 'Delete Claim',
       icon: 'delete', 
       click: (data: any): void => {
         if (!this.isDeleteBatchMoreOptionClosed) {

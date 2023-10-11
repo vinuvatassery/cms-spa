@@ -8,8 +8,9 @@ import { filter } from 'rxjs/internal/operators/filter';
 import { Observable } from 'rxjs/internal/Observable';
 
 /** Internal Libraries **/
-import { ScreenType, StatusFlag, WorkFlowProgress } from '@cms/case-management/domain';
+import { ScreenType, WorkFlowProgress } from '@cms/case-management/domain';
 import { LoaderService, LoggingService } from '@cms/shared/util-core';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-case-navigation',

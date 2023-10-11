@@ -18,7 +18,7 @@
         [primary]="true"
         look="outline"
         (click)="onOpenPrintPreviewClicked()"
-        aria-label="preview letter"
+        attr.aria-label="Preview  {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'Email' : 'Letter'}}"
       >
         Preview  {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'EMAIL' : 'LETTER'}}
       </button>
@@ -27,7 +27,7 @@
         [primary]="true"
         class="ml-2"
         (click)="onOpenPrintClicked()"
-        aria-label="print letter"
+        attr.aria-label="{{(paperless$ | async)?.paperlessFlag === 'Y' ? 'Send Email' : 'Send To Print'}}"
       >
        {{(paperless$ | async)?.paperlessFlag === 'Y' ? 'SEND EMAIL' : 'SEND TO PRINT'}}
       </button>
@@ -51,7 +51,7 @@
           [primary]="true"
           look="outline"
           (click)="onClosePrintPreviewClicked()"
-          aria-label="cancel print preview"
+          aria-label="Close"
         >
         CLOSE 
         </button>
@@ -59,7 +59,7 @@
           kendoButton
           [primary]="true"
           (click)="onOpenPrintClicked()"
-          aria-label="send to print"
+          attr.aria-label="{{paperlessFlag === 'Y' ? 'Send Email' : 'Send To Print'}}"
         >
         {{paperlessFlag === 'Y' ? 'SEND EMAIL' : 'SEND TO PRINT'}}
         </button>
@@ -94,7 +94,7 @@
         >
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="print letter"   (click)="onClosePrintClicked()">
+        <button kendoButton [primary]="true" attr.aria-label="{{paperlessFlag === 'Y' ? 'Email' : 'Print'}}"   (click)="onClosePrintClicked()">
           {{paperlessFlag === 'Y' ? 'EMAIL' : 'PRINT'}}
         </button>
       </div>

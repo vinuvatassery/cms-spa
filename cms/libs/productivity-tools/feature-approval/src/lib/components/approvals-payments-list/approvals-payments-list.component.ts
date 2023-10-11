@@ -111,7 +111,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     creationTime: 'Date Approval Requested'
   };
 
-  dropDownColumns : { columnCode: string, columnDesc: string }[] = [
+  dropDownColumnsLevel1 : { columnCode: string, columnDesc: string }[] = [
     {
       columnCode: 'ALL',
       columnDesc: 'All Columns',
@@ -123,6 +123,25 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     {
       columnCode: 'DateApprovalRequested',
       columnDesc: 'Date Approval Requested',
+    },
+  ];
+
+  dropDownColumnsLevel2 : { columnCode: string, columnDesc: string }[] = [
+    {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
+    {
+      columnCode: 'BatchName',
+      columnDesc: 'Batch #',
+    },
+    {
+      columnCode: 'DateApprovalRequested',
+      columnDesc: 'Date Approval Requested',
+    },
+    {
+      columnCode: 'FirstApprovalBy',
+      columnDesc: 'First Approval By',
     },
   ];
 
@@ -398,6 +417,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       }
    }
     this.selectedColumn = 'ALL';
+    this.searchValue = '';
     this.loadApprovalPaymentsListGrid();
     this.mainListDataHandle();
     this.gridDataHandle();

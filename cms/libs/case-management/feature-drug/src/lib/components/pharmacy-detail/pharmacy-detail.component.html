@@ -70,7 +70,7 @@
         [primary]="true"
         look="flat"
         (click)="onOpenNewPharmacyClicked()"
-        aria-label="add new pharmacy"
+        aria-label="Add New"
       >
         Add New
       </button>
@@ -78,7 +78,7 @@
         kendoButton
         class="k-danger-link"
         *ngIf="isEditPharmacy"
-        aria-label="remove pharmacy"
+        aria-label="Remove"
         (click)="removePharmacy()"
       >
         Remove
@@ -89,14 +89,14 @@
         [primary]="true"
         look="outline"
         (click)="onClosePharmacyClicked()"
-        aria-label="cancel adding pharmacy"
+        aria-label="Cancel"
       >
         Cancel
       </button>
       <button 
       kendoButton 
       [primary]="true" 
-      aria-label="add or update pharmacy"
+      attr.aria-label="{{ isEditPharmacy ? 'Update' : 'Add' }}"
       (click)="addOrEditPharmacy()" [disabled]="btnDisabled"
       >
         {{ isEditPharmacy ? 'Update' : 'Add' }}
@@ -120,7 +120,7 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
         <div class="justify-content-end">    
-            <button kendoButton [primary]="true"  aria-label="add new pharmacy"
+            <button kendoButton [primary]="true"  aria-label="Ok"
                 (click)="onCloseNewPharmacyClicked()">
                 Ok
             </button>

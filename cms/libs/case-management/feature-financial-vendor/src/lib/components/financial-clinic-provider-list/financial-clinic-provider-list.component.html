@@ -58,7 +58,7 @@
       <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
       <span class="sort-items">{{columnChangeDesc}}</span>
       <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
-      <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="resetProviderGrid()">
+      <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="resetProviderGrid()">
             <a>Set to Default</a>
       </button>
 </div>
@@ -129,7 +129,7 @@
                 kendoPopoverAnchor
                 [popover]="onUserProfileDetailsHovered"
                 showOn="hover"
-                aria-label="profile avathar"
+                [attr.aria-label]="dataItem.creatorId"
               >
               <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
               </button>
@@ -203,7 +203,7 @@
         </ng-template>
  </kendo-grid>     
       <div class="flex-col mt-1">
-            <button kendoButton [primary]="true" icon="add" aria-label="add address"
+            <button kendoButton [primary]="true" icon="add" aria-label="Provider"
                   (click)="clickOpenAddEditProvidersDetails()">
                   Provider
             </button>
