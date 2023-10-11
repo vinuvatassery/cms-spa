@@ -14,7 +14,7 @@ export class PendingApprovalPaymentService {
   getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string, level: number) {
     const paymentApprovalGridSetupDto = {
       SortType: gridSetupData.gridDataRefinerValue.sortType,
-      Sorting: gridSetupData.gridDataRefinerValue.sorting,
+      Sorting: gridSetupData.gridDataRefinerValue.sortColumn,
       SkipCount: gridSetupData.gridDataRefinerValue.skipCount,
       MaxResultCount: gridSetupData.gridDataRefinerValue.pagesize,
       ColumnName : gridSetupData.gridDataRefinerValue.columnName,
@@ -27,7 +27,7 @@ export class PendingApprovalPaymentService {
   getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string, level: number) {
     const paymentApprovalGridSetupDto = {
       SortType: gridSetupData.gridDataRefinerValue.sortType,
-      Sorting: gridSetupData.gridDataRefinerValue.sort,
+      Sorting: gridSetupData.gridDataRefinerValue.sortColumn,
       SkipCount: gridSetupData.gridDataRefinerValue.skipCount,
       MaxResultCount: gridSetupData.gridDataRefinerValue.pagesize,
       Filter: JSON.stringify(gridSetupData.gridDataRefinerValue.filter),
