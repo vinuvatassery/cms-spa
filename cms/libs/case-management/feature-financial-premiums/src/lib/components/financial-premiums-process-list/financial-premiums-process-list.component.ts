@@ -442,22 +442,37 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     this.gridFilter = filter;
   }
 
-  onChange(event: any) {
+  onChange(data: any) {
     this.defaultGridState();
-    this.columnName = this.state.columnName = this.columnDroplist[this.selectedColumn];
-    this.sortColumn = this.columns[this.selectedColumn];
-    this.filter = {logic:'and',filters:[{
-      "filters": [
-          {
-              "field": this.columnDroplist[this.selectedColumn] ?? "clientFullName",
-              "operator": "startswith",
-              "value": event
-          }
+    let operator = 'startswith';
+
+    if (
+      this.selectedColumn === 'clientId' ||
+      this.selectedColumn === 'serviceCount' ||
+      this.selectedColumn === 'annualTotal' ||
+      this.selectedColumn === 'amountDue' ||
+      this.selectedColumn === 'balanceAmount'
+    ) {
+      operator = 'eq';
+    }
+
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedColumn ?? 'invoiceNbr',
+              operator: operator,
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
       ],
-      "logic": "and"
-  }]}
-  let stateData = this.state
-  stateData.filter = this.filter
+    };
+    const stateData = this.state;
+    stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
 
