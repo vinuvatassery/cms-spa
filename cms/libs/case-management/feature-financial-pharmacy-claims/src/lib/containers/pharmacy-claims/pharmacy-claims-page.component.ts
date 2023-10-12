@@ -50,26 +50,6 @@ export class PharmacyClaimsPageComponent {
     this.financialPharmacyClaimsFacade.loadPharmacyClaimsAllPaymentsListGrid();
   }
 
-  // exportClaimsProcessGridData(){
-  //   const data = this.dataExportParameters
-  //   if(data){
-  //   const  filter = JSON.stringify(data?.filter);
-
-  //     const vendorPageAndSortedRequest =
-  //     {
-  //       SortType : data?.sortType,
-  //       Sorting : data?.sortColumn,
-  //       SkipCount : data?.skipcount,
-  //       MaxResultCount : data?.maxResultCount,
-  //       Filter : filter
-  //     }
-  //    let fileName = (this.claimsType[0].toUpperCase() + this.claimsType.substr(1).toLowerCase()) +' Claims'
-
-  //     this.documentFacade.getExportFile(vendorPageAndSortedRequest,`claims/${this.claimsType}` , fileName)
-  //   }
-  // }
-
   exportPharmacyClaimProcess(){
-    
   }
 }

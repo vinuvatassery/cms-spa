@@ -68,7 +68,9 @@
     [filter]="state.filter"
     [data]="pharmacyClaimsProcessGridLists$ | async"
     (dataStateChange)="dataStateChange($event)" 
-    (filterChange)="filterChange($event)">
+    (filterChange)="filterChange($event)"
+    (columnReorder)="onColumnReorder($event)"
+    (columnVisibilityChange)="columnChange($event)">
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"></kendo-grid-checkbox-column>
     <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="250">

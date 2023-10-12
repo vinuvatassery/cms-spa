@@ -5,7 +5,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
   Output,
@@ -15,7 +14,7 @@ import {
 import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -26,7 +25,7 @@ import { Subject, debounceTime } from 'rxjs';
   templateUrl: './pharmacy-claims-process-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy, OnChanges {
+export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
   /* Input Properties */
   @Input() pageSizes: any;
@@ -60,14 +59,13 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy, On
   isProcessBatchClosed = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isProcessGridExpand = true;
-  isPharmacyClaimsProcessGridLoaderShow = false;
 
   public state!: State;
   sortColumnDesc = 'Entry Date';
   sortDir = 'Descending';
   columnsReordered = false;
   filteredByColumnDesc = '';
-  columnChangeDesc = '';
+  columnChangeDesc = 'Default Columns';
   isColumnsReordered = false;
   selectedSearchColumn = 'ALL';
   searchText = '';
@@ -182,8 +180,6 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy, On
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
-    this.loadPharmacyClaimsProcessListGrid();
   }
 
   ngOnDestroy(): void {
@@ -191,32 +187,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy, On
   }
 
   loadPharmacyClaimsProcessListGrid() {
-    this.isPharmacyClaimsProcessGridLoaderShow = true;
     const gridDataRefinerValue = new GridFilterParam(this.state?.skip ?? 0, this.state?.take ?? 0, this.sortValue, this.sortType, JSON.stringify(this.filter));
     this.loadPharmacyClaimsProcessListEvent.emit(gridDataRefinerValue);
-  }
-
-  onChange(data: any) {
-    this.defaultGridState();
-
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
-    const stateData = this.state;
-    stateData.filter = this.filterData;
-    this.dataStateChange(stateData);
   }
 
   defaultGridState() {
@@ -230,6 +202,11 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy, On
 
   onColumnReorder($event: any) {
     this.columnsReordered = true;
+  }
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 
   dataStateChange(stateData: any): void {
@@ -314,7 +291,6 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy, On
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
-    this.loadPharmacyClaimsProcessListGrid();
   }
 
   pageSelectionChange(data: any) {
