@@ -448,10 +448,10 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
 
     if (
       this.selectedColumn === 'clientId' ||
-      this.selectedColumn === 'serviceCount' ||
-      this.selectedColumn === 'annualTotal' ||
-      this.selectedColumn === 'amountDue' ||
-      this.selectedColumn === 'balanceAmount'
+      this.selectedColumn === 'premiumAmount' ||
+      this.selectedColumn === 'policyId' ||
+      this.selectedColumn === 'groupId' ||
+      this.selectedColumn === 'paymentId'
     ) {
       operator = 'eq';
     }
