@@ -88,18 +88,18 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   public selectedProcessClaims: any[] = [];
 
   columns: any = {
-    invoiceNbr:"Invoice ID",
-    vendorFullName:"Provider Name",
-    tin:"Tax ID",
-    paymentMethodCode:"Payment Method",
     clientFullName:"Client Name",
     insuranceName:"Name on Primary Insurance Card",
     clientId:"Client ID",
-    serviceCount:"Service Count",
-    annualTotal:"Client Annual Total",
-    balanceAmount:"Client Balance",
-    amountDue:"Total Due",
-    paymentStatusCode:"Payment Status"
+    insuranceVendor:"Insurance Vendor",
+    premiumAmount:"Premium Amount",
+    paymentMethodCode:"Payment Method",
+    planName:"Plan Name",
+    insuranceType:"Insurance Type",
+    policyId:"Policy Id",
+    groupId:"Group ID",
+    paymentId:"Payment ID",
+    paymentStatus:"Payment Status"
   };
   dropDowncolumns : any = [
     {
@@ -117,10 +117,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     {
       columnCode: 'insuranceVendor',
       columnDesc: 'Insurance Vendor',
-    },
-    {
-      columnCode: 'coverageStartDate',
-      columnDesc: 'Coverage Dates',
     },
     {
       columnCode: 'premiumAmount',
@@ -155,10 +151,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     {
       columnCode: 'paymentStatus',
       columnDesc: 'Payment Status',
-    },
-    {
-      columnCode: 'entryDate',
-      columnDesc: 'Entry Date',
     },
   ];
   columnDroplist : any = {
