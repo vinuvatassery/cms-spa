@@ -316,8 +316,9 @@
                         <cms-financial-premiums-batches-reconcile-payments-breakout
                         [pageSizes]="pageSizes" [sortValue]="sortValue" [premiumsType]="premiumsType"
                         [sortType]="sortType" [sort]="sort"  [batchId]="batchId" [entityId]="entityId"    
-                        [reconcileBreakoutList$]="reconcileBreakoutList$"
-                        (loadReconcilePaymentBreakOutGridEvent)="loadReconcilePaymentBreakOutGridList($event)"></cms-financial-premiums-batches-reconcile-payments-breakout>
+                        [reconcileBreakoutList$]="reconcileBreakoutList$" [paymentRequestId]="paymentRequestId"
+                        (loadReconcilePaymentBreakOutGridEvent)="loadReconcilePaymentBreakOutGridList($event)"
+                        (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-batches-reconcile-payments-breakout>
                   </div>
             </div>
             <div class="text-right flex-gap">
