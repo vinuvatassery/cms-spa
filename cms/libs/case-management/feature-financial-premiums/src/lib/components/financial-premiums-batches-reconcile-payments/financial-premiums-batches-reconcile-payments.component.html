@@ -304,9 +304,7 @@
                               <span class="ml-2">$&nbsp;{{0 | kendoNumber: 'n2'}}</span>
                         </ng-template>
                   </div>
-                  <div><span>{{ premiumReconcileCount }} payment(s)
-                              to
-                              reconcile</span>
+                  <div><span>{{ premiumReconcileCount }} advice letter(s) to be previewed</span>
                         <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="Close">
                               <span class="material-icons" aria-label="close" aria-hidden="true"
                                     (click)="toggleBreakoutPanel()">close</span>
@@ -334,7 +332,7 @@
 
 
 <ng-template #PrintAuthorizationDialog>
-      <kendo-dialog-titlebar  class="text-normal" (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Authorization(s)</kendo-dialog-titlebar>
+      <kendo-dialog-titlebar  class="text-normal" (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Advice Letter(s)</kendo-dialog-titlebar>
     <cms-financial-premiums-print-authorization
       [printOption]="onlyPrintAdviceLetter"
       [isSaveClicked]="isSaveClicked"

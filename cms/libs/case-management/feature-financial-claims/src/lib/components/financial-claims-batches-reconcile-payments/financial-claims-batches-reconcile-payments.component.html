@@ -306,9 +306,7 @@
                               <span class="ml-2">$&nbsp;{{0 | kendoNumber: 'n2'}}</span>
                         </ng-template>
                   </div>
-                  <div><span *ngIf="!onlyPrintAdviceLetter">{{ claimReconcileCount }} payment(s)
-                              to
-                              reconcile</span>
+                  <div><span *ngIf="!onlyPrintAdviceLetter">{{ claimReconcileCount }} advice letter(s) to be previewed</span>
                         <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="Close" title="Close">
                               <span class="material-icons" aria-label="close" aria-hidden="true"
                                     (click)="toggleBreakoutPanel()">close</span>
