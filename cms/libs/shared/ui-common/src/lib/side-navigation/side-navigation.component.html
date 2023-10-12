@@ -41,7 +41,7 @@
                 (click)="onMenuClick(sprSubMenu)">
                 <span [attr.aria-label]="sprSubMenu.name">
                   {{ sprSubMenu.name }}
-                  <span *ngIf="sprSubMenu?.hasBadge" class="sidebar-menu_label-badge"> {{ getBadge(sprSubMenu.code)}}
+                  <span *ngIf="sprSubMenu?.hasBadge" class="tab-batch-notify"> {{ getBadge(sprSubMenu.code)}}
                   </span>
                 </span>
               </a>
@@ -54,7 +54,7 @@
           <a class="submenu_list_click_items" [attr.aria-label]="subMenu.name" (click)="onMenuClick(subMenu)">
             <span [attr.aria-label]="subMenu.name">
               {{ subMenu.name }}
-              <span *ngIf="subMenu?.hasBadge" class="sidebar-menu_label-badge"> {{ getBadge(subMenu.code)}} </span>
+              <span *ngIf="subMenu?.hasBadge" class="tab-batch-notify"> {{ getBadge(subMenu.code)}} </span>
             </span>
           </a>
         </div>
