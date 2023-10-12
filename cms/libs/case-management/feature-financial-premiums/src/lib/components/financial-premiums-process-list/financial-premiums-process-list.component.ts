@@ -75,7 +75,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   @Output() updatePremiumEvent = new EventEmitter<any>();
   @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
-  public selectedProcessClaims: any[] = [];
   public state!: any;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -86,10 +85,74 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   filter!: any;
   selectedColumn!: any;
   columnName: string = '';
+  public selectedProcessClaims: any[] = [];
+
   columns: any = {
-    clientFirstName:"Client Name",
-    clientId:"Client Id",
+    clientFullName:"Client Name",
+    insuranceName:"Name on Primary Insurance Card",
+    clientId:"Client ID",
+    insuranceVendor:"Insurance Vendor",
+    premiumAmount:"Premium Amount",
+    paymentMethodCode:"Payment Method",
+    planName:"Plan Name",
+    insuranceType:"Insurance Type",
+    policyId:"Policy Id",
+    groupId:"Group ID",
+    paymentId:"Payment ID",
+    paymentStatus:"Payment Status"
   };
+  dropDowncolumns : any = [
+    {
+      columnCode: 'clientFullName',
+      columnDesc: 'Client Name',
+    },
+    {
+      columnCode: 'insuranceName',
+      columnDesc: 'Name on Primary Insurance Card',
+    },
+    {
+      columnCode: 'clientId',
+      columnDesc: 'Client ID',
+    },
+    {
+      columnCode: 'insuranceVendor',
+      columnDesc: 'Insurance Vendor',
+    },
+    {
+      columnCode: 'premiumAmount',
+      columnDesc: 'Premium Amount',
+    },
+   
+ 
+    {
+      columnCode: 'planName',
+      columnDesc: 'Plan Name',
+    },
+    {
+      columnCode: 'insuranceType',
+      columnDesc: 'Insurance Type',
+    },
+    {
+      columnCode: 'paymentMethod',
+      columnDesc: 'Payment Method',
+    },
+    {
+      columnCode: 'policyId',
+      columnDesc: 'Policy ID',
+    },
+    {
+      columnCode: 'groupId',
+      columnDesc: 'Group ID',
+    },
+    {
+      columnCode: 'paymentId',
+      columnDesc: 'Payment ID',
+    },
+    {
+      columnCode: 'paymentStatus',
+      columnDesc: 'Payment Status',
+    },
+  ];
   columnDroplist : any = {
     ALL: "ALL",
     ClientFirstName:"clientFirstName",
@@ -371,22 +434,37 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     this.gridFilter = filter;
   }
 
-  onChange(event: any) {
+  onChange(data: any) {
     this.defaultGridState();
-    this.columnName = this.state.columnName = this.columnDroplist[this.selectedColumn];
-    this.sortColumn = this.columns[this.selectedColumn];
-    this.filter = {logic:'and',filters:[{
-      "filters": [
-          {
-              "field": this.columnDroplist[this.selectedColumn] ?? "clientFullName",
-              "operator": "startswith",
-              "value": event
-          }
+    let operator = 'startswith';
+
+    if (
+      this.selectedColumn === 'clientId' ||
+      this.selectedColumn === 'premiumAmount' ||
+      this.selectedColumn === 'policyId' ||
+      this.selectedColumn === 'groupId' ||
+      this.selectedColumn === 'paymentId'
+    ) {
+      operator = 'eq';
+    }
+
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedColumn ?? 'clientFullName',
+              operator: operator,
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
       ],
-      "logic": "and"
-  }]}
-  let stateData = this.state
-  stateData.filter = this.filter
+    };
+    const stateData = this.state;
+    stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
 
