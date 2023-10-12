@@ -18,7 +18,7 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
   @Input() caseEligibilityId: any;
   @Input() claimsType: any;
   @Output() saveProviderEventClicked = new EventEmitter<any>();
-  insuranceVendorsSearchResult$ = this.financialClaimsFacade.pharmacies$;
+  insuranceVendorsSearchResult$ = this.financialVendorFacade.insuranceVendors$;
   public isaddNewInsuranceProviderOpen =false;
   InsurancePlanTypes: typeof HealthInsurancePlan = HealthInsurancePlan;
   premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
@@ -31,8 +31,6 @@ clientName: any;
 isRecentClaimShow = false;
 providerTin: any;
 isShowInsuranceProvider: boolean = false;
-isShowMedicalProvider: boolean = false;
-isShowDentalProvider: boolean = false;
 medicalProviderForm: FormGroup;
 ddlStates=this.contactFacade.ddlStates$;
 clinicVendorList= this.financialVendorFacade.clinicVendorList$;;
@@ -120,7 +118,7 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType ==  FinancialVendorTypeCode.MedicalProviders? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+    this.financialVendorFacade.searchInsurnaceVendor(searchText);
   }
   onProviderValueChange($event: any) {
     
@@ -137,10 +135,7 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
 
   ngOnInit(): void {  
     
-    if(this.healthInsuranceForm.value.insuranceVendorAddressId!=null)
-    {
-      this.searchMedicalProvider(this.healthInsuranceForm.value.insuranceVendorAddressId);
-    }
+  
     this.contactFacade.loadDdlStates();
   
     if(this.ddlInsuranceType==HealthInsurancePlan.DentalInsurance)
@@ -185,10 +180,8 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
 
   public addNewInsuranceProviderOpen(): void {
     
-    this.buildVendorForm();
-    this.isShowDentalProvider=this.claimsType==FinancialVendorTypeCode.DentalProviders?true:false;   
-    this.isShowMedicalProvider=this.claimsType==FinancialVendorTypeCode.MedicalProviders?true:false;   
-    this.isShowInsuranceProvider=this.claimsType==FinancialVendorTypeCode.InsuranceVendors?true:false;   
+    this.buildVendorForm();  
+    this.isShowInsuranceProvider=true;   
   }
 
   searchClinicVendorClicked(data:any)
@@ -198,8 +191,6 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
     
   }
   closeVendorDetailModal(){
-    this.isShowMedicalProvider = false;
-    this.isShowDentalProvider = false;
     this.isShowInsuranceProvider =false;
   }
 }
