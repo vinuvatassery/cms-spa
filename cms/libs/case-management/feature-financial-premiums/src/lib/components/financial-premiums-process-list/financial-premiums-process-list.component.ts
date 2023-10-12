@@ -75,7 +75,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   @Output() updatePremiumEvent = new EventEmitter<any>();
   @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
-  public selectedProcessClaims: any[] = [];
   public state!: any;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -86,10 +85,72 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   filter!: any;
   selectedColumn!: any;
   columnName: string = '';
+  public selectedProcessClaims: any[] = [];
+
   columns: any = {
-    clientFirstName:"Client Name",
-    clientId:"Client Id",
+    invoiceNbr:"Invoice ID",
+    vendorFullName:"Provider Name",
+    tin:"Tax ID",
+    paymentMethodCode:"Payment Method",
+    clientFullName:"Client Name",
+    insuranceName:"Name on Primary Insurance Card",
+    clientId:"Client ID",
+    serviceCount:"Service Count",
+    annualTotal:"Client Annual Total",
+    balanceAmount:"Client Balance",
+    amountDue:"Total Due",
+    paymentStatusCode:"Payment Status"
   };
+  dropDowncolumns : any = [
+    {
+      columnCode: 'invoiceNbr',
+      columnDesc: 'Invoice ID',
+    },
+    {
+      columnCode: 'vendorFullName',
+      columnDesc: 'Provider Name',
+    },
+    {
+      columnCode: 'tin',
+      columnDesc: 'Tax ID',
+    },
+    {
+      columnCode: 'paymentMethodCode',
+      columnDesc: 'Payment Method',
+    },
+    {
+      columnCode: 'clientFullName',
+      columnDesc: 'Client Name',
+    },
+    {
+      columnCode: 'insuranceName',
+      columnDesc: 'Name on Primary Insurance Card',
+    },
+    {
+      columnCode: 'clientId',
+      columnDesc: 'Client ID',
+    },
+    {
+      columnCode: 'serviceCount',
+      columnDesc: 'Service Count',
+    },
+    {
+      columnCode: 'annualTotal',
+      columnDesc: 'Client Annual Total',
+    },
+    {
+      columnCode: 'balanceAmount',
+      columnDesc: 'Client Balance',
+    },
+    {
+      columnCode: 'amountDue',
+      columnDesc: 'Total Due',
+    },
+    {
+      columnCode: 'paymentStatusCode',
+      columnDesc: 'Payment Status',
+    },
+  ];
   columnDroplist : any = {
     ALL: "ALL",
     ClientFirstName:"clientFirstName",
