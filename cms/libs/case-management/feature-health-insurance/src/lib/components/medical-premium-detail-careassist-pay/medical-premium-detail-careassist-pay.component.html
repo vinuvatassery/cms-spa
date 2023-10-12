@@ -26,7 +26,63 @@
                 </fieldset>
             </div>
         </div>
-        <div class="flex-row mt-3" *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
+        <div  *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
+            <kendo-floatinglabel text="Insurance Vendor Name">
+    <kendo-multicolumncombobox textField="providerFullName"
+        [fillMode]="formUiStyle.dropDownFillMode"
+        placeholder="Insurance Vendor Name"
+        [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
+        (filterChange)="searchMedicalProvider($event)"
+        [data]="insuranceVendorsSearchResult$ | async" 
+        (valueChange)="onProviderValueChange($event)"
+        formControlName="insuranceVendorAddressId"
+        [valuePrimitive]="true"
+        valueField="vendorAddressId"
+        >
+        <button kendoButton fillMode="clear" icon="image"></button>
+
+        <kendo-combobox-column>
+            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                <span>Name:{{ dataItem.vendorName }}</span>
+            </ng-template>
+        </kendo-combobox-column>
+
+        <kendo-combobox-column>
+            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                <span class="text-muted"><em> TIN:</em> {{ dataItem.tin }}</span>
+            </ng-template>
+        </kendo-combobox-column>
+
+        <kendo-combobox-column>
+            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                <span class="text-muted"><em> Mail Code:</em> {{ dataItem.mailCode }}</span>
+            </ng-template>
+        </kendo-combobox-column>
+        <kendo-combobox-column>
+            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                <span class="text-muted"><em> Address:{{ dataItem.vendorAddress}}</em> </span>
+            </ng-template>
+        </kendo-combobox-column>
+       
+    </kendo-multicolumncombobox>
+     <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceVendorAddressId'].valid && isViewContentEditable==false"
+    class="d-flex align-items-center">
+   
+   {{providerName}} Vendor is required
+</kendo-formerror>
+    </kendo-floatinglabel>
+    <span class="fontsize_twel">Don't see the vendor you're looking for?</span>
+    <button
+      kendoButton
+      class="card-link-button ml-1 no-ul fontsize_twel"
+      [disabled]="isViewContentEditable" 
+      aria-label="add new insurance carrier"
+      (click)="addNewInsuranceProviderOpen()"
+    > 
+      ADD NEW
+    </button>
+       </div>
+        <div class="flex-row mt-3" *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'|| healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == null">
             <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Date Currently Paid Through">
                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
@@ -103,3 +159,15 @@
         </div>
     </div>
 </div>
+
+<kendo-dialog kendoRippleContainer *ngIf="isShowInsuranceProvider" (close)="closeVendorDetailModal()"
+class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Insurance Vendor" kendoTooltip>
+<cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.InsuranceVendors" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"      [ddlStates$]="ddlStates"
+[clinicVendorList$]="clinicVendorList"
+[clinicVendorLoader$]="clinicVendorLoader"
+(searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
+</kendo-dialog>
+
+
+
+

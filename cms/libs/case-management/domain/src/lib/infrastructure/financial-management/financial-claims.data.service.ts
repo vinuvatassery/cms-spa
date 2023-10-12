@@ -336,6 +336,7 @@ export class FinancialClaimsDataService {
   }
 
   searchPharmacies(searchText: string, typeCode: string) {
+    
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
       return this.http.get<Pharmacy[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/SearchText=${searchText}`
@@ -475,5 +476,16 @@ export class FinancialClaimsDataService {
     }
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/duplicate-payment-check?serviceStartDate=${startDtae}&serviceEndDate=${endDate}&vendorId=${vendorId}&amount=${totalAmountDue}`
     );
+  }
+  searchProvidorsById(VendorAddressId: string, typeCode: string) {    
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
+      return this.http.get<Pharmacy[]>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/providers/by-vendor-address/${VendorAddressId}`
+      );
+    } else {
+      return this.http.get<Pharmacy[]>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/dental/providers/by-vendor-address/${VendorAddressId}`
+      );
+    }
   }
 }

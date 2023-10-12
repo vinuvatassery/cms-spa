@@ -134,7 +134,7 @@
                                         Coverage Date is required
                                     </kendo-formerror>
                                     <kendo-formerror *ngIf="dataItem.coverageDatesExist">
-                                        Coverage Date already exist
+                                        Coverage Date already exists
                                     </kendo-formerror>
                                 </ng-template>
                             </kendo-grid-column>
@@ -183,7 +183,7 @@
                                     <kendo-textarea 
                                     *ngIf="dataItem.makeExceptionFlag"
                                     aria-label="Exception Reason" 
-                                    [maxlength]="100" 
+                                    [maxlength]="160" 
                                     [rows]="1"
                                     [fillMode]="formUiStyle.inputFillMode"
                                     resizable="none"
@@ -198,7 +198,7 @@
                                     Exception Reason is required
                                 </kendo-formerror>
                                 <kendo-formerror class="align-items-center" *ngIf="dataItem.premiumExistException"> 
-                                        <span class="material-icons mr-1" aria-hidden="false">info</span> Premium Already Exist!                                                                             
+                                        <span class="material-icons mr-1" aria-hidden="false">info</span> Premium Already Exists!                                                                             
                                         <a kendoButton class="ml-1 card-link-button" (click)="onMakeExceptionClick(dataItem)"><u>{{dataItem.exceptionText}}</u></a>
                                 </kendo-formerror>
                                 </ng-template>
@@ -212,7 +212,7 @@
                               </kendo-grid-column>
                         </kendo-grid>
                         <br/>
-                            <button kendoButton [primary]="true" icon="add"  aria-label="add pharmacy" (click)="addCoverage(dataItem)">
+                            <button kendoButton [primary]="true" icon="add"  aria-label="Premium" (click)="addCoverage(dataItem)">
                             Premium
                             </button>
                           </ng-template>
@@ -239,7 +239,7 @@
             kendoButton
             [primary]="true"
             look="outline"
-            aria-label="cancel" 
+            aria-label="Cancel" 
             (click)="closeAddPremiumClicked()"
           >
             Cancel

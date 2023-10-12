@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ClientInsurancePlans, InsurancePremiumCoverage, FinancialClaimsFacade, InsurancePremium, PolicyPremiumCoverage, StatusFlag } from '@cms/case-management/domain';
+import { ClientInsurancePlans, InsurancePremiumCoverage, FinancialClaimsFacade, InsurancePremium, PolicyPremiumCoverage } from '@cms/case-management/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { RowArgs } from '@progress/kendo-angular-grid';
@@ -117,7 +118,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
   exceptionReasonCounterChange(coverage: any, ev: string): void {
     const charactersCount = ev.length;
     coverage.exceptionReasonRequired = charactersCount <= 0;
-    coverage.exceptionReasonCount = `${charactersCount}/100`;
+    coverage.exceptionReasonCount = `${charactersCount}/160`;
   }
 
   premiumAmountValuesChanges(coverage: InsurancePremiumCoverage, value: number) {
@@ -182,7 +183,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
       comment: '',
       commentCount: '0/100',
       exceptionReason: '',
-      exceptionReasonCount: '0/100'
+      exceptionReasonCount: '0/160'
     };
 
     plan.coverages.push(newCoverage);

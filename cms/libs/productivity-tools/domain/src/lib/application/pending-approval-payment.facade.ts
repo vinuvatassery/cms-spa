@@ -2,16 +2,25 @@ import { Injectable } from '@angular/core';
 import { PendingApprovalPaymentService } from '../infrastructure/pending-approval-payment.data.service';
 import { Subject } from 'rxjs';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { SortDescriptor } from '@progress/kendo-data-query';
 import { ApprovalUserStatusCode } from '../enums/approval-user-status-code.enum';
 
 @Injectable({ providedIn: 'root' })
 export class PendingApprovalPaymentFacade {
+
+  public sortValueApprovalPaymentsApproval = 'batchName';
+  public sortApprovalPaymentsList: SortDescriptor[] = [{
+    field: this.sortValueApprovalPaymentsApproval,
+  }];
+
   /** Private properties **/
   private pendingApprovalGridSubject = new Subject<any>();
   private pendingApprovalMainListSubject = new Subject<any>();
   private pendingApprovalSubmittedSummarySubject = new Subject<any>();
   private pendingApprovalBatchDetailPaymentsCountSubject = new Subject<any>();
   private pendingApprovalBatchDetailPaymentsGridSubject = new Subject<any>();
+  private pendingApprovalSubmitSubject = new Subject<any>();
+  private pendingApprovalPaymentsCountSubject = new Subject<any>();
 
   /** Public properties **/
   pendingApprovalGrid$ = this.pendingApprovalGridSubject.asObservable();
@@ -22,6 +31,8 @@ export class PendingApprovalPaymentFacade {
   pendingApprovalSubmittedSummary$ = this.pendingApprovalSubmittedSummarySubject.asObservable();
   pendingApprovalBatchDetailPaymentsCount$ = this.pendingApprovalBatchDetailPaymentsCountSubject.asObservable();
   pendingApprovalBatchDetailPaymentsGrid$ = this.pendingApprovalBatchDetailPaymentsGridSubject.asObservable();
+  pendingApprovalSubmit$ = this.pendingApprovalSubmitSubject.asObservable();
+  pendingApprovalPaymentsCount$ = this.pendingApprovalPaymentsCountSubject.asObservable();
 
   constructor(
     private readonly PendingApprovalPaymentService: PendingApprovalPaymentService,
@@ -29,30 +40,30 @@ export class PendingApprovalPaymentFacade {
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly loaderService: LoaderService,
   ) {
-    
+
   }
-  
+
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-  {        
+  {
       if(type == SnackBarNotificationType.ERROR)
       {
-        const err= subtitle;    
+        const err= subtitle;
         this.loggingService.logException(err)
-      }  
+      }
         this.notificationSnackbarService.manageSnackBar(type,subtitle)
-        this.hideLoader();   
+        this.hideLoader();
   }
 
   showLoader()
   {
     this.loaderService.show();
   }
-    
+
   hideLoader()
   {
     this.loaderService.hide();
   }
-  
+
   getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string, level: number) {
 
     this.PendingApprovalPaymentService.getPendingApprovalPaymentGrid(gridSetupData ,serviceSubType, level).subscribe(
@@ -75,7 +86,7 @@ export class PendingApprovalPaymentFacade {
             this.approverCount = this.sendBackCount = 0
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
     );
@@ -92,20 +103,23 @@ export class PendingApprovalPaymentFacade {
           this.pendingApprovalMainListSubject.next(gridView);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
     );
   }
 
   loadSubmittedSummary(paymentRequestBatchIds: string[]) {
+    this.showLoader();
     this.PendingApprovalPaymentService.loadSubmittedSummary(paymentRequestBatchIds).subscribe(
       {
         next: (paymentsSummaryResponseDto: any) => {
+            this.hideLoader();
             this.pendingApprovalSubmittedSummarySubject.next(paymentsSummaryResponseDto);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
     );
@@ -123,7 +137,28 @@ export class PendingApprovalPaymentFacade {
             this.pendingApprovalBatchDetailPaymentsGridSubject.next(gridView);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        },
+      }
+    );
+  }
+
+  submitForApproval(data: any) {
+    this.showLoader();
+    this.PendingApprovalPaymentService.submitForApproval(data).subscribe(
+      {
+        next: (response: any) => {
+          this.hideLoader();
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            response.message
+          );
+          this.pendingApprovalSubmitSubject.next(response);
+          this.pendingApprovalPaymentsCountSubject.next(response);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
     );

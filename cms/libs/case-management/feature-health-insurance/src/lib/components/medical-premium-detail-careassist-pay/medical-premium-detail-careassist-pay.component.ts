@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { HealthInsurancePlan } from '@cms/case-management/domain';
+import {ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, FinancialVendorTypeCode, HealthInsurancePlan, ServiceSubTypeCode} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -15,20 +16,136 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
   @Input() ddlInsuranceType: string = '';
   @Input() clientId: any;
   @Input() caseEligibilityId: any;
-
+  @Input() claimsType: any;
+  @Output() saveProviderEventClicked = new EventEmitter<any>();
+  insuranceVendorsSearchResult$ = this.financialVendorFacade.insuranceVendors$;
+  public isaddNewInsuranceProviderOpen =false;
   InsurancePlanTypes: typeof HealthInsurancePlan = HealthInsurancePlan;
   premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   specialCharAdded: boolean = false;
+selectedMedicalProvider: any;
+vendorId: any;
+vendorName: any;
+clientName: any;
+isRecentClaimShow = false;
+providerTin: any;
+isShowInsuranceProvider: boolean = false;
+medicalProviderForm: FormGroup;
+ddlStates=this.contactFacade.ddlStates$;
+clinicVendorList= this.financialVendorFacade.clinicVendorList$;;
+clinicVendorLoader= this.financialVendorFacade.clinicVendorLoader$;;
+public get vendorTypes(): typeof FinancialVendorTypeCode {
+  return FinancialVendorTypeCode;
+}
+ providerName = 'Medical';
+  buildVendorForm() {
+   
+    this.medicalProviderForm.reset();
+    this.medicalProviderForm = this.formBuilder.group({
+      firstName:[''],
+      lastName:[],
+      providerName: [''],
+      tinNumber: [''],
+      npiNbr: [''],
+      paymentMethod: [''],
+      specialHandling: [''],
+      mailCode: [''],
+      nameOnCheck: [''],
+      nameOnEnvolop: [''],
+      addressLine1: [''],
+      addressLine2: [''],
+      city: [''],
+      state: [''],
+      zip: [''],
+      physicalAddressFlag: [''],
+      isPreferedPharmacy: [''],
+      paymentRunDate:[''],
+      isAcceptCombinedPayment:[''],
+      isAcceptReports: [''],
+      newAddContactForm: this.formBuilder.array([
+      ]),
+    });
+  }
   constructor(
     public readonly lovFacade: LovFacade,
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder,
+    private financialVendorFacade: FinancialVendorFacade,
+    private financialClaimsFacade: FinancialClaimsFacade,
+    private readonly contactFacade: ContactFacade,
+    
+   
   ) {
     this.healthInsuranceForm = this.formBuilder.group({});
+    this.medicalProviderForm = this.formBuilder.group({});
+
   }
 
-  ngOnInit(): void {
+    saveVendorProfile(vendorProfile: any){
+      
+      this.financialVendorFacade.showLoader();
+      if(vendorProfile.vendorTypeCode==FinancialVendorTypeCode.Manufacturers){
+        this.financialVendorFacade.updateManufacturerProfile(vendorProfile).subscribe({
+          next:(response:any)=>{
+            
+            this.financialVendorFacade.hideLoader();
+           this.closeVendorDetailModal();
+            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Successfully Added");
+          },
+          error:(err:any)=>{
+            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+          }
+        });
+      }
+      else{
+      this.closeVendorDetailModal();
+        this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
+          next:(response:any)=>{
+            
+            this.financialVendorFacade.hideLoader();
+           
+            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Successfully Added");
+          },
+          error:(err:any)=>{
+            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+          }
+        });
+      }
+    }
+ 
+  searchMedicalProvider(searchText: any) {
+    
+    if (!searchText || searchText.length == 0) {
+      return;
+    }
+    this.financialVendorFacade.searchInsurnaceVendor(searchText);
+  }
+  onProviderValueChange($event: any) {
+    
+    this.isRecentClaimShow = false;
+    this.vendorId = $event.vendorId;
+    this.vendorName = $event.vendorName;
+    this.providerTin = $event;
+    this.checkProviderNotEligibleException($event);
+  }
+  checkProviderNotEligibleException($event:any)
+  {
+       return null;
+  }
+
+  ngOnInit(): void {  
+    
+  
+    this.contactFacade.loadDdlStates();
+  
+    if(this.ddlInsuranceType==HealthInsurancePlan.DentalInsurance)
+    {
+      this.providerName="Dental";
+    }
+
     this.lovFacade.getPremiumFrequencyLovs();
+    this.buildVendorForm();
+  
   }
 
   onSameAsInsuranceIdValueChange(event: Event) {
@@ -42,6 +159,7 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
       this.healthInsuranceForm.controls['paymentIdNbr'].setValue(null);
     }
   }
+ 
   restrictSpecialChar(event: any) {
     const status = ((event.charCode > 64 && event.charCode < 91) ||
       (event.charCode > 96 && event.charCode < 123) ||
@@ -57,5 +175,22 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
       this.specialCharAdded = true;
     }
     return status;
+  }
+
+
+  public addNewInsuranceProviderOpen(): void {
+    
+    this.buildVendorForm();  
+    this.isShowInsuranceProvider=true;   
+  }
+
+  searchClinicVendorClicked(data:any)
+  {
+    
+    this.financialVendorFacade.searchClinicVendor(data);
+    
+  }
+  closeVendorDetailModal(){
+    this.isShowInsuranceProvider =false;
   }
 }

@@ -114,17 +114,17 @@
     <div class="justify-content-end">
       <button
         kendoButton
-        aria-label="cancel new status period"
+        aria-label="Cancel"
         [primary]="true"
         look="outline"
         (click)="onModalCloseClicked()"
       >
         CANCEL
       </button>
-      <button *ngIf="!isEdit && !isStatusPeriodEdit" kendoButton aria-label="start new status period" [primary]="true"(click)="startNewEligibility()" [disabled]="(isReadOnly$ | async) ? true : false">
+      <button *ngIf="!isEdit && !isStatusPeriodEdit" kendoButton aria-label="start" [primary]="true"(click)="startNewEligibility()" [disabled]="(isReadOnly$ | async) ? true : false">
         START
       </button>
-      <button *ngIf="isEdit || isStatusPeriodEdit" kendoButton aria-label="start new status period" [primary]="true"(click)="updateCurrentEligibility()" [disabled]="(isReadOnly$ | async) ? true : false || statusEndDateIsGreaterThanStartDate ? false:true">
+      <button *ngIf="isEdit || isStatusPeriodEdit" kendoButton aria-label="Update" [primary]="true"(click)="updateCurrentEligibility()" [disabled]="(isReadOnly$ | async) ? true : false || statusEndDateIsGreaterThanStartDate ? false:true">
         UPDATE
       </button>
     </div>

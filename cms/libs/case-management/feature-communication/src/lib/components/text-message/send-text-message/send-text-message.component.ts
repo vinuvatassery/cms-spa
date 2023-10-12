@@ -8,7 +8,8 @@ import {
   EventEmitter,
 } from '@angular/core';
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, CommunicationFacade, StatusFlag } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, CommunicationFacade } from '@cms/case-management/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 @Component({

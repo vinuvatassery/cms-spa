@@ -65,7 +65,7 @@
                               </kendo-floatinglabel>
                         </span>
                         <span class="right-overlay-export">
-                              <button kendoButton [primary]="true" look="flat" class="button-lg">
+                              <button kendoButton [primary]="true"  aria-label="Export" look="flat" class="button-lg">
                                     <span class="material-icons" aria-label="export"
                                           aria-invalid="true">exit_to_app</span><i class="exp_button-text">Export</i>
                               </button>
@@ -91,7 +91,7 @@
                                     [width]="80"></kendo-grid-checkbox-column>
                               <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="160">
                                     <ng-template kendoGridCellTemplate let-dataItem>
-                                          <button aria-label="Pharmacy Name" kendoButton look="flat" (click)="onViewProviderDetailClicked(providerDetailsTemplate)"
+                                          <button [attr.aria-label]="dataItem.pharmacyName" kendoButton look="flat" (click)="onViewProviderDetailClicked(providerDetailsTemplate)"
                                                 class="card-link-button">
                                                 {{ dataItem.pharmacyName }}
                                           </button>
@@ -165,8 +165,8 @@
             </div>
             <div class="text-right flex-gap">
                   
-                  <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Close </button>
-                  <button kendoButton [primary]="true" aria-label="Receipting Log" class="" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
+                  <button kendoButton [primary]="true" look="outline"  aria-label="Close"> Close </button>
+                  <button kendoButton [primary]="true" aria-label="Save"  (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
             </div>
       
       

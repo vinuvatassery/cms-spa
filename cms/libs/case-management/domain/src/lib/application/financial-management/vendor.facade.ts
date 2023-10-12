@@ -9,6 +9,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { ConfigurationProvider, LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
 import { FinancialVendorDataService } from '../../infrastructure/financial-management/vendor.data.service';
 import { FinancialVendorTypeCode } from '../../enums/financial-vendor-type-code';
+import { Pharmacy } from '../../entities/client-pharmacy';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorFacade {
@@ -39,6 +40,11 @@ export class FinancialVendorFacade {
 
   private vendorsListSubject = new BehaviorSubject<any>([]);
   vendorDetails$ = this.vendorsListSubject.asObservable();
+
+  private medicalProviderSearchLoaderVisibilitySubject = new Subject<boolean>;
+  medicalProviderSearchLoaderVisibility$= this.medicalProviderSearchLoaderVisibilitySubject.asObservable();
+  public insuranceVendorsSubject = new Subject<any>;
+  insuranceVendors$ = this.insuranceVendorsSubject.asObservable();
 
   private providerListSubject = new Subject<any>();
   providerList$ = this.providerListSubject.asObservable();
@@ -74,7 +80,40 @@ export class FinancialVendorFacade {
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
     this.hideLoader();
   }
-
+  searchProvidorsById(vendoraddressId: string) {
+    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
+    return this.financialVendorDataService.searchProvidorsById(vendoraddressId).subscribe({
+      next: (response: Pharmacy[]) => {
+        response?.forEach((vendor:any) => {
+          vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
+        });
+        this.insuranceVendorsSubject.next(response);
+        this.medicalProviderSearchLoaderVisibilitySubject.next(false);
+      },
+      error: (err) => {
+        this.medicalProviderSearchLoaderVisibilitySubject.next(false);
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      }
+    });
+  }
+  searchInsurnaceVendor(searchText: string) {
+    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
+    return this.financialVendorDataService.searchInsurnaceVendor(searchText).subscribe({
+      next: (response: Pharmacy[]) => {
+        response?.forEach((vendor:any) => {
+          vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
+        });
+        this.insuranceVendorsSubject.next(response);
+        this.medicalProviderSearchLoaderVisibilitySubject.next(false);
+      },
+      error: (err) => {
+        this.medicalProviderSearchLoaderVisibilitySubject.next(false);
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      }
+    });
+  }
 
   getVendors(skipcount: number, maxResultCount: number, sort: string, sortType: string, vendorTypeCode: string,filter : string): void {
     filter = JSON.stringify(filter);

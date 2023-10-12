@@ -1,4 +1,4 @@
-import { StatusFlag } from './../../../../../domain/src/lib/enums/status-flag.enum';
+
 import {
   Component,
   ChangeDetectionStrategy,
@@ -22,6 +22,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
 import { groupBy } from "@progress/kendo-data-query";
+import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'cms-financial-claims-detail-form',
   templateUrl: './financial-claims-detail-form.component.html',
@@ -208,11 +209,13 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
     if (this.isEdit) {
       this.title = 'Edit';
+      this.showServicesListForm = true;
       this.addOrEdit = 'Update';
       this.getMedicalClaimByPaymentRequestId();
     }
     
      this.paymentRequestType$.subscribe((paymentRequestTypes) => {
+      paymentRequestTypes = paymentRequestTypes.sort((x,y) => x.sequenceNbr < y.sequenceNbr ? -1 : 1 )
       let parentRequestTypes = paymentRequestTypes.filter(x => x.parentCode == null);
       let refactoredPaymentRequestTypeArray :Lov[] =[]
       parentRequestTypes.forEach(x => {
@@ -636,7 +639,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     }
     else {
       if (this.chosenPcaForReAssignment) {
-        bodyData.pcaCode = this.chosenPcaForReAssignment?.pcaCode;
+        bodyData.pcaCode = this.chosenPcaForReAssignment?.pcaCode.toString();
         bodyData.pcaAssignmentId = this.chosenPcaForReAssignment?.pcaAssignmentId;
         bodyData.isPcaReassignmentNeeded = this.chosenPcaForReAssignment?.isReAssignmentNeeded;
       }
@@ -692,7 +695,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
               return;
             }
 
-            claim.pcaCode = response?.pcaCode;
+            claim.pcaCode = response?.pcaCode.toString();
             claim.pcaAssignmentId = response?.pcaAssignmentId;
             claim.isPcaReassignmentNeeded = response?.isReAssignmentNeeded;
             this.saveClaim(claim);

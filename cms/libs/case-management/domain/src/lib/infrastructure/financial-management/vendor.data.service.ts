@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { FinancialVendorProviderTabCode } from '../../enums/financial-vendor-provider-tab-code';
+import { Pharmacy } from '../../entities/client-pharmacy';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorDataService {
@@ -33,6 +34,19 @@ export class FinancialVendorDataService {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/${vendorId}`
     );
+  }
+  searchInsurnaceVendor(searchText: string) {
+    
+      return this.http.get<Pharmacy[]>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/providers/SearchText=${searchText}`
+      );   
+  }
+  searchProvidorsById(VendorAddressId: string) {    
+
+      return this.http.get<Pharmacy[]>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/providers/by-vendor-address/${VendorAddressId}`
+      );
+    
   }
 
   updateVendorDetails(details: any) {

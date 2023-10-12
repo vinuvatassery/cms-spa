@@ -9,12 +9,13 @@ import {
   OnChanges,
   ChangeDetectorRef 
 } from '@angular/core';
-import { CerTrackingFacade, StatusFlag } from '@cms/case-management/domain';
+import { CerTrackingFacade } from '@cms/case-management/domain';
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, State ,} from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'case-management-cer-list',
   templateUrl: './cer-list.component.html',

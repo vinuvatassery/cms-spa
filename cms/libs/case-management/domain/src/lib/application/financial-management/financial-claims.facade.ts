@@ -462,6 +462,23 @@ export class FinancialClaimsFacade {
     );
   }
 
+  searchProvidorsById(vendoraddressId: string, typeCode: string) {
+    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
+    return this.financialClaimsDataService.searchProvidorsById(vendoraddressId, typeCode).subscribe({
+      next: (response: Pharmacy[]) => {
+        response?.forEach((vendor:any) => {
+          vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
+        });
+        this.pharmaciesSubject.next(response);
+        this.medicalProviderSearchLoaderVisibilitySubject.next(false);
+      },
+      error: (err) => {
+        this.medicalProviderSearchLoaderVisibilitySubject.next(false);
+        this.snackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      }
+    });
+  }
   searchPharmacies(searchText: string, typeCode: string) {
     this.medicalProviderSearchLoaderVisibilitySubject.next(true);
     return this.financialClaimsDataService.searchPharmacies(searchText, typeCode).subscribe({
@@ -479,7 +496,6 @@ export class FinancialClaimsFacade {
       }
     });
   }
-
 loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
     recentClaimsPageAndSortedRequestDto.filter = JSON.stringify(recentClaimsPageAndSortedRequestDto.filter);
     this.financialClaimsDataService.loadRecentClaimListService(recentClaimsPageAndSortedRequestDto).subscribe({

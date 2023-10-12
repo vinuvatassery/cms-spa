@@ -3,5 +3,6 @@ export enum ServiceSubTypeCode {
     dentalPremium ='DENTAL_PREMIUM',
     notApplicable ='NOT_APPLICABLE',
     medicalClaim ='MEDICAL_CLAIM',
-    dentalClaim ='DENTAL_CLAIM'
+    dentalClaim ='DENTAL_CLAIM',
+    insurnacePremium='INSURANCE_PREMIUM'
 }

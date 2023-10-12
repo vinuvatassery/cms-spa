@@ -1,7 +1,8 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 /** Facades **/
-import { ContactFacade, StatusFlag, CaseFacade } from '@cms/case-management/domain';
+import { ContactFacade, CaseFacade } from '@cms/case-management/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-friend-or-family-list',

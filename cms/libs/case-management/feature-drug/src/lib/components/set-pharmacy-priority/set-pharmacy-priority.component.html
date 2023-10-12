@@ -23,15 +23,11 @@
   <div class="justify-content-between">
     <div class="justify-content-end">
       <button kendoButton [primary]="true" look="outline" (click)="onCloseChangePriorityClicked()"
-        aria-label="cancel updating priority">
+        aria-label="Cancel">
         Cancel
       </button>
-      <button kendoButton [primary]="true" (click)="onSavePriority()"  aria-label="update priority" [disabled]="btnDisabled">
-        {{
-          isEditPharmacyPriorityTitle
-              ? 'Update'
-              : 'Save'
-          }}
+      <button kendoButton [primary]="true" (click)="onSavePriority()"  attr.aria-label=" {{ isEditPharmacyPriorityTitle   ? 'Update' : 'Save' }}" [disabled]="btnDisabled">
+        {{ isEditPharmacyPriorityTitle   ? 'Update' : 'Save' }}
       </button>
     </div>
   </div>

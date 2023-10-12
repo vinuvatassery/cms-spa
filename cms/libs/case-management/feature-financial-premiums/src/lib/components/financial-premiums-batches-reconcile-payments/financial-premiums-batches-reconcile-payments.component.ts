@@ -88,6 +88,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   providerTitle:any = 'Medical Provider';
   premiumReconcileCount:any =0;
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, 
     private readonly cd: ChangeDetectorRef, private configurationProvider: ConfigurationProvider, public intl: IntlService) {}
@@ -668,6 +669,10 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   navToReconcilePayments(){
     this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch`],
     { queryParams :{bid: this.batchId}});
+  }
+
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event)
   }
 }
 

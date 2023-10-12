@@ -53,7 +53,7 @@
   <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
   <span class="sort-items">{{columnChangeDesc}}</span>
   <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
-  <button aria-label="client name" kendoButton look="flat" class="sort-items" (click)="restGrid()">
+  <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="restGrid()">
         <a>Set to Default</a>
   </button>
 </div>
@@ -85,6 +85,20 @@
             (click)="navToBatchDetails(dataItem)">
             {{ dataItem.batchName }}
           </button>
+        </ng-template>
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="sendBackNotes" title="Send Back Notes" [width]="300">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span [title]="dataItem.sendBackNotes" class="grid-line-clip"> {{ (dataItem.sendBackNotes?.length>50)? dataItem.sendBackNotes?.substring(0, 50)+'...' : dataItem.sendBackNotes}}</span>
         </ng-template>
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -136,7 +150,7 @@
           </kendo-grid-numeric-filter-menu>
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAdjustmentsAmount}}</span>
+          <span class="tableamountview">{{dataItem.totalAdjustmentsAmount | kendoNumber : "c"}}</span>
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="totalPaymentsAmount " title="Total Amount of Payments" [width]="140">
@@ -147,7 +161,7 @@
           </kendo-grid-numeric-filter-menu>
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalPaymentsAmount}}</span>
+          <span class="tableamountview">{{dataItem.totalPaymentsAmount | kendoNumber : "c"}}</span>
         </ng-template>
       </kendo-grid-column>
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"  let-currentPage="currentPage">
@@ -179,5 +193,3 @@
 
     </kendo-grid>
   </div>
-
-  <button (click)="navToBatchDetails($event)">Batch Details List</button>

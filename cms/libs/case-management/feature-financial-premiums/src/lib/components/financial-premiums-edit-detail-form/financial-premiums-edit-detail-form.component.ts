@@ -24,6 +24,7 @@ export class FinancialPremiumsEditDetailFormComponent implements OnInit, OnDestr
   @Input() premiumId!: string;
   @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
   @Input() insuranceCoverageDates$: any;
+  @Input() paymentRequestId :any
 
   /* Output Properties */
   @Output() loadPremiumEvent = new EventEmitter<string>();
@@ -46,6 +47,8 @@ export class FinancialPremiumsEditDetailFormComponent implements OnInit, OnDestr
   coverageDateList: any;
   premiumSubscription = new Subscription;
   coverageDatesSubscription = new Subscription;
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  
 
   /* Constructor */
   constructor(private readonly financialPremiumsFacade: FinancialPremiumsFacade,
@@ -118,7 +121,7 @@ export class FinancialPremiumsEditDetailFormComponent implements OnInit, OnDestr
 
   duplicateCoverageCheck() {
     this.premium?.premiumAdjustments?.forEach((parent: PremiumAdjustment) => {
-      const coveragesExists = this.premium?.premiumAdjustments?.filter((child: PremiumAdjustment) => child.coverageStartDate === parent.coverageStartDate);
+      const coveragesExists = this.premium?.premiumAdjustments?.filter((child: PremiumAdjustment) => child.coverageStartDate && child.coverageStartDate === parent.coverageStartDate);
       if (coveragesExists.length > 0) {
         if (coveragesExists?.length > 1) {
           coveragesExists?.forEach((i: PremiumAdjustment) => {
@@ -198,5 +201,9 @@ export class FinancialPremiumsEditDetailFormComponent implements OnInit, OnDestr
     this.coverageDatesSubscription = this.insuranceCoverageDates$.subscribe((value: any) => {
       this.coverageDateList = value;
     });
+  }
+
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(this.paymentRequestId)
   }
 }

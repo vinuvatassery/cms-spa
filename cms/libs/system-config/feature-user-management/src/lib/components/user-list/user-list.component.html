@@ -14,7 +14,7 @@
     icon="add"
     kendoButton
     [primary]="true"
-    aria-label="add user"
+    aria-label="User"
     class="add-button-top"
     (click)="onUserDetailsClicked(false)"
   >
@@ -36,8 +36,8 @@
     </kendo-floatinglabel>
   </span>
   <span>
-    <button kendoButton [primary]="true" look="flat" class="button-lg">
-      <span class="material-icons" aria-label="export" aria-invalid="true"
+    <button kendoButton [primary]="true" look="flat" aria-label="Export" class="button-lg">
+      <span class="material-icons" aria-label="Export" aria-invalid="true"
         >exit_to_app</span
       >Export
     </button>
@@ -67,6 +67,7 @@
           [popover]="onUserProfileDetailsHovered"
           showOn="hover"
           kendoPopoverAnchor
+          [attr.aria-label]="dataItem.name"
         >
           {{ dataItem.name }}
         </button>
@@ -163,7 +164,7 @@
     icon="add"
     kendoButton
     [primary]="true"
-    aria-label="add user"
+    aria-label="User"
     (click)="onUserDetailsClicked(false)"
   >
     User

@@ -54,13 +54,13 @@ export class FinancialPremiumsAllPaymentsListComponent
   @Input() financialPremiumsAllPaymentsGridLists$: any;
   @Output() loadFinancialPremiumsAllPaymentsListEvent = new EventEmitter<any>();
   @Input() financialPremiumPaymentLoader$: any;
-
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   gridColumns: any = {
     itemNumber: 'Item #',
     batchNumber: 'Batch #',
-    vendorTypeCodeDesc: 'Insurance Vendor',
-    itemCountInBatch: 'Item Count',
-    totalCost: 'Total Amount',
+    providerName: 'Insurance Vendor',
+    itemsCountInBatch: 'Item Count',
+    totalDue: 'Total Amount',
     acceptsReportsFlag: 'Accepts reports',
     paymentRequestedDate: 'Date Payment Requested',
     paymentSentDate: 'Date Payment Sent',
@@ -81,15 +81,15 @@ export class FinancialPremiumsAllPaymentsListComponent
       columnDesc: 'Batch #',
     },
     {
-      columnName: 'vendorTypeCodeDesc',
+      columnName: 'providerName',
       columnDesc: 'Insurance Vendor',
     },
     {
-      columnName: 'itemCountInBatch',
+      columnName: 'itemsCountInBatch',
       columnDesc: 'Item Count',
     },
     {
-      columnName: 'totalCost',
+      columnName: 'totalDue',
       columnDesc: 'Total Amount',
     },
     {
@@ -149,8 +149,8 @@ export class FinancialPremiumsAllPaymentsListComponent
 
   numericColumns: any[] = [
     'itemNumber',
-    'itemCountInBatch',
-    'totalCost',
+    'itemsCountInBatch',
+    'totalDue',
     'pcaCode',
   ];
   dateColumns: any[] = ['paymentRequestedDate', 'paymentSentDate'];
@@ -252,10 +252,10 @@ export class FinancialPremiumsAllPaymentsListComponent
   ) {}
 
   ngOnInit(): void {
+    this.addSearchSubjectSubscription();
     this.getVedndorTypeCodeLov();
     this.getPaymentMethodLov();
     this.getPaymentStatusLov();
-    this.initializePremiumsPaymentsPage();
   }
 
   ngOnChanges(): void {
@@ -315,6 +315,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   }
 
   onSearch(searchValue: any) {
+    
     const isDateSearch = searchValue.includes('/');
     this.showDateSearchWarning =
       isDateSearch || this.dateColumns.includes(this.selectedSearchColumn);
@@ -367,7 +368,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   restGrid() {
     this.sortValue = 'itemNumber';
     this.sortType = 'asc';
-    this.initializePremiumsPaymentsPage();
+    this.initializePremiumsPaymentsGrid()
     this.sortColumn = 'itemNumber';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
@@ -474,11 +475,6 @@ export class FinancialPremiumsAllPaymentsListComponent
       take: this.pageSizes[0]?.value,
       sort: [{ field: 'itemNumber', dir: 'asc' }],
     };
-  }
-
-  private initializePremiumsPaymentsPage() {
-    this.loadFinancialPremiumsPaymentsListGrid();
-    this.addSearchSubjectSubscription();
   }
 
   private loadFinancialPremiumsPaymentsListGrid(): void {
@@ -649,5 +645,8 @@ export class FinancialPremiumsAllPaymentsListComponent
       this.isDeletePaymentOpen = false;
       this.deletePaymentDialog.close();
     }
+  }
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event)
   }
 }

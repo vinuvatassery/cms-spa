@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CaseFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
+import { CaseFacade, ContactFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType} from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -67,19 +67,30 @@ export class FinancialVendorPageComponent implements OnInit {
   sort = this.financialVendorFacade.sort;
   selectedVendorType = this.financialVendorFacade.selectedVendorType
   exportButtonShow$ = this.documentFacade.exportButtonShow$
+  ddlStates=this.contactFacade.ddlStates$;
+  clinicVendorList= this.financialVendorFacade.clinicVendorList$;;
+  clinicVendorLoader= this.financialVendorFacade.clinicVendorLoader$;;
+  
   constructor(private caseFacade: CaseFacade, private financialVendorFacade: FinancialVendorFacade,
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
     private reminderFacade: ReminderFacade,
-    private documentFacade :  DocumentFacade) {
+    private documentFacade :  DocumentFacade,
+    private readonly contactFacade: ContactFacade,
+    ) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
   dataExportParameters! : any
   /** Lifecycle hooks **/
   ngOnInit() {
     this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
+    this.contactFacade.loadDdlStates();  
   }
-
+  searchClinicVendorClicked(clientName:any)
+  {
+    
+    this.financialVendorFacade.searchClinicVendor(clientName);
+  }
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
     return FinancialVendorProviderTabCode;
   }
@@ -156,6 +167,7 @@ export class FinancialVendorPageComponent implements OnInit {
   }
 
   saveVendorProfile(vendorProfile: any){
+    
     this.financialVendorFacade.showLoader();
     this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
       next:(response:any)=>{
@@ -243,4 +255,7 @@ export class FinancialVendorPageComponent implements OnInit {
       this.documentFacade.getExportFile(vendorPageAndSortedRequest,'vendors' , fileName)
     }
   }
+
+
+ 
 }
