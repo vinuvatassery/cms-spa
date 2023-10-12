@@ -97,7 +97,9 @@
       @media (max-width: $breakpoint-lg) {
         width: calc(100% - 1rem);
       }
-
+      .k-window-content, .k-dialog-content{
+        padding-inline: 0;
+      }
       .app-c-tab {
         height: 100%;
 
@@ -111,6 +113,12 @@
             height: 100%;
           }
         }
+      }
+    }
+    &.add_premiums_modal{
+   
+      .k-dialog-body{
+        padding: 0px;
       }
     }
   }
