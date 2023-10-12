@@ -649,4 +649,8 @@ export class FinancialPremiumsAllPaymentsListComponent
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event)
   }
+  navToBatchDetails(event : any){
+    this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch`],
+    { queryParams :{bid: event.batchId}});
+  }
 }
