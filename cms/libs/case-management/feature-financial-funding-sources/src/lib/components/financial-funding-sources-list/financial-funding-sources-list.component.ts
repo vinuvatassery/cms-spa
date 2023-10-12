@@ -17,7 +17,7 @@ import {
   FilterService
 } from '@progress/kendo-angular-grid';
 
-import { CompositeFilterDescriptor} from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
 @Component({
   selector: 'cms-financial-funding-sources-list',
@@ -44,7 +44,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
   @Input() fundingSourceList$!: Observable<any>;
   @Output() loadFinancialFundingSourcesListEvent = new EventEmitter<any>();
   @Output() removeFundingSourceClick = new EventEmitter<string>();
-  @Input() removeFundingSource$ :any
+  @Input() removeFundingSource$: any
   isRemoveFundingSourceClicked$ = new Subject();
   public gridFilter: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   public state!: any;
@@ -59,13 +59,13 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
   gridDataResult!: GridDataResult;
   columnName: string = '';
   columns: any = {
-    fundingSourceCode:"Funding Source",
-    fundingDesc:"Funding Name",
+    fundingSourceCode: "Funding Source",
+    fundingDesc: "Funding Name",
   };
-  columnDroplist : any = {
+  columnDroplist: any = {
     ALL: "ALL",
-    FundingSourceCode:"fundingSourceCode",
-    FundingDesc:"fundingDesc"
+    FundingSourceCode: "fundingSourceCode",
+    FundingDesc: "fundingDesc"
   }
   gridFinancialFundingSourcesDataSubject = new Subject<any>();
 
@@ -107,12 +107,13 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
       },
     },
   ];
+  selectedFundingSourceCode: any;
 
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService
-  ) {}
+  ) { }
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -153,18 +154,20 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
     this.defaultGridState();
     this.columnName = this.state.columnName = this.columnDroplist[this.selectedColumn];
     this.sortColumn = this.columns[this.selectedColumn];
-    this.filter = {logic:'and',filters:[{
-      "filters": [
+    this.filter = {
+      logic: 'and', filters: [{
+        "filters": [
           {
-              "field": this.columnDroplist[this.selectedColumn] ?? "clientFullName",
-              "operator": "startswith",
-              "value": event
+            "field": this.columnDroplist[this.selectedColumn] ?? "clientFullName",
+            "operator": "startswith",
+            "value": event
           }
-      ],
-      "logic": "and"
-  }]}
-  let stateData = this.state
-  stateData.filter = this.filter
+        ],
+        "logic": "and"
+      }]
+    }
+    let stateData = this.state
+    stateData.filter = this.filter
     this.dataStateChange(stateData);
   }
 
@@ -188,7 +191,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
     this.filter = JSON.stringify(filterList);
 
     if (filters.length > 0) {
-      const filterListData = filters.map((filter:any) => this.columns[filter?.filters[0]?.field]);
+      const filterListData = filters.map((filter: any) => this.columns[filter?.filters[0]?.field]);
       this.isFiltered = true;
       this.filteredBy = filterListData.toString();
       this.cdr.detectChanges();
@@ -205,10 +208,10 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
     this.state = stateData;
     this.sortColumn = this.columns[stateData.sort[0]?.field];
     this.sortDir = "";
-    if(this.sort[0]?.dir === 'asc'){
+    if (this.sort[0]?.dir === 'asc') {
       this.sortDir = 'Ascending';
     }
-    if(this.sort[0]?.dir === 'desc'){
+    if (this.sort[0]?.dir === 'desc') {
       this.sortDir = 'Descending';
     }
     this.loadFinancialFundingSourceFacadeListGrid();
@@ -326,26 +329,27 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
       this.removeFundingDialog.close();
     }
   }
-removeFundingSourceEvent(fundingSoruceId: any) {
-  this.removeFundingSourceClick.emit(fundingSoruceId);
-  this.removeFundingOpened = false;
+  removeFundingSourceEvent(fundingSoruceId: any) {
+    this.removeFundingSourceClick.emit(fundingSoruceId);
+    this.removeFundingOpened = false;
 
-}
-removeFundingSource(dataItem: any) {
-  if (dataItem?.isDelete === true) {
-    this.removeFundingSourceEvent(this.selectFundingSourceId);
-    this.removeFundingDialog.close();
-    this.removeFundingSource$.subscribe((_ :any)=>{
-      this.loadFinancialFundingSourceFacadeListGrid();
-    })
   }
-  else{
-    this.removeFundingDialog.close();
+  removeFundingSource(dataItem: any) {
+    if (dataItem?.isDelete === true) {
+      this.removeFundingSourceEvent(this.selectFundingSourceId);
+      this.onModalCloseRemoveFundingSourceClicked(true)
+      this.removeFundingSource$.subscribe((_: any) => {
+        this.loadFinancialFundingSourceFacadeListGrid();
+      })
+    }
+    else {
+      this.onModalCloseRemoveFundingSourceClicked(true)
+    }
+    this.loadFinancialFundingSourceFacadeListGrid();
   }
-  this.loadFinancialFundingSourceFacadeListGrid();
-}
-removedClick(fundingId:any)
-{
-  this.selectFundingSourceId = fundingId
-}
+  removedClick(fundingId: any, fundingSourceCode: any) {
+    this.selectedFundingSourceCode = fundingSourceCode
+    this.selectFundingSourceId = fundingId
+  }
+
 }
