@@ -20,6 +20,16 @@
                     <td>{{vendorProfile.address.mailCode}}</td>
                 </tr>
                 <tr> 
+                    <td><strong>Accepts reports?</strong></td>
+                    <td>{{vendorProfile.address.acceptsReportsFlag==='Y'? "Yes":"No"}}</td>
+                </tr>
+                
+                <tr> 
+                    <td><strong>Accepts combined payments?</strong></td>
+                    <td>{{vendorProfile.address.acceptsCombinedPaymentsFlags==='Y'? "Yes":"No"}}</td>
+                </tr>
+                
+                <tr> 
                     <td><strong>Payment Method</strong></td>
                     <td> {{vendorProfile.address.paymentMethodCode}}</td>
                 </tr>
@@ -79,6 +89,42 @@
                         </kendo-textbox>
                         
                     </td>
+                </tr>
+                <tr>
+                    <td><strong>Accepts reports?</strong></td>
+                    <td>
+                <div class="component-list-h">
+                    <span class="app-radiobtnwidtext-wrapper">
+                      <input type="radio" kendoRadioButton aria-labelledby="acceptReportsYes" name="acceptsReportsFlag"
+                        id="acceptReportsYes" value="Y" formControlName="acceptsReportsFlag" />
+                      <kendo-label class="k-radio-label" text="Yes" for="acceptReportsYes"></kendo-label>
+                    </span>
+                    <span class="app-radiobtnwidtext-wrapper">
+                      <input type="radio" kendoRadioButton name="acceptsReportsFlag" id="acceptReportsNo"
+                        aria-labelledby="acceptReportsNo" value="N" formControlName="acceptsReportsFlag" />
+                      <kendo-label class="k-radio-label" text="No" for="acceptReportsNo"></kendo-label>
+                    </span>
+        
+                  </div>
+                </td>
+                </tr>
+                <tr>
+                    <td><strong>Accepts combined payments?</strong></td>
+                    <td>
+                <div class="component-list-h">
+                    <span class="app-radiobtnwidtext-wrapper">
+                      <input type="radio" kendoRadioButton aria-labelledby="combinedpaymentsYes" name="acceptsCombinedPaymentsFlags"
+                        id="combinedpaymentsYes" value="Y" formControlName="acceptsCombinedPaymentsFlags" />
+                      <kendo-label class="k-radio-label" text="Yes" for="combinedpaymentsYes"></kendo-label>
+                    </span>
+                    <span class="app-radiobtnwidtext-wrapper">
+                      <input type="radio" kendoRadioButton name="acceptsCombinedPaymentsFlags" id="combinedpaymentsno"
+                        aria-labelledby="combinedpaymentsno" value="N" formControlName="AcceptsCombinedPaymentsFlags" />
+                      <kendo-label class="k-radio-label" text="No" for="combinedpaymentsno"></kendo-label>
+                    </span>
+        
+                  </div>
+                </td>
                 </tr>
                 <tr>
                     <td><strong>Payment Method</strong></td>
