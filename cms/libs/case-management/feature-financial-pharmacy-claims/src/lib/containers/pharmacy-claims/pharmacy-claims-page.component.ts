@@ -25,8 +25,8 @@ export class PharmacyClaimsPageComponent {
    
 
    state!: State;
-  pharmacyClaimsProcessGridLists$ =
-  this.financialPharmacyClaimsFacade.pharmacyClaimsProcessData$;
+  pharmacyClaimsProcessGridLists$ = this.financialPharmacyClaimsFacade.pharmacyClaimsProcessData$;
+  pharmacyClaimsProcessLoader$ = this.financialPharmacyClaimsFacade.pharmacyClaimsProcessLoader$;
   pharmacyClaimsBatchGridLists$ = this.financialPharmacyClaimsFacade.pharmacyClaimsBatchData$;
 
   pharmacyClaimsAllPaymentsGridLists$ = this.financialPharmacyClaimsFacade.pharmacyClaimsAllPaymentsData$;
@@ -36,8 +36,7 @@ export class PharmacyClaimsPageComponent {
 
 
   loadPharmacyClaimsProcessListGrid(event: any) {
-  
-    this.financialPharmacyClaimsFacade.loadPharmacyClaimsProcessListGrid();
+    this.financialPharmacyClaimsFacade.loadPharmacyClaimsProcessListGrid(event);
   }
   
 
@@ -49,5 +48,28 @@ export class PharmacyClaimsPageComponent {
   loadPharmacyClaimsAllPaymentsListGrid(event: any) {
   
     this.financialPharmacyClaimsFacade.loadPharmacyClaimsAllPaymentsListGrid();
+  }
+
+  // exportClaimsProcessGridData(){
+  //   const data = this.dataExportParameters
+  //   if(data){
+  //   const  filter = JSON.stringify(data?.filter);
+
+  //     const vendorPageAndSortedRequest =
+  //     {
+  //       SortType : data?.sortType,
+  //       Sorting : data?.sortColumn,
+  //       SkipCount : data?.skipcount,
+  //       MaxResultCount : data?.maxResultCount,
+  //       Filter : filter
+  //     }
+  //    let fileName = (this.claimsType[0].toUpperCase() + this.claimsType.substr(1).toLowerCase()) +' Claims'
+
+  //     this.documentFacade.getExportFile(vendorPageAndSortedRequest,`claims/${this.claimsType}` , fileName)
+  //   }
+  // }
+
+  exportPharmacyClaimProcess(){
+    
   }
 }

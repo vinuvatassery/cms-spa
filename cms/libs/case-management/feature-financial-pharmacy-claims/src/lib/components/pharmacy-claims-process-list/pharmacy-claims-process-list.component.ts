@@ -6,26 +6,39 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, debounceTime } from 'rxjs';
 @Component({
   selector: 'cms-pharmacy-claims-process-list',
   templateUrl: './pharmacy-claims-process-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
+export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy, OnChanges {
+
+  /* Input Properties */
+  @Input() pageSizes: any;
+  @Input() sortValue: any;
+  @Input() sortType: any;
+  @Input() sort: any;
+  @Input() pharmacyClaimsProcessGridLoader$: any;
+  @Input() pharmacyClaimsProcessGridLists$: any;
+
+  /* Output Properties */
+  @Output() loadPharmacyClaimsProcessListEvent = new EventEmitter<any>();
+
   @ViewChild('batchClaimsConfirmationDialog', { read: TemplateRef })
   batchClaimsConfirmationDialog!: TemplateRef<any>;
   @ViewChild('deleteClaimsConfirmationDialog', { read: TemplateRef })
@@ -48,29 +61,27 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isProcessGridExpand = true;
   isPharmacyClaimsProcessGridLoaderShow = false;
-  @Input() pageSizes: any;
-  @Input() sortValue: any;
-  @Input() sortType: any;
-  @Input() sort: any;
-  @Input() pharmacyClaimsProcessGridLists$: any;
-  @Output() loadPharmacyClaimsProcessListEvent = new EventEmitter<any>();
+
   public state!: State;
-  sortColumn = 'vendorName';
-  sortDir = 'Ascending';
+  sortColumnDesc = 'Entry Date';
+  sortDir = 'Descending';
   columnsReordered = false;
-  filteredBy = '';
-  searchValue = '';
-  isFiltered = false;
+  filteredByColumnDesc = '';
+  columnChangeDesc = '';
+  isColumnsReordered = false;
+  selectedSearchColumn = 'ALL';
+  searchText = '';
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  showExportLoader = false;
   gridPharmacyClaimsProcessDataSubject = new Subject<any>();
   gridPharmacyClaimsProcessData$ =
     this.gridPharmacyClaimsProcessDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  private searchSubject = new Subject<string>();
   public claimsProcessMore = [
     {
       buttonType: 'btn-h-primary',
@@ -99,7 +110,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
   public processGridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: '',
+      text: 'Edit Claim',
       icon: 'edit',
       click: (data: any): void => {
         if (!this.isAddEditClaimMoreClose) {
@@ -120,15 +131,51 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
       },
     },
   ];
+
+  gridColumns: { [key: string]: string } = {
+    ALL: 'All Columns',
+    pharmacyName: 'Pharmacy Name',
+    paymentMethodCode: 'Payment Method',
+    clientFullName: 'Client Name',
+    insuranceName: 'Name on Primary Insurance Card',
+    clientId: 'Client ID',
+    paymentType: 'Payment Type',
+    amountPaid: 'Amount Paid',
+    indexCode: 'Index Code',
+    pcaCode: 'PCA Code',
+    objectCode: 'Object Code',
+    paymentStatus: 'Payment Status',
+    creationTime: 'Entry Date'
+  };
+
+  searchColumnList: { columnName: string, columnDesc: string }[] = [
+    { columnName: 'ALL', columnDesc: 'All Columns' },
+    { columnName: 'pharmacyName', columnDesc: 'Pharmacy Name' },
+    { columnName: 'paymentMethodCode', columnDesc: 'Payment Method' },
+    { columnName: 'clientFullName', columnDesc: 'Client Name' },
+    { columnName: 'insuranceName', columnDesc: 'Name on Primary Insurance Card' },
+    { columnName: 'clientId', columnDesc: 'Client ID' },
+    { columnName: 'paymentType', columnDesc: 'Payment Type' },
+    { columnName: 'amountPaid', columnDesc: 'Amount Paid' },
+    { columnName: 'indexCode', columnDesc: 'Index Code' },
+    { columnName: 'pcaCode', columnDesc: 'PCA Code' },
+    { columnName: 'objectCode', columnDesc: 'Object Code' },
+    { columnName: 'paymentStatus', columnDesc: 'Payment Status' },
+    { columnName: 'creationTime', columnDesc: 'Entry Date' }
+  ];
+
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService
-  ) {}
+  ) { }
+
 
   ngOnInit(): void {
     this.loadPharmacyClaimsProcessListGrid();
+    this.addSearchSubjectSubscription();
   }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -139,29 +186,14 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
     this.loadPharmacyClaimsProcessListGrid();
   }
 
-  private loadPharmacyClaimsProcessListGrid(): void {
-    this.loadClaimsProcess(
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType
-    );
+  ngOnDestroy(): void {
+    this.searchSubject.complete();
   }
-  loadClaimsProcess(
-    skipCountValue: number,
-    maxResultCountValue: number,
-    sortValue: string,
-    sortTypeValue: string
-  ) {
+
+  loadPharmacyClaimsProcessListGrid() {
     this.isPharmacyClaimsProcessGridLoaderShow = true;
-    const gridDataRefinerValue = {
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
-    };
+    const gridDataRefinerValue = new GridFilterParam(this.state?.skip ?? 0, this.state?.take ?? 0, this.sortValue, this.sortType, JSON.stringify(this.filter));
     this.loadPharmacyClaimsProcessListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
   }
 
   onChange(data: any) {
@@ -205,11 +237,86 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.filter = stateData?.filter?.filters;
+    this.setFilterBy(true, '', this.filter);
     this.loadPharmacyClaimsProcessListGrid();
   }
 
-  // updating the pagination infor based on dropdown selection
+  searchColumnChangeHandler(value: string) {
+    this.filter = [];
+    //this.showNumberSearchWarning = (['pcaCode', 'appropriationYear']).includes(value);
+    //this.showDateSearchWarning = value === 'closeDate';
+    if (this.searchText) {
+      this.onSearch(this.searchText);
+    }
+  }
+
+  onSearch(searchValue: any) {
+    const isDateSearch = searchValue.includes('/');
+   // this.showDateSearchWarning = isDateSearch || this.selectedSearchColumn === 'closeDate';
+    //searchValue = this.formatSearchValue(searchValue, isDateSearch);
+    if (isDateSearch && !searchValue) return;
+    this.setFilterBy(false, searchValue, []);
+    this.searchSubject.next(searchValue);
+  }
+
+  private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
+    this.filteredByColumnDesc = '';
+    if (isFromGrid) {
+      if (filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters?.filter((fld: any) => fld.value)?.map((fld: any) =>
+            this.gridColumns[fld.field])
+          return ([...new Set(filteredColumns)]);
+        });
+
+        this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
+      }
+      return;
+    }
+
+    if (searchValue !== '') {
+      this.filteredByColumnDesc = this.searchColumnList?.find(i => i.columnName === this.selectedSearchColumn)?.columnDesc ?? '';
+    }
+  }
+
+  private addSearchSubjectSubscription() {
+    this.searchSubject.pipe(debounceTime(300))
+      .subscribe((searchValue) => {
+        this.performSearch(searchValue);
+      });
+  }
+
+  resetGrid() {
+
+  }
+
+  performSearch(data: any){
+    this.defaultGridState();
+    const operator = (['clientId']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedSearchColumn ?? 'ALL',
+              operator: operator,
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
+    const stateData = this.state;
+    stateData.filter = this.filterData;
+    this.dataStateChange(stateData);
+    this.loadPharmacyClaimsProcessListGrid();
+  }
+
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
@@ -218,21 +325,6 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
 
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
-  }
-
-  gridDataHandle() {
-    this.pharmacyClaimsProcessGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridPharmacyClaimsProcessDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) {
-        this.isPharmacyClaimsProcessGridLoaderShow = false;
-      }
-    });
-    this.isPharmacyClaimsProcessGridLoaderShow = false;
   }
 
   public onBatchClaimsClicked(template: TemplateRef<unknown>): void {
@@ -284,7 +376,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
   }
 
   clientRecentClaimsModalClicked(
-    template: TemplateRef<unknown> 
+    template: TemplateRef<unknown>
   ): void {
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
@@ -319,4 +411,14 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnChanges {
       this.providerDetailsDialog.close();
     }
   }
+
+
+
+  onClickedExport() {
+
+  }
+
+
+
+
 }
