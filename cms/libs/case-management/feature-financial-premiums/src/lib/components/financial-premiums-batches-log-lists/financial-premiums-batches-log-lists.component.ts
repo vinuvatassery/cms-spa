@@ -65,7 +65,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   @Input() unbatchEntireBatch$ :any
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   selected:any
-  noDeleteStatus=['PENDING_APPROVAL','MANAGER_APPROVED']
+  noDeleteStatus=['PAYMENT_REQUESTED','MANAGER_APPROVED']
  
   public bulkMore = [
     {
