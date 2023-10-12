@@ -542,17 +542,15 @@
 
 
 
-<!----------------------------------- clinic form -->
-
 
 <kendo-dialog *ngIf="isaddNewInsuranceProviderOpen" (close)="addNewInsuranceProviderClose()"
-class="app-c-modal app-c-modal-sm app-c-modal-np"  title="Add New Clinic">
+class="app-c-modal app-c-modal-sm app-c-modal-np"  title="Add New Insurance Provider">
 
 <section class="k-dialog-body mb-2">
   <div [formGroup]="clinicForm">
   <kendo-floatinglabel text="Clinic Name">
     <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" [data]="clinicVendorList$ | async "
-      textField="vendorName" valueField="vendorName" formControlName="clinicName" [filterable]="true"
+      textField="vendorName" valueField="vendorName" formControlName="providerName2" [filterable]="true"
       placeholder="Clinic Name" (filterChange)="searchClinic($event)"
       [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }">
       <ng-template kendoAutoCompleteItemTemplate let-dataItem>
@@ -580,7 +578,7 @@ class="app-c-modal app-c-modal-sm app-c-modal-np"  title="Add New Clinic">
         <kendo-textbox aria-label="Mail Code"  (valueChange)="onChange()" (keyup)="onMailCodeChange()"  [fillMode]="formUiStyle.inputFillMode" formControlName="mailCode"
           [maxlength]="3">
         </kendo-textbox>
-        <kendo-formerror *ngIf="!medicalProviderForm.controls['mailCode'].valid && isValidateForm">
+        <kendo-formerror *ngIf="!clinicForm.controls['mailCode'].valid && isValidateForm">
           Mail code is required
         </kendo-formerror>
       </kendo-floatinglabel>
@@ -592,10 +590,10 @@ class="app-c-modal app-c-modal-sm app-c-modal-np"  title="Add New Clinic">
         <kendo-textbox aria-label="Name on Check"  [maxlength]="200" [fillMode]="formUiStyle.inputFillMode"
           formControlName="nameOnCheck">
         </kendo-textbox>
-        <kendo-formerror *ngIf="medicalProviderFormControls?.nameOnCheck.errors?.required && isValidateForm">
+        <kendo-formerror *ngIf="clinicFormControls?.nameOnCheck.errors?.required && isValidateForm">
           Name on Check is required
         </kendo-formerror>
-        <kendo-formerror *ngIf="medicalProviderFormControls?.nameOnCheck.errors?.pattern">
+        <kendo-formerror *ngIf="clinicFormControls?.nameOnCheck.errors?.pattern">
           Special characters and numeric valus are not allowed 
         </kendo-formerror>
       </kendo-floatinglabel>
@@ -607,11 +605,11 @@ class="app-c-modal app-c-modal-sm app-c-modal-np"  title="Add New Clinic">
         <kendo-textbox aria-label="Name on Envelope"  [maxlength]="200" [fillMode]="formUiStyle.inputFillMode"
           formControlName="nameOnEnvolop">
         </kendo-textbox>
-        <kendo-formerror *ngIf="medicalProviderFormControls?.nameOnEnvolop.errors?.required && isValidateForm">
+        <kendo-formerror *ngIf="clinicFormControls?.nameOnEnvolop.errors?.required && isValidateForm">
           Name on Envelope is required
 
         </kendo-formerror>
-        <kendo-formerror *ngIf="medicalProviderFormControls?.nameOnEnvolop.errors?.pattern">
+        <kendo-formerror *ngIf="clinicFormControls?.nameOnEnvolop.errors?.pattern">
           Special characters and numeric valus are not allowed 
         </kendo-formerror>
       </kendo-floatinglabel>
@@ -621,7 +619,7 @@ class="app-c-modal app-c-modal-sm app-c-modal-np"  title="Add New Clinic">
         <kendo-textbox aria-label="Address Line 1"   [maxlength]="200" [fillMode]="formUiStyle.inputFillMode"
           formControlName="addressLine1">
         </kendo-textbox>
-        <kendo-formerror *ngIf="!medicalProviderForm.controls['addressLine1'].valid && isValidateForm">
+        <kendo-formerror *ngIf="!clinicForm.controls['addressLine1'].valid && isValidateForm">
           Address is required
         </kendo-formerror>
       </kendo-floatinglabel>
@@ -637,10 +635,10 @@ class="app-c-modal app-c-modal-sm app-c-modal-np"  title="Add New Clinic">
       <kendo-floatinglabel text="City">
         <kendo-textbox aria-label="City"  [maxlength]="50" [fillMode]="formUiStyle.inputFillMode" formControlName="city">
         </kendo-textbox>
-        <kendo-formerror *ngIf="medicalProviderFormControls?.city.errors?.required && isValidateForm">
+        <kendo-formerror *ngIf="clinicFormControls?.city.errors?.required && isValidateForm">
           City is required
         </kendo-formerror>
-        <kendo-formerror *ngIf="medicalProviderFormControls?.city.errors?.pattern">
+        <kendo-formerror *ngIf="clinicFormControls?.city.errors?.pattern">
           Special characters and numeric valus are not allowed 
         </kendo-formerror>
       </kendo-floatinglabel>
@@ -652,7 +650,7 @@ class="app-c-modal app-c-modal-sm app-c-modal-np"  title="Add New Clinic">
           placeholder="State">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="!medicalProviderForm.controls['state'].valid && isValidateForm">
+      <kendo-formerror *ngIf="!clinicForm.controls['state'].valid && isValidateForm">
         State is required
       </kendo-formerror>
     </div>
@@ -660,10 +658,10 @@ class="app-c-modal app-c-modal-sm app-c-modal-np"  title="Add New Clinic">
       <kendo-floatinglabel text="Zip">
         <kendo-textbox aria-label="Zip" [fillMode]="formUiStyle.inputFillMode" formControlName="zip" [maxlength]="10">
         </kendo-textbox>
-        <kendo-formerror *ngIf="medicalProviderFormControls?.zip.errors?.required && isValidateForm">
+        <kendo-formerror *ngIf="clinicFormControls?.zip.errors?.required && isValidateForm">
           Zip Code is required
         </kendo-formerror>
-        <kendo-formerror *ngIf="medicalProviderFormControls?.zip.errors?.pattern">
+        <kendo-formerror *ngIf="clinicFormControls?.zip.errors?.pattern">
           Special characters and numeric valus are not allowed 
         </kendo-formerror>
       </kendo-floatinglabel>
@@ -692,44 +690,11 @@ class="app-c-modal app-c-modal-sm app-c-modal-np"  title="Add New Clinic">
             </div>
           </span>
         </div>
-        <kendo-formerror *ngIf="! medicalProviderForm.controls['paymentMethod'].valid && isValidateForm ">
+        <kendo-formerror *ngIf="! clinicForm.controls['paymentMethod'].valid && isValidateForm ">
           Payment Method is required
         </kendo-formerror>
       </fieldset>
     </div>
-
-
-<!-- clinc type  -->
-<div class="flex-col mt-1">
-  <fieldset class="k-form-fieldset ">
-    <legend class="k-form-legend">
-      <h5 class="mb-0"> Clinic Type </h5>
-    </legend>
-
-    <div class="component-list-h">
-      <span *ngFor="let paymentMethod of clinicType; let i = index">
-        <div class="flex-row">
-          <div class="flex-col flex-col-12">
-            <span class="app-radiobtnwidtext-wrapper">
-              <input type="radio" kendoRadioButton formControlName="paymentMethod" [value]="paymentMethod.lovCode"
-                name="paymentMethod" attr.aria-labelledby="{{ paymentMethod.lovCode }}"
-                id="{{ paymentMethod.lovCode }}" />
-
-              <kendo-label class="k-radio-label" for="trans{{ paymentMethod.lovCode }}"
-                text="{{ paymentMethod.lovDesc }}"></kendo-label>
-            </span>
-          </div>
-        </div>
-      </span>
-    </div>
-    <kendo-formerror *ngIf="! clinicForm.controls['paymentMethod'].valid && isValidateForm ">
-      Clinic Type is required
-    </kendo-formerror>
-  </fieldset>
-</div>
-
-
-
 
       <!-- special handling -->
       <div class="flex-col flex-col-12" *ngIf="providerType != vendorTypes.Manufacturers">
@@ -750,8 +715,8 @@ class="app-c-modal app-c-modal-sm app-c-modal-np"  title="Add New Clinic">
       
         <!-- Contacts -->
 
-    <div formArrayName="newAddClinicContactForm" *ngIf="!editVendorInfo">
-      <div *ngFor="let contact of AddClinicContactForm.controls; let i=index">
+    <div formArrayName="newAddContactForm" *ngIf="!editVendorInfo">
+      <div *ngFor="let contact of AddContactForm.controls; let i=index">
         <div [formGroupName]="i" class="flex-row mt-2">
 
           <div class="flex-col d-flex align-iems-center justify-content-between" [formGroupName]="i">
@@ -771,7 +736,7 @@ class="app-c-modal app-c-modal-sm app-c-modal-np"  title="Add New Clinic">
             <p class="text-muted mb-2">
               If adding a contact person, Name is required
             </p>
-            <kendo-formerror *ngIf="!getClinicContactControl(i, 'contactName')?.valid && isValidateForm && getClinicContactNameValidation(i)">Contact Name is
+            <kendo-formerror *ngIf="!getContactControl(i, 'contactName')?.valid && isValidateForm && getContactNameValidation(i)">Contact Name is
               required</kendo-formerror>
           </div>
           <div class="flex-col mb-1">
@@ -809,7 +774,7 @@ class="app-c-modal app-c-modal-sm app-c-modal-np"  title="Add New Clinic">
             <div class="component-list-h">
               <span class="app-checkboxwidtext-wrapper">
                 <input type="checkbox" kendoCheckBox aria-labelledby="Rebate" id="isPreferedContact{{i}}"
-                  formControlName="isPreferedContact" (click)="checkClinicContactPreference(i)" />
+                  formControlName="isPreferedContact" (click)="checkContactPreference(i)" />
                 <label class="k-checkbox-label" for="isPreferedContact{{i}}"> This is a preferred contact </label>
               </span>
             </div>
@@ -818,7 +783,7 @@ class="app-c-modal app-c-modal-sm app-c-modal-np"  title="Add New Clinic">
       </div>
       <div class="flex-col">
         <button kendoButton icon="add" [primary]="true" look="flat" aria-label="Contact"
-          (click)="onToggleClinicAddNewContactClick()">
+          (click)="onToggleAddNewContactClick()">
           Contact
         </button>
       </div>
@@ -844,3 +809,5 @@ class="app-c-modal app-c-modal-sm app-c-modal-np"  title="Add New Clinic">
 </kendo-dialog-actions>
 
 </kendo-dialog>
+
+
