@@ -103,22 +103,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   };
   dropDowncolumns : any = [
     {
-      columnCode: 'invoiceNbr',
-      columnDesc: 'Invoice ID',
-    },
-    {
-      columnCode: 'vendorFullName',
-      columnDesc: 'Provider Name',
-    },
-    {
-      columnCode: 'tin',
-      columnDesc: 'Tax ID',
-    },
-    {
-      columnCode: 'paymentMethodCode',
-      columnDesc: 'Payment Method',
-    },
-    {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
     },
@@ -131,24 +115,50 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       columnDesc: 'Client ID',
     },
     {
-      columnCode: 'serviceCount',
-      columnDesc: 'Service Count',
+      columnCode: 'insuranceVendor',
+      columnDesc: 'Insurance Vendor',
     },
     {
-      columnCode: 'annualTotal',
-      columnDesc: 'Client Annual Total',
+      columnCode: 'coverageStartDate',
+      columnDesc: 'Coverage Dates',
     },
     {
-      columnCode: 'balanceAmount',
-      columnDesc: 'Client Balance',
+      columnCode: 'premiumAmount',
+      columnDesc: 'Premium Amount',
+    },
+   
+ 
+    {
+      columnCode: 'planName',
+      columnDesc: 'Plan Name',
     },
     {
-      columnCode: 'amountDue',
-      columnDesc: 'Total Due',
+      columnCode: 'insuranceType',
+      columnDesc: 'Insurance Type',
     },
     {
-      columnCode: 'paymentStatusCode',
+      columnCode: 'paymentMethod',
+      columnDesc: 'Payment Method',
+    },
+    {
+      columnCode: 'policyId',
+      columnDesc: 'Policy ID',
+    },
+    {
+      columnCode: 'groupId',
+      columnDesc: 'Group ID',
+    },
+    {
+      columnCode: 'paymentId',
+      columnDesc: 'Payment ID',
+    },
+    {
+      columnCode: 'paymentStatus',
       columnDesc: 'Payment Status',
+    },
+    {
+      columnCode: 'entryDate',
+      columnDesc: 'Entry Date',
     },
   ];
   columnDroplist : any = {
