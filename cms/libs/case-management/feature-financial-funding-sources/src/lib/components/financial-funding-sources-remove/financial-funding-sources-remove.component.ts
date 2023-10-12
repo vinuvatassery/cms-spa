@@ -13,6 +13,7 @@ import {
 })
 export class FinancialFundingSourcesRemoveComponent {
   @Input() fundingSourceId!: string;
+  @Input() fundingSourceCode!:string;
   @Output() isModalRemoveFundingSourcesCloseClicked = new EventEmitter();
   @Output() removeConfirmEvent = new EventEmitter<any>();
 

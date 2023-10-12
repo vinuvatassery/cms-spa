@@ -45,7 +45,9 @@ export class FinancialPremiumsProviderInfoComponent {
       stateCode: ['', Validators.required],
       zip: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]],
       specialHandlingDesc: [''],
-      mailCode: [{ value: '', disabled: true }]
+      mailCode: [{ value: '', disabled: true }],
+      acceptsCombinedPaymentsFlags:[''],
+      acceptsReportsFlag:['']
     }),
     contacts: new FormArray([])
   })
@@ -157,7 +159,8 @@ export class FinancialPremiumsProviderInfoComponent {
         mailCode: this.vendorProfile.address.mailCode,
         specialHandlingDesc: this.vendorProfile.address.specialHandlingDesc,
         paymentMethod: this.vendorProfile.address.paymentMethodCode,
-      
+        acceptsCombinedPaymentsFlags : this.vendorProfile.address.acceptsCombinedPaymentsFlags,
+        acceptsReportsFlag :this.vendorProfile.address.acceptsReportsFlag
       }
     });
     this.createContactsFormArray() 
@@ -237,6 +240,9 @@ export class FinancialPremiumsProviderInfoComponent {
         specialHandlingDesc: this.profileForm?.controls.address.controls['specialHandlingDesc']?.value,
         paymentMethodCode: this.profileForm?.controls.address.controls['paymentMethod']?.value,
         address1: this.profileForm?.controls.address.controls['address1']?.value,
+        acceptsCombinedPaymentsFlags : this.profileForm?.controls.address.controls['acceptsCombinedPaymentsFlags'].value,
+        acceptsReportsFlag : this.profileForm?.controls.address.controls['acceptsReportsFlag'].value,
+
         address2: this.profileForm?.controls.address.controls['address2']?.value,
         cityCode: this.profileForm?.controls.address.controls['cityCode']?.value,
         stateCode: this.profileForm?.controls.address.controls['stateCode']?.value,
