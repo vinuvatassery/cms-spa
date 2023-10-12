@@ -80,6 +80,23 @@ export class FinancialVendorFacade {
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
     this.hideLoader();
   }
+  searchProvidorsById(vendoraddressId: string) {
+    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
+    return this.financialVendorDataService.searchProvidorsById(vendoraddressId).subscribe({
+      next: (response: Pharmacy[]) => {
+        response?.forEach((vendor:any) => {
+          vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
+        });
+        this.insuranceVendorsSubject.next(response);
+        this.medicalProviderSearchLoaderVisibilitySubject.next(false);
+      },
+      error: (err) => {
+        this.medicalProviderSearchLoaderVisibilitySubject.next(false);
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      }
+    });
+  }
   searchInsurnaceVendor(searchText: string) {
     this.medicalProviderSearchLoaderVisibilitySubject.next(true);
     return this.financialVendorDataService.searchInsurnaceVendor(searchText).subscribe({
