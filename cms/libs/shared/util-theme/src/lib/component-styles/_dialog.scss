@@ -382,11 +382,26 @@
       padding: 0px;
     }
   }
-
+  &.pharmacy_print_auth{
+    .k-dialog .k-dialog-body{
+      max-height: 79vh; 
+    .custom_scroll_view .k-scrollview{
+      min-height: 100vh;
+      max-height: 100%;
+      overflow-y: auto;
+    }
+    }
+    .letter-two-column-wrapper{
+      max-height: 50vh;
+      overflow: auto;
+    }
+  }
 }
 
 .transform-none {
   .k-dialog-title {
     text-transform: unset !important;
   }
+
+
 }
