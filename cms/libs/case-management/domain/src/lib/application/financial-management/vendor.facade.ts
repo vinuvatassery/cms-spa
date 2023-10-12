@@ -200,7 +200,9 @@ export class FinancialVendorFacade {
   addVendorProfile(vendorProfile: any) {
     return this.financialVendorDataService.addVendorProfile(vendorProfile);
   }
-
+  addClinicProfile(vendorProfile: any) {
+    return this.financialVendorDataService.addClinicProfile(vendorProfile);
+  }
   searchClinicVendor(vendorName: any){
     this.clinicVendorLoaderSubject.next(true);
     this.clinicVendorSubject.next(null);

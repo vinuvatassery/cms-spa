@@ -127,6 +127,7 @@
     class="app-c-modal app-c-modal-lg app-c-modal-np" title="Add New Medical Provider" kendoTooltip>
     <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.MedicalProviders" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
     [ddlStates$]="ddlStates"
+    [hasCreateUpdatePermission]="hasHealthcareProviderCreateUpdatePermission"
     [clinicVendorList$]="clinicVendorList"
     [clinicVendorLoader$]="clinicVendorLoader"
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"

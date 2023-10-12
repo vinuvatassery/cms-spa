@@ -3,11 +3,12 @@ import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@ang
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
-import { ConfigurationProvider, LoaderService, } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, SnackBarNotificationType, } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
 import { AddressType } from '../enums/address-type.enum';
 import { StatusFlag } from '../enums/status-flag.enum';
+import { FinancialVendorFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-vendor-details',
   templateUrl: './vendor-details.component.html',
@@ -15,6 +16,7 @@ import { StatusFlag } from '../enums/status-flag.enum';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VendorDetailsComponent implements OnInit {
+  
   @Input() providerType!: any;
   @Input() medicalProviderForm: FormGroup;
   @Input() clinicForm: FormGroup;
@@ -26,11 +28,15 @@ export class VendorDetailsComponent implements OnInit {
   @Input() clinicVendorList$!: any;
   @Input() clinicVendorLoader$!: any;
 
+  @Input() hasCreateUpdatePermission:boolean = true;
+
   @Output() saveProviderEventClicked = new EventEmitter<any>();
+  @Output() saveClinicEventClicked = new EventEmitter<any>();
   @Output() closeModalEventClicked = new EventEmitter<any>();
   
   @Output() updateVendorDetailsClicked = new EventEmitter<any>();
   @Output() searchClinicVendorClicked = new EventEmitter<any>();
+
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
@@ -38,13 +44,13 @@ export class VendorDetailsComponent implements OnInit {
   isValidateForm: boolean = false;
   isValidateClinicForm: boolean = false;
   paymentMethodList: any[] = [];
-  clinicType: any[] = [
-    { lovCode: 'medical', lovDesc: 'Medical' },
-  { lovCode: 'dental', lovDesc: 'Dental' },
+  clinicTypes: any[] = [
+    { lovCode: FinancialVendorTypeCode.MedicalClinic, lovDesc: 'Medical' },
+  { lovCode: FinancialVendorTypeCode.DentalClinic, lovDesc: 'Dental' },
 ];
   paymentRunDateList: any[] = [];
   vendorContactList: any[] = [];
-  clincContactList: any[] = [];
+  clinicContactList: any[] = [];
   clinicNameNotApplicable: boolean = false;
   firstLastNameNotApplicable: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
@@ -55,6 +61,7 @@ export class VendorDetailsComponent implements OnInit {
   specialHandlingTextArea = '';
   selectedClinicVendorId!: any;
 constructor(
+  private financialVendorFacade: FinancialVendorFacade,
     private readonly formBuilder: FormBuilder,
  private readonly cdr: ChangeDetectorRef,
   private lovFacade: LovFacade,
@@ -65,6 +72,7 @@ constructor(
     this.medicalProviderForm = this.formBuilder.group({});
     this.clinicForm = this.formBuilder.group({
     });
+   
     this.buildClinicForm();
   }
 
@@ -72,12 +80,11 @@ constructor(
   buildClinicForm() {
     this.clinicForm.reset();
     this.clinicForm = this.formBuilder.group({
-      firstName:[''],
-      clinicName:[''],
-      lastName:[],
+      providerName:[''],
       tinNumber: [''],
       npiNbr: [''],
       paymentMethod: [''],
+      clinicType: [''],
       specialHandling: [''],
       mailCode: [''],
       nameOnCheck: [''],
@@ -99,6 +106,7 @@ constructor(
 
 
   ngOnInit(): void {
+    this.hasCreateUpdatePermission = false;
     this.lovFacade.getPaymentRunDateLov();
     this.lovFacade.getPaymentMethodLov();
         if (this.editVendorInfo) {
@@ -244,12 +252,13 @@ fillFormData(){
   }
 
   saveClinic() {
-    
+    //debugger;
     this.validateClinicForm();
     this.isValidateClinicForm = true
     if (this.clinicForm.valid) {
       let providerData = this.mapClinicProfileData();
-      this.saveProviderEventClicked.next(providerData);
+      //this.saveClinicEventClicked.emit(providerData); // Emit the event
+      this.saveClinicProfile(providerData);
     }
 
   }
@@ -364,110 +373,93 @@ fillFormData(){
 
   validateClinicForm() {
     this.clinicForm.markAllAsTouched();
-    if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders) {
       if (!this.clinicNameNotApplicable) {
-        this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
-        this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
+        this.clinicForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
+        this.clinicForm.controls['providerName'].updateValueAndValidity();
       }
-      if (!this.firstLastNameNotApplicable) {
-        this.medicalProviderForm.controls['firstName'].setValidators([Validators.required]);
-        this.medicalProviderForm.controls['lastName'].setValidators([Validators.required]);
-        this.medicalProviderForm.controls['firstName'].updateValueAndValidity();
-        this.medicalProviderForm.controls['lastName'].updateValueAndValidity();
-      }
-    }
-    else if(this.providerType == this.vendorTypes.Manufacturers) {
-      this.medicalProviderForm.controls['providerName']
-      .setValidators([
-        Validators.required,Validators.required,Validators.pattern('^[A-Za-z ]+$')
-      ]);
-      this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
-    }
-    else {
-      this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
-      this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
-    }
-    let mailCode = this.medicalProviderForm.controls['mailCode'].value;
-    this.validateMailCode()
+      
+    let mailCode = this.clinicForm.controls['mailCode'].value;
+    this.validateClinicMailCode()
  
     if (mailCode) {
-               this.medicalProviderForm.controls['addressLine1']
+               this.clinicForm.controls['addressLine1']
         .setValidators([
           Validators.required,
         ]);
-      this.medicalProviderForm.controls['addressLine1'].updateValueAndValidity();
+      this.clinicForm.controls['addressLine1'].updateValueAndValidity();
 
-      this.medicalProviderForm.controls['city']
+      this.clinicForm.controls['city']
         .setValidators([
           Validators.required,Validators.required,Validators.pattern('^[A-Za-z ]+$')
         ]);
-      this.medicalProviderForm.controls['city'].updateValueAndValidity();
+      this.clinicForm.controls['city'].updateValueAndValidity();
 
-      this.medicalProviderForm.controls['state']
+      this.clinicForm.controls['state']
         .setValidators([
           Validators.required,
         ]);
-      this.medicalProviderForm.controls['state'].updateValueAndValidity();
+      this.clinicForm.controls['state'].updateValueAndValidity();
 
-      this.medicalProviderForm.controls['zip']
+      this.clinicForm.controls['zip']
         .setValidators([
           Validators.required,Validators.required,Validators.pattern('^[A-Za-z0-9 \-]+$')
         ]);
-      this.medicalProviderForm.controls['zip'].updateValueAndValidity();
+      this.clinicForm.controls['zip'].updateValueAndValidity();
 
       if (this.providerType == this.vendorTypes.Manufacturers) {
-        this.medicalProviderForm.controls['nameOnCheck'].setValidators([
+        this.clinicForm.controls['nameOnCheck'].setValidators([
           Validators.nullValidator,
         ]);
-        this.medicalProviderForm.controls[
+        this.clinicForm.controls[
           'nameOnCheck'
         ].updateValueAndValidity();
 
-        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([
+        this.clinicForm.controls['nameOnEnvolop'].setValidators([
           Validators.nullValidator,
         ]);
-        this.medicalProviderForm.controls[
+        this.clinicForm.controls[
           'nameOnEnvolop'
         ].updateValueAndValidity();
       }
 
     }
 
-    if(this.providerType != this.vendorTypes.Manufacturers)
-    {
-      this.medicalProviderForm.controls['paymentMethod']
+      this.clinicForm.controls['paymentMethod']
         .setValidators([
           Validators.required,
         ]);
-      this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();
+      this.clinicForm.controls['paymentMethod'].updateValueAndValidity();
 
-    }
+      this.clinicForm.controls['clinicType']
+      .setValidators([
+        Validators.required,
+      ]);
+    this.clinicForm.controls['clinicType'].updateValueAndValidity();
 
-    if (this.providerType == this.vendorTypes.InsuranceVendors) {
-
-      this.medicalProviderForm.controls['paymentRunDate']
-        .setValidators([
-          Validators.required,
-        ]);
-      this.medicalProviderForm.controls['paymentRunDate'].updateValueAndValidity();
-
-      this.medicalProviderForm.controls['isAcceptCombinedPayment']
-        .setValidators([
-          Validators.required,
-        ]);
-      this.medicalProviderForm.controls['isAcceptCombinedPayment'].updateValueAndValidity();
-
-      this.medicalProviderForm.controls['isAcceptReports']
-        .setValidators([
-          Validators.required,
-        ]);
-      this.medicalProviderForm.controls['isAcceptReports'].updateValueAndValidity();
-    }
 
     for (let index = 0; index < this.AddContactForm.length; index++) {
       (this.AddContactForm.controls[index] as FormGroup).controls['isCheckContactNameValid'].setValue(true);
     }
 
+  }
+  validateClinicMailCode() {
+    if(this.providerType == this.vendorTypes.DentalProviders){
+      let address1 =  this.clinicForm.controls['addressLine1'].value;   
+      let city =  this.clinicForm.controls['city'].value;   
+      let state =  this.clinicForm.controls['state'].value;   
+      let zip =  this.clinicForm.controls['zip'].value;
+  
+      if(address1 || city || state || zip){
+        this.clinicForm.controls['mailCode']
+        .setValidators([
+          Validators.required,
+        ]);
+      this.clinicForm.controls['mailCode'].updateValueAndValidity();
+      }else{
+        this.clinicForm.controls['mailCode'].clearValidators();
+      this.clinicForm.controls['mailCode'].updateValueAndValidity();
+      }
+    }
   }
 
   validateMailCode() {
@@ -517,12 +509,13 @@ fillFormData(){
   }
 
   mapClinicProfileData() {
+    //debugger;
     let formValues = this.clinicForm.value;
-    this.vendorContactList = [];
-    if (formValues.newAddContactForm.length > 0) {
-      formValues.newAddContactForm.forEach((contact: any) => {
+    this.clinicContactList = [];
+    if (formValues.newAddClinicContactForm.length > 0) {
+      formValues.newAddClinicContactForm.forEach((contact: any) => {
         if (contact.contactName != '' || contact.description != '' || contact.phoneNumber != '' || contact.email != '') {
-          let vendorContact = {
+          let clinicContact = {
             contactName: contact.contactName,
             contactDesc: contact.description,
             phoneNbr: contact.phoneNumber,
@@ -530,13 +523,13 @@ fillFormData(){
             emailAddressTypeCode: AddressType.Email,
             faxNbr: contact.fax
           }
-          this.vendorContactList.push(vendorContact);
+          this.vendorContactList.push(clinicContact);
         }
       })
     }
-    this.mapAddressContact(formValues);
-    const vendorProfileData = this.createVendorProfileData(formValues)
-    return vendorProfileData;
+    this.mapClinicAddressContact(formValues);
+    const clinicProfileData = this.createClinicProfileData(formValues)
+    return clinicProfileData;
   }
 
   mappVendorProfileData() {
@@ -671,6 +664,26 @@ fillFormData(){
     }
   }
 
+  mapClinicAddressContact(formValues :any){
+    this.vendorContactList = [];
+    if (formValues.newAddClinicContactForm.length > 0) {
+      formValues.newAddClinicContactForm.forEach((contact: any) => {
+        if (contact.contactName != '' || contact.description != '' || contact.phoneNumber != '' || contact.email != '') {
+          let vendorContact = {
+            contactName: contact.contactName,
+            contactDesc: contact.description,
+            phoneNbr: contact.phoneNumber,
+            emailAddress: contact.email,
+            emailAddressTypeCode: AddressType.Email,
+            faxNbr: contact.fax,
+            preferredFlag : contact.isPreferedContact ? 'Y' : 'N'
+          }
+          this.vendorContactList.push(vendorContact);
+        }
+      })
+    }
+  }
+
   createVendorProfileData(formValues :any){
     let vendorProfileData = {
       vendorId: this.selectedClinicVendorId,
@@ -702,6 +715,40 @@ fillFormData(){
     }
     return vendorProfileData;
   }
+  
+  createClinicProfileData(formValues :any){
+    let vendorProfileData = {
+      vendorId: this.selectedClinicVendorId,
+      vendorName: formValues.providerName,
+      firstName: formValues.firstName,
+      lastName: formValues.lastName,
+      vendorTypeCode: formValues.clinicType,
+      tin: formValues.tinNumber,
+      npiNbr: formValues.npiNbr,
+      mailCode: formValues.mailCode,
+      addressTypeCode: AddressType.Mailing,
+      address1: formValues.addressLine1,
+      address2: formValues.addressLine2,
+      cityCode: formValues.city,
+      stateCode: formValues.state,
+      zip: formValues.zip,
+      nameOnCheck: formValues.nameOnCheck,
+      nameOnEnvelope: formValues.nameOnEnvolop,
+      paymentMethodCode: formValues.paymentMethod,
+      specialHandling: formValues.specialHandling,
+      phoneTypeCode: AddressType.Mailing,
+      vendorContacts: this.vendorContactList,
+      AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,
+      AcceptsCombinedPaymentsFlag: (formValues.isAcceptCombinedPayment != null && formValues.isAcceptCombinedPayment != '') ? formValues.isAcceptCombinedPayment : null,
+      PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? Number(formValues.paymentRunDate) : null,
+      PreferredFlag: (formValues.isPreferedPharmacy) ? StatusFlag.Yes:StatusFlag.No,
+      PhysicalAddressFlag: (formValues.physicalAddressFlag) ? StatusFlag.Yes:StatusFlag.No,
+      emailAddressTypeCode: AddressType.Mailing,
+      activeFlag:this.hasCreateUpdatePermission==true? StatusFlag.Yes:StatusFlag.No,
+    }
+    return vendorProfileData;
+  }
+  
   onChange(){
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if (mailCode.length >= 0){
@@ -762,16 +809,34 @@ onMailCodeChange( )
 get medicalProviderFormControls() {
   return this.medicalProviderForm.controls as any;
 }
+
 get clinicFormControls() {
   return this.clinicForm.controls as any;
 }
-public isaddNewInsuranceProviderOpen =false;
-public addNewInsuranceProviderClose(): void {
-  this.isaddNewInsuranceProviderOpen = false;
+
+public isaddNewClinicOpen =false;
+public addNewClinicClose(): void {
+  this.isaddNewClinicOpen = false;
 }
 
-public addNewInsuranceProviderOpen(): void {
-  this.isaddNewInsuranceProviderOpen = true;
+public addNewClinicOpen(): void {
+  this.isaddNewClinicOpen = true;
+}
+saveClinicProfile(vendorProfile: any){
+  this.financialVendorFacade.showLoader();
+  //debugger;
+  //return;
+  this.financialVendorFacade.addClinicProfile(vendorProfile).subscribe({
+    next:(response:any)=>{
+      this.financialVendorFacade.hideLoader();
+      this.addNewClinicClose();
+      this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Clinic profile added successfully");
+      this.cdr.detectChanges();
+    },
+    error:(err:any)=>{
+      this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+    }
+  });
 }
 
 }

@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CaseFacade, ContactFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType} from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ReminderFacade } from '@cms/productivity-tools/domain';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-financial-vendor-page',
@@ -22,6 +23,7 @@ export class FinancialVendorPageComponent implements OnInit {
   isShowPharmacyProvider: boolean = false;
   reminderTabOn = true;
   isShowManufacturers: boolean = false;
+  hasHealthcareProviderCreateUpdatePermission=false;
 
   data = [
     {
@@ -77,6 +79,7 @@ export class FinancialVendorPageComponent implements OnInit {
     private reminderFacade: ReminderFacade,
     private documentFacade :  DocumentFacade,
     private readonly contactFacade: ContactFacade,
+    private userManagementFacade:UserManagementFacade, 
     ) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
@@ -85,6 +88,7 @@ export class FinancialVendorPageComponent implements OnInit {
   ngOnInit() {
     this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
     this.contactFacade.loadDdlStates();  
+    this.hasHealthcareProviderCreateUpdatePermission=this.userManagementFacade.hasPermission(['Financial_MedicalProvider_Tab']);//Financial_MedicalProvider_Tab - Healthcare_Provider_Create_Update
   }
   searchClinicVendorClicked(clientName:any)
   {
@@ -174,6 +178,22 @@ export class FinancialVendorPageComponent implements OnInit {
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal();
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Vendor profile added successfully");
+        this.cdr.detectChanges();
+      },
+      error:(err:any)=>{
+        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+      }
+    });
+  }
+
+  saveClinicProfile(vendorProfile: any){
+    
+    this.financialVendorFacade.showLoader();
+    this.financialVendorFacade.addClinicProfile(vendorProfile).subscribe({
+      next:(response:any)=>{
+        this.financialVendorFacade.hideLoader();
+        this.closeVendorDetailModal();
+        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Clinic profile added successfully");
         this.cdr.detectChanges();
       },
       error:(err:any)=>{
