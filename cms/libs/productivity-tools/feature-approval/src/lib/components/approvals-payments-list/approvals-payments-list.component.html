@@ -71,7 +71,7 @@
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
         [resizable]="true" [columnMenu]="{ filter: false }" [sort]="state.sort"
         (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
-        [data]="approvalsPaymentsGridPagedResult"
+        [data]="pendingApprovalGridDataResult"
         [isDetailExpanded]="expandSendBackNotes"
         >
 
