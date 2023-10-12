@@ -454,7 +454,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'invoiceNbr',
+              field: this.selectedColumn ?? 'clientFullName',
               operator: operator,
               value: data,
             },
