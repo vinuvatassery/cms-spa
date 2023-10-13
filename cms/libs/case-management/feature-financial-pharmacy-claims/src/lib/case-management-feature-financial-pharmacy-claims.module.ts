@@ -27,6 +27,7 @@ import { PharmacyClaimsReconcilePageComponent } from './containers/pharmacy-clai
 import { PharmacyClaimsAllPaymentsListComponent } from './components/pharmacy-claims-all-payments-list/pharmacy-claims-all-payments-list.component';
 import { PharmacyClaimsBatchItemsPageComponent } from './containers/pharmacy-claims-batch-items-page/pharmacy-claims-batch-items-page.component';
 import { PharmacyClaimsReverseClaimsComponent } from './components/pharmacy-claims-reverse-claims/pharmacy-claims-reverse-claims.component';
+import { PharmacyClaimsPrescriptionListComponent } from './components/pharmacy-claims-prescription-list/pharmacy-claims-prescription-list.component';
  
 @NgModule({
   imports: [
@@ -61,7 +62,8 @@ import { PharmacyClaimsReverseClaimsComponent } from './components/pharmacy-clai
     PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent,
     PharmacyClaimsPrintDenialLetterComponent,
     PharmacyClaimsBatchItemsPageComponent,
-    PharmacyClaimsReverseClaimsComponent
+    PharmacyClaimsReverseClaimsComponent,
+    PharmacyClaimsPrescriptionListComponent
   ],
   exports: [
     PharmacyClaimsProcessListComponent,
@@ -87,7 +89,8 @@ import { PharmacyClaimsReverseClaimsComponent } from './components/pharmacy-clai
     PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent,
     PharmacyClaimsPrintDenialLetterComponent,
     PharmacyClaimsBatchItemsPageComponent,
-    PharmacyClaimsReverseClaimsComponent
+    PharmacyClaimsReverseClaimsComponent,
+    PharmacyClaimsPrescriptionListComponent
   ],
 })
 export class CaseManagementFeatureFinancialPharmacyClaimsModule {}
