@@ -30,7 +30,7 @@ export class FinancialPcaFacade {
     field: this.sortValueFinancialPcaAssignment,
   }];
 
-  public sortValueFinancialPcaReassignment = 'batch';
+  public sortValueFinancialPcaReassignment = 'pcaCode';
   public sortPcaReassignmentList: SortDescriptor[] = [{
     field: this.sortValueFinancialPcaReassignment,
   }];
@@ -122,8 +122,12 @@ export class FinancialPcaFacade {
 
   loadFinancialPcaReassignmentListGrid(gridValuesInput: any) {
     this.financialPcaDataService.loadFinancialPcaReassignmentListService(gridValuesInput).subscribe({
-      next: (dataResponse) => {
-        this.financialPcaReassignmentDataSubject.next(dataResponse);
+      next: (dataResponse: any) => {
+        const reassignmentGridData = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.financialPcaReassignmentDataSubject.next(reassignmentGridData);
         this.hideLoader();
       },
       error: (err) => {

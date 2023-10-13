@@ -516,8 +516,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
 
   onClickedExport(){
     this.showExportLoader = true
-    this.exportGridDataEvent.emit()    
-    
+    this.exportGridDataEvent.emit()        
     this.exportButtonShow$
     .subscribe((response: any) =>
     {
