@@ -65,7 +65,6 @@ export class FinancialPremiumsBatchesLogListsComponent
   @Input() unbatchEntireBatch$ :any
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   selected:any
-  noDeleteStatus=['PAYMENT_REQUESTED','MANAGER_APPROVED']
  
   public bulkMore = [
     {
@@ -121,6 +120,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       buttonType: 'btn-h-danger',
       text: 'Delete Payment',
       icon: 'delete',
+      disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
       click: (data: any): void => {
         if (data && !this.showDeleteConfirmation) {
           this.showDeleteConfirmation = true;
