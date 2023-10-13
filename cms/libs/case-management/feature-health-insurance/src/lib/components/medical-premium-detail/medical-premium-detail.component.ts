@@ -24,7 +24,8 @@ import {
   InsuranceStatusType,
   FinancialVendorTypeCode,
   FinancialClaimsFacade,
-  ServiceSubTypeCode
+  ServiceSubTypeCode,
+  FinancialVendorFacade
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
@@ -145,7 +146,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
-    private financialClaimsFacade: FinancialClaimsFacade,
+    private financialVendorFacade: FinancialVendorFacade,
   ) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
@@ -288,8 +289,7 @@ this.insuranceTypeCode="DENTAL";
      this.healthInsurancePolicyCopy = data;
      if(data.insuranceVendorAddressId!=null)
      {      
-    this.financialClaimsFacade.searchProvidorsById(data.insuranceVendorAddressId,data.healthInsuranceTypeCode ==  FinancialVendorTypeCode.DentalProviders? ServiceSubTypeCode.dentalClaim : ServiceSubTypeCode.medicalClaim);
-     
+    this.financialVendorFacade.searchProvidorsById(data.insuranceVendorAddressId);     
      }
       this.bindValues(data);
     });

@@ -33,12 +33,10 @@ export class ApprovalFacade {
 
 
   /** Private properties **/
-  private approvalsGeneralSubject =  new Subject<any>();
   private approvalsPaymentsSubject =  new Subject<any>();
   private ImportedClaimsSubject =  new Subject<any>();
 
   /** Public properties **/
-  approvalsGeneralList$ = this.approvalsGeneralSubject.asObservable();
   approvalsPaymentsList$ = this.approvalsPaymentsSubject.asObservable();
   approvalsImportedClaimsLists$ = this.ImportedClaimsSubject.asObservable();
 
@@ -83,17 +81,6 @@ export class ApprovalFacade {
   ) { }
 
   /** Public methods **/
-  loadApprovalsGeneral(): void {
-    this.approvalDataService.loadApprovalsGeneral().subscribe({
-      next: (approvalGeneralResponse) => {
-        this.approvalsGeneralSubject.next(approvalGeneralResponse);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
-
   loadApprovalsPayments(): void {
     this.approvalDataService.loadPendingPaymentsListsServices().subscribe({
       next: (approvalsPaymentsResponse) => {

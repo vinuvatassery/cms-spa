@@ -75,7 +75,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   @Output() updatePremiumEvent = new EventEmitter<any>();
   @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
-  public selectedProcessClaims: any[] = [];
   public state!: any;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -86,10 +85,74 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   filter!: any;
   selectedColumn!: any;
   columnName: string = '';
+  public selectedProcessClaims: any[] = [];
+
   columns: any = {
-    clientFirstName:"Client Name",
-    clientId:"Client Id",
+    clientFullName:"Client Name",
+    insuranceName:"Name on Primary Insurance Card",
+    clientId:"Client ID",
+    insuranceVendor:"Insurance Vendor",
+    premiumAmount:"Premium Amount",
+    paymentMethodCode:"Payment Method",
+    planName:"Plan Name",
+    insuranceType:"Insurance Type",
+    policyId:"Policy Id",
+    groupId:"Group ID",
+    paymentId:"Payment ID",
+    paymentStatus:"Payment Status"
   };
+  dropDowncolumns : any = [
+    {
+      columnCode: 'clientFullName',
+      columnDesc: 'Client Name',
+    },
+    {
+      columnCode: 'insuranceName',
+      columnDesc: 'Name on Primary Insurance Card',
+    },
+    {
+      columnCode: 'clientId',
+      columnDesc: 'Client ID',
+    },
+    {
+      columnCode: 'insuranceVendor',
+      columnDesc: 'Insurance Vendor',
+    },
+    {
+      columnCode: 'premiumAmount',
+      columnDesc: 'Premium Amount',
+    },
+   
+ 
+    {
+      columnCode: 'planName',
+      columnDesc: 'Plan Name',
+    },
+    {
+      columnCode: 'insuranceType',
+      columnDesc: 'Insurance Type',
+    },
+    {
+      columnCode: 'paymentMethod',
+      columnDesc: 'Payment Method',
+    },
+    {
+      columnCode: 'policyId',
+      columnDesc: 'Policy ID',
+    },
+    {
+      columnCode: 'groupId',
+      columnDesc: 'Group ID',
+    },
+    {
+      columnCode: 'paymentId',
+      columnDesc: 'Payment ID',
+    },
+    {
+      columnCode: 'paymentStatus',
+      columnDesc: 'Payment Status',
+    },
+  ];
   columnDroplist : any = {
     ALL: "ALL",
     ClientFirstName:"clientFirstName",
@@ -220,7 +283,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   ngOnInit(): void {
     this.premiumGridlistDataHandle();
     this.addActionRespSubscription();
-
   }
 
   ngOnDestroy(): void {
@@ -257,9 +319,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       });
     }
     this.currentPageRecords = this.financialPremiumsProcessGridLists;
-    if(this.isRemoveBatchClosed){
-      this.checkedAndUncheckedRecordsFromSelectAll = this.currentPageRecords;
-    }
     //If the user is selecting the individual check boxes and changing the page count
     this.handlePageCountSelectionChange();
     //If the user click on select all header and either changing the page number or page count
@@ -274,25 +333,45 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
       this.selectedSendReportList = [];
       this.selectedSendReportList.SelectedSendReports = [];
-      this.financialPremiumsProcessGridLists.forEach((eachRecord: any) => {
-        eachRecord.selected = true;
-      });
+      if(this.isSendReportOpened){
       for (const item of this.financialPremiumsProcessGridLists) {
         // Check if the item is in the second list.
         const isItemInSecondList = this.unCheckedProcessRequest.find((item2 :any) => item2.paymentRequestId === item.paymentRequestId);
         // If the item is in the second list, mark it as selected true.
         if (isItemInSecondList) {
           item.selected = false;
-        }
-        else{
+        }else{
           item.selected = true;
         }
       }
-      this.selectedSendReportList.SelectedSendReports = this.financialPremiumsProcessGridLists;
+    }
+      if(this.isRemoveBatchClosed){
+        this.selectedSendReportList.SelectedSendReports = this.financialPremiumsProcessGridLists;
+        if(this.unCheckedProcessRequest?.length == 0 && this.isPageChanged){
+          this.selectedSendReportList?.SelectedSendReports?.forEach((item: any) => { item.selected = true; });
+          this.checkedAndUncheckedRecordsFromSelectAll = this.selectedSendReportList?.SelectedSendReports;
+        }else{
+        for (const item of this.financialPremiumsProcessGridLists) {
+          // Check if the item is in the second list.
+          const isItemInSecondList = this.checkedAndUncheckedRecordsFromSelectAll.find((item2 :any) => item2.paymentRequestId === item.paymentRequestId);
+          // If the item is in the second list, mark it as selected true.
+          if (isItemInSecondList) {
+            item.selected = true;
+          }else{
+            item.selected = false;
+          }
+      }
+    }
+    }
       if(this.isSendReportOpened){
+        if(this.unCheckedProcessRequest?.length > 0){
+          this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
+          this.recordCountWhenSelectallClicked = this.sendReportCount;
+        }else{
         this.sendReportCount = this.recordCountWhenSelectallClicked;
+        }
       }else{
-        this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports?.filter((item:any) => item.selected == true));
+          this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports?.filter((item:any) => item.selected == true));
     }
   }
 }
@@ -355,22 +434,37 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     this.gridFilter = filter;
   }
 
-  onChange(event: any) {
+  onChange(data: any) {
     this.defaultGridState();
-    this.columnName = this.state.columnName = this.columnDroplist[this.selectedColumn];
-    this.sortColumn = this.columns[this.selectedColumn];
-    this.filter = {logic:'and',filters:[{
-      "filters": [
-          {
-              "field": this.columnDroplist[this.selectedColumn] ?? "clientFullName",
-              "operator": "startswith",
-              "value": event
-          }
+    let operator = 'startswith';
+
+    if (
+      this.selectedColumn === 'clientId' ||
+      this.selectedColumn === 'premiumAmount' ||
+      this.selectedColumn === 'policyId' ||
+      this.selectedColumn === 'groupId' ||
+      this.selectedColumn === 'paymentId'
+    ) {
+      operator = 'eq';
+    }
+
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedColumn ?? 'clientFullName',
+              operator: operator,
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
       ],
-      "logic": "and"
-  }]}
-  let stateData = this.state
-  stateData.filter = this.filter
+    };
+    const stateData = this.state;
+    stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
 
@@ -626,24 +720,8 @@ closeRecentPremiumsModal(result: any){
             element.selected = false;
           }
         });
-        if(this.isSendReportOpened){
-        let exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
-        if (exist === 0) {
-          this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': false });
-        }else{
-          const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
-          if (recordIndex !== -1) {
-            this.checkedAndUncheckedRecordsFromSelectAll.splice(recordIndex, 1); // Remove the record at the found index
-          }
-        }
-      }
-      if(this.isRemoveBatchClosed){
-        this.checkedAndUncheckedRecordsFromSelectAll?.forEach((element: any) => {
-          if (element.paymentRequestId === dataItem.paymentRequestId) {
-            element.selected = false;
-          }
-        });
-      }
+        this.onSendReportRecordUncheckedOnSelectionChange(dataItem);
+        this.onRemovePremiumsRecordUncheckedOnSelectionChange(dataItem);
     }
     else{
       this.unCheckedProcessRequest = this.unCheckedProcessRequest.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
@@ -652,34 +730,75 @@ closeRecentPremiumsModal(result: any){
           element.selected = true;
         }
       });
-      if(this.isSendReportOpened){
-        let exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
-        if (exist === 0) {
-          this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
-        }else{
-          const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
-          if (recordIndex !== -1) {
-            this.checkedAndUncheckedRecordsFromSelectAll.splice(recordIndex, 1); // Remove the record at the found index
-          }
-        }
-      }
-      if(this.isRemoveBatchClosed){
-        this.checkedAndUncheckedRecordsFromSelectAll?.forEach((element: any) => {
-          if (element.paymentRequestId === dataItem.paymentRequestId) {
-            element.selected = true;
-          }
-        });
-      }
+      this.onSendReportRecordUncheckedOnSelectAll(dataItem);
+      this.onRemovePremiumsRecordUncheckedOnSelectAll(dataItem);
     }
     this.selectedSendReportList = {'selectAll':this.selectAll,'UnSelectedSendReports':this.unCheckedProcessRequest,
-    'SelectedSendReports':this.checkedAndUncheckedRecordsFromSelectAll, 'batchId':null, 'currentSendReportsGridFilter':this.state.filter}
+    'SelectedSendReports':this.checkedAndUncheckedRecordsFromSelectAll, 'batchId':null, 'currentSendReportsGridFilter':JSON.stringify(this.state?.filter?.filters ?? [])}
     if(this.selectAll && this.isSendReportOpened){
+      if(this.unCheckedProcessRequest?.length > 0){
+        this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
+        this.recordCountWhenSelectallClicked = this.sendReportCount;
+      }else{
       this.recordCountWhenSelectallClicked = selected == true ? this.recordCountWhenSelectallClicked + 1 : this.recordCountWhenSelectallClicked - 1;
       this.sendReportCount = this.recordCountWhenSelectallClicked;
+      }
     }else{
       this.sendReportCount = this.selectedSendReportList?.SelectedSendReports?.filter((item: any) => item.selected == true).length;
-}
+  }
     this.ref.detectChanges();
+}
+
+  onRemovePremiumsRecordUncheckedOnSelectAll(dataItem: any) {
+    if(this.isRemoveBatchClosed){
+      this.checkedAndUncheckedRecordsFromSelectAll?.filter((element: any) => {
+        if (element.paymentRequestId === dataItem.paymentRequestId) {
+          element.selected = true;
+        }
+      });
+      let exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId);
+      if(exist == 0){
+        this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
+        }
+    }
+  }
+
+  onSendReportRecordUncheckedOnSelectAll(dataItem: any) {
+    if(this.isSendReportOpened){
+      let exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
+      if (exist === 0) {
+        this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
+      }else{
+        const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
+        if (recordIndex !== -1) {
+          this.checkedAndUncheckedRecordsFromSelectAll.splice(recordIndex, 1); // Remove the record at the found index
+        }
+      }
+    }
+  }
+
+  onRemovePremiumsRecordUncheckedOnSelectionChange(dataItem: any) {
+    if(this.isRemoveBatchClosed){
+      this.checkedAndUncheckedRecordsFromSelectAll?.forEach((element: any) => {
+        if (element.paymentRequestId === dataItem.paymentRequestId) {
+          element.selected = false;
+        }
+      });
+    }
+  }
+
+  onSendReportRecordUncheckedOnSelectionChange(dataItem: any) {
+    if(this.isSendReportOpened){
+      let exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
+      if (exist === 0) {
+        this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': false });
+      }else{
+        const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
+        if (recordIndex !== -1) {
+          this.checkedAndUncheckedRecordsFromSelectAll.splice(recordIndex, 1); // Remove the record at the found index
+        }
+      }
+    }
   }
 
   selectionAllChange(){
@@ -692,9 +811,14 @@ closeRecentPremiumsModal(result: any){
       this.markAsUnChecked(this.financialPremiumsProcessGridLists);
     }
     this.selectedSendReportList = {'selectAll':this.selectAll,'UnSelectedSendReports':this.unCheckedProcessRequest,
-    'SelectedSendReports':this.checkedAndUncheckedRecordsFromSelectAll, 'batchId':null, 'currentSendReportsGridFilter': this.state.filter, "filter": this.filter}
+    'SelectedSendReports':this.checkedAndUncheckedRecordsFromSelectAll, 'batchId':null, 'currentSendReportsGridFilter': JSON.stringify(this.state?.filter?.filters ?? []) }
     if(this.selectAll && this.isSendReportOpened){
-      this.sendReportCount = this.recordCountWhenSelectallClicked;
+      if(this.unCheckedProcessRequest?.length > 0){
+        this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
+        this.recordCountWhenSelectallClicked = this.sendReportCount;      
+      }else{
+        this.sendReportCount = this.totalGridRecordsCount;
+      }
     }else{
     this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports);
 }
