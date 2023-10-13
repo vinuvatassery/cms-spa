@@ -5,7 +5,7 @@ import {  BehaviorSubject, Subject } from 'rxjs';
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, DocumentFacade, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FinancialPharmacyClaimsDataService } from '../../infrastructure/financial-management/pharmacy-claims.data.service';
 import { GridFilterParam } from '../../entities/grid-filter-param';
 
@@ -107,7 +107,8 @@ export class FinancialPharmacyClaimsFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly documentFacade: DocumentFacade
   ) { }
 
   /** Public methods **/
@@ -129,6 +130,10 @@ export class FinancialPharmacyClaimsFacade {
     });  
   }   
 
+  exportPharmacyClaimsProcessListGrid(params: any){
+    const fileName = 'pharmacy-claims-process'
+    this.documentFacade.getExportFile(params,`claims/pharmacies` , fileName);
+  }
 
   loadPharmacyClaimsBatchListGrid(){
     this.financialPharmacyClaimsDataService.loadPharmacyClaimsBatchListService().subscribe({
