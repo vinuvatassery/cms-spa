@@ -36,7 +36,7 @@ export class HealthCareProviderSearchComponent implements OnInit
   @Input() existingProviderData: any;  
   @Input() searchProviderLoaded$: any;
   @Input() selectedCustomProviderName: any;  
- 
+  @Input() hasCreateUpdatePermission:boolean=false; //Healtcare provider Add/Request
 
   /** Public properties **/
   providers$ = this.drugPharmacyFacade.healthCareProviders$;

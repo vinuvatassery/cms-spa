@@ -39,6 +39,7 @@ import { DocumentUploadComponent } from './document-upload/document-upload.compo
 import { ClientsAttachmentComponent } from './clients-attachment/clients-attachment.component';
 import { YesOrNoPipe } from './pipes/yes-or-no.pipe';
 import { VendorDetailsComponent } from './vendor-details/vendor-details.component';
+import { HealthcareProviderDetailsComponent } from './healthcare-provider-details/healthcare-provider-details.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
@@ -72,7 +73,8 @@ import { VendorDetailsComponent } from './vendor-details/vendor-details.componen
     ClientsAttachmentComponent,
     YesOrNoPipe,
     ReminderNotificationSnackBarComponent,
-    VendorDetailsComponent
+    VendorDetailsComponent,
+    HealthcareProviderDetailsComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -104,7 +106,8 @@ import { VendorDetailsComponent } from './vendor-details/vendor-details.componen
     ClientsAttachmentComponent,
     YesOrNoPipe,
     ReminderNotificationSnackBarComponent,
-    VendorDetailsComponent
+    VendorDetailsComponent,
+    HealthcareProviderDetailsComponent
   ],
 })
 export class SharedUiCommonModule {}
