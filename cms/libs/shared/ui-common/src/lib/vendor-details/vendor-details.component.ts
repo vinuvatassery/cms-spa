@@ -31,6 +31,16 @@ export class VendorDetailsComponent implements OnInit {
   @Output() updateVendorDetailsClicked = new EventEmitter<any>();
   @Output() searchClinicVendorClicked = new EventEmitter<any>();
 
+  @Output() closeMedicalProviderDialogEvent = new EventEmitter<boolean>();
+
+  closeMedicalProviderDialogInParent() {
+    this.closeMedicalProviderDialogEvent.emit(true);
+  }
+
+  addNewClinicOpen(){
+    this.closeMedicalProviderDialogInParent();
+  }
+
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
   isViewContentEditable!: boolean;

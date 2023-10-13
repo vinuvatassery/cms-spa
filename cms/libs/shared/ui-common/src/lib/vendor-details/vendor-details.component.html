@@ -67,6 +67,13 @@
                 Clinic Name cannot be more than 500 characters 
               </kendo-formerror>
             </kendo-floatinglabel>
+
+            <button
+              kendoButton
+              class="card-link-button ml-1 no-ul fontsize_twel mt-3"
+              [disabled]="isViewContentEditable" 
+              aria-label="Add New" (click)="addNewClinicOpen()"> ADD NEW</button>
+
           </div>
           <div class="flex-col" *ngIf="editVendorInfo 
           && (medicalProviderForm.value.vendorTypeCode == 'MEDICAL_CLINIC' 
