@@ -74,6 +74,7 @@ export class AuthorizationComponent   {
   errorMessage!: string;
   isSendEmailFailed: boolean = false;
   signedClietDocumentId!: string;
+  paperlessFlag: any;
   communicationLetterTypeCode: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter;
   communicationEmailTypeCode: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
   emailSubject: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
@@ -119,6 +120,7 @@ export class AuthorizationComponent   {
               if(data?.clientCaseEligibility?.paperlessFlag === StatusFlag.Yes)
               {
                 this.isGoPaperlessOpted = true;
+                this.paperlessFlag = data?.clientCaseEligibility?.paperlessFlag;
                 this.ref.detectChanges();
                 if(data?.email?.email !== null){
                   this.toEmail.push(data?.email?.email.trim());

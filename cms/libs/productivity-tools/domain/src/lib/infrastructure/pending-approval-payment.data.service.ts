@@ -14,9 +14,9 @@ export class PendingApprovalPaymentService {
   getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string, level: number) {
     const paymentApprovalGridSetupDto = {
       SortType: gridSetupData.gridDataRefinerValue.sortType,
-      Sorting: gridSetupData.gridDataRefinerValue.sorting,
-      SkipCount: gridSetupData.gridDataRefinerValue.skipcount,
-      MaxResultCount: gridSetupData.gridDataRefinerValue.maxResultCount,
+      Sorting: gridSetupData.gridDataRefinerValue.sortColumn,
+      SkipCount: gridSetupData.gridDataRefinerValue.skipCount,
+      MaxResultCount: gridSetupData.gridDataRefinerValue.pagesize,
       ColumnName : gridSetupData.gridDataRefinerValue.columnName,
       Filter:JSON.stringify(gridSetupData.gridDataRefinerValue.filter)
     };
@@ -26,10 +26,10 @@ export class PendingApprovalPaymentService {
 
   getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string, level: number) {
     const paymentApprovalGridSetupDto = {
-      SortType: gridSetupData.sortType,
-      Sorting: gridSetupData.sort,
-      SkipCount: gridSetupData.skipCount,
-      MaxResultCount: gridSetupData.pagesize,
+      SortType: gridSetupData.gridDataRefinerValue.sortType,
+      Sorting: gridSetupData.gridDataRefinerValue.sortColumn,
+      SkipCount: gridSetupData.gridDataRefinerValue.skipCount,
+      MaxResultCount: gridSetupData.gridDataRefinerValue.pagesize,
       Filter: JSON.stringify(gridSetupData.gridDataRefinerValue.filter),
     };
     return this.http.post<any>(
@@ -49,8 +49,8 @@ export class PendingApprovalPaymentService {
     const batchDetailGridSetupDto = {
       SortType: gridSetupData.sortType,
       Sorting: gridSetupData.sort,
-      SkipCount: gridSetupData.skipcount,
-      MaxResultCount: gridSetupData.maxResultCount,
+      SkipCount: gridSetupData.skipCount,
+      MaxResultCount: gridSetupData.pageSize,
       Filter: gridSetupData.filter,
     };
     return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/payments/batch-details?serviceSubType=${serviceSubType}&batchId=${batchId}`
