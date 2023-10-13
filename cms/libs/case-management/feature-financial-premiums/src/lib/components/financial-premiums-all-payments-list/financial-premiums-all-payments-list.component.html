@@ -211,7 +211,7 @@
     <kendo-grid-column field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="70" class="text-center"
       [sortable]="false">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton [data]="allPaymentsGridActions" icon="more-vertical"
+        <kendo-dropdownbutton [data]="batchLogGridActions(dataItem)" icon="more-vertical"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
           aria-label="more actions" title="More option"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }">
@@ -308,14 +308,15 @@
 </ng-template>
 
 
-<ng-template #unBatchPaymentDialogTemplate>
-
+<ng-template #unBatchPaymentPremiumsDialogTemplate>
   <cms-financial-premiums-unbatch-payment
-    (unBatchPaymentCloseClickedEvent)="onUnBatchPaymentCloseClicked($event)"></cms-financial-premiums-unbatch-payment>
+    (unBatchPaymentCloseClickedEvent)="onUnBatchPaymentCloseClicked($event)"
+    [isBulkUnBatchOpened]="false"></cms-financial-premiums-unbatch-payment>
 </ng-template>
 
-<ng-template #deletePaymentDialogTemplate>
-
+<ng-template #removePremiumsConfirmationDialogTemplate>
   <cms-financial-premiums-delete-payment
-    (deletePaymentCloseClickedEvent)="onDeletePaymentCloseClicked($event)"></cms-financial-premiums-delete-payment>
+  [paymentId]="paymentId"
+  (deletePaymentEvent)="deletePremiumPayment($event)"
+  (deletePaymentCloseClickedEvent)="onModalRemovePremiumsModalClose($event)"></cms-financial-premiums-delete-payment>
 </ng-template>
