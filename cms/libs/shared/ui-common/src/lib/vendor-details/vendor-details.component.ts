@@ -9,6 +9,7 @@ import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
 import { AddressType } from '../enums/address-type.enum';
 import { StatusFlag } from '../enums/status-flag.enum';
 import { FinancialVendorFacade } from '@cms/case-management/domain';
+import { FinancialVendorPageComponent } from 'libs/case-management/feature-financial-vendor/src/lib/containers/financial-vendor-page/financial-vendor-page.component';
 @Component({
   selector: 'cms-vendor-details',
   templateUrl: './vendor-details.component.html',
@@ -60,8 +61,7 @@ export class VendorDetailsComponent implements OnInit {
   specialHandlingMaxLength = 100;
   specialHandlingTextArea = '';
   selectedClinicVendorId!: any;
-constructor(
-  private financialVendorFacade: FinancialVendorFacade,
+constructor(private parentComponent: FinancialVendorPageComponent,
     private readonly formBuilder: FormBuilder,
  private readonly cdr: ChangeDetectorRef,
   private lovFacade: LovFacade,
@@ -106,6 +106,13 @@ constructor(
 
 
   ngOnInit(): void {
+    this.parentComponent.closeClinicModal$.subscribe((closeModal) => {
+      if (closeModal) {
+        this.addNewClinicClose();
+        this.cdr.detectChanges();
+      }
+    });
+
     this.hasCreateUpdatePermission = false;
     this.lovFacade.getPaymentRunDateLov();
     this.lovFacade.getPaymentMethodLov();
@@ -257,8 +264,8 @@ fillFormData(){
     this.isValidateClinicForm = true
     if (this.clinicForm.valid) {
       let providerData = this.mapClinicProfileData();
-      //this.saveClinicEventClicked.emit(providerData); // Emit the event
-      this.saveClinicProfile(providerData);
+      this.saveClinicEventClicked.emit(providerData); // Emit the event
+      //this.saveClinicProfile(providerData);
     }
 
   }
@@ -814,29 +821,14 @@ get clinicFormControls() {
   return this.clinicForm.controls as any;
 }
 
-public isaddNewClinicOpen =false;
+isAddNewClinicOpen = false;
+
 public addNewClinicClose(): void {
-  this.isaddNewClinicOpen = false;
+  this.isAddNewClinicOpen = false;
 }
 
 public addNewClinicOpen(): void {
-  this.isaddNewClinicOpen = true;
-}
-saveClinicProfile(vendorProfile: any){
-  this.financialVendorFacade.showLoader();
-  //debugger;
-  //return;
-  this.financialVendorFacade.addClinicProfile(vendorProfile).subscribe({
-    next:(response:any)=>{
-      this.financialVendorFacade.hideLoader();
-      this.addNewClinicClose();
-      this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Clinic profile added successfully");
-      this.cdr.detectChanges();
-    },
-    error:(err:any)=>{
-      this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
-    }
-  });
+  this.isAddNewClinicOpen = true;
 }
 
 }

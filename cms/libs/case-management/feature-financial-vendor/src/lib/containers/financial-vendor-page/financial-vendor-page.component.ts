@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { CaseFacade, ContactFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType} from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ReminderFacade } from '@cms/productivity-tools/domain';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-vendor-page',
@@ -16,7 +17,7 @@ export class FinancialVendorPageComponent implements OnInit {
   isVendorDetailFormShow = false;
   medicalProviderForm: FormGroup;
   providerTypeCode: string = '';
-
+  isAddNewClinicOpen: boolean = false;
   isShowMedicalProvider: boolean = false;
   isShowDentalProvider: boolean = false;
   isShowInsuranceProvider: boolean = false;
@@ -24,7 +25,8 @@ export class FinancialVendorPageComponent implements OnInit {
   reminderTabOn = true;
   isShowManufacturers: boolean = false;
   hasHealthcareProviderCreateUpdatePermission=false;
-
+  private closeClinicModalSubject = new BehaviorSubject<boolean>(false);
+  closeClinicModal$ = this.closeClinicModalSubject.asObservable();
   data = [
     {
       text: 'Manufacturer',
@@ -187,14 +189,17 @@ export class FinancialVendorPageComponent implements OnInit {
   }
 
   saveClinicProfile(vendorProfile: any){
-    
+    // alert('got')
+    // return;
     this.financialVendorFacade.showLoader();
     this.financialVendorFacade.addClinicProfile(vendorProfile).subscribe({
       next:(response:any)=>{
         this.financialVendorFacade.hideLoader();
-        this.closeVendorDetailModal();
+        //this.closeVendorDetailModal();
+        //this.isAddNewClinicOpen = false;
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Clinic profile added successfully");
         this.cdr.detectChanges();
+        this.closeClinicModalSubject.next(true);
       },
       error:(err:any)=>{
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
