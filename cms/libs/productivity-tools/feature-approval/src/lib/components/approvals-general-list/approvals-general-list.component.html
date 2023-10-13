@@ -5,18 +5,19 @@
         <common-user-profile-card> </common-user-profile-card>
       </ng-template>
     </kendo-popover>
-    
-    <productivity-tools-approvals-general-list-detail-addtomasterlist>
+    <div *ngFor="let item of approvalsGeneralLists$|async">
+      <productivity-tools-approvals-general-list-detail-addtomasterlist  *ngIf="item.typeCode == 'ADD_TO_MASTER_LIST'">
 
-    </productivity-tools-approvals-general-list-detail-addtomasterlist>
+      </productivity-tools-approvals-general-list-detail-addtomasterlist>
 
-    <productivity-tools-approvals-general-list-detail-exceptions>
+      <productivity-tools-approvals-general-list-detail-exceptions *ngIf="item.typeCode == 'GENERAL_EXCEPTIONS'">
 
-    </productivity-tools-approvals-general-list-detail-exceptions>
+      </productivity-tools-approvals-general-list-detail-exceptions>
 
-    <productivity-tools-approvals-general-list-detail-reassignment>
+      <productivity-tools-approvals-general-list-detail-reassignment *ngIf="item.typeCode == 'GENERAL_CASE_REASSIGNMENT'">
 
-    </productivity-tools-approvals-general-list-detail-reassignment>
+      </productivity-tools-approvals-general-list-detail-reassignment>
+    </div>
 
   </div>
 
