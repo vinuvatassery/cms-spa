@@ -46,7 +46,7 @@ export class FinancialPcasReassignmentListComponent
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialPcaReassignmentGridLists$: any;
-  @Output() loadFinancialPcaReassignmentListEvent = new EventEmitter<GridFilterParam>();
+  @Output() loadFinancialPcaReassignmentListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -169,12 +169,15 @@ export class FinancialPcasReassignmentListComponent
     //   sorting: null,
     //   filter: this.state?.["filter"]?.["filters"] ?? []
     // };
-    const gridDataRefinerValue = new GridFilterParam(
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType,
-      JSON.stringify(this.filter));
+    const gridDataRefinerValue = {
+      skipCount: this.state?.skip ?? 0,
+      maxResultCount: this.state?.take ?? 0,
+      sorting: this.sortValue,
+      sortType: this.sortType,
+      columnname: this.selectedColumn,       
+      filter: JSON.stringify(this.filter)
+    }
+      
     this.loadFinancialPcaReassignmentListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
