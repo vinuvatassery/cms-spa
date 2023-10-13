@@ -369,10 +369,12 @@ export class FinancialClaimsBatchesLogListsComponent
     this.currentPrintAdviceLetterGridFilter = event.filter;
     this.loadBatchLogListEvent.emit(event);
   }
+  
   onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
     this.isPrintAdviceLetterClicked = false;
     this.selectedDataRows = [];
+    this.selectedCount = 0;
   }
 
   onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
