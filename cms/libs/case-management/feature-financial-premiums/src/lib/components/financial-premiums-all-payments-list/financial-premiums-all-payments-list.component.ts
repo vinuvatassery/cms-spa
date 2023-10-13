@@ -93,7 +93,7 @@ export class FinancialPremiumsAllPaymentsListComponent
       columnDesc: 'Total Amount',
     },
     {
-      columnName: '8acceptsReportsFlag',
+      columnName: 'acceptsReportsFlag',
       columnDesc: 'Accepts reports',
     },
     {
