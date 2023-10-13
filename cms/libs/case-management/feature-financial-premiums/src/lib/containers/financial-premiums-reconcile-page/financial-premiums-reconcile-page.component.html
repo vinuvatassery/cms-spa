@@ -7,9 +7,11 @@
 [sortBatch]="sortBatch"
 [batchId] = "batchId"
 (loadReconcileListEvent)="loadReconcileListGrid($event)"
+[exportButtonShow$]="exportButtonShow$"   
 [reconcileBreakoutSummary$]="reconcileBreakoutSummary$ | async"
 [reconcileBreakoutList$]="reconcileBreakoutList$"
 (loadReconcileBreakoutSummaryEvent)="loadReconcileBreakoutSummary($event)"
+(exportGridDataEvent)="exportPremiumBatchesGridData()"
 (loadReconcilePaymentBreakoutListEvent)="loadReconcilePaymentBreakoutList($event)"></cms-financial-premiums-batches-reconcile-payments>
 
 <ng-template #providerDetailsTemplate>
