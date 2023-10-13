@@ -474,7 +474,7 @@ export class MedicalPaymentDetailComponent {
     if (!searchText || searchText.length == 0) {
       return;
     }
-      this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType !=this.tabStatus? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.searchPharmacies(searchText, ClientProfileTabs.DENTAL_INSURANCE_COPAY !=this.tabStatus? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
  }
  
   onProviderValueChange($event: any) {
