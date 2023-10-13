@@ -19,7 +19,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { FinancialPcaFacade, GridFilterParam } from '@cms/case-management/domain';
+import { FinancialPcaFacade } from '@cms/case-management/domain';
 import { NavigationMenuFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-pcas-reassignment-list',
