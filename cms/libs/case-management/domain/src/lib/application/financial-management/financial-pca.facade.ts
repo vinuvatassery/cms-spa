@@ -30,7 +30,7 @@ export class FinancialPcaFacade {
     field: this.sortValueFinancialPcaAssignment,
   }];
 
-  public sortValueFinancialPcaReassignment = 'batch';
+  public sortValueFinancialPcaReassignment = 'pcaCode';
   public sortPcaReassignmentList: SortDescriptor[] = [{
     field: this.sortValueFinancialPcaReassignment,
   }];

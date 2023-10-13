@@ -19,7 +19,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { FinancialPcaFacade } from '@cms/case-management/domain';
+import { FinancialPcaFacade, GridFilterParam } from '@cms/case-management/domain';
 import { NavigationMenuFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-pcas-reassignment-list',
@@ -46,7 +46,7 @@ export class FinancialPcasReassignmentListComponent
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialPcaReassignmentGridLists$: any;
-  @Output() loadFinancialPcaReassignmentListEvent = new EventEmitter<any>();
+  @Output() loadFinancialPcaReassignmentListEvent = new EventEmitter<GridFilterParam>();
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -55,7 +55,7 @@ export class FinancialPcasReassignmentListComponent
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn = 'All';
+  selectedColumn = 'ALL';
   gridDataResult!: GridDataResult;
 
   gridFinancialPcaReassignmentDataSubject = new Subject<any>();
@@ -158,17 +158,23 @@ export class FinancialPcasReassignmentListComponent
 
   loadPcaReassignment() {
     this.isFinancialPcaReassignmentGridLoaderShow = true;
-    const stateData = this.state;
-    stateData.filter = this.filterData;
-    const gridDataRefinerValue = {
-      skipCount: this.state?.skip ?? 0,
-      pagesize: this.state?.take ?? 0,
-      sortColumn: this.sortValue,
-      sortType: this.sortType,
-      columnName: this.selectedColumn,
-      sorting: null,
-      filter: this.state?.["filter"]?.["filters"] ?? []
-    };
+    // const stateData = this.state;
+    // stateData.filter = this.filterData;
+    // const gridDataRefinerValue = {
+    //   skipCount: this.state?.skip ?? 0,
+    //   pagesize: this.state?.take ?? 0,
+    //   sortColumn: this.sortValue,
+    //   sortType: this.sortType,
+    //   columnName: this.selectedColumn,
+    //   sorting: null,
+    //   filter: this.state?.["filter"]?.["filters"] ?? []
+    // };
+    const gridDataRefinerValue = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType,
+      JSON.stringify(this.filter));
     this.loadFinancialPcaReassignmentListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
@@ -214,6 +220,7 @@ export class FinancialPcasReassignmentListComponent
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.filter = stateData?.filter?.filters;
     this.loadPcaReassignment();
   }
 
@@ -346,8 +353,6 @@ public itemDisabled(itemArgs:any)
     }
   }
   onPcaReassignmentSearch(searchValue : any){
-    if(searchValue){
       this.onChange(searchValue);
-    }    
   }
 }
