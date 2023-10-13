@@ -16,12 +16,12 @@
      >
       <kendo-grid-column field="coverageStartDate" title="Coverage Dates" [width]="120">
         <ng-template kendoGridCellTemplate let-dataItem>
-            {{dataItem.coverageStartDate | date:'MM/dd/yyyy'}} - {{dataItem.coverageEndDate | date:'MM/dd/yyyy'}}
+            {{dataItem.coverageStartDate | date:'MM/dd'}} - {{dataItem.coverageEndDate | date:'MM/dd'}}
         </ng-template>
          </kendo-grid-column>
       <kendo-grid-column field="adjustmentAmount" title="Amount" [width]="60"> 
         <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="tableamountview"> <strong>$</strong> {{dataItem.adjustmentAmount}}</span>
+            <span class="tableamountview"> <strong></strong> {{dataItem.adjustmentAmount | kendoNumber : "c"}}</span>
       </ng-template> 
       </kendo-grid-column>
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"  let-currentPage="currentPage">
