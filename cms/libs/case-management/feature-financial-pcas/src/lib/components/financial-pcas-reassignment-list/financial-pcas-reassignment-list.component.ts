@@ -137,7 +137,7 @@ export class FinancialPcasReassignmentListComponent
       this.notSelectedPcaS=this.allNotAssignedPcaSList;
       this.loadPcaReassignment();
     })
-    this.financialPcaFacade.pcaActionIsSuccess$.subscribe((res:string)=>{
+    this.financialPcaFacade.pcaActionIsSuccess$.subscribe((res:string) => {
       if(res=='reassignment')
       {
         this.navigationMenuFacade.pcaReassignmentCount();
@@ -152,23 +152,11 @@ export class FinancialPcasReassignmentListComponent
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
     this.loadPcaReassignment();
   }
 
   loadPcaReassignment() {
     this.isFinancialPcaReassignmentGridLoaderShow = true;
-    // const stateData = this.state;
-    // stateData.filter = this.filterData;
-    // const gridDataRefinerValue = {
-    //   skipCount: this.state?.skip ?? 0,
-    //   pagesize: this.state?.take ?? 0,
-    //   sortColumn: this.sortValue,
-    //   sortType: this.sortType,
-    //   columnName: this.selectedColumn,
-    //   sorting: null,
-    //   filter: this.state?.["filter"]?.["filters"] ?? []
-    // };
     const gridDataRefinerValue = {
       skipCount: this.state?.skip ?? 0,
       maxResultCount: this.state?.take ?? 0,
@@ -177,7 +165,6 @@ export class FinancialPcasReassignmentListComponent
       columnname: this.selectedColumn,       
       filter: JSON.stringify(this.filter)
     }
-      
     this.loadFinancialPcaReassignmentListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
@@ -240,18 +227,13 @@ export class FinancialPcasReassignmentListComponent
   gridDataHandle() {
     this.financialPcaReassignmentGridLists$.subscribe(
       (data: GridDataResult) => {
-        this.gridDataResult = data;
-        this.gridDataResult.data = filterBy(
-          this.gridDataResult.data,
-          this.filterData
-        );
         this.gridFinancialPcaReassignmentDataSubject.next(this.gridDataResult);
         if (data?.total >= 0 || data?.total === -1) {
           this.isFinancialPcaReassignmentGridLoaderShow = false;
         }
       }
     );
-    this.isFinancialPcaReassignmentGridLoaderShow = false;
+    this.isFinancialPcaReassignmentGridLoaderShow = false;  
   }
 
   onOpenViewEditPcaReassignmentClicked(template: TemplateRef<unknown>,data:any): void {
