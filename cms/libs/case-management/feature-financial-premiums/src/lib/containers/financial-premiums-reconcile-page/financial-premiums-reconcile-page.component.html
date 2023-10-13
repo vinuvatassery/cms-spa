@@ -11,8 +11,9 @@
 [reconcileBreakoutSummary$]="reconcileBreakoutSummary$ | async"
 [reconcileBreakoutList$]="reconcileBreakoutList$"
 (loadReconcileBreakoutSummaryEvent)="loadReconcileBreakoutSummary($event)"
+(loadReconcilePaymentBreakoutListEvent)="loadReconcilePaymentBreakoutList($event)"
 (exportGridDataEvent)="exportPremiumBatchesGridData()"
-(loadReconcilePaymentBreakoutListEvent)="loadReconcilePaymentBreakoutList($event)"></cms-financial-premiums-batches-reconcile-payments>
+(onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-batches-reconcile-payments>
 
 <ng-template #providerDetailsTemplate>
     <cms-financial-premiums-provider-info
@@ -22,5 +23,5 @@
           (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
           [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
           [paymentMethodCode$]="paymentMethodCode$" 
-          (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-provider-info>
+          ></cms-financial-premiums-provider-info>
 </ng-template>

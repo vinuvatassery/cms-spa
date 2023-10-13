@@ -301,11 +301,17 @@ cms-sidenav {
                     transition: ease-in all 0.3s;
 
                   }
-           
+                     
     
           }
     
-   
+          .sidebar-menu_label-badge {
+            background: $badge-alerts;
+            color: $white !important;
+            border-radius: $border-radius-sm;
+            padding: $size-m $size-m;  
+            margin-left: $size-l;
+          }  
           .submenu_list_click_items {
             justify-content: space-between;
             display: flex;

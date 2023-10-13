@@ -143,6 +143,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     }
   ];
 
+  paymentRequestId: any;
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, 
     private readonly cd: ChangeDetectorRef, private configurationProvider: ConfigurationProvider, 
@@ -777,6 +778,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       const data = selection.selectedRows[0].dataItem;
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId;
+      this.paymentRequestId = data.paymentRequestId
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,

@@ -306,9 +306,7 @@
                               <span class="ml-2">$&nbsp;{{0 | kendoNumber: 'n2'}}</span>
                         </ng-template>
                   </div>
-                  <div><span>{{ premiumReconcileCount }} payment(s)
-                              to
-                              reconcile</span>
+                  <div><span>{{ premiumReconcileCount }} advice letter(s) to be previewed</span>
                         <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="Close">
                               <span class="material-icons" aria-label="close" aria-hidden="true"
                                     (click)="toggleBreakoutPanel()">close</span>
@@ -320,8 +318,9 @@
                         <cms-financial-premiums-batches-reconcile-payments-breakout
                         [pageSizes]="pageSizes" [sortValue]="sortValue" [premiumsType]="premiumsType"
                         [sortType]="sortType" [sort]="sort"  [batchId]="batchId" [entityId]="entityId"    
-                        [reconcileBreakoutList$]="reconcileBreakoutList$"
-                        (loadReconcilePaymentBreakOutGridEvent)="loadReconcilePaymentBreakOutGridList($event)"></cms-financial-premiums-batches-reconcile-payments-breakout>
+                        [reconcileBreakoutList$]="reconcileBreakoutList$" [paymentRequestId]="paymentRequestId"
+                        (loadReconcilePaymentBreakOutGridEvent)="loadReconcilePaymentBreakOutGridList($event)"
+                        (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-batches-reconcile-payments-breakout>
                   </div>
             </div>
             <div class="text-right flex-gap">                  
@@ -332,7 +331,7 @@
       </div>
 </div>
 <ng-template #PrintAuthorizationDialog>
-      <kendo-dialog-titlebar  class="text-normal" (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Authorization(s)</kendo-dialog-titlebar>
+      <kendo-dialog-titlebar  class="text-normal" (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Advice Letter(s)</kendo-dialog-titlebar>
     <cms-financial-premiums-print-authorization
       [printOption]="onlyPrintAdviceLetter"
       [isSaveClicked]="isSaveClicked"
