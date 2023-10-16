@@ -38,9 +38,9 @@
         </kendo-grid-column>
         <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="120" [filterable]="false">    
         </kendo-grid-column>
-        <kendo-grid-column field="txtDate" title="Entry Date" [width]="130" [sortable]="false" [filterable]="false">
+        <kendo-grid-column field="entryDate" title="Entry Date" [width]="130" [sortable]="false" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
-            {{ dataItem.txtDate | date:'MM/dd/YYYY' }}
+            {{ dataItem.entryDate | date:'MM/dd/YYYY' }}
           </ng-template>
         </kendo-grid-column>
        
