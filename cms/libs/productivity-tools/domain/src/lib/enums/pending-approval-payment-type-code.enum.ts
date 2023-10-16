@@ -6,7 +6,7 @@ export enum PendingApprovalPaymentTypeCode{
   DentalPremium = 'DENTAL_PREMIUM',
   MedicalPremium = 'MEDICAL_PREMIUM',
   Pharmacy = 'PHARMACY',
-  GeneralException = 'GeneralException',
+  GeneralException = 'GENERAL_EXCEPTION',
   GeneralCaseReassignment = 'GENERAL_CASE_REASSIGNMENT',  
   GeneralAddtoMasterList = 'GENERAL_ADD_TO_MASTER_LIST'
 }
