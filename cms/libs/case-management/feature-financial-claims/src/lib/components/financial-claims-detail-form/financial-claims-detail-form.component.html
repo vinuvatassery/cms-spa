@@ -228,13 +228,14 @@
                                   </div>
                                     <div class="flex-row">
                                         <div class="flex-col flex-col-4">
-                                            <kendo-floatinglabel text="Payment Type">
-                                                <kendo-dropdownlist
+                                            <kendo-floatinglabel text="Payment Type" >
+                                                <kendo-dropdownlist 
                                                 [fillMode]="formUiStyle.dropDownFillMode"
                                                 [data]="groupedPaymentRequestTypes" formControlName="paymentType" aria-label="Type"
                                                 textField ="lovDesc"
                                                 valueField="lovCode"
                                                 [valuePrimitive]="true"
+                                                [popupSettings]="{ popupClass: dropdownInternedClassAction, animate: true }" 
                                                 (valueChange)="onPaymentTypeValueChange($event, i)">
                                               <ng-template kendoDropDownListFixedGroupTemplate let-groupName>
                                                 <strong>{{ groupName }}</strong>
