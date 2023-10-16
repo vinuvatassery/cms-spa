@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPharmacyClaimsDataService {
@@ -15,35 +16,14 @@ export class FinancialPharmacyClaimsDataService {
  
 
  
-  loadPharmacyClaimsProcessListService( ) {
-    return of([
-      {
-        id:1,
-        PharmacyName: 'Address `',  
-        clientName:'address2', 
-        nameOnPrimaryInsuranceCard:'address2', 
-        memberID:'XXXXXX', 
-        RXNumber:'XXXXXX', 
-        FillDate:'XX/XX/XXXX', 
-        ndcCode:'XXXXXX', 
-        brandName:'XXXXXX', 
-        drugName: 'XXXXXX',
-        paymentType: 'XXXXXX',
-        amountPaid: 'xx.xx',
-        rxQty: 'XX',
-        rxType: 'XX',
-        rxDaysSupply: 'XX',
-        indexCode: 'XXXX',
-        pcaCode: 'XXXX',
-        objectCode: 'XXXX',
-        paymentStatus: 'XXXX',
-        warrantNumber: 'XXXXXX',
-        entryDate: 'XX/XX/XXXX',
-        by: 'by',
-      },
-      
-    ]);
+  loadPharmacyClaimsProcessListService(params: GridFilterParam) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies`, params);
   }
+
+  loadPrescriptions(paymentId: string, params: GridFilterParam) {
+    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/payments/${paymentId}/prescriptions${params.convertToQueryString()}`);
+  }
+
   loadPharmacyClaimsBatchListService( ) {
     return of([
       {

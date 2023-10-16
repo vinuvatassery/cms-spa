@@ -9,7 +9,7 @@
                                           <label class="ml-1 text-muted"> {{item.paymentMethodCode}}</label></p>
                               </div>
                               <div class="text-right mt-1 pr-2">
-                                    <span class="app-checkboxwidtext-wrapper">
+                                    <span class="app-checkboxwidtext-wrapper" *ngIf="item.acceptsReports === 'Y'">
                                           <input type="checkbox" [checked]="item.isPrintAdviceLetter" (change)="onCheckboxChange($event, item)" kendoCheckBox aria-labelledby="Printauthorization" id="Printauthorization" />
                                           <label class="k-checkbox-label" for="Printauthorization">Print letter</label>
                                     </span>
@@ -29,12 +29,14 @@
             <div class="justify-content-end align-items-center">
                   <span class="mr-1">{{ printOption
                         ? printCount + ' advice letter(s) to be printed'
-                        : reconcileCount + ' payment(s) to reconcile, ' + printCount + ' authorization(s) to be printed' }}</span>
+                        : reconcileCount + ' payment(s) to reconcile, ' + printCount + ' advice letter(s) to be printed' }}</span>
 
                   <button kendoButton (click)="onClosePrintAdviceLetterClicked()" [primary]="true" look="outline" aria-label="Cancel">
                         Cancel
                   </button>
-                  <button kendoButton [disabled]="printCount == 0" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true" attr.aria-label="{{printOption ? 'Print' : 'Reconcile & Print'}}"> {{printOption ? 'Print' : 'Reconcile & Print'}}</button>
+                  <!-- <button kendoButton [disabled]="reconcileCount == 0" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true" attr.aria-label="{{printOption ? 'Print' : 'Reconcile & Print'}}"> {{printOption ? 'Print' : 'Reconcile & Print'}}</button> -->
+                  <button kendoButton *ngIf="printOption" [disabled]="printCount == 0" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true"> Print</button>
+                  <button kendoButton *ngIf="!printOption" [disabled]="reconcileCount == 0" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true"> Reconcile & Print</button>
             </div>
       </div>
 </kendo-dialog-actions>

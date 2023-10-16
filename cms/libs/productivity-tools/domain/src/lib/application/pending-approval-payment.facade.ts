@@ -65,7 +65,7 @@ export class PendingApprovalPaymentFacade {
   }
 
   getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string, level: number) {
-
+    this.showLoader();
     this.PendingApprovalPaymentService.getPendingApprovalPaymentGrid(gridSetupData ,serviceSubType, level).subscribe(
       {
         next: (dataResponse: any) => {
@@ -84,12 +84,15 @@ export class PendingApprovalPaymentFacade {
           };
             this.pendingApprovalGridSubject.next(gridViewData);
             this.approverCount = this.sendBackCount = 0
+            this.hideLoader();
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+          this.hideLoader();
         },
       }
     );
+    this.hideLoader();
   }
 
   getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string, level: number) {

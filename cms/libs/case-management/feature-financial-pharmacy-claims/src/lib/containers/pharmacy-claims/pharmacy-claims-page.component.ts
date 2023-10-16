@@ -25,8 +25,8 @@ export class PharmacyClaimsPageComponent {
    
 
    state!: State;
-  pharmacyClaimsProcessGridLists$ =
-  this.financialPharmacyClaimsFacade.pharmacyClaimsProcessData$;
+  pharmacyClaimsProcessGridLists$ = this.financialPharmacyClaimsFacade.pharmacyClaimsProcessData$;
+  pharmacyClaimsProcessLoader$ = this.financialPharmacyClaimsFacade.pharmacyClaimsProcessLoader$;
   pharmacyClaimsBatchGridLists$ = this.financialPharmacyClaimsFacade.pharmacyClaimsBatchData$;
 
   pharmacyClaimsAllPaymentsGridLists$ = this.financialPharmacyClaimsFacade.pharmacyClaimsAllPaymentsData$;
@@ -36,8 +36,7 @@ export class PharmacyClaimsPageComponent {
 
 
   loadPharmacyClaimsProcessListGrid(event: any) {
-  
-    this.financialPharmacyClaimsFacade.loadPharmacyClaimsProcessListGrid();
+    this.financialPharmacyClaimsFacade.loadPharmacyClaimsProcessListGrid(event);
   }
   
 
@@ -49,5 +48,9 @@ export class PharmacyClaimsPageComponent {
   loadPharmacyClaimsAllPaymentsListGrid(event: any) {
   
     this.financialPharmacyClaimsFacade.loadPharmacyClaimsAllPaymentsListGrid();
+  }
+
+  oneExportClaimsInProcess(event: any){
+    this.financialPharmacyClaimsFacade.exportPharmacyClaimsProcessListGrid(event);
   }
 }

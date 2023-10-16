@@ -991,12 +991,17 @@ color: $app-primary-font-color;
  
 }
 .add_main_popup_screen {
-  padding-bottom: 20rem;
+  padding-bottom: 15rem !important;
 
   .add_new_top_section {
     border-bottom: 1px solid #0000001F;
     padding: 1.5rem;
     padding-top: 0;
+    .column-labels{
+      > div {
+        margin-bottom: 1rem;
+      }
+    }
   }
 
   .new_refund_Search {
@@ -1022,6 +1027,24 @@ color: $app-primary-font-color;
   }
 }
 
+.pending_app_search_clients {
+  position: relative;
+
+  .global-search-icon {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+  }
+
+  .input-inline-loader {
+    top: 10px;
+  }
+
+  .k-combobox.k-input {
+    padding-left: 1.4rem;
+  }
+}
+
 .add_new_fixed_bottom {
   background-color: $white;
   position: fixed;
@@ -1036,9 +1059,19 @@ color: $app-primary-font-color;
   width: 100%;
 
   .add_new_fixed_bottom_grid_section {
+    padding-bottom: 3rem;
     .k-grid-container {
       height: 120px;
     }
+  }
+  .fixed-btn-button_part{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    z-index: 4;
+    background: $white;
   }
 }
 .grid-list-options-menu{
@@ -1093,6 +1126,10 @@ color: $app-primary-font-color;
 
 
 .custom_scroll_view {
+  .k-scrollview-view{
+    max-width: 100%;
+    overflow-y: auto;
+  }
   .k-scrollview {
     min-height: 340px;
     max-height: 500px;
@@ -1245,3 +1282,22 @@ iframe{
   }
 }
 }
+
+.grey-cards-banner{
+background: $black-e;
+padding: 8px;
+    display: inline-block;
+    word-wrap: normal;
+    width: 100%;
+    white-space: normal;
+    border-radius: 4px;
+}
+
+.dropdown-intended{
+  .k-list-content{
+    .k-list-item{
+      padding-left: 2.1rem !important;
+    }
+  }
+}
+

@@ -106,7 +106,7 @@
                         [data]="reconcilePaymentGridPagedResult" 
                         (selectionChange)="onRowSelection(grid, $event)">
 
-                        <kendo-grid-column   title="Print Advice Ltr" [width]="80">
+                        <kendo-grid-column   title="Print Advice Ltr" [width]="120" class="text-center">
                               <ng-template kendoGridCellTemplate let-dataItem>                  
                                     <input class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr"
                                     aria-labelledby="printAdviceLetter" kendoCheckBox  (change)="printAdviceLetterChange(dataItem)" [(ngModel)]="dataItem.isPrintAdviceLetter"
@@ -306,9 +306,7 @@
                               <span class="ml-2">$&nbsp;{{0 | kendoNumber: 'n2'}}</span>
                         </ng-template>
                   </div>
-                  <div><span *ngIf="!onlyPrintAdviceLetter">{{ claimReconcileCount }} payment(s)
-                              to
-                              reconcile</span>
+                  <div><span *ngIf="!onlyPrintAdviceLetter">{{ claimReconcileCount }} advice letter(s) to be previewed</span>
                         <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="Close" title="Close">
                               <span class="material-icons" aria-label="close" aria-hidden="true"
                                     (click)="toggleBreakoutPanel()">close</span>

@@ -1,5 +1,5 @@
 <kendo-dialog-titlebar (close)="closeSearchCase()"> Search Clients </kendo-dialog-titlebar>
-<section class="k-dialog-body add_main_popup_screen">
+<section class="k-dialog-body">
     <p class="text-muted mb-2">If the claim passes all criteria after clicking “Save” it will automatically be submitted
         for processing. This action cannot be undone. If it still fails one or more criteria, it will stay in your
         approval queue.
@@ -8,7 +8,7 @@
 
     <div class="flex-row">
         <div class="flex-col">
-            <div class="combotable_search_list new_refund_Search">
+            <div class="combotable_search_list pending_app_search_clients">
                 <span class="material-icons global-search-icon" aria-label="search" aria-hidden="true">search</span>
                 <span *ngIf="isShownSearchLoader"
                     class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>

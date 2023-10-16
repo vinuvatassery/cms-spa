@@ -97,7 +97,10 @@
       @media (max-width: $breakpoint-lg) {
         width: calc(100% - 1rem);
       }
-
+      .k-window-content, .k-dialog-content{
+        padding-inline: 0;
+        padding-top: 0;
+      }
       .app-c-tab {
         height: 100%;
 
@@ -111,6 +114,12 @@
             height: 100%;
           }
         }
+      }
+    }
+    &.add_premiums_modal{
+   
+      .k-dialog-body{
+        padding: 0px;
       }
     }
   }
@@ -223,6 +232,15 @@
     justify-content: flex-start;
   }
 
+  
+  &-np_0 {
+    .k-window-content,
+    .k-dialog-content,
+    .k-prompt-container {
+      max-height: inherit;
+      padding: 0px;
+    }
+  }
   &-np {
     .k-dialog {
       top: 50px;
@@ -373,11 +391,26 @@
       padding: 0px;
     }
   }
-
+  &.pharmacy_print_auth{
+    .k-dialog .k-dialog-body{
+      max-height: 79vh; 
+    .custom_scroll_view .k-scrollview{
+      min-height: 100vh;
+      max-height: 100%;
+      overflow-y: auto;
+    }
+    }
+    .letter-two-column-wrapper{
+      max-height: 50vh;
+      overflow: auto;
+    }
+  }
 }
 
 .transform-none {
   .k-dialog-title {
     text-transform: unset !important;
   }
+
+
 }

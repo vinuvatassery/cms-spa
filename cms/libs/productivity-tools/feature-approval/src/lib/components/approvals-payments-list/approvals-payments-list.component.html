@@ -8,7 +8,7 @@
                                 [data]="pendingApprovalPaymentType$ | async" valueField="lovCode" textField="lovDesc" [valuePrimitive]="true"
                                 [loading]="(pendingApprovalPaymentType$ | async)?.length===0"
                                 (valueChange)="onPaymentTypeCodeValueChange($event)"
-                                [(ngModel)]="selectedPaymentType">                        
+                                [(ngModel)]="selectedPaymentType">
          </kendo-dropdownlist>
     </div>
 </div>
@@ -38,14 +38,14 @@
 </section>
 
 <div class="table-sorted-info">
-    <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning">       
+    <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning">
           <span class="material-icons" aria-label="search-warning" aria-hidden="true">
                 warning
           </span>
           <span *ngIf="showDateSearchWarning">
                 The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
           </span>
-    </span>   
+    </span>
 </div>
 
 <!-- Sorted Info -->
@@ -58,20 +58,20 @@
 </div>
 <div *ngIf="pageValidationMessage !== null">
     <div class="info-banners red-banner d-flex mt-2 mb-2UserRoleType.Level1">
-          <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>              
-          <div>              
-            <p > {{pageValidationMessage}} </p>                                    
-                 
-          </div>              
+          <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>
+          <div>
+            <p > {{pageValidationMessage}} </p>
+
+          </div>
      </div>
 </div>
 <!-- Case List table -->
-<div class="app-c-table">
+<div class="app-c-table expand_hidden">
     <kendo-grid [resizable]="true" [loading]="isApprovalPaymentsGridLoaderShow" [pageSize]="state.take"
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
         [resizable]="true" [columnMenu]="{ filter: false }" [sort]="state.sort"
         (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
-        [data]="approvalsPaymentsGridPagedResult"
+        [data]="pendingApprovalGridDataResult"
         [isDetailExpanded]="expandSendBackNotes"
         >
 
@@ -81,7 +81,7 @@
                     <span class="material-icons"> plagiarism </span>
                 </button>
             </ng-template>
-        </kendo-grid-column>        
+        </kendo-grid-column>
         <kendo-grid-column field="batchName" title="Batch #" [width]="180" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'">
             <ng-template kendoGridCellTemplate let-dataItem>
                 <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button" (click)="navToBatchDetails(dataItem)">
@@ -90,23 +90,23 @@
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="providerCount" title="Provider Count" [width]="120" *ngIf="selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'"> </kendo-grid-column>
-        <kendo-grid-column field="totalAmountDue" title="Total Amount" [width]="160" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'"> 
+        <kendo-grid-column field="totalAmountDue" title="Total Amount" [width]="160" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'">
             <ng-template kendoGridCellTemplate let-dataItem>
-                <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmountDue}}</span>
+                <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmountDue | kendoNumber: 'n2'}}</span>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="providerCount" title="Carrier Count" [width]="120" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM'"></kendo-grid-column>
         <kendo-grid-column field="totalPayments" title="Pmt Count" [width]="120" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'"> </kendo-grid-column>
         <kendo-grid-column field="premiumCount" title="Premium Count" [width]="100" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM'"> </kendo-grid-column>
-        <kendo-grid-column field="creationTime" title="Date Approval Requested" [width]="150" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'"> 
+        <kendo-grid-column field="creationTime" title="Date Approval Requested" [width]="150" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'">
             <ng-template kendoGridCellTemplate let-dataItem>
                 {{dataItem.dateApprovalRequested | date:'MM/dd/yyyy'}}
             </ng-template>
         </kendo-grid-column>
         <kendo-grid-column *ngIf="userLevel == 2" field="firstApprovalBy" title="First Approval By" [width]="120">
-            <ng-template kendoGridCellTemplate let-dataItem>  
-              <button [attr.aria-label]="dataItem.firstApprovalBy" kendoButton look="flat" class="card-link-button"  
-              kendoPopoverAnchor  
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <button [attr.aria-label]="dataItem.firstApprovalBy" kendoButton look="flat" class="card-link-button"
+              kendoPopoverAnchor
               [popover]="userCard"
               showOn="hover">
                 {{ dataItem.firstApprovalBy }}
@@ -139,20 +139,20 @@
         </kendo-grid-column>
         <kendo-grid-column [sortable]="false" field="sendBackNotes" title="Send Back Notes" [width]="280" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'">
             <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                <div kendoTooltip>                                             
+                <div kendoTooltip>
                       <kendo-textarea
                       #tareaCessation
                       [fillMode]="formUiStyle.inputFillMode"
                       [maxlength]="tAreaCessationMaxLength"
-                      [rows]="2"                                          
+                      [rows]="2"
                       resizable ="none"
                       [(ngModel)]="dataItem.sendBackNotes"
                       (valueChange)="sendBackNotesChange(dataItem)"
-                      aria-label="smoking cessation note"                                          
+                      aria-label="smoking cessation note"
                       title ="{{dataItem.sendBackNotes}}" [disabled]="dataItem.batchStatus == 'APPROVED'"
                       [ngClass]="ngDirtyInValid(dataItem,'sendBackNotes',rowIndex)"  id ="sendBackNotes{{rowIndex}}"
                       >
-                   
+
                     </kendo-textarea>
                     <kendo-textarea-suffix class="justify-content-end">
                       <span class="counter">{{ dataItem.tAreaCessationCounter }}</span>
@@ -210,7 +210,7 @@
 </div>
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-    <span  class="">{{approveBatchCount}} batch(es) to be approved, {{sendbackBatchCount}} batch(es) to be sent back</span>    
+    <span  class="">{{approveBatchCount}} batch(es) to be approved, {{sendbackBatchCount}} batch(es) to be sent back</span>
     <button kendoButton [primary]="true" look="flat" class="" aria-label="Approve All" (click)="onApproveAllClicked()" [disabled]="!hasPaymentPendingApproval"> APPROVE ALL </button>
     <button kendoButton [primary]="true" aria-label="Submit" class="" (click)="onOpenSubmitApprovalPaymentItemsClicked()" [disabled]="!hasPaymentPendingApproval"> Submit </button>
 </div>
@@ -222,7 +222,7 @@
         <p class="  mb-2">
           {{
             approvalTypeCode === approvalTypeCodeEnum.ExceedApprovalLimit
-            ? 'The selected batches exceed your maximum approval amount. Select A manager with a higher maximum approval limit needs to request the payments from the Salem Fiscal Team. "Send Back" batches will be sent to the user who submitted them.' 
+            ? 'The selected batches exceed your maximum approval amount. Select A manager with a higher maximum approval limit needs to request the payments from the Salem Fiscal Team. "Send Back" batches will be sent to the user who submitted them.'
             : 'Approved batches will be sent to the Salem Fiscal Team via email. “Send Back” batches will be sent back to the user who submitted them.'
           }}
         </p>
@@ -231,7 +231,7 @@
         <p *ngIf="requestedACHPayments > 0" class="mb-1">ACH payments to be requested: <strong>{{requestedACHPayments}}</strong></p>
         <p *ngIf="requestedDORHoldPayments > 0" class="mb-1">DOR Hold payments to be requested: <strong>{{requestedDORHoldPayments}}</strong></p>
         <p *ngIf="sendbackBatchCount > 0" class="mb-1">Batches to be sent back: <strong>{{sendbackBatchCount}}</strong></p>
-        <p *ngIf="approvalTypeCode === approvalTypeCodeEnum.ExceedApprovalLimit" class="mb-1">Total amount to be submitted: <strong>$ {{totalAmountSubmitted}}</strong></p>
+        <p *ngIf="approvalTypeCode === approvalTypeCodeEnum.ExceedApprovalLimit" class="mb-1">Total amount to be submitted: <strong>$ {{totalAmountSubmitted | kendoNumber: 'n2'}}</strong></p>
     </section>
     <kendo-dialog-actions>
         <div class="justify-content-between">
@@ -252,11 +252,11 @@
 
 
 <kendo-dialog *ngIf="isViewPaymentsBatchDialog" (close)="onCloseViewPaymentsBatchClicked()"
-    class="app-c-modal app-c-modal-xlg" title="View Payments in Each Batch" kendoTooltip>
+    class="app-c-modal app-c-modal-xlg app-c-modal-np_0" title="View Payments in Each Batch" kendoTooltip>
 
 
     <productivity-tools-approval-batch-lists [approvalId] = "selectedApprovalId" [batchDetailPaymentsList$] = "batchDetailPaymentsList$" [batchDetailModalSourceList] = "batchDetailModalSourceList"
-    [pageSizes]="pageSizes" [sortType]="sortType" [selectedPaymentType]="selectedPaymentType" (closeViewPaymentsBatchClickedEvent)="onCloseViewPaymentsBatchClicked()" (loadBatchDetailPaymentsListEvent)="onLoadBatchDetailPaymentsList($event)" 
+    [pageSizes]="pageSizes" [sortType]="sortType" [selectedPaymentType]="selectedPaymentType" (closeViewPaymentsBatchClickedEvent)="onCloseViewPaymentsBatchClicked()" (loadBatchDetailPaymentsListEvent)="onLoadBatchDetailPaymentsList($event)"
     (batchModalSaveClickedEvent)="onBatchModalSaveClicked($event)"></productivity-tools-approval-batch-lists>
 </kendo-dialog>
 
