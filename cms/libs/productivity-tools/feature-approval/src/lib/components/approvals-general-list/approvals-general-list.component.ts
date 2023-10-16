@@ -56,6 +56,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   private editListITemsDialog: any;
+  approvalId ! : number;
   
   /** Constructor **/
   constructor(private route: Router,
