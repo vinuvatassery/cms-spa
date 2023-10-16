@@ -39,7 +39,8 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
   ddlStates$ = this.contactFacade.ddlStates$;
-  paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$;
+  paymentByBatchGridLoader$ = this.financialPremiumsFacade.paymentByBatchGridLoader$;
   providerDetailsDialog:any;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,

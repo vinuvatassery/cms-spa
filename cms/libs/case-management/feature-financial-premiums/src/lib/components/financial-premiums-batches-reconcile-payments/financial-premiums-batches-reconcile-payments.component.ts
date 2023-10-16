@@ -606,10 +606,9 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       dataItem.paymentReconciledDate = this.currentDate;
       dataItem.datePaymentRecInValid = false;
       dataItem.datePaymentRecInValidMsg = null;
-
     }
-    if (dataItem.checkNbr !== '') {
-      dataItem.isPrintAdviceLetter = true
+    if (dataItem.checkNbr !== '' && dataItem.acceptsReports == 'Y') {
+      dataItem.isPrintAdviceLetter = true;
     }
     this.assignRowDataToMainList(dataItem);
     let isCheckNumberAlreadyExist = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr === dataItem.checkNbr && x.vendorId !== dataItem.vendorId);
@@ -774,6 +773,10 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId;
       this.paymentRequestId = data.paymentRequestId;
+      var warrantTotal=0;    
+      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId).forEach((item: any) => {
+        warrantTotal = warrantTotal + item.amountPaid;
+      });
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,

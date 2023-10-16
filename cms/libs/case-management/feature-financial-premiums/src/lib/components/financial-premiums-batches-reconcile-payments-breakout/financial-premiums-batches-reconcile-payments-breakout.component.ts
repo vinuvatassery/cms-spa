@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy,ChangeDetectorRef, Component,Input,Output,EventEmitter, OnInit,OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { GridDataResult,ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
+import { FilterService,GridDataResult,ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-premiums-batches-reconcile-payments-breakout',
   templateUrl:
@@ -70,13 +71,21 @@ export class FinancialPremiumsBatchesReconcilePaymentsBreakoutComponent  impleme
   gridReconcileIPBreakoutListSubject = new Subject<any>();
   gridReconcileIPBreakoutList$ = this.gridReconcileIPBreakoutListSubject.asObservable();
 
+  selectedPaymentStatus: string | null = null;
+  selectedPaymentMethod: string | null = null;
+  paymentMethodType$ = this.lovFacade.paymentMethodType$;
+  paymentStatus$ = this.lovFacade.paymentStatus$;
+  paymentMethodTypes: any = [];
+  paymentStatus: any = [];
 
-  constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService) { }
+  constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService,private readonly lovFacade: LovFacade) { }
   
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
    }
   ngOnInit(): void {
+    this.getPaymentMethodLov();
+    this.getPaymentStatusLov();
      this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -261,5 +270,51 @@ export class FinancialPremiumsBatchesReconcilePaymentsBreakoutComponent  impleme
 
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(this.paymentRequestId)
+  }
+
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (field === 'paymentStatusDesc') this.selectedPaymentStatus = value;
+    if (field === 'paymentMethodDesc') this.selectedPaymentMethod = value;
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'and',
+    });
+  }
+
+  private getPaymentStatusLov() {
+    this.lovFacade.getPaymentStatusLov();
+    this.paymentStatus$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentStatus = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+  }
+  private getPaymentMethodLov() {
+    this.lovFacade.getPaymentMethodLov();
+    this.paymentMethodType$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentMethodTypes = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
   }
 }

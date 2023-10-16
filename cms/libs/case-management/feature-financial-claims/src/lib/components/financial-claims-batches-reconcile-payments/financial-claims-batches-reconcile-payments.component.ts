@@ -616,14 +616,18 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     {
       const data = selection.selectedRows[0].dataItem;
       this.isBreakoutPanelShow=true;
-      this.entityId=data.entityId;
+      this.entityId=data.entityId; 
+      var warrantTotal=0;    
+      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId).forEach((item: any) => {
+        warrantTotal = warrantTotal + item.amountPaid;
+      });
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
         entityId : data.entityId,
         claimsType: this.claimsType,
         amountTotal : data.amountTotal,
-        warrantTotal : data.amountPaid,
+        warrantTotal : warrantTotal,
         warrantNbr : data.checkNbr,
         paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
       }

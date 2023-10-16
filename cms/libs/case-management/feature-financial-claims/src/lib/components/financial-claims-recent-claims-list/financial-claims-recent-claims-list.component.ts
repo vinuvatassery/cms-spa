@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy,ChangeDetectorRef,Component, Input, OnChanges, OnInit } from '@angular/core';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { GridDataResult,ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
+import { FilterService,GridDataResult,ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { FinancialClaimsFacade } from '@cms/case-management/domain';
-
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-claims-recent-claims-list',
   templateUrl: './financial-claims-recent-claims-list.component.html',
@@ -45,12 +45,26 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   dropDowncolumns : any;
   isFinancialClaimsRecentClaimGridLoaderShow = false;
 
+  selectedPaymentStatus: string | null = null;
+  selectedPaymentMethod: string | null = null;
+  selectedPaymentType: string | null = null;
+  paymentMethodType$ = this.lovFacade.paymentMethodType$;
+  paymentStatus$ = this.lovFacade.paymentStatus$;
+  paymentRequestTypes$= this.lovFacade.paymentRequestType$;
+  paymentMethodTypes: any = [];
+  paymentStatus: any = [];
+  paymentRequestTypes: any = [];
+  
+  paymentTypeFilter = '';
   constructor(
     private readonly cdr: ChangeDetectorRef,
+    private readonly lovFacade: LovFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade
   ) { }
   ngOnInit(): void { 
-    this.loadColumnsData();   
+    this.loadColumnsData(); 
+    this.getPaymentStatusLov();
+    this.getCoPaymentRequestTypeLov();  
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
@@ -171,6 +185,10 @@ loadFinancialRecentClaimListGrid() {
       this.filter = "";
       this.isFiltered = false
     }
+    if (!this.filteredBy.includes('Payment Status'))
+    this.selectedPaymentStatus = '';
+    if (!this.filteredBy.includes('Payment Type'))
+    this.selectedPaymentType = '';
     this.loadFinancialRecentClaimListGrid();    
   }
 
@@ -319,5 +337,52 @@ loadFinancialRecentClaimListGrid() {
         "columnDesc": "Payment Status"         
       }
     ]
+  }
+
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (field === 'paymentStatusDesc') this.selectedPaymentStatus = value;
+    if (field === 'paymentTypeDesc') this.selectedPaymentType = value;
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'and',
+    });
+  }
+
+  private getPaymentStatusLov() {
+    this.lovFacade.getPaymentStatusLov();
+    this.paymentStatus$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentStatus = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+  }
+
+  private getCoPaymentRequestTypeLov() {
+    this.lovFacade.getCoPaymentRequestTypeLov();
+    this.paymentRequestTypes$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentRequestTypes = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
   }
 }
