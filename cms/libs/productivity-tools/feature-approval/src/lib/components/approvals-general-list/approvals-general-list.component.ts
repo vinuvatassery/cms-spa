@@ -1,5 +1,5 @@
 /** Angular **/
-import { 
+import {
   Component,
   EventEmitter,
   Input,
@@ -7,11 +7,10 @@ import {
   OnInit,
   Output,
   TemplateRef,
-
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
-import {  GridDataResult } from '@progress/kendo-angular-grid';
+import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -21,15 +20,16 @@ import { Subject } from 'rxjs';
 import {
   PanelBarCollapseEvent,
   PanelBarExpandEvent,
-} from "@progress/kendo-angular-layout";
+} from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { PendingApprovalPaymentTypeCode } from 'libs/productivity-tools/domain/src/lib/enums/pending-approval-payment-type-code.enum';
 @Component({
   selector: 'productivity-tools-approvals-general-list',
-  templateUrl: './approvals-general-list.component.html', 
+  templateUrl: './approvals-general-list.component.html',
 })
-export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
- isPanelExpanded = false;
- ifApproveOrDeny: any;
+export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
+  isPanelExpanded = false;
+  ifApproveOrDeny: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isApprovalGeneralGridLoaderShow = false;
@@ -51,16 +51,16 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
   gridDataResult!: GridDataResult;
 
   gridApprovalGeneralDataSubject = new Subject<any>();
-  gridApprovalGeneralBatchData$ = this.gridApprovalGeneralDataSubject.asObservable();
+  gridApprovalGeneralBatchData$ =
+    this.gridApprovalGeneralDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   private editListITemsDialog: any;
-  approvalId ! : number;
-  
+  approvalId!: number;
+
   /** Constructor **/
-  constructor(private route: Router,
-    private dialogService: DialogService ) {}
+  constructor(private route: Router, private dialogService: DialogService) {}
 
   ngOnInit(): void {
     this.loadApprovalGeneralListGrid();
@@ -74,7 +74,6 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
 
     this.loadApprovalGeneralListGrid();
   }
-
 
   private loadApprovalGeneralListGrid(): void {
     this.loadApprovalGeneral(
@@ -165,7 +164,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
         this.filterData
       );
       this.gridApprovalGeneralDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
+      if (data?.total >= 0 || data?.total === -1) {
         this.isApprovalGeneralGridLoaderShow = false;
       }
     });
@@ -178,24 +177,36 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
 
   public onPanelExpand(event: PanelBarExpandEvent): void {
     this.isPanelExpanded = true;
-
   }
 
-  approveOrDeny(result:any){
-      this.ifApproveOrDeny = result;
+  approveOrDeny(result: any) {
+    this.ifApproveOrDeny = result;
   }
 
-  onEditListItemsDetailClicked(  template: TemplateRef<unknown>): void {   
+  onEditListItemsDetailClicked(template: TemplateRef<unknown>): void {
     this.editListITemsDialog = this.dialogService.open({
       content: template,
-      animation:{
+      animation: {
         direction: 'left',
-        type: 'slide', 
-      }, 
+        type: 'slide',
+      },
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
   }
-  onCloseEditListItemsDetailClicked(){
+
+  onCloseEditListItemsDetailClicked() {
     this.editListITemsDialog.close();
+  }
+
+  getTitle(itemCode: string) {
+    switch (itemCode) {
+      case PendingApprovalPaymentTypeCode.GeneralException:
+        return 'Request to Exceed Max Benefits';
+      case PendingApprovalPaymentTypeCode.GeneralCaseReassignment:
+        return 'Request for Case reassignment';
+      case PendingApprovalPaymentTypeCode.GeneralAddtoMasterList:
+        return 'Request to add To Master List';
+    }
+    return null;
   }
 }
