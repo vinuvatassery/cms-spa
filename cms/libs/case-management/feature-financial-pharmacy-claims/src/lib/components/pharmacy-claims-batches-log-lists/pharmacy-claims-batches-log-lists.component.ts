@@ -20,6 +20,7 @@ import {
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'cms-pharmacy-claims-batches-log-lists',
   templateUrl: './pharmacy-claims-batches-log-lists.component.html', 
@@ -144,6 +145,7 @@ reverseClaimsDialog: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchLogGridLists$: any;
+  @Output() loadBatchLogListEvent = new EventEmitter<any>();
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
@@ -199,7 +201,8 @@ reverseClaimsDialog: any;
       sortColumn: sortValue,
       sortType: sortTypeValue,
     };
-    this.loadVendorRefundBatchListEvent.emit(gridDataRefinerValue);
+    //this.loadVendorRefundBatchListEvent.emit(gridDataRefinerValue);
+    this.loadBatchLogListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
  
@@ -412,4 +415,5 @@ reverseClaimsDialog: any;
       this.addEditClaimsFormDialog.close();
     }
   }
+  
 }

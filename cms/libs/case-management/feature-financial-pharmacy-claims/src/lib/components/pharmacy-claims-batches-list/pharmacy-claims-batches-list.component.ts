@@ -32,6 +32,7 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  claimsType= 'pharmacy-claims';
   @Input() pharmacyClaimsBatchGridLists$: any;
   @Output() loadPharmacyClaimsBatchListEvent = new EventEmitter<any>();
   public state!: State;
@@ -164,8 +165,11 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
     });
     this.isPharmacyClaimsBatchGridLoaderShow = false;
   }
-  navToBatchDetails(event : any){  
-    this.route.navigate(['/financial-management/pharmacy-claims/batch'] );
+  navToBatchDetails(data : any){  
+    //this.route.navigate(['/financial-management/pharmacy-claims/batch'] );
+
+    this.route.navigate([`/financial-management/${this.claimsType}/batch`],
+    { queryParams :{bid: 'cd1b2d4d-e5a9-451e-aaa6-fc19da03a1ca'}});
   }
 
 }

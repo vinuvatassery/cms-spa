@@ -25,9 +25,9 @@
                     <kendo-tabstrip-tab title="Batches">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-pharmacy-claims-batches-list   [pharmacyClaimsBatchGridLists$]="pharmacyClaimsBatchGridLists$"
+                                <cms-pharmacy-claims-batches-list     [pharmacyClaimsBatchGridLists$]="pharmacyClaimsBatchGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsBatch"
-                                [sortType]="sortType" [sort]="sortBatchList" 
+                                [sortType]="sortType" [sort]="sortBatchList"    
                                 (loadPharmacyClaimsBatchListEvent)="loadPharmacyClaimsBatchListGrid($event)"></cms-pharmacy-claims-batches-list>
                             </div>
                         </ng-template>

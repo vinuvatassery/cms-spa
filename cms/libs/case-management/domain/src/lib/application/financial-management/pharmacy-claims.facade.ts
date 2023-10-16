@@ -66,8 +66,8 @@ export class FinancialPharmacyClaimsFacade {
   private pharmacyClaimsAllPaymentsDataSubject =  new Subject<any>();
   pharmacyClaimsAllPaymentsData$ = this.pharmacyClaimsAllPaymentsDataSubject.asObservable();
 
-  private batchLogDataSubject =  new Subject<any>();
-  batchLogData$ = this.batchLogDataSubject.asObservable();
+  // private batchLogDataSubject =  new Subject<any>();
+  // batchLogData$ = this.batchLogDataSubject.asObservable();
 
   private batchReconcileDataSubject =  new Subject<any>();
   reconcileDataList$ = this.batchReconcileDataSubject.asObservable();
@@ -77,6 +77,12 @@ export class FinancialPharmacyClaimsFacade {
 
   private claimsListDataSubject =  new Subject<any>();
   claimsListData$ = this.claimsListDataSubject.asObservable();
+
+
+  private paymentsByBatchDataSubject =  new Subject<any>();
+  private paymentByBatchGridLoaderSubject =  new BehaviorSubject<boolean>(false);
+  batchLogData$ = this.paymentsByBatchDataSubject.asObservable();
+
   /** Private properties **/
  
   /** Public properties **/
@@ -163,17 +169,35 @@ export class FinancialPharmacyClaimsFacade {
   }
 
 
-  loadBatchLogListGrid(){
-    this.financialPharmacyClaimsDataService.loadBatchLogListService().subscribe({
+  // loadBatchLogListGrid(){
+  //   this.financialPharmacyClaimsDataService.loadBatchLogListService().subscribe({
+  //     next: (dataResponse) => {
+  //       this.batchLogDataSubject.next(dataResponse);
+  //       this.hideLoader();
+  //     },
+  //     error: (err) => {
+  //       this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+  //       this.hideLoader(); 
+  //     },
+  //   });  
+  // }
+  loadBatchLogListGrid(batchId: string, params:GridFilterParam, claimType:string){
+    this.paymentByBatchGridLoaderSubject.next(true);
+    this.financialPharmacyClaimsDataService.loadPaymentsByBatch(batchId, params, claimType).subscribe({
       next: (dataResponse) => {
-        this.batchLogDataSubject.next(dataResponse);
-        this.hideLoader();
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+
+        this.paymentsByBatchDataSubject.next(gridView);
+        this.paymentByBatchGridLoaderSubject.next(false);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.paymentByBatchGridLoaderSubject.next(false);
       },
-    });  
+    });
   }
   loadBatchItemsListGrid(){
     this.financialPharmacyClaimsDataService.loadBatchItemsListService().subscribe({

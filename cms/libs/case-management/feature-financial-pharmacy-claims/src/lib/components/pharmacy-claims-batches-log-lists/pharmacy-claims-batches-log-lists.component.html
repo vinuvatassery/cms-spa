@@ -48,7 +48,7 @@
       <kendo-grid [resizable]="true" [loading]="isBatchLogGridLoaderShow" [pageSize]="state.take"
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
         [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
-        [data]="batchLogGridLists$ | async"  [rowClass]="rowClass">
+        [data]="batchLogGridLists$| async"  [rowClass]="rowClass">
         <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
           [width]="40"></kendo-grid-checkbox-column>
         <kendo-grid-column field="item" title="Item #" [width]="100">
@@ -73,20 +73,20 @@
         </kendo-grid-column>
   
         <kendo-grid-column field="nameOnPrimaryInsuranceCard" title="Name on Primary Insurance Card" [width]="200"> </kendo-grid-column>
-        <kendo-grid-column field="memberID" title="Member ID" [width]="140"> </kendo-grid-column>
-        <kendo-grid-column field="RXNumber" title="RX Number" [width]="140">   </kendo-grid-column>
+        <kendo-grid-column field="clientID" title="Client ID" [width]="140"> </kendo-grid-column>
+        <!-- <kendo-grid-column field="RXNumber" title="RX Number" [width]="140">   </kendo-grid-column>
         <kendo-grid-column field="FillDate" title="Fill Date" [width]="140">   </kendo-grid-column>
         <kendo-grid-column field="ndcCode" title="NDC Code" [width]="140">   </kendo-grid-column>
         <kendo-grid-column field="brandName" title="Brand Name" [width]="180">   </kendo-grid-column>
-        <kendo-grid-column field="drugName" title="Drug Name" [width]="140">   </kendo-grid-column>
+        <kendo-grid-column field="drugName" title="Drug Name" [width]="140">   </kendo-grid-column> -->
         <kendo-grid-column field="paymentType" title="Payment Type" [width]="140">   </kendo-grid-column>
         <kendo-grid-column field="amountPaid" title="Amount Paid" [width]="140">  <ng-template kendoGridCellTemplate
           let-dataItem>
           <span class="tableamountview"> <strong>$</strong> {{dataItem.amountPaid}}</span>
         </ng-template> </kendo-grid-column>
-        <kendo-grid-column field="rxQty" title="RX Qty." [width]="140">   </kendo-grid-column>
+        <!-- <kendo-grid-column field="rxQty" title="RX Qty." [width]="140">   </kendo-grid-column>
         <kendo-grid-column field="rxType" title="RX Type" [width]="140">   </kendo-grid-column>
-        <kendo-grid-column field="rxDaysSupply" title="RX Days Supply" [width]="160">   </kendo-grid-column>
+        <kendo-grid-column field="rxDaysSupply" title="RX Days Supply" [width]="160">   </kendo-grid-column> -->
         <kendo-grid-column field="indexCode" title="Index Code" [width]="140">   </kendo-grid-column>
         <kendo-grid-column field="pcaCode" title="PCA Code" [width]="140">   </kendo-grid-column>
         <kendo-grid-column field="objectCode" title="Object Code" [width]="140">   </kendo-grid-column>
