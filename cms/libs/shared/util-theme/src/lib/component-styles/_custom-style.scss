@@ -1126,6 +1126,10 @@ color: $app-primary-font-color;
 
 
 .custom_scroll_view {
+  .k-scrollview-view{
+    max-width: 100%;
+    overflow-y: auto;
+  }
   .k-scrollview {
     min-height: 340px;
     max-height: 500px;

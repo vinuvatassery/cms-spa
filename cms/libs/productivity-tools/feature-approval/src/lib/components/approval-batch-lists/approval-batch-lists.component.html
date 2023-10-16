@@ -44,7 +44,7 @@
       </kendo-textarea-suffix>
     </kendo-floatinglabel>
 
-<div class="app-c-table mt-2" (click)="$event.stopPropagation();">
+<div class="app-c-table mt-2 mb-2" (click)="$event.stopPropagation();">
   <kendo-grid [resizable]="true" [loading]="isBatchDetailPaymentsGridLoaderShow" [pageSize]="state.take"
   [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
   [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"

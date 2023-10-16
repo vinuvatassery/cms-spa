@@ -379,7 +379,7 @@ export class FinancialClaimsBatchesLogListsComponent
     this.selectedDataRows.currentPrintAdviceLetterGridFilter = JSON.stringify(this.currentPrintAdviceLetterGridFilter);
     this.printAuthorizationDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-xlg',
+      cssClass: 'app-c-modal app-c-modal-xlg app-c-modal-np_0',
     });
   }
 
