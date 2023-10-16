@@ -47,7 +47,7 @@ export class FinancialPremiumsPrintAdviceLetterLogListsComponent implements OnIn
   selectedDataIfSelectAllUnchecked:any=[];
   currentGridFilter:any;
   totalRecord:any;
-  noOfRecordToPrint:any;
+  noOfRecordToPrint:any = 0;
   yesOrNoLovs: any = [];
   gridColumns : {[key: string]: string} = {
     itemNbr: "Item #",

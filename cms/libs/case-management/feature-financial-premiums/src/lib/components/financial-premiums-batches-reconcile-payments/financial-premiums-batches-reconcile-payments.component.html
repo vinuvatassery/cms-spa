@@ -106,7 +106,7 @@
                         (selectionChange)="onRowSelection(grid, $event)">
                         <kendo-grid-column   title="Print Advice Ltr" [width]="80">
                               <ng-template kendoGridCellTemplate let-dataItem>                  
-                                    <input class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr"
+                                    <input *ngIf="dataItem.acceptsReports === 'Y'" class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr"
                                     aria-labelledby="printAdviceLetter" kendoCheckBox  (change)="printAdviceLetterChange(dataItem)" [(ngModel)]="dataItem.isPrintAdviceLetter"
                                     />                                 
                               </ng-template>
