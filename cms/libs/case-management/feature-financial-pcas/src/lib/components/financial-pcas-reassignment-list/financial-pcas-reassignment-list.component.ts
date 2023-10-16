@@ -132,7 +132,7 @@ export class FinancialPcasReassignmentListComponent
     group:'Group',
     closeDate: 'Close Date',
     originalAmount:'Orignal Amount',
-    spendAfterExpiration : 'Amount Spend After Expiration',
+    amountSpendAfterExpiration : 'Amount Spend After Expiration',
     overSpendAmount:'Overspend Amount',
     totalOverSpendAmount:'Total Overspend Amount',
     unlimitedFlag:'Unlimited'
