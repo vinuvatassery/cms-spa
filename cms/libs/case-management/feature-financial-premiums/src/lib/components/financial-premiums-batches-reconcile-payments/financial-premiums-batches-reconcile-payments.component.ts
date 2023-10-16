@@ -606,10 +606,9 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       dataItem.paymentReconciledDate = this.currentDate;
       dataItem.datePaymentRecInValid = false;
       dataItem.datePaymentRecInValidMsg = null;
-
     }
-    if (dataItem.checkNbr !== '') {
-      dataItem.isPrintAdviceLetter = true
+    if (dataItem.checkNbr !== '' && dataItem.acceptsReports == 'Y') {
+      dataItem.isPrintAdviceLetter = true;
     }
     this.assignRowDataToMainList(dataItem);
     let isCheckNumberAlreadyExist = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr === dataItem.checkNbr && x.vendorId !== dataItem.vendorId);
