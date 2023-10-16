@@ -14,13 +14,15 @@ import {
 import { Router } from '@angular/router';
 import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage,FinancialPremiumsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
+import { IntlService } from '@progress/kendo-angular-intl';
 import {
   CompositeFilterDescriptor, filterBy
 } from '@progress/kendo-data-query';
 import { BatchPremium } from 'libs/case-management/domain/src/lib/entities/financial-management/batch-premium';
-import { Observable, Subject, BehaviorSubject, Subscription } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, Subscription, debounceTime } from 'rxjs';
 @Component({
   selector: 'cms-financial-premiums-process-list',
   templateUrl: './financial-premiums-process-list.component.html',
@@ -83,11 +85,13 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn: any;
   columnName: string = '';
-  public selectedProcessClaims: any[] = [];
+  private searchSubject = new Subject<string>();
 
+  public selectedProcessClaims: any[] = [];
   columns: any = {
+    All:"All Columns",
     clientFullName:"Client Name",
     insuranceName:"Name on Primary Insurance Card",
     clientId:"Client ID",
@@ -99,9 +103,17 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     policyId:"Policy Id",
     groupId:"Group ID",
     paymentId:"Payment ID",
-    paymentStatus:"Payment Status"
+    paymentStatus:"Payment Status",
+    entrydate:"Entry Date",
+    coverageStartDate:"Coverage Dates "
   };
   dropDowncolumns : any = [
+
+    {
+      columnCode: 'All',
+      columnDesc: 'All Columns',
+    },
+
     {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
@@ -145,6 +157,10 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       columnDesc: 'Group ID',
     },
     {
+      columnCode: 'coverageStartDate',
+      columnDesc: 'Coverage Dates',
+    },
+    {
       columnCode: 'paymentId',
       columnDesc: 'Payment ID',
     },
@@ -152,6 +168,11 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       columnCode: 'paymentStatus',
       columnDesc: 'Payment Status',
     },
+    {
+      columnCode: 'entrydate',
+      columnDesc: 'Entry Date',
+    },
+    
   ];
   columnDroplist : any = {
     ALL: "ALL",
@@ -262,7 +283,11 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   paymentRequestId: any;
   recordCountWhenSelectallClicked: number = 0;
   totalGridRecordsCount: number = 0;;
-
+  selectedSearchColumn = 'ALL';
+  filteredByColumnDesc = '';
+  showDateSearchWarning = false;
+  showNumberSearchWarning = false;
+  columnChangeDesc = 'Default Columns'
   
   /** Constructor **/
   constructor(
@@ -271,6 +296,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     private dialogService: DialogService,
     private readonly route: Router,
     private readonly ref: ChangeDetectorRef,
+    private readonly intl: IntlService,
+    private readonly configProvider: ConfigurationProvider
   ) {
 
     this.selectableSettings = {
@@ -288,6 +315,84 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   ngOnDestroy(): void {
     this.unsubscribeFromActionResponse();
   }
+  searchColumnChangeHandler(value: string) {
+    this.showDateSearchWarning = value === 'entrydate';
+  
+  }
+
+  onPcaSearch(searchValues: any) {
+    const isDateSearch = searchValues.includes('/')
+    this.showDateSearchWarning = isDateSearch || this.selectedColumn === 'entrydate';
+    searchValues = this.formatSearchValue(searchValues, isDateSearch);
+    if (isDateSearch && !searchValues) return;
+    this.setFilterBy(false, searchValues, []);
+    this.searchSubject.next(searchValues);
+  }
+
+  private isValidDate = (searchValue: any) => isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(new Date(searchValue), this.configProvider?.appSettings?.dateFormat);
+      }
+      else {
+        return '';
+      }
+    }
+
+    return searchValue;
+  }
+
+  private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
+    this.filteredByColumnDesc = '';
+    if (isFromGrid) {
+      if (filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters?.filter((fld:any)=> fld.value)?.map((fld: any) =>
+            this.columns[fld.field])
+          return ([...new Set(filteredColumns)]);
+        });
+
+        this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
+      }
+      return;
+    }
+
+  }
+  onChange(data: any) {
+    if (this. searchValue) {
+      this.onPcaSearch(this. searchValue);
+    }
+    this.defaultGridState();
+    const operator = ([ 'entrydate','premiumAmount','coverageStartDate']).includes(this.selectedColumn) ? 'eq' : 'startswith';
+   
+    if (this.selectedColumn === 'entrydate' && (!this.isValidDate(data) && data !== '')) {
+      return;
+    };
+    
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedColumn ?? 'clientFullName',
+              operator: operator,
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
+   
+    const stateData = this.state;
+    stateData.filter = this.filterData;
+    this.dataStateChange(stateData);
+    this.loadFinancialPremiumsProcessListGrid();
+   
+  }
+
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event);
   }
@@ -434,39 +539,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     this.gridFilter = filter;
   }
 
-  onChange(data: any) {
-    this.defaultGridState();
-    let operator = 'startswith';
-
-    if (
-      this.selectedColumn === 'clientId' ||
-      this.selectedColumn === 'premiumAmount' ||
-      this.selectedColumn === 'policyId' ||
-      this.selectedColumn === 'groupId' ||
-      this.selectedColumn === 'paymentId'
-    ) {
-      operator = 'eq';
-    }
-
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedColumn ?? 'clientFullName',
-              operator: operator,
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
-    const stateData = this.state;
-    stateData.filter = this.filterData;
-    this.dataStateChange(stateData);
-  }
+ 
 
   defaultGridState() {
     this.state = {
@@ -531,6 +604,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     }
 
     this.sort = stateData.sort;
+    this.filteredByColumnDesc = '';
     this.sortValue = stateData.sort[0]?.field ?? "";
     this.sortType = stateData.sort[0]?.dir ?? "";
     this.state = stateData;
@@ -939,6 +1013,10 @@ if(!this.selectAll && this.isSendReportOpened){
       if (resp) {
         this.modalCloseAddPremiumsFormModal(true);
         this.modalCloseEditPremiumsFormModal(true);
+        this.searchSubject.pipe(debounceTime(300))
+        .subscribe((searchValue) => {
+          this.onChange(searchValue);
+        });
         this.loadFinancialPremiumsProcessListGrid();
       }
     });
