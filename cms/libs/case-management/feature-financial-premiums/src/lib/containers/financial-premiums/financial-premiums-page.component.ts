@@ -66,6 +66,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId: any;
+  unbatchPremiums$ =this.financialPremiumsFacade.unbatchPremiums$;
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
     private readonly router: Router,
@@ -192,4 +193,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.lovFacade.getPaymentMethodLov()
   }
 
+  unBatchPremiumClick(event:any){
+    this.financialPremiumsFacade.unbatchPremiums(event.paymentId,event.premiumsType)
+  }
 }

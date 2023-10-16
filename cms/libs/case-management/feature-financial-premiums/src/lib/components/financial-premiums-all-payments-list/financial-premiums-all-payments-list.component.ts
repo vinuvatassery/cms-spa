@@ -10,7 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { GridFilterParam } from '@cms/case-management/domain';
+import { GridFilterParam, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -26,7 +26,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject, debounceTime } from 'rxjs';
+import { Subject, debounceTime, first } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-premiums-all-payments-list',
@@ -51,6 +51,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  @Input() unbatchPremiums$:any
   @Input() financialPremiumsAllPaymentsGridLists$: any;
   @Output() loadFinancialPremiumsAllPaymentsListEvent = new EventEmitter<any>();
   @Input() financialPremiumPaymentLoader$: any;
@@ -168,7 +169,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   paymentMethodTypes: any = [];
   paymentStauses: any = [];
   acceptsReportsList: {name: string, value: string}[] = [{name: 'Yes', value: 'Y'}, {name: 'No', value: 'N'}];
-
+  @Output() unBatchPremiumEvent = new EventEmitter<any>();
   public state!: State;
   columnsReordered = false;
   isFiltered = false;
@@ -187,15 +188,18 @@ export class FinancialPremiumsAllPaymentsListComponent
   isSendReportOpened = false;
   isUnBatchPaymentOpen = false;
   isDeletePaymentOpen = false;
+  selected: any;
 
-  public allPaymentsGridActions = [
-    {
+  public allPaymentsGridActions(dataItem:any){
+    return [{
       buttonType: 'btn-h-primary',
       text: 'Unbatch Payment',
       icon: 'undo',
+      disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
       click: (data: any): void => {
         if (!this.isUnBatchPaymentOpen) {
-          this.isUnBatchPaymentOpen = true;
+          this.isUnBatchPaymentOpen =true
+          this.selected = data;
           this.onUnBatchPaymentOpenClicked(this.unBatchPaymentDialogTemplate);
         }
       },
@@ -211,7 +215,8 @@ export class FinancialPremiumsAllPaymentsListComponent
         }
       },
     },
-  ];
+  ]
+}
 
   public bulkMore = [
     {
@@ -628,11 +633,34 @@ export class FinancialPremiumsAllPaymentsListComponent
 
   onUnBatchPaymentCloseClicked(result: any) {
     if (result) {
+      this.handleUnbatchClaims()
       this.isUnBatchPaymentOpen = false;
       this.unBatchPaymentDialog.close();
+      this.unBatchPremiumEvent.emit({
+        paymentId : [this.selected.paymentRequestId],
+        premiumsType: this.premiumsType
+      })
+      this.closeUnbatchPaymentDialog()
+    }else{
+      this.closeUnbatchPaymentDialog()
     }
+
   }
 
+  closeUnbatchPaymentDialog(){
+    this.isUnBatchPaymentOpen = false;
+      this.unBatchPaymentDialog.close();
+  }
+
+  handleUnbatchClaims() {
+    this.unbatchPremiums$
+      .pipe(first((unbatchResponse: any) => unbatchResponse != null))
+      .subscribe((unbatchResponse: any) => {
+        if (unbatchResponse ?? false) {
+          this.loadFinancialPremiumsPaymentsListGrid();
+        }
+      });
+  }
   onDeletePaymentOpenClicked(template: TemplateRef<unknown>): void {
     this.deletePaymentDialog = this.dialogService.open({
       content: template,
