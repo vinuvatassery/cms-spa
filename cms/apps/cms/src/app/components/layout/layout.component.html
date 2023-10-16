@@ -2,7 +2,7 @@
 <common-loader-component></common-loader-component>
 
 <h1 hidden>CMS</h1>
-<section class="app-l-header" role="header" kendoTooltip>
+<header class="app-l-header" kendoTooltip>
   <div class="header_menu-left_most_section"  >
     <button  aria-label="Mobile Menu Icon" class="mobile-menu-icon" (click)="openMobileMenu()" *ifPermission='["Layout_Logo_View_Only"]'> <span class="material-icons">
       menu
@@ -19,7 +19,7 @@
     <productivity-tools-notification-panel  *ifPermission='["Layout_Notifications_View_Only"]'></productivity-tools-notification-panel>
     <common-login-status></common-login-status>
   </div>
-</section>
+</header>
 
 <section class="app-l-container" [ngClass]="{'mobile_menu-opened': isOpenMobileMenu}"  kendoRippleContainer role="main">
   <section
@@ -30,7 +30,7 @@
     class="app-l-sidebar"
     [class.menuToggled]="isSideMenuToggled"  
   >
-    <div class="drawer-inner-container" role="menuitem" *ifPermission='["Layout_Menu_View_Only"]'>  
+    <div class="drawer-inner-container"  *ifPermission='["Layout_Menu_View_Only"]'>  
       <div class="sidebar-hamburger">
         <button
           (click)="onSideMenuToggleClicked()"
