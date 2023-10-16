@@ -1,5 +1,5 @@
 /** Angular **/
-import { 
+import {
   Component,
   EventEmitter,
   Input,
@@ -9,7 +9,7 @@ import {
   TemplateRef,
 
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
@@ -25,7 +25,7 @@ import {
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-approvals-general-list',
-  templateUrl: './approvals-general-list.component.html', 
+  templateUrl: './approvals-general-list.component.html',
 })
 export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
  isPanelExpanded = false;
@@ -38,7 +38,10 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
   @Input() sortType: any;
   @Input() sort: any;
   @Input() approvalsGeneralLists$: any;
+  @Input() casereassignmentExpandedInfo$: any;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
+  @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
+
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -56,7 +59,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   private editListITemsDialog: any;
-  
+
   /** Constructor **/
   constructor(private route: Router,
     private dialogService: DialogService ) {}
@@ -164,7 +167,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
         this.filterData
       );
       this.gridApprovalGeneralDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
+      if (data?.total >= 0 || data?.total === -1) {
         this.isApprovalGeneralGridLoaderShow = false;
       }
     });
@@ -184,17 +187,21 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges{
       this.ifApproveOrDeny = result;
   }
 
-  onEditListItemsDetailClicked(  template: TemplateRef<unknown>): void {   
+  onEditListItemsDetailClicked(  template: TemplateRef<unknown>): void {
     this.editListITemsDialog = this.dialogService.open({
       content: template,
       animation:{
         direction: 'left',
-        type: 'slide', 
-      }, 
+        type: 'slide',
+      },
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
   }
   onCloseEditListItemsDetailClicked(){
     this.editListITemsDialog.close();
+  }
+  loadCasereassignmentExpanedInfoEvent(approvalId : any)
+  {
+    this.loadCasereassignmentExpanedInfoParentEvent.emit(approvalId);
   }
 }

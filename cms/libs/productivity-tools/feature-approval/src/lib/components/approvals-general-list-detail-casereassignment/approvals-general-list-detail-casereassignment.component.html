@@ -1,4 +1,5 @@
-<kendo-panelbar >
+<kendo-panelbar (expand)="onPanelExpand($event)"
+(collapse)="onPanelCollapse($event)">
     <kendo-panelbar-item >
       <ng-template kendoPanelBarItemTitle>
         <div class="flex-row rw-100" (click)="$event.stopPropagation();">
@@ -8,10 +9,10 @@
                 aria-label="FName LName" kendoButton look="flat" class="card-link-button">
                 FName LName
               </button> </p>
-            <div *ngIf="isPanelExpanded">
+            <!-- <div *ngIf="isPanelExpanded">
               <p class="mt-1 mb-1">Regarding <a>Donna Summer</a></p>
               <i>The client has exceeded max benefits but it is very important that we pay this invoice for them.</i>
-            </div>
+            </div> -->
           </div>
           <div class="flex-col flex-col-6">
             <div>
@@ -38,20 +39,14 @@
       </ng-template>
 
       <ng-template kendoPanelBarContent>
-        <div>
-          <p>
-            <strong>Invoice ID:</strong>
-            <span class="mr-1"> XXXXXX </span>
-            <strong>Provider:</strong>
-            <span class="mr-1"> <a> Very Nice Provider </a> </span>
-            <strong>Client YTD:</strong>
-            <span class="mr-1"> $XX,XXX.XX </span>
+        <div *ngIf="isPanelExpanded">
+          <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+          <kendo-skeleton shape="text" animation="pulse" width="50%"></kendo-skeleton>
+        </div>
 
-
-          </p>
-          <div>
-            <productivity-tools-approval-invoice></productivity-tools-approval-invoice>
-          </div>
+        <div *ngIf="casereassignmentExpandedInfoData">
+          <p>Regarding <a (click)="onClientNameClicked()">{{casereassignmentExpandedInfoData?.clientFullName}}</a></p>
+          <i>{{casereassignmentExpandedInfoData?.reassignmentReason}}</i>
         </div>
       </ng-template>
 

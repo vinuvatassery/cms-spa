@@ -7,17 +7,19 @@
     </span>
     Pending Approvals <button (click)="notificationTriger()" kendoButton fillMode="flat">Show Reminder Snackbar</button> </h1>
   </section>
- 
+
   <kendo-tabstrip class="app-c-tab app-c-tab--color" [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }">
     <kendo-tabstrip-tab [selected]="true" title="General">
       <ng-template kendoTabTitle> General <span class="tab-batch-notify">4</span></ng-template>
       <ng-template kendoTabContent>
         <div class="nm-20 approval_container">
-        <productivity-tools-approvals-general-list 
+        <productivity-tools-approvals-general-list
         [approvalsGeneralLists$]="approvalsGeneralLists$"
+        [casereassignmentExpandedInfo$]="casereassignmentExpandedInfo$"
         [pageSizes]="pageSizes" [sortValue]="sortValueGeneralAPproval"
-        [sortType]="sortType" [sort]="sortGeneralList" 
+        [sortType]="sortType" [sort]="sortGeneralList"
         (loadApprovalsGeneralGridEvent)="loadApprovalsGeneralGrid($event)"
+        (loadCasereassignmentExpanedInfoParentEvent)="loadCasereassignmentExpanedInfoParentEvent($event)"
         ></productivity-tools-approvals-general-list>
       </div>
       </ng-template>
@@ -34,14 +36,14 @@
         [batchDetailPaymentsList$]="batchDetailPaymentsList$"
         [pageSizes]="pageSizes" [sortValue]="sortValueApprovalPaymentsApproval"
         [sortType]="sortType" [sort]="sortApprovalPaymentsList"
-        [exportButtonShow$]="exportButtonShow$" 
+        [exportButtonShow$]="exportButtonShow$"
         [userLevel] = "userLevel"
         (loadApprovalsPaymentsGridEvent)="loadApprovalsPaymentsGrid($event)"
         (submitEvent)="submitData($event)"
-        (loadApprovalsPaymentsMainListEvent)="loadApprovalsPaymentsMain($event)"        
+        (loadApprovalsPaymentsMainListEvent)="loadApprovalsPaymentsMain($event)"
         (loadSubmittedSummaryEvent)="loadSubmittedSummary($event)"
           (loadBatchDetailPaymentsGridEvent)="loadBatchDetailPaymentsGrid($event)"
-          (exportGridDataEvent)="exportPendingApprovalGridData()"  
+          (exportGridDataEvent)="exportPendingApprovalGridData()"
           class="reminder-list-modal-wrap"></productivity-tools-approvals-payments-list>
           </div>
       </ng-template>
@@ -53,7 +55,7 @@
         <productivity-tools-imported-claims-lists
         [approvalsImportedClaimsLists$]="approvalsImportedClaimsLists$"
         [pageSizes]="pageSizes" [sortValue]="sortValueImportedClaimsAPproval"
-        [sortType]="sortType" [sort]="sortImportedClaimsList" 
+        [sortType]="sortType" [sort]="sortImportedClaimsList"
         (loadImportedClaimsGridEvent)="loadImportedClaimsGrid($event)"
 
           class="reminder-list-modal-wrap"></productivity-tools-imported-claims-lists>

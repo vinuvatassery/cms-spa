@@ -9,9 +9,11 @@ export class PendingApprovalGeneralFacade {
 
   /** Private properties **/
   private approvalsGeneralSubject = new Subject<any>();
+  private casereassignmentExpandedInfoSubject = new Subject<any>();
 
   /** Public properties **/
   approvalsGeneralList$ = this.approvalsGeneralSubject.asObservable();
+  casereassignmentExpandedInfo$ = this.casereassignmentExpandedInfoSubject.asObservable();
 
   /** Constructor **/
   constructor(
@@ -23,6 +25,17 @@ export class PendingApprovalGeneralFacade {
     this.pendingApprovalGeneralService.loadApprovalsGeneral().subscribe({
       next: (approvalGeneralResponse) => {
         this.approvalsGeneralSubject.next(approvalGeneralResponse);
+      },
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
+  }
+
+  loadCasereassignmentExpandedInfo(approvalId : any): void {
+    this.pendingApprovalGeneralService.loadCasereassignmentExpandedInfo(approvalId).subscribe({
+      next: (response) => {
+        this.casereassignmentExpandedInfoSubject.next(response);
       },
       error: (err) => {
         console.error('err', err);

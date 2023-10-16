@@ -5,7 +5,7 @@
         <common-user-profile-card> </common-user-profile-card>
       </ng-template>
     </kendo-popover>
-    
+
     <productivity-tools-approvals-general-list-detail-addtomasterlist>
 
     </productivity-tools-approvals-general-list-detail-addtomasterlist>
@@ -14,7 +14,10 @@
 
     </productivity-tools-approvals-general-list-detail-exceptions>
 
-    <productivity-tools-approvals-general-list-detail-reassignment>
+    <productivity-tools-approvals-general-list-detail-reassignment
+      [casereassignmentExpandedInfo$]="casereassignmentExpandedInfo$"
+     (loadCasereassignmentExpanedInfoEvent)="loadCasereassignmentExpanedInfoEvent($event)"
+     >
 
     </productivity-tools-approvals-general-list-detail-reassignment>
 
