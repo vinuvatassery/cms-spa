@@ -610,11 +610,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     toggleBreakoutPanel()
     {
       this.isBreakoutPanelShow=!this.isBreakoutPanelShow;
-      if(!this.isBreakoutPanelShow)
-      {
-        this.reconcileBreakoutSummary$.warrantTotal=0;
-        this.reconcileBreakoutSummary$.paymentToReconcileCount=0;
-      }
     }
 
     onRowSelection(grid:any, selection:any)

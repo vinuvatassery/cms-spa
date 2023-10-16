@@ -624,11 +624,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   toggleBreakoutPanel()
     {
       this.isBreakoutPanelShow=!this.isBreakoutPanelShow;
-      if(!this.isBreakoutPanelShow)
-      {
-        this.reconcileBreakoutSummary$.warrantTotal=0;
-        this.reconcileBreakoutSummary$.paymentToReconcileCount=0;
-      }
     }
 
   onRowSelection(grid:any, selection:any)
@@ -636,7 +631,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       const data = selection.selectedRows[0].dataItem;
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId;
-      this.paymentRequestId = data.paymentRequestId
+      this.paymentRequestId = data.paymentRequestId;
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,

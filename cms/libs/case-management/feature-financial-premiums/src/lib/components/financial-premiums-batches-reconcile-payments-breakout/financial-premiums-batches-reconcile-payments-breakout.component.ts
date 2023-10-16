@@ -62,7 +62,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsBreakoutComponent  impleme
     {   "columnCode": "creationTime",       "columnDesc": "Date Payment Requested"      },
     {   "columnCode": "paymentSentDate",    "columnDesc": "Date Payment Sent"           },
     {   "columnCode": "paymentMethodDesc",  "columnDesc": "Payment Method"              },
-    {   "columnCode": "paymentStatusCode",  "columnDesc": "Payment Status"              },
+    {   "columnCode": "PaymentStatusDesc",  "columnDesc": "Payment Status"              },
     {   "columnCode": "warrantNumber",      "columnDesc": "Warrant Number"              },
     {   "columnCode": "pca",                "columnDesc": "PCA"                         }  
   ]
