@@ -57,9 +57,8 @@
                   <section class="table-filter-section mat-form-no-b-space">
                         <span class="filter-section_items filter--select">
                               <kendo-floatinglabel>
-                                    <kendo-dropdownlist aria-label="All Columns"
-                                          [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc"
-                                          valueField="columnCode">
+                                    <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDropdownColumns"
+                                    textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
                                     </kendo-dropdownlist>
                               </kendo-floatinglabel>
                         </span>
@@ -67,16 +66,17 @@
                               <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
                               <kendo-floatinglabel text="Search">
                                     <kendo-textbox aria-label="Search case" rounded="medium"
-                                          [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                          [fillMode]="formUiStyle.inputFillMode" (afterValueChanged)="onSearchChange($event)" > </kendo-textbox>
 
                               </kendo-floatinglabel>
                         </span>
                         <span class="right-overlay-export">
-                              <button kendoButton [primary]="true" aria-label="Export" look="flat" class="button-lg">
-                                    <span class="material-icons" aria-label="export"
-                                          aria-invalid="true">exit_to_app</span><i class="exp_button-text">Export</i>
+                              <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export" (click)="onClickedExport()"  [disabled]="showExportLoader">
+                                <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
+                                
+                                <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
                               </button>
-                        </span>
+                            </span>
                   </section>
                   <!-- Sorted Info -->
                   <div class="table-sorted-info">
@@ -104,7 +104,6 @@
                         [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true" filterable="menu" [filter]="state.filter"
                         [data]="reconcilePaymentGridPagedResult" 
                         (selectionChange)="onRowSelection(grid, $event)">
-
                         <kendo-grid-column   title="Print Advice Ltr" [width]="80">
                               <ng-template kendoGridCellTemplate let-dataItem>                  
                                     <input class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr"
@@ -141,20 +140,23 @@
                                   </kendo-grid-string-filter-menu>
                                   </ng-template>
                         </kendo-grid-column>
-                        <kendo-grid-column field="paymentMethodCode" title="Pmt. Method" [width]="160">
-                                    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-                                          [extra]="false" operator="eq">
-                                          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                                          <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                                          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                                          <kendo-filter-contains-operator></kendo-filter-contains-operator>
-                                  </kendo-grid-string-filter-menu>
-                                  </ng-template>
-                        </kendo-grid-column>
+                        <kendo-grid-column field="paymentMethodDesc"title="Pmt. Method" [width]="160">               
+                              <ng-template kendoGridFilterMenuTemplate
+                              let-column="column"
+                              let-filter="filter"
+                              let-filterService="filterService">
+                                  <kendo-dropdownlist
+                                  [data]="paymentMethodType"
+                                  textField="lovDesc"
+                                  valueField="lovCode"
+                                  [value]="paymentMethodDesc"
+                                  (valueChange)="dropdownFilterChange('paymentMethodDesc',$event, filterService)">
+                                </kendo-dropdownlist>
+                              </ng-template>
+                            </kendo-grid-column>
                         <kendo-grid-column  field="paymentReconciledDate" title="Date Pmt. Reconciled" [width]="200">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">              
-                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
                                     aria-label="Date Pmt. Reconciled"  id ="paymentReconciledDate{{rowIndex}}"  name ="paymentReconciledDate{{rowIndex}}"
                                     [(ngModel)]="dataItem.paymentReconciledDate"  (valueChange)="dateChangeListItems($event,dataItem,'DATE_PAYMENT_RECONCILED')"
                                     [ngClass]="ngDirtyInValid(dataItem,'paymentReconciledDate',rowIndex)"
@@ -175,7 +177,7 @@
                         </kendo-grid-column>
                           <kendo-grid-column field="paymentSentDate" title="Date Pmt. Sent" [width]="160">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
                                     aria-label="Date Pmt. Sent"  id ="paymentSentDate{{rowIndex}}"  name ="paymentSentDate{{rowIndex}}"
                                     [(ngModel)]="dataItem.paymentSentDate"   (valueChange)="dateChangeListItems($event,dataItem,'DATE_PAYMENT_SENT')"
                                     [ngClass]="ngDirtyInValid(dataItem,'paymentSentDate',rowIndex)" 
@@ -193,11 +195,11 @@
                                     </ng-template>
                         </kendo-grid-column>                   
 
-                        <kendo-grid-column field="amountPaid" title="Pmt. Amount" [width]="180">
+                        <kendo-grid-column field="amountDue" title="Pmt. Amount" [width]="180">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                               <label aria-label="Medical Provider" kendoButton look="flat"
                                     class="card-link-button"  >
-                                    {{dataItem?.amountPaid | kendoNumber:'n2'}} 
+                                    {{dataItem?.amountDue | kendoNumber:'n2'}} 
                               </label>
                             </ng-template>
                               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -317,17 +319,13 @@
                         (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-batches-reconcile-payments-breakout>
                   </div>
             </div>
-            <div class="text-right flex-gap">
-                  
-                  <button kendoButton [primary]="true"  look="outline" (click)="navToReconcilePayments()" aria-label="Close"> Close </button>
+            <div class="text-right flex-gap">                  
+                  <button kendoButton [primary]="true"  look="outline" (click)="navToReconcilePayments()" aria-label="Cancel"> Cancel </button>
                   <button kendoButton [primary]="true" [disabled]="premiumReconcileCount == 0" aria-label="Save"  (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
-            </div>
-      
+            </div>     
       
       </div>
 </div>
-
-
 <ng-template #PrintAuthorizationDialog>
       <kendo-dialog-titlebar  class="text-normal" (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Advice Letter(s)</kendo-dialog-titlebar>
     <cms-financial-premiums-print-authorization

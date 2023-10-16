@@ -16,7 +16,8 @@
                                 [pharmacyClaimsProcessGridLoader$]="pharmacyClaimsProcessLoader$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsProcess"
                                 [sortType]="sortType" [sort]="sortProcessList" 
-                                (loadPharmacyClaimsProcessListEvent)="loadPharmacyClaimsProcessListGrid($event)"></cms-pharmacy-claims-process-list>
+                                (loadPharmacyClaimsProcessListEvent)="loadPharmacyClaimsProcessListGrid($event)"
+                                (exportPharmacyClaimsProcessListEvent)="oneExportClaimsInProcess($event)"></cms-pharmacy-claims-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
