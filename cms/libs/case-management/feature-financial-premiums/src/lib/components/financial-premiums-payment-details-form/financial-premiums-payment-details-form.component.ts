@@ -37,7 +37,7 @@ export class FinancialPremiumsPaymentDetailsFormComponent {
   endDateMin!: Date;
   tAreaCessationCharactersCount!: number;
   tAreaCessationCounter!: string;
-  tAreaCessationMaxLength = 100;
+  tAreaCessationMaxLength = 200;
   paymentPanel!: PaymentPanel;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   paymentPanelDataSubscription!: Subscription;
