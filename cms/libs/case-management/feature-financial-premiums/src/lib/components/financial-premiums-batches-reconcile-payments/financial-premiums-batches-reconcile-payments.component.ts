@@ -773,7 +773,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId;
       this.paymentRequestId = data.paymentRequestId;
-      var warrantTotal=0;    
+      let warrantTotal=0;    
       this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId).forEach((item: any) => {
         warrantTotal = warrantTotal + item.amountPaid;
       });
