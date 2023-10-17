@@ -231,7 +231,7 @@
 
       <ng-container *ngIf="isGridExpand">
         <div *kendoGridDetailTemplate="let dataItem">
-          Child Grid here
+          <cms-financial-payment-service-list [paymentId] = "dataItem.paymentRequestId" [claimType] = "claimsType"></cms-financial-payment-service-list>
         </div>
       </ng-container>
 
