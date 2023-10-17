@@ -34,7 +34,6 @@
                   <button kendoButton (click)="onClosePrintAdviceLetterClicked()" [primary]="true" look="outline" aria-label="Cancel">
                         Cancel
                   </button>
-                  <!-- <button kendoButton [disabled]="reconcileCount == 0" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true" attr.aria-label="{{printOption ? 'Print' : 'Reconcile & Print'}}"> {{printOption ? 'Print' : 'Reconcile & Print'}}</button> -->
                   <button kendoButton *ngIf="printOption" [disabled]="printCount == 0" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true"> Print</button>
                   <button kendoButton *ngIf="!printOption" [disabled]="reconcileCount == 0" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true"> Reconcile & Print</button>
             </div>
