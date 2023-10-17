@@ -1002,23 +1002,33 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.addExceptionForm.at(index).get('maxBenefitExceptionFlagText')?.setValue("Don't Make Exception");
     } else if(this.addExceptionForm.at(index).get('exceedMaxBenefitExceptionFlag')?.value) {
       this.addExceptionForm.at(index).get('maxBenefitExceptionFlagText')?.setValue("Make Exception");
+      this.resetReasonForException(index);
     }
     else if(this.addExceptionForm.at(index).get(controlName)?.value && this.addExceptionForm.at(index).get('oldInvoiceExceptionFlag')?.value) {
       this.addExceptionForm.at(index).get('oldInvoiceExceptionFlagText')?.setValue("Don't Make Exception");
     } else if(this.addExceptionForm.at(index).get('oldInvoiceExceptionFlag')?.value) {
       this.addExceptionForm.at(index).get('oldInvoiceExceptionFlagText')?.setValue("Make Exception");
+      this.resetReasonForException(index);
     }
     else if(this.addExceptionForm.at(index).get(controlName)?.value && this.addExceptionForm.at(index).get('bridgeUppExceptionFlag')?.value) {
       this.addExceptionForm.at(index).get('bridgeUppExceptionFlagText')?.setValue("Don't Make Exception");
     } else if(this.addExceptionForm.at(index).get('bridgeUppExceptionFlag')?.value) {
       this.addExceptionForm.at(index).get('bridgeUppExceptionFlagText')?.setValue("Make Exception");
+      this.resetReasonForException(index);
     }
     else if(this.addExceptionForm.at(index).get(controlName)?.value && this.addExceptionForm.at(index).get('duplicatePaymentExceptionFlag')?.value) {
       this.addExceptionForm.at(index).get('duplicatePaymentExceptionFlagText')?.setValue("Don't Make Exception");
     } else if(this.addExceptionForm.at(index).get('duplicatePaymentExceptionFlag')?.value) {
       this.addExceptionForm.at(index).get('duplicatePaymentExceptionFlagText')?.setValue("Make Exception");
+      this.resetReasonForException(index);
     }
   }
+
+  resetReasonForException(index:any)
+  {
+    this.addClaimServicesForm.at(index).get('reasonForException')?.reset();
+  }
+
   getExceptionFormValue(controlName: string, index: any)
   {
     return this.addExceptionForm.at(index).get(controlName)?.value
