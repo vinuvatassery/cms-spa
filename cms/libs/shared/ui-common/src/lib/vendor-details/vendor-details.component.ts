@@ -33,11 +33,10 @@ export class VendorDetailsComponent implements OnInit {
   @Output() updateVendorDetailsClicked = new EventEmitter<any>();
   @Output() searchClinicVendorClicked = new EventEmitter<any>();
 
-  @Output() closeMedicalProviderDialogEvent = new EventEmitter<string>();
+  @Output() closeMedicalDentalProviderDialogEvent = new EventEmitter<string>();
 
   closeMedicalProviderDialogInParent() {
-  console.log(this.providerType);
-    this.closeMedicalProviderDialogEvent.emit(this.providerType);
+    this.closeMedicalDentalProviderDialogEvent.emit(this.providerType);
   }
 
   addNewClinicOpen(){
@@ -51,7 +50,7 @@ export class VendorDetailsComponent implements OnInit {
   paymentMethodList: any[] = [];
   clinicTypes: any[] = [
     { lovCode: FinancialVendorTypeCode.MedicalClinic, lovDesc: 'Medical' },
-  { lovCode: FinancialVendorTypeCode.DentalClinic, lovDesc: 'Dental' },
+    { lovCode: FinancialVendorTypeCode.DentalClinic,   lovDesc: 'Dental' },
 ];
   paymentRunDateList: any[] = [];
   vendorContactList: any[] = [];
@@ -66,8 +65,8 @@ export class VendorDetailsComponent implements OnInit {
   selectedClinicVendorId!: any;
 constructor(
     private readonly formBuilder: FormBuilder,
- private readonly cdr: ChangeDetectorRef,
-  private lovFacade: LovFacade,
+    private readonly cdr: ChangeDetectorRef,
+    private lovFacade: LovFacade,
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService,

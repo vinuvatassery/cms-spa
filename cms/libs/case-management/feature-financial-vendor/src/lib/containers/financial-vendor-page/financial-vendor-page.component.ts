@@ -18,7 +18,7 @@ export class FinancialVendorPageComponent implements OnInit {
   medicalProviderForm: FormGroup;
   providerTypeCode: string = '';
 
-  isShowClinicProvider: boolean = false;
+  ShowClinicProvider: boolean = false;
   isShowMedicalProvider: boolean = false;
   isShowDentalProvider: boolean = false;
   isShowInsuranceProvider: boolean = false;
@@ -26,6 +26,7 @@ export class FinancialVendorPageComponent implements OnInit {
   reminderTabOn = true;
   isShowManufacturers: boolean = false;
   hasHealthcareProviderCreateUpdatePermission=false;
+  selectedClinicType ='';
   data = [
     {
       text: 'Manufacturer',
@@ -74,20 +75,16 @@ export class FinancialVendorPageComponent implements OnInit {
   clinicVendorList= this.financialVendorFacade.clinicVendorList$;;
   clinicVendorLoader= this.financialVendorFacade.clinicVendorLoader$;;
 
-  private closeMedicalProviderModalSubject = new BehaviorSubject<boolean>(false);
-  closeMedicalProviderModal$ = this.closeMedicalProviderModalSubject.asObservable();
+  private closeMedicalDentalProviderModalSubject = new BehaviorSubject<boolean>(false);
+  closeMedicalDentalProviderModal$ = this.closeMedicalDentalProviderModalSubject.asObservable();
 
-   selectedClinicType ='';
-  receiveDataFromChild(clinicType: string) {
-    this.clickCloseMedicalVendorDetails();
-    this.clickCloseDentalVendorDetails();
-    this.clickOpenClinicProviderDetails();
-    this.selectedClinicType = clinicType;
-    console.log(this.selectedClinicType + " in parent");
-    //alert(data)
-    // Handle the data received from the child component
-    //this.receivedData = data;
-  }
+    setupForClinic(clinicType: string) 
+    {
+      this.selectedClinicType = clinicType;
+      this.clickCloseMedicalVendorDetails();
+      this.clickCloseDentalVendorDetails();
+      this.clickOpenClinicProviderDetails();
+    }
   
   constructor(private caseFacade: CaseFacade, private financialVendorFacade: FinancialVendorFacade,
     private readonly formBuilder: FormBuilder,
@@ -133,7 +130,7 @@ export class FinancialVendorPageComponent implements OnInit {
   clickOpenClinicProviderDetails() {
     this.buildVendorForm();
     this.providerTypeCode = FinancialVendorTypeCode.Clinic;
-    this.isShowClinicProvider = true;
+    this.ShowClinicProvider = true;
   }
 
   clickOpenDentalProviderDetails() {
@@ -147,7 +144,7 @@ export class FinancialVendorPageComponent implements OnInit {
   }
 
   clickCloseClinicVendorDetails() {
-    this.isShowClinicProvider = false;
+    this.ShowClinicProvider = false;
   }
   clickCloseDentalVendorDetails() {
     this.isShowDentalProvider = false;
@@ -204,7 +201,6 @@ export class FinancialVendorPageComponent implements OnInit {
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal();
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Vendor profile added successfully");
-        console.log(this.selectedClinicType + " in parent");
         if (this.selectedClinicType === FinancialVendorTypeCode.MedicalProviders) {
           this.clickOpenMedicalProviderDetails();
         } else if (this.selectedClinicType === FinancialVendorTypeCode.DentalProviders){
@@ -226,7 +222,7 @@ export class FinancialVendorPageComponent implements OnInit {
     this.isShowInsuranceProvider =false;
     this.isShowPharmacyProvider = false;
     this.isShowManufacturers = false;
-    this.isShowClinicProvider = false;
+    this.ShowClinicProvider = false;
   }
 
   clickOpenInsuranceVendorModal(){
