@@ -134,7 +134,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   selectedCPTCode: any = null;
   isSpotsPayment!: boolean;
   textMaxLength: number = 300;
-
+  MaxBenefitExceptionReasonTextLenght :number = 150;
   isExcededMaxBeniftFlag = false;
   isExcededMaxBanifitButtonText = 'Make Exception';
   claimFlagExceptionCounter!: string;
@@ -947,9 +947,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   reasonCharCount(i: number) {
     let reasonForException = this.claimForm.value.claimService[i].reasonForException;
     if (reasonForException) {
-      return `${reasonForException.length}/${this.textMaxLength}`;
+      return `${reasonForException.length}/${this.MaxBenefitExceptionReasonTextLenght}`;
     }
-    return `0/${this.textMaxLength}`;
+    return `0/${this.MaxBenefitExceptionReasonTextLenght}`;
   }
 
   onProviderValueChange($event: any) {
