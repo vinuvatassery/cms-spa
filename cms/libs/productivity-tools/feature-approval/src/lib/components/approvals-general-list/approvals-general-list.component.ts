@@ -22,7 +22,7 @@ import {
   PanelBarExpandEvent,
 } from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { PendingApprovalPaymentTypeCode } from 'libs/productivity-tools/domain/src/lib/enums/pending-approval-payment-type-code.enum';
+import { PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
 @Component({
   selector: 'productivity-tools-approvals-general-list',
   templateUrl: './approvals-general-list.component.html',
@@ -200,11 +200,11 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
 
   getTitle(itemCode: string) {
     switch (itemCode) {
-      case PendingApprovalPaymentTypeCode.GeneralException:
+      case PendingApprovalGeneralTypeCode.GeneralException:
         return 'Request to Exceed Max Benefits';
-      case PendingApprovalPaymentTypeCode.GeneralCaseReassignment:
+      case PendingApprovalGeneralTypeCode.GeneralCaseReassignment:
         return 'Request for Case reassignment';
-      case PendingApprovalPaymentTypeCode.GeneralAddtoMasterList:
+      case PendingApprovalGeneralTypeCode.GeneralAddtoMasterList:
         return 'Request to add To Master List';
     }
     return null;
