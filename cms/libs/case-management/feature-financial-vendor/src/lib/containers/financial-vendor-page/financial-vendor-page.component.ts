@@ -101,7 +101,7 @@ export class FinancialVendorPageComponent implements OnInit {
   ngOnInit() {
     this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
     this.contactFacade.loadDdlStates();
-    this.hasHealthcareProviderCreateUpdatePermission=this.userManagementFacade.hasPermission(['Healthcare_Provider_Create_Update']);
+    this.hasHealthcareProviderCreateUpdatePermission=this.userManagementFacade.hasPermission(['Clinic_Create_Update']);
   }
   searchClinicVendorClicked(clientName:any)
   {
