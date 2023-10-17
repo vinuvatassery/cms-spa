@@ -285,7 +285,6 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumn = stateData.sort[0]?.field;
     this.sortColumnDesc = this.gridColumns[this.sortColumn];
-    // this.filter = stateData?.filter?.filters;
     if (stateData.filter?.filters.length > 0) {
       const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.filter = stateFilter.value;
