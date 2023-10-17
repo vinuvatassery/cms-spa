@@ -66,8 +66,6 @@ export class DrugsPurchasedListComponent implements OnInit {
     paymentStatusDesc: "Payment Status",
     warrantNo: "Warrant Number",
     entryDate: "Entry Date",
-    // transType: "Trans Type",
-    // payAmount: "Pay Amount",
     creatorId: "By",
   }
 
