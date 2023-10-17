@@ -55,6 +55,9 @@
                                 <cms-financial-premiums-all-payments-list [premiumsType]="premiumType" [financialPremiumPaymentLoader$]=financialPremiumPaymentLoader$  [financialPremiumsAllPaymentsGridLists$]="financialPremiumsAllPaymentsGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialPremiumsPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList"
+                                [unbatchPremiums$]="unbatchPremiums$"
+                                (deletePaymentEvent)="deletePayment($event)"
+                                (unBatchPremiumEvent)="unBatchPremiumClick($event)"
                                 (loadFinancialPremiumsAllPaymentsListEvent)="loadFinancialPremiumsAllPaymentsListGrid($event)"
                                 (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-all-payments-list>
                             </div>
