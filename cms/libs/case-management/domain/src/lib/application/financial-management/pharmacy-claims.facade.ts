@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  Subject } from 'rxjs';
+import {  BehaviorSubject, Subject } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, DocumentFacade, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FinancialPharmacyClaimsDataService } from '../../infrastructure/financial-management/pharmacy-claims.data.service';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPharmacyClaimsFacade {
@@ -16,7 +17,7 @@ export class FinancialPharmacyClaimsFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValuePharmacyClaimsProcess = 'invoiceID';
+  public sortValuePharmacyClaimsProcess = 'creationTime';
   public sortProcessList: SortDescriptor[] = [{
     field: this.sortValuePharmacyClaimsProcess,
   }];
@@ -55,6 +56,9 @@ export class FinancialPharmacyClaimsFacade {
 
   private pharmacyClaimsProcessDataSubject = new Subject<any>();
   pharmacyClaimsProcessData$ = this.pharmacyClaimsProcessDataSubject.asObservable();
+
+  private pharmacyClaimsProcessLoaderSubject = new BehaviorSubject<boolean>(true);
+  pharmacyClaimsProcessLoader$ = this.pharmacyClaimsProcessLoaderSubject.asObservable();
 
   private pharmacyClaimsBatchDataSubject =  new Subject<any>();
   pharmacyClaimsBatchData$ = this.pharmacyClaimsBatchDataSubject.asObservable();  
@@ -103,23 +107,33 @@ export class FinancialPharmacyClaimsFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly documentFacade: DocumentFacade
   ) { }
 
   /** Public methods **/
-  loadPharmacyClaimsProcessListGrid(){
-    this.financialPharmacyClaimsDataService.loadPharmacyClaimsProcessListService().subscribe({
+  loadPharmacyClaimsProcessListGrid(params: GridFilterParam){
+    this.pharmacyClaimsProcessLoaderSubject.next(true);
+    this.financialPharmacyClaimsDataService.loadPharmacyClaimsProcessListService(params).subscribe({
       next: (dataResponse) => {
-        this.pharmacyClaimsProcessDataSubject.next(dataResponse);
-        this.hideLoader();
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.pharmacyClaimsProcessDataSubject.next(gridView);
+        this.pharmacyClaimsProcessLoaderSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.pharmacyClaimsProcessLoaderSubject.next(false);
       },
     });  
   }   
 
+  exportPharmacyClaimsProcessListGrid(params: any){
+    const fileName = 'pharmacy-claims-process'
+    this.documentFacade.getExportFile(params,`claims/pharmacies` , fileName);
+  }
 
   loadPharmacyClaimsBatchListGrid(){
     this.financialPharmacyClaimsDataService.loadPharmacyClaimsBatchListService().subscribe({
@@ -186,5 +200,7 @@ export class FinancialPharmacyClaimsFacade {
     });  
   }
   
- 
+ loadPrescriptions(paymentId: string, params: GridFilterParam){
+  return  this.financialPharmacyClaimsDataService.loadPrescriptions(paymentId, params);
+ }
 }

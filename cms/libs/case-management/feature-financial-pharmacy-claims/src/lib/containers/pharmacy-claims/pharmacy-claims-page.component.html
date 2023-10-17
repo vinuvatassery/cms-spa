@@ -11,10 +11,13 @@
                     <kendo-tabstrip-tab title="Process" [selected]="true">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-pharmacy-claims-process-list      [pharmacyClaimsProcessGridLists$]="pharmacyClaimsProcessGridLists$"
+                                <cms-pharmacy-claims-process-list      
+                                [pharmacyClaimsProcessGridLists$]="pharmacyClaimsProcessGridLists$"
+                                [pharmacyClaimsProcessGridLoader$]="pharmacyClaimsProcessLoader$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsProcess"
                                 [sortType]="sortType" [sort]="sortProcessList" 
-                                (loadPharmacyClaimsProcessListEvent)="loadPharmacyClaimsProcessListGrid($event)"></cms-pharmacy-claims-process-list>
+                                (loadPharmacyClaimsProcessListEvent)="loadPharmacyClaimsProcessListGrid($event)"
+                                (exportPharmacyClaimsProcessListEvent)="oneExportClaimsInProcess($event)"></cms-pharmacy-claims-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

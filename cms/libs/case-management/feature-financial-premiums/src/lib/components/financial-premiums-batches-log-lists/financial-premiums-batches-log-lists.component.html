@@ -67,7 +67,7 @@
       </div>
 
 
-      <div class="app-c-table">
+      <div class="app-c-table" *ngIf="!isPrintAdviceLetterClicked">
         <kendo-grid [resizable]="true" [loading]="isBatchLogGridLoaderShow" [pageSize]="state.take" [pageable]="true"
           [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
           [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
@@ -147,7 +147,7 @@
               [filterService]="filterService"
             >
             </common-grid-cell-date-range-filter>
-      </ng-template>
+        </ng-template>
           </kendo-grid-column>
           <kendo-grid-column field="paymentSentDate" title="Date Pmt. Sent" [width]="200">
             <ng-template kendoGridCellTemplate let-dataItem>
@@ -160,7 +160,7 @@
               [filterService]="filterService"
             >
             </common-grid-cell-date-range-filter>
-      </ng-template>
+        </ng-template>
           </kendo-grid-column>
           <kendo-grid-column field="paymentMethodCode" title="Pmt. Method" [width]="140">
             <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -209,8 +209,7 @@
                 <span hidden> More Option</span>
                 <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                   <ng-container>
-                    <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                    [hidden]="noDeleteStatus.includes(dataItem.paymentStatusCode) && buttondataItem.text === 'Delete Payment'"
+                    <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"                    
                       [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
                       <span class="material-icons"
                         [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
@@ -264,19 +263,33 @@
 
         </kendo-grid>
       </div>
+
+      <div *ngIf="isPrintAdviceLetterClicked" >
+        <cms-financial-premiums-print-advice-letter-log-lists [premiumsType]="premiumsType" [paymentByBatchGridLoader$]="paymentByBatchGridLoader$"
+        [batchLogGridLists$]="batchLogGridLists$"
+        [pageSizes]="pageSizes"
+        (loadPrintAdviceLetterEvent)="loadPrintAdviceLetterEvent($event)"
+        (selectUnSelectEvent)="disablePreviewButton($event)"
+        (noOfRecordToPrintEvent)="setNoOfRecordToBePrint($event)"
+        [sort]="sort" [sortValue]="sortValue"
+        [sortType]="sortType"></cms-financial-premiums-print-advice-letter-log-lists>
+      </div>
     </section>
   </section>
 </div>
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span class="">0 premiums(s) to be removed</span>
+  <span class="" *ngIf="!isPrintAdviceLetterClicked">0 premiums(s) to be removed</span>
+  <span class="" *ngIf="isPrintAdviceLetterClicked">{{selectedCount}} advice letter(s) to be printed</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
-    *ngIf="isRequestPaymentClicked || isSendReportOpened" (click)="onBulkOptionCancelClicked()"> Cancel </button>
+    *ngIf="isRequestPaymentClicked || isSendReportOpened || isPrintAdviceLetterClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
   <button kendoButton [primary]="true" aria-label="Preview Requests" class="" *ngIf="isRequestPaymentClicked"
     (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
+    <button kendoButton [primary]="true" aria-label="Review" class="" *ngIf="isPrintAdviceLetterClicked" 
+    [disabled]="selectedCount == 0" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
   <button kendoButton [primary]="true" aria-label="Send Report" class="" *ngIf="isSendReportOpened"
     (click)="onSendReportOpenClicked(sendReportDialogTemplate)"> Send Report </button>
   <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action" buttonClass="k-split-button"
-    [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isSendReportOpened"
+    [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isSendReportOpened && !isPrintAdviceLetterClicked"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
     <div class="btn-inner-block">
       Bulk
@@ -344,6 +357,7 @@
   [batchId]="batchId"
   [premiumsType] ="premiumsType"
   (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+  (selectUnSelectPayment)="selectUnSelectPayment($event)"
   ></cms-financial-premiums-print-authorization>
   </ng-template>
 
