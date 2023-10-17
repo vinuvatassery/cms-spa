@@ -369,17 +369,19 @@ export class FinancialClaimsBatchesLogListsComponent
     this.currentPrintAdviceLetterGridFilter = event.filter;
     this.loadBatchLogListEvent.emit(event);
   }
+  
   onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
     this.isPrintAdviceLetterClicked = false;
     this.selectedDataRows = [];
+    this.selectedCount = 0;
   }
 
   onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
     this.selectedDataRows.currentPrintAdviceLetterGridFilter = JSON.stringify(this.currentPrintAdviceLetterGridFilter);
     this.printAuthorizationDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-xlg',
+      cssClass: 'app-c-modal app-c-modal-xlg app-c-modal-np_0',
     });
   }
 

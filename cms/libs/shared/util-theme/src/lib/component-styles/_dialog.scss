@@ -232,6 +232,15 @@
     justify-content: flex-start;
   }
 
+  
+  &-np_0 {
+    .k-window-content,
+    .k-dialog-content,
+    .k-prompt-container {
+      max-height: inherit;
+      padding: 0px;
+    }
+  }
   &-np {
     .k-dialog {
       top: 50px;
