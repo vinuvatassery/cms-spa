@@ -71,8 +71,9 @@ export class LovFacade {
   private disenrollmentReasonSubject = new BehaviorSubject<Lov[]>([]);
   private disenrollmentReasonStatusSubject = new BehaviorSubject<boolean>(false);
   private paymentRequestTypeSubject = new BehaviorSubject<Lov[]>([]);
-  private paymentReversalSubject = new BehaviorSubject<Lov[]>([]);
+  private paymentReversalSubject = new BehaviorSubject<Lov[]>([]);
   private premiumPaymentTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private paymentTypeSubject = new BehaviorSubject<Lov[]>([]);
   private premiumPaymentReversalSubject = new BehaviorSubject<Lov[]>([]);
   private lovAttachmentsDroplistSubject = new BehaviorSubject<Lov[]>([]);
   private documentTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
@@ -135,6 +136,7 @@ export class LovFacade {
   disenrollmentReasonStatus$ = this.disenrollmentReasonStatusSubject.asObservable();
   paymentRequestType$ = this.paymentRequestTypeSubject.asObservable();
   paymentReversal$ = this.paymentReversalSubject.asObservable();
+  paymentType$ = this.paymentTypeSubject.asObservable();
   premiumPaymentType$ = this.premiumPaymentTypeSubject.asObservable();
   premiumPaymentReversal$ = this.premiumPaymentReversalSubject.asObservable();
   attachmentTypeDroplistlov$ = this.lovAttachmentsDroplistSubject.asObservable();
@@ -672,6 +674,18 @@ getDocumentSubTypeLovs(parentCode : string) {
       },
     });
   }
+
+  getPaymentTypeLov(): void {
+    this.lovDataService.getLovsbyType(LovType.PaymentType).subscribe({
+      next: (lovResponse) => {
+        this.paymentTypeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
   getPremiumPaymentReversalLov(): void {
     this.lovDataService.getLovsbyType(LovType.PremiumPaymentReversal).subscribe({
       next: (lovResponse) => {
