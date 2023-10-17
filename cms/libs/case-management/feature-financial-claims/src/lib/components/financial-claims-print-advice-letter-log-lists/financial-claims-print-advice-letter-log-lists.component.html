@@ -2,17 +2,17 @@
       [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" 
       [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
       [data]="batchLogPrintAdviceLetterPagedList"   (filterChange)="filterChange($event)" filterable="menu" [filter]="state.filter">    
-      <kendo-grid-column  [sortable]="false" field="add" [width]="150" 
-      [sticky]="true" [sortable]="false"  [columnMenu]="false" [headerStyle]="{'text-align': 'center'}" [style]="{'text-align': 'center'}">
+      <kendo-grid-column  [sortable]="false" field="add" [width]="40"  class="text-center" 
+      [sticky]="true" [sortable]="false"  [columnMenu]="false"  >
         <ng-template kendoGridHeaderTemplate let-dataItem >
-            <input style="zoom: 1.2;" 
+            <input kendoCheckBox
                  type="checkbox" 
                  name="selectAll"
                  [(ngModel)]="selectAll"
                  (change)="selectionAllChange()"/>
          </ng-template> 
          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
-             <input style="zoom: 1.2;" 
+             <input   kendoCheckBox
                  type="checkbox"  [(ngModel)]="dataItem.selected" 
                  (change)="selectionChange(dataItem,dataItem.selected)"/>
          </ng-template>
