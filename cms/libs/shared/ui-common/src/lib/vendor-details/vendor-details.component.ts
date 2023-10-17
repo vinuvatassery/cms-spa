@@ -1,4 +1,3 @@
-import { DentalInsurancePageComponent } from './../../../../../case-management/feature-dental-insurance/src/lib/containers/dental-insurance-page/dental-insurance-page.component';
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
@@ -239,8 +238,7 @@ fillFormData(){
       this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();
 
     }
-
-    if(this.providerType != this.vendorTypes.Manufacturers)
+    if(this.providerType == this.vendorTypes.Clinic)
     {
       this.medicalProviderForm.controls['clinicType']
         .setValidators([
