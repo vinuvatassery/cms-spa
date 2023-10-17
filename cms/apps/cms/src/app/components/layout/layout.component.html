@@ -21,7 +21,7 @@
   </div>
 </header>
 
-<section class="app-l-container" [ngClass]="{'mobile_menu-opened': isOpenMobileMenu}"  kendoRippleContainer role="main">
+<section class="app-l-container" [ngClass]="{'mobile_menu-opened': isOpenMobileMenu}"  kendoRippleContainer>
   <section
     mode="side"
     #sidenav
@@ -55,7 +55,7 @@
       <case-management-last-visited-cases ></case-management-last-visited-cases>
     </div>
   </section>
-  <section class="app-l-body-container"  [class.menuSectionToggled]="isSideMenuToggled">
+  <section class="app-l-body-container"   role="main" id="main" [class.menuSectionToggled]="isSideMenuToggled">
     <section class="app-l-body" kendoTooltip>
       <ng-content select="[body]" ></ng-content>
     </section>
