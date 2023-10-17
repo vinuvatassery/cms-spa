@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import {  GridDataResult } from '@progress/kendo-angular-grid';
-import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-financial-vendors-list',
@@ -334,11 +334,7 @@ public filterChange(filter: CompositeFilterDescriptor): void {
   setToDefault()
   {
 
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-      };
+ 
 
     this.sortColumn = 'Vendor Name';
     this.sortDir = 'Ascending';
@@ -348,8 +344,17 @@ public filterChange(filter: CompositeFilterDescriptor): void {
     this.columnsReordered = false;
 
     this.sortValue  = 'vendorName';
-    this.sortType  = 'asc'
-    this.sort  = this.sortColumn;
+    this.sortType  = 'asc' 
+   
+    this.sort = [{
+      field: this.sortValue,
+    }];
+
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      };
 
     this.loadFinancialVendorsList();
   }

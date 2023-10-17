@@ -5,7 +5,7 @@
       </div>
       <div *ngIf="imageLoaderVisible">    
         <div mat-card-avatar class="app-c-avatar avatar-sm" *ngIf="userByIdSubject | async as userById;">
-          <span class="profile-text-avatar">{{userById?.firstName.charAt(0)}}{{userById?.lastName?.charAt(0)}}</span>          
+          <span class="profile-text-avatar">{{userById?.firstName?.charAt(0)}}{{userById?.lastName?.charAt(0)}}</span>          
         </div>
       </div>      
 </div>

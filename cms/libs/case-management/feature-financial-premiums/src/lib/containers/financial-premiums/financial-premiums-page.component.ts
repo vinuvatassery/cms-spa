@@ -27,6 +27,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
   state!: State;
   filter!: any;
+  unbatchPremiums$ = this.financialPremiumsFacade.unbatchPremiums$;
   sortType = this.financialPremiumsFacade.sortType;
   pageSizes = this.financialPremiumsFacade.gridPageSizes;
   gridSkipCount = this.financialPremiumsFacade.skipCount;
@@ -99,6 +100,12 @@ export class FinancialPremiumsPageComponent implements OnInit {
           this.loggingService.logException(err);
         },
       });
+  }
+  deletePayment(paymentId: string){
+    this.financialPremiumsFacade.deletePremiumPayment(this.premiumType, paymentId);
+  }
+  unBatchPremiumClick(event:any){
+    this.financialPremiumsFacade.unbatchPremiums(event.paymentId,event.premiumsType)
   }
   loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any) : void{
     const gridDataRefiner = {
