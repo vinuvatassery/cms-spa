@@ -77,9 +77,14 @@ export class FinancialVendorPageComponent implements OnInit {
   private closeMedicalProviderModalSubject = new BehaviorSubject<boolean>(false);
   closeMedicalProviderModal$ = this.closeMedicalProviderModalSubject.asObservable();
 
-  receiveDataFromChild(data: boolean) {
+   selectedClinicType ='';
+  receiveDataFromChild(clinicType: string) {
     this.clickCloseMedicalVendorDetails();
+    this.clickCloseDentalVendorDetails();
     this.clickOpenClinicProviderDetails();
+    this.selectedClinicType = clinicType;
+    console.log(this.selectedClinicType + " in parent");
+    //alert(data)
     // Handle the data received from the child component
     //this.receivedData = data;
   }
@@ -199,8 +204,14 @@ export class FinancialVendorPageComponent implements OnInit {
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal();
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Vendor profile added successfully");
-        if(this.providerTypeCode == FinancialVendorTypeCode.Clinic )
+        console.log(this.selectedClinicType + " in parent");
+        if (this.selectedClinicType === FinancialVendorTypeCode.MedicalProviders) {
           this.clickOpenMedicalProviderDetails();
+        } else if (this.selectedClinicType === FinancialVendorTypeCode.DentalProviders){
+          this.clickOpenDentalProviderDetails();
+        }else{
+          alert('no match ' + this.selectedClinicType)
+        }
         this.cdr.detectChanges();
       },
       error:(err:any)=>{

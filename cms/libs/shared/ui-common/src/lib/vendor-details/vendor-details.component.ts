@@ -33,10 +33,11 @@ export class VendorDetailsComponent implements OnInit {
   @Output() updateVendorDetailsClicked = new EventEmitter<any>();
   @Output() searchClinicVendorClicked = new EventEmitter<any>();
 
-  @Output() closeMedicalProviderDialogEvent = new EventEmitter<boolean>();
+  @Output() closeMedicalProviderDialogEvent = new EventEmitter<string>();
 
   closeMedicalProviderDialogInParent() {
-    this.closeMedicalProviderDialogEvent.emit(true);
+  console.log(this.providerType);
+    this.closeMedicalProviderDialogEvent.emit(this.providerType);
   }
 
   addNewClinicOpen(){

@@ -71,7 +71,7 @@
             <!-- <button *ngIf="vendorTypes.MedicalProviders == providerType" kendoButton
               class="card-link-button ml-1 no-ul fontsize_twel mt-3" [disabled]="isViewContentEditable"
               aria-label="Add New" (click)="addNewClinicOpen()"> ADD NEW</button> -->
-              <button *ngIf="vendorTypes.MedicalProviders == providerType"
+              <button *ngIf="vendorTypes.MedicalProviders == providerType || vendorTypes.DentalProviders == providerType"
               kendoButton
               class="card-link-button ml-1 no-ul fontsize_twel mt-3"
               [disabled]="isViewContentEditable" 
