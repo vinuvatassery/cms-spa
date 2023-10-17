@@ -157,12 +157,12 @@ export class FinancialClaimsBatchesLogListsComponent
     return [
       {
         buttonType: 'btn-h-primary',
-        text: 'Edit Claims',
+        text: 'Edit Claim',
         icon: 'edit'
       },
       {
         buttonType: 'btn-h-primary',
-        text: 'Unbatch Claims',
+        text: 'Unbatch Claim',
         icon: 'undo',
         disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
         click: (data: any): void => {
@@ -177,7 +177,7 @@ export class FinancialClaimsBatchesLogListsComponent
       },
       {
         buttonType: 'btn-h-danger',
-        text: 'Delete Claims',
+        text: 'Delete Claim',
         icon: 'delete',
         click: (data: any): void => {
           if([PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
