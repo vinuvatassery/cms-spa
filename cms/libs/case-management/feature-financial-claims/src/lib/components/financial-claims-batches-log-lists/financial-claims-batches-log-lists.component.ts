@@ -58,15 +58,6 @@ export class FinancialClaimsBatchesLogListsComponent
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Request Payments',
-      icon: 'local_atm',
-      click: (data: any): void => {
-        this.isRequestPaymentClicked = true;
-        this.isPrintAdviceLetterClicked = false;
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
       text: 'Reconcile Payments',
       icon: 'edit',
       click: (data: any): void => {
@@ -95,7 +86,7 @@ export class FinancialClaimsBatchesLogListsComponent
     },
   ];
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
- 
+
   @Input() claimsType: any;
   @Input() batchId: any;
   @Input() pageSizes: any;
@@ -175,7 +166,7 @@ export class FinancialClaimsBatchesLogListsComponent
         icon: 'undo',
         disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
         click: (data: any): void => {
-          
+
           if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
             if (!this.isUnBatchClaimsClosed) {
               this.isUnBatchClaimsClosed = true;
@@ -369,7 +360,7 @@ export class FinancialClaimsBatchesLogListsComponent
     this.currentPrintAdviceLetterGridFilter = event.filter;
     this.loadBatchLogListEvent.emit(event);
   }
-  
+
   onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
     this.isPrintAdviceLetterClicked = false;
