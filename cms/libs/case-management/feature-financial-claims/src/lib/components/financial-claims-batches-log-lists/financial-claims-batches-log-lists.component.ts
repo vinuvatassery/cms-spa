@@ -48,7 +48,7 @@ export class FinancialClaimsBatchesLogListsComponent
   printAuthorizationDialog: any;
   UnBatchDialog: any;
   deleteClaimsDialog: any;
-  onlyPrintAdviceLetter: boolean = true;
+  onlyPrintAdviceLetter = true;
   currentPrintAdviceLetterGridFilter:any;
   private addClientRecentClaimsDialog: any;
   vendorId:any;
@@ -149,9 +149,9 @@ export class FinancialClaimsBatchesLogListsComponent
   paymentStatusFilter = '';
   selected: any;
   selectedDataRows: any;
-  selectedCount: number = 0;
-  disablePrwButton:boolean= true;
-  deletemodelbody:string="This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch";
+  selectedCount = 0;
+  disablePrwButton = true;
+  deletemodelbody = "This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch";
 
   getBatchLogGridActions(dataItem: any){
     return [
@@ -472,6 +472,7 @@ export class FinancialClaimsBatchesLogListsComponent
         }
       });
   }
+
   disablePreviewButton(result: any) {
     this.selectedDataRows = result;
     this.selectedDataRows.batchId = this.batchId
