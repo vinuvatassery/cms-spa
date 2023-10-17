@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CaseFacade, ContactFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType} from '@cms/case-management/domain';
+import { CaseFacade, ContactFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -25,8 +25,8 @@ export class FinancialVendorPageComponent implements OnInit {
   isShowPharmacyProvider: boolean = false;
   reminderTabOn = true;
   isShowManufacturers: boolean = false;
-  hasHealthcareProviderCreateUpdatePermission=false;
-  selectedClinicType ='';
+  hasHealthcareProviderCreateUpdatePermission = false;
+  selectedClinicType = '';
   data = [
     {
       text: 'Manufacturer',
@@ -71,41 +71,39 @@ export class FinancialVendorPageComponent implements OnInit {
   sort = this.financialVendorFacade.sort;
   selectedVendorType = this.financialVendorFacade.selectedVendorType
   exportButtonShow$ = this.documentFacade.exportButtonShow$
-  ddlStates=this.contactFacade.ddlStates$;
-  clinicVendorList= this.financialVendorFacade.clinicVendorList$;;
-  clinicVendorLoader= this.financialVendorFacade.clinicVendorLoader$;;
+  ddlStates = this.contactFacade.ddlStates$;
+  clinicVendorList = this.financialVendorFacade.clinicVendorList$;;
+  clinicVendorLoader = this.financialVendorFacade.clinicVendorLoader$;;
 
   private closeMedicalDentalProviderModalSubject = new BehaviorSubject<boolean>(false);
   closeMedicalDentalProviderModal$ = this.closeMedicalDentalProviderModalSubject.asObservable();
 
-    setupForClinic(clinicType: string) 
-    {
-      this.selectedClinicType = clinicType;
-      this.clickCloseMedicalVendorDetails();
-      this.clickCloseDentalVendorDetails();
-      this.clickOpenClinicProviderDetails();
-    }
-  
+  setupForClinic(clinicType: string) {
+    this.selectedClinicType = clinicType;
+    this.clickCloseMedicalVendorDetails();
+    this.clickCloseDentalVendorDetails();
+    this.clickOpenClinicProviderDetails();
+  }
+
   constructor(private caseFacade: CaseFacade, private financialVendorFacade: FinancialVendorFacade,
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
     private reminderFacade: ReminderFacade,
-    private documentFacade :  DocumentFacade,
+    private documentFacade: DocumentFacade,
     private readonly contactFacade: ContactFacade,
-    private userManagementFacade:UserManagementFacade,
-    ) {
+    private userManagementFacade: UserManagementFacade,
+  ) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
-  dataExportParameters! : any
+  dataExportParameters!: any
   /** Lifecycle hooks **/
   ngOnInit() {
     this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
     this.contactFacade.loadDdlStates();
-    this.hasHealthcareProviderCreateUpdatePermission=this.userManagementFacade.hasPermission(['Clinic_Create_Update']);
+    this.hasHealthcareProviderCreateUpdatePermission = this.userManagementFacade.hasPermission(['Clinic_Create_Update']);
   }
-  searchClinicVendorClicked(clientName:any)
-  {
-    
+  searchClinicVendorClicked(clientName: any) {
+
     this.financialVendorFacade.searchClinicVendor(clientName);
   }
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
@@ -163,8 +161,8 @@ export class FinancialVendorPageComponent implements OnInit {
   buildVendorForm() {
     this.medicalProviderForm.reset();
     this.medicalProviderForm = this.formBuilder.group({
-      firstName:[''],
-      lastName:[],
+      firstName: [''],
+      lastName: [],
       providerName: [''],
       tinNumber: [''],
       npiNbr: [''],
@@ -181,8 +179,8 @@ export class FinancialVendorPageComponent implements OnInit {
       zip: [''],
       physicalAddressFlag: [''],
       isPreferedPharmacy: [''],
-      paymentRunDate:[''],
-      isAcceptCombinedPayment:[''],
+      paymentRunDate: [''],
+      isAcceptCombinedPayment: [''],
       isAcceptReports: [''],
       newAddContactForm: this.formBuilder.array([
       ]),
@@ -193,51 +191,51 @@ export class FinancialVendorPageComponent implements OnInit {
     return FinancialVendorTypeCode;
   }
 
-  saveVendorProfile(vendorProfile: any){
-    
+  saveVendorProfile(vendorProfile: any) {
+
     this.financialVendorFacade.showLoader();
     this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
-      next:(response:any)=>{
+      next: (response: any) => {
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal();
         var notificationMessage = "Vendor profile added successfully";
         if (this.selectedClinicType === FinancialVendorTypeCode.MedicalProviders) {
           notificationMessage = "Clinic added successfully"
           this.clickOpenMedicalProviderDetails();
-        } else if (this.selectedClinicType === FinancialVendorTypeCode.DentalProviders){
+        } else if (this.selectedClinicType === FinancialVendorTypeCode.DentalProviders) {
           notificationMessage = "Clinic added successfully"
           this.clickOpenDentalProviderDetails();
         }
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
         this.cdr.detectChanges();
       },
-      error:(err:any)=>{
-        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+      error: (err: any) => {
+        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       }
     });
   }
 
-  closeVendorDetailModal(){
+  closeVendorDetailModal() {
     this.isShowMedicalProvider = false;
     this.isShowDentalProvider = false;
-    this.isShowInsuranceProvider =false;
+    this.isShowInsuranceProvider = false;
     this.isShowPharmacyProvider = false;
     this.isShowManufacturers = false;
     this.ShowClinicProvider = false;
   }
 
-  clickOpenInsuranceVendorModal(){
+  clickOpenInsuranceVendorModal() {
     this.buildVendorForm();
     this.providerTypeCode = FinancialVendorTypeCode.InsuranceVendors;
     this.isShowInsuranceProvider = true;
   }
 
-  clickOpenPharmacyVendorModal(){
+  clickOpenPharmacyVendorModal() {
     this.buildVendorForm();
     this.providerTypeCode = FinancialVendorTypeCode.Pharmacy;
     this.isShowPharmacyProvider = true;
   }
-  onReminderDoneClicked(event:any) {
+  onReminderDoneClicked(event: any) {
     this.reminderFacade.showHideSnackBar(
       SnackBarNotificationType.SUCCESS,
       'Item  updated to Done successfully'
@@ -250,48 +248,45 @@ export class FinancialVendorPageComponent implements OnInit {
     this.isShowManufacturers = true;
   }
 
-
-  exportGridData(){
+  exportGridData() {
     const data = this.dataExportParameters
-    if(data){
-    const  filter = JSON.stringify(data?.filter);
+    if (data) {
+      const filter = JSON.stringify(data?.filter);
 
       const vendorPageAndSortedRequest =
       {
         vendorTypeCode: data?.vendorTypeCode,
-        SortType : data?.sortType,
-        Sorting : data?.sortColumn,
-        SkipCount : data?.skipCount,
-        MaxResultCount : data?.pagesize,
-        Filter : filter
+        SortType: data?.sortType,
+        Sorting: data?.sortColumn,
+        SkipCount: data?.skipCount,
+        MaxResultCount: data?.pagesize,
+        Filter: filter
       }
-     let fileName = ''
-      switch(this.financialVendorFacade.selectedVendorType) {
+      let fileName = ''
+      switch (this.financialVendorFacade.selectedVendorType) {
         case FinancialVendorTypeCode.Manufacturers: {
           fileName = 'Manufacturers';
-           break;
+          break;
         }
         case FinancialVendorTypeCode.DentalProviders: {
           fileName = 'Dental Providers';
-           break;
+          break;
         }
         case FinancialVendorTypeCode.InsuranceVendors: {
           fileName = 'Insurance Vendors';
-           break;
+          break;
         }
         case FinancialVendorTypeCode.MedicalProviders: {
           fileName = 'Medical Providers';
-           break;
+          break;
         }
         case FinancialVendorTypeCode.Pharmacy: {
           fileName = 'Pharmacy';
-           break;
+          break;
         }
-     }
-      this.documentFacade.getExportFile(vendorPageAndSortedRequest,'vendors' , fileName)
+      }
+      this.documentFacade.getExportFile(vendorPageAndSortedRequest, 'vendors', fileName)
     }
   }
 
-
- 
 }
