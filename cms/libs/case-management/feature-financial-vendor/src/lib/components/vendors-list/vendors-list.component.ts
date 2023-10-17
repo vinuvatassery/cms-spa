@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { Router } from '@angular/router';
 import { FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { ColumnComponent } from '@progress/kendo-angular-excel-export';
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
@@ -24,6 +25,7 @@ export class VendorsListComponent implements OnChanges , OnInit{
 
 @Output() loadFinancialVendorsListEvent = new EventEmitter<any>();
 @Output() exportGridDataEvent = new EventEmitter<any>();
+@Output() OnColumnVisibilityChange = new EventEmitter<any>();
 showExportLoader = false;
 vndorId! : string
 public  state!: State
@@ -49,7 +51,7 @@ loader = false;
 vendorNameTitle ="Vendor Name"
 vendorNameTitleDataSubject = new Subject<any>();
 vendornameTitleData$ = this.vendorNameTitleDataSubject.asObservable();
-
+excludedColumns = ""
 
 columns : any = {
   vendorName:"Vendor Name",
@@ -214,7 +216,8 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
      vendorTypeCode : (this.vendorTypeCode == this.financeVendorTypeCodes.MedicalProviders 
       || this.vendorTypeCode == this.financeVendorTypeCodes.DentalProviders) 
       ? this.vendorTypeCode + ',' + this.vendorTypeCode.split('_')[0] + '_CLINIC' : this.vendorTypeCode ,
-     filter : this.state?.["filter"]?.["filters"] ?? []
+     filter : this.state?.["filter"]?.["filters"] ?? [],
+     excludedColumns : this.excludedColumns
    }
 
    this.loadFinancialVendorsListEvent.emit(gridDataRefinerValue)
@@ -315,6 +318,24 @@ pageselectionchange(data: any) {
 public filterChange(filter: CompositeFilterDescriptor): void {
 
   this.filterData = filter;
+ }
+ 
+ columnVisibilityChange(data:any){
+  var colarray = data.columns as Array<ColumnComponent>
+  this.excludedColumns = colarray.map(_ => _.field).join(', ');
+  const gridDataRefinerValue =
+  {
+    skipCount: this.state?.skip ?? 0,
+    pagesize : this.state?.take ?? 0,
+    sortColumn : this.sortValue,
+    sortType : this.sortType,
+    vendorTypeCode : (this.vendorTypeCode == this.financeVendorTypeCodes.MedicalProviders 
+     || this.vendorTypeCode == this.financeVendorTypeCodes.DentalProviders) 
+     ? this.vendorTypeCode + ',' + this.vendorTypeCode.split('_')[0] + '_CLINIC' : this.vendorTypeCode ,
+    filter : this.state?.["filter"]?.["filters"] ?? [],
+    excludedColumns : this.excludedColumns
+  }
+  this.OnColumnVisibilityChange.emit(gridDataRefinerValue);
  }
 
   gridDataHandle() {

@@ -134,6 +134,10 @@ export class FinancialVendorPageComponent implements OnInit {
     this.financialVendorFacade.getVendors(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.vendorTypeCode, data?.filter)
   }
 
+  setdataExportParameters(data:any){
+    this.dataExportParameters = data
+  }
+
   buildVendorForm() {
     this.medicalProviderForm.reset();
     this.medicalProviderForm = this.formBuilder.group({
@@ -227,7 +231,8 @@ export class FinancialVendorPageComponent implements OnInit {
         Sorting : data?.sortColumn,
         SkipCount : data?.skipCount,
         MaxResultCount : data?.pagesize,
-        Filter : filter
+        Filter : filter,
+        excludedColumns : data?.excludedColumns
       }
      let fileName = ''
       switch(this.financialVendorFacade.selectedVendorType) {
