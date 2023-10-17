@@ -200,14 +200,15 @@ export class FinancialVendorPageComponent implements OnInit {
       next:(response:any)=>{
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal();
-        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Vendor profile added successfully");
+        var notificationMessage = "Vendor profile added successfully";
         if (this.selectedClinicType === FinancialVendorTypeCode.MedicalProviders) {
+          notificationMessage = "Clinic added successfully"
           this.clickOpenMedicalProviderDetails();
         } else if (this.selectedClinicType === FinancialVendorTypeCode.DentalProviders){
+          notificationMessage = "Clinic added successfully"
           this.clickOpenDentalProviderDetails();
-        }else{
-          alert('no match ' + this.selectedClinicType)
         }
+        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
         this.cdr.detectChanges();
       },
       error:(err:any)=>{
