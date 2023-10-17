@@ -128,6 +128,7 @@
     <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.MedicalProviders" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
     [ddlStates$]="ddlStates"
     [clinicVendorList$]="clinicVendorList"
+    [hasCreateUpdatePermission]="hasHealthcareProviderCreateUpdatePermission"
     [clinicVendorLoader$]="clinicVendorLoader"
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
     (closeMedicalProviderDialogEvent)="receiveDataFromChild($event)"
@@ -135,7 +136,7 @@
   </kendo-dialog>
 
   <kendo-dialog kendoRippleContainer *ngIf="isShowClinicProvider" (close)="closeVendorDetailModal()"
-  class="app-c-modal app-c-modal-lg app-c-modal-np" title="Add New Clinic Provider" kendoTooltip>
+  class="app-c-modal app-c-modal-lg app-c-modal-np" title="Add New Clinic" kendoTooltip>
   <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.Clinic" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
   [ddlStates$]="ddlStates"
   [clinicVendorList$]="clinicVendorList"

@@ -1,3 +1,4 @@
+import { DentalInsurancePageComponent } from './../../../../../case-management/feature-dental-insurance/src/lib/containers/dental-insurance-page/dental-insurance-page.component';
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
@@ -24,6 +25,7 @@ export class VendorDetailsComponent implements OnInit {
   @Input() ddlStates$!: any;
   @Input() clinicVendorList$!: any;
   @Input() clinicVendorLoader$!: any;
+  @Input() hasCreateUpdatePermission:boolean=false;
 
   @Output() saveProviderEventClicked = new EventEmitter<any>();
   @Output() closeModalEventClicked = new EventEmitter<any>();
@@ -46,6 +48,10 @@ export class VendorDetailsComponent implements OnInit {
   isViewContentEditable!: boolean;
   isValidateForm: boolean = false;
   paymentMethodList: any[] = [];
+  clinicTypes: any[] = [
+    { lovCode: FinancialVendorTypeCode.MedicalClinic, lovDesc: 'Medical' },
+  { lovCode: FinancialVendorTypeCode.DentalClinic, lovDesc: 'Dental' },
+];
   paymentRunDateList: any[] = [];
   vendorContactList: any[] = [];
   clinicNameNotApplicable: boolean = false;
@@ -69,6 +75,7 @@ constructor(
   }
 
   ngOnInit(): void {
+    this.hasCreateUpdatePermission = false;
     this.lovFacade.getPaymentRunDateLov();
     this.lovFacade.getPaymentMethodLov();
         if (this.editVendorInfo) {
@@ -231,6 +238,16 @@ fillFormData(){
           Validators.required,
         ]);
       this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();
+
+    }
+
+    if(this.providerType != this.vendorTypes.Manufacturers)
+    {
+      this.medicalProviderForm.controls['clinicType']
+        .setValidators([
+          Validators.required,
+        ]);
+      this.medicalProviderForm.controls['clinicType'].updateValueAndValidity();
 
     }
 
@@ -457,6 +474,7 @@ fillFormData(){
       nameOnCheck: formValues.nameOnCheck,
       nameOnEnvelope: formValues.nameOnEnvolop,
       paymentMethodCode: formValues.paymentMethod,
+      clinicType: formValues.clinicType,
       specialHandling: formValues.specialHandling,
       phoneTypeCode: AddressType.Mailing,
       vendorContacts: this.vendorContactList,
@@ -465,8 +483,17 @@ fillFormData(){
       PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? Number(formValues.paymentRunDate) : null,
       PreferredFlag: (formValues.isPreferedPharmacy) ? StatusFlag.Yes:StatusFlag.No,
       PhysicalAddressFlag: (formValues.physicalAddressFlag) ? StatusFlag.Yes:StatusFlag.No,
-      emailAddressTypeCode: AddressType.Mailing
+      emailAddressTypeCode: AddressType.Mailing,
+      activeFlag:this.hasCreateUpdatePermission==true? StatusFlag.Yes:StatusFlag.No,
     }
+    if (this.providerType === FinancialVendorTypeCode.Clinic) {
+      if (vendorProfileData.clinicType === FinancialVendorTypeCode.MedicalClinic) {
+        vendorProfileData.vendorTypeCode = FinancialVendorTypeCode.MedicalClinic;
+      } else {
+        vendorProfileData.vendorTypeCode = FinancialVendorTypeCode.DentalClinic;
+      }
+    }
+    
     return vendorProfileData;
   }
   onChange(){

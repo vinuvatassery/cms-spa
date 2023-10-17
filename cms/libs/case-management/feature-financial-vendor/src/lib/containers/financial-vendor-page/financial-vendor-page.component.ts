@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ReminderFacade } from '@cms/productivity-tools/domain';
 import { BehaviorSubject } from 'rxjs';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-financial-vendor-page',
@@ -24,7 +25,7 @@ export class FinancialVendorPageComponent implements OnInit {
   isShowPharmacyProvider: boolean = false;
   reminderTabOn = true;
   isShowManufacturers: boolean = false;
-
+  hasHealthcareProviderCreateUpdatePermission=false;
   data = [
     {
       text: 'Manufacturer',
@@ -89,6 +90,7 @@ export class FinancialVendorPageComponent implements OnInit {
     private reminderFacade: ReminderFacade,
     private documentFacade :  DocumentFacade,
     private readonly contactFacade: ContactFacade,
+    private userManagementFacade:UserManagementFacade,
     ) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
@@ -96,7 +98,8 @@ export class FinancialVendorPageComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit() {
     this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
-    this.contactFacade.loadDdlStates();  
+    this.contactFacade.loadDdlStates();
+    this.hasHealthcareProviderCreateUpdatePermission=this.userManagementFacade.hasPermission(['Healthcare_Provider_Create_Update']);
   }
   searchClinicVendorClicked(clientName:any)
   {
@@ -164,6 +167,7 @@ export class FinancialVendorPageComponent implements OnInit {
       tinNumber: [''],
       npiNbr: [''],
       paymentMethod: [''],
+      clinicType: [''],
       specialHandling: [''],
       mailCode: [''],
       nameOnCheck: [''],
@@ -195,6 +199,8 @@ export class FinancialVendorPageComponent implements OnInit {
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal();
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Vendor profile added successfully");
+        if(this.providerTypeCode == FinancialVendorTypeCode.Clinic )
+          this.clickOpenMedicalProviderDetails();
         this.cdr.detectChanges();
       },
       error:(err:any)=>{
