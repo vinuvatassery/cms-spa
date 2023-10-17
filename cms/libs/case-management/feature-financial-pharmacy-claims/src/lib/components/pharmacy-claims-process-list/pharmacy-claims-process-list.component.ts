@@ -14,11 +14,12 @@ import {
 import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
+import { ColumnVisibilityChangeEvent, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
+import { BatchPharmacyClaims } from 'libs/case-management/domain/src/lib/entities/financial-management/batch-pharmacy-claims';
 import { Subject, debounceTime } from 'rxjs';
 @Component({
   selector: 'cms-pharmacy-claims-process-list',
@@ -38,7 +39,13 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   /* Output Properties */
   @Output() loadPharmacyClaimsProcessListEvent = new EventEmitter<any>();
   @Output() exportPharmacyClaimsProcessListEvent = new EventEmitter<any>();
-
+  @Input() batchingClaims$: any; 
+  @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
+  public selectedProcessClaims: any[] = [];
+  public selectableSettings: SelectableSettings;
+  public checkboxOnly = true;
+  public mode: SelectableMode = 'multiple';
+  public drag = false;
   @ViewChild('batchClaimsConfirmationDialog', { read: TemplateRef })
   batchClaimsConfirmationDialog!: TemplateRef<any>;
   @ViewChild('deleteClaimsConfirmationDialog', { read: TemplateRef })
@@ -167,7 +174,13 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService
-  ) { }
+  ) { 
+    this.selectableSettings = {
+      checkboxOnly: this.checkboxOnly,
+      mode: this.mode,
+      drag: this.drag,
+    };
+  }
 
 
   ngOnInit(): void {
@@ -310,10 +323,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
-  onModalBatchClaimsModalClose(result: any) {
-    if (result) {
+  onModalBatchClaimsModalClose() {
       this.batchConfirmClaimsDialog.close();
-    }
   }
 
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
@@ -350,6 +361,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     this.isProcessGridExpand = true;
     this.isDeleteBatchClosed = false;
     this.isProcessBatchClosed = false;
+    this.selectedProcessClaims = [];
   }
 
   clientRecentClaimsModalClicked(
@@ -397,5 +409,23 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     };
 
     this.exportPharmacyClaimsProcessListEvent.emit(params);
+  }
+
+  
+  selectedKeysChange(selection: any) {
+    this.selectedProcessClaims = selection;
+  }
+
+  OnbatchClaimsClicked(){
+
+    const input: BatchPharmacyClaims = {
+      PaymentRequestIds: this.selectedProcessClaims,
+    };
+    this.batchingClaims$.subscribe((_:any) =>{
+      this.onModalBatchClaimsModalClose()
+      this.loadPharmacyClaimsProcessListGrid();
+      this.onBatchClaimsGridSelectedCancelClicked()
+    })
+    this.OnbatchClaimsClickedEvent.emit(input)
   }
 }

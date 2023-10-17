@@ -11,7 +11,8 @@ export class PharmacyClaimsPageComponent {
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
  
 
-
+  batchingClaims$ = this.financialPharmacyClaimsFacade.batchClaims$;
+  
    sortType = this.financialPharmacyClaimsFacade.sortType;
    pageSizes = this.financialPharmacyClaimsFacade.gridPageSizes;
    gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
@@ -52,5 +53,9 @@ export class PharmacyClaimsPageComponent {
 
   oneExportClaimsInProcess(event: any){
     this.financialPharmacyClaimsFacade.exportPharmacyClaimsProcessListGrid(event);
+  }
+
+  OnbatchClaimsClicked(event:any){
+    this.financialPharmacyClaimsFacade.batchClaims(event);
   }
 }
