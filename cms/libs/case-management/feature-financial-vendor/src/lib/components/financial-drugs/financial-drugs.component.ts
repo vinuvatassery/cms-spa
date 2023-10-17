@@ -155,7 +155,6 @@ export class FinancialDrugsComponent {
   }
 
   clickOpenAddEditFinancialDrugsDetails(title:string) {
-    debugger;
     this.dialogTitle = title;
     this.isFinancialDrugsDetailShow = true;
   }
