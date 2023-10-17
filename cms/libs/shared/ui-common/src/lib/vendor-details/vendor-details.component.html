@@ -47,7 +47,7 @@
         *ngIf="providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders 
         || vendorTypes.DentalClinic == providerType || vendorTypes.MedicalClinic == providerType || vendorTypes.Clinic == providerType">
         <div class="flex-row">
-          <div class="flex-col flex-col-12 inlineloaderwrapper" *ngIf="!editVendorInfo">
+          <div class="flex-col flex-col-{{providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders ? 8 : 12}} inlineloaderwrapper" *ngIf="!editVendorInfo">
             <span *ngIf="clinicVendorLoader$ | async"
               class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
             <kendo-floatinglabel text="Clinic Name">
@@ -68,9 +68,6 @@
               </kendo-formerror>
             </kendo-floatinglabel>
 
-            <!-- <button *ngIf="vendorTypes.MedicalProviders == providerType" kendoButton
-              class="card-link-button ml-1 no-ul fontsize_twel mt-3" [disabled]="isViewContentEditable"
-              aria-label="Add New" (click)="addNewClinicOpen()"> ADD NEW</button> -->
               <button *ngIf="vendorTypes.MedicalProviders == providerType || vendorTypes.DentalProviders == providerType"
               kendoButton
               class="card-link-button ml-1 no-ul fontsize_twel mt-3"
@@ -556,8 +553,7 @@
     <div class="justify-content-end">
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeVedorModal()"> Cancel
       </button>
-      <button *ngIf="vendorTypes.Clinic == providerType" kendoButton [primary]="true" aria-label="Add" (click)="save()"> {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}} </button>
-      <button *ngIf="vendorTypes.Clinic != providerType" kendoButton [primary]="true" aria-label="Add" (click)="save()"> Add </button>
+      <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}} </button>
     </div>
   </div>
   <div class="justify-content-between" *ngIf="editVendorInfo">

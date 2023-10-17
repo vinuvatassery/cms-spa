@@ -238,14 +238,13 @@ fillFormData(){
       this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();
 
     }
-    if(this.providerType == this.vendorTypes.Clinic)
-    {
+
+    if (this.providerType == this.vendorTypes.Clinic) {
       this.medicalProviderForm.controls['clinicType']
         .setValidators([
           Validators.required,
         ]);
       this.medicalProviderForm.controls['clinicType'].updateValueAndValidity();
-
     }
 
     if (this.providerType == this.vendorTypes.InsuranceVendors) {
