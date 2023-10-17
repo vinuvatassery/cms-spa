@@ -9,7 +9,7 @@
                                           <label class="ml-1 text-muted"> {{item.paymentMethodCode}}</label></p>
                               </div>
                               <div class="text-right mt-1 pr-2">
-                                    <span class="app-checkboxwidtext-wrapper" *ngIf="item.acceptsReports === 'Y'">
+                                    <span class="app-checkboxwidtext-wrapper" *ngIf="item.acceptsReportsFlag === 'Y'">
                                           <input type="checkbox" [checked]="item.isPrintAdviceLetter" (change)="onCheckboxChange($event, item)" kendoCheckBox aria-labelledby="Printauthorization" id="Printauthorization" />
                                           <label class="k-checkbox-label" for="Printauthorization">Print letter</label>
                                     </span>

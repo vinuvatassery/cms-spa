@@ -607,7 +607,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       dataItem.datePaymentRecInValid = false;
       dataItem.datePaymentRecInValidMsg = null;
     }
-    if (dataItem.checkNbr !== '' && dataItem.acceptsReports == 'Y') {
+    if (dataItem.checkNbr !== '' && dataItem.acceptsReportsFlag == 'Y') {
       dataItem.isPrintAdviceLetter = true;
     }
     this.assignRowDataToMainList(dataItem);
