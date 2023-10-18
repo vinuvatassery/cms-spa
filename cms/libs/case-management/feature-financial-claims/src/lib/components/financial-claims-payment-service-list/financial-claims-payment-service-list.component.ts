@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { FinancialClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
+import { FinancialClaimTypeCode, FinancialClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
@@ -24,6 +24,7 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
     state!: State;
     servicesList$ = new BehaviorSubject<any>([]);
     loader$ = new BehaviorSubject<boolean>(false);
+    serviceTitle = '';
 
     /** Constructor **/
     constructor(private readonly claimsFacade: FinancialClaimsFacade,
@@ -32,6 +33,7 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
 
     /* Life cycle events */
     ngOnInit(): void {
+      this.serviceTitle = this.claimType == FinancialClaimTypeCode.Medical ? 'Medical Service' : 'Dental Service'
         this.initializeGrid();
         this.loadServices();
     }

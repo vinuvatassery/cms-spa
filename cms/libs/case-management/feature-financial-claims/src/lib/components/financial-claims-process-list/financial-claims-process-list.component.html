@@ -63,7 +63,7 @@
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [headerClass]="{ 'text-center': true }"
       [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"
-      [locked]="true"></kendo-grid-checkbox-column>
+      [sticky]="true"></kendo-grid-checkbox-column>
 
     <kendo-grid-column field="invoiceNbr"  title="Invoice ID" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -243,7 +243,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <ng-container *ngIf="isProcessGridExpand">
+    <ng-container *ngIf="isProcessGridExpand && !isProcessBatchClosed && !isDeleteBatchClosed">
       <div *kendoGridDetailTemplate="let dataItem">
         <cms-financial-claims-invoice-list [paymentRequestId]="dataItem?.paymentRequestId"
           [financialInvoiceList$]="financialClaimsInvoice$" [sort]="sortValueFinancialInvoices"

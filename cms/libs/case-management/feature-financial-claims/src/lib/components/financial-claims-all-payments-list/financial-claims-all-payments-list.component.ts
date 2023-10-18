@@ -54,6 +54,12 @@ export class FinancialClaimsAllPaymentsListComponent
   unBatchClaimsDialogTemplate!: TemplateRef<any>;
   @ViewChild('deleteClaimsConfirmationDialogTemplate', { read: TemplateRef })
   deleteClaimsConfirmationDialogTemplate!: TemplateRef<any>;
+  @ViewChild('addEditClaimsDialog')
+  private addEditClaimsDialog!: TemplateRef<any>;
+
+  isEdit!: boolean;
+  paymentRequestId!: string;
+  private addEditClaimsFormDialog: any;
   isUnBatchClaimsClosed = false;
   isDeleteClaimClosed = false;
   UnBatchDialog: any;
@@ -100,7 +106,10 @@ export class FinancialClaimsAllPaymentsListComponent
       {
         buttonType: 'btn-h-primary',
         text: 'Edit Claim',
-        icon: 'edit'
+        icon: 'edit',
+        click: (claim: any): void => {
+          this.onClaimClick(claim);
+        },
       },
       {
         buttonType: 'btn-h-primary',
@@ -356,7 +365,6 @@ export class FinancialClaimsAllPaymentsListComponent
     let operator = 'startswith';
 
     if (
-      this.selectedColumn === 'invoiceNbr' ||
       this.selectedColumn === 'clientId' ||
       this.selectedColumn === 'serviceCount' ||
       this.selectedColumn === 'totalCost' ||
@@ -403,8 +411,7 @@ export class FinancialClaimsAllPaymentsListComponent
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir =
-      this.sort[0]?.dir === this.sortType ? 'Ascending' : 'Descending';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
 
     this.sortColumn = this.columns[stateData.sort[0]?.field];
 
@@ -652,5 +659,26 @@ export class FinancialClaimsAllPaymentsListComponent
           this.loadFinancialClaimsAllPaymentsListGrid();
         }
       });
+  }
+
+  onClaimClick(dataitem: any) {
+    if (!dataitem.vendorId.length) return;
+    this.isEdit = true;
+    this.paymentRequestId = dataitem.paymentRequestId;
+    this.openAddEditClaimDialoge();
+  }
+
+  openAddEditClaimDialoge() {
+    this.addEditClaimsFormDialog = this.dialogService.open({
+      content: this.addEditClaimsDialog,
+      cssClass: 'app-c-modal app-c-modal-full add_claims_modal',
+    });
+  }
+
+  modalCloseAddEditClaimsFormModal(result: any) {
+    if (result) {
+      this.loadFinancialClaimsAllPaymentsListGrid();
+      this.addEditClaimsFormDialog.close();
+    }
   }
 }
