@@ -12,7 +12,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { GroupResult, State } from '@progress/kendo-data-query';
+import { groupBy, State } from '@progress/kendo-data-query';
 import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType, FinancialPcaFacade, ExceptionTypeCode } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -21,7 +21,6 @@ import { ActivatedRoute } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
-import { groupBy } from "@progress/kendo-data-query";
 import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'cms-financial-claims-detail-form',
@@ -134,7 +133,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   selectedCPTCode: any = null;
   isSpotsPayment!: boolean;
   textMaxLength: number = 300;
-
+  MaxBenefitExceptionReasonTextLength :number = 150;
   isExcededMaxBeniftFlag = false;
   isExcededMaxBanifitButtonText = 'Make Exception';
   claimFlagExceptionCounter!: string;
@@ -947,9 +946,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   reasonCharCount(i: number) {
     let reasonForException = this.claimForm.value.claimService[i].reasonForException;
     if (reasonForException) {
-      return `${reasonForException.length}/${this.textMaxLength}`;
+      return `${reasonForException.length}/${this.MaxBenefitExceptionReasonTextLength}`;
     }
-    return `0/${this.textMaxLength}`;
+    return `0/${this.MaxBenefitExceptionReasonTextLength}`;
   }
 
   onProviderValueChange($event: any) {
