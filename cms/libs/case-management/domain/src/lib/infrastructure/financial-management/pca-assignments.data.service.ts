@@ -49,4 +49,7 @@ export class PcaAssignmentsDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/priority`,pcaAssignmentPriorityArguments);
   }
 
+  reassignPca(assignPcaRequest : any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/pca-reassign`,assignPcaRequest);
+  }
 }
