@@ -55,16 +55,7 @@ export class FinancialClaimsBatchesLogListsComponent
   clientId:any;
   clientName:any;
   PaymentStatusList = [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved];
-  public bulkMore = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Request Payments',
-      icon: 'local_atm',
-      click: (data: any): void => {
-        this.isRequestPaymentClicked = true;
-        this.isPrintAdviceLetterClicked = false;
-      },
-    },
+  public bulkMore = [  
     {
       buttonType: 'btn-h-primary',
       text: 'Reconcile Payments',

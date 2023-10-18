@@ -63,6 +63,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   isFiltered = false;
   filter!: any;
   selectedColumn!: any;
+  searchItem:any=null;
   gridDataResult!: GridDataResult;
   selectedDataRows: any[] = [];
   selectedReconcileDataRows: any[] = [];
@@ -93,6 +94,52 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     note : new FormControl('', []),
   });
   claimReconcileCount:any=0;
+  bulkNoteCounter:any=0;
+  columns : any = {
+    vendorName:"Medical Provider",
+    tin:"TIN",
+    paymentMethodCode:"Pmt. Method",
+    paymentReconciledDate:"Date Pmt. Reconciled",
+    paymentSentDate:"Date Pmt. Sent",
+    amountPaid:"Pmt. Amount",
+    checkNbr:"Warrant Number",
+    comments:"Note (optional)"
+  }
+  dropDropdownColumns : any = [
+    {
+      columnCode: 'vendorName',
+      columnDesc: 'Medical Provider',
+    },
+    {
+      columnCode: 'tin',
+      columnDesc: 'TIN',
+    },
+    {
+      columnCode: 'paymentMethodCode',
+      columnDesc: 'Pmt. Method',
+    },
+    {
+      columnCode: 'paymentReconciledDate',
+      columnDesc: 'Date Pmt. Reconciled',
+    },
+    {
+      columnCode: 'paymentSentDate',
+      columnDesc: 'Date Pmt. Sent',
+    },
+    {
+      columnCode: 'amountPaid',
+      columnDesc: 'Pmt. Amount',
+    },
+    {
+      columnCode: 'checkNbr',
+      columnDesc: 'Warrant Number',
+    },
+    {
+      columnCode: 'comments',
+      columnDesc: 'Note (optional)',
+    }
+  ];
+
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
     private readonly cd: ChangeDetectorRef, public intl: IntlService, private configurationProvider: ConfigurationProvider) {
@@ -164,10 +211,81 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
       sort: this.sortBatch,
       filter: { logic: 'and', filters: [] },
     };
+    this.filter =null;
   }
 
   onColumnReorder($event: any) {
     this.columnsReordered = true;
+  }
+  allColumnChange(){
+    this.searchItem = null;
+    this.defaultGridState();
+    this.loadReconcileListGrid();
+  }
+  onSearchChange(data: any) {
+    let searchValue = data;
+    this.defaultGridState();
+    let operator = 'startswith';
+
+    if (
+      this.selectedColumn === 'amountPaid' 
+    ) {
+      operator = 'eq';
+    }
+    else if (
+      this.selectedColumn === 'paymentReconciledDate' ||
+      this.selectedColumn === 'paymentSentDate'
+    ) {
+      operator = 'eq';
+      searchValue = this.formatSearchValue(data,true);
+
+    }
+   
+    if(searchValue !== ''){
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedColumn ?? 'vendorName',
+              operator: operator,
+              value: searchValue,
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
+    const stateData = this.state;
+    stateData.filter = this.filterData;
+    this.dataStateChange(stateData);
+  }
+  }
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(new Date(searchValue), this.dateFormat);
+      }
+      else {
+        return '';
+      }
+    }
+    return searchValue;
+  }
+
+  private isValidDate(searchValue: any) {   
+    let dateValue = isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+    if(dateValue !== null){
+      let dateArray = searchValue.split('/');
+      if(dateArray[2].length === 4){
+        return dateValue
+      }
+      else{
+        return '';
+      }
+    }
+    return ''
   }
 
   dataStateChange(stateData: any): void {
@@ -455,6 +573,12 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
       ? dataItem.comments.length
       : 0;
     dataItem.tAreaCessationCounter = `${tAreaCessationCharactersCount}/${this.tAreaCessationMaxLength}`;
+  }
+  calculateCharacterCountBulkNote(note: any) {
+    let bulkNoteCharactersCount = note
+      ? note.length
+      : 0;
+    this.bulkNoteCounter = `${bulkNoteCharactersCount}/${this.tAreaCessationMaxLength}`;
   }
 
   warrantNumberChange(dataItem: any) {
