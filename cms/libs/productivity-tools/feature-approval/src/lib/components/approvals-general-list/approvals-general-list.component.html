@@ -7,7 +7,7 @@
     </kendo-popover>
 
       <kendo-panelbar *ngFor="let item of approvalsGeneralLists$|async">
-        <kendo-panelbar-item *ngIf="getTitle(item.typeCode)">
+        <kendo-panelbar-item *ngIf="getTitle(item.approvalTypeCode)">
 
           <ng-template kendoPanelBarItemTitle>
             <div class="flex-row rw-100" (click)="$event.stopPropagation();">
