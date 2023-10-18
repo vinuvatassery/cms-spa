@@ -94,7 +94,6 @@ export class FinancialClaimsAllPaymentsListComponent
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   PreviewSubmitPaymentDialog: any;
   printAuthorizationDialog: any;
-  isRequestPaymentClicked = false;
   isPrintAuthorizationClicked = false;
   vendorId: any;
   clientId: any;
@@ -156,17 +155,6 @@ export class FinancialClaimsAllPaymentsListComponent
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Request Payments',
-      icon: 'local_atm',
-      click: (data: any): void => {
-        this.isRequestPaymentClicked = true;
-        this.isPrintAuthorizationClicked = false;
-        this.isGridExpand = false;
-      },
-    },
-
-    {
-      buttonType: 'btn-h-primary',
       text: 'Reconcile Payments',
       icon: 'edit',
       click: (data: any): void => {
@@ -176,12 +164,11 @@ export class FinancialClaimsAllPaymentsListComponent
 
     {
       buttonType: 'btn-h-primary',
-      text: 'Print Authorizations',
+      text: 'Print Advice Letter(s)',
       icon: 'print',
       click: (data: any): void => {
         this.isGridExpand = false;
         this.previewText = true;
-        this.isRequestPaymentClicked = false;
         this.isPrintAuthorizationClicked = true;
       },
     },
@@ -553,7 +540,6 @@ export class FinancialClaimsAllPaymentsListComponent
   }
 
   onBulkOptionCancelClicked() {
-    this.isRequestPaymentClicked = false;
     this.isPrintAuthorizationClicked = false;
     this.isGridExpand = true;
     this.previewText = false;

@@ -213,7 +213,7 @@
           </kendo-popover>
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column field="Option" title="Options" [columnMenu]="false" [width]="70" class="text-center">
+      <kendo-grid-column field="Option" title="Options" [columnMenu]="false" [sortable]="false" [width]="70" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
           <kendo-dropdownbutton [data]="getPaymentsGridActions(dataItem)" icon="more-vertical"
             class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -233,7 +233,7 @@
         </ng-template>
       </kendo-grid-column>
 
-      <ng-container *ngIf="isGridExpand && !isRequestPaymentClicked && !isPrintAuthorizationClicked">
+      <ng-container *ngIf="isGridExpand && !isPrintAuthorizationClicked">
         <div *kendoGridDetailTemplate="let dataItem">
           <cms-financial-payment-service-list [paymentId] = "dataItem.paymentRequestId" [claimType] = "claimsType"></cms-financial-payment-service-list>
         </div>
@@ -280,13 +280,11 @@
 
     </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
-      <span *ngIf="isRequestPaymentClicked" class="">{{selectedClaims?.length}} claims(s) to be requested</span>
       <span *ngIf="previewText" class="">{{selectedClaims?.length}} claims(s) to be previewed</span>
-      <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
-      <button kendoButton [primary]="true" aria-label="Preview Requests" class="" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
+      <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" *ngIf="isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
       <button kendoButton [primary]="true" aria-label="Review" class="" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
       <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action"
-        buttonClass="k-split-button" [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isPrintAuthorizationClicked"
+        buttonClass="k-split-button" [tabindex]="0" *ngIf="!isPrintAuthorizationClicked"
         [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
         <div class="btn-inner-block">
           Bulk
