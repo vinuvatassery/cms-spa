@@ -168,11 +168,8 @@
       </ng-template>
     </kendo-grid-column>  
 
-    <kendo-grid-column field="mailCode" title="Mail Code" [width]="100"  [sortable]="false"  
+    <kendo-grid-column field="mailCode" title="Mail Code" [width]="100"  [filterable]="false" [sortable]="false"  
       *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
-      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-      
-      </ng-template>
     </kendo-grid-column>
 
     <kendo-grid-column field="address" title="Address"  [width]="120" [sticky]="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders"
