@@ -1072,6 +1072,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.claimForm.controls['providerNotEligibleExceptionFlagText'].setValue("Don't Make Exception");
     } else if (this.claimForm.controls['providerNotEligibleExceptionFlag']?.value) {
       this.claimForm.controls['providerNotEligibleExceptionFlagText'].setValue("Make Exception");
+      this.claimForm.controls['parentReasonForException'].reset();
     }
   }
   checkProviderNotEligibleException($event:any)
