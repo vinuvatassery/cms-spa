@@ -38,24 +38,24 @@
     kendoGridSelectBy="paymentRequestId"
     (selectedKeysChange)="selectedKeysChange($event)"
     [(selectedKeys)]="selectedProcessClaims">
-    <kendo-grid-checkbox-column *ngIf="isBatchPremiumsClicked" [columnMenu]="false" [showSelectAll]="true"
+    <kendo-grid-checkbox-column *ngIf="isBatchPremiumsClicked" [columnMenu]="false" [showSelectAll]="true" class="text-center" 
     [width]="40" [sticky]="true"></kendo-grid-checkbox-column>
 
-      <kendo-grid-column *ngIf="isSendReportOpened || isRemoveBatchClosed"  field="add" [width]="150" 
-      [sortable]="false"  [columnMenu]="false" [headerStyle]="{'text-align': 'center'}" [style]="{'text-align': 'center'}">
+      <kendo-grid-column *ngIf="isSendReportOpened || isRemoveBatchClosed"  field="add" [width]="40" class="text-center" 
+      [sortable]="false"  [columnMenu]="false">
         <ng-template kendoGridHeaderTemplate let-dataItem>
-            <input style="zoom: 1.2;"   
+            <input   
                  type="checkbox" 
                  name="selectAll"
                  [(ngModel)]="selectAll"
-                 (change)="selectionAllChange()"/>
+                 (change)="selectionAllChange()" kendoCheckBox />
          </ng-template> 
          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
-             <input style="zoom: 1.2;" 
+             <input 
                  type="checkbox"
                  [(ngModel)]="dataItem.selected"
                  [disabled]="dataItem.acceptsCombinedPaymentsFlag === 'N'"
-                 (change)="selectionChange(dataItem,dataItem.selected)"/>
+                 (change)="selectionChange(dataItem,dataItem.selected)" kendoCheckBox />
          </ng-template>
       </kendo-grid-column> 
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160"> 

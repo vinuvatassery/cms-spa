@@ -14,8 +14,6 @@ export class ApprovalsGeneralListDetailCaseReassignmentComponent implements OnIn
   @Input() casereassignmentExpandedInfo$: any;
   @Output() loadCasereassignmentExpanedInfoEvent = new EventEmitter<any>();
   casereassignmentExpandedInfoData: any;
-
-  ifApproveOrDeny: any;
   isPanelExpanded = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
@@ -24,6 +22,11 @@ export class ApprovalsGeneralListDetailCaseReassignmentComponent implements OnIn
     ) {}
 
   ngOnInit(): any {
+    if(this.approvalId)
+    {
+      this.isPanelExpanded = true;
+      this.loadCasereassignmentExpanedInfoEvent.emit(this.approvalId);
+    }
     this.casereassignmentExpandedInfo$.subscribe((response: any) => {
       if (response) {
         this.casereassignmentExpandedInfoData = response;
@@ -31,23 +34,6 @@ export class ApprovalsGeneralListDetailCaseReassignmentComponent implements OnIn
       this.isPanelExpanded = false;
       this.cdr.detectChanges();
     });
-  }
-
-  approveOrDeny(result:any){
-    this.ifApproveOrDeny = result;
-  }
-
-  public onPanelCollapse(event: PanelBarCollapseEvent): void {
-    this.isPanelExpanded = false;
-  }
-
-  public onPanelExpand(event: PanelBarExpandEvent): void {
-    this.approvalId = '5657ff07-e5a2-463c-98bd-6edd1b774f3a';
-    if(this.approvalId)
-    {
-      this.isPanelExpanded = true;
-      this.loadCasereassignmentExpanedInfoEvent.emit(this.approvalId);
-    }
   }
 
   onClientNameClicked() {

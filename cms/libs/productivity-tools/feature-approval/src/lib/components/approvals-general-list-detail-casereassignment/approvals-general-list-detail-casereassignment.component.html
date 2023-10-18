@@ -1,51 +1,11 @@
-<kendo-panelbar (expand)="onPanelExpand($event)"
-(collapse)="onPanelCollapse($event)">
-    <kendo-panelbar-item >
-      <ng-template kendoPanelBarItemTitle>
-        <div class="flex-row rw-100" (click)="$event.stopPropagation();">
-          <div class="flex-col flex-col-6">
-            <h5>Request for Case Re-Assignment</h5>
-            <p>XX/XX/XXXX by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
-                aria-label="FName LName" kendoButton look="flat" class="card-link-button">
-                FName LName
-              </button> </p>
-          </div>
-          <div class="flex-col flex-col-6">
-            <div>
-              <kendo-buttongroup selection="single">
-                <button kendoButton aria-label="Approve" (click)="approveOrDeny('A')" [toggleable]="true">Approve
-                </button>
-                <button kendoButton aria-label="Deny" (click)="approveOrDeny('D')" [toggleable]="true">Deny </button>
-              </kendo-buttongroup>
-            </div>
-            <div *ngIf="ifApproveOrDeny === 'A'">
-              <kendo-floatinglabel text="Send Back Notes">
-                <kendo-textbox aria-label="Send Back Notes" [fillMode]="formUiStyle.inputFillMode">
-                </kendo-textbox>
-              </kendo-floatinglabel>
-            </div>
-            <div *ngIf="ifApproveOrDeny === 'D'">
-              <kendo-floatinglabel text="New Case Worker">
-                <kendo-dropdownlist aria-label="New Case Worker" [fillMode]="formUiStyle.dropDownFillMode">
-                </kendo-dropdownlist>
-              </kendo-floatinglabel>
-            </div>
-          </div>
-        </div>
-      </ng-template>
+<div>
+  <div *ngIf="isPanelExpanded">
+    <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+    <kendo-skeleton shape="text" animation="pulse" width="50%"></kendo-skeleton>
+  </div>
 
-      <ng-template kendoPanelBarContent>
-        <div *ngIf="isPanelExpanded">
-          <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
-          <kendo-skeleton shape="text" animation="pulse" width="50%"></kendo-skeleton>
-        </div>
-
-        <div *ngIf="casereassignmentExpandedInfoData">
-          <p>Regarding <a (click)="onClientNameClicked()">{{casereassignmentExpandedInfoData?.clientFullName}}</a></p>
-          <i>{{casereassignmentExpandedInfoData?.reassignmentReason}}</i>
-        </div>
-      </ng-template>
-
-    </kendo-panelbar-item>
-
-  </kendo-panelbar>
+  <div *ngIf="casereassignmentExpandedInfoData">
+    <p>Regarding <a (click)="onClientNameClicked()">{{casereassignmentExpandedInfoData?.clientFullName}}</a></p>
+    <i>{{casereassignmentExpandedInfoData?.reassignmentReason}}</i>
+  </div>
+</div>

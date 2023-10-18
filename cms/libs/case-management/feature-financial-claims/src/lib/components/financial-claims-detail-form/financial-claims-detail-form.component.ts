@@ -33,6 +33,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   pcaExceptionDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
+  dropdownInternedClassAction = 'dropdown-intended';
   claimsListData$ = this.financialClaimsFacade.claimsListData$;
   sortValue = this.financialClaimsFacade.sortValueClaims;
   sortType = this.financialClaimsFacade.sortType;
