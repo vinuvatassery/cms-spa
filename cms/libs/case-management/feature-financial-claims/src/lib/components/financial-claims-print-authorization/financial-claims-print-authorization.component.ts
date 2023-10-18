@@ -180,10 +180,14 @@ export class FinancialClaimsPrintAuthorizationComponent {
           if (data) {
             let printReconcileRecords = this.printAdviceLetterData?.PrintAdviceLetterGenerateInfo?.filter((x: any) => x.isPrintAdviceLetter === true)
             let request = { 'PrintAdviceLetterGenerateInfo': printReconcileRecords, 'batchId': this.printAdviceLetterData.batchId };
+            if(this.printCount > 0){
             this.generateAndPrintAdviceLetter(request);
-            this.ref.detectChanges();
+            }
           }
           this.loaderService.hide();
+          this.onClosePrintAdviceLetterClicked();
+          this.ref.detectChanges();
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled!");
         },
         error: (err: Error) => {
           this.loaderService.hide();
