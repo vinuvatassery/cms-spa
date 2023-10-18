@@ -22,6 +22,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsBreakoutComponent  impleme
   @Input() premiumsType: any;
   @Input() batchId:any;
   @Input() entityId:any;
+  @Input() paymentRequestId :any
   @Output() loadReconcilePaymentBreakOutGridEvent = new EventEmitter<any>();
   vendorId:any;
   clientId:any;
@@ -37,7 +38,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsBreakoutComponent  impleme
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-  
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -256,5 +257,9 @@ export class FinancialPremiumsBatchesReconcilePaymentsBreakoutComponent  impleme
     this.state.searchValue = '';
     this.state.selectedColumn = '';
     this.state.columnName = '';
+  }
+
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(this.paymentRequestId)
   }
 }

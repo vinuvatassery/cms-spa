@@ -13,36 +13,36 @@
    <ng-template let-item="item">
     <div>
       <div class="slidertitle-bar">
-        <p><strong>Batch # {{item.batchName}} </strong> <label class="ml-1">${{item.totalAmountDue}}</label> <label class="ml-1"> {{item.totalPayments}} payment(s)</label></p>
+        <p><strong>Batch # {{item.batchName}} </strong> <label class="ml-1">${{item.totalAmountDue | kendoNumber: 'n2'}}</label> <label class="ml-1"> {{item.totalPayments}} payment(s)</label></p>
       </div>
       <div class="mt-1">
         <kendo-buttongroup class="fill_width_group_btn">
             <button kendoButton id ="approveBatch{{index}}" [toggleable]="true" [selected]="item.batchStatus == 'APPROVED'"   aria-label="Approve" (selectedChange)="onApproveClicked(item,index)">Approve
-        
+
             </button>
             <button kendoButton id ="sendBackBatch{{index}}" [toggleable]="true" [selected]="item.batchStatus == 'SEND_BACK'"  aria-label="Send Back" (selectedChange)="onSendbackClicked(item,index)">Send Back
-        
+
             </button>
-        </kendo-buttongroup> 
+        </kendo-buttongroup>
     </div>
     <kendo-floatinglabel text="Send Back Notes">
         <kendo-textarea
         #tareaSendBackNotes
         [fillMode]="formUiStyle.inputFillMode"
         [maxlength]="tAreaSendBackNotesMaxLength"
-        [rows]="2"                                          
+        [rows]="2"
         resizable ="none"
         [(ngModel)]="item.sendBackNotes"
         (valueChange)="sendBackNotesChange(item)"
-        aria-label="Send Back Notes"                                          
-        title ="{{item.sendBackNotes}}" [disabled]="item.sendBackButtonDisabled"
+        aria-label="Send Back Notes"
+        title ="{{item.sendBackNotes}}" [disabled]="item.batchStatus == 'APPROVED'"
         >
-     
+
       </kendo-textarea>
-      <kendo-textarea-suffix class="justify-content-end"> 
+      <kendo-textarea-suffix class="justify-content-end">
         <span class="counter">{{ item.tAreaCessationCounter }}</span>
       </kendo-textarea-suffix>
-    </kendo-floatinglabel> 
+    </kendo-floatinglabel>
 
 <div class="app-c-table mt-2" (click)="$event.stopPropagation();">
   <kendo-grid [resizable]="true" [loading]="isBatchDetailPaymentsGridLoaderShow" [pageSize]="state.take"
@@ -113,7 +113,7 @@
   </kendo-grid-column>
   <kendo-grid-column *ngIf="selectedPaymentType=='MEDICAL_CLAIM'" field="amountDue" title="Total Due" [width]="130">
     <ng-template kendoGridCellTemplate let-dataItem>
-      <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue}}</span>
+      <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber: 'n2'}}</span>
   </ng-template>
   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
     <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="true" operator="eq">
@@ -127,7 +127,7 @@
   </kendo-grid-column>
   <kendo-grid-column *ngIf="selectedPaymentType=='INSURANCE_PREMIUM'" field="amountDue" title="Total Amount" [width]="130">
     <ng-template kendoGridCellTemplate let-dataItem>
-      <span class="tableamountview"> <strong>$</strong> {{dataItem.premiumTotalAmount}}</span>
+      <span class="tableamountview"> <strong>$</strong> {{dataItem.premiumTotalAmount | kendoNumber: 'n2'}}</span>
   </ng-template>
   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
     <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="true" operator="eq">
