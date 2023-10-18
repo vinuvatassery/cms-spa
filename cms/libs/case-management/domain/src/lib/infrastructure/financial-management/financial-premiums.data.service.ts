@@ -2,7 +2,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 /** External libraries **/
-import { InsurancePlan } from '../../entities/insurance-plan';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, of } from 'rxjs';
 import { BatchPremium } from '../../entities/financial-management/batch-premium';

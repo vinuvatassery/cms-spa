@@ -68,7 +68,6 @@ export class FinancialPremiumsBatchesLogListsComponent
   selected:any
   currentPrintAdviceLetterGridFilter: any;
   isPrintAdviceLetterClicked = false;
-  noDeleteStatus=['PAYMENT_REQUESTED','MANAGER_APPROVED']
  
   public bulkMore = [
     {

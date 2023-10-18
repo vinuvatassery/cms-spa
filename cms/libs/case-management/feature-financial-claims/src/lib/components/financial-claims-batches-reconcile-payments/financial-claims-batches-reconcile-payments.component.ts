@@ -610,25 +610,24 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     toggleBreakoutPanel()
     {
       this.isBreakoutPanelShow=!this.isBreakoutPanelShow;
-      if(!this.isBreakoutPanelShow)
-      {
-        this.reconcileBreakoutSummary$.warrantTotal=0;
-        this.reconcileBreakoutSummary$.paymentToReconcileCount=0;
-      }
     }
 
     onRowSelection(grid:any, selection:any)
     {
       const data = selection.selectedRows[0].dataItem;
       this.isBreakoutPanelShow=true;
-      this.entityId=data.entityId;
+      this.entityId=data.entityId; 
+      let warrantTotal=0;    
+      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId).forEach((item: any) => {
+        warrantTotal = warrantTotal + item.amountPaid;
+      });
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
         entityId : data.entityId,
         claimsType: this.claimsType,
         amountTotal : data.amountTotal,
-        warrantTotal : data.amountPaid,
+        warrantTotal : warrantTotal,
         warrantNbr : data.checkNbr,
         paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
       }
