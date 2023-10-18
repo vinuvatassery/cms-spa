@@ -46,7 +46,7 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
   selectedDataIfSelectAllUnchecked:any=[];
   currentGridFilter:any;
   totalRecord:any;
-  noOfRecordToPrint:any;
+  noOfRecordToPrint:any = 0;
   gridColumns : {[key: string]: string} = {
     paymentNbr: 'Item #',
     invoiceNbr: 'Invoice ID',
