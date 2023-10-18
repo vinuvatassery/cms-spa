@@ -130,7 +130,7 @@
 
                         <kendo-grid-column field="vendorName" [title]="providerTitle" [width]="160">
                         <ng-template kendoGridCellTemplate let-dataItem>
-                              <button [attr.aria-label]="dataItem?.vendorName" kendoButton look="flat"
+                              <button [attr.aria-label]="dataItem?.vendorName" kendoButton look="flat"  (click)="onViewProviderDetailClicked(dataItem.paymentRequestId)" 
                                           class="card-link-button"  >
                                           {{dataItem?.vendorName}} 
                               </button>
@@ -350,7 +350,7 @@
   (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
   [claimsType]="claimsType"
   ></cms-financial-claims-print-authorization>
-    </ng-template>
+</ng-template>
 
 
   

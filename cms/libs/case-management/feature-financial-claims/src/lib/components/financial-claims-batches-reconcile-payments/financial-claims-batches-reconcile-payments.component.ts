@@ -50,7 +50,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   @Input() batchId: any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
-  @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();
+  @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();;
+  @Output() onVendorClickedEvent = new EventEmitter<any>();
+
+  paymentRequestId!:any;
   entityId: any;
   public isBreakoutPanelShow:boolean=true;
   public state!: State;
@@ -787,6 +790,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   navToReconcilePayments(){
     this.route.navigate([`/financial-management/claims/${this.claimsType}/batch`],
     { queryParams :{bid: this.batchId}});
+  }
+
+  onViewProviderDetailClicked(paymentRequestId:any) {  
+    this.onVendorClickedEvent.emit(paymentRequestId);
   }
 }
 
