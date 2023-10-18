@@ -87,12 +87,19 @@
                         <span class="sort-items">Columns Re-ordered</span>
                   </div>
 
-                  <div *ngIf="pageValidationMessage !== null">
-                        <div class="info-banners red-banner d-flex mt-2 mb-2">
+                  <div *ngIf="pageValidationMessage !== null && pageValidationMessageFlag">
+                        <div class="info-banners  red-banner d-flex mt-2 mb-2">
                               <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>              
                               <div>              
-                                <p > {{pageValidationMessage}} </p>                                    
-                                     
+                                <p > {{pageValidationMessage}} </p>       
+                              </div>              
+                         </div>
+                  </div>
+                  <div *ngIf="pageValidationMessage !== null && !pageValidationMessageFlag">
+                        <div class="info-banners canyon-banner-with-black d-flex mt-2 mb-2">
+                              <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>              
+                              <div>              
+                                <p > {{pageValidationMessage}} </p>       
                               </div>              
                          </div>
                   </div>
