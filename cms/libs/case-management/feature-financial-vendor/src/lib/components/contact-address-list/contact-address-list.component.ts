@@ -67,7 +67,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   public contactAddressActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit',
+      text: 'Edit Contact',
       icon: 'edit',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -78,7 +78,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Deactivate',
+      text: 'Deactivate Contact',
       icon: 'block',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -89,7 +89,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete',
+      text: 'Delete Contact',
       icon: 'delete',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -148,7 +148,6 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
     })
 
   }
-
   ngOnChanges(changes: SimpleChanges) {
     this.defaultGridState();
     this.initializeGrid();

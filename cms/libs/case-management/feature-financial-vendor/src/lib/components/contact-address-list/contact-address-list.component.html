@@ -120,7 +120,7 @@
         aria-label="more actions" title="More option" [popupSettings]="{ popupClass: popupClassAction,  animate: true }">
         <span hidden> More Option</span>
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
-          <ng-container *ngIf="(dataItem.activeFlag == 'N' && buttondataItem.text == 'Delete') || (dataItem.activeFlag == 'Y')">
+          <ng-container *ngIf="(dataItem.activeFlag == 'N' && buttondataItem.text == 'Delete Contact') || (dataItem.activeFlag == 'Y')">
             <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
               aria-hidden="false" (click)="buttondataItem.click(dataItem)">
               <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
