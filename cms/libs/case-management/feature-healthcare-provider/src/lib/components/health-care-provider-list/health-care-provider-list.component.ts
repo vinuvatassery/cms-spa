@@ -5,10 +5,10 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
 import { CaseFacade } from '@cms/case-management/domain';
-import { FinancialVendorTypeCode } from 'libs/shared/ui-common/src/lib/enums/financial-vendor-type-code';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ContactFacade, FinancialVendorFacade, FinancialVendorProviderTabCode} from '@cms/case-management/domain';
-import { SnackBarNotificationType } from 'libs/shared/util-core/src/lib/enums/snack-bar-notification-type.enum';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-health-care-provider-list',
