@@ -146,14 +146,12 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   save() {
-
     this.validateForm();
     this.isValidateForm = true
     if (this.medicalProviderForm.valid) {
       let providerData = this.mappVendorProfileData();
       this.saveProviderEventClicked.next(providerData);
     }
-
   }
 
   validateForm() {
