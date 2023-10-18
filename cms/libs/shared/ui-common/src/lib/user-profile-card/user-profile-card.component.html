@@ -105,13 +105,33 @@
     </div>
 </div>
 
-<kendo-dialog *ngIf="businessLogicPopupOpen" (close)="businessLogicPopupClose()" class="app-c-modal app-c-modal-sm app-c-modal-np"
+<kendo-dialog *ngIf="businessLogicPopupOpen" (close)="businessLogicPopupClose()" class="app-c-modal app-c-modal-md app-c-modal-np"
   title="Re-assign Case">
 
-  <section class="k-dialog-body mb-2">
-    <p>
-      This feature is part of future scope of work for the ORCares project.
+  <section class="k-dialog-body">
+    <!-- <div [formGroup]="caseReassignForm"> -->
+    <p class="text-muted mb-2">
+      Start typing to search for a new Case Worker and enter the reason
+      the case is being re-assigned.
     </p>
+    <div class="flex-row">
+      <div class="flex-col">
+        <kendo-floatinglabel text="New Case Worker">
+          <!-- <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" [data]="clinicVendorList$ | async "
+                textField="vendorName" valueField="vendorName" formControlName="providerName" [filterable]="true"
+                placeholder="Clinic Name" (filterChange)="searchClinic($event)"
+                [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }">
+                <ng-template kendoAutoCompleteItemTemplate let-dataItem>
+                  <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{dataItem.vendorName}}</span>
+                </ng-template>
+              </kendo-autocomplete> -->
+          <!-- <kendo-formerror *ngIf="!caseReassignForm.controls['newCaseWorker'].valid && isValidateForm">
+            New Case Worker is required
+          </kendo-formerror> -->
+        </kendo-floatinglabel>
+      </div>
+    </div>
+  <!-- </div> -->
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
