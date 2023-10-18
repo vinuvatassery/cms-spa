@@ -61,6 +61,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   private editListITemsDialog: any;
   approvalId!: number;
+  selectedIndex: any;
 
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService) {}
@@ -182,7 +183,8 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     this.isPanelExpanded = true;
   }
 
-  approveOrDeny(result: any) {
+  approveOrDeny(index:any,result: any) {
+    this.selectedIndex = index;
     this.ifApproveOrDeny = result;
   }
 
