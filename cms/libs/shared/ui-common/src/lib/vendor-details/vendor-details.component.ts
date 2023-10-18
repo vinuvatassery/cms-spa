@@ -21,7 +21,7 @@ export class VendorDetailsComponent implements OnInit {
   @Input() editVendorInfo: boolean = false;
   @Input() vendorDetails!: any;
   @Input() profileInfoTitle!: string;
-
+  @Input() hasCreateUpdatePermission:boolean=false;
   @Input() ddlStates$!: any;
   @Input() clinicVendorList$!: any;
   @Input() clinicVendorLoader$!: any;
@@ -511,7 +511,9 @@ export class VendorDetailsComponent implements OnInit {
         vendorProfileData.vendorTypeCode = FinancialVendorTypeCode.DentalClinic;
       }
     }
-
+      if (this.vendorTypes.HealthcareProviders == this.providerType) {
+          vendorProfileData.vendorTypeCode = this.vendorTypes.MedicalProviders;
+      } 
     return vendorProfileData;
   }
   onChange() {

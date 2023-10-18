@@ -193,34 +193,12 @@
   </case-management-health-care-provider-reactivate-confirmation>
 </kendo-dialog>
 
-
 <!-- Business Logic Modal -->
 <kendo-dialog kendoRippleContainer *ngIf="isOpenedbusinessInfo" (close)="onBusinessInfoCloseClicked()"
   class="app-c-modal app-c-modal-lg app-c-modal-np" title="Add New Healthcare Provider" kendoTooltip>
-  <cms-healthcare-provider-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.MedicalProviders"
+  <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.HealthcareProviders"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="onBusinessInfoCloseClicked()"
-    [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader" [hasCreateUpdatePermission]="hasHealthcareProviderCreateUpdatePermission"
-    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-healthcare-provider-details>
+    [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
+    [hasCreateUpdatePermission]="hasHealthcareProviderCreateUpdatePermission"
+    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
 </kendo-dialog>
-<!-- <kendo-dialog *ngIf="isOpenedbusinessInfo" class="app-c-modal app-c-modal-sm app-c-modal-np"><kendo-dialog-titlebar
-    (close)="onBusinessInfoCloseClicked()">Add New Healthcare Provider </kendo-dialog-titlebar>
-  <section class="k-dialog-body mb-2">
-    <p>
-      This feature is part of future scope of work for the ORCares project
-    </p>
-  </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" (click)="onBusinessInfoCloseClicked()"
-          aria-label="Cancel">
-          Cancel
-        </button>
-        <button kendoButton [primary]="true" (click)="onBusinessInfoCloseClicked()" aria-label="Add">
-          Add
-        </button>
-
-      </div>
-    </div>
-  </kendo-dialog-actions>
-</kendo-dialog> -->
