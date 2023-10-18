@@ -6,7 +6,7 @@
       </ng-template>
     </kendo-popover>
 
-      <kendo-panelbar *ngFor="let item of approvalsGeneralLists$|async">
+      <kendo-panelbar *ngFor="let item of approvalsGeneralLists$|async;let i=index">
         <kendo-panelbar-item *ngIf="getTitle(item.approvalTypeCode)">
 
           <ng-template kendoPanelBarItemTitle>
@@ -25,18 +25,18 @@
               <div class="flex-col flex-col-6">
                 <div>
                   <kendo-buttongroup selection="single">
-                    <button kendoButton aria-label="Approve" (click)="approveOrDeny('A')" [toggleable]="true">Approve
+                    <button kendoButton aria-label="Approve" (click)="approveOrDeny(i,'A')" [toggleable]="true">Approve
                     </button>
-                    <button kendoButton aria-label="Deny" (click)="approveOrDeny('D')" [toggleable]="true">Deny </button>
+                    <button kendoButton aria-label="Deny" (click)="approveOrDeny(i,'D')" [toggleable]="true">Deny </button>
                   </kendo-buttongroup>
                 </div>
-                <div *ngIf="ifApproveOrDeny === 'A'">
+                <div *ngIf="ifApproveOrDeny === 'D' && i === selectedIndex">
                   <kendo-floatinglabel text="Send Back Notes">
                     <kendo-textbox aria-label="Send Back Notes" [fillMode]="formUiStyle.inputFillMode">
                     </kendo-textbox>
                   </kendo-floatinglabel>
                 </div>
-                <div *ngIf="ifApproveOrDeny === 'D'">
+                <div *ngIf="ifApproveOrDeny === 'A' && i === selectedIndex">
                   <kendo-floatinglabel text="New Case Worker">
                     <kendo-dropdownlist aria-label="New Case Worker" [fillMode]="formUiStyle.dropDownFillMode">
                     </kendo-dropdownlist>
