@@ -11,16 +11,18 @@ import {
   ViewChild
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FinancialClaimsFacade, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, first } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-claims-all-payments-list',
@@ -43,10 +45,29 @@ export class FinancialClaimsAllPaymentsListComponent
   @Input() sortType: any;
   @Input() sort: any;
   @Input() financialClaimsAllPaymentsGridLists$: any;
-  @Input() exportButtonShow$ : any
+  @Input() exportButtonShow$: any;
 
   @Output() loadFinancialClaimsAllPaymentsListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
+
+  @ViewChild('unBatchClaimsDialogTemplate', { read: TemplateRef })
+  unBatchClaimsDialogTemplate!: TemplateRef<any>;
+  @ViewChild('deleteClaimsConfirmationDialogTemplate', { read: TemplateRef })
+  deleteClaimsConfirmationDialogTemplate!: TemplateRef<any>;
+  isUnBatchClaimsClosed = false;
+  isDeleteClaimClosed = false;
+  UnBatchDialog: any;
+  deleteClaimsDialog: any;
+  deletemodelbody = "This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch";
+  selected: any;
+  isGridExpand = true;
+  selectedClaims: any[] = [];;
+  previewText = false;
+
+  public selectableSettings: SelectableSettings;
+  public checkboxOnly = true;
+  public mode: SelectableMode = 'multiple';
+  public drag = false;
 
   public state!: State;
   sortColumn = 'batchNumber';
@@ -73,25 +94,55 @@ export class FinancialClaimsAllPaymentsListComponent
   clientId: any;
   clientName: any;
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
-  
 
-  public allPaymentsGridActions = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Edit Claim',
-      icon: 'edit',
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Unbatch Claim',
-      icon: 'undo',
-    },
-    {
-      buttonType: 'btn-h-danger',
-      text: 'Delete Claim',
-      icon: 'delete',
-    },
-  ];
+  getPaymentsGridActions(dataItem: any){
+    return [
+      {
+        buttonType: 'btn-h-primary',
+        text: 'Edit Claim',
+        icon: 'edit'
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'Unbatch Claim',
+        icon: 'undo',
+        disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
+        click: (data: any): void => {
+
+          if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
+            if (!this.isUnBatchClaimsClosed) {
+              this.isUnBatchClaimsClosed = true;
+              this.selected = data;
+              this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+            }
+        },
+      },
+      {
+        buttonType: 'btn-h-danger',
+        text: 'Delete Claim',
+        icon: 'delete',
+        click: (data: any): void => {
+          if([PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
+          {
+            this.notificationSnackbarService.manageSnackBar(
+              SnackBarNotificationType.ERROR,
+              "This claim cannot be deleted",
+              NotificationSource.UI
+            );
+          }else{
+              this.isUnBatchClaimsClosed = false;
+              this.isDeleteClaimClosed = true;
+              this.onSingleClaimDelete(data.paymentRequestId.split(','));
+              this.onDeleteClaimsOpenClicked(
+                this.deleteClaimsConfirmationDialogTemplate
+              );
+
+          }
+
+        },
+      },
+    ];
+  }
 
   public bulkMore = [
     {
@@ -101,6 +152,7 @@ export class FinancialClaimsAllPaymentsListComponent
       click: (data: any): void => {
         this.isRequestPaymentClicked = true;
         this.isPrintAuthorizationClicked = false;
+        this.isGridExpand = false;
       },
     },
 
@@ -118,6 +170,8 @@ export class FinancialClaimsAllPaymentsListComponent
       text: 'Print Authorizations',
       icon: 'print',
       click: (data: any): void => {
+        this.isGridExpand = false;
+        this.previewText = true;
         this.isRequestPaymentClicked = false;
         this.isPrintAuthorizationClicked = true;
       },
@@ -211,8 +265,16 @@ export class FinancialClaimsAllPaymentsListComponent
     private dialogService: DialogService,
     public activeRoute: ActivatedRoute,
     private readonly lovFacade: LovFacade,
-    private readonly  cdr : ChangeDetectorRef
-  ) {}
+    private readonly cdr: ChangeDetectorRef,
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+  ) {
+    this.selectableSettings = {
+      checkboxOnly: this.checkboxOnly,
+      mode: this.mode,
+      drag: this.drag,
+    };
+  }
 
   ngOnInit(): void {
     this.getPaymentMethodLov();
@@ -227,6 +289,10 @@ export class FinancialClaimsAllPaymentsListComponent
     };
 
     this.loadFinancialClaimsAllPaymentsListGrid();
+  }
+
+  selectedKeysChange(selection: any) {
+    this.selectedClaims = selection;
   }
 
   private getPaymentMethodLov() {
@@ -354,7 +420,7 @@ export class FinancialClaimsAllPaymentsListComponent
     } else {
       this.filter = '';
       this.isFiltered = false;
-      this.filteredBy=''
+      this.filteredBy = '';
     }
     if (!this.filteredBy.includes('Payment Method'))
       this.selectedpaymentMethod = null;
@@ -482,6 +548,8 @@ export class FinancialClaimsAllPaymentsListComponent
   onBulkOptionCancelClicked() {
     this.isRequestPaymentClicked = false;
     this.isPrintAuthorizationClicked = false;
+    this.isGridExpand = true;
+    this.previewText = false;
   }
 
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
@@ -497,20 +565,16 @@ export class FinancialClaimsAllPaymentsListComponent
     }
   }
 
-  onClickedExport(){
-    this.showExportLoader = true
-    this.exportGridDataEvent.emit()
+  onClickedExport() {
+    this.showExportLoader = true;
+    this.exportGridDataEvent.emit();
 
-    this.exportButtonShow$
-    .subscribe((response: any) =>
-    {
-      if(response)
-      {
-        this.showExportLoader = false
-        this.cdr.detectChanges()
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
       }
-
-    })
+    });
   }
 
   onClientClicked(clientId: any) {
@@ -518,7 +582,75 @@ export class FinancialClaimsAllPaymentsListComponent
     this.closeRecentClaimsModal(true);
   }
 
-  onProviderNameClick(event:any){
-    this.onProviderNameClickEvent.emit(event)
+  onProviderNameClick(event: any) {
+    this.onProviderNameClickEvent.emit(event);
+  }
+
+  onUnBatchOpenClicked(template: TemplateRef<unknown>): void {
+    this.UnBatchDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  onUnBatchCloseClicked(result: any) {
+    if (result) {
+      this.handleUnbatchClaims();
+      this.financialClaimsFacade.unbatchClaims(
+        [this.selected.paymentRequestId],
+        this.claimsType
+      );
+    }
+    this.isUnBatchClaimsClosed = false;
+    this.UnBatchDialog.close();
+  }
+
+  handleUnbatchClaims() {
+    this.financialClaimsFacade.unbatchClaims$
+      .pipe(first((unbatchResponse: any) => unbatchResponse != null))
+      .subscribe((unbatchResponse: any) => {
+        if (unbatchResponse ?? false) {
+          this.loadFinancialClaimsAllPaymentsListGrid();        }
+      });
+  }
+
+  public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
+    this.deleteClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  onModalDeleteClaimsModalClose(result: any) {
+    if (result) {
+      this.isDeleteClaimClosed=false;
+      this.deleteClaimsDialog.close();
+    }
+  }
+
+  onSingleClaimDelete(selection: any) {
+    this.selected=selection;
+  }
+
+  onModalBatchDeletingClaimsButtonClicked(action: any) {
+    if (action) {
+      this.handleDeleteClaims();
+      this.financialClaimsFacade.deleteClaims(
+        this.selected,
+        this.claimsType
+      );
+    }
+  }
+
+  handleDeleteClaims() {
+    this.financialClaimsFacade.deleteClaims$
+      .pipe(first((deleteResponse: any) => deleteResponse != null))
+      .subscribe((deleteResponse: any) => {
+        if (deleteResponse!=null) {
+          this.isDeleteClaimClosed=false;
+          this.deleteClaimsDialog.close()
+          this.loadFinancialClaimsAllPaymentsListGrid();
+        }
+      });
   }
 }

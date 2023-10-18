@@ -249,7 +249,7 @@
         </ng-template>
       </kendo-grid-column>
 
-      <kendo-grid-column field="Option" title=" " [sortable]="false" [columnMenu]="false" [width]="50" class="text-center">
+      <kendo-grid-column field="Option" title="Options" [sortable]="false" [columnMenu]="false" [width]="80" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
           <kendo-dropdownbutton [data]="getBatchLogGridActions(dataItem)" icon="more-vertical"
             class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -355,7 +355,7 @@
 ></cms-financial-claims-print-authorization>
 </ng-template>
 
-  <ng-template #unBatchClaimsDialogTemplate>
+<ng-template #unBatchClaimsDialogTemplate>
   <cms-financial-claims-unbatch-claims (UnBatchCloseClickedEvent)="onUnBatchCloseClicked($event)" [isBulkUnBatchOpened]="isBulkUnBatchOpened"></cms-financial-claims-unbatch-claims>
 </ng-template>
 

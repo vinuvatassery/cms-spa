@@ -19,8 +19,8 @@
   </span>
   <span class="right-overlay-export">
     <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export" (click)="onClickedExport()"  [disabled]="showExportLoader">
-      <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
-      
+      <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>
+
       <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
     </button>
   </span>
@@ -61,10 +61,10 @@
   [(selectedKeys)]="selectedProcessClaims">
 
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [headerClass]="{ 'text-center': true }"
-      [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true" 
+      [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"
       [locked]="true"></kendo-grid-checkbox-column>
-      
+
     <kendo-grid-column field="invoiceNbr"  title="Invoice ID" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -166,10 +166,10 @@
           [extra]="false" operator="eq">
           <kendo-filter-eq-operator></kendo-filter-eq-operator>
         </kendo-grid-numeric-filter-menu>
-      </ng-template> 
+      </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
         <span class="tableamountview"> {{dataItem.amountDue | kendoNumber : "c"}}</span>
-  </ng-template> 
+  </ng-template>
     </kendo-grid-column>
 
       <kendo-grid-column field="annualTotal" title="Client Annual Total" [width]="180">
@@ -181,7 +181,7 @@
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
           <span class="tableamountview"> {{dataItem.annualTotal | kendoNumber : "c"}}</span>
-       </ng-template> 
+       </ng-template>
       </kendo-grid-column>
 
         <kendo-grid-column field="balanceAmount" title="Client Balance" [width]="120">
@@ -190,13 +190,13 @@
               [extra]="false" operator="eq">
               <kendo-filter-eq-operator></kendo-filter-eq-operator>
             </kendo-grid-numeric-filter-menu>
-          </ng-template> 
+          </ng-template>
           <ng-template kendoGridCellTemplate let-dataItem>
             <span class="tableamountview"> {{dataItem.balanceAmount | kendoNumber : "c"}}</span>
-         </ng-template> 
+         </ng-template>
         </kendo-grid-column>
 
-    <kendo-grid-column field="paymentStatusCode" title="Payment Status" [width]="160"> 
+    <kendo-grid-column field="paymentStatusCode" title="Payment Status" [width]="160">
        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
       <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
         [extra]="false" operator="eq">
