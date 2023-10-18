@@ -208,11 +208,11 @@
                                     </ng-template>
                         </kendo-grid-column>                   
 
-                        <kendo-grid-column field="amountPaid" title="Pmt. Amount" [width]="180">
+                        <kendo-grid-column field="amountDue" title="Pmt. Amount" [width]="180">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                               <label aria-label="Medical Provider" kendoButton look="flat"
                                     class="card-link-button"  >
-                                    {{dataItem?.amountPaid | kendoNumber:'n2'}} 
+                                    <strong>$</strong> {{dataItem?.amountDue | kendoNumber:'n2'}} 
                               </label>
                             </ng-template>
                               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">

@@ -31,7 +31,6 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 })
 export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit {
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
-  //reconcileAssignValueBatchForm!: FormGroup;
   PrintAuthorizationDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
