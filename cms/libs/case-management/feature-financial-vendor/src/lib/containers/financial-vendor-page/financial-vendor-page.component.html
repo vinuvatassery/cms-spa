@@ -118,7 +118,7 @@
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.MedicalProviders"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList"
-    [hasCreateUpdatePermission]="hasCreateUpdatePermission" [clinicVendorLoader$]="clinicVendorLoader"
+    [hasCreateUpdatePermission]="hasClinicCreateUpdatePermission" [clinicVendorLoader$]="clinicVendorLoader"
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
     (closeMedicalDentalProviderDialogEvent)="setupForClinic($event)"></cms-vendor-details>
 </kendo-dialog>
@@ -137,7 +137,7 @@
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.Clinic"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
-    [hasCreateUpdatePermission]="hasCreateUpdatePermission" 
+    [hasCreateUpdatePermission]="hasClinicCreateUpdatePermission" 
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
 </kendo-dialog>
 
