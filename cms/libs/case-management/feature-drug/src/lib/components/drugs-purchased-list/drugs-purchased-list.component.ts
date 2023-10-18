@@ -56,6 +56,7 @@ export class DrugsPurchasedListComponent implements OnInit {
     brandName: "Brand Name",
     drugName: "Drug Name",
     payTypeDesc: "Payment Type",
+    transType: "Transaction Type",
     amountPaid: "Amount Paid",
     qty: "Rx Quantity",
     clientGroup: "Client Group",
