@@ -34,6 +34,8 @@ export class VendorDetailsComponent implements OnInit {
 
   @Output() closeMedicalDentalProviderDialogEvent = new EventEmitter<string>();
 
+  private readonly clinicTypeFieldName = 'clinicType';
+
   closeMedicalProviderDialogInParent() {
     this.closeMedicalDentalProviderDialogEvent.emit(this.providerType);
   }
@@ -112,6 +114,7 @@ export class VendorDetailsComponent implements OnInit {
     this.medicalProviderForm.controls['providerName'].setValue(this.vendorDetails.vendorName);
     this.medicalProviderForm.controls['vendorId'].setValue(this.vendorDetails.vendorId);
   }
+  
   onToggleAddNewContactClick() {
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl('', Validators.required),
@@ -137,6 +140,7 @@ export class VendorDetailsComponent implements OnInit {
   getContactNameValidation(index: number) {
     return (<FormArray>this.medicalProviderForm.get('newAddContactForm')).at(index).get("isCheckContactNameValid")?.value;
   }
+
   checkContactPreference(i: number) {
     for (let index = 0; index < this.AddContactForm.length; index++) {
       if (index != i) {
@@ -236,11 +240,11 @@ export class VendorDetailsComponent implements OnInit {
     }
 
     if (this.providerType == this.vendorTypes.Clinic) {
-      this.medicalProviderForm.controls['clinicType']
+      this.medicalProviderForm.controls[this.clinicTypeFieldName]
         .setValidators([
           Validators.required,
         ]);
-      this.medicalProviderForm.controls['clinicType'].updateValueAndValidity();
+      this.medicalProviderForm.controls[this.clinicTypeFieldName].updateValueAndValidity();
     }
 
     if (this.providerType == this.vendorTypes.InsuranceVendors) {
@@ -267,8 +271,8 @@ export class VendorDetailsComponent implements OnInit {
     for (let index = 0; index < this.AddContactForm.length; index++) {
       (this.AddContactForm.controls[index] as FormGroup).controls['isCheckContactNameValid'].setValue(true);
     }
-
   }
+
   validateMailCode() {
     if (this.providerType == this.vendorTypes.DentalProviders) {
       let address1 = this.medicalProviderForm.controls['addressLine1'].value;
