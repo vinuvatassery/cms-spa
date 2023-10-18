@@ -34,6 +34,7 @@
           field="email"
           title="Email Address"
           [width]="250"
+          [filterable]="false"
         >
           <ng-template kendoGridCellTemplate let-dataItem>
             <div class="d-flex align-items center pos-rel" kendoTooltip>
@@ -53,6 +54,7 @@
           field="detailMsgFlag"
           title="Detailed Messages OK?"
           [width]="150"
+          [filterable]="false"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           {{dataItem.detailMsgFlag === 'Y' ? 'Yes' : 'No'}}  
@@ -62,6 +64,7 @@
           field="paperlessFlag"
           title="Go Paperless?"
           [width]="150"
+          [filterable]="false"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.paperlessFlag === 'Y' ? 'Yes' : 'No'}} 
@@ -71,12 +74,13 @@
           field="effectiveDate"
           title="Effective Date"
           [width]="100" 
+          [filterable]="false"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           {{dataItem.effectiveDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}  
          </ng-template>   
         </kendo-grid-column>
-        <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false" >
+        <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false" [filterable]="false" >
           <ng-template kendoGridCellTemplate let-dataItem >
             <button *ngIf="dataItem?.creatorId"
               kendoButton
@@ -107,6 +111,7 @@
           title="Options"
           [width]="75"
           class="text-center"
+          [filterable]="false"
         >
         <ng-template kendoGridCellTemplate let-clientEmail let-clientEmailId="field">
           <kendo-dropdownbutton

@@ -25,24 +25,25 @@
       [reorderable]="true"
       [columnMenu]="{ filter: true }"
       [resizable]="true" [kendoGridBinding]="addressGridView" [rowClass]="rowClass" [loading]="addressListLoader">
-        <kendo-grid-column field="addressTypeDesc" title="Type" [width]="80">
+        <kendo-grid-column field="addressTypeDesc" title="Type" [width]="80" [filterable]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="address1" title="Address1" [width]="150">
+        <kendo-grid-column field="address1" title="Address1" [width]="150" [filterable]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="address2" title="Address2" [width]="150">
+        <kendo-grid-column field="address2" title="Address2" [width]="150" [filterable]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="city" title="City" [width]="100">
+        <kendo-grid-column field="city" title="City" [width]="100" [filterable]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="stateDesc" title="State" [width]="100">
+        <kendo-grid-column field="stateDesc" title="State" [width]="100" [filterable]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="zip" title="ZIP" [width]="100">
+        <kendo-grid-column field="zip" title="ZIP" [width]="100" [filterable]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="county" title="County" [width]="100">
+        <kendo-grid-column field="county" title="County" [width]="100" [filterable]="false">
         </kendo-grid-column>
         <kendo-grid-column
           field="startDate"
           title="Effective Date"
           [width]="100"
+          [filterable]="false"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           <span *ngIf="dataItem.activeFlag == 'Y' ;else endDateBlock">
@@ -53,7 +54,7 @@
           </ng-template>
         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="70">
+        <kendo-grid-column field="by" title="By" [width]="70" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton

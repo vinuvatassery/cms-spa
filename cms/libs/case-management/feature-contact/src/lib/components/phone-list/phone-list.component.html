@@ -27,7 +27,7 @@
       [columnMenu]="{ filter: true }"
       [sort]="state.sort"
       (dataStateChange)="dataStateChange($event)">
-        <kendo-grid-column field="deviceTypeCode" title="Type"  [sortable]="true"  [width]="80">
+        <kendo-grid-column field="deviceTypeCode" title="Type"  [sortable]="true"  [width]="80" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <div class="d-flex align-items center pos-rel" kendoTooltip>
               <span class="preferred-phoneNo" title="Preferred Contact" *ngIf="dataItem.preferredFlag==='Y'">
@@ -46,6 +46,7 @@
           field="phoneNbr"
           title="Phone Number"
           [width]="150"
+          [filterable]="false"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           {{dataItem.phoneNbr | phone }}
@@ -55,19 +56,20 @@
           field="detailMsgConsentFlag"
           title="Detailed Messages OK?"
           [width]="150"
+          [filterable]="false"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           {{dataItem.detailMsgConsentFlag === 'Y' ? 'Yes' : 'No'}}  
          </ng-template>   
         </kendo-grid-column>
-        <kendo-grid-column field="smsTextConsentFlag" title="SMS Text OK?" [width]="100">
+        <kendo-grid-column field="smsTextConsentFlag" title="SMS Text OK?" [width]="100" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.smsTextConsentFlag === 'Y' ? 'Yes' : 'No'}}  
            </ng-template>   
         </kendo-grid-column>
-        <kendo-grid-column field="otherPhoneNote" title="Note" [width]="100" [sortable]="false" >
+        <kendo-grid-column field="otherPhoneNote" title="Note" [width]="100" [sortable]="false" [filterable]="false" >
         </kendo-grid-column>
-        <kendo-grid-column [sortable]="true"
+        <kendo-grid-column [sortable]="true" [filterable]="false"
           field="effectiveDate"
           title="Effective Date"
           [width]="100"
@@ -76,7 +78,7 @@
           {{dataItem.effectiveDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}  
          </ng-template>   
         </kendo-grid-column>
-        <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false" >
+        <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false" [filterable]="false" >
           <ng-template kendoGridCellTemplate let-dataItem >
             <button *ngIf="dataItem?.creatorId"
               kendoButton

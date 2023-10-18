@@ -24,18 +24,20 @@
       [reorderable]="true"
       [columnMenu]="{ filter: true }"
       [resizable]="true"  [kendoGridBinding]="gridView" [rowClass]="rowClass" [loading]="isGridLoaderShow">
-        <kendo-grid-column field="fullName" title="Name" [width]="250">
+        <kendo-grid-column field="fullName" title="Name" [width]="250" [filterable]="false">
         </kendo-grid-column>
         <kendo-grid-column
           field="relationshipSubTypeDesc"
           title="Relationship to Client"
           [width]="150"
+          [filterable]="false"
         >
         </kendo-grid-column>
         <kendo-grid-column
           field="phoneNbr"
           title="Phone Number"
           [width]="150"
+          [filterable]="false"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           {{ dataItem.phoneNbr | phone }}
@@ -45,6 +47,7 @@
           field="startDate"
           title="Effective Date"
           [width]="100"
+          [filterable]="false"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           <span *ngIf="dataItem.activeFlag == 'Y' ;else endDateBlock">
@@ -55,7 +58,7 @@
           </ng-template>
         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="50">
+        <kendo-grid-column field="by" title="By" [width]="50" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
