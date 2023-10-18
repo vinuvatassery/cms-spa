@@ -177,8 +177,7 @@ export class FinancialClaimsBatchesLogListsComponent
         click: (data: any): void => {
           
           if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
-            if (!this.isUnBatchClaimsClosed) {
-              debugger
+            if (!this.isUnBatchClaimsClosed) {              
               this.isUnBatchClaimsClosed = true;
               this.selected = data;
               this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
