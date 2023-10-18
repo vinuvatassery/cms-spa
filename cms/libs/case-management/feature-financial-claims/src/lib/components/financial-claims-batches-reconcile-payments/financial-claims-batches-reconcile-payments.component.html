@@ -343,6 +343,7 @@
 <ng-template #PrintAuthorizationDialog>
       <kendo-dialog-titlebar class="text-normal" (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Advice Letter(s)</kendo-dialog-titlebar>
       <cms-financial-claims-print-authorization
+      [claimReconcileCount]="claimReconcileCount"
   [printOption]="onlyPrintAdviceLetter"
   [isSaveClicked]="isSaveClicked"
   [items]="selectedReconcileDataRows"
