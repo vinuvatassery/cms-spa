@@ -45,7 +45,7 @@
       </div>
       <div class="flex-col"
         *ngIf="providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders 
-        || vendorTypes.DentalClinic == providerType || vendorTypes.MedicalClinic == providerType">
+        || vendorTypes.DentalClinic == providerType || vendorTypes.MedicalClinic == providerType || providerType == vendorTypes.HealthcareProviders">
         <div class="flex-row">
           <div class="flex-col flex-col-8 inlineloaderwrapper" *ngIf="!editVendorInfo">
             <span *ngIf="clinicVendorLoader$ | async"
@@ -117,7 +117,7 @@
               </kendo-formerror>
             </kendo-floatinglabel>
           </div>
-          <div class="flex-col flex-col-4 mt-checkbox" *ngIf="!editVendorInfo">
+          <div class="flex-col flex-col-4 mt-checkbox" *ngIf="!editVendorInfo && providerType != vendorTypes.HealthcareProviders">
             <span class="app-checkboxwidtext-wrapper">
               <input class="adjust-attr" type="checkbox" id="pnApplicable" name="Applicable" aria-labelledby="pnApplicable"
                 [(ngModel)]="firstLastNameNotApplicable" [ngModelOptions]="{standalone: true}" kendoCheckBox
@@ -400,7 +400,7 @@
 
 
       <div class="flex-col"
-        *ngIf="providerType != vendorTypes.MedicalProviders && providerType != vendorTypes.DentalProviders && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy && providerType != vendorTypes.Manufacturers">
+        *ngIf="providerType != vendorTypes.MedicalProviders && providerType != vendorTypes.DentalProviders && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy && providerType != vendorTypes.Manufacturers && providerType != vendorTypes.HealthcareProviders">
         <fieldset class="k-form-fieldset no_margin_fieldset">
           <legend class="k-form-legend">
             <h5>Invoice For (Select all that apply)</h5>
@@ -509,7 +509,7 @@
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
         (click)="closeVedorModal()"> Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> Add </button>
+      <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> {{hasCreateUpdatePermission==true ? 'Add New':'Request New'}} </button>
     </div>
   </div>
   <div class="justify-content-between" *ngIf="editVendorInfo">
