@@ -25,7 +25,7 @@ export class FinancialVendorPageComponent implements OnInit {
   isShowPharmacyProvider: boolean = false;
   reminderTabOn = true;
   isShowManufacturers: boolean = false;
-  hasCreateUpdatePermission = false;
+  hasClinicCreateUpdatePermission = false;
   selectedClinicType = '';
   data = [
     {
@@ -101,7 +101,7 @@ export class FinancialVendorPageComponent implements OnInit {
   ngOnInit() {
     this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
     this.contactFacade.loadDdlStates();
-    this.hasCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Clinic_Create_Update']);
+    this.hasClinicCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Clinic_Create_Update']);
   }
 
   searchClinicVendorClicked(clientName: any) {
