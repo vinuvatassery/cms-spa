@@ -66,7 +66,7 @@ export class VendorDetailsComponent implements OnInit {
   specialHandlingTextArea = '';
   selectedClinicVendorId!: any;
   mailCodeLengthError!: boolean;
-constructor(
+  constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
     private lovFacade: LovFacade,
@@ -121,7 +121,7 @@ constructor(
     this.medicalProviderForm.controls['providerName'].setValue(this.vendorDetails.vendorName);
     this.medicalProviderForm.controls['vendorId'].setValue(this.vendorDetails.vendorId);
   }
-  
+
   onToggleAddNewContactClick() {
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl('', Validators.required),
@@ -158,10 +158,6 @@ constructor(
   }
 
   save() {
-    let mailCode = this.medicalProviderForm.controls['mailCode'].value;
-    if(mailCode.length === 3){
-    
-    }
     this.validateForm();
     this.isValidateForm = true;
     if (this.medicalProviderForm.valid) {
@@ -185,6 +181,7 @@ constructor(
       }
     }
     else if (this.providerType == this.vendorTypes.Manufacturers) {
+      this.medicalProviderForm.controls['mailCode'].setValidators([Validators.required, Validators.maxLength(3), Validators.minLength(3)]);
       this.medicalProviderForm.controls['providerName']
         .setValidators([
           Validators.required, Validators.required, Validators.pattern('^[A-Za-z ]+$')
@@ -224,6 +221,7 @@ constructor(
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();
 
       if (this.providerType == this.vendorTypes.Manufacturers) {
+        this.medicalProviderForm.controls['mailCode'].setValidators([Validators.required, Validators.maxLength(3), Validators.minLength(3)]);
         this.medicalProviderForm.controls['nameOnCheck'].setValidators([
           Validators.nullValidator,
         ]);
@@ -555,19 +553,19 @@ constructor(
     }
     else {
       this.onChange();
-   }
-   
-}
-onMailCodeKeyUp() {
-  let mailCode = this.medicalProviderForm.controls['mailCode'].value;
-  if (mailCode.length !== 3 && mailCode !="") {
-    this.mailCodeLengthError = true;
+    }
+
   }
-  else if (mailCode.length <=0 || mailCode.length==3){
-    this.mailCodeLengthError = false
+  onMailCodeKeyUp() {
+    let mailCode = this.medicalProviderForm.controls['mailCode'].value;
+    if (mailCode.length !== 3 && mailCode != "") {
+      this.mailCodeLengthError = true;
+    }
+    else if (mailCode.length <= 0 || mailCode.length == 3) {
+      this.mailCodeLengthError = false
+    }
   }
-}
-get medicalProviderFormControls() {
-  return this.medicalProviderForm.controls as any;
-}
+  get medicalProviderFormControls() {
+    return this.medicalProviderForm.controls as any;
+  }
 }
