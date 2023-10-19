@@ -57,10 +57,15 @@
                                           aria-label="smoking cessation note"
                                           class="form-control table-text-area">                                       
                                         </kendo-textarea>
-                                        <kendo-textarea-suffix class="justify-content-end">                                         
-                                          <span class="counter">{{ bulkNoteCounter }}</span>
-                                        </kendo-textarea-suffix>
-                                        <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['note'].valid">note is required.</kendo-formerror>
+                                        <div class="flex-row">
+                                          <div class="flex-col flex-col-6">
+                                                <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['note'].valid">note is required.</kendo-formerror>
+                                          </div>
+                                          <div class="justify-content-end flex-col flex-col-6">                                         
+                                                <span class="counter">{{ bulkNoteCounter }}</span>
+                                              </div> 
+                                        </div>
+                                                                               
                                     </div>
                                                          
                               </kendo-floatinglabel>
@@ -87,12 +92,6 @@
 
                               </kendo-floatinglabel>
                         </span>
-                        <!-- <span class="right-overlay-export">
-                              <button kendoButton [primary]="true" aria-label="Export" look="flat" class="button-lg">
-                                    <span class="material-icons" aria-label="export"
-                                          aria-invalid="true">exit_to_app</span><i class="exp_button-text">Export</i>
-                              </button>
-                        </span> -->
                         <span class="right-overlay-export">
                               <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export" (click)="onClickedExport()"  [disabled]="showExportLoader">
                                 <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
@@ -110,7 +109,7 @@
                         <span class="sort-items">Columns Re-ordered</span>
                   </div>
 
-                  <div *ngIf="pageValidationMessage !== null">
+                  <!-- <div *ngIf="pageValidationMessage !== null">
                         <div class="info-banners red-banner d-flex mt-2 mb-2">
                               <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>              
                               <div>              
@@ -118,7 +117,24 @@
                                      
                               </div>              
                          </div>
+                  </div> -->
+                  <div *ngIf="pageValidationMessage !== null && pageValidationMessageFlag">
+                        <div class="info-banners  red-banner d-flex mt-2 mb-2">
+                              <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>              
+                              <div>              
+                                <p > {{pageValidationMessage}} </p>       
+                              </div>              
+                         </div>
                   </div>
+                  <div *ngIf="pageValidationMessage !== null && !pageValidationMessageFlag">
+                        <div class="info-banners canyon-banner-with-black d-flex mt-2 mb-2">
+                              <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>              
+                              <div>              
+                                <p > {{pageValidationMessage}} </p>       
+                              </div>              
+                         </div>
+                  </div>
+                  
                   <div class="app-c-table">
                         <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take" #grid
                         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" 

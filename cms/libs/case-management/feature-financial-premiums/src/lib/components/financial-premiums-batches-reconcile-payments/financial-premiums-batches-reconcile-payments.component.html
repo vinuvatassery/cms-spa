@@ -22,7 +22,7 @@
                                    <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['datePaymentReconciled'].valid && !datePaymentReconciledRequired">Reconciled date cannot be a future date.</kendo-formerror>
                                    <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['datePaymentReconciled'].valid && datePaymentReconciledRequired">Date payment reconciled is required..</kendo-formerror>                     
                               </kendo-floatinglabel>
-                              <button kendoButton [primary]="true" (click)="reconcileDateBatch()" class="noshadow-btn" aria-label="Batch"> Batch
+                              <button kendoButton [primary]="true" (click)="reconcileDateBatch()" class="noshadow-btn" aria-label="Bulk"> Bulk
                               </button>
                         </div>
                         <div class="flex-col flex-col-4 field-with-btn">
@@ -36,18 +36,33 @@
                                     <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['datePaymentSend'].valid && paymentSentDateRequired">Date payment sent is required..</kendo-formerror>                     
 
                                </kendo-floatinglabel>
-                              <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Batch" (click)="paymentSentDateBatch()" > Batch
+                              <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Bulk" (click)="paymentSentDateBatch()" > Bulk
                               </button>
 
                         </div>
                         <div class="flex-col flex-col-4 field-with-btn">
                               <kendo-floatinglabel text="Note">
-                                    <kendo-textbox aria-label="Note" [fillMode]="formUiStyle.inputFillMode"
-                                    formControlName="note">
-                                    </kendo-textbox>
-                                    <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['note'].valid">note is required..</kendo-formerror>                     
+                                    <kendo-textarea
+                                          #tareaCessation
+                                          [fillMode]="formUiStyle.inputFillMode"
+                                          [maxlength]="tAreaCessationMaxLength"
+                                          [rows]="2"                                          
+                                          resizable ="none"
+                                          formControlName="note" 
+                                          (valueChange)="calculateCharacterCountBulkNote($event)"
+                                          aria-label="smoking cessation note"
+                                          class="form-control table-text-area">                                       
+                                        </kendo-textarea>                    
+                                    <div class="flex-row">
+                                          <div class="flex-col flex-col-6">
+                                                <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['note'].valid">note is required.</kendo-formerror>
+                                          </div>
+                                          <div class="justify-content-end flex-col flex-col-6">                                         
+                                                <span class="counter">{{ bulkNoteCounter }}</span>
+                                              </div> 
+                                    </div>
                               </kendo-floatinglabel>
-                              <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Batch" (click)="noteBatch()"> Batch
+                              <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Bulk" (click)="noteBatch()"> Bulk
                               </button>
 
                         </div>

@@ -89,6 +89,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   paymentSentDateRequired= false;
   noteRequired= false;
   pageValidationMessage:any=null;
+  pageValidationMessageFlag:boolean=false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   providerTitle:any = 'Medical Provider';
   public reconcileAssignValueBatchForm: FormGroup = new FormGroup({
@@ -702,13 +703,16 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     const datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
     const totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length;
     if (isValid.length > 0) {
+      this.pageValidationMessageFlag = true;
       this.pageValidationMessage = "validation errors found, please review each page for errors " +
         totalCount + " is the total number of validation errors found.";
     }
     else if(this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '').length <= 0){
       this.pageValidationMessage = "No data for reconcile and print";
+      this.pageValidationMessageFlag = true;
     }
     else {
+      this.pageValidationMessageFlag = false;
       this.pageValidationMessage = "validation errors are cleared";
       this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '');
       this.selectedReconcileDataRows.forEach((data:any) =>{

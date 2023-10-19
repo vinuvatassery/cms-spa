@@ -54,10 +54,11 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   @Input() batchId: any;
   @Input() sortValueBatch: any;
   @Input() sortBatch: any;
-  entityId: any;
-  public isBreakoutPanelShow:boolean=true;
+  @Input() exportButtonShow$ : any
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
   @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -71,18 +72,12 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   selectedReconcileDataRows: any[] = [];
   onlyPrintAdviceLetter : boolean = false;
   isSaveClicked : boolean = false;
-
   gridClaimsReconcileDataSubject = new Subject<any>();
   gridClaimsReconcileData$ = this.gridClaimsReconcileDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
-  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  public reconcileAssignValueBatchForm: FormGroup = new FormGroup({
-    datePaymentReconciled: new FormControl('', []),
-    datePaymentSend: new FormControl('', []),
-    note : new FormControl('', []),
-  });
-  public currentDate =  new Date();
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] }; 
+  entityId: any;
   datePaymentReconciledRequired= false;
   paymentSentDateRequired= false;
   tAreaCessationMaxLength:any=200;
@@ -93,12 +88,10 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   premiumReconcileCount:any =0;
   paymentMethodType$ = this.lovFacade.paymentMethodType$
   paymentMethodDesc=null;
-  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   paymentMethodLovSubscription!:Subscription;
   paymentMethodType:any;
-  @Input() exportButtonShow$ : any
-  @Output() exportGridDataEvent = new EventEmitter<any>();
   showExportLoader = false;
+  bulkNoteCounter:any=0;
   columns : any = {
     vendorName:"Medical Provider",
     tin:"TIN",
@@ -145,6 +138,15 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   ];
 
   paymentRequestId: any;
+  public isBreakoutPanelShow:boolean=true;
+  public currentDate =  new Date();
+  public reconcileAssignValueBatchForm: FormGroup = new FormGroup({
+    datePaymentReconciled: new FormControl('', []),
+    datePaymentSend: new FormControl('', []),
+    note : new FormControl('', []),
+  });
+
+  
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, 
     private readonly cd: ChangeDetectorRef, private configurationProvider: ConfigurationProvider, 
@@ -831,6 +833,13 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
 
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event)
+  }
+
+  calculateCharacterCountBulkNote(note: any) {
+    let bulkNoteCharactersCount = note
+      ? note.length
+      : 0;
+    this.bulkNoteCounter = `${bulkNoteCharactersCount}/${this.tAreaCessationMaxLength}`;
   }
 }
 
