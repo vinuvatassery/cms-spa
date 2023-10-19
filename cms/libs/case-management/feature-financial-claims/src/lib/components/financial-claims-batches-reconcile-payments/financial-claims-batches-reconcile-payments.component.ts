@@ -47,11 +47,12 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   @Input() reconcileBreakoutSummary$:any;
   @Input() reconcilePaymentBreakoutList$ :any;
   @Input() batchId: any;
+  @Input() exportButtonShow$ : any
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
   @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();;
   @Output() onVendorClickedEvent = new EventEmitter<any>();
-
+  @Output() exportGridDataEvent = new EventEmitter<any>();
   paymentRequestId!:any;
   entityId: any;
   public isBreakoutPanelShow:boolean=true;
@@ -97,6 +98,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   });
   claimReconcileCount:any=0;
   bulkNoteCounter:any=0;
+  showExportLoader = false;
   columns : any = {
     vendorName:"Medical Provider",
     tin:"TIN",
@@ -793,6 +795,20 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
 
   onViewProviderDetailClicked(paymentRequestId:any) {  
     this.onVendorClickedEvent.emit(paymentRequestId);
+  }
+  onClickedExport(){
+    this.showExportLoader = true
+    this.exportGridDataEvent.emit()        
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {        
+         this.showExportLoader = false
+        this.cd.detectChanges()
+      }
+
+    })
   }
 }
 
