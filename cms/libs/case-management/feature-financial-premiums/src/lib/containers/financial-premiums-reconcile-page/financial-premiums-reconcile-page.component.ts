@@ -4,7 +4,7 @@ import { State } from '@progress/kendo-data-query';
 import {ContactFacade, FinancialPremiumsFacade, FinancialVendorFacade, GridFilterParam } from '@cms/case-management/domain'; 
 import { Router,  NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs';
-import { LoggingService } from '@cms/shared/util-core';
+import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 
@@ -38,6 +38,8 @@ export class FinancialPremiumsReconcilePageComponent implements OnInit {
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId: any;
+  dataExportParameters! : any
+  exportButtonShow$ = this.documentFacade.exportButtonShow$
 
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
@@ -48,7 +50,8 @@ export class FinancialPremiumsReconcilePageComponent implements OnInit {
     public contactFacade: ContactFacade,
     public lovFacade: LovFacade,
     private dialogService: DialogService,
-    private readonly financialVendorFacade : FinancialVendorFacade
+    private readonly financialVendorFacade : FinancialVendorFacade,
+    private documentFacade :  DocumentFacade
     
   ) {}
   ngOnInit(): void {
@@ -76,6 +79,7 @@ export class FinancialPremiumsReconcilePageComponent implements OnInit {
   }
 
   loadReconcileListGrid(event: any) { 
+    this.dataExportParameters = event;
     const params = new GridFilterParam(event.skipCount, event.pageSize, event.sortColumn, event.sortType, JSON.stringify(event.filter)); 
     this.financialPremiumsFacade.loadReconcileListGrid(this.batchId,this.premiumType,params);    
   }
@@ -101,8 +105,7 @@ export class FinancialPremiumsReconcilePageComponent implements OnInit {
         type: 'slide',  
       }, 
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
-    });
-    
+    });    
   }
 
   onCloseViewProviderDetailClicked(result: any){
@@ -124,5 +127,22 @@ export class FinancialPremiumsReconcilePageComponent implements OnInit {
   OnEditProviderProfileClick(){
     this.contactFacade.loadDdlStates()
     this.lovFacade.getPaymentMethodLov()
+  }
+
+  exportPremiumBatchesGridData(){
+    const data = this.dataExportParameters
+    if(data){
+    const  filter = JSON.stringify(data?.filter);
+      const vendorPageAndSortedRequest =
+      {
+        SortType : data?.sortType,
+        Sorting : data?.sortColumn,
+        SkipCount : data?.skipcount,
+        MaxResultCount : data?.maxResultCount,
+        Filter : filter
+      }      
+      const fileName = (this.premiumType[0].toUpperCase() + this.premiumType.substr(1).toLowerCase())  +' Premium Reconciling Payment'
+      this.documentFacade.getExportFile(vendorPageAndSortedRequest,`premium/${this.premiumType}/payment-batches/${this.batchId}/reconcile-payments` , fileName)
+    }
   }
 }

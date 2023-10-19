@@ -41,6 +41,7 @@ export enum LovType {
     EligibilityStatusCp ='ELIGIBILITY_STATUS_CP',
     CoPaymentType ='CO_PAYMENT_TYPE',
     PremiumPaymentType ="PREMIUM_PAYMENT_TYPE",
+    PaymentType = 'PAYMENT_TYPE',
     PremiumPaymentReversal = "PREMIUM_PAYMENT_REVERSAL",
     AttachmentsTypes = 'DOCUMENT_TYPE',
     DocumentTypeCode = 'DOCUMENT_TYPE',

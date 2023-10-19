@@ -163,8 +163,12 @@ export class FinancialPcasReassignmentListComponent
   }
 
   ngOnChanges(): void {
-    this.initializePCAReassignmentGrid();
-        this.loadPcaReassignment();
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+    this.loadPcaReassignment();
   }
 
   loadPcaReassignment() {
