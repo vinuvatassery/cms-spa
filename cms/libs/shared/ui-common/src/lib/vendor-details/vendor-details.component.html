@@ -184,7 +184,7 @@
           <kendo-textbox aria-label="Mail Code"  (valueChange)="onChange()" (keyup)="onMailCodeChange()" (keyup)="onMailCodeKeyUp()"  [fillMode]="formUiStyle.inputFillMode" formControlName="mailCode"
             [maxlength]="3">
           </kendo-textbox>
-          <kendo-formerror *ngIf="!medicalProviderForm.controls['mailCode'].valid && isValidateForm">
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['mailCode'].valid && isValidateForm && !mailCodeLengthError">
             Mail code is required
           </kendo-formerror>
           <kendo-formerror *ngIf="mailCodeLengthError">Mail code must contain 3 characters.</kendo-formerror>
