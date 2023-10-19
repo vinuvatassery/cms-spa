@@ -8,12 +8,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class FinancialPremiumsLeavePageComponent {
   @Output() modalLeavePageCloseClicked = new EventEmitter();
   @Input() premiumsType: any;
+  @Input() paymentRequestBatchId: any;
   constructor(private route: Router, public activeRoute: ActivatedRoute ) {}
   closeLeavePageClicked() {
     this.modalLeavePageCloseClicked.emit(true);
   }
   navToBatchDetails(event : any){  
-    this.route.navigate(['/financial-management/premiums/' + this.premiumsType] );  
+     this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch`],
+    { queryParams :{bid: this.paymentRequestBatchId}});
     this.closeLeavePageClicked();
   }
 }

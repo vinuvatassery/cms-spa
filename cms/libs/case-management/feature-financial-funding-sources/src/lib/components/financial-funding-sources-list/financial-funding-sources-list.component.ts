@@ -6,10 +6,12 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
@@ -18,13 +20,13 @@ import {
 } from '@progress/kendo-angular-grid';
 
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, debounceTime } from 'rxjs';
 @Component({
   selector: 'cms-financial-funding-sources-list',
   templateUrl: './financial-funding-sources-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialFundingSourcesListComponent implements OnChanges {
+export class FinancialFundingSourcesListComponent implements OnChanges,OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addEditFundingSourceDialogTemplate', { read: TemplateRef })
   addEditFundingSourceDialogTemplate!: TemplateRef<any>;
@@ -34,8 +36,8 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   @Output() onAddFundingSourceEvent = new EventEmitter<any>();
   @Output() onUpdateFundingSourceEvent = new EventEmitter<any>();
-  @Input() addFundingSource$: Observable<any> | undefined;
-  @Input() updateFundingSource$: Observable<any> | undefined;
+  @Input() addFundingSource$: any;
+  @Input() updateFundingSource$: any
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -48,25 +50,39 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
   isRemoveFundingSourceClicked$ = new Subject();
   public gridFilter: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   public state!: any;
-  sortColumn = 'vendorName';
+  sortColumn = 'fundingSourceCode';
   sortDir = 'Ascending';
+  sortColumnDesc = 'Funding Source';
   columnsReordered = false;
   filteredBy = '';
-  searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedSearchColumn='ALL';
   gridDataResult!: GridDataResult;
   columnName: string = '';
-  columns: any = {
+  filteredByColumnDesc ='';
+  columnChangeDesc = 'Default Columns'
+
+  gridColumns: { [key: string]: string }  = {
+    ALL: 'All Columns',
     fundingSourceCode: "Funding Source",
     fundingDesc: "Funding Name",
+
   };
-  columnDroplist: any = {
-    ALL: "ALL",
-    FundingSourceCode: "fundingSourceCode",
-    FundingDesc: "fundingDesc"
-  }
+
+  searchColumnList : { columnName: string, columnDesc: string }[] = [
+    { columnName: 'ALL', 
+    columnDesc: 'All Columns'
+   },
+    {
+      columnName: "fundingSourceCode",
+      columnDesc: "Funding Source"   
+    },
+    {
+      columnName: "fundingDesc",
+      columnDesc: "Funding Name"   
+    },
+  ]
   gridFinancialFundingSourcesDataSubject = new Subject<any>();
 
   columnDropListSubject = new Subject<any[]>();
@@ -78,8 +94,8 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
   addEditFundingDialog: any;
   removeFundingDialog: any;
   selectFundingSourceId!: string;
-  public processGridActions = [
-    {
+  public processGridActions(dataItem: any){
+    return [{
       buttonType: 'btn-h-primary',
       text: 'Edit',
       icon: 'edit',
@@ -97,7 +113,8 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
       buttonType: 'btn-h-danger',
       text: 'Remove',
       icon: 'delete',
-      click: (data: any): void => {
+      disabled: dataItem.isFundingSourceAssignedToPca,
+      click: (data: any): void => {       
         if (!this.removeFundingOpened) {
           this.removeFundingOpened = true;
           this.onRemoveFundingSourceOpenClicked(
@@ -106,69 +123,112 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
         }
       },
     },
-  ];
+  ]
+}
   selectedFundingSourceCode: any;
+  searchText = '';
+  private searchSubject = new Subject<string>();
 
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService
   ) { }
-  ngOnChanges(): void {
+  ngOnInit(): void {
+    this.initializeFundingSourcePage()
+    this.loadFinancialFundingSourceFacadeListGrid();
+    this.addSearchSubjectSubscription()
+  }
+
+  initializeFundingSourcePage() {   
+    this.loadFinancialFundingSourceFacadeListGrid();
+    this.addSearchSubjectSubscription();
+  }
+
+  private initializeFundingSourceGrid() {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      sort: [{ field: 'fundingSourceId', dir: 'asc' }]
     };
+  }
 
+  restFundingGrid() {
+    this.sortValue = 'fundingSourceCode';
+    this.sortType = 'asc';
+    this.initializeFundingSourceGrid();
+    this.sortColumn = 'fundingSourceCode';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
+    this.filter = [];
+    this.searchText = '';
+    this.selectedSearchColumn = 'ALL';
+    this.filteredByColumnDesc = '';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.columnChangeDesc = 'Default Columns';
+    this.loadFinancialFundingSourceFacadeListGrid();
+  }
+
+  ngOnChanges(): void {
+    this.initializeFundingSourceGrid()
     this.loadFinancialFundingSourceFacadeListGrid();
   }
 
   private loadFinancialFundingSourceFacadeListGrid(): void {
-    this.loadFundingSourceFacade(
+    const param = new GridFilterParam(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType,
-      this.filter
-    );
-  }
-  loadFundingSourceFacade(
-    skipCountValue: number,
-    maxResultCountValue: number,
-    sortValue: string,
-    sortTypeValue: string,
-    filter: any
-  ) {
-    const gridDataRefinerValue = {
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
-      filter: this.filter ? this.filter : null,
-    };
-    this.loadFinancialFundingSourcesListEvent.emit(gridDataRefinerValue);
+      JSON.stringify(this.filter));
+      this.loadFinancialFundingSourcesListEvent.emit(param);
   }
 
-  onChange(event: any) {
-    this.defaultGridState();
-    this.columnName = this.state.columnName = this.columnDroplist[this.selectedColumn];
-    this.sortColumn = this.columns[this.selectedColumn];
-    this.filter = {
-      logic: 'and', filters: [{
-        "filters": [
-          {
-            "field": this.columnDroplist[this.selectedColumn] ?? "clientFullName",
-            "operator": "startswith",
-            "value": event
-          }
-        ],
-        "logic": "and"
-      }]
+  private addSearchSubjectSubscription() {
+    this.searchSubject.pipe(debounceTime(300))
+      .subscribe((searchValue) => {
+        this.performFundSearch(searchValue);
+      });
+  }
+
+  searchColumnChangeHandler(value: string) {
+    this.filter = [];
+    if (this.searchText) {
+      this.onFundSearch(this.searchText);
     }
-    let stateData = this.state
-    stateData.filter = this.filter
+  }
+
+  
+  onFundSearch(searchValue: any) {
+    const isDateSearch = searchValue.includes('/');
+    if (isDateSearch && !searchValue) return;
+    this.setFilterBy(false, searchValue, []);
+    this.searchSubject.next(searchValue);
+  }
+
+  performFundSearch(data: any) {
+    this.defaultGridState();
+    const operator = 'startswith';
+
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedSearchColumn ?? 'fundingSourceId',
+              operator: operator,
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
+    const stateData = this.state;
+    stateData.filter = this.filterData;
     this.dataStateChange(stateData);
+    this.loadFinancialFundingSourceFacadeListGrid();
   }
 
   defaultGridState() {
@@ -182,40 +242,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
       searchValue: '',
     };
   }
-  public setGridState(stateData: any): void {
-    this.state = stateData;
 
-    const filters = stateData.filter?.filters ?? [];
-
-    const filterList = this.state?.filter?.filters ?? [];
-    this.filter = JSON.stringify(filterList);
-
-    if (filters.length > 0) {
-      const filterListData = filters.map((filter: any) => this.columns[filter?.filters[0]?.field]);
-      this.isFiltered = true;
-      this.filteredBy = filterListData.toString();
-      this.cdr.detectChanges();
-    }
-    else {
-      this.filter = "";
-      this.columnName = "";
-      this.isFiltered = false;
-    }
-
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? "";
-    this.sortType = stateData.sort[0]?.dir ?? "";
-    this.state = stateData;
-    this.sortColumn = this.columns[stateData.sort[0]?.field];
-    this.sortDir = "";
-    if (this.sort[0]?.dir === 'asc') {
-      this.sortDir = 'Ascending';
-    }
-    if (this.sort[0]?.dir === 'desc') {
-      this.sortDir = 'Descending';
-    }
-    this.loadFinancialFundingSourceFacadeListGrid();
-  }
   filterChange(filter: CompositeFilterDescriptor): void {
     this.gridFilter = filter;
   }
@@ -253,27 +280,35 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
   }
 
   public dataStateChange(stateData: any): void {
-    if (stateData.filter?.filters.length > 0) {
-      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
-      this.columnName = stateFilter.field;
-
-      this.filter = stateFilter.value;
-
-      this.isFiltered = true;
-      const filterList = [];
-      for (const filter of stateData.filter.filters) {
-        filterList.push(this.columns[filter.filters[0].field]);
-      }
-      this.isFiltered = true;
-      this.filteredBy = filterList.toString();
-    } else {
-      this.filter = '';
-      this.columnName = '';
-      this.isFiltered = false;
-    }
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.setGridState(stateData);
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.filter = stateData?.filter?.filters;
+    this.setFilterBy(true, '', this.filter);
     this.loadFinancialFundingSourceFacadeListGrid();
+  }
+
+  private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
+    this.filteredByColumnDesc = '';
+    if (isFromGrid) {
+      if (filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters?.filter((fld:any)=> fld.value)?.map((fld: any) =>
+            this.gridColumns[fld.field])
+          return ([...new Set(filteredColumns)]);
+        });
+
+        this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
+      }
+      return;
+    }
+
+    if (searchValue !== '') {
+      this.filteredByColumnDesc = this.searchColumnList?.find(i => i.columnName === this.selectedSearchColumn)?.columnDesc ?? '';
+    }
   }
 
   // updating the pagination infor based on dropdown selection
@@ -301,17 +336,22 @@ export class FinancialFundingSourcesListComponent implements OnChanges {
     if (result) {
       this.editFundingOpened = false;
       this.addEditFundingDialog.close();
-      this.loadFinancialFundingSourceFacadeListGrid();
+    
     }
   }
 
   addFundingSource(event: any) {
     this.onAddFundingSourceEvent.emit(event)
-    this.loadFinancialFundingSourceFacadeListGrid();
+    this.addFundingSource$.subscribe((_: any) => {
+      this.loadFinancialFundingSourceFacadeListGrid();
+    }) 
   }
 
   updateFundingSource(event: any) {
     this.onUpdateFundingSourceEvent.emit(event);
+    this.updateFundingSource$.subscribe((_: any) => {
+      this.loadFinancialFundingSourceFacadeListGrid();
+    })
   }
 
   public onRemoveFundingSourceOpenClicked(

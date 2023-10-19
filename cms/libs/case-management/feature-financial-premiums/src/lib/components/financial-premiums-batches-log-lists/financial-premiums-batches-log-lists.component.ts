@@ -63,8 +63,11 @@ export class FinancialPremiumsBatchesLogListsComponent
   isBulkUnBatchOpened = false;
   @Input() unbatchPremiums$ :any
   @Input() unbatchEntireBatch$ :any
+  @Input() paymentByBatchGridLoader$!: Observable<boolean>;
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   selected:any
+  currentPrintAdviceLetterGridFilter: any;
+  isPrintAdviceLetterClicked = false;
  
   public bulkMore = [
     {
@@ -74,6 +77,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       click: (data: any): void => {
         this.isRequestPaymentClicked = true;
         this.isSendReportOpened = false;
+        this.isPrintAdviceLetterClicked = false;
       },
     },
 
@@ -83,6 +87,15 @@ export class FinancialPremiumsBatchesLogListsComponent
       icon: 'edit',
       click: (data: any): void => {
         this.navToReconcilePayments(data);
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Print Advice Letters',
+      icon: 'print',
+      click: (data: any): void => {
+        this.isRequestPaymentClicked = false;
+        this.isPrintAdviceLetterClicked = true;
       },
     },
     {
@@ -228,6 +241,9 @@ export class FinancialPremiumsBatchesLogListsComponent
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   sendReportDialog: any;
+  selectedCount: number = 0;
+  disablePrwButton:boolean= true;
+
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService,
     public activeRoute: ActivatedRoute, private readonly lovFacade: LovFacade,
@@ -280,7 +296,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       filter: this.state?.['filter']?.['filters'] ?? [],
     };
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
- 
+    this.currentPrintAdviceLetterGridFilter = this.filter;
     this.gridDataHandle();
   }
 
@@ -481,7 +497,10 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
 
   onBulkOptionCancelClicked() {
     this.isRequestPaymentClicked = false;
+    this.isPrintAdviceLetterClicked = false;
     this.isSendReportOpened = false;
+    this.selectedCount = 0;
+    this.loadBatchLogListGrid();
   }
 
   public onSendReportOpenClicked(template: TemplateRef<unknown>): void {
@@ -693,5 +712,64 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
 
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event);
+  }
+
+  loadPrintAdviceLetterEvent(event:any){
+    this.currentPrintAdviceLetterGridFilter = event.filter;
+    this.loadBatchLogListEvent.emit(event);
+  }
+
+  onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+    this.selectedDataRows.currentPrintAdviceLetterGridFilter = JSON.stringify(this.currentPrintAdviceLetterGridFilter);
+    this.printAuthorizationDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-xlg',
+    });
+  }
+
+  selectUnSelectPayment(dataItem: any) {
+    if (!dataItem.selected) {
+      let exist = this.selectedDataRows.PrintAdviceLetterUnSelected.filter((x: any) => x.vendorAddressId === dataItem.vendorAddressId).length;
+      if (exist === 0) {
+        this.selectedDataRows.PrintAdviceLetterUnSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
+      }
+        this.selectedDataRows?.PrintAdviceLetterSelected?.forEach((element: any) => {
+          if (element.paymentRequestId === dataItem.paymentRequestId) {
+            element.selected = false;
+          }
+        });
+    }
+    else {
+      this.selectedDataRows.PrintAdviceLetterUnSelected.forEach((element: any) => {
+        if (element.paymentRequestId === dataItem.paymentRequestId) {
+          element.selected = false;
+        }
+      });
+        let exist = this.selectedDataRows.PrintAdviceLetterSelected.filter((x: any) => x.vendorAddressId === dataItem.vendorAddressId).length;
+        if (exist === 0) {
+          this.selectedDataRows.PrintAdviceLetterSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
+        }
+
+    }
+  }
+
+  disablePreviewButton(result: any) {
+    this.selectedDataRows = result;
+    this.selectedDataRows.batchId = this.batchId
+    if(result.selectAll){
+      this.disablePrwButton = false;
+    }
+    else if(result.PrintAdviceLetterSelected.length>0)
+    {
+      this.disablePrwButton = false;
+    }
+    else
+    {
+      this.disablePrwButton = true;
+    }
+  }
+
+  setNoOfRecordToBePrint(NoOfRecordToBePrint:any){
+    this.selectedCount = NoOfRecordToBePrint;
   }
 }

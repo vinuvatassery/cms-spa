@@ -5,18 +5,19 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Observable } from 'rxjs';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
-  selector: 'cms-financial-claims-print-advice-letter-log-lists',
+  selector: 'cms-financial-premiums-print-advice-letter-log-lists',
   templateUrl:
-    './financial-claims-print-advice-letter-log-lists.component.html', 
+    './financial-premiums-print-advice-letter-log-lists.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit, OnChanges{ 
+export class FinancialPremiumsPrintAdviceLetterLogListsComponent implements OnInit, OnChanges{ 
 
 
   @Input() batchLogGridLists$: any;
-  @Input() claimsType: any;
+  @Input() premiumsType: any;
   @Output() loadPrintAdviceLetterEvent = new EventEmitter<any>();
   @Output() selectUnSelectEvent = new EventEmitter<any>();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -29,7 +30,7 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
   @Input() sort: any;
   @Input() sortValue: any;
   @Input() sortType: any;
-  @Input() loader$!: Observable<boolean>;
+  @Input() paymentByBatchGridLoader$!: Observable<boolean>;
   @Output()  noOfRecordToPrintEvent = new EventEmitter();;
   batchLogPrintAdviceLetterPagedList:any;
   isBatchLogGridLoaderShow = false;
@@ -47,31 +48,33 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
   currentGridFilter:any;
   totalRecord:any;
   noOfRecordToPrint:any = 0;
+  yesOrNoLovs: any = [];
   gridColumns : {[key: string]: string} = {
-    paymentNbr: 'Item #',
-    invoiceNbr: 'Invoice ID',
-    vendorName: 'Provider Name',
-    tin: 'Tax ID',
-    clientId: 'Member ID',
-    clientFullName: 'Client Name',
-    nameOnInsuranceCard:'Name on Primary Insurance Card',
-    serviceCount: 'Service Count',
-    serviceCost: 'Total Cost',
-    amountDue: 'Total Due',
-    paymentMethodCode:'Payment Method',
-    paymentTypeCode:'Payment Type',
-    paymentStatusCode:'Payment Status',
-    clientMaximum:'Client Annual Total',
-    balanceAmount:'Client Balance'
+    itemNbr: "Item #",
+    vendorName: "Insurance Vendor",
+    serviceCount: "Item Count",
+    serviceCost: "Total Amount",
+    acceptsReports: "Accepts reports?",
+    paymentRequestedDate: "Date Pmt. Requested",
+    paymentSentDate: "Date Pmt. Sent",
+    paymentMethodCode: "Pmt. Method",
+    paymentStatusCode: "Pmt. Status",
+    pca: "PCA",
+    mailCode: "Mail Code"
   };
+  yesOrNoLov$ = this.lovFacade.yesOrNoLov$;
+  acceptReportValue = null
 
-  constructor(private route: Router,private dialogService: DialogService, public activeRoute: ActivatedRoute ) {}
+  constructor(private route: Router,private dialogService: DialogService, public activeRoute: ActivatedRoute,
+    private readonly lovFacade: LovFacade, ) {}
   
   ngOnInit(): void {
     this.sortColumnName = 'Item #';
     this.loadBatchLogListGrid();
+    this.loadYesOrNoLovs();
+    this.lovFacade.getYesOrNoLovs();
     this.batchLogGridLists$.subscribe((response:any) =>{
-      this.totalRecord = response.total;
+      this.totalRecord = response?.data?.filter((item: any) => item.acceptsReports == 'Y').length;
       this.markAsChecked(response.data);
       this.batchLogPrintAdviceLetterPagedList = response;
     })
@@ -229,6 +232,7 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
   }
 
   dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    this.acceptReportValue = value;
     if(field === 'paymentMethodCode'){
       this.paymentMethodFilter = value;
     }
@@ -249,5 +253,13 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
     });
   }
 
+  private loadYesOrNoLovs() {
+    this.yesOrNoLov$
+      .subscribe({
+        next: (data: any) => {
+          this.yesOrNoLovs = data;
+        }
+      });
+  }
 
 }
