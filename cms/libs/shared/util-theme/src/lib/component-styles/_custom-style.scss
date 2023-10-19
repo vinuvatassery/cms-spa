@@ -164,7 +164,7 @@
         &.case-menu-disabled {
           cursor: default;
           pointer-events: none;
-          opacity: 0.4;
+          opacity: 0.7;
           user-select: none;
         }
       }
@@ -1114,7 +1114,7 @@ color: $app-primary-font-color;
 
 .field_with_info {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
 
   >span.material-icons {
     margin-bottom: 10px;
@@ -1126,6 +1126,10 @@ color: $app-primary-font-color;
 
 
 .custom_scroll_view {
+  .k-scrollview-view{
+    max-width: 100%;
+    overflow-y: auto;
+  }
   .k-scrollview {
     min-height: 340px;
     max-height: 500px;
@@ -1288,3 +1292,15 @@ padding: 8px;
     white-space: normal;
     border-radius: 4px;
 }
+
+.dropdown-intended{
+  .k-list-content{
+    .k-list-item{
+      padding-left: 2.1rem !important;
+    }
+  }
+}
+#pharmacyAuthorizationBanner{
+  display: none !important;
+}
+
