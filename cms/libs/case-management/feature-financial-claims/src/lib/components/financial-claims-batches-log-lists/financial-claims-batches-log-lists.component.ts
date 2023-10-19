@@ -366,6 +366,7 @@ export class FinancialClaimsBatchesLogListsComponent
     this.isPrintAdviceLetterClicked = false;
     this.selectedDataRows = [];
     this.selectedCount = 0;
+    this.loadBatchLogListGrid();
   }
 
   onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {

@@ -41,6 +41,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   sortColumn = "";
   sortDir = "";
   columnsReordered = false;
+  isEdit !: boolean;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
@@ -70,6 +71,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
       text: 'Edit Contact',
       icon: 'edit',
       click: (data: any): void => {
+        this.isEdit = true
         if (data?.vendorContactId) {
           this.VendorContactId = data;
           this.clickOpenAddEditContactAddressDetails();
