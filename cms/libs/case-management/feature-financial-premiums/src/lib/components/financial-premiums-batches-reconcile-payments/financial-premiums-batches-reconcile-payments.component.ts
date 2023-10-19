@@ -321,7 +321,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   }
   
   dataStateChange(stateData: any): void {
-    debugger;
     this.sortBatch = stateData.sort;
     this.sortValueBatch = stateData.sort[0]?.field ?? this.sortValueBatch;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
