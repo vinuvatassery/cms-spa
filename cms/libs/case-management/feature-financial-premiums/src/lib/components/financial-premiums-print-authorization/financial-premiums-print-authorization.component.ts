@@ -15,7 +15,6 @@ export class FinancialPremiumsPrintAuthorizationComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   finalPrintList!: any[];
   printCount: number = 0;
-  reconcileCount: number = 0;
   returnResultFinalPrintList!: any[];
   printAdviceLetterData: any
 
@@ -25,6 +24,7 @@ export class FinancialPremiumsPrintAuthorizationComponent {
   @Input() batchId: any;
   @Input() premiumsType:any;
   @Input() isSaveClicked!: boolean;
+  @Input() premiumReconcileCount:any;
 
   /** Output properties  **/
   @Output() onClosePrintAdviceLetterEvent = new EventEmitter<any>();
@@ -70,7 +70,6 @@ export class FinancialPremiumsPrintAuthorizationComponent {
   onCheckboxChange(event: any, item: any): void {
     item.isPrintAdviceLetter = event.target.checked;
     this.printCount = this.returnResultFinalPrintList.filter(x => x.isPrintAdviceLetter === true).length;
-    this.reconcileCount = this.returnResultFinalPrintList.length;
     if (!this.items['print']) {
       this.printAdviceLetterData.PrintAdviceLetterGenerateInfo.forEach((value: any) => {
         if (item.vendorId === value.vendorId) {
@@ -173,7 +172,6 @@ export class FinancialPremiumsPrintAuthorizationComponent {
 
             this.returnResultFinalPrintList = data;
             this.printCount = this.returnResultFinalPrintList.filter(x => x.isPrintAdviceLetter === true).length;
-            this.reconcileCount = this.returnResultFinalPrintList.length
             this.ref.detectChanges();
           }
           this.loaderService.hide();

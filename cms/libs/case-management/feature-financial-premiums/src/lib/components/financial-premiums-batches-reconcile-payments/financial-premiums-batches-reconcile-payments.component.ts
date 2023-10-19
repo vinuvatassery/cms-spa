@@ -146,7 +146,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     note : new FormControl('', []),
   });
 
-  
+
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, 
     private readonly cd: ChangeDetectorRef, private configurationProvider: ConfigurationProvider, 
