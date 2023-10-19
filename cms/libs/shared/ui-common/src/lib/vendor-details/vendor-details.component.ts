@@ -160,12 +160,13 @@ constructor(
   save() {
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if(mailCode.length === 3){
-      this.validateForm();
+    
+    }
+    this.validateForm();
     this.isValidateForm = true;
     if (this.medicalProviderForm.valid) {
       let providerData = this.mappVendorProfileData();
       this.saveProviderEventClicked.next(providerData);
-    }
     }
   }
 
