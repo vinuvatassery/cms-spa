@@ -68,7 +68,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn='invoiceNbr';
   gridDataResult!: GridDataResult;
   showExportLoader = false;
   gridFinancialClaimsProcessDataSubject = new Subject<any>();
@@ -341,6 +341,9 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
+  searchColumnChangeHandler(data:any){
+    this.onChange(data)
+  }
 
   gridDataHandle() {
     this.financialClaimsProcessGridLists$.subscribe((data: GridDataResult) => {
@@ -485,13 +488,14 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
     this.sortColumn = 'Invoice ID';
     this.sortDir = 'Ascending';
     this.filter = '';
-    this.searchValue = '';
+    this.selectedColumn = 'invoiceNbr';
     this.isFiltered = false;
     this.columnsReordered = false;
 
     this.sortValue = 'invoiceNbr';
     this.sortType = 'asc';
     this.sort = this.sortColumn;
+    this.searchValue =''
 
     this.loadFinancialClaimsProcessListGrid();
   }
