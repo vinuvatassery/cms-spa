@@ -266,6 +266,11 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
         this.performSearch(searchValue);
       });
   }
+
+  resetGrid() {
+
+  }
+
   performSearch(data: any) {
     this.defaultGridState();
     const operator = (['clientId']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
