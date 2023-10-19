@@ -62,6 +62,7 @@ export class FinancialClaimsPageComponent implements OnInit {
     @ViewChild('providerDetailsTemplate', { read: TemplateRef })
     providerDetailsTemplate!: TemplateRef<any>;
     paymentRequestId: any;
+    tab = 1;
 
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
@@ -78,7 +79,8 @@ export class FinancialClaimsPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(data => this.claimsType = data['type'])
+    this.activatedRoute.params.subscribe(data => this.claimsType = data['type']);
+    this.activatedRoute.queryParams.subscribe(data => this.tab = +(data['tab'] ?? 1));
     this.addNavigationSubscription();
   }
 
