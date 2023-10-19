@@ -50,6 +50,6 @@ export class PcaAssignmentsDataService {
   }
 
   reassignPca(assignPcaRequest : any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/pca-reassign`,assignPcaRequest);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/reassign`,assignPcaRequest);
   }
 }

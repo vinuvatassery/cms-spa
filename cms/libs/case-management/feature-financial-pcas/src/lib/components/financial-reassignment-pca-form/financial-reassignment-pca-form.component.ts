@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges, AfterViewChecked } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { PcaAssignmentsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -10,7 +10,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
   templateUrl: './financial-reassignment-pca-form.component.html',
   styleUrls: ['./financial-reassignment-pca-form.component.scss'],
 })
-export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges, AfterViewChecked{
+export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
 
   @Input() groupCodesData$ : any
   @Input() objectCodesData$ : any
@@ -201,10 +201,7 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges, 
         }
    
   }
-  ngAfterViewChecked(){
-    //your code to update the model
-  // this.ref.detectChanges();
- }
+
   onPcaAssignmentFormSubmit()
   {    
     
