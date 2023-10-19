@@ -16,6 +16,7 @@
  [batchId]="batchId"
  (deletePaymentEvent)="deletePayment($event)"
  (onProviderNameClickEvent)="onProviderNameClick($event)"
+ [paymentByBatchGridLoader$]="paymentByBatchGridLoader$"
  ></cms-financial-premiums-batches-log-lists>
 
  <ng-template #providerDetailsTemplate>

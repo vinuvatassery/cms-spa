@@ -35,8 +35,7 @@
             </kendo-grid-column>
             <kendo-grid-column field="itemCount" title="Item Count" [width]="140">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> <strong>$</strong> {{dataItem.itemCount | kendoNumber:
-                              'n2'}}</span>
+                        <span class="tableamountview"> {{dataItem.itemCount}}</span>
                   </ng-template>
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -47,8 +46,7 @@
             </kendo-grid-column>
             <kendo-grid-column field="totalAmount" title="Total Amount" [width]="140">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmount | kendoNumber:
-                              'n2'}}</span>
+                        <span> <strong>$</strong> {{dataItem.totalAmount | kendoNumber:'n2'}}</span>
                   </ng-template>
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -59,7 +57,7 @@
             </kendo-grid-column>
             <kendo-grid-column field="creationTime" title="Date Payment Requested" [width]="186">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                        {{dataItem.serviceEndDate |date:'MM/dd/YYYY'}}
+                        {{dataItem.creationTime |date:'MM/dd/YYYY'}}
                   </ng-template>
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                         <common-grid-cell-date-range-filter [field]="'creationTime'" [filter]="filter"
@@ -69,7 +67,7 @@
             </kendo-grid-column>
             <kendo-grid-column field="paymentSentDate" title="Date Payment Sent" [width]="186">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                        {{dataItem.serviceEndDate |date:'MM/dd/YYYY'}}
+                        {{dataItem.paymentSentDate |date:'MM/dd/YYYY'}}
                   </ng-template>
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                         <common-grid-cell-date-range-filter [field]="'paymentSentDate'" [filter]="filter"
@@ -79,24 +77,19 @@
             </kendo-grid-column>
             <kendo-grid-column field="paymentMethodDesc" title="Payment Method" [width]="160">
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-                              [extra]="false" operator="eq">
-                              <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                              <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                              <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                              <kendo-filter-contains-operator></kendo-filter-contains-operator>
-                        </kendo-grid-string-filter-menu>
-                  </ng-template>
+                        <kendo-dropdownlist [data]="paymentMethodTypes"
+                        textField="lovDesc" valueField="lovDesc" [(ngModel)]="selectedPaymentMethod" [valuePrimitive]="true"
+                        (valueChange)="dropdownFilterChange('paymentMethodDesc',$event, filterService)">
+                      </kendo-dropdownlist>
+                      </ng-template>
+                  
             </kendo-grid-column>
-            <kendo-grid-column field="paymentStatusCode" title="Payment Status" [width]="160">
+            <kendo-grid-column field="paymentStatusDesc" title="Payment Status" [width]="160">
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-                              [extra]="false" operator="eq">
-                              <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                              <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                              <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                              <kendo-filter-contains-operator></kendo-filter-contains-operator>
-                        </kendo-grid-string-filter-menu>
+                        <kendo-dropdownlist [data]="paymentStatus" textField="lovDesc"
+                        valueField="lovDesc" [value]="selectedPaymentStatus" [valuePrimitive]="true"
+                        (valueChange)="dropdownFilterChange('paymentStatusDesc',$event, filterService)">
+                      </kendo-dropdownlist>
                   </ng-template>
             </kendo-grid-column>
             <kendo-grid-column field="warrantNumber" title="Warrant Number" [width]="160">

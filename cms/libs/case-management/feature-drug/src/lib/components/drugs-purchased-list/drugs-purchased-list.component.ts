@@ -8,6 +8,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
 import {ConfigurationProvider} from '@cms/shared/util-core';
+import { FilterService } from '@progress/kendo-angular-grid';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-drugs-purchased-list',
@@ -28,10 +30,10 @@ export class DrugsPurchasedListComponent implements OnInit {
   public gridSkipCount = this.drugPharmacyFacade.skipCount;
   public sort = this.drugPharmacyFacade.sort;
   public state!: any;
-  public formUiStyle : UIFormStyle = new UIFormStyle(); 
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
-  isPermiumWithinLastTwelveMonthsData:boolean=true;
+  isPermiumWithinLastTwelveMonthsData = true;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
 
 
@@ -46,26 +48,37 @@ export class DrugsPurchasedListComponent implements OnInit {
 
   selectedColumn!: any;
   gridColumns : any ={
-    prescriptionFillDate : "Fill Date",
     pharmacyName : "Pharmacy",
-    drugName: "Drug",
+    paymentMethodDesc : "Payment Method",
+    rxNumber : "RX Number",
+    prescriptionFillDate : "Fill Date",
+    ndc: "NDC Code",
     brandName: "Brand Name",
-    ndc: "NDC",
-    qty: "Qty",
-    reversalDate: "Reversal Date",
+    drugName: "Drug Name",
+    payTypeDesc: "Payment Type",
+    amountPaid: "Amount Paid",
+    qty: "Rx Quantity",
     clientGroup: "Client Group",
-    payType: "Pay Type",
-    transType: "Trans Type",
-    payAmount: "Pay Amount",
-    ingrdCost: "Ingrd Cost",
-    phmFee: "Pfm Fee",
-    totalDrug: "Total Drug",
-    pbmFee: "PBM Fee",
-    revenue: "Revenue",
-    uc: "U & c",
+    rxType: "RX Type",
+    rxDaysSupply: "RX Days Supply",
+    pcaCode: "PCA Code",
+    objectCodeDesc: "Object Code",
+    paymentStatusDesc: "Payment Status",
+    warrantNo: "Warrant Number",
     entryDate: "Entry Date",
-    createdId: "By"
+    creatorId: "By",
   }
+
+  //lov filters
+  selectedPaymentStatus: string | null = null;
+  selectedPaymentMethod: string | null = null;
+  selectedPaymentType: string | null = null;
+  paymentMethodType$ = this.lovFacade.paymentMethodType$;
+  paymentStatus$ = this.lovFacade.paymentStatus$;
+  paymentType$ = this.lovFacade.paymentType$;
+  paymentTypes: any = [];
+  paymentMethodTypes: any = [];
+  paymentStauses: any = [];
 
   public actions = [
     {
@@ -96,20 +109,71 @@ export class DrugsPurchasedListComponent implements OnInit {
   ];
 
   /** Constructor **/
-  constructor(private readonly drugPharmacyFacade: DrugPharmacyFacade, private caseFacade: CaseFacade, 
+  constructor(private readonly drugPharmacyFacade: DrugPharmacyFacade, private caseFacade: CaseFacade,
     private readonly  cdr :ChangeDetectorRef,
     public readonly  intl: IntlService,
-    private readonly configurationProvider: ConfigurationProvider) {}
+    private readonly configurationProvider: ConfigurationProvider,
+    private readonly lovFacade: LovFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.defaultGridState();    
+    this.getLovs()
+    this.defaultGridState();
     this.loadDrugsPurchased();
   }
-  
+
   /** Private methods **/
-  private loadDrugsPurchased(  
-    ) {   
+
+  getLovs(){
+    this.getPaymentMethodLov();
+    this.getPaymentStatusLov();
+    this.getPaymentTypeCodeLov();
+  }
+
+  private getPaymentTypeCodeLov() {
+    this.lovFacade.getPaymentTypeLov();
+    this.paymentType$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentTypes = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+  }
+
+  private getPaymentMethodLov() {
+    this.lovFacade.getPaymentMethodLov();
+    this.paymentMethodType$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentMethodTypes = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+  }
+
+  private getPaymentStatusLov() {
+    this.lovFacade.getPaymentStatusLov();
+    this.paymentStatus$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentStauses = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+  }
+
+  private loadDrugsPurchased(
+    ) {
       this.drugPharmacyFacade.getDrugPurchasedList(this.clientId,this.state.skip,this.state.take,this.sortValue,this.sortType,this.filters,this.isPermiumWithinLastTwelveMonthsData);
     }
 
@@ -154,6 +218,23 @@ export class DrugsPurchasedListComponent implements OnInit {
     this.filters = JSON.stringify(filter);
   }
 
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'and',
+    });
+  }
+
   setToDefault()
   {
     this.state = {
@@ -191,7 +272,7 @@ export class DrugsPurchasedListComponent implements OnInit {
 
     const filters = stateData.filter?.filters ?? [];
 
-    for (let val of filters) {
+    for (const val of filters) {
       if (val.field === 'prescriptionFillDate' || val.field === 'entryDate') {
         this.intl.formatDate(val.value, this.dateFormat);
       }

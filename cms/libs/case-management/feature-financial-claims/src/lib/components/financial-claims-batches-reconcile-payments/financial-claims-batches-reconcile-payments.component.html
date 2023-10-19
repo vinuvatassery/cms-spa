@@ -2,7 +2,7 @@
       <section class="app-l-mainTittle">
             <div class="d-flex">
                   <button aria-label="back to vendor refund" kendoButton look="flat" class="mr-1"
-                        (click)="navToBatchDetails($event)" title="Go Back"> <span class="material-icons">
+                        (click)="navToReconcilePayments()" title="Go Back"> <span class="material-icons">
                               arrow_back </span> </button>
                   <h1 class="maintitle_withicon text-bold">Reconcile Payments </h1>
             </div>
@@ -25,7 +25,7 @@
                                    <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['datePaymentReconciled'].valid && !datePaymentReconciledRequired">Reconciled date cannot be a future date.</kendo-formerror>
                                    <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['datePaymentReconciled'].valid && datePaymentReconciledRequired">Date payment reconciled is required..</kendo-formerror>                     
                               </kendo-floatinglabel>
-                              <button kendoButton [primary]="true" (click)="reconcileDateBatch()" class="noshadow-btn" aria-label="Batch"> Batch
+                              <button kendoButton [primary]="true" (click)="reconcileDateBatch()" class="noshadow-btn" aria-label="Bulk"> Bulk
                               </button>
                         </div>
                         <div class="flex-col flex-col-4 field-with-btn">
@@ -39,18 +39,32 @@
                                     <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['datePaymentSend'].valid && paymentSentDateRequired">Date payment sent is required..</kendo-formerror>                     
 
                                </kendo-floatinglabel>
-                              <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Batch" (click)="paymentSentDateBatch()" > Batch
+                              <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Bulk" (click)="paymentSentDateBatch()" > Bulk
                               </button>
 
                         </div>
                         <div class="flex-col flex-col-4 field-with-btn">
                               <kendo-floatinglabel text="Note">
-                                    <kendo-textbox aria-label="Note" [fillMode]="formUiStyle.inputFillMode"
-                                    formControlName="note">
-                                    </kendo-textbox>
-                                    <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['note'].valid">note is required..</kendo-formerror>                     
+                                    <div>                                             
+                                          <kendo-textarea
+                                          #tareaCessation
+                                          [fillMode]="formUiStyle.inputFillMode"
+                                          [maxlength]="tAreaCessationMaxLength"
+                                          [rows]="2"                                          
+                                          resizable ="none"
+                                          formControlName="note" 
+                                          (valueChange)="calculateCharacterCountBulkNote($event)"
+                                          aria-label="smoking cessation note"
+                                          class="form-control table-text-area">                                       
+                                        </kendo-textarea>
+                                        <kendo-textarea-suffix class="justify-content-end">                                         
+                                          <span class="counter">{{ bulkNoteCounter }}</span>
+                                        </kendo-textarea-suffix>
+                                        <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['note'].valid">note is required.</kendo-formerror>
+                                    </div>
+                                                         
                               </kendo-floatinglabel>
-                              <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Batch" (click)="noteBatch()"> Batch
+                              <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Bulk" (click)="noteBatch()"> Bulk
                               </button>
 
                         </div>
@@ -59,17 +73,17 @@
                   <section class="table-filter-section mat-form-no-b-space">
                         <span class="filter-section_items filter--select">
                               <kendo-floatinglabel>
-                                    <kendo-dropdownlist aria-label="All Columns"
-                                          [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc"
-                                          valueField="columnCode">
+                                    <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDropdownColumns"
+                                    textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn"
+                                    (valueChange)="allColumnChange()">
                                     </kendo-dropdownlist>
                               </kendo-floatinglabel>
                         </span>
                         <span class="filter-section_items filter--search">
                               <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
                               <kendo-floatinglabel text="Search">
-                                    <kendo-textbox aria-label="Search case" rounded="medium"
-                                          [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                    <kendo-textbox aria-label="Search case" rounded="medium" [(ngModel)]="searchItem"
+                                          [fillMode]="formUiStyle.inputFillMode"(afterValueChanged)="onSearchChange($event)"> </kendo-textbox>
 
                               </kendo-floatinglabel>
                         </span>
@@ -106,7 +120,7 @@
                         [data]="reconcilePaymentGridPagedResult" 
                         (selectionChange)="onRowSelection(grid, $event)">
 
-                        <kendo-grid-column   title="Print Advice Ltr" [width]="80">
+                        <kendo-grid-column   title="Print Advice Ltr" [width]="130" class="text-center">
                               <ng-template kendoGridCellTemplate let-dataItem>                  
                                     <input class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr"
                                     aria-labelledby="printAdviceLetter" kendoCheckBox  (change)="printAdviceLetterChange(dataItem)" [(ngModel)]="dataItem.isPrintAdviceLetter"
@@ -116,7 +130,7 @@
 
                         <kendo-grid-column field="vendorName" [title]="providerTitle" [width]="160">
                         <ng-template kendoGridCellTemplate let-dataItem>
-                              <button [attr.aria-label]="dataItem?.vendorName" kendoButton look="flat"
+                              <button [attr.aria-label]="dataItem?.vendorName" kendoButton look="flat"  (click)="onViewProviderDetailClicked(dataItem.paymentRequestId)" 
                                           class="card-link-button"  >
                                           {{dataItem?.vendorName}} 
                               </button>
@@ -155,7 +169,7 @@
                         </kendo-grid-column>
                         <kendo-grid-column  field="paymentReconciledDate" title="Date Pmt. Reconciled" [width]="200">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">              
-                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
                                     aria-label="Date Pmt. Reconciled"  id ="paymentReconciledDate{{rowIndex}}"  name ="paymentReconciledDate{{rowIndex}}"
                                     [(ngModel)]="dataItem.paymentReconciledDate"  (valueChange)="dateChangeListItems($event,dataItem,'DATE_PAYMENT_RECONCILED')"
                                     [ngClass]="ngDirtyInValid(dataItem,'paymentReconciledDate',rowIndex)"
@@ -176,7 +190,7 @@
                         </kendo-grid-column>
                           <kendo-grid-column field="paymentSentDate" title="Date Pmt. Sent" [width]="160">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
                                     aria-label="Date Pmt. Sent"  id ="paymentSentDate{{rowIndex}}"  name ="paymentSentDate{{rowIndex}}"
                                     [(ngModel)]="dataItem.paymentSentDate"   (valueChange)="dateChangeListItems($event,dataItem,'DATE_PAYMENT_SENT')"
                                     [ngClass]="ngDirtyInValid(dataItem,'paymentSentDate',rowIndex)" 
@@ -194,11 +208,11 @@
                                     </ng-template>
                         </kendo-grid-column>                   
 
-                        <kendo-grid-column field="amountPaid" title="Pmt. Amount" [width]="180">
+                        <kendo-grid-column field="amountDue" title="Pmt. Amount" [width]="180">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                               <label aria-label="Medical Provider" kendoButton look="flat"
                                     class="card-link-button"  >
-                                    {{dataItem?.amountPaid | kendoNumber:'n2'}} 
+                                    <strong>$</strong> {{dataItem?.amountDue | kendoNumber:'n2'}} 
                               </label>
                             </ng-template>
                               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -299,14 +313,9 @@
                   <div class="flex-sp-btn">
                         <div> <span><strong>Amount Total:</strong> $&nbsp;{{reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.amountTotal |
                               kendoNumber:'n2'}}</span>
-                        <span class="ml-2"><strong>Warrant Total:</strong></span> <span class="ml-2"
-                              *ngIf="isBreakoutPanelShow; else searchByBatchTemplate">$&nbsp;{{reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.warrantTotal
-                              | kendoNumber: 'n2'}}</span>
-                        <ng-template #searchByBatchTemplate>
-                              <span class="ml-2">$&nbsp;{{0 | kendoNumber: 'n2'}}</span>
-                        </ng-template>
+                        <span class="ml-2"><strong>Warrant Total:</strong></span> <span class="ml-2">$&nbsp;{{reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.warrantTotal | kendoNumber: 'n2'}}</span>
                   </div>
-                  <div><span *ngIf="!onlyPrintAdviceLetter">{{ claimReconcileCount }} advice letter(s) to be previewed</span>
+                  <div><span *ngIf="!onlyPrintAdviceLetter">{{ claimReconcileCount }} payment(s) to reconcile</span>
                         <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="Close" title="Close">
                               <span class="material-icons" aria-label="close" aria-hidden="true"
                                     (click)="toggleBreakoutPanel()">close</span>
@@ -334,6 +343,7 @@
 <ng-template #PrintAuthorizationDialog>
       <kendo-dialog-titlebar class="text-normal" (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Advice Letter(s)</kendo-dialog-titlebar>
       <cms-financial-claims-print-authorization
+      [claimReconcileCount]="claimReconcileCount"
   [printOption]="onlyPrintAdviceLetter"
   [isSaveClicked]="isSaveClicked"
   [items]="selectedReconcileDataRows"
@@ -341,7 +351,7 @@
   (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
   [claimsType]="claimsType"
   ></cms-financial-claims-print-authorization>
-    </ng-template>
+</ng-template>
 
 
   

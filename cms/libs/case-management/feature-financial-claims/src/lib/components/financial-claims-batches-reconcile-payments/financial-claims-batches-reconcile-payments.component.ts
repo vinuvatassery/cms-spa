@@ -31,7 +31,6 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 })
 export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit {
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
-  //reconcileAssignValueBatchForm!: FormGroup;
   PrintAuthorizationDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -50,7 +49,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   @Input() batchId: any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
-  @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();
+  @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();;
+  @Output() onVendorClickedEvent = new EventEmitter<any>();
+
+  paymentRequestId!:any;
   entityId: any;
   public isBreakoutPanelShow:boolean=true;
   public state!: State;
@@ -63,6 +65,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   isFiltered = false;
   filter!: any;
   selectedColumn!: any;
+  searchItem:any=null;
   gridDataResult!: GridDataResult;
   selectedDataRows: any[] = [];
   selectedReconcileDataRows: any[] = [];
@@ -93,6 +96,52 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     note : new FormControl('', []),
   });
   claimReconcileCount:any=0;
+  bulkNoteCounter:any=0;
+  columns : any = {
+    vendorName:"Medical Provider",
+    tin:"TIN",
+    paymentMethodCode:"Pmt. Method",
+    paymentReconciledDate:"Date Pmt. Reconciled",
+    paymentSentDate:"Date Pmt. Sent",
+    amountPaid:"Pmt. Amount",
+    checkNbr:"Warrant Number",
+    comments:"Note (optional)"
+  }
+  dropDropdownColumns : any = [
+    {
+      columnCode: 'vendorName',
+      columnDesc: 'Medical Provider',
+    },
+    {
+      columnCode: 'tin',
+      columnDesc: 'TIN',
+    },
+    {
+      columnCode: 'paymentMethodCode',
+      columnDesc: 'Pmt. Method',
+    },
+    {
+      columnCode: 'paymentReconciledDate',
+      columnDesc: 'Date Pmt. Reconciled',
+    },
+    {
+      columnCode: 'paymentSentDate',
+      columnDesc: 'Date Pmt. Sent',
+    },
+    {
+      columnCode: 'amountPaid',
+      columnDesc: 'Pmt. Amount',
+    },
+    {
+      columnCode: 'checkNbr',
+      columnDesc: 'Warrant Number',
+    },
+    {
+      columnCode: 'comments',
+      columnDesc: 'Note (optional)',
+    }
+  ];
+
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
     private readonly cd: ChangeDetectorRef, public intl: IntlService, private configurationProvider: ConfigurationProvider) {
@@ -164,10 +213,81 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
       sort: this.sortBatch,
       filter: { logic: 'and', filters: [] },
     };
+    this.filter =null;
   }
 
   onColumnReorder($event: any) {
     this.columnsReordered = true;
+  }
+  allColumnChange(){
+    this.searchItem = null;
+    this.defaultGridState();
+    this.loadReconcileListGrid();
+  }
+  onSearchChange(data: any) {
+    let searchValue = data;
+    this.defaultGridState();
+    let operator = 'startswith';
+
+    if (
+      this.selectedColumn === 'amountPaid' 
+    ) {
+      operator = 'eq';
+    }
+    else if (
+      this.selectedColumn === 'paymentReconciledDate' ||
+      this.selectedColumn === 'paymentSentDate'
+    ) {
+      operator = 'eq';
+      searchValue = this.formatSearchValue(data,true);
+
+    }
+   
+    if(searchValue !== ''){
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedColumn ?? 'vendorName',
+              operator: operator,
+              value: searchValue,
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
+    const stateData = this.state;
+    stateData.filter = this.filterData;
+    this.dataStateChange(stateData);
+  }
+  }
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(new Date(searchValue), this.dateFormat);
+      }
+      else {
+        return '';
+      }
+    }
+    return searchValue;
+  }
+
+  private isValidDate(searchValue: any) {   
+    let dateValue = isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+    if(dateValue !== null){
+      let dateArray = searchValue.split('/');
+      if(dateArray[2].length === 4){
+        return dateValue
+      }
+      else{
+        return '';
+      }
+    }
+    return ''
   }
 
   dataStateChange(stateData: any): void {
@@ -456,6 +576,12 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
       : 0;
     dataItem.tAreaCessationCounter = `${tAreaCessationCharactersCount}/${this.tAreaCessationMaxLength}`;
   }
+  calculateCharacterCountBulkNote(note: any) {
+    let bulkNoteCharactersCount = note
+      ? note.length
+      : 0;
+    this.bulkNoteCounter = `${bulkNoteCharactersCount}/${this.tAreaCessationMaxLength}`;
+  }
 
   warrantNumberChange(dataItem: any) {
     if (this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value === null
@@ -610,25 +736,24 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     toggleBreakoutPanel()
     {
       this.isBreakoutPanelShow=!this.isBreakoutPanelShow;
-      if(!this.isBreakoutPanelShow)
-      {
-        this.reconcileBreakoutSummary$.warrantTotal=0;
-        this.reconcileBreakoutSummary$.paymentToReconcileCount=0;
-      }
     }
 
     onRowSelection(grid:any, selection:any)
     {
       const data = selection.selectedRows[0].dataItem;
       this.isBreakoutPanelShow=true;
-      this.entityId=data.entityId;
+      this.entityId=data.entityId; 
+      let warrantTotal=0;    
+      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId).forEach((item: any) => {
+        warrantTotal = warrantTotal + item.amountPaid;
+      });
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
         entityId : data.entityId,
         claimsType: this.claimsType,
         amountTotal : data.amountTotal,
-        warrantTotal : data.amountPaid,
+        warrantTotal : warrantTotal,
         warrantNbr : data.checkNbr,
         paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
       }
@@ -664,6 +789,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   navToReconcilePayments(){
     this.route.navigate([`/financial-management/claims/${this.claimsType}/batch`],
     { queryParams :{bid: this.batchId}});
+  }
+
+  onViewProviderDetailClicked(paymentRequestId:any) {  
+    this.onVendorClickedEvent.emit(paymentRequestId);
   }
 }
 

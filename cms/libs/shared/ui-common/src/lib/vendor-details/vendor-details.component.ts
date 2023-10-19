@@ -1,5 +1,5 @@
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators, RequiredValidator } from '@angular/forms';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
@@ -65,7 +65,8 @@ export class VendorDetailsComponent implements OnInit {
   specialHandlingMaxLength = 100;
   specialHandlingTextArea = '';
   selectedClinicVendorId!: any;
-  constructor(
+  mailCodeLengthError!: boolean;
+constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
     private lovFacade: LovFacade,
@@ -157,11 +158,14 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   save() {
-    this.validateForm();
-    this.isValidateForm = true
+    let mailCode = this.medicalProviderForm.controls['mailCode'].value;
+    if(mailCode.length === 3){
+      this.validateForm();
+    this.isValidateForm = true;
     if (this.medicalProviderForm.valid) {
       let providerData = this.mappVendorProfileData();
       this.saveProviderEventClicked.next(providerData);
+    }
     }
   }
 
@@ -550,9 +554,19 @@ export class VendorDetailsComponent implements OnInit {
     }
     else {
       this.onChange();
-    }
+   }
+   
+}
+onMailCodeKeyUp() {
+  let mailCode = this.medicalProviderForm.controls['mailCode'].value;
+  if (mailCode.length !== 3 && mailCode !="") {
+    this.mailCodeLengthError = true;
   }
-  get medicalProviderFormControls() {
-    return this.medicalProviderForm.controls as any;
+  else if (mailCode.length <=0 || mailCode.length==3){
+    this.mailCodeLengthError = false
   }
+}
+get medicalProviderFormControls() {
+  return this.medicalProviderForm.controls as any;
+}
 }

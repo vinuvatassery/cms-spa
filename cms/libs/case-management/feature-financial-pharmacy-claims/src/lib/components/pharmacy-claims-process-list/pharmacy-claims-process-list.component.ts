@@ -37,6 +37,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
   /* Output Properties */
   @Output() loadPharmacyClaimsProcessListEvent = new EventEmitter<any>();
+  @Output() exportPharmacyClaimsProcessListEvent = new EventEmitter<any>();
 
   @ViewChild('batchClaimsConfirmationDialog', { read: TemplateRef })
   batchClaimsConfirmationDialog!: TemplateRef<any>;
@@ -232,7 +233,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
   onSearch(searchValue: any) {
     const isDateSearch = searchValue.includes('/');
-   // this.showDateSearchWarning = isDateSearch || this.selectedSearchColumn === 'closeDate';
+    // this.showDateSearchWarning = isDateSearch || this.selectedSearchColumn === 'closeDate';
     //searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
     this.setFilterBy(false, searchValue, []);
@@ -270,7 +271,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
   }
 
-  performSearch(data: any){
+  performSearch(data: any) {
     this.defaultGridState();
     const operator = (['clientId']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
     this.filterData = {
@@ -388,13 +389,13 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     }
   }
 
+  onExportClaims() {
+    const params = {
+      SortType: this.sortType,
+      Sorting: this.sortValue,
+      Filter: JSON.stringify(this.filter)
+    };
 
-
-  onClickedExport() {
-
+    this.exportPharmacyClaimsProcessListEvent.emit(params);
   }
-
-
-
-
 }
