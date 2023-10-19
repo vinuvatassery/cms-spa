@@ -28,12 +28,13 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   insurancePlansLoader: boolean = true;
   insurancePlan: Array<any> = [];
 
-
-
   public isLoading = false;
   carrierNames: any = [];
 
+  private dentalInsuranceSubscription!: Subscription;
 
+  startDateValidator: boolean = false;
+  termDateValidator: boolean = false;
 
   public isaddNewInsurancePlanOpen = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -44,6 +45,8 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   };
   isValidateForm = false;
 
+  dentalInsuranceSelectedItem = 'DENTAL_INSURANCE';
+
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
 
   constructor(private formBuilder: FormBuilder, private readonly lovFacade: LovFacade, private readonly insurancePlanFacade: InsurancePlanFacade,
@@ -51,31 +54,62 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     private readonly vendorFacade: VendorFacade,
     private readonly snackbarService: NotificationSnackbarService, private insurancePolicyFacade: HealthInsurancePolicyFacade) {
     this.healthInsuranceForm = this.formBuilder.group({ insuranceCarrierName: [''] });
-    this.newhealthInsuranceForm = this.formBuilder.group({ insuranceCarrierName: [''] });
 
     this.newhealthInsuranceForm = this.formBuilder.group({
-      caseOriginCode: ['', Validators.required],
+      insuranceCarrierName: ['', Validators.required],
+      insurancePlanName: ['', Validators.required],
       insuranceType: ['', Validators.required],
       startDate: ['', Validators.required],
-      termDate: ['', Validators.required],
-      insurancePlanName: ['', Validators.required],
-      insuranceCarrierName: ['', Validators.required]
+      termDate: [''],
     });
+
+
+    //enable termdate required validation if this type code
+    //"lovCode": "QUALIFIED_HEALTH_PLAN"
   }
 
-  dateValidator: boolean = false;
+
+  onHealthInsuranceTypeChanged() {
+    var selectedType = this.newhealthInsuranceForm.controls['insuranceType'].value;
+    if (selectedType == "QUALIFIED_HEALTH_PLAN") {
+      this.newhealthInsuranceForm.controls['termDate']
+        .setValidators([
+          Validators.required, Validators.required]);
+    } else {
+      this.newhealthInsuranceForm.controls['termDate'].clearValidators();
+    }
+    this.newhealthInsuranceForm.controls['termDate'].updateValueAndValidity();
+    // this.newhealthInsuranceForm.get('termDate').updateValueAndValidity();
+
+    //QUALIFIED_HEALTH_PLAN
+    // this.insuranceEndDateIsgreaterthanStartDate = true;
+    // this.resetData();
+    // this.resetValidators();
+    // this.ddlInsuranceType =
+    //   this.healthInsuranceForm.controls['insuranceType'].value;
+    // this.isOpenDdl = true;
+    // if (this.ddlInsuranceType === HealthInsurancePlan.Medicare) {
+    //   this.medicareInsuranceInfoCheck = false;
+    // }
+    // else {
+    //   this.medicareInsuranceInfoCheck = true;
+    // }
+    //this.newhealthInsuranceForm.controls['termDate'].setValidators;
+  }
 
   dateValidate(event: Event) {
-    this.dateValidator = false;
-    const signedDate = this.newhealthInsuranceForm.controls['startDate'].value;
-    const todayDate = new Date();
-    if (signedDate > todayDate) {
-      this.dateValidator = true;
+    this.startDateValidator = false;
+    this.termDateValidator = false;
+    const startDate = this.newhealthInsuranceForm.controls['startDate'].value;
+    const termDate = this.newhealthInsuranceForm.controls['termDate'].value;
+    if (startDate > termDate) {
+      this.startDateValidator = true;
+    }
+    if (termDate < startDate) {
+      this.termDateValidator = true;
     }
   }
 
-  dentalInsuranceSelectedItem = 'DENTAL_INSURANCE';
-  private dentalInsuranceSubscription!: Subscription;
   private subscribeDentalInsurance() {
     this.dentalInsuranceSubscription = this.insuranceTypeList$.subscribe((data: any) => {
       this.healthInsuranceForm.controls['insuranceType'].setValue(this.dentalInsuranceSelectedItem);
@@ -89,9 +123,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     this.lovFacade.getMedicareCoverageTypeLovs();
   }
 
-
-
-
   private sortCarrier(data: any) {
     this.carrierNames = data.sort((a: any, b: any) => {
       if (a.vendorName > b.vendorName) return 1;
@@ -103,8 +134,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     this.healthInsuranceForm.controls['insurancePlanName'].setValue(null);
     this.insuranceCarrierNameChange.emit(value);
   }
-
-
 
   ngOnInit(): void {
     this.loadInsuranceCarrierName(InsuranceStatusType.healthInsurance);
@@ -129,116 +158,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
 
   validateForm() {
     this.newhealthInsuranceForm.markAllAsTouched();
-    // if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders) {
-    //   if (!this.clinicNameNotApplicable) {
-    //     this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
-    //     this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
-    //   }
-    //   if (!this.firstLastNameNotApplicable) {
-    //     this.medicalProviderForm.controls['firstName'].setValidators([Validators.required]);
-    //     this.medicalProviderForm.controls['lastName'].setValidators([Validators.required]);
-    //     this.medicalProviderForm.controls['firstName'].updateValueAndValidity();
-    //     this.medicalProviderForm.controls['lastName'].updateValueAndValidity();
-    //   }
-    // }
-    // else if (this.providerType == this.vendorTypes.Manufacturers) {
-    //   this.medicalProviderForm.controls['providerName']
-    //     .setValidators([
-    //       Validators.required, Validators.required, Validators.pattern('^[A-Za-z ]+$')
-    //     ]);
-    //   this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
-    // }
-    // else {
-    //   this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
-    //   this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
-    // }
-    // let mailCode = this.medicalProviderForm.controls['mailCode'].value;
-    // this.validateMailCode()
-
-    // if (mailCode) {
-    //   this.medicalProviderForm.controls['addressLine1']
-    //     .setValidators([
-    //       Validators.required,
-    //     ]);
-    //   this.medicalProviderForm.controls['addressLine1'].updateValueAndValidity();
-
-    //   this.medicalProviderForm.controls['city']
-    //     .setValidators([
-    //       Validators.required, Validators.required, Validators.pattern('^[A-Za-z ]+$')
-    //     ]);
-    //   this.medicalProviderForm.controls['city'].updateValueAndValidity();
-
-    //   this.medicalProviderForm.controls['state']
-    //     .setValidators([
-    //       Validators.required,
-    //     ]);
-    //   this.medicalProviderForm.controls['state'].updateValueAndValidity();
-
-    //   this.medicalProviderForm.controls['zip']
-    //     .setValidators([
-    //       Validators.required, Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')
-    //     ]);
-    //   this.medicalProviderForm.controls['zip'].updateValueAndValidity();
-
-    //   if (this.providerType == this.vendorTypes.Manufacturers) {
-    //     this.medicalProviderForm.controls['nameOnCheck'].setValidators([
-    //       Validators.nullValidator,
-    //     ]);
-    //     this.medicalProviderForm.controls[
-    //       'nameOnCheck'
-    //     ].updateValueAndValidity();
-
-    //     this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([
-    //       Validators.nullValidator,
-    //     ]);
-    //     this.medicalProviderForm.controls[
-    //       'nameOnEnvolop'
-    //     ].updateValueAndValidity();
-    //   }
-
-    // }
-
-    // if (this.providerType != this.vendorTypes.Manufacturers) {
-    //   this.medicalProviderForm.controls['paymentMethod']
-    //     .setValidators([
-    //       Validators.required,
-    //     ]);
-    //   this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();
-
-    // }
-
-    // if (this.providerType == this.vendorTypes.Clinic) {
-    //   this.medicalProviderForm.controls[this.clinicTypeFieldName]
-    //     .setValidators([
-    //       Validators.required,
-    //     ]);
-    //   this.medicalProviderForm.controls[this.clinicTypeFieldName].updateValueAndValidity();
-    // }
-
-    // if (this.providerType == this.vendorTypes.InsuranceVendors) {
-
-    //   this.medicalProviderForm.controls['paymentRunDate']
-    //     .setValidators([
-    //       Validators.required,
-    //     ]);
-    //   this.medicalProviderForm.controls['paymentRunDate'].updateValueAndValidity();
-
-    //   this.medicalProviderForm.controls['isAcceptCombinedPayment']
-    //     .setValidators([
-    //       Validators.required,
-    //     ]);
-    //   this.medicalProviderForm.controls['isAcceptCombinedPayment'].updateValueAndValidity();
-
-    //   this.medicalProviderForm.controls['isAcceptReports']
-    //     .setValidators([
-    //       Validators.required,
-    //     ]);
-    //   this.medicalProviderForm.controls['isAcceptReports'].updateValueAndValidity();
-    // }
-
-    // for (let index = 0; index < this.AddContactForm.length; index++) {
-    //   (this.AddContactForm.controls[index] as FormGroup).controls['isCheckContactNameValid'].setValue(true);
-    // }
   }
 
   public addNewInsurancePlanClose(): void {
@@ -249,10 +168,15 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     }
 
   }
+  
+  InsurancePlanClose():void{
+    this.isaddNewInsurancePlanOpen = false;
+  }
 
   public addNewInsurancePlanOpen(): void {
     this.isaddNewInsurancePlanOpen = true;
   }
+
   private loadInsurancePlans() {
     this.insurancePlanFacade.planLoaderChange$.subscribe((data) => {
       this.insurancePlansLoader = data;
@@ -272,5 +196,4 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
       }
     });
   }
-
 }
