@@ -10,6 +10,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class ApprovalsGeneralListDetailExceptionsComponent {
   @Input() onUserProfileDetailsHovered: any;
   @Input() approvalId: any;
+  @Input() exceptionId: any;
 
   ifApproveOrDeny: any;
   isPanelExpanded = false;

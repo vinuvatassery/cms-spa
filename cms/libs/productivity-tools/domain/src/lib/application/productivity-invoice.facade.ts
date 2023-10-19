@@ -14,7 +14,7 @@ export class ProductivityInvoiceFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'InvoiceNbr';
+  public sortValue = 'EntryDate';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
@@ -59,9 +59,10 @@ export class ProductivityInvoiceFacade {
   ) { }
 
   /** Public methods **/
-  loadInvoiceListGrid(state:any,tabCode:any,sortValue:any,sortType:any){
+  loadInvoiceListGrid(invoiceDto:any){
+    invoiceDto.filter = JSON.stringify(invoiceDto.filter);
     this.isInvoiceLoadingSubject.next(true);
-    this.productivityInvoiceDataService.loadInvoiceListService(state,tabCode,sortValue,sortType).subscribe({
+    this.productivityInvoiceDataService.loadInvoiceListService(invoiceDto).subscribe({
       next: (dataResponse: any) => {
         const gridView = {
           data: dataResponse['items'],

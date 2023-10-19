@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 /** External libraries **/
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ProductivityInvoiceDataService {
@@ -15,40 +16,17 @@ export class ProductivityInvoiceDataService {
 
   /** Public methods **/
  
-  loadInvoiceListService(state:any,tabCode:any,sortValue:any,sortType:any) {  
-    return of([
-      {
-        invoiceNbr: 1, 
-        batchName: 'Attention', 
-        clientName: 'Attention', 
-        insuranceCardName: 'Attention', 
-        clientId: 'xxxx', 
-        serviceCount: 'xxxx', 
-        totalCost: 'xxx', 
-        totalDue: 'xx/xx/xxxx', 
-        paymentStatusDesc: '12/2019',
-        checkReconcileDate: 'Immediate',
-        warrant: 'Expense',
-        entryDate: 'Rent Deposit',
-        typeOfUtility: 'Electric',
-        amount: '(572.00)',
-        fundingSource: 'Formula',
-        paymentMethod: 'Check',
-        frequency: 'One Time',
-        serviceProvider: 'Post Centennial Park', 
-        status: 'Submitted', 
-        URN: '102456',
-        clientNumber: '00000543',
-        name: 'Sarah Phillips (Josh)',
-        pcaCode: 'Code X',
-        glAccount: '00000000', 
-        sendBackNotes:'notes',
-      },
-      
-      
-     
-    ]);    
+  loadInvoiceListService(data:any): Observable<any> {
+    const invoiceRequestDto =
+    {          
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
     }
- 
-
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/invoice-details?exceptionId=${data.exceptionId}`,invoiceRequestDto
+    );
+  }
 }
