@@ -127,7 +127,7 @@
                         [data]="reconcilePaymentGridPagedResult" 
                         (selectionChange)="onRowSelection(grid, $event)">
  
-                        <kendo-grid-column   title="Print Advice Ltr" [width]="130"  class="text-center">
+                        <kendo-grid-column   title="Print Advice Ltr" [width]="130"  class="text-center" [sticky]="true">
  
                               <ng-template kendoGridCellTemplate let-dataItem>                  
                                     <input *ngIf="dataItem.acceptsReportsFlag === 'Y'" class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr"

@@ -129,11 +129,11 @@
                         <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take" #grid
                         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" 
                         [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"  (filterChange)="filterChange($event)"
-                        [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true" filterable="menu" [filter]="state.filter"
+                        [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [selectable]="true" filterable="menu" [filter]="state.filter"
                         [data]="reconcilePaymentGridPagedResult" 
                         (selectionChange)="onRowSelection(grid, $event)">
 
-                        <kendo-grid-column   title="Print Advice Ltr" [width]="130" class="text-center">
+                        <kendo-grid-column   title="Print Advice Ltr" [width]="130" class="text-center" [sticky]="true">
                               <ng-template kendoGridCellTemplate let-dataItem>                  
                                     <input class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr"
                                     aria-labelledby="printAdviceLetter" kendoCheckBox  (change)="printAdviceLetterChange(dataItem)" [(ngModel)]="dataItem.isPrintAdviceLetter"
