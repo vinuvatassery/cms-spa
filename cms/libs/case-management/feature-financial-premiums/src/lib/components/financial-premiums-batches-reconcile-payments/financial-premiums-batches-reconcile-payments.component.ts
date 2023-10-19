@@ -60,7 +60,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'batch';
+  sortColumn = 'Medical Provider';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -93,26 +93,26 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   showExportLoader = false;
   bulkNoteCounter:any=0;
   columns : any = {
-    vendorName:"Medical Provider",
+    vendorName:this.providerTitle,
     tin:"TIN",
-    paymentMethodCode:"Pmt. Method",
+    paymentMethodDesc:"Pmt. Method",
     paymentReconciledDate:"Date Pmt. Reconciled",
     paymentSentDate:"Date Pmt. Sent",
-    amountPaid:"Pmt. Amount",
+    amountDue:"Pmt. Amount",
     checkNbr:"Warrant Number",
     comments:"Note (optional)"
   }
   dropDropdownColumns : any = [
     {
       columnCode: 'vendorName',
-      columnDesc: 'Medical Provider',
+      columnDesc: this.providerTitle,
     },
     {
       columnCode: 'tin',
       columnDesc: 'TIN',
     },
     {
-      columnCode: 'paymentMethodCode',
+      columnCode: 'paymentMethodDesc',
       columnDesc: 'Pmt. Method',
     },
     {
@@ -124,7 +124,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       columnDesc: 'Date Pmt. Sent',
     },
     {
-      columnCode: 'amountPaid',
+      columnCode: 'amountDue',
       columnDesc: 'Pmt. Amount',
     },
     {
@@ -157,6 +157,9 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     this.paymentMethodSubscription();
     if(this.premiumsType === PremiumType.Dental){
       this.providerTitle = 'Dental Provider';
+      this.sortColumn = this.providerTitle;
+      this.columns['vendorName'] = this.providerTitle;
+      this.dropDropdownColumns[0].columnDesc = this.providerTitle;
     }
     this.state = {
       skip: 0,
@@ -318,14 +321,52 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   }
   
   dataStateChange(stateData: any): void {
+    debugger;
     this.sortBatch = stateData.sort;
     this.sortValueBatch = stateData.sort[0]?.field ?? this.sortValueBatch;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sortBatch[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.filter = stateData?.filter?.filters;
+
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+
+    if (stateData.filter?.filters.length > 0) {
+      this.isFiltered = true;
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    } else {
+      this.filter = null;
+      this.isFiltered = false;
+    }
+
     this.loadReconcileListGrid();
   }
+
+  setToDefault() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+
+    this.sortColumn = this.providerTitle;
+    this.sortDir = 'Ascending';
+    this.filter = null;
+    this.searchValue = '';
+    this.isFiltered = false;
+    this.columnsReordered = false;
+
+    this.sortValue = 'vendorName';
+    this.sortType = 'asc';
+    this.sort = this.sortColumn;
+
+    this.loadReconcileListGrid();
+  }
+
   onClickedExport(){
     this.showExportLoader = true
     this.exportGridDataEvent.emit()        

@@ -58,7 +58,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   public isBreakoutPanelShow:boolean=true;
   public state!: State;
   public currentDate =  new Date();
-  sortColumn = 'batch';
+  sortColumn = 'Medical Provider';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -101,26 +101,26 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   bulkNoteCounter:any=0;
   showExportLoader = false;
   columns : any = {
-    vendorName:"Medical Provider",
+    vendorName:this.providerTitle,
     tin:"TIN",
-    paymentMethodCode:"Pmt. Method",
+    paymentMethodDesc:"Pmt. Method",
     paymentReconciledDate:"Date Pmt. Reconciled",
     paymentSentDate:"Date Pmt. Sent",
-    amountPaid:"Pmt. Amount",
+    amountDue:"Pmt. Amount",
     checkNbr:"Warrant Number",
     comments:"Note (optional)"
   }
   dropDropdownColumns : any = [
     {
       columnCode: 'vendorName',
-      columnDesc: 'Medical Provider',
+      columnDesc: this.providerTitle,
     },
     {
       columnCode: 'tin',
       columnDesc: 'TIN',
     },
     {
-      columnCode: 'paymentMethodCode',
+      columnCode: 'paymentMethodDesc',
       columnDesc: 'Pmt. Method',
     },
     {
@@ -132,7 +132,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
       columnDesc: 'Date Pmt. Sent',
     },
     {
-      columnCode: 'amountPaid',
+      columnCode: 'amountDue',
       columnDesc: 'Pmt. Amount',
     },
     {
@@ -154,6 +154,9 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
   ngOnInit(): void {
     if(this.claimsType === 'dental'){
       this.providerTitle = 'Dental Provider';
+      this.sortColumn = this.providerTitle;
+      this.columns['vendorName'] = this.providerTitle;
+      this.dropDropdownColumns[0].columnDesc = this.providerTitle;
     }
     this.state = {
       skip: 0,
@@ -301,8 +304,42 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit 
     this.sortDir = this.sortBatch[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.filter = stateData?.filter?.filters;
 
-    this.loadReconcileListGrid();
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
 
+    if (stateData.filter?.filters.length > 0) {
+      this.isFiltered = true;
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    } else {
+      this.filter = null;
+      this.isFiltered = false;
+    }
+
+    this.loadReconcileListGrid();
+  }
+
+  setToDefault() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+
+    this.sortColumn = this.providerTitle;
+    this.sortDir = 'Ascending';
+    this.filter = null;
+    this.searchValue = '';
+    this.isFiltered = false;
+    this.columnsReordered = false;
+
+    this.sortValue = 'vendorName';
+    this.sortType = 'asc';
+    this.sort = this.sortColumn;
+
+    this.loadReconcileListGrid();
   }
 
   // updating the pagination infor based on dropdown selection

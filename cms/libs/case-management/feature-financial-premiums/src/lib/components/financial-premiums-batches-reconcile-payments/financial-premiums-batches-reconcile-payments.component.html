@@ -95,11 +95,14 @@
                   </section>
                   <!-- Sorted Info -->
                   <div class="table-sorted-info">
-                        Sorted Descending by <span class="sort-items"> Dental Provider </span>
-                        <span class="sort-items">No Filters</span>
-                        <span class="sort-items">Filtered by Dental Provider</span>
-                        <span class="sort-items">Default Columns</span>
-                        <span class="sort-items">Columns Re-ordered</span>
+                        Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}}  </span>
+                        <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
+                        <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
+                        <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
+                        <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
+                        <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+                              <a>Set to Default</a>
+                            </button>
                   </div>
 
                   <div *ngIf="pageValidationMessage !== null && pageValidationMessageFlag">
