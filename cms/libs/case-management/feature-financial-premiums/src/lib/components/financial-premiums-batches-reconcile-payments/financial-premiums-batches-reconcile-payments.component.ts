@@ -301,7 +301,19 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     return searchValue;
   }
   
-  private isValidDate = (searchValue: any) => isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+  private isValidDate(searchValue: any) {   
+    let dateValue = isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+    if(dateValue !== null){
+      let dateArray = searchValue.split('/');
+      if(dateArray[2].length === 4){
+        return dateValue
+      }
+      else{
+        return '';
+      }
+    }
+    return ''
+  }
   
   dataStateChange(stateData: any): void {
     this.sortBatch = stateData.sort;

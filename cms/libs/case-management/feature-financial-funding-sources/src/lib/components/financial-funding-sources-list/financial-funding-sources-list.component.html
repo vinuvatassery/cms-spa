@@ -12,26 +12,36 @@ Funding
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
-      <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc"
-        valueField="columnCode">
-      </kendo-dropdownlist>
+      <kendo-dropdownlist 
+      aria-label="All Columns" 
+      [fillMode]="formUiStyle.dropDownFillMode"
+      textField="columnDesc" 
+      valueField="columnName" 
+      [data]="searchColumnList"
+      [valuePrimitive]="true"
+      [(ngModel)]="selectedSearchColumn"
+      (valueChange)="searchColumnChangeHandler($event)">
+</kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
   <span class="filter-section_items filter--search">
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
-      <kendo-textbox aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+      <kendo-textbox aria-label="Search case" rounded="medium" [(ngModel)]="searchText" (afterValueChanged)="onFundSearch($event)" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
     </kendo-floatinglabel>
   </span>
 </section>
-
 <!-- Sorted Info -->
 <div class="table-sorted-info">
-  Sorted Descending by <span class="sort-items"> Source </span>
-  <span class="sort-items">No Filters</span>
-  <span class="sort-items">Filtered by Funding SOurces</span>
-  <span class="sort-items">Default Columns</span> 
+  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
+  <span class="sort-items" *ngIf="!filteredByColumnDesc">No Filters</span>
+  <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
+  <span class="sort-items">{{columnChangeDesc}}</span>
+  <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
+  <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="restFundingGrid()">
+        <a>Set to Default</a>
+  </button>
 </div>
 
 
@@ -66,7 +76,7 @@ Funding
 
     <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="50" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton [data]="processGridActions" icon="more-vertical"
+        <kendo-dropdownbutton [data]="processGridActions(dataItem)" icon="more-vertical"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
           aria-label="more actions" title="More option"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }">

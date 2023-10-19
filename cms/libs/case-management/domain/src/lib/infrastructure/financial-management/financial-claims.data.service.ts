@@ -437,16 +437,20 @@ export class FinancialClaimsDataService {
       { responseType: 'blob' }
     );
   }
-  checkExceededMaxBenefit(serviceCost: number, clientId: number, typeCode : string ) {
-    let path;
-    if (typeCode == ServiceSubTypeCode.medicalClaim) {
-      path = 'financial-management/claims/medical';
-    } else {
-      path = 'financial-management/claims/dental';
+  
+  checkExceededMaxBenefit(serviceCost: number, clientId: number, typeCode : string,clientCaseEligibilityId : string ) {
+    let path = 'financial-management/claims/medical';
+   
+    const limitExceedCheckDto =
+    {
+      clientId : clientId,
+      servicesCost : serviceCost,
+      clientCaseEligibilityId : clientCaseEligibilityId
     }
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/exceeded-limit-check?servicesCost=${serviceCost}&clientId=${clientId}`
-    );
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/exceeded-limit-check`,limitExceedCheckDto);
   }
+
+
   checkIneligibleException(startDtae: any,endDate: any, clientId: number, typeCode : string ) {
     let path;
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
