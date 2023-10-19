@@ -1,15 +1,17 @@
 import {
+  ChangeDetectorRef,
   Component,
+  Input,
   OnInit,
-  ViewEncapsulation,Input, ChangeDetectorRef
+  ViewEncapsulation
 } from '@angular/core';
-import { DrugPharmacyFacade, CaseFacade } from '@cms/case-management/domain';
+import { CaseFacade, DrugPharmacyFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
-import { IntlService } from '@progress/kendo-angular-intl';
-import {ConfigurationProvider} from '@cms/shared/util-core';
-import { FilterService } from '@progress/kendo-angular-grid';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
+import { FilterService } from '@progress/kendo-angular-grid';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 
 @Component({
   selector: 'case-management-drugs-purchased-list',
@@ -59,6 +61,7 @@ export class DrugsPurchasedListComponent implements OnInit {
     transType: "Transaction Type",
     amountPaid: "Amount Paid",
     qty: "Rx Quantity",
+    reversalDate: "Reversal Date",
     clientGroup: "Client Group",
     rxType: "RX Type",
     rxDaysSupply: "RX Days Supply",
@@ -274,7 +277,7 @@ export class DrugsPurchasedListComponent implements OnInit {
     const filters = stateData.filter?.filters ?? [];
 
     for (const val of filters) {
-      if (val.field === 'prescriptionFillDate' || val.field === 'entryDate') {
+      if (val.field === 'prescriptionFillDate' || val.field === 'entryDate' || val.field === 'reversalDate') {
         this.intl.formatDate(val.value, this.dateFormat);
       }
     }

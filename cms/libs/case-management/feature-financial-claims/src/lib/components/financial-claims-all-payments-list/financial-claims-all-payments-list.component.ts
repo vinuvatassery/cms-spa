@@ -19,8 +19,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy,
+  State
 } from '@progress/kendo-data-query';
 import { Subject, first } from 'rxjs';
 
@@ -44,6 +43,7 @@ export class FinancialClaimsAllPaymentsListComponent
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  @Input() financialClaimsAllPaymentsGridLoader$: any;
   @Input() financialClaimsAllPaymentsGridLists$: any;
   @Input() exportButtonShow$: any;
 
@@ -275,15 +275,10 @@ export class FinancialClaimsAllPaymentsListComponent
   ngOnInit(): void {
     this.getPaymentMethodLov();
     this.getPaymentStatusLov();
-    this.loadFinancialClaimsAllPaymentsListGrid();
+
   }
   ngOnChanges(): void {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
-
+    this.defaultGridState()
     this.loadFinancialClaimsAllPaymentsListGrid();
   }
 
@@ -343,7 +338,6 @@ export class FinancialClaimsAllPaymentsListComponent
       filter: this.state?.['filter']?.['filters'] ?? [],
     };
     this.loadFinancialClaimsAllPaymentsListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
   }
 
   onChange(data: any) {
@@ -475,23 +469,6 @@ export class FinancialClaimsAllPaymentsListComponent
     });
   }
 
-  gridDataHandle() {
-    this.financialClaimsAllPaymentsGridLists$.subscribe(
-      (data: GridDataResult) => {
-        this.gridDataResult = data;
-        this.gridDataResult.data = filterBy(
-          this.gridDataResult.data,
-          this.filterData
-        );
-        this.gridFinancialClaimsAllPaymentsDataSubject.next(
-          this.gridDataResult
-        );
-        if (data?.total >= 0 || data?.total === -1) {
-          this.isFinancialClaimsAllPaymentsGridLoaderShow = false;
-        }
-      }
-    );
-  }
   navToReconcilePayments(event: any) {
     this.route.navigate([
       '/financial-management/claims/' +

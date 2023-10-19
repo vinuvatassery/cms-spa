@@ -245,7 +245,7 @@
         </ng-template>
       </kendo-grid-column>
 
-      <kendo-grid-column field="Option" title="Options" [sortable]="false" [columnMenu]="false" [width]="80" class="text-center">
+      <kendo-grid-column field="Option" title="Options" [reorderable]="false" [draggable]="false" [sortable]="false" [columnMenu]="false" [width]="80" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
           <kendo-dropdownbutton [data]="getBatchLogGridActions(dataItem)" icon="more-vertical"
             class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"

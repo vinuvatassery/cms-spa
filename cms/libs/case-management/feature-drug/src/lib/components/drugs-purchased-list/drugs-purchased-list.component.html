@@ -139,6 +139,18 @@
           </ng-template>
         </kendo-grid-column>
 
+        <kendo-grid-column field="reversalDate" title="Reversal Date" [width]="160"
+          [format]="{ date: 'MM-dd-yyyy' }" filter="date">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.reversalDate | date:'MM/dd/yyyy'}}
+          </ng-template>
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <common-grid-cell-date-range-filter [field]="'reversalDate'" [filter]="filter"
+              [filterService]="filterService">
+            </common-grid-cell-date-range-filter>
+          </ng-template>
+        </kendo-grid-column>
+
         <kendo-grid-column field="clientGroup" title="Client Group" [width]="150">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"

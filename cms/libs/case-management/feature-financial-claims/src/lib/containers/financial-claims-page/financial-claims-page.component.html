@@ -17,7 +17,7 @@
                                 [sortType]="sortType" [sort]="sortProcessList"
                                 [sortValueFinancialInvoices]="sortValueFinancialInvoices"
                                 [financialClaimsInvoice$]="financialClaimsInvoice$"
-                                [exportButtonShow$]="exportButtonShow$"         
+                                [exportButtonShow$]="exportButtonShow$"
                                 (loadFinancialClaimsProcessListEvent)="loadFinancialClaimsProcessListGrid($event)"
                                 (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)
                                 (exportGridDataEvent)="exportClaimsProcessGridData()"
@@ -32,7 +32,7 @@
                                 <cms-financial-claims-batches-list  [claimsType]="claimsType" [financialClaimsBatchGridLists$]="financialClaimsBatchGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsBatch"
                                 [sortType]="sortType" [sort]="sortBatchList"
-                                [exportButtonShow$]="exportButtonShow$"         
+                                [exportButtonShow$]="exportButtonShow$"
                                 (loadFinancialClaimsBatchListEvent)="loadFinancialClaimsBatchListGrid($event)"
                                 (exportGridDataEvent)="exportClaimsBatchGridData()"
                                 (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-claims-batches-list>
@@ -42,10 +42,12 @@
                     <kendo-tabstrip-tab title="All Payments">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-claims-all-payments-list [claimsType]="claimsType" [financialClaimsAllPaymentsGridLists$]="financialClaimsAllPaymentsGridLists$"
+                                <cms-financial-claims-all-payments-list [claimsType]="claimsType"
+                                [financialClaimsAllPaymentsGridLists$]="financialClaimsAllPaymentsGridLists$"
+                                [financialClaimsAllPaymentsGridLoader$]="financialClaimsAllPaymentsDataLoader$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList"
-                                [exportButtonShow$]="exportButtonShow$"         
+                                [exportButtonShow$]="exportButtonShow$"
                                 (loadFinancialClaimsAllPaymentsListEvent)="loadFinancialClaimsAllPaymentsListGrid($event)"
                                 (exportGridDataEvent)="exportClaimsPaymentsGridData()"
                                 (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-claims-all-payments-list>
@@ -60,7 +62,7 @@
         <cms-financial-claims-provider-info
               [paymentRequestId]="paymentRequestId"
               (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
-              (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+              (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
               (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
               [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
               [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
