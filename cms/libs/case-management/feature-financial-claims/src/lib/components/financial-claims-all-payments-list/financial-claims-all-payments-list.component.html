@@ -177,7 +177,7 @@
           </kendo-grid-numeric-filter-menu>
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview">{{dataItem.totalCost | kendoNumber : "c"}}</span>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalCost | kendoNumber: 'n2'}}</span>
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="totalDue" title="Total Due" [width]="160">
@@ -188,7 +188,7 @@
           </kendo-grid-numeric-filter-menu>
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview">{{dataItem.totalDue | kendoNumber : "c"}}</span>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalDue | kendoNumber: 'n2'}}</span>
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="paymentStatusDesc" title="Payment Status" [width]="180">
