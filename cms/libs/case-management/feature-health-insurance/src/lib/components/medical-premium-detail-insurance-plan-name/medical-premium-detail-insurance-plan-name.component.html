@@ -1,56 +1,120 @@
 <div [formGroup]="healthInsuranceForm">
 
-    <kendo-floatinglabel text="Insurance Plan Name" >   
-        <kendo-combobox   
-        aria-label="Insurance Plan Name"
-        [fillMode]="formUiStyle.dropDownFillMode" 
-        [loading] = "insurancePlansLoader"    
-        #caseOwnr
-        formControlName="insurancePlanName"     
-        [data]="insurancePlans"   
-        textField="insurancePlanName" 
-        valueField="insurancePlanId"
-        [valuePrimitive]="true"       
-        [filterable]="true"     
-        [kendoDropDownFilter]="caseOwnerfilterSettings"      
-      >
-      </kendo-combobox>
-    
-      </kendo-floatinglabel>
-      <kendo-formerror *ngIf="!healthInsuranceForm.controls['insurancePlanName'].valid && !healthInsuranceForm.controls['insurancePlanName'].disabled">Insurance Plan Name is required.</kendo-formerror>
-      <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
-        <span class="fontsize_twel">Don’t see the Plan you’re looking for?</span>
-        <button
-          kendoButton
-          class="card-link-button ml-1 no-ul fontsize_twel"
-          [disabled]="isViewContentEditable"
-          aria-label="Add New"
-          (click)="addNewInsurancePlanOpen()"
-        >
-          ADD NEW
-        </button>
-      </div>
-</div>
-<kendo-dialog *ngIf="isaddNewInsurancePlanOpen" (close)="addNewInsurancePlanClose()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Add New Plan">
+  <kendo-floatinglabel text="Insurance Plan Name">
+    <kendo-combobox aria-label="Insurance Plan Name" [fillMode]="formUiStyle.dropDownFillMode"
+      [loading]="insurancePlansLoader" #caseOwnr formControlName="insurancePlanName" [data]="insurancePlans"
+      textField="insurancePlanName" valueField="insurancePlanId" [valuePrimitive]="true" [filterable]="true"
+      [kendoDropDownFilter]="caseOwnerfilterSettings">
+    </kendo-combobox>
 
-<section class="k-dialog-body mb-2">
-  <p>
-    This feature is part of future scope of work for the ORCares project.
-  </p>
-</section>
-<kendo-dialog-actions>
-  <div class="justify-content-between">
-    <div class="justify-content-end">
-      <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
-        (click)="addNewInsurancePlanClose()">
-        Cancel
-      </button>
-      <button kendoButton [primary]="true" aria-label="Add" (click)="addNewInsurancePlanClose()">
-        Add
-      </button>
-    </div>
+  </kendo-floatinglabel>
+  <kendo-formerror
+    *ngIf="!healthInsuranceForm.controls['insurancePlanName'].valid && !healthInsuranceForm.controls['insurancePlanName'].disabled">Insurance
+    Plan Name is required.</kendo-formerror>
+  <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
+    <span class="fontsize_twel">Don’t see the Plan you’re looking for?</span>
+    <button kendoButton class="card-link-button ml-1 no-ul fontsize_twel" [disabled]="isViewContentEditable"
+      aria-label="Add New " (click)="addNewInsurancePlanOpen()">
+      ADD NEW
+    </button>
   </div>
-</kendo-dialog-actions>
+</div>
 
+
+
+
+
+<kendo-dialog *ngIf="isaddNewInsurancePlanOpen" (close)="addNewInsurancePlanClose()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Add New Insurance Plan">
+
+  <div [formGroup]="newhealthInsuranceForm">
+    <section class="k-dialog-body mb-2">
+      <p class="text-muted mb-2">
+        All fields are required unless otherwise stated.
+      </p>
+      <kendo-floatinglabel text="Insurance Provider">
+        <kendo-combobox aria-label="Insurance Provider" [fillMode]="formUiStyle.dropDownFillMode" [loading]="isLoading"
+          #caseOwnr formControlName="insuranceCarrierName" [data]="carrierNames" textField="vendorName"
+          valueField="vendorId" [valuePrimitive]="true" [filterable]="true"
+          [kendoDropDownFilter]="caseOwnerfilterSettings" (valueChange)="insuranceCarrierNameChangeValue($event)">
+        </kendo-combobox>
+      </kendo-floatinglabel>
+      <!-- <kendo-formerror *ngIf="!newhealthInsuranceForm.controls['insuranceCarrierName'].valid">Insurance Provider is
+        required</kendo-formerror> -->
+
+        <kendo-formerror *ngIf="!newhealthInsuranceForm.controls['insuranceCarrierName'].valid &&  isValidateForm">Insurance Carrier Name is required.</kendo-formerror>
+
+      <div>
+        <kendo-floatinglabel text="Insurance Plan Name">
+          <kendo-textbox aria-label="insurance Plan Name" placeholder="Insurance Plan Name"
+            formControlName="insurancePlanName" [maxlength]="20" [fillMode]="formUiStyle.inputFillMode">
+          </kendo-textbox>
+        </kendo-floatinglabel>
+        <!-- <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && !specialCharAdded && !healthInsuranceForm.controls['insuranceIdNumber'].disabled">
+      Insurance ID Number is required.</kendo-formerror>
+    <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && specialCharAdded && !healthInsuranceForm.controls['insuranceIdNumber'].disabled">
+      Special characters not allowed.</kendo-formerror> -->
+      </div>
+
+
+      <div class="flex-row">
+        <div class="flex-col">
+
+          <kendo-floatinglabel text="Health Insurance Type 1">
+            <kendo-dropdownlist dropdownFieldautofocus aria-label="Health Insurance Type"
+              [fillMode]="formUiStyle.dropDownFillMode" [data]="insuranceTypeList$ | async"
+              formControlName="insuranceType" textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
+              [loading]="(insuranceTypeList$ | async)?.length===0">
+            </kendo-dropdownlist>
+          </kendo-floatinglabel>
+        </div>
+      </div>
+
+      <div class="mt-checkbox">
+        <span class="app-checkboxwidtext-wrapper">
+          <input class="adjust-attr" type="checkbox" id="Applicable" name="Applicable" aria-labelledby="Applicable"
+            kendoCheckBox />
+          <label class="k-checkbox-label" for="Applicable">The insurance plan can pay for medication</label>
+        </span>
+
+        <span class="app-checkboxwidtext-wrapper">
+          <input class="adjust-attr" type="checkbox" id="Applicable" name="Applicable" aria-labelledby="Applicable"
+            kendoCheckBox />
+          <label class="k-checkbox-label" for="Applicable">This is a dental plan</label>
+        </span>
+      </div>
+
+      <kendo-floatinglabel text="Start Date">
+        <kendo-datepicker aria-label="Start Date" [fillMode]="formUiStyle.dateInputFillMode" formControlName="startDate"
+          format="MM-dd-yyyy" formatPlaceholder="formatPattern" (select)="dateValidate($event)"
+          (keyup)="dateValidate($event)" placeholder="Start Date"></kendo-datepicker>
+        <!-- <kendo-formerror *ngIf="cerDateValidator">Date CER Received cannot be less than CER Sent Date ({{cerSentDateValue | date: 'MM/dd/yyyy'}}).</kendo-formerror>  
+              <kendo-formerror *ngIf="!appInfoForm.controls['cerReceivedDate'].valid">Date CER received is
+                required.</kendo-formerror> -->
+      </kendo-floatinglabel>
+
+      <kendo-floatinglabel text="Term Date">
+        <kendo-datepicker aria-label="Start Date" [fillMode]="formUiStyle.dateInputFillMode" formControlName="termDate"
+          format="MM-dd-yyyy" formatPlaceholder="formatPattern" (select)="dateValidate($event)"
+          (keyup)="dateValidate($event)" placeholder="Term Date"></kendo-datepicker>
+        <!-- <kendo-formerror *ngIf="cerDateValidator">Date CER Received cannot be less than CER Sent Date ({{cerSentDateValue | date: 'MM/dd/yyyy'}}).</kendo-formerror>  
+              <kendo-formerror *ngIf="!appInfoForm.controls['cerReceivedDate'].valid">Date CER received is
+                required.</kendo-formerror> -->
+      </kendo-floatinglabel>
+
+
+    </section>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div class="justify-content-end">
+          <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="addNewInsurancePlanClose()">
+            Cancel
+          </button>
+          <button kendoButton [primary]="true" aria-label="Add" (click)="addNewInsurancePlanClose()">
+            Add
+          </button>
+        </div>
+      </div>
+    </kendo-dialog-actions>
+  </div>
 </kendo-dialog>
