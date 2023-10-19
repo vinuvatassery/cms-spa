@@ -28,7 +28,7 @@ export class FinancialVendorPageComponent implements OnInit {
   hasClinicCreateUpdatePermission = false;
 
   inputProviderTypeForClinic = '';
-  isDentalClinicSelected : boolean = false;
+  selectedClinicType : string = this.financeVendorTypeCodes.MedicalClinic;
 
   data = [
     {
@@ -83,8 +83,11 @@ export class FinancialVendorPageComponent implements OnInit {
 
   setupForClinic(providerTypeForClinic: string) {
     if (providerTypeForClinic === FinancialVendorTypeCode.DentalProviders)
-      this.isDentalClinicSelected = true;
-    this.inputProviderTypeForClinic = providerTypeForClinic;
+      this.selectedClinicType = FinancialVendorTypeCode.DentalProviders;
+    else if (providerTypeForClinic === FinancialVendorTypeCode.MedicalProviders)
+      this.selectedClinicType = FinancialVendorTypeCode.MedicalProviders;
+
+    this.inputProviderTypeForClinic = FinancialVendorTypeCode.MedicalProviders;
 
     this.clickCloseMedicalVendorDetails();
     this.clickCloseDentalVendorDetails();

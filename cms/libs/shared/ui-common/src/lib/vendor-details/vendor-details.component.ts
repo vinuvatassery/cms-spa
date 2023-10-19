@@ -25,7 +25,7 @@ export class VendorDetailsComponent implements OnInit {
   @Input() clinicVendorList$!: any;
   @Input() clinicVendorLoader$!: any;
   @Input() hasCreateUpdatePermission: boolean = false;
-  @Input() isDentalClinicSelected: boolean = false;
+  @Input() selectedClinicType: string = FinancialVendorTypeCode.MedicalClinic;
 
   @Output() saveProviderEventClicked = new EventEmitter<any>();
   @Output() closeModalEventClicked = new EventEmitter<any>();
@@ -87,10 +87,10 @@ export class VendorDetailsComponent implements OnInit {
       this.getPaymentMethods();
       this.getPaymentRunDate();
     }
-    if (this.isDentalClinicSelected) {
-      this.medicalProviderForm.controls[this.clinicTypeFieldName].setValue(FinancialVendorTypeCode.DentalClinic)
-    } else {
+    if (this.selectedClinicType === FinancialVendorTypeCode.MedicalProviders) {
       this.medicalProviderForm.controls[this.clinicTypeFieldName].setValue(FinancialVendorTypeCode.MedicalClinic)
+    } else if (this.selectedClinicType === FinancialVendorTypeCode.DentalProviders) {
+      this.medicalProviderForm.controls[this.clinicTypeFieldName].setValue(FinancialVendorTypeCode.DentalClinic)
     }
   }
 
