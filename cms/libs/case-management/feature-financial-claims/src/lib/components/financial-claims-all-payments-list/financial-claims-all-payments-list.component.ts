@@ -64,10 +64,11 @@ export class FinancialClaimsAllPaymentsListComponent
   isDeleteClaimClosed = false;
   UnBatchDialog: any;
   deleteClaimsDialog: any;
-  deletemodelbody = "This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch";
+  deletemodelbody =
+    'This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
   selected: any;
   isGridExpand = true;
-  selectedClaims: any[] = [];;
+  selectedClaims: any[] = [];
   previewText = false;
 
   public selectableSettings: SelectableSettings;
@@ -100,24 +101,25 @@ export class FinancialClaimsAllPaymentsListComponent
   clientName: any;
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
 
-  getPaymentsGridActions(dataItem: any){
-    return [
-      {
-        buttonType: 'btn-h-primary',
-        text: 'Edit Claim',
-        icon: 'edit',
-        click: (claim: any): void => {
-          this.onClaimClick(claim);
-        },
-      },
+  getPaymentsGridActions(dataItem: any) {
+    let list = [
       {
         buttonType: 'btn-h-primary',
         text: 'Unbatch Claim',
         icon: 'undo',
-        disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
+        disabled: [
+          PaymentStatusCode.Paid,
+          PaymentStatusCode.PaymentRequested,
+          PaymentStatusCode.ManagerApproved,
+        ].includes(dataItem.paymentStatusCode),
         click: (data: any): void => {
-
-          if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
+          if (
+            ![
+              PaymentStatusCode.Paid,
+              PaymentStatusCode.PaymentRequested,
+              PaymentStatusCode.ManagerApproved,
+            ].includes(data.paymentStatusCode)
+          )
             if (!this.isUnBatchClaimsClosed) {
               this.isUnBatchClaimsClosed = true;
               this.selected = data;
@@ -130,26 +132,43 @@ export class FinancialClaimsAllPaymentsListComponent
         text: 'Delete Claim',
         icon: 'delete',
         click: (data: any): void => {
-          if([PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
-          {
+          if (
+            [
+              PaymentStatusCode.Paid,
+              PaymentStatusCode.PaymentRequested,
+              PaymentStatusCode.ManagerApproved,
+            ].includes(data.paymentStatusCode)
+          ) {
             this.notificationSnackbarService.manageSnackBar(
               SnackBarNotificationType.ERROR,
-              "This claim cannot be deleted",
+              'This claim cannot be deleted',
               NotificationSource.UI
             );
-          }else{
-              this.isUnBatchClaimsClosed = false;
-              this.isDeleteClaimClosed = true;
-              this.onSingleClaimDelete(data.paymentRequestId.split(','));
-              this.onDeleteClaimsOpenClicked(
-                this.deleteClaimsConfirmationDialogTemplate
-              );
-
+          } else {
+            this.isUnBatchClaimsClosed = false;
+            this.isDeleteClaimClosed = true;
+            this.onSingleClaimDelete(data.paymentRequestId.split(','));
+            this.onDeleteClaimsOpenClicked(
+              this.deleteClaimsConfirmationDialogTemplate
+            );
           }
-
         },
       },
     ];
+
+    if (PaymentStatusCode.Denied == dataItem.paymentStatusCode)
+      list = [
+        {
+          buttonType: 'btn-h-primary',
+          text: 'Edit Claim',
+          icon: 'edit',
+          click: (claim: any): void => {
+            this.onClaimClick(claim);
+          },
+        },
+        ...list,
+      ];
+    return list;
   }
 
   public bulkMore = [
@@ -263,7 +282,7 @@ export class FinancialClaimsAllPaymentsListComponent
     private readonly lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly notificationSnackbarService: NotificationSnackbarService
   ) {
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -275,10 +294,9 @@ export class FinancialClaimsAllPaymentsListComponent
   ngOnInit(): void {
     this.getPaymentMethodLov();
     this.getPaymentStatusLov();
-
   }
   ngOnChanges(): void {
-    this.defaultGridState()
+    this.defaultGridState();
     this.loadFinancialClaimsAllPaymentsListGrid();
   }
 
@@ -580,7 +598,8 @@ export class FinancialClaimsAllPaymentsListComponent
       .pipe(first((unbatchResponse: any) => unbatchResponse != null))
       .subscribe((unbatchResponse: any) => {
         if (unbatchResponse ?? false) {
-          this.loadFinancialClaimsAllPaymentsListGrid();        }
+          this.loadFinancialClaimsAllPaymentsListGrid();
+        }
       });
   }
 
@@ -593,22 +612,19 @@ export class FinancialClaimsAllPaymentsListComponent
 
   onModalDeleteClaimsModalClose(result: any) {
     if (result) {
-      this.isDeleteClaimClosed=false;
+      this.isDeleteClaimClosed = false;
       this.deleteClaimsDialog.close();
     }
   }
 
   onSingleClaimDelete(selection: any) {
-    this.selected=selection;
+    this.selected = selection;
   }
 
   onModalBatchDeletingClaimsButtonClicked(action: any) {
     if (action) {
       this.handleDeleteClaims();
-      this.financialClaimsFacade.deleteClaims(
-        this.selected,
-        this.claimsType
-      );
+      this.financialClaimsFacade.deleteClaims(this.selected, this.claimsType);
     }
   }
 
@@ -616,9 +632,9 @@ export class FinancialClaimsAllPaymentsListComponent
     this.financialClaimsFacade.deleteClaims$
       .pipe(first((deleteResponse: any) => deleteResponse != null))
       .subscribe((deleteResponse: any) => {
-        if (deleteResponse!=null) {
-          this.isDeleteClaimClosed=false;
-          this.deleteClaimsDialog.close()
+        if (deleteResponse != null) {
+          this.isDeleteClaimClosed = false;
+          this.deleteClaimsDialog.close();
           this.loadFinancialClaimsAllPaymentsListGrid();
         }
       });

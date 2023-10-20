@@ -29,6 +29,9 @@ export class PcaAssignmentsFacade {
 
     private assignPcaResponseDataSubject = new Subject<any>();
     assignPcaResponseData$ = this.assignPcaResponseDataSubject.asObservable();
+
+    private reassignPcaResponseDataSubject = new Subject<any>();
+    reassignPcaResponseData$ = this.reassignPcaResponseDataSubject.asObservable();
     
     private editAssignedPcaResponseDataSubject = new Subject<any>();
     editAssignedPcaResponseData$ = this.editAssignedPcaResponseDataSubject.asObservable();
@@ -166,6 +169,24 @@ export class PcaAssignmentsFacade {
         }
       },
       error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
+  }
+  reassignPca(assignPcaRequest : any){
+    
+    this.showLoader();
+    return this.pcaAssignmentsDataService.reassignPca(assignPcaRequest).subscribe({
+      next: (updatedResponse: any) => {        
+        if (updatedResponse) {
+          this.reassignPcaResponseDataSubject.next(updatedResponse);            
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, updatedResponse?.message)
+          this.hideLoader();      
+        }
+      },
+      error: (err) => {
+        
         this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
