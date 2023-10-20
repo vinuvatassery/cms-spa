@@ -107,6 +107,7 @@ export class FinancialPremiumsPrintAuthorizationComponent {
             window.open(fileUrl, "_blank");
             this.ref.detectChanges();
           }
+          this.onClosePrintAdviceLetterClicked();
           this.loaderService.hide();
         },
         error: (err: Error) => {
