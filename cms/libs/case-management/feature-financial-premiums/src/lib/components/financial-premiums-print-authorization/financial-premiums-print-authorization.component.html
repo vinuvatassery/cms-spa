@@ -29,13 +29,13 @@
             <div class="justify-content-end align-items-center">
                   <span class="mr-1">{{ printOption
                         ? printCount + ' advice letter(s) to be printed'
-                        : reconcileCount + ' payment(s) to reconcile, ' + printCount + ' advice letter(s) to be printed' }}</span>
+                        : premiumReconcileCount + ' payment(s) to reconcile, ' + printCount + ' advice letter(s) to be printed' }}</span>
 
                   <button kendoButton (click)="onClosePrintAdviceLetterClicked()" [primary]="true" look="outline" aria-label="Cancel">
                         Cancel
                   </button>
                   <button kendoButton *ngIf="printOption" [disabled]="printCount == 0" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true"> Print</button>
-                  <button kendoButton *ngIf="!printOption" [disabled]="reconcileCount == 0" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true"> Reconcile & Print</button>
+                  <button kendoButton *ngIf="!printOption" [disabled]="premiumReconcileCount == 0" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true"> Reconcile & Print</button>
             </div>
       </div>
 </kendo-dialog-actions>

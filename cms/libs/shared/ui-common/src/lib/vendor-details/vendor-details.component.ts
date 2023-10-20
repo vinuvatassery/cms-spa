@@ -151,14 +151,11 @@ constructor(
   }
 
   save() {
-    let mailCode = this.medicalProviderForm.controls['mailCode'].value;
-    if(mailCode.length === 3){
-      this.validateForm();
+     this.validateForm();
     this.isValidateForm = true;
     if (this.medicalProviderForm.valid) {
       let providerData = this.mappVendorProfileData();
       this.saveProviderEventClicked.next(providerData);
-    }
     }
   }
 
@@ -176,7 +173,8 @@ constructor(
         this.medicalProviderForm.controls['lastName'].updateValueAndValidity();
       }
     }
-    else if (this.providerType == this.vendorTypes.Manufacturers) {
+    else if(this.providerType == this.vendorTypes.Manufacturers) {
+      this.medicalProviderForm.controls['mailCode'].setValidators([Validators.required, Validators.maxLength(3), Validators.minLength(3)]);
       this.medicalProviderForm.controls['providerName']
         .setValidators([
           Validators.required, Validators.required, Validators.pattern('^[A-Za-z ]+$')
@@ -216,6 +214,7 @@ constructor(
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();
 
       if (this.providerType == this.vendorTypes.Manufacturers) {
+        this.medicalProviderForm.controls['mailCode'].setValidators([Validators.required, Validators.maxLength(3), Validators.minLength(3)]);
         this.medicalProviderForm.controls['nameOnCheck'].setValidators([
           Validators.nullValidator,
         ]);
