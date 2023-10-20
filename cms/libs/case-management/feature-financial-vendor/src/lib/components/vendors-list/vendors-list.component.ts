@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import {  GridDataResult } from '@progress/kendo-angular-grid';
-import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-financial-vendors-list',
@@ -64,7 +64,6 @@ columns : any = {
   openInvoices:"Open Invoices",
   phones:"Phones",
   emails:"Emails",
-  mailCode:"Mail Code",
   address:"Address",
   preferredFlag:"Preferred Flag",
   nabp:"Nabp",
@@ -139,12 +138,6 @@ dropDowncolumns : any = [
     "columnCode": "NpiNbr",
     "columnDesc": "Npi Number"   ,
     "vendorTypeCode": ["PHARMACY"],
-  }
-  ,
-  {
-    "columnCode": "mailCode",
-    "columnDesc": "Mail Code"   ,
-    "vendorTypeCode":  ["MANUFACTURERS","DENTAL_PROVIDER","MEDICAL_PROVIDER"],
   }
   ,
   {
@@ -242,10 +235,6 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     {
       operator = "eq"
     }
-    if(this.selectedColumn ==='mailCode')
-      operator = "contains"
-
-
     this.filterData = {logic:'and',filters:[{
       "filters": [
           {

@@ -185,7 +185,7 @@ export class VendorDetailsComponent implements OnInit {
         this.medicalProviderForm.controls['lastName'].updateValueAndValidity();
       }
     }
-    else if (this.providerType == this.vendorTypes.Manufacturers) {
+    else if(this.providerType == this.vendorTypes.Manufacturers) {
       this.medicalProviderForm.controls['mailCode'].setValidators([Validators.required, Validators.maxLength(3), Validators.minLength(3)]);
       this.medicalProviderForm.controls['providerName']
         .setValidators([

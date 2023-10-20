@@ -1,5 +1,5 @@
 /** Angular libraries **/
-import { ChangeDetectionStrategy, Component, Input, ViewChild, OnInit, OnDestroy } from '@angular/core'; 
+import { ChangeDetectionStrategy, Component, Input, ViewChild, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core'; 
 import { Router } from '@angular/router';
 
 /** External libraries **/
@@ -35,6 +35,10 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   isInvoiceLoadingSubscription!:Subscription;
   @Input() tabCode: any;
   @Input() vendorId: any;
+  @Input() serviceGridView$ :any;
+  @Input() isInvoiceServiceLoading$: any;
+  @Output() loadInvoiceServiceEvent = new EventEmitter<any>();
+  @Output() loadInvoiceEvent = new EventEmitter<any>();
   @ViewChild(GridComponent)
   invoiceGrid!: GridComponent;
   claimsType: any = 'dental';
@@ -101,7 +105,6 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   }
   
   public dataStateChange(stateData: any): void {
-    this.collapseAll(this.state?.take);
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -140,7 +143,7 @@ export class InvoicesComponent implements OnInit, OnDestroy {
     { queryParams :{bid: batchId}});
   } 
 
-  onExpand(event:any) {
-    this.invoiceFacade.loadPaymentRequestServices(event.dataItem,this.vendorId,this.tabCode)   
+  loadInvoiceServices(event:any){
+    this.loadInvoiceServiceEvent.emit(event); 
   } 
 }
