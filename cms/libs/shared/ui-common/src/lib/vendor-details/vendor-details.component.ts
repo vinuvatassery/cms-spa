@@ -79,7 +79,7 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
     if (this.vendorTypes.Clinic == this.providerType) {
       this.isClinicNameFilterable = false;
     }
@@ -185,7 +185,7 @@ export class VendorDetailsComponent implements OnInit {
         this.medicalProviderForm.controls['lastName'].updateValueAndValidity();
       }
     }
-    else if(this.providerType == this.vendorTypes.Manufacturers) {
+    else if (this.providerType == this.vendorTypes.Manufacturers) {
       this.medicalProviderForm.controls['mailCode'].setValidators([Validators.required, Validators.maxLength(3), Validators.minLength(3)]);
       this.medicalProviderForm.controls['providerName']
         .setValidators([
@@ -396,16 +396,9 @@ export class VendorDetailsComponent implements OnInit {
     this.medicalProviderForm.controls['providerName'].setValue(clinicDetail.vendorName);
   }
 
-  onClinicSelected($event: any) {
-    
-    
-  }
-
   isClinicNameFilterable = true;
   @ViewChild(MultiColumnComboBoxComponent, { static: false }) comboBox: MultiColumnComboBoxComponent | undefined = undefined;
   onComboBoxOpen(event: any) {
-    // You can implement a condition to prevent the dropdown from opening.
-    // For example, you can prevent the dropdown from opening if a certain condition is met.
     if (this.vendorTypes.Clinic == this.providerType) {
       event.preventDefault();
       this.isClinicNameFilterable = false;
