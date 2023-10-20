@@ -314,9 +314,6 @@ export class ClientsComponent implements OnInit, OnChanges{
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
-      
-    //const  filter = JSON.stringify(param?.filter);
-
     const vendorCleintPageAndSortedRequest =
     {
       SortType : param?.sortType,
@@ -328,9 +325,7 @@ export class ClientsComponent implements OnInit, OnChanges{
       vendorTypeCode:this.vendorTypeCode
     }
    let fileName = this.vendorTypeCode+' '+(this.vendorName[0].toUpperCase() + this.vendorName.substr(1).toLowerCase())+' Clients'
-
     this.documentFacade.getExportFile(vendorCleintPageAndSortedRequest, `vendors/${this.providerId}/clients`,fileName)
-
     this.exportButtonShow$
     .subscribe((response: any) =>
     {
@@ -339,7 +334,6 @@ export class ClientsComponent implements OnInit, OnChanges{
         this.showExportLoader = false
         this.cdr.detectChanges()
       }
-
     })
   }
 }
