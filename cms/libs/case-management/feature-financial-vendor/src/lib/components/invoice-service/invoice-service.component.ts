@@ -6,7 +6,6 @@ import { Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'cms-invoice-service',
   templateUrl: './invoice-service.component.html',
-  styleUrls: ['./invoice-service.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InvoiceServiceComponent implements OnChanges {
