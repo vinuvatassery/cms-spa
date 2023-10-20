@@ -4,7 +4,7 @@ import { State } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, PaymentPanel, PaymentsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import {  filter } from 'rxjs';
-import { LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoggingService } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 

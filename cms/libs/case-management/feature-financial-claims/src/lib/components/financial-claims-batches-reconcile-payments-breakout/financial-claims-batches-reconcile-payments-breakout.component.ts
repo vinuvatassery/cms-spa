@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy,ChangeDetectorRef, Component,Input,Output,EventEmitter, OnInit,OnChanges,TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { GridDataResult,ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
+import { FilterService,GridDataResult,ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-claims-batches-reconcile-payments-breakout',
   templateUrl:
@@ -77,7 +78,7 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
       "columnDesc": "Amount Due"         
     },
     {
-      "columnCode": "paymentStatusCode",
+      "columnCode": "paymentStatusDesc",
       "columnDesc": "Payment Status"         
     },
     {
@@ -97,14 +98,20 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
 
   gridReconcilePaymentBreakoutListSubject = new Subject<any>();
   gridReconcilePaymentBreakout$ = this.gridReconcilePaymentBreakoutListSubject.asObservable();
+  selectedPaymentStatus: string | null = null;
+  selectedpaymentMethod: string | null = null;
+  paymentMethodType$ = this.lovFacade.paymentMethodType$;
+  paymentStatus$ = this.lovFacade.paymentStatus$;
+  paymentMethodTypes: any = [];
+  paymentStatus: any = [];
 
-
-  constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService) { }
+  constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService,private readonly lovFacade: LovFacade) { }
   
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
    }
   ngOnInit(): void {
+    this.getPaymentStatusLov();
      this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -225,6 +232,8 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
       this.filter = "";
       this.isFiltered = false
     }
+    if (!this.filteredBy.includes('Payment Status'))
+    this.selectedPaymentStatus = '';
     this.loadPaymentBreakoutGrid();    
   }
 
@@ -311,5 +320,38 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
     this.closeRecentClaimsModal(true);
+  }
+
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (field === 'paymentStatusDesc') this.selectedPaymentStatus = value;
+    if (field === 'paymentMethodDesc') this.selectedpaymentMethod = value;
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'and',
+    });
+  }
+
+  private getPaymentStatusLov() {
+    this.lovFacade.getPaymentStatusLov();
+    this.paymentStatus$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentStatus = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
   }
 }

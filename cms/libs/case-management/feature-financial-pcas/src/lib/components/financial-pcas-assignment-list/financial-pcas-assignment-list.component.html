@@ -6,7 +6,7 @@ aria-label="Assignment"> Assignment</button>
 <p class="mt-2">Select object and group below to load the grid data</p>
 <section class="flex-row mb-1">
 
-                  <span class="flex-col flex-col-3">
+                  <div class="flex-col flex-col-3">
                         <kendo-floatinglabel text="Object">
                         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
                               placeholder="Object"
@@ -18,26 +18,26 @@ aria-label="Assignment"> Assignment</button>
                         </kendo-dropdownlist>
                         <kendo-formerror *ngIf="!objectCodeValid">Object is required.</kendo-formerror>
                         </kendo-floatinglabel>
-                  </span>
-                  <form [formGroup]="pcaAssignmentGroupForm">
-                  <span class="flex-col flex-col-9">
-                        <kendo-floatinglabel text="Group">
-                        <kendo-multiselect
-                        class="fixed-height-input"
-                        [checkboxes]="{ checkOnClick: true, enabled: true }"
-                        [fillMode]="formUiStyle.dropDownFillMode"
-                        [data]="groupCodesData$"
-                        aria-label="to address"
-                        [textField]="'groupCodeDesc'"
-                        [valueField]="'groupCodeId'"
-                        formControlName="groupCodes"
-                        [kendoMultiSelectSummaryTag]="5"
-                        (valueChange)="groupChange($event)"
-                        ></kendo-multiselect>
-                        <kendo-formerror *ngIf="!groupCodesValid">Group is required.</kendo-formerror>
-                        </kendo-floatinglabel>
-                  </span>
-                  </form>
+                  </div>
+                  <div class="flex-col flex-col-9">
+                              <form [formGroup]="pcaAssignmentGroupForm">                              
+                                    <kendo-floatinglabel text="Group">
+                                    <kendo-multiselect
+                                    class="fixed-height-input"
+                                    [checkboxes]="{ checkOnClick: true, enabled: true }"
+                                    [fillMode]="formUiStyle.dropDownFillMode"
+                                    [data]="groupCodesData$"
+                                    aria-label="to address"
+                                    [textField]="'groupCodeDesc'"
+                                    [valueField]="'groupCodeId'"
+                                    formControlName="groupCodes" 
+                                    (valueChange)="groupChange($event)"
+                                    ></kendo-multiselect>
+                                    <kendo-formerror *ngIf="!groupCodesValid">Group is required.</kendo-formerror>
+                                    </kendo-floatinglabel>
+                              </form>               
+                   </div>
+                 
 </section>
 
       <div>

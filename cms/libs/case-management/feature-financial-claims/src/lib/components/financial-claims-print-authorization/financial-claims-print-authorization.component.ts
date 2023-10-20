@@ -25,6 +25,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
   @Input() printOption: boolean = false;
   @Input() isSaveClicked!: boolean;
   @Input() claimsType:any;
+  @Input() claimReconcileCount:any;
 
   /** Output properties  **/
   @Output() onClosePrintAdviceLetterEvent = new EventEmitter<any>();
@@ -76,7 +77,6 @@ export class FinancialClaimsPrintAuthorizationComponent {
 
             this.returnResultFinalPrintList = data;
             this.printCount = this.returnResultFinalPrintList.filter(x => x.isPrintAdviceLetter === true).length;
-            this.reconcileCount = this.returnResultFinalPrintList.length
             this.ref.detectChanges();
           }
           this.loaderService.hide();
@@ -128,7 +128,6 @@ export class FinancialClaimsPrintAuthorizationComponent {
   onCheckboxChange(event: any, item: any): void {
     item.isPrintAdviceLetter = event.target.checked;
     this.printCount = this.returnResultFinalPrintList.filter(x => x.isPrintAdviceLetter === true).length;
-    this.reconcileCount = this.returnResultFinalPrintList.length;
     if (!this.items['print']) {
       this.printAdviceLetterData.PrintAdviceLetterGenerateInfo.forEach((value: any) => {
         if (item.vendorId === value.vendorId) {
@@ -161,6 +160,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
             window.open(fileUrl, "_blank");
             this.ref.detectChanges();
           }
+          this.onClosePrintAdviceLetterClicked();
           this.loaderService.hide();
         },
         error: (err: Error) => {
@@ -180,10 +180,13 @@ export class FinancialClaimsPrintAuthorizationComponent {
           if (data) {
             let printReconcileRecords = this.printAdviceLetterData?.PrintAdviceLetterGenerateInfo?.filter((x: any) => x.isPrintAdviceLetter === true)
             let request = { 'PrintAdviceLetterGenerateInfo': printReconcileRecords, 'batchId': this.printAdviceLetterData.batchId };
+            if(this.printCount > 0){
             this.generateAndPrintAdviceLetter(request);
-            this.ref.detectChanges();
+            }
           }
-          this.loaderService.hide();
+          this.onClosePrintAdviceLetterClicked();
+          this.ref.detectChanges();
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled!");
         },
         error: (err: Error) => {
           this.loaderService.hide();

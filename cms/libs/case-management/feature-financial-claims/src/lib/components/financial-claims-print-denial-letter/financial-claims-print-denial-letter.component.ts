@@ -9,7 +9,12 @@ export class FinancialClaimsPrintDenialLetterComponent {
 
   @Output() modalCloseEvent= new EventEmitter<any>();
 
-  closeModal(){
+  saveModal(){
     this.modalCloseEvent.emit(true);
+  }
+
+  closeModal()
+  {
+    this.modalCloseEvent.emit(false);
   }
 }

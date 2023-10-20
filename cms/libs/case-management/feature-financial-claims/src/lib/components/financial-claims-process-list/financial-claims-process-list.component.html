@@ -5,7 +5,7 @@
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
       <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
-      textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
+      textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn"  (valueChange)="searchColumnChangeHandler($event)">
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
@@ -81,7 +81,7 @@
     <kendo-grid-column field="vendorFullName" title="Provider Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.vendorFullName"  kendoButton look="flat" class="card-link-button"
-        (click)="onClaimClick(dataItem);onProviderNameClick(dataItem.paymentRequestId)">
+        (click)="onProviderNameClick(dataItem.paymentRequestId)">
           {{ dataItem.vendorFullName }}
         </button>
       </ng-template>
@@ -165,10 +165,14 @@
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
           <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-gt-operator></kendo-filter-gt-operator>
+          <kendo-filter-gte-operator></kendo-filter-gte-operator>
+          <kendo-filter-lt-operator></kendo-filter-lt-operator>
+          <kendo-filter-lte-operator></kendo-filter-lte-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template> 
       <ng-template kendoGridCellTemplate let-dataItem>
-        <span class="tableamountview"> {{dataItem.amountDue | kendoNumber : "c"}}</span>
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber: 'n2'}}</span>
   </ng-template> 
     </kendo-grid-column>
 
@@ -177,10 +181,14 @@
           <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
             <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-gt-operator></kendo-filter-gt-operator>
+            <kendo-filter-gte-operator></kendo-filter-gte-operator>
+            <kendo-filter-lt-operator></kendo-filter-lt-operator>
+            <kendo-filter-lte-operator></kendo-filter-lte-operator>
           </kendo-grid-numeric-filter-menu>
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview"> {{dataItem.annualTotal | kendoNumber : "c"}}</span>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.annualTotal | kendoNumber: 'n2'}}</span>
        </ng-template> 
       </kendo-grid-column>
 
@@ -189,10 +197,14 @@
             <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
               [extra]="false" operator="eq">
               <kendo-filter-eq-operator></kendo-filter-eq-operator>
+              <kendo-filter-gt-operator></kendo-filter-gt-operator>
+              <kendo-filter-gte-operator></kendo-filter-gte-operator>
+              <kendo-filter-lt-operator></kendo-filter-lt-operator>
+              <kendo-filter-lte-operator></kendo-filter-lte-operator>
             </kendo-grid-numeric-filter-menu>
           </ng-template> 
           <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="tableamountview"> {{dataItem.balanceAmount | kendoNumber : "c"}}</span>
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.balanceAmount | kendoNumber: 'n2'}}</span>
          </ng-template> 
         </kendo-grid-column>
 
@@ -290,7 +302,7 @@
     (click)="onBatchClaimsGridSelectedCancelClicked()" *ngIf="isDeleteBatchClosed || isProcessBatchClosed"> Cancel
   </button>
 
-  <button kendoButton kendoButton class="{{selectedProcessClaims.length?'k-error-button':''}}" aria-label="Delete" *ngIf="isDeleteBatchClosed" [disabled]="!selectedProcessClaims.length"
+  <button kendoButton kendoButton class="k-error-button" aria-label="Delete" *ngIf="isDeleteBatchClosed" 
     (click)="onDeleteClaimsOpenClicked(deleteClaimsConfirmationDialog)"> <span class="material-icons mr-1"
       aria-label="Delete"> delete</span> Delete </button>
 
