@@ -374,8 +374,6 @@ public itemDisabled(itemArgs:any)
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
-    // this.showDateSearchWarning = false;
-    // this.showNumberSearchWarning = false;
     this.loadPcaReassignment();
   }
 
