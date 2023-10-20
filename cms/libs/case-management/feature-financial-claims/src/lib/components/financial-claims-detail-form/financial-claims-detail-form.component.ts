@@ -514,6 +514,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
        this.addClaimServicesForm.reset();
     }
     if(this.addClaimServicesForm.length > 1 ){
+    let form = this.addClaimServicesForm.value[i]
+    this.deleteClaimService(form.tpaInvoiceId);
     this.addClaimServicesForm.removeAt(i);
     this.addExceptionForm.removeAt(i);
     }
@@ -823,7 +825,10 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
             {
               vendorId: val.vendorId,
               providerFullName: val.vendorName,
-              vendorAddressId: val.vendorAddressId
+              vendorAddressId: val.vendorAddressId,
+              vendorName: val.vendorName,
+              tin: val.tin,
+              mailCode: val.mailCode
             },
           ];
           this.financialClaimsFacade.clientSubject.next(clients);
@@ -1238,5 +1243,23 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
     }
   }
+  deleteClaimService(tpaInvoiceId:any){
+    this.financialClaimsFacade.deleteClaimService(tpaInvoiceId,this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim).subscribe({
+      next:()=>{
+        this.financialClaimsFacade.showHideSnackBar(
+          SnackBarNotificationType.WARNING,
+          'Service Deleted'
+        );
+      },
+      error:(err:any)=> {
+        this.loaderService.hide();
+        this.financialClaimsFacade.showHideSnackBar(
+          SnackBarNotificationType.ERROR,
+          err
+        );
+      },
+    })
+  }
+  
 }
 

@@ -733,4 +733,22 @@ checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalA
   })
   this.hideLoader();
 }
+deleteClaimService(tpaInvoiceId: any, typeCode: string) {
+  return this.financialClaimsDataService
+    .deleteClaimService(tpaInvoiceId,typeCode)
+    .pipe(
+      catchError((err: any) => {
+        this.loaderService.hide();
+        this.notificationSnackbarService.manageSnackBar(
+          SnackBarNotificationType.ERROR,
+          err
+        );
+        if (!(err?.error ?? false)) {
+          this.loggingService.logException(err);
+          this.hideLoader();
+        }
+        return of(false);
+      })
+    );
+}
 }
