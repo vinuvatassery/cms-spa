@@ -1250,7 +1250,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.financialClaimsFacade.deleteClaimService(tpaInvoiceId,this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim).subscribe({
       next:()=>{
         this.financialClaimsFacade.showHideSnackBar(
-          SnackBarNotificationType.WARNING,
+          SnackBarNotificationType.SUCCESS,
           'Service Deleted'
         );
       },
