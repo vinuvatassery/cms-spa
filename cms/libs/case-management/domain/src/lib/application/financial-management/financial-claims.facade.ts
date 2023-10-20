@@ -26,9 +26,9 @@ export class FinancialClaimsFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortType = 'asc';
+  public sortType = 'desc';
 
-  public sortValueFinancialClaimsProcess = 'invoiceNbr';
+  public sortValueFinancialClaimsProcess = 'creationTime';
   public sortProcessList: SortDescriptor[] = [
     {
       field: this.sortValueFinancialClaimsProcess,
