@@ -93,7 +93,8 @@
         <div class="block-section">
 
           <div class="client-profile-outlet">
-            <cms-invoices [tabCode]="tabCode" [vendorId]="vendorId"></cms-invoices>
+            <cms-invoices [tabCode]="tabCode" [vendorId]="vendorId" [serviceGridView$]="serviceGridView$ "
+            (loadInvoiceServiceEvent)="loadInvoiceServices($event)" [isInvoiceServiceLoading$]="isInvoiceServiceLoading$"></cms-invoices>
           </div>
         </div>
       </ng-template>
