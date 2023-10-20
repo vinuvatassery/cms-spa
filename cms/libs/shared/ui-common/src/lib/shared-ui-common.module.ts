@@ -17,6 +17,7 @@ import { LoaderComponent } from './loader/loader.component';
 import { GridLoaderComponent } from './loader/grid-loader.component';
 import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list.component';
 import { ReminderNotificationSnackBarComponent } from './reminder-notification-snack-bar/reminder-notification-snack-bar.component';
+import { ReAssignCaseComponent } from './re-assign-case/re-assign-case.component';
 
 import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
@@ -72,7 +73,8 @@ import { VendorDetailsComponent } from './vendor-details/vendor-details.componen
     ClientsAttachmentComponent,
     YesOrNoPipe,
     ReminderNotificationSnackBarComponent,
-    VendorDetailsComponent
+    VendorDetailsComponent,
+    ReAssignCaseComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -104,7 +106,8 @@ import { VendorDetailsComponent } from './vendor-details/vendor-details.componen
     ClientsAttachmentComponent,
     YesOrNoPipe,
     ReminderNotificationSnackBarComponent,
-    VendorDetailsComponent
+    VendorDetailsComponent,
+    ReAssignCaseComponent
   ],
 })
 export class SharedUiCommonModule {}
