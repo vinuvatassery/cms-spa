@@ -510,7 +510,7 @@
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
         (click)="closeVedorModal()"> Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> Add </button>
+      <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> {{hasCreateUpdatePermission==true?'ADD NEW':'REQUEST NEW'}} </button>
     </div>
   </div>
   <div class="justify-content-between" *ngIf="editVendorInfo">

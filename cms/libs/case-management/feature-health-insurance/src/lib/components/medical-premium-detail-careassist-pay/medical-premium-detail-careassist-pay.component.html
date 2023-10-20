@@ -21,85 +21,82 @@
                             <kendo-label class="k-radio-label" for="buyingPremiumNo" text="No"></kendo-label>
                         </span>
                         <kendo-formerror
-                            *ngIf="!healthInsuranceForm.controls['careassistPayingPremiumFlag'].valid && isViewContentEditable==false">A Response is Required.</kendo-formerror>
+                            *ngIf="!healthInsuranceForm.controls['careassistPayingPremiumFlag'].valid && isViewContentEditable==false">A
+                            Response is Required.</kendo-formerror>
                     </div>
                 </fieldset>
             </div>
         </div>
-        <div  *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
+        <div *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
             <kendo-floatinglabel text="Insurance Vendor Name">
-    <kendo-multicolumncombobox textField="providerFullName"
-        [fillMode]="formUiStyle.dropDownFillMode"
-        placeholder="Insurance Vendor Name"
-        [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-        (filterChange)="searchMedicalProvider($event)"
-        [data]="insuranceVendorsSearchResult$ | async" 
-        (valueChange)="onProviderValueChange($event)"
-        formControlName="insuranceVendorAddressId"
-        [valuePrimitive]="true"
-        valueField="vendorAddressId"
-        >
-        <button kendoButton fillMode="clear" icon="image"></button>
+                <kendo-multicolumncombobox textField="providerFullName" [fillMode]="formUiStyle.dropDownFillMode"
+                    placeholder="Insurance Vendor Name"
+                    [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
+                    (filterChange)="searchMedicalProvider($event)" [data]="insuranceVendorsSearchResult$ | async"
+                    (valueChange)="onProviderValueChange($event)" formControlName="insuranceVendorAddressId"
+                    [valuePrimitive]="true" valueField="vendorAddressId">
+                    <button kendoButton fillMode="clear" icon="image"></button>
 
-        <kendo-combobox-column>
-            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                <span>Name:{{ dataItem.vendorName }}</span>
-            </ng-template>
-        </kendo-combobox-column>
+                    <kendo-combobox-column>
+                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                            <span>Name:{{ dataItem.vendorName }}</span>
+                        </ng-template>
+                    </kendo-combobox-column>
 
-        <kendo-combobox-column>
-            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                <span class="text-muted"><em> TIN:</em> {{ dataItem.tin }}</span>
-            </ng-template>
-        </kendo-combobox-column>
+                    <kendo-combobox-column>
+                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                            <span class="text-muted"><em> TIN:</em> {{ dataItem.tin }}</span>
+                        </ng-template>
+                    </kendo-combobox-column>
 
-        <kendo-combobox-column>
-            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                <span class="text-muted"><em> Mail Code:</em> {{ dataItem.mailCode }}</span>
-            </ng-template>
-        </kendo-combobox-column>
-        <kendo-combobox-column>
-            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                <span class="text-muted"><em> Address:{{ dataItem.vendorAddress}}</em> </span>
-            </ng-template>
-        </kendo-combobox-column>
-       
-    </kendo-multicolumncombobox>
-     <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceVendorAddressId'].valid && isViewContentEditable==false"
-    class="d-flex align-items-center">
-   
-   {{providerName}} Vendor is required
-</kendo-formerror>
-    </kendo-floatinglabel>
-    <span class="fontsize_twel">Don't see the vendor you're looking for?</span>
-    <button
-      kendoButton
-      class="card-link-button ml-1 no-ul fontsize_twel"
-      [disabled]="isViewContentEditable" 
-      aria-label="add new insurance carrier"
-      (click)="addNewInsuranceProviderOpen()"
-    > 
-      ADD NEW
-    </button>
-       </div>
-        <div class="flex-row mt-3" *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'|| healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == null">
+                    <kendo-combobox-column>
+                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                            <span class="text-muted"><em> Mail Code:</em> {{ dataItem.mailCode }}</span>
+                        </ng-template>
+                    </kendo-combobox-column>
+                    <kendo-combobox-column>
+                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                            <span class="text-muted"><em> Address:{{ dataItem.vendorAddress}}</em> </span>
+                        </ng-template>
+                    </kendo-combobox-column>
+
+                </kendo-multicolumncombobox>
+                <kendo-formerror
+                    *ngIf="!healthInsuranceForm.controls['insuranceVendorAddressId'].valid && isViewContentEditable==false"
+                    class="d-flex align-items-center">
+
+                    {{providerName}} Vendor is required
+                </kendo-formerror>
+            </kendo-floatinglabel>
+            <span class="fontsize_twel">Don't see the vendor you're looking for?</span>
+            <button kendoButton class="card-link-button ml-1 no-ul fontsize_twel" [disabled]="isViewContentEditable"
+                aria-label="add new insurance carrier" (click)="addNewInsuranceProviderOpen()">
+                {{hasinsuranceVendorCreateUpdatePermission==true? 'ADD NEW' :'REQUEST NEW'}}
+            </button>
+        </div>
+        <div class="flex-row mt-3"
+            *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'|| healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == null">
             <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Date Currently Paid Through">
                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                        formControlName="premiumPaidThruDate" 
-                        formatPlaceholder="formatPattern" placeholder="" aria-label="Date Currently Paid Through">
+                        formControlName="premiumPaidThruDate" formatPlaceholder="formatPattern" placeholder=""
+                        aria-label="Date Currently Paid Through">
                     </kendo-datepicker>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumPaidThruDate'].valid && !healthInsuranceForm.controls['premiumPaidThruDate'].disabled">Date currently paid through is required.</kendo-formerror>
+                <kendo-formerror
+                    *ngIf="!healthInsuranceForm.controls['premiumPaidThruDate'].valid && !healthInsuranceForm.controls['premiumPaidThruDate'].disabled">Date
+                    currently paid through is required.</kendo-formerror>
             </div>
             <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Next Premium Payment Due Date">
                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                        formControlName="nextPremiumDueDate" 
-                        formatPlaceholder="formatPattern" placeholder="" aria-label="Next Premium Payment Due Date">
+                        formControlName="nextPremiumDueDate" formatPlaceholder="formatPattern" placeholder=""
+                        aria-label="Next Premium Payment Due Date">
                     </kendo-datepicker>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['nextPremiumDueDate'].valid && !healthInsuranceForm.controls['nextPremiumDueDate'].disabled">	Next payment due date is required.</kendo-formerror>
+                <kendo-formerror
+                    *ngIf="!healthInsuranceForm.controls['nextPremiumDueDate'].valid && !healthInsuranceForm.controls['nextPremiumDueDate'].disabled">
+                    Next payment due date is required.</kendo-formerror>
 
             </div>
             <div class="flex-col flex-col-6">
@@ -107,33 +104,38 @@
                     <span class="k-input-prefix custom-currencysymbol"> $ </span>
                     <kendo-numerictextbox aria-label="premiumAmt" [spinners]="false" class="input-icon-right"
                         placeholder="Premium Amount" placeholder="00.00" formControlName="premiumAmt" #premiumAmt
-                        [fillMode]="formUiStyle.inputFillMode" name="premiumAmt" >
+                        [fillMode]="formUiStyle.inputFillMode" name="premiumAmt">
 
                     </kendo-numerictextbox>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumAmt'].valid && !healthInsuranceForm.controls['premiumAmt'].disabled">Premium amount is required.</kendo-formerror>
+                <kendo-formerror
+                    *ngIf="!healthInsuranceForm.controls['premiumAmt'].valid && !healthInsuranceForm.controls['premiumAmt'].disabled">Premium
+                    amount is required.</kendo-formerror>
 
             </div>
             <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Premium Frequency">
                     <kendo-dropdownlist aria-label="Premium Frequency" [fillMode]="formUiStyle.dropDownFillMode"
-                        [data]="premiumFrequencyList$ | async"
-                        formControlName="premiumFrequencyCode" textField="lovDesc" valueField="lovCode"
-                        [valuePrimitive]="true">
+                        [data]="premiumFrequencyList$ | async" formControlName="premiumFrequencyCode"
+                        textField="lovDesc" valueField="lovCode" [valuePrimitive]="true">
                     </kendo-dropdownlist>
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['premiumFrequencyCode'].valid && !healthInsuranceForm.controls['premiumFrequencyCode'].disabled">Premium frequency is required.</kendo-formerror>
+                <kendo-formerror
+                    *ngIf="!healthInsuranceForm.controls['premiumFrequencyCode'].valid && !healthInsuranceForm.controls['premiumFrequencyCode'].disabled">Premium
+                    frequency is required.</kendo-formerror>
             </div>
             <div class="flex-col">
                 <kendo-floatinglabel text="Payment ID Number">
-                    <kendo-textbox 
-                        placeholder="Payment ID Number" formControlName="paymentIdNbr" [maxlength]="20"
+                    <kendo-textbox placeholder="Payment ID Number" formControlName="paymentIdNbr" [maxlength]="20"
                         [fillMode]="formUiStyle.inputFillMode" (keypress)="restrictSpecialChar($event)">
                     </kendo-textbox>
 
                 </kendo-floatinglabel>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['paymentIdNbr'].valid && !healthInsuranceForm.controls['paymentIdNbr'].disabled">Payment ID number is required.</kendo-formerror>
-                <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && specialCharAdded && !healthInsuranceForm.controls['paymentIdNbr'].disabled">
+                <kendo-formerror
+                    *ngIf="!healthInsuranceForm.controls['paymentIdNbr'].valid && !healthInsuranceForm.controls['paymentIdNbr'].disabled">Payment
+                    ID number is required.</kendo-formerror>
+                <kendo-formerror
+                    *ngIf="!healthInsuranceForm.controls['insuranceIdNumber'].valid && specialCharAdded && !healthInsuranceForm.controls['paymentIdNbr'].disabled">
                     Special characters not allowed.</kendo-formerror>
             </div>
             <div class="flex-col mt-2">
@@ -146,28 +148,27 @@
                 </span>
             </div>
 
-            <div class="flex-col mt-3" >
+            <div class="flex-col mt-3">
                 <case-management-medical-premium-detail-client-policy-holder [healthInsuranceForm]="healthInsuranceForm"
                     [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-client-policy-holder>
             </div>
 
             <div class="flex-col mt-3">
                 <case-management-medical-premium-detail-others-covered-plan [healthInsuranceForm]="healthInsuranceForm"
-                    [isViewContentEditable]="isViewContentEditable"
-                    [clientId]="clientId" [caseEligibilityId] ="caseEligibilityId"></case-management-medical-premium-detail-others-covered-plan>
+                    [isViewContentEditable]="isViewContentEditable" [clientId]="clientId"
+                    [caseEligibilityId]="caseEligibilityId"></case-management-medical-premium-detail-others-covered-plan>
             </div>
         </div>
     </div>
 </div>
 
 <kendo-dialog kendoRippleContainer *ngIf="isShowInsuranceProvider" (close)="closeVendorDetailModal()"
-class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Insurance Vendor" kendoTooltip>
-<cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.InsuranceVendors" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"      [ddlStates$]="ddlStates"
-[clinicVendorList$]="clinicVendorList"
-[clinicVendorLoader$]="clinicVendorLoader"
-(searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
+    class="app-c-modal app-c-modal-md app-c-modal-np"
+    title="{{hasinsuranceVendorCreateUpdatePermission==true? 'Add Health Insurance':'Request Health Insurance'}}"
+    kendoTooltip>
+    <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.InsuranceVendors"
+        (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
+        [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
+        [hasCreateUpdatePermission]="hasinsuranceVendorCreateUpdatePermission"
+        (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
 </kendo-dialog>
-
-
-
-

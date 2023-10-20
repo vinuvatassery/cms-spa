@@ -4,6 +4,7 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ReminderFacade } from '@cms/productivity-tools/domain';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-financial-vendor-page',
@@ -22,7 +23,7 @@ export class FinancialVendorPageComponent implements OnInit {
   isShowPharmacyProvider: boolean = false;
   reminderTabOn = true;
   isShowManufacturers: boolean = false;
-
+  hasinsuranceVendorCreateUpdatePermission:boolean = false;
   data = [
     {
       text: 'Manufacturer',
@@ -77,8 +78,10 @@ export class FinancialVendorPageComponent implements OnInit {
     private reminderFacade: ReminderFacade,
     private documentFacade :  DocumentFacade,
     private readonly contactFacade: ContactFacade,
+    private userManagementFacade:UserManagementFacade
     ) {
     this.medicalProviderForm = this.formBuilder.group({});
+    this.hasinsuranceVendorCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Insurance_Vendor_Create_Update']);
   }
   dataExportParameters! : any
   /** Lifecycle hooks **/
@@ -159,6 +162,7 @@ export class FinancialVendorPageComponent implements OnInit {
       isAcceptReports: [''],
       newAddContactForm: this.formBuilder.array([
       ]),
+      activeFlag:[]
     });
   }
 

@@ -24,7 +24,7 @@ export class VendorDetailsComponent implements OnInit {
   @Input() ddlStates$!: any;
   @Input() clinicVendorList$!: any;
   @Input() clinicVendorLoader$!: any;
-
+  @Input() hasCreateUpdatePermission =false;
   @Output() saveProviderEventClicked = new EventEmitter<any>();
   @Output() closeModalEventClicked = new EventEmitter<any>();
   
@@ -456,7 +456,8 @@ fillFormData(){
       PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? Number(formValues.paymentRunDate) : null,
       PreferredFlag: (formValues.isPreferedPharmacy) ? StatusFlag.Yes:StatusFlag.No,
       PhysicalAddressFlag: (formValues.physicalAddressFlag) ? StatusFlag.Yes:StatusFlag.No,
-      emailAddressTypeCode: AddressType.Mailing
+      emailAddressTypeCode: AddressType.Mailing,
+      activeFlag: this.hasCreateUpdatePermission == true ? StatusFlag.Yes : StatusFlag.No,
     }
     return vendorProfileData;
   }
