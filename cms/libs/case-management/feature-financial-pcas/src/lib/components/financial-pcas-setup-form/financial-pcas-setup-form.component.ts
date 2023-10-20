@@ -149,5 +149,21 @@ export class FinancialPcasSetupFormComponent implements OnInit, OnDestroy {
       this.pcaFormControls?.appropriationYear?.disable();
       this.pcaFormControls?.fundingSourceId?.disable();
   }
+
+  public disabledDates = (date: Date): boolean => {        
+    return date.getDate() != 1;
+  }
+
+  public disabledLastDates = (date: Date): boolean => {        
+    return !this.isLastDay(date);
+  }
+
+  public isLastDay(dt : Date) {
+    let test = new Date(dt.getTime()),
+      month = test.getMonth();
+
+    test.setDate(test.getDate() + 1);
+    return test.getMonth() !== month;
+   }
 }
 

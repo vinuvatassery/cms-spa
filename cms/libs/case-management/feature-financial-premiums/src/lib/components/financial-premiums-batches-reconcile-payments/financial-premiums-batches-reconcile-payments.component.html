@@ -87,12 +87,19 @@
                         <span class="sort-items">Columns Re-ordered</span>
                   </div>
 
-                  <div *ngIf="pageValidationMessage !== null">
-                        <div class="info-banners red-banner d-flex mt-2 mb-2">
+                  <div *ngIf="pageValidationMessage !== null && pageValidationMessageFlag">
+                        <div class="info-banners  red-banner d-flex mt-2 mb-2">
                               <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>              
                               <div>              
-                                <p > {{pageValidationMessage}} </p>                                    
-                                     
+                                <p > {{pageValidationMessage}} </p>       
+                              </div>              
+                         </div>
+                  </div>
+                  <div *ngIf="pageValidationMessage !== null && !pageValidationMessageFlag">
+                        <div class="info-banners canyon-banner-with-black d-flex mt-2 mb-2">
+                              <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>              
+                              <div>              
+                                <p > {{pageValidationMessage}} </p>       
                               </div>              
                          </div>
                   </div>
@@ -105,10 +112,10 @@
                         [data]="reconcilePaymentGridPagedResult" 
                         (selectionChange)="onRowSelection(grid, $event)">
  
-                        <kendo-grid-column   title="Print Advice Ltr" [width]="120"  class="text-center">
+                        <kendo-grid-column   title="Print Advice Ltr" [width]="130"  class="text-center">
  
                               <ng-template kendoGridCellTemplate let-dataItem>                  
-                                    <input *ngIf="dataItem.acceptsReports === 'Y'" class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr"
+                                    <input *ngIf="dataItem.acceptsReportsFlag === 'Y'" class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr"
                                     aria-labelledby="printAdviceLetter" kendoCheckBox  (change)="printAdviceLetterChange(dataItem)" [(ngModel)]="dataItem.isPrintAdviceLetter"
                                     />                                 
                               </ng-template>
@@ -301,12 +308,8 @@
                   <div class="flex-sp-btn">
                         <div> <span><strong>Amount Total:</strong> $&nbsp;{{reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.amountTotal |
                               kendoNumber:'n2'}}</span>
-                        <span class="ml-2"><strong>Warrant Total:</strong></span> <span class="ml-2"
-                              *ngIf="isBreakoutPanelShow; else searchByBatchTemplate">$&nbsp;{{reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.warrantTotal
-                              | kendoNumber: 'n2'}}</span>
-                        <ng-template #searchByBatchTemplate>
-                              <span class="ml-2">$&nbsp;{{0 | kendoNumber: 'n2'}}</span>
-                        </ng-template>
+                        <span class="ml-2"><strong>Warrant Total:</strong></span> <span class="ml-2">$&nbsp;{{reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.warrantTotal | kendoNumber: 'n2'}}</span>
+                       
                   </div>
                   <div><span>{{ premiumReconcileCount }} advice letter(s) to be previewed</span>
                         <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="Close">
@@ -346,7 +349,7 @@
     
 <ng-template #leavePageDialogTemplate>
        
-    <cms-financial-premiums-leave-page [premiumsType]="premiumsType" (modalLeavePageCloseClicked)="onLeavePageCloseClicked($event)"></cms-financial-premiums-leave-page>
+    <cms-financial-premiums-leave-page [premiumsType]="premiumsType" [paymentRequestBatchId]="batchId" (modalLeavePageCloseClicked)="onLeavePageCloseClicked($event)"></cms-financial-premiums-leave-page>
     </ng-template>
 
 

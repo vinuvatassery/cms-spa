@@ -129,10 +129,11 @@ export class FinancialPremiumsPrintAuthorizationComponent {
             if(this.printCount > 0){
             this.generateAndPrintAdviceLetter(request);
             }
-            this.ref.detectChanges();
           }
           this.loaderService.hide();
           this.onClosePrintAdviceLetterClicked();
+          this.ref.detectChanges();
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled!");
         },
         error: (err: Error) => {
           this.loaderService.hide();
