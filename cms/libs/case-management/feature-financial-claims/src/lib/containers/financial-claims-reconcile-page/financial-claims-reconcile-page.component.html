@@ -11,7 +11,8 @@
 [reconcilePaymentBreakoutList$]="reconcilePaymentBreakoutList$"
 (loadReconcileBreakoutSummaryEvent)="loadReconcileBreakoutSummary($event)"
 (loadReconcilePaymentBreakoutListEvent)="loadReconcilePaymentBreakoutList($event)"
-
+[exportButtonShow$]="exportButtonShow$"  
+(exportGridDataEvent)="exportClaimBatchesGridData()"
 (onVendorClickedEvent)="navigateProviderPanel($event)"
 ></cms-financial-claims-batches-reconcile-payments>
 
