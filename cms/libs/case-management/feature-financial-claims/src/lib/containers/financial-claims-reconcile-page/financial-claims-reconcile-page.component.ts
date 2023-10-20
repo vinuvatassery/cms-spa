@@ -117,7 +117,6 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
       }, 
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
-    
   }
   
 }

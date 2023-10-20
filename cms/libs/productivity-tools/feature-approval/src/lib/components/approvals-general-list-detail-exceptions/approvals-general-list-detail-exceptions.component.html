@@ -1,15 +1,30 @@
-<div>
+<div class="flex-col flex-col-10">
+  <p class="mt-1 mb-1">Regarding <a>{{approvalsExceedMaxBenefitCard$?.clientName}}</a></p>
+  <i>{{approvalsExceedMaxBenefitCard$?.exceptionReason}}</i>
+  <i>&nbsp;</i>
+</div>
+<div class="flex-col flex-col-12">
   <p>
-    <strong>Invoice ID:</strong>
-    <span class="mr-1"> XXXXXX </span>
-    <strong>Provider:</strong>
-    <span class="mr-1"> <a> Very Nice Provider </a> </span>
-    <strong>Client YTD:</strong>
-    <span class="mr-1"> $XX,XXX.XX </span>
-
-
+    <strong>Invoice ID : </strong>
+    <span class="mr-1"> {{approvalsExceedMaxBenefitCard$?.invoiceId}} </span>
+    <strong>Provider: </strong>
+    <span class="mr-1">
+      <button [attr.aria-label]="approvalsExceedMaxBenefitCard$?.vendorName" kendoButton look="flat"
+        (click)="onViewProviderDetailClicked(approvalsExceedMaxBenefitCard$?.paymentRequestId)"
+        class="card-link-button">
+        {{approvalsExceedMaxBenefitCard$?.vendorName}}
+      </button>
+    </span>
+    <strong>Client Annual Total : </strong><span class="mr-1"> <strong>$</strong> {{approvalsExceedMaxBenefitCard$?.clientAnnualTotal | kendoNumber: 'n2'}}</span>
+    <strong>Client Balance : </strong> <span class="mr-1"> <strong>$</strong> {{approvalsExceedMaxBenefitCard$?.clientBalance | kendoNumber: 'n2'}} </span>
+    <strong>Service Cost Total : </strong><span class="mr-1"> <strong>$</strong> {{approvalsExceedMaxBenefitCard$?.serviceCostTotal | kendoNumber: 'n2'}}</span>
+    <strong>Amount Due Total : </strong><span class="mr-1"> <strong>$</strong> {{approvalsExceedMaxBenefitCard$?.amountDueTotal | kendoNumber: 'n2'}}</span>
   </p>
   <div>
-    <productivity-tools-approval-invoice [exceptionId]="exceptionId"></productivity-tools-approval-invoice>
+    <productivity-tools-approval-invoice [exceptionId]="exceptionId" [pageSizes]="pageSizes" [sortValue]="sortValue"
+      [sortType]="sortType" [sort]="sort" [gridSkipCount]="gridSkipCount" [invoiceData$]="invoiceData$"
+      [isInvoiceLoading$]="isInvoiceLoading$"
+      (loadApprovalsExceedMaxBenefitInvoiceEvent)="loadApprovalsExceedMaxBenefitInvoice($event)">
+    </productivity-tools-approval-invoice>
   </div>
 </div>

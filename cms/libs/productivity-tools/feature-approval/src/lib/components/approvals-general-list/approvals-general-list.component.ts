@@ -37,8 +37,14 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  @Input() gridSkipCount:any;
   @Input() approvalsGeneralLists$: any;
+  @Input() approvalsExceedMaxBenefitCard$:any;
+  @Input() invoiceData$:any;
+  @Input() isInvoiceLoading$:any;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
+  @Output() loadApprovalsExceedMaxBenefitCardEvent = new EventEmitter<any>();
+  @Output() loadApprovalsExceedMaxBenefitInvoiceEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -210,5 +216,13 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       //   return 'Request to add To Master List';
     }
     return null;
+  }
+  loadApprovalsExceedMaxBenefitCard($event:any)
+  {
+    this.loadApprovalsExceedMaxBenefitCardEvent.emit($event);
+  }
+  loadApprovalsExceedMaxBenefitInvoice($event:any)
+  {
+    this.loadApprovalsExceedMaxBenefitInvoiceEvent.emit($event);
   }
 }

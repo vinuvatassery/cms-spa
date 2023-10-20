@@ -1,15 +1,15 @@
 /** Angular libraries **/
-import {  ChangeDetectionStrategy,ChangeDetectorRef,Component, Input, ViewChild, OnInit,OnChanges, OnDestroy } from '@angular/core'; 
+import {  ChangeDetectionStrategy,ChangeDetectorRef,Component, Input, ViewChild, OnInit,OnChanges, OnDestroy, EventEmitter, Output } from '@angular/core'; 
 import { Router } from '@angular/router';
 
 /** External libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subscription,Subject } from 'rxjs';
 /** Facade **/
-import { ProductivityInvoiceFacade } from '@cms/productivity-tools/domain';
-import { ColumnComponent, ColumnVisibilityChangeEvent, GridComponent,GridDataResult } from '@progress/kendo-angular-grid';
-
+import { PendingApprovalGeneralFacade, ProductivityInvoiceFacade } from '@cms/productivity-tools/domain';
+import { ColumnComponent, ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approval-invoice',
   templateUrl: './approval-invoice.component.html',
@@ -20,16 +20,19 @@ export class ApprovalInvoiceComponent implements OnInit, OnChanges, OnDestroy{
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isInvoiceGridLoaderShow = false;
   @Input() exceptionId: any;
-  @ViewChild(GridComponent)
-  
-  public sortValue = this.productivityInvoiceFacade.sortValue;
-  public sortType = this.productivityInvoiceFacade.sortType;
-  public pageSizes = this.productivityInvoiceFacade.gridPageSizes;
-  public gridSkipCount = this.productivityInvoiceFacade.skipCount;
-  public sort = this.productivityInvoiceFacade.sort;
+  @Input() pageSizes: any;
+  @Input() sortValue: any;
+  @Input() sortType: any;
+  @Input() sort: any;
+  @Input() gridSkipCount:any;
+  @Input() approvalsExceedMaxBenefitCard$:any;
+  @Input() invoiceData$:any;
+  @Input() isInvoiceLoading$:any;
+  @Output() loadApprovalsExceedMaxBenefitInvoiceEvent = new EventEmitter<any>();
   public state!: any;
   sortColumn = 'Entry Date';
   sortDir = 'Ascending';
+  sortColumnDesc:string = 'Entry Date';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
@@ -38,45 +41,40 @@ export class ApprovalInvoiceComponent implements OnInit, OnChanges, OnDestroy{
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
-  invoiceGridView$ = this.productivityInvoiceFacade.invoiceData$;
   invoiceGridViewDataSubject = new Subject<any>();
-  invoiceListData$ =  this.invoiceGridViewDataSubject.asObservable();
+  invoiceGridView$ =  this.invoiceGridViewDataSubject.asObservable();
 
+  isInvoiceLoadingSubject = new Subject<boolean>();
+  isInvoiceLoadingData$ =  this.isInvoiceLoadingSubject.asObservable();
   providerId:any;
-  isInvoiceLoading$=  this.productivityInvoiceFacade.isInvoiceLoading$
   isInvoiceLoadingSubscription!:Subscription;
  
-  invoiceGrid!: GridComponent;
-
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   addRemoveColumns="Default Columns"
   columns : any;  
   dropDowncolumns : any;
+
+  selectedPaymentType: string | null = null;
+  paymentRequestTypes$= this.lovFacade.paymentRequestType$;
+  paymentRequestTypes: any = [];
+  
+  paymentTypeFilter = '';
    /** Constructor **/
-   constructor(private readonly cdr: ChangeDetectorRef,
-               private readonly productivityInvoiceFacade: ProductivityInvoiceFacade,
-               private readonly router: Router) {}
+   constructor( private readonly cdr: ChangeDetectorRef,
+                private readonly lovFacade: LovFacade,
+                private readonly router: Router) {}
 
   ngOnInit(): void {
-    this.loadColumnsData();  
-    this.state = {
-      skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value
-    };
+    this.loadColumnsData(); 
+    this.getCoPaymentRequestTypeLov();  
+    this.initializeGridState();
     this.loadGeneralExceptionInvoiceGrid();
-    this.isInvoiceLoadingSubscription = this.isInvoiceLoading$.subscribe((data:boolean)=>{
-      this.isInvoiceGridLoaderShow = data;
-    })
   }
 
   ngOnChanges(): void {
-    this.state = {
-      skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
+    this.initializeGridState();
     this.loadGeneralExceptionInvoiceGrid();
   }
 
@@ -160,6 +158,8 @@ export class ApprovalInvoiceComponent implements OnInit, OnChanges, OnDestroy{
       this.filter = "";
       this.isFiltered = false
     }
+    if (!this.filteredBy.includes('Payment Type'))
+    this.selectedPaymentType = '';
     this.loadGeneralExceptionInvoiceGrid();    
   }
 
@@ -174,12 +174,13 @@ export class ApprovalInvoiceComponent implements OnInit, OnChanges, OnDestroy{
   }
 
   gridDataHandle() {
-    this.invoiceGridView$.subscribe((data: GridDataResult) => {
+    this.invoiceData$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.invoiceGridViewDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isInvoiceGridLoaderShow = false;
       }
+      this.isInvoiceGridLoaderShow = false;
     });
   }
 
@@ -274,6 +275,48 @@ export class ApprovalInvoiceComponent implements OnInit, OnChanges, OnDestroy{
 
   
   loadInvoiceListGrid(data: any) {
-    this.productivityInvoiceFacade.loadInvoiceListGrid(data);
+    this.loadApprovalsExceedMaxBenefitInvoiceEvent.emit(data);
+  }
+
+  
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (field === 'paymentTypeDesc') this.selectedPaymentType = value;
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'and',
+    });
+  }
+
+  private getCoPaymentRequestTypeLov() {
+    this.lovFacade.getCoPaymentRequestTypeLov();
+    this.paymentRequestTypes$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentRequestTypes = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+  }
+
+  private initializeGridState(){
+    this.state = {
+      skip: this.gridSkipCount,
+      take: this.pageSizes[0]?.value,
+      sort: [{ field: 'entryDate', dir: 'desc' }],
+    };
+    this.sortColumnDesc = 'Entry Date';
   }
 }

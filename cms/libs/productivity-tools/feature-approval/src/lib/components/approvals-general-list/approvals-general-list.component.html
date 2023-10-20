@@ -57,7 +57,19 @@
                 </productivity-tools-approvals-general-list-detail-addtomasterlist>
               </ng-template>
               <ng-template ngSwitchCase="GENERAL_EXCEPTIONS">
-                <productivity-tools-approvals-general-list-detail-exceptions [approvalId]="item.generalPendingApprovalId" [exceptionId]="item.approvalEntityId">
+                <productivity-tools-approvals-general-list-detail-exceptions 
+                  [approvalId]="item.generalPendingApprovalId" 
+                  [exceptionId]="item.approvalEntityId"
+                  [approvalsExceedMaxBenefitCard$]="approvalsExceedMaxBenefitCard$|async"
+                  (loadApprovalsExceedMaxBenefitCardEvent)="loadApprovalsExceedMaxBenefitCard($event)"
+                  [pageSizes]="pageSizes"
+                  [sortValue]="sortValue" 
+                  [sortType]="sortType" 
+                  [sort]="sort"
+                  [gridSkipCount]="gridSkipCount"
+                  [invoiceData$]="invoiceData$"
+                  [isInvoiceLoading$]="isInvoiceLoading$"  
+                  (loadApprovalsExceedMaxBenefitInvoiceEvent)="loadApprovalsExceedMaxBenefitInvoice($event)">
                 </productivity-tools-approvals-general-list-detail-exceptions>
               </ng-template>
               <ng-template ngSwitchDefault>
