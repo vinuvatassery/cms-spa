@@ -90,42 +90,6 @@
                            
                             </span>
                   </ng-template> </kendo-grid-column>
-                  <kendo-grid-column field="ReassignPca" title="Reassign PCA" [sticky]="true" [columnMenu]="false" [sortable]="false" [width]="220">
-                        <ng-template kendoGridCellTemplate let-dataItem2>
-      
-                             
-                                    <kendo-multicolumncombobox
-                                    [data]="allNotAssignedPcaSList"
-                                    (filterChange)="onSearchTextChange($event,dataItem2)"
-                                    (selectionChange)="onClientSelected($event,dataItem2)"
-                                    (click)="onclick(dataItem2)"
-                                     [itemDisabled]="itemDisabled.bind(this)"
-                                    [allowCustom]="true"
-                                     textField="pcaCode" valueField="pcaCode" 
-                                    [fillMode]="formUiStyle.dropDownFillMode" placeholder="PCA"  [filterable]="true"> 
-                                          <kendo-combobox-column [width]="200"     >
-                                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem  (cellClick)="cellClick($event)" >
-                                                      <span class=""   ><strong> {{ dataItem.pcaCode }}/{{dataItem.fundingSourceCode}}</strong></span> 
-                                                </ng-template>
-                                          </kendo-combobox-column>
-                                         <kendo-combobox-column [width]="180" >
-                                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem disabled >
-                                                      <span class=""><strong class="text-muted">Remaining Amount</strong>
-                                                            <p    class="{{dataItem2.originalAmount>dataItem.pcaRemainingAmount?'lessAmount':''}}"><span *ngIf="dataItem2.originalAmount>dataItem.pcaRemainingAmount">-</span>${{ dataItem.pcaRemainingAmount }}</p>
-                                                      </span>
-                                                </ng-template>
-                                          </kendo-combobox-column> 
-                                          <kendo-combobox-column [width]="140" >
-                                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                                      <span><strong class="text-muted">Close Date</strong><p>{{ dataItem.closeDate }}</p>
-                                                            </span>
-                                                </ng-template>
-                                          </kendo-combobox-column> 
-                                    </kendo-multicolumncombobox>
-                            
-                        </ng-template>
-      
-                  </kendo-grid-column>
             <kendo-grid-column field="Option" title=" " [sticky]="true" [columnMenu]="false" [width]="50"
                   class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
@@ -183,13 +147,6 @@
       </kendo-grid>
 </div>
 
-<div class="bottom-fixed-wrapper text-right flex-gap">
-
-      <button kendoButton [primary]="true" aria-label="Reassign" class=""
-      (click)="onConfirmationPcaReassignmentClicked(confirmationPcaReassignmentDialogTemplate)" [disabled]="reAssignPcaS.length==0" > Reassign
-      </button>
-
-</div>
 <ng-template #addEditPcaReassignmentDialogTemplate>
       <cms-financial-pcas-reassignment-form
             (closeEditPcaReassignmentClickedEvent)="onCloseEditPcaReassignmentClicked($event)"
@@ -203,6 +160,29 @@
       </cms-financial-pcas-reassignment-form>
 
 </ng-template>
+<ng-template #reassignPcaReassignmentDialogTemplate>
+      <cms-financial-reassignment-pca-form
+
+  [objectCodeIdValue]="objectCodeIdValue"
+      [groupCodeIdsdValue]="groupCodeIdsdValue"
+      [groupCodesData$]="groupCodesData$"
+      [objectCodesData$]="objectCodesData$"
+      [pcaCodesData$]="allNotAssignedPcaSList"
+      [pcaAssignOpenDatesList$]="pcaAssignOpenDatesList$"
+      [pcaAssignCloseDatesList$]="pcaAssignCloseDatesList$"
+      [pcaCodesInfoData$]="pcaCodesInfoData$"
+      [pcaAssignmentData$]="pcaAssignmentData$"
+      [newForm]="newForm"
+      [pcaAssignmentFormDataModel$]="pcaAssignmentFormData"
+      [groupCodesDataFilter]="groupCodesDataFilter"
+      (closePcaReAssignmentFormClickedEvent)="onClosePcaReAssignmentFormClicked()"
+      (loadPcaEvent)="onLoadPcaEvent($event)"
+      (reassignpcaEvent)="reassignPcaData($event)"
+            >
+      </cms-financial-reassignment-pca-form>
+
+</ng-template>
+
 
 <ng-template #confirmationPcaReassignmentDialogTemplate>
       <cms-financial-pcas-reassignment-confirmation
