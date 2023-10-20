@@ -9,6 +9,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class ApprovalsGeneralListDetailAddtomasterlistComponent {
 
   @Input() onUserProfileDetailsHovered: any;
+  @Input() approvalId: any;
 
   ifApproveOrDeny: any;
   isPanelExpanded = false;

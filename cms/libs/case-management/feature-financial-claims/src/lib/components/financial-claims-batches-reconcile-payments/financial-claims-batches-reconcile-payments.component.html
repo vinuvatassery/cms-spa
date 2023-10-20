@@ -57,10 +57,15 @@
                                           aria-label="smoking cessation note"
                                           class="form-control table-text-area">                                       
                                         </kendo-textarea>
-                                        <kendo-textarea-suffix class="justify-content-end">                                         
-                                          <span class="counter">{{ bulkNoteCounter }}</span>
-                                        </kendo-textarea-suffix>
-                                        <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['note'].valid">note is required.</kendo-formerror>
+                                        <div class="flex-row">
+                                          <div class="flex-col flex-col-6">
+                                                <kendo-formerror *ngIf="!reconcileAssignValueBatchForm.controls['note'].valid">note is required.</kendo-formerror>
+                                          </div>
+                                          <div class="justify-content-end flex-col flex-col-6">                                         
+                                                <span class="counter">{{ bulkNoteCounter }}</span>
+                                              </div> 
+                                        </div>
+                                                                               
                                     </div>
                                                          
                               </kendo-floatinglabel>
@@ -88,39 +93,50 @@
                               </kendo-floatinglabel>
                         </span>
                         <span class="right-overlay-export">
-                              <button kendoButton [primary]="true" aria-label="Export" look="flat" class="button-lg">
-                                    <span class="material-icons" aria-label="export"
-                                          aria-invalid="true">exit_to_app</span><i class="exp_button-text">Export</i>
+                              <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export" (click)="onClickedExport()"  [disabled]="showExportLoader">
+                                <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
+                                
+                                <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
                               </button>
-                        </span>
+                            </span>
                   </section>
                   <!-- Sorted Info -->
                   <div class="table-sorted-info">
-                        Sorted Descending by <span class="sort-items"> Medical Provider </span>
-                        <span class="sort-items">No Filters</span>
-                        <span class="sort-items">Filtered by Medical Provider</span>
-                        <span class="sort-items">Default Columns</span>
-                        <span class="sort-items">Columns Re-ordered</span>
+                        Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}}  </span>
+                        <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
+                        <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
+                        <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
+                        <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
+                        <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+                              <a>Set to Default</a>
+                            </button>
                   </div>
-
-                  <div *ngIf="pageValidationMessage !== null">
-                        <div class="info-banners red-banner d-flex mt-2 mb-2">
+                  <div *ngIf="pageValidationMessage !== null && pageValidationMessageFlag">
+                        <div class="info-banners  red-banner d-flex mt-2 mb-2">
                               <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>              
                               <div>              
-                                <p > {{pageValidationMessage}} </p>                                    
-                                     
+                                <p > {{pageValidationMessage}} </p>       
                               </div>              
                          </div>
                   </div>
+                  <div *ngIf="pageValidationMessage !== null && !pageValidationMessageFlag">
+                        <div class="info-banners canyon-banner-with-black d-flex mt-2 mb-2">
+                              <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>              
+                              <div>              
+                                <p > {{pageValidationMessage}} </p>       
+                              </div>              
+                         </div>
+                  </div>
+                  
                   <div class="app-c-table">
                         <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take" #grid
                         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" 
                         [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"  (filterChange)="filterChange($event)"
-                        [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true" filterable="menu" [filter]="state.filter"
+                        [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [selectable]="true" filterable="menu" [filter]="state.filter"
                         [data]="reconcilePaymentGridPagedResult" 
                         (selectionChange)="onRowSelection(grid, $event)">
 
-                        <kendo-grid-column   title="Print Advice Ltr" [width]="130" class="text-center">
+                        <kendo-grid-column   title="Print Advice Ltr" [width]="130" class="text-center" [sticky]="true">
                               <ng-template kendoGridCellTemplate let-dataItem>                  
                                     <input class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr"
                                     aria-labelledby="printAdviceLetter" kendoCheckBox  (change)="printAdviceLetterChange(dataItem)" [(ngModel)]="dataItem.isPrintAdviceLetter"
