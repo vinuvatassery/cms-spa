@@ -329,7 +329,7 @@ export class ClientsComponent implements OnInit, OnChanges{
     }
    let fileName = this.vendorTypeCode+' '+(this.vendorName[0].toUpperCase() + this.vendorName.substr(1).toLowerCase())+' Clients'
 
-    this.documentFacade.getExportFile(vendorCleintPageAndSortedRequest,'vendors/clients',fileName)
+    this.documentFacade.getExportFile(vendorCleintPageAndSortedRequest, `vendors/${this.providerId}/clients`,fileName)
 
     this.exportButtonShow$
     .subscribe((response: any) =>
