@@ -131,7 +131,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
   /** Lifecycle hooks **/ 
   ngOnInit() { 
     this.contactFacade.loadDdlStates();  
-    this.hasHealthcareProviderCreateUpdatePermission=this.userManagementFacade.hasPermission(['Service_Provider_HIV_Healthcare_Provider_Create_Update']);//Financial_MedicalProvider_Tab
+    this.hasHealthcareProviderCreateUpdatePermission=this.userManagementFacade.hasPermission(['Service_Provider_Medical_Dental_Provider_Create_Update']);
   }
   ngOnChanges(): void {     
     this.state = {
