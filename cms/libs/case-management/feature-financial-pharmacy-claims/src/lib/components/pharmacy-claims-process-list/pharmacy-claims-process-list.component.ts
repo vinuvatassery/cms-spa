@@ -40,7 +40,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   @Output() loadPharmacyClaimsProcessListEvent = new EventEmitter<any>();
   @Output() exportPharmacyClaimsProcessListEvent = new EventEmitter<any>();
   @Input() batchingClaims$: any; 
-  @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
+  @Output() onbatchClaimsClickedEvent = new EventEmitter<any>();
   public selectedProcessClaims: any[] = [];
   public selectableSettings: SelectableSettings;
   public checkboxOnly = true;
@@ -426,6 +426,6 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       this.loadPharmacyClaimsProcessListGrid();
       this.onBatchClaimsGridSelectedCancelClicked()
     })
-    this.OnbatchClaimsClickedEvent.emit(input)
+    this.onbatchClaimsClickedEvent.emit(input)
   }
 }

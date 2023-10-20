@@ -51,11 +51,11 @@ export class PharmacyClaimsPageComponent {
     this.financialPharmacyClaimsFacade.loadPharmacyClaimsAllPaymentsListGrid();
   }
 
-  oneExportClaimsInProcess(event: any){
+  onExportClaimsInProcess(event: any){
     this.financialPharmacyClaimsFacade.exportPharmacyClaimsProcessListGrid(event);
   }
 
-  OnbatchClaimsClicked(event:any){
+  onbatchClaimsClicked(event:any){
     this.financialPharmacyClaimsFacade.batchClaims(event);
   }
 }

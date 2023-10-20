@@ -17,8 +17,8 @@
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsProcess"
                                 [sortType]="sortType" [sort]="sortProcessList" 
                                 (loadPharmacyClaimsProcessListEvent)="loadPharmacyClaimsProcessListGrid($event)"
-                                (exportPharmacyClaimsProcessListEvent)="oneExportClaimsInProcess($event)"
-                                (OnbatchClaimsClickedEvent)="OnbatchClaimsClicked($event)"
+                                (exportPharmacyClaimsProcessListEvent)="onExportClaimsInProcess($event)"
+                                (onbatchClaimsClickedEvent)="onbatchClaimsClicked($event)"
                                 [batchingClaims$]="batchingClaims$"></cms-pharmacy-claims-process-list>
                             </div>
                         </ng-template>
