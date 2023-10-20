@@ -132,6 +132,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   addOrEdit: any;
   selectedCPTCode: any = null;
   isSpotsPayment!: boolean;
+  pcaCode!: any;
   textMaxLength: number = 300;
   exceptionReasonMaxLength = 150;
 
@@ -369,7 +370,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       exceptionArray : new FormArray([]),
       providerNotEligibleExceptionFlag: new FormControl(false),
       showProviderNotEligibleExceptionReason: new FormControl(false),
-      providerNotEligibleExceptionFlagText: new FormControl(this.isExcededMaxBanifitButtonText)
+      providerNotEligibleExceptionFlagText: new FormControl(this.isExcededMaxBanifitButtonText),
+      pcaCode : new FormControl('')
     });
   }
 
@@ -637,7 +639,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         exceptionReasonCode: element.reasonForException,
         tpaInvoiceId: element.tpaInvoiceId,
         exceptionFlag: element.exceptionFlag,
-        exceptionTypeCode: element.exceptionTypeCode
+        exceptionTypeCode: element.exceptionTypeCode,
+        pcaCode:element.pcaCode
       };
       this.validateStartEndDate(service.serviceStartDate,
         service.serviceEndDate);
@@ -887,6 +890,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       serviceForm.controls['cptCodeId'].setValue(service.cptCodeId);
       serviceForm.controls['exceptionFlag'].setValue(service.exceptionFlag);
       serviceForm.controls['exceptionTypeCode'].setValue(service.exceptionTypeCode);
+      serviceForm.controls['pcaCode'].setValue(service.pcaCode);
       let exceptionForm = this.addExceptionForm.at(i) as FormGroup;
       if(serviceForm.controls['exceptionFlag'].value === StatusFlag.Yes && !this.claimForm.controls['parentExceptionTypeCode'])
       {
