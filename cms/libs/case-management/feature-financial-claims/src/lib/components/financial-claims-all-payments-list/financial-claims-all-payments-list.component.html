@@ -292,7 +292,7 @@
 
     <ng-template #clientRecentClaimsDialog>
       <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">Recent Claims for {{clientName}}</h4></kendo-dialog-titlebar>
-      <section class="k-dialog-body">
+      <section class="k-dialog-body-padding">
         <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
           (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>
       </section>
