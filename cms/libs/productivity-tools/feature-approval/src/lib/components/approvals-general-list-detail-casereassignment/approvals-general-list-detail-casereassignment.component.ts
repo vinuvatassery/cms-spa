@@ -10,7 +10,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class ApprovalsGeneralListDetailCaseReassignmentComponent {
 
   @Input() onUserProfileDetailsHovered: any;
-
+  @Input() approvalId: any;
+  
   ifApproveOrDeny: any;
   isPanelExpanded = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();

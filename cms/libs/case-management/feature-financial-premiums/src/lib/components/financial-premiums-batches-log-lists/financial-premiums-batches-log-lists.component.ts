@@ -72,17 +72,6 @@ export class FinancialPremiumsBatchesLogListsComponent
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Request Payments',
-      icon: 'local_atm',
-      click: (data: any): void => {
-        this.isRequestPaymentClicked = true;
-        this.isSendReportOpened = false;
-        this.isPrintAdviceLetterClicked = false;
-      },
-    },
-
-    {
-      buttonType: 'btn-h-primary',
       text: 'Reconcile Payments',
       icon: 'edit',
       click: (data: any): void => {

@@ -160,6 +160,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
             window.open(fileUrl, "_blank");
             this.ref.detectChanges();
           }
+          this.onClosePrintAdviceLetterClicked();
           this.loaderService.hide();
         },
         error: (err: Error) => {
@@ -183,7 +184,6 @@ export class FinancialClaimsPrintAuthorizationComponent {
             this.generateAndPrintAdviceLetter(request);
             }
           }
-          this.loaderService.hide();
           this.onClosePrintAdviceLetterClicked();
           this.ref.detectChanges();
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled!");
