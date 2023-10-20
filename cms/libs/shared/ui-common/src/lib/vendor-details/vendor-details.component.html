@@ -62,15 +62,9 @@
 
                 <kendo-combobox-column>
                   <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                    <span>Name:{{ dataItem.vendorName }}</span>
+                    <span>{{ dataItem.vendorName }}</span>
                   </ng-template>
                 </kendo-combobox-column>
-
-                <ng-template kendoMultiColumnComboBoxNoDataTemplate let-noData>
-                  <ng-container *ngIf="!noData">
-                    <!-- Your custom content here -->
-                  </ng-container>
-                </ng-template>
 
               </kendo-multicolumncombobox>
 
