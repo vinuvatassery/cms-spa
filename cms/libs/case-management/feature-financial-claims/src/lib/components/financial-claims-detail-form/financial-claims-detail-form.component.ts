@@ -213,6 +213,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.showServicesListForm = true;
       this.addOrEdit = 'Update';
       this.getMedicalClaimByPaymentRequestId();
+      this.isRecentClaimShow = true;
     }
 
      this.paymentRequestType$.subscribe((paymentRequestTypes) => {
@@ -827,7 +828,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           this.selectedClient = clients[0];
 
           this.financialClaimsFacade.pharmaciesSubject.next(vendors);
-          this.selectedMedicalProvider = vendors[0];
+          this.selectedMedicalProvider =  vendors[0];
+          this.vendorId =  val.vendorId;
+          this.clientId = val.clientId
           this.claimForm.patchValue({
             invoiceId: val.claimNbr,
             paymentRequestId: val.paymentRequestId,

@@ -200,6 +200,11 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
       icon: 'delete',
       click: (data: any): void => {
         this.onSingleClaimDelete(data.paymentRequestId.split(','));
+        if (!this.selectedProcessClaims.length)
+        {
+          this.financialClaimsFacade.errorShowHideSnackBar("Select a claim to delete")
+          return;
+        } 
         this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog);
       },
     },
@@ -412,8 +417,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
     }
   }
 
-  public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
-    if (!this.selectedProcessClaims.length) return;
+  public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void { 
     this.deleteClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',

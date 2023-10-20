@@ -75,6 +75,13 @@
                               [getPcaAssignmentById$]="getPcaAssignmentById$"
                               [notAssignPcaLists$]="notAssignPcsLists$"
                               (loadPcaReassignmentListEvent)="loadPcaReassignmentList($event)"
+                              (pcaChangeEvent)="loadPcaDates()"
+                              [pcaAssignOpenDatesList$]="pcaAssignOpenDatesList$ | async"
+                              [pcaAssignCloseDatesList$]="pcaAssignCloseDatesList$ | async"
+                              [objectCodesData$]="objectCodesData$ | async"
+                              [groupCodesData$]="groupCodesData$ | async"
+                              (loadObjectCodesEvent)="loadObjectCodes()"
+                              (loadGroupCodesEvent)="loadGroupCodes()"
                               ></cms-financial-pcas-reassignment-list>
 
 

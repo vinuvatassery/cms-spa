@@ -284,8 +284,8 @@
     *ngIf="isRequestPaymentClicked || isSendReportOpened || isPrintAdviceLetterClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
   <button kendoButton [primary]="true" aria-label="Preview Requests" class="" *ngIf="isRequestPaymentClicked"
     (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
-    <button kendoButton [primary]="true" aria-label="Review" class="" *ngIf="isPrintAdviceLetterClicked" 
-    [disabled]="selectedCount == 0" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
+    <button kendoButton [primary]="true" aria-label="Preview" class="" *ngIf="isPrintAdviceLetterClicked" 
+    [disabled]="selectedCount == 0" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
   <button kendoButton [primary]="true" aria-label="Send Report" class="" *ngIf="isSendReportOpened"
     (click)="onSendReportOpenClicked(sendReportDialogTemplate)"> Send Report </button>
   <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action" buttonClass="k-split-button"
