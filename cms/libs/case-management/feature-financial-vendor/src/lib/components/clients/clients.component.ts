@@ -3,8 +3,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { InsuranceProviderFacade, GridFilterParam } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import {
-  CompositeFilterDescriptor,
-  State,
+  CompositeFilterDescriptor
 } from '@progress/kendo-data-query';
 import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-grid';
@@ -49,6 +48,9 @@ export class ClientsComponent implements OnInit, OnChanges{
   sortColumnDesc = 'Client Name';
   showExportLoader = false;
   @Output() loadVendorClients = new EventEmitter<any>();
+  showDateSearchWarning = false
+  showNumberSearchWarning = false
+  numberSearchColumnName =''
   searchColumnList : { columnName: string, columnDesc: string }[] = [
     { columnName: 'clientName', 
     columnDesc: 'Client Name'
@@ -95,6 +97,10 @@ export class ClientsComponent implements OnInit, OnChanges{
     clientId: "ID",
     urn: "URN",
     preferredContact: "Preferred Contact",
+    status:"Status",
+    group:"Group",
+    eilgibilityStartDate:"Eligibility Start Date",
+    eligibilityEndDate:"Eligibility End Date"
   };
   searchText = '';
   private searchSubject = new Subject<string>();
@@ -158,6 +164,12 @@ export class ClientsComponent implements OnInit, OnChanges{
   }
 
   searchColumnChangeHandler(value: string) {
+    this.showNumberSearchWarning = (['clientId']).includes(value);
+    this.showDateSearchWarning =   (['eilgibilityStartDate','eligibilityEndDate']).includes(value);
+
+    if(this.showNumberSearchWarning){
+      this.numberSearchColumnName = this.gridColumns[value]
+    }
     this.filter = [];
     if (this.searchText) {
       this.onClientSearch(this.searchText);
