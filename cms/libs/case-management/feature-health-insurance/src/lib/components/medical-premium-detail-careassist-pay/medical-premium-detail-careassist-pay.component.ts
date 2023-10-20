@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import {ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, FinancialVendorTypeCode, HealthInsurancePlan, ServiceSubTypeCode} from '@cms/case-management/domain';
+import {ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, FinancialVendorTypeCode, HealthInsurancePlan} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';

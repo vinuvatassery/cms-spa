@@ -320,7 +320,7 @@
     <span class="" *ngIf="isPrintAdviceLetterClicked">{{selectedCount}} advice letter(s) to be printed</span>
     <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAdviceLetterClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
     <button kendoButton [primary]="true" aria-label="Preview Requests" class="" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
-    <button kendoButton [primary]="true" aria-label="Review" class="" *ngIf="isPrintAdviceLetterClicked" [disabled]="disablePrwButton" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
+    <button kendoButton [primary]="true" aria-label="Preview" class="" *ngIf="isPrintAdviceLetterClicked" [disabled]="disablePrwButton" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
     <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action"
       buttonClass="k-split-button" [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isPrintAdviceLetterClicked"
       [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">

@@ -1,6 +1,6 @@
 <div>
     <div class="flex-col flex-space-bw align-items-center">
-        <h5 class="title-md mb-0 text-capital">Drugs</h5>
+        <h5 class="title-md mb-0">Drugs</h5>
 
     </div>
 
@@ -142,7 +142,7 @@
                     </kendo-dropdownlist>
                   </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column [hidden]="true" [sortable]="false" [sticky]="true" field="Option" title=" " [columnMenu]="false" [width]="60" class="text-center">
+                <kendo-grid-column  [sortable]="false" [sticky]="true" field="Option" title="Options" [columnMenu]="false" [width]="60" class="text-center">
                     <ng-template kendoGridCellTemplate let-dataItem>
                       <kendo-dropdownbutton [data]="emailBillingAddressActions" icon="more-vertical"
                         class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"

@@ -164,7 +164,7 @@
         &.case-menu-disabled {
           cursor: default;
           pointer-events: none;
-          opacity: 0.4;
+          opacity: 0.7;
           user-select: none;
         }
       }
@@ -1114,7 +1114,7 @@ color: $app-primary-font-color;
 
 .field_with_info {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
 
   >span.material-icons {
     margin-bottom: 10px;
