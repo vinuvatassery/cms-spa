@@ -1,4 +1,4 @@
-import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators, RequiredValidator } from '@angular/forms';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -8,6 +8,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
 import { AddressType } from '../enums/address-type.enum';
 import { StatusFlag } from '../enums/status-flag.enum';
+import { MultiColumnComboBoxComponent } from '@progress/kendo-angular-dropdowns';
 @Component({
   selector: 'cms-vendor-details',
   templateUrl: './vendor-details.component.html',
@@ -78,6 +79,10 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
+    if (this.vendorTypes.Clinic == this.providerType) {
+      this.isClinicNameFilterable = false;
+    }
     this.lovFacade.getPaymentRunDateLov();
     this.lovFacade.getPaymentMethodLov();
     if (this.editVendorInfo) {
@@ -391,6 +396,21 @@ export class VendorDetailsComponent implements OnInit {
     this.medicalProviderForm.controls['providerName'].setValue(clinicDetail.vendorName);
   }
 
+  onClinicSelected($event: any) {
+    
+    
+  }
+
+  isClinicNameFilterable = true;
+  @ViewChild(MultiColumnComboBoxComponent, { static: false }) comboBox: MultiColumnComboBoxComponent | undefined = undefined;
+  onComboBoxOpen(event: any) {
+    // You can implement a condition to prevent the dropdown from opening.
+    // For example, you can prevent the dropdown from opening if a certain condition is met.
+    if (this.vendorTypes.Clinic == this.providerType) {
+      event.preventDefault();
+      this.isClinicNameFilterable = false;
+    }
+  }
   searchClinic(clinicName: any) {
     if (clinicName != '') {
       this.selectedClinicVendorId = null;
