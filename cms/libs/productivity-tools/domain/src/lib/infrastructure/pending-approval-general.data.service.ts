@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 /** External libraries **/ 
 
 @Injectable({ providedIn: 'root' })
