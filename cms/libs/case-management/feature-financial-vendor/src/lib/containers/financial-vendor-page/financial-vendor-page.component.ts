@@ -214,6 +214,19 @@ export class FinancialVendorPageComponent implements OnInit {
     return FinancialVendorTypeCode;
   }
 
+  makeHumanReadable(input: string | null): string {
+    // Check if the input is null or an empty string
+    if (input === null || input.trim() === '') {
+      return '';
+    }
+
+    // Split the input string by underscores and capitalize each word
+    const words = input.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+
+    // Join the words with spaces to create a human-readable string
+    return words.join(' ');
+  }
+
   saveVendorProfile(vendorProfile: any) {
 
     this.financialVendorFacade.showLoader();
@@ -221,8 +234,8 @@ export class FinancialVendorPageComponent implements OnInit {
       next: (response: any) => {
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal(this.providerTypeCode);
-        alert(vendorProfile.vendorTypeCode)
-        var notificationMessage = "Vendor profile added successfully";
+        var notificationMessage = this.makeHumanReadable(vendorProfile.vendorTypeCode).toLowerCase() + " profile added successfully";
+        // var notificationMessage = "Vendor profile added successfully";
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
         this.cdr.detectChanges();
       },
