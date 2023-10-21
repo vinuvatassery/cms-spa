@@ -94,8 +94,10 @@ export class VendorDetailsComponent implements OnInit {
       this.medicalProviderForm.controls[this.clinicTypeFieldName].setValue(FinancialVendorTypeCode.DentalClinic)
     }
 
-    this.selectedClinicVendorId = null;
-    this.searchClinicVendorClicked.emit(" ");
+    // loading clinic list on modal init for dropdown
+    if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders)
+      this.searchClinic("  ");
+    // this.searchClinicVendorClicked.emit(" ");
   }
 
   get AddContactForm(): FormArray {
@@ -394,14 +396,14 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   searchClinic(clinicName: any) {
-    if (clinicName != '') {
-      this.selectedClinicVendorId = null;
-      this.searchClinicVendorClicked.emit(clinicName);
-    }
+    //if (clinicName != '') {
+    this.selectedClinicVendorId = null;
+    this.searchClinicVendorClicked.emit(clinicName);
+    //}
   }
 
   closeVedorModal() {
-    this.closeModalEventClicked.next(true);
+    this.closeModalEventClicked.next(null);
   }
 
   updateVendorDetails() {
@@ -559,7 +561,7 @@ export class VendorDetailsComponent implements OnInit {
       this.onChange();
     }
   }
-  
+
   onMailCodeKeyUp() {
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if (mailCode.length !== 3 && mailCode != "") {
