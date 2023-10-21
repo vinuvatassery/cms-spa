@@ -138,6 +138,7 @@
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
     [hasCreateUpdatePermission]="hasClinicCreateUpdatePermission" 
+    [selectedClinicType]="selectedClinicType"
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
 </kendo-dialog>
 

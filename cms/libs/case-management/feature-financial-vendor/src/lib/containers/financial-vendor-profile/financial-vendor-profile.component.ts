@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DrugsFacade, FinancialVendorDataService, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
+import { DrugsFacade, FinancialVendorDataService, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, InvoiceFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { LoaderService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { State } from '@progress/kendo-data-query';
@@ -36,7 +36,8 @@ export class FinancialVendorProfileComponent implements OnInit {
   removeprovider$ = this.financialVendorFacade.removeprovider$
   addProviderNew$ = this.financialVendorFacade.addProviderNew$
   vendorProfileSpecialHandling$ = this.financialVendorFacade.vendorProfileSpecialHandling$
-
+  serviceGridView$ = this.invoiceFacade.serviceData$;
+   isInvoiceServiceLoading$  = this.invoiceFacade.isInvoiceServiceLoading$;
    providerList$ = this.financialVendorFacade.providerList$
    providerLispageSizes = this.financialVendorFacade.gridPageSizes;
    providerLissortValue = this.financialVendorFacade.sortValue;
@@ -46,8 +47,8 @@ export class FinancialVendorProfileComponent implements OnInit {
   filter:any=[];
   isClinicalVendor=false;
 
-  constructor(private loaderService:LoaderService,private notificationSnackbarService:NotificationSnackbarService,private activeRoute: ActivatedRoute,private financialVendorFacade : FinancialVendorFacade,
-              private readonly drugsFacade: DrugsFacade,private financialVendorDataService:FinancialVendorDataService) {}
+  constructor(private activeRoute: ActivatedRoute,private financialVendorFacade : FinancialVendorFacade,
+              private readonly drugsFacade: DrugsFacade,private readonly invoiceFacade: InvoiceFacade) {}
 
   ngOnInit(): void {
     this.loadQueryParams();
@@ -164,6 +165,10 @@ export class FinancialVendorProfileComponent implements OnInit {
   }
   removeProvider(providerId: any) {
    this.financialVendorFacade.removeProvider(providerId);
+  }
+
+  loadInvoiceServices(event:any){
+    this.invoiceFacade.loadPaymentRequestServices(event.dataItem,this.vendorId,this.tabCode)   
   }
  
 }

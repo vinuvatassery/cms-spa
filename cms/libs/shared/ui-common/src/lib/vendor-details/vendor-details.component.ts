@@ -1,4 +1,4 @@
-import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators, RequiredValidator } from '@angular/forms';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -8,6 +8,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
 import { AddressType } from '../enums/address-type.enum';
 import { StatusFlag } from '../enums/status-flag.enum';
+import { MultiColumnComboBoxComponent } from '@progress/kendo-angular-dropdowns';
 @Component({
   selector: 'cms-vendor-details',
   templateUrl: './vendor-details.component.html',
@@ -24,6 +25,7 @@ export class VendorDetailsComponent implements OnInit {
   @Input() ddlStates$!: any;
   @Input() clinicVendorList$!: any;
   @Input() clinicVendorLoader$!: any;
+  @Input() selectedClinicType: string = FinancialVendorTypeCode.MedicalClinic;
 
   @Output() saveProviderEventClicked = new EventEmitter<any>();
   @Output() closeModalEventClicked = new EventEmitter<any>();
@@ -64,7 +66,7 @@ export class VendorDetailsComponent implements OnInit {
   specialHandlingTextArea = '';
   selectedClinicVendorId!: any;
   mailCodeLengthError!: boolean;
-constructor(
+  constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
     private lovFacade: LovFacade,
@@ -76,6 +78,10 @@ constructor(
   }
 
   ngOnInit(): void {
+
+    if (this.vendorTypes.Clinic == this.providerType) {
+      this.isClinicNameFilterable = false;
+    }
     this.lovFacade.getPaymentRunDateLov();
     this.lovFacade.getPaymentMethodLov();
     if (this.editVendorInfo) {
@@ -85,6 +91,11 @@ constructor(
 
       this.getPaymentMethods();
       this.getPaymentRunDate();
+    }
+    if (this.selectedClinicType === FinancialVendorTypeCode.MedicalProviders) {
+      this.medicalProviderForm.controls[this.clinicTypeFieldName].setValue(FinancialVendorTypeCode.MedicalClinic)
+    } else if (this.selectedClinicType === FinancialVendorTypeCode.DentalProviders) {
+      this.medicalProviderForm.controls[this.clinicTypeFieldName].setValue(FinancialVendorTypeCode.DentalClinic)
     }
   }
 
@@ -114,7 +125,6 @@ constructor(
     this.medicalProviderForm.controls['providerName'].setValue(this.vendorDetails.vendorName);
     this.medicalProviderForm.controls['vendorId'].setValue(this.vendorDetails.vendorId);
   }
-  
   onToggleAddNewContactClick() {
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl('', Validators.required),
@@ -151,7 +161,7 @@ constructor(
   }
 
   save() {
-     this.validateForm();
+    this.validateForm();
     this.isValidateForm = true;
     if (this.medicalProviderForm.valid) {
       let providerData = this.mappVendorProfileData();
@@ -173,7 +183,7 @@ constructor(
         this.medicalProviderForm.controls['lastName'].updateValueAndValidity();
       }
     }
-    else if(this.providerType == this.vendorTypes.Manufacturers) {
+    else if (this.providerType == this.vendorTypes.Manufacturers) {
       this.medicalProviderForm.controls['mailCode'].setValidators([Validators.required, Validators.maxLength(3), Validators.minLength(3)]);
       this.medicalProviderForm.controls['providerName']
         .setValidators([
@@ -384,6 +394,14 @@ constructor(
     this.medicalProviderForm.controls['providerName'].setValue(clinicDetail.vendorName);
   }
 
+  isClinicNameFilterable = true;
+  @ViewChild(MultiColumnComboBoxComponent, { static: false }) comboBox: MultiColumnComboBoxComponent | undefined = undefined;
+  onComboBoxOpen(event: any) {
+    if (this.vendorTypes.Clinic == this.providerType) {
+      event.preventDefault();
+      this.isClinicNameFilterable = false;
+    }
+  }
   searchClinic(clinicName: any) {
     if (clinicName != '') {
       this.selectedClinicVendorId = null;
@@ -549,19 +567,19 @@ constructor(
     }
     else {
       this.onChange();
-   }
-   
-}
-onMailCodeKeyUp() {
-  let mailCode = this.medicalProviderForm.controls['mailCode'].value;
-  if (mailCode.length !== 3 && mailCode !="") {
-    this.mailCodeLengthError = true;
+    }
+
   }
-  else if (mailCode.length <=0 || mailCode.length==3){
-    this.mailCodeLengthError = false
+  onMailCodeKeyUp() {
+    let mailCode = this.medicalProviderForm.controls['mailCode'].value;
+    if (mailCode.length !== 3 && mailCode != "") {
+      this.mailCodeLengthError = true;
+    }
+    else if (mailCode.length <= 0 || mailCode.length == 3) {
+      this.mailCodeLengthError = false
+    }
   }
-}
-get medicalProviderFormControls() {
-  return this.medicalProviderForm.controls as any;
-}
+  get medicalProviderFormControls() {
+    return this.medicalProviderForm.controls as any;
+  }
 }
