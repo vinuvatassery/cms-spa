@@ -1,4 +1,4 @@
-import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators, RequiredValidator } from '@angular/forms';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -8,7 +8,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
 import { AddressType } from '../enums/address-type.enum';
 import { StatusFlag } from '../enums/status-flag.enum';
-import { MultiColumnComboBoxComponent } from '@progress/kendo-angular-dropdowns';
+
 @Component({
   selector: 'cms-vendor-details',
   templateUrl: './vendor-details.component.html',
@@ -79,17 +79,12 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    if (this.vendorTypes.Clinic == this.providerType) {
-      this.isClinicNameFilterable = false;
-    }
     this.lovFacade.getPaymentRunDateLov();
     this.lovFacade.getPaymentMethodLov();
     if (this.editVendorInfo) {
       this.setVendorDetailFormValues();
     }
     else {
-
       this.getPaymentMethods();
       this.getPaymentRunDate();
     }
@@ -159,7 +154,6 @@ export class VendorDetailsComponent implements OnInit {
         (this.AddContactForm.controls[index] as FormGroup).controls['isPreferedContact'].setValue(false)
       }
     }
-
   }
 
   save() {
@@ -396,14 +390,6 @@ export class VendorDetailsComponent implements OnInit {
     this.medicalProviderForm.controls['providerName'].setValue(clinicDetail.vendorName);
   }
 
-  isClinicNameFilterable = true;
-  @ViewChild(MultiColumnComboBoxComponent, { static: false }) comboBox: MultiColumnComboBoxComponent | undefined = undefined;
-  onComboBoxOpen(event: any) {
-    if (this.vendorTypes.Clinic == this.providerType) {
-      event.preventDefault();
-      this.isClinicNameFilterable = false;
-    }
-  }
   searchClinic(clinicName: any) {
     if (clinicName != '') {
       this.selectedClinicVendorId = null;
@@ -414,6 +400,7 @@ export class VendorDetailsComponent implements OnInit {
   closeVedorModal() {
     this.closeModalEventClicked.next(true);
   }
+
   updateVendorDetails() {
     this.validateEditForm();
     this.isValidateForm = true;
@@ -514,6 +501,7 @@ export class VendorDetailsComponent implements OnInit {
 
     return vendorProfileData;
   }
+
   onChange() {
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if (mailCode.length >= 0) {
@@ -541,8 +529,8 @@ export class VendorDetailsComponent implements OnInit {
         .setValidators([]);
       this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
     }
-
   }
+
   onMailCodeChange() {
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if (mailCode.length > 0) {
@@ -567,8 +555,8 @@ export class VendorDetailsComponent implements OnInit {
     else {
       this.onChange();
     }
-
   }
+  
   onMailCodeKeyUp() {
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if (mailCode.length !== 3 && mailCode != "") {
