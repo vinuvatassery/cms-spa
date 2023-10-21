@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult , ColumnVisibilityChangeEvent} from '@progress/kendo-angular-grid';
+import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State
@@ -82,9 +82,6 @@ export class FinancialPcasReassignmentListComponent
   allNotAssignedPcaSList:any;
   notSelectedPcaS:any;
   selectedPcaData:any;
-  filteredByColumnDesc = '';
-  sortColumnDesc = 'PCA #';
-  columnChangeDesc = 'Default Columns';
 
   public gridMoreActions = [
     {
@@ -169,19 +166,6 @@ export class FinancialPcasReassignmentListComponent
       columnDesc: 'CloseDate',
     },
   ];
-
-  gridColumns: { [key: string]: string } = {
-    ALL: 'All Columns',
-    pcaCode: 'PCA #',
-    objectName: 'Object',
-    group:'Group',
-    closeDate: 'Close Date',
-    originalAmount:'Orignal Amount',
-    amountSpendAfterExpiration : 'Amount Spend After Expiration',
-    overSpendAmount:'Overspend Amount',
-    totalOverSpendAmount:'Total Overspend Amount',
-    unlimitedFlag:'Unlimited'
-  };
 
   /** Constructor **/
   constructor(
@@ -339,11 +323,7 @@ export class FinancialPcasReassignmentListComponent
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.filter = stateData?.filter?.filters;
-    if (this.filter !== null) {
-      this.filteredByColumnDesc = this.dropDownColumns?.find(i => i.columnCode === this.selectedColumn)?.columnDesc ?? ''; 
-    }
     this.loadPcaReassignment();
   }
 
@@ -487,34 +467,5 @@ public itemDisabled(itemArgs:any)
   }
   onPcaReassignmentSearch(searchValue : any){
       this.onChange(searchValue);
-  }
-
-  restPcaReassignmentGrid() {
-    this.sortValue = 'pcaCode';
-    this.sortType = 'asc';
-    this.initializePCAReassignmentGrid();
-    this.sortColumn = 'pcaCode';
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
-    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
-    this.filter = [];
-    this.searchValue = '';
-    this.selectedColumn = 'ALL';
-    this.filteredByColumnDesc = '';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
-    this.columnChangeDesc = 'Default Columns';
-    this.loadPcaReassignment();
-  }
-
-  private initializePCAReassignmentGrid(){
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
-  }
-
-  columnChange(event: ColumnVisibilityChangeEvent) {
-    const columnsRemoved = event?.columns.filter(x => x.hidden).length
-    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 }

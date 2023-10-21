@@ -93,12 +93,6 @@ export class FinancialVendorDataService {
     );
   }
 
-  getProviderPanelByVendorAddressId(vendorAddressId:string){
-    return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/vendors?vendorAddressId=${vendorAddressId}`
-    );
-  }
   updateProviderPanel(providePanelDto:any){
     return this.http.put<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +

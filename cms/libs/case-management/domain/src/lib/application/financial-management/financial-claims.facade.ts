@@ -26,9 +26,9 @@ export class FinancialClaimsFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortType = 'desc';
+  public sortType = 'asc';
 
-  public sortValueFinancialClaimsProcess = 'creationTime';
+  public sortValueFinancialClaimsProcess = 'invoiceNbr';
   public sortProcessList: SortDescriptor[] = [
     {
       field: this.sortValueFinancialClaimsProcess,
@@ -732,23 +732,5 @@ checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalA
     },
   })
   this.hideLoader();
-}
-deleteClaimService(tpaInvoiceId: any, typeCode: string) {
-  return this.financialClaimsDataService
-    .deleteClaimService(tpaInvoiceId,typeCode)
-    .pipe(
-      catchError((err: any) => {
-        this.loaderService.hide();
-        this.notificationSnackbarService.manageSnackBar(
-          SnackBarNotificationType.ERROR,
-          err
-        );
-        if (!(err?.error ?? false)) {
-          this.loggingService.logException(err);
-          this.hideLoader();
-        }
-        return of(false);
-      })
-    );
 }
 }

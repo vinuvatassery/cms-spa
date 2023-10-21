@@ -9,21 +9,19 @@ import {
   TemplateRef,
   ViewChild,
   ChangeDetectorRef,
-  OnDestroy,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State
 } from '@progress/kendo-data-query';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-financial-claims-batches-reconcile-payments',
@@ -31,7 +29,7 @@ import { LovFacade } from '@cms/system-config/domain';
   styleUrls: ['./financial-claims-batches-reconcile-payments.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,OnDestroy {
+export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit {
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
   PrintAuthorizationDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -76,7 +74,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   isSaveClicked : boolean = false;
   startItemNumber: number = 1;
   isStartItemNumberUpdated: boolean = false;
-  paymentMethodDesc=null;
+
   reconcilePaymentGridPagedResult:any =[];
   reconcilePaymentGridUpdatedResult: any=[];
   gridClaimsReconcileDataSubject = new Subject<any>();
@@ -91,8 +89,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   paymentSentDateRequired= false;
   noteRequired= false;
   pageValidationMessage:any=null;
-  paymentMethodType$ = this.lovFacade.paymentMethodType$;
-  paymentMethodType:any;
   pageValidationMessageFlag:boolean=false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   providerTitle:any = 'Medical Provider';
@@ -101,7 +97,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     datePaymentSend: new FormControl('', []),
     note : new FormControl('', []),
   });
-  paymentMethodLovSubscription!:Subscription;
   claimReconcileCount:any=0;
   bulkNoteCounter:any=0;
   showExportLoader = false;
@@ -152,17 +147,15 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
 
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
-    private readonly cd: ChangeDetectorRef, public intl: IntlService, 
-    private configurationProvider: ConfigurationProvider,private readonly lovFacade: LovFacade) {
+    private readonly cd: ChangeDetectorRef, public intl: IntlService, private configurationProvider: ConfigurationProvider) {
 
     }
 
   ngOnInit(): void {
-    this.lovFacade.getPaymentMethodLov();
-    this.paymentMethodSubscription();
     if(this.claimsType === 'dental'){
       this.providerTitle = 'Dental Provider';
       this.sortColumn = this.providerTitle;
+      this.columns['vendorName'] = this.providerTitle;
       this.dropDropdownColumns[0].columnDesc = this.providerTitle;
     }
     this.state = {
@@ -184,10 +177,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         paymentToReconcileCount : 0
       }
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
-  }
-
-  ngOnDestroy(): void {
-    this.paymentMethodLovSubscription.unsubscribe();
   }
 
   private loadReconcileListGrid(): void {
@@ -221,27 +210,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     this.defaultGridState();
     const stateData = this.state;
     this.dataStateChange(stateData);
-  }
-
-  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
-    filterService.filter({
-      filters: [{
-        field: field,
-        operator: "eq",
-        value:value.lovCode
-    }],
-      logic: "or"
-  });
-    if(field == "paymentMethodDesc"){
-      this.paymentMethodDesc = value;
-    }
-  }
-  
-
-  paymentMethodSubscription(){
-    this.paymentMethodLovSubscription = this.paymentMethodType$.subscribe(data=>{
-      this.paymentMethodType = data;
-    });
   }
 
   defaultGridState() {

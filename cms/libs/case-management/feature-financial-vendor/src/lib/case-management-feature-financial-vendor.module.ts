@@ -54,7 +54,6 @@ import { ProductivityToolsFeatureNotificationModule } from '@cms/productivity-to
 import { FinancialClinicProviderListComponent } from './components/financial-clinic-provider-list/financial-clinic-provider-list.component';
 import { FinancialClinicProviderRemoveComponent } from './components/financial-clinic-provider-remove/financial-clinic-provider-remove.component';
 import { FinancialClinicProviderDetailsComponent } from './components/financial-clinic-provider-details/financial-clinic-provider-details.component';
-import { InvoiceServiceComponent } from './components/invoice-service/invoice-service.component';
 @NgModule({
   imports: [
     CaseManagementDomainModule,
@@ -114,7 +113,6 @@ import { InvoiceServiceComponent } from './components/invoice-service/invoice-se
     FinancialClinicProviderListComponent,
     FinancialClinicProviderRemoveComponent,
     FinancialClinicProviderDetailsComponent,
-    InvoiceServiceComponent,
   ],
   exports: [
     FinancialVendorPageComponent,

@@ -26,10 +26,7 @@ export class FinancialVendorPageComponent implements OnInit {
   reminderTabOn = true;
   isShowManufacturers: boolean = false;
   hasClinicCreateUpdatePermission = false;
-
-  inputProviderTypeForClinic = '';
-  selectedClinicType : string = this.financeVendorTypeCodes.MedicalClinic;
-
+  selectedClinicType = '';
   data = [
     {
       text: 'Manufacturer',
@@ -81,14 +78,8 @@ export class FinancialVendorPageComponent implements OnInit {
   private closeMedicalDentalProviderModalSubject = new BehaviorSubject<boolean>(false);
   closeMedicalDentalProviderModal$ = this.closeMedicalDentalProviderModalSubject.asObservable();
 
-  setupForClinic(providerTypeForClinic: string) {
-    if (providerTypeForClinic === FinancialVendorTypeCode.DentalProviders)
-      this.selectedClinicType = FinancialVendorTypeCode.DentalProviders;
-    else if (providerTypeForClinic === FinancialVendorTypeCode.MedicalProviders)
-      this.selectedClinicType = FinancialVendorTypeCode.MedicalProviders;
-
-    this.inputProviderTypeForClinic = FinancialVendorTypeCode.MedicalProviders;
-
+  setupForClinic(clinicType: string) {
+    this.selectedClinicType = clinicType;
     this.clickCloseMedicalVendorDetails();
     this.clickCloseDentalVendorDetails();
     this.clickOpenClinicProviderDetails();
@@ -210,6 +201,13 @@ export class FinancialVendorPageComponent implements OnInit {
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal();
         var notificationMessage = "Vendor profile added successfully";
+        if (this.selectedClinicType === FinancialVendorTypeCode.MedicalProviders) {
+          notificationMessage = "Clinic added successfully"
+          this.clickOpenMedicalProviderDetails();
+        } else if (this.selectedClinicType === FinancialVendorTypeCode.DentalProviders) {
+          notificationMessage = "Clinic added successfully"
+          this.clickOpenDentalProviderDetails();
+        }
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
         this.cdr.detectChanges();
       },
