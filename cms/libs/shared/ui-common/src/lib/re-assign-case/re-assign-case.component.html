@@ -1,8 +1,11 @@
 <section class="k-dialog-body">
     <div [formGroup]="caseReassignForm">
-    <p class="text-muted mb-2">
+    <p class="text-muted mb-2" *ngif="hasReassignPermission">
       Start typing to search for a new Case Worker and enter the reason
       the case is being re-assigned.
+    </p>
+    <p class="text-muted mb-2" *ngif="!hasReassignPermission">
+      This will send a request to re-assign the client to a different Case Worker. Enter your reason below.
     </p>
     <div class="flex-row">
       <div class="flex-col">
@@ -14,8 +17,8 @@
                 <ng-template kendoAutoCompleteItemTemplate let-dataItem>
                   <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{dataItem.vendorName}}</span>
                 </ng-template>
-              </kendo-autocomplete>
-          <kendo-formerror *ngIf="!caseReassignForm.controls['newCaseWorker'].valid && isValidateForm">
+              </kendo-autocomplete> -->
+          <!-- <kendo-formerror *ngIf="!caseReassignForm.controls['newCaseWorker'].valid && isValidateForm">
             New Case Worker is required
           </kendo-formerror> -->
         </kendo-floatinglabel>

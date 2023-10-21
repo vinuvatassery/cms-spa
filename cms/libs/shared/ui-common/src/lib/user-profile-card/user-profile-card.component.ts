@@ -17,6 +17,8 @@ export class UserProfileCardComponent implements OnInit {
   userById$ = this.userManagementFacade.usersById$;
   imageLoaderVisible =true;
   businessLogicPopupOpen = false;
+  hasReassignPermission = false;
+  title = '';
  
     /** Constructor**/
     constructor(     
@@ -27,7 +29,9 @@ export class UserProfileCardComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {  
    this.loadProfilePhoto();
-   this.loadProfileData();     
+   this.loadProfileData(); 
+   this.hasReassignPermission = this.userManagementFacade.hasPermission(['Reassign_Cases']);
+   this.title = this.hasReassignPermission? 'Re-assign Case' : 'Assign New Case Worker?'    
  }
  
     loadProfilePhoto()
@@ -59,5 +63,6 @@ export class UserProfileCardComponent implements OnInit {
     businessLogicPopupClose()
     {
       this.businessLogicPopupOpen = false;
-   }
+    }
+
  }

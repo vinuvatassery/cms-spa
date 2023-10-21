@@ -10,6 +10,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class ReAssignCaseComponent {
   @Input() caseReassignForm: FormGroup;
+  @Input() hasReassignPermission: boolean = false;
   
   public formUiStyle: UIFormStyle = new UIFormStyle();
 

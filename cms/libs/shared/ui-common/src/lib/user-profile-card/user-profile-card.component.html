@@ -106,8 +106,8 @@
 </div>
 
 <kendo-dialog *ngIf="businessLogicPopupOpen" (close)="businessLogicPopupClose()" class="app-c-modal app-c-modal-md app-c-modal-np"
-  title="Re-assign Case">
-  <common-re-assign-case></common-re-assign-case>
+  title="title">
+  <common-re-assign-case [hasReassignPermission] = "hasReassignPermission"></common-re-assign-case>
   
   <kendo-dialog-actions>
     <div class="justify-content-between">
