@@ -93,6 +93,9 @@ export class VendorDetailsComponent implements OnInit {
     } else if (this.selectedClinicType === FinancialVendorTypeCode.DentalProviders) {
       this.medicalProviderForm.controls[this.clinicTypeFieldName].setValue(FinancialVendorTypeCode.DentalClinic)
     }
+
+    this.selectedClinicVendorId = null;
+    this.searchClinicVendorClicked.emit(" ");
   }
 
   get AddContactForm(): FormArray {
