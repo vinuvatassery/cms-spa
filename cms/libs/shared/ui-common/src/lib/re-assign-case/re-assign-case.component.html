@@ -1,27 +1,42 @@
 <section class="k-dialog-body">
     <div [formGroup]="caseReassignForm">
-    <p class="text-muted mb-2" *ngif="hasReassignPermission">
+    <p class="text-muted mb-2" *ngIf="hasReassignPermission">
       Start typing to search for a new Case Worker and enter the reason
       the case is being re-assigned.
     </p>
-    <p class="text-muted mb-2" *ngif="!hasReassignPermission">
+    <p class="text-muted mb-2" *ngIf="!hasReassignPermission">
       This will send a request to re-assign the client to a different Case Worker. Enter your reason below.
     </p>
     <div class="flex-row">
-      <div class="flex-col">
-        <kendo-floatinglabel text="New Case Worker">
-          <!-- <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" [data]="clinicVendorList$ | async "
-                textField="vendorName" valueField="vendorName" formControlName="providerName" [filterable]="true"
-                placeholder="Clinic Name" (filterChange)="searchClinic($event)"
-                [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }">
-                <ng-template kendoAutoCompleteItemTemplate let-dataItem>
-                  <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{dataItem.vendorName}}</span>
-                </ng-template>
-              </kendo-autocomplete> -->
-          <!-- <kendo-formerror *ngIf="!caseReassignForm.controls['newCaseWorker'].valid && isValidateForm">
+      <div class="flex-col hidedropicon" *ngIf="hasReassignPermission">
+        <kendo-floatinglabel text="New Case Worker" class="inline-search-loader">
+                <kendo-combobox   
+                [fillMode]="formUiStyle.dropDownFillMode" 
+                formControlName="newCaseWorkerId" 
+                [data]="caseOwnersObject"   
+                textField="fullName" 
+                valueField="loginUserId"
+                [valuePrimitive]="true"       
+                [filterable]="true"     
+                [kendoDropDownFilter]="caseOwnerfilterSettings" 
+                placeholder="New Case Worker"     
+              >
+              </kendo-combobox>
+          <kendo-formerror *ngIf="!caseReassignForm.controls['newCaseWorkerId'].valid && isValidateForm">
             New Case Worker is required
-          </kendo-formerror> -->
+          </kendo-formerror>
         </kendo-floatinglabel>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel [text]="hasReassignPermission ? 'Reason for Re-assign' : 'Reason for Re-assignment Request?'">
+          <kendo-textbox aria-label="Reason for Re-assign" [fillMode]="formUiStyle.inputFillMode"
+            formControlName="reasonForReassign" [maxlength]="250">
+          </kendo-textbox>
+          <kendo-formerror
+            *ngIf="!caseReassignForm.controls['reasonForReassign'].valid && !caseReassignForm.controls['reasonForReassign'].disabled && isValidateForm">
+              Reason for Re-assign is required.
+          </kendo-formerror>
+        </kendo-floatinglabel>        
       </div>
     </div>
   </div>

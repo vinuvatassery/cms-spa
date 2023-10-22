@@ -106,8 +106,8 @@
 </div>
 
 <kendo-dialog *ngIf="businessLogicPopupOpen" (close)="businessLogicPopupClose()" class="app-c-modal app-c-modal-md app-c-modal-np"
-  title="title">
-  <common-re-assign-case [hasReassignPermission] = "hasReassignPermission"></common-re-assign-case>
+  [title]="hasReassignPermission? 'Re-assign Case' : 'Assign New Case Worker?'" kendoTooltip>
+  <common-re-assign-case [hasReassignPermission] = "hasReassignPermission" [caseOwners] = "caseOwners$"></common-re-assign-case>
   
   <kendo-dialog-actions>
     <div class="justify-content-between">
@@ -117,7 +117,7 @@
           Cancel
         </button> 
         <button  kendoButton [primary]="true" look="flat" aria-label="Re-assign" (click)="businessLogicPopupClose()">
-          Re-assign
+          {{hasReassignPermission ? 'Re-assign' : 'Submit'}}
         </button>
       </div>
     </div>

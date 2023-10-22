@@ -1,6 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { UserDefaultRoles } from '@cms/case-management/domain';
 
 @Component({
   selector: 'common-user-profile-card',
@@ -15,23 +16,24 @@ export class UserProfileCardComponent implements OnInit {
    @Input() sendEmail? : boolean = false
   userImage$ = this.userManagementFacade.userImage$;
   userById$ = this.userManagementFacade.usersById$;
+  caseOwners$ = this.userManagementFacade.usersByRole$;
   imageLoaderVisible =true;
   businessLogicPopupOpen = false;
   hasReassignPermission = false;
-  title = '';
  
     /** Constructor**/
     constructor(     
-      private userManagementFacade : UserManagementFacade
-    ) {}
+      private userManagementFacade : UserManagementFacade,
+    ) { 
+      this.hasReassignPermission = userManagementFacade.hasPermission(['Reassign_Cases']);
+    }
 
 
   /** Lifecycle hooks **/
   ngOnInit(): void {  
    this.loadProfilePhoto();
-   this.loadProfileData(); 
-   this.hasReassignPermission = this.userManagementFacade.hasPermission(['Reassign_Cases']);
-   this.title = this.hasReassignPermission? 'Re-assign Case' : 'Assign New Case Worker?'    
+   this.loadProfileData();
+   this.loadUsersByRole();
  }
  
     loadProfilePhoto()
@@ -63,6 +65,11 @@ export class UserProfileCardComponent implements OnInit {
     businessLogicPopupClose()
     {
       this.businessLogicPopupOpen = false;
+    }
+
+    loadUsersByRole()
+    {
+      this.userManagementFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
     }
 
  }
