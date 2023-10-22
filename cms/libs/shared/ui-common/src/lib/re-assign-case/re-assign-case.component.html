@@ -1,5 +1,5 @@
-<section class="k-dialog-body">
-    <div [formGroup]="caseReassignForm">
+<form class="k-form" [formGroup]="caseReassignForm">
+  <section class="k-dialog-body">
     <p class="text-muted mb-2" *ngIf="hasReassignPermission">
       Start typing to search for a new Case Worker and enter the reason
       the case is being re-assigned.
@@ -29,15 +29,38 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel [text]="hasReassignPermission ? 'Reason for Re-assign' : 'Reason for Re-assignment Request?'">
-          <kendo-textbox aria-label="Reason for Re-assign" [fillMode]="formUiStyle.inputFillMode"
-            formControlName="reasonForReassign" [maxlength]="250">
-          </kendo-textbox>
+          <kendo-textarea
+          #tAreaReasonForReassign
+          [fillMode]="formUiStyle.inputFillMode"
+          [maxlength]="tAreaReasonForReassignMaxLength"
+          [rows]="3"
+          resizable ="none"
+          (valueChange)="calculateCharacterCount($event)"
+          aria-label="Reason for Re-assign"
+          formControlName="reasonForReassign">
+          </kendo-textarea>
+          <kendo-textarea-suffix class="justify-content-end">
+            <span class="counter">{{ tAreaReasonForReassignCounter }}</span>
+          </kendo-textarea-suffix>
           <kendo-formerror
-            *ngIf="!caseReassignForm.controls['reasonForReassign'].valid && !caseReassignForm.controls['reasonForReassign'].disabled && isValidateForm">
+            *ngIf="!caseReassignForm.controls['reasonForReassign'].valid && isValidateForm">
               Reason for Re-assign is required.
           </kendo-formerror>
         </kendo-floatinglabel>        
       </div>
     </div>
-  </div>
   </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" look="flat" aria-label="Cancel" look="outline"
+          (click)="onCancel()">
+          Cancel
+        </button> 
+        <button  kendoButton [primary]="true" look="flat" aria-label="Re-assign" (click)="save()">
+          {{hasReassignPermission ? 'Re-assign' : 'Submit'}}
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</form>

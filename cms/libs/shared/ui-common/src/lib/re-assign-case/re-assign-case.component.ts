@@ -1,5 +1,5 @@
 /** Angular **/
-import { Input, Output, Component, ChangeDetectionStrategy, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Input, Output, Component, ChangeDetectionStrategy, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
@@ -9,10 +9,11 @@ import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
   templateUrl: './re-assign-case.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReAssignCaseComponent implements OnChanges {
+export class ReAssignCaseComponent implements OnInit, OnChanges {
   @Input() hasReassignPermission: boolean = false;
   @Input() caseOwners !: any;
   @Output() reassignEventClicked = new EventEmitter<any>();
+  @Output() cancelEventClicked = new EventEmitter();
   
   public caseOwnerfilterSettings: DropDownFilterSettings = {
     caseSensitive: false,
@@ -23,21 +24,21 @@ export class ReAssignCaseComponent implements OnChanges {
   caseReassignForm !: FormGroup;
   isValidateForm: boolean = false;
   caseOwnersObject!: any;
+  tAreaReasonForReassignMaxLength:any = 250;
+  tAreaReasonForReassignCounter:any = 0;
 
   constructor(
     private readonly formBuilder: FormBuilder,
-    // private readonly cdr: ChangeDetectorRef,
-    // private lovFacade: LovFacade,
-    // public readonly intl: IntlService,
-    // private readonly configurationProvider: ConfigurationProvider,
-    // private readonly loaderService: LoaderService,
- ) {
+ ) {  }
+
+  ngOnInit(){
+    this.calculateCharacterCount();
     this.createCaseReassignForm();
   }
 
   createCaseReassignForm(){
     this.caseReassignForm = this.formBuilder.group({
-      newCaseWorkerId: ['',[Validators.required]],
+      newCaseWorkerId: [''],
       reasonForReassign: ['', [Validators.required, Validators.maxLength(250)]],
     });
   }
@@ -51,29 +52,30 @@ export class ReAssignCaseComponent implements OnChanges {
     }
   }
 
+  calculateCharacterCount(reason?: any) {
+    let tAreaReasonForReassignCharactersCount = reason ? reason.length : 0;
+    this.tAreaReasonForReassignCounter = `${tAreaReasonForReassignCharactersCount}/${this.tAreaReasonForReassignMaxLength}`;
+  }
+
   save() {
     this.validateForm();
     this.isValidateForm = true;
     if (this.caseReassignForm.valid) {
       let reassignData = this.mapReassignData();
+      console.log('reassignData',reassignData);
       this.reassignEventClicked.next(reassignData);
     }
+  }
+  onCancel(){
+    this.cancelEventClicked.emit();
   }
 
   validateForm() {
     this.caseReassignForm.markAllAsTouched();
-    // if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders) {
-    //   if (!this.clinicNameNotApplicable) {
-    //     this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
-    //     this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
-    //   }
-    //   if (!this.firstLastNameNotApplicable) {
-    //     this.medicalProviderForm.controls['firstName'].setValidators([Validators.required]);
-    //     this.medicalProviderForm.controls['lastName'].setValidators([Validators.required]);
-    //     this.medicalProviderForm.controls['firstName'].updateValueAndValidity();
-    //     this.medicalProviderForm.controls['lastName'].updateValueAndValidity();
-    //   }
-    // }
+    if(this.hasReassignPermission){
+      this.caseReassignForm.controls['newCaseWorkerId'].setValidators([Validators.required]);
+      this.caseReassignForm.controls['newCaseWorkerId'].updateValueAndValidity();
+    }
   }
   mapReassignData(){
     let formValues = this.caseReassignForm.value;
@@ -83,10 +85,8 @@ export class ReAssignCaseComponent implements OnChanges {
 
   createReassignData(formValues: any) {
     let reassignData = {
-      //vendorId: this.selectedClinicVendorId,
-      //vendorName: formValues.providerName,
+      newCaseWorkerId: this.hasReassignPermission? formValues.newCaseWorkerId : null,
       reasonForReassign: formValues.reasonForReassign,
-      //lastName: formValues.lastName
     }
     return reassignData;
   }
