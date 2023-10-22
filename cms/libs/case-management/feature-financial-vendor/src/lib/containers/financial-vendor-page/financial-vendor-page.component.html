@@ -141,7 +141,7 @@
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.Clinic)"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
     [hasCreateUpdatePermission]="hasClinicCreateUpdatePermission" [selectedClinicType]="selectedClinicType"
-    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
+    (searchClinicVendorClicked)="searchClinicVendorClicked($event)" [saveVendorEventSubject]="saveVendorEventSubject"></cms-vendor-details>
 </kendo-dialog>
 
 <kendo-dialog kendoRippleContainer *ngIf="isShowInsuranceProvider" (close)="closeVendorDetailModal()"

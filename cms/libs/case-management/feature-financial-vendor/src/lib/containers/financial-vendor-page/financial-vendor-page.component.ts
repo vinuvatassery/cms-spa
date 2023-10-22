@@ -4,7 +4,7 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ReminderFacade } from '@cms/productivity-tools/domain';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -81,6 +81,8 @@ export class FinancialVendorPageComponent implements OnInit {
 
   private closeMedicalDentalProviderModalSubject = new BehaviorSubject<boolean>(false);
   closeMedicalDentalProviderModal$ = this.closeMedicalDentalProviderModalSubject.asObservable();
+
+  saveVendorEventSubject:Subject<any> = new Subject();
 
   setupForClinic(providerTypeForClinic: string) {
     if (providerTypeForClinic === FinancialVendorTypeCode.DentalProviders)
@@ -227,6 +229,7 @@ export class FinancialVendorPageComponent implements OnInit {
     return words.join(' ');
   }
 
+ 
   saveVendorProfile(vendorProfile: any) {
 
     this.financialVendorFacade.showLoader();
@@ -236,6 +239,7 @@ export class FinancialVendorPageComponent implements OnInit {
         this.closeVendorDetailModal(this.providerTypeCode);
         var notificationMessage = this.makeHumanReadable(vendorProfile.vendorTypeCode).toLowerCase() + " profile added successfully";
         // var notificationMessage = "Vendor profile added successfully";
+        this.saveVendorEventSubject.next('vendor saved');
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
         this.cdr.detectChanges();
       },

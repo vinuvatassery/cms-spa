@@ -1,4 +1,4 @@
-import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators, RequiredValidator } from '@angular/forms';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -8,6 +8,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
 import { AddressType } from '../enums/address-type.enum';
 import { StatusFlag } from '../enums/status-flag.enum';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'cms-vendor-details',
@@ -15,7 +16,7 @@ import { StatusFlag } from '../enums/status-flag.enum';
   styleUrls: ['./vendor-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VendorDetailsComponent implements OnInit {
+export class VendorDetailsComponent implements OnInit, OnDestroy {
   @Input() providerType!: any;
   @Input() medicalProviderForm: FormGroup;
   @Input() editVendorInfo: boolean = false;
@@ -27,6 +28,9 @@ export class VendorDetailsComponent implements OnInit {
   @Input() clinicVendorLoader$!: any;
   @Input() hasCreateUpdatePermission: boolean = false;
   @Input() selectedClinicType: string = FinancialVendorTypeCode.MedicalClinic;
+
+  // listens for event when vendor saved in page comp
+  @Input() saveVendorEventSubject: Subject<any> = new Subject<any>();
 
   @Output() saveProviderEventClicked = new EventEmitter<any>();
   @Output() closeModalEventClicked = new EventEmitter<any>();
@@ -96,8 +100,17 @@ export class VendorDetailsComponent implements OnInit {
 
     // loading clinic list on modal init for dropdown
     if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders)
-      this.searchClinic("  ");
-    // this.searchClinicVendorClicked.emit(" ");
+      this.searchClinic(" ");
+
+    // listends for save vendor event in page comp
+    this.saveVendorEventSubject.subscribe(event => {
+      if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders)
+        this.searchClinic(" ");
+    });
+  }
+
+  ngOnDestroy() {
+    this.saveVendorEventSubject.unsubscribe();
   }
 
   get AddContactForm(): FormArray {
