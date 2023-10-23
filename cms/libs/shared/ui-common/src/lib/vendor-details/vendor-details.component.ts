@@ -501,7 +501,7 @@ export class VendorDetailsComponent implements OnInit {
       PreferredFlag: (formValues.isPreferedPharmacy) ? StatusFlag.Yes : StatusFlag.No,
       PhysicalAddressFlag: (formValues.physicalAddressFlag) ? StatusFlag.Yes : StatusFlag.No,
       emailAddressTypeCode: AddressType.Mailing,
-      activeFlag: this.hasCreateUpdatePermission == true ? StatusFlag.Yes : StatusFlag.No,
+      activeFlag: (this.hasCreateUpdatePermission) ? StatusFlag.Yes : StatusFlag.No,
     }
     if (this.providerType === FinancialVendorTypeCode.Clinic) {
       if (vendorProfileData.clinicType === FinancialVendorTypeCode.MedicalClinic) {
