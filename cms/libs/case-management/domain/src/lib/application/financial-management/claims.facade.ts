@@ -9,13 +9,14 @@ import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { ClaimsDataService } from '../../infrastructure/financial-management/claims.data.service';
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { GridFilterParam } from '@cms/case-management/domain';
 
 @Injectable({ providedIn: 'root' })
 export class ClaimsFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'address1';
+  public sortValue = 'batchName';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
@@ -61,7 +62,7 @@ export class ClaimsFacade {
   ) { }
 
   /** Public methods **/
-  loadClaimsListGrid(pharmacyId: string, paginationParameters: State){
+  loadClaimsListGrid(pharmacyId: string, paginationParameters: GridFilterParam){
     this.claimsDataLoaderSubject.next(true);
     this.claimsDataService.loadClaimsListService(pharmacyId, paginationParameters).subscribe({
       next: (dataResponse:any) => {
