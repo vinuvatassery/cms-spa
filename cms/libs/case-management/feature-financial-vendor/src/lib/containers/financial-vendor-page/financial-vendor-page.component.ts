@@ -248,9 +248,6 @@ export class FinancialVendorPageComponent implements OnInit {
   }
 
   closeVendorDetailModal(data?: any) {
-    // alert(data)
-    // alert(this.providerTypeCode)
-    // if (this.providerTypeCode == this.financeVendorTypeCodes.Clinic) {
     if (data == this.vendorTypes.Clinic) {
       this.ShowClinicProvider = false;
     } else {
@@ -259,7 +256,6 @@ export class FinancialVendorPageComponent implements OnInit {
       this.isShowInsuranceProvider = false;
       this.isShowPharmacyProvider = false;
       this.isShowManufacturers = false;
-      // this.ShowClinicProvider = false;
     }
   }
 
