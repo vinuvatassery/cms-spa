@@ -835,6 +835,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
             invoiceId: val.claimNbr,
             paymentRequestId: val.paymentRequestId,
           });
+          if(this.isEdit){
+            this.isRecentClaimShow = true;
+          }
           this.claimForm.controls['parentReasonForException'].setValue(val.exceptionReasonCode);
           this.claimForm.controls['parentExceptionFlag'].setValue(val.exceptionFlag);
           this.claimForm.controls['parentExceptionTypeCode'].setValue(val.exceptionTypeCode);
