@@ -1,11 +1,5 @@
 <div class="flex-row app-c-expansion-panel-two">
   <div class="flex-col">
-    <kendo-popover #onUserProfileDetailsHovered width="330" position="right">
-      <ng-template kendoPopoverBodyTemplate>
-        <common-user-profile-card> </common-user-profile-card>
-      </ng-template>
-    </kendo-popover>
-
       <kendo-panelbar *ngFor="let item of approvalsGeneralLists$|async;let i=index">
         <kendo-panelbar-item *ngIf="getTitle(item.approvalTypeCode)">
 
@@ -44,6 +38,11 @@
                 </div>
               </div>
             </div>
+            <kendo-popover #onUserProfileDetailsHovered width="330" position="right">
+              <ng-template kendoPopoverBodyTemplate>
+                <common-user-profile-card  [userId]="item.creatorId"> </common-user-profile-card>
+              </ng-template>
+            </kendo-popover>
           </ng-template>
 
           <ng-template kendoPanelBarContent>
