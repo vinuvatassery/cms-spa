@@ -24,7 +24,6 @@ export class VendorDetailsComponent implements OnInit {
   @Input() ddlStates$!: any;
   @Input() clinicVendorList$!: any;
   @Input() clinicVendorLoader$!: any;
-  @Input() hasCreateUpdatePermission =false;
   @Output() saveProviderEventClicked = new EventEmitter<any>();
   @Output() closeModalEventClicked = new EventEmitter<any>();
 
