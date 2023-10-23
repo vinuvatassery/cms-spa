@@ -587,7 +587,9 @@ export class MedicalPaymentDetailComponent {
       this.addClaimServicesForm.controls.forEach((element, index) => {
           totalServiceCost += + element.get('amountDue')?.value;
       });
-      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, 
+        index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
+        this.clientCaseEligibilityId);
       this.exceedMaxBenefitFlag = this.financialClaimsFacade.serviceCostFlag;
     }
   }

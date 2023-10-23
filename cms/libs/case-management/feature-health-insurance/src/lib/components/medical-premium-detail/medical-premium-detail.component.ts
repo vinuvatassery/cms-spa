@@ -23,8 +23,6 @@ import {
   PriorityCode,
   InsuranceStatusType,
   FinancialVendorTypeCode,
-  FinancialClaimsFacade,
-  ServiceSubTypeCode,
   FinancialVendorFacade
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';

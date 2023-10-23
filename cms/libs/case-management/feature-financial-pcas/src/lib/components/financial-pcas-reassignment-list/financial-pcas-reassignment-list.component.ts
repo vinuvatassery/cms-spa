@@ -12,15 +12,15 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridDataResult , ColumnVisibilityChangeEvent} from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy,
+  State
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { FinancialPcaFacade } from '@cms/case-management/domain';
+import { FinancialPcaFacade, PcaAssignmentsFacade } from '@cms/case-management/domain';
 import { NavigationMenuFacade } from '@cms/system-config/domain';
+import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'cms-financial-pcas-reassignment-list',
   templateUrl: './financial-pcas-reassignment-list.component.html',
@@ -32,15 +32,22 @@ export class FinancialPcasReassignmentListComponent
 {
   @ViewChild('addEditPcaReassignmentDialogTemplate', { read: TemplateRef })
   addEditPcaReassignmentDialogTemplate!: TemplateRef<any>;
+
   @ViewChild('confirmationPcaReassignmentDialogTemplate', { read: TemplateRef })
   confirmationPcaReassignmentDialogTemplate!: TemplateRef<any>;
+
+  @ViewChild('reassignPcaReassignmentDialogTemplate', { read: TemplateRef })
+  reassignPcaReassignmentDialogTemplate!: TemplateRef<any>;
+
   public formUiStyle: UIFormStyle = new UIFormStyle();
   pcaReassignmentConfirmationDialogService: any;
   pcaReassignmentAddEditDialogService: any;
+  reassignmentDialogService: any;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isFinancialPcaReassignmentGridLoaderShow = false;
   isViewGridOptionClicked = false;
   isEditGridOptionClicked = false;
+  isreAssignGridOptionClicked = false;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -75,6 +82,9 @@ export class FinancialPcasReassignmentListComponent
   allNotAssignedPcaSList:any;
   notSelectedPcaS:any;
   selectedPcaData:any;
+  filteredByColumnDesc = '';
+  sortColumnDesc = 'PCA #';
+  columnChangeDesc = 'Default Columns';
 
   public gridMoreActions = [
     {
@@ -85,6 +95,7 @@ export class FinancialPcasReassignmentListComponent
         if (!this.isViewGridOptionClicked) {
           this.isViewGridOptionClicked = true;
           this.isEditGridOptionClicked=false;
+          this.isreAssignGridOptionClicked=false;
           this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate,data);
         }
       },
@@ -97,12 +108,49 @@ export class FinancialPcasReassignmentListComponent
         if (!this.isEditGridOptionClicked) {
           this.isEditGridOptionClicked = true;
           this.isViewGridOptionClicked = false;
+          this.isreAssignGridOptionClicked=false;
           this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate,data);
         }
       },
     },
+    {
+      buttonType: 'btn-h-danger',
+      text: 'Reassign PCA',
+      icon: 'edit',
+      click: (data: any): void => {
+        
+        if (!this.isEditGridOptionClicked) {
+          this.isEditGridOptionClicked = false;
+          this.isViewGridOptionClicked = false;
+          this.isreAssignGridOptionClicked=true;
+          this.onOpenReassignPcaReassignmentClicked(this.reassignPcaReassignmentDialogTemplate,data);
+        }
+      },
+    },
   ];
-
+  isEditAssignmentClosed = false;
+  isRemoveAssignmentClosed = false;
+  pcaAssignmentFormData : any
+  @Input() objectCodeIdValue : any
+  @Input() groupCodeIdsdValue : any=[];
+  @Input() groupCodesData$ : any
+  @Input() objectCodesData$ : any
+  @Input() pcaCodesData$ : any
+  @Input() pcaAssignOpenDatesList$ : any
+  @Input() pcaAssignCloseDatesList$ : any
+  @Input() pcaAssignmentData$ : any
+  @Input() pcaAssignmentFormDataModel$ : any
+  @Input() newForm : any
+  @Input() pcaCodesInfoData$ : any;
+  @Output() addPcaDataEvent = new EventEmitter<any>();
+  @Output() reassignpcaEvent = new EventEmitter<any>();
+  @Input() groupCodesDataFilter : any
+  @Output() loadPcaEvent = new EventEmitter<any>();
+  @Input() assignPcaResponseData$ : any;
+  @Output() getPcaAssignmentEvent = new EventEmitter<any>();
+  @Output() pcaChangeEvent = new EventEmitter<any>();
+  @Output() loadObjectCodesEvent = new EventEmitter<any>();
+  @Output() loadGroupCodesEvent = new EventEmitter<any>();
   dropDownColumns : { columnCode: string, columnDesc: string }[] = [
     {
       columnCode: 'ALL',
@@ -122,14 +170,95 @@ export class FinancialPcasReassignmentListComponent
     },
   ];
 
+  gridColumns: { [key: string]: string } = {
+    ALL: 'All Columns',
+    pcaCode: 'PCA #',
+    objectName: 'Object',
+    group:'Group',
+    closeDate: 'Close Date',
+    originalAmount:'Orignal Amount',
+    amountSpendAfterExpiration : 'Amount Spend After Expiration',
+    overSpendAmount:'Overspend Amount',
+    totalOverSpendAmount:'Total Overspend Amount',
+    unlimitedFlag:'Unlimited'
+  };
+
   /** Constructor **/
   constructor(
     private dialogService: DialogService,
     private financialPcaFacade:FinancialPcaFacade,
-    private readonly navigationMenuFacade: NavigationMenuFacade
+    private readonly navigationMenuFacade: NavigationMenuFacade,
+    private readonly pcaAssignmentsFacade : PcaAssignmentsFacade,
   ) {}
+  reassignPcaData(pcaAssignmentData : any)
+  {
+          this.pcaAssignmentsFacade.reassignPca(pcaAssignmentData);
+          this.pcaAssignmentsFacade.reassignPcaResponseData$.subscribe((res:any)=>{
+            
+            this.onClosePcaReAssignmentFormClicked();
+            this.loadPcaReassignment();
+            this.navigationMenuFacade.pcaReassignmentCount();
+            this.groupChange(true)
+          }) 
+        
+      
+  this.reassignpcaEvent.emit(pcaAssignmentData)
+  }
+  objectCodeValid = true
+  groupCodesValid = true
+  isFinancialPcaAssignmentGridLoaderShow = false;
+  pcaAssignmentGroupForm!: FormGroup;
+  @Output() loadFinancialPcaAssignmentEvent = new EventEmitter<any>();
+  editButtonClicked = false;
+  pcaAssignmentAddEditDialogService : any;
+  groupChange($event : any)
+  {    
+    this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;
+    let  groupCodeIdsdValueData= []
 
+    for (const key in this.groupCodeIdsdValue)
+    {
+      groupCodeIdsdValueData.push(this.groupCodeIdsdValue[key]?.groupCodeId)
+    }
+
+    if(this.objectCodeIdValue)
+    {
+      this.objectCodeValid = true
+    }
+    if(this.groupCodeIdsdValue.length > 0)
+    {
+      this.groupCodesValid = true
+    }
+    else
+    {
+      this.groupCodesValid = false
+    }
+    if(this.groupCodeIdsdValue.length > 0 && this.objectCodeIdValue)
+    {
+      this.isFinancialPcaAssignmentGridLoaderShow = true;
+      const pcaAssignmentGridArguments =
+      {
+        objectId : this.objectCodeIdValue,
+        groupIds : groupCodeIdsdValueData
+      }
+
+      this.loadFinancialPcaAssignmentEvent.emit(pcaAssignmentGridArguments)     
+      this.gridDataHandle();
+    }
+  }
+  onClosePcaReAssignmentFormClicked() {
+      this.isEditAssignmentClosed = false;
+      this.editButtonClicked = false
+      this.reassignmentDialogService.close();
+  }
+  onLoadPcaEvent($event :  any)
+  {
+  this.loadPcaEvent.emit()
+  }
   ngOnInit(): void {
+    this.pcaChangeEvent.emit()
+    this.loadObjectCodesEvent.emit()
+    this.loadGroupCodesEvent.emit()
     this.defaultGridState();
     this.financialPcaFacade.getPcaUnAssignments();
     this.notAssignPcaLists$.subscribe((res:any)=>{
@@ -210,7 +339,11 @@ export class FinancialPcasReassignmentListComponent
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.filter = stateData?.filter?.filters;
+    if (this.filter !== null) {
+      this.filteredByColumnDesc = this.dropDownColumns?.find(i => i.columnCode === this.selectedColumn)?.columnDesc ?? ''; 
+    }
     this.loadPcaReassignment();
   }
 
@@ -244,6 +377,20 @@ export class FinancialPcasReassignmentListComponent
     this.editPcaReassignmentItem = data;
   }
 
+  onOpenReassignPcaReassignmentClicked(template: TemplateRef<unknown>,data:any): void {
+        
+    this.groupCodesData$=this.groupCodesData$.filter((x:any)=>x.groupCodeId==data.groupId[0]);
+    this.objectCodesData$=this.objectCodesData$.filter((x:any)=>x.objectCodeId==data.objectId);
+   
+    this.reassignmentDialogService = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+        this.newForm = false
+        this.getPcaAssignmentEvent.emit(data.pcaAssignmentId)
+       this.pcaAssignmentFormData=data;
+  }
+
   onCloseEditPcaReassignmentClicked(result: any) {
     if (result) {
       this.isViewGridOptionClicked = false;
@@ -273,6 +420,7 @@ export class FinancialPcasReassignmentListComponent
     this.updatePcaAssignmentByEvent.emit(updateReassignmentValue);
     this.isViewGridOptionClicked = false;
     this.isEditGridOptionClicked = false;
+    this.isreAssignGridOptionClicked=false;
       this.pcaReassignmentAddEditDialogService.close();
       this.loadPcaReassignmentListEvent.emit(true);
   }
@@ -339,5 +487,34 @@ public itemDisabled(itemArgs:any)
   }
   onPcaReassignmentSearch(searchValue : any){
       this.onChange(searchValue);
+  }
+
+  restPcaReassignmentGrid() {
+    this.sortValue = 'pcaCode';
+    this.sortType = 'asc';
+    this.initializePCAReassignmentGrid();
+    this.sortColumn = 'pcaCode';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
+    this.filter = [];
+    this.searchValue = '';
+    this.selectedColumn = 'ALL';
+    this.filteredByColumnDesc = '';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.columnChangeDesc = 'Default Columns';
+    this.loadPcaReassignment();
+  }
+
+  private initializePCAReassignmentGrid(){
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+  }
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 }

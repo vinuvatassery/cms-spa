@@ -56,7 +56,7 @@
                                   <a kendoButton class="ml-1 card-link-button"
                                     (click)="onMakeParentExceptionClick('showProviderNotEligibleExceptionReason')">{{getParentExceptionFormValue('providerNotEligibleExceptionFlagText')}}
                                   </a>
-                                  <a kendoButton class="ml-1 card-link-button"
+                                  <a kendoButton class="ml-1 card-link-button" (click)="onVendorNameClick()"
                                    >{{vendorName??''}}
                                   </a>
                           </kendo-formerror>
@@ -64,10 +64,10 @@
                             <div class="flex-col">
                                 <kendo-floatinglabel text="Reason For Exception">
                                     <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
-                                        aria-label="Reason For Exception" [maxlength]="textMaxLength"
+                                        aria-label="Reason For Exception" [maxlength]="exceptionReasonMaxLength"
                                         formControlName="parentReasonForException">
                                         <kendo-textarea-suffix class="justify-content-end">
-                                            <span class="tareacounter"></span>
+                                            <span class="tareacounter"> {{parentReasonCharCount()}} </span>
                                         </kendo-textarea-suffix>
                                     </kendo-textarea>
                                 </kendo-floatinglabel>
@@ -213,7 +213,7 @@
                                       <div class="flex-col">
                                           <kendo-floatinglabel text="Reason For Exception">
                                               <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
-                                                  aria-label="Reason For Exception" [maxlength]="textMaxLength"
+                                                  aria-label="Reason For Exception" [maxlength]="exceptionReasonMaxLength"
                                                   formControlName="reasonForException">
                                                   <kendo-textarea-suffix class="justify-content-end">
                                                       <span class="tareacounter"> {{reasonCharCount(i)}}</span>
@@ -229,13 +229,13 @@
                                     <div class="flex-row">
                                         <div class="flex-col flex-col-4">
                                             <kendo-floatinglabel text="Payment Type" >
-                                                <kendo-dropdownlist 
+                                                <kendo-dropdownlist
                                                 [fillMode]="formUiStyle.dropDownFillMode"
                                                 [data]="groupedPaymentRequestTypes" formControlName="paymentType" aria-label="Type"
                                                 textField ="lovDesc"
                                                 valueField="lovCode"
                                                 [valuePrimitive]="true"
-                                                [popupSettings]="{ popupClass: dropdownInternedClassAction, animate: true }" 
+                                                [popupSettings]="{ popupClass: dropdownInternedClassAction, animate: true }"
                                                 (valueChange)="onPaymentTypeValueChange($event, i)">
                                               <ng-template kendoDropDownListFixedGroupTemplate let-groupName>
                                                 <strong>{{ groupName }}</strong>
@@ -250,7 +250,7 @@
                                                 class="d-flex align-items-center"> <span class="material-icons mr-1"
                                                     aria-hidden="false">info</span>Payment Type is required
                                             </kendo-formerror>
-                                            
+
                                         </div>
                                         <div class="flex-col flex-col-4">
                                             <kendo-floatinglabel text="CPT Code" class="inline-search-loader">
@@ -294,7 +294,7 @@
                                       <div class="flex-col">
                                           <kendo-floatinglabel text="Reason For Exception">
                                               <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
-                                                  aria-label="Reason For Exception" [maxlength]="textMaxLength"
+                                                  aria-label="Reason For Exception" [maxlength]="exceptionReasonMaxLength"
                                                   formControlName="reasonForException">
                                                   <kendo-textarea-suffix class="justify-content-end">
                                                       <span class="tareacounter"> {{reasonCharCount(i)}}</span>
@@ -363,7 +363,7 @@
                                             </kendo-formerror>
                                         </div>
                                         <div class="ml-2" *ngIf="getExceptionFormValue('duplicatePaymentExceptionFlag',i)" >
-                                          <kendo-formerror class="align-items-center"> 
+                                          <kendo-formerror class="align-items-center">
                                             <span class="material-icons mr-1" aria-hidden="false">info</span> Duplicate Payment. <a kendoButton class="ml-1 card-link-button"
                                                   (click)="onMakeExceptionClick('duplicatePaymentExceptionReason',i)">{{getExceptionFormValue('duplicatePaymentExceptionFlagText',i)}}
                                               </a>
@@ -375,7 +375,7 @@
                                         <div class="flex-col">
                                             <kendo-floatinglabel text="Reason For Exception">
                                                 <kendo-textarea [fillMode]="formUiStyle.inputFillMode" resizable="auto"
-                                                    aria-label="Reason For Exception" [maxlength]="MaxBenefitExceptionReasonTextLength"
+                                                    aria-label="Reason For Exception" [maxlength]="exceptionReasonMaxLength"
                                                     formControlName="reasonForException">
                                                     <kendo-textarea-suffix class="justify-content-end">
                                                         <span class="tareacounter"> {{reasonCharCount(i)}}</span>

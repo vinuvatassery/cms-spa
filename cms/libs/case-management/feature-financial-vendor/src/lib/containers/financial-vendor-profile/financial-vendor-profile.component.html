@@ -93,7 +93,8 @@
         <div class="block-section">
 
           <div class="client-profile-outlet">
-            <cms-invoices [tabCode]="tabCode" [vendorId]="vendorId"></cms-invoices>
+            <cms-invoices [tabCode]="tabCode" [vendorId]="vendorId" [serviceGridView$]="serviceGridView$ "
+            (loadInvoiceServiceEvent)="loadInvoiceServices($event)" [isInvoiceServiceLoading$]="isInvoiceServiceLoading$"></cms-invoices>
           </div>
         </div>
       </ng-template>
@@ -105,18 +106,7 @@
         <div class="block-section ">
 
           <div class="client-profile-outlet"  *ngIf="vendorTypeCode">
-            <cms-clients [vendorTypeCode]="vendorTypeCode" [providerId]="vendorId"></cms-clients>
-          </div>
-        </div>
-      </ng-template>
-    </kendo-tabstrip-tab>
-
-    <kendo-tabstrip-tab title="Contacts" *ngIf="tabCode !== financeManagementTabs.Pharmacy">
-      <ng-template kendoTabContent>
-        <div class="block-section">
-
-          <div class="client-profile-outlet">
-            <cms-contacts></cms-contacts>
+            <cms-clients [vendorTypeCode]="vendorTypeCode" [providerId]="vendorId" [vendorName]="vendorName"></cms-clients>
           </div>
         </div>
       </ng-template>

@@ -9,8 +9,7 @@
           [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
           [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
           [columnMenu]="{ filter: true }"(filterChange)="filterChange($event)" [filter]="state.filter"
-          [navigable]="true" [data]="invoiceGridView$ | async"
-          (detailExpand)="onExpand($event)" >  
+          [navigable]="true" [data]="invoiceGridView$ | async">  
               <kendo-grid-column field="batchName" title="Batch #" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
                       <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button"
@@ -144,7 +143,7 @@
               <kendo-grid-column field="warrant" title="Warrant#" [width]="100"> </kendo-grid-column>
               <kendo-grid-column field="entryDate" title="Entry Date" [width]="120"> 
                 <ng-template kendoGridCellTemplate let-dataItem>                
-                    {{ dataItem.entryDate | date:'MM-dd-yyyy' }}                 
+                    {{ dataItem.entryDate | date:'MM/dd/yyyy' }}                 
                 </ng-template>
                 <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                   <common-grid-cell-date-range-filter
@@ -180,32 +179,12 @@
                   </ng-template>
                 </kendo-grid-column>
 
-                <div *kendoGridDetailTemplate="let dataItem">
-                  <kendo-grid [resizable]="true" [navigable]="true"  [data]="dataItem.invoiceServices" [loading]="dataItem.IsInvoiceServiceLoader">
+                <div *kendoGridDetailTemplate="let dataItem">                 
+                    <cms-invoice-service [dataItem] ="dataItem" [vendorId] ="vendorId"[tabCode]= "tabCode"
+                    (loadInvoiceServiceEvent)="loadInvoiceServices($event)"[serviceGridView$]="serviceGridView$"
+                    [isInvoiceServiceLoading$]="isInvoiceServiceLoading$">
 
-                    <kendo-grid-column field="serviceStartDate" title="Service Start" [width]="150">
-                      <ng-template kendoGridCellTemplate let-dataItem>
-                    
-                          {{ dataItem.serviceStartDate | date:'MM-dd-yyyy' }}
-                       
-                      </ng-template>
-                         </kendo-grid-column> 
-                    <kendo-grid-column field="serviceEndDate" title="Service End" [width]="100"> 
-                      <ng-template kendoGridCellTemplate let-dataItem>
-                      
-                          {{ dataItem.serviceEndDate | date:'MM-dd-yyyy' }}
-                      
-                      </ng-template>
-                    </kendo-grid-column>
-                    <kendo-grid-column field="cptCode" title="CPT Code" [width]="100">
-                         
-                         </kendo-grid-column>
-                    <kendo-grid-column field="medicalService" title="Medical Service" [width]="100"> </kendo-grid-column>
-                    <kendo-grid-column field="serviceCost" title="Service Cost" [width]="100"> </kendo-grid-column>
-                    <kendo-grid-column field="amountDue" title="Amount Due" [width]="100"> </kendo-grid-column>
-                    <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="100"> </kendo-grid-column>                  
-                   
-                    </kendo-grid>
+                    </cms-invoice-service>
                   </div>
                   
                      <!-- grid Pagination template -->
