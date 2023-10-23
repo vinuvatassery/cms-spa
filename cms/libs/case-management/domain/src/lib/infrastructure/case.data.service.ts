@@ -427,4 +427,8 @@ export class CaseDataService {
       `/case-management/clients/${clientId}/eligibility/${clientCaseEligibilityId}/status`
     );
   }
+
+  reassignCase(caseReassignData : any){
+    return this.http.post<boolean>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case/reassign`, caseReassignData);
+  }
 }
