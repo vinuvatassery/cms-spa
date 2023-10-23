@@ -44,15 +44,15 @@
         </kendo-floatinglabel>
       </div>
 
-      <div class="flex-col"
+      <div class="flex-col" 
         *ngIf="providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders 
         || vendorTypes.DentalClinic == providerType || vendorTypes.MedicalClinic == providerType || vendorTypes.Clinic == providerType">
         <div class="flex-row">
 
-          <!-- if medical providers  -->
+          <!-- if medical providers starts -->
 
           <div *ngIf="providerType !== vendorTypes.Clinic && !editVendorInfo"
-            class="flex-col flex-col-8 inlineloaderwrapper">
+            class="flex-col flex-col-8 inlineloaderwrapper hidedropiconm">
             <span *ngIf="clinicVendorLoader$ | async"
               class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
             <kendo-floatinglabel text="Clinic Name">
@@ -89,10 +89,10 @@
 
           </div>
 
-          <!-- if medical providers ends -->
+          <!--  medical providers ends -->
 
 
-          <!-- if clinic  -->
+          <!-- if clinic starts -->
 
           <div *ngIf="providerType === vendorTypes.Clinic && !editVendorInfo"
             class="flex-col flex-col-12 inlineloaderwrapper">
@@ -121,7 +121,7 @@
 
           </div>
 
-          <!-- if clinic ends  -->
+          <!--  clinic ends  -->
 
           <div class="flex-col" *ngIf="editVendorInfo 
           && ( medicalProviderForm.value.vendorTypeCode == 'MEDICAL_CLINIC' 

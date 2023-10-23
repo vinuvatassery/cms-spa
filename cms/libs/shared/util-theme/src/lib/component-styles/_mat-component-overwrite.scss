@@ -149,6 +149,10 @@
 .hidedropicon kendo-combobox > .k-button {
   display: none;
 }
+
+.hidedropiconm kendo-multicolumncombobox > .k-button {
+  display: none;
+}
 .field-label-hide {
   .k-label {
     display: none;
