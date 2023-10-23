@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PanelBarCollapseEvent, PanelBarExpandEvent } from '@progress/kendo-angular-layout';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 
@@ -10,7 +10,7 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent {
 
   @Input() onUserProfileDetailsHovered: any;
   @Input() approvalId: any;
-
+  @Output() openEditModal = new EventEmitter<any>();
   ifApproveOrDeny: any;
   isPanelExpanded = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -27,15 +27,8 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent {
     this.isPanelExpanded = true;
   }
 
-  onEditListItemsDetailClicked(template: any): void {
-    // this.editListITemsDialog = this.dialogService.open({
-    //   content: template,
-    //   animation: {
-    //     direction: 'left',
-    //     type: 'slide',
-    //   },
-    //   cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
-    // });
+  onEditListItemsDetailClicked(): void {
+    this.openEditModal.emit(this.approvalId);
   }
 
   onCloseEditListItemsDetailClicked() {

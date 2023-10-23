@@ -7,6 +7,7 @@ import {
   OnInit,
   Output,
   TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
@@ -23,6 +24,7 @@ import {
 } from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approvals-general-list',
   templateUrl: './approvals-general-list.component.html',
@@ -38,6 +40,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() approvalsGeneralLists$: any;
+  @Input() ClientsSubjects$ : any;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
@@ -59,9 +62,11 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   private editListITemsDialog: any;
   approvalId!: number;
   selectedIndex: any;
-
+  @ViewChild('editListItemDialogModal') editModalTemplate!: TemplateRef<any>;
+  caseOwners$ = this.loginUserFacade.usersByRole$;
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService) {}
+  constructor(private route: Router, private dialogService: DialogService,private readonly loginUserFacade : UserManagementFacade,
+    ) {}
 
   ngOnInit(): void {
     this.loadApprovalGeneralListGrid();
@@ -177,6 +182,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
 
   public onPanelExpand(event: PanelBarExpandEvent): void {
+    //here we will call the api
     this.isPanelExpanded = true;
   }
 
@@ -200,14 +206,38 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     this.editListITemsDialog.close();
   }
 
-  getTitle(itemCode: string) {
-    switch (itemCode) {
+  getTitle(approvalTypeCode: string,subTypeCode:string) {
+    switch (approvalTypeCode) {
       case PendingApprovalGeneralTypeCode.GeneralException:
         return 'Request to Exceed Max Benefits';
       case PendingApprovalGeneralTypeCode.GeneralCaseReassignment:
         return 'Request for Case reassignment';
       case PendingApprovalGeneralTypeCode.GeneralAddtoMasterList:
-        return 'Request to add To Master List';
+        return this.getMasterlistTitle(subTypeCode);
+    }
+    return null;
+  }
+  openEditModal(event:any){
+    if(!event){
+      this.onEditListItemsDetailClicked(this.editModalTemplate);
+    }
+  }
+  getMasterlistTitle(subTypeCode:string){
+    switch(subTypeCode){
+      case 'DENTAL_CLINIC':
+        return 'Request to add Dental Clinics To Master List';
+      case 'MEDICAL_CLINIC':
+        return 'Request to add Medical Clinics To Master List';
+      case 'MEDICAL_PROVIDER':
+        return 'Request to add Medical Providers To Master List';
+      case 'DENTAL_PROVIDER':
+        return 'Request to add Dental Providers To Master List';
+      case 'INSURANCE_VENDOR':
+        return 'Request to add Insurance Vendors To Master List';
+      case 'INSURANCE_PROVIDER':
+        return 'Request to add Insurance Providers To Master List';
+      case 'PHARMACY':
+        return 'Request to add Pharmacies To Master List';
     }
     return null;
   }

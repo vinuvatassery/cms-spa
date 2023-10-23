@@ -6,68 +6,73 @@
       </ng-template>
     </kendo-popover>
 
-      <kendo-panelbar *ngFor="let item of approvalsGeneralLists$|async;let i=index">
-        <kendo-panelbar-item *ngIf="getTitle(item.approvalTypeCode)">
+    <kendo-panelbar *ngFor="let item of approvalsGeneralLists$|async;let i=index" (expand)="onPanelExpand($event)">
+      <kendo-panelbar-item *ngIf="getTitle(item.approvalTypeCode,item.subTypeCode)">
 
-          <ng-template kendoPanelBarItemTitle>
-            <div class="flex-row rw-100" (click)="$event.stopPropagation();">
-              <div class="flex-col flex-col-6">
-                <h5>{{getTitle(item.approvalTypeCode)}}</h5>               
-                <p>{{item.creationTime | date:'MM-dd-yyyy'}} by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
-                    aria-label="FName LName" kendoButton look="flat" class="card-link-button">
-                    {{item.fullName}}
-                  </button> </p>
-                <div *ngIf="isPanelExpanded">
-                  <p class="mt-1 mb-1">Regarding <a>Donna Summer</a></p>
-                  <i>The client has exceeded max benefits but it is very important that we pay this invoice for them.</i>
-                </div>
-              </div>
-              <div class="flex-col flex-col-6">
-                <div>
-                  <kendo-buttongroup selection="single">
-                    <button kendoButton aria-label="Approve" (click)="approveOrDeny(i,'A')" [toggleable]="true">Approve
-                    </button>
-                    <button kendoButton aria-label="Deny" (click)="approveOrDeny(i,'D')" [toggleable]="true">Deny </button>
-                  </kendo-buttongroup>
-                </div>
-                <div *ngIf="ifApproveOrDeny === 'D' && i === selectedIndex">
-                  <kendo-floatinglabel text="Send Back Notes">
-                    <kendo-textbox aria-label="Send Back Notes" [fillMode]="formUiStyle.inputFillMode">
-                    </kendo-textbox>
-                  </kendo-floatinglabel>
-                </div>
-                <div *ngIf="ifApproveOrDeny === 'A' && i === selectedIndex">
-                  <kendo-floatinglabel text="New Case Worker">
-                    <kendo-dropdownlist aria-label="New Case Worker" [fillMode]="formUiStyle.dropDownFillMode">
-                    </kendo-dropdownlist>
-                  </kendo-floatinglabel>
-                </div>
+        <ng-template kendoPanelBarItemTitle>
+          <div class="flex-row rw-100" (click)="$event.stopPropagation()">
+            <div class="flex-col flex-col-6">
+              <h5>{{getTitle(item.approvalTypeCode,item.subTypeCode)}}</h5>
+              <p>{{item.creationTime | date:'MM-dd-yyyy'}} by <button kendoPopoverAnchor
+                  [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="FName LName" kendoButton
+                  look="flat" class="card-link-button">
+                  {{item.fullName}}
+                </button> </p>
+              <div *ngIf="isPanelExpanded">
+                <p class="mt-1 mb-1">Regarding <a>Donna Summer</a></p>
+                <i>The client has exceeded max benefits but it is very important that we pay this invoice for them.</i>
               </div>
             </div>
-          </ng-template>
+            <div class="flex-col flex-col-6">
+              <div>
+                <kendo-buttongroup selection="single">
+                  <button kendoButton aria-label="Approve" (click)="approveOrDeny(i,'A')" [toggleable]="true">Approve
+                  </button>
+                  <button kendoButton aria-label="Deny" (click)="approveOrDeny(i,'D')" [toggleable]="true">Deny
+                  </button>
+                </kendo-buttongroup>
+              </div>
+              <div *ngIf="ifApproveOrDeny === 'D' && i === selectedIndex">
+                <kendo-floatinglabel text="Send Back Notes">
+                  <kendo-textbox aria-label="Send Back Notes" [fillMode]="formUiStyle.inputFillMode">
+                  </kendo-textbox>
+                </kendo-floatinglabel>
+              </div>
+              <div *ngIf="ifApproveOrDeny === 'A' && i === selectedIndex && item.approvalTypeCode === 'GENERAL_ADD_TO_MASTER_LIST'">
+                <kendo-floatinglabel text="New Case Worker">
+                  <kendo-dropdownlist aria-label="New Case Worker" [fillMode]="formUiStyle.dropDownFillMode"
+                    [data]="ClientsSubjects$ | async" textField="firstName"
+                    valueField="loginUserId">
+                  </kendo-dropdownlist>
+                </kendo-floatinglabel>
+              </div>
+            </div>
+          </div>
+        </ng-template>
 
-          <ng-template kendoPanelBarContent>
-            <ng-switch [ngSwitch]="item.approvalTypeCode">
-              <ng-template ngSwitchCase="GENERAL_CASE_REASSIGNMENT">
-                <productivity-tools-approvals-general-list-detail-reassignment [approvalId]="approvalId">
-                </productivity-tools-approvals-general-list-detail-reassignment>
-              </ng-template>
-              <ng-template ngSwitchCase="GENERAL_ADD_TO_MASTER_LIST">
-                <productivity-tools-approvals-general-list-detail-addtomasterlist [approvalId]="approvalId">
-                </productivity-tools-approvals-general-list-detail-addtomasterlist>
-              </ng-template>
-              <ng-template ngSwitchCase="GENERAL_EXCEPTIONS">
-                <productivity-tools-approvals-general-list-detail-exceptions [approvalId]="approvalId">
-                </productivity-tools-approvals-general-list-detail-exceptions>
-              </ng-template>
-              <ng-template ngSwitchDefault>
-                <p>Unknown approval request type.</p>
-              </ng-template>
-            </ng-switch>
-          </ng-template>
-          
-        </kendo-panelbar-item>
-      </kendo-panelbar>
+        <ng-template kendoPanelBarContent>
+          <ng-switch [ngSwitch]="item.approvalTypeCode">
+            <ng-template ngSwitchCase="GENERAL_CASE_REASSIGNMENT">
+              <productivity-tools-approvals-general-list-detail-reassignment [approvalId]="approvalId">
+              </productivity-tools-approvals-general-list-detail-reassignment>
+            </ng-template>
+            <ng-template ngSwitchCase="GENERAL_ADD_TO_MASTER_LIST">
+              <productivity-tools-approvals-general-list-detail-addtomasterlist [approvalId]="approvalId"
+                (openEditModal)="openEditModal($event)">
+              </productivity-tools-approvals-general-list-detail-addtomasterlist>
+            </ng-template>
+            <ng-template ngSwitchCase="GENERAL_EXCEPTIONS">
+              <productivity-tools-approvals-general-list-detail-exceptions [approvalId]="approvalId">
+              </productivity-tools-approvals-general-list-detail-exceptions>
+            </ng-template>
+            <ng-template ngSwitchDefault>
+              <p>Unknown approval request type.</p>
+            </ng-template>
+          </ng-switch>
+        </ng-template>
+
+      </kendo-panelbar-item>
+    </kendo-panelbar>
 
   </div>
 

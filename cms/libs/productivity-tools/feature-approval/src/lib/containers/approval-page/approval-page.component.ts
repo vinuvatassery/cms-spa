@@ -45,6 +45,7 @@ export class ApprovalPageComponent implements OnInit {
   pendingApprovalSubmit$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmit$;
   batchDetailPaymentsList$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
   batchDetailPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
+  ClientsSubjects$ = this.pendingApprovalGeneralFacade.ClientsSubjects$;
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,
               private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService,
@@ -60,7 +61,8 @@ export class ApprovalPageComponent implements OnInit {
       if(response){
         this.navigationMenuFacade.getAllPendingApprovalPaymentCount(this.userLevel);
       }
-    })
+    });
+    this.pendingApprovalGeneralFacade.getUserById();
   }
 
    loadApprovalsGeneralGrid(event: any): void {

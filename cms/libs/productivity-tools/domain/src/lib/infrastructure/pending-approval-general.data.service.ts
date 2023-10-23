@@ -12,4 +12,10 @@ export class PendingApprovalGeneralService {
   loadApprovalsGeneral() {
    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general`);
   }
+  getUserById() {    
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}`+
+      `/productivity-tools/approvals/general/caseworkers`
+    );  
+  } 
 }
