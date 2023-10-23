@@ -8,8 +8,9 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 import { LovFacade } from '@cms/system-config/domain';
 import { InsurancePlanFacade, HealthInsurancePolicyFacade, VendorFacade, InsuranceStatusType } from '@cms/case-management/domain';
-import { SnackBarNotificationType, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
+import { SnackBarNotificationType, LoggingService, NotificationSnackbarService, LoaderService } from '@cms/shared/util-core';
 import { Subscription } from 'rxjs';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-medical-premium-detail-insurance-plan-name',
@@ -51,7 +52,10 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
 
   constructor(private formBuilder: FormBuilder, private readonly lovFacade: LovFacade, private readonly insurancePlanFacade: InsurancePlanFacade,
     private changeDetector: ChangeDetectorRef, private readonly loggingService: LoggingService,
+    private readonly loaderService: LoaderService,
     private readonly vendorFacade: VendorFacade,
+    private readonly insuranceFacade: InsurancePlanFacade,
+    private readonly cdr: ChangeDetectorRef,
     private readonly snackbarService: NotificationSnackbarService, private insurancePolicyFacade: HealthInsurancePolicyFacade) {
     this.healthInsuranceForm = this.formBuilder.group({ insuranceCarrierName: [''] });
 
@@ -61,6 +65,8 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
       insuranceType: ['', Validators.required],
       startDate: ['', Validators.required],
       termDate: [''],
+      canPayForMedicationFlag: [false],
+      dentalPlanFlag: [false],
     });
 
 
@@ -102,12 +108,15 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     this.termDateValidator = false;
     const startDate = this.newhealthInsuranceForm.controls['startDate'].value;
     const termDate = this.newhealthInsuranceForm.controls['termDate'].value;
-    if (startDate > termDate) {
-      this.startDateValidator = true;
+    if (!termDate) {
+      if (startDate > termDate) {
+        this.startDateValidator = true;
+      }
+      if (termDate < startDate) {
+        this.termDateValidator = true;
+      }
     }
-    if (termDate < startDate) {
-      this.termDateValidator = true;
-    }
+
   }
 
   private subscribeDentalInsurance() {
@@ -160,16 +169,57 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     this.newhealthInsuranceForm.markAllAsTouched();
   }
 
+  //@Input()
+  hasCreateUpdatePermission: boolean = false;
+
+  mapFormValues() {
+    const formValues = this.newhealthInsuranceForm.value;
+    const hasCreateUpdatePermission = this.hasCreateUpdatePermission === true;
+
+    const dto = {
+      insuranceProviderId: formValues.insuranceCarrierName,
+      insurancePlanName: formValues.insurancePlanName,
+      healthInsuranceTypeCode: formValues.insuranceType,
+      startDate: formValues.startDate,
+      termDate: formValues.termDate,
+      canPayForMedicationFlag: formValues.canPayForMedicationFlag ? StatusFlag.Yes : StatusFlag.No,
+      dentalPlanFlag: formValues.dentalPlanFlag ? StatusFlag.Yes : StatusFlag.No,
+      activeFlag: hasCreateUpdatePermission ? StatusFlag.Yes : StatusFlag.No,
+    };
+
+    return dto;
+  }
+
+  showLoader() { this.loaderService.show(); }
+  hideLoader() { this.loaderService.hide(); }
+
   public addNewInsurancePlanClose(): void {
     this.validateForm();
     this.isValidateForm = true;
-    if (this.newhealthInsuranceForm.valid) {
-      this.isaddNewInsurancePlanOpen = false;
-    }
 
+    if (this.newhealthInsuranceForm.valid) {
+      var finalData = this.mapFormValues();
+      this.insuranceFacade.addPlan(finalData);
+      this.showLoader();
+
+      this.insuranceFacade.addPlan(finalData).subscribe({
+        next: (response: any) => {
+          var notificationMessage = "Insurance plan added successfully";
+          this.InsurancePlanClose();
+          this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
+          this.hideLoader();
+        
+          this.cdr.detectChanges();
+        },
+        error: (err: any) => {
+          this.hideLoader();
+          this.lovFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        }
+      });
+    }
   }
-  
-  InsurancePlanClose():void{
+
+  InsurancePlanClose(): void {
     this.isaddNewInsurancePlanOpen = false;
   }
 
