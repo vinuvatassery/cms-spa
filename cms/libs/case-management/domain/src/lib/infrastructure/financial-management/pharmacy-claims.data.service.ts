@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
 import { GridFilterParam } from '../../entities/grid-filter-param';
+import { BatchPharmacyClaims } from '../../entities/financial-management/batch-pharmacy-claims';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPharmacyClaimsDataService {
@@ -22,6 +23,9 @@ export class FinancialPharmacyClaimsDataService {
 
   loadPrescriptions(paymentId: string, params: GridFilterParam) {
     return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/payments/${paymentId}/prescriptions${params.convertToQueryString()}`);
+  }
+  batchClaims(batchPharmacyClaims: BatchPharmacyClaims) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/batch`, batchPharmacyClaims);
   }
 
   loadPharmacyClaimsBatchListService( ) {
