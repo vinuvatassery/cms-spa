@@ -83,6 +83,10 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    if (this.vendorTypes.Clinic == this.providerType) {
+      this.isClinicNameFilterable = false;
+    }
     this.lovFacade.getPaymentRunDateLov();
     this.lovFacade.getPaymentMethodLov();
     if (this.editVendorInfo) {
@@ -263,6 +267,14 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls[this.clinicTypeFieldName].updateValueAndValidity();
     }
 
+    if (this.providerType == this.vendorTypes.Clinic) {
+      this.medicalProviderForm.controls[this.clinicTypeFieldName]
+        .setValidators([
+          Validators.required,
+        ]);
+      this.medicalProviderForm.controls[this.clinicTypeFieldName].updateValueAndValidity();
+    }
+
     if (this.providerType == this.vendorTypes.InsuranceVendors) {
 
       this.medicalProviderForm.controls['paymentRunDate']
@@ -398,6 +410,14 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.medicalProviderForm.controls['providerName'].setValue(clinicDetail.vendorName);
   }
 
+  isClinicNameFilterable = true;
+  @ViewChild(MultiColumnComboBoxComponent, { static: false }) comboBox: MultiColumnComboBoxComponent | undefined = undefined;
+  onComboBoxOpen(event: any) {
+    if (this.vendorTypes.Clinic == this.providerType) {
+      event.preventDefault();
+      this.isClinicNameFilterable = false;
+    }
+  }
   searchClinic(clinicName: any) {
     if (clinicName != '') {
       this.selectedClinicVendorId = null;

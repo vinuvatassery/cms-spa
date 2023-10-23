@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { groupBy, State } from '@progress/kendo-data-query';
-import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType, FinancialPcaFacade, ExceptionTypeCode } from '@cms/case-management/domain';
+import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType, FinancialPcaFacade, ExceptionTypeCode, ContactFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Lov, LovFacade } from '@cms/system-config/domain';
@@ -156,6 +156,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   providerTin: any;
  groupedPaymentRequestTypes: any;
 
+ @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+ providerDetailsTemplate!: TemplateRef<any>;
+
   private showExceedMaxBenefitSubscription !: Subscription;
   private showIneligibleSubscription !: Subscription;
   private showBridgeUppSubscription !: Subscription;
@@ -168,6 +171,11 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   currentFormControl!: FormGroup<any>;
    data:any = [];
    tempData:any = {};
+  providerDetailsDialog: any;
+  vendorProfile$ = this.financialVendorFacade.providePanelSubject$
+  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
+  ddlStates$ = this.contactFacade.ddlStates$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
     private cd: ChangeDetectorRef,
@@ -177,7 +185,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     private dialogService: DialogService,
     private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
-    private readonly financialPcaFacade: FinancialPcaFacade
+    private readonly financialPcaFacade: FinancialPcaFacade,
+    public contactFacade: ContactFacade,
+    private readonly financialVendorFacade : FinancialVendorFacade
   ) {
     this.initMedicalClaimObject();
     this.initClaimForm();
@@ -236,6 +246,41 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.groupedPaymentRequestTypes = groupBy(refactoredPaymentRequestTypeArray, [{ field: "parentCode" }]);
     });
   }
+
+  onCloseViewProviderDetailClicked(result: any){
+    if(result){
+      this.providerDetailsDialog.close();
+    }
+  }
+  
+  onVendorNameClick(){
+    this.paymentRequestId = event
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',  
+      }, 
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+    
+  }
+
+  getProviderPanel(event:any){
+    this.financialVendorFacade.getProviderPanelByVendorAddressId(this.selectedMedicalProvider.vendorAddressId)
+
+  }
+
+  updateProviderProfile(event:any){
+    console.log(event)
+    this.financialVendorFacade.updateProviderPanel(event)
+  }
+
+  OnEditProviderProfileClick(){
+    this.contactFacade.loadDdlStates()
+    this.lovFacade.getPaymentMethodLov()
+  }
+  
   checkExceptions()
   {
     this.showExceedMaxBenefitSubscription = this.showExceedMaxBenefitException$.subscribe(data => {
@@ -515,6 +560,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
        this.addClaimServicesForm.reset();
     }
     if(this.addClaimServicesForm.length > 1 ){
+    let form = this.addClaimServicesForm.value[i]
+    this.deleteClaimService(form.tpaInvoiceId);
     this.addClaimServicesForm.removeAt(i);
     this.addExceptionForm.removeAt(i);
     }
@@ -824,7 +871,10 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
             {
               vendorId: val.vendorId,
               providerFullName: val.vendorName,
-              vendorAddressId: val.vendorAddressId
+              vendorAddressId: val.vendorAddressId,
+              vendorName: val.vendorName,
+              tin: val.tin,
+              mailCode: val.mailCode
             },
           ];
           this.financialClaimsFacade.clientSubject.next(clients);
@@ -838,6 +888,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
             invoiceId: val.claimNbr,
             paymentRequestId: val.paymentRequestId,
           });
+          if(this.isEdit){
+            this.isRecentClaimShow = true;
+          }
           this.claimForm.controls['parentReasonForException'].setValue(val.exceptionReasonCode);
           this.claimForm.controls['parentExceptionFlag'].setValue(val.exceptionFlag);
           this.claimForm.controls['parentExceptionTypeCode'].setValue(val.exceptionTypeCode);
@@ -1241,5 +1294,23 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
     }
   }
+  deleteClaimService(tpaInvoiceId:any){
+    this.financialClaimsFacade.deleteClaimService(tpaInvoiceId,this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim).subscribe({
+      next:()=>{
+        this.financialClaimsFacade.showHideSnackBar(
+          SnackBarNotificationType.SUCCESS,
+          'Service Deleted'
+        );
+      },
+      error:(err:any)=> {
+        this.loaderService.hide();
+        this.financialClaimsFacade.showHideSnackBar(
+          SnackBarNotificationType.ERROR,
+          err
+        );
+      },
+    })
+  }
+  
 }
 

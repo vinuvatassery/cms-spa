@@ -46,6 +46,7 @@ export class FinancialVendorProfileComponent implements OnInit {
 
   filter:any=[];
   isClinicalVendor=false;
+  vendorName: any;
 
   constructor(private activeRoute: ActivatedRoute,private financialVendorFacade : FinancialVendorFacade,
               private readonly drugsFacade: DrugsFacade,private readonly invoiceFacade: InvoiceFacade) {}
@@ -123,6 +124,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   {
     this.financialVendorFacade.getVendorProfile(vendorId,this.tabCode)
     this.vendorProfile$.subscribe(vendorProfile =>{
+      this.vendorName = vendorProfile.vendorName
       this.setVendorTypeCode(vendorProfile)
     })
   }
