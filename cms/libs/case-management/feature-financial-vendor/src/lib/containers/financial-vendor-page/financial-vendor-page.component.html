@@ -112,12 +112,15 @@
     </section>
   </div>
 </div>
+
 <kendo-dialog kendoRippleContainer *ngIf="isShowMedicalProvider" (close)="closeVendorDetailModal()"
   class="app-c-modal app-c-modal-lg app-c-modal-np" title="Add New Medical Provider" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.MedicalProviders"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
-    [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
-    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
+    [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList"
+    [hasCreateUpdatePermission]="hasClinicCreateUpdatePermission" [clinicVendorLoader$]="clinicVendorLoader"
+    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
+    (closeMedicalDentalProviderDialogEvent)="setupForClinic($event)"></cms-vendor-details>
 </kendo-dialog>
 
 <kendo-dialog kendoRippleContainer *ngIf="isShowDentalProvider" (close)="closeVendorDetailModal()"
@@ -125,6 +128,16 @@
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.DentalProviders"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
+    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
+    (closeMedicalDentalProviderDialogEvent)="setupForClinic($event)"></cms-vendor-details>
+</kendo-dialog>
+
+<kendo-dialog kendoRippleContainer *ngIf="ShowClinicProvider" (close)="closeVendorDetailModal()"
+  class="app-c-modal app-c-modal-lg app-c-modal-np" title="Add New Clinic" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.Clinic"
+    (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
+    [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
+    [hasCreateUpdatePermission]="hasClinicCreateUpdatePermission" 
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
 </kendo-dialog>
 
