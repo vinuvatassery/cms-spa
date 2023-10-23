@@ -54,7 +54,6 @@
             <kendo-floatinglabel text="Clinic Name">
 
               <kendo-multicolumncombobox [fillMode]="formUiStyle.dropDownFillMode" placeholder="Clinic Name"
-              (open)="onComboBoxOpen($event)"
                 [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="isClinicNameFilterable"
                 (filterChange)="searchClinic($event)" [data]="clinicVendorList$| async" formControlName="providerName"
                 [valuePrimitive]="true" valueField="vendorName" textField="vendorName">
