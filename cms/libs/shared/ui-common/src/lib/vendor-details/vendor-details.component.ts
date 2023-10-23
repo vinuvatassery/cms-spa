@@ -1,5 +1,5 @@
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators, RequiredValidator } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
