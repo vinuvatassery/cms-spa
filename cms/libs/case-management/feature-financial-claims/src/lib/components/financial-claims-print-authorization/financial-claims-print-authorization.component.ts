@@ -96,7 +96,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
       batchId:this.batchId,
       PrintAdviceLetterGenerateInfo:[]
     };
-    PrintAdviceLetterInfo.push({'vendorId':item.vendorId,'paymentRequestId':item.paymentRequestId,
+    PrintAdviceLetterInfo.push({'vendorId':item.vendorId,'paymentRequestId':item.paymentRequestId,'batchId':item.batchId,
     'vendorAddressId':item.entityId,'clientId':item.clientId,'isPrintAdviceLetter':item.isPrintAdviceLetter, 'checkNbr':item.checkNbr});
     });
     this.printAdviceLetterData.PrintAdviceLetterGenerateInfo = PrintAdviceLetterInfo;

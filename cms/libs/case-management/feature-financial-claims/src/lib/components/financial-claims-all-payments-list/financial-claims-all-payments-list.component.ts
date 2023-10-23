@@ -437,7 +437,7 @@ export class FinancialClaimsAllPaymentsListComponent
       '/financial-management/claims/' +
         this.claimsType +
         '/payments/reconcile-payments',
-    ]);
+    ],{ queryParams :{loadType: 'allPayments'}});
   }
 
   clientRecentClaimsModalClicked(

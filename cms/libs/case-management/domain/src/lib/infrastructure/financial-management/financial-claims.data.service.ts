@@ -424,7 +424,7 @@ export class FinancialClaimsDataService {
   }
 
   getPrintAdviceLetterData(batchId:any,selectedProviders: any, claimsType:any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/${batchId}/print-advice-letter`,selectedProviders);
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/print-advice-letter`,selectedProviders);
   }
 
   reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any, claimsType:any) {

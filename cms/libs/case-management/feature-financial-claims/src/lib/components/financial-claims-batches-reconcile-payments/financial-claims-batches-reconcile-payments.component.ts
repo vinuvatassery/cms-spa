@@ -105,6 +105,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   claimReconcileCount:any=0;
   bulkNoteCounter:any=0;
   showExportLoader = false;
+  loadType:any = null;
   columns : any = {
     vendorName:this.providerTitle,
     tin:"TIN",
@@ -158,6 +159,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     }
 
   ngOnInit(): void {
+    this.loadQueryParams();
     this.lovFacade.getPaymentMethodLov();
     this.paymentMethodSubscription();
     if(this.claimsType === 'dental'){
@@ -190,6 +192,9 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     this.paymentMethodLovSubscription.unsubscribe();
   }
 
+  loadQueryParams(){
+    this.loadType = this.activeRoute.snapshot.queryParams['loadType'];
+  }
   private loadReconcileListGrid(): void {
     this.loadReconcile(
       this.state?.skip ?? 0,
@@ -401,6 +406,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
           this.reconcilePaymentGridUpdatedResult[index].vendorName = dataItem?.vendorName;
           this.reconcilePaymentGridUpdatedResult[index].amountPaid = dataItem?.amountPaid;
           this.reconcilePaymentGridUpdatedResult[index].paymentMethodCode = dataItem?.paymentMethodCode;
+          this.reconcilePaymentGridUpdatedResult[index].batchId = dataItem?.batchId;
         }
       });
     }
@@ -463,7 +469,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         itemResponse.data[index].datePaymentSentInValidMsg = ifExist?.datePaymentSentInValidMsg;
         itemResponse.data[index].isPrintAdviceLetter = ifExist?.isPrintAdviceLetter;
         itemResponse.data[index].tAreaCessationCounter = ifExist?.tAreaCessationCounter;
-
+        itemResponse[index].batchId = ifExist?.batchId;
       }
       else {
         itemResponse.data[index].paymentReconciledDate = itemResponse.data[index].paymentReconciledDate !== null ? new Date(itemResponse.data[index].paymentReconciledDate) : itemResponse.data[index].paymentReconciledDate;
@@ -729,6 +735,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
           item.vendorName = dataItem?.vendorName;
           item.amountPaid = dataItem?.amountPaid;
           item.paymentMethodCode = dataItem?.paymentMethodCode;
+          item.batchId = dataItem.batchId;
         }
       }
     })
@@ -862,8 +869,13 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   }
 
   navToReconcilePayments(){
+    if(this.loadType === null || this.loadType === undefined){
     this.route.navigate([`/financial-management/claims/${this.claimsType}/batch`],
     { queryParams :{bid: this.batchId}});
+    }
+    else{
+      this.route.navigate([`/financial-management/claims/${this.claimsType}`]);
+    }
   }
 
   onViewProviderDetailClicked(paymentRequestId:any) {  
