@@ -638,4 +638,8 @@ export class CaseFacade {
   enableSearchHeader(headerType : SearchHeaderType) {
     this.searchBarsubject.next(headerType);
   }
+
+  reassignCase(caseReassignData : any){
+
+  }
 }

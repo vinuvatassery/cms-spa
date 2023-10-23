@@ -3,6 +3,7 @@ import { Input, Output, Component, ChangeDetectionStrategy, EventEmitter, OnInit
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
+import { StatusFlag } from '../enums/status-flag.enum';
 
 @Component({
   selector: 'common-re-assign-case',
@@ -12,8 +13,11 @@ import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 export class ReAssignCaseComponent implements OnInit, OnChanges {
   @Input() hasReassignPermission: boolean = false;
   @Input() caseOwners !: any;
-  @Output() reassignEventClicked = new EventEmitter<any>();
-  @Output() cancelEventClicked = new EventEmitter();
+  @Input() caseWorkerId: any;
+  @Input() clientId: any;
+  @Input() clientCaseId: any;
+  @Output() reassignClicked = new EventEmitter<any>();
+  @Output() cancelClicked = new EventEmitter();
   
   public caseOwnerfilterSettings: DropDownFilterSettings = {
     caseSensitive: false,
@@ -63,11 +67,11 @@ export class ReAssignCaseComponent implements OnInit, OnChanges {
     if (this.caseReassignForm.valid) {
       let reassignData = this.mapReassignData();
       console.log('reassignData',reassignData);
-      this.reassignEventClicked.next(reassignData);
+      this.reassignClicked.emit(reassignData);
     }
   }
   onCancel(){
-    this.cancelEventClicked.emit();
+    this.cancelClicked.emit();
   }
 
   validateForm() {
@@ -85,8 +89,12 @@ export class ReAssignCaseComponent implements OnInit, OnChanges {
 
   createReassignData(formValues: any) {
     let reassignData = {
-      newCaseWorkerId: this.hasReassignPermission? formValues.newCaseWorkerId : null,
+      newCaseWorkerId: this.hasReassignPermission ? formValues.newCaseWorkerId : null,
       reasonForReassign: formValues.reasonForReassign,
+      caseWorkerId: this.caseWorkerId,
+      clientId: this.clientId,
+      clientCaseId: this.clientCaseId,
+      activeFlag: this.hasReassignPermission ? StatusFlag.Yes : StatusFlag.No,
     }
     return reassignData;
   }

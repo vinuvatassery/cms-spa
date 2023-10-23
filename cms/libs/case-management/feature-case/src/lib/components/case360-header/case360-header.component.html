@@ -15,9 +15,12 @@
   <kendo-popover #userCard width="330" position="bottom" [callout]="false">
     <ng-template kendoPopoverBodyTemplate>
       <common-user-profile-card 
-      [userId]="caseWorkerId"     
-      [reassign]=true      
-      ></common-user-profile-card>
+        [userId]="caseWorkerId"     
+        [reassign]=true
+        [clientId]="clientId"
+        [clientCaseId]="clientCaseId"
+        (reassignClicked)="onReassignClicked">
+      </common-user-profile-card>
     </ng-template>
   </kendo-popover>
 
