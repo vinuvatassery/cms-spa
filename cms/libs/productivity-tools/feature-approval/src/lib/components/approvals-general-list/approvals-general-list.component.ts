@@ -172,7 +172,6 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       );
       this.gridApprovalGeneralDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
-      if (data?.total >= 0 || data?.total === -1) {
         this.isApprovalGeneralGridLoaderShow = false;
       }
     });
@@ -196,10 +195,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     this.editListITemsDialog = this.dialogService.open({
       content: template,
       animation: {
-      animation: {
         direction: 'left',
-        type: 'slide',
-      },
         type: 'slide',
       },
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
