@@ -215,7 +215,6 @@ export class FinancialVendorPageComponent implements OnInit {
   }
 
   makeHumanReadable(input: string | null): string {
-    // Check if the input is null or an empty string
     if (input === null || input.trim() === '') {
       return '';
     }
@@ -223,7 +222,6 @@ export class FinancialVendorPageComponent implements OnInit {
     // Split the input string by underscores and capitalize each word
     const words = input.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
 
-    // Join the words with spaces to create a human-readable string
     return words.join(' ');
   }
 
