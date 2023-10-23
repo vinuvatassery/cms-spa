@@ -7,6 +7,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 export class PendingApprovalGeneralService {
   /** Constructor **/
   constructor(private readonly http: HttpClient,private configurationProvider: ConfigurationProvider) {}
+  constructor(private readonly http: HttpClient,private configurationProvider: ConfigurationProvider) {}
 
   /** Public methods **/
   loadApprovalsGeneral() {
