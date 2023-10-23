@@ -96,10 +96,12 @@ export class FinancialClaimsFacade {
   private showIneligibleExceptionSubject = new Subject<any>();
   private showBridgeUppExceptionSubject = new Subject<any>();
   private showDuplicatePaymentExceptionSubject = new Subject<any>();
+  public showDuplicatePaymentHighlightSubject = new Subject<any>();
   showExceedMaxBenefitException$ = this.showExceedMaxBenefitExceptionSubject.asObservable();
   showIneligibleException$ = this.showIneligibleExceptionSubject.asObservable();
   showBridgeUppException$ = this.showBridgeUppExceptionSubject.asObservable();
   showDuplicatePaymentException$ = this.showDuplicatePaymentExceptionSubject.asObservable();
+  showDuplicatePaymentExceptionHighlight$ = this.showDuplicatePaymentHighlightSubject.asObservable();
 
 
 

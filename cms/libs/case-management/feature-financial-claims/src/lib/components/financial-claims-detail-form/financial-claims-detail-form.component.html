@@ -417,7 +417,7 @@
     <div *ngIf="isRecentClaimShow">
         <h4 class="text-upper">Recent Claims for this {{clientName}} and {{vendorName}}</h4>
         <div class="add_new_fixed_bottom_grid_section">
-            <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId"
+            <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [duplicatePaymentInputObject]="duplicatePaymentObject"
                 [claimsType]="claimsType"></cms-financial-claims-recent-claims-list>
         </div>
     </div>

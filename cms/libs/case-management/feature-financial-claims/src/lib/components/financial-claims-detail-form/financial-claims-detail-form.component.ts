@@ -173,6 +173,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
    tempData:any = {};
   providerDetailsDialog: any;
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$
+  showDuplicatePaymentHighlightSubject = this.financialClaimsFacade.showDuplicatePaymentHighlightSubject
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
@@ -303,6 +304,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         }
         if (!data?.flag)
         {
+          this.duplicatePaymentObject.isDuplicatePaymentFound =true; 
           this.checkDuplicatePaymentException(data?.indexNumber);
         }
         this.cd.detectChanges();
@@ -359,6 +361,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       {
         if(data?.flag)
         {
+          this.getDuplicateData();
+          this.showDuplicatePaymentHighlightSubject.next(true);    
           this.resetExceptionFields(data?.indexNumber);
           this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
           this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlag')?.setValue(data?.flag);
@@ -367,7 +371,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           this.addClaimServicesForm.at(data?.indexNumber).get('reasonForException')?.setValue('');
         }
         else if (this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.value === ExceptionTypeCode.DuplicatePayment)
-        {
+        { this.duplicatePaymentObject = {}
+          this.showDuplicatePaymentHighlightSubject.next(false); 
           this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlag')?.setValue(data?.flag);
           this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue('')
           this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.No)
@@ -1088,8 +1093,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.addClaimServicesForm.at(index).get('reasonForException')?.reset();
   }
 
+duplicatePaymentObject:any = {};
   getExceptionFormValue(controlName: string, index: any)
-  {
+  { 
     return this.addExceptionForm.at(index).get(controlName)?.value
   }
   public onPrintDenialLetterOpen() {
@@ -1310,6 +1316,12 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         );
       },
     })
+  }
+  getDuplicateData()
+  {
+    this.duplicatePaymentObject.amountDue = this.addClaimServicesForm.at(0).get('amountDue')?.value;
+    this.duplicatePaymentObject.serviceStartDate = this.addClaimServicesForm.at(0).get('serviceStartDate')?.value;
+    this.duplicatePaymentObject.serviceEndDate = this.addClaimServicesForm.at(0).get('serviceEndDate')?.value;
   }
   
 }
