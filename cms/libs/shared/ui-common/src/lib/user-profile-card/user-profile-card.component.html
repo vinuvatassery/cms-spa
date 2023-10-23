@@ -98,15 +98,15 @@
         <a href="mailto:userById?.emailAddress">      <button  kendoButton [primary]="true" look="flat" aria-label="Send Email"> Send Email    </button></a>
     </div>
     <div class="app-card-bottom-buttons" *ngIf="reassign"> 
-      <button  kendoButton [primary]="true" look="flat" aria-label="Re-assign" (click)="openBusinessPopup()">
+      <button  kendoButton [primary]="true" look="flat" aria-label="Re-assign" (click)="openBusinessPopup(reassignCaseModalTemplate)">
         Re-assign
       </button>
     </div>
     </div>
 </div>
-
-<kendo-dialog *ngIf="businessLogicPopupOpen" (close)="businessLogicPopupClose()" class="app-c-modal app-c-modal-md app-c-modal-np"
-  [title]="hasReassignPermission? 'Re-assign Case' : 'Assign New Case Worker?'" kendoTooltip>
+<ng-template #reassignCaseModalTemplate>
+<!-- <kendo-dialog *ngIf="businessLogicPopupOpen"   class="app-c-modal app-c-modal-md app-c-modal-np" > -->
+    <kendo-dialog-titlebar (close)="businessLogicPopupClose()"> {{ hasReassignPermission? 'Re-assign Case' : 'Assign New Case Worker?' }} </kendo-dialog-titlebar>
     <common-re-assign-case 
       [hasReassignPermission]="hasReassignPermission" 
       [caseOwners]="caseOwners$"
@@ -116,4 +116,4 @@
       (reassignClicked)="onReassignClicked($event)"
       (cancelClicked)="businessLogicPopupClose()">
     </common-re-assign-case>
-  </kendo-dialog>
+  </ng-template>

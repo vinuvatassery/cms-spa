@@ -38,10 +38,11 @@
           (valueChange)="calculateCharacterCount($event)"
           aria-label="Reason for Re-assign"
           formControlName="reasonForReassign">
-          </kendo-textarea>
           <kendo-textarea-suffix class="justify-content-end">
             <span class="counter">{{ tAreaReasonForReassignCounter }}</span>
           </kendo-textarea-suffix>
+          </kendo-textarea>
+    
           <kendo-formerror
             *ngIf="!caseReassignForm.controls['reasonForReassign'].valid && isValidateForm">
               Reason for Re-assign is required.
