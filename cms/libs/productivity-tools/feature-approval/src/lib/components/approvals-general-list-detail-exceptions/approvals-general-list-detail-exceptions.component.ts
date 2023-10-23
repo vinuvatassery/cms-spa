@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PanelBarCollapseEvent, PanelBarExpandEvent } from '@progress/kendo-angular-layout';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 

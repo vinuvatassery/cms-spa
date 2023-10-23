@@ -1,13 +1,12 @@
 /** Angular libraries **/
-import {  ChangeDetectionStrategy,ChangeDetectorRef,Component, Input, ViewChild, OnInit,OnChanges, OnDestroy, EventEmitter, Output } from '@angular/core'; 
+import {  ChangeDetectionStrategy,ChangeDetectorRef,Component, Input, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core'; 
 import { Router } from '@angular/router';
 
 /** External libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subscription,Subject } from 'rxjs';
 /** Facade **/
-import { PendingApprovalGeneralFacade, ProductivityInvoiceFacade } from '@cms/productivity-tools/domain';
 import { ColumnComponent, ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { LovFacade } from '@cms/system-config/domain';
 @Component({
@@ -15,7 +14,7 @@ import { LovFacade } from '@cms/system-config/domain';
   templateUrl: './approval-invoice.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApprovalInvoiceComponent implements OnInit, OnChanges, OnDestroy{
+export class ApprovalInvoiceComponent implements OnInit, OnDestroy{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isInvoiceGridLoaderShow = false;
@@ -69,11 +68,6 @@ export class ApprovalInvoiceComponent implements OnInit, OnChanges, OnDestroy{
   ngOnInit(): void {
     this.loadColumnsData(); 
     this.getCoPaymentRequestTypeLov();  
-    this.initializeGridState();
-    this.loadGeneralExceptionInvoiceGrid();
-  }
-
-  ngOnChanges(): void {
     this.initializeGridState();
     this.loadGeneralExceptionInvoiceGrid();
   }

@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { PendingApprovalGeneralService } from '../infrastructure/pending-approval-general.data.service';
 import { Subject } from 'rxjs';
-import {
-} from '@cms/shared/util-core';
-/** Angular **/
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+
 /** External libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Providers **/
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 
 
 @Injectable({ providedIn: 'root' })
