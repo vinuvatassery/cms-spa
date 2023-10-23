@@ -202,7 +202,8 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     });
   }
 
-  onCloseEditListItemsDetailClicked() {
+
+  onCloseEditListItemsDetailClicked()  {
     this.editListITemsDialog.close();
   }
 

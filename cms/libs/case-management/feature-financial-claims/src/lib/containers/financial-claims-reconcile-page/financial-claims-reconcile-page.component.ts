@@ -4,7 +4,7 @@ import { ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, GridFilter
 import { Router, NavigationEnd, ActivatedRoute  } from '@angular/router';
 import { filter } from 'rxjs';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
-import { LoggingService } from '@cms/shared/util-core';
+import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 
@@ -38,6 +38,8 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId!:any;
+  exportButtonShow$ = this.documentFacade.exportButtonShow$;
+  dataExportParameters! : any
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly router: Router,
@@ -48,6 +50,7 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
     public contactFacade: ContactFacade,
     public lovFacade: LovFacade,
     private dialogService: DialogService,
+    private documentFacade :  DocumentFacade
   ) {}
 
   ngOnInit(): void { 
@@ -77,6 +80,7 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   }
 
   loadReconcileListGrid(event: any) {
+    this.dataExportParameters = event;
     const params = new GridFilterParam(event.skipCount, event.pageSize, event.sortColumn, event.sortType, JSON.stringify(event.filter)); 
     this.financialClaimsFacade.loadReconcileListGrid(this.batchId,this.claimsType,params);    
   }
@@ -117,6 +121,23 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
       }, 
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
+    
+  }
+  exportClaimBatchesGridData(){
+    const data = this.dataExportParameters
+    if(data){
+    const  filter = JSON.stringify(data?.filter);
+      const vendorPageAndSortedRequest =
+      {
+        SortType : data?.sortType,
+        Sorting : data?.sortColumn,
+        SkipCount : data?.skipcount,
+        MaxResultCount : data?.maxResultCount,
+        Filter : filter
+      }      
+      const fileName = (this.claimsType[0].toUpperCase() + this.claimsType.substr(1).toLowerCase())  +' Claims Reconciling Payment'
+      this.documentFacade.getExportFile(vendorPageAndSortedRequest,`claims/${this.claimsType}/payment-batches/${this.batchId}/reconcile-payments` , fileName)
+    }
   }
   
 }
