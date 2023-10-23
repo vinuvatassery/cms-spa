@@ -47,7 +47,7 @@
           </ng-template>
 
           <ng-template kendoPanelBarContent>
-            <ng-switch [ngSwitch]="item.approvalTypeCode">
+            <ng-switch [ngSwitch]="item.typeCode">
               <ng-template ngSwitchCase="GENERAL_CASE_REASSIGNMENT">
                 <productivity-tools-approvals-general-list-detail-reassignment [approvalId]="item.generalPendingApprovalId"
                 [casereassignmentExpandedInfo$]="casereassignmentExpandedInfo$"

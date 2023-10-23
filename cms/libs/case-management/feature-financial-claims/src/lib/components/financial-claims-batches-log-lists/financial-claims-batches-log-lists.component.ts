@@ -55,16 +55,7 @@ export class FinancialClaimsBatchesLogListsComponent
   clientId:any;
   clientName:any;
   PaymentStatusList = [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved];
-  public bulkMore = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Request Payments',
-      icon: 'local_atm',
-      click: (data: any): void => {
-        this.isRequestPaymentClicked = true;
-        this.isPrintAdviceLetterClicked = false;
-      },
-    },
+  public bulkMore = [  
     {
       buttonType: 'btn-h-primary',
       text: 'Reconcile Payments',
@@ -177,7 +168,7 @@ export class FinancialClaimsBatchesLogListsComponent
         click: (data: any): void => {
           
           if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
-            if (!this.isUnBatchClaimsClosed) {
+            if (!this.isUnBatchClaimsClosed) {              
               this.isUnBatchClaimsClosed = true;
               this.selected = data;
               this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
@@ -375,6 +366,7 @@ export class FinancialClaimsBatchesLogListsComponent
     this.isPrintAdviceLetterClicked = false;
     this.selectedDataRows = [];
     this.selectedCount = 0;
+    this.loadBatchLogListGrid();
   }
 
   onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {

@@ -15,7 +15,7 @@
                               [maxlength]="15"
                               [readonly]="pcaId != null"
                               format="0"
-                              formControlName="pcaCode"
+                              formControlName="pcaCode"                             
                               > 
                               </kendo-numerictextbox >
                         </kendo-floatinglabel> 
@@ -99,7 +99,8 @@
                               formatPlaceholder="formatPattern" 
                               placeholder=""
                               formControlName="openDate"
-                              (valueChange)="validateOpenAndCloseDates()">
+                              (valueChange)="validateOpenAndCloseDates()"
+                              [disabledDates]="disabledDates">
                               </kendo-datepicker>
                         </kendo-floatinglabel>
                         <kendo-formerror *ngIf="pcaFormControls?.openDate?.errors?.required">
@@ -119,7 +120,8 @@
                               formatPlaceholder="formatPattern" 
                               placeholder=""
                               formControlName="closeDate"
-                              (valueChange)="validateOpenAndCloseDates()">
+                              (valueChange)="validateOpenAndCloseDates()"
+                              [disabledDates]="disabledLastDates">
                               </kendo-datepicker>
                         </kendo-floatinglabel>
                         <kendo-formerror *ngIf="pcaFormControls?.closeDate?.errors?.required">
