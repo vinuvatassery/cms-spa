@@ -54,12 +54,12 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   @Input() sortValueFinancialInvoices: any;
   @Input() financialClaimsProcessGridLists$: any;
   @Input() financialClaimsInvoice$: any;
-  @Input() exportButtonShow$ : any
+  @Input() exportButtonShow$: any;
 
   @Output() loadFinancialClaimsProcessListEvent = new EventEmitter<any>();
   @Output() loadFinancialClaimsInvoiceListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
-  
+
   public state!: State;
   sortColumn = 'Invoice ID';
   sortDir = 'Ascending';
@@ -78,38 +78,38 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
- 
+
   @ViewChild('addEditClaimsDialog')
   private addEditClaimsDialog!: TemplateRef<any>;
 
   isEdit!: boolean;
   paymentRequestId!: string;
 
-  vendorId:any;
-  clientId:any;
-  clientName:any;
+  vendorId: any;
+  clientId: any;
+  clientName: any;
   public selectableSettings: SelectableSettings;
   public checkboxOnly = true;
   public mode: SelectableMode = 'multiple';
   public drag = false;
 
   public selectedProcessClaims: any[] = [];
-  columns : any = {
-    invoiceNbr:"Invoice ID",
-    vendorFullName:"Provider Name",
-    tin:"Tax ID",
-    paymentMethodCode:"Payment Method",
-    clientFullName:"Client Name",
-    insuranceName:"Name on Primary Insurance Card",
-    clientId:"Client ID",
-    serviceCount:"Service Count",
-    annualTotal:"Client Annual Total",
-    balanceAmount:"Client Balance",
-    amountDue:"Total Due",
-    paymentStatusCode:"Payment Status"
-  }
+  columns: any = {
+    invoiceNbr: 'Invoice ID',
+    vendorFullName: 'Provider Name',
+    tin: 'Tax ID',
+    paymentMethodCode: 'Payment Method',
+    clientFullName: 'Client Name',
+    insuranceName: 'Name on Primary Insurance Card',
+    clientId: 'Client ID',
+    serviceCount: 'Service Count',
+    annualTotal: 'Client Annual Total',
+    balanceAmount: 'Client Balance',
+    amountDue: 'Total Due',
+    paymentStatusCode: 'Payment Status',
+  };
 
-  dropDowncolumns : any = [
+  dropDowncolumns: any = [
     {
       columnCode: 'invoiceNbr',
       columnDesc: 'Invoice ID',
@@ -190,9 +190,9 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
       buttonType: 'btn-h-primary',
       text: 'Edit Claim',
       icon: 'edit',
-      click:(claim : any): void => {        
+      click: (claim: any): void => {
         this.onClaimClick(claim);
-      }
+      },
     },
     {
       buttonType: 'btn-h-danger',
@@ -209,13 +209,14 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
       },
     },
   ];
-  deletemodelbody="This action cannot be undone, but you may add a claim at any time.";
+  deletemodelbody =
+    'This action cannot be undone, but you may add a claim at any time.';
   /** Constructor **/
   constructor(
     private readonly route: Router,
     private dialogService: DialogService,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private readonly  cdr : ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef
   ) {
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -364,23 +365,20 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
     if (!this.selectedProcessClaims.length) return;
     this.batchConfirmClaimsDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
     });
   }
   onModalBatchClaimsModalClose() {
     this.batchConfirmClaimsDialog.close();
   }
 
-  onModalBatchClaimsButtonClicked(managerId: string) {
-    if (managerId) {
-      const input: BatchClaim = {
-        managerId: managerId,
-        PaymentRequestIds: this.selectedProcessClaims,
-      };
+  onModalBatchClaimsButtonClicked(event: any) {
+    const input: BatchClaim = {
+      PaymentRequestIds: this.selectedProcessClaims,
+    };
 
-      this.handleBatchClaims();
-      this.financialClaimsFacade.batchClaims(input, this.claimsType);
-    }
+    this.handleBatchClaims();
+    this.financialClaimsFacade.batchClaims(input, this.claimsType);
   }
 
   handleBatchClaims() {
@@ -472,9 +470,9 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
         duration: 200,
       },
     });
-    this.vendorId=data.vendorId;
-    this.clientId=data.clientId;
-    this.clientName=data.clientFullName;
+    this.vendorId = data.vendorId;
+    this.clientId = data.clientId;
+    this.clientName = data.clientFullName;
   }
 
   closeRecentClaimsModal(result: any) {
@@ -508,41 +506,37 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
     this.loadFinancialClaimsInvoiceListEvent.emit(data);
   }
 
-  onClaimClick(dataitem: any){
-    if(!dataitem.vendorId.length) return;
+  onClaimClick(dataitem: any) {
+    if (!dataitem.vendorId.length) return;
     this.isEdit = true;
     this.paymentRequestId = dataitem.paymentRequestId;
     this.openAddEditClaimDialoge();
   }
 
-  openAddEditClaimDialoge(){
+  openAddEditClaimDialoge() {
     this.addEditClaimsFormDialog = this.dialogService.open({
       content: this.addEditClaimsDialog,
       cssClass: 'app-c-modal app-c-modal-full add_claims_modal',
     });
   }
 
-  onClickedExport(){
-    this.showExportLoader = true
-    this.exportGridDataEvent.emit()        
-    this.exportButtonShow$
-    .subscribe((response: any) =>
-    {
-      if(response)
-      {        
-        this.showExportLoader = false
-        this.cdr.detectChanges()
+  onClickedExport() {
+    this.showExportLoader = true;
+    this.exportGridDataEvent.emit();
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
       }
-
-    })
+    });
   }
 
   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
     this.closeRecentClaimsModal(true);
   }
-  
-  onProviderNameClick(event:any){
+
+  onProviderNameClick(event: any) {
     this.onProviderNameClickEvent.emit(event);
   }
 }

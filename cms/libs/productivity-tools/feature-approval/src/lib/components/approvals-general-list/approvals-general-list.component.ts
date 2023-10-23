@@ -45,6 +45,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
   @Output() loadApprovalsExceedMaxBenefitCardEvent = new EventEmitter<any>();
   @Output() loadApprovalsExceedMaxBenefitInvoiceEvent = new EventEmitter<any>();
+  pendingApprovalGeneralTypeCode:any;
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -71,6 +72,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.loadApprovalGeneralListGrid();
+    this.pendingApprovalGeneralTypeCode=PendingApprovalGeneralTypeCode;
   }
   ngOnChanges(): void {
     this.state = {

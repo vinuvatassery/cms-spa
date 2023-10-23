@@ -69,29 +69,35 @@ constructor(
 
   /** Public methods **/
   loadApprovalsGeneral(): void {
+    this.showLoader();
     this.pendingApprovalGeneralService.loadApprovalsGeneral().subscribe({
       next: (approvalGeneralResponse) => {
         this.approvalsGeneralSubject.next(approvalGeneralResponse);
+        this.hideLoader();
       },
       error: (err) => {
-        console.error('err', err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.hideLoader();
       },
     });
   }
 
   loadExceedMaxBenefitCard(data:any): void {
+    this.showLoader();
     this.pendingApprovalGeneralService.loadExceedMaxBenefitCard(data).subscribe({
       next: (exceedMaxBenefitCardResponse) => {
         this.approvalsGeneralExceedMaxBenefitCardSubject.next(exceedMaxBenefitCardResponse);
+        this.hideLoader();
       },
       error: (err) => {
-        console.error('err', err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.hideLoader();
       },
     });
   }
 
   /** Public methods **/
-  loadInvoiceListGrid(invoiceDto:any){    
+  loadInvoiceListGrid(invoiceDto:any){  
     this.isInvoiceLoadingSubject.next(true);
     this.pendingApprovalGeneralService.loadInvoiceListService(invoiceDto).subscribe({
       next: (dataResponse: any) => {
@@ -101,6 +107,7 @@ constructor(
         };
         this.invoiceDataSubject.next(gridView);
         this.isInvoiceLoadingSubject.next(false);
+
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
