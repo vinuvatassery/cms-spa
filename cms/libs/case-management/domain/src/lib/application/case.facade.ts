@@ -640,6 +640,6 @@ export class CaseFacade {
   }
 
   reassignCase(caseReassignData : any){
-
+    return this.caseDataService.reassignCase(caseReassignData);
   }
 }
