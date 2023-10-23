@@ -481,7 +481,7 @@ constructor(
       PreferredFlag: (formValues.isPreferedPharmacy) ? StatusFlag.Yes : StatusFlag.No,
       PhysicalAddressFlag: (formValues.physicalAddressFlag) ? StatusFlag.Yes : StatusFlag.No,
       emailAddressTypeCode: AddressType.Mailing,
-      activeFlag: this.hasCreateUpdatePermission == true ? StatusFlag.Yes : StatusFlag.No,
+      activeFlag: (this.hasCreateUpdatePermission) ? StatusFlag.Yes : StatusFlag.No,
     }
     if (this.vendorTypes.HealthcareProviders==this.providerType) {
       vendorProfileData.vendorTypeCode=this.vendorTypes.MedicalProviders;

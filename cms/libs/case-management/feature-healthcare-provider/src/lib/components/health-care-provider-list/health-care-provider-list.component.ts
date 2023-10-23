@@ -4,10 +4,9 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
-import { CaseFacade } from '@cms/case-management/domain';
+import { CaseFacade, ContactFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ContactFacade, FinancialVendorFacade, FinancialVendorProviderTabCode} from '@cms/case-management/domain';
+import { FormBuilder, FormGroup } from '@angular/forms'; 
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
