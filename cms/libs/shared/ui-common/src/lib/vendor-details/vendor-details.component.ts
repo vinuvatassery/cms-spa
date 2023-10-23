@@ -25,7 +25,6 @@ export class VendorDetailsComponent implements OnInit {
   @Input() ddlStates$!: any;
   @Input() clinicVendorList$!: any;
   @Input() clinicVendorLoader$!: any;
-  @Input() hasCreateUpdatePermission: boolean = false;
   @Input() selectedClinicType: string = FinancialVendorTypeCode.MedicalClinic;
 
   @Output() saveProviderEventClicked = new EventEmitter<any>();
@@ -173,7 +172,7 @@ export class VendorDetailsComponent implements OnInit {
 
   validateForm() {
     this.medicalProviderForm.markAllAsTouched();
-    if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders) {
+    if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders || this.providerType == this.vendorTypes.HealthcareProviders) {
       if (!this.clinicNameNotApplicable) {
         this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
