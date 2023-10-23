@@ -97,16 +97,6 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     } else if (this.selectedClinicType === FinancialVendorTypeCode.DentalProviders) {
       this.medicalProviderForm.controls[this.clinicTypeFieldName].setValue(FinancialVendorTypeCode.DentalClinic)
     }
-
-    // loading clinic list on modal init for dropdown
-    if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders)
-      this.searchClinic(" ");
-
-    // listends for save vendor event in page comp
-    this.saveVendorEventSubject.subscribe(event => {
-      if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders)
-        this.searchClinic(" ");
-    });
   }
 
   ngOnDestroy() {
@@ -409,10 +399,10 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
 
   searchClinic(clinicName: any) {
-    //if (clinicName != '') {
-    this.selectedClinicVendorId = null;
-    this.searchClinicVendorClicked.emit(clinicName);
-    //}
+    if (clinicName != '') {
+      this.selectedClinicVendorId = null;
+      this.searchClinicVendorClicked.emit(clinicName);
+    }
   }
 
   closeVedorModal() {

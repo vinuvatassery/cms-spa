@@ -92,8 +92,6 @@ export class FinancialVendorPageComponent implements OnInit {
 
     this.inputProviderTypeForClinic = FinancialVendorTypeCode.MedicalProviders;
 
-    //this.clickCloseMedicalVendorDetails();
-    //this.clickCloseDentalVendorDetails();
     this.clickOpenClinicProviderDetails();
   }
 
