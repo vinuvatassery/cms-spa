@@ -1,15 +1,84 @@
-<div>
-  <p>
-    <strong>Invoice ID:</strong>
-    <span class="mr-1"> XXXXXX </span>
-    <strong>Provider:</strong>
-    <span class="mr-1"> <a> Very Nice Provider </a> </span>
-    <strong>Client YTD:</strong>
-    <span class="mr-1"> $XX,XXX.XX </span>
+  <div class="flex-row">
+    <div class="flex-col flex-col-6">
+      <button kendoButton class="mb-1 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit "
+        aria-label="edit" title="Edit List Item" (click)="onEditListItemsDetailClicked(editListItemDialogModal)"></button>
+      <table class="info-table-custom nobg-left">
+        <caption hidden> Vendor Info</caption>
+        <tr hidden>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+        <tbody>
+          <tr>
+            <td>Manufacturer</td>
+            <td>Nice Manufacturer</td>
+          </tr>
+          <tr>
+            <td>Drug Name</td>
+            <td>Nice Drug</td>
+          </tr>
+          <tr>
+            <td>Brand Name</td>
+            <td>Nice Brand</td>
+          </tr>
+          <tr>
+            <td>NDC Code</td>
+            <td>XXXXXXXX</td>
+          </tr>
+          <tr>
+            <td>Include in rebates?</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>HIV drug?</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Hepatitis drug?</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Opportunistic infection drug?</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Delivery Method</td>
+            <td>Yes</td>
+          </tr>
+        </tbody>
+      </table>
 
+    </div>
+    <div class="flex-col flex-col-6">
+      <div *ngIf="ifApproveOrDeny === 'A'">
+        <kendo-floatinglabel text="Send Back Notes">
+          <kendo-textbox aria-label="Send Back Notes" [fillMode]="formUiStyle.inputFillMode">
+          </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+      <div *ngIf="ifApproveOrDeny === 'D'">
+        <kendo-floatinglabel text="New Case Worker">
+          <kendo-dropdownlist aria-label="New Case Worker" [fillMode]="formUiStyle.dropDownFillMode">
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div>
+    </div>
 
-  </p>
-  <div>
-    <productivity-tools-approval-invoice></productivity-tools-approval-invoice>
   </div>
-</div>
+
+<ng-template #editListItemDialogModal>
+  <kendo-dialog-titlebar (close)="onCloseEditListItemsDetailClicked()">  Edit List Item</kendo-dialog-titlebar>
+<productivity-tools-approvals-edit-items> </productivity-tools-approvals-edit-items>
+</ng-template>

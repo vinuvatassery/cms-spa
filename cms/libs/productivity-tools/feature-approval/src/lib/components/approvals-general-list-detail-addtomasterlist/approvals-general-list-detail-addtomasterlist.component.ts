@@ -26,4 +26,18 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent {
   public onPanelExpand(event: PanelBarExpandEvent): void {
     this.isPanelExpanded = true;
   }
+
+  onEditListItemsDetailClicked(template: any): void {
+    // this.editListITemsDialog = this.dialogService.open({
+    //   content: template,
+    //   animation: {
+    //     direction: 'left',
+    //     type: 'slide',
+    //   },
+    //   cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    // });
+  }
+
+  onCloseEditListItemsDetailClicked() {
+  }
 }
