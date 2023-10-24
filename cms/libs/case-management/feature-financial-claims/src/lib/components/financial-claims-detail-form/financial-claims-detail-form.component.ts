@@ -226,7 +226,6 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.addOrEdit = 'Update';
       this.duplicatePaymentFlagPaymentRequestId = this.paymentRequestId;
       this.getMedicalClaimByPaymentRequestId();
-      this.isRecentClaimShow = true;
     }
 
      this.paymentRequestType$.subscribe((paymentRequestTypes) => {
