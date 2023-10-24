@@ -12,4 +12,22 @@ export class PendingApprovalGeneralService {
   loadApprovalsGeneral() {
    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general`);
   }
+
+  loadExceedMaxBenefitCard(exceptionId:string) {
+    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/exceptions?exceptionId=${exceptionId}`);
+   }
+
+   loadInvoiceListService(data:any){
+    const invoiceRequestDto =
+    {          
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : JSON.stringify(data.filter)
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/invoice-details?exceptionId=${data.exceptionId}`,invoiceRequestDto
+    );
+  }
 }

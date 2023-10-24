@@ -5,6 +5,7 @@ import { BehaviorSubject, Subject, catchError, of } from 'rxjs';
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
+import { Router } from '@angular/router';
 import {
   ConfigurationProvider,
   LoaderService,
@@ -13,13 +14,12 @@ import {
   NotificationSource,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
-import { FinancialClaimsDataService } from '../../infrastructure/financial-management/financial-claims.data.service';
-import { Router } from '@angular/router';
-import { FinancialClaimTypeCode } from '../../enums/financial-claim-types';
-import { PaymentBatchName } from '../../entities/financial-management/Payment-details';
-import { GridFilterParam } from '../../entities/grid-filter-param';
-import { BatchClaim } from '../../entities/financial-management/batch-claim';
 import { Pharmacy } from '../../entities/client-pharmacy';
+import { PaymentBatchName } from '../../entities/financial-management/Payment-details';
+import { BatchClaim } from '../../entities/financial-management/batch-claim';
+import { GridFilterParam } from '../../entities/grid-filter-param';
+import { FinancialClaimTypeCode } from '../../enums/financial-claim-types';
+import { FinancialClaimsDataService } from '../../infrastructure/financial-management/financial-claims.data.service';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
@@ -27,6 +27,7 @@ export class FinancialClaimsFacade {
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'desc';
+  public selectedClaimsTab = 1
 
   public sortValueFinancialClaimsProcess = 'creationTime';
   public sortProcessList: SortDescriptor[] = [
@@ -42,7 +43,7 @@ export class FinancialClaimsFacade {
     },
   ];
 
-  public sortValueFinancialClaimsBatch = 'batchName';
+  public sortValueFinancialClaimsBatch = 'creationTime';
   public sortBatchList: SortDescriptor[] = [{
     field: this.sortValueFinancialClaimsBatch,
   }];
@@ -115,6 +116,9 @@ export class FinancialClaimsFacade {
   private financialClaimsBatchDataSubject =  new Subject<any>();
   financialClaimsBatchData$ = this.financialClaimsBatchDataSubject.asObservable();
 
+  private financialClaimsAllPaymentsDataLoaderSubject = new Subject<any>();
+  financialClaimsAllPaymentsDataLoader$ =
+    this.financialClaimsAllPaymentsDataLoaderSubject.asObservable();
   private financialClaimsAllPaymentsDataSubject = new Subject<any>();
   financialClaimsAllPaymentsData$ =
     this.financialClaimsAllPaymentsDataSubject.asObservable();
@@ -249,7 +253,7 @@ export class FinancialClaimsFacade {
         this.financialClaimsProcessDataSubject.next(gridView);
         this.hideLoader();
       },
-      error: (err) => {        
+      error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
         this.hideLoader();
       },
@@ -297,6 +301,7 @@ export class FinancialClaimsFacade {
 
   loadFinancialClaimsAllPaymentsListGrid(skipCount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string, claimsType : string){
     filter = JSON.stringify(filter);
+    this.financialClaimsAllPaymentsDataLoaderSubject.next(true);
     this.financialClaimsDataService.loadFinancialClaimsAllPaymentsListService(skipCount, maxResultCount, sort, sortType, filter, claimsType).subscribe({
       next: (dataResponse) => {
         const gridView = {
@@ -304,9 +309,11 @@ export class FinancialClaimsFacade {
           total: dataResponse["totalCount"]
         };
         this.financialClaimsAllPaymentsDataSubject.next(gridView);
+        this.financialClaimsAllPaymentsDataLoaderSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.financialClaimsAllPaymentsDataLoaderSubject.next(false);
       },
     });
   }

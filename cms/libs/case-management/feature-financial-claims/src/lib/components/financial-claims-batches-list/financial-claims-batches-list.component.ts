@@ -66,7 +66,7 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
 
   dropDowncolumns : any = [
     {
-      "columnCode": "batchName",
+      "columnCode": "creationTime",
       "columnDesc": "Batch #"    
     },
     {
@@ -148,7 +148,7 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
     this.defaultGridState();
     let operator= "startswith"
 
-    if(this.selectedColumn !=="batchName")
+    if(this.selectedColumn !=="creationTime")
     {
       operator = "eq"
     }
@@ -159,7 +159,7 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'batchName',
+              field: this.selectedColumn ?? 'creationTime',
               operator: operator,
               value: data,
             },
@@ -251,7 +251,7 @@ export class FinancialClaimsBatchesListComponent implements  OnChanges{
     this.isFiltered = false;
     this.columnsReordered = false;
     
-    this.sortValue  = 'batchName';
+    this.sortValue  = 'creationTime';
     this.sortType  = 'asc'
     this.sort  = this.sortColumn;
   
