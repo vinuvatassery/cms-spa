@@ -83,7 +83,6 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
     };
     this.loadFinancialRecentClaimListGrid();
     this.cdr.detectChanges();
-    console.log('dd',this.duplicatePaymentInputObject);
   }
 
 loadFinancialRecentClaimListGrid() {
