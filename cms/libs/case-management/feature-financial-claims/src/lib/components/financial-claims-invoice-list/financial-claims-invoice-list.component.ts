@@ -1,11 +1,13 @@
 /** Angular **/
 import {    ChangeDetectionStrategy,     Component,    EventEmitter,    Input,
     OnChanges,       Output,     } from '@angular/core';
+import { FinancialClaimsFacade } from '@cms/case-management/domain';
 
   import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { LoaderService } from '@cms/shared/util-core';
   import { GridDataResult } from '@progress/kendo-angular-grid';
   import {State} from '@progress/kendo-data-query';
-  import { Subject } from 'rxjs';
+  import { BehaviorSubject, Subject } from 'rxjs';
 
 
   @Component({
@@ -27,6 +29,10 @@ import {    ChangeDetectionStrategy,     Component,    EventEmitter,    Input,
    sortType ="asc"
    gridDataResult!: GridDataResult;
    public formUiStyle: UIFormStyle = new UIFormStyle();
+
+   constructor(private financialClaimsFacade : FinancialClaimsFacade){
+
+   }
 
       ngOnChanges(): void {            
         this.state = {
@@ -54,19 +60,27 @@ import {    ChangeDetectionStrategy,     Component,    EventEmitter,    Input,
           sortColumn: sortValue,
           sortType: sortTypeValue    
         };
-        this.loadFinancialClaimsInvoiceListEvent.emit(gridDataRefinerValue);
+           this.financialClaimsFacade.loadFinancialClaimsInvoiceList(gridDataRefinerValue?.paymentRequestId , gridDataRefinerValue?.skipCount,   gridDataRefinerValue?.pagesize, gridDataRefinerValue?.sortColumn, gridDataRefinerValue?.sortType,this.claimsType)
+           .subscribe({
+            next: (dataResponse) => {
+              const gridView = {
+                data: dataResponse["items"],
+                total: dataResponse["totalCount"]
+              };
+              this.isFinancialClaimsInvoiceGridLoaderShow = false;
+              this.gridFinancialClaimsInvoiceSubject.next(gridView);
+            },
+            error: (err) => {
+            },
+          });
         this.gridDataHandle();
       }
 
       gridDataHandle() {
         this.financialInvoiceList$.subscribe((data: GridDataResult) => {      
           this.gridDataResult = data;    
-          this.gridFinancialClaimsInvoiceSubject.next(this.gridDataResult);
-          if (data?.total >= 0 || data?.total === -1) {
             this.isFinancialClaimsInvoiceGridLoaderShow = false;
-          }
-        });
-      
+        });   
       }
     
       loadFinancialInvoiceListGrid()
