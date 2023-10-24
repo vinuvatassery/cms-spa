@@ -15,7 +15,7 @@
     <span class="fontsize_twel">Don’t see the Plan you’re looking for?</span>
     <button kendoButton class="card-link-button ml-1 no-ul fontsize_twel" [disabled]="isViewContentEditable"
       aria-label="Add New " (click)="addNewInsurancePlanOpen()">
-      ADD NEW
+      {{ hasInsurancePlanCreateUpdatePermission == true ? 'ADD NEW':'REQUEST NEW' }}
     </button>
   </div>
 </div>
@@ -59,8 +59,7 @@
             <kendo-dropdownlist dropdownFieldautofocus aria-label="Health Insurance Type"
               [fillMode]="formUiStyle.dropDownFillMode" [data]="insuranceTypeList$ | async"
               formControlName="insuranceType" textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
-              (valueChange)="onHealthInsuranceTypeChanged()"
-              [loading]="(insuranceTypeList$ | async)?.length===0">
+              (valueChange)="onHealthInsuranceTypeChanged()" [loading]="(insuranceTypeList$ | async)?.length===0">
             </kendo-dropdownlist>
             <kendo-formerror *ngIf="!newhealthInsuranceForm.controls['insuranceType'].valid && isValidateForm">Health
               Insurance Type is required.</kendo-formerror>
@@ -70,14 +69,15 @@
 
       <div>
         <span class="app-checkboxwidtext-wrapper">
-          <input class="adjust-attr" formControlName="canPayForMedicationFlag" type="checkbox" id="canPayForMedicationFlag" name="canPayForMedicationFlag" aria-labelledby="Applicable"
-            kendoCheckBox />
-          <label class="k-checkbox-label" for="canPayForMedicationFlag">The insurance plan can pay for medication</label>
+          <input class="adjust-attr" formControlName="canPayForMedicationFlag" type="checkbox"
+            id="canPayForMedicationFlag" name="canPayForMedicationFlag" aria-labelledby="Applicable" kendoCheckBox />
+          <label class="k-checkbox-label" for="canPayForMedicationFlag">The insurance plan can pay for
+            medication</label>
         </span>
 
         <span class="app-checkboxwidtext-wrapper">
-          <input class="adjust-attr" type="checkbox" formControlName="dentalPlanFlag" id="dentalPlanFlag" name="dentalPlanFlag" aria-labelledby="Applicable"
-            kendoCheckBox />
+          <input class="adjust-attr" type="checkbox" formControlName="dentalPlanFlag" id="dentalPlanFlag"
+            name="dentalPlanFlag" aria-labelledby="Applicable" kendoCheckBox />
           <label class="k-checkbox-label" for="dentalPlanFlag">This is a dental plan</label>
         </span>
       </div>
@@ -113,7 +113,7 @@
             Cancel
           </button>
           <button kendoButton [primary]="true" aria-label="Add" (click)="addNewInsurancePlanClose()">
-            Add
+            {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}
           </button>
         </div>
       </div>

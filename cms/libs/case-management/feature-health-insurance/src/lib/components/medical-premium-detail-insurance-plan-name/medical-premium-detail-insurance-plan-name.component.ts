@@ -6,7 +6,7 @@ import {
 } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { InsurancePlanFacade, HealthInsurancePolicyFacade, VendorFacade, InsuranceStatusType } from '@cms/case-management/domain';
 import { SnackBarNotificationType, LoggingService, NotificationSnackbarService, LoaderService } from '@cms/shared/util-core';
 import { Subscription } from 'rxjs';
@@ -47,6 +47,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   isValidateForm = false;
 
   dentalInsuranceSelectedItem = 'DENTAL_INSURANCE';
+  hasInsurancePlanCreateUpdatePermission=false;
 
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
 
@@ -56,6 +57,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     private readonly vendorFacade: VendorFacade,
     private readonly insuranceFacade: InsurancePlanFacade,
     private readonly cdr: ChangeDetectorRef,
+    private userManagementFacade:UserManagementFacade,
     private readonly snackbarService: NotificationSnackbarService, private insurancePolicyFacade: HealthInsurancePolicyFacade) {
     this.healthInsuranceForm = this.formBuilder.group({ insuranceCarrierName: [''] });
 
@@ -146,6 +148,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   ngOnInit(): void {
     this.loadInsuranceCarrierName(InsuranceStatusType.healthInsurance);
     this.loadInsurancePlans();
+    this.hasInsurancePlanCreateUpdatePermission=this.userManagementFacade.hasPermission(['Insurance_Plan_Create_Update']);
   }
 
   private loadInsuranceCarrierName(type: string) {
