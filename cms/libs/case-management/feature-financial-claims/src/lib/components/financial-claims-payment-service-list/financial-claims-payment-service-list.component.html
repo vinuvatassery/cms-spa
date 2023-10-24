@@ -16,14 +16,12 @@
     <kendo-grid-column field="serviceDesc" [title]="serviceTitle" [width]="100"> </kendo-grid-column>
     <kendo-grid-column field="serviceCost" title="Service Cost" [width]="50">
         <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="text-muted">$</span>
-            {{dataItem.serviceCost}}
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.serviceCost | kendoNumber: 'n2'}}</span>
         </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="amountDue" title="Amount Due" [width]="50">
         <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="text-muted">$</span>
-            {{dataItem.amountDue}}
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber: 'n2'}}</span>
         </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="creationTime" title="Entry Date" [width]="50">

@@ -32,8 +32,7 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
         private readonly notificationSnackbarService: NotificationSnackbarService,) { }
 
     /* Life cycle events */
-    ngOnInit(): void {
-      this.serviceTitle = this.claimType == FinancialClaimTypeCode.Medical ? 'Medical Service' : 'Dental Service'
+    ngOnInit(): void {        
         this.initializeGrid();
         this.loadServices();
     }
@@ -67,6 +66,7 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
                 };
                 this.servicesList$.next(gridView);
                 this.loader$.next(false);
+                this.serviceTitle = this.claimType == FinancialClaimTypeCode.Medical ? 'Medical Service' : 'Dental Service';
             },
             error: (err: any) => {
                 this.loader$.next(false);
@@ -77,6 +77,7 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
     }
 
     private initializeGrid(){
+        this.serviceTitle = this.claimType == FinancialClaimTypeCode.Medical ? 'Medical Service' : 'Dental Service';
         this.state = {
             skip: this.gridSkipCount,
             take: this.pageSizes[0]?.value,

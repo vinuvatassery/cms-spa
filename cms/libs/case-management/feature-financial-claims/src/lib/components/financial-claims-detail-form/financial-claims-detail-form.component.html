@@ -417,7 +417,7 @@
     <div *ngIf="isRecentClaimShow">
         <h4 class="text-upper">Recent Claims for this {{clientName}} and {{vendorName}}</h4>
         <div class="add_new_fixed_bottom_grid_section">
-            <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId"
+            <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [duplicatePaymentInputObject]="duplicatePaymentObject"
                 [claimsType]="claimsType"></cms-financial-claims-recent-claims-list>
         </div>
     </div>
@@ -447,5 +447,14 @@
     </cms-financial-pca-chosen-alert>
   </ng-template>
 
+  <ng-template #providerDetailsTemplate>
+    <cms-financial-claims-provider-info
+          [paymentRequestId]=""
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
+</ng-template>
 
 
