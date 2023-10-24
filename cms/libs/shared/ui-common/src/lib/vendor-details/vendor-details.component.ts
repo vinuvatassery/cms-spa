@@ -1,4 +1,4 @@
-import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -396,13 +396,7 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   isClinicNameFilterable = true;
-  @ViewChild(MultiColumnComboBoxComponent, { static: false }) comboBox: MultiColumnComboBoxComponent | undefined = undefined;
-  onComboBoxOpen(event: any) {
-    if (this.vendorTypes.Clinic == this.providerType) {
-      event.preventDefault();
-      this.isClinicNameFilterable = false;
-    }
-  }
+
   searchClinic(clinicName: any) {
     if (clinicName != '') {
       this.selectedClinicVendorId = null;
