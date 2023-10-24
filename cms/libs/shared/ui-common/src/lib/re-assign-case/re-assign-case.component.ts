@@ -66,7 +66,6 @@ export class ReAssignCaseComponent implements OnInit, OnChanges {
     this.isValidateForm = true;
     if (this.caseReassignForm.valid) {
       let reassignData = this.mapReassignData();
-      console.log('reassignData',reassignData);
       this.reassignClicked.emit(reassignData);
     }
   }

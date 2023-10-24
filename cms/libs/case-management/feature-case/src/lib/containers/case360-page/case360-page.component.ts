@@ -312,6 +312,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   }
 
   onReassignClicked(data:any){
+    console.log('4-data',data);
     this.caseFacade.reassignCase(data);
   }
 }

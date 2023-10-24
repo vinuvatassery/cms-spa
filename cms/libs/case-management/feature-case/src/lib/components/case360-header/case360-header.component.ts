@@ -169,7 +169,8 @@ export class Case360HeaderComponent implements OnInit {
     }
   }
 
-  onReassignClicked(data:any) {
+  onReassignClicked(data:any) {debugger;
+    console.log('3-data',data);
     this.reassignClicked.emit(data);    
   }
 }

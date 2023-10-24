@@ -69,7 +69,8 @@ export class UserProfileCardComponent implements OnInit {
     this.userManagementFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
   }
 
-  onReassignClicked(data: any) {
+  onReassignClicked(data: any) {debugger;
+    console.log('2-data',data);
     this.reassignClicked.emit(data);
   }
   public openBusinessPopup(template: TemplateRef<unknown>): void {

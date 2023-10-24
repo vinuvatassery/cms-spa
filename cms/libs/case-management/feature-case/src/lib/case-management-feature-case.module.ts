@@ -29,7 +29,7 @@ import { NewCaseComponent } from './components/new-case/new-case.component';
 import { CaseDetailPageComponent } from './containers/case-detail-page/case-detail-page.component';
 import { Case360PageComponent } from './containers/case360-page/case360-page.component';
 import { Case360HeaderComponent } from './components/case360-header/case360-header.component';
-import { ReAssignCaseComponent } from './components/re-assign-case/re-assign-case.component';
+//import { ReAssignCaseComponent } from './components/re-assign-case/re-assign-case.component';
 import { CommonActionsComponent } from './components/common-actions/common-actions.component';
 import { SendLetterProfileComponent } from './components/send-letter-profile/send-letter-profile.component';
 import { CaseSummaryComponent } from './containers/case-summary/case-summary.component';
@@ -78,7 +78,7 @@ import { Case360HeaderToolsComponent } from './components/case360-header-tools/c
     CaseDetailPageComponent,
     Case360PageComponent,
     Case360HeaderComponent,
-    ReAssignCaseComponent,
+    //ReAssignCaseComponent,
     CommonActionsComponent,
     SendLetterProfileComponent,
     CaseSummaryComponent,
@@ -97,7 +97,7 @@ import { Case360HeaderToolsComponent } from './components/case360-header-tools/c
     CaseDetailPageComponent,
     Case360PageComponent,
     Case360HeaderComponent,
-    ReAssignCaseComponent,
+    //ReAssignCaseComponent,
     CommonActionsComponent,
     SendLetterProfileComponent,
     CaseSummaryComponent,
