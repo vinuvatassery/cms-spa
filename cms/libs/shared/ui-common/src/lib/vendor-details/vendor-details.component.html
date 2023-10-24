@@ -49,8 +49,6 @@
         || vendorTypes.DentalClinic == providerType || vendorTypes.MedicalClinic == providerType || providerType == vendorTypes.HealthcareProviders || providerType == vendorTypes.Clinic">
         <div class="flex-row">
 
-          <!-- if medical providers starts -->
-
           <div *ngIf="providerType !== vendorTypes.Clinic && !editVendorInfo"
             class="flex-col flex-col-8 inlineloaderwrapper hidedropicon">
             <span *ngIf="clinicVendorLoader$ | async"
@@ -84,11 +82,6 @@
 
           </div>
 
-          <!--  medical providers ends -->
-
-
-          <!-- if clinic starts -->
-
           <div *ngIf="providerType === vendorTypes.Clinic && !editVendorInfo"
             class="flex-col flex-col-12 inlineloaderwrapper">
             <span *ngIf="clinicVendorLoader$ | async"
@@ -115,8 +108,6 @@
             </button>
 
           </div>
-
-          <!--  clinic ends  -->
 
           <div class="flex-col" *ngIf="editVendorInfo 
           && ( medicalProviderForm.value.vendorTypeCode == 'MEDICAL_CLINIC' 
