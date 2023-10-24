@@ -224,7 +224,6 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.showServicesListForm = true;
       this.addOrEdit = 'Update';
       this.getMedicalClaimByPaymentRequestId();
-      this.isRecentClaimShow = true;
     }
 
      this.paymentRequestType$.subscribe((paymentRequestTypes) => {
