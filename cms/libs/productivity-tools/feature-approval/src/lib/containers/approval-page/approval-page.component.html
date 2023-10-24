@@ -27,7 +27,8 @@
             [isInvoiceLoading$]="isInvoiceLoading$"
             (loadApprovalsGeneralGridEvent)="loadApprovalsGeneralGrid($event)"
             (loadApprovalsExceedMaxBenefitCardEvent)="loadApprovalsExceedMaxBenefitCard($event)"
-            (loadApprovalsExceedMaxBenefitInvoiceEvent)="loadApprovalsExceedMaxBenefitInvoice($event)">
+            (loadApprovalsExceedMaxBenefitInvoiceEvent)="loadApprovalsExceedMaxBenefitInvoice($event)"
+            [usersByRole$]="usersByRole$">
           </productivity-tools-approvals-general-list>
         </div>
       </ng-template>

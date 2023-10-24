@@ -41,7 +41,7 @@
               <div *ngIf="ifApproveOrDeny === 'A' && i === selectedIndex && item.approvalTypeCode === 'GENERAL_ADD_TO_MASTER_LIST'">
                 <kendo-floatinglabel text="New Case Worker">
                   <kendo-dropdownlist aria-label="New Case Worker" [fillMode]="formUiStyle.dropDownFillMode"
-                    [data]="ClientsSubjects$ | async" textField="firstName"
+                    [data]="usersByRole$ | async" textField="firstName"
                     valueField="loginUserId">
                   </kendo-dropdownlist>
                 </kendo-floatinglabel>

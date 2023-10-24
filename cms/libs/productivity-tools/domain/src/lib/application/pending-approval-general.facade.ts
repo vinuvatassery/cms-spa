@@ -45,12 +45,10 @@ export class PendingApprovalGeneralFacade {
 
   /** Private properties **/
   private approvalsGeneralSubject = new Subject<any>();
-  private ClientsSubjects = new BehaviorSubject<any>([]);
 
 
   /** Public properties **/
   approvalsGeneralList$ = this.approvalsGeneralSubject.asObservable();
-  ClientsSubjects$ = this.ClientsSubjects.asObservable();
 
 
   /** Constructor **/
@@ -85,16 +83,6 @@ export class PendingApprovalGeneralFacade {
         this.hideLoader();
       },
     });
-  }
-  getUserById(){
-    this.pendingApprovalGeneralService.getUserById().subscribe({
-      next: (value)=>{
-        this.ClientsSubjects.next(value);
-      },
-      error:(err)=>{
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-      }
-    })
   }
 
   loadExceedMaxBenefitCard(data:any): void {

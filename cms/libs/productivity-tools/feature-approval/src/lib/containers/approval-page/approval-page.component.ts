@@ -48,7 +48,6 @@ export class ApprovalPageComponent implements OnInit {
   pendingApprovalSubmit$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmit$;
   batchDetailPaymentsList$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
   batchDetailPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
-  ClientsSubjects$ = this.pendingApprovalGeneralFacade.ClientsSubjects$;
   approvalsExceedMaxBenefitCard$ = this.pendingApprovalGeneralFacade.approvalsGeneralExceedMaxBenefitCardSubjectList$;
   invoiceData$ = this.pendingApprovalGeneralFacade.invoiceData$;
   isInvoiceLoading$ = this.pendingApprovalGeneralFacade.isInvoiceLoading$;
@@ -57,6 +56,7 @@ export class ApprovalPageComponent implements OnInit {
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId!:any;
+  usersByRole$ = this.userManagementFacade.usersByRole$;
   
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,
@@ -70,14 +70,13 @@ export class ApprovalPageComponent implements OnInit {
               }
   ngOnInit(): void {
     this.getUserRole();
+    this.userManagementFacade.getUsersByRole(UserRoleType.Level1);
     this.pendingApprovalPaymentsCount$.subscribe((response:any)=>{
       if(response){
         this.navigationMenuFacade.getAllPendingApprovalPaymentCount(this.userLevel);
       }
     });
-    this.pendingApprovalGeneralFacade.getUserById();
   }
-
    loadApprovalsGeneralGrid(event: any): void {
     this.pendingApprovalGeneralFacade.loadApprovalsGeneral();
   }

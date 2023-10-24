@@ -70,7 +70,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   approvalId!: number;
   selectedIndex: any;
   @ViewChild('editListItemDialogModal') editModalTemplate!: TemplateRef<any>;
-  caseOwners$ = this.loginUserFacade.usersByRole$;
+  @Input() usersByRole$ : any;
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService,private readonly loginUserFacade : UserManagementFacade,
     ) {}
