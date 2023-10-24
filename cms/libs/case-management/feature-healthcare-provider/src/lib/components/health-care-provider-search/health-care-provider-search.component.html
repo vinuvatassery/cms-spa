@@ -64,7 +64,7 @@
           aria-label="Add New"
           *ngIf="!isEditSearchHealthProviderValue"
         >
-          Add New
+         {{hasCreateUpdatePermission==true ? 'Add New':'Request New'}} 
         </button>
         <button
           kendoButton

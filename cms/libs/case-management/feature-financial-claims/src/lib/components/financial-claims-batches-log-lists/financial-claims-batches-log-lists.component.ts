@@ -22,6 +22,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { FinancialClaimsFacade, PaymentBatchName, PaymentStatusCode } from '@cms/case-management/domain';
 import { NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { Location } from '@angular/common';
 @Component({
   selector: 'cms-financial-claims-batches-log-lists',
   templateUrl: './financial-claims-batches-log-lists.component.html',
@@ -48,14 +49,14 @@ export class FinancialClaimsBatchesLogListsComponent
   printAuthorizationDialog: any;
   UnBatchDialog: any;
   deleteClaimsDialog: any;
-  onlyPrintAdviceLetter: boolean = true;
+  onlyPrintAdviceLetter = true;
   currentPrintAdviceLetterGridFilter:any;
   private addClientRecentClaimsDialog: any;
   vendorId:any;
   clientId:any;
   clientName:any;
   PaymentStatusList = [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved];
-  public bulkMore = [  
+  public bulkMore = [
     {
       buttonType: 'btn-h-primary',
       text: 'Reconcile Payments',
@@ -86,7 +87,7 @@ export class FinancialClaimsBatchesLogListsComponent
     },
   ];
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
- 
+
   @Input() claimsType: any;
   @Input() batchId: any;
   @Input() pageSizes: any;
@@ -149,26 +150,26 @@ export class FinancialClaimsBatchesLogListsComponent
   paymentStatusFilter = '';
   selected: any;
   selectedDataRows: any;
-  selectedCount: number = 0;
-  disablePrwButton:boolean= true;
-  deletemodelbody:string="This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch";
+  selectedCount = 0;
+  disablePrwButton = true;
+  deletemodelbody = "This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch";
 
   getBatchLogGridActions(dataItem: any){
     return [
       {
         buttonType: 'btn-h-primary',
-        text: 'Edit Claims',
+        text: 'Edit Claim',
         icon: 'edit'
       },
       {
         buttonType: 'btn-h-primary',
-        text: 'Unbatch Claims',
+        text: 'Unbatch Claim',
         icon: 'undo',
         disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
         click: (data: any): void => {
-          
+
           if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
-            if (!this.isUnBatchClaimsClosed) {              
+            if (!this.isUnBatchClaimsClosed) {
               this.isUnBatchClaimsClosed = true;
               this.selected = data;
               this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
@@ -177,7 +178,7 @@ export class FinancialClaimsBatchesLogListsComponent
       },
       {
         buttonType: 'btn-h-danger',
-        text: 'Delete Claims',
+        text: 'Delete Claim',
         icon: 'delete',
         click: (data: any): void => {
           if([PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
@@ -208,6 +209,7 @@ export class FinancialClaimsBatchesLogListsComponent
     public activeRoute: ActivatedRoute,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly notificationSnackbarService: NotificationSnackbarService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -360,7 +362,7 @@ export class FinancialClaimsBatchesLogListsComponent
     this.currentPrintAdviceLetterGridFilter = event.filter;
     this.loadBatchLogListEvent.emit(event);
   }
-  
+
   onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
     this.isPrintAdviceLetterClicked = false;
@@ -431,6 +433,7 @@ export class FinancialClaimsBatchesLogListsComponent
       )
       .subscribe((unbatchEntireBatchResponse: any) => {
         if (unbatchEntireBatchResponse ?? false) {
+          this.route.navigateByUrl(`financial-management/claims/${this.claimsType}?tab=2`)
           this.loadBatchLogListGrid();
         }
       });
@@ -473,6 +476,7 @@ export class FinancialClaimsBatchesLogListsComponent
         }
       });
   }
+
   disablePreviewButton(result: any) {
     this.selectedDataRows = result;
     this.selectedDataRows.batchId = this.batchId
