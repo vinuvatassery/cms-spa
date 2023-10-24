@@ -45,7 +45,7 @@
       </div>
       <div class="flex-col"
         *ngIf="providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders 
-        || vendorTypes.DentalClinic == providerType || vendorTypes.MedicalClinic == providerType || vendorTypes.Clinic == providerType">
+        || vendorTypes.DentalClinic == providerType || vendorTypes.MedicalClinic == providerType || providerType == vendorTypes.HealthcareProviders">
         <div class="flex-row">
           <div class="flex-col flex-col-{{providerType === vendorTypes.Clinic ? 12 : 8}} inlineloaderwrapper"
             *ngIf="!editVendorInfo">
@@ -144,7 +144,7 @@
           </div>
 
           <div class="flex-col flex-col-4 mt-checkbox"
-            *ngIf="vendorTypes.Clinic != providerType && !editVendorInfo && vendorTypes.Clinic != providerType ">
+            *ngIf="vendorTypes.Clinic != providerType && !editVendorInfo && vendorTypes.Clinic != providerType && providerType != vendorTypes.HealthcareProviders">
             <span class="app-checkboxwidtext-wrapper">
               <input class="adjust-attr" type="checkbox" id="pnApplicable" name="Applicable"
                 aria-labelledby="pnApplicable" [(ngModel)]="firstLastNameNotApplicable"
@@ -457,7 +457,7 @@
 
 
       <div class="flex-col"
-        *ngIf="vendorTypes.Clinic != providerType && providerType != vendorTypes.MedicalProviders && providerType != vendorTypes.DentalProviders && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy && providerType != vendorTypes.Manufacturers">
+        *ngIf="vendorTypes.Clinic != providerType && providerType != vendorTypes.MedicalProviders && providerType != vendorTypes.DentalProviders && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy && providerType != vendorTypes.Manufacturers && providerType != vendorTypes.HealthcareProviders">
         <fieldset class="k-form-fieldset no_margin_fieldset">
           <legend class="k-form-legend">
             <h5>Invoice For (Select all that apply)</h5>
