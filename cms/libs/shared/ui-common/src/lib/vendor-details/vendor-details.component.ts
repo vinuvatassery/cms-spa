@@ -1,5 +1,5 @@
-import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators, RequiredValidator } from '@angular/forms';
+import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
@@ -24,6 +24,8 @@ export class VendorDetailsComponent implements OnInit {
   @Input() ddlStates$!: any;
   @Input() clinicVendorList$!: any;
   @Input() clinicVendorLoader$!: any;
+  @Input() selectedClinicType: string = FinancialVendorTypeCode.MedicalClinic;
+
   @Output() saveProviderEventClicked = new EventEmitter<any>();
   @Output() closeModalEventClicked = new EventEmitter<any>();
 
@@ -483,9 +485,6 @@ constructor(
       emailAddressTypeCode: AddressType.Mailing,
       activeFlag: (this.hasCreateUpdatePermission) ? StatusFlag.Yes : StatusFlag.No,
     }
-    if (this.vendorTypes.HealthcareProviders==this.providerType) {
-      vendorProfileData.vendorTypeCode=this.vendorTypes.MedicalProviders;
-    } 
     if (this.providerType === FinancialVendorTypeCode.Clinic) {
       if (vendorProfileData.clinicType === FinancialVendorTypeCode.MedicalClinic) {
         vendorProfileData.vendorTypeCode = FinancialVendorTypeCode.MedicalClinic;
@@ -493,7 +492,9 @@ constructor(
         vendorProfileData.vendorTypeCode = FinancialVendorTypeCode.DentalClinic;
       }
     }
-
+      if (this.vendorTypes.HealthcareProviders == this.providerType) {
+          vendorProfileData.vendorTypeCode = this.vendorTypes.MedicalProviders;
+      } 
     return vendorProfileData;
   }
   onChange() {

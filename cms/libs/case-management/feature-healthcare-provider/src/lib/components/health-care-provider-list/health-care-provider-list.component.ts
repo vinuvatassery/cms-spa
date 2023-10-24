@@ -4,7 +4,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
-import { CaseFacade, ContactFacade, FinancialVendorFacade } from '@cms/case-management/domain';
+import { CaseFacade,ContactFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { FormBuilder, FormGroup } from '@angular/forms'; 
 import { SnackBarNotificationType } from '@cms/shared/util-core';
@@ -188,6 +188,7 @@ pageselectionchange(data: any) {
   onOpenBusinessLogicClicked()
   {
     this.onCloseProviderSearchClicked()
+    this.buildVendorForm();
     this.buildVendorForm();
     this.isOpenedbusinessInfo = true;
   }
