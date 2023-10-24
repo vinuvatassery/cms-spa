@@ -227,7 +227,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     return null;
   }
   openEditModal(event:any){
-    if(!event){
+    if(event){
       this.onEditListItemsDetailClicked(this.editModalTemplate);
     }
   }

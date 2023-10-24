@@ -9,4 +9,6 @@ export enum PendingApprovalGeneralTypeCode {
   InsuranceVendor = 'INSURANCE_VENDOR',
   InsuranceProvider = 'INSURANCE_PROVIDER',
   Pharmacy = 'PHARMACY',
+  Drugs = 'Drugs',
+  InsurancePlan = 'Insurance_Plan'
 }

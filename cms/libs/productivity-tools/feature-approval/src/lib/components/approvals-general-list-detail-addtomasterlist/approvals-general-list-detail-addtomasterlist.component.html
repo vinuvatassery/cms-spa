@@ -4,23 +4,7 @@
         aria-label="edit" title="Edit List Item" (click)="onEditListItemsDetailClicked()"></button>
       <table class="info-table-custom nobg-left">
         <caption hidden> Vendor Info</caption>
-        <tr hidden>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-        </tr>
-        <tbody>
+        <tbody *ngIf="subTypeCode === subTypeConst.DentalClinic || subTypeCode === subTypeConst.MedicalClinic || subTypeCode === subTypeConst.MedicalProvider || subTypeCode === subTypeConst.DentalProvider">
           <tr>
             <td>Clinic Name</td>
             <td>Nice Manufacturer</td>
@@ -53,9 +37,123 @@
             <td>Address</td>
             <td>Abc street</td>
           </tr>
+        </tbody>
+        <tbody *ngIf="subTypeCode === subTypeConst.Drugs">
+          <tr>
+            <td>Manufacturer</td>
+            <td>Nice Manufacturer</td>
+          </tr>
+          <tr>
+            <td>Drug Name</td>
+            <td>Nice Drug</td>
+          </tr>
+          <tr>
+            <td>Brand Name</td>
+            <td>Nice Brand</td>
+          </tr>
+          <tr>
+            <td>NDC Code</td>
+            <td>XXXXXXXX</td>
+          </tr>
+          <tr>
+            <td>HIV Drug?</td>
+            <td>XXXXXXXX</td>
+          </tr>
+          <tr>
+            <td>Hepatitis Drug?</td>
+            <td>abc@gmail.com</td>
+          </tr>
+          <tr>
+            <td>Opportunistic infection drug?</td>
+            <td>Yes</td>
+          </tr>
           <tr>
             <td>Delivery Method</td>
+            <td>Abc street</td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="subTypeCode === subTypeConst.InsuranceVendor">
+          <tr>
+            <td>Vendor Name</td>
+            <td>Nice VEndor</td>
+          </tr>
+          <tr>
+            <td>TIN</td>
+            <td>XXXXXXXX<td>
+          </tr>
+          <tr>
+            <td>Accepts Combined Payments</td>
+            <td>Nice Brand</td>
+          </tr>
+          <tr>
+            <td>Accepts Reports</td>
+            <td>XXXXXXXX</td>
+          </tr>
+          <tr>
+            <td>Payment Method</td>
+            <td>XXXXXXXX</td>
+          </tr>
+          <tr>
+            <td>Payment Run Date</td>
+            <td>dd/mm/yyyy</td>
+          </tr>
+          <tr>
+            <td>Name on Check</td>
             <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Name on Envelope</td>
+            <td>Abc street</td>
+          </tr>
+          <tr>
+            <td>Billing Email</td>
+            <td>Abc street</td>
+          </tr>
+          <tr>
+            <td>Billing Address</td>
+            <td>Abc street</td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="subTypeCode === subTypeConst.InsurancePlan">
+          <tr>
+            <td>Insurance Provider</td>
+            <td>Nice Manufacturer</td>
+          </tr>
+          <tr>
+            <td>Insurance Plan Name</td>
+            <td>Nice Drug</td>
+          </tr>
+          <tr>
+            <td>Health Insurance Type</td>
+            <td>Nice Brand</td>
+          </tr>
+          <tr>
+            <td>Can pay for medication</td>
+            <td>XXXXXXXX</td>
+          </tr>
+          <tr>
+            <td>Is a dental plan</td>
+            <td>XXXXXXXX</td>
+          </tr>
+          <tr>
+            <td>Start Date</td>
+            <td>abc@gmail.com</td>
+          </tr>
+          <tr>
+            <td>Term Date</td>
+            <td>Yes</td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="subTypeCode === subTypeConst.InsuranceProvider">
+          <tr>
+            <td>Provider Name</td>
+            <td>Nice Manufacturer</td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="subTypeCode === subTypeConst.Pharmacy">
+          <tr hidden>
+            <td>Pharmacy</td>
+            <td>Very nice pharmacy</td>
           </tr>
         </tbody>
       </table>

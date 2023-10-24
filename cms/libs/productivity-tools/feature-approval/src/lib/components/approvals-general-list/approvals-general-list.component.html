@@ -57,7 +57,7 @@
                 </productivity-tools-approvals-general-list-detail-reassignment>
               </ng-template>
               <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralAddtoMasterList}}">
-                <productivity-tools-approvals-general-list-detail-addtomasterlist [approvalId]="item.generalPendingApprovalId">
+                <productivity-tools-approvals-general-list-detail-addtomasterlist [approvalId]="item.generalPendingApprovalId" (openEditModal)="openEditModal($event)" [subTypeCode]="item.subTypeCode">
                 </productivity-tools-approvals-general-list-detail-addtomasterlist>
               </ng-template>
               <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralException}}">
@@ -95,8 +95,6 @@
 </div>
 
 <ng-template #editListItemDialogModal>
-  <kendo-dialog-titlebar (close)="onCloseEditListItemsDetailClicked()"> Edit List Item</kendo-dialog-titlebar>
-  <productivity-tools-approvals-edit-items> </productivity-tools-approvals-edit-items>
   <kendo-dialog-titlebar (close)="onCloseEditListItemsDetailClicked()"> Edit List Item</kendo-dialog-titlebar>
   <productivity-tools-approvals-edit-items> </productivity-tools-approvals-edit-items>
 </ng-template>
