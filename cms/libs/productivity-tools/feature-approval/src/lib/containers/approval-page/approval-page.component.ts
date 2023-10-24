@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component,  ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component,  ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
@@ -7,6 +7,7 @@ import { ApprovalFacade, PendingApprovalGeneralFacade, PendingApprovalPaymentFac
 import { ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, DocumentFacade, ApiType } from '@cms/shared/util-core';
 import { NotificationService } from '@progress/kendo-angular-notification';
 import { NavigationMenuFacade, UserManagementFacade, UserDataService } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
@@ -19,11 +20,13 @@ export class ApprovalPageComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
   commonReminderSnackbar$   = this.reminderNotificationSnackbarService.snackbar$
-  sortType = this.approvalFacade.sortType;
-  pageSizes = this.approvalFacade.gridPageSizes;
-  gridSkipCount = this.approvalFacade.skipCount;
+  sortType = this.pendingApprovalGeneralFacade.sortType;
+  pageSizes = this.pendingApprovalGeneralFacade.gridPageSizes;
+  gridSkipCount = this.pendingApprovalGeneralFacade.skipCount;
   dataExportParameters! : any;
 
+  sortValue = this.pendingApprovalGeneralFacade.sortValue;
+  sort = this.pendingApprovalGeneralFacade.sort;
   sortValueGeneralAPproval = this.approvalFacade.sortValueGeneralAPproval;
   sortGeneralList = this.approvalFacade.sortGeneralList;
   sortApprovalPaymentsList = this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
@@ -46,6 +49,15 @@ export class ApprovalPageComponent implements OnInit {
   batchDetailPaymentsList$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
   batchDetailPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
   ClientsSubjects$ = this.pendingApprovalGeneralFacade.ClientsSubjects$;
+  approvalsExceedMaxBenefitCard$ = this.pendingApprovalGeneralFacade.approvalsGeneralExceedMaxBenefitCardSubjectList$;
+  invoiceData$ = this.pendingApprovalGeneralFacade.invoiceData$;
+  isInvoiceLoading$ = this.pendingApprovalGeneralFacade.isInvoiceLoading$;
+
+  providerDetailsDialog: any
+  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+  providerDetailsTemplate!: TemplateRef<any>;
+  paymentRequestId!:any;
+  
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,
               private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService,
@@ -53,7 +65,8 @@ export class ApprovalPageComponent implements OnInit {
               private userManagementFacade: UserManagementFacade,
               private navigationMenuFacade: NavigationMenuFacade,
               private documentFacade :  DocumentFacade,  private readonly userDataService: UserDataService,
-              private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade) {
+              private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade,
+              private dialogService: DialogService) {
               }
   ngOnInit(): void {
     this.getUserRole();
@@ -137,5 +150,15 @@ export class ApprovalPageComponent implements OnInit {
 
       this.documentFacade.getExportFile(approvalPageAndSortedRequest,`payment-batches?serviceType=${data.selectedPaymentType}&level=${this.userLevel}` , fileName, ApiType.ProductivityToolsApi);
     }
+  }
+
+  loadApprovalsExceedMaxBenefitCard(data:any)
+  {
+      this.pendingApprovalGeneralFacade.loadExceedMaxBenefitCard(data);
+  }
+
+  loadApprovalsExceedMaxBenefitInvoice(data:any)
+  {
+      this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
   }
 }

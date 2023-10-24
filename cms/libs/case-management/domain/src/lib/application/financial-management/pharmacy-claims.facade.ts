@@ -8,6 +8,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { ConfigurationProvider, DocumentFacade, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FinancialPharmacyClaimsDataService } from '../../infrastructure/financial-management/pharmacy-claims.data.service';
 import { GridFilterParam } from '../../entities/grid-filter-param';
+import { BatchPharmacyClaims } from '../../entities/financial-management/batch-pharmacy-claims';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPharmacyClaimsFacade {
@@ -16,6 +17,10 @@ export class FinancialPharmacyClaimsFacade {
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
+
+  batchClaimsSubject  =  new Subject<any>();
+  batchClaims$ = this.batchClaimsSubject.asObservable();
+
 
   public sortValuePharmacyClaimsProcess = 'creationTime';
   public sortProcessList: SortDescriptor[] = [{
@@ -130,6 +135,7 @@ export class FinancialPharmacyClaimsFacade {
     });  
   }   
 
+
   exportPharmacyClaimsProcessListGrid(params: any){
     const fileName = 'pharmacy-claims-process'
     this.documentFacade.getExportFile(params,`claims/pharmacies` , fileName);
@@ -203,4 +209,28 @@ export class FinancialPharmacyClaimsFacade {
  loadPrescriptions(paymentId: string, params: GridFilterParam){
   return  this.financialPharmacyClaimsDataService.loadPrescriptions(paymentId, params);
  }
+
+ batchClaims(batchPharmacyClaims: BatchPharmacyClaims) {
+  this.showLoader();
+  return this.financialPharmacyClaimsDataService
+    .batchClaims(batchPharmacyClaims)
+    .subscribe({
+      next: (response:any) => {
+        this.batchClaimsSubject.next(response);
+        if (response.status) {
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            response.message
+          );
+        }
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+}
+
+ 
 }

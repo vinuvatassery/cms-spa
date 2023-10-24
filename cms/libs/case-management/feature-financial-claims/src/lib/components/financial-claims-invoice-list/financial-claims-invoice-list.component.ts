@@ -17,10 +17,11 @@ import {    ChangeDetectionStrategy,     Component,    EventEmitter,    Input,
    @Input() paymentRequestId : any
    @Input() financialInvoiceList$ : any
    @Input() sort : any
+   @Input() claimsType: any;
    @Output() loadFinancialClaimsInvoiceListEvent = new EventEmitter<any>();
    gridFinancialClaimsInvoiceSubject = new Subject<any>();
    gridFinancialClaimsInvoice$ =  this.gridFinancialClaimsInvoiceSubject.asObservable();
-
+   serviceTitle = ''
    isFinancialClaimsInvoiceGridLoaderShow = false
    public state!: State;  
    sortType ="asc"
@@ -33,7 +34,7 @@ import {    ChangeDetectionStrategy,     Component,    EventEmitter,    Input,
           take: 5,
           sort: this.sort,
         };
-    
+       this.serviceTitle = this.claimsType+' Service'
         this.loadFinancialInvoiceListGrid();
       }
 
