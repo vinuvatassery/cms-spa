@@ -22,6 +22,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { FinancialClaimsFacade, PaymentBatchName, PaymentStatusCode } from '@cms/case-management/domain';
 import { NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { Location } from '@angular/common';
 @Component({
   selector: 'cms-financial-claims-batches-log-lists',
   templateUrl: './financial-claims-batches-log-lists.component.html',
@@ -208,6 +209,7 @@ export class FinancialClaimsBatchesLogListsComponent
     public activeRoute: ActivatedRoute,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly notificationSnackbarService: NotificationSnackbarService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
