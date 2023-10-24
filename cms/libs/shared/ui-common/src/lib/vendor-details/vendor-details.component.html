@@ -52,7 +52,7 @@
           <!-- if medical providers starts -->
 
           <div *ngIf="providerType !== vendorTypes.Clinic && !editVendorInfo"
-            class="flex-col flex-col-8 inlineloaderwrapper hidedropiconm">
+            class="flex-col flex-col-8 inlineloaderwrapper hidedropicon">
             <span *ngIf="clinicVendorLoader$ | async"
               class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
             <kendo-floatinglabel text="Clinic Name">
