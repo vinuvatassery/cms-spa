@@ -9,7 +9,7 @@ import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { ClaimsDataService } from '../../infrastructure/financial-management/claims.data.service';
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
-import { GridFilterParam } from '@cms/case-management/domain';
+
 
 @Injectable({ providedIn: 'root' })
 export class ClaimsFacade {
@@ -62,7 +62,7 @@ export class ClaimsFacade {
   ) { }
 
   /** Public methods **/
-  loadClaimsListGrid(pharmacyId: string, paginationParameters: GridFilterParam){
+  loadClaimsListGrid(pharmacyId: string, paginationParameters: any){
     this.claimsDataLoaderSubject.next(true);
     this.claimsDataService.loadClaimsListService(pharmacyId, paginationParameters).subscribe({
       next: (dataResponse:any) => {
