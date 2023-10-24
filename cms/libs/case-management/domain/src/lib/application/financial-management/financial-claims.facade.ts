@@ -725,9 +725,9 @@ checkGroupException(startDtae: any,endDate: any, clientId: number,cptCode:any, i
   })
   this.hideLoader();
 }
-checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any, indexNumber: any, typeCode : string){
+checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any,paymentRequestId :any, indexNumber: any, typeCode : string){
   this.showLoader();
-  this.financialClaimsDataService.checkDuplicatePaymentException(startDtae,endDate,vendorId,totalAmountDue,typeCode).subscribe({
+  this.financialClaimsDataService.checkDuplicatePaymentException(startDtae,endDate,vendorId,totalAmountDue, paymentRequestId, typeCode).subscribe({
     next: (data:any)=>{
       const flag =  data;
       let response = {

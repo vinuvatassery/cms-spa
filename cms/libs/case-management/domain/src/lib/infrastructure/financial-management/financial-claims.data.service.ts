@@ -336,7 +336,7 @@ export class FinancialClaimsDataService {
   }
 
   searchPharmacies(searchText: string, typeCode: string) {
-    
+
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
       return this.http.get<Pharmacy[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/SearchText=${searchText}`
@@ -437,10 +437,10 @@ export class FinancialClaimsDataService {
       { responseType: 'blob' }
     );
   }
-  
+
   checkExceededMaxBenefit(serviceCost: number, clientId: number, typeCode : string,clientCaseEligibilityId : string ) {
     let path = 'financial-management/claims/medical';
-   
+
     const limitExceedCheckDto =
     {
       clientId : clientId,
@@ -471,17 +471,17 @@ export class FinancialClaimsDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/group-check?startDate=${startDtae}&endDate=${endDate}&clientId=${clientId}&cptCode=${cptCode}`
     );
   }
-  checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any, typeCode : string ) {
+  checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any, paymentRequestId :any, typeCode : string ) {
     let path;
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
       path = 'financial-management/claims/medical';
     } else {
       path = 'financial-management/claims/dental';
     }
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/duplicate-payment-check?serviceStartDate=${startDtae}&serviceEndDate=${endDate}&vendorId=${vendorId}&amount=${totalAmountDue}`
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/duplicate-payment-check?serviceStartDate=${startDtae}&serviceEndDate=${endDate}&vendorId=${vendorId}&amount=${totalAmountDue}&paymentRequestId=${paymentRequestId}`
     );
   }
-  searchProvidorsById(VendorAddressId: string, typeCode: string) {    
+  searchProvidorsById(VendorAddressId: string, typeCode: string) {
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
       return this.http.get<Pharmacy[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/providers/by-vendor-address/${VendorAddressId}`

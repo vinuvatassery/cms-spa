@@ -447,5 +447,14 @@
     </cms-financial-pca-chosen-alert>
   </ng-template>
 
+  <ng-template #providerDetailsTemplate>
+    <cms-financial-claims-provider-info
+          [paymentRequestId]=""
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
+</ng-template>
 
 
