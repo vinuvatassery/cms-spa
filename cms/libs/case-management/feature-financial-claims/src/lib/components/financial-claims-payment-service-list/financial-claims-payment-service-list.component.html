@@ -13,7 +13,7 @@
         </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="cptCode" title="CPT Code" [width]="50"> </kendo-grid-column>
-    <kendo-grid-column field="serviceDesc" title="Medical Service" [width]="100"> </kendo-grid-column>
+    <kendo-grid-column field="serviceDesc" [title]="serviceTitle" [width]="100"> </kendo-grid-column>
     <kendo-grid-column field="serviceCost" title="Service Cost" [width]="50">
         <ng-template kendoGridCellTemplate let-dataItem>
             <span class="text-muted">$</span>
