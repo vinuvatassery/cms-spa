@@ -406,6 +406,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.medicalProviderForm.controls['providerName'].setValue(clinicDetail.vendorName);
   }
 
+  isClinicNameFilterable = true;
+
   searchClinic(clinicName: any) {
     if (clinicName != '') {
       this.selectedClinicVendorId = null;
