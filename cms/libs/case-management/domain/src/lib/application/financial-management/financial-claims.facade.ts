@@ -27,6 +27,7 @@ export class FinancialClaimsFacade {
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'desc';
+  public selectedClaimsTab = 1
 
   public sortValueFinancialClaimsProcess = 'creationTime';
   public sortProcessList: SortDescriptor[] = [
@@ -42,7 +43,7 @@ export class FinancialClaimsFacade {
     },
   ];
 
-  public sortValueFinancialClaimsBatch = 'batchName';
+  public sortValueFinancialClaimsBatch = 'creationTime';
   public sortBatchList: SortDescriptor[] = [{
     field: this.sortValueFinancialClaimsBatch,
   }];

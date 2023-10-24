@@ -10,7 +10,7 @@
 <kendo-grid-column field="cptCode" title="CPT Code" [width]="100">
 
 </kendo-grid-column>
-<kendo-grid-column field="serviceDesc" title="Medical Service" [width]="100"> </kendo-grid-column>
+<kendo-grid-column field="serviceDesc" title="{{serviceTitle | titlecase}}" [width]="100"> </kendo-grid-column>
 <kendo-grid-column field="serviceCost" title="Service Cost" [width]="100"> 
 
   <ng-template kendoGridCellTemplate let-dataItem>

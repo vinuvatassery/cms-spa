@@ -78,9 +78,10 @@ export class FinancialClaimsPageComponent implements OnInit {
 
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {   
     this.activatedRoute.params.subscribe(data => this.claimsType = data['type']);
     this.activatedRoute.queryParams.subscribe(data => this.tab = +(data['tab'] ?? 1));
+    this.tab = this.financialClaimsFacade.selectedClaimsTab
     this.addNavigationSubscription();
   }
 
@@ -91,6 +92,7 @@ export class FinancialClaimsPageComponent implements OnInit {
       .subscribe({
         next: () => {
           this.activatedRoute.params.subscribe(data => this.claimsType = data['type'])
+          this.tab = 1
           this.cdr.detectChanges();
         },
 
@@ -101,6 +103,8 @@ export class FinancialClaimsPageComponent implements OnInit {
   }
 
   loadFinancialClaimsProcessListGrid(data: any) {
+    this.financialClaimsFacade.selectedClaimsTab = 1
+    this.tab = this.financialClaimsFacade.selectedClaimsTab
     this.financialClaimsAllPaymentsGridLists$ =
     this.financialClaimsFacade.financialClaimsAllPaymentsData$
     this.dataExportParameters = data
@@ -113,12 +117,15 @@ export class FinancialClaimsPageComponent implements OnInit {
   }
 
   loadFinancialClaimsBatchListGrid(data: any) {
-
+    this.financialClaimsFacade.selectedClaimsTab = 2
+    this.tab = this.financialClaimsFacade.selectedClaimsTab
     this.dataExportParameters = data
     this.financialClaimsFacade.loadFinancialClaimsBatchListGrid( data?.skipCount,   data?.pagesize, data?.sortColumn, data?.sortType,data?.filter,this.claimsType);
   }
 
   loadFinancialClaimsAllPaymentsListGrid(data: any) {
+    this.financialClaimsFacade.selectedClaimsTab = 3
+    this.tab = this.financialClaimsFacade.selectedClaimsTab
     this.dataExportParameters = data
     this.financialClaimsFacade.loadFinancialClaimsAllPaymentsListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.filter, this.claimsType);
   }
