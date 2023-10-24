@@ -41,7 +41,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() casereassignmentExpandedInfo$: any;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
   @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
-
+  pendingApprovalGeneralTyoeCode: any = PendingApprovalGeneralTypeCode
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';

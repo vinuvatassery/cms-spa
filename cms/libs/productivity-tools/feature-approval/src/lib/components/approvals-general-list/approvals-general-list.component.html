@@ -47,17 +47,17 @@
 
           <ng-template kendoPanelBarContent>
             <ng-switch [ngSwitch]="item.approvalTypeCode">
-              <ng-template ngSwitchCase="GENERAL_CASE_REASSIGNMENT">
+              <ng-template ngSwitchCase = "{{pendingApprovalGeneralTyoeCode.GeneralCaseReassignment}}">
                 <productivity-tools-approvals-general-list-detail-reassignment [approvalId]="item.generalPendingApprovalId"
                 [casereassignmentExpandedInfo$]="casereassignmentExpandedInfo$"
                 (loadCasereassignmentExpanedInfoEvent)="loadCasereassignmentExpanedInfoEvent($event)">
                 </productivity-tools-approvals-general-list-detail-reassignment>
               </ng-template>
-              <ng-template ngSwitchCase="GENERAL_ADD_TO_MASTER_LIST">
+              <ng-template ngSwitchCase = "{{pendingApprovalGeneralTyoeCode.GeneralAddtoMasterList}}">
                 <productivity-tools-approvals-general-list-detail-addtomasterlist [approvalId]="approvalId">
                 </productivity-tools-approvals-general-list-detail-addtomasterlist>
               </ng-template>
-              <ng-template ngSwitchCase="GENERAL_EXCEPTIONS">
+              <ng-template ngSwitchCase = "{{pendingApprovalGeneralTyoeCode.GeneralException}}">
                 <productivity-tools-approvals-general-list-detail-exceptions [approvalId]="approvalId">
                 </productivity-tools-approvals-general-list-detail-exceptions>
               </ng-template>
