@@ -23,7 +23,7 @@ import {
   PanelBarExpandEvent,
 } from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
+import { PendingApprovalGeneralTypeCode, PendingApprovalPaymentTypeCode } from '@cms/productivity-tools/domain';
 import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approvals-general-list',
@@ -231,25 +231,27 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       this.onEditListItemsDetailClicked(this.editModalTemplate);
     }
   }
+
   getMasterlistTitle(subTypeCode:string){
     switch(subTypeCode){
-      case 'DENTAL_CLINIC':
+      case PendingApprovalGeneralTypeCode.DentalClinic:
         return 'Request to add Dental Clinics To Master List';
-      case 'MEDICAL_CLINIC':
+      case PendingApprovalGeneralTypeCode.MedicalClinic:
         return 'Request to add Medical Clinics To Master List';
-      case 'MEDICAL_PROVIDER':
+      case PendingApprovalGeneralTypeCode.MedicalProvider:
         return 'Request to add Medical Providers To Master List';
-      case 'DENTAL_PROVIDER':
+      case PendingApprovalGeneralTypeCode.DentalProvider:
         return 'Request to add Dental Providers To Master List';
-      case 'INSURANCE_VENDOR':
+      case PendingApprovalGeneralTypeCode.InsuranceVendor:
         return 'Request to add Insurance Vendors To Master List';
-      case 'INSURANCE_PROVIDER':
+      case PendingApprovalGeneralTypeCode.InsuranceProvider:
         return 'Request to add Insurance Providers To Master List';
-      case 'PHARMACY':
+      case PendingApprovalGeneralTypeCode.Pharmacy:
         return 'Request to add Pharmacies To Master List';
     }
     return null;
   }
+
   loadApprovalsExceedMaxBenefitCard($event:any)
   {
     this.loadApprovalsExceedMaxBenefitCardEvent.emit($event);
