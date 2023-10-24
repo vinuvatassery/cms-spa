@@ -1,10 +1,14 @@
 /** Angular **/
 import {
-  Component,  ChangeDetectionStrategy,  Input,  Output,  EventEmitter, OnChanges,} from '@angular/core';
+  Component,  ChangeDetectionStrategy,  Input,  Output,  EventEmitter, OnChanges, ChangeDetectorRef,} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
-import { CaseFacade } from '@cms/case-management/domain';
+import { CaseFacade,ContactFacade, FinancialVendorFacade } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+import { FormBuilder, FormGroup } from '@angular/forms'; 
+import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-health-care-provider-list',
   templateUrl: './health-care-provider-list.component.html',
@@ -62,7 +66,8 @@ export class HealthCareProviderListComponent implements  OnChanges {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   notApplicable :any ='Not Applicable'
-
+  medicalProviderForm: FormGroup;
+  hasHealthcareProviderCreateUpdatePermission=false;
   public actions = [
     {
       buttonType:"btn-h-primary",
@@ -114,11 +119,19 @@ export class HealthCareProviderListComponent implements  OnChanges {
       },
     }
   ];
+  ddlStates=this.contactFacade.ddlStates$;
+  clinicVendorList= this.financialVendorFacade.clinicVendorList$;
+  clinicVendorLoader= this.financialVendorFacade.clinicVendorLoader$;
+  constructor(private caseFacade: CaseFacade,private financialVendorFacade: FinancialVendorFacade,private contactFacade:ContactFacade,
+    private userManagementFacade:UserManagementFacade, private readonly formBuilder: FormBuilder,private readonly cdr: ChangeDetectorRef,){
+    this.medicalProviderForm = this.formBuilder.group({});
+  }
 
-  constructor(private caseFacade: CaseFacade){}
-
-  /** Lifecycle hooks **/
-  
+  /** Lifecycle hooks **/ 
+  ngOnInit() { 
+    this.contactFacade.loadDdlStates();  
+    this.hasHealthcareProviderCreateUpdatePermission=this.userManagementFacade.hasPermission(['Service_Provider_HIV_Healthcare_Provider_Create_Update']);
+  }
   ngOnChanges(): void {     
     this.state = {
     skip: 0,
@@ -175,6 +188,7 @@ pageselectionchange(data: any) {
   onOpenBusinessLogicClicked()
   {
     this.onCloseProviderSearchClicked()
+    this.buildVendorForm();
     this.isOpenedbusinessInfo = true;
   }
   onDeleteConfirmCloseClicked()
@@ -366,5 +380,58 @@ pageselectionchange(data: any) {
      });
     
    }
-   
+
+   buildVendorForm() {
+    this.medicalProviderForm.reset();
+    this.medicalProviderForm = this.formBuilder.group({
+      firstName:[''],
+      lastName:[],
+      providerName: [''],
+      tinNumber: [''],
+      npiNbr: [''],
+      paymentMethod: [''],
+      specialHandling: [''],
+      mailCode: [''],
+      nameOnCheck: [''],
+      nameOnEnvolop: [''],
+      addressLine1: [''],
+      addressLine2: [''],
+      city: [''],
+      state: [''],
+      zip: [''],
+      physicalAddressFlag: [''],
+      isPreferedPharmacy: [''],
+      paymentRunDate:[''],
+      isAcceptCombinedPayment:[''],
+      isAcceptReports: [''],
+      newAddContactForm: this.formBuilder.array([
+      ]),
+      activeFlag:[]
+    });
+  }
+
+  public get vendorTypes(): typeof FinancialVendorTypeCode {
+    return FinancialVendorTypeCode;
+  }
+
+  saveVendorProfile(vendorProfile: any){
+    
+    this.financialVendorFacade.showLoader();
+    this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
+      next:(response:any)=>{
+        this.financialVendorFacade.hideLoader();
+        this.onBusinessInfoCloseClicked();
+        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Vendor profile added successfully");
+        this.cdr.detectChanges();
+      },
+      error:(err:any)=>{
+        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+      }
+    });
+  }
+  searchClinicVendorClicked(clientName:any)
+  {
+    
+    this.financialVendorFacade.searchClinicVendor(clientName);
+  }
 }

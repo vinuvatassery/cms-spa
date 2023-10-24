@@ -2,7 +2,7 @@
 
 <section class="k-dialog-body">
     <p class="text-muted mb-1">  You will not be able to add claims to batches, but you will be able to unbatch, delete, or edit them.   </p>
-    <p class="text-muted mb-2">    Claims to be batched: 4   </p>
+    <p class="text-muted mb-2">    Claims to be batched: {{selectedProcessClaimsCount}}   </p>
   </section>
   
   <kendo-dialog-actions>
@@ -17,7 +17,7 @@
         >
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="Batch"  >
+        <button kendoButton [primary]="true" aria-label="Batch"  (click)="OnbatchClaimsClicked()" >
           Batch
         </button>
       </div>
