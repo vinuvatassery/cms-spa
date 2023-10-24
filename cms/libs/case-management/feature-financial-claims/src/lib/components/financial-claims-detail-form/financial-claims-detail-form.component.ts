@@ -176,6 +176,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  batchId: any;
+  paymentStatusCode: any;
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
     private cd: ChangeDetectorRef,
@@ -252,18 +254,18 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.providerDetailsDialog.close();
     }
   }
-  
+
   onVendorNameClick(){
     this.paymentRequestId = event
     this.providerDetailsDialog = this.dialogService.open({
       content: this.providerDetailsTemplate,
       animation:{
         direction: 'left',
-        type: 'slide',  
-      }, 
+        type: 'slide',
+      },
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
-    
+
   }
 
   getProviderPanel(event:any){
@@ -280,7 +282,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.contactFacade.loadDdlStates()
     this.lovFacade.getPaymentMethodLov()
   }
-  
+
   checkExceptions()
   {
     this.showExceedMaxBenefitSubscription = this.showExceedMaxBenefitException$.subscribe(data => {
@@ -788,6 +790,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     if (!this.isEdit) {
       this.saveData(claim);
     } else {
+      claim.paymentStatusCode = this.paymentStatusCode;
+      claim.batchId = this.batchId;
       this.update(claim);
     }
   }
@@ -861,6 +865,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       .getMedicalClaimByPaymentRequestId(this.paymentRequestId, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim)
       .subscribe({
         next: (val) => {
+          this.batchId = val.batchId;
+          this.paymentStatusCode = val.paymentStatusCode;
           const clients = [
             {
               clientId: val.clientId,
@@ -1253,7 +1259,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.addClaimServicesForm.controls.forEach((element, index) => {
           totalServiceCost += + element.get('amountDue')?.value;
       });
-      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index, 
+      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index,
         this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim, this.clientCaseEligibilityId);
       this.exceedMaxBenefitFlag = this.financialClaimsFacade.serviceCostFlag;
     }
@@ -1311,6 +1317,6 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       },
     })
   }
-  
+
 }
 
