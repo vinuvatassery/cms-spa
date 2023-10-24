@@ -9,7 +9,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
-import { UserDefaultRoles } from '@cms/case-management/domain';
+//import { UserDefaultRoles } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
@@ -66,7 +66,7 @@ export class UserProfileCardComponent implements OnInit {
   }
 
   loadUsersByRole() {
-    this.userManagementFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
+    this.userManagementFacade.getUsersByRole("CACW");
   }
 
   onReassignClicked(data: any) {debugger;
