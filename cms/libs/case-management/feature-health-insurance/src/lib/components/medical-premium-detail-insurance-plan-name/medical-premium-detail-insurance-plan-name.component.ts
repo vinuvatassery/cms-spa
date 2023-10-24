@@ -108,7 +108,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     this.termDateValidator = false;
     const startDate = this.newhealthInsuranceForm.controls['startDate'].value;
     const termDate = this.newhealthInsuranceForm.controls['termDate'].value;
-    if (!termDate) {
+    if (termDate) {
       if (startDate > termDate) {
         this.startDateValidator = true;
       }
@@ -116,7 +116,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
         this.termDateValidator = true;
       }
     }
-
   }
 
   private subscribeDentalInsurance() {
@@ -208,7 +207,8 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
           this.InsurancePlanClose();
           this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
           this.hideLoader();
-        
+          this.newhealthInsuranceForm.reset();
+          this.isValidateForm = false;
           this.cdr.detectChanges();
         },
         error: (err: any) => {
