@@ -4,10 +4,9 @@ import {    ChangeDetectionStrategy,     Component,    EventEmitter,    Input,
 import { FinancialClaimsFacade } from '@cms/case-management/domain';
 
   import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LoaderService } from '@cms/shared/util-core';
   import { GridDataResult } from '@progress/kendo-angular-grid';
   import {State} from '@progress/kendo-data-query';
-  import { BehaviorSubject, Subject } from 'rxjs';
+  import {Subject } from 'rxjs';
 
 
   @Component({
