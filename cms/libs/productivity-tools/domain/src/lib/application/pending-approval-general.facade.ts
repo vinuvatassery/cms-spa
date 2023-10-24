@@ -123,7 +123,7 @@ constructor(
         this.casereassignmentExpandedInfoSubject.next(response);
       },
       error: (err) => {
-        console.error('err', err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
       },
     });
   }
