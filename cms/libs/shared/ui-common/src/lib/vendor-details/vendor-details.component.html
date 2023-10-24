@@ -43,38 +43,28 @@
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
+
       <div class="flex-col"
         *ngIf="providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders 
-        || vendorTypes.DentalClinic == providerType || vendorTypes.MedicalClinic == providerType || providerType == vendorTypes.HealthcareProviders">
+        || vendorTypes.DentalClinic == providerType || vendorTypes.MedicalClinic == providerType || providerType == vendorTypes.HealthcareProviders || providerType == vendorTypes.Clinic">
         <div class="flex-row">
-          <div class="flex-col flex-col-{{providerType === vendorTypes.Clinic ? 12 : 8}} inlineloaderwrapper"
-            *ngIf="!editVendorInfo">
+
+          <div *ngIf="providerType !== vendorTypes.Clinic && !editVendorInfo"
+            class="flex-col flex-col-8 inlineloaderwrapper hidedropicon">
             <span *ngIf="clinicVendorLoader$ | async"
               class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
             <kendo-floatinglabel text="Clinic Name">
 
-              <kendo-multicolumncombobox [fillMode]="formUiStyle.dropDownFillMode" placeholder="Clinic Name"
-                [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="isClinicNameFilterable"
-                (filterChange)="searchClinic($event)" [data]="clinicVendorList$| async" formControlName="providerName"
-                [valuePrimitive]="true" valueField="vendorName" textField="vendorName">
-                <button kendoButton fillMode="clear" icon="image"></button>
-
-                <kendo-combobox-column>
-                  <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                    <span>{{ dataItem.vendorName }}</span>
-                  </ng-template>
-                </kendo-combobox-column>
-
-              </kendo-multicolumncombobox>
-
-              <!-- <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" [data]="clinicVendorList$ | async "
-                textField="vendorName" valueField="vendorName" formControlName="providerName" [filterable]="true"
-                placeholder="Clinic Name" (filterChange)="searchClinic($event)"
-                [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }">
-                <ng-template kendoAutoCompleteItemTemplate let-dataItem>
-                  <span class="pr-1" (click)="onSearchTemplateClick(dataItem)">{{dataItem.vendorName}}</span>
+              <kendo-combobox placeholder="Clinic Name" [fillMode]="formUiStyle.dropDownFillMode"
+                [popupSettings]="{ popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
+                (filterChange)="searchClinic($event)" [data]="clinicVendorList$ | async"
+                [formControlName]="'providerName'" [valuePrimitive]="true" [valueField]="'vendorName'"
+                [textField]="'vendorName'"><button kendoButton fillMode="clear" icon="image"></button>
+                <ng-template kendoComboBoxItemTemplate let-dataItem>
+                  <span>{{ dataItem.vendorName }}</span>
                 </ng-template>
-              </kendo-autocomplete> -->
+              </kendo-combobox>
+
               <kendo-formerror
                 *ngIf="medicalProviderFormControls?.providerName.errors?.required && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
                 Clinic Name is required
@@ -91,6 +81,34 @@
             </button>
 
           </div>
+
+          <div *ngIf="providerType === vendorTypes.Clinic && !editVendorInfo"
+            class="flex-col flex-col-12 inlineloaderwrapper">
+            <span *ngIf="clinicVendorLoader$ | async"
+              class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+            <kendo-floatinglabel text="Clinic Name">
+
+              <kendo-textbox aria-label="Clinic Name" [fillMode]="formUiStyle.inputFillMode"
+                formControlName="providerName">
+              </kendo-textbox>
+
+              <kendo-formerror
+                *ngIf="medicalProviderFormControls?.providerName.errors?.required && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
+                Clinic Name is required
+              </kendo-formerror>
+              <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.maxlength">
+                Clinic Name cannot be more than 500 characters
+              </kendo-formerror>
+            </kendo-floatinglabel>
+
+            <button *ngIf="vendorTypes.MedicalProviders == providerType || vendorTypes.DentalProviders == providerType"
+              kendoButton class="card-link-button ml-1 no-ul fontsize_twel mt-3" [disabled]="isViewContentEditable"
+              aria-label="Add New" (click)="addNewClinicOpen()">
+              {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}
+            </button>
+
+          </div>
+
           <div class="flex-col" *ngIf="editVendorInfo 
           && ( medicalProviderForm.value.vendorTypeCode == 'MEDICAL_CLINIC' 
           || medicalProviderForm.value.vendorTypeCode == 'DENTAL_CLINIC')">
@@ -210,7 +228,8 @@
             (keyup)="onMailCodeKeyUp()" [fillMode]="formUiStyle.inputFillMode" formControlName="mailCode"
             [maxlength]="3">
           </kendo-textbox>
-          <kendo-formerror *ngIf="!medicalProviderForm.controls['mailCode'].valid && isValidateForm && !mailCodeLengthError">
+          <kendo-formerror
+            *ngIf="!medicalProviderForm.controls['mailCode'].valid && isValidateForm && !mailCodeLengthError">
             Mail code is required
           </kendo-formerror>
           <kendo-formerror *ngIf="mailCodeLengthError">Mail code must contain 3 characters.</kendo-formerror>
