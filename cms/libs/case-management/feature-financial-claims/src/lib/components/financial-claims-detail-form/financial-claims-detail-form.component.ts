@@ -176,6 +176,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  duplicatePaymentFlagPaymentRequestId : any;
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
     private cd: ChangeDetectorRef,
@@ -223,6 +224,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.title = 'Edit';
       this.showServicesListForm = true;
       this.addOrEdit = 'Update';
+      this.duplicatePaymentFlagPaymentRequestId = this.paymentRequestId;
       this.getMedicalClaimByPaymentRequestId();
       this.isRecentClaimShow = true;
     }
@@ -1246,7 +1248,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     const dueAmount = serviceFormData.controls['amountDue'].value;
     const vendorId = this.claimForm.value?.medicalProvider?.vendorId
     if (startDate && endDate && dueAmount && vendorId) {
-      this.financialClaimsFacade.checkDuplicatePaymentException(startDate,endDate, vendorId,dueAmount, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.checkDuplicatePaymentException(startDate,endDate, vendorId,dueAmount, this.duplicatePaymentFlagPaymentRequestId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
   loadServiceCostMethod(index:number){
