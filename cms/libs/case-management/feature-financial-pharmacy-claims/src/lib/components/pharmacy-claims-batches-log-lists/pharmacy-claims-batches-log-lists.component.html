@@ -1,4 +1,4 @@
-   <div class=" pt-0"> 
+   <div class=" pt-0">
           <section class="app-l-mainTittle">
               <div class="d-flex">
                   <button aria-label="Go Back" title="Go Back" kendoButton look="flat" class="mr-1" (click)="backToBatch($event)"> <span
@@ -8,12 +8,12 @@
               </div>
           </section>
           <section class="app-l-client-wrapper ">
-              <section class="app-l-wrapper"> 
+              <section class="app-l-wrapper">
                   <p> Click “Bulk” to execute actions for one or more claims. Click on a row to view that claim.</p>
                   <section class="table-filter-section mat-form-no-b-space">
                       <span class="filter-section_items filter--select">
                         <kendo-floatinglabel>
-                          <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"  
+                          <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"
                           textField="columnDesc" valueField="columnCode"  >
                           </kendo-dropdownlist>
                         </kendo-floatinglabel>
@@ -23,7 +23,7 @@
                         <kendo-floatinglabel text="Search">
                           <kendo-textbox   aria-label="Search case"
                             rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                    
+
                         </kendo-floatinglabel>
                       </span>
                       <span class="right-overlay-export">
@@ -42,8 +42,8 @@
       <span class="sort-items">Default Columns</span>
       <span class="sort-items" >Columns Re-ordered</span>
     </div>
-    
-   
+
+
     <div class="app-c-table">
       <kendo-grid [resizable]="true" [loading]="isBatchLogGridLoaderShow" [pageSize]="state.take"
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
@@ -52,11 +52,11 @@
         <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
           [width]="40"></kendo-grid-checkbox-column>
         <kendo-grid-column field="item" title="Item #" [width]="100">
-         
+
         </kendo-grid-column>
-        
-    
-        <kendo-grid-column field="PharmacyName" title="Pharmacy Name" [width]="160"> 
+
+
+        <kendo-grid-column field="PharmacyName" title="Pharmacy Name" [width]="160">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button [attr.aria-label]="dataItem.PharmacyName" kendoButton look="flat" class="card-link-button" (click)="onViewProviderDetailClicked(providerDetailsTemplate)">
               {{ dataItem.PharmacyName }}
@@ -64,14 +64,14 @@
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="paymentMethod" title="Payment Method" [width]="160"> </kendo-grid-column>
-                <kendo-grid-column field="clientName" title="Client Name" [width]="160"> 
+                <kendo-grid-column field="clientName" title="Client Name" [width]="160">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog)">
               {{ dataItem.clientName }}
             </button>
           </ng-template>
         </kendo-grid-column>
-  
+
         <kendo-grid-column field="nameOnPrimaryInsuranceCard" title="Name on Primary Insurance Card" [width]="200"> </kendo-grid-column>
         <kendo-grid-column field="memberID" title="Member ID" [width]="140"> </kendo-grid-column>
         <kendo-grid-column field="RXNumber" title="RX Number" [width]="140">   </kendo-grid-column>
@@ -93,7 +93,7 @@
         <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="160">   </kendo-grid-column>
         <kendo-grid-column field="warrantNumber" title="Warrant Number" [width]="160">   </kendo-grid-column>
         <kendo-grid-column field="entryDate" title="Entry Date" [width]="140">   </kendo-grid-column>
-         
+
         <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
@@ -107,7 +107,7 @@
             </kendo-popover>
           </ng-template>
         </kendo-grid-column>
-    
+
         <kendo-grid-column field="Option" title=" "  [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton [data]="batchLogGridActions" icon="more-vertical"
@@ -123,10 +123,10 @@
                     <label> {{ buttondataItem.text }} </label>
                   </button>
                 </ng-container>
-  
-  
-  
-  
+
+
+
+
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
@@ -140,8 +140,9 @@
                 [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
                 [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
               <kendo-pager-info> </kendo-pager-info>
+ 
               <kendo-grid-messages [pagerItems]="'rows'"  [pagerPage]="'Page'"> </kendo-grid-messages>
-    
+ 
             </div>
             <div class="d-flex">
               <kendo-pager-input></kendo-pager-input>
@@ -159,22 +160,22 @@
           </div>
           <p>There is no data to display.</p>
         </ng-template>
-    
+
       </kendo-grid>
     </div>
-              </section> 
+              </section>
           </section>
       </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
     <span class="">0 claims(s) to be deleted</span>
-    <button (click)="goToBatchItems($event)">Batch Log items</button> 
-    <button kendoButton [primary]="true" look="outline" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button> 
+    <button (click)="goToBatchItems($event)">Batch Log items</button>
+    <button kendoButton [primary]="true" look="outline" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
     <button kendoButton [primary]="true" aria-label="Preview Requests" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
     <button kendoButton [primary]="true" aria-label="Review" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
     <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action"
       buttonClass="k-split-button" [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isPrintAuthorizationClicked"
       [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
-      <div class="btn-inner-block" > 
+      <div class="btn-inner-block" >
         Bulk
       </div>
       <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
@@ -189,7 +190,7 @@
 
   <ng-template #previewSubmitPaymentDialogTemplate>
     <kendo-dialog-titlebar (close)="onPreviewSubmitPaymentCloseClicked($event)"> Preview and Submit Payment Requests </kendo-dialog-titlebar>
- 
+
   <cms-pharmacy-claims-preview-payment-request></cms-pharmacy-claims-preview-payment-request>
   </ng-template>
 
