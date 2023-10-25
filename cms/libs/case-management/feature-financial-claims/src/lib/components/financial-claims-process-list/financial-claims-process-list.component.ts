@@ -6,6 +6,8 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
+  OnInit,
   Output,
   TemplateRef,
   ViewChild,
@@ -17,19 +19,21 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
+  FilterService,
   GridDataResult,
   SelectableMode,
   SelectableSettings,
 } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
-import { Subject, first } from 'rxjs';
+import { Subject, Subscription, first } from 'rxjs';
 import { Router } from '@angular/router';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-claims-process-list',
   templateUrl: './financial-claims-process-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsProcessListComponent implements OnChanges {
+export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,OnDestroy {
   @ViewChild('batchClaimsConfirmationDialog', { read: TemplateRef })
   batchClaimsConfirmationDialog!: TemplateRef<any>;
   @ViewChild('deleteClaimsConfirmationDialog', { read: TemplateRef })
@@ -46,6 +50,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isProcessGridExpand = true;
   isFinancialClaimsProcessGridLoaderShow = false;
+  paymentStatusLovSubscription!:Subscription;
   @Input() claimsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -60,6 +65,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   @Output() loadFinancialClaimsInvoiceListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
 
+  paymentStatusCode =null
   public state!: State;
   sortColumn = 'Invoice ID';
   sortDir = 'Ascending';
@@ -77,6 +83,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  paymentStatuses$ = this.lovFacade.paymentStatus$
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
 
   @ViewChild('addEditClaimsDialog')
@@ -84,7 +91,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
 
   isEdit!: boolean;
   paymentRequestId!: string;
-
+  paymentStatusType:any;
   vendorId: any;
   clientId: any;
   clientName: any;
@@ -216,7 +223,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
     private readonly route: Router,
     private dialogService: DialogService,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly lovFacade : LovFacade
   ) {
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -224,7 +232,22 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
       drag: this.drag,
     };
   }
+  ngOnInit(): void {
+    this.lovFacade.getPaymentStatusLov()
+    this.paymentStatusSubscription();
+  }
 
+  paymentStatusSubscription()
+  {
+    this.paymentStatusLovSubscription = this.paymentStatuses$.subscribe(data=>{
+      this.paymentStatusType = data;
+      this.cdr.detectChanges()
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.paymentStatusLovSubscription.unsubscribe();
+  }
   onSingleClaimDelete(selection: any) {
     this.selectedKeysChange(selection);
   }
@@ -235,7 +258,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
+ 
     this.loadFinancialClaimsProcessListGrid();
   }
 
@@ -538,5 +561,19 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
 
   onProviderNameClick(event: any) {
     this.onProviderNameClickEvent.emit(event);
+  }
+
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    filterService.filter({
+      filters: [{
+        field: field,
+        operator: "eq",
+        value:value.lovCode
+    }],
+      logic: "or"
+  });
+    if(field == "paymentStatusCode"){
+      this.paymentStatusCode = value;
+    }
   }
 }
