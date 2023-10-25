@@ -1,5 +1,5 @@
-import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators, RequiredValidator } from '@angular/forms';
+import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
@@ -21,11 +21,10 @@ export class VendorDetailsComponent implements OnInit {
   @Input() editVendorInfo: boolean = false;
   @Input() vendorDetails!: any;
   @Input() profileInfoTitle!: string;
-
+  @Input() hasCreateUpdatePermission:boolean=false;
   @Input() ddlStates$!: any;
   @Input() clinicVendorList$!: any;
   @Input() clinicVendorLoader$!: any;
-  @Input() hasCreateUpdatePermission: boolean = false;
   @Input() selectedClinicType: string = FinancialVendorTypeCode.MedicalClinic;
 
   @Output() saveProviderEventClicked = new EventEmitter<any>();
@@ -173,7 +172,7 @@ export class VendorDetailsComponent implements OnInit {
 
   validateForm() {
     this.medicalProviderForm.markAllAsTouched();
-    if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders) {
+    if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders || this.providerType == this.vendorTypes.HealthcareProviders) {
       if (!this.clinicNameNotApplicable) {
         this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
@@ -224,23 +223,17 @@ export class VendorDetailsComponent implements OnInit {
           Validators.required, Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')
         ]);
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();
+      this.medicalProviderForm.controls['nameOnCheck']
+      .setValidators([
+        Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
+      ]);
+    this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
 
-      if (this.providerType == this.vendorTypes.Manufacturers) {
-        this.medicalProviderForm.controls['mailCode'].setValidators([Validators.required, Validators.maxLength(3), Validators.minLength(3)]);
-        this.medicalProviderForm.controls['nameOnCheck'].setValidators([
-          Validators.nullValidator,
-        ]);
-        this.medicalProviderForm.controls[
-          'nameOnCheck'
-        ].updateValueAndValidity();
-
-        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([
-          Validators.nullValidator,
-        ]);
-        this.medicalProviderForm.controls[
-          'nameOnEnvolop'
-        ].updateValueAndValidity();
-      }
+    this.medicalProviderForm.controls['nameOnEnvolop']
+    .setValidators([
+      Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
+    ]);
+      this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
 
     }
 
@@ -397,13 +390,7 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   isClinicNameFilterable = true;
-  @ViewChild(MultiColumnComboBoxComponent, { static: false }) comboBox: MultiColumnComboBoxComponent | undefined = undefined;
-  onComboBoxOpen(event: any) {
-    if (this.vendorTypes.Clinic == this.providerType) {
-      event.preventDefault();
-      this.isClinicNameFilterable = false;
-    }
-  }
+
   searchClinic(clinicName: any) {
     if (clinicName != '') {
       this.selectedClinicVendorId = null;
@@ -502,7 +489,7 @@ export class VendorDetailsComponent implements OnInit {
       PreferredFlag: (formValues.isPreferedPharmacy) ? StatusFlag.Yes : StatusFlag.No,
       PhysicalAddressFlag: (formValues.physicalAddressFlag) ? StatusFlag.Yes : StatusFlag.No,
       emailAddressTypeCode: AddressType.Mailing,
-      activeFlag: this.hasCreateUpdatePermission == true ? StatusFlag.Yes : StatusFlag.No,
+      activeFlag: (this.hasCreateUpdatePermission) ? StatusFlag.Yes : StatusFlag.No,
     }
     if (this.providerType === FinancialVendorTypeCode.Clinic) {
       if (vendorProfileData.clinicType === FinancialVendorTypeCode.MedicalClinic) {
@@ -511,7 +498,9 @@ export class VendorDetailsComponent implements OnInit {
         vendorProfileData.vendorTypeCode = FinancialVendorTypeCode.DentalClinic;
       }
     }
-
+      if (this.vendorTypes.HealthcareProviders == this.providerType) {
+          vendorProfileData.vendorTypeCode = this.vendorTypes.MedicalProviders;
+      } 
     return vendorProfileData;
   }
   onChange() {

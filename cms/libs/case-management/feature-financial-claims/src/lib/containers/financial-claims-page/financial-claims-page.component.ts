@@ -4,16 +4,16 @@ import {
   Component,
   OnInit,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
-import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
-import { State } from '@progress/kendo-data-query';
-import { ContactFacade, FinancialClaimsFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import {  filter } from 'rxjs';
+import { ContactFacade, FinancialClaimsFacade, FinancialVendorFacade } from '@cms/case-management/domain';
+import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { State } from '@progress/kendo-data-query';
+import { filter } from 'rxjs';
 @Component({
   selector: 'cms-financial-claims-page',
   templateUrl: './financial-claims-page.component.html',
@@ -49,6 +49,8 @@ export class FinancialClaimsPageComponent implements OnInit {
 
   financialClaimsAllPaymentsGridLists$ =
     this.financialClaimsFacade.financialClaimsAllPaymentsData$;
+  financialClaimsAllPaymentsDataLoader$ =
+    this.financialClaimsFacade.financialClaimsAllPaymentsDataLoader$;
 
     financialClaimsInvoice$ = this.financialClaimsFacade.financialClaimsInvoice$;
 
@@ -60,6 +62,7 @@ export class FinancialClaimsPageComponent implements OnInit {
     @ViewChild('providerDetailsTemplate', { read: TemplateRef })
     providerDetailsTemplate!: TemplateRef<any>;
     paymentRequestId: any;
+    tab = 1;
 
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
@@ -75,8 +78,10 @@ export class FinancialClaimsPageComponent implements OnInit {
 
   ) {}
 
-  ngOnInit(): void {
-    this.activatedRoute.params.subscribe(data => this.claimsType = data['type'])
+  ngOnInit(): void {   
+    this.activatedRoute.params.subscribe(data => this.claimsType = data['type']);
+    this.activatedRoute.queryParams.subscribe(data => this.tab = +(data['tab'] ?? 1));
+    this.tab = this.financialClaimsFacade.selectedClaimsTab
     this.addNavigationSubscription();
   }
 
@@ -87,6 +92,7 @@ export class FinancialClaimsPageComponent implements OnInit {
       .subscribe({
         next: () => {
           this.activatedRoute.params.subscribe(data => this.claimsType = data['type'])
+          this.tab = 1
           this.cdr.detectChanges();
         },
 
@@ -97,6 +103,10 @@ export class FinancialClaimsPageComponent implements OnInit {
   }
 
   loadFinancialClaimsProcessListGrid(data: any) {
+    this.financialClaimsFacade.selectedClaimsTab = 1
+    this.tab = this.financialClaimsFacade.selectedClaimsTab
+    this.financialClaimsAllPaymentsGridLists$ =
+    this.financialClaimsFacade.financialClaimsAllPaymentsData$
     this.dataExportParameters = data
     this.financialClaimsFacade.loadFinancialClaimsProcessListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType,data?.filter,this.claimsType);
   }
@@ -107,12 +117,15 @@ export class FinancialClaimsPageComponent implements OnInit {
   }
 
   loadFinancialClaimsBatchListGrid(data: any) {
-    
+    this.financialClaimsFacade.selectedClaimsTab = 2
+    this.tab = this.financialClaimsFacade.selectedClaimsTab
     this.dataExportParameters = data
     this.financialClaimsFacade.loadFinancialClaimsBatchListGrid( data?.skipCount,   data?.pagesize, data?.sortColumn, data?.sortType,data?.filter,this.claimsType);
   }
 
   loadFinancialClaimsAllPaymentsListGrid(data: any) {
+    this.financialClaimsFacade.selectedClaimsTab = 3
+    this.tab = this.financialClaimsFacade.selectedClaimsTab
     this.dataExportParameters = data
     this.financialClaimsFacade.loadFinancialClaimsAllPaymentsListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.filter, this.claimsType);
   }
@@ -138,7 +151,7 @@ export class FinancialClaimsPageComponent implements OnInit {
   }
 
   exportClaimsBatchGridData(){
-    
+
     const data = this.dataExportParameters
     if(data){
     const  filter = JSON.stringify(data?.filter);
@@ -158,7 +171,7 @@ export class FinancialClaimsPageComponent implements OnInit {
   }
 
   exportClaimsPaymentsGridData(){
-    
+
     const data = this.dataExportParameters
     if(data){
     const  filter = JSON.stringify(data?.filter);
@@ -183,11 +196,11 @@ export class FinancialClaimsPageComponent implements OnInit {
       content: this.providerDetailsTemplate,
       animation:{
         direction: 'left',
-        type: 'slide',  
-      }, 
+        type: 'slide',
+      },
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
-    
+
   }
 
   onCloseViewProviderDetailClicked(result: any){
@@ -195,8 +208,8 @@ export class FinancialClaimsPageComponent implements OnInit {
       this.providerDetailsDialog.close();
     }
   }
-  
-  
+
+
   getProviderPanel(event:any){
     this.financialVendorFacade.getProviderPanel(event)
   }
@@ -210,4 +223,4 @@ export class FinancialClaimsPageComponent implements OnInit {
     this.contactFacade.loadDdlStates()
     this.lovFacade.getPaymentMethodLov()
   }
-} 
+}
