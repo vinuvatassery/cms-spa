@@ -81,6 +81,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="text-right" *ngIf="isRecentClaimShow" >
+                                <a  kendoButton look="flat" class="card-link-button" href="#isRecentClaimShow" >
+                                    View Recent Claims
+                                 </a>
+                             </div>
                         </div>
                     </div>
                 </div>
@@ -448,7 +453,7 @@
 
             </div>
 
-            <div *ngIf="isRecentClaimShow">
+            <div *ngIf="isRecentClaimShow" id="isRecentClaimShow">
                 <h5 class="text-upper">Recent Claims for this {{clientName}} and {{vendorName}}</h5>
 
                 <div class="add_new_fixed_bottom_grid_section">
