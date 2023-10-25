@@ -81,12 +81,12 @@ aria-label="add"> PCA Setup</button>
             <kendo-grid-column field="isPcaAssigned" title="Assigned" [width]="90"> 
                   <ng-template kendoGridCellTemplate let-dataItem> 
                         <div class="text-center">
-                              <span class="material-icons green-text-color" *ngIf="dataItem.isPcaAssigned">
-                                    check_circle_outline 
+                              <span class="material-icons red-text-color" title="Assigned" *ngIf="dataItem.isPcaAssigned">
+                                    price_check 
                               </span>
 
-                              <span class="material-icons red-text-color" *ngIf="!dataItem.isPcaAssigned">
-                                    local_atm 
+                              <span class="material-icons green-text-color" title="Un-assigned" *ngIf="!dataItem.isPcaAssigned">
+                                    attach_money 
                               </span> 
                               
                         </div>
@@ -222,7 +222,7 @@ aria-label="add"> PCA Setup</button>
                                     aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
                                     (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
                               <kendo-pager-info> </kendo-pager-info>
-                              <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'">
+                              <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'">
                               </kendo-grid-messages>
 
                         </div>
