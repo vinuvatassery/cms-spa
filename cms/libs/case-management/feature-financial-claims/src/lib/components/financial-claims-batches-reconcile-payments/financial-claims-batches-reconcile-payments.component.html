@@ -259,7 +259,7 @@
                                     placeholder="Warrant Number"  [maxlength]="12"
                                     [fillMode]="formUiStyle.inputFillMode"
                                     [ngClass]="ngDirtyInValid(dataItem,'checkNbr',rowIndex)"  id ="checkNbr{{rowIndex}}"
-                                    [(ngModel)]="dataItem.checkNbr" (valueChange)="warrantNumberChange(dataItem)"    >
+                                    [(ngModel)]="dataItem.checkNbr" (afterValueChanged)="warrantNumberChange(dataItem)"    >
                                   </kendo-textbox>
                                   <kendo-formerror *ngIf="dataItem.warrantNumberInValid">{{dataItem.warrantNumberInValidMsg}}</kendo-formerror>
                               </ng-template>

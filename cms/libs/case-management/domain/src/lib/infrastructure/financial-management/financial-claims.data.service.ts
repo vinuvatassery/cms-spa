@@ -503,4 +503,7 @@ export class FinancialClaimsDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/${path}/service/${tpaInvoiceId}`
     );
   }
+  CheckWarrantNumber(batchId:any,warrantNumber:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/payments/batches/${batchId}/warrant-number/${warrantNumber}`);
+  }
 }

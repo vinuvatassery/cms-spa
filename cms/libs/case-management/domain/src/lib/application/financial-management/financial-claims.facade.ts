@@ -187,6 +187,9 @@ export class FinancialClaimsFacade {
 
   private unbatchClaimsSubject =  new Subject<any>();
   unbatchClaims$ = this.unbatchClaimsSubject.asObservable();
+
+  private warrantNumberChangeSubject = new Subject<any>();
+  warrantNumberChange$ = this.warrantNumberChangeSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -759,5 +762,15 @@ deleteClaimService(tpaInvoiceId: any, typeCode: string) {
         return of(false);
       })
     );
-}
+  }
+  CheckWarrantNumber(batchId:any,warrantNumber:any){
+    this.financialClaimsDataService.CheckWarrantNumber(batchId,warrantNumber).subscribe({
+      next: (dataResponse:any) => {       
+        this.warrantNumberChangeSubject.next(dataResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+      },
+    });
+  }
 }

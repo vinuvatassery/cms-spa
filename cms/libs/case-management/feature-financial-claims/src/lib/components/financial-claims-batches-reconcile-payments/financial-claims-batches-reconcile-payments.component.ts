@@ -50,11 +50,13 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   @Input() reconcilePaymentBreakoutList$ :any;
   @Input() batchId: any;
   @Input() exportButtonShow$ : any
+  @Input() warrantNumberChange$: any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
   @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();;
   @Output() onVendorClickedEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
+  @Output() warrantNumberChangeEvent = new EventEmitter<any>();
   paymentRequestId!:any;
   entityId: any;
   public isBreakoutPanelShow:boolean=true;
@@ -96,6 +98,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   pageValidationMessageFlag:boolean=false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   providerTitle:any = 'Medical Provider';
+  checkingPaymentRequest!:any;
   public reconcileAssignValueBatchForm: FormGroup = new FormGroup({
     datePaymentReconciled: new FormControl('', []),
     datePaymentSend: new FormControl('', []),
@@ -186,6 +189,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         paymentToReconcileCount : 0
       }
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
+      this.warrantNumberChangeSubscription();
   }
 
   ngOnDestroy(): void {
@@ -669,13 +673,19 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       dataItem.paymentReconciledDate = this.currentDate;
       dataItem.datePaymentRecInValid = false;
       dataItem.datePaymentRecInValidMsg = null;
-
     }
     if (dataItem.checkNbr !== '') {
       dataItem.isPrintAdviceLetter = true
     }
     this.assignRowDataToMainList(dataItem);
-    let isCheckNumberAlreadyExist = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr === dataItem.checkNbr && x.vendorId !== dataItem.vendorId);
+
+    if(dataItem.checkNbr !== null || dataItem.checkNbr !== undefined){
+      this.checkingPaymentRequest = dataItem.paymentRequestId;
+      this.warrantNumberChangeEvent.emit(dataItem);
+    }
+    
+    let isCheckNumberAlreadyExist = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr === dataItem.checkNbr 
+    && x.vendorId !== dataItem.vendorId && x.batchId !== dataItem.batchId);
     if (isCheckNumberAlreadyExist.length > 0) {
       dataItem.warrantNumberInValid = true;
       dataItem.warrantNumberInValidMsg = 'Duplicate Warrant Number entered.'
@@ -689,7 +699,18 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       dataItem.warrantNumberInValid = false;
     }
   }
-
+ warrantNumberChangeSubscription(){
+  this.warrantNumberChange$.subscribe((response:any) =>{
+    if(response.length>0){
+      let ifExist = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === this.checkingPaymentRequest);
+      if (ifExist !== undefined) {
+        ifExist.warrantNumberInValid = true;
+        ifExist.warrantNumberInValidMsg = 'Duplicate Warrant Number entered.'
+        this.cd.detectChanges();
+      }
+    }
+  })
+ }
 
   validateReconcileGridRecord() {
     this.reconcilePaymentGridUpdatedResult.forEach((currentPage: any, index: number) => {
