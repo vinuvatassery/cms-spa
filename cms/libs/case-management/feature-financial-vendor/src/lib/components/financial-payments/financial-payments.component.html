@@ -168,7 +168,7 @@
             <kendo-dropdownlist 
             [data]="paymentStatusLov$ | async" 
             textField="lovDesc"
-            valueField="lovDesc" 
+            valueField="lovCode" 
             [value]="paymentStatusFilter" 
             [valuePrimitive]="true"
             (valueChange)="dropdownFilterChange('paymentStatusCode',$event, filterService)">
