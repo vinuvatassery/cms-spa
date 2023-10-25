@@ -177,9 +177,9 @@ export class FinancialVendorFacade {
     });
   }
 
-  getProviderPanel(vendorId:string){
+  getProviderPanel(paymentRequestId:string){
     this.showLoader();
-    this.financialVendorDataService.getProviderPanel(vendorId).subscribe({
+    this.financialVendorDataService.getProviderPanel(paymentRequestId).subscribe({
       next: (vendorsResponse: any) => {
         if (vendorsResponse) {
           this.providePanelSubject.next(vendorsResponse);   
@@ -193,6 +193,22 @@ export class FinancialVendorFacade {
     });
   }
 
+  getProviderPanelByVendorAddressId(vendorAddressId:string){
+    this.showLoader();
+    this.financialVendorDataService.getProviderPanelByVendorAddressId(vendorAddressId).subscribe({
+      next: (vendorsResponse: any) => {
+        if (vendorsResponse) {
+          this.providePanelSubject.next(vendorsResponse);   
+          this.hideLoader();      
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  } 
+  
   updateProviderPanel(ProviderPanelDto:any){
     this.showLoader();
     return this.financialVendorDataService.updateProviderPanel(ProviderPanelDto).subscribe({

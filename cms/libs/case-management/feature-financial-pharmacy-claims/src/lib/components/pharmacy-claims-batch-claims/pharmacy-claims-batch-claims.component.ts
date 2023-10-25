@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Output , EventEmitter, Component } from '@angular/core'; 
+import { ChangeDetectionStrategy, Output , EventEmitter, Component, Input } from '@angular/core'; 
 
 @Component({
   selector: 'cms-pharmacy-claims-batch-claims',
@@ -8,8 +8,14 @@ import { ChangeDetectionStrategy, Output , EventEmitter, Component } from '@angu
 export class PharmacyClaimsBatchClaimsComponent {
   
   @Output() isModalBatchClaimsCloseClicked = new EventEmitter();
-
+  @Output() OnbatchClaimsClickedEvent = new EventEmitter();
+  @Input() selectedProcessClaimsCount:any 
+  
   closeBatchClaimsClicked(){
     this.isModalBatchClaimsCloseClicked.emit(true);  
+  }
+
+  OnbatchClaimsClicked(){
+    this.OnbatchClaimsClickedEvent.emit();
   }
 }
