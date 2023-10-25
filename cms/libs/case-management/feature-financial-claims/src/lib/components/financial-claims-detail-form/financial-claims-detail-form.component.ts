@@ -1156,12 +1156,18 @@ duplicatePaymentObject:any = {};
   }
   checkProviderNotEligibleException($event:any)
   {
+    let checkException = true;
     this.addExceptionForm.controls.forEach((element, index) => {
-      if(!this.checkPriority(this.providerNotEligiblePriorityArray,index,null))
+      checkException = this.checkPriority(this.providerNotEligiblePriorityArray,index,null);
+      if(!checkException)
       {
         return;
       }
     });
+    if(!checkException)
+    {
+      return;
+    }
     if(!$event?.tin && !this.isSpotsPayment)
     {
       this.addExceptionForm.reset();
