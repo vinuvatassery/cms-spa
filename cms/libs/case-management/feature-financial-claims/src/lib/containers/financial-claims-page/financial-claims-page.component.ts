@@ -82,7 +82,7 @@ export class FinancialClaimsPageComponent implements OnInit {
     this.activatedRoute.params.subscribe(data => this.claimsType = data['type']);
     this.activatedRoute.queryParams.subscribe(data => this.tab = +(data['tab'] ?? 1));
     this.tab = this.financialClaimsFacade.selectedClaimsTab
-    this.addNavigationSubscription();
+  this.addNavigationSubscription();
   }
 
   private addNavigationSubscription() {
