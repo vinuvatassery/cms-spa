@@ -518,7 +518,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges {
   openAddEditClaimDialoge(){
     this.addEditClaimsFormDialog = this.dialogService.open({
       content: this.addEditClaimsDialog,
-      cssClass: 'app-c-modal app-c-modal-full add_claims_modal',
+      cssClass: 'app-c-modal app-c-modal-96full add_claims_modal',
     });
   }
 
