@@ -14,12 +14,12 @@
     <span class="fontsize_twel">Don’t see the Carrier you’re looking for?</span>
     <button kendoButton class="card-link-button ml-1 no-ul fontsize_twel" [disabled]="isViewContentEditable"
       aria-label="Add New" (click)="addNewInsuranceProviderOpen()">
-      ADD NEW
+      {{hasInsuranceCarrierCreateUpdatePermission == true ? 'ADD NEW' : 'REQUEST NEW'}} 
     </button>
   </div>
 </div>
 <kendo-dialog kendoRippleContainer *ngIf="isaddNewInsuranceProviderOpen" (close)="addNewInsuranceProviderClose()"
-  class="app-c-modal app-c-modal-lg app-c-modal-np" title="Add New Insurance Provider" kendoTooltip>
+  class="app-c-modal app-c-modal-lg app-c-modal-np" title="{{ hasInsuranceCarrierCreateUpdatePermission == true ? 'Add New Insurance Provider' : 'Request New Insurance Provider'}} " kendoTooltip>
   <cms-insruance-carrier-details [insuranceProviderForm]="InsuranceCarrierForm" [hasCreateUpdatePermission]="hasInsuranceCarrierCreateUpdatePermission"
     [providerType]="vendorTypes.InsuranceProviders" (saveProviderEventClicked)="saveVendorProfile($event)"
     (closeModalEventClicked)="addNewInsuranceProviderClose()">

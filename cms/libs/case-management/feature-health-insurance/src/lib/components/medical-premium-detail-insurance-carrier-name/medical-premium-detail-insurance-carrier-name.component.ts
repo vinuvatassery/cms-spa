@@ -54,7 +54,7 @@ selectedMedicalProvider: any;
     else{  
        this.loadInsuranceCarrierName(InsuranceStatusType.healthInsurance);   
     }
-    this.hasInsuranceCarrierCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Clinic_Create_Update']);
+    this.hasInsuranceCarrierCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Insurance_Vendor_Create_Update']);
   }
 
   private loadInsuranceCarrierName(type:string) {
