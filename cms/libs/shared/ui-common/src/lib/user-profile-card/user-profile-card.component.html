@@ -1,5 +1,5 @@
 
-
+<div class="profile-popover-wrapper">
 <!-- Loader content -->
 
   <div *ngIf="(userById$ | async) === null">
@@ -39,7 +39,7 @@
     
   </div>
 </div>
-
+</div>
 <!-- data content -->
 <div>
 <div class="app-popover-header use-profile-card-wrapper">
@@ -56,12 +56,9 @@
       </div>  
       <div *ngIf="userById$ | async as userById;">   
         <h5>{{userById?.fullName}}  <span class="text-muted" *ngIf="userById?.pOrNbr">({{userById?.pOrNbr}})</span></h5>
-        <p></p>
-        {{userById?.domainCode}} <span class="text-muted"></span>
-        <p></p>
-      {{userById?.assistorGroupCode}} <span class="text-muted"></span>
-        <p></p>
-        {{userById?.jobTitle}} <span class="text-muted"></span>
+        <p> <span class="text-muted">{{userById?.domainCode}}</span></p> 
+        <p>  <span class="text-muted"> {{userById?.assistorGroupCode}}</span></p> 
+        <p>  <span class="text-muted"> {{userById?.jobTitle}}</span></p> 
       </div>
     </div>
     <div class="app-popover-body" *ngIf="userById$ | async as userById;">    
@@ -87,12 +84,14 @@
       <div class="app-card-details align-items-fstart">
         <span class="material-icons" aria-label="address" aria-hidden="true">location_pin</span >
         <div> 
-          <p>  {{userById?.address1}} </p>
-
-          <p> {{userById?.address2}} </p>
-          <p> {{userById?.city}}  {{userById?.state}}  {{userById?.zip}} </p>
-        </div> 
-
+          <p> <span *ngIf="userById?.address1"> {{userById?.address1}}, </span> 
+              <span *ngIf="userById?.address2"> {{userById?.address2}}, </span> 
+              </p>
+              <p>
+              <span *ngIf="userById?.city">  {{userById?.city}},</span> 
+              <span *ngIf="userById?.state">  {{userById?.state}} </span> 
+              <span *ngIf="userById?.zip"> - {{userById?.zip}}</span>.</p>
+        </div>  
       </div>    
     <div class="app-card-bottom-buttons" *ngIf="sendEmail"> 
         <a href="mailto:userById?.emailAddress">      <button  kendoButton [primary]="true" look="flat" aria-label="Send Email"> Send Email    </button></a>
