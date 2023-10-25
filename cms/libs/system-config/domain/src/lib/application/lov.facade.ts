@@ -709,7 +709,7 @@ getDocumentSubTypeLovs(parentCode : string) {
   }
 
   getPaymentStatusLov(): void {
-    this.lovDataService.getLovsbyType(LovType.PaymentStatusCode).subscribe({
+    this.lovDataService.getLovsbyType(LovType.ClaimStatus).subscribe({
       next: (lovResponse) => {
         this.paymentStatusSubject.next(lovResponse);
       },
