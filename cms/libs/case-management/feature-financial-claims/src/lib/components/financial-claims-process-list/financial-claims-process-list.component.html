@@ -291,7 +291,7 @@
             [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
             [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
-          <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
+          <kendo-grid-messages [pagerItems]="'rows'"  [pagerPage]="'Page'"> </kendo-grid-messages>
 
         </div>
         <div class="d-flex">
@@ -362,7 +362,7 @@
 
 <ng-template #clientRecentClaimsDialog>
   <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"> <h4 class="text-upper">  Recent Claims for {{clientName}} </h4> </kendo-dialog-titlebar>
-  <section class="k-dialog-body">
+  <section class="k-dialog-body-padding">
     <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
       (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>
   </section>
