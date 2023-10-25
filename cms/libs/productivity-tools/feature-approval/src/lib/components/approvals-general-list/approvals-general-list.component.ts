@@ -41,7 +41,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() sort: any;
   @Input() gridSkipCount:any;
   @Input() approvalsGeneralLists$: any;
-  @Input() ClientsSubjects$ : any;
+  @Input() clientsSubjects$ : any;
   @Input() approvalsExceedMaxBenefitCard$:any;
   @Input() invoiceData$:any;
   @Input() isInvoiceLoading$:any;

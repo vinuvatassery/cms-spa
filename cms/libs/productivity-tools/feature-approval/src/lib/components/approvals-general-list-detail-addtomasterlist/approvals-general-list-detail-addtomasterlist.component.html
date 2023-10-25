@@ -160,13 +160,13 @@
 
     </div>
     <div class="flex-col flex-col-6">
-      <div *ngIf="ifApproveOrDeny === 'A'">
+      <div *ngIf="ifApproveOrDeny === approveOrDenyConst.Approve">
         <kendo-floatinglabel text="Send Back Notes">
           <kendo-textbox aria-label="Send Back Notes" [fillMode]="formUiStyle.inputFillMode">
           </kendo-textbox>
         </kendo-floatinglabel>
       </div>
-      <div *ngIf="ifApproveOrDeny === 'D'">
+      <div *ngIf="ifApproveOrDeny === approveOrDenyConst.Deny">
         <kendo-floatinglabel text="New Case Worker">
           <kendo-dropdownlist aria-label="New Case Worker" [fillMode]="formUiStyle.dropDownFillMode">
           </kendo-dropdownlist>

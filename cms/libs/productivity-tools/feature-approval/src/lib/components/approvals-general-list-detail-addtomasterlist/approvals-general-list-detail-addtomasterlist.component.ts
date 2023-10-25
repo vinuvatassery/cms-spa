@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PanelBarCollapseEvent, PanelBarExpandEvent } from '@progress/kendo-angular-layout';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
+import { GeneralApprovalApproveDeny, PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -20,6 +20,7 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent implements OnIni
   isPanelExpanded = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   readonly subTypeConst = PendingApprovalGeneralTypeCode;
+  readonly approveOrDenyConst = GeneralApprovalApproveDeny;
   ngOnInit(): void {   
   }
 

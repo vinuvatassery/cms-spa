@@ -14,7 +14,6 @@ export class ApprovalsEditItemsComponent implements OnInit {
   readonly subTypeConst = PendingApprovalGeneralTypeCode;
 
   ngOnInit(): void {  
-    console.log(this.selectedSubtypeCode);
   }
 
 }
