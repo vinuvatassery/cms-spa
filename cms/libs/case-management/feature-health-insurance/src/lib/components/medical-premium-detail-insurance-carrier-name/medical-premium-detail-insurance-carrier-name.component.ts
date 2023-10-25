@@ -91,7 +91,6 @@ selectedMedicalProvider: any;
 
   public addNewInsuranceProviderOpen(): void {
     this.buildVendorForm();
-    //this.providerTypeCode = FinancialVendorTypeCode.InsuranceVendors;
     this.isaddNewInsuranceProviderOpen = true;
   }
   public get vendorTypes(): typeof FinancialVendorTypeCode {

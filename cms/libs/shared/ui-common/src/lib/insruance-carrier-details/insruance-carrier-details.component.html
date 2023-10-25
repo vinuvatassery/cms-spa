@@ -8,7 +8,6 @@
       All fields are required unless otherwise stated.
     </p>
     <div class="flex-row"> 
-      <!-- *ngIf="providerType == vendorTypes.InsuranceVendors" -->
       <div class="flex-col">
         <kendo-floatinglabel text="Insurance Provider Name">
           <kendo-textbox aria-label="Provider Name" [fillMode]="formUiStyle.inputFillMode"
@@ -32,13 +31,4 @@
       <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> {{hasCreateUpdatePermission == true ? 'ADD NEW' : 'REQUEST NEW'}} </button>
     </div>
   </div>
-  <!-- <div class="justify-content-between" *ngIf="editVendorInfo">
-    <div class="justify-content-end">
-      <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
-        (click)="closeVedorModal()"> Cancel
-      </button>
-      <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="updateVendorDetails()">
-        Update </button>
-    </div>
-  </div> -->
 </kendo-dialog-actions>

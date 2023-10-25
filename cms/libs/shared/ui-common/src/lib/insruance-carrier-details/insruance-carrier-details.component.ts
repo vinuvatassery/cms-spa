@@ -1,12 +1,9 @@
-import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators, RequiredValidator } from '@angular/forms';
-
-import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade } from '@cms/system-config/domain';
+import { Input, ChangeDetectionStrategy, Component, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, Validators,} from '@angular/forms'; 
+import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import { ConfigurationProvider, LoaderService, } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
-import { AddressType } from '../enums/address-type.enum';
 import { StatusFlag } from '../enums/status-flag.enum';
 @Component({
   selector: 'cms-insruance-carrier-details',
@@ -14,7 +11,7 @@ import { StatusFlag } from '../enums/status-flag.enum';
   styleUrls: ['./insruance-carrier-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InsuranceCarrierDetailsComponent implements OnInit {
+export class InsuranceCarrierDetailsComponent{
   @Input() providerType!: any;
   @Input() insuranceProviderForm: FormGroup;
   @Input() editVendorInfo: boolean = false;
@@ -36,10 +33,6 @@ constructor(
     private readonly loaderService: LoaderService,
  ) {
     this.insuranceProviderForm = this.formBuilder.group({});
-  }
-
-  ngOnInit(): void {
-    
   }
 
   save() {
@@ -76,32 +69,10 @@ constructor(
   createVendorProfileData(formValues :any){
     let vendorProfileData = {
       vendorId: null,
-      vendorName: formValues.providerName,
-      // firstName: formValues.firstName,
-      // lastName: formValues.lastName,
-         vendorTypeCode: this.providerType,
-      // tin: formValues.tinNumber,
-      // npiNbr: formValues.npiNbr,
-      // mailCode: formValues.mailCode,
-      // addressTypeCode: AddressType.Mailing,
-      // address1: formValues.addressLine1,
-      // address2: formValues.addressLine2,
-      // cityCode: formValues.city,
-      // stateCode: formValues.state,
-      // zip: formValues.zip,
-      // nameOnCheck: formValues.nameOnCheck,
-      // nameOnEnvelope: formValues.nameOnEnvolop,
-      // paymentMethodCode: formValues.paymentMethod,
-      // specialHandling: formValues.specialHandling,
-      // phoneTypeCode: AddressType.Mailing,
-         vendorContacts: [],
-      // AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,
-      // AcceptsCombinedPaymentsFlag: (formValues.isAcceptCombinedPayment != null && formValues.isAcceptCombinedPayment != '') ? formValues.isAcceptCombinedPayment : null,
-      // PaymentRunDateMonthly: (formValues.paymentRunDate != null && formValues.paymentRunDate != '') ? Number(formValues.paymentRunDate) : null,
-      // PreferredFlag: (formValues.isPreferedPharmacy) ? StatusFlag.Yes:StatusFlag.No,
-      // PhysicalAddressFlag: (formValues.physicalAddressFlag) ? StatusFlag.Yes:StatusFlag.No,
-      // emailAddressTypeCode: AddressType.Mailing
-      activeFlag: this.hasCreateUpdatePermission == true ? StatusFlag.Yes : StatusFlag.No,
+      vendorName: formValues.providerName, 
+      vendorTypeCode: this.providerType, 
+      vendorContacts: [], 
+      activeFlag: (this.hasCreateUpdatePermission) ? StatusFlag.Yes : StatusFlag.No,
     }
     if (this.vendorTypes.InsuranceProviders==this.providerType) {
       vendorProfileData.vendorTypeCode=this.vendorTypes.InsuranceProviders;
