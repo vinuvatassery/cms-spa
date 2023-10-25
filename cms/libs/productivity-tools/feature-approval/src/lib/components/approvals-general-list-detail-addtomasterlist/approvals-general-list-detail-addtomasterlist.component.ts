@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PanelBarCollapseEvent, PanelBarExpandEvent } from '@progress/kendo-angular-layout';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'productivity-tools-approvals-general-list-detail-addtomasterlist',
@@ -14,6 +15,7 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent implements OnIni
   @Input() approvalId: any;
   @Output() openEditModal = new EventEmitter<any>();
   @Input() subTypeCode: any;
+  @Input() selectedVendor$:any;
   ifApproveOrDeny: any;
   isPanelExpanded = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();

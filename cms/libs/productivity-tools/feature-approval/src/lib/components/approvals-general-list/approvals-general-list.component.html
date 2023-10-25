@@ -6,7 +6,7 @@
       </ng-template>
     </kendo-popover>
 
-    <kendo-panelbar *ngFor="let item of approvalsGeneralLists$|async;let i=index" (expand)="onPanelExpand($event)">
+    <kendo-panelbar *ngFor="let item of approvalsGeneralLists$|async;let i=index" (expand)="onPanelExpand(item)">
       <kendo-panelbar-item *ngIf="getTitle(item.approvalTypeCode,item.subTypeCode)">
 
         <ng-template kendoPanelBarItemTitle>
@@ -57,7 +57,7 @@
                 </productivity-tools-approvals-general-list-detail-reassignment>
               </ng-template>
               <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralAddtoMasterList}}">
-                <productivity-tools-approvals-general-list-detail-addtomasterlist [approvalId]="item.generalPendingApprovalId" (openEditModal)="openEditModal($event)" [subTypeCode]="item.subTypeCode">
+                <productivity-tools-approvals-general-list-detail-addtomasterlist [approvalId]="item.generalPendingApprovalId" (openEditModal)="openEditModal($event)" [subTypeCode]="item.subTypeCode" [selectedVendor$]="selectedVendor$">
                 </productivity-tools-approvals-general-list-detail-addtomasterlist>
               </ng-template>
               <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralException}}">
@@ -96,5 +96,5 @@
 
 <ng-template #editListItemDialogModal>
   <kendo-dialog-titlebar (close)="onCloseEditListItemsDetailClicked()"> Edit List Item</kendo-dialog-titlebar>
-  <productivity-tools-approvals-edit-items> </productivity-tools-approvals-edit-items>
+  <productivity-tools-approvals-edit-items [selectedSubtypeCode]="selectedSubtypeCode"> </productivity-tools-approvals-edit-items>
 </ng-template>

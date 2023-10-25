@@ -57,6 +57,7 @@ export class ApprovalPageComponent implements OnInit {
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId!:any;
   usersByRole$ = this.userManagementFacade.usersByRole$;
+  selectedVendor$ = this.pendingApprovalGeneralFacade.selectedVendor$;  
   
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,
@@ -159,5 +160,9 @@ export class ApprovalPageComponent implements OnInit {
   loadApprovalsExceedMaxBenefitInvoice(data:any)
   {
       this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
+  }
+
+  getVendorDetail(approvalEntityId:any){
+    this.pendingApprovalGeneralFacade.getVendorDetails(approvalEntityId);
   }
 }

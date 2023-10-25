@@ -25,6 +25,7 @@ export class PendingApprovalGeneralFacade {
   private serviceDataSubject = new Subject<any>();
   private isInvoiceLoadingSubject = new Subject<boolean>();
   private approvalsGeneralExceedMaxBenefitCardSubject = new Subject<any>();
+  private selectedVendorSubject = new Subject<any>();
 
   /** Public properties **/
   snackbarMessage!: SnackBar;
@@ -33,6 +34,8 @@ export class PendingApprovalGeneralFacade {
   invoiceData$ = this.invoiceDataSubject.asObservable();
   isInvoiceLoading$ = this.isInvoiceLoadingSubject.asObservable();
   approvalsGeneralExceedMaxBenefitCardSubjectList$ = this.approvalsGeneralExceedMaxBenefitCardSubject.asObservable();
+  selectedVendor$ = this.selectedVendorSubject.asObservable();
+
  
 
   showLoader() { this.loaderService.show(); }
@@ -117,5 +120,19 @@ export class PendingApprovalGeneralFacade {
         this.isInvoiceLoadingSubject.next(false);
       },
     });   
+  }
+
+  getVendorDetails(vendorId: string) {
+    this.showLoader();
+    this.pendingApprovalGeneralService.getVendorDetails(vendorId).subscribe({
+      next: (vendorDetail: any) => {    
+        this.selectedVendorSubject.next(vendorDetail);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      }
+    });
   }
 }

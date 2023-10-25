@@ -2,7 +2,7 @@
     <div class="flex-col flex-col-6">
       <button kendoButton class="mb-1 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit "
         aria-label="edit" title="Edit List Item" (click)="onEditListItemsDetailClicked()"></button>
-      <table class="info-table-custom nobg-left">
+      <table class="info-table-custom nobg-left" *ngFor="let item of selectedVendor$ | async">
         <caption hidden> Vendor Info</caption>
         <tbody *ngIf="subTypeCode === subTypeConst.DentalClinic || subTypeCode === subTypeConst.MedicalClinic || subTypeCode === subTypeConst.MedicalProvider || subTypeCode === subTypeConst.DentalProvider">
           <tr>
@@ -10,15 +10,15 @@
             <td>Nice Manufacturer</td>
           </tr>
           <tr>
-            <td>Provider First Name</td>
+            <td>item.firstName</td>
             <td>Nice Drug</td>
           </tr>
           <tr>
-            <td>Provider Last Name</td>
+            <td>item.lastName</td>
             <td>Nice Brand</td>
           </tr>
           <tr>
-            <td>TIN</td>
+            <td>item.tin</td>
             <td>XXXXXXXX</td>
           </tr>
           <tr>
@@ -34,7 +34,7 @@
             <td>Yes</td>
           </tr>
           <tr>
-            <td>Address</td>
+            <td>item.vendorAddress</td>
             <td>Abc street</td>
           </tr>
         </tbody>
@@ -44,7 +44,7 @@
             <td>Nice Manufacturer</td>
           </tr>
           <tr>
-            <td>Drug Name</td>
+            <td>item.drug</td>
             <td>Nice Drug</td>
           </tr>
           <tr>

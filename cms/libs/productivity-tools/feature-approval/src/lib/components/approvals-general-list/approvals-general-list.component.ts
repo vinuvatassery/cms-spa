@@ -71,6 +71,10 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   selectedIndex: any;
   @ViewChild('editListItemDialogModal') editModalTemplate!: TemplateRef<any>;
   @Input() usersByRole$ : any;
+  @Output() approvalEntityId = new EventEmitter<any>();
+  @Input() selectedVendor$ : any;
+  selectedSubtypeCode: any;
+
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService,private readonly loginUserFacade : UserManagementFacade,
     ) {}
@@ -189,8 +193,9 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     this.isPanelExpanded = false;
   }
 
-  public onPanelExpand(event: PanelBarExpandEvent): void {
-    //here we will call the api
+  public onPanelExpand(item:any): void {
+    this.selectedSubtypeCode  = item.subTypeCode;
+    this.approvalEntityId.emit(item.approvalEntityId);
     this.isPanelExpanded = true;
   }
 
