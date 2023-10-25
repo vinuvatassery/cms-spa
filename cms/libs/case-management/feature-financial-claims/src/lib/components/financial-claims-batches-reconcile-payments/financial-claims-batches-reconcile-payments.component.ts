@@ -683,9 +683,8 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       this.checkingPaymentRequest = dataItem.paymentRequestId;
       this.warrantNumberChangeEvent.emit(dataItem);
     }
-    
     let isCheckNumberAlreadyExist = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr === dataItem.checkNbr 
-    && x.vendorId !== dataItem.vendorId && x.batchId !== dataItem.batchId);
+    && (x.vendorId !== dataItem.vendorId || x.batchId !== dataItem.batchId));
     if (isCheckNumberAlreadyExist.length > 0) {
       dataItem.warrantNumberInValid = true;
       dataItem.warrantNumberInValidMsg = 'Duplicate Warrant Number entered.'
