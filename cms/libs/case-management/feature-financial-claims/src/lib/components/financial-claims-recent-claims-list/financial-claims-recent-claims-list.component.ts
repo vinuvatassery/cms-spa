@@ -64,7 +64,7 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   ) { }
   ngOnInit(): void { 
     this.loadColumnsData(); 
-    this.getPaymentStatusLov();
+    this.getClaimStatusLov();
     this.getCoPaymentRequestTypeLov();  
     this.state = {
       skip: this.gridSkipCount,
@@ -363,8 +363,8 @@ loadFinancialRecentClaimListGrid() {
     });
   }
 
-  private getPaymentStatusLov() {
-    this.lovFacade.getPaymentStatusLov();
+  private getClaimStatusLov() {
+    this.lovFacade.getClaimStatusLov();
     this.paymentStatus$.subscribe({
       next: (data: any) => {
         data.forEach((item: any) => {
