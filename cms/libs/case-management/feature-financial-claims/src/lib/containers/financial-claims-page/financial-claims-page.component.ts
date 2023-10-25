@@ -111,11 +111,6 @@ export class FinancialClaimsPageComponent implements OnInit {
     this.financialClaimsFacade.loadFinancialClaimsProcessListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType,data?.filter,this.claimsType);
   }
 
-  loadFinancialClaimsInvoiceListService(data: any)
-  {
-  this.financialClaimsFacade.loadFinancialClaimsInvoiceListService(data?.paymentRequestId , data?.skipcount,   data?.pagesize, data?.sortColumn, data?.sortType,this.claimsType)
-  }
-
   loadFinancialClaimsBatchListGrid(data: any) {
     this.financialClaimsFacade.selectedClaimsTab = 2
     this.tab = this.financialClaimsFacade.selectedClaimsTab

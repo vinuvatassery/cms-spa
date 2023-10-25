@@ -62,7 +62,6 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   @Input() exportButtonShow$: any;
 
   @Output() loadFinancialClaimsProcessListEvent = new EventEmitter<any>();
-  @Output() loadFinancialClaimsInvoiceListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
 
   paymentStatusCode =null
@@ -523,10 +522,6 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.searchValue =''
 
     this.loadFinancialClaimsProcessListGrid();
-  }
-
-  loadFinancialClaimsInvoiceListService(data: any) {
-    this.loadFinancialClaimsInvoiceListEvent.emit(data);
   }
 
   onClaimClick(dataitem: any) {

@@ -4,6 +4,7 @@ import {    ChangeDetectionStrategy,     Component,    EventEmitter,    Input,
 import { FinancialClaimsFacade } from '@cms/case-management/domain';
 
   import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
   import { GridDataResult } from '@progress/kendo-angular-grid';
   import {State} from '@progress/kendo-data-query';
   import {Subject } from 'rxjs';
@@ -29,7 +30,9 @@ import { FinancialClaimsFacade } from '@cms/case-management/domain';
    gridDataResult!: GridDataResult;
    public formUiStyle: UIFormStyle = new UIFormStyle();
 
-   constructor(private financialClaimsFacade : FinancialClaimsFacade){
+   constructor(private financialClaimsFacade : FinancialClaimsFacade,
+     private readonly notificationSnackbarService: NotificationSnackbarService,
+     private loggingService: LoggingService){
 
    }
 
@@ -70,6 +73,10 @@ import { FinancialClaimsFacade } from '@cms/case-management/domain';
               this.gridFinancialClaimsInvoiceSubject.next(gridView);
             },
             error: (err) => {
+              this.isFinancialClaimsInvoiceGridLoaderShow = false;
+              this.loggingService.logException(err)
+              this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
+   
             },
           });
         this.gridDataHandle();
