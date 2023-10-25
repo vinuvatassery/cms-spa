@@ -709,6 +709,16 @@ getDocumentSubTypeLovs(parentCode : string) {
   }
 
   getPaymentStatusLov(): void {
+    this.lovDataService.getLovsbyType(LovType.PaymentStatusCode).subscribe({
+      next: (lovResponse) => {
+        this.paymentStatusSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+  getClaimStatusLov(): void {
     this.lovDataService.getLovsbyType(LovType.ClaimStatus).subscribe({
       next: (lovResponse) => {
         this.paymentStatusSubject.next(lovResponse);
@@ -718,7 +728,6 @@ getDocumentSubTypeLovs(parentCode : string) {
       }
     });
   }
-
   getPaymentRunDateLov(): void {
     this.lovDataService.getLovsbyType(LovType.PaymentRunDate).subscribe({
       next: (lovResponse) => {
