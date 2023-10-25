@@ -222,8 +222,8 @@
           <ng-template kendoGridCellTemplate let-dataItem>
             <span class="tableamountview"> <strong>$</strong> {{dataItem.balanceAmount | kendoNumber: 'n2'}}</span>
          </ng-template>
-        </kendo-grid-column>    
-    <kendo-grid-column field="paymentStatusCode"title="Payment Status" [width]="160">               
+        </kendo-grid-column>
+    <kendo-grid-column field="paymentStatusCode"title="Payment Status" [width]="160">
       <ng-template kendoGridFilterMenuTemplate
       let-column="column"
       let-filter="filter"
@@ -231,8 +231,8 @@
           <kendo-dropdownlist
           [data]="paymentStatusType"
           textField="lovDesc"
-          valueField="lovCode"         
-          [(ngModel)]="paymentStatusCode"        
+          valueField="lovCode"
+          [(ngModel)]="paymentStatusCode"
           (valueChange)="dropdownFilterChange('paymentStatusCode',$event, filterService)">
         </kendo-dropdownlist>
       </ng-template>
@@ -369,8 +369,8 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
-          Client Profile <span class="material-icons ml-1" (click)="onClientClicked(clientId)">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+          Client Profile <span class="material-icons ml-1">
             chevron_right
           </span>
         </button>

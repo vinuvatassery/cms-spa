@@ -279,13 +279,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   }
   contactUpdated(res: boolean) {
     if (res) {
-      this.vendocontactsFacade.loadcontacts(this.VendorAddressId,
-        this.state?.skip ?? 0,
-        this.state?.take ?? 0,
-        this.sortValue,
-        this.sortType,
-        this.filters
-      );
+      this.initializeGrid();
     }
   }
   public setGridState(stateData: any): void {

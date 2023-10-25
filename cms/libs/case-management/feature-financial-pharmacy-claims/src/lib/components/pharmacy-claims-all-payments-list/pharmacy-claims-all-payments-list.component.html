@@ -1,10 +1,10 @@
 <!-- Table Top Filter, Search and Export -->
- 
+
 <p class="mt-2"> Click “Bulk” to execute actions for one or more claims. Click on a row to view that claim.</p>
 <section class="table-filter-section mat-form-no-b-space">
     <span class="filter-section_items filter--select">
       <kendo-floatinglabel>
-        <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"  
+        <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"
         textField="columnDesc" valueField="columnCode"  >
         </kendo-dropdownlist>
       </kendo-floatinglabel>
@@ -14,7 +14,7 @@
       <kendo-floatinglabel text="Search">
         <kendo-textbox   aria-label="Search case"
           rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-  
+
       </kendo-floatinglabel>
     </span>
     <span class="right-overlay-export">
@@ -25,7 +25,7 @@
       </button>
     </span>
   </section>
-  
+
   <!-- Sorted Info -->
   <div class="table-sorted-info">
     Sorted Descending by <span class="sort-items"> Source </span>
@@ -34,18 +34,18 @@
     <span class="sort-items">Default Columns</span>
     <span class="sort-items" >Columns Re-ordered</span>
   </div>
-  
+
   <!-- Case List table -->
   <div class="app-c-table">
     <kendo-grid [resizable]="true" [loading]="isPharmacyClaimsAllPaymentsGridLoaderShow"  [pageSize]="state.take" [pageable]="true"
     [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
     [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true" [data]="pharmacyClaimsAllPaymentsGridLists$ | async">
     <kendo-grid-checkbox-column  [sticky]="true"  [columnMenu]="false" [showSelectAll]="true"  [width]="40"></kendo-grid-checkbox-column>
-      
+
     <kendo-grid-column field="Item" title="Item #" [width]="140">
-    
+
       </kendo-grid-column>
-      <kendo-grid-column field="batch" title="Batch #" [width]="140">     
+      <kendo-grid-column field="batch" title="Batch #" [width]="140">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button [attr.aria-label]="dataItem.batch" kendoButton look="flat" class="card-link-button" >
             {{ dataItem.batch }}
@@ -53,8 +53,8 @@
         </ng-template>
      </kendo-grid-column>
 
- 
-     
+
+
      <kendo-grid-column field="PharmacyName" title="Pharmacy Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.PharmacyName" kendoButton look="flat" class="card-link-button"
@@ -70,7 +70,7 @@
           <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog)">
             {{ dataItem.clientName }}
           </button>
-  
+
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="nameOnPrimaryInsuranceCard" title="Name on Primary Insurance Card" [width]="200">   </kendo-grid-column>
@@ -94,7 +94,7 @@
       <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="120"> </kendo-grid-column>
       <kendo-grid-column field="warrantNumber" title="Warrant Number" [width]="120"> </kendo-grid-column>
       <kendo-grid-column field="entryDate" title="Entry Date" [width]="120"> </kendo-grid-column>
-  
+
       <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
@@ -126,7 +126,7 @@
           </kendo-dropdownbutton>
         </ng-template>
       </kendo-grid-column>
-  
+
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
         let-currentPage="currentPage">
         <div class="grid-custom-paginationtemplates d-flex">
@@ -137,7 +137,7 @@
               [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'PharmacyClaims'" [pagerPage]="'Page'"> </kendo-grid-messages>
-  
+
           </div>
           <div class="d-flex">
             <kendo-pager-input></kendo-pager-input>
@@ -155,27 +155,27 @@
         </div>
         <p>There is no data to display.</p>
       </ng-template>
-  
+
     </kendo-grid>
   </div>
 
 
-  <div class="bottom-fixed-wrapper text-right flex-gap"> 
+  <div class="bottom-fixed-wrapper text-right flex-gap">
       <button kendoButton [primary]="true" look="outline"   aria-label="Cancel"> Cancel </button>
       <button kendoButton [primary]="true" aria-label="Download"     icon="download">  Download </button>
       <button kendoButton [primary]="true" aria-label="Print"   icon="print">   Print </button>
       <button kendoButton [primary]="true" aria-label="Receipting Log" > Receipting Log </button>
-   
+
     </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
-      <span class="">0 claims(s) to be deleted</span> 
-      <button kendoButton [primary]="true" look="outline"   aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button> 
+      <span class="">0 claims(s) to be deleted</span>
+      <button kendoButton [primary]="true" look="outline"   aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
       <button kendoButton [primary]="true" aria-label="Preview Requests"  *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
       <button kendoButton [primary]="true" aria-label="Review" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
       <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action"
         buttonClass="k-split-button" [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isPrintAuthorizationClicked"
         [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
-        <div class="btn-inner-block"> 
+        <div class="btn-inner-block">
           Bulk
         </div>
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
@@ -190,16 +190,16 @@
 
     <ng-template #previewSubmitPaymentDialogTemplate>
       <kendo-dialog-titlebar (close)="onPreviewSubmitPaymentCloseClicked($event)"> Preview and Submit Payment Requests </kendo-dialog-titlebar>
-   
+
     <cms-pharmacy-claims-preview-payment-request></cms-pharmacy-claims-preview-payment-request>
     </ng-template>
-  
-  
+
+
     <ng-template #PrintAuthorizationDialogTemplate>
       <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Authorization(s)</kendo-dialog-titlebar>
     <cms-pharmacy-claims-print-authorization></cms-pharmacy-claims-print-authorization>
     </ng-template>
-    
+
 
     <ng-template #clientRecentClaimsDialog>
       <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"> <h4 class="text-upper">  Recent Claims for Donna Summer </h4> </kendo-dialog-titlebar>
@@ -215,12 +215,12 @@
                 chevron_right
               </span>
             </button>
-    
+
           </div>
         </div>
       </kendo-dialog-actions>
     </ng-template>
-    
+
     <ng-template #providerDetailsTemplate>
       <cms-pharmacy-claims-provider-info
         (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"></cms-pharmacy-claims-provider-info>
