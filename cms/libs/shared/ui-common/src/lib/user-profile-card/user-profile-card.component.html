@@ -56,26 +56,26 @@
       </div>  
       <div *ngIf="userById$ | async as userById;">   
         <h5>{{userById?.fullName}}  <span class="text-muted" *ngIf="userById?.pOrNbr">({{userById?.pOrNbr}})</span></h5>
-        <p> <span class="text-muted">{{userById?.domainCode}}</span></p> 
-        <p>  <span class="text-muted"> {{userById?.assistorGroupCode}}</span></p> 
-        <p>  <span class="text-muted"> {{userById?.jobTitle}}</span></p> 
+        <p *ngIf="userById?.domainCode"> <span class="text-muted">{{userById?.domainCode}}</span></p> 
+        <p *ngIf="userById?.assistorGroupCode">  <span class="text-muted"> {{userById?.assistorGroupCode}}</span></p> 
+        <p *ngIf="userById?.jobTitle">  <span class="text-muted"> {{userById?.jobTitle}}</span></p> 
       </div>
     </div>
     <div class="app-popover-body" *ngIf="userById$ | async as userById;">    
       <h5 class="app-card-heading">Contact</h5>
-      <p class="app-card-details">
+      <p class="app-card-details" *ngIf="userById?.email">
         <span class="material-icons" aria-label="email" aria-hidden="true"
           >email</span
         >
         <a href="mailto:aj.com"> {{userById?.email}}</a>
       </p>
-      <p class="app-card-details">
+      <p class="app-card-details" *ngIf="userById?.phoneNbr">
         <span class="material-icons" aria-label="phone" aria-hidden="true"
           >phone</span
         >
         {{userById?.phoneNbr}}
       </p>
-      <p class="app-card-details">
+      <p class="app-card-details" *ngIf="userById?.faxNbr">
         <span class="material-icons" aria-label="fax" aria-hidden="true"
           >print</span
         >
