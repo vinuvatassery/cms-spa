@@ -103,6 +103,18 @@
           </ng-template>
         </kendo-grid-column>
 
+        <kendo-grid-column field="transType" title="Transaction Type" [width]="170">
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+              [extra]="false" operator="eq">
+              <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+              <kendo-filter-eq-operator></kendo-filter-eq-operator>
+              <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+              <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            </kendo-grid-string-filter-menu>
+          </ng-template>
+        </kendo-grid-column>
+
         <kendo-grid-column field="amountPaid" title="Amount Paid" [width]="140">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -124,6 +136,18 @@
               <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
               <kendo-filter-contains-operator></kendo-filter-contains-operator>
             </kendo-grid-string-filter-menu>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="reversalDate" title="Reversal Date" [width]="160"
+          [format]="{ date: 'MM-dd-yyyy' }" filter="date">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.reversalDate | date:'MM/dd/yyyy'}}
+          </ng-template>
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <common-grid-cell-date-range-filter [field]="'reversalDate'" [filter]="filter"
+              [filterService]="filterService">
+            </common-grid-cell-date-range-filter>
           </ng-template>
         </kendo-grid-column>
 

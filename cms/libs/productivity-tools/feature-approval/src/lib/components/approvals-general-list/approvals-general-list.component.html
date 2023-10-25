@@ -47,17 +47,29 @@
           </ng-template>
 
           <ng-template kendoPanelBarContent>
-            <ng-switch [ngSwitch]="item.typeCode">
-              <ng-template ngSwitchCase="GENERAL_CASE_REASSIGNMENT">
-                <productivity-tools-approvals-general-list-detail-reassignment [approvalId]="approvalId">
+            <ng-switch [ngSwitch]="item.approvalTypeCode">
+              <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralCaseReassignment}}">
+                <productivity-tools-approvals-general-list-detail-reassignment [approvalId]="item.generalPendingApprovalId">
                 </productivity-tools-approvals-general-list-detail-reassignment>
               </ng-template>
-              <ng-template ngSwitchCase="GENERAL_ADD_TO_MASTER_LIST">
-                <productivity-tools-approvals-general-list-detail-addtomasterlist [approvalId]="approvalId">
+              <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralAddtoMasterList}}">
+                <productivity-tools-approvals-general-list-detail-addtomasterlist [approvalId]="item.generalPendingApprovalId">
                 </productivity-tools-approvals-general-list-detail-addtomasterlist>
               </ng-template>
-              <ng-template ngSwitchCase="GENERAL_EXCEPTIONS">
-                <productivity-tools-approvals-general-list-detail-exceptions [approvalId]="approvalId">
+              <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralException}}">
+                <productivity-tools-approvals-general-list-detail-exceptions 
+                  [approvalId]="item.generalPendingApprovalId" 
+                  [exceptionId]="item.approvalEntityId"
+                  [approvalsExceedMaxBenefitCard$]="approvalsExceedMaxBenefitCard$|async"
+                  (loadApprovalsExceedMaxBenefitCardEvent)="loadApprovalsExceedMaxBenefitCard($event)"
+                  [pageSizes]="pageSizes"
+                  [sortValue]="sortValue" 
+                  [sortType]="sortType" 
+                  [sort]="sort"
+                  [gridSkipCount]="gridSkipCount"
+                  [invoiceData$]="invoiceData$"
+                  [isInvoiceLoading$]="isInvoiceLoading$"  
+                  (loadApprovalsExceedMaxBenefitInvoiceEvent)="loadApprovalsExceedMaxBenefitInvoice($event)">
                 </productivity-tools-approvals-general-list-detail-exceptions>
               </ng-template>
               <ng-template ngSwitchDefault>
@@ -79,6 +91,8 @@
 </div>
 
 <ng-template #editListItemDialogModal>
+  <kendo-dialog-titlebar (close)="onCloseEditListItemsDetailClicked()"> Edit List Item</kendo-dialog-titlebar>
+  <productivity-tools-approvals-edit-items> </productivity-tools-approvals-edit-items>
   <kendo-dialog-titlebar (close)="onCloseEditListItemsDetailClicked()"> Edit List Item</kendo-dialog-titlebar>
   <productivity-tools-approvals-edit-items> </productivity-tools-approvals-edit-items>
 </ng-template>
