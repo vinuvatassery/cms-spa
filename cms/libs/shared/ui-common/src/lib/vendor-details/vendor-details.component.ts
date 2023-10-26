@@ -1,5 +1,5 @@
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators, RequiredValidator } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
@@ -8,6 +8,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
 import { AddressType } from '../enums/address-type.enum';
 import { StatusFlag } from '../enums/status-flag.enum';
+import { MultiColumnComboBoxComponent } from '@progress/kendo-angular-dropdowns';
 @Component({
   selector: 'cms-vendor-details',
   templateUrl: './vendor-details.component.html',
@@ -20,7 +21,7 @@ export class VendorDetailsComponent implements OnInit {
   @Input() editVendorInfo: boolean = false;
   @Input() vendorDetails!: any;
   @Input() profileInfoTitle!: string;
-
+  @Input() hasCreateUpdatePermission:boolean=false;
   @Input() ddlStates$!: any;
   @Input() clinicVendorList$!: any;
   @Input() clinicVendorLoader$!: any;
@@ -66,7 +67,7 @@ export class VendorDetailsComponent implements OnInit {
   specialHandlingTextArea = '';
   selectedClinicVendorId!: any;
   mailCodeLengthError!: boolean;
-constructor(
+  constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
     private lovFacade: LovFacade,
@@ -78,6 +79,10 @@ constructor(
   }
 
   ngOnInit(): void {
+
+    if (this.vendorTypes.Clinic == this.providerType) {
+      this.isClinicNameFilterable = false;
+    }
     this.lovFacade.getPaymentRunDateLov();
     this.lovFacade.getPaymentMethodLov();
     if (this.editVendorInfo) {
@@ -158,10 +163,6 @@ constructor(
   }
 
   save() {
-    let mailCode = this.medicalProviderForm.controls['mailCode'].value;
-    if(mailCode.length === 3){
-    
-    }
     this.validateForm();
     this.isValidateForm = true;
     if (this.medicalProviderForm.valid) {
@@ -172,7 +173,7 @@ constructor(
 
   validateForm() {
     this.medicalProviderForm.markAllAsTouched();
-    if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders) {
+    if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders || this.providerType == this.vendorTypes.HealthcareProviders) {
       if (!this.clinicNameNotApplicable) {
         this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
@@ -185,6 +186,7 @@ constructor(
       }
     }
     else if (this.providerType == this.vendorTypes.Manufacturers) {
+      this.medicalProviderForm.controls['mailCode'].setValidators([Validators.required, Validators.maxLength(3), Validators.minLength(3)]);
       this.medicalProviderForm.controls['providerName']
         .setValidators([
           Validators.required, Validators.required, Validators.pattern('^[A-Za-z ]+$')
@@ -222,22 +224,17 @@ constructor(
           Validators.required, Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')
         ]);
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();
+      this.medicalProviderForm.controls['nameOnCheck']
+      .setValidators([
+        Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
+      ]);
+    this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
 
-      if (this.providerType == this.vendorTypes.Manufacturers) {
-        this.medicalProviderForm.controls['nameOnCheck'].setValidators([
-          Validators.nullValidator,
-        ]);
-        this.medicalProviderForm.controls[
-          'nameOnCheck'
-        ].updateValueAndValidity();
-
-        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([
-          Validators.nullValidator,
-        ]);
-        this.medicalProviderForm.controls[
-          'nameOnEnvolop'
-        ].updateValueAndValidity();
-      }
+    this.medicalProviderForm.controls['nameOnEnvolop']
+    .setValidators([
+      Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
+    ]);
+      this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
 
     }
 
@@ -248,6 +245,14 @@ constructor(
         ]);
       this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();
 
+    }
+
+    if (this.providerType == this.vendorTypes.Clinic) {
+      this.medicalProviderForm.controls[this.clinicTypeFieldName]
+        .setValidators([
+          Validators.required,
+        ]);
+      this.medicalProviderForm.controls[this.clinicTypeFieldName].updateValueAndValidity();
     }
 
     if (this.providerType == this.vendorTypes.Clinic) {
@@ -393,6 +398,8 @@ constructor(
     this.medicalProviderForm.controls['providerName'].setValue(clinicDetail.vendorName);
   }
 
+  isClinicNameFilterable = true;
+
   searchClinic(clinicName: any) {
     if (clinicName != '') {
       this.selectedClinicVendorId = null;
@@ -491,7 +498,7 @@ constructor(
       PreferredFlag: (formValues.isPreferedPharmacy) ? StatusFlag.Yes : StatusFlag.No,
       PhysicalAddressFlag: (formValues.physicalAddressFlag) ? StatusFlag.Yes : StatusFlag.No,
       emailAddressTypeCode: AddressType.Mailing,
-      activeFlag: this.hasCreateUpdatePermission == true ? StatusFlag.Yes : StatusFlag.No,
+      activeFlag: (this.hasCreateUpdatePermission) ? StatusFlag.Yes : StatusFlag.No,
     }
     if (this.providerType === FinancialVendorTypeCode.Clinic) {
       if (vendorProfileData.clinicType === FinancialVendorTypeCode.MedicalClinic) {
@@ -500,7 +507,9 @@ constructor(
         vendorProfileData.vendorTypeCode = FinancialVendorTypeCode.DentalClinic;
       }
     }
-
+      if (this.vendorTypes.HealthcareProviders == this.providerType) {
+          vendorProfileData.vendorTypeCode = this.vendorTypes.MedicalProviders;
+      } 
     return vendorProfileData;
   }
   onChange() {
@@ -555,19 +564,19 @@ constructor(
     }
     else {
       this.onChange();
-   }
-   
-}
-onMailCodeKeyUp() {
-  let mailCode = this.medicalProviderForm.controls['mailCode'].value;
-  if (mailCode.length !== 3 && mailCode !="") {
-    this.mailCodeLengthError = true;
+    }
+
   }
-  else if (mailCode.length <=0 || mailCode.length==3){
-    this.mailCodeLengthError = false
+  onMailCodeKeyUp() {
+    let mailCode = this.medicalProviderForm.controls['mailCode'].value;
+    if (mailCode.length !== 3 && mailCode != "") {
+      this.mailCodeLengthError = true;
+    }
+    else if (mailCode.length <= 0 || mailCode.length == 3) {
+      this.mailCodeLengthError = false
+    }
   }
-}
-get medicalProviderFormControls() {
-  return this.medicalProviderForm.controls as any;
-}
+  get medicalProviderFormControls() {
+    return this.medicalProviderForm.controls as any;
+  }
 }

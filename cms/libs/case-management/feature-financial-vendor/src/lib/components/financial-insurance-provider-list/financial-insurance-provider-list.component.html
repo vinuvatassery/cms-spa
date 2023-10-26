@@ -99,7 +99,7 @@
                 [valueField]="'value'" aria-label="Rows Per Page" id="RowsPerPage" [valuePrimitive]="true"
                 [(value)]="state.take" (selectionChange)="pageSelectionchange($event)"></kendo-dropdownlist>
               <kendo-pager-info> </kendo-pager-info>
-              <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+              <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
             </div>
             <div class="d-flex">
               <kendo-pager-input></kendo-pager-input>
@@ -127,9 +127,13 @@
       Insurance Provider
     </button>
 
-    <button kendoButton icon="export" [primary]="true" look="flat" aria-label="Export">
-      Export
-    </button>
+    <span class="right-overlay-export">
+      <button kendoButton [primary]="true" look="flat" aria-label="Export"  class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
+        <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
+        
+        <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
+      </button>
+    </span>
   </div>
 </div>
 

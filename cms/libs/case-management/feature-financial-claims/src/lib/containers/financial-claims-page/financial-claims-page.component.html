@@ -1,4 +1,4 @@
-<div class="app-l-inner-rapper pb-8rem pt-0">
+<div class="app-l-inner-rapper pb-5rem pt-0">
     <common-bread-crumb></common-bread-crumb>
     <div class=" pt-0">
         <section class="app-l-mainTittle">
@@ -8,7 +8,7 @@
             <section class="app-l-wrapper">
                 <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
                     class="app-c-tab case-360-tab">
-                    <kendo-tabstrip-tab title="Process" [selected]="true">
+                    <kendo-tabstrip-tab title="Process" [selected]="tab===1">
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-financial-claims-process-list   [claimsType]="claimsType"
@@ -17,7 +17,7 @@
                                 [sortType]="sortType" [sort]="sortProcessList"
                                 [sortValueFinancialInvoices]="sortValueFinancialInvoices"
                                 [financialClaimsInvoice$]="financialClaimsInvoice$"
-                                [exportButtonShow$]="exportButtonShow$"         
+                                [exportButtonShow$]="exportButtonShow$"
                                 (loadFinancialClaimsProcessListEvent)="loadFinancialClaimsProcessListGrid($event)"
                                 (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)
                                 (exportGridDataEvent)="exportClaimsProcessGridData()"
@@ -26,26 +26,28 @@
                         </ng-template>
                     </kendo-tabstrip-tab>
 
-                    <kendo-tabstrip-tab title="Batches">
+                    <kendo-tabstrip-tab title="Batches" [selected]="tab===2">
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-financial-claims-batches-list  [claimsType]="claimsType" [financialClaimsBatchGridLists$]="financialClaimsBatchGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsBatch"
                                 [sortType]="sortType" [sort]="sortBatchList"
-                                [exportButtonShow$]="exportButtonShow$"         
+                                [exportButtonShow$]="exportButtonShow$"
                                 (loadFinancialClaimsBatchListEvent)="loadFinancialClaimsBatchListGrid($event)"
                                 (exportGridDataEvent)="exportClaimsBatchGridData()"
                                 (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-claims-batches-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
-                    <kendo-tabstrip-tab title="All Payments">
+                    <kendo-tabstrip-tab title="All Payments" [selected]="tab===3">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-financial-claims-all-payments-list [claimsType]="claimsType" [financialClaimsAllPaymentsGridLists$]="financialClaimsAllPaymentsGridLists$"
+                                <cms-financial-claims-all-payments-list [claimsType]="claimsType"
+                                [financialClaimsAllPaymentsGridLists$]="financialClaimsAllPaymentsGridLists$"
+                                [financialClaimsAllPaymentsGridLoader$]="financialClaimsAllPaymentsDataLoader$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList"
-                                [exportButtonShow$]="exportButtonShow$"         
+                                [exportButtonShow$]="exportButtonShow$"
                                 (loadFinancialClaimsAllPaymentsListEvent)="loadFinancialClaimsAllPaymentsListGrid($event)"
                                 (exportGridDataEvent)="exportClaimsPaymentsGridData()"
                                 (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-claims-all-payments-list>
@@ -60,7 +62,7 @@
         <cms-financial-claims-provider-info
               [paymentRequestId]="paymentRequestId"
               (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
-              (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+              (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
               (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
               [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
               [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>

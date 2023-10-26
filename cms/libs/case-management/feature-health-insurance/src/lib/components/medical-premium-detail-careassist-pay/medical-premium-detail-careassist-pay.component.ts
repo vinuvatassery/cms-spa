@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import {ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, FinancialVendorTypeCode, HealthInsurancePlan, ServiceSubTypeCode} from '@cms/case-management/domain';
+import {ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, FinancialVendorTypeCode, HealthInsurancePlan} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-medical-premium-detail-careassist-pay',
@@ -35,6 +35,7 @@ medicalProviderForm: FormGroup;
 ddlStates=this.contactFacade.ddlStates$;
 clinicVendorList= this.financialVendorFacade.clinicVendorList$;;
 clinicVendorLoader= this.financialVendorFacade.clinicVendorLoader$;;
+hasinsuranceVendorCreateUpdatePermission:boolean = false;
 public get vendorTypes(): typeof FinancialVendorTypeCode {
   return FinancialVendorTypeCode;
 }
@@ -73,12 +74,11 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
     private financialVendorFacade: FinancialVendorFacade,
     private financialClaimsFacade: FinancialClaimsFacade,
     private readonly contactFacade: ContactFacade,
-    
-   
+    private userManagementFacade:UserManagementFacade
   ) {
     this.healthInsuranceForm = this.formBuilder.group({});
     this.medicalProviderForm = this.formBuilder.group({});
-
+    this.hasinsuranceVendorCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Insurance_Vendor_Create_Update']);
   }
 
     saveVendorProfile(vendorProfile: any){

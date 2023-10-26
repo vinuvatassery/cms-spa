@@ -54,7 +54,8 @@ export class FinancialDrugsComponent {
     deliveryMethodDesc: 'Delivery Method',
     hiv: 'HIV Drugs?',
     hepatitis: 'Hep Drugs?',
-    opportunisticInfection: 'OI Drugs?'
+    opportunisticInfection: 'OI Drugs?',
+    option:'Options'
   };
 
   //Column Standards

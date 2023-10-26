@@ -1,19 +1,19 @@
 <div>
       <div class="app-c-table" >
-            <kendo-grid 
-                  [reorderable]="true" 
-                  [resizable]="true" 
-                  [columnMenu]="{ filter: true }" 
+            <kendo-grid
+                  [reorderable]="true"
+                  [resizable]="true"
+                  [columnMenu]="{ filter: true }"
                   [sort]="state.sort"
                   [pageSize]="state.take"
                   [pageable]="true"
-                  [sortable]="true" 
+                  [sortable]="true"
                   [skip]="state.skip"
                   [pageable]="true"
-                  [data]="reconcilePaymentBreakoutList$ | async" 
+                  [data]="reconcilePaymentBreakoutList$ | async"
                   [loading]="isGridLoaderShow"
                   (dataStateChange)="dataStateChange($event)"
-                  (filterChange)="filterChange($event)" 
+                  (filterChange)="filterChange($event)"
                   (columnVisibilityChange)="columnChange($event)"
                   >
                   <kendo-grid-column field="invoiceNbr" title="Invoice ID" [width]="120">
@@ -125,7 +125,7 @@
                                           aria-label="Rows Per Page" [valuePrimitive]="true" [(value)]="state.take"
                                           (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
                                     <kendo-pager-info> </kendo-pager-info>
-                                    <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+                                    <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
                               </div>
                               <div class="d-flex">
                                     <kendo-pager-input></kendo-pager-input>
@@ -149,14 +149,14 @@
 </div>
 <ng-template #clientRecentClaimsDialog>
       <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper"> Recent Claims for {{clientName}} </h4></kendo-dialog-titlebar>
-      <section class="k-dialog-body">
+      <section class="k-dialog-body-padding">
             <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType" (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>
       </section>
       <kendo-dialog-actions>
             <div class="justify-content-between">
                   <div class="justify-content-end">
-                        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
-                              Client Profile <span class="material-icons ml-1" (click)="onClientClicked(clientId)">
+                        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+                              Client Profile <span class="material-icons ml-1">
                                     chevron_right
                               </span>
                         </button>

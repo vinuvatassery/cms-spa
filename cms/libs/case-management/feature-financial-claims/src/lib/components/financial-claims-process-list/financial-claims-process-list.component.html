@@ -5,7 +5,7 @@
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
       <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
-      textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
+      textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn"  (valueChange)="searchColumnChangeHandler($event)">
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
@@ -19,8 +19,8 @@
   </span>
   <span class="right-overlay-export">
     <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export" (click)="onClickedExport()"  [disabled]="showExportLoader">
-      <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
-      
+      <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>
+
       <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
     </button>
   </span>
@@ -61,10 +61,10 @@
   [(selectedKeys)]="selectedProcessClaims">
 
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [headerClass]="{ 'text-center': true }"
-      [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true" 
+      [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"
-      [locked]="true"></kendo-grid-checkbox-column>
-      
+      [sticky]="true"></kendo-grid-checkbox-column>
+
     <kendo-grid-column field="invoiceNbr"  title="Invoice ID" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -160,16 +160,36 @@
       </ng-template>
     </kendo-grid-column>
 
+    <kendo-grid-column field="serviceCost" title="Total Cost" [width]="120">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+          [extra]="false" operator="eq">
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-gt-operator></kendo-filter-gt-operator>
+          <kendo-filter-gte-operator></kendo-filter-gte-operator>
+          <kendo-filter-lt-operator></kendo-filter-lt-operator>
+          <kendo-filter-lte-operator></kendo-filter-lte-operator>
+        </kendo-grid-numeric-filter-menu>
+      </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.serviceCost | kendoNumber: 'n2'}}</span>
+  </ng-template>
+    </kendo-grid-column>
+
     <kendo-grid-column field="amountDue" title="Total Due" [width]="120">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
           <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-gt-operator></kendo-filter-gt-operator>
+          <kendo-filter-gte-operator></kendo-filter-gte-operator>
+          <kendo-filter-lt-operator></kendo-filter-lt-operator>
+          <kendo-filter-lte-operator></kendo-filter-lte-operator>
         </kendo-grid-numeric-filter-menu>
-      </ng-template> 
+      </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
-        <span class="tableamountview"> {{dataItem.amountDue | kendoNumber : "c"}}</span>
-  </ng-template> 
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber: 'n2'}}</span>
+  </ng-template>
     </kendo-grid-column>
 
       <kendo-grid-column field="annualTotal" title="Client Annual Total" [width]="180">
@@ -177,11 +197,15 @@
           <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
             <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-gt-operator></kendo-filter-gt-operator>
+            <kendo-filter-gte-operator></kendo-filter-gte-operator>
+            <kendo-filter-lt-operator></kendo-filter-lt-operator>
+            <kendo-filter-lte-operator></kendo-filter-lte-operator>
           </kendo-grid-numeric-filter-menu>
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview"> {{dataItem.annualTotal | kendoNumber : "c"}}</span>
-       </ng-template> 
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.annualTotal | kendoNumber: 'n2'}}</span>
+       </ng-template>
       </kendo-grid-column>
 
         <kendo-grid-column field="balanceAmount" title="Client Balance" [width]="120">
@@ -189,23 +213,30 @@
             <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
               [extra]="false" operator="eq">
               <kendo-filter-eq-operator></kendo-filter-eq-operator>
+              <kendo-filter-gt-operator></kendo-filter-gt-operator>
+              <kendo-filter-gte-operator></kendo-filter-gte-operator>
+              <kendo-filter-lt-operator></kendo-filter-lt-operator>
+              <kendo-filter-lte-operator></kendo-filter-lte-operator>
             </kendo-grid-numeric-filter-menu>
-          </ng-template> 
+          </ng-template>
           <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="tableamountview"> {{dataItem.balanceAmount | kendoNumber : "c"}}</span>
-         </ng-template> 
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.balanceAmount | kendoNumber: 'n2'}}</span>
+         </ng-template>
         </kendo-grid-column>
-
-    <kendo-grid-column field="paymentStatusCode" title="Payment Status" [width]="160"> 
-       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-      <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-        [extra]="false" operator="eq">
-        <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-        <kendo-filter-eq-operator></kendo-filter-eq-operator>
-        <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-        <kendo-filter-contains-operator></kendo-filter-contains-operator>
-      </kendo-grid-string-filter-menu>
-    </ng-template></kendo-grid-column>
+    <kendo-grid-column field="paymentStatusCode"title="Payment Status" [width]="160">
+      <ng-template kendoGridFilterMenuTemplate
+      let-column="column"
+      let-filter="filter"
+      let-filterService="filterService">
+          <kendo-dropdownlist
+          [data]="paymentStatusType"
+          textField="lovDesc"
+          valueField="lovCode"
+          [(ngModel)]="paymentStatusCode"
+          (valueChange)="dropdownFilterChange('paymentStatusCode',$event, filterService)">
+        </kendo-dropdownlist>
+      </ng-template>
+    </kendo-grid-column>
     <kendo-grid-column field="creatorId" title="By" [width]="70"  [sortable]="false" >
       <ng-template kendoGridCellTemplate let-dataItem>
         <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
@@ -243,9 +274,9 @@
       </ng-template>
     </kendo-grid-column>
 
-    <ng-container *ngIf="isProcessGridExpand">
+    <ng-container *ngIf="isProcessGridExpand && !isProcessBatchClosed && !isDeleteBatchClosed">
       <div *kendoGridDetailTemplate="let dataItem">
-        <cms-financial-claims-invoice-list [paymentRequestId]="dataItem?.paymentRequestId"
+        <cms-financial-claims-invoice-list [paymentRequestId]="dataItem?.paymentRequestId" [claimsType]="claimsType"
           [financialInvoiceList$]="financialClaimsInvoice$" [sort]="sortValueFinancialInvoices"
           (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)></cms-financial-claims-invoice-list>
       </div>
@@ -260,7 +291,7 @@
             [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
             [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
-          <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
+          <kendo-grid-messages [pagerItems]="'rows'"  [pagerPage]="'Page'"> </kendo-grid-messages>
 
         </div>
         <div class="d-flex">
@@ -290,7 +321,7 @@
     (click)="onBatchClaimsGridSelectedCancelClicked()" *ngIf="isDeleteBatchClosed || isProcessBatchClosed"> Cancel
   </button>
 
-  <button kendoButton kendoButton class="{{selectedProcessClaims.length?'k-error-button':''}}" aria-label="Delete" *ngIf="isDeleteBatchClosed" [disabled]="!selectedProcessClaims.length"
+  <button kendoButton kendoButton class="k-error-button" aria-label="Delete" *ngIf="isDeleteBatchClosed"
     (click)="onDeleteClaimsOpenClicked(deleteClaimsConfirmationDialog)"> <span class="material-icons mr-1"
       aria-label="Delete"> delete</span> Delete </button>
 
@@ -331,15 +362,15 @@
 
 <ng-template #clientRecentClaimsDialog>
   <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"> <h4 class="text-upper">  Recent Claims for {{clientName}} </h4> </kendo-dialog-titlebar>
-  <section class="k-dialog-body">
+  <section class="k-dialog-body-padding">
     <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
       (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
-          Client Profile <span class="material-icons ml-1" (click)="onClientClicked(clientId)">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+          Client Profile <span class="material-icons ml-1">
             chevron_right
           </span>
         </button>
