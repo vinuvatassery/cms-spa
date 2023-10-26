@@ -19,9 +19,8 @@
   </div>
 </div>
 <kendo-dialog kendoRippleContainer *ngIf="isaddNewInsuranceProviderOpen" (close)="addNewInsuranceProviderClose()"
-  class="app-c-modal app-c-modal-lg app-c-modal-np" title="{{ hasInsuranceCarrierCreateUpdatePermission == true ? 'Add New Insurance Provider' : 'Request New Insurance Provider'}} " kendoTooltip>
-  <cms-insruance-carrier-details [insuranceProviderForm]="InsuranceCarrierForm" [hasCreateUpdatePermission]="hasInsuranceCarrierCreateUpdatePermission"
-    [providerType]="vendorTypes.InsuranceProviders" (saveProviderEventClicked)="saveVendorProfile($event)"
-    (closeModalEventClicked)="addNewInsuranceProviderClose()">
-  </cms-insruance-carrier-details>
+  class="app-c-modal app-c-modal-lg app-c-modal-np"  title="{{ hasInsuranceCarrierCreateUpdatePermission == true ? 'Add New Insurance Provider' : 'Request New Insurance Provider'}}" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm]="InsuranceCarrierForm" [providerType]="vendorTypes.InsuranceProviders"
+    (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="addNewInsuranceProviderClose()"
+    [hasCreateUpdatePermission]="hasInsuranceCarrierCreateUpdatePermission"></cms-vendor-details>
 </kendo-dialog>

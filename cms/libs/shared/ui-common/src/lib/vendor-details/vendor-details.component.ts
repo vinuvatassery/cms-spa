@@ -237,7 +237,7 @@ export class VendorDetailsComponent implements OnInit {
 
     }
 
-    if (this.providerType != this.vendorTypes.Manufacturers) {
+    if (this.providerType != this.vendorTypes.Manufacturers && this.providerType != this.vendorTypes.InsuranceProviders) {
       this.medicalProviderForm.controls['paymentMethod']
         .setValidators([
           Validators.required,
@@ -467,7 +467,7 @@ export class VendorDetailsComponent implements OnInit {
       firstName: formValues.firstName,
       lastName: formValues.lastName,
       vendorTypeCode: this.providerType,
-      tin: formValues.tinNumber,
+      tin: (formValues.tinNumber != null && formValues.tinNumber != '') ? formValues.tinNumber : null,
       npiNbr: formValues.npiNbr,
       mailCode: formValues.mailCode,
       addressTypeCode: AddressType.Mailing,

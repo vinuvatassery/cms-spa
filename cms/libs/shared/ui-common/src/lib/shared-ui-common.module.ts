@@ -39,7 +39,6 @@ import { DocumentUploadComponent } from './document-upload/document-upload.compo
 import { ClientsAttachmentComponent } from './clients-attachment/clients-attachment.component';
 import { YesOrNoPipe } from './pipes/yes-or-no.pipe';
 import { VendorDetailsComponent } from './vendor-details/vendor-details.component';
-import { InsuranceCarrierDetailsComponent } from './insruance-carrier-details/insruance-carrier-details.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
@@ -73,8 +72,7 @@ import { InsuranceCarrierDetailsComponent } from './insruance-carrier-details/in
     ClientsAttachmentComponent,
     YesOrNoPipe,
     ReminderNotificationSnackBarComponent,
-    VendorDetailsComponent,
-    InsuranceCarrierDetailsComponent
+    VendorDetailsComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -106,8 +104,7 @@ import { InsuranceCarrierDetailsComponent } from './insruance-carrier-details/in
     ClientsAttachmentComponent,
     YesOrNoPipe,
     ReminderNotificationSnackBarComponent,
-    VendorDetailsComponent,
-    InsuranceCarrierDetailsComponent
+    VendorDetailsComponent
   ],
 })
 export class SharedUiCommonModule {}
