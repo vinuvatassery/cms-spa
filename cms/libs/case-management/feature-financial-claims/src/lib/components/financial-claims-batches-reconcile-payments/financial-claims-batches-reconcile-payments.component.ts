@@ -274,7 +274,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   onSearchChange(data: any) {
     let searchValue = data;
     this.defaultGridState();
-    let operator = 'startswith';
+    let operator = 'contains';
 
     if (
       this.selectedColumn === 'amountPaid' 
@@ -363,6 +363,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   }
 
   setToDefault() {
+    this.searchItem = null;
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
