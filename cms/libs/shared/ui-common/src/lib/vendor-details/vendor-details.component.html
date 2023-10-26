@@ -45,7 +45,8 @@
       </div>
       <div class="flex-col"
         *ngIf="providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders 
-        || vendorTypes.DentalClinic == providerType || vendorTypes.MedicalClinic == providerType || providerType == vendorTypes.HealthcareProviders">
+        || vendorTypes.DentalClinic == providerType || vendorTypes.MedicalClinic == providerType || vendorTypes.Clinic == providerType
+        || providerType == vendorTypes.HealthcareProviders">
         <div class="flex-row">
           <div class="flex-col flex-col-{{providerType === vendorTypes.Clinic ? 12 : 8}} inlineloaderwrapper"
             *ngIf="!editVendorInfo">
@@ -54,9 +55,10 @@
             <kendo-floatinglabel text="Clinic Name">
 
               <kendo-multicolumncombobox [fillMode]="formUiStyle.dropDownFillMode" placeholder="Clinic Name"
-                [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="isClinicNameFilterable"
-                (filterChange)="searchClinic($event)" [data]="clinicVendorList$| async" formControlName="providerName"
-                [valuePrimitive]="true" valueField="vendorName" textField="vendorName">
+                [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+                [filterable]="isClinicNameFilterable" (filterChange)="searchClinic($event)"
+                [data]="clinicVendorList$| async" formControlName="providerName" [valuePrimitive]="true"
+                valueField="vendorName" textField="vendorName">
                 <button kendoButton fillMode="clear" icon="image"></button>
 
                 <kendo-combobox-column>
@@ -210,7 +212,8 @@
             (keyup)="onMailCodeKeyUp()" [fillMode]="formUiStyle.inputFillMode" formControlName="mailCode"
             [maxlength]="3">
           </kendo-textbox>
-          <kendo-formerror *ngIf="!medicalProviderForm.controls['mailCode'].valid && isValidateForm && !mailCodeLengthError">
+          <kendo-formerror
+            *ngIf="!medicalProviderForm.controls['mailCode'].valid && isValidateForm && !mailCodeLengthError">
             Mail code is required
           </kendo-formerror>
           <kendo-formerror *ngIf="mailCodeLengthError">Mail code must contain 3 characters.</kendo-formerror>
@@ -311,7 +314,9 @@
       </div>
 
       <div
-        *ngIf="vendorTypes.Clinic != providerType && (providerType != vendorTypes.MedicalProviders) && (providerType != vendorTypes.DentalProviders) && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy && (providerType != vendorTypes.Manufacturers)"
+        *ngIf="vendorTypes.Clinic != providerType && (providerType != vendorTypes.MedicalProviders) && (providerType != vendorTypes.DentalProviders)
+         && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy && (providerType != vendorTypes.Manufacturers)
+         && (providerType != vendorTypes.HealthcareProviders)"
         class="flex-col mt-1">
         <button kendoButton icon="add" [primary]="true" look="flat" aria-label="Address">
           Address

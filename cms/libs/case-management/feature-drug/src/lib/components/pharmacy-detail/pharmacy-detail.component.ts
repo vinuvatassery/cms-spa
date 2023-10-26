@@ -60,7 +60,7 @@ export class PharmacyDetailComponent implements OnInit {
       this.selectedPharmacyForEdit = this.selectedPharmacy?.vendorFullName ?? '';
       this.selectedPharmacyId = this.selectedPharmacy?.vendorId;
     }
-    this.hasPharmacyCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Insurance_Vendor_Create_Update']);
+    this.hasPharmacyCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Pharmacy_Create_Update']);
   }
 
   /** Private methods **/
