@@ -11,7 +11,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FinancialClaimsFacade, PaymentStatusCode } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -492,7 +492,7 @@ export class FinancialClaimsAllPaymentsListComponent
       '/financial-management/claims/' +
         this.claimsType +
         '/payments/reconcile-payments',
-    ],{ queryParams :{loadType: 'allPayments'}});
+    ],{ queryParams :{loadType: LoadTypes.allPayments}});
   }
 
   clientRecentClaimsModalClicked(

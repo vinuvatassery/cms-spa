@@ -24,6 +24,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
+import { LoadTypes } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-financial-claims-batches-reconcile-payments',
@@ -109,6 +110,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   bulkNoteCounter:any=0;
   showExportLoader = false;
   loadType:any = null;
+  loadTypeAllPayments:any = LoadTypes.allPayments
   columns : any = {
     vendorName:this.providerTitle,
     tin:"TIN",
@@ -163,6 +165,11 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
 
   ngOnInit(): void {
     this.loadQueryParams();
+    if(this.loadType === LoadTypes.allPayments){
+      this.columns.batchName ='Batch #';
+      let batch = {columnCode:'batchName',columnDesc:'Batch #'};
+      this.dropDropdownColumns.splice(0, 0, batch);
+    }
     this.lovFacade.getPaymentMethodLov();
     this.paymentMethodSubscription();
     if(this.claimsType === 'dental'){
@@ -366,7 +373,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     this.searchItem = null;
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: this.pageSizes[2]?.value,
       sort: this.sort,
     };
 
@@ -680,7 +687,8 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     }
     this.assignRowDataToMainList(dataItem);
 
-    if(dataItem.checkNbr !== null || dataItem.checkNbr !== undefined){
+    if(dataItem.checkNbr !== null && dataItem.checkNbr !== undefined
+      && dataItem.checkNbr !== ''){
       this.checkingPaymentRequest = dataItem.paymentRequestId;
       this.warrantNumberChangeEvent.emit(dataItem);
     }
@@ -891,8 +899,8 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
 
   navToReconcilePayments(){
     if(this.loadType === null || this.loadType === undefined){
-    this.route.navigate([`/financial-management/claims/${this.claimsType}/batch`],
-    { queryParams :{bid: this.batchId}});
+      this.route.navigate([`/financial-management/claims/${this.claimsType}/batch`],
+      { queryParams :{bid: this.batchId}});
     }
     else{
       this.route.navigate([`/financial-management/claims/${this.claimsType}`]);

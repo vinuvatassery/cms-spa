@@ -136,7 +136,7 @@
                         [data]="reconcilePaymentGridPagedResult" 
                         (selectionChange)="onRowSelection(grid, $event)">
                        
-                        <kendo-grid-column field="batchName" title="Batch #" [width]="160" *ngIf="loadType == 'allPayments'">
+                        <kendo-grid-column field="batchName" title="Batch #" [width]="160" *ngIf="loadType == loadTypeAllPayments">
                               <ng-template kendoGridCellTemplate let-dataItem>
                                     <button [attr.aria-label]="dataItem?.batchName" kendoButton look="flat" 
                                                 class="card-link-button"  >
