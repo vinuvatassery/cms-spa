@@ -45,7 +45,7 @@
       </div>
       <div class="flex-col"
       *ngIf="providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders 
-S      || vendorTypes.DentalClinic == providerType || vendorTypes.MedicalClinic == providerType || vendorTypes.Clinic == providerType || providerType == vendorTypes.HealthcareProviders">
+      || vendorTypes.DentalClinic == providerType || vendorTypes.MedicalClinic == providerType || vendorTypes.Clinic == providerType || providerType == vendorTypes.HealthcareProviders">
         <div class="flex-row">
           <div class="flex-col flex-col-{{providerType === vendorTypes.Clinic ? 12 : 8}} inlineloaderwrapper" *ngIf="!editVendorInfo">
             <span *ngIf="clinicVendorLoader$ | async"
