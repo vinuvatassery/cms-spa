@@ -342,7 +342,7 @@
 <ng-template #PrintAuthorizationDialogTemplate>
 <kendo-dialog-titlebar  class="text-normal"  (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Advice Letter(s)</kendo-dialog-titlebar>
 <cms-financial-claims-print-authorization
-[printOption]="onlyPrintAdviceLetter"
+[printOption]="true"
 [items]="selectedDataRows"
 [batchId]="batchId"
 [claimsType] ="claimsType"
