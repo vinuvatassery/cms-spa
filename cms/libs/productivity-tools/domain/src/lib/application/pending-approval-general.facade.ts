@@ -27,11 +27,11 @@ export class PendingApprovalGeneralFacade {
 
   /** Public properties **/
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>(); 
+  snackbarSubject = new Subject<SnackBar>();
   serviceData$ = this.serviceDataSubject.asObservable();
   invoiceData$ = this.invoiceDataSubject.asObservable();
   isInvoiceLoading$ = this.isInvoiceLoadingSubject.asObservable();
- 
+
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
@@ -52,12 +52,14 @@ export class PendingApprovalGeneralFacade {
 
   /** Private properties **/
   private approvalsGeneralSubject = new Subject<any>();
+  private casereassignmentExpandedInfoSubject = new Subject<any>();
   private approvalsGeneralExceedMaxBenefitCardSubject = new Subject<any>();
 
   /** Public properties **/
   approvalsGeneralList$ = this.approvalsGeneralSubject.asObservable();
   approvalsGeneralExceedMaxBenefitCardSubjectList$ = this.approvalsGeneralExceedMaxBenefitCardSubject.asObservable();
-  
+  casereassignmentExpandedInfo$ = this.casereassignmentExpandedInfoSubject.asObservable();
+
  /** Constructor**/
 constructor(
   private pendingApprovalGeneralService: PendingApprovalGeneralService,
@@ -94,7 +96,7 @@ constructor(
   }
 
   /** Public methods **/
-  loadInvoiceListGrid(invoiceDto:any){  
+  loadInvoiceListGrid(invoiceDto:any){
     this.isInvoiceLoadingSubject.next(true);
     this.pendingApprovalGeneralService.loadInvoiceListService(invoiceDto).subscribe({
       next: (dataResponse: any) => {
@@ -110,6 +112,16 @@ constructor(
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         this.isInvoiceLoadingSubject.next(false);
       },
-    });   
+    });
+  }
+  loadCasereassignmentExpandedInfo(approvalId : any): void {
+    this.pendingApprovalGeneralService.loadCasereassignmentExpandedInfo(approvalId).subscribe({
+      next: (response) => {
+        this.casereassignmentExpandedInfoSubject.next(response);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+      },
+    });
   }
 }

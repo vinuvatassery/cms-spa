@@ -1,15 +1,11 @@
 <div>
-  <p>
-    <strong>Invoice ID:</strong>
-    <span class="mr-1"> XXXXXX </span>
-    <strong>Provider:</strong>
-    <span class="mr-1"> <a> Very Nice Provider </a> </span>
-    <strong>Client YTD:</strong>
-    <span class="mr-1"> $XX,XXX.XX </span>
+  <div *ngIf="isPanelExpanded">
+    <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+    <kendo-skeleton shape="text" animation="pulse" width="50%"></kendo-skeleton>
+  </div>
 
-
-  </p>
-  <div>
-    <productivity-tools-approval-invoice></productivity-tools-approval-invoice>
+  <div *ngIf="casereassignmentExpandedInfoData">
+    <p>Regarding <a (click)="onClientNameClicked()">{{casereassignmentExpandedInfoData?.clientFullName}}</a></p>
+    <i>{{casereassignmentExpandedInfoData?.reassignmentReason}}</i>
   </div>
 </div>
