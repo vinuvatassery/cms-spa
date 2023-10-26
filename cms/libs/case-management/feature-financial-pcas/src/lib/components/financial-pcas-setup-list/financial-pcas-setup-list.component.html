@@ -132,8 +132,8 @@ aria-label="add"> PCA Setup</button>
             </kendo-grid-column>
             <kendo-grid-column field="totalAmount" title="Amount" [width]="160"> 
                   <ng-template kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> {{dataItem.totalAmount | kendoNumber : "c"}}</span>
-                  </ng-template> 
+                        <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmount | kendoNumber: 'n2'}}</span>
+                  </ng-template>
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                         <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="true" operator="eq">
                               <kendo-filter-eq-operator></kendo-filter-eq-operator>
@@ -147,8 +147,8 @@ aria-label="add"> PCA Setup</button>
 
             <kendo-grid-column field="remainingAmount" title="Remaining" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview">{{dataItem.remainingAmount | kendoNumber : "c"}}</span>
-                  </ng-template> 
+                        <span class="tableamountview"> <strong>$</strong> {{dataItem.remainingAmount | kendoNumber: 'n2'}}</span>
+                  </ng-template>
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                         <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="true" operator="eq">
                               <kendo-filter-eq-operator></kendo-filter-eq-operator>

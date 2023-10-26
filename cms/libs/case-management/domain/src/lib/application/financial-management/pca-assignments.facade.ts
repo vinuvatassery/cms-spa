@@ -200,7 +200,7 @@ export class PcaAssignmentsFacade {
         if (updatedResponse) {
           this.assignPcaResponseDataSubject.next(updatedResponse);       
           
-          if(updatedResponse?.status === 'warning')
+          if(updatedResponse?.status === 2)
           {
             this.showHideSnackBar(SnackBarNotificationType.WARNING, updatedResponse?.message)
           }
