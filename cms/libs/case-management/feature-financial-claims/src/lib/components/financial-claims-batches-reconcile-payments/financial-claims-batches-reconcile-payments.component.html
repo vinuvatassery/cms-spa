@@ -128,7 +128,7 @@
                          </div>
                   </div>
                   
-                  <div class="app-c-table">
+                  <div class="app-c-table mb-1">
                         <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take" #grid
                         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" 
                         [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"  (filterChange)="filterChange($event)"
@@ -162,6 +162,9 @@
                                   </ng-template>
                         </kendo-grid-column>
                         <kendo-grid-column field="tin" title="TIN" [width]="160"> 
+                              <ng-template kendoGridCellTemplate let-dataItem>
+                                    <span class="tableamountview"> {{dataItem.tin | ssn}}</span>
+                              </ng-template>
                               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                                     <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                                     [extra]="false" operator="eq">
@@ -302,7 +305,7 @@
                                           aria-label="Rows Per Page" [valuePrimitive]="true" [(value)]="state.take"
                                           (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
                                     <kendo-pager-info> </kendo-pager-info>
-                                    <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+                                    <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
                               </div>
                               <div class="d-flex">
                                     <kendo-pager-input></kendo-pager-input>

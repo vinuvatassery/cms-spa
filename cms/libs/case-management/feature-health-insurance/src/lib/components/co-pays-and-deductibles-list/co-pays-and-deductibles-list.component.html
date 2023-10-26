@@ -32,9 +32,9 @@
         </kendo-grid-column>
         <kendo-grid-column field="cptCode" title="CPT Code" [width]="150" [filterable]="false">
         </kendo-grid-column>       
-        <kendo-grid-column field="amountDue" title="Service Cost" [width]="100" [filterable]="false">
+        <kendo-grid-column field="serviceCost" title="Service Cost" [width]="100" [filterable]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="serviceCost" title="Amount Due" [width]="100" [filterable]="false">
+        <kendo-grid-column field="amountDue" title="Amount Due" [width]="100" [filterable]="false">
         </kendo-grid-column>
         <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="120" [filterable]="false">    
         </kendo-grid-column>
@@ -84,7 +84,7 @@
                 [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"  aria-label="Rows Per Page"
                 id="RowsPerPage" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
               <kendo-pager-info> </kendo-pager-info>
-              <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages> 
+              <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages> 
 
             </div>
             <div class="d-flex">

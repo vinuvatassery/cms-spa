@@ -167,15 +167,20 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
+
   readonly financialProvider = 'medical';
   currentFormControl!: FormGroup<any>;
    data:any = [];
    tempData:any = {};
   providerDetailsDialog: any;
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$
+  showDuplicatePaymentHighlightSubject = this.financialClaimsFacade.showDuplicatePaymentHighlightSubject
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  batchId: any;
+  paymentStatusCode: any;
+  duplicatePaymentFlagPaymentRequestId : any;
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
     private cd: ChangeDetectorRef,
@@ -193,8 +198,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.initClaimForm();
   }
 
-  closeAddEditClaimsFormModalClicked() {
-    this.modalCloseAddEditClaimsFormModal.emit(true);
+  closeAddEditClaimsFormModalClicked(refresh : boolean) {
+    this.modalCloseAddEditClaimsFormModal.emit(refresh);
   }
 
   loadClaimsListGrid() {
@@ -223,8 +228,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.title = 'Edit';
       this.showServicesListForm = true;
       this.addOrEdit = 'Update';
+      this.duplicatePaymentFlagPaymentRequestId = this.paymentRequestId;
       this.getMedicalClaimByPaymentRequestId();
-      this.isRecentClaimShow = true;
     }
 
      this.paymentRequestType$.subscribe((paymentRequestTypes) => {
@@ -252,18 +257,18 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.providerDetailsDialog.close();
     }
   }
-  
+
   onVendorNameClick(){
     this.paymentRequestId = event
     this.providerDetailsDialog = this.dialogService.open({
       content: this.providerDetailsTemplate,
       animation:{
         direction: 'left',
-        type: 'slide',  
-      }, 
+        type: 'slide',
+      },
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
-    
+
   }
 
   getProviderPanel(event:any){
@@ -271,8 +276,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
   }
 
-  updateProviderProfile(event:any){
-    console.log(event)
+  updateProviderProfile(event:any){    
     this.financialVendorFacade.updateProviderPanel(event)
   }
 
@@ -280,7 +284,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.contactFacade.loadDdlStates()
     this.lovFacade.getPaymentMethodLov()
   }
-  
+
   checkExceptions()
   {
     this.showExceedMaxBenefitSubscription = this.showExceedMaxBenefitException$.subscribe(data => {
@@ -298,11 +302,14 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         else if (this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.value === ExceptionTypeCode.ExceedMaxBenefits)
         {
           this.addExceptionForm.at(data?.indexNumber).get('exceedMaxBenefitExceptionFlag')?.setValue(data?.flag);
-          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue('')
-          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.No)
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue('');
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.No);
+          this.checkOldInvoiceException(data?.indexNumber);
+          this.checkBridgeUppEception(data?.indexNumber);
         }
         if (!data?.flag)
         {
+          this.duplicatePaymentObject.isDuplicatePaymentFound =true;
           this.checkDuplicatePaymentException(data?.indexNumber);
         }
         this.cd.detectChanges();
@@ -323,11 +330,14 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlag')?.setValue(data?.flag);
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue('')
         this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.No)
+        this.checkProviderNotEligibleException(this.providerTin);
+        this.loadServiceCostMethod(data?.indexNumber);
+
       }
       if (!data?.flag)
       {
-        this.checkOldInvoiceException(data?.indexNumber);
         this.checkDuplicatePaymentException(data?.indexNumber);
+        this.checkOldInvoiceException(data?.indexNumber);
         this.checkBridgeUppEception(data?.indexNumber);
       }
       this.cd.detectChanges();
@@ -359,6 +369,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       {
         if(data?.flag)
         {
+          this.getDuplicateData();
+          this.showDuplicatePaymentHighlightSubject.next(true);
           this.resetExceptionFields(data?.indexNumber);
           this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
           this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlag')?.setValue(data?.flag);
@@ -367,10 +379,13 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           this.addClaimServicesForm.at(data?.indexNumber).get('reasonForException')?.setValue('');
         }
         else if (this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.value === ExceptionTypeCode.DuplicatePayment)
-        {
+        { this.duplicatePaymentObject = {}
+          this.showDuplicatePaymentHighlightSubject.next(false);
           this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlag')?.setValue(data?.flag);
           this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue('')
           this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.No)
+          this.checkOldInvoiceException(data?.indexNumber);
+          this.checkBridgeUppEception(data?.indexNumber);
         }
         this.cd.detectChanges();
       }
@@ -788,6 +803,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     if (!this.isEdit) {
       this.saveData(claim);
     } else {
+      claim.paymentStatusCode = this.paymentStatusCode;
+      claim.batchId = this.batchId;
       this.update(claim);
     }
   }
@@ -804,7 +821,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           );
           this.pcaExceptionDialogService.close();
         } else {
-          this.closeAddEditClaimsFormModalClicked();
+          this.closeAddEditClaimsFormModalClicked(true);
           this.pcaExceptionDialogService.close();
           this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
@@ -836,7 +853,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           );
           this.pcaExceptionDialogService.close();
         } else {
-          this.closeAddEditClaimsFormModalClicked();
+          this.closeAddEditClaimsFormModalClicked(true);
           this.pcaExceptionDialogService.close();
           this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
@@ -861,6 +878,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       .getMedicalClaimByPaymentRequestId(this.paymentRequestId, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim)
       .subscribe({
         next: (val) => {
+          this.batchId = val.batchId;
+          this.paymentStatusCode = val.paymentStatusCode;
           const clients = [
             {
               clientId: val.clientId,
@@ -888,6 +907,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
             invoiceId: val.claimNbr,
             paymentRequestId: val.paymentRequestId,
           });
+          if(this.isEdit){
+            this.isRecentClaimShow = true;
+          }
           this.claimForm.controls['parentReasonForException'].setValue(val.exceptionReasonCode);
           this.claimForm.controls['parentExceptionFlag'].setValue(val.exceptionFlag);
           this.claimForm.controls['parentExceptionTypeCode'].setValue(val.exceptionTypeCode);
@@ -1085,6 +1107,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.addClaimServicesForm.at(index).get('reasonForException')?.reset();
   }
 
+duplicatePaymentObject:any = {};
   getExceptionFormValue(controlName: string, index: any)
   {
     return this.addExceptionForm.at(index).get(controlName)?.value
@@ -1133,12 +1156,18 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   }
   checkProviderNotEligibleException($event:any)
   {
+    let checkException = true;
     this.addExceptionForm.controls.forEach((element, index) => {
-      if(!this.checkPriority(this.providerNotEligiblePriorityArray,index,null))
+      checkException = this.checkPriority(this.providerNotEligiblePriorityArray,index,null);
+      if(!checkException)
       {
         return;
       }
     });
+    if(!checkException)
+    {
+      return;
+    }
     if(!$event?.tin && !this.isSpotsPayment)
     {
       this.addExceptionForm.reset();
@@ -1147,11 +1176,12 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.claimForm.controls['parentExceptionFlag']?.setValue(StatusFlag.Yes);
       this.claimForm.controls['parentReasonForException']?.setValue('');
     }
-    else
+    else if (this.claimForm.controls['parentExceptionTypeCode']?.value === ExceptionTypeCode.ProviderIneligible)
     {
       this.claimForm.controls['providerNotEligibleExceptionFlag']?.setValue(false);
       this.claimForm.controls['parentExceptionTypeCode'].setValue('');
       this.claimForm.controls['parentExceptionFlag']?.setValue(StatusFlag.No);
+      this.checkForChildClaimFlags();
     }
     this.cd.detectChanges();
   }
@@ -1182,8 +1212,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       else if (this.addClaimServicesForm.at(index).get('exceptionTypeCode')?.value === ExceptionTypeCode.OldInvoice)
       {
         this.addExceptionForm.at(index).get('oldInvoiceExceptionFlag')?.setValue(false);
-        this.addClaimServicesForm.at(index).get('exceptionTypeCode')?.setValue('')
-        this.addClaimServicesForm.at(index).get('exceptionFlag')?.setValue(StatusFlag.No)
+        this.addClaimServicesForm.at(index).get('exceptionTypeCode')?.setValue('');
+        this.addClaimServicesForm.at(index).get('exceptionFlag')?.setValue(StatusFlag.No);
       }
     }
     this.cd.detectChanges();
@@ -1235,7 +1265,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     const dueAmount = serviceFormData.controls['amountDue'].value;
     const vendorId = this.claimForm.value?.medicalProvider?.vendorId
     if (startDate && endDate && dueAmount && vendorId) {
-      this.financialClaimsFacade.checkDuplicatePaymentException(startDate,endDate, vendorId,dueAmount, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.checkDuplicatePaymentException(startDate,endDate, vendorId,dueAmount, this.duplicatePaymentFlagPaymentRequestId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
   loadServiceCostMethod(index:number){
@@ -1250,7 +1280,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.addClaimServicesForm.controls.forEach((element, index) => {
           totalServiceCost += + element.get('amountDue')?.value;
       });
-      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index, 
+      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index,
         this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim, this.clientCaseEligibilityId);
       this.exceedMaxBenefitFlag = this.financialClaimsFacade.serviceCostFlag;
     }
@@ -1308,6 +1338,21 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       },
     })
   }
-  
+  getDuplicateData()
+  {
+    this.duplicatePaymentObject.amountDue = this.addClaimServicesForm.at(0).get('amountDue')?.value;
+    this.duplicatePaymentObject.serviceStartDate = this.addClaimServicesForm.at(0).get('serviceStartDate')?.value;
+    this.duplicatePaymentObject.serviceEndDate = this.addClaimServicesForm.at(0).get('serviceEndDate')?.value;
+  }
+
+  checkForChildClaimFlags()
+  {
+    this.addClaimServicesForm.controls.forEach((element, index) => {
+      this.loadServiceCostMethod(index);
+      this.checkOldInvoiceException(index);
+      this.checkBridgeUppEception(index);
+    });
+  }
+
 }
 

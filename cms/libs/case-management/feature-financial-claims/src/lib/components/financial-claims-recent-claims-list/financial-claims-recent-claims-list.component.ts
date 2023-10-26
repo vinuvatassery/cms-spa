@@ -22,6 +22,7 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   @Input() clientId: any;
   @Input() claimsType: any;
   dentalOrMedicalServiceField:any;
+  @Input() duplicatePaymentInputObject:any;
   public state!: any;
   sortColumn = 'Entry Date';
   sortDir = 'Ascending';
@@ -36,7 +37,7 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
   recentClaimListDataSubject = new Subject<any>();
   recentClaimListData$ =  this.recentClaimListDataSubject.asObservable();
-  
+  showDuplicatePaymentExceptionHighlight$ = this.financialClaimsFacade.showDuplicatePaymentExceptionHighlight$;
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -63,12 +64,15 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   ) { }
   ngOnInit(): void { 
     this.loadColumnsData(); 
-    this.getPaymentStatusLov();
+    this.getClaimStatusLov();
     this.getCoPaymentRequestTypeLov();  
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
     };
+    this.showDuplicatePaymentExceptionHighlight$.subscribe(() => {
+      this.cdr.detectChanges();
+    });
     this.loadFinancialRecentClaimListGrid();
   }
   ngOnChanges(): void {
@@ -78,6 +82,7 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
       sort: this.sort,
     };
     this.loadFinancialRecentClaimListGrid();
+    this.cdr.detectChanges();
   }
 
 loadFinancialRecentClaimListGrid() {
@@ -358,8 +363,8 @@ loadFinancialRecentClaimListGrid() {
     });
   }
 
-  private getPaymentStatusLov() {
-    this.lovFacade.getPaymentStatusLov();
+  private getClaimStatusLov() {
+    this.lovFacade.getClaimStatusLov();
     this.paymentStatus$.subscribe({
       next: (data: any) => {
         data.forEach((item: any) => {
@@ -384,5 +389,17 @@ loadFinancialRecentClaimListGrid() {
         );
       },
     });
-  }
+   }
+  public rowClass = (args:any) => {
+    let bool =false ; 
+    if(this.duplicatePaymentInputObject?.amountDue)
+ {
+   bool = args.dataItem.amountDue == this.duplicatePaymentInputObject?.amountDue 
+   && args.dataItem.startDate== this.duplicatePaymentInputObject?.startDate
+   && args.dataItem.endDate== this.duplicatePaymentInputObject?.endDate
+   ; 
+ }
+  return {"table-row-disabled" : bool }
+  
+  };
 }

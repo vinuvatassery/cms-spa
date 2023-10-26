@@ -99,7 +99,7 @@ export class AcceptApplicationComponent implements OnInit, OnDestroy {
       groupCode: [''],
       eligibilityStartDate: [now],
       eligibilityEndDate: [''],
-      assignedCwUser:['']
+      assignedCwUser:[{value:'', disabled: true}]
     });
 
     this.eligibilityForm.controls['caseStatusCode'].setValue(CaseStatusCode.accept);
