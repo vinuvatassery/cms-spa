@@ -75,23 +75,11 @@ export class PendingApprovalGeneralFacade {
 
 
   /** Private properties **/
-  private approvalsGeneralSubject = new Subject<any>();
   private casereassignmentExpandedInfoSubject = new Subject<any>();
-  private approvalsGeneralExceedMaxBenefitCardSubject = new Subject<any>();
 
   /** Public properties **/
-  approvalsGeneralList$ = this.approvalsGeneralSubject.asObservable();
-  approvalsGeneralExceedMaxBenefitCardSubjectList$ = this.approvalsGeneralExceedMaxBenefitCardSubject.asObservable();
   casereassignmentExpandedInfo$ = this.casereassignmentExpandedInfoSubject.asObservable();
 
- /** Constructor**/
-constructor(
-  private pendingApprovalGeneralService: PendingApprovalGeneralService,
-  private loggingService: LoggingService,
-  private readonly notificationSnackbarService: NotificationSnackbarService,
-  private configurationProvider: ConfigurationProvider,
-  private readonly loaderService: LoaderService
-) { }
 
   /** Public methods **/
   loadApprovalsGeneral(): void {
@@ -151,14 +139,17 @@ constructor(
       },
     });
   }
-  loadCasereassignmentExpandedInfo(approvalId : any): void {
-    this.pendingApprovalGeneralService.loadCasereassignmentExpandedInfo(approvalId).subscribe({
-      next: (response) => {
-        this.casereassignmentExpandedInfoSubject.next(response);
+  getVendorDetails(vendorId: string) {
+    this.showLoader();
+    this.pendingApprovalGeneralService.getVendorDetails(vendorId).subscribe({
+      next: (vendorDetail: any) => {    
+        this.selectedVendorSubject.next(vendorDetail);
+        this.hideLoader();
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
-      },
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      }
     });
   }
 }
