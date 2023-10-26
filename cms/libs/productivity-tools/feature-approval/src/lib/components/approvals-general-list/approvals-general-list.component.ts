@@ -305,7 +305,6 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
 
   onSubmitPendingApprovalGeneralClicked(){
-    debugger;
     this.validateApprovalsPaymentsGridRecord();
     const isValid = this.approvalsPaymentsGridPagedResult.filter((x: any) => x.sendBackNotesInValid);
     const totalCount = isValid.length;
@@ -318,9 +317,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     else {
       this.pageValidationMessage = null;
       this.approvalsPaymentsGridUpdatedResult = this.approvalsPaymentsGridPagedResult.filter((x: any) => x.status == this.approveStatus || x.status == this.denyStatus);
-      this.approvalsPaymentsGridUpdatedResult.length>0 ? alert("Data Submitted by "+this.loginUserId):"";
     }
-   
   }
 
   validateApprovalsPaymentsGridRecord() {
@@ -471,6 +468,4 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       }
     })
   }
-
-
 }
