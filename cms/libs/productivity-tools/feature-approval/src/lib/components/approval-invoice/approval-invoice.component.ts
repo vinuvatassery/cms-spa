@@ -1,5 +1,5 @@
 /** Angular libraries **/
-import {  ChangeDetectionStrategy,ChangeDetectorRef,Component, Input, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core'; 
+import {  ChangeDetectionStrategy,ChangeDetectorRef,Component, Input, OnInit, EventEmitter, Output } from '@angular/core'; 
 import { Router } from '@angular/router';
 
 /** External libraries **/

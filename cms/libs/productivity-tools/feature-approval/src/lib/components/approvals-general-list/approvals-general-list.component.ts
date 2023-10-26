@@ -14,8 +14,7 @@ import { Router } from '@angular/router';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy,
+  State
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import {
@@ -301,7 +300,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
 
   sendBackNotesChange(dataItem: any) {
     this.calculateCharacterCount(dataItem);
-   // this.assignRowDataToMainList(dataItem);
+    this.assignRowDataToMainList(dataItem);
   }
 
   onSubmitPendingApprovalGeneralClicked(){
@@ -457,7 +456,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   enableSubmitButton()
   {
     const totalCount = this.approvalsPaymentsGridPagedResult.filter((x: any) => x.status == this.approveStatus || x.status == this.denyStatus).length;
-    this.hasDisabledSubmit = !(totalCount > 0);
+    this.hasDisabledSubmit = (totalCount <= 0);
     this.cd.detectChanges();
   }
 
