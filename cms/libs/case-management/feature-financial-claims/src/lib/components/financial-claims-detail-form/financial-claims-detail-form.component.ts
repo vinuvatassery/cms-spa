@@ -167,6 +167,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
+
   readonly financialProvider = 'medical';
   currentFormControl!: FormGroup<any>;
    data:any = [];
@@ -177,6 +178,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  batchId: any;
+  paymentStatusCode: any;
   duplicatePaymentFlagPaymentRequestId : any;
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
@@ -195,8 +198,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.initClaimForm();
   }
 
-  closeAddEditClaimsFormModalClicked() {
-    this.modalCloseAddEditClaimsFormModal.emit(true);
+  closeAddEditClaimsFormModalClicked(refresh : boolean) {
+    this.modalCloseAddEditClaimsFormModal.emit(refresh);
   }
 
   loadClaimsListGrid() {
@@ -273,8 +276,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
   }
 
-  updateProviderProfile(event:any){
-    console.log(event)
+  updateProviderProfile(event:any){    
     this.financialVendorFacade.updateProviderPanel(event)
   }
 
@@ -307,7 +309,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         }
         if (!data?.flag)
         {
-          this.duplicatePaymentObject.isDuplicatePaymentFound =true; 
+          this.duplicatePaymentObject.isDuplicatePaymentFound =true;
           this.checkDuplicatePaymentException(data?.indexNumber);
         }
         this.cd.detectChanges();
@@ -368,7 +370,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         if(data?.flag)
         {
           this.getDuplicateData();
-          this.showDuplicatePaymentHighlightSubject.next(true);    
+          this.showDuplicatePaymentHighlightSubject.next(true);
           this.resetExceptionFields(data?.indexNumber);
           this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
           this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlag')?.setValue(data?.flag);
@@ -378,7 +380,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         }
         else if (this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.value === ExceptionTypeCode.DuplicatePayment)
         { this.duplicatePaymentObject = {}
-          this.showDuplicatePaymentHighlightSubject.next(false); 
+          this.showDuplicatePaymentHighlightSubject.next(false);
           this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlag')?.setValue(data?.flag);
           this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue('')
           this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.No)
@@ -801,6 +803,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     if (!this.isEdit) {
       this.saveData(claim);
     } else {
+      claim.paymentStatusCode = this.paymentStatusCode;
+      claim.batchId = this.batchId;
       this.update(claim);
     }
   }
@@ -817,7 +821,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           );
           this.pcaExceptionDialogService.close();
         } else {
-          this.closeAddEditClaimsFormModalClicked();
+          this.closeAddEditClaimsFormModalClicked(true);
           this.pcaExceptionDialogService.close();
           this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
@@ -849,7 +853,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           );
           this.pcaExceptionDialogService.close();
         } else {
-          this.closeAddEditClaimsFormModalClicked();
+          this.closeAddEditClaimsFormModalClicked(true);
           this.pcaExceptionDialogService.close();
           this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
@@ -874,6 +878,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       .getMedicalClaimByPaymentRequestId(this.paymentRequestId, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim)
       .subscribe({
         next: (val) => {
+          this.batchId = val.batchId;
+          this.paymentStatusCode = val.paymentStatusCode;
           const clients = [
             {
               clientId: val.clientId,
@@ -1103,7 +1109,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
 duplicatePaymentObject:any = {};
   getExceptionFormValue(controlName: string, index: any)
-  { 
+  {
     return this.addExceptionForm.at(index).get(controlName)?.value
   }
   public onPrintDenialLetterOpen() {
@@ -1150,12 +1156,18 @@ duplicatePaymentObject:any = {};
   }
   checkProviderNotEligibleException($event:any)
   {
+    let checkException = true;
     this.addExceptionForm.controls.forEach((element, index) => {
-      if(!this.checkPriority(this.providerNotEligiblePriorityArray,index,null))
+      checkException = this.checkPriority(this.providerNotEligiblePriorityArray,index,null);
+      if(!checkException)
       {
         return;
       }
     });
+    if(!checkException)
+    {
+      return;
+    }
     if(!$event?.tin && !this.isSpotsPayment)
     {
       this.addExceptionForm.reset();

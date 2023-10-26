@@ -21,6 +21,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { PaymentDetail, PaymentPanel } from '@cms/case-management/domain';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-claims-batch-list-detail-items',
   templateUrl: './financial-claims-batch-list-detail-items.component.html', 
@@ -87,12 +88,13 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
             invoiceNbr:'Invoice ID'
           };
     
-  paymentStatusList = ['SUBMITTED', 'PENDING_APPROVAL', 'DENIED', 'MANAGER_APPROVED', 'PAYMENT_REQUESTED', 'ONHOLD', 'FAILED', 'PAID'];
+  paymentStatusLov$ = this.lovFacade.paymentStatus$;
   paymentStatusFilter = '';
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService, 
     public activeRoute: ActivatedRoute,
-    private readonly cd: ChangeDetectorRef) {
+    private readonly cd: ChangeDetectorRef,
+    private lovFacade :  LovFacade) {
     
     }
   
@@ -100,9 +102,10 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
     this.serviceGridColumnName = this.claimsType.charAt(0).toUpperCase() + this.claimsType.slice(1);
     this.gridColumns['serviceDesc'] = `${this.serviceGridColumnName} Service`;
     this.initializeGridState();
-    this.loadBatchLogItemsListGrid();   
-   
+    this.loadBatchLogItemsListGrid(); 
+    this.lovFacade.getPaymentStatusLov();
   }
+  
   ngOnChanges(): void {
     this.paymentPanelData$.subscribe((data: any)=>{
       this.paymentPanelDetails = data;

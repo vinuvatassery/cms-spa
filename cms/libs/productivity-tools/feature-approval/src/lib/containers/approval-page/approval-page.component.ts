@@ -39,6 +39,7 @@ export class ApprovalPageComponent implements OnInit {
   userLevel = 1;
 
   state!: State;
+  casereassignmentExpandedInfo$ = this.pendingApprovalGeneralFacade.casereassignmentExpandedInfo$;
   approvalsGeneralLists$ = this.pendingApprovalGeneralFacade.approvalsGeneralList$;
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalCount$;
@@ -56,7 +57,7 @@ export class ApprovalPageComponent implements OnInit {
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId!:any;
-  
+
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,
               private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService,
@@ -148,6 +149,10 @@ export class ApprovalPageComponent implements OnInit {
 
       this.documentFacade.getExportFile(approvalPageAndSortedRequest,`payment-batches?serviceType=${data.selectedPaymentType}&level=${this.userLevel}` , fileName, ApiType.ProductivityToolsApi);
     }
+  }
+  loadCasereassignmentExpanedInfoParentEvent(approvalId:any)
+  {
+    this.pendingApprovalGeneralFacade.loadCasereassignmentExpandedInfo(approvalId);
   }
 
   loadApprovalsExceedMaxBenefitCard(data:any)
