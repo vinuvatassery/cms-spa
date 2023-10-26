@@ -3,7 +3,8 @@
         <h1 class="maintitle_withicon text-bold">Edit Premium </h1>
     </section>
 </kendo-dialog-titlebar>
-<section class="add_main_popup_screen k-dialog-body" *ngIf="insurancePremium$ | async as premium">
+<section class="k-dialog-body">
+<section class="add_main_popup_screen" *ngIf="insurancePremium$ | async as premium">
 
 
     <div class="add_new_top_section">
@@ -77,9 +78,9 @@
                         type="checkbox" 
                         id="spots-payment" 
                         name="spots-payment"
-                        aria-labelledby="SPOTSpayment"
+                        aria-labelledby="spots-payment"
                         [(ngModel)]="premium.isSpotsPayment"/>
-                    <label class="k-checkbox-label" for="SPOTSpayment">This is a SPOTS payment</label>
+                    <label class="k-checkbox-label" for="spots-payment">This is a SPOTS payment</label>
                 </span>
             </div>
         </div>
@@ -187,75 +188,86 @@
 
     </div>
 
-
-</section>
-<div class="add_new_fixed_bottom" *ngIf="insurancePremium$ | async">
-    <div>
+    <div *ngIf="insurancePremium$ | async">
         <h5 class="text-upper">Recent Premiums for this client</h5>
         <div class="add_new_fixed_bottom_grid_section">
             <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [paymentRequestId]="paymentRequestId" [clientId]="clientId" [premiumsType]="premiumsType"
             (onProviderNameClickEvent)="onProviderNameClick($event)"
             ></cms-financial-premiums-recent-premiums-list>
         </div>
-        <div class="d-flex align-items-center mt-1 fixed-btn-button_part">
-            <button kendoButton [primary]="true" aria-label="Update"  (click)="save()"> Update </button>
-            <button kendoButton [primary]="true" look="outline" class="ml-2" aria-label="Cancel" (click)="closeAddEditPremiumsFormModalClicked()"> Cancel </button>
+ 
+    </div>
+    
+</section>
+<!-- Skeleton Loader -->
+  
+<div class="add_new_top_section" *ngIf="!(insurancePremium$ | async)">
+    <p class="mb-3"> Update the premium amount and add adjustments if needed.</p>
+    <div class="flex-row column-labels">
+        <div class="flex-col flex-col-3">
+            <label><strong>Client Name:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+        <div class="flex-col flex-col-3">
+            <label><strong>Member ID:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+
+        <div class="flex-col flex-col-3">
+            <label><strong>Insurance Vendor:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+
+        <div class="flex-col flex-col-3">
+            <label><strong>Plan Name:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+
+        <div class="flex-col flex-col-3">
+            <label><strong>Insurance Type:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+        <div class="flex-col flex-col-3">
+            <label><strong>Coverage Start Date:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+        <div class="flex-col flex-col-3">
+            <label><strong>Coverage End Date:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+        <div class="flex-col flex-col-3">
+            <label><strong>Last Premium Due Date:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+        </div>
+   
+    <div class="flex-row">
+        <div class="flex-col flex-col-3">
+            <kendo-floatinglabel text="" class="amount-with-symbol">
+                <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                <kendo-skeleton shape="text" animation="pulse" width="60%" height="50px"></kendo-skeleton>
+            </kendo-floatinglabel>
+        </div>
+        <div class="flex-col mt-1">
+            <p>This will update the premium amount going forward</p>
         </div>
     </div>
 
 </div>
-<section class="add_main_popup_screen" *ngIf="!(insurancePremium$ | async)">
-    <div class="add_new_top_section">
-        <p class="mb-3"> Update the premium amount and add adjustments if needed.</p>
-        <div class="flex-row column-labels">
-            <div class="flex-col flex-col-3">
-                <label><strong>Client Name:</strong></label>
-                <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
-            </div>
-            <div class="flex-col flex-col-3">
-                <label><strong>Member ID:</strong></label>
-                <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
-            </div>
-
-            <div class="flex-col flex-col-3">
-                <label><strong>Insurance Vendor:</strong></label>
-                <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
-            </div>
-
-            <div class="flex-col flex-col-3">
-                <label><strong>Plan Name:</strong></label>
-                <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
-            </div>
-
-            <div class="flex-col flex-col-3">
-                <label><strong>Insurance Type:</strong></label>
-                <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
-            </div>
-            <div class="flex-col flex-col-3">
-                <label><strong>Coverage Start Date:</strong></label>
-                <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
-            </div>
-            <div class="flex-col flex-col-3">
-                <label><strong>Coverage End Date:</strong></label>
-                <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
-            </div>
-            <div class="flex-col flex-col-3">
-                <label><strong>Last Premium Due Date:</strong></label>
-                <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
-            </div>
-            </div>
-       
-        <div class="flex-row">
-            <div class="flex-col flex-col-3">
-                <kendo-floatinglabel text="" class="amount-with-symbol">
-                    <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                    <kendo-skeleton shape="text" animation="pulse" width="60%" height="50px"></kendo-skeleton>
-                </kendo-floatinglabel>
-            </div>
-            <div class="flex-col mt-1">
-                <p>This will update the premium amount going forward</p>
-            </div>
-        </div>
-
-    </div>
 </section>
+  
+
+
+<kendo-dialog-actions>
+
+    <div class="justify-content-between align-items-center">
+        <div class="justify-content-end">
+            <button kendoButton [primary]="true" look="outline" class="ml-2" aria-label="Cancel" (click)="closeAddEditPremiumsFormModalClicked()"> Cancel </button>
+            <button kendoButton [primary]="true" aria-label="Update"  (click)="save()"> Update </button>
+      
+        </div>
+    </div>
+</kendo-dialog-actions>
+
+
+ 
