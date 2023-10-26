@@ -473,8 +473,9 @@
     <div class="justify-content-end align-items-center"> 
        
             <span class="mr-2">1 service(s) to be added</span>
-            <button kendoButton [primary]="true" look="outline"  aria-label="Cancel"
+            <button kendoButton [primary]="true" look="outline"  aria-label="Cancel" 
                 (click)="closeAddEditClaimsFormModalClicked(false)"> Cancel </button>
+ 
             <button kendoButton [primary]="true" [attr.aria-label]="addOrEdit" (click)="save(false)">
                 {{addOrEdit}}
             </button>

@@ -446,12 +446,13 @@
           <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #SpecialHandling resizable="auto" id="SpecialHandling"
             [maxlength]="specialHandlingMaxLength" aria-label="Special Handling" formControlName="specialHandling"
             (valueChange)="onspecialHandlingTextAreaValueChange($event)" [value]="specialHandlingTextArea">
+            <kendo-textarea-suffix class="justify-content-end">
+              <span class="specialhandlingCounter">{{
+                specialhandlingCounter
+                }}</span>
+            </kendo-textarea-suffix>
           </kendo-textarea>
-          <kendo-textarea-suffix class="justify-content-end">
-            <span class="specialhandlingCounter">{{
-              specialhandlingCounter
-              }}</span>
-          </kendo-textarea-suffix>
+       
         </kendo-floatinglabel>
       </div>
 

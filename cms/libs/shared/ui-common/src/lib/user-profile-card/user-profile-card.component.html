@@ -73,13 +73,13 @@
         <span class="material-icons" aria-label="phone" aria-hidden="true"
           >phone</span
         >
-        {{userById?.phoneNbr}}
+        {{userById?.phoneNbr | phone}}
       </p>
       <p class="app-card-details" *ngIf="userById?.faxNbr">
         <span class="material-icons" aria-label="fax" aria-hidden="true"
           >print</span
         >
-        {{userById?.faxNbr}}
+        {{userById?.faxNbr | phone}}
       </p>
       <div class="app-card-details align-items-fstart">
         <span class="material-icons" aria-label="address" aria-hidden="true">location_pin</span >
