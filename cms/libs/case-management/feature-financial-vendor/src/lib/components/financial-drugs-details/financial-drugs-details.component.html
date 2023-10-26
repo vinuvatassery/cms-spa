@@ -15,12 +15,12 @@
           </div>
           <div class="flex-col mb-1">
             <kendo-floatinglabel text="NDC Code">
-                <kendo-textbox
+                <kendo-maskedtextbox
                 aria-label="NDC Code"
                 [fillMode]="formUiStyle.inputFillMode"
-                formControlName="ndcNbr"
+                formControlName="ndcNbr" [mask]="ndcMaskFormat"
               >
-              </kendo-textbox>
+              </kendo-maskedtextbox>
               </kendo-floatinglabel>
               <kendo-formerror *ngIf="(!drugForm.controls['ndcNbr'].valid && drugForm.controls['ndcNbr'].hasError('required')) && isSubmitted">
                 NDC number is required.
