@@ -83,15 +83,12 @@ constructor(
   }
 
   loadExceedMaxBenefitCard(data:any): void {
-    this.showLoader();
     this.pendingApprovalGeneralService.loadExceedMaxBenefitCard(data).subscribe({
       next: (exceedMaxBenefitCardResponse) => {
         this.approvalsGeneralExceedMaxBenefitCardSubject.next(exceedMaxBenefitCardResponse);
-        this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-        this.hideLoader();
       },
     });
   }

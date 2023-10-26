@@ -1,5 +1,6 @@
 /** Angular **/
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -23,6 +24,7 @@ import {
 } from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
+import {UserDataService } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approvals-general-list',
   templateUrl: './approvals-general-list.component.html',
@@ -57,6 +59,16 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
+  tAreaCessationMaxLength:any=200;
+  approveStatus:string="APPROVED";
+  denyStatus:string="DENY";
+  sendbackNotesRequireMessage:string = "Reason for denial is required.";
+  approvalsPaymentsGridPagedResult:any =[];
+  approvalsPaymentsGridUpdatedResult: any=[];
+  hasDisabledSubmit:boolean=true;
+  loginUserId!:any;
+  pageValidationMessage:any=null;
+
   gridApprovalGeneralDataSubject = new Subject<any>();
   gridApprovalGeneralBatchData$ =
     this.gridApprovalGeneralDataSubject.asObservable();
@@ -68,11 +80,15 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   selectedIndex: any;
 
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService) {}
+  constructor(private route: Router, 
+              private dialogService: DialogService,
+              private readonly cd: ChangeDetectorRef,
+              private readonly userDataService: UserDataService) {}
 
   ngOnInit(): void {
     this.loadApprovalGeneralListGrid();
     this.pendingApprovalGeneralTypeCode=PendingApprovalGeneralTypeCode;
+    this.getLoggedInUserProfile();
   }
   ngOnChanges(): void {
     this.state = {
@@ -166,26 +182,45 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
-    this.approvalsGeneralLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridApprovalGeneralDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) {
+    this.approvalsGeneralLists$.subscribe((response: any) => {
+      if (response.length > 0) {
+        this.approvalsPaymentsGridPagedResult = response;
+        this.tAreaVariablesInitiation(this.approvalsPaymentsGridPagedResult);
         this.isApprovalGeneralGridLoaderShow = false;
+        this.gridApprovalGeneralDataSubject.next(this.approvalsPaymentsGridPagedResult);
+        if (response?.total >= 0 || response?.total === -1) {
+          this.isApprovalGeneralGridLoaderShow = false;
+        }
+        this.cd.detectChanges();
+      }
+      else
+      {
+        this.approvalsPaymentsGridPagedResult = response;
+        this.isApprovalGeneralGridLoaderShow = false;
+        this.cd.detectChanges();
       }
     });
     this.isApprovalGeneralGridLoaderShow = false;
   }
 
-  public onPanelCollapse(event: PanelBarCollapseEvent): void {
+  public onPanelCollapse(event: PanelBarCollapseEvent,dataItem:any): void {
     this.isPanelExpanded = false;
+    dataItem.isExpanded=this.isPanelExpanded;
+    if(dataItem.status==this.denyStatus)
+    {
+      dataItem.isExpanded=false;
+    }
+    this.cd.detectChanges();
   }
 
-  public onPanelExpand(event: PanelBarExpandEvent): void {
+  public onPanelExpand(event: PanelBarExpandEvent,dataItem:any): void {
     this.isPanelExpanded = true;
+    dataItem.isExpanded=this.isPanelExpanded;
+    if(dataItem.status==this.denyStatus)
+    {
+      dataItem.isExpanded=false;
+    }
+    this.cd.detectChanges();
   }
 
   approveOrDeny(index:any,result: any) {
@@ -228,4 +263,214 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   {
     this.loadApprovalsExceedMaxBenefitInvoiceEvent.emit($event);
   }
+
+  ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
+    let inValid = false;
+
+    if (control === 'sendBackNotes') {
+      dataItem.sendBackNotesInValid = (dataItem.status == this.denyStatus && (dataItem.sendBackNotes == null || dataItem.sendBackNotes == undefined || dataItem.sendBackNotes == ""));
+      dataItem.sendBackNotesInValidMsg = (dataItem.status == this.denyStatus && (dataItem.sendBackNotes == null || dataItem.sendBackNotes == undefined || dataItem.sendBackNotes == "")) ? this.sendbackNotesRequireMessage : "";
+      inValid =  dataItem.sendBackNotesInValid;
+    }
+    if (inValid) {
+      document.getElementById(control + rowIndex)?.classList.remove('ng-valid');
+      document.getElementById(control + rowIndex)?.classList.add('ng-invalid');
+      document.getElementById(control + rowIndex)?.classList.add('ng-dirty');
+    }
+    else {
+      document.getElementById(control + rowIndex)?.classList.remove('ng-invalid');
+      document.getElementById(control + rowIndex)?.classList.remove('ng-dirty');
+      document.getElementById(control + rowIndex)?.classList.add('ng-valid');
+    }
+    return 'ng-dirty ng-invalid';
+  }
+
+  
+  private tAreaVariablesInitiation(dataItem: any) {
+    dataItem.forEach((dataItem: any) => {
+      this.calculateCharacterCount(dataItem);
+    });
+  }
+
+  calculateCharacterCount(dataItem: any) {
+    let tAreaCessationCharactersCount = dataItem.sendBackNotes
+      ? dataItem.sendBackNotes.length
+      : 0;
+    dataItem.tAreaCessationCounter = `${tAreaCessationCharactersCount}/${this.tAreaCessationMaxLength}`;
+  }
+
+  sendBackNotesChange(dataItem: any) {
+    this.calculateCharacterCount(dataItem);
+   // this.assignRowDataToMainList(dataItem);
+  }
+
+  onSubmitPendingApprovalGeneralClicked(){
+    debugger;
+    this.validateApprovalsPaymentsGridRecord();
+    const isValid = this.approvalsPaymentsGridPagedResult.filter((x: any) => x.sendBackNotesInValid);
+    const totalCount = isValid.length;
+    if (isValid.length > 0) {
+     this.pageValidationMessage = totalCount +  " validation error(s) found, please review each page for errors.";
+    }
+    else if(this.approvalsPaymentsGridPagedResult.filter((x: any) => x.status == this.approveStatus || x.status == this.denyStatus).length <= 0){
+      this.pageValidationMessage ="No data for approval";
+    }
+    else {
+      this.pageValidationMessage = null;
+      this.approvalsPaymentsGridUpdatedResult = this.approvalsPaymentsGridPagedResult.filter((x: any) => x.status == this.approveStatus || x.status == this.denyStatus);
+      this.approvalsPaymentsGridUpdatedResult.length>0 ? alert("Data Submitted by "+this.loginUserId):"";
+    }
+   
+  }
+
+  validateApprovalsPaymentsGridRecord() {
+    this.approvalsGeneralLists$.forEach((currentPage: any, index: number) => {
+      if (currentPage.status !== null
+        && currentPage.status === this.denyStatus
+        && currentPage.status !== undefined) {
+        if (currentPage.sendBackNotes == null || currentPage.sendBackNotes === undefined || currentPage.sendBackNotes === '') {
+          currentPage.sendBackNotesInValid = true;
+          currentPage.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
+        }
+      }
+      else {
+        currentPage.sendBackNotesInValid = false;
+        currentPage.sendBackNotesInValidMsg = null;
+      }
+    });
+
+    this.updatedResultValidation();
+    this.assignPagedGridItemToUpdatedList(this.approvalsGeneralLists$);
+  }
+
+  updatedResultValidation() {
+    if (this.approvalsPaymentsGridPagedResult.length > 0) {
+      this.approvalsPaymentsGridPagedResult.forEach((item: any, index: number) => {
+            if (this.approvalsPaymentsGridPagedResult[index].status==this.denyStatus) {
+              this.updatedResultValidationSendBack(index);
+            }
+            else {
+              this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValid = false;
+              this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValidMsg = null;
+            }
+        }
+      );
+    }
+  }
+
+  updatedResultValidationSendBack(index: any) {
+    if (this.approvalsPaymentsGridPagedResult[index].sendBackNotes === null
+      || this.approvalsPaymentsGridPagedResult[index].sendBackNotes === ''
+      || this.approvalsPaymentsGridPagedResult[index].sendBackNotes === undefined) {
+      this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValid = true;
+      this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
+    }
+    else
+    {
+      this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValid = false;
+      this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValidMsg = null;
+    }
+  }
+  assignPagedGridItemToUpdatedList(dataItem: any) {
+    dataItem.forEach((item: any) => {
+      this.assignRowDataToMainList(item);
+    })
+  }
+
+  assignRowDataToMainList(dataItem: any) {
+    let ifExist = this.approvalsPaymentsGridPagedResult.find((x: any) => x.generalPendingApprovalId === dataItem.generalPendingApprovalId);
+    if (ifExist !== undefined) {
+      this.approvalsPaymentsGridPagedResult.forEach((item: any, index: number) => {
+        if (item.generalPendingApprovalId === ifExist.generalPendingApprovalId) {
+          this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValidMsg = dataItem?.sendBackNotesInValidMsg;
+          this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValid = dataItem?.sendBackNotesInValid;
+          this.approvalsPaymentsGridPagedResult[index].tAreaCessationCounter = dataItem?.tAreaCessationCounter;
+          this.approvalsPaymentsGridPagedResult[index].status = dataItem?.status;
+          this.approvalsPaymentsGridPagedResult[index].sendBackNotes = dataItem?.sendBackNotes;
+          this.approvalsPaymentsGridPagedResult[index].caseWorkerId = dataItem?.caseWorkerId;
+        }
+      });
+    }
+  }
+
+  onRowLevelApproveClicked(e: boolean,dataItem: any, control: any, rowIndex: any)
+  {
+    dataItem.sendBackNotes="";
+    if(dataItem.status === undefined || dataItem.status === '' || dataItem.status === null)
+    {
+      dataItem.status=this.approveStatus;
+      dataItem.isExpanded=true;
+    }
+    else if(dataItem.status == this.approveStatus)
+    {
+      dataItem.status="";
+      dataItem.sendBackNotes="";
+      dataItem.sendBackNotesInValidMsg="";
+      dataItem.sendBackNotesInValid = false;
+      dataItem.isExpanded=false;
+    }
+    else if(dataItem.status == this.denyStatus)
+    {
+      dataItem.status=this.approveStatus;
+      dataItem.sendBackNotesInValidMsg="";
+      dataItem.sendBackNotesInValid = false;
+      dataItem.isExpanded=true;
+    }
+    this.isPanelExpanded = dataItem.isExpanded; 
+    this.sendBackNotesChange(dataItem);
+    this.assignRowDataToMainList(dataItem);
+    this.enableSubmitButton();
+    this.ngDirtyInValid(dataItem,control,rowIndex);    
+    this.cd.detectChanges();
+  }
+
+  onRowLevelDenyClicked(e: boolean,dataItem: any, control: any, rowIndex: any)
+  { 
+    dataItem.isExpanded=false; 
+    this.isPanelExpanded = dataItem.isExpanded;  
+    if(dataItem.status === undefined || dataItem.status === '' || dataItem.status === null)
+    {
+      dataItem.status=this.denyStatus;
+      dataItem.sendBackNotesInValidMsg= this.sendbackNotesRequireMessage;
+      dataItem.sendBackNotesInValid = true;
+    }
+    else if(dataItem.status == this.denyStatus)
+    {
+      dataItem.status="";
+      dataItem.sendBackNotesInValidMsg="";
+      dataItem.sendBackNotes="";
+      dataItem.sendBackNotesInValid = false;
+      dataItem.sendBackButtonDisabled=true;
+    }
+    else
+    {
+      dataItem.status=this.denyStatus;
+      dataItem.sendBackNotesInValidMsg=this.sendbackNotesRequireMessage;
+      dataItem.sendBackNotesInValid = true;
+      dataItem.sendBackButtonDisabled=false;
+    }    
+    this.sendBackNotesChange(dataItem);
+    this.assignRowDataToMainList(dataItem);
+    this.ngDirtyInValid(dataItem,control,rowIndex);  
+    this.enableSubmitButton();  
+    this.cd.detectChanges();
+    
+  }
+
+  enableSubmitButton()
+  {
+    const totalCount = this.approvalsPaymentsGridPagedResult.filter((x: any) => x.status == this.approveStatus || x.status == this.denyStatus).length;
+    this.hasDisabledSubmit = !(totalCount > 0);
+    this.cd.detectChanges();
+  }
+
+  getLoggedInUserProfile(){
+    this.userDataService.getProfile$.subscribe((profile:any)=>{
+      if(profile?.length>0){
+       this.loginUserId= profile[0]?.loginUserId;
+      }
+    })
+  }
+
+
 }

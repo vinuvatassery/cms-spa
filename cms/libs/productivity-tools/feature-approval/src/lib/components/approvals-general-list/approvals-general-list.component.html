@@ -6,39 +6,58 @@
       </ng-template>
     </kendo-popover>
 
-      <kendo-panelbar *ngFor="let item of approvalsGeneralLists$|async;let i=index">
-        <kendo-panelbar-item *ngIf="getTitle(item.approvalTypeCode)">
+      <kendo-panelbar (collapse)="onPanelCollapse($event,item)"
+      (expand)="onPanelExpand($event,item)"
+        *ngFor="let item of approvalsGeneralLists$|async;let i=index">
+        <kendo-panelbar-item *ngIf="getTitle(item.approvalTypeCode)" [expanded]="item.isExpanded">
 
           <ng-template kendoPanelBarItemTitle>
             <div class="flex-row rw-100" (click)="$event.stopPropagation();">
               <div class="flex-col flex-col-6">
                 <h5>{{getTitle(item.approvalTypeCode)}}</h5>               
-                <p>{{item.creationTime | date:'MM-dd-yyyy'}} by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
+                <p>{{item.creationTime | date:'MM/dd/yyyy'}} by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
                     aria-label="FName LName" kendoButton look="flat" class="card-link-button">
                     {{item.fullName}}
                   </button> </p>
-                <div *ngIf="isPanelExpanded">
-                  <p class="mt-1 mb-1">Regarding <a>Donna Summer</a></p>
-                  <i>The client has exceeded max benefits but it is very important that we pay this invoice for them.</i>
-                </div>
               </div>
               <div class="flex-col flex-col-6">
-                <div>
-                  <kendo-buttongroup selection="single">
-                    <button kendoButton aria-label="Approve" (click)="approveOrDeny(i,'A')" [toggleable]="true">Approve
-                    </button>
-                    <button kendoButton aria-label="Deny" (click)="approveOrDeny(i,'D')" [toggleable]="true">Deny </button>
-                  </kendo-buttongroup>
+                <div class="cms-button-group">
+                    <button kendoButton (selectedChange)="onRowLevelApproveClicked($event,item,'sendBackNotes',i)" [selected]="item.status == 'APPROVED'" aria-label="Approve" id ="approve{{i}}" [toggleable]="true" >Approve</button>
+                    <button kendoButton (selectedChange)="onRowLevelDenyClicked($event,item,'sendBackNotes',i)" [selected]="item.status == 'DENY'" aria-label="Send Back" id ="approve{{i}}" [toggleable]="true">Send Back</button>
                 </div>
-                <div *ngIf="ifApproveOrDeny === 'D' && i === selectedIndex">
+                <div *ngIf="item.status == 'APPROVED' && item.approvalTypeCode==pendingApprovalGeneralTypeCode.GeneralAddtoMasterList">
+                  <i>The user will be notified of your changes.</i>
+                </div>
+                <div *ngIf="item.status == 'DENY'">
                   <kendo-floatinglabel text="Send Back Notes">
-                    <kendo-textbox aria-label="Send Back Notes" [fillMode]="formUiStyle.inputFillMode">
-                    </kendo-textbox>
+                    <kendo-textarea
+                    #tareaCessation
+                    [fillMode]="formUiStyle.inputFillMode"
+                    [maxlength]="tAreaCessationMaxLength"
+                    [rows]="2"
+                    resizable ="none"
+                    [(ngModel)]="item.sendBackNotes"
+                    (valueChange)="sendBackNotesChange(item)"
+                    aria-label="smoking cessation note"
+                    title ="{{item.sendBackNotes}}"
+                    [ngClass]="ngDirtyInValid(item,'sendBackNotes',i)"  id ="sendBackNotes{{i}}"
+                    ></kendo-textarea>
+
+                    <kendo-textarea-suffix class="justify-content-end">
+                      <span class="counter">{{ item.tAreaCessationCounter }}</span>
+                    </kendo-textarea-suffix>
+                    <kendo-formerror *ngIf="item.sendBackNotesInValid">{{item.sendBackNotesInValidMsg}}</kendo-formerror>
                   </kendo-floatinglabel>
                 </div>
-                <div *ngIf="ifApproveOrDeny === 'A' && i === selectedIndex">
+                <div *ngIf="item.status == 'APPROVED'  && item.approvalTypeCode==pendingApprovalGeneralTypeCode.GeneralCaseReassignment">
                   <kendo-floatinglabel text="New Case Worker">
-                    <kendo-dropdownlist aria-label="New Case Worker" [fillMode]="formUiStyle.dropDownFillMode">
+                    <kendo-dropdownlist aria-label="New Case Worker" 
+                      [fillMode]="formUiStyle.dropDownFillMode"
+                      textField="caseWorkerName"
+                      valueField="caseWorkerId" 
+                      [valuePrimitive]="true"
+                      [(ngModel)]="item.caseWorkerId"
+                      id ="caseWorkerId{{i}}">
                     </kendo-dropdownlist>
                   </kendo-floatinglabel>
                 </div>
@@ -47,7 +66,7 @@
           </ng-template>
 
           <ng-template kendoPanelBarContent>
-            <ng-switch [ngSwitch]="item.approvalTypeCode">
+            <ng-switch [ngSwitch]="item.approvalTypeCode" *ngIf="item.isExpanded">
               <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralCaseReassignment}}">
                 <productivity-tools-approvals-general-list-detail-reassignment [approvalId]="item.generalPendingApprovalId">
                 </productivity-tools-approvals-general-list-detail-reassignment>
@@ -87,7 +106,7 @@
 <div class="bottom-fixed-wrapper text-right flex-gap">
   <span class="">1 Approved</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Save </button>
-  <button kendoButton [primary]="true" aria-label="Submit" class=""> Submit </button>
+  <button kendoButton [primary]="true" aria-label="Submit" class="" (click)="onSubmitPendingApprovalGeneralClicked()" [disabled]="hasDisabledSubmit"> Submit </button>
 </div>
 
 <ng-template #editListItemDialogModal>
