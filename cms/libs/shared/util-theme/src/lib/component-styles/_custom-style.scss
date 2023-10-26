@@ -760,7 +760,7 @@ color: $app-primary-font-color;
   overflow-y: hidden;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
-
+  min-height: 32px;
   .k-scrollview {
     border: 0px !important;
   }

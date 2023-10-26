@@ -94,10 +94,9 @@
         (valueChange)="onMessageValueChange($event, item.id)"
         aria-label="message description"
       >
+      <kendo-textarea-suffix class="justify-content-end"> <span  class="counter">  {{ item.wordCount }}/{{ tareaMessageMaxLength }} </span> </kendo-textarea-suffix>
       </kendo-textarea>
-      <kendo-formhint class="justify-content-end"
-        >{{ item.wordCount }}/{{ tareaMessageMaxLength }}</kendo-formhint
-      >
+   
     </kendo-floatinglabel>
   </div>
   <div class="flex-col">
