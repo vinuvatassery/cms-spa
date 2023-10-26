@@ -74,7 +74,20 @@ aria-label="Assignment"> Assignment</button>
                         <span class="tableamountview"> <strong>$</strong> {{dataItem.balanceAmount}}</span>
                       </ng-template>  
                   </kendo-grid-column>
-
+                  <kendo-grid-column field="unlimitedFlag" title="Unlimited" [width]="100"> <ng-template
+                        kendoGridCellTemplate let-dataItem>
+                        <span class="app-checkboxwidtext-wrapper">
+                              <input 
+                                type="checkbox"
+                                kendoCheckBox
+                                id="unlimited"
+                                aria-label="unlimited"                            
+                                disabled
+                                [checked]="isUnlimitedFlag(dataItem.unlimitedFlag)"
+                              />
+                           
+                            </span>
+                  </ng-template> </kendo-grid-column>
 
             <kendo-grid-column field="Option"  title="Options"  [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
