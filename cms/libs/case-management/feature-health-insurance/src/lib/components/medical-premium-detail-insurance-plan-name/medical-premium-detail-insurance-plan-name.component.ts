@@ -69,7 +69,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     });
   }
 
-
   onHealthInsuranceTypeChanged() {
     var selectedType = this.newhealthInsuranceForm.controls['insuranceType'].value;
     if (selectedType == "QUALIFIED_HEALTH_PLAN") {
@@ -148,8 +147,8 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
       healthInsuranceTypeCode: formValues.insuranceType,
       startDate: formValues.startDate,
       termDate: formValues.termDate,
-      canPayForMedicationFlag: formValues.canPayForMedicationFlag ? StatusFlag.Yes : StatusFlag.No,
-      dentalPlanFlag: formValues.dentalPlanFlag ? StatusFlag.Yes : StatusFlag.No,
+      canPayForMedicationFlag: formValues.canPayForMedicationFlag ? 'INSURANCE_PLAN.can_pay_for_medication_flag' : StatusFlag.No,
+      dentalPlanFlag: formValues.dentalPlanFlag ? 'INSURANCE_PLAN.dental_plan_flag' : StatusFlag.No,
       activeFlag: hasCreateUpdatePermission ? StatusFlag.Yes : StatusFlag.No,
     };
 
