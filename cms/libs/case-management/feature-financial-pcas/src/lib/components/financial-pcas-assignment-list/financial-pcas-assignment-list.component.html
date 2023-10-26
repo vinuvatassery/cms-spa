@@ -61,20 +61,33 @@ aria-label="Assignment"> Assignment</button>
             </kendo-grid-column>
             <kendo-grid-column field="totalAmount" title="Total Amount" [width]="180"> 
                   <ng-template kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> {{dataItem.totalAmount | kendoNumber : "c"}}</span>
-                     </ng-template>      
+                        <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmount}}</span>
+                      </ng-template>  
             </kendo-grid-column>
             <kendo-grid-column field="amountSpent" title="Amount Used" [width]="140">  
                   <ng-template kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> {{dataItem.amountSpent | kendoNumber : "c"}}</span>
-                     </ng-template>  
+                        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountSpent}}</span>
+                      </ng-template>  
                     </kendo-grid-column>
             <kendo-grid-column field="balanceAmount" title="Amount Left" [width]="140">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> {{dataItem.balanceAmount | kendoNumber : "c"}}</span>
-                     </ng-template>   
+                        <span class="tableamountview"> <strong>$</strong> {{dataItem.balanceAmount}}</span>
+                      </ng-template>  
                   </kendo-grid-column>
-
+                  <kendo-grid-column field="unlimitedFlag" title="Unlimited" [width]="100"> <ng-template
+                        kendoGridCellTemplate let-dataItem>
+                        <span class="app-checkboxwidtext-wrapper">
+                              <input 
+                                type="checkbox"
+                                kendoCheckBox
+                                id="unlimited"
+                                aria-label="unlimited"                            
+                                disabled
+                                [checked]="isUnlimitedFlag(dataItem.unlimitedFlag)"
+                              />
+                           
+                            </span>
+                  </ng-template> </kendo-grid-column>
 
             <kendo-grid-column field="Option"  title="Options"  [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
