@@ -114,7 +114,8 @@ export class FinancialClaimsPrintAuthorizationComponent {
         paymentSentDate: item.paymentSentDate,
         checkNbr: item.checkNbr,
         comments: item.comments,
-        paymentRequestId: item.paymentRequestId
+        paymentRequestId: item.paymentRequestId,
+        batchId: this.batchId
       };
       selectedProviders.push(selectedProvider);
     });

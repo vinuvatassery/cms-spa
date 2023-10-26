@@ -363,6 +363,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   }
 
   setToDefault() {
+    this.searchItem = null;
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
