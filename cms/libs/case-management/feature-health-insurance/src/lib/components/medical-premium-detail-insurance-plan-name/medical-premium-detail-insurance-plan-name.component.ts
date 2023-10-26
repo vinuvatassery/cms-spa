@@ -9,7 +9,6 @@ import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { InsurancePlanFacade, HealthInsurancePolicyFacade, VendorFacade, InsuranceStatusType } from '@cms/case-management/domain';
 import { SnackBarNotificationType, LoggingService, NotificationSnackbarService, LoaderService } from '@cms/shared/util-core';
-import { Subscription } from 'rxjs';
 import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
@@ -31,8 +30,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
 
   public isLoading = false;
   carrierNames: any = [];
-
-  private dentalInsuranceSubscription!: Subscription;
 
   startDateValidator: boolean = false;
   termDateValidator: boolean = false;
