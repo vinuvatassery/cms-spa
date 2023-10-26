@@ -36,7 +36,7 @@
           <kendo-textarea  formControlName="otherPhoneNote" [fillMode]="formUiStyle.inputFillMode" name="Phone Note"  resizable="none"
             aria-label="Phone Note"  [maxlength]="75" [rows]="2" [cols]="40" (valueChange)="onIncomeNoteValueChange($event)">
             <kendo-textarea-suffix class="justify-content-end">
-              <kendo-formhint class="justify-content-end">{{noteCounter}}</kendo-formhint>
+              <kendo-formhint class="justify-content-end"><span  class="counter">   {{noteCounter}} </span> </kendo-formhint>
 
             </kendo-textarea-suffix>
           </kendo-textarea>
