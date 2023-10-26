@@ -18,12 +18,11 @@
         [userId]="caseWorkerId"     
         [reassign]=true
         [clientId]="clientId"
-        [clientCaseId]="clientCaseId"
-        (reassignClicked)="onReassignClicked($event)">
+        [clientCaseId]="clientCaseId">
       </common-user-profile-card>
     </ng-template>
   </kendo-popover>
-
+    
   <!-- Main Title Section -->
   <section class="app-l-mainTittle" *ngIf="loadedClientHeader?.clientFullName">
     <h2 class="title-md">

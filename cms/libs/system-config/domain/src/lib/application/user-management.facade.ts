@@ -415,5 +415,9 @@ export class UserManagementFacade {
       },
     });
   }
+
+  reassignCase(caseReassignData : any){
+    return this.userDataService.reassignCase(caseReassignData);
+  }
  
 }

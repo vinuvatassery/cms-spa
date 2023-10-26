@@ -638,9 +638,4 @@ export class CaseFacade {
   enableSearchHeader(headerType : SearchHeaderType) {
     this.searchBarsubject.next(headerType);
   }
-
-  reassignCase(caseReassignData : any){
-    console.log('5-caseReassignData',caseReassignData);
-    return this.caseDataService.reassignCase(caseReassignData);
-  }
 }

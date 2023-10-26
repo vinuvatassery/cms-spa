@@ -105,7 +105,6 @@
     </div>
 </div>
 <ng-template #reassignCaseModalTemplate>
-<!-- <kendo-dialog *ngIf="businessLogicPopupOpen"   class="app-c-modal app-c-modal-md app-c-modal-np" > -->
     <kendo-dialog-titlebar (close)="businessLogicPopupClose()"> {{ hasReassignPermission? 'Re-assign Case' : 'Assign New Case Worker?' }} </kendo-dialog-titlebar>
     <common-re-assign-case 
       [hasReassignPermission]="hasReassignPermission" 

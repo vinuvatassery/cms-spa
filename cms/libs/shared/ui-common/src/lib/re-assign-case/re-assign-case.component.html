@@ -28,7 +28,7 @@
         </kendo-floatinglabel>
       </div>
       <div class="flex-col">
-        <kendo-floatinglabel [text]="hasReassignPermission ? 'Reason for Re-assign' : 'Reason for Re-assignment Request?'">
+        <kendo-floatinglabel [text]="hasReassignPermission ? 'Reason for Re-assignment' : 'Reason for Re-assignment Request?'">
           <kendo-textarea
           #tAreaReasonForReassign
           [fillMode]="formUiStyle.inputFillMode"
@@ -45,7 +45,7 @@
     
           <kendo-formerror
             *ngIf="!caseReassignForm.controls['reasonForReassign'].valid && isValidateForm">
-              Reason for Re-assign is required.
+              Reason for Re-assignment is required.
           </kendo-formerror>
         </kendo-floatinglabel>        
       </div>
@@ -58,7 +58,7 @@
           (click)="onCancel()">
           Cancel
         </button> 
-        <button  kendoButton [primary]="true" look="flat" aria-label="Re-assign" (click)="save()">
+        <button  kendoButton [primary]="true" look="flat" aria-label="Submit" (click)="save()">
           {{hasReassignPermission ? 'Re-assign' : 'Submit'}}
         </button>
       </div>

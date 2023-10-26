@@ -39,7 +39,6 @@ export class Case360HeaderComponent implements OnInit {
   @Output() loadChangeGroupEvent = new EventEmitter<string>();
   @Output() updateChangeGroupEvent = new EventEmitter<any>();
   @Output() createCerSessionEvent = new EventEmitter<string>();
-  @Output() reassignClicked = new EventEmitter<any>();
 
   isAnimationOptionsOpened: boolean | DialItemAnimation = false;
   isStatusPeriodDetailOpened = false;
@@ -167,10 +166,5 @@ export class Case360HeaderComponent implements OnInit {
     if (this.loadedClientHeader?.caseStatus !== 'DISENROLLED') {
       this.createCerSessionEvent.emit();
     }
-  }
-
-  onReassignClicked(data:any) {debugger;
-    console.log('3-data',data);
-    this.reassignClicked.emit(data);    
   }
 }

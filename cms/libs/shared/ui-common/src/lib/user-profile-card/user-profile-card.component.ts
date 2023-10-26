@@ -8,6 +8,7 @@ import {
   EventEmitter,
   TemplateRef,
 } from '@angular/core';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 //import { UserDefaultRoles } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -23,7 +24,6 @@ export class UserProfileCardComponent implements OnInit {
   @Input() sendEmail?: boolean = false;
   @Input() clientId: any;
   @Input() clientCaseId: any;
-  @Output() reassignClicked = new EventEmitter<any>();
   userImage$ = this.userManagementFacade.userImage$;
   userById$ = this.userManagementFacade.usersById$;
   caseOwners$ = this.userManagementFacade.usersByRole$;
@@ -34,12 +34,8 @@ export class UserProfileCardComponent implements OnInit {
   /** Constructor**/
   constructor(
     private userManagementFacade: UserManagementFacade,
-
     private dialogService: DialogService
   ) {
-    this.hasReassignPermission = userManagementFacade.hasPermission([
-      'Reassign_Cases',
-    ]);
   }
 
   /** Lifecycle hooks **/
@@ -47,6 +43,9 @@ export class UserProfileCardComponent implements OnInit {
     this.loadProfilePhoto();
     this.loadProfileData();
     this.loadUsersByRole();
+    this.hasReassignPermission = this.userManagementFacade.hasPermission([
+      'Reassign_Cases',
+    ]);
   }
 
   loadProfilePhoto() {
@@ -69,10 +68,21 @@ export class UserProfileCardComponent implements OnInit {
     this.userManagementFacade.getUsersByRole("CACW");
   }
 
-  onReassignClicked(data: any) {debugger;
-    console.log('2-data',data);
-    this.reassignClicked.emit(data);
+  onReassignClicked(data: any) {
+    this.userManagementFacade.showLoader();
+    this.userManagementFacade.reassignCase(data).subscribe({
+      next: (response: any) => {
+        this.userManagementFacade.hideLoader();
+        this.userManagementFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+        this.businessLogicPopupClose();
+      },
+      error: (err: any) => {
+        this.userManagementFacade.hideLoader();
+        this.userManagementFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      }
+    });
   }
+
   public openBusinessPopup(template: TemplateRef<unknown>): void {
     this.reassignCaseTemp = this.dialogService.open({
       content: template,
