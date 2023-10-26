@@ -274,7 +274,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   onSearchChange(data: any) {
     let searchValue = data;
     this.defaultGridState();
-    let operator = 'startswith';
+    let operator = 'contains';
 
     if (
       this.selectedColumn === 'amountPaid' 

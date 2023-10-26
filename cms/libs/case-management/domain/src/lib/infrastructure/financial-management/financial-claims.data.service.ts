@@ -428,7 +428,7 @@ export class FinancialClaimsDataService {
   }
 
   reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any, claimsType:any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/${batchId}/reconcile-payments`,reconcileData);
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/reconcile-payments`,reconcileData);
   }
 
   viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, claimsType:any) {
