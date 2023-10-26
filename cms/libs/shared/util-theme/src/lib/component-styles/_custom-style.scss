@@ -1238,9 +1238,11 @@ color: $app-primary-font-color;
 
 .table-text-area{
   textarea{
-    height: 35px;
+    min-height: 37px;
+    height: 37px;
     resize: vertical;
     line-height: normal;
+    padding: 8px 16px !important;
   }
 }
  .table-filter-with-dropdown{
