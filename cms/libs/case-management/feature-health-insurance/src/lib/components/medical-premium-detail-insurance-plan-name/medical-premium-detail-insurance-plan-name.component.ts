@@ -87,22 +87,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
       this.newhealthInsuranceForm.controls['termDate'].clearValidators();
     }
     this.newhealthInsuranceForm.controls['termDate'].updateValueAndValidity();
-    // this.newhealthInsuranceForm.get('termDate').updateValueAndValidity();
-
-    //QUALIFIED_HEALTH_PLAN
-    // this.insuranceEndDateIsgreaterthanStartDate = true;
-    // this.resetData();
-    // this.resetValidators();
-    // this.ddlInsuranceType =
-    //   this.healthInsuranceForm.controls['insuranceType'].value;
-    // this.isOpenDdl = true;
-    // if (this.ddlInsuranceType === HealthInsurancePlan.Medicare) {
-    //   this.medicareInsuranceInfoCheck = false;
-    // }
-    // else {
-    //   this.medicareInsuranceInfoCheck = true;
-    // }
-    //this.newhealthInsuranceForm.controls['termDate'].setValidators;
   }
 
   dateValidate(event: Event) {
@@ -118,19 +102,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
         this.termDateValidator = true;
       }
     }
-  }
-
-  private subscribeDentalInsurance() {
-    this.dentalInsuranceSubscription = this.insuranceTypeList$.subscribe((data: any) => {
-      this.healthInsuranceForm.controls['insuranceType'].setValue(this.dentalInsuranceSelectedItem);
-      // this.onHealthInsuranceTypeChanged();
-      this.healthInsuranceForm.controls["insuranceType"].disable();
-    });
-  }
-
-  private loadHealthInsuranceLovs() {
-    this.lovFacade.getHealthInsuranceTypeLovs();
-    this.lovFacade.getMedicareCoverageTypeLovs();
   }
 
   private sortCarrier(data: any) {
