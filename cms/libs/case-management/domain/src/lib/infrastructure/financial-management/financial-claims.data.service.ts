@@ -294,7 +294,8 @@ export class FinancialClaimsDataService {
       AmountTotal : data.amountTotal,
       WarrantTotal : data.warrantTotal,
       WarrantNbr : data.warrantNbr,
-      PaymentToReconcileCount : data.paymentToReconcileCount
+      PaymentToReconcileCount : data.paymentToReconcileCount,
+      warrantcalcalcution:data.warrantcalcalcution
     }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/payments/payment-reconcile-summary`,ReconcilePaymentResponseDto

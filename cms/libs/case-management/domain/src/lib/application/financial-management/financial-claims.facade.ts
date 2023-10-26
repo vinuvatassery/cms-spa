@@ -366,6 +366,7 @@ export class FinancialClaimsFacade {
   }
 
   loadReconcilePaymentBreakoutSummary(data:any){
+ 
     this.financialClaimsDataService.loadReconcilePaymentBreakoutSummaryService(data).subscribe({
       next: (dataResponse) => {
         this.reconcileBreakoutSummaryDataSubject.next(dataResponse);
@@ -377,6 +378,7 @@ export class FinancialClaimsFacade {
   }
 
   loadReconcilePaymentBreakoutListGrid(data:any) {
+    this.loaderService.show(); 
     data.filter=JSON.stringify(data.filter);
     this.financialClaimsDataService
       .loadReconcilePaymentBreakoutListService(data)
@@ -389,6 +391,7 @@ export class FinancialClaimsFacade {
               total: dataResponse['totalCount'],
             };
             this.reconcilePaymentBreakoutListDataSubject.next(gridView);
+            this.loaderService.hide();
           }
         },
         error: (err) => {
