@@ -390,7 +390,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   onClickOpenEditPremiumsFromModal(template: TemplateRef<unknown>): void {
     this.editPremiumsFormDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-full add_premiums_modal',
+      cssClass: 'app-c-modal app-c-modal-96full add_premiums_modal',
     });
   }
   modalCloseEditPremiumsFormModal(result: any) {

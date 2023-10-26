@@ -29,7 +29,7 @@ export class PendingApprovalGeneralFacade {
 
   /** Public properties **/
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>(); 
+  snackbarSubject = new Subject<SnackBar>();
   serviceData$ = this.serviceDataSubject.asObservable();
   invoiceData$ = this.invoiceDataSubject.asObservable();
   isInvoiceLoading$ = this.isInvoiceLoadingSubject.asObservable();
@@ -73,6 +73,26 @@ export class PendingApprovalGeneralFacade {
     this.hideLoader();
   }
 
+
+  /** Private properties **/
+  private approvalsGeneralSubject = new Subject<any>();
+  private casereassignmentExpandedInfoSubject = new Subject<any>();
+  private approvalsGeneralExceedMaxBenefitCardSubject = new Subject<any>();
+
+  /** Public properties **/
+  approvalsGeneralList$ = this.approvalsGeneralSubject.asObservable();
+  approvalsGeneralExceedMaxBenefitCardSubjectList$ = this.approvalsGeneralExceedMaxBenefitCardSubject.asObservable();
+  casereassignmentExpandedInfo$ = this.casereassignmentExpandedInfoSubject.asObservable();
+
+ /** Constructor**/
+constructor(
+  private pendingApprovalGeneralService: PendingApprovalGeneralService,
+  private loggingService: LoggingService,
+  private readonly notificationSnackbarService: NotificationSnackbarService,
+  private configurationProvider: ConfigurationProvider,
+  private readonly loaderService: LoaderService
+) { }
+
   /** Public methods **/
   loadApprovalsGeneral(): void {
     this.showLoader();
@@ -103,7 +123,7 @@ export class PendingApprovalGeneralFacade {
   }
 
   /** Public methods **/
-  loadInvoiceListGrid(invoiceDto:any){  
+  loadInvoiceListGrid(invoiceDto:any){
     this.isInvoiceLoadingSubject.next(true);
     this.pendingApprovalGeneralService.loadInvoiceListService(invoiceDto).subscribe({
       next: (dataResponse: any) => {
@@ -121,18 +141,24 @@ export class PendingApprovalGeneralFacade {
       },
     });   
   }
-
-  getVendorDetails(vendorId: string) {
-    this.showLoader();
-    this.pendingApprovalGeneralService.getVendorDetails(vendorId).subscribe({
-      next: (vendorDetail: any) => {    
-        this.selectedVendorSubject.next(vendorDetail);
-        this.hideLoader();
+  loadCasereassignmentExpandedInfo(approvalId : any): void {
+    this.pendingApprovalGeneralService.loadCasereassignmentExpandedInfo(approvalId).subscribe({
+      next: (response) => {
+        this.casereassignmentExpandedInfoSubject.next(response);
       },
       error: (err) => {
-        this.hideLoader();
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-      }
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+      },
+    });
+  }
+  loadCasereassignmentExpandedInfo(approvalId : any): void {
+    this.pendingApprovalGeneralService.loadCasereassignmentExpandedInfo(approvalId).subscribe({
+      next: (response) => {
+        this.casereassignmentExpandedInfoSubject.next(response);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+      },
     });
   }
 }

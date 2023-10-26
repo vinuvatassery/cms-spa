@@ -42,10 +42,12 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() gridSkipCount:any;
   @Input() approvalsGeneralLists$: any;
   @Input() clientsSubjects$ : any;
+  @Input() casereassignmentExpandedInfo$: any;
   @Input() approvalsExceedMaxBenefitCard$:any;
   @Input() invoiceData$:any;
   @Input() isInvoiceLoading$:any;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
+  @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
   @Output() loadApprovalsExceedMaxBenefitCardEvent = new EventEmitter<any>();
   @Output() loadApprovalsExceedMaxBenefitInvoiceEvent = new EventEmitter<any>();
   pendingApprovalGeneralTypeCode:any;
@@ -256,7 +258,10 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     }
     return null;
   }
-
+  loadCasereassignmentExpanedInfoEvent(approvalId : any)
+  {
+    this.loadCasereassignmentExpanedInfoParentEvent.emit(approvalId);
+  }
   loadApprovalsExceedMaxBenefitCard($event:any)
   {
     this.loadApprovalsExceedMaxBenefitCardEvent.emit($event);

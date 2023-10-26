@@ -71,17 +71,6 @@ export class FinancialPaymentComponent {
   showNumberSearchWarning = false;
   private searchSubject = new Subject<string>();
 
-  paymentStatusList = [
-    'SUBMITTED',
-    'PENDING_APPROVAL',
-    'DENIED',
-    'MANAGER_APPROVED',
-    'PAYMENT_REQUESTED',
-    'ONHOLD',
-    'FAILED',
-    'PAID',
-  ];
-
   /** Constructor **/
   constructor(private readonly paymentsFacade: PaymentsFacade,
     private documentFacade :  DocumentFacade,
