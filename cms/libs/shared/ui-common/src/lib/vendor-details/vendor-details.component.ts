@@ -21,7 +21,6 @@ export class VendorDetailsComponent implements OnInit {
   @Input() editVendorInfo: boolean = false;
   @Input() vendorDetails!: any;
   @Input() profileInfoTitle!: string;
-  @Input() hasCreateUpdatePermission:boolean=false;
   @Input() ddlStates$!: any;
   @Input() clinicVendorList$!: any;
   @Input() clinicVendorLoader$!: any;
