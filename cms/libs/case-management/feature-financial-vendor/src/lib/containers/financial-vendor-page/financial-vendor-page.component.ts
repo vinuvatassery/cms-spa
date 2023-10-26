@@ -30,6 +30,7 @@ export class FinancialVendorPageComponent implements OnInit {
   inputProviderTypeForClinic = '';
   selectedClinicType : string = this.financeVendorTypeCodes.MedicalClinic;
   hasinsuranceVendorCreateUpdatePermission:boolean = false;
+  hasPharmacyCreateUpdatePermission:boolean = false;
   data = [
     {
       text: 'Manufacturer',
@@ -112,6 +113,7 @@ export class FinancialVendorPageComponent implements OnInit {
     this.contactFacade.loadDdlStates();
     this.hasClinicCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Clinic_Create_Update']);
     this.hasinsuranceVendorCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Insurance_Vendor_Create_Update']);
+    this.hasPharmacyCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Insurance_Vendor_Create_Update']);
   }
 
   searchClinicVendorClicked(clientName: any) {

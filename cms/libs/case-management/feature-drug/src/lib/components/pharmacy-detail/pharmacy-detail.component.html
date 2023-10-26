@@ -105,28 +105,12 @@
   </div>
 </kendo-dialog-actions>
 
-<!-- Add New Pharmacy Modal -->
-<kendo-dialog
-  *ngIf="isOpenNewPharmacyClicked"
-  (close)="onCloseNewPharmacyClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
-  >
-    <kendo-dialog-titlebar> Add New Pharmacy </kendo-dialog-titlebar>
-    <section class="k-dialog-body mb-2">
-      <p>
-          This feature is part of a future scope of work for the ORCares project.
-      </p>
-  </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-        <div class="justify-content-end">    
-            <button kendoButton [primary]="true"  aria-label="Ok"
-                (click)="onCloseNewPharmacyClicked()">
-                Ok
-            </button>
-        </div>
-    </div>
-</kendo-dialog-actions>
+<kendo-dialog kendoRippleContainer *ngIf="isOpenNewPharmacyClicked" (close)="onCloseNewPharmacyClicked()"
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Pharmacy" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.Pharmacy"
+    (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="onCloseNewPharmacyClicked()"
+    [ddlStates$]="ddlStates" [hasCreateUpdatePermission]="hasPharmacyCreateUpdatePermission"
+    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
 </kendo-dialog>
 
 <!-- //NOSONAR  <kendo-dialog
