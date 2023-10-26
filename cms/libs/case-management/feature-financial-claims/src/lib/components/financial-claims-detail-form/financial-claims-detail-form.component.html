@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar (close)="closeAddEditClaimsFormModalClicked()">
+<kendo-dialog-titlebar (close)="closeAddEditClaimsFormModalClicked(false)">
     <section class="app-l-mainTittle">
         <h1 class="maintitle_withicon text-bold">{{title}} Claim</h1>
     </section>
@@ -474,7 +474,7 @@
        
             <span class="mr-2">1 service(s) to be added</span>
             <button kendoButton [primary]="true" look="outline"  aria-label="Cancel"
-                (click)="closeAddEditClaimsFormModalClicked()"> Cancel </button>
+                (click)="closeAddEditClaimsFormModalClicked(false)"> Cancel </button>
             <button kendoButton [primary]="true" [attr.aria-label]="addOrEdit" (click)="save(false)">
                 {{addOrEdit}}
             </button>
