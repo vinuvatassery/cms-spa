@@ -30,7 +30,7 @@
           </tr>
           <tr>
             <td>TIN</td>
-            <td>{{selectedVendorInfo$?.tin}}</td>
+            <td>{{selectedVendorInfo$?.tin | tin}}</td>
           </tr>
           <tr *ngIf="profileInfoTitle == 'Pharmacy Info'">
             <td>Mail Code</td>

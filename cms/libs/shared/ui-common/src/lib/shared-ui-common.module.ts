@@ -20,6 +20,8 @@ import { ReminderNotificationSnackBarComponent } from './reminder-notification-s
 
 import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
+import { TinPipe } from './pipes/tin.pipe'
+
 import { FileSizePipe } from './pipes/fileSize.pipe';
 // directive
 import {
@@ -72,6 +74,7 @@ import { VendorDetailsComponent } from './vendor-details/vendor-details.componen
     YesOrNoPipe,
     ReminderNotificationSnackBarComponent,
     VendorDetailsComponent,
+    TinPipe
   ],
   exports: [
     LoginStatusComponent,
@@ -104,6 +107,7 @@ import { VendorDetailsComponent } from './vendor-details/vendor-details.componen
     YesOrNoPipe,
     ReminderNotificationSnackBarComponent,
     VendorDetailsComponent,
+    TinPipe
   ],
 })
 export class SharedUiCommonModule {}
