@@ -47,7 +47,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   isValidateForm = false;
 
   dentalInsuranceSelectedItem = 'DENTAL_INSURANCE';
-  hasInsurancePlanCreateUpdatePermission=false;
+  hasInsurancePlanCreateUpdatePermission = false;
 
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
 
@@ -57,7 +57,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     private readonly vendorFacade: VendorFacade,
     private readonly insuranceFacade: InsurancePlanFacade,
     private readonly cdr: ChangeDetectorRef,
-    private userManagementFacade:UserManagementFacade,
+    private userManagementFacade: UserManagementFacade,
     private readonly snackbarService: NotificationSnackbarService, private insurancePolicyFacade: HealthInsurancePolicyFacade) {
     this.healthInsuranceForm = this.formBuilder.group({ insuranceCarrierName: [''] });
 
@@ -70,10 +70,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
       canPayForMedicationFlag: [false],
       dentalPlanFlag: [false],
     });
-
-
-    //enable termdate required validation if this type code
-    //"lovCode": "QUALIFIED_HEALTH_PLAN"
   }
 
 
@@ -119,7 +115,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   ngOnInit(): void {
     this.loadInsuranceCarrierName(InsuranceStatusType.healthInsurance);
     this.loadInsurancePlans();
-    this.hasInsurancePlanCreateUpdatePermission=this.userManagementFacade.hasPermission(['Insurance_Plan_Create_Update']);
+    this.hasInsurancePlanCreateUpdatePermission = this.userManagementFacade.hasPermission(['Insurance_Plan_Create_Update']);
   }
 
   private loadInsuranceCarrierName(type: string) {
