@@ -38,7 +38,7 @@
                   </kendo-textbox>
                 </kendo-floatinglabel>
               </div>
-              <div *ngIf="ifApproveOrDeny === 'A' && i === selectedIndex && item.approvalTypeCode === pendingApprovalGeneralTypeCode.GeneralAddtoMasterList">
+              <div *ngIf="ifApproveOrDeny === 'A' && i === selectedIndex && item.approvalTypeCode === pendingApprovalGeneralTypeCode.GeneralCaseReassignment">
                 <kendo-floatinglabel text="New Case Worker">
                   <kendo-dropdownlist aria-label="New Case Worker" [fillMode]="formUiStyle.dropDownFillMode"
                     [data]="usersByRole$ | async" textField="firstName"
