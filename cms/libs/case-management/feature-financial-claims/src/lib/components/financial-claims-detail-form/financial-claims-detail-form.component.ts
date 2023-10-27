@@ -167,6 +167,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
+
   readonly financialProvider = 'medical';
   currentFormControl!: FormGroup<any>;
    data:any = [];
@@ -197,8 +198,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.initClaimForm();
   }
 
-  closeAddEditClaimsFormModalClicked() {
-    this.modalCloseAddEditClaimsFormModal.emit(true);
+  closeAddEditClaimsFormModalClicked(refresh : boolean) {
+    this.modalCloseAddEditClaimsFormModal.emit(refresh);
   }
 
   loadClaimsListGrid() {
@@ -275,8 +276,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
   }
 
-  updateProviderProfile(event:any){
-    console.log(event)
+  updateProviderProfile(event:any){    
     this.financialVendorFacade.updateProviderPanel(event)
   }
 
@@ -821,7 +821,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           );
           this.pcaExceptionDialogService.close();
         } else {
-          this.closeAddEditClaimsFormModalClicked();
+          this.closeAddEditClaimsFormModalClicked(true);
           this.pcaExceptionDialogService.close();
           this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
@@ -853,7 +853,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           );
           this.pcaExceptionDialogService.close();
         } else {
-          this.closeAddEditClaimsFormModalClicked();
+          this.closeAddEditClaimsFormModalClicked(true);
           this.pcaExceptionDialogService.close();
           this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
@@ -1156,12 +1156,18 @@ duplicatePaymentObject:any = {};
   }
   checkProviderNotEligibleException($event:any)
   {
+    let checkException = true;
     this.addExceptionForm.controls.forEach((element, index) => {
-      if(!this.checkPriority(this.providerNotEligiblePriorityArray,index,null))
+      checkException = this.checkPriority(this.providerNotEligiblePriorityArray,index,null);
+      if(!checkException)
       {
         return;
       }
     });
+    if(!checkException)
+    {
+      return;
+    }
     if(!$event?.tin && !this.isSpotsPayment)
     {
       this.addExceptionForm.reset();

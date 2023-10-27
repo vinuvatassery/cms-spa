@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PendingApprovalGeneralService } from '../infrastructure/pending-approval-general.data.service';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 
 /** External libraries **/
@@ -24,22 +24,46 @@ export class PendingApprovalGeneralFacade {
   private invoiceDataSubject = new Subject<any>();
   private serviceDataSubject = new Subject<any>();
   private isInvoiceLoadingSubject = new Subject<boolean>();
+  private approvalsGeneralExceedMaxBenefitCardSubject = new Subject<any>();
+  private selectedVendorSubject = new Subject<any>();
 
   /** Public properties **/
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>(); 
+  snackbarSubject = new Subject<SnackBar>();
   serviceData$ = this.serviceDataSubject.asObservable();
   invoiceData$ = this.invoiceDataSubject.asObservable();
   isInvoiceLoading$ = this.isInvoiceLoadingSubject.asObservable();
+  approvalsGeneralExceedMaxBenefitCardSubjectList$ = this.approvalsGeneralExceedMaxBenefitCardSubject.asObservable();
+  selectedVendor$ = this.selectedVendorSubject.asObservable();
+
  
 
   showLoader() { this.loaderService.show(); }
-  hideLoader() { this.loaderService.hide(); }
 
   errorShowHideSnackBar( subtitle : any)
   {
     this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR,subtitle, NotificationSource.UI)
   }
+
+
+  /** Private properties **/
+  private approvalsGeneralSubject = new Subject<any>();
+
+
+  /** Public properties **/
+  approvalsGeneralList$ = this.approvalsGeneralSubject.asObservable();
+
+
+  /** Constructor **/
+  constructor(
+    private pendingApprovalGeneralService: PendingApprovalGeneralService,
+  private loggingService: LoggingService,
+  private readonly notificationSnackbarService: NotificationSnackbarService,
+  private configurationProvider: ConfigurationProvider,
+  private readonly loaderService: LoaderService
+  ) {}
+  hideLoader() { this.loaderService.hide(); }
+
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
@@ -51,21 +75,11 @@ export class PendingApprovalGeneralFacade {
 
 
   /** Private properties **/
-  private approvalsGeneralSubject = new Subject<any>();
-  private approvalsGeneralExceedMaxBenefitCardSubject = new Subject<any>();
+  private casereassignmentExpandedInfoSubject = new Subject<any>();
 
   /** Public properties **/
-  approvalsGeneralList$ = this.approvalsGeneralSubject.asObservable();
-  approvalsGeneralExceedMaxBenefitCardSubjectList$ = this.approvalsGeneralExceedMaxBenefitCardSubject.asObservable();
-  
- /** Constructor**/
-constructor(
-  private pendingApprovalGeneralService: PendingApprovalGeneralService,
-  private loggingService: LoggingService,
-  private readonly notificationSnackbarService: NotificationSnackbarService,
-  private configurationProvider: ConfigurationProvider,
-  private readonly loaderService: LoaderService
-) { }
+  casereassignmentExpandedInfo$ = this.casereassignmentExpandedInfoSubject.asObservable();
+
 
   /** Public methods **/
   loadApprovalsGeneral(): void {
@@ -97,7 +111,7 @@ constructor(
   }
 
   /** Public methods **/
-  loadInvoiceListGrid(invoiceDto:any){  
+  loadInvoiceListGrid(invoiceDto:any){
     this.isInvoiceLoadingSubject.next(true);
     this.pendingApprovalGeneralService.loadInvoiceListService(invoiceDto).subscribe({
       next: (dataResponse: any) => {
@@ -114,5 +128,28 @@ constructor(
         this.isInvoiceLoadingSubject.next(false);
       },
     });   
+  }
+  loadCasereassignmentExpandedInfo(approvalId : any): void {
+    this.pendingApprovalGeneralService.loadCasereassignmentExpandedInfo(approvalId).subscribe({
+      next: (response) => {
+        this.casereassignmentExpandedInfoSubject.next(response);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+      },
+    });
+  }
+  getVendorDetails(vendorId: string) {
+    this.showLoader();
+    this.pendingApprovalGeneralService.getVendorDetails(vendorId).subscribe({
+      next: (vendorDetail: any) => {    
+        this.selectedVendorSubject.next(vendorDetail);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      }
+    });
   }
 }

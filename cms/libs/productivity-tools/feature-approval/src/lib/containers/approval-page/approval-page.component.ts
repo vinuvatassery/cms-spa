@@ -6,7 +6,7 @@ import { State } from '@progress/kendo-data-query';
 import { ApprovalFacade, PendingApprovalGeneralFacade, PendingApprovalPaymentFacade, UserRoleType } from '@cms/productivity-tools/domain';
 import { ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, DocumentFacade, ApiType } from '@cms/shared/util-core';
 import { NotificationService } from '@progress/kendo-angular-notification';
-import { NavigationMenuFacade, UserManagementFacade, UserDataService } from '@cms/system-config/domain';
+import { NavigationMenuFacade, UserManagementFacade, UserDataService, UserDefaultRoles } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-approval-page',
@@ -39,6 +39,7 @@ export class ApprovalPageComponent implements OnInit {
   userLevel = 1;
 
   state!: State;
+  casereassignmentExpandedInfo$ = this.pendingApprovalGeneralFacade.casereassignmentExpandedInfo$;
   approvalsGeneralLists$ = this.pendingApprovalGeneralFacade.approvalsGeneralList$;
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalCount$;
@@ -56,6 +57,8 @@ export class ApprovalPageComponent implements OnInit {
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId!:any;
+  usersByRole$ = this.userManagementFacade.usersByRole$;
+  selectedVendor$ = this.pendingApprovalGeneralFacade.selectedVendor$;  
   
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,
@@ -69,13 +72,13 @@ export class ApprovalPageComponent implements OnInit {
               }
   ngOnInit(): void {
     this.getUserRole();
+    this.userManagementFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
     this.pendingApprovalPaymentsCount$.subscribe((response:any)=>{
       if(response){
         this.navigationMenuFacade.getAllPendingApprovalPaymentCount(this.userLevel);
       }
-    })
+    });
   }
-
    loadApprovalsGeneralGrid(event: any): void {
     this.pendingApprovalGeneralFacade.loadApprovalsGeneral();
   }
@@ -149,6 +152,10 @@ export class ApprovalPageComponent implements OnInit {
       this.documentFacade.getExportFile(approvalPageAndSortedRequest,`payment-batches?serviceType=${data.selectedPaymentType}&level=${this.userLevel}` , fileName, ApiType.ProductivityToolsApi);
     }
   }
+  loadCasereassignmentExpanedInfoParentEvent(approvalId:any)
+  {
+    this.pendingApprovalGeneralFacade.loadCasereassignmentExpandedInfo(approvalId);
+  }
 
   loadApprovalsExceedMaxBenefitCard(data:any)
   {
@@ -158,5 +165,9 @@ export class ApprovalPageComponent implements OnInit {
   loadApprovalsExceedMaxBenefitInvoice(data:any)
   {
       this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
+  }
+
+  getVendorDetail(approvalEntityId:any){
+    this.pendingApprovalGeneralFacade.getVendorDetails(approvalEntityId);
   }
 }

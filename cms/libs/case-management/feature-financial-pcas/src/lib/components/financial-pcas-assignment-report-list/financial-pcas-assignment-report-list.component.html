@@ -150,8 +150,8 @@
 
     <kendo-grid-column field="amountAssigned" title="Amount Assigned" [width]="170">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountAssigned}}</span>
-      </ng-template>
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountAssigned | kendoNumber: 'n2'}}</span>
+  </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -160,10 +160,9 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="amountRemaining" title="Amount Remaining" [width]="180"> <ng-template
-        kendoGridCellTemplate let-dataItem>
-        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountRemaining}}</span>
-      </ng-template>
+    <kendo-grid-column field="amountRemaining" title="Amount Remaining" [width]="180">  <ng-template kendoGridCellTemplate let-dataItem>
+      <span class="tableamountview"> <strong>$</strong> {{dataItem.amountRemaining | kendoNumber: 'n2'}}</span>
+</ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -204,7 +203,7 @@
             [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
             [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
-          <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'">
+          <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'">
           </kendo-grid-messages>
 
         </div>

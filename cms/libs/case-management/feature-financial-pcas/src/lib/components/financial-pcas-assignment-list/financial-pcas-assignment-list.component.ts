@@ -364,7 +364,13 @@ public rowCallback(context: RowClassArgs) {
     })
   }
 
- 
+  isUnlimitedFlag(flag : string){
+    return flag == "Y";
+  }
+  close()
+  {
+    
+  }
 }
 
 
