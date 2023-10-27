@@ -15,13 +15,26 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent implements OnIni
   @Input() approvalId: any;
   @Output() openEditModal = new EventEmitter<any>();
   @Input() subTypeCode: any;
-  @Input() selectedVendor$:any;
+  @Input() selectedVendor$!:Observable<any>;
   ifApproveOrDeny: any;
   isPanelExpanded = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   readonly subTypeConst = PendingApprovalGeneralTypeCode;
   readonly approveOrDenyConst = GeneralApprovalApproveDeny;
-  ngOnInit(): void {   
+  vendorData : any;
+  ngOnInit(): void {  
+    this.getVendorData(); 
+  }
+
+  private getVendorData() {
+    this.selectedVendor$.subscribe((value: any) => {
+      if(this.subTypeCode === PendingApprovalGeneralTypeCode.Drugs)
+      {
+        this.vendorData = value.items[0];
+      }else{
+        this.vendorData = value
+      }
+    });
   }
 
   approveOrDeny(result:any){

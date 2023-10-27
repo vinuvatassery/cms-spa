@@ -167,7 +167,7 @@ export class ApprovalPageComponent implements OnInit {
       this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
   }
 
-  getVendorDetail(approvalEntityId:any){
-    this.pendingApprovalGeneralFacade.getVendorDetails(approvalEntityId);
+  getVendorDetail(userObject: any){
+    this.pendingApprovalGeneralFacade.getVendorDetails(userObject.approvalEntityId,userObject.subTypeCode);
   }
 }

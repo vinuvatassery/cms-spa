@@ -2,74 +2,76 @@
     <div class="flex-col flex-col-6">
       <button kendoButton class="mb-1 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit "
         aria-label="edit" title="Edit List Item" (click)="onEditListItemsDetailClicked()"></button>
-      <table class="info-table-custom nobg-left" *ngFor="let item of selectedVendor$ | async">
+      <table class="info-table-custom nobg-left">
         <caption hidden> Vendor Info</caption>
-        <tbody *ngIf="subTypeCode === subTypeConst.DentalClinic || subTypeCode === subTypeConst.MedicalClinic || subTypeCode === subTypeConst.MedicalProvider || subTypeCode === subTypeConst.DentalProvider">
+        <tbody *ngIf="subTypeCode === subTypeConst.DentalClinic|| subTypeCode === subTypeConst.MedicalClinic || subTypeCode === subTypeConst.MedicalProvider || subTypeCode === subTypeConst.DentalProvider">
           <tr>
-            <td>Clinic Name</td>
-            <td>Nice Manufacturer</td>
-          </tr>
-          <tr>
-            <td>item.firstName</td>
-            <td>Nice Drug</td>
-          </tr>
-          <tr>
-            <td>item.lastName</td>
-            <td>Nice Brand</td>
-          </tr>
-          <tr>
-            <td>item.tin</td>
-            <td>XXXXXXXX</td>
-          </tr>
-          <tr>
-            <td>Phone</td>
-            <td>XXXXXXXX</td>
-          </tr>
-          <tr>
-            <td>Email</td>
-            <td>abc@gmail.com</td>
-          </tr>
-          <tr>
-            <td>Fax</td>
-            <td>Yes</td>
-          </tr>
-          <tr>
-            <td>item.vendorAddress</td>
-            <td>Abc street</td>
-          </tr>
+             <td>Clinic Name</td>
+             <td>{{vendorData.clinicName}}</td>
+           </tr>
+           <tr>
+             <td>Provider First Name</td>
+             <td>{{vendorData.firstName}}</td>
+           </tr>
+           <tr>
+             <td>Provider Last Name</td>
+             <td>{{vendorData.lastName}}</td>
+           </tr>
+           <tr>
+             <td>TIN</td>
+             <td>{{vendorData.tin}}</td>
+           </tr>
+           <tr>
+             <td>Phone</td>
+             <td>{{vendorData.phone}}</td>
+           </tr>
+           <ng-container *ngIf="vendorData.phone">
+             <tr>
+               <td>Email</td>
+               <td>{{vendorData.Email}}</td>
+             </tr>
+             <tr>
+               <td>Fax</td>
+               <td>{{vendorData.Fax}}</td>
+             </tr>
+           </ng-container>
+           <tr>
+             <td>Address</td>
+             <td>{{vendorData.address}}</td>
+           </tr>
         </tbody>
         <tbody *ngIf="subTypeCode === subTypeConst.Drugs">
           <tr>
             <td>Manufacturer</td>
-            <td>Nice Manufacturer</td>
+            <td>{{vendorData.manufacturer}}</td>
           </tr>
           <tr>
-            <td>item.drug</td>
-            <td>Nice Drug</td>
+            <td>Drug Name</td>
+            <td>{{vendorData.drugName}}</td>
           </tr>
           <tr>
             <td>Brand Name</td>
-            <td>Nice Brand</td>
+            <td>{{vendorData.brandName}}</td>
           </tr>
           <tr>
             <td>NDC Code</td>
-            <td>XXXXXXXX</td>
+            <td>{{vendorData.ndcNbr}}</td>
           </tr>
           <tr>
             <td>HIV Drug?</td>
-            <td>XXXXXXXX</td>
+            <td>{{vendorData.hiv}}</td>
           </tr>
           <tr>
             <td>Hepatitis Drug?</td>
-            <td>abc@gmail.com</td>
+            <td>{{vendorData.hepatitis}}</td>
           </tr>
           <tr>
             <td>Opportunistic infection drug?</td>
-            <td>Yes</td>
+            <td>{{vendorData.opportunisticInfection}}</td>
           </tr>
           <tr>
             <td>Delivery Method</td>
-            <td>Abc street</td>
+            <td>{{vendorData.deliveryMethodCode}}</td>
           </tr>
         </tbody>
         <tbody *ngIf="subTypeCode === subTypeConst.InsuranceVendor">

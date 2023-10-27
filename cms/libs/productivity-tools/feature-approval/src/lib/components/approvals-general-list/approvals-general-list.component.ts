@@ -196,8 +196,12 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
 
   public onPanelExpand(item:any): void {
+    const userObject = {
+      approvalEntityId : item.approvalEntityId,
+      subTypeCode : item.subTypeCode
+    }
     this.selectedSubtypeCode  = item.subTypeCode;
-    this.approvalEntityId.emit(item.approvalEntityId);
+    this.approvalEntityId.emit(userObject);
     this.isPanelExpanded = true;
   }
 
