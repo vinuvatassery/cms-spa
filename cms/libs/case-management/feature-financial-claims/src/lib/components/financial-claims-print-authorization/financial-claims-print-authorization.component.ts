@@ -26,6 +26,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
   @Input() isSaveClicked!: boolean;
   @Input() claimsType:any;
   @Input() claimReconcileCount:any;
+  @Input() isReconcilePrintCount: any;
 
   /** Output properties  **/
   @Output() onClosePrintAdviceLetterEvent = new EventEmitter<any>();
