@@ -107,6 +107,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   });
   paymentMethodLovSubscription!:Subscription;
   claimReconcileCount:any=0;
+  isRecordForPrint:any=0;
   bulkNoteCounter:any=0;
   showExportLoader = false;
   loadType:any = null;
@@ -426,6 +427,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       this.reconcilePaymentGridUpdatedResult.push(dataItem);
     }
     this.claimReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberChanged).length;
+    this.isRecordForPrint =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.isPrintAdviceLetter).length;
   }
 
   assignPaymentReconciledDateToPagedList() {
