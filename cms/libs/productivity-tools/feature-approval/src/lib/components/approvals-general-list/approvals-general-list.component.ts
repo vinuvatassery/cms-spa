@@ -41,13 +41,13 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() gridSkipCount:any;
   @Input() approvalsGeneralLists$: any;
   @Input() casereassignmentExpandedInfo$: any;
-  @Input() approvalsExceedMaxBenefitCard$:any;
+  @Input() approvalsExceptionCard$:any;
   @Input() invoiceData$:any;
   @Input() isInvoiceLoading$:any;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
   @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
-  @Output() loadApprovalsExceedMaxBenefitCardEvent = new EventEmitter<any>();
-  @Output() loadApprovalsExceedMaxBenefitInvoiceEvent = new EventEmitter<any>();
+  @Output() loadApprovalsExceptionCardEvent = new EventEmitter<any>();
+  @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
   pendingApprovalGeneralTypeCode:any;
   public state!: State;
   sortColumn = 'batch';
@@ -185,7 +185,12 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   gridDataHandle() {
     this.approvalsGeneralLists$.subscribe((response: any) => {
       if (response.length > 0) {
-        this.approvalsPaymentsGridPagedResult = response;
+        this.approvalsPaymentsGridPagedResult = response.map((item:any) => ({
+          ...item,
+          sendBackNotesInValidMsg: '',
+          sendBackNotesInValid : false,
+          isExpanded:false
+        }));
         this.tAreaVariablesInitiation(this.approvalsPaymentsGridPagedResult);
         this.isApprovalGeneralGridLoaderShow = false;
         this.gridApprovalGeneralDataSubject.next(this.approvalsPaymentsGridPagedResult);
@@ -260,13 +265,13 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   {
     this.loadCasereassignmentExpanedInfoParentEvent.emit(approvalId);
   }
-  loadApprovalsExceedMaxBenefitCard($event:any)
+  loadApprovalsExceptionCard($event:any)
   {
-    this.loadApprovalsExceedMaxBenefitCardEvent.emit($event);
+    this.loadApprovalsExceptionCardEvent.emit($event);
   }
-  loadApprovalsExceedMaxBenefitInvoice($event:any)
+  loadApprovalsExceptionInvoice($event:any)
   {
-    this.loadApprovalsExceedMaxBenefitInvoiceEvent.emit($event);
+    this.loadApprovalsExceptionInvoiceEvent.emit($event);
   }
 
   ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {

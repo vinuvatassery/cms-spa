@@ -53,11 +53,11 @@ export class PendingApprovalGeneralFacade {
   /** Private properties **/
   private approvalsGeneralSubject = new Subject<any>();
   private casereassignmentExpandedInfoSubject = new Subject<any>();
-  private approvalsGeneralExceedMaxBenefitCardSubject = new Subject<any>();
+  private approvalsGeneralExceptionCardSubject = new Subject<any>();
 
   /** Public properties **/
   approvalsGeneralList$ = this.approvalsGeneralSubject.asObservable();
-  approvalsGeneralExceedMaxBenefitCardSubjectList$ = this.approvalsGeneralExceedMaxBenefitCardSubject.asObservable();
+  approvalsGeneralExceptionCardSubjectList$ = this.approvalsGeneralExceptionCardSubject.asObservable();
   casereassignmentExpandedInfo$ = this.casereassignmentExpandedInfoSubject.asObservable();
 
  /** Constructor**/
@@ -84,10 +84,10 @@ constructor(
     });
   }
 
-  loadExceedMaxBenefitCard(data:any): void {
-    this.pendingApprovalGeneralService.loadExceedMaxBenefitCard(data).subscribe({
-      next: (exceedMaxBenefitCardResponse) => {
-        this.approvalsGeneralExceedMaxBenefitCardSubject.next(exceedMaxBenefitCardResponse);
+  loadExceptionCard(data:any): void {
+    this.pendingApprovalGeneralService.loadExceptionCard(data).subscribe({
+      next: (exptionCardResponse) => {
+        this.approvalsGeneralExceptionCardSubject.next(exptionCardResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)

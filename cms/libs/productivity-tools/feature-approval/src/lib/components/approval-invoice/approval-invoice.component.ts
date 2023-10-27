@@ -24,10 +24,9 @@ export class ApprovalInvoiceComponent implements OnInit{
   @Input() sortType: any;
   @Input() sort: any;
   @Input() gridSkipCount:any;
-  @Input() approvalsExceedMaxBenefitCard$:any;
   @Input() invoiceData$:any;
   @Input() isInvoiceLoading$:any;
-  @Output() loadApprovalsExceedMaxBenefitInvoiceEvent = new EventEmitter<any>();
+  @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
   public state!: any;
   sortColumn = 'Service Start';
   sortDir = 'Ascending';
@@ -265,7 +264,7 @@ export class ApprovalInvoiceComponent implements OnInit{
 
   
   loadInvoiceListGrid(data: any) {
-    this.loadApprovalsExceedMaxBenefitInvoiceEvent.emit(data);
+    this.loadApprovalsExceptionInvoiceEvent.emit(data);
   }
 
   

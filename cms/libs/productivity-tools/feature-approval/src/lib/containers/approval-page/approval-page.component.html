@@ -17,7 +17,7 @@
         <div class="nm-20 approval_container">
           <productivity-tools-approvals-general-list
             [approvalsGeneralLists$]="approvalsGeneralLists$"
-            [approvalsExceedMaxBenefitCard$]="approvalsExceedMaxBenefitCard$"
+            [approvalsExceptionCard$]="approvalsExceptionCard$"
             [casereassignmentExpandedInfo$]="casereassignmentExpandedInfo$"
             [invoiceData$]="invoiceData$"
             [pageSizes]="pageSizes"
@@ -28,8 +28,8 @@
             [isInvoiceLoading$]="isInvoiceLoading$"
             (loadApprovalsGeneralGridEvent)="loadApprovalsGeneralGrid($event)"
             (loadCasereassignmentExpanedInfoParentEvent)="loadCasereassignmentExpanedInfoParentEvent($event)"
-            (loadApprovalsExceedMaxBenefitCardEvent)="loadApprovalsExceedMaxBenefitCard($event)"
-            (loadApprovalsExceedMaxBenefitInvoiceEvent)="loadApprovalsExceedMaxBenefitInvoice($event)">
+            (loadApprovalsExceptionCardEvent)="loadApprovalsExceptionCard($event)"
+            (loadApprovalsExceptionInvoiceEvent)="loadApprovalsExceptionInvoice($event)">
           </productivity-tools-approvals-general-list>
         </div>
       </ng-template>
