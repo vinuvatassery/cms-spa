@@ -776,8 +776,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     const totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length;
     if (isValid.length > 0) {
       this.pageValidationMessageFlag = true;
-      this.pageValidationMessage = "Validation errors found, please review each page for errors " +
-        totalCount + " is the, total number of validation errors found.";
+      this.pageValidationMessage = totalCount +" validation errors found, please review each page for errors. " ;
     }
     else if(this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '').length <= 0){
       this.pageValidationMessage = "No data for reconcile and print.";

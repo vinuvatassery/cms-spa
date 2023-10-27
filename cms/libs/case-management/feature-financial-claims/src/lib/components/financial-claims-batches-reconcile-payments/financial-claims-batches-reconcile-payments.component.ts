@@ -117,7 +117,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     paymentMethodDesc:"Pmt. Method",
     paymentReconciledDate:"Date Pmt. Reconciled",
     paymentSentDate:"Date Pmt. Sent",
-    amountDue:"Pmt. Amount",
+    amountDue:"Amount Due",
     checkNbr:"Warrant Number",
     comments:"Note (optional)"
   }
@@ -144,7 +144,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     },
     {
       columnCode: 'amountDue',
-      columnDesc: 'Pmt. Amount',
+      columnDesc: 'Amount Due',
     },
     {
       columnCode: 'checkNbr',
@@ -481,7 +481,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         itemResponse.data[index].datePaymentSentInValidMsg = ifExist?.datePaymentSentInValidMsg;
         itemResponse.data[index].isPrintAdviceLetter = ifExist?.isPrintAdviceLetter;
         itemResponse.data[index].tAreaCessationCounter = ifExist?.tAreaCessationCounter;
-        itemResponse[index].batchId = ifExist?.batchId;
+        itemResponse.data[index].batchId = ifExist?.batchId;
       }
       else {
         itemResponse.data[index].paymentReconciledDate = itemResponse.data[index].paymentReconciledDate !== null ? new Date(itemResponse.data[index].paymentReconciledDate) : itemResponse.data[index].paymentReconciledDate;
@@ -809,8 +809,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     const totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length;
     if (isValid.length > 0) {
       this.pageValidationMessageFlag = true;
-      this.pageValidationMessage = "validation errors found, please review each page for errors " +
-        totalCount + " is the total number of validation errors found.";
+      this.pageValidationMessage = totalCount +" validation errors found, please review each page for errors. " ;
     }
     else if(this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '').length <= 0){
       this.pageValidationMessage = "No data for reconcile and print";
