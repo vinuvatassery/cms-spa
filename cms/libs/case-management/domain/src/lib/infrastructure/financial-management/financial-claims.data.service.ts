@@ -504,6 +504,6 @@ export class FinancialClaimsDataService {
     );
   }
   CheckWarrantNumber(batchId:any,warrantNumber:any){
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/payments/batches/${batchId}/warrant-number/${warrantNumber}`);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/payments/batches/${batchId}/warrants/${warrantNumber}`);
   }
 }
