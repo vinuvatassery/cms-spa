@@ -147,8 +147,8 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
       healthInsuranceTypeCode: formValues.insuranceType,
       startDate: formValues.startDate,
       termDate: formValues.termDate,
-      canPayForMedicationFlag: formValues.canPayForMedicationFlag ? 'INSURANCE_PLAN.can_pay_for_medication_flag' : StatusFlag.No,
-      dentalPlanFlag: formValues.dentalPlanFlag ? 'INSURANCE_PLAN.dental_plan_flag' : StatusFlag.No,
+      canPayForMedicationFlag: formValues.canPayForMedicationFlag ? StatusFlag.Yes : StatusFlag.No,
+      dentalPlanFlag: formValues.dentalPlanFlag ? StatusFlag.Yes : StatusFlag.No,
       activeFlag: hasCreateUpdatePermission ? StatusFlag.Yes : StatusFlag.No,
     };
 
