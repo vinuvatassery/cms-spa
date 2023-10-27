@@ -40,8 +40,10 @@
       <div class="flex-col">
         <kendo-floatinglabel text="Note">
           <kendo-textarea [fillMode]="formUiStyle.inputFillMode"  aria-label="Note" [rows]="1" >
-          </kendo-textarea>
-          <kendo-formhint class="justify-content-end">6/100</kendo-formhint>
+            <kendo-textarea-suffix class="justify-content-end">
+              <span class="counter">6/100</span>
+        </kendo-textarea-suffix>
+          </kendo-textarea> 
         </kendo-floatinglabel>
       </div>
  
