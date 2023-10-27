@@ -760,7 +760,7 @@ color: $app-primary-font-color;
   overflow-y: hidden;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
-
+  min-height: 32px;
   .k-scrollview {
     border: 0px !important;
   }
@@ -1238,9 +1238,11 @@ color: $app-primary-font-color;
 
 .table-text-area{
   textarea{
-    height: 35px;
+    min-height: 37px;
+    height: 37px;
     resize: vertical;
     line-height: normal;
+    padding: 8px 16px !important;
   }
 }
  .table-filter-with-dropdown{

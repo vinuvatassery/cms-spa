@@ -193,7 +193,21 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
         this.sortValue,
         this.sortType,
         this.filters
-      );
+      ).subscribe({
+        next: (res: any) => {
+          const gridView: any = {
+            data: res.items,
+            total: res.totalCount,
+          };
+          this.contacts$.next(gridView);
+          this.loader$.next(false);
+        },
+        error: (err: any) => {
+          this.loader$.next(false);
+          this.loggingService.logException(err)
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
+        },
+      })
       this.clickCloseDeleteContactAddress();
     }
   }
@@ -207,7 +221,21 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
         this.sortValue,
         this.sortType,
         this.filters
-      );
+      ).subscribe({
+        next: (res: any) => {
+          const gridView: any = {
+            data: res.items,
+            total: res.totalCount,
+          };
+          this.contacts$.next(gridView);
+          this.loader$.next(false);
+        },
+        error: (err: any) => {
+          this.loader$.next(false);
+          this.loggingService.logException(err)
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
+        },
+      })
       this.clickCloseDeactivateContactAddress();
       this.refreshPaymentAddressList.emit();
       this.initializeGrid();
@@ -227,7 +255,21 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
       this.sortValue,
       this.sortType,
       this.filters
-    );
+    ).subscribe({
+      next: (res: any) => {
+        const gridView: any = {
+          data: res.items,
+          total: res.totalCount,
+        };
+        this.contacts$.next(gridView);
+        this.loader$.next(false);
+      },
+      error: (err: any) => {
+        this.loader$.next(false);
+        this.loggingService.logException(err)
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
   }
 
   public dataStateChange(stateData: any): void {
@@ -241,7 +283,21 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
       this.sortValue,
       this.sortType,
       this.filters
-    );
+    ).subscribe({
+      next: (res: any) => {
+        const gridView: any = {
+          data: res.items,
+          total: res.totalCount,
+        };
+        this.contacts$.next(gridView);
+        this.loader$.next(false);
+      },
+      error: (err: any) => {
+        this.loader$.next(false);
+        this.loggingService.logException(err)
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
   }
   filterChange(filter: CompositeFilterDescriptor): void {
     this.filters = JSON.stringify(filter);

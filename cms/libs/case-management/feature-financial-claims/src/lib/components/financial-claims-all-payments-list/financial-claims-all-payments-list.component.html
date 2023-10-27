@@ -50,11 +50,27 @@
     (selectedKeysChange)="selectedKeysChange($event)"
     [(selectedKeys)]="selectedClaims">
 
-    <kendo-grid-checkbox-column *ngIf="!isGridExpand" [headerClass]="{ 'text-center': true }"
+    <kendo-grid-checkbox-column *ngIf="!(isGridExpand || isPrintAuthorizationClicked)" [headerClass]="{ 'text-center': true }"
       [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"
       [sticky]="true"
       ></kendo-grid-checkbox-column>
+
+      <kendo-grid-column *ngIf="isPrintAuthorizationClicked" [sortable]="false" field="add" [width]="40"  class="text-center" 
+      [sticky]="true" [sortable]="false"  [columnMenu]="false"  >
+        <ng-template kendoGridHeaderTemplate let-dataItem >
+            <input kendoCheckBox
+                 type="checkbox" 
+                 name="selectAll"
+                 [(ngModel)]="selectAll"
+                 (change)="selectionAllChange()"/>
+         </ng-template> 
+         <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
+             <input   kendoCheckBox
+                 type="checkbox"  [(ngModel)]="dataItem.selected" 
+                 (change)="selectionChange(dataItem,dataItem.selected)"/>
+         </ng-template>
+      </kendo-grid-column>
 
       <kendo-grid-column field="itemNumber" title="Item #" [width]="120">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -280,9 +296,9 @@
 
     </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
-      <span *ngIf="previewText" class="">{{selectedClaims?.length}} claims(s) to be previewed</span>
+      <span *ngIf="previewText" class="">{{sendReportCount}} claims(s) to be previewed</span>
       <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" *ngIf="isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
-      <button kendoButton [primary]="true" aria-label="Review" class="" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
+      <button kendoButton [primary]="true" aria-label="Review" [disabled]="sendReportCount == 0" class="" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
       <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action"
         buttonClass="k-split-button" [tabindex]="0" *ngIf="!isPrintAuthorizationClicked"
         [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
@@ -308,7 +324,12 @@
 
     <ng-template #PrintAuthorizationDialogTemplate>
       <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Authorization(s)</kendo-dialog-titlebar>
-    <cms-financial-claims-print-authorization></cms-financial-claims-print-authorization>
+    <cms-financial-claims-print-authorization
+    [printOption]="true"
+    [items]="selectedAllPaymentsList"
+    [claimsType] ="claimsType"
+    (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)">
+    </cms-financial-claims-print-authorization>
     </ng-template>
 
     <ng-template #clientRecentClaimsDialog>

@@ -883,6 +883,19 @@ table,
         width: 50%; 
         border-bottom: 1px solid rgba($black, 0.1);
       }
+      &.providercontact{
+        td{
+          border-bottom: 0px solid rgba($black, 0.1);
+          padding: 0px;
+         
+        }
+        &:nth-child(3n + 1){
+          border-bottom: 1px solid rgba($black, 0.1);
+          td{
+            padding-bottom: 10px;
+          }
+        }
+      }
     }
   }
 }

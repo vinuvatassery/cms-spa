@@ -15,7 +15,7 @@
                 <p> {{premium.clientFullName}}</p>
             </div>
             <div class="flex-col flex-col-3">
-                <label><strong>Member ID:</strong></label>
+                <label><strong>Client ID:</strong></label>
                 <p>{{premium.clientId}}</p>
             </div>
 
@@ -42,7 +42,7 @@
                 <p> {{premium.coverageEndDate  | date:'MM/dd/yyyy'}} </p>
             </div>
             <div class="flex-col flex-col-3">
-                <label><strong>Last Premium Due Date:</strong></label>
+                <label><strong>Next Premium Due Date:</strong></label>
                 <p> {{premium.nextPremiumDueDate  | date:'MM/dd/yyyy'}} </p>
             </div>
         </div>
@@ -91,7 +91,7 @@
     <div class="add_new_bottom_section">
         <div class="flex-row">
             <div class="flex-col flex-col-6">
-                <div class=" mb-3">
+            
                 <div  *ngFor="let adjustment of premium.premiumAdjustments;index as i" class="mb-2">   
                     <div class="flex-space-bw align-items-center">
                         <h4 class="mar-0">ADJUSTMENT {{i+1}}</h4>
@@ -182,7 +182,7 @@
                         (click)="addAdjustment()"> 
                         <span class="material-icons" aria-label="New Premiums" aria-hidden="false">add</span> ADJUSTMENT</button>
                     </div>
-                </div>
+               
             </div>
         </div>
 
@@ -190,11 +190,11 @@
 
     <div *ngIf="insurancePremium$ | async">
         <h5 class="text-upper">Recent Premiums for this client</h5>
-        <div class="add_new_fixed_bottom_grid_section">
+  
             <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [paymentRequestId]="paymentRequestId" [clientId]="clientId" [premiumsType]="premiumsType"
             (onProviderNameClickEvent)="onProviderNameClick($event)"
             ></cms-financial-premiums-recent-premiums-list>
-        </div>
+       
  
     </div>
     
@@ -209,7 +209,7 @@
             <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
         </div>
         <div class="flex-col flex-col-3">
-            <label><strong>Member ID:</strong></label>
+            <label><strong>Client ID:</strong></label>
             <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
         </div>
 
@@ -236,7 +236,7 @@
             <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
         </div>
         <div class="flex-col flex-col-3">
-            <label><strong>Last Premium Due Date:</strong></label>
+            <label><strong>Next Premium Due Date:</strong></label>
             <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
         </div>
         </div>

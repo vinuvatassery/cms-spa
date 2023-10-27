@@ -95,9 +95,11 @@
         </kendo-grid-string-filter-menu>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="tin" title="Tax ID" [width]="100">
+    <kendo-grid-column field="tin" title="Tax ID" [width]="150">
       <ng-template kendoGridCellTemplate let-dataItem>
-        {{ dataItem.tin | tin }}
+        
+          {{ dataItem.tin | tin }}
+        
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
