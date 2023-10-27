@@ -152,11 +152,11 @@
                       title ="{{dataItem.sendBackNotes}}" [disabled]="dataItem.batchStatus == 'APPROVED'"
                       [ngClass]="ngDirtyInValid(dataItem,'sendBackNotes',rowIndex)"  id ="sendBackNotes{{rowIndex}}"
                       >
-
+                      <kendo-textarea-suffix class="justify-content-end">
+                        <span class="counter">{{ dataItem.tAreaCessationCounter }}</span>
+                      </kendo-textarea-suffix>
                     </kendo-textarea>
-                    <kendo-textarea-suffix class="justify-content-end">
-                      <span class="counter">{{ dataItem.tAreaCessationCounter }}</span>
-                    </kendo-textarea-suffix>
+                
                     <kendo-formerror *ngIf="dataItem.sendBackNotesInValid">{{dataItem.sendBackNotesInValidMsg}}</kendo-formerror>
                 </div>
     </ng-template>
@@ -186,7 +186,7 @@
                         id="RowsPerPage" [(value)]="state.take"
                         (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
                     <kendo-pager-info> </kendo-pager-info>
-                    <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Vendors'" [pagerPage]="'Page'">
+                    <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'">
                     </kendo-grid-messages>
                 </div>
                 <div class="d-flex">

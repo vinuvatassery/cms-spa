@@ -1,18 +1,12 @@
 <div class="flex-row app-c-expansion-panel-two">
   <div class="flex-col">
-    <kendo-popover #onUserProfileDetailsHovered width="330" position="right">
-      <ng-template kendoPopoverBodyTemplate>
-        <common-user-profile-card> </common-user-profile-card>
-      </ng-template>
-    </kendo-popover>
-
       <kendo-panelbar *ngFor="let item of approvalsGeneralLists$|async;let i=index">
         <kendo-panelbar-item *ngIf="getTitle(item.approvalTypeCode)">
 
           <ng-template kendoPanelBarItemTitle>
             <div class="flex-row rw-100" (click)="$event.stopPropagation();">
               <div class="flex-col flex-col-6">
-                <h5>{{getTitle(item.approvalTypeCode)}}</h5>               
+                <h5>{{getTitle(item.approvalTypeCode)}}</h5>
                 <p>{{item.creationTime | date:'MM-dd-yyyy'}} by <button kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
                     aria-label="FName LName" kendoButton look="flat" class="card-link-button">
                     {{item.fullName}}
@@ -44,12 +38,19 @@
                 </div>
               </div>
             </div>
+            <kendo-popover #onUserProfileDetailsHovered width="330" position="right">
+              <ng-template kendoPopoverBodyTemplate>
+                <common-user-profile-card  [userId]="item.creatorId"> </common-user-profile-card>
+              </ng-template>
+            </kendo-popover>
           </ng-template>
 
           <ng-template kendoPanelBarContent>
             <ng-switch [ngSwitch]="item.approvalTypeCode">
-              <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralCaseReassignment}}">
-                <productivity-tools-approvals-general-list-detail-reassignment [approvalId]="item.generalPendingApprovalId">
+              <ng-template ngSwitchCase = "{{pendingApprovalGeneralTypeCode.GeneralCaseReassignment}}">
+                <productivity-tools-approvals-general-list-detail-reassignment [approvalId]="item.generalPendingApprovalId"
+                [casereassignmentExpandedInfo$]="casereassignmentExpandedInfo$"
+                (loadCasereassignmentExpanedInfoEvent)="loadCasereassignmentExpanedInfoEvent($event)">
                 </productivity-tools-approvals-general-list-detail-reassignment>
               </ng-template>
               <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralAddtoMasterList}}">
@@ -57,18 +58,18 @@
                 </productivity-tools-approvals-general-list-detail-addtomasterlist>
               </ng-template>
               <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralException}}">
-                <productivity-tools-approvals-general-list-detail-exceptions 
-                  [approvalId]="item.generalPendingApprovalId" 
+                <productivity-tools-approvals-general-list-detail-exceptions
+                  [approvalId]="item.generalPendingApprovalId"
                   [exceptionId]="item.approvalEntityId"
                   [approvalsExceedMaxBenefitCard$]="approvalsExceedMaxBenefitCard$|async"
                   (loadApprovalsExceedMaxBenefitCardEvent)="loadApprovalsExceedMaxBenefitCard($event)"
                   [pageSizes]="pageSizes"
-                  [sortValue]="sortValue" 
-                  [sortType]="sortType" 
+                  [sortValue]="sortValue"
+                  [sortType]="sortType"
                   [sort]="sort"
                   [gridSkipCount]="gridSkipCount"
                   [invoiceData$]="invoiceData$"
-                  [isInvoiceLoading$]="isInvoiceLoading$"  
+                  [isInvoiceLoading$]="isInvoiceLoading$"
                   (loadApprovalsExceedMaxBenefitInvoiceEvent)="loadApprovalsExceedMaxBenefitInvoice($event)">
                 </productivity-tools-approvals-general-list-detail-exceptions>
               </ng-template>
@@ -77,7 +78,7 @@
               </ng-template>
             </ng-switch>
           </ng-template>
-          
+
         </kendo-panelbar-item>
       </kendo-panelbar>
 
