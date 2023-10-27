@@ -824,10 +824,11 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
     this.isSaveClicked = true;
     this.validateReconcileGridRecord();
-    const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid);
+    const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid || x.warrantNumberInValid);
     const datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
     const datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
-    const totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length;
+    const warrantNumberInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberInValid);
+    const totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length + warrantNumberInValidCount.length;
     if (isValid.length > 0) {
       this.pageValidationMessageFlag = true;
       this.pageValidationMessage = totalCount +" validation errors found, please review each page for errors. " ;
