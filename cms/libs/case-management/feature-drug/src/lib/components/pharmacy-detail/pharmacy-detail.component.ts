@@ -95,7 +95,6 @@ export class PharmacyDetailComponent implements OnInit {
 
   /** Internal event methods **/
   onCloseNewPharmacyClicked() {
-    this.closePharmacyEvent.emit();
     this.isOpenNewPharmacyClicked = false;
   }
 
@@ -153,7 +152,8 @@ export class PharmacyDetailComponent implements OnInit {
       next: (response: any) => {
         this.financialVendorFacade.hideLoader();
         this.onCloseNewPharmacyClicked();
-        var notificationMessage = "Vendor profile added successfully";
+        alert(JSON.stringify(response))
+        var notificationMessage = response.message;
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
         this.cdr.detectChanges();
       },
