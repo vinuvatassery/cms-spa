@@ -150,7 +150,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     }
   ];
 
-  warrantcalcalcutionarray:any[]=[];
+  warrantCalcutionArray:any[]=[];
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
     private readonly cd: ChangeDetectorRef, public intl: IntlService, 
@@ -816,22 +816,24 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
 
     onRowSelection(grid:any, selection:any)
     {
-     this.warrantcalcalcutionarray=[];
+     this.warrantCalcutionArray=[];
       const data = selection.selectedRows[0].dataItem;    
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId; 
       let warrantTotal=0; 
      
-      let object={
-        vendorId:data?.entityId,
-        batchId:this.batchId,
-        paymentRequestId:data?.paymentRequestId,
-        warrantnumber:data?.checkNbr,
-
-      }
-      this.warrantcalcalcutionarray.push(object);  
-      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId && x.batchId==this.batchId).forEach((item: any) => {
+    
+      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId ).forEach((item: any) => {
+       
      
+        let object={
+          vendorId:item?.entityId,
+          batchId:this.batchId,
+          paymentRequestId:item?.paymentRequestId,
+          warrantNumber:item?.checkNbr,
+  
+        }
+        this.warrantCalcutionArray.push(object);
       });
 
       const ReconcilePaymentResponseDto =
@@ -842,9 +844,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         amountTotal : data.amountTotal,
         warrantTotal : warrantTotal,
         warrantNbr : data.checkNbr,
-        warrantcalcalcution:this.warrantcalcalcutionarray,
+        warrantCalculation:this.warrantCalcutionArray,
         paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
       }
+      
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
     }
 

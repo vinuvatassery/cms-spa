@@ -366,10 +366,11 @@ export class FinancialClaimsFacade {
   }
 
   loadReconcilePaymentBreakoutSummary(data:any){
- 
+    this.loaderService.show(); 
     this.financialClaimsDataService.loadReconcilePaymentBreakoutSummaryService(data).subscribe({
       next: (dataResponse) => {
         this.reconcileBreakoutSummaryDataSubject.next(dataResponse);
+        this.loaderService.hide(); 
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
