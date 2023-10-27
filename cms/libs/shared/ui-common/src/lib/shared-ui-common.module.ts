@@ -21,7 +21,6 @@ import { ReAssignCaseComponent } from './re-assign-case/re-assign-case.component
 
 import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
-import { TinPipe } from './pipes/tin.pipe'
 
 import { FileSizePipe } from './pipes/fileSize.pipe';
 // directive
