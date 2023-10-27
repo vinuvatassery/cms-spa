@@ -151,8 +151,7 @@ export class PharmacyDetailComponent implements OnInit {
     this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
       next: (response: any) => {
         this.financialVendorFacade.hideLoader();
-        this.onCloseNewPharmacyClicked();
-        alert(JSON.stringify(response))
+        this.onCloseNewPharmacyClicked(); 
         var notificationMessage = response.message;
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
         this.cdr.detectChanges();
