@@ -325,14 +325,16 @@
         <div class="component-list-h">
           <span class="app-checkboxwidtext-wrapper">
             <input type="checkbox" kendoCheckBox aria-labelledby="Rebate" id="physicalAddressFlag"
-              formControlName="physicalAddressFlag" />
+              formControlName="physicalAddressFlag" (change)="onPharmacyPhysicalAddressChecked()"/>
             <label class="k-checkbox-label" for="physicalAddressFlag"> This is the pharmacy's physical address </label>
           </span>
         </div>
       </div>
 
       <div
-        *ngIf="vendorTypes.Clinic != providerType && (providerType != vendorTypes.MedicalProviders) && (providerType != vendorTypes.DentalProviders) && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy && (providerType != vendorTypes.Manufacturers)"
+        *ngIf="vendorTypes.Clinic != providerType && (providerType != vendorTypes.MedicalProviders) && (providerType != vendorTypes.DentalProviders)
+         && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy && (providerType != vendorTypes.Manufacturers)
+         && (providerType != vendorTypes.HealthcareProviders)"
         class="flex-col mt-1">
         <button kendoButton icon="add" [primary]="true" look="flat" aria-label="Address">
           Address
