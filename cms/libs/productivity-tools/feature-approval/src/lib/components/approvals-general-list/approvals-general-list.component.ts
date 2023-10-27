@@ -20,10 +20,9 @@ import {
 import { Subject } from 'rxjs';
 import {
   PanelBarCollapseEvent,
-  PanelBarExpandEvent,
 } from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { PendingApprovalGeneralTypeCode, PendingApprovalPaymentTypeCode } from '@cms/productivity-tools/domain';
+import { PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
 import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approvals-general-list',

@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef} from '@angular/core';
-import { PanelBarCollapseEvent, PanelBarExpandEvent } from '@progress/kendo-angular-layout';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 
