@@ -1,4 +1,4 @@
-import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -8,14 +8,15 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
 import { AddressType } from '../enums/address-type.enum';
 import { StatusFlag } from '../enums/status-flag.enum';
-import { MultiColumnComboBoxComponent } from '@progress/kendo-angular-dropdowns';
+import { Subject } from 'rxjs';
+
 @Component({
   selector: 'cms-vendor-details',
   templateUrl: './vendor-details.component.html',
   styleUrls: ['./vendor-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VendorDetailsComponent implements OnInit {
+export class VendorDetailsComponent implements OnInit, OnDestroy {
   @Input() providerType!: any;
   @Input() medicalProviderForm: FormGroup;
   @Input() editVendorInfo: boolean = false;
@@ -26,6 +27,9 @@ export class VendorDetailsComponent implements OnInit {
   @Input() clinicVendorList$!: any;
   @Input() clinicVendorLoader$!: any;
   @Input() selectedClinicType: string = FinancialVendorTypeCode.MedicalClinic;
+
+  // listens for event when vendor saved in page comp
+  @Input() saveVendorEventSubject: Subject<any> = new Subject<any>();
 
   @Output() saveProviderEventClicked = new EventEmitter<any>();
   @Output() closeModalEventClicked = new EventEmitter<any>();
@@ -79,16 +83,12 @@ export class VendorDetailsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    if (this.vendorTypes.Clinic == this.providerType) {
-      this.isClinicNameFilterable = false;
-    }
     this.lovFacade.getPaymentRunDateLov();
     this.lovFacade.getPaymentMethodLov();
     if (this.editVendorInfo) {
       this.setVendorDetailFormValues();
     }
     else {
-
       this.getPaymentMethods();
       this.getPaymentRunDate();
     }
@@ -97,6 +97,10 @@ export class VendorDetailsComponent implements OnInit {
     } else if (this.selectedClinicType === FinancialVendorTypeCode.DentalProviders) {
       this.medicalProviderForm.controls[this.clinicTypeFieldName].setValue(FinancialVendorTypeCode.DentalClinic)
     }
+  }
+
+  ngOnDestroy() {
+    this.saveVendorEventSubject.unsubscribe();
   }
 
   get AddContactForm(): FormArray {
@@ -158,7 +162,6 @@ export class VendorDetailsComponent implements OnInit {
         (this.AddContactForm.controls[index] as FormGroup).controls['isPreferedContact'].setValue(false)
       }
     }
-
   }
 
   save() {
@@ -244,6 +247,14 @@ export class VendorDetailsComponent implements OnInit {
         ]);
       this.medicalProviderForm.controls['paymentMethod'].updateValueAndValidity();
 
+    }
+
+    if (this.providerType == this.vendorTypes.Clinic) {
+      this.medicalProviderForm.controls[this.clinicTypeFieldName]
+        .setValidators([
+          Validators.required,
+        ]);
+      this.medicalProviderForm.controls[this.clinicTypeFieldName].updateValueAndValidity();
     }
 
     if (this.providerType == this.vendorTypes.Clinic) {
@@ -391,6 +402,7 @@ export class VendorDetailsComponent implements OnInit {
 
   isClinicNameFilterable = true;
 
+
   searchClinic(clinicName: any) {
     if (clinicName != '') {
       this.selectedClinicVendorId = null;
@@ -399,8 +411,9 @@ export class VendorDetailsComponent implements OnInit {
   }
 
   closeVedorModal() {
-    this.closeModalEventClicked.next(true);
+    this.closeModalEventClicked.next(null);
   }
+
   updateVendorDetails() {
     this.validateEditForm();
     this.isValidateForm = true;
@@ -503,6 +516,7 @@ export class VendorDetailsComponent implements OnInit {
       } 
     return vendorProfileData;
   }
+
   onChange() {
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if (mailCode.length >= 0) {
@@ -530,8 +544,8 @@ export class VendorDetailsComponent implements OnInit {
         .setValidators([]);
       this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
     }
-
   }
+
   onMailCodeChange() {
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if (mailCode.length > 0) {
@@ -556,8 +570,8 @@ export class VendorDetailsComponent implements OnInit {
     else {
       this.onChange();
     }
-
   }
+
   onMailCodeKeyUp() {
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     if (mailCode.length !== 3 && mailCode != "") {
