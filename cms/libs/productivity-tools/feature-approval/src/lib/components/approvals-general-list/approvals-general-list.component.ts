@@ -23,11 +23,13 @@ import {
 } from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
+import { UserDataService } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approvals-general-list',
   templateUrl: './approvals-general-list.component.html',
 })
 export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
+  loginUserId!:any;
   isPanelExpanded = false;
   ifApproveOrDeny: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -43,10 +45,13 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() approvalsExceedMaxBenefitCard$:any;
   @Input() invoiceData$:any;
   @Input() isInvoiceLoading$:any;
+  @Input() submitGenerealRequest$:any;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
   @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
   @Output() loadApprovalsExceedMaxBenefitCardEvent = new EventEmitter<any>();
   @Output() loadApprovalsExceedMaxBenefitInvoiceEvent = new EventEmitter<any>();
+  @Output() submitGeneralRequestsEvent = new EventEmitter<any>();
+
   pendingApprovalGeneralTypeCode:any;
   public state!: State;
   sortColumn = 'batch';
@@ -70,7 +75,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   selectedIndex: any;
 
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService) {}
+  constructor(private route: Router, private dialogService: DialogService, private readonly userDataService: UserDataService) {}
 
   ngOnInit(): void {
     this.loadApprovalGeneralListGrid();
@@ -84,6 +89,14 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     };
 
     this.loadApprovalGeneralListGrid();
+  }
+
+  getLoggedInUserProfile(){
+    this.userDataService.getProfile$.subscribe((profile:any)=>{
+      if(profile?.length>0){
+       this.loginUserId= profile[0]?.loginUserId;
+      }
+    })
   }
 
   private loadApprovalGeneralListGrid(): void {

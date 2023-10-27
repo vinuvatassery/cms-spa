@@ -24,6 +24,7 @@ export class PendingApprovalGeneralFacade {
   private invoiceDataSubject = new Subject<any>();
   private serviceDataSubject = new Subject<any>();
   private isInvoiceLoadingSubject = new Subject<boolean>();
+  private submitGenerealRequestSubject = new Subject<any>();
 
   /** Public properties **/
   snackbarMessage!: SnackBar;
@@ -31,7 +32,7 @@ export class PendingApprovalGeneralFacade {
   serviceData$ = this.serviceDataSubject.asObservable();
   invoiceData$ = this.invoiceDataSubject.asObservable();
   isInvoiceLoading$ = this.isInvoiceLoadingSubject.asObservable();
-
+  submitGenerealRequest$ = this.submitGenerealRequestSubject.asObservable();
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
@@ -117,6 +118,7 @@ constructor(
       },
     });
   }
+
   loadCasereassignmentExpandedInfo(approvalId : any): void {
     this.pendingApprovalGeneralService.loadCasereassignmentExpandedInfo(approvalId).subscribe({
       next: (response) => {
@@ -127,4 +129,25 @@ constructor(
       },
     });
   }
+
+  submitGeneralRequests(requests: any) {
+    this.showLoader();
+    this.pendingApprovalGeneralService.submitGeneralRequests(requests).subscribe(
+      {
+        next: (response: any) => {
+          this.hideLoader();
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            response.message
+          );
+          this.submitGenerealRequestSubject.next(response);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        },
+      }
+    );
+  }
+
 }

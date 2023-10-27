@@ -52,6 +52,7 @@ export class ApprovalPageComponent implements OnInit {
   approvalsExceedMaxBenefitCard$ = this.pendingApprovalGeneralFacade.approvalsGeneralExceedMaxBenefitCardSubjectList$;
   invoiceData$ = this.pendingApprovalGeneralFacade.invoiceData$;
   isInvoiceLoading$ = this.pendingApprovalGeneralFacade.isInvoiceLoading$;
+  submitGenerealRequest$ = this.pendingApprovalGeneralFacade.submitGenerealRequest$;
 
   providerDetailsDialog: any
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
@@ -163,5 +164,9 @@ export class ApprovalPageComponent implements OnInit {
   loadApprovalsExceedMaxBenefitInvoice(data:any)
   {
       this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
+  }
+  submitGeneralRequests(requests:any)
+  {
+    this.pendingApprovalGeneralFacade.submitGeneralRequests(requests);
   }
 }
