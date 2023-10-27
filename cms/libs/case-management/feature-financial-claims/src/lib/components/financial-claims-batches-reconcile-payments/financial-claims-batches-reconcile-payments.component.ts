@@ -150,7 +150,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     }
   ];
 
-  warrantCalcutionArray:any[]=[];
+  warrantCalculationArray:any[]=[];
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
     private readonly cd: ChangeDetectorRef, public intl: IntlService, 
@@ -833,7 +833,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
           warrantNumber:item?.checkNbr,
   
         }
-        this.warrantCalcutionArray.push(object);
+        this.warrantCalculationArray.push(object);
       });
 
       const ReconcilePaymentResponseDto =
@@ -844,7 +844,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         amountTotal : data.amountTotal,
         warrantTotal : warrantTotal,
         warrantNbr : data.checkNbr,
-        warrantCalculation:this.warrantCalcutionArray,
+        warrantCalculation:this.warrantCalculationArray,
         paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
       }
       
