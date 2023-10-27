@@ -655,7 +655,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   }
 
   printAdviceLetterChange(dataItem: any) {
-    debugger;
     let ifExist = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === dataItem.paymentRequestId);
     if(!dataItem.isPrintAdviceLetter && !ifExist.warrantNumberChange){           
       this.reconcilePaymentGridUpdatedResult = this.reconcilePaymentGridUpdatedResult.filter((x:any)=>x.paymentRequestId !== dataItem.paymentRequestId);    
