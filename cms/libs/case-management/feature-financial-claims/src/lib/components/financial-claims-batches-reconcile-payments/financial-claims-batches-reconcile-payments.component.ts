@@ -52,6 +52,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   @Input() batchId: any;
   @Input() exportButtonShow$ : any
   @Input() warrantNumberChange$: any;
+  @Input() warrantNumberChangeLoader$: any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
   @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();;
@@ -921,6 +922,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   }
 
   navToReconcilePayments(){
+    this.reconcilePaymentGridUpdatedResult = [];
     if(this.loadType === null || this.loadType === undefined){
       this.route.navigate([`/financial-management/claims/${this.claimsType}/batch`],
       { queryParams :{bid: this.batchId}});

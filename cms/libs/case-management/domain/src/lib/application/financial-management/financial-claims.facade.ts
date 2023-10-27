@@ -190,6 +190,9 @@ export class FinancialClaimsFacade {
 
   private warrantNumberChangeSubject = new Subject<any>();
   warrantNumberChange$ = this.warrantNumberChangeSubject.asObservable();
+
+  private warrantNumberChangeLoaderSubject = new Subject<any>();
+  warrantNumberChangeLoader$ = this.warrantNumberChangeLoaderSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -764,12 +767,15 @@ deleteClaimService(tpaInvoiceId: any, typeCode: string) {
     );
   }
   CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+    this.warrantNumberChangeLoaderSubject.next(true);
     this.financialClaimsDataService.CheckWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
       next: (dataResponse:any) => {       
         this.warrantNumberChangeSubject.next(dataResponse);
+        this.warrantNumberChangeLoaderSubject.next(false);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.warrantNumberChangeLoaderSubject.next(false);
       },
     });
   }

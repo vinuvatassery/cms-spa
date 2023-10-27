@@ -29,6 +29,7 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   reconcileBreakoutSummary$ = this.financialClaimsFacade.reconcileBreakoutSummary$;
   reconcilePaymentBreakoutList$ = this.financialClaimsFacade.reconcilePaymentBreakoutList$;
   warrantNumberChange$ = this.financialClaimsFacade.warrantNumberChange$;
+  warrantNumberChangeLoader$ = this.financialClaimsFacade.warrantNumberChangeLoader$;
   batchId:any;
   claimsType: any;
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
