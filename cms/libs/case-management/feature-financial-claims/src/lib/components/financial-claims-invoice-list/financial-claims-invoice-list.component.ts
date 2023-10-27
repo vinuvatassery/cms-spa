@@ -1,16 +1,14 @@
 /** Angular **/
-import {    ChangeDetectionStrategy,     Component,    EventEmitter,    Input,
-    OnChanges,       Output,     } from '@angular/core';
-
-  import { UIFormStyle } from '@cms/shared/ui-tpa';
-  import { GridDataResult } from '@progress/kendo-angular-grid';
-  import {State} from '@progress/kendo-data-query';
-  import { Subject } from 'rxjs';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input,OnChanges, Output} from '@angular/core';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { GridDataResult } from '@progress/kendo-angular-grid';
+import { State } from '@progress/kendo-data-query';
+import { Subject, take } from 'rxjs';
 
 
   @Component({
     selector: 'cms-financial-claims-invoice-list',
-    templateUrl: './financial-claims-invoice-list.component.html', 
+    templateUrl: './financial-claims-invoice-list.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
   })
   export class FinancialClaimsInvoiceListComponent implements OnChanges {
@@ -23,12 +21,12 @@ import {    ChangeDetectionStrategy,     Component,    EventEmitter,    Input,
    gridFinancialClaimsInvoice$ =  this.gridFinancialClaimsInvoiceSubject.asObservable();
    serviceTitle = ''
    isFinancialClaimsInvoiceGridLoaderShow = false
-   public state!: State;  
+   public state!: State;
    sortType ="asc"
    gridDataResult!: GridDataResult;
    public formUiStyle: UIFormStyle = new UIFormStyle();
 
-      ngOnChanges(): void {            
+      ngOnChanges(): void {
         this.state = {
           skip: 0,
           take: 5,
@@ -52,23 +50,23 @@ import {    ChangeDetectionStrategy,     Component,    EventEmitter,    Input,
           skipCount: skipCountValue,
           pagesize: maxResultCountValue,
           sortColumn: sortValue,
-          sortType: sortTypeValue    
+          sortType: sortTypeValue
         };
         this.loadFinancialClaimsInvoiceListEvent.emit(gridDataRefinerValue);
         this.gridDataHandle();
       }
 
       gridDataHandle() {
-        this.financialInvoiceList$.subscribe((data: GridDataResult) => {      
-          this.gridDataResult = data;    
+        this.financialInvoiceList$.pipe(take(1)).subscribe((data: GridDataResult) => {
+          this.gridDataResult = data;
           this.gridFinancialClaimsInvoiceSubject.next(this.gridDataResult);
           if (data?.total >= 0 || data?.total === -1) {
             this.isFinancialClaimsInvoiceGridLoaderShow = false;
           }
         });
-      
+
       }
-    
+
       loadFinancialInvoiceListGrid()
       {
         this.loadClaimsInvoices(
@@ -82,4 +80,3 @@ import {    ChangeDetectionStrategy,     Component,    EventEmitter,    Input,
   }
 
 
- 

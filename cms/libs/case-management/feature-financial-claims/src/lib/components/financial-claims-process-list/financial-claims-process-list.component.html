@@ -315,7 +315,7 @@
 
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span *ngIf="isProcessBatchClosed" class="">{{selectedProcessClaims.length}} claims(s) to be batched</span>
+  <span *ngIf="isProcessBatchClosed" class="">{{selectedProcessClaims.length}} claim(s) selected</span>
   <span *ngIf="isDeleteBatchClosed" class="">{{selectedProcessClaims.length}} claims(s) to be deleted</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchClaimsGridSelectedCancelClicked()" *ngIf="isDeleteBatchClosed || isProcessBatchClosed"> Cancel
