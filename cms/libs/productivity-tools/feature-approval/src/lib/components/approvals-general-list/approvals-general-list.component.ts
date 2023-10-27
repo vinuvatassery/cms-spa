@@ -1,4 +1,3 @@
-import { ApprovalTypeCode } from './../../../../../domain/src/lib/enums/approval-type-code.enum';
 /** Angular **/
 import {
   ChangeDetectorRef,
