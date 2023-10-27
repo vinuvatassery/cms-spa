@@ -60,6 +60,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public state!: State;
+  searchItem:any=null;
   sortColumn = 'Medical Provider';
   sortDir = 'Ascending';
   columnsReordered = false;
@@ -252,11 +253,15 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
-
+  allColumnChange(){
+    this.searchItem = null;
+    this.defaultGridState();
+    this.loadReconcileListGrid();
+  }
   onSearchChange(data: any) {
     let searchValue = data;
     this.defaultGridState();
-    let operator = 'startswith';
+    let operator = 'contains';
 
     if (
       this.selectedColumn === 'amountPaid' 
@@ -346,6 +351,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   }
 
   setToDefault() {
+    this.searchItem = null;
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -770,8 +776,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     const totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length;
     if (isValid.length > 0) {
       this.pageValidationMessageFlag = true;
-      this.pageValidationMessage = "Validation errors found, please review each page for errors " +
-        totalCount + " is the, total number of validation errors found.";
+      this.pageValidationMessage = totalCount +" validation errors found, please review each page for errors. " ;
     }
     else if(this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '').length <= 0){
       this.pageValidationMessage = "No data for reconcile and print.";

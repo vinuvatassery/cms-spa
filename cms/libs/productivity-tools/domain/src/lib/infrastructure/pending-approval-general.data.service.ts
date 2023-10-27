@@ -26,11 +26,9 @@ export class PendingApprovalGeneralService {
     );
   }
 
-  loadExceedMaxBenefitCard(exceptionId: string) {
-    return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/exceptions?exceptionId=${exceptionId}`
-    );
-  }
+  loadExceptionCard(exceptionId:string) {
+    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/exceptions?exceptionId=${exceptionId}`);
+   }
 
   loadInvoiceListService(data: any) {
     const invoiceRequestDto = {
@@ -45,6 +43,13 @@ export class PendingApprovalGeneralService {
       invoiceRequestDto
     );
   }
+  submitGeneralRequests(requests : any)
+  {
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/`,requests
+    );
+  }
+  
   getVendorDetails(vendorId: string, subTypeCode: string) {
     if (
       subTypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||

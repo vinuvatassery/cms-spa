@@ -1,5 +1,7 @@
+import { ApprovalTypeCode } from './../../../../../domain/src/lib/enums/approval-type-code.enum';
 /** Angular **/
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -14,21 +16,24 @@ import { Router } from '@angular/router';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy,
+  State
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import {
   PanelBarCollapseEvent,
 } from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { PendingApprovalGeneralTypeCode, PendingApprovalPaymentTypeCode } from '@cms/productivity-tools/domain';
+import {UserDataService, UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approvals-general-list',
   templateUrl: './approvals-general-list.component.html',
 })
 export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
+  @ViewChild('submitRequestModalDialog', { read: TemplateRef })
+  submitRequestModalDialog!: TemplateRef<any>;
+
+  loginUserId!:any;
   isPanelExpanded = false;
   ifApproveOrDeny: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -42,13 +47,16 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() approvalsGeneralLists$: any;
   @Input() clientsSubjects$ : any;
   @Input() casereassignmentExpandedInfo$: any;
-  @Input() approvalsExceedMaxBenefitCard$:any;
+  @Input() approvalsExceptionCard$:any;
   @Input() invoiceData$:any;
   @Input() isInvoiceLoading$:any;
+  @Input() submitGenerealRequest$:any;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
   @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
-  @Output() loadApprovalsExceedMaxBenefitCardEvent = new EventEmitter<any>();
-  @Output() loadApprovalsExceedMaxBenefitInvoiceEvent = new EventEmitter<any>();
+  @Output() loadApprovalsExceptionCardEvent = new EventEmitter<any>();
+  @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
+  @Output() submitGeneralRequestsEvent = new EventEmitter<any>();
+
   pendingApprovalGeneralTypeCode:any;
   public state!: State;
   sortColumn = 'batch';
@@ -60,7 +68,18 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  isSubmitGeneralRequest = false;
+  tAreaCessationMaxLength:any=200;
+  approveStatus:string="APPROVED";
+  denyStatus:string="DENIED";
+  sendbackNotesRequireMessage:string = "Reason for denial is required.";
+  approvalsPaymentsGridPagedResult:any =[];
+  approvalsPaymentsGridUpdatedResult: any=[];
+  hasDisabledSubmit:boolean=true;
+  pageValidationMessage:any=null;
+  caseReassignmentsCount = 0;
+  exceptionsCount = 0;
+  listManagementItemsCount = 0
   gridApprovalGeneralDataSubject = new Subject<any>();
   gridApprovalGeneralBatchData$ =
     this.gridApprovalGeneralDataSubject.asObservable();
@@ -68,6 +87,8 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   private editListITemsDialog: any;
+  private submitRequestDialogService: any;
+
   approvalId!: number;
   selectedIndex: any;
   @ViewChild('editListItemDialogModal') editModalTemplate!: TemplateRef<any>;
@@ -77,12 +98,16 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   selectedSubtypeCode: any;
 
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService,private readonly loginUserFacade : UserManagementFacade,
+  constructor(private route: Router,
+              private dialogService: DialogService,
+              private readonly cd: ChangeDetectorRef,
+              private readonly userDataService: UserDataService,private readonly loginUserFacade : UserManagementFacade,
     ) {}
 
   ngOnInit(): void {
     this.loadApprovalGeneralListGrid();
     this.pendingApprovalGeneralTypeCode=PendingApprovalGeneralTypeCode;
+    this.getLoggedInUserProfile();
   }
   ngOnChanges(): void {
     this.state = {
@@ -176,32 +201,44 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
-    this.approvalsGeneralLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridApprovalGeneralDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) {
+    this.approvalsGeneralLists$.subscribe((response: any) => {
+      if (response.length > 0) {
+        this.approvalsPaymentsGridPagedResult = response.map((item:any) => ({
+          ...item,
+          sendBackNotesInValidMsg: '',
+          sendBackNotesInValid : false,
+          isExpanded:false
+        }));
+        this.tAreaVariablesInitiation(this.approvalsPaymentsGridPagedResult);
         this.isApprovalGeneralGridLoaderShow = false;
+        this.gridApprovalGeneralDataSubject.next(this.approvalsPaymentsGridPagedResult);
+        if (response?.total >= 0 || response?.total === -1) {
+          this.isApprovalGeneralGridLoaderShow = false;
+        }
+        this.cd.detectChanges();
+      }
+      else
+      {
+        this.approvalsPaymentsGridPagedResult = response;
+        this.isApprovalGeneralGridLoaderShow = false;
+        this.cd.detectChanges();
       }
     });
     this.isApprovalGeneralGridLoaderShow = false;
   }
 
-  public onPanelCollapse(event: PanelBarCollapseEvent): void {
-    this.isPanelExpanded = false;
-  }
-
   public onPanelExpand(item:any): void {
-    const userObject = {
-      approvalEntityId : item.approvalEntityId,
-      subTypeCode : item.subTypeCode
+    if(item.approvalTypeCode === PendingApprovalGeneralTypeCode.GeneralAddtoMasterList)
+    {
+      const userObject = {
+        approvalEntityId : item.approvalEntityId,
+        subTypeCode : item.subTypeCode
+      }
+      this.selectedSubtypeCode  = item.subTypeCode;
+      this.approvalEntityId.emit(userObject);
+      this.isPanelExpanded = true;
+      this.cd.detectChanges();
     }
-    this.selectedSubtypeCode  = item.subTypeCode;
-    this.approvalEntityId.emit(userObject);
-    this.isPanelExpanded = true;
   }
 
   approveOrDeny(index:any,result: any) {
@@ -220,6 +257,12 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     });
   }
 
+  onSubmitClicked(template: TemplateRef<unknown>): void {
+    this.submitRequestDialogService = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
+    });
+  }
 
   onCloseEditListItemsDetailClicked()  {
     this.editListITemsDialog.close();
@@ -265,12 +308,255 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   {
     this.loadCasereassignmentExpanedInfoParentEvent.emit(approvalId);
   }
-  loadApprovalsExceedMaxBenefitCard($event:any)
+  loadApprovalsExceptionCard($event:any)
   {
-    this.loadApprovalsExceedMaxBenefitCardEvent.emit($event);
+    this.loadApprovalsExceptionCardEvent.emit($event);
   }
-  loadApprovalsExceedMaxBenefitInvoice($event:any)
+  loadApprovalsExceptionInvoice($event:any)
   {
-    this.loadApprovalsExceedMaxBenefitInvoiceEvent.emit($event);
+    this.loadApprovalsExceptionInvoiceEvent.emit($event);
   }
+
+  ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
+    let inValid = false;
+
+    if (control === 'sendBackNotes') {
+      dataItem.sendBackNotesInValid = (dataItem.status == this.denyStatus && (dataItem.sendBackNotes == null || dataItem.sendBackNotes == undefined || dataItem.sendBackNotes == ""));
+      dataItem.sendBackNotesInValidMsg = (dataItem.status == this.denyStatus && (dataItem.sendBackNotes == null || dataItem.sendBackNotes == undefined || dataItem.sendBackNotes == "")) ? this.sendbackNotesRequireMessage : "";
+      inValid =  dataItem.sendBackNotesInValid;
+    }
+    if (inValid) {
+      document.getElementById(control + rowIndex)?.classList.remove('ng-valid');
+      document.getElementById(control + rowIndex)?.classList.add('ng-invalid');
+      document.getElementById(control + rowIndex)?.classList.add('ng-dirty');
+    }
+    else {
+      document.getElementById(control + rowIndex)?.classList.remove('ng-invalid');
+      document.getElementById(control + rowIndex)?.classList.remove('ng-dirty');
+      document.getElementById(control + rowIndex)?.classList.add('ng-valid');
+    }
+    return 'ng-dirty ng-invalid';
+  }
+
+
+  private tAreaVariablesInitiation(dataItem: any) {
+    dataItem.forEach((dataItem: any) => {
+      this.calculateCharacterCount(dataItem);
+    });
+  }
+
+  calculateCharacterCount(dataItem: any) {
+    let tAreaCessationCharactersCount = dataItem.sendBackNotes
+      ? dataItem.sendBackNotes.length
+      : 0;
+    dataItem.tAreaCessationCounter = `${tAreaCessationCharactersCount}/${this.tAreaCessationMaxLength}`;
+  }
+
+  sendBackNotesChange(dataItem: any) {
+    this.calculateCharacterCount(dataItem);
+    this.assignRowDataToMainList(dataItem);
+  }
+
+  onSubmitPendingApprovalGeneralClicked(){
+    this.validateApprovalsPaymentsGridRecord();
+    const isValid = this.approvalsPaymentsGridPagedResult.filter((x: any) => x.sendBackNotesInValid);
+    const totalCount = isValid.length;
+    if (isValid.length > 0) {
+     this.pageValidationMessage = totalCount +  " validation error(s) found, please review each page for errors.";
+    }
+    else if(this.approvalsPaymentsGridPagedResult.filter((x: any) => x.status == this.approveStatus || x.status == this.denyStatus).length <= 0){
+      this.pageValidationMessage ="No data for approval";
+    }
+    else {
+      this.pageValidationMessage = null;
+      this.approvalsPaymentsGridUpdatedResult = this.approvalsPaymentsGridPagedResult.filter((x: any) => x.status == this.approveStatus || x.status == this.denyStatus);
+      this.caseReassignmentsCount =  (this.approvalsPaymentsGridUpdatedResult.filter((x:any) => x.approvalTypeCode === this.pendingApprovalGeneralTypeCode.GeneralCaseReassignment)).length;
+      this.listManagementItemsCount =  (this.approvalsPaymentsGridUpdatedResult.filter((x:any) => x.approvalTypeCode === this.pendingApprovalGeneralTypeCode.GeneralAddtoMasterList)).length;
+      this.exceptionsCount =  (this.approvalsPaymentsGridUpdatedResult.filter((x:any) => x.approvalTypeCode === this.pendingApprovalGeneralTypeCode.GeneralException)).length;
+      this.onSubmitClicked(this.submitRequestModalDialog);
+    }
+  }
+
+  validateApprovalsPaymentsGridRecord() {
+    this.approvalsGeneralLists$.forEach((currentPage: any, index: number) => {
+      if (currentPage.status !== null
+        && currentPage.status === this.denyStatus
+        && currentPage.status !== undefined) {
+        if (currentPage.sendBackNotes == null || currentPage.sendBackNotes === undefined || currentPage.sendBackNotes === '') {
+          currentPage.sendBackNotesInValid = true;
+          currentPage.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
+        }
+      }
+      else {
+        currentPage.sendBackNotesInValid = false;
+        currentPage.sendBackNotesInValidMsg = null;
+      }
+    });
+
+    this.updatedResultValidation();
+    this.assignPagedGridItemToUpdatedList(this.approvalsGeneralLists$);
+  }
+
+  updatedResultValidation() {
+    if (this.approvalsPaymentsGridPagedResult.length > 0) {
+      this.approvalsPaymentsGridPagedResult.forEach((item: any, index: number) => {
+            if (this.approvalsPaymentsGridPagedResult[index].status==this.denyStatus) {
+              this.updatedResultValidationSendBack(index);
+            }
+            else {
+              this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValid = false;
+              this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValidMsg = null;
+            }
+        }
+      );
+    }
+  }
+
+  updatedResultValidationSendBack(index: any) {
+    if (this.approvalsPaymentsGridPagedResult[index].sendBackNotes === null
+      || this.approvalsPaymentsGridPagedResult[index].sendBackNotes === ''
+      || this.approvalsPaymentsGridPagedResult[index].sendBackNotes === undefined) {
+      this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValid = true;
+      this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
+    }
+    else
+    {
+      this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValid = false;
+      this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValidMsg = null;
+    }
+  }
+  assignPagedGridItemToUpdatedList(dataItem: any) {
+    dataItem.forEach((item: any) => {
+      this.assignRowDataToMainList(item);
+    })
+  }
+
+  assignRowDataToMainList(dataItem: any) {
+    let ifExist = this.approvalsPaymentsGridPagedResult.find((x: any) => x.generalPendingApprovalId === dataItem.generalPendingApprovalId);
+    if (ifExist !== undefined) {
+      this.approvalsPaymentsGridPagedResult.forEach((item: any, index: number) => {
+        if (item.generalPendingApprovalId === ifExist.generalPendingApprovalId) {
+          this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValidMsg = dataItem?.sendBackNotesInValidMsg;
+          this.approvalsPaymentsGridPagedResult[index].sendBackNotesInValid = dataItem?.sendBackNotesInValid;
+          this.approvalsPaymentsGridPagedResult[index].tAreaCessationCounter = dataItem?.tAreaCessationCounter;
+          this.approvalsPaymentsGridPagedResult[index].status = dataItem?.status;
+          this.approvalsPaymentsGridPagedResult[index].sendBackNotes = dataItem?.sendBackNotes;
+          this.approvalsPaymentsGridPagedResult[index].caseWorkerId = dataItem?.caseWorkerId;
+        }
+      });
+    }
+  }
+
+  onRowLevelApproveClicked(e: boolean,dataItem: any, control: any, rowIndex: any)
+  {
+    dataItem.sendBackNotes="";
+    if(dataItem.status === undefined || dataItem.status === '' || dataItem.status === null)
+    {
+      dataItem.status=this.approveStatus;
+      dataItem.isExpanded=true;
+    }
+    else if(dataItem.status == this.approveStatus)
+    {
+      dataItem.status="";
+      dataItem.sendBackNotes="";
+      dataItem.sendBackNotesInValidMsg="";
+      dataItem.sendBackNotesInValid = false;
+      dataItem.isExpanded=false;
+    }
+    else if(dataItem.status == this.denyStatus)
+    {
+      dataItem.status=this.approveStatus;
+      dataItem.sendBackNotesInValidMsg="";
+      dataItem.sendBackNotesInValid = false;
+      dataItem.isExpanded=true;
+    }
+    this.isPanelExpanded = dataItem.isExpanded;
+    this.sendBackNotesChange(dataItem);
+    this.assignRowDataToMainList(dataItem);
+    this.enableSubmitButton();
+    this.ngDirtyInValid(dataItem,control,rowIndex);
+    this.cd.detectChanges();
+  }
+
+  onRowLevelDenyClicked(e: boolean,dataItem: any, control: any, rowIndex: any)
+  {
+    dataItem.isExpanded=false;
+    this.isPanelExpanded = dataItem.isExpanded;
+    if(dataItem.status === undefined || dataItem.status === '' || dataItem.status === null)
+    {
+      dataItem.status=this.denyStatus;
+      dataItem.sendBackNotesInValidMsg= this.sendbackNotesRequireMessage;
+      dataItem.sendBackNotesInValid = true;
+    }
+    else if(dataItem.status == this.denyStatus)
+    {
+      dataItem.status="";
+      dataItem.sendBackNotesInValidMsg="";
+      dataItem.sendBackNotes="";
+      dataItem.sendBackNotesInValid = false;
+      dataItem.sendBackButtonDisabled=true;
+    }
+    else
+    {
+      dataItem.status=this.denyStatus;
+      dataItem.sendBackNotesInValidMsg=this.sendbackNotesRequireMessage;
+      dataItem.sendBackNotesInValid = true;
+      dataItem.sendBackButtonDisabled=false;
+    }
+    this.sendBackNotesChange(dataItem);
+    this.assignRowDataToMainList(dataItem);
+    this.ngDirtyInValid(dataItem,control,rowIndex);
+    this.enableSubmitButton();
+    this.cd.detectChanges();
+
+  }
+
+  enableSubmitButton()
+  {
+    const totalCount = this.approvalsPaymentsGridPagedResult.filter((x: any) => x.status == this.approveStatus || x.status == this.denyStatus).length;
+    this.hasDisabledSubmit = (totalCount <= 0);
+    this.cd.detectChanges();
+  }
+
+  getLoggedInUserProfile(){
+    this.userDataService.getProfile$.subscribe((profile:any)=>{
+      if(profile?.length>0){
+       this.loginUserId= profile[0]?.loginUserId;
+      }
+    })
+  }
+
+  onCloseSubmitGeneralRequestClicked()
+  {
+     this.submitRequestDialogService.close();
+  }
+
+  makeRequestData()
+  {
+    let requests = [{}];
+    for (let element of this.approvalsPaymentsGridUpdatedResult) {
+      let request = {
+        approvalId: element.generalPendingApprovalId,
+        approvalTypeCode: element.approvalTypeCode,
+        entityId : element.approvalEntityId,
+        statusCode: element.status,
+        denialDescription: element.sendBackNotes ? element.sendBackNotes : null,
+        approvedUserId: this.loginUserId,
+        asignedCaseWorkerId : element.caseWorkerId
+      };
+      requests.push(request);
+    }
+    requests.splice(0, 1);
+    this.submit(requests);
+  }
+  submit(data:any)
+  {
+    this.submitGeneralRequestsEvent.emit(data);
+    this.submitGenerealRequest$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+          this.loadApprovalGeneralListGrid();
+      }
+    });
+  }
+
 }

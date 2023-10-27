@@ -1,6 +1,10 @@
 import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
+import { PendingApprovalGeneralFacade } from '@cms/productivity-tools/domain';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
+
+
 
 @Component({
   selector: 'productivity-tools-approvals-general-list-detail-reassignment',
@@ -8,7 +12,6 @@ import { Router } from '@angular/router';
 })
 export class ApprovalsGeneralListDetailCaseReassignmentComponent implements OnInit {
 
-  @Input() onUserProfileDetailsHovered: any;
   @Input() approvalId: any;
   @Input() casereassignmentExpandedInfo$: any;
   @Output() loadCasereassignmentExpanedInfoEvent = new EventEmitter<any>();
@@ -17,22 +20,25 @@ export class ApprovalsGeneralListDetailCaseReassignmentComponent implements OnIn
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
   constructor(private readonly  cdr :ChangeDetectorRef,
-    private readonly router: Router,
+    private readonly router: Router, private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade,
+
     ) {}
 
   ngOnInit(): any {
     if(this.approvalId)
     {
       this.isPanelExpanded = true;
-      this.loadCasereassignmentExpanedInfoEvent.emit(this.approvalId);
+      this.pendingApprovalGeneralFacade.loadCasereassignmentExpandedInfo(this.approvalId).subscribe({
+        next: (response) => {
+          this.casereassignmentExpandedInfoData = response;
+          this.isPanelExpanded = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.pendingApprovalGeneralFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        },
+      });
     }
-    this.casereassignmentExpandedInfo$.subscribe((response: any) => {
-      if (response) {
-        this.casereassignmentExpandedInfoData = response;
-      }
-      this.isPanelExpanded = false;
-      this.cdr.detectChanges();
-    });
   }
 
   onClientNameClicked() {
