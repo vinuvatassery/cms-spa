@@ -413,7 +413,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  closeVedorModal() {
+  closeVendorModal() {
     this.closeModalEventClicked.next(null);
   }
 
