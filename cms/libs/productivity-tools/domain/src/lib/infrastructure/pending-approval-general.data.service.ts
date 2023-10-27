@@ -8,11 +8,16 @@ import { of } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class PendingApprovalGeneralService {
   /** Constructor **/
-  constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider) { }
+  constructor(
+    private readonly http: HttpClient,
+    private configurationProvider: ConfigurationProvider
+  ) {}
 
   /** Public methods **/
   loadApprovalsGeneral() {
-    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general`);
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general`
+    );
   }
 
   loadCasereassignmentExpandedInfo(approvalId: any) {
@@ -22,36 +27,36 @@ export class PendingApprovalGeneralService {
   }
 
   loadExceedMaxBenefitCard(exceptionId: string) {
-    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/exceptions?exceptionId=${exceptionId}`);
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/exceptions?exceptionId=${exceptionId}`
+    );
   }
 
   loadInvoiceListService(data: any) {
-    const invoiceRequestDto =
-    {
+    const invoiceRequestDto = {
       SortType: data.sortType,
       Sorting: data.sort,
       SkipCount: data.skipCount,
       MaxResultCount: data.pageSize,
-      Filter: JSON.stringify(data.filter)
-    }
+      Filter: JSON.stringify(data.filter),
+    };
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/invoice-details?exceptionId=${data.exceptionId}`, invoiceRequestDto
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/invoice-details?exceptionId=${data.exceptionId}`,
+      invoiceRequestDto
     );
   }
   getVendorDetails(vendorId: string, subTypeCode: string) {
-    if (subTypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
+    if (
+      subTypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
       subTypeCode === PendingApprovalGeneralTypeCode.MedicalClinic ||
       subTypeCode === PendingApprovalGeneralTypeCode.DentalProvider ||
-      subTypeCode === PendingApprovalGeneralTypeCode.MedicalProvider)
-      {
-      return this.http.get<any>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/temp`
-      );
-    }
-    else if (subTypeCode == PendingApprovalGeneralTypeCode.Drugs) 
-    {
+      subTypeCode === PendingApprovalGeneralTypeCode.MedicalProvider
+    ) {
+      return of();
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.Drugs) {
       return this.http.post<any>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/drugs`, null
+        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/drugs`,
+        null
       );
     }
     return of();
