@@ -17,7 +17,7 @@ export class InsurancePlanDataService {
   addPlan(dto: any) {
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/insurance-plans/add_plan`,
+      `/case-management/insurance-plans/plan`,
       dto
     );
   }

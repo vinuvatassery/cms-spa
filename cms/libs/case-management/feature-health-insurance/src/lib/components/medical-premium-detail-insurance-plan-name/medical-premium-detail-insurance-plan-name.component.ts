@@ -169,7 +169,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
 
       this.insuranceFacade.addPlan(finalData).subscribe({
         next: (response: any) => {
-          var notificationMessage = "Insurance plan added successfully";
+          var notificationMessage = response.message;
           this.InsurancePlanClose();
           this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
           this.hideLoader();
