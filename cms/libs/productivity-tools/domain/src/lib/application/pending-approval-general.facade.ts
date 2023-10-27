@@ -86,8 +86,8 @@ constructor(
 
   loadExceptionCard(data:any): void {
     this.pendingApprovalGeneralService.loadExceptionCard(data).subscribe({
-      next: (exptionCardResponse) => {
-        this.approvalsGeneralExceptionCardSubject.next(exptionCardResponse);
+      next: (dataResponse) => {
+        this.approvalsGeneralExceptionCardSubject.next(dataResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
