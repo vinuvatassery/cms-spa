@@ -36,8 +36,6 @@ export class FinancialVendorProfileComponent implements OnInit {
   removeprovider$ = this.financialVendorFacade.removeprovider$
   addProviderNew$ = this.financialVendorFacade.addProviderNew$
   vendorProfileSpecialHandling$ = this.financialVendorFacade.vendorProfileSpecialHandling$
-  serviceGridView$ = this.invoiceFacade.serviceData$;
-   isInvoiceServiceLoading$  = this.invoiceFacade.isInvoiceServiceLoading$;
    providerList$ = this.financialVendorFacade.providerList$
    providerLispageSizes = this.financialVendorFacade.gridPageSizes;
    providerLissortValue = this.financialVendorFacade.sortValue;

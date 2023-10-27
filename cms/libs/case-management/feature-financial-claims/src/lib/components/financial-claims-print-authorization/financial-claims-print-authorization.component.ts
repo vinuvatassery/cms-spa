@@ -96,7 +96,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
       batchId:this.batchId,
       PrintAdviceLetterGenerateInfo:[]
     };
-    PrintAdviceLetterInfo.push({'vendorId':item.vendorId,'paymentRequestId':item.paymentRequestId,
+    PrintAdviceLetterInfo.push({'vendorId':item.vendorId,'paymentRequestId':item.paymentRequestId,'batchId':item.batchId,
     'vendorAddressId':item.entityId,'clientId':item.clientId,'isPrintAdviceLetter':item.isPrintAdviceLetter, 'checkNbr':item.checkNbr});
     });
     this.printAdviceLetterData.PrintAdviceLetterGenerateInfo = PrintAdviceLetterInfo;
@@ -114,7 +114,8 @@ export class FinancialClaimsPrintAuthorizationComponent {
         paymentSentDate: item.paymentSentDate,
         checkNbr: item.checkNbr,
         comments: item.comments,
-        paymentRequestId: item.paymentRequestId
+        paymentRequestId: item.paymentRequestId,
+        batchId: this.batchId
       };
       selectedProviders.push(selectedProvider);
     });
@@ -173,7 +174,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
 
   reconcilePaymentsAndPrintAdviceLetter() {
     this.loaderService.show();
-    let reconcileData = this.reconcilePaymentsData(this.finalPrintList);
+    let reconcileData = this.reconcilePaymentsData(this.finalPrintList.filter(x=> x.warrantNumberChanged));
     this.financialClaimsFacade.reconcilePaymentsAndLoadPrintLetterContent(this.batchId, reconcileData,this.claimsType)
       .subscribe({
         next: (data: any) => {

@@ -1,4 +1,4 @@
-<kendo-grid [resizable]="true" [navigable]="true"  [data]="gridFinancialClaimsInvoice$ | async" [loading]="(isInvoiceServiceLoading$ | async)??false">
+<kendo-grid [resizable]="true" [navigable]="true"  [data]="gridFinancialClaimsInvoice$ | async" [loading]="isInvoiceServiceGridLoaderShow">
 
     <kendo-grid-column field="serviceStartDate" title="Service Start" [width]="150">
       <ng-template kendoGridCellTemplate let-dataItem>
