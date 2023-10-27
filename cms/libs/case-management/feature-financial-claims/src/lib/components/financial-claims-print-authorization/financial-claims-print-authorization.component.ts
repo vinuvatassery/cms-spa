@@ -174,7 +174,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
 
   reconcilePaymentsAndPrintAdviceLetter() {
     this.loaderService.show();
-    let reconcileData = this.reconcilePaymentsData(this.finalPrintList);
+    let reconcileData = this.reconcilePaymentsData(this.finalPrintList.filter(x=> x.warrantNumberChanged));
     this.financialClaimsFacade.reconcilePaymentsAndLoadPrintLetterContent(this.batchId, reconcileData,this.claimsType)
       .subscribe({
         next: (data: any) => {

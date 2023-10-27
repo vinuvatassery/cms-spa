@@ -425,7 +425,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     else {
       this.reconcilePaymentGridUpdatedResult.push(dataItem);
     }
-    this.claimReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== '').length;
+    this.claimReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberChanged).length;
   }
 
   assignPaymentReconciledDateToPagedList() {
@@ -619,6 +619,12 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   }
 
   dateChangeListItems(enteredDate: Date, dataItem: any, type: any) {
+    if(dataItem.checkNbr !== null && dataItem.checkNbr !== undefined && dataItem.checkNbr !== ''){
+      dataItem.warrantNumberChanged = true;
+    }
+    else{
+      dataItem.warrantNumberChanged = false;
+    }
     const todayDate = new Date();
     switch (type.toUpperCase()) {
       case "DATE_PAYMENT_RECONCILED":
@@ -649,6 +655,12 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     this.assignRowDataToMainList(dataItem);
   }
   noteChange(dataItem: any) {
+    if(dataItem.checkNbr !== null && dataItem.checkNbr !== undefined && dataItem.checkNbr !== ''){
+      dataItem.warrantNumberChanged = true;
+    }
+    else{
+      dataItem.warrantNumberChanged = false;
+    }
     this.calculateCharacterCount(dataItem)
     this.assignRowDataToMainList(dataItem);
   }
@@ -674,6 +686,12 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   }
 
   warrantNumberChange(dataItem: any) {
+    if(dataItem.checkNbr !== null && dataItem.checkNbr !== undefined && dataItem.checkNbr !== ''){
+      dataItem.warrantNumberChanged = true;
+    }
+    else{
+      dataItem.warrantNumberChanged = false;
+    }
     if (this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value === null
       || this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value === undefined
       || this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value === '') {
@@ -683,7 +701,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       dataItem.datePaymentRecInValidMsg = null;
     }
     if (dataItem.checkNbr !== '') {
-      dataItem.isPrintAdviceLetter = true
+      dataItem.isPrintAdviceLetter = true;      
     }
     this.assignRowDataToMainList(dataItem);
 
@@ -691,6 +709,9 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       && dataItem.checkNbr !== ''){
       this.checkingPaymentRequest = dataItem.paymentRequestId;
       this.warrantNumberChangeEvent.emit(dataItem);
+    }
+    else{
+      dataItem.warrantNumberChanged = false;
     }
     let isCheckNumberAlreadyExist = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr === dataItem.checkNbr 
     && (x.vendorId !== dataItem.vendorId || x.batchId !== dataItem.batchId));
@@ -818,7 +839,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     else {
       this.pageValidationMessageFlag = false;
       this.pageValidationMessage = "validation errors are cleared.";
-      this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '');
+       this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '');
       this.selectedReconcileDataRows.forEach((data:any) =>{
         data. paymentReconciledDate =  this.intl.formatDate(data.paymentReconciledDate, this.dateFormat);
         data. paymentSentDate =  this.intl.formatDate(data.paymentSentDate, this.dateFormat);
