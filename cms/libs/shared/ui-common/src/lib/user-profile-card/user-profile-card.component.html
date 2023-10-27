@@ -97,32 +97,22 @@
         <a href="mailto:userById?.emailAddress">      <button  kendoButton [primary]="true" look="flat" aria-label="Send Email"> Send Email    </button></a>
     </div>
     <div class="app-card-bottom-buttons" *ngIf="reassign"> 
-      <button  kendoButton [primary]="true" look="flat" aria-label="Re-assign" (click)="openBusinessPopup()">
+      <button  kendoButton [primary]="true" look="flat" aria-label="Re-assign" (click)="openBusinessPopup(reassignCaseModalTemplate)">
         Re-assign
       </button>
     </div>
     </div>
 </div>
-
-<kendo-dialog *ngIf="businessLogicPopupOpen" (close)="businessLogicPopupClose()" class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Re-assign Case">
-
-  <section class="k-dialog-body mb-2">
-    <p>
-      This feature is part of future scope of work for the ORCares project.
-    </p>
-  </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="flat" aria-label="Cancel" look="outline"
-          (click)="businessLogicPopupClose()">
-          Cancel
-        </button> 
-        <button  kendoButton [primary]="true" look="flat" aria-label="Re-assign" (click)="businessLogicPopupClose()">
-          Re-assign
-        </button>
-      </div>
-    </div>
-  </kendo-dialog-actions>
-  </kendo-dialog>
+<ng-template #reassignCaseModalTemplate>
+    <kendo-dialog-titlebar (close)="businessLogicPopupClose()"> {{ hasReassignPermission? 'Re-assign Case' : 'Assign New Case Worker?' }} </kendo-dialog-titlebar>
+    <common-re-assign-case 
+      [hasReassignPermission]="hasReassignPermission" 
+      [caseOwners]="caseOwners$"
+      [caseWorkerId]="userId" 
+      [clientId]="clientId"
+      [clientName]="clientName"
+      [clientCaseId]="clientCaseId"
+      (reassignClicked)="onReassignClicked($event)"
+      (cancelClicked)="businessLogicPopupClose()">
+    </common-re-assign-case>
+  </ng-template>
