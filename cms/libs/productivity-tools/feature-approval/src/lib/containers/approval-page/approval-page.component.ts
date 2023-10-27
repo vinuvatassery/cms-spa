@@ -3,10 +3,10 @@ import { Component,  ChangeDetectionStrategy, OnInit, TemplateRef, ViewChild } f
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
-import { ApprovalFacade, PendingApprovalGeneralFacade, PendingApprovalPaymentFacade, UserDefaultRoles, UserRoleType } from '@cms/productivity-tools/domain';
+import { ApprovalFacade, PendingApprovalGeneralFacade, PendingApprovalPaymentFacade, UserRoleType } from '@cms/productivity-tools/domain';
 import { ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, DocumentFacade, ApiType } from '@cms/shared/util-core';
 import { NotificationService } from '@progress/kendo-angular-notification';
-import { NavigationMenuFacade, UserManagementFacade, UserDataService } from '@cms/system-config/domain';
+import { NavigationMenuFacade, UserManagementFacade, UserDataService, UserDefaultRoles } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-approval-page',
