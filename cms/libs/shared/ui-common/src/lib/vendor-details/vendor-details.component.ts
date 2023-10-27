@@ -22,10 +22,10 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   @Input() editVendorInfo: boolean = false;
   @Input() vendorDetails!: any;
   @Input() profileInfoTitle!: string;
-  @Input() hasCreateUpdatePermission:boolean=false;
   @Input() ddlStates$!: any;
   @Input() clinicVendorList$!: any;
   @Input() clinicVendorLoader$!: any;
+  @Input() hasCreateUpdatePermission: boolean = false;
   @Input() selectedClinicType: string = FinancialVendorTypeCode.MedicalClinic;
 
   // listens for event when vendor saved in page comp
@@ -129,7 +129,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.medicalProviderForm.controls['providerName'].setValue(this.vendorDetails.vendorName);
     this.medicalProviderForm.controls['vendorId'].setValue(this.vendorDetails.vendorId);
   }
-
+  
   onToggleAddNewContactClick() {
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl('', Validators.required),
@@ -413,7 +413,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  closeVedorModal() {
+  closeVendorModal() {
     this.closeModalEventClicked.next(null);
   }
 
