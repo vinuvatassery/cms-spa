@@ -39,7 +39,6 @@ export class ApprovalPageComponent implements OnInit {
   userLevel = 1;
 
   state!: State;
-  casereassignmentExpandedInfo$ = this.pendingApprovalGeneralFacade.casereassignmentExpandedInfo$;
   approvalsGeneralLists$ = this.pendingApprovalGeneralFacade.approvalsGeneralList$;
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalCount$;
@@ -49,7 +48,7 @@ export class ApprovalPageComponent implements OnInit {
   pendingApprovalSubmit$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmit$;
   batchDetailPaymentsList$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
   batchDetailPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
-  approvalsExceedMaxBenefitCard$ = this.pendingApprovalGeneralFacade.approvalsGeneralExceedMaxBenefitCardSubjectList$;
+  approvalsExceptionCard$ = this.pendingApprovalGeneralFacade.approvalsGeneralExceptionCardSubjectList$;
   invoiceData$ = this.pendingApprovalGeneralFacade.invoiceData$;
   isInvoiceLoading$ = this.pendingApprovalGeneralFacade.isInvoiceLoading$;
   submitGenerealRequest$ = this.pendingApprovalGeneralFacade.submitGenerealRequest$;
@@ -156,12 +155,12 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalGeneralFacade.loadCasereassignmentExpandedInfo(approvalId);
   }
 
-  loadApprovalsExceedMaxBenefitCard(data:any)
+  loadApprovalsExceptionCard(data:any)
   {
-      this.pendingApprovalGeneralFacade.loadExceedMaxBenefitCard(data);
+      this.pendingApprovalGeneralFacade.loadExceptionCard(data);
   }
 
-  loadApprovalsExceedMaxBenefitInvoice(data:any)
+  loadApprovalsExceptionInvoice(data:any)
   {
       this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
   }

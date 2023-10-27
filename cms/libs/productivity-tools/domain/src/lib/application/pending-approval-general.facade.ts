@@ -53,13 +53,11 @@ export class PendingApprovalGeneralFacade {
 
   /** Private properties **/
   private approvalsGeneralSubject = new Subject<any>();
-  private casereassignmentExpandedInfoSubject = new Subject<any>();
-  private approvalsGeneralExceedMaxBenefitCardSubject = new Subject<any>();
+  private approvalsGeneralExceptionCardSubject = new Subject<any>();
 
   /** Public properties **/
   approvalsGeneralList$ = this.approvalsGeneralSubject.asObservable();
-  approvalsGeneralExceedMaxBenefitCardSubjectList$ = this.approvalsGeneralExceedMaxBenefitCardSubject.asObservable();
-  casereassignmentExpandedInfo$ = this.casereassignmentExpandedInfoSubject.asObservable();
+  approvalsGeneralExceptionCardSubjectList$ = this.approvalsGeneralExceptionCardSubject.asObservable();
 
  /** Constructor**/
 constructor(
@@ -85,16 +83,13 @@ constructor(
     });
   }
 
-  loadExceedMaxBenefitCard(data:any): void {
-    this.showLoader();
-    this.pendingApprovalGeneralService.loadExceedMaxBenefitCard(data).subscribe({
-      next: (exceedMaxBenefitCardResponse) => {
-        this.approvalsGeneralExceedMaxBenefitCardSubject.next(exceedMaxBenefitCardResponse);
-        this.hideLoader();
+  loadExceptionCard(data:any): void {
+    this.pendingApprovalGeneralService.loadExceptionCard(data).subscribe({
+      next: (dataResponse) => {
+        this.approvalsGeneralExceptionCardSubject.next(dataResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-        this.hideLoader();
       },
     });
   }
@@ -119,15 +114,8 @@ constructor(
     });
   }
 
-  loadCasereassignmentExpandedInfo(approvalId : any): void {
-    this.pendingApprovalGeneralService.loadCasereassignmentExpandedInfo(approvalId).subscribe({
-      next: (response) => {
-        this.casereassignmentExpandedInfoSubject.next(response);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
-      },
-    });
+  loadCasereassignmentExpandedInfo(approvalId : any) {
+    return this.pendingApprovalGeneralService.loadCasereassignmentExpandedInfo(approvalId);
   }
 
   submitGeneralRequests(requests: any) {

@@ -18,8 +18,7 @@
           <productivity-tools-approvals-general-list
             [approvalsGeneralLists$]="approvalsGeneralLists$"
             [submitGenerealRequest$]="submitGenerealRequest$"
-            [approvalsExceedMaxBenefitCard$]="approvalsExceedMaxBenefitCard$"
-            [casereassignmentExpandedInfo$]="casereassignmentExpandedInfo$"
+            [approvalsExceptionCard$]="approvalsExceptionCard$"
             [invoiceData$]="invoiceData$"
             [pageSizes]="pageSizes"
             [sortValue]="sortValue"
@@ -29,8 +28,8 @@
             [isInvoiceLoading$]="isInvoiceLoading$"
             (loadApprovalsGeneralGridEvent)="loadApprovalsGeneralGrid($event)"
             (loadCasereassignmentExpanedInfoParentEvent)="loadCasereassignmentExpanedInfoParentEvent($event)"
-            (loadApprovalsExceedMaxBenefitCardEvent)="loadApprovalsExceedMaxBenefitCard($event)"
-            (loadApprovalsExceedMaxBenefitInvoiceEvent)="loadApprovalsExceedMaxBenefitInvoice($event)"
+            (loadApprovalsExceptionCardEvent)="loadApprovalsExceptionCard($event)"
+            (loadApprovalsExceptionInvoiceEvent)="loadApprovalsExceptionInvoice($event)"
             (submitGeneralRequestsEvent)="submitGeneralRequests($event)">
           </productivity-tools-approvals-general-list>
         </div>
