@@ -183,6 +183,9 @@
         <kendo-floatinglabel text="NPI (optional)">
           <kendo-textbox aria-label="NPI" [fillMode]="formUiStyle.inputFillMode" formControlName="npiNbr">
           </kendo-textbox>
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['npiNbr'].valid && isValidateForm">
+            NPI  is required
+          </kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div *ngIf="providerType == vendorTypes.Pharmacy" class="flex-col mt-1">
@@ -460,12 +463,13 @@
           <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #SpecialHandling resizable="auto" id="SpecialHandling"
             [maxlength]="specialHandlingMaxLength" aria-label="Special Handling" formControlName="specialHandling"
             (valueChange)="onspecialHandlingTextAreaValueChange($event)" [value]="specialHandlingTextArea">
+            <kendo-textarea-suffix class="justify-content-end">
+              <span class="specialhandlingCounter">{{
+                specialhandlingCounter
+                }}</span>
+            </kendo-textarea-suffix>
           </kendo-textarea>
-          <kendo-textarea-suffix class="justify-content-end">
-            <span class="specialhandlingCounter">{{
-              specialhandlingCounter
-              }}</span>
-          </kendo-textarea-suffix>
+       
         </kendo-floatinglabel>
       </div>
 
@@ -585,8 +589,7 @@
     <div class="justify-content-end">
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeVedorModal()"> Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> {{hasCreateUpdatePermission == true ? 'ADD
-        NEW' : 'REQUEST NEW'}} </button>
+      <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> {{hasCreateUpdatePermission == true ? 'ADD NEW' : 'REQUEST NEW'}} </button>
     </div>
   </div>
   <div class="justify-content-between" *ngIf="editVendorInfo">

@@ -61,21 +61,21 @@
             </kendo-grid-column>
             <kendo-grid-column field="originalAmount" title="Original Amount" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> <strong>$</strong> {{dataItem.originalAmount}}</span>
+                        <span class="tableamountview"> <strong>$</strong> {{dataItem.originalAmount | kendoNumber: 'n2'}}</span>
                   </ng-template>
             </kendo-grid-column>
             <kendo-grid-column field="amountSpendAfterExpiration" title="Amount Spend After Expiration" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountSpendAfterExpiration}}</span>
+                        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountSpendAfterExpiration | kendoNumber: 'n2'}}</span>
                   </ng-template> </kendo-grid-column>
-            <kendo-grid-column field="overSpendAmount" title="Overspend Amount" [width]="180"> <ng-template
-                        kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> <strong>$</strong> {{dataItem.overSpendAmount}}</span>
+            <kendo-grid-column field="overSpendAmount" title="Overspend Amount" [width]="180">
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                        <span class="tableamountview"> <strong>$</strong> {{dataItem.overSpendAmount | kendoNumber: 'n2'}}</span>
                   </ng-template> </kendo-grid-column>
-            <kendo-grid-column field="totalOverSpendAmount" title="Total Overspend Amount" [width]="180"> <ng-template
-                        kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> <strong>$</strong> {{dataItem.totalOverSpendAmount}}</span>
-                  </ng-template> </kendo-grid-column>
+            <kendo-grid-column field="totalOverSpendAmount" title="Total Overspend Amount" [width]="180"> 
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                        <span class="tableamountview"> <strong>$</strong> {{dataItem.totalOverSpendAmount | kendoNumber: 'n2'}}</span>
+                  </ng-template>  </kendo-grid-column>
                   <kendo-grid-column field="unlimitedFlag" title="Unlimited" [width]="100"> <ng-template
                         kendoGridCellTemplate let-dataItem>
                         <span class="app-checkboxwidtext-wrapper">
@@ -123,7 +123,7 @@
                                     aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
                                     (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
                               <kendo-pager-info> </kendo-pager-info>
-                              <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'">
+                              <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'">
                               </kendo-grid-messages>
 
                         </div>

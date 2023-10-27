@@ -226,17 +226,20 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
           Validators.required, Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')
         ]);
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();
-      this.medicalProviderForm.controls['nameOnCheck']
-      .setValidators([
-        Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
-      ]);
-    this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
-
-    this.medicalProviderForm.controls['nameOnEnvolop']
-    .setValidators([
-      Validators.required,Validators.required,Validators.pattern('^[A-Za-z\]+$')
-    ]);
-      this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
+      if (this.providerType == this.vendorTypes.Manufacturers)
+      {
+        this.medicalProviderForm.controls['nameOnCheck'].setValidators([ Validators.nullValidator,]);
+        this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
+        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.nullValidator, ]);
+        this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
+      }
+      else
+      {
+        this.medicalProviderForm.controls['nameOnCheck'].setValidators([ Validators.required,Validators.pattern('^[A-Za-z ]+$')]);
+        this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
+        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.required,Validators.pattern('^[A-Za-z ]+$')]);
+        this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
+      }
 
     }
 
@@ -451,6 +454,12 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
+    if(this.vendorTypes.Pharmacy == this.providerType)
+    {
+      this.medicalProviderForm.controls['npiNbr'].setValidators([Validators.required]);
+      this.medicalProviderForm.controls['npiNbr'].updateValueAndValidity();
+    }
+  
   }
 
   mapAddressContact(formValues: any) {

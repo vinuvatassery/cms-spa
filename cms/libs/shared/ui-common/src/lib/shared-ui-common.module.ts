@@ -17,6 +17,7 @@ import { LoaderComponent } from './loader/loader.component';
 import { GridLoaderComponent } from './loader/grid-loader.component';
 import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list.component';
 import { ReminderNotificationSnackBarComponent } from './reminder-notification-snack-bar/reminder-notification-snack-bar.component';
+import { ReAssignCaseComponent } from './re-assign-case/re-assign-case.component';
 
 import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
@@ -39,6 +40,7 @@ import { DocumentUploadComponent } from './document-upload/document-upload.compo
 import { ClientsAttachmentComponent } from './clients-attachment/clients-attachment.component';
 import { YesOrNoPipe } from './pipes/yes-or-no.pipe';
 import { VendorDetailsComponent } from './vendor-details/vendor-details.component';
+import { TinPipe } from './pipes/tin.pipe';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -72,6 +74,8 @@ import { VendorDetailsComponent } from './vendor-details/vendor-details.componen
     YesOrNoPipe,
     ReminderNotificationSnackBarComponent,
     VendorDetailsComponent,
+    TinPipe,
+    ReAssignCaseComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -104,6 +108,8 @@ import { VendorDetailsComponent } from './vendor-details/vendor-details.componen
     YesOrNoPipe,
     ReminderNotificationSnackBarComponent,
     VendorDetailsComponent,
+    TinPipe,
+    ReAssignCaseComponent
   ],
 })
 export class SharedUiCommonModule {}
