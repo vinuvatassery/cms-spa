@@ -816,7 +816,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
 
     onRowSelection(grid:any, selection:any)
     {
-     this.warrantCalcutionArray=[];
+     this.warrantCalculationArray=[];
       const data = selection.selectedRows[0].dataItem;    
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId; 
