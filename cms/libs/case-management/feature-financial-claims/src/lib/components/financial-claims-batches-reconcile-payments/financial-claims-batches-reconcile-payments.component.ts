@@ -276,7 +276,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   allColumnChange(){
     this.searchItem = null;
     this.defaultGridState();
-    this.loadReconcileListGrid();
   }
   onSearchChange(data: any) {
     let searchValue = data;
