@@ -263,7 +263,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   defaultGridState() {
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: this.pageSizes[2]?.value,
       sort: this.sortBatch,
       filter: { logic: 'and', filters: [] },
     };
