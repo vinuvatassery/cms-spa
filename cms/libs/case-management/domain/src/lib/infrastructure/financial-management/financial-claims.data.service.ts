@@ -97,7 +97,7 @@ export class FinancialClaimsDataService {
   }
 
   loadReconcileListService(batchId:any,claimsType:any,paginationParameters:any){
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/reconcile-payments?batchId=${batchId}`,paginationParameters);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/all/reconcile-payments?batchId=${batchId}`,paginationParameters);
   }
   loadClaimsListService() {
     return of([
@@ -428,7 +428,7 @@ export class FinancialClaimsDataService {
   }
 
   reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any, claimsType:any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/reconcile-payments`,reconcileData);
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/all/reconcile-payments`,reconcileData);
   }
 
   viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, claimsType:any) {
