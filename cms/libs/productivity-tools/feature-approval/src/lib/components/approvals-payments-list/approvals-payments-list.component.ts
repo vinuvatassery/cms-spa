@@ -173,7 +173,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       next: (value) => {
         this.selectedPaymentType = value[0].lovCode;
         switch(this.selectedPaymentType) {
-          case PendingApprovalPaymentTypeCode.MedicalClaim:{
+          case PendingApprovalPaymentTypeCode.TpaClaim:{
             this.approvalPermissionCode = ApprovalLimitPermissionCode.MedicalClaimPermissionCode;
              break;
           }
@@ -401,7 +401,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.approveBatchCount= 0;
     this.sendbackBatchCount= 0;
     switch(this.selectedPaymentType) {
-      case PendingApprovalPaymentTypeCode.MedicalClaim:{
+      case PendingApprovalPaymentTypeCode.TpaClaim:{
         this.approvalPermissionCode = ApprovalLimitPermissionCode.MedicalClaimPermissionCode;
          break;
       }
@@ -911,7 +911,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
         type = 'premiums/dental';
         break;
       }
-      case PendingApprovalPaymentTypeCode.Pharmacy: {
+      case PendingApprovalPaymentTypeCode.PharmacyClaim: {
         type = 'claims/pharmacy';
         break;
       }      

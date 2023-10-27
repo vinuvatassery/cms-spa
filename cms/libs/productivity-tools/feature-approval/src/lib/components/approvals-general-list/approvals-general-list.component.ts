@@ -213,11 +213,11 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
 
   getTitle(itemCode: string) {
     switch (itemCode) {
-      case PendingApprovalGeneralTypeCode.GeneralException:
+      case PendingApprovalGeneralTypeCode.GeneralExceptions:
         return 'Request to Exceed Max Benefits';
       case PendingApprovalGeneralTypeCode.GeneralCaseReassignment:
         return 'Request for Case reassignment';
-      case PendingApprovalGeneralTypeCode.GeneralAddtoMasterList:
+      case PendingApprovalGeneralTypeCode.GeneralAddToMasterList:
         return 'Request to add To Master List';
     }
     return null;
