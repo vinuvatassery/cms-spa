@@ -763,8 +763,8 @@ deleteClaimService(tpaInvoiceId: any, typeCode: string) {
       })
     );
   }
-  CheckWarrantNumber(batchId:any,warrantNumber:any){
-    this.financialClaimsDataService.CheckWarrantNumber(batchId,warrantNumber).subscribe({
+  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+    this.financialClaimsDataService.CheckWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
       next: (dataResponse:any) => {       
         this.warrantNumberChangeSubject.next(dataResponse);
       },

@@ -197,6 +197,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       }
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
       this.warrantNumberChangeSubscription();
+      this.calculateCharacterCountBulkNote(null);
   }
 
   ngOnDestroy(): void {
@@ -816,7 +817,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     }
     else {
       this.pageValidationMessageFlag = false;
-      this.pageValidationMessage = "validation errors are cleared";
+      this.pageValidationMessage = "validation errors are cleared.";
       this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '');
       this.selectedReconcileDataRows.forEach((data:any) =>{
         data. paymentReconciledDate =  this.intl.formatDate(data.paymentReconciledDate, this.dateFormat);
