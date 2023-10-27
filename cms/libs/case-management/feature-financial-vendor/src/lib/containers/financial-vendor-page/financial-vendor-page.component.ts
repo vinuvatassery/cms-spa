@@ -4,7 +4,7 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ReminderFacade } from '@cms/productivity-tools/domain';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -16,6 +16,7 @@ import { UserManagementFacade } from '@cms/system-config/domain';
 export class FinancialVendorPageComponent implements OnInit {
   isVendorDetailFormShow = false;
   medicalProviderForm: FormGroup;
+  clinicForm: FormGroup;
   providerTypeCode: string = '';
 
   ShowClinicProvider: boolean = false;
@@ -81,6 +82,8 @@ export class FinancialVendorPageComponent implements OnInit {
   private closeMedicalDentalProviderModalSubject = new BehaviorSubject<boolean>(false);
   closeMedicalDentalProviderModal$ = this.closeMedicalDentalProviderModalSubject.asObservable();
 
+  saveVendorEventSubject: Subject<any> = new Subject();
+
   setupForClinic(providerTypeForClinic: string) {
     if (providerTypeForClinic === FinancialVendorTypeCode.DentalProviders)
       this.selectedClinicType = FinancialVendorTypeCode.DentalProviders;
@@ -89,8 +92,6 @@ export class FinancialVendorPageComponent implements OnInit {
 
     this.inputProviderTypeForClinic = FinancialVendorTypeCode.MedicalProviders;
 
-    this.clickCloseMedicalVendorDetails();
-    this.clickCloseDentalVendorDetails();
     this.clickOpenClinicProviderDetails();
   }
 
@@ -103,8 +104,9 @@ export class FinancialVendorPageComponent implements OnInit {
     private userManagementFacade: UserManagementFacade,
   ) {
     this.medicalProviderForm = this.formBuilder.group({});
+    this.clinicForm = this.formBuilder.group({});
   }
-  
+
   dataExportParameters!: any
   /** Lifecycle hooks **/
   ngOnInit() {
@@ -138,8 +140,8 @@ export class FinancialVendorPageComponent implements OnInit {
   }
 
   clickOpenClinicProviderDetails() {
-    this.buildVendorForm();
     this.providerTypeCode = FinancialVendorTypeCode.Clinic;
+    this.buildVendorForm(this.providerTypeCode);
     this.ShowClinicProvider = true;
   }
 
@@ -170,9 +172,14 @@ export class FinancialVendorPageComponent implements OnInit {
     this.financialVendorFacade.getVendors(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.vendorTypeCode, data?.filter)
   }
 
-  buildVendorForm() {
-    this.medicalProviderForm.reset();
-    this.medicalProviderForm = this.formBuilder.group({
+  buildVendorForm(providerType?: any) {
+
+    if (providerType === FinancialVendorTypeCode.Clinic)
+      this.clinicForm.reset();
+    else
+      this.medicalProviderForm.reset();
+
+    let form = this.formBuilder.group({
       firstName: [''],
       lastName: [],
       providerName: [''],
@@ -197,6 +204,11 @@ export class FinancialVendorPageComponent implements OnInit {
       newAddContactForm: this.formBuilder.array([
       ]),
     });
+
+    if (providerType === FinancialVendorTypeCode.Clinic)
+      this.clinicForm = form;
+    else
+      this.medicalProviderForm = form;
   }
 
   public get vendorTypes(): typeof FinancialVendorTypeCode {
@@ -209,7 +221,7 @@ export class FinancialVendorPageComponent implements OnInit {
     this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
       next: (response: any) => {
         this.financialVendorFacade.hideLoader();
-        this.closeVendorDetailModal();
+        this.closeVendorDetailModal(this.providerTypeCode);
         var notificationMessage = "Vendor profile added successfully";
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
         this.cdr.detectChanges();
@@ -220,13 +232,16 @@ export class FinancialVendorPageComponent implements OnInit {
     });
   }
 
-  closeVendorDetailModal() {
-    this.isShowMedicalProvider = false;
-    this.isShowDentalProvider = false;
-    this.isShowInsuranceProvider = false;
-    this.isShowPharmacyProvider = false;
-    this.isShowManufacturers = false;
-    this.ShowClinicProvider = false;
+  closeVendorDetailModal(data?: any) {
+    if (data == this.vendorTypes.Clinic) {
+      this.ShowClinicProvider = false;
+    } else {
+      this.isShowMedicalProvider = false;
+      this.isShowDentalProvider = false;
+      this.isShowInsuranceProvider = false;
+      this.isShowPharmacyProvider = false;
+      this.isShowManufacturers = false;
+    }
   }
 
   clickOpenInsuranceVendorModal() {
