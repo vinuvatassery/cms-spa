@@ -97,7 +97,7 @@ export class FinancialClaimsDataService {
   }
 
   loadReconcileListService(batchId:any,claimsType:any,paginationParameters:any){
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/all/reconcile-payments?batchId=${batchId}`,paginationParameters);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/${batchId}/reconcile-payments`,paginationParameters);
   }
   loadClaimsListService() {
     return of([
