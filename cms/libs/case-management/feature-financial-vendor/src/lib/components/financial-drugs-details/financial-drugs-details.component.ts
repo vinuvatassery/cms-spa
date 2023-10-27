@@ -22,7 +22,7 @@ export class FinancialDrugsDetailsComponent implements OnInit  {
   drugForm!: FormGroup;
   isSubmitted: boolean = false;
   deliveryMethodCodes: any[] = ["Tablet", "Capsule", "Liquid", "Injection"];
-
+  ndcMaskFormat : string ="00000-0000-00"
   showLoader() {
     this.loaderService.show();
   }
