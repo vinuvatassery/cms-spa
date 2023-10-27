@@ -31,7 +31,6 @@ export * from './lib/application/pending-approval-general.facade';
 /** Enums **/
 export * from './lib/enums/approval-user-status-code.enum';
 export * from './lib/enums/approval-type-code.enum';
-export * from './lib/enums/financial-manager-role-code.enum';
 export * from './lib/enums/approval-limit-permission-code.enum';
 export * from './lib/enums/pending-approval-payment-type-code.enum';
 export * from './lib/enums/user-role-type-enum';
