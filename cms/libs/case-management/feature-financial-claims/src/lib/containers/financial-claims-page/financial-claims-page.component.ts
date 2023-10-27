@@ -8,9 +8,11 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {
+  CaseFacade,
   ContactFacade,
   FinancialClaimsFacade,
   FinancialVendorFacade,
+  SearchHeaderType,
 } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
@@ -80,10 +82,12 @@ export class FinancialClaimsPageComponent implements OnInit {
     public contactFacade: ContactFacade,
     public lovFacade: LovFacade,
     private dialogService: DialogService,
-    private readonly financialVendorFacade: FinancialVendorFacade
+    private readonly financialVendorFacade: FinancialVendorFacade,
+    private caseFacade: CaseFacade,
   ) {}
 
   ngOnInit(): void {
+    this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
     this.activatedRoute.params.subscribe(
       (data) => (this.claimsType = data['type'])
     );

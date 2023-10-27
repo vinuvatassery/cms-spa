@@ -114,6 +114,10 @@ export class FinancialClaimsBatchesLogListsComponent
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  isEdit!: boolean;
+  paymentRequestId!: string;
+  private addEditClaimsFormDialog: any;
+  private addEditClaimsDialog!: TemplateRef<any>;
 
   gridColumns: { [key: string]: string } = {
     paymentNbr: 'Item #',
@@ -155,12 +159,17 @@ export class FinancialClaimsBatchesLogListsComponent
   deletemodelbody = "This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch";
 
   getBatchLogGridActions(dataItem: any){
-    return [
-      {
+    if (PaymentStatusCode.Denied == dataItem.paymentStatusCode) {
+      return [{
         buttonType: 'btn-h-primary',
         text: 'Edit Claim',
-        icon: 'edit'
-      },
+        icon: 'edit',
+        click: (claim: any): void => {
+          this.onClaimClick(claim);
+        },
+      }];
+    }
+    return [
       {
         buttonType: 'btn-h-primary',
         text: 'Unbatch Claim',
@@ -549,5 +558,18 @@ export class FinancialClaimsBatchesLogListsComponent
 
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event);
+  }
+  onClaimClick(dataitem: any) {
+    if (!dataitem.vendorId.length) return;
+    this.isEdit = true;
+    this.paymentRequestId = dataitem.paymentRequestId;
+    this.openAddEditClaimDialoge();
+  }
+
+  openAddEditClaimDialoge() {
+    this.addEditClaimsFormDialog = this.dialogService.open({
+      content: this.addEditClaimsDialog,
+      cssClass: 'app-c-modal app-c-modal-full add_claims_modal',
+    });
   }
 }

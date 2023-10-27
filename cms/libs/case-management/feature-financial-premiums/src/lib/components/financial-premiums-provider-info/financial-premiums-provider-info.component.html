@@ -215,49 +215,55 @@
                 </tr>
     
             </ng-container>
-                   <tr formArrayName="contacts" *ngFor="let contact of contactsArray.controls; let i=index">              
-                    <ng-container [formGroupName]="i">            
-                    <td>
-                         <div class="flex-row fiel-column-label"><strong>contact {{i+1}} </strong></div>
-                         <div class="flex-row fiel-column-label"><strong>Name</strong> </div>
-                     
-                         <div class="flex-row fiel-column-label"><strong>Phone</strong> </div>
-                        
-                         <div class="flex-row fiel-column-label"><strong>Email</strong> </div>
-                    </td>
-                    <td>
-                        <div class="flex-col mt-1" style="visibility: hidden;"> 
-                     
-                    </div>
-                        <div class="flex-col mt-1"  >
-                            <kendo-textbox aria-label="Name" [fillMode]="formUiStyle.inputFillMode"  formControlName="contactName"  id="{{'contactName'+i}}">
-                            </kendo-textbox>
-                            <kendo-formerror *ngIf="contact.hasError('required','contactName') && isSubmitted">Contact name is Required
-                            </kendo-formerror>
-                        </div>
-               
-                        <div  formArrayName="phones"  class="flex-col mt-1" *ngFor="let phone of  getPhonesArray(contact).controls; let j=index">
-                            <div [formGroupName]="j">                       
-                                <kendo-maskedtextbox  aria-label="Phone"  [maskOnFocus]="true"  mask="(999) 000-0000" [fillMode]="formUiStyle.inputFillMode" formControlName="phoneNbr" id="{{'phoneNbr'+i}}">
-                                </kendo-maskedtextbox> 
-                                <kendo-formerror *ngIf="phone.hasError('required','phoneNbr') && isSubmitted">phoneNbr is Required
-                                </kendo-formerror>
-                            </div>
-                        </div>
-           
-                            <div formArrayName="emails" class="flex-col mt-1" *ngFor="let email of  getEmailsArray(contact).controls; let k=index">
-                                <div [formGroupName]="k">
-                            <kendo-textbox aria-label="Email" [fillMode]="formUiStyle.inputFillMode" formControlName="emailAddress" id="{{'emailAddress'+i}}">
-                            </kendo-textbox>
-                            <kendo-formerror *ngIf="email.hasError('required','emailAddress') &&  isSubmitted">EmailAddress is Required
-                            </kendo-formerror>
-                        </div>
-    
-                        </div>
+    <tbody formArrayName="contacts" *ngFor="let contact of contactsArray.controls; let i=index">
+        <tr>
+            <td colspan="2">
+                <div class="flex-row fiel-column-label"><strong>contact {{i+1}} </strong></div>
+            </td>
+        </tr>
+        <tr>              
+            <ng-container [formGroupName]="i">                
+            <td>
+                 <div class="flex-row fiel-column-label"><strong>Name</strong> </div>
+             
+                 <div class="flex-row fiel-column-label"><strong>Phone</strong> </div>
                 
-                    </td>
-                </ng-container>
-                </tr>
+                 <div class="flex-row fiel-column-label"><strong>Email</strong> </div>
+            </td>
+            <td>
+                <div class="flex-col mt-1" style="visibility: hidden;"> 
+             
+            </div>
+                <div class="flex-col mt-1"  >
+                    <kendo-textbox aria-label="Name" [fillMode]="formUiStyle.inputFillMode"  formControlName="contactName"  id="{{'contactName'+i}}">
+                    </kendo-textbox>
+                    <kendo-formerror *ngIf="contact.hasError('required','contactName') && isSubmitted">Contact name is Required
+                    </kendo-formerror>
+                </div>
+       
+                <div  formArrayName="phones"  class="flex-col mt-1" *ngFor="let phone of  getPhonesArray(contact).controls; let j=index">
+                    <div [formGroupName]="j">                       
+                        <kendo-maskedtextbox  aria-label="Phone"  [maskOnFocus]="true"  mask="(999) 000-0000" [fillMode]="formUiStyle.inputFillMode" formControlName="phoneNbr" id="{{'phoneNbr'+i}}">
+                        </kendo-maskedtextbox> 
+                        <kendo-formerror *ngIf="phone.hasError('required','phoneNbr') && isSubmitted">phoneNbr is Required
+                        </kendo-formerror>
+                    </div>
+                </div>
+   
+                    <div formArrayName="emails" class="flex-col mt-1" *ngFor="let email of  getEmailsArray(contact).controls; let k=index">
+                        <div [formGroupName]="k">
+                    <kendo-textbox aria-label="Email" [fillMode]="formUiStyle.inputFillMode" formControlName="emailAddress" id="{{'emailAddress'+i}}">
+                    </kendo-textbox>
+                    <kendo-formerror *ngIf="email.hasError('required','emailAddress') &&  isSubmitted">Email Address is Required
+                    </kendo-formerror>
+                </div>
+
+                </div>
+        
+            </td>
+        </ng-container>
+        </tr>
+    </tbody>
            
             </table>
         </ng-container>

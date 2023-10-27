@@ -169,7 +169,15 @@
             </tr>
 
         </ng-container>
-               <tr formArrayName="contacts" *ngFor="let contact of contactsArray.controls; let i=index">              
+        <tbody formArrayName="contacts" *ngFor="let contact of contactsArray.controls; let i=index">
+            <tr>
+                <td colspan="2">
+                    <div class="flex-row fiel-column-label"><strong>contact {{i+1}} </strong></div>
+                </td>
+            </tr>
+            <tr>  
+        
+               <tr>              
                 <ng-container [formGroupName]="i">            
                 <td>
                      <div class="flex-row fiel-column-label"><strong>contact {{i+1}} </strong></div>
@@ -212,7 +220,7 @@
                 </td>
             </ng-container>
             </tr>
-       
+        </tbody>
         </table>
     </ng-container>
     </div>

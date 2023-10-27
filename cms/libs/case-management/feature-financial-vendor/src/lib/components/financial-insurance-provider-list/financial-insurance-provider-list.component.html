@@ -2,6 +2,16 @@
   <div class="flex-col flex-space-bw align-items-center">
     <h5 class="title-md mb-0 text-capital">Insurance Providers</h5>
   </div>
+  <div class="table-sorted-info">
+    Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
+    <span class="sort-items"  *ngIf="!filteredByColumnDesc">No Filters</span>
+    <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
+    <span class="sort-items">{{columnChangeDesc}}</span>
+    <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
+    <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="resetGrid()" >
+      <a>Set to Default</a>
+    </button>
+  </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
       <kendo-grid 
@@ -19,7 +29,8 @@
       [data]="vendorInsurancePlanGridView$ | async"
       [filter]="state.filter"
       (filterChange)="filterChange($event)"
-      (dataStateChange)="dataStateChange($event)">
+      (dataStateChange)="dataStateChange($event)"
+      (columnReorder)="onColumnReorder($event)">
         <kendo-grid-column field="providerName" title="Insurance Provider" [width]="100"> 
           <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
             <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
@@ -126,6 +137,7 @@
       (click)="clickOpenAddEditInsurancePlanDetails()">
       Insurance Provider
     </button>
+   
 
     <span class="right-overlay-export">
       <button kendoButton [primary]="true" look="flat" aria-label="Export"  class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
