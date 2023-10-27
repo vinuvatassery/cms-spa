@@ -3,14 +3,11 @@ import {
   Component,
   ChangeDetectionStrategy,
   Input,
-  Output,
   OnInit,
-  EventEmitter,
   TemplateRef,
 } from '@angular/core';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserManagementFacade } from '@cms/system-config/domain';
-//import { UserDefaultRoles } from '@cms/case-management/domain';
+import { UserManagementFacade, UserDefaultRoles } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
@@ -23,6 +20,7 @@ export class UserProfileCardComponent implements OnInit {
   @Input() reassign?: boolean = false;
   @Input() sendEmail?: boolean = false;
   @Input() clientId: any;
+  @Input() clientName: any;
   @Input() clientCaseId: any;
   userImage$ = this.userManagementFacade.userImage$;
   userById$ = this.userManagementFacade.usersById$;
@@ -65,7 +63,7 @@ export class UserProfileCardComponent implements OnInit {
   }
 
   loadUsersByRole() {
-    this.userManagementFacade.getUsersByRole("CACW");
+    this.userManagementFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
   }
 
   onReassignClicked(data: any) {

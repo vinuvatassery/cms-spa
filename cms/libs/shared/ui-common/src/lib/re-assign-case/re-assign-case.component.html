@@ -1,11 +1,11 @@
 <form class="k-form" [formGroup]="caseReassignForm">
   <section class="k-dialog-body">
     <p class="text-muted mb-2" *ngIf="hasReassignPermission">
-      Start typing to search for a new Case Worker and enter the reason
+      Start typing to search for a new Case Worker for {{clientName}} and enter the reason
       the case is being re-assigned.
     </p>
     <p class="text-muted mb-2" *ngIf="!hasReassignPermission">
-      This will send a request to re-assign the client to a different Case Worker. Enter your reason below.
+      This will send a request to re-assign {{clientName}} to a different Case Worker. Enter your reason below.
     </p>
     <div class="flex-row">
       <div class="flex-col hidedropicon" *ngIf="hasReassignPermission">

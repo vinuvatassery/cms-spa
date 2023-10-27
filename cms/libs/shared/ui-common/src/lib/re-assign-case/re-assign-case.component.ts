@@ -15,6 +15,7 @@ export class ReAssignCaseComponent implements OnInit, OnChanges {
   @Input() caseOwners !: any;
   @Input() caseWorkerId: any;
   @Input() clientId: any;
+  @Input() clientName: any;
   @Input() clientCaseId: any;
   @Output() reassignClicked = new EventEmitter<any>();
   @Output() cancelClicked = new EventEmitter();
