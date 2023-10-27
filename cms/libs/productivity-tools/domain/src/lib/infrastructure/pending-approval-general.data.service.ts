@@ -53,7 +53,7 @@ export class PendingApprovalGeneralService {
       subTypeCode === PendingApprovalGeneralTypeCode.MedicalProvider
     ) {
       return of();
-    } else if (subTypeCode == PendingApprovalGeneralTypeCode.Drugs) {
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.Drug) {
       return this.http.post<any>(
         `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/drugs`,
         null
