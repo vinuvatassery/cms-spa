@@ -1,3 +1,4 @@
+import { ApprovalTypeCode } from './../../../../../domain/src/lib/enums/approval-type-code.enum';
 /** Angular **/
 import {
   ChangeDetectorRef,
@@ -23,8 +24,8 @@ import {
   PanelBarExpandEvent,
 } from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
-import {UserDataService } from '@cms/system-config/domain';
+import { PendingApprovalGeneralTypeCode, PendingApprovalPaymentTypeCode } from '@cms/productivity-tools/domain';
+import {UserDataService, UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approvals-general-list',
   templateUrl: './approvals-general-list.component.html',
@@ -45,6 +46,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() sort: any;
   @Input() gridSkipCount:any;
   @Input() approvalsGeneralLists$: any;
+  @Input() clientsSubjects$ : any;
   @Input() casereassignmentExpandedInfo$: any;
   @Input() approvalsExceptionCard$:any;
   @Input() invoiceData$:any;
@@ -90,12 +92,18 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
 
   approvalId!: number;
   selectedIndex: any;
+  @ViewChild('editListItemDialogModal') editModalTemplate!: TemplateRef<any>;
+  @Input() usersByRole$ : any;
+  @Output() approvalEntityId = new EventEmitter<any>();
+  @Input() selectedVendor$ : any;
+  selectedSubtypeCode: any;
 
   /** Constructor **/
   constructor(private route: Router,
               private dialogService: DialogService,
               private readonly cd: ChangeDetectorRef,
-              private readonly userDataService: UserDataService) {}
+              private readonly userDataService: UserDataService,private readonly loginUserFacade : UserManagementFacade,
+    ) {}
 
   ngOnInit(): void {
     this.loadApprovalGeneralListGrid();
@@ -220,24 +228,18 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     this.isApprovalGeneralGridLoaderShow = false;
   }
 
-  public onPanelCollapse(event: PanelBarCollapseEvent,dataItem:any): void {
-    this.isPanelExpanded = false;
-    dataItem.isExpanded=this.isPanelExpanded;
-    if(dataItem.status==this.denyStatus)
+  public onPanelExpand(item:any): void {
+    if(item.approvalTypeCode === PendingApprovalGeneralTypeCode.GeneralAddtoMasterList)
     {
-      dataItem.isExpanded=false;
+      const userObject = {
+        approvalEntityId : item.approvalEntityId,
+        subTypeCode : item.subTypeCode
+      }
+      this.selectedSubtypeCode  = item.subTypeCode;
+      this.approvalEntityId.emit(userObject);
+      this.isPanelExpanded = true;
+      this.cd.detectChanges();
     }
-    this.cd.detectChanges();
-  }
-
-  public onPanelExpand(event: PanelBarExpandEvent,dataItem:any): void {
-    this.isPanelExpanded = true;
-    dataItem.isExpanded=this.isPanelExpanded;
-    if(dataItem.status==this.denyStatus)
-    {
-      dataItem.isExpanded=false;
-    }
-    this.cd.detectChanges();
   }
 
   approveOrDeny(index:any,result: any) {
@@ -267,14 +269,39 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     this.editListITemsDialog.close();
   }
 
-  getTitle(itemCode: string) {
-    switch (itemCode) {
+  getTitle(approvalTypeCode: string,subTypeCode:string) {
+    switch (approvalTypeCode) {
       case PendingApprovalGeneralTypeCode.GeneralException:
         return 'Request to Exceed Max Benefits';
       case PendingApprovalGeneralTypeCode.GeneralCaseReassignment:
         return 'Request for Case reassignment';
       case PendingApprovalGeneralTypeCode.GeneralAddtoMasterList:
-        return 'Request to add To Master List';
+        return this.getMasterlistTitle(subTypeCode);
+    }
+    return null;
+  }
+  openEditModal(event:any){
+    if(event){
+      this.onEditListItemsDetailClicked(this.editModalTemplate);
+    }
+  }
+
+  getMasterlistTitle(subTypeCode:string){
+    switch(subTypeCode){
+      case PendingApprovalGeneralTypeCode.DentalClinic:
+        return 'Request to add Dental Clinics To Master List';
+      case PendingApprovalGeneralTypeCode.MedicalClinic:
+        return 'Request to add Medical Clinics To Master List';
+      case PendingApprovalGeneralTypeCode.MedicalProvider:
+        return 'Request to add Medical Providers To Master List';
+      case PendingApprovalGeneralTypeCode.DentalProvider:
+        return 'Request to add Dental Providers To Master List';
+      case PendingApprovalGeneralTypeCode.InsuranceVendor:
+        return 'Request to add Insurance Vendors To Master List';
+      case PendingApprovalGeneralTypeCode.InsuranceProvider:
+        return 'Request to add Insurance Providers To Master List';
+      case PendingApprovalGeneralTypeCode.Pharmacy:
+        return 'Request to add Pharmacies To Master List';
     }
     return null;
   }

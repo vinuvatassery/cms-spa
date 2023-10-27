@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PendingApprovalGeneralService } from '../infrastructure/pending-approval-general.data.service';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 
 /** External libraries **/
@@ -24,6 +24,7 @@ export class PendingApprovalGeneralFacade {
   private invoiceDataSubject = new Subject<any>();
   private serviceDataSubject = new Subject<any>();
   private isInvoiceLoadingSubject = new Subject<boolean>();
+  private selectedVendorSubject = new Subject<any>();
   private submitGenerealRequestSubject = new Subject<any>();
 
   /** Public properties **/
@@ -33,14 +34,27 @@ export class PendingApprovalGeneralFacade {
   invoiceData$ = this.invoiceDataSubject.asObservable();
   isInvoiceLoading$ = this.isInvoiceLoadingSubject.asObservable();
   submitGenerealRequest$ = this.submitGenerealRequestSubject.asObservable();
+  selectedVendor$ = this.selectedVendorSubject.asObservable();
+
+
 
   showLoader() { this.loaderService.show(); }
-  hideLoader() { this.loaderService.hide(); }
 
   errorShowHideSnackBar( subtitle : any)
   {
     this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR,subtitle, NotificationSource.UI)
   }
+
+  /** Constructor **/
+  constructor(
+    private pendingApprovalGeneralService: PendingApprovalGeneralService,
+  private loggingService: LoggingService,
+  private readonly notificationSnackbarService: NotificationSnackbarService,
+  private configurationProvider: ConfigurationProvider,
+  private readonly loaderService: LoaderService
+  ) {}
+  hideLoader() { this.loaderService.hide(); }
+
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
@@ -59,14 +73,6 @@ export class PendingApprovalGeneralFacade {
   approvalsGeneralList$ = this.approvalsGeneralSubject.asObservable();
   approvalsGeneralExceptionCardSubjectList$ = this.approvalsGeneralExceptionCardSubject.asObservable();
 
- /** Constructor**/
-constructor(
-  private pendingApprovalGeneralService: PendingApprovalGeneralService,
-  private loggingService: LoggingService,
-  private readonly notificationSnackbarService: NotificationSnackbarService,
-  private configurationProvider: ConfigurationProvider,
-  private readonly loaderService: LoaderService
-) { }
 
   /** Public methods **/
   loadApprovalsGeneral(): void {
@@ -137,5 +143,17 @@ constructor(
       }
     );
   }
-
+  getVendorDetails(vendorId: string) {
+    this.showLoader();
+    this.pendingApprovalGeneralService.getVendorDetails(vendorId).subscribe({
+      next: (vendorDetail: any) => {
+        this.selectedVendorSubject.next(vendorDetail);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      }
+    });
+  }
 }

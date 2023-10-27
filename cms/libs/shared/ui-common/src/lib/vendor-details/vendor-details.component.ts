@@ -454,6 +454,12 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
+    if(this.vendorTypes.Pharmacy == this.providerType)
+    {
+      this.medicalProviderForm.controls['npiNbr'].setValidators([Validators.required]);
+      this.medicalProviderForm.controls['npiNbr'].updateValueAndValidity();
+    }
+  
   }
 
   mapAddressContact(formValues: any) {

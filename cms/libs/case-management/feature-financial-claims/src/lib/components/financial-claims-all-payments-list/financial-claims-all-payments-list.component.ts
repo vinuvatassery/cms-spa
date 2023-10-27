@@ -11,7 +11,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FinancialClaimsFacade, PaymentStatusCode } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -19,9 +19,10 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State
+  State,
+  filterBy
 } from '@progress/kendo-data-query';
-import { Subject, first } from 'rxjs';
+import { BehaviorSubject, Subject, first } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-claims-all-payments-list',
@@ -37,7 +38,7 @@ export class FinancialClaimsAllPaymentsListComponent
   private addClientRecentClaimsDialog: any;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isFinancialClaimsAllPaymentsGridLoaderShow = false;
-
+  gridLoaderSubject = new BehaviorSubject(false);
   @Input() claimsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -100,6 +101,19 @@ export class FinancialClaimsAllPaymentsListComponent
   clientId: any;
   clientName: any;
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  selectAll:boolean=false;
+  unCheckedPaymentRequest:any=[];
+  selectedDataIfSelectAllUnchecked:any=[];
+  financialClaimsAllPaymentsGridLists: any = [];
+  currentPageRecords: any = [];
+  selectedAllPaymentsList!: any;
+  isPageCountChanged: boolean = false;
+  isPageChanged: boolean = false;
+  unCheckedProcessRequest:any=[];
+  checkedAndUncheckedRecordsFromSelectAll:any=[];
+  recordCountWhenSelectallClicked: number = 0;
+  totalGridRecordsCount: number = 0;
+  sendReportCount: number = 0;
 
   getPaymentsGridActions(dataItem: any) {
     let list = [
@@ -282,7 +296,7 @@ export class FinancialClaimsAllPaymentsListComponent
     private readonly lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private readonly notificationSnackbarService: NotificationSnackbarService
+    private readonly notificationSnackbarService: NotificationSnackbarService,
   ) {
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -294,7 +308,77 @@ export class FinancialClaimsAllPaymentsListComponent
   ngOnInit(): void {
     this.getPaymentMethodLov();
     this.getPaymentStatusLov();
+    this.handleAllPaymentsGridData();
   }
+
+  handleAllPaymentsGridData() {
+    this.financialClaimsAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
+      this.gridDataResult = data;
+      this.gridDataResult.data = filterBy(
+        this.gridDataResult.data,
+        this.filterData
+      );
+      this.gridFinancialClaimsAllPaymentsDataSubject.next(this.gridDataResult);
+      if (data?.total >= 0 || data?.total === -1) {
+        this.gridLoaderSubject.next(false);
+      }
+      this.financialClaimsAllPaymentsGridLists = this.gridDataResult?.data;
+      if(this.recordCountWhenSelectallClicked == 0){
+        this.recordCountWhenSelectallClicked = this.gridDataResult?.total;
+        this.totalGridRecordsCount = this.gridDataResult?.total;
+      }
+      if(!this.selectAll)
+      {
+      this.financialClaimsAllPaymentsGridLists.forEach((item1: any) => {
+        const matchingGridItem = this.selectedAllPaymentsList?.PrintAdviceLetterSelected.find((item2: any) => item2.paymentRequestId === item1.paymentRequestId);
+        if (matchingGridItem) {
+          item1.selected = true;
+        } else {
+          item1.selected = false;
+        }
+      });
+    }
+    this.currentPageRecords = this.financialClaimsAllPaymentsGridLists;
+    //If the user is selecting the individual check boxes and changing the page count
+    this.handlePageCountSelectionChange();
+    //If the user click on select all header and either changing the page number or page count
+    this.pageNumberAndCountChangedInSelectAll();
+    this.gridLoaderSubject.next(false);
+    });
+  }
+
+  handlePageCountSelectionChange() {
+    if(!this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
+      // Extract the payment request ids from grid data
+      const idsToKeep: number[] = this.checkedAndUncheckedRecordsFromSelectAll.map((item: any) => item.paymentRequestId);
+      // Remove items from selected records based on the IDs from grid data
+      for (let i = this.selectedAllPaymentsList?.PrintAdviceLetterSelected?.length - 1; i >= 0; i--) {
+        if (!idsToKeep.includes(this.selectedAllPaymentsList?.PrintAdviceLetterSelected[i].paymentRequestId)) {
+          this.selectedAllPaymentsList?.PrintAdviceLetterSelected.splice(i, 1); // Remove the item at index i
+        }
+      }
+      this.getSelectedReportCount(this.selectedAllPaymentsList?.PrintAdviceLetterSelected?.filter((item:any) => item.selected));
+    }
+}
+
+pageNumberAndCountChangedInSelectAll() {
+  //If selecte all header checked and either the page count or the page number changed
+  if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
+    this.selectedAllPaymentsList = [];
+    this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
+    for (const item of this.financialClaimsAllPaymentsGridLists) {
+      // Check if the item is in the second list.
+      const isItemInSecondList = this.unCheckedProcessRequest.find((item2 :any) => item2.paymentRequestId === item.paymentRequestId);
+      // If the item is in the second list, mark it as selected true.
+      if (isItemInSecondList) {
+        item.selected = false;
+      }else{
+        item.selected = true;
+      }
+    }
+  }
+}
+
   ngOnChanges(): void {
     this.defaultGridState();
     this.loadFinancialClaimsAllPaymentsListGrid();
@@ -406,6 +490,8 @@ export class FinancialClaimsAllPaymentsListComponent
   }
 
   dataStateChange(stateData: any): void {
+    this.isPageCountChanged = false;
+    this.isPageChanged = true;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -433,13 +519,21 @@ export class FinancialClaimsAllPaymentsListComponent
     if (!this.filteredBy.includes('Payment Status'))
       this.selectedPaymentStatus = '';
     this.loadFinancialClaimsAllPaymentsListGrid();
+    if(this.isPrintAuthorizationClicked){
+      this.handleAllPaymentsGridData();
+    }
   }
 
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
+    this.isPageCountChanged = true;
+    this.isPageChanged = false;
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadFinancialClaimsAllPaymentsListGrid();
+    if(this.isPrintAuthorizationClicked){
+      this.handleAllPaymentsGridData();
+    }
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -492,7 +586,7 @@ export class FinancialClaimsAllPaymentsListComponent
       '/financial-management/claims/' +
         this.claimsType +
         '/payments/reconcile-payments',
-    ]);
+    ],{ queryParams :{loadType: LoadTypes.allPayments}});
   }
 
   clientRecentClaimsModalClicked(
@@ -538,6 +632,16 @@ export class FinancialClaimsAllPaymentsListComponent
     this.isPrintAuthorizationClicked = false;
     this.isGridExpand = true;
     this.previewText = false;
+    this.markAsUnChecked(this.selectedAllPaymentsList?.PrintAdviceLetterSelected);
+    this.markAsUnChecked(this.financialClaimsAllPaymentsGridLists);
+    this.unCheckedProcessRequest = [];
+    this.checkedAndUncheckedRecordsFromSelectAll = [];
+    this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
+    this.selectedAllPaymentsList.PrintAdviceLetterUnSelected = [];
+    this.getSelectedReportCount(this.selectedAllPaymentsList?.PrintAdviceLetterSelected);
+    this.selectAll = false;
+    this.recordCountWhenSelectallClicked = 0;
+    this.sendReportCount = 0;
   }
 
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
@@ -659,5 +763,123 @@ export class FinancialClaimsAllPaymentsListComponent
       this.loadFinancialClaimsAllPaymentsListGrid();
       this.addEditClaimsFormDialog.close();
     }
+  }
+
+  selectionChange(dataItem:any, selected:boolean){
+    if(!selected){
+      this.onRecordSelectionChecked(dataItem);
+    }
+    else{
+      this.onRecordSelectionUnChecked(dataItem);
+    }
+      this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedProcessRequest,
+      'PrintAdviceLetterSelected':this.checkedAndUncheckedRecordsFromSelectAll,'print':true,
+      'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'};
+    if(this.selectAll){
+      if(this.unCheckedProcessRequest?.length > 0){
+        this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
+        this.recordCountWhenSelectallClicked = this.sendReportCount;
+      }else{
+      this.recordCountWhenSelectallClicked = selected ? this.recordCountWhenSelectallClicked + 1 : this.recordCountWhenSelectallClicked - 1;
+      this.sendReportCount = this.recordCountWhenSelectallClicked;
+      }
+    }else{
+      this.sendReportCount = this.selectedAllPaymentsList?.PrintAdviceLetterSelected?.filter((item: any) => item.selected).length;
+   }
+    this.cdr.detectChanges();
+}
+
+  onRecordSelectionUnChecked(dataItem: any) {
+    this.unCheckedProcessRequest = this.unCheckedProcessRequest.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
+      this.currentPageRecords?.forEach((element: any) => {
+        if (element.paymentRequestId === dataItem.paymentRequestId) {
+          element.selected = true;
+        }
+      });
+      const exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
+      if (exist === 0) {
+        this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true, 'batchId': dataItem.batchId });
+      }else{
+        const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
+        if (recordIndex !== -1) {
+          this.checkedAndUncheckedRecordsFromSelectAll.splice(recordIndex, 1); // Remove the record at the found index
+        }
+      }
+  }
+
+  onRecordSelectionChecked(dataItem: any) {
+    this.unCheckedProcessRequest.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true});
+        this.currentPageRecords?.forEach((element: any) => {
+          if (element.paymentRequestId === dataItem.paymentRequestId) {
+            element.selected = false;
+          }
+        });
+        const exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
+        if (exist === 0) {
+          this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': false, 'batchId': dataItem.batchId });
+        }else{
+          const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
+          if (recordIndex !== -1) {
+            this.checkedAndUncheckedRecordsFromSelectAll.splice(recordIndex, 1); // Remove the record at the found index
+          }
+        }
+  }
+
+  selectionAllChange(){
+    this.unCheckedProcessRequest=[];
+    this.checkedAndUncheckedRecordsFromSelectAll=[];
+    if(this.selectAll){
+      this.markAsChecked(this.financialClaimsAllPaymentsGridLists);
+    }
+    else{
+      this.markAsUnChecked(this.financialClaimsAllPaymentsGridLists);
+    }
+    this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedProcessRequest,
+    'PrintAdviceLetterSelected':this.checkedAndUncheckedRecordsFromSelectAll,'print':true,
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'};
+    this.cdr.detectChanges();
+    if(this.selectAll){
+      if(this.unCheckedProcessRequest?.length > 0){
+        this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
+        this.recordCountWhenSelectallClicked = this.sendReportCount;      
+      }else{
+        this.sendReportCount = this.totalGridRecordsCount;
+      }
+    }else{
+    this.getSelectedReportCount(this.selectedAllPaymentsList?.PrintAdviceLetterSelected);
+  }
+  }
+
+  markAsChecked(data:any){
+    data.forEach((element:any) => { 
+      if(this.selectAll){
+        element.selected = true; 
+      } 
+      else{
+        element.selected = false; 
+      }
+      if(this.unCheckedPaymentRequest.length>0 || this.selectedDataIfSelectAllUnchecked.length >0)   {
+        const itemMarkedAsUnChecked=   this.unCheckedPaymentRequest.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
+        if(itemMarkedAsUnChecked !== null && itemMarkedAsUnChecked !== undefined){
+          element.selected = false;    
+        }
+        const itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
+        if(itemMarkedAsChecked !== null && itemMarkedAsChecked !== undefined){
+          element.selected = true;   
+        }
+      }
+     
+    });
+  
+  }
+
+  markAsUnChecked(data:any){
+    data.forEach((element:any) => {     
+      element.selected = false;    
+  });
+  }
+
+  getSelectedReportCount(selectedSendReportList : []){
+    this.sendReportCount = selectedSendReportList.length;
   }
 }

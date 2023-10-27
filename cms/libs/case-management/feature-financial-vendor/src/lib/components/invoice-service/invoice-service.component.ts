@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { InvoiceFacade } from '@cms/case-management/domain';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { Subject, Subscription } from 'rxjs';
@@ -26,6 +28,7 @@ export class InvoiceServiceComponent implements OnChanges {
     field: this.sortValue,
   }];
   sortType ="asc"
+  constructor(private readonly invoiceFacade: InvoiceFacade) {}
   ngOnChanges(): void {     
     this.state = {
       skip: 0,
@@ -35,37 +38,25 @@ export class InvoiceServiceComponent implements OnChanges {
     this.loadServices();
   }
   loadServices(){
+    this.isInvoiceServiceGridLoaderShow = true;
     this.loadInvoiceServices(
-      this.dataItem,
-      this.vendorId,
-      this.tabCode,
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType
+      this.dataItem
     );
   }
   loadInvoiceServices(
-    dataItem : any,
-    vendorId:any,
-    tabCode:any,
-    skipCountValue: number,
-    maxResultCountValue: number,
-    sortValue: string,
-    sortTypeValue: string
+    dataItem : any
   ) {
-    this.isInvoiceServiceGridLoaderShow = true;
-    const gridDataRefinerValue = {
-      dataItem : dataItem,
-      vendorId:vendorId,
-      tabCode:tabCode,
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue    
-    };
-    this.loadInvoiceServiceEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
+    this.invoiceFacade.loadPaymentRequestServices(dataItem,this.vendorId,this.tabCode)
+    .subscribe({
+      next: (dataResponse) => { 
+        this.gridFinancialClaimsInvoiceSubject.next(dataResponse);
+        this.isInvoiceServiceGridLoaderShow = false;
+      },
+      error: (err) => {
+        this.isInvoiceServiceGridLoaderShow = false;
+        this.invoiceFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+         },
+    });  
   }
   gridDataHandle() {
     this.serviceGridView$.subscribe((data: GridDataResult) => {   

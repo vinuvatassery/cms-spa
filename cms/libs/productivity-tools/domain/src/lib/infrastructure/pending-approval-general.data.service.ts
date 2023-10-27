@@ -44,4 +44,9 @@ export class PendingApprovalGeneralService {
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/`,requests
     );
   }
+  getVendorDetails(vendorId: string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/${vendorId}`
+    );
+  }
 }

@@ -30,7 +30,10 @@
             (loadCasereassignmentExpanedInfoParentEvent)="loadCasereassignmentExpanedInfoParentEvent($event)"
             (loadApprovalsExceptionCardEvent)="loadApprovalsExceptionCard($event)"
             (loadApprovalsExceptionInvoiceEvent)="loadApprovalsExceptionInvoice($event)"
-            (submitGeneralRequestsEvent)="submitGeneralRequests($event)">
+            (submitGeneralRequestsEvent)="submitGeneralRequests($event)"
+            [usersByRole$]="usersByRole$"
+            (approvalEntityId)="getVendorDetail($event)"
+            [selectedVendor$]="selectedVendor$">
           </productivity-tools-approvals-general-list>
         </div>
       </ng-template>
