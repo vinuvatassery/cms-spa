@@ -157,7 +157,7 @@
                         </kendo-grid-column>
                         <kendo-grid-column field="tin" title="TIN" [width]="160"> 
                               <ng-template kendoGridCellTemplate let-dataItem>
-                                    <span class="tableamountview"> {{dataItem.tin | ssn}}</span>
+                                    <span class="tableamountview"> {{dataItem.tin | tin}}</span>
                               </ng-template>
                               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                                     <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
