@@ -27,7 +27,6 @@ export class PendingApprovalGeneralService {
   }
 
   loadExceptionCard(exceptionId:string) {
-  loadExceptionCard(exceptionId:string) {
     return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/exceptions?exceptionId=${exceptionId}`);
    }
 
