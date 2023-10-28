@@ -673,8 +673,8 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
     return this.financialClaimsDataService.getPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
   }
 
-  reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any,claimsType:any) {
-    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData,claimsType);
+  reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any,claimsType:any) {
+    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData,claimsType);
 }
 
 viewAdviceLetterData(batchId:any,printAdviceLetterData: any, claimsType:any) {
