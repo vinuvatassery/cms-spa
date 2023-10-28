@@ -130,7 +130,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
   /** Lifecycle hooks **/ 
   ngOnInit() { 
     this.contactFacade.loadDdlStates();  
-    this.hasHealthcareProviderCreateUpdatePermission=this.userManagementFacade.hasPermission(['Service_Provider_HIV_Healthcare_Provider_Create_Update']);
+    this.hasHealthcareProviderCreateUpdatePermission=this.userManagementFacade.hasPermission(['Service_Provider_Medical_Dental_Provider_Create_Update']);
   }
   ngOnChanges(): void {     
     this.state = {
@@ -186,8 +186,7 @@ pageselectionchange(data: any) {
   }
 
   onOpenBusinessLogicClicked()
-  {
-    this.onCloseProviderSearchClicked()
+  { 
     this.buildVendorForm();
     this.isOpenedbusinessInfo = true;
   }

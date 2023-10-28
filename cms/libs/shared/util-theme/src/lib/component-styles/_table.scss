@@ -704,11 +704,13 @@ table,
     &.k-numerictextbox,
     &.k-focus {
       margin: 0 0px;
-      width: 100%;
-      max-width: 30px;
+     
+      width: auto;
+      max-width: 25px;
       border-bottom: 0px;
       background: transparent !important;
       border: 0px !important;
+      display: inline-flex;
     }
 
     &.k-input-solid {
@@ -738,8 +740,9 @@ table,
       font-size: $font-size;
       padding: 0px;
       position: relative;
-      top: -1px;
-
+      top: 0px;
+      width: auto;
+      text-align: right;
     }
   }
 
@@ -880,6 +883,19 @@ table,
         width: 50%; 
         border-bottom: 1px solid rgba($black, 0.1);
       }
+      &.providercontact{
+        td{
+          border-bottom: 0px solid rgba($black, 0.1);
+          padding: 0px;
+         
+        }
+        &:nth-child(3n + 1){
+          border-bottom: 1px solid rgba($black, 0.1);
+          td{
+            padding-bottom: 10px;
+          }
+        }
+      }
     }
   }
 }
@@ -959,5 +975,4 @@ table,
    > .k-content.k-focus{
     outline: 0px;
    }
-
 }

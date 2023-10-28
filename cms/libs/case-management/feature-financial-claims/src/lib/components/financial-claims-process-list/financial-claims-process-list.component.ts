@@ -205,12 +205,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
       text: 'Delete Claim',
       icon: 'delete',
       click: (data: any): void => {
-        this.onSingleClaimDelete(data.paymentRequestId.split(','));
-        if (!this.selectedProcessClaims.length)
-        {
-          this.financialClaimsFacade.errorShowHideSnackBar("Select a claim to delete")
-          return;
-        } 
+   
+        this.onSingleClaimDelete(data.paymentRequestId.split(','));       
         this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog);
       },
     },
@@ -257,7 +253,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
- 
+
     this.loadFinancialClaimsProcessListGrid();
   }
 
@@ -438,6 +434,11 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   }
 
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void { 
+    if (!this.selectedProcessClaims.length)
+    {
+      this.financialClaimsFacade.errorShowHideSnackBar("Select a claim to delete")
+      return;
+    } 
     this.deleteClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
@@ -455,10 +456,10 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.openAddEditClaimDialoge();
   }
   modalCloseAddEditClaimsFormModal(result: any) {
-    if (result) {
-      this.loadFinancialClaimsProcessListGrid();
-      this.addEditClaimsFormDialog.close();
+    if (result === true) {
+      this.loadFinancialClaimsProcessListGrid();     
     }
+    this.addEditClaimsFormDialog.close();
   }
 
   onBatchClaimsGridSelectedClicked() {
@@ -534,7 +535,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   openAddEditClaimDialoge() {
     this.addEditClaimsFormDialog = this.dialogService.open({
       content: this.addEditClaimsDialog,
-      cssClass: 'app-c-modal app-c-modal-full add_claims_modal',
+      cssClass: 'app-c-modal app-c-modal-96full add_claims_modal',
     });
   }
 

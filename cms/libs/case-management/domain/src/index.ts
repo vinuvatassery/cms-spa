@@ -74,7 +74,6 @@ export * from './lib/enums/navigation-type.enum';
 export * from './lib/enums/adjustment-operator.enum';
 export * from './lib/enums/data-point-type.enum';
 export * from './lib/enums/entity-type-code.enum';
-export * from './lib/enums/user-default-roles.enum';
 export * from './lib/enums/program.enum';
 export * from './lib/enums/dependent-type.enum';
 export * from './lib/enums/client-dependent-group.enum';
@@ -130,6 +129,7 @@ export * from './lib/enums/payment-status-code.enum'
 export * from './lib/enums/premium-type.enum';
 export * from './lib/enums/premium-payment-status.enum';
 export * from './lib/enums/payment-type.enum';
+export * from './lib/enums/load-type.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';

@@ -83,7 +83,11 @@ export class UserDataService {
       `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
       `/system-config/users/${userId}/profile-photo`, {responseType: 'text'}
     );  
-  }  
+  }
+  
+  reassignCase(caseReassignData : any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case/reassign`, caseReassignData);
+  }
   
   loadUsers(): Observable<User[]> {
     return of([

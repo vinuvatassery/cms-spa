@@ -5,11 +5,11 @@ import { Router } from '@angular/router';
 
 
 /** Internal Libraries **/
-import { CaseFacade, CaseScreenTab, WorkflowFacade,  UserDefaultRoles, SearchHeaderType,ModuleCode  } from '@cms/case-management/domain';
+import { CaseFacade, CaseScreenTab, WorkflowFacade, SearchHeaderType,ModuleCode  } from '@cms/case-management/domain';
 import { ReminderFacade } from '@cms/productivity-tools/domain';
 import {UITabStripScroll} from '@cms/shared/ui-tpa'
 import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { LovFacade , UserManagementFacade} from '@cms/system-config/domain'
+import { LovFacade , UserManagementFacade, UserDefaultRoles} from '@cms/system-config/domain'
 
 
 @Component({

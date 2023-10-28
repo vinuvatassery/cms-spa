@@ -250,6 +250,9 @@
               <common-user-profile-card
               [userId]="dataItem.assignedCwUserId"
               [reassign]=true
+              [clientId]="dataItem.clientId"
+              [clientName]="dataItem.clientFullName"
+              [clientCaseId]="dataItem.clientCaseId"
               ></common-user-profile-card>
             </ng-template>
           </kendo-popover>
@@ -272,7 +275,7 @@
                 [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
                 (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
-          <kendo-grid-messages [pagerItems]="' '"  [pagerItems]="'clients'" [pagerPage]="'Page'"> </kendo-grid-messages>
+          <kendo-grid-messages  [pagerItems]="'clients'" [pagerPage]="'Page'"> </kendo-grid-messages>
 
         </div>
         <div class="d-flex">

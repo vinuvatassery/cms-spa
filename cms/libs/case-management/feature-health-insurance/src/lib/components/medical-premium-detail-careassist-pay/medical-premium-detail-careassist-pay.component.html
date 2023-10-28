@@ -79,7 +79,7 @@
       aria-label="add new insurance carrier"
       (click)="addNewInsuranceProviderOpen()"
     > 
-      ADD NEW
+      {{hasinsuranceVendorCreateUpdatePermission==true? 'ADD NEW':'REQUEST NEW'}}
     </button>
        </div>
         <div class="flex-row mt-3" *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'|| healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == null">
@@ -161,11 +161,14 @@
 </div>
 
 <kendo-dialog kendoRippleContainer *ngIf="isShowInsuranceProvider" (close)="closeVendorDetailModal()"
-class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Insurance Vendor" kendoTooltip>
-<cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.InsuranceVendors" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"      [ddlStates$]="ddlStates"
-[clinicVendorList$]="clinicVendorList"
-[clinicVendorLoader$]="clinicVendorLoader"
-(searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
+    class="app-c-modal app-c-modal-md app-c-modal-np"
+    title="{{hasinsuranceVendorCreateUpdatePermission==true? 'Add Health Insurance':'Request Health Insurance'}}"
+    kendoTooltip>
+    <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.InsuranceVendors"
+        (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
+        [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
+        [hasCreateUpdatePermission]="hasinsuranceVendorCreateUpdatePermission"
+        (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
 </kendo-dialog>
 
 

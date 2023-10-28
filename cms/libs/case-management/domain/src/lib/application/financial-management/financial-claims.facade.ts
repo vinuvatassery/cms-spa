@@ -97,10 +97,12 @@ export class FinancialClaimsFacade {
   private showIneligibleExceptionSubject = new Subject<any>();
   private showBridgeUppExceptionSubject = new Subject<any>();
   private showDuplicatePaymentExceptionSubject = new Subject<any>();
+  public showDuplicatePaymentHighlightSubject = new Subject<any>();
   showExceedMaxBenefitException$ = this.showExceedMaxBenefitExceptionSubject.asObservable();
   showIneligibleException$ = this.showIneligibleExceptionSubject.asObservable();
   showBridgeUppException$ = this.showBridgeUppExceptionSubject.asObservable();
   showDuplicatePaymentException$ = this.showDuplicatePaymentExceptionSubject.asObservable();
+  showDuplicatePaymentExceptionHighlight$ = this.showDuplicatePaymentHighlightSubject.asObservable();
 
 
 
@@ -185,6 +187,12 @@ export class FinancialClaimsFacade {
 
   private unbatchClaimsSubject =  new Subject<any>();
   unbatchClaims$ = this.unbatchClaimsSubject.asObservable();
+
+  private warrantNumberChangeSubject = new Subject<any>();
+  warrantNumberChange$ = this.warrantNumberChangeSubject.asObservable();
+
+  private warrantNumberChangeLoaderSubject = new Subject<any>();
+  warrantNumberChangeLoader$ = this.warrantNumberChangeLoaderSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -365,9 +373,11 @@ export class FinancialClaimsFacade {
   }
 
   loadReconcilePaymentBreakoutSummary(data:any){
+    this.loaderService.show(); 
     this.financialClaimsDataService.loadReconcilePaymentBreakoutSummaryService(data).subscribe({
       next: (dataResponse) => {
         this.reconcileBreakoutSummaryDataSubject.next(dataResponse);
+        this.loaderService.hide(); 
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
@@ -376,6 +386,7 @@ export class FinancialClaimsFacade {
   }
 
   loadReconcilePaymentBreakoutListGrid(data:any) {
+    this.loaderService.show(); 
     data.filter=JSON.stringify(data.filter);
     this.financialClaimsDataService
       .loadReconcilePaymentBreakoutListService(data)
@@ -388,6 +399,7 @@ export class FinancialClaimsFacade {
               total: dataResponse['totalCount'],
             };
             this.reconcilePaymentBreakoutListDataSubject.next(gridView);
+            this.loaderService.hide();
           }
         },
         error: (err) => {
@@ -724,9 +736,9 @@ checkGroupException(startDtae: any,endDate: any, clientId: number,cptCode:any, i
   })
   this.hideLoader();
 }
-checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any, indexNumber: any, typeCode : string){
+checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any,paymentRequestId :any, indexNumber: any, typeCode : string){
   this.showLoader();
-  this.financialClaimsDataService.checkDuplicatePaymentException(startDtae,endDate,vendorId,totalAmountDue,typeCode).subscribe({
+  this.financialClaimsDataService.checkDuplicatePaymentException(startDtae,endDate,vendorId,totalAmountDue, paymentRequestId, typeCode).subscribe({
     next: (data:any)=>{
       const flag =  data;
       let response = {
@@ -764,4 +776,17 @@ loadFinancialClaimsInvoiceList(paymentRequestId : string, skipcount: number,  ma
   return this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType,claimsType) 
 }
 
+  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+    this.warrantNumberChangeLoaderSubject.next(true);
+    this.financialClaimsDataService.CheckWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
+      next: (dataResponse:any) => {       
+        this.warrantNumberChangeSubject.next(dataResponse);
+        this.warrantNumberChangeLoaderSubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.warrantNumberChangeLoaderSubject.next(false);
+      },
+    });
+  }
 }
