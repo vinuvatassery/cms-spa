@@ -26,6 +26,7 @@ export class PendingApprovalGeneralFacade {
   private isInvoiceLoadingSubject = new Subject<boolean>();
   private selectedVendorSubject = new Subject<any>();
   private submitGenerealRequestSubject = new Subject<any>();
+  private submitGenerealRequestSubject = new Subject<any>();
 
   /** Public properties **/
   snackbarMessage!: SnackBar;
@@ -33,6 +34,7 @@ export class PendingApprovalGeneralFacade {
   serviceData$ = this.serviceDataSubject.asObservable();
   invoiceData$ = this.invoiceDataSubject.asObservable();
   isInvoiceLoading$ = this.isInvoiceLoadingSubject.asObservable();
+  submitGenerealRequest$ = this.submitGenerealRequestSubject.asObservable();
   submitGenerealRequest$ = this.submitGenerealRequestSubject.asObservable();
   selectedVendor$ = this.selectedVendorSubject.asObservable();
 
@@ -145,7 +147,7 @@ export class PendingApprovalGeneralFacade {
   }
   getVendorDetails(vendorId: string,subTypeCode: string) {
     this.showLoader();
-    this.pendingApprovalGeneralService.getVendorDetails(vendorId,subTypeCode).subscribe({
+    this.pendingApprovalGeneralService.getVendorDetails(vendorId, subTypeCode).subscribe({
       next: (vendorDetail: any) => {    
         this.selectedVendorSubject.next(vendorDetail);
         this.hideLoader();

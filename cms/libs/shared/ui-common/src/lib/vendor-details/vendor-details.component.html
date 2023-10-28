@@ -39,14 +39,13 @@
             Manufacturer name is required
           </kendo-formerror>
           <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.pattern">
-            Special characters and numeric valus are not allowed
+            Special characters and numeric values are not allowed
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
 
       <div class="flex-col"
-        *ngIf="providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders 
-        || vendorTypes.DentalClinic == providerType || vendorTypes.MedicalClinic == providerType || providerType == vendorTypes.HealthcareProviders || providerType == vendorTypes.Clinic">
+        *ngIf="providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders || providerType == vendorTypes.HealthcareProviders || providerType == vendorTypes.Clinic">
         <div class="flex-row">
 
           <div *ngIf="providerType !== vendorTypes.Clinic && !editVendorInfo"
@@ -326,14 +325,16 @@
         <div class="component-list-h">
           <span class="app-checkboxwidtext-wrapper">
             <input type="checkbox" kendoCheckBox aria-labelledby="Rebate" id="physicalAddressFlag"
-              formControlName="physicalAddressFlag" />
+              formControlName="physicalAddressFlag" (change)="onPharmacyPhysicalAddressChecked()"/>
             <label class="k-checkbox-label" for="physicalAddressFlag"> This is the pharmacy's physical address </label>
           </span>
         </div>
       </div>
 
       <div
-        *ngIf="vendorTypes.Clinic != providerType && (providerType != vendorTypes.MedicalProviders) && (providerType != vendorTypes.DentalProviders) && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy && (providerType != vendorTypes.Manufacturers)"
+        *ngIf="vendorTypes.Clinic != providerType && (providerType != vendorTypes.MedicalProviders) && (providerType != vendorTypes.DentalProviders)
+         && providerType != vendorTypes.InsuranceVendors && providerType != vendorTypes.Pharmacy && (providerType != vendorTypes.Manufacturers)
+         && (providerType != vendorTypes.HealthcareProviders)"
         class="flex-col mt-1">
         <button kendoButton icon="add" [primary]="true" look="flat" aria-label="Address">
           Address
@@ -587,14 +588,14 @@
 <kendo-dialog-actions>
   <div class="justify-content-between" *ngIf="!editVendorInfo">
     <div class="justify-content-end">
-      <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeVedorModal()"> Cancel
+      <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeVendorModal()"> Cancel
       </button>
       <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> {{hasCreateUpdatePermission == true ? 'ADD NEW' : 'REQUEST NEW'}} </button>
     </div>
   </div>
   <div class="justify-content-between" *ngIf="editVendorInfo">
     <div class="justify-content-end">
-      <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeVedorModal()"> Cancel
+      <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeVendorModal()"> Cancel
       </button>
       <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="updateVendorDetails()">
         Update </button>

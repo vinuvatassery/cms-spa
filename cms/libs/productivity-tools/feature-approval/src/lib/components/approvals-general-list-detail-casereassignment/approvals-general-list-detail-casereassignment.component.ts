@@ -13,7 +13,6 @@ import { SnackBarNotificationType } from '@cms/shared/util-core';
 export class ApprovalsGeneralListDetailCaseReassignmentComponent implements OnInit {
 
   @Input() approvalId: any;
-  @Input() casereassignmentExpandedInfo$: any;
   @Output() loadCasereassignmentExpanedInfoEvent = new EventEmitter<any>();
   casereassignmentExpandedInfoData: any;
   isPanelExpanded = false;
