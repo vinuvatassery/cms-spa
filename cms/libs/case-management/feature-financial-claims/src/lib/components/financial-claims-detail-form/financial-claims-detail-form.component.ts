@@ -259,7 +259,6 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   }
 
   onVendorNameClick(){
-    this.paymentRequestId = event
     this.providerDetailsDialog = this.dialogService.open({
       content: this.providerDetailsTemplate,
       animation:{
