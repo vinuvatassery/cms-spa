@@ -117,7 +117,9 @@ export class FinancialClaimsBatchesLogListsComponent
   isEdit!: boolean;
   paymentRequestId!: string;
   private addEditClaimsFormDialog: any;
+  @ViewChild('addEditClaimsDialog')
   private addEditClaimsDialog!: TemplateRef<any>;
+
 
   gridColumns: { [key: string]: string } = {
     paymentNbr: 'Item #',
@@ -159,15 +161,40 @@ export class FinancialClaimsBatchesLogListsComponent
   deletemodelbody = "This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch";
 
   getBatchLogGridActions(dataItem: any){
-    if (PaymentStatusCode.Denied == dataItem.paymentStatusCode) {
+    if (dataItem.paymentStatusCode.toLowerCase() == PaymentStatusCode.Denied.toLowerCase()) {
       return [{
         buttonType: 'btn-h-primary',
         text: 'Edit Claim',
         icon: 'edit',
         click: (claim: any): void => {
           this.onClaimClick(claim);
+        }
+      },
+      {
+        buttonType: 'btn-h-danger',
+        text: 'Delete Claim',
+        icon: 'delete',
+        click: (data: any): void => {
+          if([PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
+          {
+            this.notificationSnackbarService.manageSnackBar(
+              SnackBarNotificationType.ERROR,
+              "This claim cannot be deleted",
+              NotificationSource.UI
+            );
+          }else{
+              this.isUnBatchClaimsClosed = false;
+              this.isDeleteClaimClosed = true;
+              this.onSingleClaimDelete(data.paymentRequestId.split(','));
+              this.onDeleteClaimsOpenClicked(
+                this.deleteClaimsConfirmationDialogTemplate
+              );
+
+          }
+
         },
-      }];
+      },
+    ];
     }
     return [
       {
@@ -571,5 +598,11 @@ export class FinancialClaimsBatchesLogListsComponent
       content: this.addEditClaimsDialog,
       cssClass: 'app-c-modal app-c-modal-full add_claims_modal',
     });
+  }
+  modalCloseAddEditClaimsFormModal(result: any) {
+    if (result) {
+      this.loadBatchLogListGrid();
+      this.addEditClaimsFormDialog.close();
+    }
   }
 }

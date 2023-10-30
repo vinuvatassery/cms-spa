@@ -379,3 +379,10 @@
     </div>
   </kendo-dialog-actions>
 </ng-template>
+
+<ng-template #addEditClaimsDialog>
+  <cms-financial-claims-detail-form
+    (modalCloseAddEditClaimsFormModal)="modalCloseAddEditClaimsFormModal($event)"
+    [isEdit]="isEdit" [paymentRequestId]="paymentRequestId"
+    ></cms-financial-claims-detail-form>
+</ng-template>
