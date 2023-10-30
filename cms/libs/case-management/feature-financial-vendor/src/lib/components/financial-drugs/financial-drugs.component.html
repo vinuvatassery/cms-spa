@@ -199,7 +199,7 @@
     </div>
     <div class="flex-col mt-1">
       <button kendoButton [primary]="true" icon="add" aria-label="Drug" (click)="clickOpenAddEditFinancialDrugsDetails('Add New')">
-        Drug
+        {{hasCreateUpdatePermission == true ? 'add drug' : 'request drug'}}
       </button>
     </div>
 </div>

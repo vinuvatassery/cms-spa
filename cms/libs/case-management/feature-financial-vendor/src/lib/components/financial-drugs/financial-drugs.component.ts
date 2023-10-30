@@ -23,6 +23,8 @@ export class FinancialDrugsComponent {
   @Input() sortType : any;
   @Input() sort : any;
   @Input() gridSkipCount : any;
+  @Input() hasCreateUpdatePermission: boolean = false;
+  
   @Output() loadDrugListEvent = new EventEmitter<any>();
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -133,6 +135,7 @@ export class FinancialDrugsComponent {
     this.loadYesOrNoLovs();
     this.loadDeliveryMethodLovs();
     this.vendorId = this.route.snapshot.queryParams['v_id'];
+    
   }
 
   ngOnChanges(): void {
@@ -155,8 +158,12 @@ export class FinancialDrugsComponent {
     );
   }
 
-  clickOpenAddEditFinancialDrugsDetails(title:string) {
+  clickOpenAddEditFinancialDrugsDetails(title: string) {
     this.dialogTitle = title;
+    if (title === "Add New") {
+      this.dialogTitle = this.hasCreateUpdatePermission ? "Add New" : "Request New";
+    }
+
     this.isFinancialDrugsDetailShow = true;
   }
 
