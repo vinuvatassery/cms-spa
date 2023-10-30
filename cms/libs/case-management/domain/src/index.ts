@@ -129,6 +129,7 @@ export * from './lib/enums/payment-status-code.enum'
 export * from './lib/enums/premium-type.enum';
 export * from './lib/enums/premium-payment-status.enum';
 export * from './lib/enums/payment-type.enum';
+export * from './lib/enums/load-type.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';

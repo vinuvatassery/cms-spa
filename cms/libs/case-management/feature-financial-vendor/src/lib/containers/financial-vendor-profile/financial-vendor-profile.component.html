@@ -17,7 +17,7 @@
         </div>
       </ng-template>
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="{{tabCode !== financeManagementTabs.Manufacturers ? 'Payment Addresses' : 'Addresses and Contacts'}}">
+    <kendo-tabstrip-tab *ngIf="tabCode !== financeManagementTabs.Manufacturers" title="Payment Addresses">
       <ng-template kendoTabContent>
         <div class="block-section">
 
@@ -87,14 +87,14 @@
       </ng-template>
     </kendo-tabstrip-tab>
 
-    <kendo-tabstrip-tab title="Invoices" *ngIf="tabCode === financeManagementTabs.Manufacturers || tabCode === financeManagementTabs.MedicalProvider || tabCode === financeManagementTabs.DentalProvider">
+    <kendo-tabstrip-tab title="Invoices" *ngIf="tabCode === financeManagementTabs.MedicalProvider || tabCode === financeManagementTabs.DentalProvider">
 
       <ng-template kendoTabContent>
         <div class="block-section">
 
           <div class="client-profile-outlet">
-            <cms-invoices [tabCode]="tabCode" [vendorId]="vendorId" [serviceGridView$]="serviceGridView$ "
-            (loadInvoiceServiceEvent)="loadInvoiceServices($event)" [isInvoiceServiceLoading$]="isInvoiceServiceLoading$"></cms-invoices>
+            <cms-invoices [tabCode]="tabCode" [vendorId]="vendorId" 
+            (loadInvoiceServiceEvent)="loadInvoiceServices($event)"></cms-invoices>
           </div>
         </div>
       </ng-template>

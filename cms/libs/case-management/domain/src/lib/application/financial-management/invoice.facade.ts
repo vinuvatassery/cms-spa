@@ -23,16 +23,12 @@ export class InvoiceFacade {
 
   /** Private properties **/
   private invoiceDataSubject = new BehaviorSubject<any>([]);
-  private serviceDataSubject = new BehaviorSubject<any>([]);
   private isInvoiceLoadingSubject = new BehaviorSubject<boolean>(false);
-  private isInvoiceServiceLoadingSubject = new BehaviorSubject<boolean>(false);
   /** Public properties **/
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>(); 
-  serviceData$ = this.serviceDataSubject.asObservable();
   invoiceData$ = this.invoiceDataSubject.asObservable();
   isInvoiceLoading$ = this.isInvoiceLoadingSubject.asObservable();
-  isInvoiceServiceLoading$ = this.isInvoiceServiceLoadingSubject.asObservable();
  
 
   showLoader() { this.loaderService.show(); }
@@ -80,18 +76,7 @@ export class InvoiceFacade {
   }
 
   loadPaymentRequestServices(dataItem:any,vendorId:any,vendorType:any){  
-    this.isInvoiceServiceLoadingSubject.next(true);
-    this.invoiceDataService.loadPaymentRequestServices(dataItem,vendorId,vendorType).subscribe({
-      next: (dataResponse) => { 
-        this.serviceDataSubject.next(dataResponse);
-        this.isInvoiceServiceLoadingSubject.next(false);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
-        this.isInvoiceServiceLoadingSubject.next(false);
-         },
-    });  
-
+    return this.invoiceDataService.loadPaymentRequestServices(dataItem,vendorId,vendorType);
   }
  
 }

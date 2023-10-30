@@ -1,5 +1,5 @@
 /** Angular libraries **/
-import {  ChangeDetectionStrategy,ChangeDetectorRef,Component, Input, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core'; 
+import {  ChangeDetectionStrategy,ChangeDetectorRef,Component, Input, OnInit, EventEmitter, Output } from '@angular/core'; 
 import { Router } from '@angular/router';
 
 /** External libraries **/
@@ -14,7 +14,7 @@ import { LovFacade } from '@cms/system-config/domain';
   templateUrl: './approval-invoice.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApprovalInvoiceComponent implements OnInit, OnDestroy{
+export class ApprovalInvoiceComponent implements OnInit{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isInvoiceGridLoaderShow = false;
@@ -24,14 +24,13 @@ export class ApprovalInvoiceComponent implements OnInit, OnDestroy{
   @Input() sortType: any;
   @Input() sort: any;
   @Input() gridSkipCount:any;
-  @Input() approvalsExceedMaxBenefitCard$:any;
   @Input() invoiceData$:any;
   @Input() isInvoiceLoading$:any;
-  @Output() loadApprovalsExceedMaxBenefitInvoiceEvent = new EventEmitter<any>();
+  @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
   public state!: any;
-  sortColumn = 'Entry Date';
+  sortColumn = 'Service Start';
   sortDir = 'Ascending';
-  sortColumnDesc:string = 'Entry Date';
+  sortColumnDesc:string = 'Service Start';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
@@ -72,10 +71,6 @@ export class ApprovalInvoiceComponent implements OnInit, OnDestroy{
     this.loadGeneralExceptionInvoiceGrid();
   }
 
-  ngOnDestroy(): void {
-    this.isInvoiceLoadingSubscription.unsubscribe();
-  }
-
   private clearSelectedColumn() {
     this.selectedColumn = '';
     this.filter = '';
@@ -99,7 +94,7 @@ export class ApprovalInvoiceComponent implements OnInit, OnDestroy{
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'entryDate',
+              field: this.selectedColumn ?? 'serviceStartDate',
               operator: operator,
               value: data,
             },
@@ -269,7 +264,7 @@ export class ApprovalInvoiceComponent implements OnInit, OnDestroy{
 
   
   loadInvoiceListGrid(data: any) {
-    this.loadApprovalsExceedMaxBenefitInvoiceEvent.emit(data);
+    this.loadApprovalsExceptionInvoiceEvent.emit(data);
   }
 
   
@@ -309,8 +304,8 @@ export class ApprovalInvoiceComponent implements OnInit, OnDestroy{
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'entryDate', dir: 'desc' }],
+      sort: [{ field: 'serviceStartDate', dir: 'desc' }],
     };
-    this.sortColumnDesc = 'Entry Date';
+    this.sortColumnDesc = 'Service Start';
   }
 }
