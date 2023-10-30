@@ -143,17 +143,5 @@ export class PendingApprovalGeneralFacade {
       }
     );
   }
-  getVendorDetails(vendorId: string,subTypeCode: string) {
-    this.showLoader();
-    this.pendingApprovalGeneralService.getVendorDetails(vendorId, subTypeCode).subscribe({
-      next: (vendorDetail: any) => {    
-        this.selectedVendorSubject.next(vendorDetail);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.hideLoader();
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-      }
-    });
-  }
+
 }
