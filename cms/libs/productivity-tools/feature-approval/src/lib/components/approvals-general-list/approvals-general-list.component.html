@@ -80,17 +80,7 @@
               <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralException}}">
                 <productivity-tools-approvals-general-list-detail-exceptions
                   [approvalId]="item.generalPendingApprovalId"
-                  [exceptionId]="item.approvalEntityId"
-                  [approvalsExceptionCard$]="approvalsExceptionCard$|async"
-                  (loadApprovalsExceptionCardEvent)="loadApprovalsExceptionCard($event)"
-                  [pageSizes]="pageSizes"
-                  [sortValue]="sortValue"
-                  [sortType]="sortType"
-                  [sort]="sort"
-                  [gridSkipCount]="gridSkipCount"
-                  [invoiceData$]="invoiceData$"
-                  [isInvoiceLoading$]="isInvoiceLoading$"
-                  (loadApprovalsExceptionInvoiceEvent)="loadApprovalsExceptionInvoice($event)">
+                  [exceptionId]="item.approvalEntityId">
                 </productivity-tools-approvals-general-list-detail-exceptions>
               </ng-template>
               <ng-template ngSwitchDefault>

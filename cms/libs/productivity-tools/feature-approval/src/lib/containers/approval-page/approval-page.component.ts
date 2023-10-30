@@ -48,9 +48,6 @@ export class ApprovalPageComponent implements OnInit {
   pendingApprovalSubmit$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmit$;
   batchDetailPaymentsList$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
   batchDetailPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
-  approvalsExceptionCard$ = this.pendingApprovalGeneralFacade.approvalsGeneralExceptionCardSubjectList$;
-  invoiceData$ = this.pendingApprovalGeneralFacade.invoiceData$;
-  isInvoiceLoading$ = this.pendingApprovalGeneralFacade.isInvoiceLoading$;
   submitGenerealRequest$ = this.pendingApprovalGeneralFacade.submitGenerealRequest$;
 
   providerDetailsDialog: any
@@ -157,15 +154,6 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalGeneralFacade.loadCasereassignmentExpandedInfo(approvalId);
   }
 
-  loadApprovalsExceptionCard(data:any)
-  {
-      this.pendingApprovalGeneralFacade.loadExceptionCard(data);
-  }
-
-  loadApprovalsExceptionInvoice(data:any)
-  {
-      this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
-  }
   submitGeneralRequests(requests:any)
   {
     this.pendingApprovalGeneralFacade.submitGeneralRequests(requests);

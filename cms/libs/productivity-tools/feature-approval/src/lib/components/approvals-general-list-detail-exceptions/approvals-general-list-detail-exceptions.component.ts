@@ -1,6 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { PanelBarCollapseEvent, PanelBarExpandEvent } from '@progress/kendo-angular-layout';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { Router } from '@angular/router';
+import { PendingApprovalGeneralFacade } from '@cms/productivity-tools/domain';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 
 @Component({
@@ -11,30 +14,34 @@ export class ApprovalsGeneralListDetailExceptionsComponent implements OnInit{
   @Input() onUserProfileDetailsHovered: any;
   @Input() approvalId: any;
   @Input() exceptionId: any;
-  @Input() approvalsExceptionCard$:any;
-  @Input() pageSizes: any;
-  @Input() sortValue: any;
-  @Input() sortType: any;
-  @Input() sort: any;
-  @Input() gridSkipCount:any;
-  @Input() invoiceData$:any;
-  @Input() isInvoiceLoading$:any;
-  @Output() loadApprovalsExceptionCardEvent = new EventEmitter<any>();
-  @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
-  @Output() onVendorClickedEvent = new EventEmitter<any>();
-  
-  ngOnInit(): void {
-    this.loadApprovalsExceptionCard();
-  }
-
-  loadApprovalsExceptionCard()
-  {
-    this.loadApprovalsExceptionCardEvent.emit(this.exceptionId);
-  }
-
+  approvalsExceptionCard$:any;
   ifApproveOrDeny: any;
   isPanelExpanded = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
+
+  ngOnInit(): any {
+    this.loadApprovalsExceptionCard();
+  }
+
+  constructor(
+      private readonly  cdr :ChangeDetectorRef,
+      private readonly router: Router, 
+      private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade
+    ) {}
+    
+  loadApprovalsExceptionCard():any
+  {
+    this.pendingApprovalGeneralFacade.loadExceptionCard(this.exceptionId).subscribe({
+      next: (response) => {
+        this.approvalsExceptionCard$ = response;
+        this.isPanelExpanded = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.pendingApprovalGeneralFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+      },
+    });
+  }
 
   approveOrDeny(result:any){
     this.ifApproveOrDeny = result;
@@ -46,14 +53,5 @@ export class ApprovalsGeneralListDetailExceptionsComponent implements OnInit{
 
   public onPanelExpand(event: PanelBarExpandEvent): void {
     this.isPanelExpanded = true;
-  }
-
-  loadApprovalsExceptionInvoice($event:any)
-  {
-    this.loadApprovalsExceptionInvoiceEvent.emit($event);
-  }
-
-  onViewProviderDetailClicked(paymentRequestId:any) {  
-    this.onVendorClickedEvent.emit(paymentRequestId);
   }
 }

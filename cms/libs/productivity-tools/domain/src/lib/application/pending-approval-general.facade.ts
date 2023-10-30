@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PendingApprovalGeneralService } from '../infrastructure/pending-approval-general.data.service';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 
 /** External libraries **/
@@ -14,7 +14,7 @@ export class PendingApprovalGeneralFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'EntryDate';
+  public sortValue = 'serviceStartDate';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
@@ -71,7 +71,7 @@ export class PendingApprovalGeneralFacade {
 
   /** Public properties **/
   approvalsGeneralList$ = this.approvalsGeneralSubject.asObservable();
-  approvalsGeneralExceptionCardSubjectList$ = this.approvalsGeneralExceptionCardSubject.asObservable();
+  approvalsExceptionCard$ = this.approvalsGeneralExceptionCardSubject.asObservable();
 
 
   /** Public methods **/
@@ -89,15 +89,8 @@ export class PendingApprovalGeneralFacade {
     });
   }
 
-  loadExceptionCard(data:any): void {
-    this.pendingApprovalGeneralService.loadExceptionCard(data).subscribe({
-      next: (dataResponse) => {
-        this.approvalsGeneralExceptionCardSubject.next(dataResponse);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-      },
-    });
+  loadExceptionCard(exceptionId:string) {
+    return this.pendingApprovalGeneralService.loadExceptionCard(exceptionId);
   }
 
   /** Public methods **/

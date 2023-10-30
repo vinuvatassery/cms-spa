@@ -18,12 +18,8 @@ import {
   State
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import {
-  PanelBarCollapseEvent,
-  PanelBarExpandEvent,
-} from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { PendingApprovalGeneralTypeCode, PendingApprovalPaymentTypeCode } from '@cms/productivity-tools/domain';
+import { PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
 import {UserDataService, UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approvals-general-list',
@@ -46,15 +42,10 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() gridSkipCount:any;
   @Input() approvalsGeneralLists$: any;
   @Input() clientsSubjects$ : any;
-  @Input() casereassignmentExpandedInfo$: any;
-  @Input() approvalsExceptionCard$:any;
-  @Input() invoiceData$:any;
-  @Input() isInvoiceLoading$:any;
+  @Input() casereassignmentExpandedInfo$: any;  
   @Input() submitGenerealRequest$:any;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
-  @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
-  @Output() loadApprovalsExceptionCardEvent = new EventEmitter<any>();
-  @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
+  @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();  
   @Output() submitGeneralRequestsEvent = new EventEmitter<any>();
 
   pendingApprovalGeneralTypeCode:any;
@@ -307,14 +298,6 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   loadCasereassignmentExpanedInfoEvent(approvalId : any)
   {
     this.loadCasereassignmentExpanedInfoParentEvent.emit(approvalId);
-  }
-  loadApprovalsExceptionCard($event:any)
-  {
-    this.loadApprovalsExceptionCardEvent.emit($event);
-  }
-  loadApprovalsExceptionInvoice($event:any)
-  {
-    this.loadApprovalsExceptionInvoiceEvent.emit($event);
   }
 
   ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
