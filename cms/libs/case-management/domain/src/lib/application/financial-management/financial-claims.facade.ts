@@ -187,6 +187,12 @@ export class FinancialClaimsFacade {
 
   private unbatchClaimsSubject =  new Subject<any>();
   unbatchClaims$ = this.unbatchClaimsSubject.asObservable();
+
+  private warrantNumberChangeSubject = new Subject<any>();
+  warrantNumberChange$ = this.warrantNumberChangeSubject.asObservable();
+
+  private warrantNumberChangeLoaderSubject = new Subject<any>();
+  warrantNumberChangeLoader$ = this.warrantNumberChangeLoaderSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -366,9 +372,11 @@ export class FinancialClaimsFacade {
   }
 
   loadReconcilePaymentBreakoutSummary(data:any){
+    this.loaderService.show(); 
     this.financialClaimsDataService.loadReconcilePaymentBreakoutSummaryService(data).subscribe({
       next: (dataResponse) => {
         this.reconcileBreakoutSummaryDataSubject.next(dataResponse);
+        this.loaderService.hide(); 
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
@@ -377,6 +385,7 @@ export class FinancialClaimsFacade {
   }
 
   loadReconcilePaymentBreakoutListGrid(data:any) {
+    this.loaderService.show(); 
     data.filter=JSON.stringify(data.filter);
     this.financialClaimsDataService
       .loadReconcilePaymentBreakoutListService(data)
@@ -389,6 +398,7 @@ export class FinancialClaimsFacade {
               total: dataResponse['totalCount'],
             };
             this.reconcilePaymentBreakoutListDataSubject.next(gridView);
+            this.loaderService.hide();
           }
         },
         error: (err) => {
@@ -759,5 +769,18 @@ deleteClaimService(tpaInvoiceId: any, typeCode: string) {
         return of(false);
       })
     );
-}
+  }
+  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+    this.warrantNumberChangeLoaderSubject.next(true);
+    this.financialClaimsDataService.CheckWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
+      next: (dataResponse:any) => {       
+        this.warrantNumberChangeSubject.next(dataResponse);
+        this.warrantNumberChangeLoaderSubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.warrantNumberChangeLoaderSubject.next(false);
+      },
+    });
+  }
 }

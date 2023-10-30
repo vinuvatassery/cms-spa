@@ -97,7 +97,7 @@ export class FinancialClaimsDataService {
   }
 
   loadReconcileListService(batchId:any,claimsType:any,paginationParameters:any){
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/${batchId}/reconcile-payments`,paginationParameters);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/reconcile-payments?batchId=${batchId}`,paginationParameters);
   }
   loadClaimsListService() {
     return of([
@@ -294,7 +294,8 @@ export class FinancialClaimsDataService {
       AmountTotal : data.amountTotal,
       WarrantTotal : data.warrantTotal,
       WarrantNbr : data.warrantNbr,
-      PaymentToReconcileCount : data.paymentToReconcileCount
+      PaymentToReconcileCount : data.paymentToReconcileCount,
+      warrantCalculation:data.warrantCalculation
     }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/payments/payment-reconcile-summary`,ReconcilePaymentResponseDto
@@ -424,11 +425,11 @@ export class FinancialClaimsDataService {
   }
 
   getPrintAdviceLetterData(batchId:any,selectedProviders: any, claimsType:any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/${batchId}/print-advice-letter`,selectedProviders);
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/print-advice-letter`,selectedProviders);
   }
 
   reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any, claimsType:any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/${batchId}/reconcile-payments`,reconcileData);
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/reconcile-payments`,reconcileData);
   }
 
   viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, claimsType:any) {
@@ -502,5 +503,8 @@ export class FinancialClaimsDataService {
     return this.http.delete<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/${path}/service/${tpaInvoiceId}`
     );
+  }
+  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/payments/batches/${batchId}/vendors/${vendorId}/warrants/${warrantNumber}`);
   }
 }

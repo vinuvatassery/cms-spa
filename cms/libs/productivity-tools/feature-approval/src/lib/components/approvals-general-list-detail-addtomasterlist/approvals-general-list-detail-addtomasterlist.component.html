@@ -1,15 +1,182 @@
-<div>
-  <p>
-    <strong>Invoice ID:</strong>
-    <span class="mr-1"> XXXXXX </span>
-    <strong>Provider:</strong>
-    <span class="mr-1"> <a> Very Nice Provider </a> </span>
-    <strong>Client YTD:</strong>
-    <span class="mr-1"> $XX,XXX.XX </span>
+  <div class="flex-row">
+    <div class="flex-col flex-col-6">
+      <button kendoButton class="mb-1 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit "
+        aria-label="edit" title="Edit List Item" (click)="onEditListItemsDetailClicked()"></button>
+      <table class="info-table-custom nobg-left" *ngFor="let item of selectedVendor$ | async">
+        <caption hidden> Vendor Info</caption>
+        <tbody *ngIf="subTypeCode === subTypeConst.DentalClinic || subTypeCode === subTypeConst.MedicalClinic || subTypeCode === subTypeConst.MedicalProvider || subTypeCode === subTypeConst.DentalProvider">
+          <tr>
+            <td>Clinic Name</td>
+            <td>Nice Manufacturer</td>
+          </tr>
+          <tr>
+            <td>item.firstName</td>
+            <td>Nice Drug</td>
+          </tr>
+          <tr>
+            <td>item.lastName</td>
+            <td>Nice Brand</td>
+          </tr>
+          <tr>
+            <td>item.tin</td>
+            <td>XXXXXXXX</td>
+          </tr>
+          <tr>
+            <td>Phone</td>
+            <td>XXXXXXXX</td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td>abc@gmail.com</td>
+          </tr>
+          <tr>
+            <td>Fax</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>item.vendorAddress</td>
+            <td>Abc street</td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="subTypeCode === subTypeConst.Drug">
+          <tr>
+            <td>Manufacturer</td>
+            <td>Nice Manufacturer</td>
+          </tr>
+          <tr>
+            <td>item.drug</td>
+            <td>Nice Drug</td>
+          </tr>
+          <tr>
+            <td>Brand Name</td>
+            <td>Nice Brand</td>
+          </tr>
+          <tr>
+            <td>NDC Code</td>
+            <td>XXXXXXXX</td>
+          </tr>
+          <tr>
+            <td>HIV Drug?</td>
+            <td>XXXXXXXX</td>
+          </tr>
+          <tr>
+            <td>Hepatitis Drug?</td>
+            <td>abc@gmail.com</td>
+          </tr>
+          <tr>
+            <td>Opportunistic infection drug?</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Delivery Method</td>
+            <td>Abc street</td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="subTypeCode === subTypeConst.InsuranceVendor">
+          <tr>
+            <td>Vendor Name</td>
+            <td>Nice VEndor</td>
+          </tr>
+          <tr>
+            <td>TIN</td>
+            <td>XXXXXXXX<td>
+          </tr>
+          <tr>
+            <td>Accepts Combined Payments</td>
+            <td>Nice Brand</td>
+          </tr>
+          <tr>
+            <td>Accepts Reports</td>
+            <td>XXXXXXXX</td>
+          </tr>
+          <tr>
+            <td>Payment Method</td>
+            <td>XXXXXXXX</td>
+          </tr>
+          <tr>
+            <td>Payment Run Date</td>
+            <td>dd/mm/yyyy</td>
+          </tr>
+          <tr>
+            <td>Name on Check</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Name on Envelope</td>
+            <td>Abc street</td>
+          </tr>
+          <tr>
+            <td>Billing Email</td>
+            <td>Abc street</td>
+          </tr>
+          <tr>
+            <td>Billing Address</td>
+            <td>Abc street</td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="subTypeCode === subTypeConst.InsurancePlan">
+          <tr>
+            <td>Insurance Provider</td>
+            <td>Nice Manufacturer</td>
+          </tr>
+          <tr>
+            <td>Insurance Plan Name</td>
+            <td>Nice Drug</td>
+          </tr>
+          <tr>
+            <td>Health Insurance Type</td>
+            <td>Nice Brand</td>
+          </tr>
+          <tr>
+            <td>Can pay for medication</td>
+            <td>XXXXXXXX</td>
+          </tr>
+          <tr>
+            <td>Is a dental plan</td>
+            <td>XXXXXXXX</td>
+          </tr>
+          <tr>
+            <td>Start Date</td>
+            <td>abc@gmail.com</td>
+          </tr>
+          <tr>
+            <td>Term Date</td>
+            <td>Yes</td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="subTypeCode === subTypeConst.InsuranceProvider">
+          <tr>
+            <td>Provider Name</td>
+            <td>Nice Manufacturer</td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="subTypeCode === subTypeConst.Pharmacy">
+          <tr hidden>
+            <td>Pharmacy</td>
+            <td>Very nice pharmacy</td>
+          </tr>
+        </tbody>
+      </table>
 
+    </div>
+    <div class="flex-col flex-col-6">
+      <div *ngIf="ifApproveOrDeny === approveOrDenyConst.Approve">
+        <kendo-floatinglabel text="Send Back Notes">
+          <kendo-textbox aria-label="Send Back Notes" [fillMode]="formUiStyle.inputFillMode">
+          </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+      <div *ngIf="ifApproveOrDeny === approveOrDenyConst.Deny">
+        <kendo-floatinglabel text="New Case Worker">
+          <kendo-dropdownlist aria-label="New Case Worker" [fillMode]="formUiStyle.dropDownFillMode">
+          </kendo-dropdownlist>
+        </kendo-floatinglabel>
+      </div>
+    </div>
 
-  </p>
-  <div>
-    <productivity-tools-approval-invoice></productivity-tools-approval-invoice>
   </div>
-</div>
+
+<ng-template #editListItemDialogModal>
+  <kendo-dialog-titlebar (close)="onCloseEditListItemsDetailClicked()">  Edit List Item</kendo-dialog-titlebar>
+<productivity-tools-approvals-edit-items> </productivity-tools-approvals-edit-items>
+</ng-template>
