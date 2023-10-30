@@ -554,6 +554,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     this.submitGeneralRequestsEvent.emit(data);
     this.submitGenerealRequest$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
+          this.onCloseSubmitGeneralRequestClicked();
           this.loadApprovalGeneralListGrid();
       }
     });

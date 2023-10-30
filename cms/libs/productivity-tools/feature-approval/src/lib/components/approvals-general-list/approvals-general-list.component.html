@@ -53,7 +53,7 @@
                     [data]="usersByRole$ | async" textField="firstName"
                     valueField="loginUserId"
                     [valuePrimitive]="true"
-                    [(ngModel)]="item.caseWorkerId">
+                    [(ngModel)]="approvalsPaymentsGridPagedResult[i].caseWorkerId">
                   </kendo-dropdownlist>
                   </kendo-floatinglabel>
                 </div>
