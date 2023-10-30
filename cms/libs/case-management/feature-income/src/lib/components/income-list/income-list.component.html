@@ -8,7 +8,7 @@
         <kendo-grid-column
           field="incomeSourceCodeDesc"
           title="Income Source"
-          [width]="140"
+          [width]="160"
         >
           <ng-template
             kendoGridFooterTemplate
@@ -37,7 +37,7 @@
         <kendo-grid-column
           field="incomeStartDate"
           [title]="isClientProfileTab ? 'Income Start' : 'Date of Hire'"
-          [width]="110"
+          [width]="140"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.incomeStartDate| date: 'MM/dd/yyyy'}}
@@ -46,7 +46,7 @@
         <kendo-grid-column
           field="incomeEndDate"
           title="Income End"
-          [width]="110"
+          [width]="130"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           {{dataItem.incomeEndDate| date: 'MM/dd/yyyy'}}
@@ -71,7 +71,7 @@
         <kendo-grid-column
           field="incomeNote"
           title="Financial Justification or Income Note"
-          [width]="160"
+          [width]="220"
           [sortable]="false"
         >
           <ng-template
@@ -85,7 +85,7 @@
         <kendo-grid-column
           field="monthlyIncome"
           title="Monthly Income"
-          [width]="120"
+          [width]="140"
           format="{0:c2}"
           [sticky]="true"
         >
@@ -100,7 +100,7 @@
           </ng-template>
 
         </kendo-grid-column>
-        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="65" 
+        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="70" class="text-center" 
         [sticky]="true" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
