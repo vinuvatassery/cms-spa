@@ -11,7 +11,7 @@ export class ApprovalsGeneralListDetailExceptionsComponent implements OnInit{
   @Input() onUserProfileDetailsHovered: any;
   @Input() approvalId: any;
   @Input() exceptionId: any;
-  @Input() approvalsExceedMaxBenefitCard$:any;
+  @Input() approvalsExceptionCard$:any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -19,17 +19,17 @@ export class ApprovalsGeneralListDetailExceptionsComponent implements OnInit{
   @Input() gridSkipCount:any;
   @Input() invoiceData$:any;
   @Input() isInvoiceLoading$:any;
-  @Output() loadApprovalsExceedMaxBenefitCardEvent = new EventEmitter<any>();
-  @Output() loadApprovalsExceedMaxBenefitInvoiceEvent = new EventEmitter<any>();
+  @Output() loadApprovalsExceptionCardEvent = new EventEmitter<any>();
+  @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
   @Output() onVendorClickedEvent = new EventEmitter<any>();
   
   ngOnInit(): void {
-    this.loadApprovalsExceedMaxBenefitCard();
+    this.loadApprovalsExceptionCard();
   }
 
-  loadApprovalsExceedMaxBenefitCard()
+  loadApprovalsExceptionCard()
   {
-    this.loadApprovalsExceedMaxBenefitCardEvent.emit(this.exceptionId);
+    this.loadApprovalsExceptionCardEvent.emit(this.exceptionId);
   }
 
   ifApproveOrDeny: any;
@@ -48,9 +48,9 @@ export class ApprovalsGeneralListDetailExceptionsComponent implements OnInit{
     this.isPanelExpanded = true;
   }
 
-  loadApprovalsExceedMaxBenefitInvoice($event:any)
+  loadApprovalsExceptionInvoice($event:any)
   {
-    this.loadApprovalsExceedMaxBenefitInvoiceEvent.emit($event);
+    this.loadApprovalsExceptionInvoiceEvent.emit($event);
   }
 
   onViewProviderDetailClicked(paymentRequestId:any) {  

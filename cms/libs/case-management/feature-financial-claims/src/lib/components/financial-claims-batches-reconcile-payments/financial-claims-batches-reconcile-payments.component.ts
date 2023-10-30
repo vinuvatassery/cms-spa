@@ -158,6 +158,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     }
   ];
 
+  warrantCalculationArray:any[]=[];
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
     private readonly cd: ChangeDetectorRef, public intl: IntlService, 
@@ -875,13 +876,26 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
 
     onRowSelection(grid:any, selection:any)
     {
-      const data = selection.selectedRows[0].dataItem;
+     this.warrantCalculationArray=[];
+      const data = selection.selectedRows[0].dataItem;    
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId; 
-      let warrantTotal=0;    
-      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId).forEach((item: any) => {
-        warrantTotal = warrantTotal + item.amountPaid;
+      let warrantTotal=0; 
+     
+    
+      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId ).forEach((item: any) => {
+       
+     
+        let object={
+          vendorId:item?.entityId,
+          batchId:this.batchId,
+          paymentRequestId:item?.paymentRequestId,
+          warrantNumber:item?.checkNbr,
+  
+        }
+        this.warrantCalculationArray.push(object);
       });
+
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
@@ -890,8 +904,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         amountTotal : data.amountTotal,
         warrantTotal : warrantTotal,
         warrantNbr : data.checkNbr,
+        warrantCalculation:this.warrantCalculationArray,
         paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
       }
+      
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
     }
 
