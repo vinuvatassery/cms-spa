@@ -199,7 +199,7 @@
                   </common-grid-cell-date-range-filter>
                 </ng-template>
               </kendo-grid-column>
-              <kendo-grid-column [sortable]="false" [filterable]="false" field="creatorId" title="By" [width]="70">
+              <kendo-grid-column [sortable]="false" [filterable]="false" field="creatorId" title="By" [width]="70" class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     <button
                       kendoButton
@@ -223,7 +223,7 @@
                     </kendo-popover>
                   </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column [sortable]="false" field="Option" title="Options" [columnMenu]="false" [width]="80" class="text-center">
+                <kendo-grid-column [sortable]="false" field="Option" title="Options" [columnMenu]="false" [width]="75" class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
                       <kendo-dropdownbutton [data]="paymentAddressActions" icon="more-vertical"
                           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"

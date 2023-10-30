@@ -53,13 +53,13 @@
         <kendo-grid-column field="fax" title="Fax" [width]="120" [sortable]="false" [columnMenu]="false"
           *ngIf="managementTab">
         </kendo-grid-column>
-        <kendo-grid-column *ngIf="managementTab" field="startDate" title="Effective Date" [width]="120">
+        <kendo-grid-column *ngIf="managementTab" field="startDate" title="Effective Date" [width]="150">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.startDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date:
             'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="creatorId" title="By" [width]="80" class="text-center" [sortable]="false"
+        <kendo-grid-column field="creatorId" title="By" [width]="70" class="text-center" [sortable]="false"
           *ngIf="managementTab">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button *ngIf="dataItem?.creatorId" kendoButton [primary]="true" class="avatar-sm-btn c-default"
@@ -74,7 +74,7 @@
             </kendo-popover>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="clientProviderId" title="Options" [width]="80" class="text-center" [sticky]="true"
+        <kendo-grid-column field="clientProviderId" title="Options" [width]="75" class="text-center" [sticky]="true"
           [sortable]="false" [columnMenu]="false">
           <ng-template kendoGridCellTemplate let-provider let-clientProviderId="field">
             <kendo-dropdownbutton [data]="actions" icon="more-vertical" title="More option"
