@@ -19,6 +19,10 @@ export class FinancialClaimsPrintAuthorizationComponent {
   printCount: number = 0;
   reconcileCount: number = 0;
   printAdviceLetterData: any
+  letterContent:any;
+  letterContentLoader:boolean= true;
+  currentIndex:any=0;
+  reconcileArray:any=[]; 
     /** Input properties **/
   @Input() items!: any;
   @Input() batchId: any;
@@ -27,10 +31,12 @@ export class FinancialClaimsPrintAuthorizationComponent {
   @Input() claimsType:any;
   @Input() claimReconcileCount:any;
   @Input() isReconcilePrintCount: any;
-
+  @Input() letterContentList$ :any;
+  @Input() letterContentLoader$ :any;
   /** Output properties  **/
   @Output() onClosePrintAdviceLetterEvent = new EventEmitter<any>();
   @Output() selectUnSelectPayment  = new EventEmitter<any>();
+  @Output() loadTemplateEvent  = new EventEmitter<any>();
 
   /** Constructor **/
   constructor(private readonly paymentsFacade: PaymentsFacade,
@@ -50,6 +56,14 @@ export class FinancialClaimsPrintAuthorizationComponent {
       this.printAdviceLetterData = this.loadPrintLetterModelData();
       this.loadPrintLetterContent(this.printAdviceLetterData);
     }
+    this.letterContentList$.subscribe((response:any)=>{
+      this.letterContent = response.letterContent;
+      this.ref.detectChanges();
+    });
+    this.letterContentLoader$.subscribe((response:any)=>{
+      this.letterContentLoader = response;
+      this.ref.detectChanges();
+    })
     
   }
 
@@ -75,10 +89,10 @@ export class FinancialClaimsPrintAuthorizationComponent {
             data.forEach((result, index: number) => {
               result.paymentNbr = index + 1;
             });
-
             this.returnResultFinalPrintList = data;
-            this.printCount = this.returnResultFinalPrintList.filter(x => x.isPrintAdviceLetter === true).length;
-            this.ref.detectChanges();
+            this.printCount = this.returnResultFinalPrintList.filter(x => x.isPrintAdviceLetter === true).length;     
+            this.loadTemplateEvent.emit(this.returnResultFinalPrintList[0]);
+            this.currentIndex =0;
           }
           this.loaderService.hide();
         },
@@ -175,11 +189,27 @@ export class FinancialClaimsPrintAuthorizationComponent {
 
   reconcilePaymentsAndPrintAdviceLetter() {
     this.loaderService.show();
-    let reconcileData = this.reconcilePaymentsData(this.finalPrintList.filter(x=> x.warrantNumberChanged));
-    this.financialClaimsFacade.reconcilePaymentsAndLoadPrintLetterContent(reconcileData,this.claimsType)
+    this.reconcileArray=[]; 
+    this.returnResultFinalPrintList[this.currentIndex].paymentRequestIds.forEach((paymentRequestId:any)=>{
+      let payments = this.finalPrintList.filter(x=> x.paymentRequestId === paymentRequestId);
+      this.reconcileArray.push
+      ({
+          paymentRequestId:payments[0].paymentRequestId,
+          checkRequestId :payments[0].checkRequestId,
+          vendorId :payments[0].vendorId,
+          batchId:payments[0].batchId,
+          entityId :payments[0].entityId,
+          paymentReconciledDate :payments[0].paymentReconciledDate,
+          paymentSentDate :payments[0].paymentSentDate,
+          checkNbr :payments[0].checkNbr,
+          comments :payments[0].comments
+      });
+    })
+    this.financialClaimsFacade.reconcilePaymentsAndLoadPrintLetterContent(this.reconcileArray,this.claimsType)
       .subscribe({
         next: (data: any) => {
           if (data) {
+
             let printReconcileRecords = this.printAdviceLetterData?.PrintAdviceLetterGenerateInfo?.filter((x: any) => x.isPrintAdviceLetter === true)
             let request = { 'PrintAdviceLetterGenerateInfo': printReconcileRecords, 'batchId': this.printAdviceLetterData.batchId };
             if(this.printCount > 0){
@@ -196,6 +226,11 @@ export class FinancialClaimsPrintAuthorizationComponent {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       });
+  }
+
+  onItemChange(event:any){
+    this.loadTemplateEvent.emit(this.returnResultFinalPrintList[event.index]);
+    this.currentIndex = event.index;
   }
 }
 

@@ -383,12 +383,15 @@
       <cms-financial-claims-print-authorization
       [claimReconcileCount]="claimReconcileCount"
       [isReconcilePrintCount] ="isRecordForPrint"
-  [printOption]="onlyPrintAdviceLetter"
-  [isSaveClicked]="isSaveClicked"
-  [items]="selectedReconcileDataRows"
-  [batchId]="batchId"
-  (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
-  [claimsType]="claimsType"
+      [printOption]="onlyPrintAdviceLetter"
+      [isSaveClicked]="isSaveClicked"
+      [items]="selectedReconcileDataRows"
+      [batchId]="batchId"
+      (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+      [claimsType]="claimsType"
+      (loadTemplateEvent)="loadEachLetterTemplate($event)"
+      [letterContentList$]="letterContentList$"
+      [letterContentLoader$]="letterContentLoader$"
   ></cms-financial-claims-print-authorization>
 </ng-template>
 

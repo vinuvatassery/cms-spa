@@ -30,6 +30,8 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   reconcilePaymentBreakoutList$ = this.financialClaimsFacade.reconcilePaymentBreakoutList$;
   warrantNumberChange$ = this.financialClaimsFacade.warrantNumberChange$;
   warrantNumberChangeLoader$ = this.financialClaimsFacade.warrantNumberChangeLoader$;
+  letterContentList$ = this.financialClaimsFacade.letterContentList$;
+  letterContentLoader$ = this.financialClaimsFacade.letterContentLoader$;
   batchId:any;
   claimsType: any;
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
@@ -146,6 +148,9 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   }
   warrantNumberChange(data:any){
     this.financialClaimsFacade.CheckWarrantNumber(data.batchId,data.checkNbr,data.vendorId);   
+  }
+  loadEachLetterTemplate(event:any){
+    this.financialClaimsFacade.loadEachLetterTemplate(this.claimsType, event);  
   }
   
 }

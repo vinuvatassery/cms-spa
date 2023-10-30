@@ -1,9 +1,10 @@
 <section class="k-dialog-body">
       <p>{{printOption ? 'Review the advice letters and confirm which ones to print. Click "Print" when you\'re done.':'Review the advice letters and confirm which ones to print. Click "Reconcile & Print" when you\'re done.'}}</p>
       <div class="custom_scroll_view mt-2">
-            <kendo-scrollview [data]="returnResultFinalPrintList" [width]="width" [height]="height" [arrows]="true" [pageable]="false">
+            <kendo-scrollview [data]="returnResultFinalPrintList" [width]="width" [height]="height" [arrows]="true" [pageable]="false" 
+            (itemChanged)="onItemChange($event)">
                   <ng-template let-item="item">                      
-                        <div>
+                        <div *ngIf="!letterContentLoader">
                               <div class="slidertitle-bar">
                                     <p><strong>{{item.paymentNbr}}) {{item.vendorName}} </strong> <label class="ml-1 text-muted">${{item.totalBatchAmount}}</label>
                                           <label class="ml-1 text-muted"> {{item.paymentMethodCode}}</label></p>
@@ -15,14 +16,14 @@
                                     </span>
                               </div>
 
-                              <div [innerHTML]="item.letterContent" class="view-auth-port">
+                              <div [innerHTML]="letterContent" class="view-auth-port">
                               </div>
                         </div>
+                        <common-grid-loader-component *ngIf="letterContentLoader">
+                        </common-grid-loader-component>
                   </ng-template>
             </kendo-scrollview>
-
       </div>
-
 </section>
 <kendo-dialog-actions>
       <div class="justify-content-between align-items-center">

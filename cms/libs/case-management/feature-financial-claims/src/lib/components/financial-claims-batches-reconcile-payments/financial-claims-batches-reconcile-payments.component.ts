@@ -53,12 +53,15 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   @Input() exportButtonShow$ : any
   @Input() warrantNumberChange$: any;
   @Input() warrantNumberChangeLoader$: any;
+  @Input() letterContentList$ :any;
+  @Input() letterContentLoader$ :any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
   @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();;
   @Output() onVendorClickedEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() warrantNumberChangeEvent = new EventEmitter<any>();
+  @Output() loadTemplateEvent = new EventEmitter<any>();
   paymentRequestId!:any;
   entityId: any;
   public isBreakoutPanelShow:boolean=true;
@@ -970,6 +973,9 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       }
 
     })
+  }
+  loadEachLetterTemplate(event:any){
+    this.loadTemplateEvent.emit(event);
   }
 }
 
