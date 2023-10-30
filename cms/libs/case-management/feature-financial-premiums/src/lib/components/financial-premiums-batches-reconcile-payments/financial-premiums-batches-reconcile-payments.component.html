@@ -80,7 +80,7 @@
                         <span class="filter-section_items filter--search">
                               <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
                               <kendo-floatinglabel text="Search">
-                                    <kendo-textbox aria-label="Search case" rounded="medium"
+                                    <kendo-textbox aria-label="Search case" rounded="medium"  [(ngModel)]="searchItem"
                                           [fillMode]="formUiStyle.inputFillMode" (afterValueChanged)="onSearchChange($event)" > </kendo-textbox>
 
                               </kendo-floatinglabel>
@@ -130,8 +130,7 @@
                         [data]="reconcilePaymentGridPagedResult" 
                         (selectionChange)="onRowSelection(grid, $event)">
  
-                        <kendo-grid-column   title="Print Advice Ltr" [width]="130"  class="text-center" [sticky]="true">
- 
+                        <kendo-grid-column   title="Print Advice Ltr" [width]="130"  class="text-center" [sticky]="true"> 
                               <ng-template kendoGridCellTemplate let-dataItem>                  
                                     <input *ngIf="dataItem.acceptsReportsFlag === 'Y'" class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr"
                                     aria-labelledby="printAdviceLetter" kendoCheckBox  (change)="printAdviceLetterChange(dataItem)" [(ngModel)]="dataItem.isPrintAdviceLetter"
@@ -158,7 +157,7 @@
                         </kendo-grid-column>
                         <kendo-grid-column field="tin" title="TIN" [width]="160"> 
                               <ng-template kendoGridCellTemplate let-dataItem>
-                                    <span class="tableamountview"> {{dataItem.tin | ssn}}</span>
+                                    <span class="tableamountview"> {{dataItem.tin | tin}}</span>
                               </ng-template>
                               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                                     <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -300,7 +299,7 @@
                                           aria-label="Rows Per Page" [valuePrimitive]="true" [(value)]="state.take"
                                           (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
                                     <kendo-pager-info> </kendo-pager-info>
-                                    <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+                                    <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
                               </div>
                               <div class="d-flex">
                                     <kendo-pager-input></kendo-pager-input>

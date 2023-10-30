@@ -163,6 +163,7 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
   }
 
   onChange(data: any) {
+    
     this.defaultGridState();
     let operator= "startswith"
 
@@ -191,6 +192,7 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
     this.dataStateChange(stateData);
   }
   loadPaymentBreakout(gridDataRefinerValue:any) {
+    
     this.loadReconcilePaymentBreakOutGridEvent.emit(gridDataRefinerValue);
     this.isGridLoaderShow=false;
   }
@@ -207,6 +209,7 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
   }
 
   dataStateChange(stateData: any): void {
+    
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -327,6 +330,7 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
     value: any,
     filterService: FilterService
   ): void {
+    ;
     if (field === 'paymentStatusDesc') this.selectedPaymentStatus = value;
     if (field === 'paymentMethodDesc') this.selectedpaymentMethod = value;
     filterService.filter({

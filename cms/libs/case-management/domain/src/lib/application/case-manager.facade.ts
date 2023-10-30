@@ -1,10 +1,9 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserDataService } from '@cms/system-config/domain';
+import { UserDataService, UserDefaultRoles } from '@cms/system-config/domain';
 import { Subject } from 'rxjs';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
-import { UserDefaultRoles } from '../enums/user-default-roles.enum';
 import { CaseManagerDataService } from '../infrastructure/case-manager.data.service';
 import { WorkflowFacade } from './workflow.facade';
 import { SortDescriptor } from '@progress/kendo-data-query';

@@ -210,6 +210,7 @@ max-width: 250px;
 }
 .k-tooltip {
   background: var(--hive-neutral-palette-900);
+  word-break: break-word;
   .k-tooltip-content {
     font-size: $font-size-s;
   }

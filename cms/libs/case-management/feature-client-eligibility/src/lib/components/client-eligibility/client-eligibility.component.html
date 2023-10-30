@@ -75,7 +75,7 @@
             <kendo-textarea [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="child.notes"
               [ngModelOptions]="{standalone: true}" aria-label="exception note description" name="Exception Note"
               [rows]="5" [cols]="40" (blur)="notesChanged()">
-              <kendo-textarea-suffix class="justify-content-end"> {{child.notes?.length}}/250</kendo-textarea-suffix>
+              <kendo-textarea-suffix class="justify-content-end"> <span  class="counter"> {{child.notes?.length}}/250</span> </kendo-textarea-suffix>
             </kendo-textarea> 
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="formSubmited && child.answerCode==='YES' && child.notes?.length<1">Exception Note is required.</kendo-formerror>
@@ -92,8 +92,8 @@
             (blur)="cerNotesChanged()" [maxlength]="7500"
               aria-label="note description" name="Note"
               [rows]="5" [cols]="40" (blur)="notesChanged()">
-            </kendo-textarea>
-            <kendo-formhint class="justify-content-end">{{cerNote.length}}/7500</kendo-formhint>
+              <kendo-textarea-suffix class="justify-content-end"> <span  class="counter"> {{cerNote.length}}/7500 </span> </kendo-textarea-suffix>
+            </kendo-textarea> 
           </kendo-floatinglabel>        
         </div>
       </div>
