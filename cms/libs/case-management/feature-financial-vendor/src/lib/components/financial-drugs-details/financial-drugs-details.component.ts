@@ -104,7 +104,6 @@ export class FinancialDrugsDetailsComponent implements OnInit {
 
   mapFormValues() {
     const formValues = this.drugForm.value;
-    // const hasCreateUpdatePermission = this.hasCreateUpdatePermission === true;
 
     const dto = {
       manufacturerId: formValues.manufacturer,
