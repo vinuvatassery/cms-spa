@@ -283,7 +283,7 @@
       <div *kendoGridDetailTemplate="let dataItem">
         <cms-financial-claims-invoice-list [paymentRequestId]="dataItem?.paymentRequestId" [claimsType]="claimsType"
           [financialInvoiceList$]="financialClaimsInvoice$" [sort]="sortValueFinancialInvoices"
-          (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)></cms-financial-claims-invoice-list>
+          [claimsType]="claimsType"></cms-financial-claims-invoice-list>
       </div>
     </ng-container>
 
