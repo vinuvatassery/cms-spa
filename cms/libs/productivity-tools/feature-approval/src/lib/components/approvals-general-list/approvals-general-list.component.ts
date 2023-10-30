@@ -228,7 +228,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
 
   public onPanelExpand(item:any): void {
-    if(item.approvalTypeCode === PendingApprovalGeneralTypeCode.GeneralAddtoMasterList)
+    if(item.approvalTypeCode === PendingApprovalGeneralTypeCode.GeneralAddToMasterList)
     {
       const userObject = {
         approvalEntityId : item.approvalEntityId,
