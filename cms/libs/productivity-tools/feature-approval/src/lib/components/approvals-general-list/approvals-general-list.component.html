@@ -113,7 +113,7 @@
 
 <ng-template #editListItemDialogModal>
   <kendo-dialog-titlebar (close)="onCloseEditListItemsDetailClicked()"> Edit List Item</kendo-dialog-titlebar>
-  <productivity-tools-approvals-edit-items [selectedSubtypeCode]="selectedSubtypeCode"> </productivity-tools-approvals-edit-items>
+  <productivity-tools-approvals-edit-items [selectedSubtypeCode]="selectedSubtypeCode" [selectedVendor$]="selectedVendor$"> </productivity-tools-approvals-edit-items>
 </ng-template>
 
 <ng-template #submitRequestModalDialog>

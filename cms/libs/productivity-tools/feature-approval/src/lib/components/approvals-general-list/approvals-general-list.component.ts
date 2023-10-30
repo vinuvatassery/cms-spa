@@ -20,7 +20,6 @@ import {
 import { Subject } from 'rxjs';
 import {
   PanelBarCollapseEvent,
-  PanelBarExpandEvent,
 } from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { PendingApprovalGeneralTypeCode, PendingApprovalPaymentTypeCode } from '@cms/productivity-tools/domain';
