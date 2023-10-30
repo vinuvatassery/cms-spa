@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { ManufacturerDrugs, VendorFacade, VendorInsurancePlanFacade } from '@cms/case-management/domain';
+import { DrugsFacade, ManufacturerDrugs, VendorFacade, VendorInsurancePlanFacade } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Observable } from 'rxjs';
-import { DrugFacade } from '../../../../../domain/src/lib/application/drug.facade copy';
 import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -27,6 +26,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   isSubmitted: boolean = false;
   deliveryMethodCodes: any[] = ["Tablet", "Capsule", "Liquid", "Injection"];
   ndcMaskFormat: string = "00000-0000-00"
+  isLoading = false;
 
   showLoader() {
     this.loaderService.show();
@@ -42,7 +42,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
     private readonly vendorFacade: VendorFacade,
     private formBuilder: FormBuilder,
     private readonly loaderService: LoaderService,
-    private readonly drugFacade: DrugFacade,
+    private readonly drugsFacade: DrugsFacade,
     private cd: ChangeDetectorRef) {
     this.createDrugForm();
   }
@@ -57,27 +57,6 @@ export class FinancialDrugsDetailsComponent implements OnInit {
       this.saveButtonText = "Update"
     }
 
-    this.loadManufacturer("MANUFACTURERS")
-  }
-  //
-  vendors: any;
-  isLoading = false;
-  private loadManufacturer(type: string) {
-    this.isLoading = true;
-    this.vendorFacade.loadAllVendors(type).subscribe({
-      next: (data: any) => {
-        if (!Array.isArray(data)) return;
-        this.vendors = data;
-        //alert(JSON.stringify(data))
-        //this.sortCarrier(data);
-        //this.insuranceCarrierNameData.emit(this.carrierNames);
-        this.isLoading = false;
-        //this.insurancePlanFacade.planLoaderSubject.next(false);
-      },
-      error: (error: any) => {
-        this.isLoading = false;
-      }
-    });
   }
 
   createDrugForm() {
@@ -154,7 +133,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
       var finalData = this.mapFormValues();
       this.showLoader();
 
-      this.drugFacade.addDrug(finalData).subscribe({
+      this.drugsFacade.addDrug(finalData).subscribe({
         next: (response: any) => {
           this.onCancelClick();
           var notificationMessage = response.message;
