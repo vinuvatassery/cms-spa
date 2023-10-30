@@ -75,37 +75,37 @@
         [isDetailExpanded]="expandSendBackNotes"
         >
 
-        <kendo-grid-column [sortable]="false"  field="viewPmtsInBatch" title="View Pmts In Batch" [width]="120" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'">
+        <kendo-grid-column [sortable]="false"  field="viewPmtsInBatch" title="View Pmts In Batch" [width]="120">
             <ng-template kendoGridCellTemplate let-dataItem>
                 <button aria-label="View Pmts In Batch" title="View" kendoButton look="flat" class="card-link-button" (click)="onOpenViewPaymentsBatchClicked(dataItem)">
                     <span class="material-icons"> plagiarism </span>
                 </button>
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="batchName" title="Batch #" [width]="180" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'">
+        <kendo-grid-column field="batchName" title="Batch #" [width]="180">
             <ng-template kendoGridCellTemplate let-dataItem>
                 <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button" (click)="navToBatchDetails(dataItem)">
                     {{ dataItem.batchName }}
                 </button>
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="providerCount" title="Provider Count" [width]="120" *ngIf="selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'"> </kendo-grid-column>
-        <kendo-grid-column field="paymentRequestSubTypeCode" title="Claim Type" [width]="120" *ngIf="selectedPaymentType === 'MEDICAL_CLAIM'">
+        <kendo-grid-column field="providerCount" title="Provider Count" [width]="120" *ngIf="selectedPaymentType === 'TPA_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'"> </kendo-grid-column>
+        <kendo-grid-column field="paymentRequestSubTypeCode" title="Claim Type" [width]="120" *ngIf="selectedPaymentType === 'TPA_CLAIM'">
             <ng-template kendoGridCellTemplate let-dataItem>
                 <span *ngFor="let requestSubtypeCode of dataItem.paymentRequestSubTypeCode?.split('_')">
                     {{ requestSubtypeCode | titlecase}}
                 </span>
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="totalAmountDue" title="Total Amount" [width]="160" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'">
+        <kendo-grid-column field="totalAmountDue" title="Total Amount" [width]="160" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'TPA_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'">
             <ng-template kendoGridCellTemplate let-dataItem>
                 <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmountDue | kendoNumber: 'n2'}}</span>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="providerCount" title="Carrier Count" [width]="120" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM'"></kendo-grid-column>
-        <kendo-grid-column field="totalPayments" title="Pmt Count" [width]="120" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'"> </kendo-grid-column>
+        <kendo-grid-column field="totalPayments" title="Pmt Count" [width]="120"> </kendo-grid-column>
         <kendo-grid-column field="premiumCount" title="Premium Count" [width]="100" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM'"> </kendo-grid-column>
-        <kendo-grid-column field="creationTime" title="Date Approval Requested" [width]="150" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'">
+        <kendo-grid-column field="creationTime" title="Date Approval Requested" [width]="150">
             <ng-template kendoGridCellTemplate let-dataItem>
                 {{dataItem.dateApprovalRequested | date:'MM/dd/yyyy'}}
             </ng-template>
@@ -136,7 +136,7 @@
               </kendo-grid-string-filter-menu>
                </ng-template>
           </kendo-grid-column>
-        <kendo-grid-column field=" " title="Approve | Send Back" [width]="210" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'">
+        <kendo-grid-column field=" " title="Approve | Send Back" [width]="210">
             <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                 <div class="cms-button-group">
                     <button kendoButton (selectedChange)="onRowLevelApproveClicked($event,dataItem,'sendBackNotes',rowIndex)" [selected]="dataItem.batchStatus == 'APPROVED'" aria-label="Approve" id ="approve{{rowIndex}}" [toggleable]="true" >Approve</button>
@@ -144,7 +144,7 @@
                 </div>
             </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column [sortable]="false" field="sendBackNotes" title="Send Back Notes" [width]="280" *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM' || selectedPaymentType === 'MEDICAL_CLAIM' || selectedPaymentType === 'PHARMACY_CLAIM'">
+        <kendo-grid-column [sortable]="false" field="sendBackNotes" title="Send Back Notes" [width]="280">
             <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                 <div kendoTooltip>
                       <kendo-textarea

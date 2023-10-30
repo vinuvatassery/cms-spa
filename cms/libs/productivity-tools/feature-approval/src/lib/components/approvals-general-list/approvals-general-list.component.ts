@@ -227,7 +227,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
 
   public onPanelExpand(item:any): void {
-    if(item.approvalTypeCode === PendingApprovalGeneralTypeCode.GeneralAddtoMasterList)
+    if(item.approvalTypeCode === PendingApprovalGeneralTypeCode.GeneralAddToMasterList)
     {
       const userObject = {
         approvalEntityId : item.approvalEntityId,
@@ -269,11 +269,11 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
 
   getTitle(approvalTypeCode: string,subTypeCode:string) {
     switch (approvalTypeCode) {
-      case PendingApprovalGeneralTypeCode.GeneralException:
+      case PendingApprovalGeneralTypeCode.GeneralExceptions:
         return 'Request to Exceed Max Benefits';
       case PendingApprovalGeneralTypeCode.GeneralCaseReassignment:
         return 'Request for Case reassignment';
-      case PendingApprovalGeneralTypeCode.GeneralAddtoMasterList:
+      case PendingApprovalGeneralTypeCode.GeneralAddToMasterList:
         return this.getMasterlistTitle(subTypeCode);
     }
     return null;
