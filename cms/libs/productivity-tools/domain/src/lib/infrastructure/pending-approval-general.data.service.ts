@@ -20,7 +20,7 @@ export class PendingApprovalGeneralService {
     );
   }
 
-  loadExceedMaxBenefitCard(exceptionId:string) {
+  loadExceptionCard(exceptionId:string) {
     return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/exceptions?exceptionId=${exceptionId}`);
    }
 
@@ -37,7 +37,14 @@ export class PendingApprovalGeneralService {
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/invoice-details?exceptionId=${data.exceptionId}`,invoiceRequestDto
     );
   }
-  getVendorDetails(vendorId: string) { 
+
+  submitGeneralRequests(requests : any)
+  {
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/`,requests
+    );
+  }
+  getVendorDetails(vendorId: string) {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/${vendorId}`
     );

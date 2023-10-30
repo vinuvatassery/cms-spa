@@ -82,8 +82,10 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   }
 
   loadReconcileListGrid(event: any) {
+    
     this.dataExportParameters = event;
     const params = new GridFilterParam(event.skipCount, event.pageSize, event.sortColumn, event.sortType, JSON.stringify(event.filter)); 
+   
     this.financialClaimsFacade.loadReconcileListGrid(this.batchId,this.claimsType,params);    
   }
 
@@ -95,6 +97,7 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
 
   loadReconcilePaymentBreakoutList(event: any)
   {
+    
     event.claimsType=this.claimsType;
     this.financialClaimsFacade.loadReconcilePaymentBreakoutListGrid(event);
   }
