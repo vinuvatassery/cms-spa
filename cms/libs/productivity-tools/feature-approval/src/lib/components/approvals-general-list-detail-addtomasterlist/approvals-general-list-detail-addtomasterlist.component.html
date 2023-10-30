@@ -1,8 +1,8 @@
   <div class="flex-row">
     <div class="flex-col flex-col-6">
       <button kendoButton class="mb-1 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit "
-        aria-label="edit" title="Edit List Item" (click)="onEditListItemsDetailClicked()"></button>
-      <table class="info-table-custom nobg-left">
+        aria-label="edit" title="Edit List Item" (click)="onEditListItemsDetailClicked()" *ngIf="(selectedVendor$|async) as item"></button>
+      <table class="info-table-custom nobg-left" *ngIf="(selectedVendor$|async) as item">
         <caption hidden> Vendor Info</caption>
         <tbody *ngIf="subTypeCode === subTypeConst.DentalClinic|| subTypeCode === subTypeConst.MedicalClinic || subTypeCode === subTypeConst.MedicalProvider || subTypeCode === subTypeConst.DentalProvider">
           <tr>

@@ -32,6 +32,7 @@
             (loadApprovalsExceptionInvoiceEvent)="loadApprovalsExceptionInvoice($event)"
             (submitGeneralRequestsEvent)="submitGeneralRequests($event)"
             [usersByRole$]="usersByRole$"
+            (getVendorDetailEvent)="getVendorDetail($event)"
             [selectedVendor$]="selectedVendor$">
           </productivity-tools-approvals-general-list>
         </div>
