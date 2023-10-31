@@ -16,7 +16,8 @@ import { VendorRefundClientClaimsListComponent } from './components/vendor-refun
 import { VendorRefundInsurancePremiumListComponent } from './components/vendor-refund-insurance-premium-list/vendor-refund-insurance-premium-list.component';
 import { VendorRefundSelectedPremiumListComponent } from './components/vendor-refund-selected-premium-list/vendor-refund-selected-premium-list.component';
 import { RefundBatchPageComponent } from './containers/refund-batch-page/refund-batch-page.component';
-
+import { VendorRefundPharmacyPaymentsListComponent } from './components/vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
+ 
 @NgModule({
   imports: [
     CommonModule,
@@ -37,7 +38,8 @@ import { RefundBatchPageComponent } from './containers/refund-batch-page/refund-
     VendorRefundInsurancePremiumListComponent,
     RefundBatchPageComponent,
     VendorRefundSelectedPremiumListComponent,
-    VendorRefundClientClaimsListComponent
+    VendorRefundClientClaimsListComponent,
+    VendorRefundPharmacyPaymentsListComponent
   ],
 })
 export class CaseManagementFeatureFinancialVendorRefundModule {}
