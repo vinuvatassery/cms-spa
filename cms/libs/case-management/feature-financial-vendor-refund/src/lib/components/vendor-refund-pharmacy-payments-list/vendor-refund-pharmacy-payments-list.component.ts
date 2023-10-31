@@ -1,5 +1,6 @@
 /** Angular **/
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -19,6 +20,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-vendor-refund-pharmacy-payments-list',
   templateUrl: './vendor-refund-pharmacy-payments-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();

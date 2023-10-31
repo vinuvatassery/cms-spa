@@ -1,5 +1,6 @@
 /** Angular **/
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -19,6 +20,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-vendor-refund-claims-list',
   templateUrl: './vendor-refund-claims-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -47,40 +49,7 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
-  claimsListData = [
-    {
-      invoiceId: '#213213213',
-      providerName:'providerName', 
-      taxID:'234234', 
-      paymentMethod:'XXXX', 
-      serviceStartDate:'XX/XX/XXXX', 
-      serviceEndDate:'XX/XX/XXXX', 
-      serviceCost:'XXXX.XX', 
-      totalCost:'XXXX.XX', 
-      totalDue:'XXXX.XX', 
-      paymentStatus:'XXXX', 
-      pcaCode:'XXXXXX', 
-      entryDate:'XX/XX/XXXX',   
-      by: 'by',
-    },
-    {
-      invoiceId: '#213213213',
-      providerName:'providerName', 
-      taxID:'234234', 
-      paymentMethod:'XXXX', 
-      serviceStartDate:'XX/XX/XXXX', 
-      serviceEndDate:'XX/XX/XXXX', 
-      serviceCost:'XXXX.XX', 
-      totalCost:'XXXX.XX', 
-      totalDue:'XXXX.XX', 
-      paymentStatus:'XXXX', 
-      pcaCode:'XXXXXX', 
-      entryDate:'XX/XX/XXXX',   
-      by: 'by',
-    },
-    
-  ]
+
   ngOnInit(): void {
     this.loadClaimsListGrid();
   }

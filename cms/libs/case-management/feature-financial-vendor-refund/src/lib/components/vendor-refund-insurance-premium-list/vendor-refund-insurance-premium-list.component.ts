@@ -1,5 +1,6 @@
 /** Angular **/
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -19,6 +20,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-vendor-refund-insurance-premium-list',
   templateUrl: './vendor-refund-insurance-premium-list.component.html', 
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnChanges{
 
@@ -31,7 +33,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   @Input() sort: any;
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
   public state!: State;
-  @Input() premiumListData$: any;
+  @Input() premiumsListData$: any;
   @Output() loadPremiumListEvent = new EventEmitter<any>();
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -49,7 +51,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   
-
+ 
   ngOnInit(): void {
     this.loadPremiumListGrid();
   }
@@ -107,7 +109,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   }
 
   gridDataHandle() {
-    this.premiumListData$.subscribe((data: GridDataResult) => {
+    this.premiumsListData$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,

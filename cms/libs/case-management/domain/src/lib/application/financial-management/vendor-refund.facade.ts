@@ -36,14 +36,25 @@ export class FinancialVendorRefundFacade {
     field: this.sortValueBatchLog,
   }];
 
-  public sortValueClaims = 'batch';
+  public sortValueClaims = 'invoiceId';
   public sortClaimsList: SortDescriptor[] = [{
     field: this.sortValueClaims,
   }];
 
-  public sortValuePremiums = 'batch';
+  public sortValuePremiums = 'insuranceCarrier';
   public sortPremiumsList: SortDescriptor[] = [{
     field: this.sortValuePremiums,
+  }];
+
+
+  public sortValueClientClaims = 'clientId';
+  public sortClientClaimsList: SortDescriptor[] = [{
+    field: this.sortValueClientClaims,
+  }];
+
+  public sortValuePharmacyPayment = 'clientId';
+  public sortPharmacyPaymentList: SortDescriptor[] = [{
+    field: this.sortValuePharmacyPayment,
   }];
 
   private vendorRefundProcessDataSubject = new Subject<any>();
@@ -63,6 +74,14 @@ export class FinancialVendorRefundFacade {
 
   private premiumsListDataSubject =  new Subject<any>();
   premiumsListData$ = this.premiumsListDataSubject.asObservable();
+
+  
+  private clientClaimsListDataSubject =  new Subject<any>();
+  clientClaimsListData$ = this.clientClaimsListDataSubject.asObservable();
+
+  
+  private pharmacyPaymentsListDataSubject =  new Subject<any>();
+  pharmacyPaymentsListData$ = this.pharmacyPaymentsListDataSubject.asObservable();
   /** Private properties **/
  
   /** Public properties **/
@@ -168,6 +187,32 @@ export class FinancialVendorRefundFacade {
     this.financialVendorRefundDataService.loadPremiumsListService().subscribe({
       next: (dataResponse) => {
         this.premiumsListDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  }
+
+  loadClientClaimsListGrid(){
+    this.financialVendorRefundDataService.loadClientClaimsListService().subscribe({
+      next: (dataResponse) => {
+        this.clientClaimsListDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  }
+
+  loadPharmacyPaymentsListGrid(){
+    this.financialVendorRefundDataService.loadPharmacyPaymentsListService().subscribe({
+      next: (dataResponse) => {
+        this.pharmacyPaymentsListDataSubject.next(dataResponse);
         this.hideLoader();
       },
       error: (err) => {

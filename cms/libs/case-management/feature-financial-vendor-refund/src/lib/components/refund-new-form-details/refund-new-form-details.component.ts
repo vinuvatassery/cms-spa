@@ -17,18 +17,31 @@ export class RefundNewFormDetailsComponent{
     "TAX",
     "RX",
   ];
-  premiumsListData$ =   this.financialVendorRefundFacade.premiumsListData$;
-  claimsListData$ =
-    this.financialVendorRefundFacade.claimsListData$;
-    sortValue = this.financialVendorRefundFacade.sortValueClaims;
-    sortType = this.financialVendorRefundFacade.sortType;
-    pageSizes = this.financialVendorRefundFacade.gridPageSizes;
-    gridSkipCount = this.financialVendorRefundFacade.skipCount;
-    sort = this.financialVendorRefundFacade.sortClaimsList;
-    state!: State;
 
-    sortValuePremiums = this.financialVendorRefundFacade.sortValuePremiums;
-    sortPremiums = this.financialVendorRefundFacade.sortPremiumsList;
+  sortType = this.financialVendorRefundFacade.sortType;
+  pageSizes = this.financialVendorRefundFacade.gridPageSizes;
+  gridSkipCount = this.financialVendorRefundFacade.skipCount;
+  state!: State;
+
+  premiumsListData$ =   this.financialVendorRefundFacade.premiumsListData$;
+  claimsListData$ =   this.financialVendorRefundFacade.claimsListData$;
+  clientClaimsListData$ =   this.financialVendorRefundFacade.clientClaimsListData$;
+  pharmacyPaymentsListData$ =   this.financialVendorRefundFacade.pharmacyPaymentsListData$;
+
+
+  sortValueClaims = this.financialVendorRefundFacade.sortValueClaims;
+  sortClaims = this.financialVendorRefundFacade.sortClaimsList;
+
+  sortValuePremiums = this.financialVendorRefundFacade.sortValuePremiums;
+  sortPremiums = this.financialVendorRefundFacade.sortPremiumsList;
+
+  sortValueClientClaims = this.financialVendorRefundFacade.sortValueClientClaims;
+  sortClientClaims = this.financialVendorRefundFacade.sortClientClaimsList;
+   
+  sortValuePharmacyPayment = this.financialVendorRefundFacade.sortValuePharmacyPayment;
+  sortPharmacyPayment = this.financialVendorRefundFacade.sortValuePharmacyPayment;
+
+   
   clientSearchResult =[
 
     {
@@ -72,13 +85,17 @@ export class RefundNewFormDetailsComponent{
   }
 
 
-  loadClaimsListGrid() {
- 
+  loadClaimsListGrid(event: any) { 
     this.financialVendorRefundFacade.loadClaimsListGrid();
   }
 
-  loadPremiumsListGrid() {
- 
+  loadPremiumsListGrid(event: any) { 
     this.financialVendorRefundFacade.loadPremiumsListGrid();
+  }
+  loadClientClaimsListGrid(event: any) { 
+    this.financialVendorRefundFacade.loadClientClaimsListGrid();
+  }
+  loadPharmacyPaymentsListGrid(event: any) { 
+    this.financialVendorRefundFacade.loadPharmacyPaymentsListGrid();
   }
 }

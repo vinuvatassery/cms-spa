@@ -471,4 +471,69 @@ export class FinancialVendorRefundDataService {
       
     ]);
   }
+  loadClientClaimsListService( ) {
+    return of([
+      {
+        id:1,
+        item:1,
+        PharmacyName: 'XXXXXX XXXXXX',  
+        paymentMethod: 'paymentMethod',
+        clientName:'XXXXXX XXXXXX XXXX', 
+        nameOnPrimaryInsuranceCard:'address2', 
+        clientId:'XXXXXX', 
+        RXNumber:'XXXXXX', 
+        FillDate:'XX/XX/XXXX', 
+        ndcCode:'XXXXXX', 
+        brandName:'XXXXXX', 
+        drugName: 'XXXXXX',
+        paymentType: 'XXXXXX',
+        amountPaid: 'xx.xx',
+        rxQty: 'XX',
+        rxType: 'XX',
+        rxDaysSupply: 'XX',
+        indexCode: 'XXXX',
+        pcaCode: 'XXXX',
+        objectCode: 'XXXX',
+        paymentStatus: 'XXXX',
+        warrantNumber: 'XXXXXX',
+        entryDate: 'XX/XX/XXXX',
+        by: 'by',
+      },
+      
+      
+    ]);
+  }
+  loadPharmacyPaymentsListService( ) {
+    return of([
+      {
+        id:1,
+        item:1,
+        PharmacyName: 'XXXXXX XXXXXX',  
+        paymentMethod: 'paymentMethod',
+        clientName:'XXXXXX XXXXXX XXXX', 
+        nameOnPrimaryInsuranceCard:'address2', 
+        clientId:'XXXXXX', 
+        RXNumber:'XXXXXX', 
+        FillDate:'XX/XX/XXXX', 
+        ndcCode:'XXXXXX', 
+        brandName:'XXXXXX', 
+        drugName: 'XXXXXX',
+        paymentType: 'XXXXXX',
+        amountPaid: 'xx.xx',
+        rxQty: 'XX',
+        rxType: 'XX',
+        rxDaysSupply: 'XX',
+        indexCode: 'XXXX',
+        pcaCode: 'XXXX',
+        objectCode: 'XXXX',
+        paymentStatus: 'XXXX',
+        warrantNumber: 'XXXXXX',
+        entryDate: 'XX/XX/XXXX',
+        by: 'by',
+      },
+      
+      
+    ]);
+  }
+
 }
