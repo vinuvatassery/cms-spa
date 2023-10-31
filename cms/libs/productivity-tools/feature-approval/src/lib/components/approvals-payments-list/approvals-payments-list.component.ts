@@ -69,7 +69,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   approvalTypeCode! : any;
   approveStatus:string="APPROVED";
   sendbackStatus:string="SEND_BACK";
-  hasPaymentPendingApproval:boolean=false;
+  hasPaymentPendingApproval:boolean=true;
   sendbackNotesRequireMessage:string = "Send Back Notes are required.";
   tAreaCessationMaxLength:any=100;
   approveBatchCount:any=0;
@@ -234,6 +234,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.isViewPaymentsBatchDialog = false;
     this.approvalsPaymentsGridUpdatedResult = data.map((item:any)=>({...item}));
     this.loadApprovalPaymentsListGrid();
+    this.enableSubmitButtonMain();
   }
 
   onLoadBatchDetailPaymentsList(data?:any){
@@ -422,6 +423,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.searchValue = '';
     this.loadApprovalPaymentsListGrid();
     this.mainListDataHandle();
+    this.enableSubmitButtonMain();
     this.gridDataHandle();
     this.cd.detectChanges();
   }
@@ -453,6 +455,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.assignRowDataToMainList(dataItem);
     this.ngDirtyInValid(dataItem,control,rowIndex);
     this.approveAndSendbackCount();
+    this.enableSubmitButtonMain();    
+    this.cd.detectChanges();
   }
 
   onRowLevelSendbackClicked(e: boolean,dataItem: any, control: any, rowIndex: any)
@@ -486,6 +490,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.ngDirtyInValid(dataItem,control,rowIndex);
     this.isApproveAllClicked = false;
     this.approveAndSendbackCount();
+    this.enableSubmitButtonMain();
+    this.cd.detectChanges();
   }
 
   private tAreaVariablesInitiation(dataItem: any) {
@@ -656,6 +662,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       });
     }
     this.approveAndSendbackCount();
+    this.enableSubmitButtonMain();
   }
 
   validateApprovalsPaymentsGridRecord() {
@@ -919,5 +926,12 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
 
     this.route.navigate([`/financial-management/${type}/batch`],
     { queryParams :{bid: data?.paymentRequestBatchId}});
+  }
+
+  enableSubmitButtonMain()
+  {
+    const totalCount = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus).length;
+    this.hasPaymentPendingApproval = (totalCount <= 0);
+    this.cd.detectChanges();
   }
 }

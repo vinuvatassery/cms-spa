@@ -23,7 +23,7 @@
                     <button kendoButton (selectedChange)="onRowLevelApproveClicked($event,item,'sendBackNotes',i)" [selected]="item.status == approveStatus" aria-label="Approve" id ="approve{{i}}" [toggleable]="true" >Approve</button>
                     <button kendoButton (selectedChange)="onRowLevelDenyClicked($event,item,'sendBackNotes',i)" [selected]="item.status == denyStatus" aria-label="Send Back" id ="deny{{i}}" [toggleable]="true">Send Back</button>
                 </div>
-                <div *ngIf="item.status == approveStatus && item.approvalTypeCode==pendingApprovalGeneralTypeCode.GeneralAddtoMasterList">
+                <div *ngIf="item.status == approveStatus && item.approvalTypeCode==pendingApprovalGeneralTypeCode.GeneralAddToMasterList">
                   <i>The user will be notified of your changes.</i>
                 </div>
                 <div *ngIf="item.status == denyStatus">
@@ -77,7 +77,7 @@
                 <productivity-tools-approvals-general-list-detail-addtomasterlist [approvalId]="item.generalPendingApprovalId" (openEditModal)="openEditModal($event)" [subTypeCode]="item.subTypeCode" [selectedVendor$]="selectedVendor$">
                 </productivity-tools-approvals-general-list-detail-addtomasterlist>
               </ng-template>
-              <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralException}}">
+              <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralExceptions}}">
                 <productivity-tools-approvals-general-list-detail-exceptions
                   [approvalId]="item.generalPendingApprovalId"
                   [exceptionId]="item.approvalEntityId">
@@ -96,8 +96,6 @@
 
 </div>
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span class="">1 Approved</span>
-  <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"> Save </button>
   <button kendoButton [primary]="true" aria-label="Submit" class="" (click)="onSubmitPendingApprovalGeneralClicked()" [disabled]="hasDisabledSubmit"> Submit </button>
 </div>
 
