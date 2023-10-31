@@ -200,7 +200,7 @@
                             </kendo-grid-column>
                         <kendo-grid-column  field="paymentReconciledDate" title="Date Pmt. Reconciled" [width]="200">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">              
-                                    <kendo-datepicker [disabled]="dataItem.checkNbr !== null && dataItem?.warrantNumberChanged !== true" [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
+                                    <kendo-datepicker [disabled]="dataItem?.reconciled" [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
                                     aria-label="Date Pmt. Reconciled"  id ="paymentReconciledDate{{rowIndex}}"  name ="paymentReconciledDate{{rowIndex}}"
                                     [(ngModel)]="dataItem.paymentReconciledDate"  (valueChange)="dateChangeListItems($event,dataItem,'DATE_PAYMENT_RECONCILED')"
                                     [ngClass]="ngDirtyInValid(dataItem,'paymentReconciledDate',rowIndex)"
@@ -221,7 +221,7 @@
                         </kendo-grid-column>
                         <kendo-grid-column field="paymentSentDate" title="Date Pmt. Sent" [width]="160">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                                    <kendo-datepicker [disabled]="dataItem.checkNbr !== null && dataItem?.warrantNumberChanged !== true" [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
+                                    <kendo-datepicker [disabled]="dataItem?.reconciled" [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
                                     aria-label="Date Pmt. Sent"  id ="paymentSentDate{{rowIndex}}"  name ="paymentSentDate{{rowIndex}}"
                                     [(ngModel)]="dataItem.paymentSentDate"   (valueChange)="dateChangeListItems($event,dataItem,'DATE_PAYMENT_SENT')"
                                     [ngClass]="ngDirtyInValid(dataItem,'paymentSentDate',rowIndex)" 
@@ -255,7 +255,7 @@
                         </kendo-grid-column>
                         <kendo-grid-column field="checkNbr" title="Warrant Number" [width]="180">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                                    <kendo-textbox [disabled]="dataItem.checkNbr !== null && dataItem?.warrantNumberChanged !== true" aria-label="Warrant Number"
+                                    <kendo-textbox [disabled]="dataItem?.reconciled" aria-label="Warrant Number"
                                     placeholder="Warrant Number"  [maxlength]="12"
                                     [fillMode]="formUiStyle.inputFillMode"
                                     [ngClass]="ngDirtyInValid(dataItem,'checkNbr',rowIndex)"  id ="checkNbr{{rowIndex}}"
@@ -277,7 +277,7 @@
                               <ng-template kendoGridCellTemplate let-dataItem>
                                     <div kendoTooltip>                                             
                                           <kendo-textarea
-                                          [disabled]="dataItem.checkNbr !== null && dataItem?.warrantNumberChanged !== true"
+                                          [disabled]="dataItem?.reconciled"
                                           #tareaCessation
                                           [fillMode]="formUiStyle.inputFillMode"
                                           [maxlength]="tAreaCessationMaxLength"

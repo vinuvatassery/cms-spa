@@ -488,16 +488,18 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         itemResponse.data[index].datePaymentSentInValidMsg = ifExist?.datePaymentSentInValidMsg;
         itemResponse.data[index].isPrintAdviceLetter = ifExist?.isPrintAdviceLetter;
         itemResponse.data[index].tAreaCessationCounter = ifExist?.tAreaCessationCounter;
-        itemResponse.data[index].batchId = ifExist?.batchId;
+        itemResponse.data[index].batchId = ifExist?.batchId;        
       }
       else {
         itemResponse.data[index].paymentReconciledDate = itemResponse.data[index].paymentReconciledDate !== null ? new Date(itemResponse.data[index].paymentReconciledDate) : itemResponse.data[index].paymentReconciledDate;
         itemResponse.data[index].paymentSentDate = itemResponse.data[index].paymentSentDate !== null ? new Date(itemResponse.data[index].paymentSentDate) : itemResponse.data[index].paymentSentDate;
-      }
-
+        if((itemResponse.data[index].checkNbr !== null && itemResponse.data[index].checkNbr !== '' && itemResponse.data[index].checkNbr !== undefined )){
+          itemResponse.data[index].reconciled = true;
+        }
+      }     
+      this.reconcilePaymentGridPagedResult = itemResponse;      
     });
 
-    this.reconcilePaymentGridPagedResult = itemResponse;
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
