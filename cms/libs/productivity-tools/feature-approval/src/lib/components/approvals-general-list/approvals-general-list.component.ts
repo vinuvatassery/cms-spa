@@ -20,7 +20,6 @@ import {
 import { Subject } from 'rxjs';
 import {
   PanelBarCollapseEvent,
-  PanelBarExpandEvent,
 } from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { PendingApprovalGeneralTypeCode, PendingApprovalPaymentTypeCode } from '@cms/productivity-tools/domain';
@@ -228,7 +227,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
 
   public onPanelExpand(item:any): void {
-    if(item.approvalTypeCode === PendingApprovalGeneralTypeCode.GeneralAddtoMasterList)
+    if(item.approvalTypeCode === PendingApprovalGeneralTypeCode.GeneralAddToMasterList)
     {
       const userObject = {
         approvalEntityId : item.approvalEntityId,
@@ -270,11 +269,11 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
 
   getTitle(approvalTypeCode: string,subTypeCode:string) {
     switch (approvalTypeCode) {
-      case PendingApprovalGeneralTypeCode.GeneralException:
+      case PendingApprovalGeneralTypeCode.GeneralExceptions:
         return 'Request to Exceed Max Benefits';
       case PendingApprovalGeneralTypeCode.GeneralCaseReassignment:
         return 'Request for Case reassignment';
-      case PendingApprovalGeneralTypeCode.GeneralAddtoMasterList:
+      case PendingApprovalGeneralTypeCode.GeneralAddToMasterList:
         return this.getMasterlistTitle(subTypeCode);
     }
     return null;
@@ -554,6 +553,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     this.submitGeneralRequestsEvent.emit(data);
     this.submitGenerealRequest$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
+          this.onCloseSubmitGeneralRequestClicked();
           this.loadApprovalGeneralListGrid();
       }
     });
