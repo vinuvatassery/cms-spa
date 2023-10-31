@@ -77,14 +77,14 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="paymentMethod" title="Payment Method"  [width]="100" [sortable]="false"
+    <kendo-grid-column field="paymentMethod" title="Payment Method"  [width]="160" [sortable]="false"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
       
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="totalClaims" title="Total Claims" [width]="100"
+    <kendo-grid-column field="totalClaims" title="Total Claims" [width]="140"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -94,7 +94,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="unreconciledClaims" title="Unreconciled Claims" [width]="100"  format="0"
+    <kendo-grid-column field="unreconciledClaims" title="Unreconciled Claims" [width]="160"  format="0"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -104,7 +104,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="totalPayments" title="Total Payments" [width]="100" format="0"
+    <kendo-grid-column field="totalPayments" title="Total Payments" [width]="160" format="0"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -114,7 +114,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="unreconciledPayments" title="Unreconciled Payments" [width]="100"  format="0"
+    <kendo-grid-column field="unreconciledPayments" title="Unreconciled Payments" [width]="160"  format="0"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -124,7 +124,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="insurancePlans" title="Insurance Plans" [width]="120"  format="0"
+    <kendo-grid-column field="insurancePlans" title="Insurance Plans" [width]="140"  format="0"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -135,7 +135,7 @@
     </kendo-grid-column>
 
     <kendo-grid-column field="clients" title="{{vendorTypeCode===financeVendorTypeCodes.InsuranceVendors?
-      'Clients' : '# of Clients'}}" [width]="100"  format="0"
+      'Clients' : '# of Clients'}}" [width]="140"  format="0"
     [sticky]="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors"
     *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors
     || vendorTypeCode===financeVendorTypeCodes.Pharmacy">
@@ -147,7 +147,7 @@
       </ng-template>
     </kendo-grid-column>
    
-    <kendo-grid-column field="unreconciledClaims" title="Unreconciled Claims" [width]="100"  format="0"
+    <kendo-grid-column field="unreconciledClaims" title="Unreconciled Claims" [width]="160"  format="0"
     *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy">
     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
       <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -157,7 +157,7 @@
     </ng-template>
   </kendo-grid-column>
 
-    <kendo-grid-column field="totalDrugs" title="Total Drugs" [width]="100"  format="0"
+    <kendo-grid-column field="totalDrugs" title="Total Drugs" [width]="120"  format="0"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -175,7 +175,7 @@
       *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
     </kendo-grid-column>
 
-    <kendo-grid-column field="address" title="Address"  [width]="120" [sticky]="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders"
+    <kendo-grid-column field="address" title="Address"  [width]="160" [sticky]="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders"
     *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
       <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"

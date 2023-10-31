@@ -39,7 +39,6 @@ export class ApprovalPageComponent implements OnInit {
   userLevel = 1;
 
   state!: State;
-  casereassignmentExpandedInfo$ = this.pendingApprovalGeneralFacade.casereassignmentExpandedInfo$;
   approvalsGeneralLists$ = this.pendingApprovalGeneralFacade.approvalsGeneralList$;
   approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalCount$;
@@ -49,17 +48,18 @@ export class ApprovalPageComponent implements OnInit {
   pendingApprovalSubmit$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmit$;
   batchDetailPaymentsList$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
   batchDetailPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
-  approvalsExceedMaxBenefitCard$ = this.pendingApprovalGeneralFacade.approvalsGeneralExceedMaxBenefitCardSubjectList$;
+  approvalsExceptionCard$ = this.pendingApprovalGeneralFacade.approvalsGeneralExceptionCardSubjectList$;
   invoiceData$ = this.pendingApprovalGeneralFacade.invoiceData$;
   isInvoiceLoading$ = this.pendingApprovalGeneralFacade.isInvoiceLoading$;
+  submitGenerealRequest$ = this.pendingApprovalGeneralFacade.submitGenerealRequest$;
 
   providerDetailsDialog: any
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId!:any;
   usersByRole$ = this.userManagementFacade.usersByRole$;
-  selectedVendor$ = this.pendingApprovalGeneralFacade.selectedVendor$;  
-  
+  selectedVendor$ = this.pendingApprovalGeneralFacade.selectedVendor$;
+
   /** Constructor **/
   constructor(private readonly approvalFacade: ApprovalFacade, private notificationService: NotificationService,
               private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService,
@@ -157,17 +157,21 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalGeneralFacade.loadCasereassignmentExpandedInfo(approvalId);
   }
 
-  loadApprovalsExceedMaxBenefitCard(data:any)
+  loadApprovalsExceptionCard(data:any)
   {
-      this.pendingApprovalGeneralFacade.loadExceedMaxBenefitCard(data);
+      this.pendingApprovalGeneralFacade.loadExceptionCard(data);
   }
 
-  loadApprovalsExceedMaxBenefitInvoice(data:any)
+  loadApprovalsExceptionInvoice(data:any)
   {
       this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
   }
+  submitGeneralRequests(requests:any)
+  {
+    this.pendingApprovalGeneralFacade.submitGeneralRequests(requests);
+  }
 
-  getVendorDetail(approvalEntityId:any){
-    this.pendingApprovalGeneralFacade.getVendorDetails(approvalEntityId);
+  getVendorDetail(userObject: any){
+    this.pendingApprovalGeneralFacade.getVendorDetails(userObject.approvalEntityId,userObject.subTypeCode);
   }
 }

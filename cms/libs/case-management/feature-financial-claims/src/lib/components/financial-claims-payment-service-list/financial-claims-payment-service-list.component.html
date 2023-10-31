@@ -2,24 +2,24 @@
     [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
     [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
     (dataStateChange)="dataStateChange($event)" [navigable]="true" [data]="servicesList$ | async">
-    <kendo-grid-column title="Service Start" [width]="50">
+    <kendo-grid-column title="Service Start" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.serviceStartDate | date:'MM/dd/yyyy'}}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column title="Service End" [width]="50">
+    <kendo-grid-column title="Service End" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.serviceEndDate | date:'MM/dd/yyyy'}}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="cptCode" title="CPT Code" [width]="50"> </kendo-grid-column>
+    <kendo-grid-column field="cptCode" title="CPT Code" [width]="100"> </kendo-grid-column>
     <kendo-grid-column field="serviceDesc" [title]="serviceTitle" [width]="100"> </kendo-grid-column>
-    <kendo-grid-column field="serviceCost" title="Service Cost" [width]="50">
+    <kendo-grid-column field="serviceCost" title="Service Cost" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
             <span class="tableamountview"> <strong>$</strong> {{dataItem.serviceCost | kendoNumber: 'n2'}}</span>
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="amountDue" title="Amount Due" [width]="50">
+    <kendo-grid-column field="amountDue" title="Amount Due" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
             <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber: 'n2'}}</span>
         </ng-template>
@@ -29,7 +29,7 @@
             {{dataItem.creationTime | date:'MM/dd/yyyy'}}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="creatorId" title="By" [sortable]="false" [width]="20">
+    <kendo-grid-column field="creatorId" title="By" [sortable]="false" [width]="70" class="text-center" >
         <ng-template kendoGridCellTemplate let-dataItem>
             <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
                 [popover]="onUserProfileDetailsHovered" showOn="hover" ar[attr.aria-label]="dataItem.creatorId">

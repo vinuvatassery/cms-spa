@@ -1,57 +1,26 @@
 <div [formGroup]="healthInsuranceForm">
 
-    <kendo-floatinglabel text="Insurance Carrier Name" >   
-        <kendo-combobox   
-        aria-label="Insurance Carrier Name"
-        [fillMode]="formUiStyle.dropDownFillMode"  
-        [loading] = "isLoading" 
-        #caseOwnr
-        formControlName="insuranceCarrierName"     
-        [data]="carrierNames"   
-        textField="vendorName" 
-        valueField="vendorId"
-        [valuePrimitive]="true"       
-        [filterable]="true"     
-        [kendoDropDownFilter]="caseOwnerfilterSettings"
-        (valueChange)="insuranceCarrierNameChangeValue($event)"      
-      >
-      </kendo-combobox>
-      </kendo-floatinglabel>
-      <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceCarrierName'].valid && !healthInsuranceForm.controls['insuranceCarrierName'].disabled">Insurance Carrier Name is required.</kendo-formerror>
-      <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
-        <span class="fontsize_twel">Don’t see the Carrier you’re looking for?</span>
-        <button
-          kendoButton
-          class="card-link-button ml-1 no-ul fontsize_twel"
-          [disabled]="isViewContentEditable" 
-          aria-label="Add New"
-          (click)="addNewInsuranceProviderOpen()"
-        > 
-          ADD NEW
-        </button>
-      </div>
-</div>
-
-<kendo-dialog *ngIf="isaddNewInsuranceProviderOpen" (close)="addNewInsuranceProviderClose()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Add New Insurance Provider">
-
-<section class="k-dialog-body mb-2">
-  <p>
-    This feature is part of future scope of work for the ORCares project.
-  </p>
-</section>
-<kendo-dialog-actions>
-  <div class="justify-content-between">
-    <div class="justify-content-end">
-      <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
-        (click)="addNewInsuranceProviderClose()">
-        Cancel
-      </button>
-      <button kendoButton      [primary]="true" aria-label="Add" (click)="addNewInsuranceProviderClose()">
-        Add
-      </button>
-    </div>
+  <kendo-floatinglabel text="Insurance Carrier Name">
+    <kendo-combobox aria-label="Insurance Carrier Name" [fillMode]="formUiStyle.dropDownFillMode" [loading]="isLoading"
+      #caseOwnr formControlName="insuranceCarrierName" [data]="carrierNames" textField="vendorName"
+      valueField="vendorId" [valuePrimitive]="true" [filterable]="true" [kendoDropDownFilter]="caseOwnerfilterSettings"
+      (valueChange)="insuranceCarrierNameChangeValue($event)">
+    </kendo-combobox>
+  </kendo-floatinglabel>
+  <kendo-formerror
+    *ngIf="!healthInsuranceForm.controls['insuranceCarrierName'].valid && !healthInsuranceForm.controls['insuranceCarrierName'].disabled">Insurance
+    Carrier Name is required.</kendo-formerror>
+  <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
+    <span class="fontsize_twel">Don’t see the Carrier you’re looking for?</span>
+    <button kendoButton class="card-link-button ml-1 no-ul fontsize_twel" [disabled]="isViewContentEditable"
+      aria-label="Add New" (click)="addNewInsuranceProviderOpen()">
+      {{hasInsuranceCarrierCreateUpdatePermission == true ? 'ADD NEW' : 'REQUEST NEW'}} 
+    </button>
   </div>
-</kendo-dialog-actions>
-
+</div>
+<kendo-dialog kendoRippleContainer *ngIf="isaddNewInsuranceProviderOpen" (close)="addNewInsuranceProviderClose()"
+  class="app-c-modal app-c-modal-lg app-c-modal-np"  title="{{ hasInsuranceCarrierCreateUpdatePermission == true ? 'Add New Insurance Provider' : 'Request New Insurance Provider'}}" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm]="InsuranceCarrierForm" [providerType]="vendorTypes.InsuranceProviders"
+    (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="addNewInsuranceProviderClose()"
+    [hasCreateUpdatePermission]="hasInsuranceCarrierCreateUpdatePermission"></cms-vendor-details>
 </kendo-dialog>
