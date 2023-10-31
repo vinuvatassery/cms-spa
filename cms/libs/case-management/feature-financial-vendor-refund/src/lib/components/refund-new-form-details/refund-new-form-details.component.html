@@ -54,7 +54,7 @@
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Refund Type">
                         <kendo-dropdownlist aria-label="Refund Type" [(ngModel)]="selectedRefundType"
-                            [data]="refundType" [fillMode]="formUiStyle.dropDownFillMode">
+                            [data]="refundType" [fillMode]="formUiStyle.dropDownFillMode"  (selectionChange)="selectionChange($event)">
                         </kendo-dropdownlist>
                     </kendo-floatinglabel>
                 </div>
@@ -107,7 +107,7 @@
         <!-- TPA Content -->
         <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'TPA'">
             <!-- TPA Claims Grid -->
-            <div class="mt-1">
+            <div class="mt-1" *ngIf="!isConfirmationClicked">
                 <h5>Select claims to refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
                     <cms-vendor-refund-claims-list [claimsListData$]="claimsListData$" [pageSizes]="pageSizes"
@@ -115,17 +115,18 @@
                         (loadClaimsListEvent)="loadClaimsListGrid($event)"></cms-vendor-refund-claims-list>
                 </div>
             </div>
+            <div *ngIf="isConfirmationClicked"> 
             <!-- TPA Claims Refund Form -->
-            <div class="flex-row">
-                <div class="flex-col-6 flex-col mt-2">
+            <div class="flex-row" >
+                <div class="flex-col-6 flex-col">
                     <div class="flex-row">
-                        <div class="flex-col text-center mb-1">
+                        <div class="flex-col text-center mt-2 mb-2">
                             <button kendoButton [primary]="true" look="flat" aria-label="Select different Payments"
-                                class="button-lg"> Select different Payments
+                                class="button-lg" (click)="selectDiffPayments()" > Select different Payments
                             </button>
                         </div>
                     </div>
-                    <div class="flex-row align-items-center justify-content-between mt-1">
+                    <div class="flex-row align-items-center justify-content-between ">
                         <div class="flex-col flex-col-2">
                             <h5>Refund 1</h5>
                         </div>
@@ -282,11 +283,12 @@
                         (loadClaimsListEvent)="loadClaimsListGrid($event)"></cms-vendor-refund-claims-list>
                 </div>
             </div>
+            </div>
         </div>
 
         <!-- INS Content -->
         <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'INS'">
-            <div class="mt-1">
+            <div class="mt-1" *ngIf="!isConfirmationClicked">
                 <h5>Select all premium included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
                     <cms-vendor-refund-insurance-premium-list [premiumsListData$]="premiumsListData$"
@@ -295,10 +297,11 @@
                         (loadPremiumsListEvent)="loadPremiumsListGrid($event)"></cms-vendor-refund-insurance-premium-list>
                 </div>
             </div>
+            <div *ngIf="isConfirmationClicked"> 
             <div class="flex-row">
-                <div class="flex-col text-center mb-1">
+                <div class="flex-col flex-col-6 text-center mt-2 mb-2">
                     <button kendoButton [primary]="true" look="flat" aria-label="Select different Payments"
-                        class="button-lg"> Select different Payments
+                        class="button-lg" (click)="selectDiffPayments()"> Select different Payments
                     </button>
                 </div>
             </div>
@@ -313,8 +316,8 @@
                                 <label class="k-checkbox-label" for="spots-payment">This is a SPOTS payment</label>
                             </span>
                         </div>
-                        <div class="flex-col">
-                            <table class=" info-table-custom left_right_align mb-3">
+                        <div class="flex-col  mb-3">
+                            <table class=" info-table-custom left_right_align">
                                 <caption hidden> Refund Information</caption>
                                 <tr hidden>
                                     <th scope="col">Fields</th>
@@ -352,7 +355,7 @@
                     </div>
                 </div>
             </div>
-            <div class="flex-row">
+            <div class="flex-row  mb-3">
                 <div class="flex-col  add_grid_section">
                     <h5>Enter refund amount for selected premium:</h5>
                     <cms-vendor-refund-selected-premium-list></cms-vendor-refund-selected-premium-list>
@@ -412,11 +415,12 @@
                         (loadPremiumsListEvent)="loadPremiumsListGrid($event)"></cms-vendor-refund-insurance-premium-list>
                 </div>
             </div>
+            </div>
         </div>
 
         <!-- TAX Content -->
         <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'TAX'">
-            <div class="mt-3">
+            <div class="mt-1" *ngIf="!isConfirmationClicked">
                 <h5>Select all premiums included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
                     <cms-vendor-refund-insurance-premium-list [premiumsListData$]="premiumsListData$"
@@ -425,10 +429,11 @@
                         (loadPremiumsListEvent)="loadPremiumsListGrid($event)"></cms-vendor-refund-insurance-premium-list>
                 </div>
             </div>
+            <div *ngIf="isConfirmationClicked"> 
             <div class="flex-row">
-                <div class="flex-col flex-col-6 text-center mb-1">
+                <div class="flex-col flex-col-6 text-center mt-2 mb-2">
                     <button kendoButton [primary]="true" look="flat" aria-label="Select different Payments"
-                        class="button-lg"> Select different Payments
+                        class="button-lg" (click)="selectDiffPayments()"> Select different Payments
                     </button>
                 </div>
             </div>
@@ -438,8 +443,8 @@
                         <div class="flex-col align-items-center justify-content-start">
                             <h5>Refund Information</h5>
                         </div>
-                        <div class="flex-col">
-                            <table class=" info-table-custom left_right_align mb-3">
+                        <div class="flex-col mb-3">
+                            <table class=" info-table-custom left_right_align ">
                                 <caption hidden> Refund Information</caption>
                                 <tr hidden>
                                     <th scope="col">Fields</th>
@@ -464,7 +469,7 @@
                     </div>
                 </div>
             </div>
-            <div class="flex-row">
+            <div class="flex-row  mb-3">
                 <div class="flex-col add_grid_section">
                     <cms-vendor-refund-insurance-premium-list [premiumsListData$]="premiumsListData$"
                         [pageSizes]="pageSizes" [sortValue]="sortValuePremiums" [sortType]="sortType"
@@ -526,11 +531,12 @@
                         (loadPremiumsListEvent)="loadPremiumsListGrid($event)"></cms-vendor-refund-insurance-premium-list>
                 </div>
             </div>
+            </div>
         </div>
 
         <!-- RX Content -->
         <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'RX'"> 
-            <div class="mt-3">
+            <div class="mt-1" *ngIf="!isConfirmationClicked">
                 <h5>Select all claims included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
                     <cms-vendor-refund-client-claims-list [clientClaimsListData$]="clientClaimsListData$" [pageSizes]="pageSizes"
@@ -538,12 +544,12 @@
                         (loadClientClaimsListEvent)="loadClientClaimsListGrid($event)"></cms-vendor-refund-client-claims-list>
                 </div>
             </div>
-
+            <div *ngIf="isConfirmationClicked"> 
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
-                    <div class=" text-center mt-1 mb-1">
+                    <div class=" text-center mt-2 mb-2">
                         <button kendoButton [primary]="true" look="flat" aria-label="Select different Payments"
-                            class="button-lg"> Select different Payments
+                            class="button-lg" (click)="selectDiffPayments()"> Select different Payments
                         </button>
                     </div>
                 </div>
@@ -561,9 +567,9 @@
                     </span>
                 </div>
             </div>
-            <div class="flex-row">
+            <div class="flex-row mb-3">
                 <div class="flex-col flex-col-6">
-                    <table class=" info-table-custom left_right_align mb-3">
+                    <table class=" info-table-custom left_right_align ">
                         <caption hidden> Refund Information</caption>
                         <tr hidden>
                             <th scope="col">Fields</th>
@@ -596,7 +602,7 @@
                     </table>
                 </div>
             </div>
-            <div class="flex-row">
+            <div class="flex-row mb-3">
                 <div class="flex-col">
                     <h5>Enter quantity, days supply, and amount refunded</h5>
                     <div class="app-c-table">
@@ -672,7 +678,7 @@
 
                 </div>
             </div>
-            <div class="flex-row">
+            <div class="flex-row mb-3">
                 <div class="flex-col">
                     <div class="flex-row">
                         <div class="flex-col flex-col-3">
@@ -726,6 +732,7 @@
                 </div>
 
             </div>
+            </div>
         </div>
 
 
@@ -735,15 +742,15 @@
 
 <kendo-dialog-actions>
 
-    <div class="justify-content-end align-items-center">
+    <div class="justify-content-end align-items-center" *ngIf="isConfirmationClicked">
         <span class="mr-2">0 payment(s) selected</span>
         <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel </button>
         <button kendoButton [primary]="true" aria-label="Add" class=""> Add </button>
     </div>
 
-    <div class="justify-content-end align-items-center">
+    <div class="justify-content-end align-items-center" *ngIf="!isConfirmationClicked">
         <span class="mr-2">2 refund(s) to be added</span>
-        <button kendoButton [primary]="true" aria-label="Confirm Selections" class=""> Confirm Selections
+        <button kendoButton [primary]="true" aria-label="Confirm Selections"  (click)="confirmationClicked()"> Confirm Selections
         </button>
     </div>
 

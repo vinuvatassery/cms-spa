@@ -59,6 +59,7 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
+
     this.loadClaimsListGrid();
   }
 
@@ -70,11 +71,12 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
       this.sortType
     );
   }
-  loadClaimsList
-  (    skipCountValue: number,
+  loadClaimsList (   
+    skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
-    sortTypeValue: string) {
+    sortTypeValue: string
+    ) {
       this.isClaimsLoaderShow = true;
       const gridDataRefinerValue = {
         skipCount: skipCountValue,
@@ -85,7 +87,7 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     this.loadClaimsListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
-  
+ 
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
