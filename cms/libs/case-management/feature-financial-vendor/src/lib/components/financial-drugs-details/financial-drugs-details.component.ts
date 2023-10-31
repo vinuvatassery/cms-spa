@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { DrugsFacade, ManufacturerDrugs, VendorFacade, VendorInsurancePlanFacade } from '@cms/case-management/domain';
+import { DrugsFacade, ManufacturerDrugs } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -19,12 +19,12 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   @Input() dialogTitle: any;
   saveButtonText: any;
   @Input() vendorDetails$!: Observable<any>;
+  @Input() deliveryMethodCodes: any;
   @Output() close = new EventEmitter<any>();
 
   drug = new ManufacturerDrugs();
   drugForm!: FormGroup;
   isSubmitted: boolean = false;
-  deliveryMethodCodes: any[] = ["Tablet", "Capsule", "Liquid", "Injection"];
   ndcMaskFormat: string = "00000-0000-00"
   isLoading = false;
 
@@ -37,9 +37,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   }
 
   constructor(
-    private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
-    private readonly vendorFacade: VendorFacade,
     private formBuilder: FormBuilder,
     private readonly loaderService: LoaderService,
     private readonly drugsFacade: DrugsFacade,
@@ -56,7 +54,6 @@ export class FinancialDrugsDetailsComponent implements OnInit {
     } else {
       this.saveButtonText = "Update"
     }
-
   }
 
   createDrugForm() {
@@ -129,18 +126,18 @@ export class FinancialDrugsDetailsComponent implements OnInit {
     this.isValidateForm = true;
 
     if (this.drugForm.valid) {
-      var finalData = this.mapFormValues();
+      let finalData = this.mapFormValues();
       this.showLoader();
 
       this.drugsFacade.addDrug(finalData).subscribe({
         next: (response: any) => {
           this.onCancelClick();
-          var notificationMessage = response.message;
+          let notificationMessage = response.message;
           this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
           this.hideLoader();
           this.drugForm.reset();
           this.isValidateForm = false;
-          this.cdr.detectChanges();
+          this.cd.detectChanges();
         },
         error: (err: any) => {
           this.hideLoader();

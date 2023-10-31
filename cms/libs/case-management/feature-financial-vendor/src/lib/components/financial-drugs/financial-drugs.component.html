@@ -209,7 +209,7 @@
 class="app-c-modal app-c-modal-sm app-c-modal-np">
 <kendo-dialog-titlebar (close)="clickCloseAddEditFinancialDrugsDetails()">  {{dialogTitle}} Drug
 </kendo-dialog-titlebar>
-<cms-financial-drugs-details [vendorId]="vendorId" [dialogTitle]="dialogTitle" [vendorDetails$]="vendorDetails$" (close)="clickCloseAddEditFinancialDrugsDetails()"> </cms-financial-drugs-details>
+<cms-financial-drugs-details [vendorId]="vendorId" [dialogTitle]="dialogTitle" [vendorDetails$]="vendorDetails$" [deliveryMethodCodes]="deliveryMethodLovs" (close)="clickCloseAddEditFinancialDrugsDetails()"> </cms-financial-drugs-details>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isFinancialDrugsReassignShow" (close)="clickCloseReassignFinancialDrugs()"
