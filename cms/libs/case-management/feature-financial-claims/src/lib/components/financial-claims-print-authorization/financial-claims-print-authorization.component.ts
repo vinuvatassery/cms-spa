@@ -20,7 +20,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
   reconcileCount: number = 0;
   printAdviceLetterData: any
   letterContent:any;
-  letterContentLoader:boolean= true;
+  letterContentLoader:boolean= false;
   currentIndex:any=0;
   reconcileArray:any=[]; 
     /** Input properties **/
@@ -191,8 +191,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
     this.reconcileArray=[]; 
     this.returnResultFinalPrintList[this.currentIndex].paymentRequestIds.forEach((paymentRequestId:any)=>{
       let payments = this.finalPrintList.filter(x=> x.paymentRequestId === paymentRequestId);
-      this.reconcileArray.push
-      ({
+      this.reconcileArray.push({
           paymentRequestId:payments[0].paymentRequestId,
           checkRequestId :payments[0].checkRequestId,
           vendorId :payments[0].vendorId,
