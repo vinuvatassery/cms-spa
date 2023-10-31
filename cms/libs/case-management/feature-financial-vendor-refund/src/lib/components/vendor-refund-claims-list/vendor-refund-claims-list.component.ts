@@ -48,7 +48,39 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   
-
+  claimsListData = [
+    {
+      invoiceId: '#213213213',
+      providerName:'providerName', 
+      taxID:'234234', 
+      paymentMethod:'XXXX', 
+      serviceStartDate:'XX/XX/XXXX', 
+      serviceEndDate:'XX/XX/XXXX', 
+      serviceCost:'XXXX.XX', 
+      totalCost:'XXXX.XX', 
+      totalDue:'XXXX.XX', 
+      paymentStatus:'XXXX', 
+      pcaCode:'XXXXXX', 
+      entryDate:'XX/XX/XXXX',   
+      by: 'by',
+    },
+    {
+      invoiceId: '#213213213',
+      providerName:'providerName', 
+      taxID:'234234', 
+      paymentMethod:'XXXX', 
+      serviceStartDate:'XX/XX/XXXX', 
+      serviceEndDate:'XX/XX/XXXX', 
+      serviceCost:'XXXX.XX', 
+      totalCost:'XXXX.XX', 
+      totalDue:'XXXX.XX', 
+      paymentStatus:'XXXX', 
+      pcaCode:'XXXXXX', 
+      entryDate:'XX/XX/XXXX',   
+      by: 'by',
+    },
+    
+  ]
   ngOnInit(): void {
     this.loadClaimsListGrid();
   }

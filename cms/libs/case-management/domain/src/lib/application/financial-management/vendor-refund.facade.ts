@@ -41,6 +41,11 @@ export class FinancialVendorRefundFacade {
     field: this.sortValueClaims,
   }];
 
+  public sortValuePremiums = 'batch';
+  public sortPremiumsList: SortDescriptor[] = [{
+    field: this.sortValuePremiums,
+  }];
+
   private vendorRefundProcessDataSubject = new Subject<any>();
   vendorRefundProcessData$ = this.vendorRefundProcessDataSubject.asObservable();
 
@@ -55,6 +60,9 @@ export class FinancialVendorRefundFacade {
 
   private claimsListDataSubject =  new Subject<any>();
   claimsListData$ = this.claimsListDataSubject.asObservable();
+
+  private premiumsListDataSubject =  new Subject<any>();
+  premiumsListData$ = this.premiumsListDataSubject.asObservable();
   /** Private properties **/
  
   /** Public properties **/
@@ -148,6 +156,18 @@ export class FinancialVendorRefundFacade {
     this.financialVendorRefundDataService.loadClaimsListService().subscribe({
       next: (dataResponse) => {
         this.claimsListDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  }
+  loadPremiumsListGrid(){
+    this.financialVendorRefundDataService.loadPremiumsListService().subscribe({
+      next: (dataResponse) => {
+        this.premiumsListDataSubject.next(dataResponse);
         this.hideLoader();
       },
       error: (err) => {

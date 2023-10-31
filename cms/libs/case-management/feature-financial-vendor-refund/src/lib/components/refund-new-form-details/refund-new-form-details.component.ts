@@ -10,6 +10,14 @@ import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 export class RefundNewFormDetailsComponent{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
+  selectedRefundType : any;
+  public refundType  = [
+    "TPA",
+    "INS",
+    "TAX",
+    "RX",
+  ];
+  premiumsListData$ =   this.financialVendorRefundFacade.premiumsListData$;
   claimsListData$ =
     this.financialVendorRefundFacade.claimsListData$;
     sortValue = this.financialVendorRefundFacade.sortValueClaims;
@@ -18,6 +26,9 @@ export class RefundNewFormDetailsComponent{
     gridSkipCount = this.financialVendorRefundFacade.skipCount;
     sort = this.financialVendorRefundFacade.sortClaimsList;
     state!: State;
+
+    sortValuePremiums = this.financialVendorRefundFacade.sortValuePremiums;
+    sortPremiums = this.financialVendorRefundFacade.sortPremiumsList;
   clientSearchResult =[
 
     {
@@ -78,5 +89,10 @@ export class RefundNewFormDetailsComponent{
   loadClaimsListGrid() {
  
     this.financialVendorRefundFacade.loadClaimsListGrid();
+  }
+
+  loadPremiumsListGrid() {
+ 
+    this.financialVendorRefundFacade.loadPremiumsListGrid();
   }
 }
