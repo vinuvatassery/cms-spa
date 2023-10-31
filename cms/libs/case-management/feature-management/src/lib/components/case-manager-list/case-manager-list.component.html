@@ -26,11 +26,11 @@
               </kendo-popover>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="pNumber" title="PNumber" [width]="100" *ngIf="managementTab"></kendo-grid-column>
+        <kendo-grid-column field="pNumber" title="PNumber" [width]="120" *ngIf="managementTab"></kendo-grid-column>
         <kendo-grid-column field="domainCode" title="Domain" [width]="100" *ngIf="managementTab || isCerForm"></kendo-grid-column>
         <kendo-grid-column field="assisterGroup" title="Assister Group" [width]="160"
           *ngIf="managementTab"></kendo-grid-column>
-        <kendo-grid-column *ngIf="managementTab" field="assignmentStartDate" title="Effective Date" [width]="100"
+        <kendo-grid-column *ngIf="managementTab" field="assignmentStartDate" title="Effective Date" [width]="150"
          >
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.assignmentStartDate | date: 'MM/dd/yyyy'}} {{dataItem.assignmentEndDate ? '-' : ''}}
@@ -40,7 +40,7 @@
         <kendo-grid-column title="Assigning Case Manager" [width]="180" *ngIf="managementTab"></kendo-grid-column>
         <kendo-grid-column field="city" title="City" [width]="100" *ngIf="managementTab"></kendo-grid-column>
         <kendo-grid-column field="county" title="County" [width]="100" *ngIf="managementTab"></kendo-grid-column>
-        <kendo-grid-column field="creatorId" title="By" [width]="60" [sortable]="false" *ngIf="managementTab">
+        <kendo-grid-column field="creatorId" title="By" [width]="70" class="text-center" [sortable]="false" *ngIf="managementTab">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button *ngIf="dataItem?.creatorId" kendoButton [primary]="true" class="avatar-sm-btn c-default"
               kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
@@ -54,7 +54,7 @@
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column *ngIf="!managementTab" field="phone" title="Phone" [width]="100"></kendo-grid-column>
-        <kendo-grid-column field="clientCaseId" title="Options" [width]="90" class="text-center" [sticky]="true">
+        <kendo-grid-column field="clientCaseId" title="Options" [width]="100" class="text-center" [sticky]="true">
           <ng-template kendoGridCellTemplate let-manager let-clientCaseId="field">
             <kendo-dropdownbutton [data]="newAppActions" icon="more-vertical" title="More option" *ngIf="!managementTab"
               class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"

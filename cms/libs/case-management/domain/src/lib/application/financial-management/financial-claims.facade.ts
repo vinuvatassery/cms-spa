@@ -274,7 +274,8 @@ export class FinancialClaimsFacade {
 
   loadFinancialClaimsInvoiceListService(paymentRequestId : string, skipcount: number,  maxResultCount: number,  sort: string,  sortType: string,claimsType : string){
 
-    this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType,claimsType).subscribe({
+    this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType,claimsType)
+    .subscribe({
       next: (dataResponse) => {
         const gridView = {
           data: dataResponse["items"],
@@ -790,7 +791,12 @@ deleteClaimService(tpaInvoiceId: any, typeCode: string) {
         return of(false);
       })
     );
-  }
+}
+
+loadFinancialClaimsInvoiceList(paymentRequestId : string, skipcount: number,  maxResultCount: number,  sort: string,  sortType: string,claimsType : string){
+  return this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType,claimsType) 
+}
+
   CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
     this.warrantNumberChangeLoaderSubject.next(true);
     this.financialClaimsDataService.CheckWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
