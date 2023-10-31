@@ -259,7 +259,6 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   }
 
   onVendorNameClick(){
-    this.paymentRequestId = event
     this.providerDetailsDialog = this.dialogService.open({
       content: this.providerDetailsTemplate,
       animation:{
@@ -909,6 +908,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           });
           if(this.isEdit){
             this.isRecentClaimShow = true;
+            this.clientName = val.clientName;
+            this.vendorName = val.vendorName;
+
           }
           this.claimForm.controls['parentReasonForException'].setValue(val.exceptionReasonCode);
           this.claimForm.controls['parentExceptionFlag'].setValue(val.exceptionFlag);
@@ -1061,10 +1063,12 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   }
 
   onProviderValueChange($event: any) {
-    this.isRecentClaimShow = false;
     this.vendorId = $event.vendorId;
     this.vendorName = $event.vendorName;
     this.providerTin = $event;
+    if (this.clientId != null && this.vendorId != null) {
+      this.isRecentClaimShow = true;
+    }
     this.checkProviderNotEligibleException($event);
   }
   clientValueChange($event: any) {

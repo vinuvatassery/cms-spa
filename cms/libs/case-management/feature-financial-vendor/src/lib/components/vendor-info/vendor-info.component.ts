@@ -156,6 +156,7 @@ export class VendorInfoComponent implements OnInit {
          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, this.profileInfoTitle.split(' ')[0] + ' information updated.');
           this.openEditDailog=false;
           this.cdr.detectChanges();
+          this.onVendorEditSuccessStatus.emit(true);
         }
         else {
           this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.WARNING, this.profileInfoTitle.split(' ')[0] + ' information not updated.');
