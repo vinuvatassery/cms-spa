@@ -57,11 +57,11 @@ export class FinancialClaimsPrintAuthorizationComponent {
       this.printAdviceLetterData = this.loadPrintLetterModelData();
       this.loadPrintLetterContent(this.printAdviceLetterData);
     }
-    this.letterContentList$.subscribe((response:any)=>{
+    this.letterContentList$?.subscribe((response:any)=>{
       this.letterContent = response.letterContent;
       this.ref.detectChanges();
     });
-    this.letterContentLoader$.subscribe((response:any)=>{
+    this.letterContentLoader$?.subscribe((response:any)=>{
       this.letterContentLoader = response;
       this.ref.detectChanges();
     })

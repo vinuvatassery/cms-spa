@@ -171,7 +171,7 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalGeneralFacade.submitGeneralRequests(requests);
   }
 
-  getVendorDetail(approvalEntityId:any){
-    this.pendingApprovalGeneralFacade.getVendorDetails(approvalEntityId);
+  getVendorDetail(userObject: any){
+    this.pendingApprovalGeneralFacade.getVendorDetails(userObject.approvalEntityId,userObject.subTypeCode);
   }
 }

@@ -54,29 +54,29 @@
         <kendo-grid-column
           field="detailMsgConsentFlag"
           title="Detailed Messages OK?"
-          [width]="150"
+          [width]="180"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           {{dataItem.detailMsgConsentFlag === 'Y' ? 'Yes' : 'No'}}  
          </ng-template>   
         </kendo-grid-column>
-        <kendo-grid-column field="smsTextConsentFlag" title="SMS Text OK?" [width]="100">
+        <kendo-grid-column field="smsTextConsentFlag" title="SMS Text OK?" [width]="120">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.smsTextConsentFlag === 'Y' ? 'Yes' : 'No'}}  
            </ng-template>   
         </kendo-grid-column>
-        <kendo-grid-column field="otherPhoneNote" title="Note" [width]="100" [sortable]="false" >
+        <kendo-grid-column field="otherPhoneNote" title="Note" [width]="140" [sortable]="false" >
         </kendo-grid-column>
         <kendo-grid-column [sortable]="true"
           field="effectiveDate"
           title="Effective Date"
-          [width]="100"
+          [width]="140"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           {{dataItem.effectiveDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}  
          </ng-template>   
         </kendo-grid-column>
-        <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false" >
+        <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem >
             <button *ngIf="dataItem?.creatorId"
               kendoButton

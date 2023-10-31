@@ -4,7 +4,7 @@
             <kendo-scrollview [data]="returnResultFinalPrintList" [width]="width" [height]="height" [arrows]="true" [pageable]="false" 
             (itemChanged)="onItemChange($event)" [activeIndex]="currentIndex">
                   <ng-template let-item="item">                      
-                        <div *ngIf="!letterContentLoader">
+                        <div *ngIf="!letterContentLoader && returnResultFinalPrintList != null">
                               <div class="slidertitle-bar">
                                     <p><strong>{{item.paymentNbr}}) {{item.vendorName}} </strong> <label class="ml-1 text-muted">${{item.totalBatchAmount}}</label>
                                           <label class="ml-1 text-muted"> {{item.paymentMethodCode}}</label></p>
