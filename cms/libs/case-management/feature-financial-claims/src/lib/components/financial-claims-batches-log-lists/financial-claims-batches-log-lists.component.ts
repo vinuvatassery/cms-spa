@@ -55,6 +55,9 @@ export class FinancialClaimsBatchesLogListsComponent
   vendorId:any;
   clientId:any;
   clientName:any;
+  @Input() letterContentList$ :any;
+  @Input() letterContentLoader$ :any;
+  @Output() loadTemplateEvent = new EventEmitter<any>();
   PaymentStatusList = [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved];
   public bulkMore = [
     {
@@ -492,11 +495,11 @@ export class FinancialClaimsBatchesLogListsComponent
       this.disablePrwButton = true;
     }
   }
-  selectUnSelectPayment(dataItem: any) {
+   selectUnSelectPayment(dataItem: any) {
     if (!dataItem.selected) {
       let exist = this.selectedDataRows.PrintAdviceLetterUnSelected.filter((x: any) => x.vendorAddressId === dataItem.vendorAddressId).length;
       if (exist === 0) {
-        this.selectedDataRows.PrintAdviceLetterUnSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
+        this.selectedDataRows.PrintAdviceLetterUnSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true,'batchId': dataItem.batchId });
       }
         this.selectedDataRows?.PrintAdviceLetterSelected?.forEach((element: any) => {
           if (element.paymentRequestId === dataItem.paymentRequestId) {
@@ -512,11 +515,11 @@ export class FinancialClaimsBatchesLogListsComponent
       });
         let exist = this.selectedDataRows.PrintAdviceLetterSelected.filter((x: any) => x.vendorAddressId === dataItem.vendorAddressId).length;
         if (exist === 0) {
-          this.selectedDataRows.PrintAdviceLetterSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
+          this.selectedDataRows.PrintAdviceLetterSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true,'batchId': dataItem.batchId });
         }
 
     }
-  }
+   }
 
   clientRecentClaimsModalClicked(
     template: TemplateRef<unknown>,
@@ -549,5 +552,9 @@ export class FinancialClaimsBatchesLogListsComponent
 
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event);
+  }
+
+  loadEachLetterTemplate(event:any){
+    this.loadTemplateEvent.emit(event);
   }
 }

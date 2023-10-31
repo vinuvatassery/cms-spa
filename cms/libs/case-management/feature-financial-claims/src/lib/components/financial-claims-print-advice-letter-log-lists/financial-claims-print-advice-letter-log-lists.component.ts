@@ -106,7 +106,7 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
     if(!selected){
       this.noOfRecordToPrint = this.noOfRecordToPrint - 1;
       this.noOfRecordToPrintEvent.emit(this.noOfRecordToPrint);
-      this.unCheckedPaymentRequest.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true});
+      this.unCheckedPaymentRequest.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true,'batchId':dataItem.batchId});
       if(!this.selectAll){
       this.selectedDataIfSelectAllUnchecked = this.selectedDataIfSelectAllUnchecked.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
 
@@ -117,7 +117,7 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
       this.noOfRecordToPrintEvent.emit(this.noOfRecordToPrint);
       this.unCheckedPaymentRequest = this.unCheckedPaymentRequest.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
       if(!this.selectAll){
-      this.selectedDataIfSelectAllUnchecked.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true});
+      this.selectedDataIfSelectAllUnchecked.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true,'batchId':dataItem.batchId});
       }          
     }
     let returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
@@ -248,6 +248,5 @@ export class FinancialClaimsPrintAdviceLetterLogListsComponent implements OnInit
         logic: "or"
     });
   }
-
 
 }

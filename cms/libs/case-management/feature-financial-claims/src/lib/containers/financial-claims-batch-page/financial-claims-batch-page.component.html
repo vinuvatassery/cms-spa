@@ -2,7 +2,11 @@
  [loader$]="paymentByBatchGridLoader$" [pageSizes]="pageSizes" [sortValue]="sortValue"
  [sortType]="sortType" [sort]="sort" [paymentBatchName$]="paymentBatchName$"
  (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
- (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-claims-batches-log-lists>
+ (onProviderNameClickEvent)="onProviderNameClick($event)"
+ (loadTemplateEvent) = "loadEachLetterTemplate($event)"
+ [letterContentList$]="letterContentList$"
+ [letterContentLoader$]="letterContentLoader$">
+</cms-financial-claims-batches-log-lists>
 
  <ng-template #providerDetailsTemplate>
     <cms-financial-claims-provider-info

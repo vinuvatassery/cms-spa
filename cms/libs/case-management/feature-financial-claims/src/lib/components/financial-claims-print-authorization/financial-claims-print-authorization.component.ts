@@ -37,6 +37,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
   @Output() onClosePrintAdviceLetterEvent = new EventEmitter<any>();
   @Output() selectUnSelectPayment  = new EventEmitter<any>();
   @Output() loadTemplateEvent  = new EventEmitter<any>();
+  @Output() loadTemplateEventLog  = new EventEmitter<any>();
 
   /** Constructor **/
   constructor(private readonly paymentsFacade: PaymentsFacade,
@@ -158,9 +159,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
 
   onPrintAdviceLetterClicked(buttonText: string) {
     if (buttonText == 'PRINT') {
-      this.items.PrintAdviceLetterUnSelected =  this.items.PrintAdviceLetterUnSelected.filter((x:any)=>x.selected);
-      this.items.PrintAdviceLetterSelected =  this.items.PrintAdviceLetterSelected.filter((x:any)=>x.selected);
-      this.generateAndPrintAdviceLetter(this.items);
+      this.generateAndPrintAdviceLetter(this.returnResultFinalPrintList[this.currentIndex]);
     } else {
       this.reconcilePaymentsAndPrintAdviceLetter();
     }
@@ -209,11 +208,8 @@ export class FinancialClaimsPrintAuthorizationComponent {
       .subscribe({
         next: (data: any) => {
           if (data) {
-
-            let printReconcileRecords = this.printAdviceLetterData?.PrintAdviceLetterGenerateInfo?.filter((x: any) => x.isPrintAdviceLetter === true)
-            let request = { 'PrintAdviceLetterGenerateInfo': printReconcileRecords, 'batchId': this.printAdviceLetterData.batchId };
             if(this.printCount > 0){
-            this.generateAndPrintAdviceLetter(request);
+            this.generateAndPrintAdviceLetter(this.returnResultFinalPrintList[this.currentIndex]);
             }
           }
           this.onClosePrintAdviceLetterClicked();

@@ -50,7 +50,10 @@
                                 [exportButtonShow$]="exportButtonShow$"
                                 (loadFinancialClaimsAllPaymentsListEvent)="loadFinancialClaimsAllPaymentsListGrid($event)"
                                 (exportGridDataEvent)="exportClaimsPaymentsGridData()"
-                                (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-claims-all-payments-list>
+                                (onProviderNameClickEvent)="onProviderNameClick($event)"
+                                (loadTemplateEvent) = "loadEachLetterTemplate($event)"
+                                [letterContentList$]="letterContentList$"
+                                [letterContentLoader$]="letterContentLoader$"></cms-financial-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
