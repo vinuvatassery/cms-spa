@@ -1,3 +1,4 @@
+import { PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DrugCategoryCode, VendorFacade } from '@cms/case-management/domain';
@@ -6,7 +7,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
 import { LovFacade } from '@cms/system-config/domain';
-import { PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
 
 @Component({
   selector: 'cms-financial-drugs',
