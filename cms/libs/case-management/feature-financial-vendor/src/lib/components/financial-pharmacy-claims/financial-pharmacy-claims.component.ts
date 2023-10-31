@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
+import { ConfigurationProvider, DocumentFacade } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-grid';
@@ -14,6 +15,9 @@ import { LovFacade } from '@cms/system-config/domain';
 export class FinancialPharmacyClaimsComponent {
   /* Input Properties */
   @Input() vendorId!: string;
+  @Output() exportGridDataEvent = new EventEmitter<any>();
+  @Input() exportButtonShow$ : any
+  @Input() claimsType: any;
   
   /* public properties */
   formUiStyle: UIFormStyle = new UIFormStyle();
@@ -43,9 +47,18 @@ export class FinancialPharmacyClaimsComponent {
   paymentRequestTypes: any = [];
   sortColumn = 'Entry Date';
   sortDir = 'Ascending';
-   
+ 
+   searchText = '';
+  filteredByColumnDesc = '';
+  sortColumnDesc = 'Batch #';
+  columnChangeDesc = 'Default Columns';
+  showExportLoader = false;
+
    /** Constructor **/
    constructor(private readonly claimsFacade: ClaimsFacade,
+   private documentFacade :  DocumentFacade,
+   private route: Router,
+   private readonly  cdr :ChangeDetectorRef,
     private readonly router: Router,  private readonly lovFacade: LovFacade,
     ) {}
    
@@ -164,5 +177,37 @@ export class FinancialPharmacyClaimsComponent {
       });
     }
   }
+   
+  onExportclaims(){
+    const params = {
+      SortType: this.sortType,
+      Sorting: this.sortValue,
+      Filter: JSON.stringify(this.filter)
+    };
 
+    this.documentFacade.getExportFile(params,`vendors/${this.vendorId}/payment-batches` , 'insurance-payments')
+  }
+  private defaultGridState() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      filter: { logic: 'and', filters: [] },
+    }
+  }
+  resetGrid() {
+    this.defaultGridState();
+    this.sortValue = 'batchName';
+    this.sortType = 'asc';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
+    this.filter = [];
+    this.searchText = '';
+    this.filteredByColumnDesc = '';
+    this.columnChangeDesc = 'Default Columns';
+    this.loadClaimsListGrid();
+  }
 }
+
+
+
