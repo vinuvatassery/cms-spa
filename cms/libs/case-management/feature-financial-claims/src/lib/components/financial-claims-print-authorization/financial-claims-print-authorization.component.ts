@@ -89,6 +89,13 @@ export class FinancialClaimsPrintAuthorizationComponent {
           if (data.length > 0) {
             data.forEach((result, index: number) => {
               result.paymentNbr = index + 1;
+              if(!this.printOption){
+              this.items.forEach((currentItem: any) => { 
+                if(result.paymentRequestIds.includes(currentItem.paymentRequestId)){
+                  result.warrantNumberChange = this.assignWarrantNumberChange(currentItem);
+              }
+             });
+            }
             });
             this.returnResultFinalPrintList = data;
             this.printCount = this.returnResultFinalPrintList.filter(x => x.isPrintAdviceLetter === true).length;     
@@ -104,6 +111,14 @@ export class FinancialClaimsPrintAuthorizationComponent {
         },
       });
   }
+  assignWarrantNumberChange(currentItem: any): any {
+    if(currentItem.warrantNumberChanged){
+      return true;
+    }else if(currentItem.warrantNumberChanged == undefined){
+      return false;
+    }
+  }
+
 
   loadPrintLetterModelData() {
     let PrintAdviceLetterInfo: any = [];
@@ -112,30 +127,11 @@ export class FinancialClaimsPrintAuthorizationComponent {
       batchId:this.batchId,
       PrintAdviceLetterGenerateInfo:[]
     };
-    PrintAdviceLetterInfo.push({'vendorId':item.vendorId,'paymentRequestId':item.paymentRequestId,'batchId':item.batchId,
+    PrintAdviceLetterInfo.push({'vendorId':item.vendorId,'paymentRequestId':item.paymentRequestId,'batchId':item.batchId, 'warrantNumberChange': item.warrantNumberChanged,
     'vendorAddressId':item.entityId,'clientId':item.clientId,'isPrintAdviceLetter':item.isPrintAdviceLetter, 'checkNbr':item.checkNbr});
     });
     this.printAdviceLetterData.PrintAdviceLetterGenerateInfo = PrintAdviceLetterInfo;
     return this.printAdviceLetterData;
-  }
-
-  reconcilePaymentsData(selectedPrintList: any[]) {
-    let selectedProviders: any = [];
-    selectedPrintList.forEach(item => {
-      let selectedProvider = {
-        checkRequestId: item.checkRequestId,
-        vendorId: item.vendorId,
-        entityId: item.entityId,
-        paymentReconciledDate: item.paymentReconciledDate,
-        paymentSentDate: item.paymentSentDate,
-        checkNbr: item.checkNbr,
-        comments: item.comments,
-        paymentRequestId: item.paymentRequestId,
-        batchId: this.batchId
-      };
-      selectedProviders.push(selectedProvider);
-    });
-    return selectedProviders;
   }
 
   onClosePrintAdviceLetterClicked() {
@@ -175,7 +171,14 @@ export class FinancialClaimsPrintAuthorizationComponent {
             window.open(fileUrl, "_blank");
             this.ref.detectChanges();
           }
-          this.onClosePrintAdviceLetterClicked();
+          if(this.currentIndex == this.returnResultFinalPrintList.length - 1){
+            this.onClosePrintAdviceLetterClicked();
+            }else{
+              let event = {
+                index:  this.returnResultFinalPrintList.indexOf(this.returnResultFinalPrintList[this.currentIndex + 1]),
+              };
+              this.onItemChange(event);
+            }
           this.loaderService.hide();
         },
         error: (err: Error) => {
@@ -189,8 +192,8 @@ export class FinancialClaimsPrintAuthorizationComponent {
   reconcilePaymentsAndPrintAdviceLetter() {
     this.loaderService.show();
     this.reconcileArray=[]; 
-    this.returnResultFinalPrintList[this.currentIndex].paymentRequestIds.forEach((paymentRequestId:any)=>{
-      let payments = this.finalPrintList.filter(x=> x.paymentRequestId === paymentRequestId);
+    this.returnResultFinalPrintList[this.currentIndex].paymentRequestIds?.forEach((paymentRequestId:any)=>{
+      let payments = this.finalPrintList?.filter(x=> x.paymentRequestId === paymentRequestId);
       this.reconcileArray.push({
           paymentRequestId:payments[0].paymentRequestId,
           checkRequestId :payments[0].checkRequestId,
@@ -211,9 +214,20 @@ export class FinancialClaimsPrintAuthorizationComponent {
             this.generateAndPrintAdviceLetter(this.returnResultFinalPrintList[this.currentIndex]);
             }
           }
+          if(this.currentIndex == this.returnResultFinalPrintList.length - 1){
           this.onClosePrintAdviceLetterClicked();
-          this.ref.detectChanges();
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled!");
+          }else{
+            if(this.printCount == 0){
+            let event = {
+              index:  this.returnResultFinalPrintList.indexOf(this.returnResultFinalPrintList[this.currentIndex + 1]),
+            };
+            this.onItemChange(event);
+          }
+        }
+        this.ref.detectChanges();
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled!");
+        this.returnResultFinalPrintList[this.currentIndex].warrantNumberChange = false;
+        this.ref.detectChanges();
         },
         error: (err: Error) => {
           this.loaderService.hide();
@@ -226,6 +240,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
   onItemChange(event:any){
     this.loadTemplateEvent.emit(this.returnResultFinalPrintList[event.index]);
     this.currentIndex = event.index;
+    this.ref.detectChanges();
   }
 }
 
