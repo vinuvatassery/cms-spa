@@ -25,7 +25,7 @@
             {{dataItem.dateOfHire | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By"  [columnMenu]="false" [width]="80" [sortable]="false">
+        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By"  [columnMenu]="false" [width]="70" class="text-center" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton

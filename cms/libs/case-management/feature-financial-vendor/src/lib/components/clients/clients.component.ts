@@ -8,7 +8,8 @@ import {
 import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-grid';
 import { Subject, debounceTime } from 'rxjs';
-import { DocumentFacade } from '@cms/shared/util-core';
+import { ConfigurationProvider, DocumentFacade } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Component({
   selector: 'cms-clients',
@@ -109,7 +110,9 @@ export class ClientsComponent implements OnInit, OnChanges{
 
   /** Constructor **/
   constructor(private readonly insuranceProviderFacade: InsuranceProviderFacade,private readonly router: Router,
-    private readonly lovFacade: LovFacade, private readonly  cdr :ChangeDetectorRef,private documentFacade:DocumentFacade) {}
+    private readonly lovFacade: LovFacade, private readonly  cdr :ChangeDetectorRef,private documentFacade:DocumentFacade,
+    private readonly configProvider: ConfigurationProvider,
+    private readonly intl: IntlService) {}
 
   ngOnInit(): void {
     this.lovFacade.getGroupLovs();
@@ -139,8 +142,8 @@ export class ClientsComponent implements OnInit, OnChanges{
   }
 
   performClientSearch(data: any) {
-    this.defaultGridState();
-    const operator = 'startswith';
+    this.defaultGridState();  
+    const operator = (['eilgibilityStartDate', 'eligibilityEndDate']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
 
     this.filterData = {
       logic: 'and',
@@ -178,6 +181,7 @@ export class ClientsComponent implements OnInit, OnChanges{
 
   onClientSearch(searchValue: any) {
     const isDateSearch = searchValue.includes('/');
+    searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
     this.setFilterBy(false, searchValue, []);
     this.searchSubject.next(searchValue);
@@ -335,5 +339,21 @@ export class ClientsComponent implements OnInit, OnChanges{
         this.cdr.detectChanges()
       }
     })
+  }
+
+   
+  private isValidDate = (searchValue: any) => isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(new Date(searchValue), this.configProvider?.appSettings?.dateFormat);
+      }
+      else {
+        return '';
+      }
+    }
+
+    return searchValue;
   }
 }

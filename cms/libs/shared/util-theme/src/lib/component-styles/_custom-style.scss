@@ -717,6 +717,7 @@ color: $app-primary-font-color;
 
 .client-tab-bar-wrappers {
   box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.14);
+  min-height: 30px;
 }
 
 .custom-client-tab-main-wrapper {
@@ -760,7 +761,7 @@ color: $app-primary-font-color;
   overflow-y: hidden;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
-  min-height: 32px;
+  // min-height: 29px;
   .k-scrollview {
     border: 0px !important;
   }
