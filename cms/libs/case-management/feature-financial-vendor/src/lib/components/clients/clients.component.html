@@ -121,7 +121,7 @@
              </kendo-grid-string-filter-menu>
          </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="preferredContact" title="Preferred Contact" [width]="150">
+        <kendo-grid-column field="preferredContact" title="Preferred Contact" [width]="180">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.preferredContact?.includes('@') ? dataItem.preferredContact : dataItem.preferredContact | phone}}
           </ng-template>
@@ -166,7 +166,7 @@
         </kendo-dropdownlist>
      </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="eilgibilityStartDate" title="Eligibility Start Date" [width]="150">
+        <kendo-grid-column field="eilgibilityStartDate" title="Eligibility Start Date" [width]="180">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.eilgibilityStartDate| date: 'MM/dd/yyyy'}}
           </ng-template>
@@ -179,7 +179,7 @@
             </common-grid-cell-date-range-filter>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="100">
+        <kendo-grid-column field="eligibilityEndDate" title="Eligibility End Date" [width]="180">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.eligibilityEndDate| date: 'MM/dd/yyyy'}}
           </ng-template>

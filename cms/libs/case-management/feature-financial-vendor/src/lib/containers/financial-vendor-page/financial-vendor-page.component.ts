@@ -224,7 +224,7 @@ export class FinancialVendorPageComponent implements OnInit {
       next: (response: any) => {
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal(this.providerTypeCode);
-        var notificationMessage = "Vendor profile added successfully";
+        let notificationMessage = "Vendor profile added successfully";
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
         this.cdr.detectChanges();
       },

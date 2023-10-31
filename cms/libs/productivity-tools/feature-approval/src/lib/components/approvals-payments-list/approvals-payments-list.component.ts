@@ -21,8 +21,8 @@ import {
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { LovFacade, UserManagementFacade, UserDataService } from '@cms/system-config/domain';
-import { ApprovalTypeCode, FinancialManagerCode, ApprovalLimitPermissionCode, PendingApprovalPaymentTypeCode } from '@cms/productivity-tools/domain';
+import { LovFacade, UserManagementFacade, UserDataService, UserDefaultRoles } from '@cms/system-config/domain';
+import { ApprovalTypeCode, ApprovalLimitPermissionCode, PendingApprovalPaymentTypeCode } from '@cms/productivity-tools/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Component({
@@ -173,7 +173,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
       next: (value) => {
         this.selectedPaymentType = value[0].lovCode;
         switch(this.selectedPaymentType) {
-          case PendingApprovalPaymentTypeCode.MedicalClaim:{
+          case PendingApprovalPaymentTypeCode.TpaClaim:{
             this.approvalPermissionCode = ApprovalLimitPermissionCode.MedicalClaimPermissionCode;
              break;
           }
@@ -401,7 +401,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
     this.approveBatchCount= 0;
     this.sendbackBatchCount= 0;
     switch(this.selectedPaymentType) {
-      case PendingApprovalPaymentTypeCode.MedicalClaim:{
+      case PendingApprovalPaymentTypeCode.TpaClaim:{
         this.approvalPermissionCode = ApprovalLimitPermissionCode.MedicalClaimPermissionCode;
          break;
       }
@@ -800,15 +800,15 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
   {
 
     let role;
-    if(this.userManagementFacade.hasRole(FinancialManagerCode.FinancialManager2))
+    if(this.userManagementFacade.hasRole(UserDefaultRoles.FinancialManagerL2))
     {
       this.approvalTypeCode = ApprovalTypeCode.L2Approval;
-      role = FinancialManagerCode.FinancialManager2;
+      role = UserDefaultRoles.FinancialManagerL2;
     }
-    else if(this.userManagementFacade.hasRole(FinancialManagerCode.FinancialManager1) && !role)
+    else if(this.userManagementFacade.hasRole(UserDefaultRoles.FinancialManagerL1) && !role)
     {
       this.approvalTypeCode = ApprovalTypeCode.L1Approval;
-      role = FinancialManagerCode.FinancialManager1;
+      role = UserDefaultRoles.FinancialManagerL1;
     }
     const approvalLimit = this.userManagementFacade.getUserPermissionMetaData(this.approvalPermissionCode, role);
     if(approvalLimit && this.approvalTypeCode === ApprovalTypeCode.L1Approval)
@@ -911,7 +911,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges{
         type = 'premiums/dental';
         break;
       }
-      case PendingApprovalPaymentTypeCode.Pharmacy: {
+      case PendingApprovalPaymentTypeCode.PharmacyClaim: {
         type = 'claims/pharmacy';
         break;
       }      
