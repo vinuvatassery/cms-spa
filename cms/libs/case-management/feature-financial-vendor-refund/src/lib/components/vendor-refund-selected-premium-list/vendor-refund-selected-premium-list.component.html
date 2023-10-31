@@ -1,0 +1,41 @@
+<div class="app-c-table">
+  <kendo-grid [resizable]="true" [groupable]="false" [reorderable]="true" [resizable]="true"
+  [columnMenu]="{ filter: true }" [data]="selectedPremium">
+  <kendo-grid-column field="coverageDates" title="Coverage Dates" [width]="200">
+      <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+          Total
+      </ng-template>
+  </kendo-grid-column>
+  <kendo-grid-column field="warrant" title="Original Warrant #" [width]="160">
+  </kendo-grid-column>
+  <kendo-grid-column field="amountPaid" title="Original Amount Paid" [width]="180">
+      <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+          <span class="tableamountview"> <strong>$</strong> XXXX.XX </span>
+      </ng-template>
+  </kendo-grid-column>
+  <kendo-grid-column field="pmtMethod" title="Pmt. Method" [width]="140"> </kendo-grid-column>
+  <kendo-grid-column field="pmtStatus" title="Pmt. Status" [width]="130"> </kendo-grid-column>
+  <kendo-grid-column field="PCA" title="PCA" [width]="120"> </kendo-grid-column>
+  <kendo-grid-column field="mailCode" title="Mail Code" [width]="120"> </kendo-grid-column>
+  <kendo-grid-column field="refundAmount" title="Refund Amount" [width]="150">
+      <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+          <span class="tableamountview"> <strong>$</strong> XXXX.XX </span>
+      </ng-template>
+  </kendo-grid-column>
+  <kendo-grid-column field="by" title="By" [width]="75" class="text-center" [sticky]="true">
+      <ng-template kendoGridCellTemplate let-dataItem>
+          <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
+              [popover]="onUserProfileDetailsHovered" showOn="hover"
+              [attr.aria-label]="dataItem.creatorId">
+              <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
+          </button>
+          <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+              <ng-template kendoPopoverBodyTemplate>
+                  <common-user-profile-card
+                      [userId]="dataItem.creatorId"></common-user-profile-card>
+              </ng-template>
+          </kendo-popover>
+      </ng-template>
+  </kendo-grid-column>
+</kendo-grid>
+    </div>

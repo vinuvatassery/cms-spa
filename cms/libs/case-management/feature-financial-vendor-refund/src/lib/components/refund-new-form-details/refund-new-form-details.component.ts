@@ -62,21 +62,7 @@ export class RefundNewFormDetailsComponent{
       dob: '23/12/2023',
     },
   ];
-  selectedPremium =[
-    {
-    coverageDates:'XX/XX/XXXX-XX/XX/XXXX', 
-    warrant:'XXXXXXXXX', 
-    amountPaid:'XXXXXXXXX', 
-    groupID:'XXXXXXXXX', 
-    paymentID:'XXXXXXXXX', 
-    pmtMethod:'ACH', 
-    pmtStatus:'Recon', 
-    PCA:'XXXXXX', 
-    mailCode:'XXXX',   
-    by: 'by',
-  },
 
-];
   @Output() modalCloseAddEditRefundFormModal = new EventEmitter();
 
   constructor(  private readonly financialVendorRefundFacade: FinancialVendorRefundFacade) {}
