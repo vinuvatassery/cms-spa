@@ -100,7 +100,7 @@
       </common-grid-cell-date-range-filter>
     </ng-template>
   </kendo-grid-column>
-  <kendo-grid-column field="creatorId" title="By" [filterable]="false" [width]="50" [sortable]="false">
+  <kendo-grid-column field="creatorId" title="By" class="text-center" [filterable]="false" [width]="50" [sortable]="false">
     <ng-template kendoGridCellTemplate let-dataItem>
       <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
         [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">

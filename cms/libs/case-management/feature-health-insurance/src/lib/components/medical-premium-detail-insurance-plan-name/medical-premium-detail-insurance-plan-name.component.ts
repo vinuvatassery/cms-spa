@@ -70,7 +70,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   }
 
   onHealthInsuranceTypeChanged() {
-    var selectedType = this.newhealthInsuranceForm.controls['insuranceType'].value;
+    let selectedType = this.newhealthInsuranceForm.controls['insuranceType'].value;
     if (selectedType == "QUALIFIED_HEALTH_PLAN") {
       this.newhealthInsuranceForm.controls['termDate']
         .setValidators([
@@ -163,13 +163,12 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     this.isValidateForm = true;
 
     if (this.newhealthInsuranceForm.valid) {
-      var finalData = this.mapFormValues();
-      this.insuranceFacade.addPlan(finalData);
+      let finalData = this.mapFormValues();
       this.showLoader();
 
       this.insuranceFacade.addPlan(finalData).subscribe({
         next: (response: any) => {
-          var notificationMessage = response.message;
+          let notificationMessage = response.message;
           this.InsurancePlanClose();
           this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
           this.hideLoader();

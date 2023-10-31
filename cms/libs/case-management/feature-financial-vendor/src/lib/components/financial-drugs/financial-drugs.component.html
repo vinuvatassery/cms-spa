@@ -66,7 +66,7 @@
                     </kendo-grid-string-filter-menu>
                   </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column field="deliveryMethodDesc" title="Delivery Method" [width]="120">
+                <kendo-grid-column field="deliveryMethodDesc" title="Delivery Method" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     {{ dataItem.deliveryMethodDesc }}
                   </ng-template>
@@ -85,7 +85,7 @@
                     </kendo-dropdownlist>
                   </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column field="hiv" title="HIV Drugs?" [width]="100">
+                <kendo-grid-column field="hiv" title="HIV Drugs?" [width]="140">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     {{ dataItem.hiv | yesOrNo }}
                   </ng-template>
@@ -104,7 +104,7 @@
                     </kendo-dropdownlist>
                   </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column field="hepatitis" title="Hep Drugs?" [width]="100">
+                <kendo-grid-column field="hepatitis" title="Hep Drugs?" [width]="140">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     {{ dataItem.hepatitis | yesOrNo }}
                   </ng-template>
@@ -142,7 +142,7 @@
                     </kendo-dropdownlist>
                   </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column  [sortable]="false" [sticky]="true" field="Option" title="Options" [columnMenu]="false" [width]="60" class="text-center">
+                <kendo-grid-column  [sortable]="false" [sticky]="true" field="Option" title="Options" [columnMenu]="false" [width]="70" class="text-center">
                     <ng-template kendoGridCellTemplate let-dataItem>
                       <kendo-dropdownbutton [data]="emailBillingAddressActions" icon="more-vertical"
                         class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -156,12 +156,8 @@
                               <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                               <label> {{ buttondataItem.text }} </label>
                             </button>
-                          </ng-container>
-
-
-
-
-                        </ng-template>
+                          </ng-container> 
+                          </ng-template>
                       </kendo-dropdownbutton>
                     </ng-template>
                   </kendo-grid-column>

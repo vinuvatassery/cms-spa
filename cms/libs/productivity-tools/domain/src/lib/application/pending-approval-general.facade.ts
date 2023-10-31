@@ -136,10 +136,10 @@ export class PendingApprovalGeneralFacade {
       }
     );
   }
-  getVendorDetails(vendorId: string) {
+  getVendorDetails(vendorId: string,subTypeCode: string) {
     this.showLoader();
-    this.pendingApprovalGeneralService.getVendorDetails(vendorId).subscribe({
-      next: (vendorDetail: any) => {
+    this.pendingApprovalGeneralService.getVendorDetails(vendorId, subTypeCode).subscribe({
+      next: (vendorDetail: any) => {    
         this.selectedVendorSubject.next(vendorDetail);
         this.hideLoader();
       },
