@@ -107,6 +107,12 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     this.loadApprovalGeneralListGrid();
     this.pendingApprovalGeneralTypeCode=PendingApprovalGeneralTypeCode;
     this.getLoggedInUserProfile();
+    this.submitGenerealRequest$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+          this.onCloseSubmitGeneralRequestClicked();
+          this.loadApprovalGeneralListGrid();
+      }
+    });
   }
   ngOnChanges(): void {
     this.state = {
@@ -370,7 +376,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       this.pageValidationMessage = null;
       this.approvalsPaymentsGridUpdatedResult = this.approvalsPaymentsGridPagedResult.filter((x: any) => x.status == this.approveStatus || x.status == this.denyStatus);
       this.caseReassignmentsCount =  (this.approvalsPaymentsGridUpdatedResult.filter((x:any) => x.approvalTypeCode === this.pendingApprovalGeneralTypeCode.GeneralCaseReassignment)).length;
-      this.listManagementItemsCount =  (this.approvalsPaymentsGridUpdatedResult.filter((x:any) => x.approvalTypeCode === this.pendingApprovalGeneralTypeCode.GeneralAddtoMasterList)).length;
+      this.listManagementItemsCount =  (this.approvalsPaymentsGridUpdatedResult.filter((x:any) => x.approvalTypeCode === this.pendingApprovalGeneralTypeCode.GeneralAddToMasterList)).length;
       this.exceptionsCount =  (this.approvalsPaymentsGridUpdatedResult.filter((x:any) => x.approvalTypeCode === this.pendingApprovalGeneralTypeCode.GeneralException)).length;
       this.onSubmitClicked(this.submitRequestModalDialog);
     }
@@ -541,7 +547,8 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         statusCode: element.status,
         denialDescription: element.sendBackNotes ? element.sendBackNotes : null,
         approvedUserId: this.loginUserId,
-        asignedCaseWorkerId : element.caseWorkerId
+        asignedCaseWorkerId : element.caseWorkerId,
+        entityType : element.approvalEntityType
       };
       requests.push(request);
     }
@@ -551,12 +558,6 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   submit(data:any)
   {
     this.submitGeneralRequestsEvent.emit(data);
-    this.submitGenerealRequest$.subscribe((response: any) => {
-      if (response !== undefined && response !== null) {
-          this.onCloseSubmitGeneralRequestClicked();
-          this.loadApprovalGeneralListGrid();
-      }
-    });
   }
 
 }
