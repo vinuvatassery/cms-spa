@@ -207,6 +207,40 @@ export class FinancialPharmacyClaimsComponent {
     this.columnChangeDesc = 'Default Columns';
     this.loadClaimsListGrid();
   }
+
+  getDummData(){
+    return [
+      {
+        batchName: "1",
+        itemNbr: "item name 1",
+        clientFullName: "Good client",
+        PharmacyName: " Pharmacy2 ",
+        insuranceFirstName:"insurancename",
+        totalAmountPaid:"23466",
+        amountPaid:"23455665"
+
+
+
+
+
+      },
+      {
+        batchName: "2",
+        itemNbr: "item name 1",
+        clientFullName: "Good client"
+      },
+      {
+        batchName: "3",
+        itemNbr: "item name 1",
+        clientFullName: "Good client"
+      },
+      {
+        batchName: "4",
+        itemNbr: "item name 1",
+        clientFullName: "bad client"
+      },
+    ]
+  }
 }
 
 

@@ -80,6 +80,9 @@
                 </kendo-grid-column>
 
                 <kendo-grid-column field="vendorName" title="Pharmacy Name" [width]="270"> 
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem.vendorName}}
+                </ng-template>
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                     <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                       [extra]="false" operator="eq">
@@ -120,7 +123,7 @@
               
                 <kendo-grid-column field="totalAmountPaid" title="Total Amount Paid" [width]="180"> 
                   <ng-template kendoGridCellTemplate let-dataItem>
-                    <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmountPaid | kendoNumber: 'n2'}}</span>
+                    <span class="tableamountview">{{dataItem.totalAmountPaid | kendoNumber: 'c'}}</span>
                   </ng-template>
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                     <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -216,6 +219,9 @@
                 </kendo-grid-column>
 
                 <kendo-grid-column field="amountPaid" title="Amount Paid" [width]="140"> 
+                    <ng-template kendoGridCellTemplate let-dataItem>
+                    <span class="tableamountview">{{dataItem.amountPaid | kendoNumber: 'c'}}</span>
+                    </ng-template>
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                     <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                       [extra]="false" operator="eq">
