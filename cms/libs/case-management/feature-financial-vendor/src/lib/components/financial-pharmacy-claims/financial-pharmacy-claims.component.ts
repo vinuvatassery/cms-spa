@@ -6,6 +6,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-grid';
 import { LovFacade } from '@cms/system-config/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'cms-financial-pharmacy-claims',
   templateUrl: './financial-pharmacy-claims.component.html',
@@ -105,6 +106,15 @@ export class FinancialPharmacyClaimsComponent {
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
+  public columnChange(e: any) {
+    this.cdr.detectChanges();
+  }
+  onColumnReorder($event: any) {
+    this.columnsReordered = true;
+  }
+  public rowClass = (args:any) => ({
+    "table-row-disabled": (args.dataItem.activeFlag != StatusFlag.Yes),
+  });
 
   dropdownFilterChange(
     field: string,
@@ -167,7 +177,7 @@ export class FinancialPharmacyClaimsComponent {
 
   rowClickNavigation(field: string, dataItem: any){
     if(field === 'batchName'){
-      this.router.navigate(['financial-management/pharmacy-claims/batch'], {
+      this.router.navigate(['financial-management/pharmacy-claims/batch/items'], {
         queryParams: { bid: dataItem.batchId },
       });
     }
@@ -177,15 +187,16 @@ export class FinancialPharmacyClaimsComponent {
       });
     }
   }
-   
   onExportclaims(){
-    const params = {
-      SortType: this.sortType,
-      Sorting: this.sortValue,
-      Filter: JSON.stringify(this.filter)
-    };
+    this.showExportLoader = true;
+    this.exportGridDataEvent.emit();
 
-    this.documentFacade.getExportFile(params,`vendors/${this.vendorId}/payment-batches` , 'insurance-payments')
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
   private defaultGridState() {
     this.state = {
@@ -207,40 +218,7 @@ export class FinancialPharmacyClaimsComponent {
     this.columnChangeDesc = 'Default Columns';
     this.loadClaimsListGrid();
   }
-
-  getDummData(){
-    return [
-      {
-        batchName: "1",
-        itemNbr: "item name 1",
-        clientFullName: "Good client",
-        PharmacyName: " Pharmacy2 ",
-        insuranceFirstName:"insurancename",
-        totalAmountPaid:"23466",
-        amountPaid:"23455665"
-
-
-
-
-
-      },
-      {
-        batchName: "2",
-        itemNbr: "item name 1",
-        clientFullName: "Good client"
-      },
-      {
-        batchName: "3",
-        itemNbr: "item name 1",
-        clientFullName: "Good client"
-      },
-      {
-        batchName: "4",
-        itemNbr: "item name 1",
-        clientFullName: "bad client"
-      },
-    ]
-  }
+  
 }
 
 

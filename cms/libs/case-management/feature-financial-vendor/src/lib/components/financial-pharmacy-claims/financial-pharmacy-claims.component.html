@@ -27,8 +27,12 @@
             [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true" 
             [columnMenu]="{ filter: true }"
             [sort]="state.sort"
+            [filter]="state.filter"
             (dataStateChange)="dataStateChange($event)"
+            (columnVisibilityChange)="columnChange($event)"
             (filterChange)="filterChange($event)"
+            (columnReorder)="onColumnReorder($event)"
+            [rowClass]="rowClass"
             [data]="claimsGridView$ | async">
 
                 <kendo-grid-column field="batchName" title="Batch #" [width]="150">
@@ -123,7 +127,7 @@
               
                 <kendo-grid-column field="totalAmountPaid" title="Total Amount Paid" [width]="180"> 
                   <ng-template kendoGridCellTemplate let-dataItem>
-                    <span class="tableamountview">{{dataItem.totalAmountPaid | kendoNumber: 'c'}}</span>
+                    <span class="tableamountview"><strong></strong>{{dataItem.totalAmountPaid | kendoNumber: 'c'}}</span>
                   </ng-template>
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                     <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -220,7 +224,7 @@
 
                 <kendo-grid-column field="amountPaid" title="Amount Paid" [width]="140"> 
                     <ng-template kendoGridCellTemplate let-dataItem>
-                    <span class="tableamountview">{{dataItem.amountPaid | kendoNumber: 'c'}}</span>
+                    <span class="tableamountview"><strong></strong>{{dataItem.amountPaid | kendoNumber: 'c'}}</span>
                     </ng-template>
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                     <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
