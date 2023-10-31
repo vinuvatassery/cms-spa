@@ -508,7 +508,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       cptCode: new FormControl(this.medicalClaimServices.cptCode, [
         Validators.required,
       ]),
-      pcaCode: new FormControl(this.medicalClaimServices.pcaCode),
+      pcaCode: new FormControl({value: this.medicalClaimServices.pcaCode, disabled:true}),
       serviceDescription: new FormControl(
         this.medicalClaimServices.serviceDescription,
         [Validators.required]
@@ -819,10 +819,10 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
             SnackBarNotificationType.ERROR,
             'An error occure whilie adding claim'
           );
-          this.pcaExceptionDialogService.close();
+          this.pcaExceptionDialogService?.close();
         } else {
           this.closeAddEditClaimsFormModalClicked(true);
-          this.pcaExceptionDialogService.close();
+          this.pcaExceptionDialogService?.close();
           this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,

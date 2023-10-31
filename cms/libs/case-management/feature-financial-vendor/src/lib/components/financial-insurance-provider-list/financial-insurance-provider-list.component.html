@@ -1,6 +1,13 @@
 <div>
   <div class="flex-col flex-space-bw align-items-center">
     <h5 class="title-md mb-0 text-capital">Insurance Providers</h5>
+    <span class="right-overlay-export">
+      <button kendoButton [primary]="true" look="flat" aria-label="Export"  class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
+        <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
+        
+        <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
+      </button>
+    </span>
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
@@ -126,14 +133,6 @@
       (click)="clickOpenAddEditInsurancePlanDetails()">
       Insurance Provider
     </button>
-
-    <span class="right-overlay-export">
-      <button kendoButton [primary]="true" look="flat" aria-label="Export"  class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
-        <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
-        
-        <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
-      </button>
-    </span>
   </div>
 </div>
 
