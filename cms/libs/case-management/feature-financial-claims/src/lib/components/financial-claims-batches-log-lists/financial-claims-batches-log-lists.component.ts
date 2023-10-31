@@ -116,9 +116,9 @@ export class FinancialClaimsBatchesLogListsComponent
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   isEdit!: boolean;
   paymentRequestId!: string;
-  private addEditClaimsFormDialog: any;
-  @ViewChild('addEditClaimsDialog')
+@ViewChild('addEditClaimsDialog')
   private addEditClaimsDialog!: TemplateRef<any>;
+  private addEditClaimsFormDialog: any;
 
 
   gridColumns: { [key: string]: string } = {
@@ -600,9 +600,9 @@ export class FinancialClaimsBatchesLogListsComponent
     });
   }
   modalCloseAddEditClaimsFormModal(result: any) {
-    if (result) {
-      this.loadBatchLogListGrid();
-      this.addEditClaimsFormDialog.close();
+    if (result === true) {
+      this.loadBatchLogListGrid();    
     }
+    this.addEditClaimsFormDialog.close();
   }
 }
