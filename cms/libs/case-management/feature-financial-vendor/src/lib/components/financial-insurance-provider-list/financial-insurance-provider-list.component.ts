@@ -194,7 +194,7 @@ export class FinancialInsuranceProviderListComponent implements OnInit  {
     this.isInsurancePlanDeleteShow = false;
   }
   onClickedExport(){
-    debugger
+    
     const params = {
       SortType: this.sortType,
       Sorting: this.sortValue,

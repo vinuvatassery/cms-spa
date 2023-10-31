@@ -11,7 +11,7 @@
         (dataStateChange)="dataStateChange($event)">
 
   
-        <kendo-grid-column field="vendorName" title="Service Provider Name" [width]="150" [sticky]="true" [filterable]="false">
+        <kendo-grid-column field="vendorName" title="Service Provider Name" [width]="180" [sticky]="true" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button kendoButton look="flat" class="card-link-button" [attr.aria-label]="dataItem.vendorName" kendoPopoverAnchor
               [popover]="myPopover" (click)="getCarrierContactInfo(dataItem.vendorId)">
@@ -20,23 +20,23 @@
         </kendo-grid-column>
         <kendo-grid-column field="invoiceId" title="Invoice ID" [width]="150" [filterable]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="ServiceStartDate" title="Service Start Date" [width]="130" [filterable]="false">
+        <kendo-grid-column field="ServiceStartDate" title="Service Start Date" [width]="150" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.serviceStartDate | date:'MM/dd/YYYY' }}
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="serviceEndDate" title="Service End Date" [width]="130" [filterable]="false">
+        <kendo-grid-column field="serviceEndDate" title="Service End Date" [width]="150" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.serviceEndDate | date:'MM/dd/YYYY' }}
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="cptCode" title="CPT Code" [width]="150" [filterable]="false">
         </kendo-grid-column>       
-        <kendo-grid-column field="serviceCost" title="Service Cost" [width]="100" [filterable]="false">
+        <kendo-grid-column field="serviceCost" title="Service Cost" [width]="140" [filterable]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="amountDue" title="Amount Due" [width]="100" [filterable]="false">
+        <kendo-grid-column field="amountDue" title="Amount Due" [width]="140" [filterable]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="120" [filterable]="false">    
+        <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="140" [filterable]="false">    
         </kendo-grid-column>
         <kendo-grid-column field="entryDate" title="Entry Date" [width]="130" [sortable]="false" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
@@ -46,9 +46,9 @@
        
         <kendo-grid-column field="CheckNbr" title="Warrant" [width]="130" [sortable]="false" [filterable]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="serviceDesc" title="Service Description" [width]="150" [sortable]="false" [filterable]="false">
+        <kendo-grid-column field="serviceDesc" title="Service Description" [width]="200" [sortable]="false" [filterable]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="80" [sortable]="false" [columnMenu]="false" [sticky]="true">
+        <kendo-grid-column field="by" title="By" [width]="70" class="text-center" [sortable]="false" [columnMenu]="false" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton

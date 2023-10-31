@@ -28,6 +28,8 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   reconcileGridLists$ = this.financialClaimsFacade.reconcileDataList$;
   reconcileBreakoutSummary$ = this.financialClaimsFacade.reconcileBreakoutSummary$;
   reconcilePaymentBreakoutList$ = this.financialClaimsFacade.reconcilePaymentBreakoutList$;
+  warrantNumberChange$ = this.financialClaimsFacade.warrantNumberChange$;
+  warrantNumberChangeLoader$ = this.financialClaimsFacade.warrantNumberChangeLoader$;
   batchId:any;
   claimsType: any;
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
@@ -80,8 +82,10 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   }
 
   loadReconcileListGrid(event: any) {
+    
     this.dataExportParameters = event;
     const params = new GridFilterParam(event.skipCount, event.pageSize, event.sortColumn, event.sortType, JSON.stringify(event.filter)); 
+   
     this.financialClaimsFacade.loadReconcileListGrid(this.batchId,this.claimsType,params);    
   }
 
@@ -93,6 +97,7 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
 
   loadReconcilePaymentBreakoutList(event: any)
   {
+    
     event.claimsType=this.claimsType;
     this.financialClaimsFacade.loadReconcilePaymentBreakoutListGrid(event);
   }
@@ -138,6 +143,9 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
       const fileName = (this.claimsType[0].toUpperCase() + this.claimsType.substr(1).toLowerCase())  +' Claims Reconciling Payment'
       this.documentFacade.getExportFile(vendorPageAndSortedRequest,`claims/${this.claimsType}/payment-batches/${this.batchId}/reconcile-payments` , fileName)
     }
+  }
+  warrantNumberChange(data:any){
+    this.financialClaimsFacade.CheckWarrantNumber(data.batchId,data.checkNbr,data.vendorId);   
   }
   
 }

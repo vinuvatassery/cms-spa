@@ -186,8 +186,7 @@ pageselectionchange(data: any) {
   }
 
   onOpenBusinessLogicClicked()
-  {
-    this.onCloseProviderSearchClicked()
+  { 
     this.buildVendorForm();
     this.isOpenedbusinessInfo = true;
   }

@@ -7,7 +7,6 @@ export * from './lib/components/case-navigation/case-navigation.component';
 export * from './lib/components/last-visited-cases/last-visited-cases.component';
 export * from './lib/components/case360-header/case360-header.component';
 export * from './lib/components/new-case/new-case.component';
-//export * from './lib/components/re-assign-case/re-assign-case.component';
 export * from './lib/containers/case360-page/case360-page.component';
 export * from './lib/containers/case-page/case-page.component';
 export * from './lib/containers/case-detail-page/case-detail-page.component';
