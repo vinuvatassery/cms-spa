@@ -44,7 +44,7 @@
         <kendo-grid-column
           field="startDate"
           title="Effective Date"
-          [width]="100"
+          [width]="140"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           <span *ngIf="dataItem.activeFlag == 'Y' ;else endDateBlock">
@@ -55,7 +55,7 @@
           </ng-template>
         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="50">
+        <kendo-grid-column field="by" title="By" [width]="70" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
