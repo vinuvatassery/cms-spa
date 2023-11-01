@@ -5,6 +5,7 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  ChangeDetectorRef
 } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
@@ -62,7 +63,7 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
 
   userLevel = 1;
-
+  pendingApprovalCount = 0;
   state!: State;
   approvalsGeneralLists$ =
     this.pendingApprovalGeneralFacade.approvalsGeneralList$;
@@ -106,7 +107,8 @@ export class ApprovalPageComponent implements OnInit {
     private documentFacade: DocumentFacade,
     private readonly userDataService: UserDataService,
     private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly cd: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
     this.getUserRole();
@@ -116,6 +118,12 @@ export class ApprovalPageComponent implements OnInit {
         this.navigationMenuFacade.getAllPendingApprovalPaymentCount(
           this.userLevel
         );
+      }
+    });
+    this.pendingApprovalCount$.subscribe((response: any) => {
+      if (response) {
+        this.pendingApprovalCount = response;
+        this.cd.detectChanges();
       }
     });
   }
