@@ -58,6 +58,8 @@
                                 [unbatchPremiums$]="unbatchPremiums$"
                                 (deletePaymentEvent)="deletePayment($event)"
                                 (unBatchPremiumEvent)="unBatchPremiumClick($event)"
+                                [exportButtonShow$]="exportButtonShow$"
+                                (exportGridDataEvent)="exportClaimsPaymentsGridData()"
                                 (loadFinancialPremiumsAllPaymentsListEvent)="loadFinancialPremiumsAllPaymentsListGrid($event)"
                                 (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-all-payments-list>
                             </div>

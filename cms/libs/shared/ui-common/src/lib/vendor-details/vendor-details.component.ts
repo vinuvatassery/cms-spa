@@ -129,7 +129,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.medicalProviderForm.controls['providerName'].setValue(this.vendorDetails.vendorName);
     this.medicalProviderForm.controls['vendorId'].setValue(this.vendorDetails.vendorId);
   }
-  
+
   onToggleAddNewContactClick() {
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl('', Validators.required),
@@ -379,6 +379,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     if (this.clinicNameNotApplicable) {
       this.medicalProviderForm.controls['providerName'].setValue(null);
       this.medicalProviderForm.controls['providerName'].disable();
+      this.firstLastNameNotApplicable = false;
+      this.onNameChecked();
     }
     else {
       this.medicalProviderForm.controls['providerName'].enable();
@@ -391,6 +393,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls['lastName'].setValue(null);
       this.medicalProviderForm.controls['firstName'].disable();
       this.medicalProviderForm.controls['lastName'].disable();
+      this.clinicNameNotApplicable = false;
+      this.onClinicNameChecked();
     }
     else {
       this.medicalProviderForm.controls['firstName'].enable();
@@ -407,10 +411,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
 
 
   searchClinic(clinicName: any) {
-    if (clinicName != '') {
       this.selectedClinicVendorId = null;
       this.searchClinicVendorClicked.emit(clinicName);
-    }
   }
 
   closeVendorModal() {
@@ -459,7 +461,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls['npiNbr'].setValidators([Validators.required]);
       this.medicalProviderForm.controls['npiNbr'].updateValueAndValidity();
     }
-  
+
   }
 
   mapAddressContact(formValues: any) {
@@ -595,9 +597,9 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
   onPharmacyPhysicalAddressChecked() {
     let isPharmacyPhysicalAddressChecked = this.medicalProviderForm.controls['physicalAddressFlag'].value;
-    if (isPharmacyPhysicalAddressChecked) {  
+    if (isPharmacyPhysicalAddressChecked) {
       this.medicalProviderForm.controls['addressLine1']
-        .setValidators([Validators.required]); 
+        .setValidators([Validators.required]);
       this.medicalProviderForm.controls['addressLine1'].updateValueAndValidity();
 
       this.medicalProviderForm.controls['city']

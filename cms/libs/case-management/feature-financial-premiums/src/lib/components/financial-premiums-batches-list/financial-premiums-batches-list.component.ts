@@ -65,7 +65,7 @@ export class FinancialPremiumsBatchesListComponent
     },
     {
       columnName: "sendBackNotes",
-      columnDesc: "Send Back Notes"        
+      columnDesc: "Send Back Notes"
     },
     {
       columnName: 'unbatchedPayments',
@@ -276,29 +276,6 @@ export class FinancialPremiumsBatchesListComponent
       ],
       logic: 'and',
     });
-  }
-
-  onChange(data: any) {
-    this.defaultGridState();
-
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedSearchColumn ?? 'batchName',
-              operator: 'startswith',
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
-    const stateData = this.state;
-    stateData.filter = this.filterData;
-    this.dataStateChange(stateData);
   }
 
   /* Private methods */
