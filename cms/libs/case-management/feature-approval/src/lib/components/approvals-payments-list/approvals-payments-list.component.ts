@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
-import { ColumnVisibilityChangeEvent, GridDataResult, RowArgs } from '@progress/kendo-angular-grid';
+import { GridDataResult, RowArgs } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -113,7 +113,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   approvalTypeCodeEnum: any = ApprovalTypeCode;
-  sortColumnDesc = 'Batch';
   gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
     batchName: 'Batch',
@@ -123,10 +122,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     totalPayments: 'Pmt Count',
     totalClaims: 'Premium Count',
     creationTime: 'Date Approval Requested',
-    premiumType: 'Premium Type',
-    premiumCount: 'Premium Count',
-    dateApprovalRequested: 'Date Approval Requested',
-    firstApprovalBy: 'First Approval By'
   };
 
   dropDownColumnsLevel1: { columnCode: string; columnDesc: string }[] = [
@@ -365,7 +360,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.state = stateData;
     this.sortColumn = this.columns[stateData.sort[0]?.field];
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
     if (stateData.filter?.filters.length > 0) {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.filter = stateFilter.value;
@@ -1059,24 +1053,5 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.route.navigate([`/financial-management/${type}/batch`], {
       queryParams: { bid: data?.paymentRequestBatchId },
     });
-  }
-  resetApprovalPaymentListGrid(){
-    this.sortValue = 'batchName';
-    this.sortType = 'asc';
-    this.setGridValueAndData();
-    this.sortColumn = 'batchName';
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
-    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
-    this.filter = [];
-    this.searchValue = '';
-    this.selectedColumn = 'ALL';
-    this.filteredByColumnDesc = '';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
-    this.columnChangeDesc = 'Default Columns';
-    this.loadApprovalPaymentsListGrid();
-  }
-  columnChange(event: ColumnVisibilityChangeEvent) {
-    const columnsRemoved = event?.columns.filter(x => x.hidden).length
-    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 }
