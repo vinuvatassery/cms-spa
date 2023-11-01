@@ -169,26 +169,6 @@ export class FinancialClaimsBatchesLogListsComponent
   getBatchLogGridActions(dataItem: any){
     return [
       {
-        buttonType: 'btn-h-primary',
-        text: 'Edit Claim',
-        icon: 'edit'
-      },
-      {
-        buttonType: 'btn-h-primary',
-        text: 'Unbatch Claim',
-        icon: 'undo',
-        disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
-        click: (data: any): void => {
-
-          if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
-            if (!this.isUnBatchClaimsClosed) {
-              this.isUnBatchClaimsClosed = true;
-              this.selected = data;
-              this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
-            }
-        },
-      },
-      {
         buttonType: 'btn-h-danger',
         text: 'Delete Claim',
         icon: 'delete',
@@ -211,6 +191,26 @@ export class FinancialClaimsBatchesLogListsComponent
           }
 
         },
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'Unbatch Claim',
+        icon: 'undo',
+        disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
+        click: (data: any): void => {
+
+          if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
+            if (!this.isUnBatchClaimsClosed) {
+              this.isUnBatchClaimsClosed = true;
+              this.selected = data;
+              this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+            }
+        },
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'Edit Claim',
+        icon: 'edit'
       },
     ];
   }
