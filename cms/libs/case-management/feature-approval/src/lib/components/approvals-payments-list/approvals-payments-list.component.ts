@@ -31,7 +31,7 @@ import {
   ApprovalTypeCode,
   ApprovalLimitPermissionCode,
   PendingApprovalPaymentTypeCode,
-} from '@cms/productivity-tools/domain';
+} from '@cms/case-management/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Component({

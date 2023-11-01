@@ -15,7 +15,7 @@ import {
   PendingApprovalGeneralFacade,
   PendingApprovalPaymentFacade,
   UserRoleType,
-} from '@cms/productivity-tools/domain';
+} from '@cms/case-management/domain';
 import {
   ReminderNotificationSnackbarService,
   ReminderSnackBarNotificationType,
