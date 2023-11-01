@@ -12,7 +12,7 @@ import { LoggingService, NotificationSnackbarService, SnackBarNotificationType }
 
   @Component({
     selector: 'cms-financial-claims-invoice-list',
-    templateUrl: './financial-claims-invoice-list.component.html', 
+    templateUrl: './financial-claims-invoice-list.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
   })
   export class FinancialClaimsInvoiceListComponent implements OnChanges {
@@ -25,7 +25,7 @@ import { LoggingService, NotificationSnackbarService, SnackBarNotificationType }
    gridFinancialClaimsInvoice$ =  this.gridFinancialClaimsInvoiceSubject.asObservable();
    serviceTitle = ''
    isFinancialClaimsInvoiceGridLoaderShow = false
-   public state!: State;  
+   public state!: State;
    sortType ="asc"
    gridDataResult!: GridDataResult;
    public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -36,7 +36,7 @@ import { LoggingService, NotificationSnackbarService, SnackBarNotificationType }
 
    }
 
-      ngOnChanges(): void {            
+      ngOnChanges(): void {
         this.state = {
           skip: 0,
           take: 5,
@@ -60,7 +60,7 @@ import { LoggingService, NotificationSnackbarService, SnackBarNotificationType }
           skipCount: skipCountValue,
           pagesize: maxResultCountValue,
           sortColumn: sortValue,
-          sortType: sortTypeValue    
+          sortType: sortTypeValue
         };
            this.financialClaimsFacade.loadFinancialClaimsInvoiceList(gridDataRefinerValue?.paymentRequestId , gridDataRefinerValue?.skipCount,   gridDataRefinerValue?.pagesize, gridDataRefinerValue?.sortColumn, gridDataRefinerValue?.sortType,this.claimsType)
            .subscribe({
@@ -76,19 +76,19 @@ import { LoggingService, NotificationSnackbarService, SnackBarNotificationType }
               this.isFinancialClaimsInvoiceGridLoaderShow = false;
               this.loggingService.logException(err)
               this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
-   
+
             },
           });
         this.gridDataHandle();
       }
 
       gridDataHandle() {
-        this.financialInvoiceList$.subscribe((data: GridDataResult) => {      
-          this.gridDataResult = data;    
+        this.financialInvoiceList$.subscribe((data: GridDataResult) => {
+          this.gridDataResult = data;
             this.isFinancialClaimsInvoiceGridLoaderShow = false;
-        });   
+        });
       }
-    
+
       loadFinancialInvoiceListGrid()
       {
         this.loadClaimsInvoices(
@@ -102,4 +102,3 @@ import { LoggingService, NotificationSnackbarService, SnackBarNotificationType }
   }
 
 
- 
