@@ -47,6 +47,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   hasInsurancePlanCreateUpdatePermission = false;
 
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
+  insuranceTypeListForPlan$ = this.lovFacade.insuranceTypelovForPlan$;
 
   constructor(private formBuilder: FormBuilder, private readonly lovFacade: LovFacade, private readonly insurancePlanFacade: InsurancePlanFacade,
     private changeDetector: ChangeDetectorRef, private readonly loggingService: LoggingService,
