@@ -14,9 +14,8 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   FinancialClaimsFacade,
-  GridFilterParam,
   PaymentBatchName,
-  PaymentStatusCode,
+  PaymentStatusCode
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {
@@ -25,6 +24,7 @@ import {
   NotificationSource,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
+import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   ColumnVisibilityChangeEvent,
@@ -131,7 +131,6 @@ export class FinancialClaimsBatchesLogListsComponent
     invoiceNbr: 'Invoice ID',
     vendorName: 'Provider Name',
     tin: 'Tax ID',
-    clientId: 'Member ID',
     clientFullName: 'Client Name',
     nameOnInsuranceCard: 'Name on Primary Insurance Card',
     serviceCount: 'Service Count',
@@ -144,18 +143,6 @@ export class FinancialClaimsBatchesLogListsComponent
     balanceAmount: 'Client Balance',
   };
 
-  paymentMethods = ['CHECK', 'ACH', 'SPOTS'];
-  paymentTypes = ['PAYMENT', 'REFUND', 'COPAYMENT', 'DEDUCTIBLE', 'FULL PAY'];
-  paymentStatusList = [
-    'SUBMITTED',
-    'PENDING_APPROVAL',
-    'DENIED',
-    'MANAGER_APPROVED',
-    'PAYMENT_REQUESTED',
-    'ONHOLD',
-    'FAILED',
-    'PAID',
-  ];
 
   paymentMethodFilter = '';
   paymentTypeFilter = '';
@@ -184,10 +171,6 @@ export class FinancialClaimsBatchesLogListsComponent
     {
       columnName: 'tin',
       columnDesc: 'Tax ID',
-    },
-    {
-      columnName: 'clientId',
-      columnDesc: 'Member ID',
     },
     {
       columnName: 'clientFullName',
@@ -237,8 +220,6 @@ export class FinancialClaimsBatchesLogListsComponent
     'amountDue',
     'serviceCost',
     'serviceCount',
-    'clientId',
-    'invoiceNbr',
     'itemNbr',
   ];
   dateColumns: any[] = [];
@@ -251,7 +232,7 @@ export class FinancialClaimsBatchesLogListsComponent
   //sorting
   sortColumn = 'itemNbr';
   sortColumnDesc = 'Item #';
-  sortDir = 'Ascending';
+  sortDir = 'Descending';
   sortColumnName = '';
 
   //filtering
@@ -265,6 +246,17 @@ export class FinancialClaimsBatchesLogListsComponent
 
   //export
   showExportLoader = false;
+
+  //LovDropdowns
+  selectedpaymentMethod: string | null = null;
+  selectedPaymentType: string | null = null;
+  selectedPaymentStatus: string | null = null;
+  paymentMethodType$ = this.lovFacade.paymentMethodType$;
+  paymentTypes$ = this.lovFacade.paymentRequestType$;
+  paymentStatus$ = this.lovFacade.paymentStatus$;
+  paymentMethods: any = [];
+  paymentTypes: any = [];
+  paymentStatusList: any = [];
 
   getBatchLogGridActions(dataItem: any) {
     return [
@@ -335,18 +327,62 @@ export class FinancialClaimsBatchesLogListsComponent
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly configProvider: ConfigurationProvider,
     private readonly intl: IntlService,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly lovFacade: LovFacade,
   ) {}
 
   ngOnInit(): void {
-    // this.sortColumnName = 'Item #';
-    // this.loadBatchLogListGrid();
+    this.getPaymentMethodLov();
+    this.getPaymentStatusLov();
+    this.getCoPaymentRequestTypeLov();
     this.initializePage();
   }
 
   ngOnChanges(): void {
     this.initializeGrid();
     this.loadBatchLogListGrid();
+  }
+
+  private getPaymentMethodLov() {
+    this.lovFacade.getPaymentMethodLov();
+    this.paymentMethodType$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentMethods = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+  }
+
+  private getCoPaymentRequestTypeLov() {
+    this.lovFacade.getCoPaymentRequestTypeLov();
+    this.paymentTypes$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentTypes = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+  }
+
+  private getPaymentStatusLov() {
+    this.lovFacade.getPaymentStatusLov();
+    this.paymentStatus$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentStatusList = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
   }
 
   searchColumnChangeHandler(value: string) {
@@ -369,7 +405,6 @@ export class FinancialClaimsBatchesLogListsComponent
   }
 
   performSearch(data: any) {
-    debugger;
     this.defaultGridState();
     const operator = [...this.numericColumns, ...this.dateColumns].includes(
       this.selectedSearchColumn
@@ -411,16 +446,14 @@ export class FinancialClaimsBatchesLogListsComponent
 
   restGrid() {
     this.sortValue = 'itemNbr';
-    this.sortType = 'asc';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.sortType = 'desc';
     this.initializeGrid();
-    this.sortColumn = 'itemNbr';
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
-    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
+    this.sortDir = 'Descending';
     this.filter = [];
     this.searchText = '';
-    this.selectedSearchColumn = null;
+    this.selectedSearchColumn = 'itemNbr';
     this.filteredByColumnDesc = '';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
     this.showDateSearchWarning = false;
     this.showNumberSearchWarning = false;
@@ -453,12 +486,31 @@ export class FinancialClaimsBatchesLogListsComponent
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.sortType = stateData.sort[0]?.dir ?? 'desc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumn = stateData.sort[0]?.field;
     this.sortColumnName = this.gridColumns[this.sortColumn];
-    this.filter = stateData?.filter?.filters;
+    if (stateData.filter?.filters.length > 0) {
+      const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      this.isFiltered = true;
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.gridColumns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    } else {
+      this.filter = '';
+      this.isFiltered = false;
+      this.filteredBy = '';
+    }
+    if (!this.filteredBy.includes('Payment Method'))
+      this.selectedpaymentMethod = null;
+    if (!this.filteredBy.includes('Payment Type'))
+      this.selectedPaymentType = '';
+    if (!this.filteredBy.includes('Payment Status'))
+      this.selectedPaymentStatus = '';
     this.loadBatchLogListGrid();
   }
 
@@ -481,13 +533,9 @@ export class FinancialClaimsBatchesLogListsComponent
     value: any,
     filterService: FilterService
   ): void {
-    if (field === 'paymentMethodCode') {
-      this.paymentMethodFilter = value;
-    } else if (field === 'paymentTypeCode') {
-      this.paymentTypeFilter = value;
-    } else if (field === 'paymentStatusCode') {
-      this.paymentStatusFilter = value;
-    }
+    if (field === 'paymentMethodDesc') this.selectedpaymentMethod = value;
+    if (field === 'paymentTypeDesc') this.selectedPaymentType = value;
+    if (field === 'paymentStatusDesc') this.selectedPaymentStatus = value;
 
     filterService.filter({
       filters: [
@@ -773,7 +821,7 @@ export class FinancialClaimsBatchesLogListsComponent
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'itemNbr', dir: 'asc' }],
+      sort: [{ field: 'itemNbr', dir: 'desc' }],
     };
   }
 
@@ -801,11 +849,11 @@ export class FinancialClaimsBatchesLogListsComponent
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
       sortColumn: this.sortColumn ?? 'itemNbr',
-      sortType: sortTypeValue ?? 'asc',
-      filter: this.filter,
+      sortType: sortTypeValue ?? 'desc',
+      filter: this.state?.['filter']?.['filters'] ?? [],
     };
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
-    this.currentPrintAdviceLetterGridFilter = this.filter;
+    this.currentPrintAdviceLetterGridFilter = this.state?.['filter']?.['filters'] ?? [];
   }
 
   private addSearchSubjectSubscription() {

@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
-import { State } from '@progress/kendo-data-query';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, GridFilterParam } from '@cms/case-management/domain';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { filter } from 'rxjs';
+import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { State } from '@progress/kendo-data-query';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-claims-batch-page',
@@ -76,6 +76,7 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
   }
 
   loadBatchLogListGrid(event: any) {
+    this.dataExportParameters = event;
     const batchId = this.route.snapshot.queryParams['bid'];
     const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
     this.financialClaimsFacade.loadBatchLogListGrid(batchId, params, this.claimsType);
@@ -135,7 +136,7 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
       const fileName =
         this.claimsType[0].toUpperCase() +
         this.claimsType.substr(1).toLowerCase() +
-        ' Claims Batches';
+        ' Medical Batch Payments';
 
       this.documentFacade.getExportFile(
         vendorPageAndSortedRequest,
