@@ -117,17 +117,13 @@
     <kendo-grid-column field="paymentRequestSubTypeCode" title="Premium Type" [width]="120"
       *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM'">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <span>
           {{ dataItem.paymentRequestSubTypeCode?.split('_')[0] | titlecase }}
-        </span>
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="paymentRequestSubTypeCode" title="Pharmacy Type" [width]="120"
       *ngIf="selectedPaymentType === 'PHARMACY_CLAIM'">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <span>
           {{ dataItem.paymentRequestSubTypeCode?.split('_')[0] | titlecase }}
-        </span>
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="premiumCount" title="Premium Count" [width]="100"
