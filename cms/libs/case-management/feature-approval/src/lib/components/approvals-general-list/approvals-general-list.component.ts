@@ -18,7 +18,8 @@ import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   PendingApprovalGeneralTypeCode,
-} from '@cms/productivity-tools/domain';
+  PendingApprovalPaymentTypeCode,
+} from '@cms/case-management/domain';
 import {
   UserDataService,
   UserManagementFacade,
