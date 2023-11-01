@@ -7,7 +7,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {
   GeneralApprovalApproveDeny,
   PendingApprovalGeneralTypeCode,
-} from '@cms/productivity-tools/domain';
+} from '@cms/case-management/domain';
 import { Observable } from 'rxjs';
 
 @Component({

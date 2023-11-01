@@ -20,7 +20,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   PendingApprovalGeneralTypeCode,
   PendingApprovalPaymentTypeCode,
-} from '@cms/productivity-tools/domain';
+} from '@cms/case-management/domain';
 import {
   UserDataService,
   UserManagementFacade,

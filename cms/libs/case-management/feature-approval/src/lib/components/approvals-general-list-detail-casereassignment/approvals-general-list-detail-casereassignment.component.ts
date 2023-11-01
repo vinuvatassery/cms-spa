@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
-import { PendingApprovalGeneralFacade } from '@cms/productivity-tools/domain';
+import { PendingApprovalGeneralFacade } from '@cms/case-management/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
