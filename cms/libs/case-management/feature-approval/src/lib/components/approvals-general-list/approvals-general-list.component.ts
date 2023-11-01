@@ -15,11 +15,9 @@ import { Router } from '@angular/router';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { PanelBarCollapseEvent } from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   PendingApprovalGeneralTypeCode,
-  PendingApprovalPaymentTypeCode,
 } from '@cms/productivity-tools/domain';
 import {
   UserDataService,
