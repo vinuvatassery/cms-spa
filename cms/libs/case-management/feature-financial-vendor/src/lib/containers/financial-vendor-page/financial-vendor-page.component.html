@@ -136,7 +136,7 @@
 
 <!-- clinic -->
 <kendo-dialog kendoRippleContainer *ngIf="ShowClinicProvider" (close)="closeVendorDetailModal(vendorTypes.Clinic)"
-  class="app-c-modal app-c-modal-md hide app-c-modal-np" title="{{hasClinicCreateUpdatePermission ? 'Add New Clinic' : 'Request New Clinic'}}" kendoTooltip>
+  class="app-c-modal app-c-modal-md hide app-c-modal-np" title="Add New Clinic" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=clinicForm [providerType]="vendorTypes.Clinic"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.Clinic)"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
