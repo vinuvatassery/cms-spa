@@ -25,7 +25,7 @@ export class DrugsDataService {
   addDrug(dto: any) {
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/manufacturers/drugs`,
+      `/case-management/drugs`,
       dto
     );
   }
