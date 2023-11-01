@@ -431,7 +431,6 @@
     class=""
     aria-label="Approve All"
     (click)="onApproveAllClicked()"
-    [disabled]="!hasPaymentPendingApproval"
   >
     APPROVE ALL
   </button>
@@ -441,7 +440,7 @@
     aria-label="Submit"
     class=""
     (click)="onOpenSubmitApprovalPaymentItemsClicked()"
-    [disabled]="!hasPaymentPendingApproval"
+    [disabled]="hasPaymentPendingApproval"
   >
     Submit
   </button>

@@ -71,7 +71,7 @@
                 *ngIf="
                   item.status == approveStatus &&
                   item.approvalTypeCode ==
-                    pendingApprovalGeneralTypeCode.GeneralAddtoMasterList
+                    pendingApprovalGeneralTypeCode.GeneralAddToMasterList
                 "
               >
                 <i>The user will be notified of your changes.</i>
@@ -171,27 +171,11 @@
             </ng-template>
             <ng-template
               ngSwitchCase="{{
-                pendingApprovalGeneralTypeCode.GeneralException
+                pendingApprovalGeneralTypeCode.GeneralExceptions
               }}"
             >
               <productivity-tools-approvals-general-list-detail-exceptions
-                [approvalId]="item.generalPendingApprovalId"
-                [exceptionId]="item.approvalEntityId"
-                [approvalsExceptionCard$]="approvalsExceptionCard$ | async"
-                (loadApprovalsExceptionCardEvent)="
-                  loadApprovalsExceptionCard($event)
-                "
-                [pageSizes]="pageSizes"
-                [sortValue]="sortValue"
-                [sortType]="sortType"
-                [sort]="sort"
-                [gridSkipCount]="gridSkipCount"
-                [invoiceData$]="invoiceData$"
-                [isInvoiceLoading$]="isInvoiceLoading$"
-                (loadApprovalsExceptionInvoiceEvent)="
-                  loadApprovalsExceptionInvoice($event)
-                "
-              >
+                [exceptionId]="item.approvalEntityId">
               </productivity-tools-approvals-general-list-detail-exceptions>
             </ng-template>
             <ng-template ngSwitchDefault>
@@ -204,16 +188,6 @@
   </div>
 </div>
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span class="">1 Approved</span>
-  <button
-    kendoButton
-    [primary]="true"
-    look="outline"
-    class=""
-    aria-label="Cancel"
-  >
-    Save
-  </button>
   <button
     kendoButton
     [primary]="true"

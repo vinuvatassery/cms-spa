@@ -50,43 +50,26 @@ export class ApprovalPageComponent implements OnInit {
   sort = this.pendingApprovalGeneralFacade.sort;
   sortValueGeneralAPproval = this.approvalFacade.sortValueGeneralAPproval;
   sortGeneralList = this.approvalFacade.sortGeneralList;
-  sortApprovalPaymentsList =
-    this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
-  sortValueApprovalPaymentsApproval =
-    this.pendingApprovalPaymentFacade.sortValueApprovalPaymentsApproval;
+  sortApprovalPaymentsList = this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
+  sortValueApprovalPaymentsApproval = this.pendingApprovalPaymentFacade.sortValueApprovalPaymentsApproval;
   sortImportedClaimsList = this.approvalFacade.sortImportedClaimsList;
-  sortValueImportedClaimsAPproval =
-    this.approvalFacade.sortValueImportedClaimsAPproval;
+  sortValueImportedClaimsAPproval = this.approvalFacade.sortValueImportedClaimsAPproval;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
-  pendingApprovalPaymentsCount$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
+  pendingApprovalPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
 
   userLevel = 1;
 
   state!: State;
-  approvalsGeneralLists$ =
-    this.pendingApprovalGeneralFacade.approvalsGeneralList$;
-  approvalsImportedClaimsLists$ =
-    this.approvalFacade.approvalsImportedClaimsLists$;
+  approvalsGeneralLists$ = this.pendingApprovalGeneralFacade.approvalsGeneralList$;
+  approvalsImportedClaimsLists$ = this.approvalFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalCount$;
-  approvalsPaymentsLists$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
-  approvalsPaymentsMainLists$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalMainList$;
-  pendingApprovalSubmittedSummary$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalSubmittedSummary$;
-  pendingApprovalSubmit$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalSubmit$;
-  batchDetailPaymentsList$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
-  batchDetailPaymentsCount$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
-  approvalsExceptionCard$ =
-    this.pendingApprovalGeneralFacade.approvalsGeneralExceptionCardSubjectList$;
-  invoiceData$ = this.pendingApprovalGeneralFacade.invoiceData$;
-  isInvoiceLoading$ = this.pendingApprovalGeneralFacade.isInvoiceLoading$;
-  submitGenerealRequest$ =
-    this.pendingApprovalGeneralFacade.submitGenerealRequest$;
+  approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
+  approvalsPaymentsMainLists$ = this.pendingApprovalPaymentFacade.pendingApprovalMainList$;
+  pendingApprovalSubmittedSummary$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmittedSummary$;
+  pendingApprovalSubmit$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmit$;
+  batchDetailPaymentsList$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
+  batchDetailPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;  
+  submitGenerealRequest$ = this.pendingApprovalGeneralFacade.submitGenerealRequest$;
 
   providerDetailsDialog: any;
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
@@ -225,13 +208,6 @@ export class ApprovalPageComponent implements OnInit {
     );
   }
 
-  loadApprovalsExceptionCard(data: any) {
-    this.pendingApprovalGeneralFacade.loadExceptionCard(data);
-  }
-
-  loadApprovalsExceptionInvoice(data: any) {
-    this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
-  }
   submitGeneralRequests(requests: any) {
     this.pendingApprovalGeneralFacade.submitGeneralRequests(requests);
   }

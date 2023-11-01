@@ -5,10 +5,7 @@ import {
   Component,
   Input,
   OnInit,
-  EventEmitter,
-  Output,
 } from '@angular/core';
-import { Router } from '@angular/router';
 
 /** External libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -22,6 +19,7 @@ import {
   GridDataResult,
 } from '@progress/kendo-angular-grid';
 import { LovFacade } from '@cms/system-config/domain';
+import { PendingApprovalGeneralFacade } from 'libs/case-management/domain/src/lib/application/approval/pending-approval-general.facade';
 @Component({
   selector: 'productivity-tools-approval-invoice',
   templateUrl: './approval-invoice.component.html',
@@ -32,14 +30,12 @@ export class ApprovalInvoiceComponent implements OnInit {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isInvoiceGridLoaderShow = false;
   @Input() exceptionId: any;
-  @Input() pageSizes: any;
-  @Input() sortValue: any;
-  @Input() sortType: any;
-  @Input() sort: any;
-  @Input() gridSkipCount: any;
-  @Input() invoiceData$: any;
-  @Input() isInvoiceLoading$: any;
-  @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
+  public sortValue = this.pendingApprovalGeneralFacade.sortValue;
+  public sortType = this.pendingApprovalGeneralFacade.sortType;
+  public pageSizes = this.pendingApprovalGeneralFacade.gridPageSizes;
+  public gridSkipCount = this.pendingApprovalGeneralFacade.skipCount;
+  public sort = this.pendingApprovalGeneralFacade.sort;
+  
   public state!: any;
   sortColumn = 'Service Start';
   sortDir = 'Ascending';
@@ -51,10 +47,10 @@ export class ApprovalInvoiceComponent implements OnInit {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  invoiceData$ = this.pendingApprovalGeneralFacade.invoiceData$;
   invoiceGridViewDataSubject = new Subject<any>();
-  invoiceGridView$ = this.invoiceGridViewDataSubject.asObservable();
-
+  invoiceGridView$ =  this.invoiceGridViewDataSubject.asObservable();
+  isInvoiceLoading$ = this.pendingApprovalGeneralFacade.isInvoiceLoading$;
   isInvoiceLoadingSubject = new Subject<boolean>();
   isInvoiceLoadingData$ = this.isInvoiceLoadingSubject.asObservable();
   providerId: any;
@@ -76,7 +72,7 @@ export class ApprovalInvoiceComponent implements OnInit {
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
-    private readonly router: Router
+    private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade
   ) {}
 
   ngOnInit(): void {
@@ -276,7 +272,7 @@ export class ApprovalInvoiceComponent implements OnInit {
   }
 
   loadInvoiceListGrid(data: any) {
-    this.loadApprovalsExceptionInvoiceEvent.emit(data);
+    this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
   }
 
   dropdownFilterChange(

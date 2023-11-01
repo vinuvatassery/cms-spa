@@ -20,9 +20,6 @@
         [attr.aria-label]="approvalsExceptionCard$?.vendorName"
         kendoButton
         look="flat"
-        (click)="
-          onViewProviderDetailClicked(approvalsExceptionCard$?.paymentRequestId)
-        "
         class="card-link-button"
       >
         {{ approvalsExceptionCard$?.vendorName }}
@@ -53,16 +50,6 @@
   </p>
 </div>
 <div>
-  <productivity-tools-approval-invoice
-    [exceptionId]="exceptionId"
-    [pageSizes]="pageSizes"
-    [sortValue]="sortValue"
-    [sortType]="sortType"
-    [sort]="sort"
-    [gridSkipCount]="gridSkipCount"
-    [invoiceData$]="invoiceData$"
-    [isInvoiceLoading$]="isInvoiceLoading$"
-    (loadApprovalsExceptionInvoiceEvent)="loadApprovalsExceptionInvoice($event)"
-  >
+  <productivity-tools-approval-invoice [exceptionId]="exceptionId">
   </productivity-tools-approval-invoice>
 </div>
