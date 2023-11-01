@@ -913,7 +913,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
 
   loadSubmittedSummaryData() {
     this.selectedApprovalSendbackDataRows
-      .filter((x: any) => x.batchStatus == this.approveStatus)
+      .filter((x: any) => x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus)
       .forEach((currentPage: any, index: number) => {
         this.selectedBatchIds.push(currentPage.paymentRequestBatchId);
       });
