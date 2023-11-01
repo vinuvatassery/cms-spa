@@ -73,7 +73,7 @@
                 (loadCasereassignmentExpanedInfoEvent)="loadCasereassignmentExpanedInfoEvent($event)">
                 </productivity-tools-approvals-general-list-detail-reassignment>
               </ng-template>
-              <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralAddtoMasterList}}">
+              <ng-template ngSwitchCase="{{pendingApprovalGeneralTypeCode.GeneralAddToMasterList}}">
                 <productivity-tools-approvals-general-list-detail-addtomasterlist [approvalId]="item.generalPendingApprovalId" (openEditModal)="openEditModal($event)" [subTypeCode]="item.subTypeCode" [selectedVendor$]="selectedVendor$">
                 </productivity-tools-approvals-general-list-detail-addtomasterlist>
               </ng-template>
