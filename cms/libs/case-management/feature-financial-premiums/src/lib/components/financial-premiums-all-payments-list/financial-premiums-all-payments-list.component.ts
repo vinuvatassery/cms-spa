@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -129,7 +130,7 @@ export class FinancialPremiumsAllPaymentsListComponent
 
   //searching
   private searchSubject = new Subject<string>();
-  selectedSearchColumn: null | string = null;
+  selectedSearchColumn = 'itemNumber';
   searchText: null | string = null;
 
   //sorting
@@ -195,8 +196,11 @@ export class FinancialPremiumsAllPaymentsListComponent
   unBatchPaymentPremiumsDialogTemplate!: TemplateRef<any>;
   selected:any;
   paymentId!: any;
+  showExportLoader = false;
   @Input() unbatchPremiums$ :any
+  @Input() exportButtonShow$: any;
   @Output() deletePaymentEvent = new EventEmitter();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
   UnBatchPaymentDialog: any;
   removePremiumsDialog: any;
   public allPaymentsGridActions = [
@@ -329,6 +333,7 @@ deletePremiumPayment(paymentId: string) {
     private readonly configProvider: ConfigurationProvider,
     private readonly intl: IntlService,
     private readonly lovFacade: LovFacade,
+    private readonly cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -454,7 +459,7 @@ deletePremiumPayment(paymentId: string) {
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
     this.filter = [];
     this.searchText = '';
-    this.selectedSearchColumn = null;
+    this.selectedSearchColumn = 'itemNumber';
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
@@ -725,6 +730,17 @@ deletePremiumPayment(paymentId: string) {
   paymentClickHandler(dataItem: any) {
     this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch/items`], {
       queryParams: { bid: dataItem.batchId, pid: dataItem.paymentRequestId,eid:dataItem.vendorAddressId },
+    });
+  }
+  onClickedExport() {
+    this.showExportLoader = true;
+    this.exportGridDataEvent.emit();
+
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 }
