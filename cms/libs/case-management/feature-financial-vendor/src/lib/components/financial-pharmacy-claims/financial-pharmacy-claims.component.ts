@@ -184,17 +184,6 @@ export class FinancialPharmacyClaimsComponent {
       });
     }
   }
-  onExportclaims(){
-    this.showExportLoader = true;
-    this.exportGridDataEvent.emit();
-
-    this.exportButtonShow$.subscribe((response: any) => {
-      if (response) {
-        this.showExportLoader = false;
-        this.cdr.detectChanges();
-      }
-    });
-  }
   private defaultGridState() {
     this.state = {
       skip: 0,
