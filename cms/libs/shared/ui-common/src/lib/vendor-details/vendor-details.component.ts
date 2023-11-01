@@ -397,6 +397,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     if (this.clinicNameNotApplicable) {
       this.medicalProviderForm.controls['providerName'].setValue(null);
       this.medicalProviderForm.controls['providerName'].disable();
+      this.firstLastNameNotApplicable = false;
+      this.onNameChecked();
     }
     else {
       this.medicalProviderForm.controls['providerName'].enable();
@@ -409,6 +411,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls['lastName'].setValue(null);
       this.medicalProviderForm.controls['firstName'].disable();
       this.medicalProviderForm.controls['lastName'].disable();
+      this.clinicNameNotApplicable = false;
+      this.onClinicNameChecked();
     }
     else {
       this.medicalProviderForm.controls['firstName'].enable();
