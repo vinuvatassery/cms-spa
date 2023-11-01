@@ -79,7 +79,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   approveStatus: string = 'APPROVED';
   sendbackStatus: string = 'SEND_BACK';
   hasPaymentPendingApproval: boolean = true;
-  sendbackNotesRequireMessage: string = 'Send back notes are required.';
+  sendbackNotesRequireMessage: string = 'Send Back Note is required.';
   tAreaCessationMaxLength: any = 100;
   approveBatchCount: any = 0;
   sendbackBatchCount: any = 0;
