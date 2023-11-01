@@ -186,15 +186,25 @@ export class FinancialPharmacyClaimsComponent {
     }
   }
   onExportclaims(){
-    this.showExportLoader = true;
-    this.exportGridDataEvent.emit();
+    this.showExportLoader = true
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType,
+      JSON.stringify(this.filter));
 
-    this.exportButtonShow$.subscribe((response: any) => {
-      if (response) {
-        this.showExportLoader = false;
-        this.cdr.detectChanges();
+   let fileName = 'Pharmacy Claims'
+    this.documentFacade.getExportFile(param, `pharmacies/${this.vendorId}/claims`,fileName)
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {
+        this.showExportLoader = false
+        this.cdr.detectChanges()
       }
-    });
+    })
   }
   private defaultGridState() {
     this.state = {
