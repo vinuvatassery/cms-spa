@@ -721,8 +721,19 @@ export class MedicalPaymentDetailComponent {
     });
   }
   medicalClaimServices!: FinancialClaims;
-  addClaimServiceGroup() {
 
+  onclikaddClaimServiceGroup()
+  {
+    this.isSubmitted = true;
+    if (!this.claimForm.valid) {
+      this.claimForm.markAllAsTouched()
+      return;
+    }
+    this.isSubmitted = false;
+    this.addClaimServiceGroup();
+  }
+  
+  addClaimServiceGroup() {
     let claimForm = this.formBuilder.group({
       serviceStartDate: new FormControl(
         this.medicalClaimServices.serviceStartDate,
