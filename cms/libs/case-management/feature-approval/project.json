@@ -1,0 +1,46 @@
+{
+  "name": "case-management-feature-approval",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/case-management/feature-approval/src",
+  "prefix": "case-management",
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/libs/case-management/feature-approval"],
+      "options": {
+        "project": "libs/case-management/feature-approval/ng-package.json",
+        "updateBuildableProjectDepsInPackageJson": true
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/case-management/feature-approval/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/case-management/feature-approval/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/libs/case-management/feature-approval"
+      ],
+      "options": {
+        "jestConfig": "libs/case-management/feature-approval/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/case-management/feature-approval/src/**/*.ts",
+          "libs/case-management/feature-approval/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": ["domain:case-management", "type:feature"]
+}
