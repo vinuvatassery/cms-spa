@@ -8,7 +8,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
 import { AddressType } from '../enums/address-type.enum';
 import { StatusFlag } from '../enums/status-flag.enum';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-vendor-details',
@@ -24,6 +24,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   @Input() profileInfoTitle!: string;
   @Input() ddlStates$!: any;
   @Input() clinicVendorList$!: any;
+  clinicVendorListLocal: any;
   @Input() clinicVendorLoader$!: any;
   @Input() hasCreateUpdatePermission: boolean = false;
   @Input() selectedClinicType: string = FinancialVendorTypeCode.MedicalClinic;
@@ -70,6 +71,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   specialHandlingTextArea = '';
   selectedClinicVendorId!: any;
   mailCodeLengthError!: boolean;
+  clinicSearchSubscription !: Subscription;
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
@@ -79,6 +81,24 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     private readonly loaderService: LoaderService,
   ) {
     this.medicalProviderForm = this.formBuilder.group({});
+  }
+
+  searchClinic(clinicName: any) {
+    this.clinicSearchSubscription?.unsubscribe();
+  
+    if (clinicName === '' || !clinicName) {
+      this.clinicVendorListLocal = null;
+      return;
+    }
+  
+    this.clinicSearchSubscription = this.clinicVendorList$.subscribe((data: any) => {
+      if (data && clinicName !== '') {
+        this.clinicVendorListLocal = data;
+      }
+    });
+  
+    this.selectedClinicVendorId = null;
+    this.searchClinicVendorClicked.emit(clinicName);
   }
 
   ngOnInit(): void {
@@ -129,7 +149,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.medicalProviderForm.controls['providerName'].setValue(this.vendorDetails.vendorName);
     this.medicalProviderForm.controls['vendorId'].setValue(this.vendorDetails.vendorId);
   }
-  
+
   onToggleAddNewContactClick() {
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl('', Validators.required),
@@ -226,18 +246,16 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
           Validators.required, Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')
         ]);
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();
-      if (this.providerType == this.vendorTypes.Manufacturers)
-      {
-        this.medicalProviderForm.controls['nameOnCheck'].setValidators([ Validators.nullValidator,]);
+      if (this.providerType == this.vendorTypes.Manufacturers) {
+        this.medicalProviderForm.controls['nameOnCheck'].setValidators([Validators.nullValidator,]);
         this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
-        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.nullValidator, ]);
+        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.nullValidator,]);
         this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
       }
-      else
-      {
-        this.medicalProviderForm.controls['nameOnCheck'].setValidators([ Validators.required,Validators.pattern('^[A-Za-z ]+$')]);
+      else {
+        this.medicalProviderForm.controls['nameOnCheck'].setValidators([Validators.required, Validators.pattern('^[A-Za-z ]+$')]);
         this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
-        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.required,Validators.pattern('^[A-Za-z ]+$')]);
+        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.required, Validators.pattern('^[A-Za-z ]+$')]);
         this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
       }
 
@@ -406,13 +424,6 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   isClinicNameFilterable = true;
 
 
-  searchClinic(clinicName: any) {
-    if (clinicName != '') {
-      this.selectedClinicVendorId = null;
-      this.searchClinicVendorClicked.emit(clinicName);
-    }
-  }
-
   closeVendorModal() {
     this.closeModalEventClicked.next(null);
   }
@@ -454,12 +465,11 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
-    if(this.vendorTypes.Pharmacy == this.providerType)
-    {
+    if (this.vendorTypes.Pharmacy == this.providerType) {
       this.medicalProviderForm.controls['npiNbr'].setValidators([Validators.required]);
       this.medicalProviderForm.controls['npiNbr'].updateValueAndValidity();
     }
-  
+
   }
 
   mapAddressContact(formValues: any) {
@@ -595,9 +605,9 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
   onPharmacyPhysicalAddressChecked() {
     let isPharmacyPhysicalAddressChecked = this.medicalProviderForm.controls['physicalAddressFlag'].value;
-    if (isPharmacyPhysicalAddressChecked) {  
+    if (isPharmacyPhysicalAddressChecked) {
       this.medicalProviderForm.controls['addressLine1']
-        .setValidators([Validators.required]); 
+        .setValidators([Validators.required]);
       this.medicalProviderForm.controls['addressLine1'].updateValueAndValidity();
 
       this.medicalProviderForm.controls['city']
