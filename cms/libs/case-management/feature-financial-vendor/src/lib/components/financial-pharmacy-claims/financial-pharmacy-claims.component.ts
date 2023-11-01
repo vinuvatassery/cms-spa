@@ -16,10 +16,8 @@ import { StatusFlag } from '@cms/shared/ui-common';
 export class FinancialPharmacyClaimsComponent {
   /* Input Properties */
   @Input() vendorId!: string;
-  @Output() exportGridDataEvent = new EventEmitter<any>();
-  @Input() exportButtonShow$ : any
+  @Input() exportButtonShow$ =    this.documentFacade.exportButtonShow$
   @Input() claimsType: any;
-  
   /* public properties */
   formUiStyle: UIFormStyle = new UIFormStyle();
   isFinancialDrugsDetailShow = false;
