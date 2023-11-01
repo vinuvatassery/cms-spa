@@ -166,6 +166,10 @@ export class ClientsComponent implements OnInit, OnChanges{
     this.loadClientsListGrid();
   }
 
+  onColumnReorder($event: any) {
+    this.columnsReordered = true;
+  }
+  
   searchColumnChangeHandler(value: string) {
     this.showNumberSearchWarning = (['clientId']).includes(value);
     this.showDateSearchWarning =   (['eilgibilityStartDate','eligibilityEndDate']).includes(value);

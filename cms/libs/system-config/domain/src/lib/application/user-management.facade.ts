@@ -106,7 +106,7 @@ export class UserManagementFacade {
   {
     let roleCheck;
     this.userDataService.getProfile$
-      .pipe(first(profile => profile[0]?.permissions != null))
+      .pipe(first(profile => profile?.length > 0))
       .subscribe((profile:any)=>{ 
         const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);  
         roleCheck = roleProfile ? true : false;
@@ -116,28 +116,39 @@ export class UserManagementFacade {
 
   hasPermission(ifPermission : string[]) : any
   {
-   let hasPerm =false;
+    let hasPerm =false;
     this.userDataService.getProfile$
-      .pipe(first(profile => profile[0]?.permissions != null))
-      .subscribe((profile:any)=>{    
-        let hasPermissions = false;
+      .pipe(first(profile => profile?.length > 0))
+      .subscribe((profile:any)=>{
+        let permission : any;       
         for(const profileItem of profile){
-          const permission =profileItem?.permissions 
-          if (permission?.length == 0) {
-            hasPerm = false;
-          }  
+          if(permission == undefined || permission?.length == 0){
+            permission = profileItem?.permissions 
+          }
+          else{
+            profileItem?.permissions.forEach((newPerm : any) => {
+              const permissionExists = permission.some((existPerm : any) => existPerm.permissionId === newPerm.permissionId);
+              if(!permissionExists){
+                permission.push(newPerm);    
+              }
+            });
+          }
+        }
+        if (permission?.length == 0) {
+          hasPerm = false;
+        }  
 
-          const searchPermission  = ifPermission;    
-          for (const perm of searchPermission)
-          {            
-              hasPermissions = permission?.some((x : any)=> x.permissionsCode   === perm)   
-          }
-          if (!hasPermissions) {
-            hasPerm = false;
-          } else {
-            hasPerm = true;
-            return;
-          }
+        const searchPermission  = ifPermission;    
+        let hasPermissions = false;    
+        for (const perm of searchPermission)
+        {            
+            hasPermissions = permission?.some((x : any)=> x.permissionsCode   === perm)   
+        }
+
+        if (!hasPermissions) {
+          hasPerm = false;
+        } else {
+          hasPerm = true;
         }  
       })
       return  hasPerm;
@@ -151,7 +162,7 @@ export class UserManagementFacade {
       return;
     }
     this.userDataService.getProfile$
-    .pipe(first(profile => profile[0]?.permissions != null))
+    .pipe(first(profile => profile?.length > 0))
     .subscribe((profile:any)=>{ 
       const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);  
       const permission = roleProfile?.permissions;

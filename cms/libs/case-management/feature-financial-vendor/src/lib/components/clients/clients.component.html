@@ -78,7 +78,8 @@
       [filter]="state.filter"
       (dataStateChange)="dataStateChange($event)"
       (filterChange)="filterChange($event)"
-      (columnVisibilityChange)="columnChange()">
+      (columnVisibilityChange)="columnChange()"
+      (columnReorder)="onColumnReorder($event)">
 
         <kendo-grid-column field="clientName" title="Client Name" [width]="150"  [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
