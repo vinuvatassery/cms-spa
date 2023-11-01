@@ -112,9 +112,7 @@ export class FinancialPharmacyClaimsComponent {
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
-  public rowClass = (args:any) => ({
-    "table-row-disabled": (args.dataItem.activeFlag != StatusFlag.Yes),
-  });
+
 
   dropdownFilterChange(
     field: string,
@@ -220,6 +218,3 @@ export class FinancialPharmacyClaimsComponent {
   }
   
 }
-
-
-

@@ -32,7 +32,6 @@
             (columnVisibilityChange)="columnChange($event)"
             (filterChange)="filterChange($event)"
             (columnReorder)="onColumnReorder($event)"
-            [rowClass]="rowClass"
             [data]="claimsGridView$ | async">
 
                 <kendo-grid-column field="batchName" title="Batch #" [width]="150">
