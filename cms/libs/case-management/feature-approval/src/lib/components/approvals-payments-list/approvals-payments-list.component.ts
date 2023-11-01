@@ -79,7 +79,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   approveStatus: string = 'APPROVED';
   sendbackStatus: string = 'SEND_BACK';
   hasPaymentPendingApproval: boolean = true;
-  sendbackNotesRequireMessage: string = 'Send Back Notes are required.';
+  sendbackNotesRequireMessage: string = 'Send back notes are required.';
   tAreaCessationMaxLength: any = 100;
   approveBatchCount: any = 0;
   sendbackBatchCount: any = 0;
@@ -256,6 +256,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     }));
     this.loadApprovalPaymentsListGrid();
     this.enableSubmitButtonMain();
+    this.approveAndSendbackCount();
   }
 
   onLoadBatchDetailPaymentsList(data?: any) {
@@ -485,6 +486,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.ngDirtyInValid(dataItem, control, rowIndex);
     this.approveAndSendbackCount();
     this.enableSubmitButtonMain();
+    this.pageValidationMessage = null;
   }
 
   onRowLevelSendbackClicked(
@@ -495,6 +497,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   ) {
     dataItem.approveButtonDisabled = true;
     dataItem.sendBackButtonDisabled = false;
+    this.pageValidationMessage = null;
     if (
       dataItem.batchStatus === undefined ||
       dataItem.batchStatus === '' ||
@@ -521,7 +524,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.ngDirtyInValid(dataItem, control, rowIndex);
     this.isApproveAllClicked = false;
     this.approveAndSendbackCount();
-    this.enableSubmitButtonMain();
+    this.enableSubmitButtonMain();    
   }
 
   private tAreaVariablesInitiation(dataItem: any) {
@@ -678,7 +681,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     if (isValid.length > 0) {
       this.pageValidationMessage =
         totalCount +
-        ' validation error(s) found, please review each page for errors.';
+        ' Validation error(s) found, please review each page for errors.';
     } else if (
       this.approvalsPaymentsGridUpdatedResult.filter(
         (x: any) =>
@@ -686,7 +689,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           x.batchStatus == this.sendbackStatus
       ).length <= 0
     ) {
-      this.pageValidationMessage = 'No data for approval';
+      this.pageValidationMessage = 'No data for approval.';
     } else {
       this.pageValidationMessage = null;
       this.selectedApprovalSendbackDataRows =

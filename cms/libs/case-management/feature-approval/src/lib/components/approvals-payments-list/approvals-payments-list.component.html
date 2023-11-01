@@ -292,7 +292,7 @@
                 rowIndex
               )
             "
-            [selected]="dataItem.batchStatus == 'APPROVED'"
+            [selected]="dataItem.batchStatus == approveStatus"
             aria-label="Approve"
             id="approve{{ rowIndex }}"
             [toggleable]="true"
@@ -309,7 +309,7 @@
                 rowIndex
               )
             "
-            [selected]="dataItem.batchStatus == 'SEND_BACK'"
+            [selected]="dataItem.batchStatus == sendbackStatus"
             aria-label="Send Back"
             id="approve{{ rowIndex }}"
             [toggleable]="true"
@@ -337,7 +337,7 @@
             (valueChange)="sendBackNotesChange(dataItem)"
             aria-label="smoking cessation note"
             title="{{ dataItem.sendBackNotes }}"
-            [disabled]="dataItem.batchStatus == 'APPROVED'"
+            [disabled]="dataItem.batchStatus != sendbackStatus"
             [ngClass]="ngDirtyInValid(dataItem, 'sendBackNotes', rowIndex)"
             id="sendBackNotes{{ rowIndex }}"
           >
