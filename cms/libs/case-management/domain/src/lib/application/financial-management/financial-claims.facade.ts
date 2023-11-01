@@ -55,9 +55,9 @@ export class FinancialClaimsFacade {
     },
   ];
 
-  public sortValueBatchLog = 'creationTime';
+  public sortValueBatchLog = 'itemNbr';
   public sortBatchLogList: SortDescriptor[] = [{
-    field: this.sortValueBatchLog, dir: 'desc'
+    field: this.sortValueBatchLog, dir: 'asc'
   }];
 
   public sortValueClaims = 'batch';

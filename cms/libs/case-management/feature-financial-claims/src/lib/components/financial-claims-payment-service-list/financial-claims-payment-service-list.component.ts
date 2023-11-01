@@ -29,10 +29,10 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
     /** Constructor **/
     constructor(private readonly claimsFacade: FinancialClaimsFacade,
         private loggingService: LoggingService,
-        private readonly notificationSnackbarService: NotificationSnackbarService,) { }
+        private readonly notificationSnackbarService: NotificationSnackbarService) { }
 
     /* Life cycle events */
-    ngOnInit(): void {        
+    ngOnInit(): void {
         this.initializeGrid();
         this.loadServices();
     }
@@ -57,7 +57,7 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
     loadServices() {
         this.servicesList$.next({ data: [], total: 0 });
         this.loader$.next(true);
-        const params = new GridFilterParam(this.state.skip, this.state.take , this.sort[0]?.field, this.sort[0]?.dir,'')
+        const params = new GridFilterParam(this.state.skip, this.state.take, this.sort[0]?.field, this.sort[0]?.dir, '')
         this.claimsFacade.loadServicesByPayment(this.paymentId, params, this.claimType).subscribe({
             next: (dataResponse: any) => {
                 const gridView: any = {
@@ -76,12 +76,12 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
         });
     }
 
-    private initializeGrid(){
+    private initializeGrid() {
         this.serviceTitle = this.claimType == FinancialClaimTypeCode.Medical ? 'Medical Service' : 'Dental Service';
         this.state = {
             skip: this.gridSkipCount,
             take: this.pageSizes[0]?.value,
             sort: this.sort,
         };
-    }
+    }    
 }

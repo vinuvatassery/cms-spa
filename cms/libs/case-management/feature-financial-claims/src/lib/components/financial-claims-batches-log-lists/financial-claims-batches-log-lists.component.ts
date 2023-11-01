@@ -11,18 +11,18 @@ import {
   ViewChild,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import {  GridDataResult } from '@progress/kendo-angular-grid';
+import {  ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   CompositeFilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Observable, Subject, first } from 'rxjs';
+import { Observable, Subject, debounceTime, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { FinancialClaimsFacade, PaymentBatchName, PaymentStatusCode } from '@cms/case-management/domain';
-import { NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
-import { Location } from '@angular/common';
+import { DocumentFacade, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-claims-batches-log-lists',
   templateUrl: './financial-claims-batches-log-lists.component.html',
@@ -99,28 +99,30 @@ export class FinancialClaimsBatchesLogListsComponent
   @Input() paymentBatchName$!: Observable<PaymentBatchName>;
   @Output() loadBatchLogListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'paymentNbr';
-  sortDir = 'Ascending';
-  sortColumnName = '';
-  columnsReordered = false;
-  filteredBy = '';
-  searchValue = '';
-  isFiltered = false;
-  filter!: any;
-  selectedColumn!: any;
   gridDataResult!: GridDataResult;
   gridClaimsBatchLogDataSubject = new Subject<any>();
   gridClaimsBatchLogData$ = this.gridClaimsBatchLogDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  sortColumn = 'itemNbr';
+  columnsReordered = false;
+  searchValue = '';
+  isFiltered = false;
+  filter!: any;
+  selectedColumn!: any;
+  sortDir = 'Ascending';
+  sortColumnDesc = 'Item #';
+  filteredByColumnDesc = '';
+  columnChangeDesc = 'Default Columns';
+  selectedSearchColumn = 'ALL';
+  searchText = '';
 
   gridColumns: { [key: string]: string } = {
-    paymentNbr: 'Item #',
+    itemNbr: 'Item #',
     invoiceNbr: 'Invoice ID',
     vendorName: 'Provider Name',
     tin: 'Tax ID',
-    clientId: 'Member ID',
     clientFullName: 'Client Name',
     nameOnInsuranceCard: 'Name on Primary Insurance Card',
     serviceCount: 'Service Count',
@@ -133,26 +135,36 @@ export class FinancialClaimsBatchesLogListsComponent
     balanceAmount: 'Client Balance',
   };
 
-  paymentMethods = ['CHECK', 'ACH', 'SPOTS'];
-  paymentTypes = ['PAYMENT', 'REFUND', 'COPAYMENT', 'DEDUCTIBLE', 'FULL PAY'];
-  paymentStatusList = [
-    'SUBMITTED',
-    'PENDING_APPROVAL',
-    'DENIED',
-    'MANAGER_APPROVED',
-    'PAYMENT_REQUESTED',
-    'ONHOLD',
-    'FAILED',
-    'PAID',
+  searchColumnList = [
+    { columnName: 'ALL', columnDesc: 'All Columns' },
+    { columnName: 'itemNbr', columnDesc:'Item #'},
+    { columnName: 'invoiceNbr', columnDesc:'Invoice ID'},
+    { columnName: 'vendorName', columnDesc:'Provider Name'},
+    { columnName: 'tin', columnDesc:'Tax ID'},
+    { columnName: 'clientFullName', columnDesc:'Client Name'},
+    { columnName: 'nameOnInsuranceCard', columnDesc:'Name on Primary Insurance Card'},
+    { columnName: 'serviceCount', columnDesc:'Service Count'},
+    { columnName: 'serviceCost', columnDesc:'Total Cost'},
+    { columnName: 'amountDue', columnDesc:'Total Due'},
+    { columnName: 'paymentMethodCode', columnDesc:'Payment Method'},
+    { columnName: 'paymentTypeCode', columnDesc:'Payment Type'},
+    { columnName: 'paymentStatusCode', columnDesc:'Payment Status'},
+    { columnName: 'clientMaximum', columnDesc:'Client Annual Total'},
+    { columnName: 'balanceAmount', columnDesc:'Client Balance'},
   ];
+
+  paymentMethods = ['CHECK', 'ACH', 'SPOTS'];
+  paymentStatusLov$ = this.lovFacade.paymentStatus$;
+  paymentType$ = this.lovFacade.paymentType$;
   paymentMethodFilter = '';
-  paymentTypeFilter = '';
   paymentStatusFilter = '';
   selected: any;
   selectedDataRows: any;
   selectedCount = 0;
   disablePrwButton = true;
   deletemodelbody = "This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch";
+  showExportLoader = false;
+  private searchSubject = new Subject<string>();
 
   getBatchLogGridActions(dataItem: any){
     return [
@@ -209,12 +221,17 @@ export class FinancialClaimsBatchesLogListsComponent
     public activeRoute: ActivatedRoute,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly notificationSnackbarService: NotificationSnackbarService,
-    private location: Location
+    private lovFacade :  LovFacade,
+    private documentFacade :  DocumentFacade,
   ) {}
 
   ngOnInit(): void {
-    this.sortColumnName = 'Item #';
+    this.sortColumnDesc = 'Item #';
+    this.sortValue ='itemNbr';
+    this.sortType = 'asc';
     this.loadBatchLogListGrid();
+    this.addSearchSubjectSubscription();
+    this.lovFacade.getPaymentStatusLov();
   }
 
   ngOnChanges(): void {
@@ -250,7 +267,7 @@ export class FinancialClaimsBatchesLogListsComponent
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
-      sortColumn: this.sortColumn ?? 'paymentNbr',
+      sortColumn: this.sortColumn ?? 'itemNbr',
       sortType: sortTypeValue ?? 'asc',
       filter: this.filter,
     };
@@ -282,10 +299,11 @@ export class FinancialClaimsBatchesLogListsComponent
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.sortColumn = stateData.sort[0]?.field;
-    this.sortColumnName = this.gridColumns[this.sortColumn];
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumn = stateData.sort[0]?.field ?? 'itemNbr';
+    this.sortColumnDesc = this.gridColumns[this.sortColumn];
     this.filter = stateData?.filter?.filters;
+    this.setFilterBy(true, '', this.filter);
     this.loadBatchLogListGrid();
   }
 
@@ -296,8 +314,6 @@ export class FinancialClaimsBatchesLogListsComponent
   ): void {
     if (field === 'paymentMethodCode') {
       this.paymentMethodFilter = value;
-    } else if (field === 'paymentTypeCode') {
-      this.paymentTypeFilter = value;
     } else if (field === 'paymentStatusCode') {
       this.paymentStatusFilter = value;
     }
@@ -549,5 +565,100 @@ export class FinancialClaimsBatchesLogListsComponent
 
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event);
+  }
+
+  onExportBatchPayments(){
+    const params = {
+      SortType: this.sortType,
+      Sorting: this.sortValue,
+      Filter: JSON.stringify(this.filter)
+    };
+
+    this.documentFacade.getExportFile(params,`claims/${this.claimsType}/payment-batches/${this.batchId}/payments/export` , `${this.claimsType}-claim-batch-payments`)
+
+  }
+
+  onSearch(searchValue: any) {
+    searchValue = searchValue.trim();    
+    this.setFilterBy(false, searchValue, []);
+    this.searchSubject.next(searchValue);
+  }
+
+  searchColumnChangeHandler(value: any) {
+    this.filter = [];
+    if (this.searchText) {
+      this.onSearch(this.searchText);
+    }
+  }
+
+  private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
+    this.filteredByColumnDesc = '';
+    if (isFromGrid) {
+      if (filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters?.filter((fld: any) => fld.value)?.map((fld: any) =>
+            this.gridColumns[fld.field])
+          return ([...new Set(filteredColumns)]);
+        });
+
+        this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
+      }
+      return;
+    }
+
+    if (searchValue !== '') {
+      this.filteredByColumnDesc = this.searchColumnList?.find(i => i.columnName === this.selectedSearchColumn)?.columnDesc ?? '';
+    }
+  }
+
+  performSearch(data: any) {
+    this.defaultGridState();
+    const numberAndDateFields = ['itemNbr', 'serviceCount', 'serviceCost', 'amountDue', 'clientMaximum','balanceAmount'];
+    const operator = numberAndDateFields.includes(this.selectedSearchColumn) ? 'eq' : 'contains';
+
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedSearchColumn ?? 'ALL',
+              operator: operator,
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
+    const stateData = this.state;
+    stateData.filter = this.filterData;
+    this.dataStateChange(stateData);
+  }
+
+  resetGrid() {
+    this.defaultGridState();
+    this.sortValue = 'itemNbr';
+    this.sortType = 'asc';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
+    this.filter = [];
+    this.searchText = '';
+    this.selectedSearchColumn = 'ALL';
+    this.filteredByColumnDesc = '';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.loadBatchLogListGrid();
+  }
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
+  }
+
+  private addSearchSubjectSubscription() {
+    this.searchSubject.pipe(debounceTime(300))
+      .subscribe((searchValue) => {
+        this.performSearch(searchValue);
+      });
   }
 }

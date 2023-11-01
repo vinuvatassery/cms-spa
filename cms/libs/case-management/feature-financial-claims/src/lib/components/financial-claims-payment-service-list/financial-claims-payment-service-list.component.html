@@ -1,17 +1,18 @@
 <kendo-grid [resizable]="true" [navigable]="true" [resizable]="true" [loading]="(loader$ | async) ?? false"
     [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
-    [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
+    [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: false }" [sort]="state.sort"
     (dataStateChange)="dataStateChange($event)" [navigable]="true" [data]="servicesList$ | async">
-    <kendo-grid-column title="Service Start" [width]="100">
+    <kendo-grid-column field="serviceStartDate" title="Service Start" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.serviceStartDate | date:'MM/dd/yyyy'}}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column title="Service End" [width]="100">
+    <kendo-grid-column field="serviceEndDate" title="Service End" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.serviceEndDate | date:'MM/dd/yyyy'}}
         </ng-template>
     </kendo-grid-column>
+    <kendo-grid-column field="paymentTypeCode" title="Payment Type" [width]="150"></kendo-grid-column>
     <kendo-grid-column field="cptCode" title="CPT Code" [width]="100"> </kendo-grid-column>
     <kendo-grid-column field="serviceDesc" [title]="serviceTitle" [width]="100"> </kendo-grid-column>
     <kendo-grid-column field="serviceCost" title="Service Cost" [width]="100">
@@ -32,12 +33,12 @@
     <kendo-grid-column field="creatorId" title="By" [sortable]="false" [width]="70" class="text-center" >
         <ng-template kendoGridCellTemplate let-dataItem>
             <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-                [popover]="onUserProfileDetailsHovered" showOn="hover" ar[attr.aria-label]="dataItem.creatorId">
+                [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
                 <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
             <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
                 <ng-template kendoPopoverBodyTemplate>
-                    <common-user-profile-card [userId]="dataItem?.creatorId"
+                    <common-user-profile-card [userId]="dataItem.creatorId"
                         [reassign]=false></common-user-profile-card>
                 </ng-template>
             </kendo-popover>
