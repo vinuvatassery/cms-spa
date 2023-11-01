@@ -17,7 +17,7 @@
                               (click)="onViewProviderDetailClicked(providerDetailsTemplate)" kendoButton look="flat"
                               class="mr-3 card-link-button">
                               {{payment.vendorName}}
-                        </button> 
+                        </button>
                         <span class="mr-3" *ngIf="payment.paymentStatusDate">Pmt. Requested {{payment.paymentStatusDate | kendoDate}}</span> <span class="mr-3">{{payment.amountDue | kendoNumber : "c"}} Due</span>
                         <span class="mr-3">{{payment.paymentStatusCode}}</span>
                   </p>
@@ -157,8 +157,8 @@
                                                      <kendo-filter-contains-operator></kendo-filter-contains-operator>
                                                  </kendo-grid-string-filter-menu>
                                              </ng-template>
-                                    </kendo-grid-column>  
-                                    <kendo-grid-column field="serviceCost" title="Service Cost" [width]="150"> 
+                                    </kendo-grid-column>
+                                    <kendo-grid-column field="serviceCost" title="Service Cost" [width]="150">
                                           <ng-template kendoGridCellTemplate let-dataItem>
                                                 <span class="tableamountview"> <strong>$</strong> {{dataItem.serviceCost | kendoNumber: 'n2'}}</span>
                                             </ng-template>
@@ -171,11 +171,11 @@
                                                       <kendo-filter-lte-operator></kendo-filter-lte-operator>
                                                 </kendo-grid-numeric-filter-menu>
                                             </ng-template>
-                                    </kendo-grid-column>  
+                                    </kendo-grid-column>
                                     <kendo-grid-column field="amountDue" title="Client Co-Pay" [width]="160">
                                           <ng-template kendoGridCellTemplate let-dataItem>
                                                 <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber: 'n2'}}</span>
-                                            </ng-template> 
+                                            </ng-template>
                                           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                                                 <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="true" operator="eq">
                                                       <kendo-filter-eq-operator></kendo-filter-eq-operator>
@@ -191,12 +191,12 @@
                                     </kendo-grid-column>
                                     <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="160">
                                           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                                                <kendo-dropdownlist 
-                                                [data]="paymentStatusLov$ | async" 
+                                                <kendo-dropdownlist
+                                                [data]="paymentStatusLov$ | async"
                                                 textField="lovDesc"
-                                                valueField="lovCode"  
+                                                valueField="lovCode"
                                                 [value]="paymentStatusFilter"
-                                                [valuePrimitive]="true"  
+                                                [valuePrimitive]="true"
                                                 (valueChange)="dropdownFilterChange('paymentStatus',$event, filterService)">
                                                 </kendo-dropdownlist>
                                           </ng-template>
@@ -238,7 +238,7 @@
                                                       id="RowsPerPage" [(value)]="state.take"
                                                       (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
                                                 <kendo-pager-info> </kendo-pager-info>
-                                                <kendo-grid-messages [pagerItems]="'rows'" 
+                                                <kendo-grid-messages [pagerItems]="'rows'"
                                                       [pagerPage]="'Page'"> </kendo-grid-messages>
 
                                           </div>
