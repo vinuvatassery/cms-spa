@@ -407,10 +407,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
 
 
   searchClinic(clinicName: any) {
-    if (clinicName != '') {
       this.selectedClinicVendorId = null;
       this.searchClinicVendorClicked.emit(clinicName);
-    }
   }
 
   closeVendorModal() {
