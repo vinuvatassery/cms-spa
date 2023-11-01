@@ -4,6 +4,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {FinancialClaimsFacade, PaymentsFacade } from '@cms/case-management/domain';
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
+import { StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'cms-financial-claims-print-authorization',
@@ -203,8 +204,12 @@ export class FinancialClaimsPrintAuthorizationComponent {
           paymentReconciledDate :payments[0].paymentReconciledDate,
           paymentSentDate :payments[0].paymentSentDate,
           checkNbr :payments[0].checkNbr,
-          comments :payments[0].comments
+          comments :payments[0].comments,
+          printFlag: payments[0].isPrintAdviceLetter? StatusFlag.Yes:StatusFlag.No
       });
+      if(payments[0].isPrintAdviceLetter){
+        this.returnResultFinalPrintList[this.currentIndex].printFlag=StatusFlag.Yes;
+      }
     })
     this.financialClaimsFacade.reconcilePaymentsAndLoadPrintLetterContent(this.reconcileArray,this.claimsType)
       .subscribe({
