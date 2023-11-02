@@ -15,6 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@cms/case-management/feature-approval": [
+        "libs/case-management/feature-approval/src/index.ts"
+      ],
       "@cms/case-management/domain": [
         "libs/case-management/domain/src/index.ts"
       ],
@@ -114,9 +117,6 @@
       ],
       "@cms/productivity-tools/domain": [
         "libs/productivity-tools/domain/src/index.ts"
-      ],
-      "@cms/productivity-tools/feature-approval": [
-        "libs/productivity-tools/feature-approval/src/index.ts"
       ],
       "@cms/productivity-tools/feature-direct-message": [
         "libs/productivity-tools/feature-direct-message/src/index.ts"
