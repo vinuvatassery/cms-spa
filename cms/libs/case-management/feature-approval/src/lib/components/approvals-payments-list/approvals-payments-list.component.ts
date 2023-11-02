@@ -177,7 +177,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   private loadPaymentStatusLov(){
     this.lovFacade.getPaymentStatusLov();
     this.paymentStatusLovSubscription = this.paymentStatusLov$.subscribe({
-      next:(response) => {debugger;
+      next:(response) => {
         this.paymentStatusLovList = response;
       }
     });
@@ -186,7 +186,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   private loadPaymentMethodLov(){
     this.lovFacade.getPaymentMethodLov();
     this.paymentMethodLovSubscription = this.paymentMethodLov$.subscribe({
-      next:(response) => {debugger;
+      next:(response) => {
         this.paymentMethodLovList = response;
       }
     });
