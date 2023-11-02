@@ -167,8 +167,12 @@
                 'sendBackNotes',
                 rowIndex
               )
-            " [selected]="dataItem.batchStatus == 'APPROVED'" aria-label="Approve" id="approve{{ rowIndex }}"
-            [toggleable]="true">
+            "
+            [selected]="dataItem.batchStatus == approveStatus"
+            aria-label="Approve"
+            id="approve{{ rowIndex }}"
+            [toggleable]="true"
+          >
             Approve
           </button>
           <button kendoButton (selectedChange)="
@@ -178,8 +182,12 @@
                 'sendBackNotes',
                 rowIndex
               )
-            " [selected]="dataItem.batchStatus == 'SEND_BACK'" aria-label="Send Back" id="approve{{ rowIndex }}"
-            [toggleable]="true">
+            "
+            [selected]="dataItem.batchStatus == sendbackStatus"
+            aria-label="Send Back"
+            id="approve{{ rowIndex }}"
+            [toggleable]="true"
+          >
             Send Back
           </button>
         </div>
@@ -188,11 +196,20 @@
     <kendo-grid-column [sortable]="false" field="sendBackNotes" title="Send Back Notes" [width]="280">
       <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
         <div kendoTooltip>
-          <kendo-textarea #tareaCessation [fillMode]="formUiStyle.inputFillMode" [maxlength]="tAreaCessationMaxLength"
-            [rows]="2" resizable="none" [(ngModel)]="dataItem.sendBackNotes"
-            (valueChange)="sendBackNotesChange(dataItem)" aria-label="smoking cessation note"
-            title="{{ dataItem.sendBackNotes }}" [disabled]="dataItem.batchStatus == 'APPROVED'"
-            [ngClass]="ngDirtyInValid(dataItem, 'sendBackNotes', rowIndex)" id="sendBackNotes{{ rowIndex }}">
+          <kendo-textarea
+            #tareaCessation
+            [fillMode]="formUiStyle.inputFillMode"
+            [maxlength]="tAreaCessationMaxLength"
+            [rows]="2"
+            resizable="none"
+            [(ngModel)]="dataItem.sendBackNotes"
+            (valueChange)="sendBackNotesChange(dataItem)"
+            aria-label="smoking cessation note"
+            title="{{ dataItem.sendBackNotes }}"
+            [disabled]="dataItem.batchStatus != sendbackStatus"
+            [ngClass]="ngDirtyInValid(dataItem, 'sendBackNotes', rowIndex)"
+            id="sendBackNotes{{ rowIndex }}"
+          >
             <kendo-textarea-suffix class="justify-content-end">
               <span class="counter">{{ dataItem.tAreaCessationCounter }}</span>
             </kendo-textarea-suffix>
@@ -255,14 +272,28 @@
 </div>
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span class="">{{ approveBatchCount }} batch(es) to be approved,
-    {{ sendbackBatchCount }} batch(es) to be sent back</span>
-  <button kendoButton [primary]="true" look="flat" class="" aria-label="Approve All" (click)="onApproveAllClicked()"
-    [disabled]="!hasPaymentPendingApproval">
+  <span class=""
+    >{{ approveBatchCount }} batch(es) to be approved,
+    {{ sendbackBatchCount }} batch(es) to be sent back</span
+  >
+  <button
+    kendoButton
+    [primary]="true"
+    look="flat"
+    class=""
+    aria-label="Approve All"
+    (click)="onApproveAllClicked()"
+  >
     APPROVE ALL
   </button>
-  <button kendoButton [primary]="true" aria-label="Submit" class="" (click)="onOpenSubmitApprovalPaymentItemsClicked()"
-    [disabled]="!hasPaymentPendingApproval">
+  <button
+    kendoButton
+    [primary]="true"
+    aria-label="Submit"
+    class=""
+    (click)="onOpenSubmitApprovalPaymentItemsClicked()"
+    [disabled]="hasPaymentPendingApproval"
+  >
     Submit
   </button>
 </div>
@@ -272,12 +303,9 @@
   <section class="k-dialog-body newcase">
     <p class="mb-2">
       {{
-      approvalTypeCode === approvalTypeCodeEnum.ExceedApprovalLimit
-      ? 'The selected batches exceed your maximum approval amount. Select A manager with a higher maximum approval limit
-      needs to request the payments from the Salem Fiscal Team. "Send Back" batches will be sent to the user who
-      submitted them.'
-      : 'Approved batches will be sent to the Salem Fiscal Team via email. “Send Back” batches will be sent back to the
-      user who submitted them.'
+        approvalTypeCode === approvalTypeCodeEnum.ExceedApprovalLimit
+          ? 'The selected batches exceed your maximum approval amount. A manager with a higher maximum approval limit needs to request the payments from the Salem Fiscal Team. "Send Back" batches will be sent to the user who submitted them.'
+          : 'Approved batches will be sent to the Salem Fiscal Team via email. “Send Back” batches will be sent back to the user who submitted them.'
       }}
     </p>
 
