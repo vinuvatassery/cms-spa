@@ -25,7 +25,7 @@
       <kendo-dropdownlist
         aria-label="All Columns"
         [fillMode]="formUiStyle.dropDownFillMode"
-        [data]="userLevel == 2 ? dropDownColumnsLevel2 : dropDownColumnsLevel1"
+        [data]="dropDownColumns"
         [valuePrimitive]="true"
         textField="columnDesc"
         valueField="columnCode"
@@ -518,6 +518,8 @@
     [approvalId]="selectedApprovalId"
     [batchDetailPaymentsList$]="batchDetailPaymentsList$"
     [batchDetailModalSourceList]="batchDetailModalSourceList"
+    [paymentStatusLovList]="paymentStatusLovList"
+    [paymentMethodLovList]="paymentMethodLovList"
     [pageSizes]="pageSizes"
     [sortType]="sortType"
     [selectedPaymentType]="selectedPaymentType"
