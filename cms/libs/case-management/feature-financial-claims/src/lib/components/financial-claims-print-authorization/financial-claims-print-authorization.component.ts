@@ -39,6 +39,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
   @Output() selectUnSelectPayment  = new EventEmitter<any>();
   @Output() loadTemplateEvent  = new EventEmitter<any>();
   @Output() loadTemplateEventLog  = new EventEmitter<any>();
+  @Output() onReconcileRecordEvent = new EventEmitter<any>();
 
   /** Constructor **/
   constructor(private readonly paymentsFacade: PaymentsFacade,
@@ -205,34 +206,34 @@ export class FinancialClaimsPrintAuthorizationComponent {
           paymentSentDate :payments[0].paymentSentDate,
           checkNbr :payments[0].checkNbr,
           comments :payments[0].comments,
-          printFlag: payments[0].isPrintAdviceLetter? StatusFlag.Yes:StatusFlag.No
+          printFlag: this.returnResultFinalPrintList[this.currentIndex].isPrintAdviceLetter == true ? StatusFlag.Yes : StatusFlag.No
       });
-      if(payments[0].isPrintAdviceLetter){
-        this.returnResultFinalPrintList[this.currentIndex].printFlag=StatusFlag.Yes;
+      if(this.returnResultFinalPrintList[this.currentIndex].isPrintAdviceLetter){
+        this.returnResultFinalPrintList[this.currentIndex].printFlag = StatusFlag.Yes;
+      }else{
+        this.returnResultFinalPrintList[this.currentIndex].printFlag = StatusFlag.No;
       }
     })
     this.financialClaimsFacade.reconcilePaymentsAndLoadPrintLetterContent(this.reconcileArray,this.claimsType)
       .subscribe({
         next: (data: any) => {
           if (data) {
-            if(this.printCount > 0){
+            if(this.reconcileArray[0].printFlag === StatusFlag.Yes){
             this.generateAndPrintAdviceLetter(this.returnResultFinalPrintList[this.currentIndex]);
             }
+            this.returnResultFinalPrintList[this.currentIndex].warrantNumberChange = false;
+            this.onReconcileRecordEvent.emit(this.returnResultFinalPrintList[this.currentIndex]);
           }
           if(this.currentIndex == this.returnResultFinalPrintList.length - 1){
           this.onClosePrintAdviceLetterClicked();
           }else{
-            if(this.printCount == 0){
             let event = {
               index:  this.returnResultFinalPrintList.indexOf(this.returnResultFinalPrintList[this.currentIndex + 1]),
             };
             this.onItemChange(event);
-          }
         }
         this.ref.detectChanges();
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled!");
-        this.returnResultFinalPrintList[this.currentIndex].warrantNumberChange = false;
-        this.ref.detectChanges();
         },
         error: (err: Error) => {
           this.loaderService.hide();

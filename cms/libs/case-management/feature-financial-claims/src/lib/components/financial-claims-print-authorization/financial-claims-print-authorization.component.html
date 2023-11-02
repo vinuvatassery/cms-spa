@@ -37,8 +37,8 @@
                   <button kendoButton (click)="onClosePrintAdviceLetterClicked()" [primary]="true" look="outline" aria-label="Cancel">
                         Cancel
                   </button>
-                  <button kendoButton *ngIf="(printOption || (returnResultFinalPrintList!= undefined &&returnResultFinalPrintList[currentIndex]?.warrantNumberChange === false))" [disabled]="printCount == 0" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true"> Print</button>
-                  <button kendoButton *ngIf="(returnResultFinalPrintList!= undefined && returnResultFinalPrintList[currentIndex]?.warrantNumberChange === true)" [disabled]="(claimReconcileCount == 0 && isReconcilePrintCount == 0)" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true"> Reconcile & Print</button>
+                  <button kendoButton *ngIf="printOption || (returnResultFinalPrintList!= undefined && !returnResultFinalPrintList[currentIndex]?.warrantNumberChange)" [disabled]="(returnResultFinalPrintList!= undefined && !returnResultFinalPrintList[this.currentIndex]?.isPrintAdviceLetter)" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true"> Print</button>
+                  <button kendoButton *ngIf="(returnResultFinalPrintList!= undefined && returnResultFinalPrintList[currentIndex]?.warrantNumberChange)" [disabled]="(claimReconcileCount == 0 && isReconcilePrintCount == 0)" (click)="onPrintAdviceLetterClicked($event.target.innerText)" [primary]="true"> Reconcile & Print</button>
             </div>
       </div>
 </kendo-dialog-actions>

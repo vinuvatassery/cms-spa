@@ -16,6 +16,8 @@
 (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
 [paymentMethodCode$]=" paymentMethodCode$"
 (onProviderNameClickEvent)="onProviderNameClick($event)"
+[exportButtonShow$]="exportButtonShow$"
+(onExportClickedEvent)="exportBatchItemListGridData($event)"
 ></cms-financial-claims-batch-list-detail-items>
 
 <ng-template #providerDetailsTemplate>
