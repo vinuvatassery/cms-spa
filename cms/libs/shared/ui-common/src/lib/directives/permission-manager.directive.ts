@@ -27,30 +27,44 @@ export class PermissionManagerDirective implements OnInit, OnDestroy {
     this.subscription.push(
 
       this.userDataService.getProfile$
-      .pipe(first(profile => profile[0]?.permissions != null))
-      .subscribe((profile:any)=>{       
-            
-            this.permission =profile[0]?.permissions 
-            
-            if (this.permission?.length == 0) {
-              // Remove element from DOM
-              this.viewContainerRef.clear();
-            }            
-            const searchPermission  = this.ifPermission;    
-            let hasPermissions = false;    
-            for (const perm of searchPermission)
-            {            
-                hasPermissions = this.permission?.some((x : any)=> x.permissionsCode   === perm)   
-            }
+      .pipe(first(profile => profile?.length > 0))
+      .subscribe((profile:any)=>{
+        let permissions : any;       
+        for(const profileItem of profile){
+          if(permissions == undefined || permissions?.length == 0){
+            permissions = profileItem?.permissions 
+          }
+          else{
+            profileItem?.permissions.forEach((newPerm : any) => {
+              const permissionExists = permissions.some((existPerm : any) => existPerm.permissionId === newPerm.permissionId);
+              if(!permissionExists){
+                permissions.push(newPerm);    
+              }
+            });
+          }
+        }
+        this.permission = permissions;             
+        if (this.permission?.length == 0) {
+          // Remove element from DOM
+          this.viewContainerRef.clear();
+        }           
+        const searchPermission  = this.ifPermission;    
+        let hasPermissions = false;    
+        for (const perm of searchPermission)
+        {            
+            hasPermissions = this.permission?.some((x : any)=> x.permissionsCode   === perm)   
+        }
 
-            if (!hasPermissions) {
-              this.viewContainerRef.clear();
-            } else {
-              // appends the ref element to DOM
-              this.viewContainerRef.createEmbeddedView(this.templateRef);
-            }   
-          })      
-      );
+        if (!hasPermissions) {
+          this.viewContainerRef.clear();
+        } else {
+          // appends the ref element to DOM
+          this.viewContainerRef.createEmbeddedView(this.templateRef);
+        }
+        permissions = null;
+        this.permission = null; 
+      })      
+    );
   }
 
   /**

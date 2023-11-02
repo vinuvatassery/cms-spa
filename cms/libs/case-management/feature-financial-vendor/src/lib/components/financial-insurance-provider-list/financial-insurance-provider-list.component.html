@@ -1,6 +1,13 @@
 <div>
   <div class="flex-col flex-space-bw align-items-center">
     <h5 class="title-md mb-0 text-capital">Insurance Providers</h5>
+    <span class="right-overlay-export">
+      <button kendoButton [primary]="true" look="flat" aria-label="Export"  class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
+        <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
+        
+        <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
+      </button>
+    </span>
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
@@ -20,7 +27,7 @@
       [filter]="state.filter"
       (filterChange)="filterChange($event)"
       (dataStateChange)="dataStateChange($event)">
-        <kendo-grid-column field="providerName" title="Insurance Provider" [width]="100"> 
+        <kendo-grid-column field="providerName" title="Insurance Provider" [width]="250"> 
           <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
             <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
                       <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
@@ -30,7 +37,7 @@
             </kendo-grid-string-filter-menu>
              </ng-template> 
         </kendo-grid-column>
-        <kendo-grid-column field="insurancePlanCount" title="# Of Active Plans" [width]="50"> 
+        <kendo-grid-column field="insurancePlanCount" title="# Of Active Plans" [width]="140"> 
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="true" operator="eq" format="0">
                   <kendo-filter-eq-operator></kendo-filter-eq-operator>
@@ -41,7 +48,7 @@
             </kendo-grid-numeric-filter-menu>
         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="clientCount" title="# Of Active Clients" [width]="50"> 
+        <kendo-grid-column field="clientCount" title="# Of Active Clients" [width]="140"> 
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="true" operator="eq" format="0">
                   <kendo-filter-eq-operator></kendo-filter-eq-operator>
@@ -52,10 +59,10 @@
             </kendo-grid-numeric-filter-menu>
         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="20" [filterable]="false" [sortable]="false">
+        <kendo-grid-column field="by" title="By" [width]="70" class="text-center" [filterable]="false" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-              [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
+              [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.lastUpdatedBy">
               <common-user-photo-icon [userId]="dataItem.lastUpdatedBy"></common-user-photo-icon>
             </button>
             <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
@@ -65,7 +72,7 @@
             </kendo-popover>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="Option" title="Option" [columnMenu]="false" [sortable]="false" [width]="20" class="text-center">
+        <kendo-grid-column field="Option" title="Options" [columnMenu]="false" [sortable]="false" [width]="75" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton [data]="emailBillingAddressActions" icon="more-vertical"
               class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -126,14 +133,6 @@
       (click)="clickOpenAddEditInsurancePlanDetails()">
       Insurance Provider
     </button>
-
-    <span class="right-overlay-export">
-      <button kendoButton [primary]="true" look="flat" aria-label="Export"  class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
-        <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
-        
-        <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
-      </button>
-    </span>
   </div>
 </div>
 
