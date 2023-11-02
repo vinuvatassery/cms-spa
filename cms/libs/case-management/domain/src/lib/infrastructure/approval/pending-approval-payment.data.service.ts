@@ -47,11 +47,11 @@ export class PendingApprovalPaymentService {
 
   getPendingApprovalBatchDetailPaymentsGrid(gridSetupData: any, batchId: string, serviceSubType: string) {
     const batchDetailGridSetupDto = {
-      SortType: gridSetupData.sortType,
-      Sorting: gridSetupData.sort,
-      SkipCount: gridSetupData.skipCount,
-      MaxResultCount: gridSetupData.pageSize,
-      Filter: gridSetupData.filter,
+      SortType: gridSetupData.gridDataRefinerValue.sortType,
+      Sorting: gridSetupData.gridDataRefinerValue.sort,
+      SkipCount: gridSetupData.gridDataRefinerValue.skipCount,
+      MaxResultCount: gridSetupData.gridDataRefinerValue.pageSize,
+      Filter: JSON.stringify(gridSetupData.gridDataRefinerValue.filter),
     };
     return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/payments/batch-details?serviceSubType=${serviceSubType}&batchId=${batchId}`
     , batchDetailGridSetupDto);

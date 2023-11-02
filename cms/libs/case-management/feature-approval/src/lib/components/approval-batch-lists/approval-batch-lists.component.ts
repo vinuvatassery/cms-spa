@@ -15,7 +15,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 @Component({
   selector: 'productivity-tools-approval-batch-lists',
@@ -31,11 +31,13 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   @Input() batchDetailPaymentsList$: any;
   @Input() batchDetailModalSourceList: any;
   @Input() selectedPaymentType: any;
+  @Input() paymentStatusLovList: any;
+  @Input() paymentMethodLovList: any;
   @Output() closeViewPaymentsBatchClickedEvent = new EventEmitter();
   @Output() loadBatchDetailPaymentsListEvent = new EventEmitter<any>();
   @Output() batchModalSaveClickedEvent = new EventEmitter<any>();
   public state!: State;
-  isBatchDetailPaymentsGridLoaderShow = false;
+  isBatchDetailPaymentsGridLoaderShow = new BehaviorSubject<boolean>(true);
   sortColumn = 'paymentNbr';
   sortDir = 'Ascending';
   sortColumnName = '';
@@ -61,8 +63,9 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  //columns : any;
 
-  gridColumns: { [key: string]: string } = {
+  columns: { [key: string]: string } = {
     paymentNbr: 'Item #',
     invoiceNbr: 'Invoice ID',
     vendorName: 'Provider Name',
@@ -74,19 +77,8 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
     clientId: 'Client ID',
     paymentStatusCode: 'Payment Status',
   };
-  paymentMethods = ['CHECK', 'ACH', 'SPOTS'];
-  paymentStatusList = [
-    'SUBMITTED',
-    'PENDING_APPROVAL',
-    'DENIED',
-    'MANAGER_APPROVED',
-    'PAYMENT_REQUESTED',
-    'ONHOLD',
-    'FAILED',
-    'PAID',
-  ];
+
   paymentMethodFilter = '';
-  paymentTypeFilter = '';
   paymentStatusFilter = '';
   public width = '100%';
   public height = '100%';
@@ -95,6 +87,11 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   constructor(private readonly cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[2]?.value,
+      sort: this.sort,
+    };
     this.tAreaVariablesInitiation(this.batchDetailModalSourceList);
     this.getCurrentBatchId();
     this.loadBatchPaymentListGrid();
@@ -247,13 +244,14 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isBatchDetailPaymentsGridLoaderShow = true;
+    this.isBatchDetailPaymentsGridLoaderShow.next(true);
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
-      sortColumn: this.sortColumn ?? 'paymentNbr',
+      sort: sortValue,
+      //sortColumn: this.sortColumn ?? 'paymentNbr',
       sortType: sortTypeValue ?? 'asc',
-      filter: this.filter,
+      filter: this.state?.["filter"]?.["filters"] ?? []
     };
     let batchId = this.batchId;
     let selectedPaymentType = this.selectedPaymentType;
@@ -266,23 +264,23 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
-    this.batchDetailPaymentsList$.subscribe((data: any) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
+    this.batchDetailPaymentsList$.subscribe((response: any) => {
+      let gridData = {
+        data: response.data,
+        total: response.total,
+      };
+      this.gridDataResult = gridData;
       this.gridBatchDetailPaymentsDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) {
-        this.isBatchDetailPaymentsGridLoaderShow = false;
+      if (response?.total >= 0 || response?.total === -1) {
+        this.isBatchDetailPaymentsGridLoaderShow.next(false);
       }
     });
-    this.isBatchDetailPaymentsGridLoaderShow = false;
   }
 
   onChange(data: any) {
     this.defaultGridState();
     const stateData = this.state;
+    stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
 
@@ -305,9 +303,32 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.sortColumn = stateData.sort[0]?.field;
-    this.sortColumnName = this.gridColumns[this.sortColumn];
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+    // this.sortColumn = stateData.sort[0]?.field;
+    // this.sortColumnName = this.columns[this.sortColumn];
     this.filter = stateData?.filter?.filters;
+    if(stateData.filter?.filters.length > 0)
+    {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      this.isFiltered = true;
+      const filterList = []
+      for(const filter of stateData.filter.filters)
+      {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy =  filterList.toString();
+    }
+    else
+    {
+      this.filter = "";
+      this.isFiltered = false
+    }
+
+    if (!this.filteredBy.includes('Payment Method'))
+    this.paymentMethodFilter = '';
+    if (!this.filteredBy.includes('Payment Status'))
+    this.paymentStatusFilter = '';
     this.loadBatchPaymentListGrid();
   }
 
@@ -318,8 +339,6 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   ): void {
     if (field === 'paymentMethodCode') {
       this.paymentMethodFilter = value;
-    } else if (field === 'paymentTypeCode') {
-      this.paymentTypeFilter = value;
     } else if (field === 'paymentStatusCode') {
       this.paymentStatusFilter = value;
     }
