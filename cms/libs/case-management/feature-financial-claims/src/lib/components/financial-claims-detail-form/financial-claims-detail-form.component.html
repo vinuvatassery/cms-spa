@@ -36,7 +36,7 @@
 
                                 <kendo-combobox-column>
                                     <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                        <span class="text-muted"><em> TIN:</em> {{ dataItem.tin }}</span>
+                                        <span class="text-muted"><em> TIN:</em> {{ dataItem.tin | tin }}</span>
                                     </ng-template>
                                 </kendo-combobox-column>
 
@@ -215,7 +215,7 @@
                                                 <kendo-formerror
                                                     *ngIf="getExceptionFormValue('oldInvoiceExceptionFlag',i)"
                                                     class="d-flex align-items-center">
-                                                    <span class="material-icons mr-1" aria-hidden="false">info</span>
+                                                    <span class="material-icons mr-1" aria-hidden="false">error</span>
                                                     Invoice is over 1 year old. <a kendoButton
                                                         class="ml-1 card-link-button"
                                                         (click)="onMakeExceptionClick('oldInvoiceExceptionReason',i)">
@@ -224,7 +224,7 @@
                                                 <kendo-formerror
                                                     *ngIf="getExceptionFormValue('ineligibleExceptionFlag',i)"
                                                     class="d-flex align-items-center">
-                                                    <span class="material-icons mr-1" aria-hidden="false">info</span>
+                                                    <span class="material-icons mr-1" aria-hidden="false">error</span>
                                                     Client not eligible for these dates. Claim status will automatically
                                                     be Denied.
                                                 </kendo-formerror>
