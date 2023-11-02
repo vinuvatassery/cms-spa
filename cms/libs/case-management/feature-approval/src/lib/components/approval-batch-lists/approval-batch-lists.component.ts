@@ -248,7 +248,6 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
       sort: sortValue,
-      //sortColumn: this.sortColumn ?? 'paymentNbr',
       sortType: sortTypeValue ?? 'asc',
       filter: this.state?.["filter"]?.["filters"] ?? []
     };
@@ -303,8 +302,6 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumn = this.columns[stateData.sort[0]?.field];
-    // this.sortColumn = stateData.sort[0]?.field;
-    // this.sortColumnName = this.columns[this.sortColumn];
     this.filter = stateData?.filter?.filters;
     if(stateData.filter?.filters.length > 0)
     {
