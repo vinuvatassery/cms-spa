@@ -292,7 +292,7 @@
                 rowIndex
               )
             "
-            [selected]="dataItem.batchStatus == 'APPROVED'"
+            [selected]="dataItem.batchStatus == approveStatus"
             aria-label="Approve"
             id="approve{{ rowIndex }}"
             [toggleable]="true"
@@ -309,7 +309,7 @@
                 rowIndex
               )
             "
-            [selected]="dataItem.batchStatus == 'SEND_BACK'"
+            [selected]="dataItem.batchStatus == sendbackStatus"
             aria-label="Send Back"
             id="approve{{ rowIndex }}"
             [toggleable]="true"
@@ -337,7 +337,7 @@
             (valueChange)="sendBackNotesChange(dataItem)"
             aria-label="smoking cessation note"
             title="{{ dataItem.sendBackNotes }}"
-            [disabled]="dataItem.batchStatus == 'APPROVED'"
+            [disabled]="dataItem.batchStatus != sendbackStatus"
             [ngClass]="ngDirtyInValid(dataItem, 'sendBackNotes', rowIndex)"
             id="sendBackNotes{{ rowIndex }}"
           >
@@ -431,7 +431,6 @@
     class=""
     aria-label="Approve All"
     (click)="onApproveAllClicked()"
-    [disabled]="!hasPaymentPendingApproval"
   >
     APPROVE ALL
   </button>
@@ -441,7 +440,7 @@
     aria-label="Submit"
     class=""
     (click)="onOpenSubmitApprovalPaymentItemsClicked()"
-    [disabled]="!hasPaymentPendingApproval"
+    [disabled]="hasPaymentPendingApproval"
   >
     Submit
   </button>
@@ -458,7 +457,7 @@
     <p class="mb-2">
       {{
         approvalTypeCode === approvalTypeCodeEnum.ExceedApprovalLimit
-          ? 'The selected batches exceed your maximum approval amount. Select A manager with a higher maximum approval limit needs to request the payments from the Salem Fiscal Team. "Send Back" batches will be sent to the user who submitted them.'
+          ? 'The selected batches exceed your maximum approval amount. A manager with a higher maximum approval limit needs to request the payments from the Salem Fiscal Team. "Send Back" batches will be sent to the user who submitted them.'
           : 'Approved batches will be sent to the Salem Fiscal Team via email. “Send Back” batches will be sent back to the user who submitted them.'
       }}
     </p>
