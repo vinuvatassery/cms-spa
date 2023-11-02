@@ -17,6 +17,9 @@
 (warrantNumberChangeEvent)="warrantNumberChange($event)"
 [warrantNumberChange$]="warrantNumberChange$"
 [warrantNumberChangeLoader$]="warrantNumberChangeLoader$"
+(loadTemplateEvent) = "loadEachLetterTemplate($event)"
+[letterContentList$]="letterContentList$"
+[letterContentLoader$]="letterContentLoader$"
 ></cms-financial-claims-batches-reconcile-payments>
 
 <ng-template #providerDetailsTemplate>

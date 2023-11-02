@@ -47,10 +47,11 @@ export class FinancialClaimsAllPaymentsListComponent
   @Input() financialClaimsAllPaymentsGridLoader$: any;
   @Input() financialClaimsAllPaymentsGridLists$: any;
   @Input() exportButtonShow$: any;
-
+  @Input() letterContentList$ :any;
+  @Input() letterContentLoader$ :any;
   @Output() loadFinancialClaimsAllPaymentsListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
-
+  @Output() loadTemplateEvent = new EventEmitter<any>();
   @ViewChild('unBatchClaimsDialogTemplate', { read: TemplateRef })
   unBatchClaimsDialogTemplate!: TemplateRef<any>;
   @ViewChild('deleteClaimsConfirmationDialogTemplate', { read: TemplateRef })
@@ -881,5 +882,9 @@ pageNumberAndCountChangedInSelectAll() {
 
   getSelectedReportCount(selectedSendReportList : []){
     this.sendReportCount = selectedSendReportList.length;
+  }
+
+    loadEachLetterTemplate(event:any){
+      this.loadTemplateEvent.emit(event);
   }
 }
