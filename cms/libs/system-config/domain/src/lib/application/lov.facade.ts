@@ -1,4 +1,3 @@
-import { InsurancePlanTypeCodes } from './../../../../../shared/ui-common/src/lib/enums/insurance-plan.enum';
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { NotificationSnackbarService, SnackBarNotificationType, LoggingService } from '@cms/shared/util-core';
@@ -7,8 +6,10 @@ import { Subject, map } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
 import { Lov } from '../entities/lov';
+
 import { AcceptedCaseStatusCode } from '../enums/accepted-case-status-code.enum';
 import { ApplicantInfoLovType } from '../enums/applicant-info-lov-types.enum';
+import { InsurancePlanTypeCodes } from '../enums/insurance-plan.enum';
 import { LovType } from '../enums/lov-types.enum';
 
 
