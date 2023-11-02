@@ -82,8 +82,8 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
           pcaAssignmentId:  this.pcaAssignmentFormDataModel$?.pcaAssignmentId ,  
           objectCode: this.pcaAssignmentFormDataModel$?.objectId,     
           pcaId: this.pcaAssignmentFormDataModel$?.pcaId, 
-          openDate: this.pcaAssignmentFormDataModel$?.openDate,
-          closeDate: this.pcaAssignmentFormDataModel$?.closeDate,
+          openDate: '',
+          closeDate: '',
           amount:this.pcaAssignmentFormDataModel$.pcaRemainingAmount,
           unlimited:false,
           groupCodes : this.groupCodesData$               
@@ -190,7 +190,7 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
                 objectCode:  this.pcaAssignmentFormDataModel$?.objectCodeId,     
                 pcaId: this.pcaAssignmentFormDataModel$?.pcaId, 
                 openDate: this.pcaAssignmentFormDataModel$?.openDate,
-                closeDate: this.pcaAssignmentFormDataModel$?.closeDate,
+                closeDate: '',
                 amount: this.pcaAssignmentFormDataModel$?.amount,
                 unlimited: this.pcaAssignmentFormDataModel$?.unlimited,
                 groupCodes : groupCodeIdsAssignedValue               

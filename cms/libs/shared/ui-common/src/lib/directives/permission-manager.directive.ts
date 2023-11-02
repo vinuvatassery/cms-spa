@@ -30,7 +30,7 @@ export class PermissionManagerDirective implements OnInit, OnDestroy {
       .pipe(first(profile => profile?.length > 0))
       .subscribe((profile:any)=>{
         let permissions : any;       
-        for(const profileItem of profile){debugger;
+        for(const profileItem of profile){
           if(permissions == undefined || permissions?.length == 0){
             permissions = profileItem?.permissions 
           }
@@ -61,8 +61,8 @@ export class PermissionManagerDirective implements OnInit, OnDestroy {
           // appends the ref element to DOM
           this.viewContainerRef.createEmbeddedView(this.templateRef);
         }
-        permissions.clear();
-        this.permission.clear(); 
+        permissions = null;
+        this.permission = null; 
       })      
     );
   }
