@@ -131,7 +131,7 @@ export class FinancialDrugsComponent {
   ) { }
 
   private loadManufacturer() {
-    this.vendorDetails$ = this.vendorFacade.loadAllVendors(PendingApprovalGeneralTypeCode.Manufacturer)
+    this.vendorDetails$ = this.vendorFacade.loadAllVendors('MANUFACTURERS')
   }
 
   ngOnInit(): void {
