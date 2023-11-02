@@ -85,18 +85,24 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
 
   searchClinic(clinicName: any) {
     this.clinicSearchSubscription?.unsubscribe();
-  
+
     if (clinicName === '' || !clinicName) {
       this.clinicVendorListLocal = null;
       return;
     }
-  
+
     this.clinicSearchSubscription = this.clinicVendorList$.subscribe((data: any) => {
       if (data && clinicName !== '') {
-        this.clinicVendorListLocal = data;
+        if (this.providerType === FinancialVendorTypeCode.MedicalProviders) {
+          this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic);
+        } else if (this.providerType === FinancialVendorTypeCode.DentalProviders) {
+          this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic);
+        }
+        this.clinicSearchSubscription?.unsubscribe();
       }
     });
-  
+
+
     this.selectedClinicVendorId = null;
     this.searchClinicVendorClicked.emit(clinicName);
   }
@@ -107,11 +113,11 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.lovFacade.getPaymentMethodLov();
     if (this.editVendorInfo) {
       this.setVendorDetailFormValues();
-    }
-    else {
+    } else {
       this.getPaymentMethods();
       this.getPaymentRunDate();
     }
+
     if (this.selectedClinicType === FinancialVendorTypeCode.MedicalProviders) {
       this.medicalProviderForm.controls[this.clinicTypeFieldName].setValue(FinancialVendorTypeCode.MedicalClinic)
     } else if (this.selectedClinicType === FinancialVendorTypeCode.DentalProviders) {
