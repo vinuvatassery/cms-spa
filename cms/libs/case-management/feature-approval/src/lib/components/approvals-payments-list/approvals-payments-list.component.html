@@ -100,12 +100,7 @@
     <kendo-grid-column
       field="totalAmountDue"
       title="Total Amount"
-      [width]="160"
-      *ngIf="
-        selectedPaymentType === 'INSURANCE_PREMIUM' ||
-        selectedPaymentType === 'TPA_CLAIM' ||
-        selectedPaymentType === 'PHARMACY_CLAIM'
-      ">
+      [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
         <span class="tableamountview">
           <strong>$</strong>
@@ -116,10 +111,6 @@
       field="providerCount"
       title="Provider Count"
       [width]="120"
-      *ngIf="
-        selectedPaymentType === 'TPA_CLAIM' ||
-        selectedPaymentType === 'PHARMACY_CLAIM'
-      "
     >
     </kendo-grid-column>
     <kendo-grid-column
