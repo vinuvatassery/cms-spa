@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 /** Internal Library **/
-import { NavigationMenu, NavigationMenuFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { NavigationMenu, NavigationMenuFacade, UserManagementFacade, UserDefaultRoles, UserLevel } from '@cms/system-config/domain';
 import { MenuBadge } from '../enums/menu-badge.enum';
 
 @Component({
@@ -96,11 +96,11 @@ export class SideNavigationComponent implements OnInit {
     }
 
     getUserRole(){
-      if(this.userManagementFacade.hasRole("FM2")){
-        this.userLevel = 2;
+      if(this.userManagementFacade.hasRole(UserDefaultRoles.FinancialManagerL2)){
+        this.userLevel = UserLevel.Level2Value;
       }
-      else if(this.userManagementFacade.hasRole("FM1")){
-        this.userLevel = 1;
+      else if(this.userManagementFacade.hasRole(UserDefaultRoles.FinancialManagerL1)){
+        this.userLevel = UserLevel.Level1Value;
       }
     }
 
