@@ -56,18 +56,18 @@
       [sticky]="true"
       ></kendo-grid-checkbox-column>
 
-      <kendo-grid-column *ngIf="isPrintAuthorizationClicked" [sortable]="false" field="add" [width]="40"  class="text-center" 
+      <kendo-grid-column *ngIf="isPrintAuthorizationClicked" [sortable]="false" field="add" [width]="40"  class="text-center"
       [sticky]="true" [sortable]="false"  [columnMenu]="false"  >
         <ng-template kendoGridHeaderTemplate let-dataItem >
             <input kendoCheckBox
-                 type="checkbox" 
+                 type="checkbox"
                  name="selectAll"
                  [(ngModel)]="selectAll"
                  (change)="selectionAllChange()"/>
-         </ng-template> 
+         </ng-template>
          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
              <input   kendoCheckBox
-                 type="checkbox"  [(ngModel)]="dataItem.selected" 
+                 type="checkbox"  [(ngModel)]="dataItem.selected"
                  (change)="selectionChange(dataItem,dataItem.selected)"/>
          </ng-template>
       </kendo-grid-column>
@@ -82,6 +82,12 @@
             <kendo-filter-contains-operator></kendo-filter-contains-operator>
           </kendo-grid-string-filter-menu>
         </ng-template>
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button aria-label="itemNumber" kendoButton look="flat" class="card-link-button"
+          (click)="onitemNumberClick(dataItem)">
+            {{ dataItem.itemNumber }}
+          </button>
+        </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="batchNumber" title="Batch #" [width]="120">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -92,6 +98,12 @@
             <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
             <kendo-filter-contains-operator></kendo-filter-contains-operator>
           </kendo-grid-string-filter-menu>
+        </ng-template>
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button aria-label="batchNumber" kendoButton look="flat" class="card-link-button"
+          (click)="onbatchNumberClick(dataItem)">
+            {{ dataItem.batchNumber }}
+          </button>
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="invoiceNbr" title="Invoice ID" [width]="150">
@@ -298,7 +310,7 @@
     <div class="bottom-fixed-wrapper text-right flex-gap">
       <span *ngIf="previewText" class="">{{sendReportCount}} claims(s) to be previewed</span>
       <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" *ngIf="isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
-      <button kendoButton [primary]="true" aria-label="Review" [disabled]="sendReportCount == 0" class="" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
+      <button kendoButton [primary]="true" aria-label="Review" [disabled]="sendReportCount === 0" class="" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
       <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action"
         buttonClass="k-split-button" [tabindex]="0" *ngIf="!isPrintAuthorizationClicked"
         [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
@@ -336,7 +348,15 @@
     </ng-template>
 
     <ng-template #clientRecentClaimsDialog>
-      <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">Recent Claims for {{clientName}}</h4></kendo-dialog-titlebar>
+      <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)">
+        <h4 class="text-upper">Recent Claims for {{clientName}}</h4>
+        <div *ngIf="(recentClaimsGridLists$ | async) as recentClaims" class="k-flex-grow justify-content-end">
+          <span class="d-flex k-wizard-horizontal align-items-fstart">
+            <div class="flex-space-bw w100" style="gap: 4px;">Client Annual Total: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientAnnualTotal | kendoNumber: 'n2'}}</span></div>
+            <div class="flex-space-bw w100" style="gap: 4px;">Client Balance: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientBalance | kendoNumber: 'n2'}}</span></div>
+          </span>
+        </div>
+      </kendo-dialog-titlebar>
       <section class="k-dialog-body-padding">
         <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
           (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>

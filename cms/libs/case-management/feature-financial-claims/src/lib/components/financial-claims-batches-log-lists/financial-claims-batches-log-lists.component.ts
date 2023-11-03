@@ -134,6 +134,7 @@ export class FinancialClaimsBatchesLogListsComponent
   noOfRecordToPrint:any = 0;
   totalRecord:any;
   batchLogPrintAdviceLetterPagedList:any;
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
 
   gridColumns: { [key: string]: string } = {
     itemNbr: 'Item #',
@@ -239,9 +240,8 @@ export class FinancialClaimsBatchesLogListsComponent
 
   //sorting
   sortColumn = 'itemNbr';
-  sortColumnDesc = 'Item #';
   sortDir = 'Descending';
-  sortColumnName = '';
+  sortColumnName = 'Item #';
 
   //filtering
   filteredBy = '';
@@ -424,7 +424,7 @@ export class FinancialClaimsBatchesLogListsComponent
 
   restGrid() {
     this.sortValue = 'itemNbr';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.sortColumnName = this.gridColumns[this.sortValue];
     this.sortType = 'desc';
     this.initializeGrid();
     this.sortDir = 'Descending';
@@ -915,31 +915,31 @@ export class FinancialClaimsBatchesLogListsComponent
   }
 
   markAsUnChecked(data:any){
-    data.forEach((element:any) => {     
-      element.selected = false;    
+    data.forEach((element:any) => {
+      element.selected = false;
   });
   }
   markAsChecked(data:any){
-    data.forEach((element:any) => { 
+    data.forEach((element:any) => {
       if(this.selectAll){
-        element.selected = true; 
-      } 
+        element.selected = true;
+      }
       else{
-        element.selected = false; 
+        element.selected = false;
       }
       if(this.unCheckedPaymentRequest.length>0 || this.selectedDataIfSelectAllUnchecked.length >0)   {
         let itemMarkedAsUnChecked=   this.unCheckedPaymentRequest.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
         if(itemMarkedAsUnChecked !== null && itemMarkedAsUnChecked !== undefined){
-          element.selected = false;    
+          element.selected = false;
         }
         let itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
         if(itemMarkedAsChecked !== null && itemMarkedAsChecked !== undefined){
-          element.selected = true;   
+          element.selected = true;
         }
       }
-     
+
     });
-  
+
   }
   selectionChange(dataItem:any,selected:boolean){
     if(!selected){
@@ -956,13 +956,13 @@ export class FinancialClaimsBatchesLogListsComponent
       this.unCheckedPaymentRequest = this.unCheckedPaymentRequest.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
       if(!this.selectAll){
       this.selectedDataIfSelectAllUnchecked.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true,'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr});
-      }          
+      }
     }
     let returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
     'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
     'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
     this.disablePreviewButton(returnResult);
-   
+
   }
 
   //#endregion
