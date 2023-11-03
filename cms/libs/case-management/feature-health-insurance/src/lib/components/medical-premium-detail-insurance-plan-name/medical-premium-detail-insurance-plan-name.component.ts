@@ -47,6 +47,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   hasInsurancePlanCreateUpdatePermission = false;
 
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
+  insuranceTypeListForPlan$ = this.lovFacade.insuranceTypelovForPlan$;
 
   constructor(private formBuilder: FormBuilder, private readonly lovFacade: LovFacade, private readonly insurancePlanFacade: InsurancePlanFacade,
     private changeDetector: ChangeDetectorRef, private readonly loggingService: LoggingService,
@@ -70,7 +71,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   }
 
   onHealthInsuranceTypeChanged() {
-    var selectedType = this.newhealthInsuranceForm.controls['insuranceType'].value;
+    let selectedType = this.newhealthInsuranceForm.controls['insuranceType'].value;
     if (selectedType == "QUALIFIED_HEALTH_PLAN") {
       this.newhealthInsuranceForm.controls['termDate']
         .setValidators([
@@ -163,13 +164,12 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     this.isValidateForm = true;
 
     if (this.newhealthInsuranceForm.valid) {
-      var finalData = this.mapFormValues();
-      this.insuranceFacade.addPlan(finalData);
+      let finalData = this.mapFormValues();
       this.showLoader();
 
       this.insuranceFacade.addPlan(finalData).subscribe({
         next: (response: any) => {
-          var notificationMessage = response.message;
+          let notificationMessage = response.message;
           this.InsurancePlanClose();
           this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
           this.hideLoader();

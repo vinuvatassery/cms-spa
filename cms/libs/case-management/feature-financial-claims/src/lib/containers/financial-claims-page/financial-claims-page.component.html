@@ -19,7 +19,6 @@
                                 [financialClaimsInvoice$]="financialClaimsInvoice$"
                                 [exportButtonShow$]="exportButtonShow$"
                                 (loadFinancialClaimsProcessListEvent)="loadFinancialClaimsProcessListGrid($event)"
-                                (loadFinancialClaimsInvoiceListEvent)=loadFinancialClaimsInvoiceListService($event)
                                 (exportGridDataEvent)="exportClaimsProcessGridData()"
                                 (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-claims-process-list>
                             </div>
@@ -50,7 +49,10 @@
                                 [exportButtonShow$]="exportButtonShow$"
                                 (loadFinancialClaimsAllPaymentsListEvent)="loadFinancialClaimsAllPaymentsListGrid($event)"
                                 (exportGridDataEvent)="exportClaimsPaymentsGridData()"
-                                (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-claims-all-payments-list>
+                                (onProviderNameClickEvent)="onProviderNameClick($event)"
+                                (loadTemplateEvent) = "loadEachLetterTemplate($event)"
+                                [letterContentList$]="letterContentList$"
+                                [letterContentLoader$]="letterContentLoader$"></cms-financial-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

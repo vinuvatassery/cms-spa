@@ -62,7 +62,6 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   @Input() exportButtonShow$: any;
 
   @Output() loadFinancialClaimsProcessListEvent = new EventEmitter<any>();
-  @Output() loadFinancialClaimsInvoiceListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
 
   paymentStatusCode =null
@@ -206,8 +205,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
       text: 'Delete Claim',
       icon: 'delete',
       click: (data: any): void => {
-   
-        this.onSingleClaimDelete(data.paymentRequestId.split(','));       
+
+        this.onSingleClaimDelete(data.paymentRequestId.split(','));
         this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog);
       },
     },
@@ -434,12 +433,12 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     }
   }
 
-  public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void { 
+  public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
     if (!this.selectedProcessClaims.length)
     {
       this.financialClaimsFacade.errorShowHideSnackBar("Select a claim to delete")
       return;
-    } 
+    }
     this.deleteClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
@@ -458,7 +457,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   }
   modalCloseAddEditClaimsFormModal(result: any) {
     if (result === true) {
-      this.loadFinancialClaimsProcessListGrid();     
+      this.loadFinancialClaimsProcessListGrid();
     }
     this.addEditClaimsFormDialog.close();
   }
@@ -524,10 +523,6 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.searchValue =''
 
     this.loadFinancialClaimsProcessListGrid();
-  }
-
-  loadFinancialClaimsInvoiceListService(data: any) {
-    this.loadFinancialClaimsInvoiceListEvent.emit(data);
   }
 
   onClaimClick(dataitem: any) {

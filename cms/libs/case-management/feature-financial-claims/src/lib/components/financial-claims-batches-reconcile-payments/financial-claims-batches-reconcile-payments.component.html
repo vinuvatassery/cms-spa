@@ -200,7 +200,7 @@
                             </kendo-grid-column>
                         <kendo-grid-column  field="paymentReconciledDate" title="Date Pmt. Reconciled" [width]="200">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">              
-                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
+                                    <kendo-datepicker [disabled]="dataItem?.reconciled" [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
                                     aria-label="Date Pmt. Reconciled"  id ="paymentReconciledDate{{rowIndex}}"  name ="paymentReconciledDate{{rowIndex}}"
                                     [(ngModel)]="dataItem.paymentReconciledDate"  (valueChange)="dateChangeListItems($event,dataItem,'DATE_PAYMENT_RECONCILED')"
                                     [ngClass]="ngDirtyInValid(dataItem,'paymentReconciledDate',rowIndex)"
@@ -221,7 +221,7 @@
                         </kendo-grid-column>
                         <kendo-grid-column field="paymentSentDate" title="Date Pmt. Sent" [width]="160">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
+                                    <kendo-datepicker [disabled]="dataItem?.reconciled" [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
                                     aria-label="Date Pmt. Sent"  id ="paymentSentDate{{rowIndex}}"  name ="paymentSentDate{{rowIndex}}"
                                     [(ngModel)]="dataItem.paymentSentDate"   (valueChange)="dateChangeListItems($event,dataItem,'DATE_PAYMENT_SENT')"
                                     [ngClass]="ngDirtyInValid(dataItem,'paymentSentDate',rowIndex)" 
@@ -255,11 +255,11 @@
                         </kendo-grid-column>
                         <kendo-grid-column field="checkNbr" title="Warrant Number" [width]="180">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                                    <kendo-textbox  aria-label="Warrant Number"
+                                    <kendo-textbox [disabled]="dataItem?.reconciled" aria-label="Warrant Number"
                                     placeholder="Warrant Number"  [maxlength]="12"
                                     [fillMode]="formUiStyle.inputFillMode"
                                     [ngClass]="ngDirtyInValid(dataItem,'checkNbr',rowIndex)"  id ="checkNbr{{rowIndex}}"
-                                    [(ngModel)]="dataItem.checkNbr" (afterValueChanged)="warrantNumberChange(dataItem)"    >
+                                    [(ngModel)]="dataItem.checkNbr" (afterValueChanged)="warrantNumberChange(dataItem)">
                                   </kendo-textbox>
                                   <kendo-formerror *ngIf="dataItem.warrantNumberInValid">{{dataItem.warrantNumberInValidMsg}}</kendo-formerror>
                               </ng-template>
@@ -277,6 +277,7 @@
                               <ng-template kendoGridCellTemplate let-dataItem>
                                     <div kendoTooltip>                                             
                                           <kendo-textarea
+                                          [disabled]="dataItem?.reconciled"
                                           #tareaCessation
                                           [fillMode]="formUiStyle.inputFillMode"
                                           [maxlength]="tAreaCessationMaxLength"
@@ -372,7 +373,7 @@
             <div class="text-right flex-gap">     
 
                   <button kendoButton [primary]="true" look="outline" class="" (click)="navToReconcilePayments()" aria-label="Cancel"> Close </button>
-                  <button kendoButton [primary]="true" [disabled]="(claimReconcileCount == 0 && isRecordForPrint ==0) || (warrantNumberChangeLoader$ | async) ?? true" aria-label="Save" class="" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
+                  <button kendoButton [primary]="true" [disabled]="claimReconcileCount == 0 && isRecordForPrint == 0 && !warrantNumberChanged" aria-label="Save" class="" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
             </div>
       </div>
 </div>
@@ -382,12 +383,17 @@
       <kendo-dialog-titlebar class="text-normal" (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Advice Letter(s)</kendo-dialog-titlebar>
       <cms-financial-claims-print-authorization
       [claimReconcileCount]="claimReconcileCount"
-  [printOption]="onlyPrintAdviceLetter"
-  [isSaveClicked]="isSaveClicked"
-  [items]="selectedReconcileDataRows"
-  [batchId]="batchId"
-  (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
-  [claimsType]="claimsType"
+      [isReconcilePrintCount] ="isRecordForPrint"
+      [printOption]="onlyPrintAdviceLetter"
+      [isSaveClicked]="isSaveClicked"
+      [items]="selectedReconcileDataRows"
+      [batchId]="batchId"
+      (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+      [claimsType]="claimsType"
+      (loadTemplateEvent)="loadEachLetterTemplate($event)"
+      [letterContentList$]="letterContentList$"
+      [letterContentLoader$]="letterContentLoader$"
+      (onReconcileRecordEvent)="onReconcileRecord($event)"
   ></cms-financial-claims-print-authorization>
 </ng-template>
 

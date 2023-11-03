@@ -1,9 +1,20 @@
-<kendo-grid [resizable]="true" [loading]="(loader$ | async) ?? false" [pageSize]="state.take" [pageable]="true" [sortable]="true"
-    [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true" [sort]="state.sort"
-    (dataStateChange)="dataStateChange($event)" [data]="vendorInsurancePlanList$ | async">
-    <kendo-grid-column field="insurancePlanName" title="Insurance Plan Name" [width]="150"> </kendo-grid-column>
-    <kendo-grid-column field="insuranceType" title="Health Insurance Type" [width]="100"> </kendo-grid-column>
-    <kendo-grid-column field="canPayForMedicationFlag" title="Can pay for meds?" [width]="150">
+<kendo-grid 
+    [resizable]="true" 
+    [loading]="(loader$ | async) ?? false" 
+    [pageSize]="state.take" 
+    [pageable]="true" 
+    [sortable]="true"
+    [skip]="state.skip" 
+    [groupable]="false" 
+    [reorderable]="true" 
+    [resizable]="true" 
+    [sort]="state.sort"
+    [columnMenu]="{ filter: false }" 
+    (dataStateChange)="dataStateChange($event)" 
+    [data]="vendorInsurancePlanList$ | async">
+    <kendo-grid-column field="insurancePlanName" title="Insurance Plan Name" [width]="200"> </kendo-grid-column>
+    <kendo-grid-column field="insuranceType" title="Health Insurance Type" [width]="200"> </kendo-grid-column>
+    <kendo-grid-column field="canPayForMedicationFlag" title="Can pay for meds?" [width]="200">
         <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.canPayForMedicationFlag | yesOrNo }}
         </ng-template>
@@ -23,7 +34,7 @@
             {{ dataItem.termDate | date:'MM/dd/yyyy' }}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="Option" title="Option" [columnMenu]="false"  [sortable]="false" [width]="75" class="text-center">
+    <kendo-grid-column field="Option" title="Option" [columnMenu]="false" [sticky]="true" [sortable]="false" [width]="75" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton [data]="actionsButtons" icon="more-vertical"
                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -54,7 +65,7 @@
                     [valueField]="'value'" aria-label="Rows Per Page" id="RowsPerPage" [valuePrimitive]="true"
                     [(value)]="state.take" (selectionChange)="pageSelectionchange($event)"></kendo-dropdownlist>
                 <kendo-pager-info> </kendo-pager-info>
-                <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
+                <kendo-grid-messages [pagerItems]="'Rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
             </div>
             <div class="d-flex">
                 <kendo-pager-input></kendo-pager-input>

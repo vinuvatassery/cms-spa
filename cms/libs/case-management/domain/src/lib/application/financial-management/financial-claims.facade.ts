@@ -26,7 +26,7 @@ export class FinancialClaimsFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortType = 'desc';
+  public sortType = 'asc';
   public selectedClaimsTab = 1
 
   public sortValueFinancialClaimsProcess = 'creationTime';
@@ -134,6 +134,12 @@ export class FinancialClaimsFacade {
 
   private batchReconcileDataSubject = new Subject<any>();
   reconcileDataList$ = this.batchReconcileDataSubject.asObservable();
+
+  private letterContentSubject = new Subject<any>();
+  letterContentList$ = this.letterContentSubject.asObservable();
+
+  private letterContentLoaderSubject = new Subject<any>();
+  letterContentLoader$ = this.letterContentLoaderSubject.asObservable();
 
   private batchItemsDataSubject =  new Subject<any>();
   private batchItemsLoaderSubject =  new BehaviorSubject<any>(false);
@@ -268,7 +274,8 @@ export class FinancialClaimsFacade {
 
   loadFinancialClaimsInvoiceListService(paymentRequestId : string, skipcount: number,  maxResultCount: number,  sort: string,  sortType: string,claimsType : string){
 
-    this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType,claimsType).subscribe({
+    this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType,claimsType)
+    .subscribe({
       next: (dataResponse) => {
         const gridView = {
           data: dataResponse["items"],
@@ -357,6 +364,21 @@ export class FinancialClaimsFacade {
       },
     });
   }
+
+  loadEachLetterTemplate(claimsType:any,templateParams:any){
+    this.letterContentLoaderSubject.next(true);
+    this.financialClaimsDataService.loadEachLetterTemplate(claimsType,templateParams).subscribe({
+      next: (dataResponse:any) => {
+        this.letterContentSubject.next(dataResponse);
+        this.letterContentLoaderSubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.letterContentLoaderSubject.next(false);
+      },
+    });
+  }
+
 
   loadClaimsListGrid(){
     this.financialClaimsDataService.loadClaimsListService().subscribe({
@@ -677,8 +699,8 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
     return this.financialClaimsDataService.getPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
   }
 
-  reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any,claimsType:any) {
-    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData,claimsType);
+  reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any,claimsType:any) {
+    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData,claimsType);
 }
 
 viewAdviceLetterData(batchId:any,printAdviceLetterData: any, claimsType:any) {
@@ -769,7 +791,12 @@ deleteClaimService(tpaInvoiceId: any, typeCode: string) {
         return of(false);
       })
     );
-  }
+}
+
+loadFinancialClaimsInvoiceList(paymentRequestId : string, skipcount: number,  maxResultCount: number,  sort: string,  sortType: string,claimsType : string){
+  return this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType,claimsType) 
+}
+
   CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
     this.warrantNumberChangeLoaderSubject.next(true);
     this.financialClaimsDataService.CheckWarrantNumber(batchId,warrantNumber,vendorId).subscribe({

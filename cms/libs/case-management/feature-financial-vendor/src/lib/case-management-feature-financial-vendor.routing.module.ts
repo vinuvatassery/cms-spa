@@ -14,6 +14,7 @@ const routes: Routes = [
   {
     path: 'profile',
     component: FinancialVendorProfileComponent,
+    data: { title: 'Vendor Profile', },
   } 
 ];
 

@@ -64,6 +64,8 @@ export class FinancialClaimsPageComponent implements OnInit {
     this.financialVendorFacade.updateProviderPanelSubject$;
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
+  letterContentList$ = this.financialClaimsFacade.letterContentList$;
+  letterContentLoader$ = this.financialClaimsFacade.letterContentLoader$;
   providerDetailsDialog: any;
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
@@ -125,17 +127,6 @@ export class FinancialClaimsPageComponent implements OnInit {
       data?.sortColumn,
       data?.sortType,
       data?.filter,
-      this.claimsType
-    );
-  }
-
-  loadFinancialClaimsInvoiceListService(data: any) {
-    this.financialClaimsFacade.loadFinancialClaimsInvoiceListService(
-      data?.paymentRequestId,
-      data?.skipcount,
-      data?.pagesize,
-      data?.sortColumn,
-      data?.sortType,
       this.claimsType
     );
   }
@@ -273,5 +264,9 @@ export class FinancialClaimsPageComponent implements OnInit {
   OnEditProviderProfileClick() {
     this.contactFacade.loadDdlStates();
     this.lovFacade.getPaymentMethodLov();
+  }
+
+  loadEachLetterTemplate(event:any){
+    this.financialClaimsFacade.loadEachLetterTemplate(this.claimsType, event);  
   }
 }
