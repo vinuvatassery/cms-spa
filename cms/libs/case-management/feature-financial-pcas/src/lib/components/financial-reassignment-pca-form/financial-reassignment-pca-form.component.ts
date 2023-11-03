@@ -81,7 +81,7 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
         {     
           pcaAssignmentId:  this.pcaAssignmentFormDataModel$?.pcaAssignmentId ,  
           objectCode: this.pcaAssignmentFormDataModel$?.objectId,     
-          pcaId: this.pcaAssignmentFormDataModel$?.pcaId, 
+          pcaId: '', 
           openDate: '',
           closeDate: '',
           amount:this.pcaAssignmentFormDataModel$.pcaRemainingAmount,
@@ -89,7 +89,7 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
           groupCodes : this.groupCodesData$               
         }
       )
-      this.onPcaChange(this.pcaAssignmentFormDataModel$?.pcaId)  
+    //  this.onPcaChange(this.pcaAssignmentFormDataModel$?.pcaId)  
       
     
   }
@@ -166,7 +166,7 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
           this.pcaAssignmentForm.reset()
           let groupCodeIdsAssignedValue : any=[];   
           this.editPca = true      
-          this.onPcaChange(this.pcaAssignmentFormDataModel$?.pcaId)    
+         // this.onPcaChange(this.pcaAssignmentFormDataModel$?.pcaId)    
           this.pcaAssignmentForm.controls['pcaId'].disable();
           
           Object.values(this.groupCodesDataFilter).forEach((key : any) => {  
@@ -188,7 +188,7 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
               {     
                 pcaAssignmentId:  this.pcaAssignmentFormDataModel$?.pcaAssignmentId ,  
                 objectCode:  this.pcaAssignmentFormDataModel$?.objectCodeId,     
-                pcaId: this.pcaAssignmentFormDataModel$?.pcaId, 
+                pcaId: '', 
                 openDate: this.pcaAssignmentFormDataModel$?.openDate,
                 closeDate: '',
                 amount: this.pcaAssignmentFormDataModel$?.amount,
