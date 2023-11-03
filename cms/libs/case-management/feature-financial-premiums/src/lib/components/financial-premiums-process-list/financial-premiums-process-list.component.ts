@@ -13,12 +13,14 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage,FinancialPremiumsFacade } from '@cms/case-management/domain';
+import { GridFilterDataType } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor, filterBy
 } from '@progress/kendo-data-query';
+import {  GridHelperService } from '@cms/shared/util-common';
 import { BatchPremium } from 'libs/case-management/domain/src/lib/entities/financial-management/batch-premium';
 import { Observable, Subject, BehaviorSubject, Subscription } from 'rxjs';
 @Component({
@@ -83,7 +85,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn = "ALL"
   columnName: string = '';
   public selectedProcessClaims: any[] = [];
 
@@ -103,55 +105,47 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   };
   dropDowncolumns : any = [
     {
-      columnCode: 'clientFullName',
-      columnDesc: 'Client Name',
+      columnCode: 'ALL',
+      columnDesc: 'All Columns'    
     },
     {
-      columnCode: 'insuranceName',
-      columnDesc: 'Name on Primary Insurance Card',
-    },
+      columnCode: 'clientFullName',
+      columnDesc: 'Client Name',
+      operator : 'startswith',
+      dataType : GridFilterDataType.String
+    }, 
     {
       columnCode: 'clientId',
       columnDesc: 'Client ID',
+      operator : 'eq',
+      dataType : GridFilterDataType.Number
     },
     {
       columnCode: 'insuranceVendor',
       columnDesc: 'Insurance Vendor',
+      operator : 'startswith',
+      dataType : GridFilterDataType.String
     },
     {
       columnCode: 'premiumAmount',
       columnDesc: 'Premium Amount',
-    },
-   
- 
+      operator : 'eq',
+      dataType : GridFilterDataType.Number
+    },  
     {
-      columnCode: 'planName',
-      columnDesc: 'Plan Name',
+      columnCode: 'entryDate',
+      columnDesc: 'Entry Date',
+      operator : 'eq',
+      dataType : GridFilterDataType.Date
     },
-    {
-      columnCode: 'insuranceType',
-      columnDesc: 'Insurance Type',
-    },
-    {
-      columnCode: 'paymentMethod',
-      columnDesc: 'Payment Method',
-    },
+  
     {
       columnCode: 'policyId',
       columnDesc: 'Policy ID',
-    },
-    {
-      columnCode: 'groupId',
-      columnDesc: 'Group ID',
-    },
-    {
-      columnCode: 'paymentId',
-      columnDesc: 'Payment ID',
-    },
-    {
-      columnCode: 'paymentStatus',
-      columnDesc: 'Payment Status',
-    },
+      operator : 'startswith',
+      dataType : GridFilterDataType.String
+    },   
+   
   ];
   columnDroplist : any = {
     ALL: "ALL",
@@ -271,6 +265,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     private dialogService: DialogService,
     private readonly route: Router,
     private readonly ref: ChangeDetectorRef,
+    private readonly gridHelperService : GridHelperService
   ) {
 
     this.selectableSettings = {
@@ -443,33 +438,11 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
 
   onChange(data: any) {
     this.defaultGridState();
-    let operator = 'startswith';
+    this.searchValue = data
+    this.filterData ={ logic: 'and', filters: [] }
 
-    if (
-      this.selectedColumn === 'clientId' ||
-      this.selectedColumn === 'premiumAmount' ||
-      this.selectedColumn === 'policyId' ||
-      this.selectedColumn === 'groupId' ||
-      this.selectedColumn === 'paymentId'
-    ) {
-      operator = 'eq';
-    }
-
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedColumn ?? 'clientFullName',
-              operator: operator,
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
+    this.filterData = this.gridHelperService.manageSearchFilter(this.selectedColumn  ,this.dropDowncolumns ,this.filterData, this.searchValue )
+   
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);

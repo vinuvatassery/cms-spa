@@ -18,12 +18,15 @@ import {
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { GridFilterDataType } from '@cms/shared/ui-common';
 import {
   FilterService,
   GridDataResult,
   SelectableMode,
   SelectableSettings,
 } from '@progress/kendo-angular-grid';
+
+import {  GridHelperService } from '@cms/shared/util-common';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subject, Subscription, first } from 'rxjs';
 import { Router } from '@angular/router';
@@ -73,7 +76,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn='invoiceNbr';
+  selectedColumn='ALL';
   gridDataResult!: GridDataResult;
   showExportLoader = false;
   gridFinancialClaimsProcessDataSubject = new Subject<any>();
@@ -117,54 +120,34 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
 
   dropDowncolumns: any = [
     {
-      columnCode: 'invoiceNbr',
-      columnDesc: 'Invoice ID',
+      columnCode: 'ALL',
+      columnDesc: 'All Columns'       
     },
     {
       columnCode: 'vendorFullName',
       columnDesc: 'Provider Name',
+      operator : 'startswith',
+      dataType : GridFilterDataType.String
     },
     {
       columnCode: 'tin',
       columnDesc: 'Tax ID',
+      operator : 'startswith',
+      dataType : GridFilterDataType.String
     },
-    {
-      columnCode: 'paymentMethodCode',
-      columnDesc: 'Payment Method',
-    },
-    {
+       {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
-    },
-    {
-      columnCode: 'insuranceName',
-      columnDesc: 'Name on Primary Insurance Card',
-    },
+      operator : 'startswith',
+      dataType : GridFilterDataType.String
+    },   
     {
       columnCode: 'clientId',
       columnDesc: 'Client ID',
+      operator : 'eq',
+      dataType : GridFilterDataType.Number
     },
-    {
-      columnCode: 'serviceCount',
-      columnDesc: 'Service Count',
-    },
-    {
-      columnCode: 'annualTotal',
-      columnDesc: 'Client Annual Total',
-    },
-    {
-      columnCode: 'balanceAmount',
-      columnDesc: 'Client Balance',
-    },
-    {
-      columnCode: 'amountDue',
-      columnDesc: 'Total Due',
-    },
-    {
-      columnCode: 'paymentStatusCode',
-      columnDesc: 'Payment Status',
-    },
-  ];
+     ];
 
   public claimsProcessMore = [
     {
@@ -219,7 +202,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     private dialogService: DialogService,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly cdr: ChangeDetectorRef,
-    private readonly lovFacade : LovFacade
+    private readonly lovFacade : LovFacade,
+    private readonly gridHelperService : GridHelperService
   ) {
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -284,34 +268,12 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   }
 
   onChange(data: any) {
-    this.defaultGridState();
-    let operator = 'startswith';
+    
+    this.searchValue = data
+    this.filterData ={ logic: 'and', filters: [] }
 
-    if (
-      this.selectedColumn === 'clientId' ||
-      this.selectedColumn === 'serviceCount' ||
-      this.selectedColumn === 'annualTotal' ||
-      this.selectedColumn === 'amountDue' ||
-      this.selectedColumn === 'balanceAmount'
-    ) {
-      operator = 'eq';
-    }
-
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedColumn ?? 'invoiceNbr',
-              operator: operator,
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
+    this.filterData = this.gridHelperService.manageSearchFilter(this.selectedColumn  ,this.dropDowncolumns ,this.filterData, this.searchValue )
+    
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
@@ -366,7 +328,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.filterData = filter;
   }
   searchColumnChangeHandler(data:any){
-    this.onChange(data)
+    this.onChange(this.searchValue)
   }
 
   gridDataHandle() {
@@ -504,6 +466,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     }
   }
   setToDefault() {
+    this.filterData ={ logic: 'and', filters: [] }
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -513,7 +476,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.sortColumn = 'Invoice ID';
     this.sortDir = 'Ascending';
     this.filter = '';
-    this.selectedColumn = 'invoiceNbr';
+    this.selectedColumn = 'ALL';
     this.isFiltered = false;
     this.columnsReordered = false;
 

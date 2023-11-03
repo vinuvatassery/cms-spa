@@ -44,6 +44,7 @@ export * from './lib/enums/address-type.enum';
 export * from './lib/enums/financial-vendor-type-code';
 export * from './lib/enums/status-flag.enum';
 export * from './lib/enums/material-format.enum';
+export * from './lib/enums/grid-filter-datatype';
 
 export * from './lib/document-upload/document-upload.component';
 export * from './lib/clients-attachment/clients-attachment.component';
