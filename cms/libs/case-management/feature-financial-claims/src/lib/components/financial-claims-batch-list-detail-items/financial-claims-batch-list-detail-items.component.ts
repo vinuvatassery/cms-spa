@@ -19,7 +19,7 @@ import {
 import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { PaymentDetail, PaymentPanel } from '@cms/case-management/domain';
+import { GridFilterParam, PaymentDetail, PaymentPanel } from '@cms/case-management/domain';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { LovFacade } from '@cms/system-config/domain';
 @Component({
@@ -49,6 +49,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   @Output() getProviderPanelEvent = new EventEmitter<any>();
   @Output() updateProviderProfileEvent = new EventEmitter<any>();
   @Output() onEditProviderProfileEvent = new EventEmitter<any>();
+  @Output() onExportClickedEvent = new EventEmitter<any>();
   @Input() vendorProfile$ :any;
   @Input() updateProviderPanelSubject$:any
   @Input() ddlStates$ :any
@@ -73,6 +74,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   serviceGridColumnName = ''; 
+  @Input() exportButtonShow$:any
 
   gridColumns : {[key: string]: string} = {
             clientFullName: 'Client Name',
@@ -90,6 +92,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
     
   paymentStatusLov$ = this.lovFacade.paymentStatus$;
   paymentStatusFilter = '';
+  showExportLoader=false;
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService, 
     public activeRoute: ActivatedRoute,
@@ -273,5 +276,35 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
       sort: [{ field: 'creationTime', dir: 'desc' }],
     };
     this.sortColumnDesc = 'Entry Date';
+  }
+
+  onClickedExport(){
+    this.showExportLoader = true
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType,
+      this.filter);
+
+    const PagingAndSortedRequest =
+    {
+      SortType : param?.sortType,
+      Sorting : param?.sorting,
+      SkipCount : param?.skipCount,
+      MaxResultCount : param?.maxResultCount,
+      Filter : param?.filter
+    }
+    this.onExportClickedEvent.emit(PagingAndSortedRequest);
+
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {
+        this.showExportLoader = false
+       this.cd.detectChanges()
+      }
+    })
   }
 }
