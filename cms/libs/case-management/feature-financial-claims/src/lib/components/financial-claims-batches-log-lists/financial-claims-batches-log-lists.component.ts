@@ -125,6 +125,7 @@ export class FinancialClaimsBatchesLogListsComponent
   gridClaimsBatchLogData$ = this.gridClaimsBatchLogDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
 
   gridColumns: { [key: string]: string } = {
     itemNbr: 'Item #',
@@ -231,9 +232,8 @@ export class FinancialClaimsBatchesLogListsComponent
 
   //sorting
   sortColumn = 'itemNbr';
-  sortColumnDesc = 'Item #';
   sortDir = 'Descending';
-  sortColumnName = '';
+  sortColumnName = 'Item #';
 
   //filtering
   filteredBy = '';
@@ -446,7 +446,7 @@ export class FinancialClaimsBatchesLogListsComponent
 
   restGrid() {
     this.sortValue = 'itemNbr';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.sortColumnName = this.gridColumns[this.sortValue];
     this.sortType = 'desc';
     this.initializeGrid();
     this.sortDir = 'Descending';

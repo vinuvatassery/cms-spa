@@ -114,6 +114,7 @@ export class FinancialClaimsAllPaymentsListComponent
   recordCountWhenSelectallClicked: number = 0;
   totalGridRecordsCount: number = 0;
   sendReportCount: number = 0;
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
 
   getPaymentsGridActions(dataItem: any) {
     let list = [
@@ -676,6 +677,26 @@ pageNumberAndCountChangedInSelectAll() {
 
   onProviderNameClick(event: any) {
     this.onProviderNameClickEvent.emit(event);
+  }
+
+  onitemNumberClick(dataItem: any) {
+    this.route.navigate(
+      [`/financial-management/claims/${this.claimsType}/batch/items`],
+      { queryParams:
+        {
+          bid: dataItem?.batchId,
+          pid: dataItem.paymentRequestId,
+          eid: dataItem.vendorId,
+        }
+      }
+    );
+  }
+
+  onbatchNumberClick(dataItem: any) {
+    this.route.navigate(
+      [`/financial-management/claims/${this.claimsType}/batch`],
+      { queryParams: { bid: dataItem?.batchId } }
+    );
   }
 
   onUnBatchOpenClicked(template: TemplateRef<unknown>): void {

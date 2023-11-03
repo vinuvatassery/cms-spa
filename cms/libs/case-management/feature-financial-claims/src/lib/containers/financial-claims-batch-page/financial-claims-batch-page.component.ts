@@ -86,6 +86,7 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
     const batchId = this.route.snapshot.queryParams['bid'];
     this.financialClaimsFacade.loadBatchName(batchId);
   }
+
   onProviderNameClick(event:any){
     this.paymentRequestId = event
     this.providerDetailsDialog = this.dialogService.open({
@@ -104,7 +105,6 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
       this.providerDetailsDialog.close();
     }
   }
-
 
   getProviderPanel(event:any){
     this.financialVendorFacade.getProviderPanel(event)
@@ -136,11 +136,11 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
       const fileName =
         this.claimsType[0].toUpperCase() +
         this.claimsType.substr(1).toLowerCase() +
-        ' Medical Batch Payments';
+        'Batch Payments';
 
       this.documentFacade.getExportFile(
         vendorPageAndSortedRequest,
-        `claims/${this.claimsType}/payment-batches/${batchId}/payments`,
+        `claims/${this.claimsType}/batches/${batchId}/payments`,
         fileName
       );
     }
