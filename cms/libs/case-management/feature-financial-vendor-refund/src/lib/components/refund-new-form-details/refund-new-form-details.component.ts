@@ -12,8 +12,7 @@ export class RefundNewFormDetailsComponent{
   selectedRefundType : any;
   public refundType  = [
     "TPA",
-    "INS",
-    "TAX",
+    "INS", 
     "RX",
   ];
 
