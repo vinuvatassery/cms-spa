@@ -3,7 +3,7 @@
       [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
       [data]="batchLogPrintAdviceLetterPagedList"   (filterChange)="filterChange($event)" filterable="menu" [filter]="state.filter">    
       <kendo-grid-column  [sortable]="false" field="add" [width]="40" class="text-center"
-      [sticky]="true" [sortable]="false"  [columnMenu]="false">
+      [sortable]="false"  [columnMenu]="false">
         <ng-template kendoGridHeaderTemplate let-dataItem >
             <input
                  type="checkbox" 

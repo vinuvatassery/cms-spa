@@ -677,7 +677,11 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     else{
       this.assignRowDataToMainList(dataItem);
     }
+    if(this.selectedReconcileDataRows !== null && this.selectedReconcileDataRows?.length > 0){
+      this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === dataItem.paymentRequestId);
+      }
     this.isRecordForPrint =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.isPrintAdviceLetter).length;
+    this.cd.detectChanges();
   }
 
   noteChange(dataItem: any) {
@@ -705,6 +709,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     dataItem.tAreaCessationCounter = `${tAreaCessationCharactersCount}/${this.tAreaCessationMaxLength}`;
   }
   calculateCharacterCountBulkNote(note: any) {
+    this.reconcileAssignValueBatchForm.controls['note'].removeValidators([
+      Validators.required,
+    ]);
+    this.reconcileAssignValueBatchForm.controls['note'].updateValueAndValidity();
     let bulkNoteCharactersCount = note
       ? note.length
       : 0;
@@ -851,6 +859,18 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   }
 
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+    this.reconcileAssignValueBatchForm.controls['note'].removeValidators([
+      Validators.required,
+    ]);
+    this.reconcileAssignValueBatchForm.controls['note'].updateValueAndValidity();
+    this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].removeValidators([
+      Validators.required,
+    ]);
+    this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].updateValueAndValidity();
+    this.reconcileAssignValueBatchForm.controls['datePaymentSend'].removeValidators([
+      Validators.required,
+    ]);
+    this.reconcileAssignValueBatchForm.controls['datePaymentSend'].updateValueAndValidity();
     this.isSaveClicked = true;
     this.validateReconcileGridRecord();
     const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid || x.warrantNumberInValid);
