@@ -25,7 +25,7 @@
       <kendo-dropdownlist
         aria-label="All Columns"
         [fillMode]="formUiStyle.dropDownFillMode"
-        [data]="userLevel == 2 ? dropDownColumnsLevel2 : dropDownColumnsLevel1"
+        [data]="dropDownColumns"
         [valuePrimitive]="true"
         textField="columnDesc"
         valueField="columnCode"
@@ -164,34 +164,6 @@
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
-      field="providerCount"
-      title="Provider Count"
-      [width]="120"
-      *ngIf="
-        selectedPaymentType === 'TPA_CLAIM' ||
-        selectedPaymentType === 'PHARMACY_CLAIM'
-      "
-    >
-    </kendo-grid-column>
-    <kendo-grid-column
-      field="paymentRequestSubTypeCode"
-      title="Claim Type"
-      [width]="120"
-      *ngIf="selectedPaymentType === 'TPA_CLAIM'"
-    >
-      <ng-template kendoGridCellTemplate let-dataItem>
-        <span
-          *ngFor="
-            let requestSubtypeCode of dataItem.paymentRequestSubTypeCode?.split(
-              '_'
-            )
-          "
-        >
-          {{ requestSubtypeCode | titlecase }}
-        </span>
-      </ng-template>
-    </kendo-grid-column>
-    <kendo-grid-column
       field="totalAmountDue"
       title="Total Amount"
       [width]="160"
@@ -210,11 +182,39 @@
     </kendo-grid-column>
     <kendo-grid-column
       field="providerCount"
+      title="Provider Count"
+      [width]="120"
+      *ngIf="
+        selectedPaymentType === 'TPA_CLAIM' ||
+        selectedPaymentType === 'PHARMACY_CLAIM'
+      "
+    >
+    </kendo-grid-column>
+    <kendo-grid-column
+      field="providerCount"
       title="Carrier Count"
       [width]="120"
       *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM'"
     ></kendo-grid-column>
     <kendo-grid-column field="totalPayments" title="Pmt Count" [width]="120">
+    </kendo-grid-column>
+    <kendo-grid-column field="paymentRequestSubTypeCode" title="Claim Type" [width]="120"
+      *ngIf="selectedPaymentType === 'TPA_CLAIM'">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{ dataItem.paymentRequestSubTypeCode?.split('_')[0] | titlecase }}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="paymentRequestSubTypeCode" title="Premium Type" [width]="120"
+      *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM'">
+      <ng-template kendoGridCellTemplate let-dataItem>
+          {{ dataItem.paymentRequestSubTypeCode?.split('_')[0] | titlecase }}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="paymentRequestSubTypeCode" title="Pharmacy Type" [width]="120"
+      *ngIf="selectedPaymentType === 'PHARMACY_CLAIM'">
+      <ng-template kendoGridCellTemplate let-dataItem>
+          {{ dataItem.paymentRequestSubTypeCode?.split('_')[0] | titlecase }}
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
       field="premiumCount"
@@ -357,7 +357,7 @@
         <div class="flex-row">
           <div class="flex-col flex-col-6">
             <p class="text-right mt-2">
-              Second Level Approval Send Back Notes:
+              Second Level Send Back Notes:
             </p>
           </div>
           <div class="flex-col flex-col-6">
@@ -518,6 +518,8 @@
     [approvalId]="selectedApprovalId"
     [batchDetailPaymentsList$]="batchDetailPaymentsList$"
     [batchDetailModalSourceList]="batchDetailModalSourceList"
+    [paymentStatusLovList]="paymentStatusLovList"
+    [paymentMethodLovList]="paymentMethodLovList"
     [pageSizes]="pageSizes"
     [sortType]="sortType"
     [selectedPaymentType]="selectedPaymentType"
