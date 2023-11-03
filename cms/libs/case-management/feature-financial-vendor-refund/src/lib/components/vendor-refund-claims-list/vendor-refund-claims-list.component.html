@@ -5,25 +5,27 @@
       [data]="claimsListData$ | async">
       <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
         [width]="40"></kendo-grid-checkbox-column>
-      <kendo-grid-column field="insuranceCarrier" title="Insurance Carrier" [width]="160">
-        <ng-template kendoGridCellTemplate let-dataItem>
-            <button [attr.aria-label]="dataItem.insuranceCarrier" kendoButton look="flat" class="card-link-button">
-              {{ dataItem.insuranceCarrier }}
-            </button>
-          </ng-template>
+      <kendo-grid-column title="Invoice ID" field="invoiceId" [width]="160">
+  
       </kendo-grid-column>
-      <kendo-grid-column field="planName" title="Plan Name" [width]="160"> </kendo-grid-column>  
-      <kendo-grid-column field="insuranceType" title="Insurance Type" [width]="160"> </kendo-grid-column>
-      <kendo-grid-column field="amount" title="Amount" [width]="120"> </kendo-grid-column>
-      <kendo-grid-column field="coverageDates" title="Coverage Dates" [width]="210"> </kendo-grid-column>
-      <kendo-grid-column field="policyID" title="Policy ID" [width]="120"> </kendo-grid-column>
-      <kendo-grid-column field="groupID" title="Group ID" [width]="120"> </kendo-grid-column>
-      <kendo-grid-column field="paymentID" title="Payment ID" [width]="140"> </kendo-grid-column>
-      <kendo-grid-column field="pmtMethod" title="Pmt. Method" [width]="150"> </kendo-grid-column>
-      <kendo-grid-column field="pmtStatus" title="Pmt. Status" [width]="150"> </kendo-grid-column>
-      <kendo-grid-column field="PCA" title="PCA" [width]="100"> </kendo-grid-column>
-      <kendo-grid-column field="mailCode" title="Mail Code" [width]="120"> </kendo-grid-column>    
-      <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true" class="text-center">
+      <kendo-grid-column title="Provider Name" field="providerName" [width]="160"> 
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button [attr.aria-label]="dataItem.providerName" kendoButton look="flat" class="card-link-button">
+            {{ dataItem.providerName }}
+          </button>
+        </ng-template>
+      </kendo-grid-column>  
+      <kendo-grid-column title="Tax ID" field="taxID" [width]="160"> </kendo-grid-column>
+      <kendo-grid-column title="Payment Method" field="paymentMethod" [width]="160"> </kendo-grid-column>
+      <kendo-grid-column title="Service Start Date" field="serviceStartDate" [width]="180"> </kendo-grid-column>
+      <kendo-grid-column title="Service End Date" field="serviceEndDate" [width]="160"> </kendo-grid-column>
+      <kendo-grid-column title="Service Cost" field="serviceCost" [width]="140"> </kendo-grid-column>
+      <kendo-grid-column title="Total Cost" field="totalCost" [width]="120"> </kendo-grid-column>
+      <kendo-grid-column title="Total Due" field="totalDue" [width]="140"> </kendo-grid-column>
+      <kendo-grid-column title="Payment Status" field="paymentStatus" [width]="160"> </kendo-grid-column>
+      <kendo-grid-column title="PCA Code" field="pcaCode" [width]="150"> </kendo-grid-column>
+      <kendo-grid-column title="Entry Date" field="entryDate" [width]="140"> </kendo-grid-column>  
+      <kendo-grid-column title="By" field="by" [width]="70" [sticky]="true" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
             [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">

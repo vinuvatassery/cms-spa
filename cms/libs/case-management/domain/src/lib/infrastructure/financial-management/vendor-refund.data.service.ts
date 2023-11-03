@@ -235,6 +235,59 @@ export class FinancialVendorRefundDataService {
   loadClaimsListService( ) {
     return of([
       {
+        invoiceId: '#213213213',
+        providerName:'providerName', 
+        taxID:'234234', 
+        paymentMethod:'XXXX', 
+        serviceStartDate:'XX/XX/XXXX', 
+        serviceEndDate:'XX/XX/XXXX', 
+        serviceCost:'XXXX.XX', 
+        totalCost:'XXXX.XX', 
+        totalDue:'XXXX.XX', 
+        paymentStatus:'XXXX', 
+        pcaCode:'XXXXXX', 
+        entryDate:'XX/XX/XXXX',   
+        by: 'by',
+      },
+      {
+        invoiceId: '#213213213',
+        providerName:'providerName', 
+        taxID:'234234', 
+        paymentMethod:'XXXX', 
+        serviceStartDate:'XX/XX/XXXX', 
+        serviceEndDate:'XX/XX/XXXX', 
+        serviceCost:'XXXX.XX', 
+        totalCost:'XXXX.XX', 
+        totalDue:'XXXX.XX', 
+        paymentStatus:'XXXX', 
+        pcaCode:'XXXXXX', 
+        entryDate:'XX/XX/XXXX',   
+        by: 'by',
+      },
+      {
+        invoiceId: '#213213213',
+        providerName:'providerName', 
+        taxID:'234234', 
+        paymentMethod:'XXXX', 
+        serviceStartDate:'XX/XX/XXXX', 
+        serviceEndDate:'XX/XX/XXXX', 
+        serviceCost:'XXXX.XX', 
+        totalCost:'XXXX.XX', 
+        totalDue:'XXXX.XX', 
+        paymentStatus:'XXXX', 
+        pcaCode:'XXXXXX', 
+        entryDate:'XX/XX/XXXX',   
+        by: 'by',
+      },
+      
+      
+    ]);
+  }
+
+
+  loadPremiumsListService( ) {
+    return of([
+      {
         insuranceCarrier: 'Carrier Name',
         planName:'Plan Name', 
         insuranceType:'Off-Exchange Plan', 
@@ -418,4 +471,69 @@ export class FinancialVendorRefundDataService {
       
     ]);
   }
+  loadClientClaimsListService( ) {
+    return of([
+      {
+        id:1,
+        item:1,
+        PharmacyName: 'XXXXXX XXXXXX',  
+        paymentMethod: 'paymentMethod',
+        clientName:'XXXXXX XXXXXX XXXX', 
+        nameOnPrimaryInsuranceCard:'address2', 
+        clientId:'XXXXXX', 
+        RXNumber:'XXXXXX', 
+        FillDate:'XX/XX/XXXX', 
+        ndcCode:'XXXXXX', 
+        brandName:'XXXXXX', 
+        drugName: 'XXXXXX',
+        paymentType: 'XXXXXX',
+        amountPaid: 'xx.xx',
+        rxQty: 'XX',
+        rxType: 'XX',
+        rxDaysSupply: 'XX',
+        indexCode: 'XXXX',
+        pcaCode: 'XXXX',
+        objectCode: 'XXXX',
+        paymentStatus: 'XXXX',
+        warrantNumber: 'XXXXXX',
+        entryDate: 'XX/XX/XXXX',
+        by: 'by',
+      },
+      
+      
+    ]);
+  }
+  loadPharmacyPaymentsListService( ) {
+    return of([
+      {
+        id:1,
+        item:1,
+        PharmacyName: 'XXXXXX XXXXXX',  
+        paymentMethod: 'paymentMethod',
+        clientName:'XXXXXX XXXXXX XXXX', 
+        nameOnPrimaryInsuranceCard:'address2', 
+        clientId:'XXXXXX', 
+        RXNumber:'XXXXXX', 
+        FillDate:'XX/XX/XXXX', 
+        ndcCode:'XXXXXX', 
+        brandName:'XXXXXX', 
+        drugName: 'XXXXXX',
+        paymentType: 'XXXXXX',
+        amountPaid: 'xx.xx',
+        rxQty: 'XX',
+        rxType: 'XX',
+        rxDaysSupply: 'XX',
+        indexCode: 'XXXX',
+        pcaCode: 'XXXX',
+        objectCode: 'XXXX',
+        paymentStatus: 'XXXX',
+        warrantNumber: 'XXXXXX',
+        entryDate: 'XX/XX/XXXX',
+        by: 'by',
+      },
+      
+      
+    ]);
+  }
+
 }

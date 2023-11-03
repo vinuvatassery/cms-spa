@@ -47,10 +47,11 @@ export class FinancialClaimsAllPaymentsListComponent
   @Input() financialClaimsAllPaymentsGridLoader$: any;
   @Input() financialClaimsAllPaymentsGridLists$: any;
   @Input() exportButtonShow$: any;
-
+  @Input() letterContentList$ :any;
+  @Input() letterContentLoader$ :any;
   @Output() loadFinancialClaimsAllPaymentsListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
-
+  @Output() loadTemplateEvent = new EventEmitter<any>();
   @ViewChild('unBatchClaimsDialogTemplate', { read: TemplateRef })
   unBatchClaimsDialogTemplate!: TemplateRef<any>;
   @ViewChild('deleteClaimsConfirmationDialogTemplate', { read: TemplateRef })
@@ -114,6 +115,7 @@ export class FinancialClaimsAllPaymentsListComponent
   recordCountWhenSelectallClicked: number = 0;
   totalGridRecordsCount: number = 0;
   sendReportCount: number = 0;
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
 
   getPaymentsGridActions(dataItem: any) {
     let list = [
@@ -678,6 +680,26 @@ pageNumberAndCountChangedInSelectAll() {
     this.onProviderNameClickEvent.emit(event);
   }
 
+  onitemNumberClick(dataItem: any) {
+    this.route.navigate(
+      [`/financial-management/claims/${this.claimsType}/batch/items`],
+      { queryParams:
+        {
+          bid: dataItem?.batchId,
+          pid: dataItem.paymentRequestId,
+          eid: dataItem.vendorId,
+        }
+      }
+    );
+  }
+
+  onbatchNumberClick(dataItem: any) {
+    this.route.navigate(
+      [`/financial-management/claims/${this.claimsType}/batch`],
+      { queryParams: { bid: dataItem?.batchId } }
+    );
+  }
+
   onUnBatchOpenClicked(template: TemplateRef<unknown>): void {
     this.UnBatchDialog = this.dialogService.open({
       content: template,
@@ -881,5 +903,9 @@ pageNumberAndCountChangedInSelectAll() {
 
   getSelectedReportCount(selectedSendReportList : []){
     this.sendReportCount = selectedSendReportList.length;
+  }
+
+    loadEachLetterTemplate(event:any){
+      this.loadTemplateEvent.emit(event);
   }
 }

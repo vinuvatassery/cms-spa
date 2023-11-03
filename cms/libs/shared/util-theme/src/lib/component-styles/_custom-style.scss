@@ -1001,13 +1001,13 @@ color: $app-primary-font-color;
     border-bottom: 1px solid #0000001F;
     padding:0px 0px 1.5rem;
     padding-top: 0;
-    .column-labels{
-      > div {
-        margin-bottom: 1rem;
-      }
+
+  }
+  .column-labels{
+    > div {
+      margin-bottom: 1rem;
     }
   }
-
   .new_refund_Search {
     position: relative;
 
