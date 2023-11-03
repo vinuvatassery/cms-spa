@@ -12,7 +12,7 @@ import { PcaAssignmentsDataService } from '../../infrastructure/financial-manage
 
 export class PcaAssignmentsFacade {
 
-    private objectCodesDataSubject = new BehaviorSubject<any>([]);
+    private objectCodesDataSubject = new Subject<any>();
     objectCodesData$ = this.objectCodesDataSubject.asObservable();
 
     private groupCodesDataSubject = new BehaviorSubject<any>([]);
