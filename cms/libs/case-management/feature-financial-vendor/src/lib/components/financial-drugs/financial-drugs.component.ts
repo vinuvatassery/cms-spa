@@ -1,7 +1,6 @@
-import { PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { DrugCategoryCode, VendorFacade } from '@cms/case-management/domain';
+import { DrugCategoryCode, FinancialVendorTypeCode, VendorFacade } from '@cms/case-management/domain';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -131,7 +130,7 @@ export class FinancialDrugsComponent {
   ) { }
 
   private loadManufacturer() {
-    this.vendorDetails$ = this.vendorFacade.loadAllVendors('MANUFACTURERS')
+    this.vendorDetails$ = this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers)
   }
 
   ngOnInit(): void {

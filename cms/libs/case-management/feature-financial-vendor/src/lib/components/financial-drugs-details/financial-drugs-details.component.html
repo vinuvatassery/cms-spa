@@ -7,7 +7,7 @@
         <div class="flex-row">
             <div class="flex-col mb-1">
                 <kendo-floatinglabel text="Manufacturer">
-                    <kendo-dropdownlist  [data]="vendorDetails$ | async" [fillMode]="formUiStyle.dropDownFillMode"
+                    <kendo-dropdownlist [data]="vendorDetails$ | async" [fillMode]="formUiStyle.dropDownFillMode"
                         [valuePrimitive]="true" textField="vendorName" valueField="vendorId" aria-label="Manufacturer"
                         formControlName="manufacturer" [disabled]="false">
                     </kendo-dropdownlist>
@@ -62,8 +62,8 @@
             <div class="flex-col mb-1">
                 <kendo-floatinglabel text="Delivery Method">
                     <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" textField="lovDesc"
-                        valueField="lovCode" [data]="deliveryMethodCodes" aria-label="State"
-                        [valuePrimitive]="true" formControlName="deliveryMethodCode">
+                        valueField="lovCode" [data]="deliveryMethodCodes" aria-label="State" [valuePrimitive]="true"
+                        formControlName="deliveryMethodCode">
                     </kendo-dropdownlist>
                 </kendo-floatinglabel>
                 <kendo-formerror *ngIf="(!drugForm.controls['deliveryMethodCode'].valid) &&isSubmitted">A Delivery
@@ -81,20 +81,18 @@
                         <span class="app-radiobtnwidtext-wrapper">
 
                             <input type="radio" kendoRadioButton aria-labelledby="manufacturerrebatesyes"
-                                formControlName="drugType" id="manufacturerrebatesyes" class="form-control" value="HIV"
-                                name="manufacturerRebates" />
+                                formControlName="drugType" id="manufacturerrebatesyes" class="form-control"
+                                value="HIV" />
                             <label class="k-radio-label" for="manufacturerrebatesyes">HIV</label>
                         </span>
                         <span class="app-radiobtnwidtext-wrapper">
                             <input type="radio" kendoRadioButton aria-labelledby="manufacturerrebatesno"
-                                formControlName="drugType" id="manufacturerrebatesno" value="HEPA"
-                                name="manufacturerRebates" />
+                                formControlName="drugType" id="manufacturerrebatesno" value="HEPA" />
                             <label class="k-radio-label" for="manufacturerrebatesno">Hepatitis</label>
                         </span>
                         <span class="app-radiobtnwidtext-wrapper">
                             <input type="radio" kendoRadioButton aria-labelledby="manufacturerrebatesno"
-                                formControlName="drugType" id="manufacturerrebatesno" value="OPPO"
-                                name="manufacturerRebates" />
+                                formControlName="drugType" id="manufacturerrebatesno" value="OPPO" />
                             <label class="k-radio-label" for="manufacturerrebatesno">Opportunistic Infection</label>
                         </span>
                     </div>
