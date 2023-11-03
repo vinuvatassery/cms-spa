@@ -64,6 +64,8 @@ export class FinancialClaimsPageComponent implements OnInit {
     this.financialVendorFacade.updateProviderPanelSubject$;
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
+  letterContentList$ = this.financialClaimsFacade.letterContentList$;
+  letterContentLoader$ = this.financialClaimsFacade.letterContentLoader$;
   providerDetailsDialog: any;
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
@@ -262,5 +264,9 @@ export class FinancialClaimsPageComponent implements OnInit {
   OnEditProviderProfileClick() {
     this.contactFacade.loadDdlStates();
     this.lovFacade.getPaymentMethodLov();
+  }
+
+  loadEachLetterTemplate(event:any){
+    this.financialClaimsFacade.loadEachLetterTemplate(this.claimsType, event);  
   }
 }

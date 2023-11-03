@@ -129,21 +129,18 @@ export class PendingApprovalPaymentFacade {
   }
 
   getPendingApprovalBatchDetailPaymentsGrid(gridSetupData: any, batchId: string, serviceSubType: string) {
-
-    this.PendingApprovalPaymentService.getPendingApprovalBatchDetailPaymentsGrid(gridSetupData, batchId, serviceSubType).subscribe(
-      {
-        next: (dataResponse: any) => {
-          const gridView = {
-            data: dataResponse["items"],
-            total: dataResponse["totalCount"]
-          };
-            this.pendingApprovalBatchDetailPaymentsGridSubject.next(gridView);
-        },
-        error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-        },
-      }
-    );
+    this.PendingApprovalPaymentService.getPendingApprovalBatchDetailPaymentsGrid(gridSetupData, batchId, serviceSubType).subscribe({
+      next: (dataResponse: any) => {
+        const gridView = {
+          data: dataResponse["items"],
+          total: dataResponse["totalCount"]
+        };
+          this.pendingApprovalBatchDetailPaymentsGridSubject.next(gridView);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
   }
 
   submitForApproval(data: any) {

@@ -340,7 +340,10 @@
     [printOption]="true"
     [items]="selectedAllPaymentsList"
     [claimsType] ="claimsType"
-    (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)">
+    (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+    [letterContentList$]="letterContentList$"
+    [letterContentLoader$]="letterContentLoader$"
+    (loadTemplateEvent)="loadEachLetterTemplate($event)">
     </cms-financial-claims-print-authorization>
     </ng-template>
 
