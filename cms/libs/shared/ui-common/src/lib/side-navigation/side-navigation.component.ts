@@ -33,10 +33,10 @@ export class SideNavigationComponent implements OnInit {
     private readonly navigationMenuFacade: NavigationMenuFacade,private userManagementFacade: UserManagementFacade) { }
 
   /** Lifecycle events **/
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.navigationMenuFacade.getNavigationMenu();
     this.getUserRole();
-    this.getMenuCount();    
+    this.getMenuCount();
   }
 
   ngOnDestroy(){
@@ -77,31 +77,30 @@ export class SideNavigationComponent implements OnInit {
       this.getPendingApprovalCount();
 
     }
-  
+
     private getPcaAssignmentMenuCount(){
       this.navigationMenuFacade.pcaReassignmentCount();
       this.subscribeToReassignPcaCount();
     }
-  
+
     private setBadgeValue(key: string, value: number){
       let menuIndex = this.menuBadges.findIndex(x => x.key == key);
       (this.menuBadges[menuIndex]?? null).value = value;
     }
-  
+
     private subscribeToReassignPcaCount(){
       this.navigationMenuFacade.pcaReassignmentCount$.subscribe((count) => {
         this.setBadgeValue(MenuBadge.financialManagement, count);
-        this.setBadgeValue(MenuBadge.fundsAndPcas, count);    
-      });    
+        this.setBadgeValue(MenuBadge.fundsAndPcas, count);
+      });
     }
-  
+
     getUserRole(){
-      if(this.userManagementFacade.hasRole("FM1")){
-        this.userLevel = 1;
-        return;
-      }
       if(this.userManagementFacade.hasRole("FM2")){
         this.userLevel = 2;
+      }
+      else if(this.userManagementFacade.hasRole("FM1")){
+        this.userLevel = 1;
       }
     }
 
@@ -117,5 +116,5 @@ export class SideNavigationComponent implements OnInit {
       this.navigationMenuFacade.getAllPendingApprovalPaymentCount(this.userLevel);
       this.subscribeToPendingApprovalCount();
     }
-  
+
 }

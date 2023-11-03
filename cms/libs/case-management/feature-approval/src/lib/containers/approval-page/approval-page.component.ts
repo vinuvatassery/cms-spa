@@ -123,8 +123,11 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalCount = response;
-        this.cd.detectChanges();
       }
+      else{
+        this.pendingApprovalCount = 0;
+      }
+      this.cd.detectChanges();
     });
   }
   loadApprovalsGeneralGrid(event: any): void {
