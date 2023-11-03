@@ -216,11 +216,10 @@
           <kendo-textarea
             #tareaCessation
             [fillMode]="formUiStyle.inputFillMode"
-            [maxlength]="tAreaCessationMaxLength"
-            [rows]="2"
-            resizable="none"
+            [maxlength]="tAreaCessationMaxLength"  
             [(ngModel)]="dataItem.sendBackNotes"
             (valueChange)="sendBackNotesChange(dataItem)"
+            class="table-text-area textarea"
             aria-label="smoking cessation note"
             title="{{ dataItem.sendBackNotes }}"
             [disabled]="dataItem.batchStatus != sendbackStatus"
