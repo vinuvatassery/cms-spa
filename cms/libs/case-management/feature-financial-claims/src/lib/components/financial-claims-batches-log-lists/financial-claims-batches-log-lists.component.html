@@ -211,21 +211,14 @@
           </kendo-grid-column>
           <kendo-grid-column field="paymentMethodDesc" title="Payment Method" [width]="170">
             <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-              <kendo-dropdownlist [data]="paymentMethods" [value]="paymentMethodFilter" textField="lovDesc" valueField="lovDesc" [(ngModel)]="selectedpaymentMethod" [valuePrimitive]="true"
+              <kendo-dropdownlist [data]="paymentMethodType$ | async" [value]="paymentMethodFilter" textField="lovDesc" valueField="lovDesc" [(ngModel)]="selectedPaymentMethod" [valuePrimitive]="true"
                 (valueChange)="dropdownFilterChange('paymentMethodDesc',$event, filterService)">
-              </kendo-dropdownlist>
-            </ng-template>
-          </kendo-grid-column>
-          <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="150">
-            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-              <kendo-dropdownlist [data]="paymentTypes" [value]="paymentTypeFilter" textField="lovDesc" valueField="lovDesc" [(ngModel)]="selectedPaymentType" [valuePrimitive]="true"
-                (valueChange)="dropdownFilterChange('paymentTypeDesc',$event, filterService)">
               </kendo-dropdownlist>
             </ng-template>
           </kendo-grid-column>
           <kendo-grid-column field="paymentStatusDesc" title="Payment Status" [width]="170">
             <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-              <kendo-dropdownlist [data]="paymentStatusList" [value]="paymentStatusFilter" textField="lovDesc" valueField="lovDesc" [(ngModel)]="selectedPaymentStatus" [valuePrimitive]="true"
+              <kendo-dropdownlist [data]="paymentStatus$ | async" [value]="paymentStatusFilter" textField="lovDesc" valueField="lovDesc" [(ngModel)]="selectedPaymentStatus" [valuePrimitive]="true"
                 (valueChange)="dropdownFilterChange('paymentStatusDesc',$event, filterService)">
               </kendo-dropdownlist>
             </ng-template>
