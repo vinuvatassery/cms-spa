@@ -19,7 +19,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   LovFacade,
@@ -129,7 +129,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     firstApprovalBy: 'First Approval By'
   };
 
-  dropDownColumnsLevel1: { columnCode: string; columnDesc: string }[] = [
+  dropDownColumns: { columnCode: string; columnDesc: string }[] = [
     {
       columnCode: 'ALL',
       columnDesc: 'All Columns',
@@ -141,25 +141,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     {
       columnCode: 'DateApprovalRequested',
       columnDesc: 'Date Approval Requested',
-    },
-  ];
-
-  dropDownColumnsLevel2: { columnCode: string; columnDesc: string }[] = [
-    {
-      columnCode: 'ALL',
-      columnDesc: 'All Columns',
-    },
-    {
-      columnCode: 'BatchName',
-      columnDesc: 'Batch #',
-    },
-    {
-      columnCode: 'DateApprovalRequested',
-      columnDesc: 'Date Approval Requested',
-    },
-    {
-      columnCode: 'FirstApprovalBy',
-      columnDesc: 'First Approval By',
     },
   ];
 
@@ -170,8 +151,14 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   showExportLoader = false;
 
   private depositDetailsDialog: any;
+  paymentStatusLovList: any;
+  paymentMethodLovList: any;
 
   pendingApprovalPaymentType$ = this.lovFacade.pendingApprovalPaymentType$;
+  paymentStatusLov$ = this.lovFacade.paymentStatus$;
+  paymentMethodLov$ = this.lovFacade.paymentMethodType$;
+  paymentStatusLovSubscription!: Subscription;
+  paymentMethodLovSubscription!: Subscription;
   /** Constructor **/
   constructor(
     private route: Router,
@@ -188,6 +175,26 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.lovFacade.getPandingApprovalPaymentTypeLov();
     this.defaultPaymentType();
     this.getLoggedInUserProfile();
+    this.loadPaymentStatusLov();
+    this.loadPaymentMethodLov();
+  }
+
+  private loadPaymentStatusLov(){
+    this.lovFacade.getPaymentStatusLov();
+    this.paymentStatusLovSubscription = this.paymentStatusLov$.subscribe({
+      next:(response) => {
+        this.paymentStatusLovList = response;
+      }
+    });
+  }
+
+  private loadPaymentMethodLov(){
+    this.lovFacade.getPaymentMethodLov();
+    this.paymentMethodLovSubscription = this.paymentMethodLov$.subscribe({
+      next:(response) => {
+        this.paymentMethodLovList = response;
+      }
+    });
   }
 
   private defaultPaymentType() {
@@ -202,7 +209,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           }
           case PendingApprovalPaymentTypeCode.PharmacyClaim: {
             this.approvalPermissionCode =
-              ApprovalLimitPermissionCode.PharmacyPermissiomCode;
+              ApprovalLimitPermissionCode.PharmacyPermissionCode;
             break;
           }
           case PendingApprovalPaymentTypeCode.InsurancePremium: {
@@ -221,6 +228,11 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
 
   ngOnChanges(): void {
     this.setGridValueAndData();
+  }
+
+  ngOnDestroy(): void {
+    this.paymentStatusLovSubscription.unsubscribe();
+    this.paymentMethodLovSubscription.unsubscribe();
   }
 
   setGridValueAndData() {
@@ -441,7 +453,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       }
       case PendingApprovalPaymentTypeCode.PharmacyClaim: {
         this.approvalPermissionCode =
-          ApprovalLimitPermissionCode.PharmacyPermissiomCode;
+          ApprovalLimitPermissionCode.PharmacyPermissionCode;
         break;
       }
       case PendingApprovalPaymentTypeCode.InsurancePremium: {
