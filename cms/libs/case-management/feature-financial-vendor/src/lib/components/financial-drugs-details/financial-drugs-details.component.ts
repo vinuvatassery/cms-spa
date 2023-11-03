@@ -20,6 +20,8 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   saveButtonText: any;
   @Input() vendorDetails$!: Observable<any>;
   @Input() deliveryMethodCodes: any;
+  @Input() hasCreateUpdatePermission = false;
+
   @Output() close = new EventEmitter<any>();
 
   drug = new ManufacturerDrugs();
@@ -41,7 +43,8 @@ export class FinancialDrugsDetailsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private readonly loaderService: LoaderService,
     private readonly drugsFacade: DrugsFacade,
-    private cd: ChangeDetectorRef) {
+    private cd: ChangeDetectorRef,
+  ) {
     this.createDrugForm();
   }
 
@@ -92,7 +95,6 @@ export class FinancialDrugsDetailsComponent implements OnInit {
     this.isSubmitted = true;
   }
 
-  hasCreateUpdatePermission = false;
   isValidateForm = false;
 
   validateForm() {
