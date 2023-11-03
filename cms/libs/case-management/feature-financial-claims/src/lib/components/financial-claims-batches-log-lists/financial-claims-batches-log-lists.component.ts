@@ -136,7 +136,7 @@ export class FinancialClaimsBatchesLogListsComponent
   batchLogPrintAdviceLetterPagedList:any;
   isEdit!: boolean;
   paymentRequestId!: string;
-@ViewChild('addEditClaimsDialog')
+  @ViewChild('addEditClaimsDialog')
   private addEditClaimsDialog!: TemplateRef<any>;
   private addEditClaimsFormDialog: any;
 
@@ -274,6 +274,45 @@ export class FinancialClaimsBatchesLogListsComponent
   paymentStatusList: any = [];
 
   getBatchLogGridActions(dataItem: any) {
+    if(dataItem.paymentStatusCode.toLowerCase() == PaymentStatusCode.Denied.toLowerCase()) {
+      return [{
+        buttonType: 'btn-h-primary',
+        text: 'Edit Claim',
+        icon: 'edit',
+        click: (claim: any): void => {
+          this.onClaimClick(claim);
+        }
+      },
+      {
+        buttonType: 'btn-h-danger',
+        text: 'Delete Claim',
+        icon: 'delete',
+        click: (data: any): void => {
+          if (
+            [
+              PaymentStatusCode.Paid,
+              PaymentStatusCode.PaymentRequested,
+              PaymentStatusCode.ManagerApproved,
+            ].includes(data.paymentStatusCode)
+          ) {
+            this.notificationSnackbarService.manageSnackBar(
+              SnackBarNotificationType.ERROR,
+              'This claim cannot be deleted',
+              NotificationSource.UI
+            );
+          } else {
+            this.isUnBatchClaimsClosed = false;
+            this.isDeleteClaimClosed = true;
+            this.onSingleClaimDelete(data.paymentRequestId.split(','));
+            this.onDeleteClaimsOpenClicked(
+              this.deleteClaimsConfirmationDialogTemplate
+            );
+          }
+        },
+      },
+    ];
+  }
+
     return [
       {
         buttonType: 'btn-h-primary',
@@ -850,6 +889,25 @@ export class FinancialClaimsBatchesLogListsComponent
     });
   }
 
+  onClaimClick(dataitem: any) {
+    if (!dataitem.vendorId.length) return;
+    this.isEdit = true;
+    this.paymentRequestId = dataitem.paymentRequestId;
+    this.openAddEditClaimDialoge();
+  }
+
+  openAddEditClaimDialoge() {
+    this.addEditClaimsFormDialog = this.dialogService.open({
+      content: this.addEditClaimsDialog,
+      cssClass: 'app-c-modal app-c-modal-96full add_claims_modal',
+    });
+  }
+  modalCloseAddEditClaimsFormModal(result: any) {
+    if (result === true) {
+      this.loadBatchLogListGrid();
+    }
+    this.addEditClaimsFormDialog.close();
+  }
   //#region Private
   /* Private methods */
   private initializeGrid() {

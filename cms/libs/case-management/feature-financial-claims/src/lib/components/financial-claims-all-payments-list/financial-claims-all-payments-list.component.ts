@@ -760,7 +760,7 @@ pageNumberAndCountChangedInSelectAll() {
   }
 
   modalCloseAddEditClaimsFormModal(result: any) {
-    if (result) {
+    if (result === true) {
       this.loadFinancialClaimsAllPaymentsListGrid();
       this.addEditClaimsFormDialog.close();
     }
