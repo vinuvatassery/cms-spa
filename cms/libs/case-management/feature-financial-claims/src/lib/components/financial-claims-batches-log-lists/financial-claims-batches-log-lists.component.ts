@@ -580,6 +580,7 @@ export class FinancialClaimsBatchesLogListsComponent
   }
 
   onBulkOptionCancelClicked() {
+    this.selectAll = false;
     this.isRequestPaymentClicked = false;
     this.isPrintAdviceLetterClicked = false;
     this.selectedDataRows = [];
