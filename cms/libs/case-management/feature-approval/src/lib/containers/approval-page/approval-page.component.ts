@@ -12,6 +12,8 @@ import { State } from '@progress/kendo-data-query';
 /** Facades **/
 import {
   ApprovalFacade,
+  ContactFacade,
+  FinancialVendorFacade,
   PendingApprovalGeneralFacade,
   PendingApprovalPaymentFacade,
   UserRoleType,
@@ -30,6 +32,7 @@ import {
   UserDefaultRoles,
 } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { FormBuilder, FormGroup } from '@angular/forms';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
@@ -95,6 +98,9 @@ export class ApprovalPageComponent implements OnInit {
   paymentRequestId!: any;
   usersByRole$ = this.userManagementFacade.usersByRole$;
   selectedVendor$ = this.pendingApprovalGeneralFacade.selectedVendor$;
+  clinicVendorList$ = this.financialVendorFacade.clinicVendorList$;
+  ddlStates$ = this.contactFacade.ddlStates$;
+  healthCareForm: FormGroup
 
   /** Constructor **/
   constructor(
@@ -108,8 +114,13 @@ export class ApprovalPageComponent implements OnInit {
     private readonly userDataService: UserDataService,
     private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade,
     private dialogService: DialogService,
-    private readonly cd: ChangeDetectorRef
-  ) {}
+    private readonly cd: ChangeDetectorRef,
+    private financialVendorFacade: FinancialVendorFacade,
+    private contactFacade: ContactFacade,
+    private readonly formBuilder: FormBuilder,
+  ) {
+    this.healthCareForm = this.formBuilder.group({});
+  }
   ngOnInit(): void {
     this.getUserRole();
     this.userManagementFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
@@ -249,5 +260,33 @@ export class ApprovalPageComponent implements OnInit {
       userObject.approvalEntityId,
       userObject.subTypeCode
     );
+  }
+  buildVendorForm() {
+  let form = this.formBuilder.group({
+      clinicName: [''],
+      providerFirstName: [''],
+      providerLastName: [],
+      tinNumber: [''],
+      phoneNumber: [''],
+      email:[''],
+      fax:[''],
+      addressLine1: [''],
+      addressLine2: [''],
+      city: [''],
+      state: [''],
+      zip: [''],
+      contactFirstName:[''],
+      contactLastName: [''],
+      contactPhone:[''],
+      contactFax:[''],
+      contactEmail:['']
+    });
+    this.healthCareForm = form;
+  }
+  editClicked(event : any){
+    if(event)
+    {
+      this.buildVendorForm();
+    }
   }
 }

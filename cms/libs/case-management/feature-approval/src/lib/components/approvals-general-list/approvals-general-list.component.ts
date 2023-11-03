@@ -25,6 +25,7 @@ import {
   UserDataService,
   UserManagementFacade,
 } from '@cms/system-config/domain';
+import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'productivity-tools-approvals-general-list',
   templateUrl: './approvals-general-list.component.html',
@@ -94,9 +95,13 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   selectedIndex: any;
   @ViewChild('editListItemDialogModal') editModalTemplate!: TemplateRef<any>;
   @Input() usersByRole$: any;
-  @Output() approvalEntityId = new EventEmitter<any>();
+  @Output() getVendorDetailEvent = new EventEmitter<any>();
   @Input() selectedVendor$: any;
   selectedSubtypeCode: any;
+  @Input() clinicVendorList$:any;
+  @Input() ddlStates$ : any;
+  @Output() editClickedEvent = new EventEmitter<any>();
+  @Input() healthCareForm!: FormGroup;
 
   /** Constructor **/
   constructor(
@@ -246,7 +251,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         subTypeCode: item.subTypeCode,
       };
       this.selectedSubtypeCode = item.subTypeCode;
-      this.approvalEntityId.emit(userObject);
+      this.getVendorDetailEvent.emit(userObject);
       this.isPanelExpanded = true;
       this.cd.detectChanges();
     }
@@ -292,6 +297,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
   openEditModal(event: any) {
     if (event) {
+      this.editClickedEvent.emit(true);
       this.onEditListItemsDetailClicked(this.editModalTemplate);
     }
   }

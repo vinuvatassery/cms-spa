@@ -12,24 +12,28 @@
       selectedSubtypeCode === subTypeConst.MedicalProvider ||
       selectedSubtypeCode === subTypeConst.DentalProvider
     "
+    [formGroup]="healthCareForm"
   >
     <div class="flex-col">
       <div class="k-auto-complete-box">
         <kendo-floatinglabel text="Clinic Name">
-          <span
-            class="k-icon k-i-loading k-input-loading-icon input-inline-loader"
-          ></span>
-          <kendo-autocomplete
-            [fillMode]="formUiStyle.dropDownFillMode"
-            placeholder="Clinic Name"
-            [filterable]="true"
-            [popupSettings]="{
-              popupClass: 'healthcaresearch-list auto-complete-with-template',
-              animate: true,
-              appendTo: 'component'
-            }"
-          >
-          </kendo-autocomplete>
+
+          <kendo-combobox placeholder="Clinic Name" [fillMode]="formUiStyle.dropDownFillMode"
+            [popupSettings]="{ popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
+            (filterChange)="searchClinic($event)" [data]="clinicVendorListLocal"
+            [formControlName]="'providerName'" [valuePrimitive]="true" [valueField]="'vendorName'"
+            [textField]="'vendorName'" formControlName="clinicName"><button kendoButton fillMode="clear" icon="image"></button>
+            <ng-template kendoComboBoxItemTemplate let-dataItem>
+              <span>{{ dataItem.vendorName }}</span>
+            </ng-template>
+          </kendo-combobox>
+          <!-- <kendo-formerror
+            *ngIf="medicalProviderFormControls?.providerName.errors?.required && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
+            Clinic Name is required
+          </kendo-formerror>
+          <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.maxlength">
+            Clinic Name cannot be more than 500 characters
+          </kendo-formerror> -->
         </kendo-floatinglabel>
         <kendo-formhint>
           Start typing to choose an existing clinic, or enter a new one
@@ -42,6 +46,7 @@
           aria-label="Provider First Name"
           placeholder="Provider First Name"
           [fillMode]="formUiStyle.inputFillMode"
+          formControlName="providerFirstName"
         >
         </kendo-textbox>
       </kendo-floatinglabel>
@@ -52,6 +57,7 @@
           aria-label="Provider Last Name"
           placeholder="Provider Last Name"
           [fillMode]="formUiStyle.inputFillMode"
+          formControlName="providerLastName"
         >
         </kendo-textbox>
       </kendo-floatinglabel>
@@ -62,6 +68,7 @@
           aria-label="Phone"
           placeholder="Tin"
           [fillMode]="formUiStyle.inputFillMode"
+          formControlName="tinNumber"
         >
         </kendo-textbox>
       </kendo-floatinglabel>
@@ -72,6 +79,7 @@
           aria-label="Phone"
           placeholder="Phone"
           [fillMode]="formUiStyle.inputFillMode"
+          formControlName="phoneNumber"
         >
         </kendo-textbox>
       </kendo-floatinglabel>
@@ -82,6 +90,7 @@
           aria-label="Email (optional)"
           placeholder="Email (optional)"
           [fillMode]="formUiStyle.inputFillMode"
+          formControlName="email"
         >
         </kendo-textbox>
       </kendo-floatinglabel>
@@ -93,6 +102,7 @@
           aria-label="Fax (optional)"
           placeholder="Fax (optional)"
           [fillMode]="formUiStyle.inputFillMode"
+          formControlName="fax"
         >
         </kendo-textbox>
       </kendo-floatinglabel>
@@ -103,6 +113,7 @@
           aria-label="address line 1"
           placeholder="Address line 1"
           [fillMode]="formUiStyle.inputFillMode"
+          formControlName="addressLine1"
         >
         </kendo-textbox>
       </kendo-floatinglabel>
@@ -113,6 +124,7 @@
           aria-label="address line 2"
           placeholder="Address line 2"
           [fillMode]="formUiStyle.inputFillMode"
+          formControlName="addressLine2"
         >
         </kendo-textbox>
       </kendo-floatinglabel>
@@ -123,20 +135,16 @@
           aria-label="city"
           placeholder="City"
           [fillMode]="formUiStyle.inputFillMode"
+          formControlName="city"
         >
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="State" class="inline-search-loader">
-        <span
-          class="k-icon k-i-loading k-input-loading-icon input-inline-loader"
-        ></span>
-        <kendo-dropdownlist
-          aria-label="State"
-          [fillMode]="formUiStyle.dropDownFillMode"
-          placeholder="State"
-        >
+      <kendo-floatinglabel text="State">
+        <kendo-dropdownlist aria-label="State" [fillMode]="formUiStyle.dropDownFillMode" formControlName="state"
+          [data]="ddlStates$| async" textField="stateName" valueField="stateCode" [valuePrimitive]="true"
+          placeholder="State">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
@@ -146,6 +154,62 @@
           aria-label="Zip"
           placeholder="Zip"
           [fillMode]="formUiStyle.inputFillMode"
+          formControlName="zip"
+        >
+        </kendo-textbox>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="contactFirstName">
+        <kendo-textbox
+          aria-label="contactFirstName"
+          placeholder="contactFirstName"
+          [fillMode]="formUiStyle.inputFillMode"
+          formControlName="contactFirstName"
+        >
+        </kendo-textbox>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="contactLastName">
+        <kendo-textbox
+          aria-label="contactLastName"
+          placeholder="contactLastName"
+          [fillMode]="formUiStyle.inputFillMode"
+          formControlName="contactLastName"
+        >
+        </kendo-textbox>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="contactPhone">
+        <kendo-textbox
+          aria-label="contactPhone"
+          placeholder="contactPhone"
+          [fillMode]="formUiStyle.inputFillMode"
+          formControlName="contactPhone"
+        >
+        </kendo-textbox>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="contactFax">
+        <kendo-textbox
+          aria-label="contactFax"
+          placeholder="contactFax"
+          [fillMode]="formUiStyle.inputFillMode"
+          formControlName="contactFax"
+        >
+        </kendo-textbox>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="contactEmail">
+        <kendo-textbox
+          aria-label="contactEmail"
+          placeholder="contactEmail"
+          [fillMode]="formUiStyle.inputFillMode"
+          formControlName="contactEmail"
         >
         </kendo-textbox>
       </kendo-floatinglabel>
