@@ -155,8 +155,8 @@
     }
   }
   &.green-banner {
-    background: var(--hive-success-palette-A100);
-    color: $black;
+    background: $toLight-green;
+    color: var(--hive-success-palette-900);
     padding: $size-xx $size-xx;
     a {
       color: $black;

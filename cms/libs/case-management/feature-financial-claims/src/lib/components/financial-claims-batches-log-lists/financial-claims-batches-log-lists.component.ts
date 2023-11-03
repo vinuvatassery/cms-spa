@@ -153,7 +153,6 @@ export class FinancialClaimsBatchesLogListsComponent
     balanceAmount: 'Client Balance',
   };
 
-
   paymentMethodFilter = '';
   paymentTypeFilter = '';
   paymentStatusFilter = '';
@@ -257,15 +256,10 @@ export class FinancialClaimsBatchesLogListsComponent
   showExportLoader = false;
 
   //LovDropdowns
-  selectedpaymentMethod: string | null = null;
-  selectedPaymentType: string | null = null;
+  selectedPaymentMethod: string | null = null;
   selectedPaymentStatus: string | null = null;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
-  paymentTypes$ = this.lovFacade.paymentRequestType$;
   paymentStatus$ = this.lovFacade.paymentStatus$;
-  paymentMethods: any = [];
-  paymentTypes: any = [];
-  paymentStatusList: any = [];
 
   getBatchLogGridActions(dataItem: any) {
     return [
@@ -341,9 +335,7 @@ export class FinancialClaimsBatchesLogListsComponent
   ) {}
 
   ngOnInit(): void {
-    this.getPaymentMethodLov();
-    this.getPaymentStatusLov();
-    this.getCoPaymentRequestTypeLov();
+    this.loadLov();
     this.initializePage();
     this.sortColumnName = 'Item #';
     this.loadBatchLogListGrid();
@@ -366,46 +358,9 @@ export class FinancialClaimsBatchesLogListsComponent
     this.loadBatchLogListGrid();
   }
 
-  private getPaymentMethodLov() {
+  private loadLov() {
     this.lovFacade.getPaymentMethodLov();
-    this.paymentMethodType$.subscribe({
-      next: (data: any) => {
-        data.forEach((item: any) => {
-          item.lovDesc = item.lovDesc.toUpperCase();
-        });
-        this.paymentMethods = data.sort(
-          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
-        );
-      },
-    });
-  }
-
-  private getCoPaymentRequestTypeLov() {
-    this.lovFacade.getCoPaymentRequestTypeLov();
-    this.paymentTypes$.subscribe({
-      next: (data: any) => {
-        data.forEach((item: any) => {
-          item.lovDesc = item.lovDesc.toUpperCase();
-        });
-        this.paymentTypes = data.sort(
-          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
-        );
-      },
-    });
-  }
-
-  private getPaymentStatusLov() {
-    this.lovFacade.getPaymentStatusLov();
-    this.paymentStatus$.subscribe({
-      next: (data: any) => {
-        data.forEach((item: any) => {
-          item.lovDesc = item.lovDesc.toUpperCase();
-        });
-        this.paymentStatusList = data.sort(
-          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
-        );
-      },
-    });
+    this.lovFacade.getPaymentStatusLov();   
   }
 
   searchColumnChangeHandler(value: string) {
@@ -530,9 +485,7 @@ export class FinancialClaimsBatchesLogListsComponent
       this.filteredBy = '';
     }
     if (!this.filteredBy.includes('Payment Method'))
-      this.selectedpaymentMethod = null;
-    if (!this.filteredBy.includes('Payment Type'))
-      this.selectedPaymentType = '';
+      this.selectedPaymentMethod = null;
     if (!this.filteredBy.includes('Payment Status'))
       this.selectedPaymentStatus = '';
     this.loadBatchLogListGrid();
@@ -627,6 +580,7 @@ export class FinancialClaimsBatchesLogListsComponent
   }
 
   onBulkOptionCancelClicked() {
+    this.selectAll = false;
     this.isRequestPaymentClicked = false;
     this.isPrintAdviceLetterClicked = false;
     this.selectedDataRows = [];

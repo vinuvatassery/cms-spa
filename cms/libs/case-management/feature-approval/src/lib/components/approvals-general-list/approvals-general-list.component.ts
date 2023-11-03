@@ -94,7 +94,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   selectedIndex: any;
   @ViewChild('editListItemDialogModal') editModalTemplate!: TemplateRef<any>;
   @Input() usersByRole$: any;
-  @Output() approvalEntityId = new EventEmitter<any>();
+  @Output() getVendorDetailEvent = new EventEmitter<any>();
   @Input() selectedVendor$: any;
   selectedSubtypeCode: any;
 
@@ -246,7 +246,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         subTypeCode: item.subTypeCode,
       };
       this.selectedSubtypeCode = item.subTypeCode;
-      this.approvalEntityId.emit(userObject);
+      this.getVendorDetailEvent.emit(userObject);
       this.isPanelExpanded = true;
       this.cd.detectChanges();
     }
