@@ -31,6 +31,7 @@ import { Subscription } from 'rxjs';
 import { SnackBarNotificationType, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { InsuranceTypeCode } from '../../../../../domain/src/lib/enums/insurance-type-code';
 
 @Component({
   selector: 'case-management-medical-premium-detail',
@@ -157,7 +158,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     this.validateFormMode();
 
     if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) {
-      this.insuranceTypeCode = FinancialVendorTypeCode.Dental;
+      this.insuranceTypeCode = InsuranceTypeCode.Dental;
       this.selectedClaimType = FinancialVendorTypeCode.DentalProviders;
       this.subscribeDentalInsurance();
       this.loadDentalInsuranceLovs();
