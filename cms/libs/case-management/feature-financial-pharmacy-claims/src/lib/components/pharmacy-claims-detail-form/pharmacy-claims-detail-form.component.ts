@@ -21,7 +21,8 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
 
   pharmacyClaimForm!: FormGroup;
   clientTotalPayments = 0
-  
+  isClientRestricted = false
+  isClientInEligible = false
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
   claimsListData$ = this.financialPharmacyClaimsFacade.claimsListData$;
@@ -115,7 +116,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   }
 
   addClaimServiceGroup()
-  {    
+  {       
     const pharmacyClaimService = this.formBuilder.group({
       prescriptionFillId : [''],
       claimNbr  : ['', Validators.required],
@@ -130,9 +131,9 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
       drugName : ['']
     });
 
-    this.addClaimServicesForm.push(pharmacyClaimService)
-    this.cd.markForCheck();
+    this.addClaimServicesForm.push(pharmacyClaimService) 
     this.cd.markForCheck()
+    this.isSubmitted = false
   }
   
   isControlValid(controlName: string, index: any) {
@@ -174,6 +175,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
        }
        pharmacyClaimData.prescriptionFillDto.push(service)
     }
+    console.log(pharmacyClaimData)
      if(pharmacyClaimData.paymentRequestId)
      {
         //this.updatePharmacyClaimEvent.emit(pharmacyClaimData)
@@ -237,6 +239,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   clientSelectionChange(data : any)
   {
     this.pharmacyClaimForm.controls['clientId'].setValue(data?.clientId);
+    this.pharmacyClaimForm.controls['clientCaseEligibilityId'].setValue(data?.clientCaseEligibilityId);
     this.cd.detectChanges();
   this.clientTotalPayments = data?.TotalPayments ?? 0    
   this.showHideServiceList()

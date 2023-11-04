@@ -68,11 +68,6 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isProcessGridExpand = true;
   isPharmacyClaimsProcessGridLoaderShow = false;
-  @Input() pageSizes: any;
-  @Input() sortValue: any;
-  @Input() sortType: any;
-  @Input() sort: any;
-  @Input() pharmacyClaimsProcessGridLists$: any;
 
   @Input() addPharmacyClaim$: any;
   @Input() editPharmacyClaim$: any;
@@ -85,8 +80,6 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   @Input() searchDrugsLoader$: any;
   @Input() paymentRequestType$ : any
   @Input() deliveryMethodLov$ :any
-
-  @Output() loadPharmacyClaimsProcessListEvent = new EventEmitter<any>();
 
   @Output() addPharmacyClaimEvent = new EventEmitter<any>();
   @Output() updatePharmacyClaimEvent = new EventEmitter<any>();
