@@ -63,20 +63,9 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
-  columns: { [key: string]: string } = {
-    paymentNbr: 'Item #',
-    invoiceNbr: 'Invoice ID',
-    vendorName: 'Provider Name',
-    amountDue: 'Total Due',
-    paymentMethodCode: 'Payment Method',
-    serviceCount: 'Service Count',
-    clientFullName: 'Client Name',
-    nameOnInsuranceCard: 'Name on Primary Insurance Card',
-    clientId: 'Client ID',
-    paymentStatusCode: 'Payment Status',
-  };
-
+  columns: any; 
+  vendorNameField: any;
+  amountDueField: any;
   paymentMethodFilter = '';
   paymentStatusFilter = '';
   public width = '100%';
@@ -91,6 +80,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
       take: this.pageSizes[2]?.value,
       sort: this.sort,
     };
+    this.loadColumnsData();
     this.tAreaVariablesInitiation(this.batchDetailModalSourceList);
     this.getCurrentBatchId();
     this.loadBatchPaymentListGrid();
@@ -104,6 +94,48 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
       sort: this.sort,
     };
     this.loadBatchPaymentListGrid();
+  }
+
+  private loadColumnsData()
+  {
+    switch(this.selectedPaymentType){
+      case "INSURANCE_PREMIUM":
+        this.vendorNameField = 'Insurance Vendor';
+        this.amountDueField = 'Total Amount';
+        break;
+      case "TPA_CLAIM" :
+        this.vendorNameField = 'Provider Name';
+        this.amountDueField = 'Total Due';
+        break;
+      case "PHARMACY_CLAIM" :
+        this.vendorNameField = 'Pharmacy Name';
+        this.amountDueField = '';
+        break;
+    }
+    
+    this.columns = {
+      paymentNbr: 'Item #',
+      invoiceNbr: 'Invoice ID',
+      vendorName: this.vendorNameField,
+      premiumCount: 'Item Count',
+      amountDue: this.amountDueField,
+      paymentMethodCode: 'Payment Method',
+      serviceCount: 'Service Count',
+      clientFullName: 'Client Name',
+      nameOnInsuranceCard: 'Name on Primary Insurance Card',
+      clientId: 'Client ID',
+      drugName: 'Drug Name',
+      ndcCode: 'NDC Code',
+      rxQty: 'RX Qty',
+      rxType: 'Unit',
+      prescriptionTotalAmount: 'Total Amount Paid',
+      daySupply: 'Days Supply',
+      prescriptionFillDate: 'Fill Date',
+      paymentStatusCode: 'Payment Status',
+      prescriptionNbr: 'Prescription #',
+      pcaCode: 'PCA Code',
+      mailCode: 'Mail Code',
+    }
   }
 
   getCurrentBatchId() {
