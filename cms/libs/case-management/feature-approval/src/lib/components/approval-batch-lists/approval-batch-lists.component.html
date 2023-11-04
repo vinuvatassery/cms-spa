@@ -17,7 +17,7 @@
         <div>
           <div class="slidertitle-bar">
             <p>
-              <strong>Batch # {{ item.batchName }} </strong>
+              Batch # <strong> {{ item.batchName }} </strong>
               <label class="ml-1"
                 >${{ item.totalAmountDue | kendoNumber : 'n2' }}</label
               >
@@ -54,12 +54,13 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="tAreaSendBackNotesMaxLength"
               [rows]="2"
+              class="table-text-area textarea"
               resizable="none"
               [(ngModel)]="item.sendBackNotes"
               (valueChange)="sendBackNotesChange(item)"
               aria-label="Send Back Notes"
               title="{{ item.sendBackNotes }}"
-              [disabled]="item.batchStatus == 'APPROVED'"
+              [disabled]="item.batchStatus != 'SEND_BACK'"
             >
             <kendo-textarea-suffix class="justify-content-end">
               <span class="counter">{{ item.tAreaCessationCounter }}</span>
@@ -285,7 +286,7 @@
               </kendo-grid-column>
               <kendo-grid-column
                 *ngIf="selectedPaymentType == 'INSURANCE_PREMIUM'"
-                field="amountDue"
+                field="premiumTotalAmount"
                 title="Total Amount"
                 [width]="130"
               >

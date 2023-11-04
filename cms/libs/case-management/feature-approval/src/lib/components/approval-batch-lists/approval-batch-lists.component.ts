@@ -65,7 +65,6 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   columns: any; 
   vendorNameField: any;
-  amountDueField: any;
   paymentMethodFilter = '';
   paymentStatusFilter = '';
   public width = '100%';
@@ -81,8 +80,8 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
       sort: this.sort,
     };
     this.loadColumnsData();
-    this.tAreaVariablesInitiation(this.batchDetailModalSourceList);
     this.getCurrentBatchId();
+    this.tAreaVariablesInitiation(this.batchDetailModalSourceList[this.index]);
     this.loadBatchPaymentListGrid();
     this.approveAndSendbackCount();
   }
@@ -101,15 +100,12 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
     switch(this.selectedPaymentType){
       case "INSURANCE_PREMIUM":
         this.vendorNameField = 'Insurance Vendor';
-        this.amountDueField = 'Total Amount';
         break;
       case "TPA_CLAIM" :
         this.vendorNameField = 'Provider Name';
-        this.amountDueField = 'Total Due';
         break;
       case "PHARMACY_CLAIM" :
         this.vendorNameField = 'Pharmacy Name';
-        this.amountDueField = '';
         break;
     }
     
@@ -118,7 +114,8 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
       invoiceNbr: 'Invoice ID',
       vendorName: this.vendorNameField,
       premiumCount: 'Item Count',
-      amountDue: this.amountDueField,
+      amountDue: 'Total Due',
+      premiumTotalAmount: 'Total Amount',
       paymentMethodCode: 'Payment Method',
       serviceCount: 'Service Count',
       clientFullName: 'Client Name',

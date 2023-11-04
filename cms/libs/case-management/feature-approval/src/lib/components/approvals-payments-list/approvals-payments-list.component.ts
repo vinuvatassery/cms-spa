@@ -183,9 +183,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.lovFacade.getPaymentStatusLov();
     this.paymentStatusLovSubscription = this.paymentStatusLov$.subscribe({
       next:(response) => {
-        this.paymentStatusLovList = response.sort(
-          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
-        );
+        response.sort((value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr);
+        this.paymentStatusLovList = response;
       }
     });
   }
@@ -194,9 +193,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.lovFacade.getPaymentMethodLov();
     this.paymentMethodLovSubscription = this.paymentMethodLov$.subscribe({
       next:(response) => {
-        this.paymentMethodLovList = response.sort(
-          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
-        );
+        response.sort((value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr);
+        this.paymentMethodLovList = response;
       }
     });
   }
