@@ -8,5 +8,4 @@ export enum FinancialVendorTypeCode {
     MedicalClinic = 'MEDICAL_CLINIC',
     Clinic = 'CLINIC',
     InsuranceProviders = 'INSURANCE_PROVIDER',
-    Dental = 'DENTAL',
 }
