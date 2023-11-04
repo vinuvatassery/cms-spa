@@ -157,7 +157,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     this.validateFormMode();
 
     if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) {
-      this.insuranceTypeCode = "DENTAL";
+      this.insuranceTypeCode = FinancialVendorTypeCode.Dental;
       this.selectedClaimType = FinancialVendorTypeCode.DentalProviders;
       this.subscribeDentalInsurance();
       this.loadDentalInsuranceLovs();
