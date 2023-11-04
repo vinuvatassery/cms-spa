@@ -129,7 +129,7 @@ export class FinancialPcasPageComponent implements OnInit{
     this.pcaAssignmentsFacade.loadPcaCodes()
   }
 
-  loadPcaDates() {
+  loadPcaDates() {    
     this.pcaAssignmentsFacade.loadPcaDates()
     this.getPcaDatesList()
   }
@@ -154,12 +154,14 @@ export class FinancialPcasPageComponent implements OnInit{
     }
   }
 
+
   getPcaAssignment(pcaAssignmentId : string) {
     this.pcaAssignmentsFacade.getPcaAssignment(pcaAssignmentId)
   }
 
   getPcaDatesList()
   {
+    
    this.pcaDatesData$?.pipe()
    .subscribe((data: any) =>
    {

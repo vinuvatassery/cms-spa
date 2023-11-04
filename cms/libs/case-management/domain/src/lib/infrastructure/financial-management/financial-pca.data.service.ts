@@ -15,7 +15,7 @@ export class FinancialPcaDataService {
   ) {}
 
   loadFinancialPcaReassignmentListService(gridValuesInput:any) {
-    return this.http.get<any>(
+    return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments`,gridValuesInput);
   }
 

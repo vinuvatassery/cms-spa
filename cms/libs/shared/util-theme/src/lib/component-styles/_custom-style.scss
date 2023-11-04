@@ -164,7 +164,7 @@
         &.case-menu-disabled {
           cursor: default;
           pointer-events: none;
-          opacity: 0.4;
+          opacity: 0.7;
           user-select: none;
         }
       }
@@ -717,6 +717,7 @@ color: $app-primary-font-color;
 
 .client-tab-bar-wrappers {
   box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.14);
+  min-height: 30px;
 }
 
 .custom-client-tab-main-wrapper {
@@ -760,7 +761,7 @@ color: $app-primary-font-color;
   overflow-y: hidden;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
-
+  // min-height: 29px;
   .k-scrollview {
     border: 0px !important;
   }
@@ -990,15 +991,23 @@ color: $app-primary-font-color;
   margin: 0px -20px 16px -20px;
  
 }
+.add_new_bottom_section{
+  // padding-bottom: 15rem !important;
+}
 .add_main_popup_screen {
-  padding-bottom: 20rem;
+  // padding-bottom: 15rem !important;
 
   .add_new_top_section {
     border-bottom: 1px solid #0000001F;
-    padding: 1.5rem;
+    padding:0px 0px 1.5rem;
     padding-top: 0;
-  }
 
+  }
+  .column-labels{
+    > div {
+      margin-bottom: 1rem;
+    }
+  }
   .new_refund_Search {
     position: relative;
 
@@ -1018,7 +1027,25 @@ color: $app-primary-font-color;
   }
 
   .add_new_bottom_section {
-    padding: 1.5rem;
+    padding: 20px 0px 20px;
+  }
+}
+
+.pending_app_search_clients {
+  position: relative;
+
+  .global-search-icon {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+  }
+
+  .input-inline-loader {
+    top: 10px;
+  }
+
+  .k-combobox.k-input {
+    padding-left: 1.4rem;
   }
 }
 
@@ -1036,9 +1063,19 @@ color: $app-primary-font-color;
   width: 100%;
 
   .add_new_fixed_bottom_grid_section {
+    padding-bottom: 3rem;
     .k-grid-container {
-      height: 120px;
+      max-height: 120px;
     }
+  }
+  .fixed-btn-button_part{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    z-index: 4;
+    background: $white;
   }
 }
 .grid-list-options-menu{
@@ -1081,7 +1118,7 @@ color: $app-primary-font-color;
 
 .field_with_info {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
 
   >span.material-icons {
     margin-bottom: 10px;
@@ -1093,6 +1130,10 @@ color: $app-primary-font-color;
 
 
 .custom_scroll_view {
+  .k-scrollview-view{
+    max-width: 100%;
+    overflow-y: auto;
+  }
   .k-scrollview {
     min-height: 340px;
     max-height: 500px;
@@ -1149,6 +1190,15 @@ color: $app-primary-font-color;
 .pb-8rem{
   padding-bottom: 8rem;
 }
+.pb-6rem{
+  padding-bottom: 6rem;
+}
+.pb-5rem{
+  padding-bottom: 5rem;
+}
+.pb-4rem{
+  padding-bottom: 4rem;
+}
 
 .grey-banner-section{
   background: $grey-f7;
@@ -1189,9 +1239,11 @@ color: $app-primary-font-color;
 
 .table-text-area{
   textarea{
-    height: 35px;
+    min-height: 37px;
+    height: 37px;
     resize: vertical;
     line-height: normal;
+    padding: 8px 16px !important;
   }
 }
  .table-filter-with-dropdown{
@@ -1244,4 +1296,32 @@ iframe{
     font-family: $font-family;
   }
 }
+}
+
+.grey-cards-banner{
+background: $black-e;
+padding: 8px;
+    display: inline-block;
+    word-wrap: normal;
+    width: 100%;
+    white-space: normal;
+    border-radius: 4px;
+}
+
+.dropdown-intended{
+  .k-list-content{
+    .k-list-item{
+      padding-left: 2.1rem !important;
+    }
+  }
+}
+#pharmacyAuthorizationBanner{
+  display: none !important;
+}
+ 
+
+.section_border{
+  border: 1px solid rgba($black, 0.3);
+  border-radius: 6px;
+  padding: 1rem;
 }

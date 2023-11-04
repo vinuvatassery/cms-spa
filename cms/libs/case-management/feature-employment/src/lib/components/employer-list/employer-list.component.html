@@ -25,7 +25,7 @@
             {{dataItem.dateOfHire | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By"  [columnMenu]="false" [width]="80" [sortable]="false">
+        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By"  [columnMenu]="false" [width]="70" class="text-center" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
@@ -78,7 +78,7 @@
                 [valueField]="'value'" aria-label="Rows Per Page" id="RowsPerPage"  [valuePrimitive]="true" [(value)]="state.take"
                 (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
               <kendo-pager-info> </kendo-pager-info>
-              <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+              <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
             </div>
             <div class="d-flex">
               <kendo-pager-input></kendo-pager-input>

@@ -12,8 +12,8 @@ import {
   OnDestroy
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { GroupResult, State } from '@progress/kendo-data-query';
-import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType, FinancialPcaFacade, ExceptionTypeCode } from '@cms/case-management/domain';
+import { groupBy, State } from '@progress/kendo-data-query';
+import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType, FinancialPcaFacade, ExceptionTypeCode, ContactFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Lov, LovFacade } from '@cms/system-config/domain';
@@ -21,7 +21,6 @@ import { ActivatedRoute } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
-import { groupBy } from "@progress/kendo-data-query";
 import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'cms-financial-claims-detail-form',
@@ -33,6 +32,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   pcaExceptionDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
+  dropdownInternedClassAction = 'dropdown-intended';
   claimsListData$ = this.financialClaimsFacade.claimsListData$;
   sortValue = this.financialClaimsFacade.sortValueClaims;
   sortType = this.financialClaimsFacade.sortType;
@@ -132,7 +132,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   addOrEdit: any;
   selectedCPTCode: any = null;
   isSpotsPayment!: boolean;
+  pcaCode!: any;
   textMaxLength: number = 300;
+  exceptionReasonMaxLength = 150;
 
   isExcededMaxBeniftFlag = false;
   isExcededMaxBanifitButtonText = 'Make Exception';
@@ -154,6 +156,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   providerTin: any;
  groupedPaymentRequestTypes: any;
 
+ @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+ providerDetailsTemplate!: TemplateRef<any>;
+
   private showExceedMaxBenefitSubscription !: Subscription;
   private showIneligibleSubscription !: Subscription;
   private showBridgeUppSubscription !: Subscription;
@@ -162,10 +167,20 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   @Input() isEdit: any;
   @Input() paymentRequestId: any;
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
+
   readonly financialProvider = 'medical';
   currentFormControl!: FormGroup<any>;
    data:any = [];
    tempData:any = {};
+  providerDetailsDialog: any;
+  vendorProfile$ = this.financialVendorFacade.providePanelSubject$
+  showDuplicatePaymentHighlightSubject = this.financialClaimsFacade.showDuplicatePaymentHighlightSubject
+  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
+  ddlStates$ = this.contactFacade.ddlStates$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  batchId: any;
+  paymentStatusCode: any;
+  duplicatePaymentFlagPaymentRequestId : any;
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
     private cd: ChangeDetectorRef,
@@ -175,14 +190,16 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     private dialogService: DialogService,
     private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
-    private readonly financialPcaFacade: FinancialPcaFacade
+    private readonly financialPcaFacade: FinancialPcaFacade,
+    public contactFacade: ContactFacade,
+    private readonly financialVendorFacade : FinancialVendorFacade
   ) {
     this.initMedicalClaimObject();
     this.initClaimForm();
   }
 
-  closeAddEditClaimsFormModalClicked() {
-    this.modalCloseAddEditClaimsFormModal.emit(true);
+  closeAddEditClaimsFormModalClicked(refresh : boolean) {
+    this.modalCloseAddEditClaimsFormModal.emit(refresh);
   }
 
   loadClaimsListGrid() {
@@ -209,10 +226,12 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
     if (this.isEdit) {
       this.title = 'Edit';
+      this.showServicesListForm = true;
       this.addOrEdit = 'Update';
+      this.duplicatePaymentFlagPaymentRequestId = this.paymentRequestId;
       this.getMedicalClaimByPaymentRequestId();
     }
-    
+
      this.paymentRequestType$.subscribe((paymentRequestTypes) => {
       paymentRequestTypes = paymentRequestTypes.sort((x,y) => x.sequenceNbr < y.sequenceNbr ? -1 : 1 )
       let parentRequestTypes = paymentRequestTypes.filter(x => x.parentCode == null);
@@ -232,6 +251,39 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.groupedPaymentRequestTypes = groupBy(refactoredPaymentRequestTypeArray, [{ field: "parentCode" }]);
     });
   }
+
+  onCloseViewProviderDetailClicked(result: any){
+    if(result){
+      this.providerDetailsDialog.close();
+    }
+  }
+
+  onVendorNameClick(){
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+
+  }
+
+  getProviderPanel(event:any){
+    this.financialVendorFacade.getProviderPanelByVendorAddressId(this.selectedMedicalProvider.vendorAddressId)
+
+  }
+
+  updateProviderProfile(event:any){    
+    this.financialVendorFacade.updateProviderPanel(event)
+  }
+
+  OnEditProviderProfileClick(){
+    this.contactFacade.loadDdlStates()
+    this.lovFacade.getPaymentMethodLov()
+  }
+
   checkExceptions()
   {
     this.showExceedMaxBenefitSubscription = this.showExceedMaxBenefitException$.subscribe(data => {
@@ -242,15 +294,21 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           this.resetExceptionFields(data?.indexNumber);
           this.addExceptionForm.at(data?.indexNumber).get('maxBenefitExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
           this.addExceptionForm.at(data?.indexNumber).get('exceedMaxBenefitExceptionFlag')?.setValue(data?.flag);
-          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.ExceedMaxBenefits : '')
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(ExceptionTypeCode.ExceedMaxBenefits)
           this.addClaimServicesForm.at(data?.indexNumber).get('reasonForException')?.setValue('');
-          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.Yes)
         }
-        else
+        else if (this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.value === ExceptionTypeCode.ExceedMaxBenefits)
         {
           this.addExceptionForm.at(data?.indexNumber).get('exceedMaxBenefitExceptionFlag')?.setValue(data?.flag);
-          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.ExceedMaxBenefits : '')
-          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue('');
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.No);
+          this.checkOldInvoiceException(data?.indexNumber);
+          this.checkBridgeUppEception(data?.indexNumber);
+        }
+        if (!data?.flag)
+        {
+          this.duplicatePaymentObject.isDuplicatePaymentFound =true;
           this.checkDuplicatePaymentException(data?.indexNumber);
         }
         this.cd.detectChanges();
@@ -262,19 +320,26 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         this.resetExceptionFields(data?.indexNumber);
         this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
         this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlag')?.setValue(data?.flag);
-        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.Ineligible : '')
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(ExceptionTypeCode.Ineligible)
         this.addClaimServicesForm.at(data?.indexNumber).get('reasonForException')?.setValue('');
-        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
-        this.cd.detectChanges();
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.Yes)
       }
-      else
+      else if (this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.value === ExceptionTypeCode.Ineligible)
       {
         this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlag')?.setValue(data?.flag);
-        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.Ineligible : '')
-        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
-        this.checkOldInvoiceException(data?.indexNumber);
-        this.checkDuplicatePaymentException(data?.indexNumber);
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue('')
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.No)
+        this.checkProviderNotEligibleException(this.providerTin);
+        this.loadServiceCostMethod(data?.indexNumber);
+
       }
+      if (!data?.flag)
+      {
+        this.checkDuplicatePaymentException(data?.indexNumber);
+        this.checkOldInvoiceException(data?.indexNumber);
+        this.checkBridgeUppEception(data?.indexNumber);
+      }
+      this.cd.detectChanges();
     });
     this.showBridgeUppSubscription = this.showBridgeUppException$.subscribe(data => {
       if(data)
@@ -283,11 +348,18 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         {
           this.resetExceptionFields(data?.indexNumber);
           this.addExceptionForm.at(data?.indexNumber).get('bridgeUppExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
-          this.addClaimServicesForm.at(data?.indexNumber).get('reasonForException')?.setValue('');
-        }
           this.addExceptionForm.at(data?.indexNumber).get('bridgeUppExceptionFlag')?.setValue(data?.flag);
-          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.BridgeUpp : '')
-          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(ExceptionTypeCode.BridgeUpp)
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.Yes)
+          this.addClaimServicesForm.at(data?.indexNumber).get('reasonForException')?.setValue('');
+
+        }
+        else if (this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.value === ExceptionTypeCode.BridgeUpp)
+        {
+          this.addExceptionForm.at(data?.indexNumber).get('bridgeUppExceptionFlag')?.setValue(data?.flag);
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue('')
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.No)
+        }
         this.cd.detectChanges();
       }
     });
@@ -296,13 +368,24 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       {
         if(data?.flag)
         {
+          this.getDuplicateData();
+          this.showDuplicatePaymentHighlightSubject.next(true);
           this.resetExceptionFields(data?.indexNumber);
           this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
+          this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlag')?.setValue(data?.flag);
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(ExceptionTypeCode.DuplicatePayment)
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.Yes)
           this.addClaimServicesForm.at(data?.indexNumber).get('reasonForException')?.setValue('');
         }
+        else if (this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.value === ExceptionTypeCode.DuplicatePayment)
+        { this.duplicatePaymentObject = {}
+          this.showDuplicatePaymentHighlightSubject.next(false);
           this.addExceptionForm.at(data?.indexNumber).get('duplicatePaymentExceptionFlag')?.setValue(data?.flag);
-          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(data?.flag ? ExceptionTypeCode.DuplicatePayment : '')
-          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(data?.flag ? StatusFlag.Yes : StatusFlag.No)
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue('')
+          this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.No)
+          this.checkOldInvoiceException(data?.indexNumber);
+          this.checkBridgeUppEception(data?.indexNumber);
+        }
         this.cd.detectChanges();
       }
     });
@@ -346,7 +429,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       exceptionArray : new FormArray([]),
       providerNotEligibleExceptionFlag: new FormControl(false),
       showProviderNotEligibleExceptionReason: new FormControl(false),
-      providerNotEligibleExceptionFlagText: new FormControl(this.isExcededMaxBanifitButtonText)
+      providerNotEligibleExceptionFlagText: new FormControl(this.isExcededMaxBanifitButtonText),
+      pcaCode : new FormControl('')
     });
   }
 
@@ -423,7 +507,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       cptCode: new FormControl(this.medicalClaimServices.cptCode, [
         Validators.required,
       ]),
-      pcaCode: new FormControl(this.medicalClaimServices.pcaCode),
+      pcaCode: new FormControl({value: this.medicalClaimServices.pcaCode, disabled:true}),
       serviceDescription: new FormControl(
         this.medicalClaimServices.serviceDescription,
         [Validators.required]
@@ -490,6 +574,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
        this.addClaimServicesForm.reset();
     }
     if(this.addClaimServicesForm.length > 1 ){
+    let form = this.addClaimServicesForm.value[i]
+    this.deleteClaimService(form.tpaInvoiceId);
     this.addClaimServicesForm.removeAt(i);
     this.addExceptionForm.removeAt(i);
     }
@@ -575,6 +661,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
     if (!this.claimForm.valid) {
       this.claimForm.markAllAsTouched()
+      this.cd.detectChanges();
       return;
     }
     let formValues = this.claimForm.value;
@@ -613,7 +700,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         exceptionReasonCode: element.reasonForException,
         tpaInvoiceId: element.tpaInvoiceId,
         exceptionFlag: element.exceptionFlag,
-        exceptionTypeCode: element.exceptionTypeCode
+        exceptionTypeCode: element.exceptionTypeCode,
+        pcaCode:element.pcaCode
       };
       this.validateStartEndDate(service.serviceStartDate,
         service.serviceEndDate);
@@ -629,7 +717,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.onPrintDenialLetterOpen();
       return;
     }
-    this.getPCACode(isPcaAssigned, bodyData);  
+    this.getPCACode(isPcaAssigned, bodyData);
 }
 
   getPCACode(isPcaAssigned: boolean, bodyData: any){
@@ -715,6 +803,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     if (!this.isEdit) {
       this.saveData(claim);
     } else {
+      claim.paymentStatusCode = this.paymentStatusCode;
+      claim.batchId = this.batchId;
       this.update(claim);
     }
   }
@@ -729,10 +819,10 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
             SnackBarNotificationType.ERROR,
             'An error occure whilie adding claim'
           );
-          this.pcaExceptionDialogService.close();
+          this.pcaExceptionDialogService?.close();
         } else {
-          this.closeAddEditClaimsFormModalClicked();
-          this.pcaExceptionDialogService.close();
+          this.closeAddEditClaimsFormModalClicked(true);
+          this.pcaExceptionDialogService?.close();
           this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
@@ -763,7 +853,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           );
           this.pcaExceptionDialogService.close();
         } else {
-          this.closeAddEditClaimsFormModalClicked();
+          this.closeAddEditClaimsFormModalClicked(true);
           this.pcaExceptionDialogService.close();
           this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
@@ -788,6 +878,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       .getMedicalClaimByPaymentRequestId(this.paymentRequestId, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim)
       .subscribe({
         next: (val) => {
+          this.batchId = val.batchId;
+          this.paymentStatusCode = val.paymentStatusCode;
           const clients = [
             {
               clientId: val.clientId,
@@ -798,18 +890,29 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
             {
               vendorId: val.vendorId,
               providerFullName: val.vendorName,
-              vendorAddressId: val.vendorAddressId
+              vendorAddressId: val.vendorAddressId,
+              vendorName: val.vendorName,
+              tin: val.tin,
+              mailCode: val.mailCode
             },
           ];
           this.financialClaimsFacade.clientSubject.next(clients);
           this.selectedClient = clients[0];
 
           this.financialClaimsFacade.pharmaciesSubject.next(vendors);
-          this.selectedMedicalProvider = vendors[0];
+          this.selectedMedicalProvider =  vendors[0];
+          this.vendorId =  val.vendorId;
+          this.clientId = val.clientId
           this.claimForm.patchValue({
             invoiceId: val.claimNbr,
             paymentRequestId: val.paymentRequestId,
           });
+          if(this.isEdit){
+            this.isRecentClaimShow = true;
+            this.clientName = val.clientName;
+            this.vendorName = val.vendorName;
+
+          }
           this.claimForm.controls['parentReasonForException'].setValue(val.exceptionReasonCode);
           this.claimForm.controls['parentExceptionFlag'].setValue(val.exceptionFlag);
           this.claimForm.controls['parentExceptionTypeCode'].setValue(val.exceptionTypeCode);
@@ -862,6 +965,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       serviceForm.controls['cptCodeId'].setValue(service.cptCodeId);
       serviceForm.controls['exceptionFlag'].setValue(service.exceptionFlag);
       serviceForm.controls['exceptionTypeCode'].setValue(service.exceptionTypeCode);
+      serviceForm.controls['pcaCode'].setValue(service.pcaCode);
       let exceptionForm = this.addExceptionForm.at(i) as FormGroup;
       if(serviceForm.controls['exceptionFlag'].value === StatusFlag.Yes && !this.claimForm.controls['parentExceptionTypeCode'])
       {
@@ -929,7 +1033,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
   onSpotsPaymentChange(check: any) {
     this.isSpotsPayment = check.currentTarget.checked;
-    if(this.claimForm.controls['providerNotEligibleExceptionFlag'].value && this.vendorId)
+    if(this.vendorId)
     {
       this.checkProviderNotEligibleException(this.providerTin);
     }
@@ -946,16 +1050,26 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   reasonCharCount(i: number) {
     let reasonForException = this.claimForm.value.claimService[i].reasonForException;
     if (reasonForException) {
-      return `${reasonForException.length}/${this.textMaxLength}`;
+      return `${reasonForException.length}/${this.exceptionReasonMaxLength}`;
     }
-    return `0/${this.textMaxLength}`;
+    return `0/${this.exceptionReasonMaxLength}`;
+  }
+
+  parentReasonCharCount() {
+    let reasonForException = this.claimForm.value.parentReasonForException;
+    if (reasonForException) {
+      return `${reasonForException.length}/${this.exceptionReasonMaxLength}`;
+    }
+    return `0/${this.exceptionReasonMaxLength}`;
   }
 
   onProviderValueChange($event: any) {
-    this.isRecentClaimShow = false;
     this.vendorId = $event.vendorId;
     this.vendorName = $event.vendorName;
     this.providerTin = $event;
+    if (this.clientId != null && this.vendorId != null) {
+      this.isRecentClaimShow = true;
+    }
     this.checkProviderNotEligibleException($event);
   }
   clientValueChange($event: any) {
@@ -971,23 +1085,34 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.addExceptionForm.at(index).get('maxBenefitExceptionFlagText')?.setValue("Don't Make Exception");
     } else if(this.addExceptionForm.at(index).get('exceedMaxBenefitExceptionFlag')?.value) {
       this.addExceptionForm.at(index).get('maxBenefitExceptionFlagText')?.setValue("Make Exception");
+      this.resetReasonForException(index);
     }
     else if(this.addExceptionForm.at(index).get(controlName)?.value && this.addExceptionForm.at(index).get('oldInvoiceExceptionFlag')?.value) {
       this.addExceptionForm.at(index).get('oldInvoiceExceptionFlagText')?.setValue("Don't Make Exception");
     } else if(this.addExceptionForm.at(index).get('oldInvoiceExceptionFlag')?.value) {
       this.addExceptionForm.at(index).get('oldInvoiceExceptionFlagText')?.setValue("Make Exception");
+      this.resetReasonForException(index);
     }
     else if(this.addExceptionForm.at(index).get(controlName)?.value && this.addExceptionForm.at(index).get('bridgeUppExceptionFlag')?.value) {
       this.addExceptionForm.at(index).get('bridgeUppExceptionFlagText')?.setValue("Don't Make Exception");
     } else if(this.addExceptionForm.at(index).get('bridgeUppExceptionFlag')?.value) {
       this.addExceptionForm.at(index).get('bridgeUppExceptionFlagText')?.setValue("Make Exception");
+      this.resetReasonForException(index);
     }
     else if(this.addExceptionForm.at(index).get(controlName)?.value && this.addExceptionForm.at(index).get('duplicatePaymentExceptionFlag')?.value) {
       this.addExceptionForm.at(index).get('duplicatePaymentExceptionFlagText')?.setValue("Don't Make Exception");
     } else if(this.addExceptionForm.at(index).get('duplicatePaymentExceptionFlag')?.value) {
       this.addExceptionForm.at(index).get('duplicatePaymentExceptionFlagText')?.setValue("Make Exception");
+      this.resetReasonForException(index);
     }
   }
+
+  resetReasonForException(index:any)
+  {
+    this.addClaimServicesForm.at(index).get('reasonForException')?.reset();
+  }
+
+duplicatePaymentObject:any = {};
   getExceptionFormValue(controlName: string, index: any)
   {
     return this.addExceptionForm.at(index).get(controlName)?.value
@@ -1031,16 +1156,23 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.claimForm.controls['providerNotEligibleExceptionFlagText'].setValue("Don't Make Exception");
     } else if (this.claimForm.controls['providerNotEligibleExceptionFlag']?.value) {
       this.claimForm.controls['providerNotEligibleExceptionFlagText'].setValue("Make Exception");
+      this.claimForm.controls['parentReasonForException'].reset();
     }
   }
   checkProviderNotEligibleException($event:any)
   {
+    let checkException = true;
     this.addExceptionForm.controls.forEach((element, index) => {
-      if(!this.checkPriority(this.providerNotEligiblePriorityArray,index,null))
+      checkException = this.checkPriority(this.providerNotEligiblePriorityArray,index,null);
+      if(!checkException)
       {
         return;
       }
     });
+    if(!checkException)
+    {
+      return;
+    }
     if(!$event?.tin && !this.isSpotsPayment)
     {
       this.addExceptionForm.reset();
@@ -1049,11 +1181,12 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.claimForm.controls['parentExceptionFlag']?.setValue(StatusFlag.Yes);
       this.claimForm.controls['parentReasonForException']?.setValue('');
     }
-    else
+    else if (this.claimForm.controls['parentExceptionTypeCode']?.value === ExceptionTypeCode.ProviderIneligible)
     {
       this.claimForm.controls['providerNotEligibleExceptionFlag']?.setValue(false);
       this.claimForm.controls['parentExceptionTypeCode'].setValue('');
       this.claimForm.controls['parentExceptionFlag']?.setValue(StatusFlag.No);
+      this.checkForChildClaimFlags();
     }
     this.cd.detectChanges();
   }
@@ -1072,7 +1205,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       today.setFullYear(today.getFullYear() - 1);
       serviceEndDate.setHours(0,0,0,0);
       today.setHours(0,0,0,0);
-      if(serviceEndDate < today)
+      if(serviceEndDate <= today)
       {
         this.resetExceptionFields(index);
         this.addExceptionForm.at(index).get('oldInvoiceExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
@@ -1081,11 +1214,11 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         this.addClaimServicesForm.at(index).get('exceptionFlag')?.setValue(StatusFlag.Yes)
         this.addClaimServicesForm.at(index).get('reasonForException')?.setValue('');
       }
-      else
+      else if (this.addClaimServicesForm.at(index).get('exceptionTypeCode')?.value === ExceptionTypeCode.OldInvoice)
       {
         this.addExceptionForm.at(index).get('oldInvoiceExceptionFlag')?.setValue(false);
-        this.addClaimServicesForm.at(index).get('exceptionTypeCode')?.setValue('')
-        this.addClaimServicesForm.at(index).get('exceptionFlag')?.setValue(StatusFlag.No)
+        this.addClaimServicesForm.at(index).get('exceptionTypeCode')?.setValue('');
+        this.addClaimServicesForm.at(index).get('exceptionFlag')?.setValue(StatusFlag.No);
       }
     }
     this.cd.detectChanges();
@@ -1137,7 +1270,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     const dueAmount = serviceFormData.controls['amountDue'].value;
     const vendorId = this.claimForm.value?.medicalProvider?.vendorId
     if (startDate && endDate && dueAmount && vendorId) {
-      this.financialClaimsFacade.checkDuplicatePaymentException(startDate,endDate, vendorId,dueAmount, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.checkDuplicatePaymentException(startDate,endDate, vendorId,dueAmount, this.duplicatePaymentFlagPaymentRequestId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
   loadServiceCostMethod(index:number){
@@ -1152,7 +1285,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.addClaimServicesForm.controls.forEach((element, index) => {
           totalServiceCost += + element.get('amountDue')?.value;
       });
-      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index,
+        this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim, this.clientCaseEligibilityId);
       this.exceedMaxBenefitFlag = this.financialClaimsFacade.serviceCostFlag;
     }
   }
@@ -1189,8 +1323,41 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     {
       this.showServicesListForm= false;
       this.isRecentClaimShow =false;
-      
+
     }
   }
+  deleteClaimService(tpaInvoiceId:any){
+    this.financialClaimsFacade.deleteClaimService(tpaInvoiceId,this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim).subscribe({
+      next:()=>{
+        this.financialClaimsFacade.showHideSnackBar(
+          SnackBarNotificationType.SUCCESS,
+          'Service Deleted'
+        );
+      },
+      error:(err:any)=> {
+        this.loaderService.hide();
+        this.financialClaimsFacade.showHideSnackBar(
+          SnackBarNotificationType.ERROR,
+          err
+        );
+      },
+    })
+  }
+  getDuplicateData()
+  {
+    this.duplicatePaymentObject.amountDue = this.addClaimServicesForm.at(0).get('amountDue')?.value;
+    this.duplicatePaymentObject.serviceStartDate = this.addClaimServicesForm.at(0).get('serviceStartDate')?.value;
+    this.duplicatePaymentObject.serviceEndDate = this.addClaimServicesForm.at(0).get('serviceEndDate')?.value;
+  }
+
+  checkForChildClaimFlags()
+  {
+    this.addClaimServicesForm.controls.forEach((element, index) => {
+      this.loadServiceCostMethod(index);
+      this.checkOldInvoiceException(index);
+      this.checkBridgeUppEception(index);
+    });
+  }
+
 }
 

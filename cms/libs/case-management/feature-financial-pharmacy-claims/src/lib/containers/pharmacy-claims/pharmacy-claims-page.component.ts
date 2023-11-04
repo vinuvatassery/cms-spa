@@ -13,7 +13,8 @@ export class PharmacyClaimsPageComponent {
  
   paymentRequestType$ = this.lovFacade.paymentRequestType$;
   deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
-
+  batchingClaims$ = this.financialPharmacyClaimsFacade.batchClaims$;
+  
    sortType = this.financialPharmacyClaimsFacade.sortType;
    pageSizes = this.financialPharmacyClaimsFacade.gridPageSizes;
    gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
@@ -27,8 +28,8 @@ export class PharmacyClaimsPageComponent {
    
 
    state!: State;
-  pharmacyClaimsProcessGridLists$ =
-  this.financialPharmacyClaimsFacade.pharmacyClaimsProcessData$;
+  pharmacyClaimsProcessGridLists$ = this.financialPharmacyClaimsFacade.pharmacyClaimsProcessData$;
+  pharmacyClaimsProcessLoader$ = this.financialPharmacyClaimsFacade.pharmacyClaimsProcessLoader$;
   pharmacyClaimsBatchGridLists$ = this.financialPharmacyClaimsFacade.pharmacyClaimsBatchData$;
 
   pharmacyClaimsAllPaymentsGridLists$ = this.financialPharmacyClaimsFacade.pharmacyClaimsAllPaymentsData$;
@@ -62,8 +63,7 @@ export class PharmacyClaimsPageComponent {
   }
 
   loadPharmacyClaimsProcessListGrid(event: any) {
-  
-    this.financialPharmacyClaimsFacade.loadPharmacyClaimsProcessListGrid();
+    this.financialPharmacyClaimsFacade.loadPharmacyClaimsProcessListGrid(event);
   }
   
 
@@ -98,5 +98,13 @@ export class PharmacyClaimsPageComponent {
   }
   searchDrug(searchText: string) {
     this.financialPharmacyClaimsFacade.searchDrug(searchText);
+  }
+
+  onExportClaimsInProcess(event: any){
+    this.financialPharmacyClaimsFacade.exportPharmacyClaimsProcessListGrid(event);
+  }
+
+  onbatchClaimsClicked(event:any){
+    this.financialPharmacyClaimsFacade.batchClaims(event);
   }
 }

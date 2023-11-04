@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridFilterParam, VendorInsurancePlanFacade } from '@cms/case-management/domain';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { DocumentFacade } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-financial-insurance-provider-list',
   templateUrl: './financial-insurance-provider-list.component.html',
@@ -16,6 +17,7 @@ export class FinancialInsuranceProviderListComponent implements OnInit  {
   isInsurancePlanDetailShow = false;
   isInsurancePlanDeactivateShow = false;
   isInsurancePlanDeleteShow = false;
+  showExportLoader = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public sortValue = this.vendorInsurancePlanFacade.sortValue;
   public sortType = this.vendorInsurancePlanFacade.sortType;
@@ -70,7 +72,7 @@ export class FinancialInsuranceProviderListComponent implements OnInit  {
   ];
 
   /** Constructor **/
-  constructor(private readonly vendorInsurancePlanFacade: VendorInsurancePlanFacade) { }
+  constructor(private readonly vendorInsurancePlanFacade: VendorInsurancePlanFacade , private documentFacade :  DocumentFacade,) { }
 
   ngOnInit(): void {
     this.state = {
@@ -134,5 +136,14 @@ export class FinancialInsuranceProviderListComponent implements OnInit  {
   }
   clickCloseDeleteInsurancePlan() {
     this.isInsurancePlanDeleteShow = false;
+  }
+  onClickedExport(){
+    const params = {
+      SortType: this.sortType,
+      Sorting: this.sortValue,
+      Filter: JSON.stringify(this.filter)
+    };
+
+    this.documentFacade.getExportFile(params,`vendors/${this.vendorId}/insurances-providers` , 'insurances-providers')
   }
 }

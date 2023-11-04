@@ -3,71 +3,24 @@
         <h1 class="maintitle_withicon text-bold">Add New Claims </h1>
     </section>
 </kendo-dialog-titlebar>
-<section class="add_main_popup_screen">
+<section class="k-dialog-body">
+    <section class="add_main_popup_screen">
 
-    <div [formGroup]="pharmacyClaimForm">
+
         <div class="add_new_top_section">
             <p class="mb-3"> Select a pharmacy and client to bulk add prescriptions.</p>
-            <div class="flex-row">
+            <div class="flex-row mb-3">
                 <div class="flex-col flex-col-6">
-                    <div class="combotable_search_list new_refund_Search new_claims_Search mb-3">
+                    <div class="combotable_search_list new_refund_Search new_claims_Search ">
                         <span class="material-icons global-search-icon" aria-label="search"
                             aria-hidden="true">search</span>
-                        <span *ngIf="searchPharmaciesLoader$ | async"
+                        <span *ngIf="isShownSearchLoader"
                             class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-
-                        <kendo-multicolumncombobox [data]="searchPharmacies$ | async" textField="fullCustomName"
-                            valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
-                            (filterChange)="searchPharmacy($event)" placeholder="Search Pharmacy name or TIN"
-                            [valuePrimitive]="true"
-                            [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-                            (selectionChange)="pharmacySelectionChange($event)" 
-                            formControlName="vendorAddressId">
-                            <button kendoButton fillMode="clear" icon="image"></button>
-
-                            <kendo-combobox-column>
-                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                    <span>{{ dataItem.vendorName }}</span>
-                                </ng-template>
-                            </kendo-combobox-column>
-
-                            <kendo-combobox-column>
-                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                    <span class="text-muted"><em> TIN:</em> {{ dataItem.tin }}</span>
-                                </ng-template>
-                            </kendo-combobox-column>
-
-                            <kendo-combobox-column>
-                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                    <span class="text-muted"><em> Mail Code:</em> {{ dataItem.mailCode }}</span>
-                                </ng-template>
-                            </kendo-combobox-column>
-
-                            <kendo-combobox-column>
-                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                    <span class="text-muted"><em> Address:</em> {{ dataItem.address }}</span>
-                                </ng-template>
-                            </kendo-combobox-column>
-                        </kendo-multicolumncombobox>
-                        <kendo-formerror *ngIf="(!pharmacyClaimForm.controls['vendorAddressId'].valid) && isSubmitted"
-                            class="d-flex align-items-center"> <span class="material-icons mr-1"
-                                aria-hidden="false">info</span> Pharmacy selection is required
-                        </kendo-formerror>
-                    </div>
-                </div>
-            </div>
-            <div class="flex-row">
-                <div class="flex-col flex-col-6">
-                    <div class="combotable_search_list new_refund_Search new_claims_Search">
-                        <span class="material-icons global-search-icon" aria-label="search"
-                            aria-hidden="true">search</span>
-                        <span *ngIf="searchClientLoader$ | async"
-                            class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                        <kendo-multicolumncombobox [data]="searchClients$ | async" textField="fullCustomName"
+                        <kendo-multicolumncombobox [data]="clientSearchResult" textField="clientFullName"
                             valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
-                            (filterChange)="searchClient($event)" placeholder="Search Client Name, ID, or SSN"
-                            [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-                            (selectionChange)="clientSelectionChange($event)"  formControlName="clientId" [valuePrimitive]="true">
+                            placeholder="Search Client Name, ID, or SSN"
+                            [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+                            [filterable]="true">
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
@@ -87,29 +40,60 @@
                             </kendo-combobox-column>
                             <kendo-combobox-column [width]="125">
                                 <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                    <span class=" text-muted"> <em>DOB:</em> {{ dataItem.dob | date:'MM/dd/YYYY'}}</span>
+                                    <span class=" text-muted"> <em>DOB:</em> {{ dataItem.dob}}</span>
                                 </ng-template>
                             </kendo-combobox-column>
                         </kendo-multicolumncombobox>
-                        <kendo-formerror *ngIf="(!pharmacyClaimForm.controls['clientId'].valid) && isSubmitted"
-                        class="d-flex align-items-center"> <span class="material-icons mr-1"
-                            aria-hidden="false">info</span>Client selection is required
-                    </kendo-formerror>
                     </div>
                 </div>
             </div>
-            <div class="flex-row mt-2">
+            <div class="flex-row">
+                <div class="flex-col flex-col-6">
+                    <div class="combotable_search_list new_refund_Search new_claims_Search ">
+                        <span class="material-icons global-search-icon" aria-label="search"
+                            aria-hidden="true">search</span>
+                        <span *ngIf="isShownSearchLoader"
+                            class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+
+                        <kendo-multicolumncombobox [data]="providerSearchResult" textField="providerFullName"
+                            valueField="providerId" [fillMode]="formUiStyle.dropDownFillMode"
+                            placeholder="Search Pharmacy name or TIN"
+                            [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+                            [filterable]="true">
+                            <button kendoButton fillMode="clear" icon="image"></button>
+
+                            <kendo-combobox-column>
+                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                    <span>{{ dataItem.providerFullName }}</span>
+                                </ng-template>
+                            </kendo-combobox-column>
+
+                            <kendo-combobox-column>
+                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                    <span class="text-muted"><em> TIN:</em> {{ dataItem.tin }}</span>
+                                </ng-template>
+                            </kendo-combobox-column>
+
+                        </kendo-multicolumncombobox>
+                        <div class="text-right">
+                            <a kendoButton look="flat" class="card-link-button" href="#isRecentClaimShow">
+                                View Recent Claims
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            <div class="flex-row mt-1">
                 <div class="flex-col flex-col-6">
                     <div class="flex-space-bw">
                         <div class="component-list-h">
                             <span class="app-checkboxwidtext-wrapper">
-                                <input type="checkbox" kendoCheckBox id="paymentMethodCode" aria-labelledby="paymentMethodCode" 
-                                formControlName="paymentMethodCode"/>
-                                <label class="k-checkbox-label" for="paymentMethodCode">This is a SPOTS payment</label>
+                                <input type="checkbox" kendoCheckBox id="SPOTSpayment" aria-labelledby="SPOTSpayment" />
+                                <label class="k-checkbox-label" for="SPOTSpayment">This is a SPOTS payment</label>
                             </span>
                         </div>
                         <div>
-                            <p><strong>Client YTD Paid:</strong>$ {{clientTotalPayments}}</p>
+                            <p><strong>Client YTD Paid:</strong>$X,XXX.XX</p>
                         </div>
                     </div>
                 </div>
@@ -127,7 +111,7 @@
                                 added to this claim.</p>
                         </div>
                     </div>
-                    <div class="info-banners red-bg-banner d-inline-flex" *ngIf="false">
+                    <div class="info-banners red-bg-banner d-inline-flex">
                         <span class="material-icons" aria-label="info" aria-hidden="true">info</span>
                         <div>
                             <p>Client status is INELIGIBLE. CAREAssist cannot pay for prescriptions.</p>
@@ -136,204 +120,134 @@
                 </div>
 
             </div>
-            <div class="flex-row" *ngIf="showServicesListForm">
-                <div class="flex-col flex-col-6">
-                    <div class=" mb-3">
-                       
+            <div class="flex-row">
+                <div class="mb-3 flex-col">
+                    <div class="section_border">
+                        <div class="flex-space-bw align-items-center">
+                            <h4 class="mar-0">Prescription 1</h4>
+                            <button aria-label="Delete" kendoButton fillMode="flat" themeColor="error">DELETE</button>
+                        </div>
+                        <div class="flex-row">
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="Prescription Number">
+                                    <kendo-textbox aria-label="Prescription Number"
+                                        [fillMode]="formUiStyle.inputFillMode">
+                                    </kendo-textbox>
+                                </kendo-floatinglabel>
+                            </div>
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="Fill Date">
+                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Fill Date"
+                                        format="MM/dd/yyyy" formatPlaceholder="formatPattern">
+                                    </kendo-datepicker>
+                                </kendo-floatinglabel>
+                            </div> 
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="Payment Type">
+                                    <kendo-dropdownlist aria-label="Payment Type"
+                                        [fillMode]="formUiStyle.dropDownFillMode">
+                                    </kendo-dropdownlist>
+                                </kendo-floatinglabel>
+                            </div>
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="Amount Paid" class="amount-with-symbol">
+                                    <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                                    <kendo-numerictextbox aria-label="Amount Paid"
+                                        [fillMode]="formUiStyle.inputFillMode" [spinners]="false">
+                                    </kendo-numerictextbox>
+                                </kendo-floatinglabel>
+                            </div> 
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="NDC Code">
+                                    <kendo-textbox aria-label="NDC Code" [fillMode]="formUiStyle.inputFillMode">
+                                    </kendo-textbox>
+                                </kendo-floatinglabel>
+                            </div>
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="Unit">
+                                    <kendo-dropdownlist aria-label="Unit" [fillMode]="formUiStyle.dropDownFillMode">
+                                    </kendo-dropdownlist>
+                                </kendo-floatinglabel>
+                            </div>
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="Brand name">
+                                    <kendo-textbox aria-label="Brand name" [disabled]="true"
+                                        [fillMode]="formUiStyle.inputFillMode">
+                                    </kendo-textbox>
+                                </kendo-floatinglabel>
+                            </div>
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="Drug Name">
+                                    <kendo-textbox aria-label="Drug Name" [disabled]="true"
+                                        [fillMode]="formUiStyle.inputFillMode">
+                                    </kendo-textbox>
+                                </kendo-floatinglabel>
+                            </div>
+                            <div class="flex-col flex-col-3">
 
-                        <ng-container formArrayName="prescriptionFillDto">
-                            <ng-container *ngFor="let contact of addClaimServicesForm.controls; let i=index">
-                                <ng-container [formGroupName]="i">
-                                    <div class="flex-space-bw align-items-center">
-                                        <h4 class="mar-0">Prescription 1</h4>
-                                        <button aria-label="Delete" kendoButton fillMode="flat" themeColor="error">DELETE</button>
-                                    </div>
-                                    <input type="hidden" formControlName="prescriptionFillId">
-                                    <div class="flex-row">
-                                        <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel text="Prescription Number">
-                                                <kendo-textbox aria-label="Prescription Number"
-                                                    [fillMode]="formUiStyle.inputFillMode" formControlName="claimNbr">
-                                                </kendo-textbox>
-                                            </kendo-floatinglabel>
-                                            <kendo-formerror *ngIf="(isControlValid('claimNbr', i)) && isSubmitted"
-                                            class="d-flex align-items-center"> <span class="material-icons mr-1"
-                                                aria-hidden="false">info</span> Prescription # is required
-                                        </kendo-formerror>
-                                        </div>
-                                        <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel text="Fill Date">
-                                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
-                                                    aria-label="Fill Date" format="MM/dd/yyyy" formControlName="prescriptionFillDate"
-                                                    formatPlaceholder="formatPattern">
-                                                </kendo-datepicker>
-                                            </kendo-floatinglabel>
-                                        </div>
-
-                                    </div>
-                                    <div class="flex-row">
-                                                <div class="flex-col flex-col-4">
-                                            <kendo-floatinglabel text="Payment Type">
-                                                <kendo-dropdownlist
-                                                [fillMode]="formUiStyle.dropDownFillMode"
-                                                [data]="groupedPaymentRequestTypes"
-                                                formControlName="paymentTypeCode" aria-label="Type"
-                                                textField ="lovDesc"
-                                                valueField="lovCode"
-                                                [valuePrimitive]="true"
-                                                >
-                                              <ng-template kendoDropDownListFixedGroupTemplate let-groupName>
-                                                <strong>{{ groupName }}</strong>
-                                              </ng-template>
-
-                                              <ng-template kendoDropDownListGroupTemplate let-groupName>
-                                                <strong>{{ groupName }}</strong>
-                                              </ng-template>
-                                              </kendo-dropdownlist>
-                                            </kendo-floatinglabel>   
-                                        </div>
-                                        <!-- <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel text="Payment Type">
-                                                <kendo-dropdownlist aria-label="Payment Type"
-                                                    [fillMode]="formUiStyle.dropDownFillMode" formControlName="paymentTypeCode">
-                                                </kendo-dropdownlist>
-                                            </kendo-floatinglabel>
-                                        </div> -->
-                                        <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel text="Amount Paid" class="amount-with-symbol">
-                                                <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                                                <kendo-numerictextbox aria-label="Amount Paid" formControlName="copayAmountPaid"
-                                                    [fillMode]="formUiStyle.inputFillMode" [spinners]="false">
-                                                </kendo-numerictextbox>
-                                            </kendo-floatinglabel>
-                                        </div>
-
-                                    </div>
-                                    <div class="flex-row">
-                                        <!-- <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel text="NDC Code">
-                                                <kendo-textbox aria-label="NDC Code" formControlName="ndc"
-                                                    [fillMode]="formUiStyle.inputFillMode">
-                                                </kendo-textbox>
-                                            </kendo-floatinglabel>
-                                        </div> -->
-                                        <div class="flex-col flex-col-4">
-                                            <kendo-floatinglabel text="NDC Code" class="inline-search-loader">
-                                                <span *ngIf="searchDrugsLoader$ | async"
-                                                    class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                                                <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode"
-                                                    [data]="searchDrugs$ | async" formControlName="ndc"
-                                                     [filterable]="true"
-                                                      textField="ndcNbr"
-                                                      valueField="ndcNbr"
-                                                    (filterChange)="searchcptcode($event)"
-                                                    [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }">
-                                                    <ng-template kendoAutoCompleteItemTemplate let-dataItem>
-                                                        <span class="pr-1" (click)="onNdcCodeValueChange(dataItem,i)">{{
-                                                            dataItem.ndcNbr}}</span>
-                                                    </ng-template>
-                                                </kendo-autocomplete>
-                                                <kendo-formerror *ngIf="(isControlValid('ndc', i) && isSubmitted)"
-                                                    class="d-flex align-items-center"> <span class="material-icons mr-1"
-                                                        aria-hidden="false">info</span>NDC Code is required
-                                                </kendo-formerror>
-                                            </kendo-floatinglabel>
-                                        </div>
-                                        <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel text="Unit">
-                                                <kendo-dropdownlist aria-label="Unit" formControlName="qntType"
-                                                [data] = "deliveryMethodLov$ | async"
-                                                textField="lovDesc"
-                                                valueField="lovCode" [valuePrimitive]="true"
-                                                    [fillMode]="formUiStyle.dropDownFillMode">
-                                                </kendo-dropdownlist>
-                                            </kendo-floatinglabel>
-                                        </div>
-                                    </div>
-                                    <div class="flex-row">
-                                        <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel text="Brand name">
-                                                <kendo-textbox aria-label="Brand name" [disabled]="true"  
-                                                    [fillMode]="formUiStyle.inputFillMode"
-                                                    formControlName="brandName">
-                                                </kendo-textbox>
-                                            </kendo-floatinglabel>
-                                        </div>
-                                        <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel text="Drug Name">
-                                                <kendo-textbox aria-label="Drug Name" [disabled]="true"
-                                                    [fillMode]="formUiStyle.inputFillMode"
-                                                    formControlName="drugName">
-                                                </kendo-textbox>
-                                            </kendo-floatinglabel>
-                                        </div>
-                                    </div>
-                                    <div class="flex-row">
-                                        <div class="flex-col flex-col-6">
-
-                                            <kendo-floatinglabel text="RX Quantity">
-                                                <kendo-textbox aria-label="RX Quantity" formControlName="dispensingQty"
-                                                    [fillMode]="formUiStyle.inputFillMode">
-                                                </kendo-textbox>
-                                            </kendo-floatinglabel>
+                                <kendo-floatinglabel text="RX Quantity">
+                                    <kendo-textbox aria-label="RX Quantity" [fillMode]="formUiStyle.inputFillMode">
+                                    </kendo-textbox>
+                                </kendo-floatinglabel>
 
 
-                                        </div>
-                                        <div class="flex-col flex-col-6">
-                                            <kendo-floatinglabel text="RX Days Supply">
-                                                <kendo-textbox aria-label="RX Days Supply" formControlName="daySupply"
-                                                    [fillMode]="formUiStyle.inputFillMode">
-                                                </kendo-textbox>
-                                            </kendo-floatinglabel>
-                                        </div>
+                            </div>
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="RX Days Supply">
+                                    <kendo-textbox aria-label="RX Days Supply" [fillMode]="formUiStyle.inputFillMode">
+                                    </kendo-textbox>
+                                </kendo-floatinglabel>
+                            </div>
 
-                                    </div>
-                                    <div class="flex-row">                                       
-                                        <div class="flex-col flex-col-4">
-                                            <kendo-floatinglabel text="PCA Code">
-                                                <kendo-textbox aria-label="PCA Code"
-                                                    [fillMode]="formUiStyle.inputFillMode">
-                                                </kendo-textbox>
-                                            </kendo-floatinglabel>
-                                        </div>
-                                        <div class="flex-col flex-col-4">
-                                            <kendo-floatinglabel text="Object Code">
-                                                <kendo-textbox aria-label="Object Code"
-                                                    [fillMode]="formUiStyle.inputFillMode">
-                                                </kendo-textbox>
-                                            </kendo-floatinglabel>
-                                        </div>
-                                    </div>
-                                </ng-container>
-                            </ng-container>
-                        </ng-container>
-                        <hr class="row-border" />
-                        <div class="mt-2">
-                            <button aria-label="New Prescription" kendoButton fillMode="flat" themeColor="primary"  (click)="addClaimServiceGroup()">
-                                <span class="material-icons" aria-label="New Prescription"
-                                    aria-hidden="false">add</span> New Prescription</button>
+
+                          
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="PCA Code">
+                                    <kendo-textbox aria-label="PCA Code" [fillMode]="formUiStyle.inputFillMode">
+                                    </kendo-textbox>
+                                </kendo-floatinglabel>
+                            </div>
+                            <div class="flex-col flex-col-3">
+                                <kendo-floatinglabel text="Object Code">
+                                    <kendo-textbox aria-label="Object Code" [fillMode]="formUiStyle.inputFillMode">
+                                    </kendo-textbox>
+                                </kendo-floatinglabel>
+                            </div>
+                        </div>
+
 
                         </div>
                     </div>
                 </div>
             </div>
+            <div>
+                <button aria-label="New Prescription" kendoButton fillMode="flat" themeColor="primary"> <span
+                        class="material-icons" aria-label="New Prescription" aria-hidden="false">add</span> New
+                    Prescription</button>
+
+            </div>
+            <div class="mt-4">
+                <h5 class="text-upper"> Recent Claims for this client and Provider</h5>
+                <div class="add_new_fixed_bottom_grid_section">
+                    <cms-pharmacy-claims-recent-claims-list></cms-pharmacy-claims-recent-claims-list>
+                </div>
+
+            </div>
 
         </div>
-    </div>
 
+
+    </section>
 </section>
-<div class="add_new_fixed_bottom">
-    <div>
-        <div class="d-flex align-items-center mt-1">
-            <button kendoButton [primary]="true" aria-label="Add" class="" (click)="savePharmacyClaim()"> Add </button>
-            <button kendoButton [primary]="true" look="outline" class="ml-2" aria-label="Cancel"> Cancel </button>
-            <span class="ml-2">1 service(s) to be added</span>
-        </div>
-        <h4 class="text-upper"> Recent Claims for this client and Provider</h4>
-        <div class="add_new_fixed_bottom_grid_section">
-            <cms-pharmacy-claims-recent-claims-list></cms-pharmacy-claims-recent-claims-list>
-        </div>
-      
-    </div>
 
-</div>
+
+
+
+<kendo-dialog-actions>
+
+    <div class="justify-content-end align-items-center"> 
+            <span class="mr-1">1 service(s) to be added</span>
+            <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel </button>
+            <button kendoButton [primary]="true" aria-label="Add" class=""> Add </button>
+    </div>
+</kendo-dialog-actions>

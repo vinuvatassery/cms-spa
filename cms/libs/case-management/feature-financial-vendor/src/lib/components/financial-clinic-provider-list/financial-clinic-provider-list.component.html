@@ -120,7 +120,7 @@
           </ng-template>
           </kendo-grid-column>
 
-      <kendo-grid-column field="creatorId" title="Record Created By" [width]="80">
+      <kendo-grid-column field="creatorId" title="Record Created By" [width]="80" class="text-center">
             <ng-template kendoGridCellTemplate let-dataItem>
               <button
                 kendoButton
@@ -182,7 +182,7 @@
                 [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
                 [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
               <kendo-pager-info> </kendo-pager-info>
-              <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
+              <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
     
             </div>
             <div class="d-flex">

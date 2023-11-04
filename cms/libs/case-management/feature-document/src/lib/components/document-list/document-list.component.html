@@ -19,8 +19,8 @@
               {{ dataItem.documentSize | fileSize}}
             </ng-template>
           </kendo-grid-column>
-          <kendo-grid-column field="attachmentType" title="Attachment Type" [width]="100"></kendo-grid-column>
-          <kendo-grid-column field="creationDate" title="Uploaded On" [width]="100" [format]="{ date: 'MM-dd-yyyy' }" filter="date">
+          <kendo-grid-column field="attachmentType" title="Attachment Type" [width]="140"></kendo-grid-column>
+          <kendo-grid-column field="creationDate" title="Uploaded On" [width]="120" [format]="{ date: 'MM-dd-yyyy' }" filter="date">
             <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
               <kendo-grid-date-filter-menu [column]="column"
                                            [filter]="filter"
@@ -30,9 +30,14 @@
               </kendo-grid-date-filter-menu>
             </ng-template>
           </kendo-grid-column>
-          <kendo-grid-column field="clientDocumentDescription" title="Attachment Note" [width]="200"></kendo-grid-column>
+          <kendo-grid-column field="clientDocumentDescription" title="Attachment Note" [width]="200">
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <span [title]="dataItem.clientDocumentDescription" class="grid-line-clip"> {{ dataItem.clientDocumentDescription }}</span>
+              </ng-template>
+
+          </kendo-grid-column>
           
-          <kendo-grid-column field="by" title="By" [width]="50" [sticky]="true">
+          <kendo-grid-column field="by" title="By" [width]="70" class="text-center" [sticky]="true">
             <ng-template kendoGridCellTemplate let-dataItem >
               <button *ngIf="dataItem?.creatorId"
                 kendoButton
@@ -86,7 +91,7 @@
                 <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
                                     [valueField]="'value'" [valuePrimitive]="true" id="docrowperpage" [(value)]="state.take" (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
                 <kendo-pager-info> </kendo-pager-info>
-                <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+                <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
   
               </div>
               <div class="d-flex">

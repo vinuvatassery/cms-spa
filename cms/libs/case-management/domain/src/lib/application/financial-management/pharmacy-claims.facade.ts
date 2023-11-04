@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { Subject } from 'rxjs';
+import {  BehaviorSubject, Subject } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
 import {
-  ConfigurationProvider,
+  ConfigurationProvider, DocumentFacade,
   LoaderService,
   LoggingService,
   NotificationSnackbarService,
@@ -14,6 +14,8 @@ import {
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
 import { FinancialPharmacyClaimsDataService } from '../../infrastructure/financial-management/pharmacy-claims.data.service';
+import { GridFilterParam } from '../../entities/grid-filter-param';
+import { BatchPharmacyClaims } from '../../entities/financial-management/batch-pharmacy-claims';
 import { Vendor } from '../../entities/vendor';
 import { Client } from '../../entities/client';
 
@@ -24,12 +26,14 @@ export class FinancialPharmacyClaimsFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValuePharmacyClaimsProcess = 'invoiceID';
-  public sortProcessList: SortDescriptor[] = [
-    {
-      field: this.sortValuePharmacyClaimsProcess,
-    },
-  ];
+  batchClaimsSubject  =  new Subject<any>();
+  batchClaims$ = this.batchClaimsSubject.asObservable();
+
+
+  public sortValuePharmacyClaimsProcess = 'creationTime';
+  public sortProcessList: SortDescriptor[] = [{
+    field: this.sortValuePharmacyClaimsProcess,
+  }];
 
   public sortValuePharmacyClaimsBatch = 'batch';
   public sortBatchList: SortDescriptor[] = [
@@ -74,8 +78,10 @@ export class FinancialPharmacyClaimsFacade {
   ];
 
   private pharmacyClaimsProcessDataSubject = new Subject<any>();
-  pharmacyClaimsProcessData$ =
-    this.pharmacyClaimsProcessDataSubject.asObservable();
+  pharmacyClaimsProcessData$ = this.pharmacyClaimsProcessDataSubject.asObservable();
+
+  private pharmacyClaimsProcessLoaderSubject = new BehaviorSubject<boolean>(true);
+  pharmacyClaimsProcessLoader$ = this.pharmacyClaimsProcessLoaderSubject.asObservable();
 
   private pharmacyClaimsBatchDataSubject = new Subject<any>();
   pharmacyClaimsBatchData$ = this.pharmacyClaimsBatchDataSubject.asObservable();
@@ -159,11 +165,28 @@ export class FinancialPharmacyClaimsFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService
-  ) {}
+    private readonly loaderService: LoaderService,
+    private readonly documentFacade: DocumentFacade
+  ) { }
 
   /** Public methods **/
-
+  loadPharmacyClaimsProcessListGrid(params: GridFilterParam){
+    this.pharmacyClaimsProcessLoaderSubject.next(true);
+    this.financialPharmacyClaimsDataService.loadPharmacyClaimsProcessListService(params).subscribe({
+      next: (dataResponse) => {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.pharmacyClaimsProcessDataSubject.next(gridView);
+        this.pharmacyClaimsProcessLoaderSubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.pharmacyClaimsProcessLoaderSubject.next(false);
+      },
+    });
+  }
   addPharmacyClaim(data: any) {
     this.showLoader();
     this.financialPharmacyClaimsDataService.addPharmacyClaim(data).subscribe({
@@ -182,6 +205,11 @@ export class FinancialPharmacyClaimsFacade {
     });
   }
 
+
+  exportPharmacyClaimsProcessListGrid(params: any){
+    const fileName = 'pharmacy-claims-process'
+    this.documentFacade.getExportFile(params,`claims/pharmacies` , fileName);
+  }
   updatePharmacyClaim(data: any) {
     this.showLoader();
     this.financialPharmacyClaimsDataService
@@ -283,20 +311,7 @@ export class FinancialPharmacyClaimsFacade {
   }
 
 
-  loadPharmacyClaimsProcessListGrid() {
-    this.financialPharmacyClaimsDataService
-      .loadPharmacyClaimsProcessListService()
-      .subscribe({
-        next: (dataResponse) => {
-          this.pharmacyClaimsProcessDataSubject.next(dataResponse);
-          this.hideLoader();
-        },
-        error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-          this.hideLoader();
-        },
-      });
-  }
+
 
   loadPharmacyClaimsBatchListGrid() {
     this.financialPharmacyClaimsDataService
@@ -356,18 +371,44 @@ export class FinancialPharmacyClaimsFacade {
         },
       });
   }
-  loadReconcileListGrid() {
-    this.financialPharmacyClaimsDataService
-      .loadReconcileListService()
-      .subscribe({
-        next: (dataResponse) => {
-          this.batchReconcileDataSubject.next(dataResponse);
-          this.hideLoader();
-        },
-        error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-          this.hideLoader();
-        },
-      });
+  loadReconcileListGrid(){
+    this.financialPharmacyClaimsDataService.loadReconcileListService().subscribe({
+      next: (dataResponse) => {
+        this.batchReconcileDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
   }
+  
+ loadPrescriptions(paymentId: string, params: GridFilterParam){
+  return  this.financialPharmacyClaimsDataService.loadPrescriptions(paymentId, params);
+ }
+
+ batchClaims(batchPharmacyClaims: BatchPharmacyClaims) {
+  this.showLoader();
+  return this.financialPharmacyClaimsDataService
+    .batchClaims(batchPharmacyClaims)
+    .subscribe({
+      next: (response:any) => {
+        this.batchClaimsSubject.next(response);
+        if (response.status) {
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            response.message
+          );
+        }
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+}
+
+ 
 }

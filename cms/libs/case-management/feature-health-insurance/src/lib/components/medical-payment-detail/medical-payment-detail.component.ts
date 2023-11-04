@@ -116,7 +116,7 @@ export class MedicalPaymentDetailComponent {
     private readonly financialClaimsFacade: FinancialClaimsFacade,
   ) {
     this.copayPaymentForm = this.formBuilder.group({});
-   
+
   }
 
   /** Lifecycle hooks **/
@@ -125,7 +125,7 @@ export class MedicalPaymentDetailComponent {
     {
       this.financialProvider="Dental";
     }
-    this.paymentRequestType$.subscribe((paymentRequestTypes) => {    
+    this.paymentRequestType$.subscribe((paymentRequestTypes) => {
       let parentRequestTypes = paymentRequestTypes.filter(x => x.parentCode == null);
       let refactoredPaymentRequestTypeArray :Lov[] =[]
       parentRequestTypes.forEach(x => {
@@ -143,18 +143,18 @@ export class MedicalPaymentDetailComponent {
       this.groupedPaymentRequestTypes = groupBy(refactoredPaymentRequestTypeArray, [{ field: "parentCode" }]);
     });
 
-  
+
     this.initMedicalClaimObject();
     this.buildCoPaymentForm();
-   
+
     this.initClaimForm();
     this.commentCounterInitiation();
     if(this.tabStatus==ClientProfileTabs.DENTAL_INSURANCE_COPAY){
-      
+
       this.loadServiceProviderName(InsuranceStatusType.healthInsurance,'VENDOR_PAYMENT_REQUEST',this.clientId,this.caseEligibilityId);
     }
     else{
-      
+
       this.loadServiceProviderName(InsuranceStatusType.dentalInsurance,'VENDOR_PAYMENT_REQUEST',this.clientId,this.caseEligibilityId);
     }
     this.addClaimServiceGroup();
@@ -203,7 +203,7 @@ export class MedicalPaymentDetailComponent {
     if(value){
       this.isInsurancePoliciesLoading=true;
       this.insurancePolicyFacade.loadInsurancePoliciesByProviderId(value,this.clientId,this.caseEligibilityId,(this.tabStatus==ClientProfileTabs.DENTAL_INSURANCE_COPAY) ?  ClientProfileTabs.DENTAL_INSURANCE_STATUS: ClientProfileTabs.HEALTH_INSURANCE_STATUS  ).subscribe({
-        next: (data: any) => {         
+        next: (data: any) => {
           data.forEach((policy:any)=>{
             if(policy.insuranceIdNumber !== null){
               policy["policyValueField"]= '['+policy.insuranceIdNumber+ "] - [" + policy.insurancePlanName +']';
@@ -243,7 +243,7 @@ export class MedicalPaymentDetailComponent {
       entryDate: [''],
       comments: [''],
     });
-    
+
   }
   initMedicalClaimObject() {
     this.medicalClaimServices = {
@@ -288,16 +288,16 @@ export class MedicalPaymentDetailComponent {
       }
     });
   }
-  save() {    
+  save() {
     this.setExceptionValidation();
     this.isSubmitted = true;
     if (!this.claimForm.valid) {
       this.claimForm.markAllAsTouched()
       return;
     }
-    
+
     let formValues = this.claimForm.value;
-    
+
     let bodyData = {
       clientId: this.clientId,
       vendorId: formValues.medicalProvider.vendorId,
@@ -347,18 +347,18 @@ export class MedicalPaymentDetailComponent {
         );
         return;
       }
-    
+
       bodyData.tpaInvoices.push(service);
     }
     bodyData.tpaInvoices.splice(0, 1);
-   
 
- 
-  
+
+
+
     this.savePaymentDetailsClicked(bodyData);
   }
   savePaymentDetailsClicked(bodyData:any) {
-    
+
 
       this.insurancePolicyFacade.showLoader();
       this.insurancePolicyFacade.savePaymentRequest(bodyData).subscribe({
@@ -376,7 +376,7 @@ export class MedicalPaymentDetailComponent {
             );
 
           }
-         
+
           this.insurancePolicyFacade.triggeredCoPaySaveSubject.next(true);
           this.insurancePolicyFacade.hideLoader();
         },
@@ -389,24 +389,24 @@ export class MedicalPaymentDetailComponent {
   populatePaymentRequest() {
     this.paymentRequest = new PaymentRequest()
     this.paymentRequest.clientId = this.clientId;
-    this.paymentRequest.clientCaseEligibilityId =  this.caseEligibilityId;    
+    this.paymentRequest.clientCaseEligibilityId =  this.caseEligibilityId;
     this.paymentRequest.entityId = this.copayPaymentForm.controls['vendorId'].value;
     this.paymentRequest.entityTypeCode = EntityTypeCode.Vendor.toUpperCase();
     this.paymentRequest.clientInsurancePolicyId = this.copayPaymentForm.controls['clientInsurancePolicyId'].value;
     this.paymentRequest.serviceTypeCode = this.copayPaymentForm.controls['serviceTypeCode'].value;
     this.paymentRequest.amountRequested = this.copayPaymentForm.controls['amountRequested'].value;
     this.paymentRequest.paymentTypeCode = this.copayPaymentForm.controls['paymentTypeCode'].value;
-    this.paymentRequest.txtDate = this.intl.formatDate(this.copayPaymentForm.controls['entryDate'].value, this.dateFormat); 
+    this.paymentRequest.txtDate = this.intl.formatDate(this.copayPaymentForm.controls['entryDate'].value, this.dateFormat);
     this.paymentRequest.paymentRequestTypeCode = 'Expense'
-    this.paymentRequest.serviceStartDate = this.intl.formatDate(this.copayPaymentForm.controls['serviceStartDate'].value, this.dateFormat); 
-    this.paymentRequest.serviceEndDate = this.intl.formatDate(this.copayPaymentForm.controls['serviceEndDate'].value, this.dateFormat); 
+    this.paymentRequest.serviceStartDate = this.intl.formatDate(this.copayPaymentForm.controls['serviceStartDate'].value, this.dateFormat);
+    this.paymentRequest.serviceEndDate = this.intl.formatDate(this.copayPaymentForm.controls['serviceEndDate'].value, this.dateFormat);
     this.paymentRequest.comments = this.copayPaymentForm.controls['comments'].value;
     this.paymentRequest.serviceSubTypeCode = ServiceSubTypeCode.notApplicable
-    
+
   }
 
   validateForm(){
-    this.copayPaymentForm.markAllAsTouched();  
+    this.copayPaymentForm.markAllAsTouched();
     this.copayPaymentForm.controls['vendorId'].setValidators([Validators.required,]);
     this.copayPaymentForm.controls['clientInsurancePolicyId'].setValidators([Validators.required,]);
     this.copayPaymentForm.controls['serviceDescription'].setValidators([Validators.required,]);
@@ -445,7 +445,7 @@ export class MedicalPaymentDetailComponent {
       this.copayPaymentForm.controls['serviceStartDate'].markAllAsTouched();
       this.copayPaymentForm.controls['serviceStartDate'].setValidators([Validators.required]);
       this.copayPaymentForm.controls['serviceStartDate'].updateValueAndValidity();
-      
+
       this.statusEndDateIsGreaterThanStartDate = false;
     }
     else if (this.copayPaymentForm.controls['serviceEndDate'].value !== null) {
@@ -474,9 +474,9 @@ export class MedicalPaymentDetailComponent {
     if (!searchText || searchText.length == 0) {
       return;
     }
-      this.financialClaimsFacade.searchPharmacies(searchText, this.claimsType !=this.tabStatus? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.searchPharmacies(searchText, ClientProfileTabs.DENTAL_INSURANCE_COPAY !=this.tabStatus? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
  }
- 
+
   onProviderValueChange($event: any) {
     this.isRecentClaimShow = false;
     this.vendorId = $event.vendorId;
@@ -523,7 +523,7 @@ export class MedicalPaymentDetailComponent {
       this.claimForm.controls['parentExceptionTypeCode'].setValue('');
       this.claimForm.controls['parentExceptionFlag']?.setValue(StatusFlag.No);
     }
-    
+
   }
   getParentExceptionFormValue(controlName:string)
   {
@@ -587,7 +587,9 @@ export class MedicalPaymentDetailComponent {
       this.addClaimServicesForm.controls.forEach((element, index) => {
           totalServiceCost += + element.get('amountDue')?.value;
       });
-      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId,
+        index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
+        this.clientCaseEligibilityId);
       this.exceedMaxBenefitFlag = this.financialClaimsFacade.serviceCostFlag;
     }
   }
@@ -604,7 +606,7 @@ export class MedicalPaymentDetailComponent {
     const dueAmount = serviceFormData.controls['amountDue'].value;
     const vendorId = this.claimForm.value?.medicalProvider?.vendorId
     if (startDate && endDate && dueAmount && vendorId) {
-      this.financialClaimsFacade.checkDuplicatePaymentException(startDate,endDate, vendorId,dueAmount, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.checkDuplicatePaymentException(startDate,endDate, vendorId,dueAmount,null, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
   calculateMedicadeRate(index: number) {
@@ -701,7 +703,7 @@ export class MedicalPaymentDetailComponent {
       this.checkIneligibleEception(startDate,endDate,index);
     }
 
-  } 
+  }
   initClaimForm() {
     this.claimForm = this.formBuilder.group({
       medicalProvider: [this.selectedMedicalProvider, Validators.required],
@@ -719,8 +721,19 @@ export class MedicalPaymentDetailComponent {
     });
   }
   medicalClaimServices!: FinancialClaims;
+
+  onclikaddClaimServiceGroup()
+  {
+    this.isSubmitted = true;
+    if (!this.claimForm.valid) {
+      this.claimForm.markAllAsTouched()
+      return;
+    }
+    this.isSubmitted = false;
+    this.addClaimServiceGroup();
+  }
+  
   addClaimServiceGroup() {
-    
     let claimForm = this.formBuilder.group({
       serviceStartDate: new FormControl(
         this.medicalClaimServices.serviceStartDate,

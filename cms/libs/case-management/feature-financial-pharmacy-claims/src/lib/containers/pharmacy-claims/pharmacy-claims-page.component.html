@@ -12,6 +12,8 @@
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-pharmacy-claims-process-list 
+                                [pharmacyClaimsProcessGridLists$]="pharmacyClaimsProcessGridLists$"
+                                [pharmacyClaimsProcessGridLoader$]="pharmacyClaimsProcessLoader$"
                                 [deliveryMethodLov$]="deliveryMethodLov$"
                                 [paymentRequestType$]="paymentRequestType$"
                                 [addPharmacyClaim$] = "addPharmacyClaim$"
@@ -34,7 +36,10 @@
                                 (searchDrugEvent)="searchDrug($event)"
                                 (getCoPaymentRequestTypeLovEvent)="getCoPaymentRequestTypeLov()"
                                 (getDrugUnitTypeLovEvent)="getDrugUnitTypeLov()"
-                                (loadPharmacyClaimsProcessListEvent)="loadPharmacyClaimsProcessListGrid($event)"></cms-pharmacy-claims-process-list>
+                                (loadPharmacyClaimsProcessListEvent)="loadPharmacyClaimsProcessListGrid($event)"
+                                (exportPharmacyClaimsProcessListEvent)="onExportClaimsInProcess($event)"
+                                (onbatchClaimsClickedEvent)="onbatchClaimsClicked($event)"
+                                [batchingClaims$]="batchingClaims$"></cms-pharmacy-claims-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

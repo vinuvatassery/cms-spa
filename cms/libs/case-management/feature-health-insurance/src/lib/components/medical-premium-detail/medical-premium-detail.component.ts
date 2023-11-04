@@ -23,8 +23,6 @@ import {
   PriorityCode,
   InsuranceStatusType,
   FinancialVendorTypeCode,
-  FinancialClaimsFacade,
-  ServiceSubTypeCode,
   FinancialVendorFacade
 } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
@@ -196,6 +194,7 @@ this.insuranceTypeCode="DENTAL";
   }
   private loadHealthInsuranceLovs() {
     this.lovFacade.getHealthInsuranceTypeLovs();
+    this.lovFacade.getHealthInsuranceTypeLovsForPlan();
     this.lovFacade.getMedicareCoverageTypeLovs();
   }
   private loadDentalInsuranceLovs() {

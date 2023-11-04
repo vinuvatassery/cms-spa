@@ -1,5 +1,6 @@
 /** Angular **/
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -19,6 +20,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-vendor-refund-claims-list',
   templateUrl: './vendor-refund-claims-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -47,7 +49,6 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
 
   ngOnInit(): void {
     this.loadClaimsListGrid();
@@ -58,6 +59,7 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
+
     this.loadClaimsListGrid();
   }
 
@@ -69,11 +71,12 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
       this.sortType
     );
   }
-  loadClaimsList
-  (    skipCountValue: number,
+  loadClaimsList (   
+    skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
-    sortTypeValue: string) {
+    sortTypeValue: string
+    ) {
       this.isClaimsLoaderShow = true;
       const gridDataRefinerValue = {
         skipCount: skipCountValue,
@@ -84,7 +87,7 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     this.loadClaimsListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
-  
+ 
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;

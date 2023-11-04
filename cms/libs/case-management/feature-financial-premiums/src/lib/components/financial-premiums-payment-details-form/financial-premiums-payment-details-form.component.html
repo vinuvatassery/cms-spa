@@ -64,11 +64,11 @@
           <kendo-textarea [fillMode]="formUiStyle.inputFillMode" aria-label="Note" [rows]="1"
             [maxlength]="tAreaCessationMaxLength" (valueChange)="onTAreaCessationValueChange($event)" resizable="auto"
             formControlName="note">
+            <kendo-textarea-suffix class="justify-content-end">
+              <span class="counter">{{ tAreaCessationCounter }}</span>
+            </kendo-textarea-suffix>
           </kendo-textarea>
-          <!-- <kendo-formhint class="justify-content-end">6/200</kendo-formhint> -->
-          <kendo-textarea-suffix class="justify-content-end">
-            <span class="counter">{{ tAreaCessationCounter }}</span>
-          </kendo-textarea-suffix>
+         
         </kendo-floatinglabel>
       </div>
     </div>

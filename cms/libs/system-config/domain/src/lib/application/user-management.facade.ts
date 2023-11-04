@@ -106,7 +106,7 @@ export class UserManagementFacade {
   {
     let roleCheck;
     this.userDataService.getProfile$
-      .pipe(first(profile => profile[0]?.permissions != null))
+      .pipe(first(profile => profile?.length > 0))
       .subscribe((profile:any)=>{ 
         const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);  
         roleCheck = roleProfile ? true : false;
@@ -116,11 +116,24 @@ export class UserManagementFacade {
 
   hasPermission(ifPermission : string[]) : any
   {
-   let hasPerm =false;
+    let hasPerm =false;
     this.userDataService.getProfile$
-      .pipe(first(profile => profile[0]?.permissions != null))
-      .subscribe((profile:any)=>{ 
-        const permission =profile[0]?.permissions 
+      .pipe(first(profile => profile?.length > 0))
+      .subscribe((profile:any)=>{
+        let permission : any;       
+        for(const profileItem of profile){
+          if(permission == undefined || permission?.length == 0){
+            permission = profileItem?.permissions 
+          }
+          else{
+            profileItem?.permissions.forEach((newPerm : any) => {
+              const permissionExists = permission.some((existPerm : any) => existPerm.permissionId === newPerm.permissionId);
+              if(!permissionExists){
+                permission.push(newPerm);    
+              }
+            });
+          }
+        }
         if (permission?.length == 0) {
           hasPerm = false;
         }  
@@ -149,7 +162,7 @@ export class UserManagementFacade {
       return;
     }
     this.userDataService.getProfile$
-    .pipe(first(profile => profile[0]?.permissions != null))
+    .pipe(first(profile => profile?.length > 0))
     .subscribe((profile:any)=>{ 
       const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);  
       const permission = roleProfile?.permissions;
@@ -412,6 +425,10 @@ export class UserManagementFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
       },
     });
+  }
+
+  reassignCase(caseReassignData : any){
+    return this.userDataService.reassignCase(caseReassignData);
   }
  
 }

@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy,ChangeDetectorRef, Component,Input,Output,EventEmitter, OnInit,OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { GridDataResult,ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
+import { FilterService,GridDataResult,ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-premiums-batches-reconcile-payments-breakout',
   templateUrl:
@@ -22,6 +23,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsBreakoutComponent  impleme
   @Input() premiumsType: any;
   @Input() batchId:any;
   @Input() entityId:any;
+  @Input() paymentRequestId :any
   @Output() loadReconcilePaymentBreakOutGridEvent = new EventEmitter<any>();
   vendorId:any;
   clientId:any;
@@ -37,7 +39,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsBreakoutComponent  impleme
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-  
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -61,7 +63,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsBreakoutComponent  impleme
     {   "columnCode": "creationTime",       "columnDesc": "Date Payment Requested"      },
     {   "columnCode": "paymentSentDate",    "columnDesc": "Date Payment Sent"           },
     {   "columnCode": "paymentMethodDesc",  "columnDesc": "Payment Method"              },
-    {   "columnCode": "paymentStatusCode",  "columnDesc": "Payment Status"              },
+    {   "columnCode": "PaymentStatusDesc",  "columnDesc": "Payment Status"              },
     {   "columnCode": "warrantNumber",      "columnDesc": "Warrant Number"              },
     {   "columnCode": "pca",                "columnDesc": "PCA"                         }  
   ]
@@ -69,13 +71,21 @@ export class FinancialPremiumsBatchesReconcilePaymentsBreakoutComponent  impleme
   gridReconcileIPBreakoutListSubject = new Subject<any>();
   gridReconcileIPBreakoutList$ = this.gridReconcileIPBreakoutListSubject.asObservable();
 
+  selectedPaymentStatus: string | null = null;
+  selectedPaymentMethod: string | null = null;
+  paymentMethodType$ = this.lovFacade.paymentMethodType$;
+  paymentStatus$ = this.lovFacade.paymentStatus$;
+  paymentMethodTypes: any = [];
+  paymentStatus: any = [];
 
-  constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService) { }
+  constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService,private readonly lovFacade: LovFacade) { }
   
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
    }
   ngOnInit(): void {
+    this.getPaymentMethodLov();
+    this.getPaymentStatusLov();
      this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -256,5 +266,55 @@ export class FinancialPremiumsBatchesReconcilePaymentsBreakoutComponent  impleme
     this.state.searchValue = '';
     this.state.selectedColumn = '';
     this.state.columnName = '';
+  }
+
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(this.paymentRequestId)
+  }
+
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (field === 'paymentStatusDesc') this.selectedPaymentStatus = value;
+    if (field === 'paymentMethodDesc') this.selectedPaymentMethod = value;
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'and',
+    });
+  }
+
+  private getPaymentStatusLov() {
+    this.lovFacade.getPaymentStatusLov();
+    this.paymentStatus$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentStatus = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+  }
+  private getPaymentMethodLov() {
+    this.lovFacade.getPaymentMethodLov();
+    this.paymentMethodType$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentMethodTypes = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
   }
 }

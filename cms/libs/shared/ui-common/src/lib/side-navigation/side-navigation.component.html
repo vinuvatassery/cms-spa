@@ -1,19 +1,19 @@
-<ul class="sidebar-menu" aria-label="sidebar menu">
-  <li *ngFor="let menu of menus$ | async as menus; let i = index" attr.aria-label="sidebar menu item {{ menu.name }}"
+<ul class="sidebar-menu" aria-label="sidebar menu" role="menu">
+  <li  role="menuitem" *ngFor="let menu of menus$ | async as menus; let i = index" attr.aria-label="{{ menu.name }}"
     [ngClass]="{ 'sidebar-menu_items':true, 'with-sub-menu': menu.subMenus.length !== 0 }"
     class="new_sub_sidebar_menu">
-    <a class="sub-menu-item" [attr.aria-label]="menu.name" (click)="onMenuClick(menu)">
-      <span class="material-icons sidebar-menu_icon" [attr.aria-label]="menu.name">
+    <a class="sub-menu-item"(click)="onMenuClick(menu)">
+      <span class="material-icons sidebar-menu_icon">
         {{menu.icon}}
       </span>
-      <span class="sidebar-menu_label" [attr.aria-label]="menu.name">
+      <span class="sidebar-menu_label" >
         {{ menu.name }} <span *ngIf="menu?.hasBadge && isShowBadge(menu.code)" class="sidebar-menu_label-badge"> {{ getBadge(menu.code)}} </span>
       </span>
     </a>
 
-    <div class="secondary_submenu" *ngIf="menu.subMenus?.length !== 0"
-      attr.aria-label="sidebar sub menu item {{ menu.name }}">
-      <div class="menu_search_header">
+    <ul class="secondary_submenu" *ngIf="menu.subMenus?.length !== 0"
+      attr.aria-label="{{ menu.name }}">
+      <li class="menu_search_header">
         <p class="submenu_heading">{{menu.name}}</p>
         <div class="input-search">
           <span class="material-icons" aria-label="search" aria-hidden="true">search</span>
@@ -22,26 +22,25 @@
             </kendo-textbox>
           </kendo-floatinglabel>
         </div>
-      </div>
-      <div class="submenu_list_wrapper" *ngFor="let subMenu of menu.subMenus"
-        attr.aria-label="sub menu item {{ subMenu.name }}">
+      </li>
+      <li class="submenu_list_wrapper" *ngFor="let subMenu of menu.subMenus"
+        attr.aria-label="{{ subMenu.name }}">
 
         <div *ngIf="subMenu.subMenus?.length !== 0">
           <p class="submenu_list_heading" [attr.aria-label]="subMenu.name"
             *ngIf="isMenuHeadingVisible(subMenu.subMenus, menu.filterText) || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1">
             {{ subMenu.name | uppercase }}
-            <span *ngIf="subMenu?.hasBadge && isShowBadge(subMenu.code)"> ({{ getBadge(subMenu.code)}}) </span>
+            <span class="sidebar-menu_label-badge" *ngIf="subMenu?.hasBadge && isShowBadge(subMenu.code)"> {{ getBadge(subMenu.code)}} </span>
           </p>
 
-          <div class="submenu_list_container" *ngFor="let sprSubMenu of subMenu.subMenus"
-            attr.aria-label="sub menu item {{ sprSubMenu.name }}">
+          <div class="submenu_list_container" *ngFor="let sprSubMenu of subMenu.subMenus">
             <div
               *ngIf="(menu?.filterText === '' || (sprSubMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1 || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1)">
               <a class="submenu_list_click_items" [attr.aria-label]="sprSubMenu.name"
                 (click)="onMenuClick(sprSubMenu)">
-                <span [attr.aria-label]="sprSubMenu.name">
+                <span>
                   {{ sprSubMenu.name }}
-                  <span *ngIf="sprSubMenu?.hasBadge" class="sidebar-menu_label-badge"> {{ getBadge(sprSubMenu.code)}}
+                  <span *ngIf="sprSubMenu?.hasBadge" class="tab-batch-notify"> {{ getBadge(sprSubMenu.code)}}
                   </span>
                 </span>
               </a>
@@ -54,11 +53,11 @@
           <a class="submenu_list_click_items" [attr.aria-label]="subMenu.name" (click)="onMenuClick(subMenu)">
             <span [attr.aria-label]="subMenu.name">
               {{ subMenu.name }}
-              <span *ngIf="subMenu?.hasBadge" class="sidebar-menu_label-badge"> ({{ getBadge(subMenu.code)}}) </span>
+              <span *ngIf="subMenu?.hasBadge" class="tab-batch-notify"> {{ getBadge(subMenu.code)}} </span>
             </span>
           </a>
         </div>
-      </div>
-    </div>
+      </li>
+    </ul>
   </li>
 </ul>

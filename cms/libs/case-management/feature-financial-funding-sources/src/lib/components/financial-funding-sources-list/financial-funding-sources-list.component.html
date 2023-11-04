@@ -12,26 +12,36 @@ Funding
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
-      <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc"
-        valueField="columnCode">
-      </kendo-dropdownlist>
+      <kendo-dropdownlist 
+      aria-label="All Columns" 
+      [fillMode]="formUiStyle.dropDownFillMode"
+      textField="columnDesc" 
+      valueField="columnName" 
+      [data]="searchColumnList"
+      [valuePrimitive]="true"
+      [(ngModel)]="selectedSearchColumn"
+      (valueChange)="searchColumnChangeHandler($event)">
+</kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
   <span class="filter-section_items filter--search">
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
-      <kendo-textbox aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+      <kendo-textbox aria-label="Search case" rounded="medium" [(ngModel)]="searchText" (afterValueChanged)="onFundSearch($event)" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
     </kendo-floatinglabel>
   </span>
 </section>
-
 <!-- Sorted Info -->
 <div class="table-sorted-info">
-  Sorted Descending by <span class="sort-items"> Source </span>
-  <span class="sort-items">No Filters</span>
-  <span class="sort-items">Filtered by Funding SOurces</span>
-  <span class="sort-items">Default Columns</span> 
+  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
+  <span class="sort-items" *ngIf="!filteredByColumnDesc">No Filters</span>
+  <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
+  <span class="sort-items">{{columnChangeDesc}}</span>
+  <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
+  <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="restFundingGrid()">
+        <a>Set to Default</a>
+  </button>
 </div>
 
 
@@ -40,7 +50,7 @@ Funding
     [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [filter]="state.filter" [resizable]="true"
     [columnMenu]="{ filter: true }" [sort]="state.sort"  
     (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
-    [data]="fundingSourceList$ | async" [rowClass]="rowClass">
+    [data]="fundingSourceList$ | async" [rowClass]="rowClass"   (columnReorder)="onColumnReorder($event)"> 
   
     <kendo-grid-column field="fundingSourceCode" title="Funding Source"  >
       <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService"> 
@@ -64,9 +74,9 @@ Funding
     </kendo-grid-column>
     
 
-    <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="50" class="text-center">
+    <kendo-grid-column field="Option" title="Options" [columnMenu]="false" [width]="50" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton [data]="processGridActions" icon="more-vertical"
+        <kendo-dropdownbutton [data]="processGridActions(dataItem)" icon="more-vertical"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
           aria-label="more actions" title="More option"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }">
@@ -74,7 +84,7 @@ Funding
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
             <ng-container>
               <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                [class]="buttondataItem.buttonType" aria-hidden="false" (click)="removedClick(dataItem.fundingSourceId); buttondataItem.click(dataItem)">
+                [class]="buttondataItem.buttonType" aria-hidden="false" (click)="removedClick(dataItem.fundingSourceId, dataItem.fundingSourceCode); buttondataItem.click(dataItem)">
                 <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                 <label> {{ buttondataItem.text }} </label>
               </button>
@@ -94,7 +104,7 @@ Funding
             [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
             [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
-          <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
+          <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
 
         </div>
         <div class="d-flex">
@@ -130,7 +140,9 @@ Funding
 
  <ng-template #removeFundingSourceDialogTemplate>
 <cms-financial-funding-sources-remove
+[fundingSourceCode]="selectedFundingSourceCode"
 [fundingSourceId]="selectFundingSourceId"
-(removeConfirmEvent)="removeFundingSource($event)">
+(removeConfirmEvent)="removeFundingSource($event)"
+(isModalRemoveFundingSourcesCloseClicked)="onModalCloseRemoveFundingSourceClicked($event)">
 </cms-financial-funding-sources-remove>
  </ng-template>
