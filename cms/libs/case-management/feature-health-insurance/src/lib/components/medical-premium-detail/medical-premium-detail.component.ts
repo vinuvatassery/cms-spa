@@ -133,7 +133,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   endDateMin!: Date;
   dentalInsuranceSelectedItem = 'DENTAL_INSURANCE';
   selectedClaimType = FinancialVendorTypeCode.MedicalProviders;
-  insuranceTypeCode : any = InsuranceTypeCode.Medical;
+  insuranceTypeCode = InsuranceTypeCode.Medical;
 
   /** Constructor **/
   constructor(
