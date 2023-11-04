@@ -74,7 +74,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   @Output() isAddEditClicked = new EventEmitter<any>();
   @Output() isAddPriority = new EventEmitter<any>();
 
-  hasInsurancePlanNameCreateUpdatePermission: boolean = false;
+  hasInsurancePlanCreateUpdatePermission: boolean = false;
 
   /** Private properties **/
   private editViewSubscription!: Subscription;
@@ -177,7 +177,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     });
     this.isInsuranceTypeLoading = false;
 
-    this.hasInsurancePlanNameCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Insurance_Plan_Create_Update']);
+    this.hasInsurancePlanCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Insurance_Plan_Create_Update']);
   }
 
   ngOnDestroy(): void {
