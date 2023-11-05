@@ -65,6 +65,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   @Output() submitEvent = new EventEmitter<any>();
   @Output() loadBatchDetailPaymentsGridEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
+  readonly paymentTypeCode = PendingApprovalPaymentTypeCode;
   public state!: State;
   sortColumn = 'batchName';
   sortDir = 'Ascending';
