@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PendingApprovalGeneralService } from '../../infrastructure/approval/pending-approval-general.data.service';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 
 /** External libraries **/
@@ -89,15 +89,8 @@ export class PendingApprovalGeneralFacade {
     });
   }
 
-  loadExceptionCard(data:any): void {
-    this.pendingApprovalGeneralService.loadExceptionCard(data).subscribe({
-      next: (dataResponse) => {
-        this.approvalsGeneralExceptionCardSubject.next(dataResponse);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-      },
-    });
+  loadExceptionCard(data:any) {
+    return this.pendingApprovalGeneralService.loadExceptionCard(data);
   }
 
   /** Public methods **/

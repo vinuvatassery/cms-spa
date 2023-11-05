@@ -15,15 +15,10 @@ import { Router } from '@angular/router';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { PanelBarCollapseEvent } from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
 import {
-  PendingApprovalGeneralTypeCode,
-  PendingApprovalPaymentTypeCode,
-} from '@cms/case-management/domain';
-import {
-  UserDataService,
-  UserManagementFacade,
+  UserDataService
 } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approvals-general-list',
@@ -47,17 +42,11 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() approvalsGeneralLists$: any;
   @Input() clientsSubjects$: any;
   @Input() casereassignmentExpandedInfo$: any;
-  @Input() approvalsExceptionCard$: any;
-  @Input() invoiceData$: any;
-  @Input() isInvoiceLoading$: any;
   @Input() submitGenerealRequest$: any;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
-  @Output() loadCasereassignmentExpanedInfoParentEvent =
-    new EventEmitter<any>();
-  @Output() loadApprovalsExceptionCardEvent = new EventEmitter<any>();
-  @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
+  @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
   @Output() submitGeneralRequestsEvent = new EventEmitter<any>();
-
+  @Output() onVendorClickedEvent = new EventEmitter<any>();
   pendingApprovalGeneralTypeCode: any;
   public state!: State;
   sortColumn = 'batch';
@@ -82,8 +71,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   exceptionsCount = 0;
   listManagementItemsCount = 0;
   gridApprovalGeneralDataSubject = new Subject<any>();
-  gridApprovalGeneralBatchData$ =
-    this.gridApprovalGeneralDataSubject.asObservable();
+  gridApprovalGeneralBatchData$ = this.gridApprovalGeneralDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -103,8 +91,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     private route: Router,
     private dialogService: DialogService,
     private readonly cd: ChangeDetectorRef,
-    private readonly userDataService: UserDataService,
-    private readonly loginUserFacade: UserManagementFacade
+    private readonly userDataService: UserDataService
   ) {}
 
   ngOnInit(): void {
@@ -318,13 +305,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   loadCasereassignmentExpanedInfoEvent(approvalId: any) {
     this.loadCasereassignmentExpanedInfoParentEvent.emit(approvalId);
   }
-  loadApprovalsExceptionCard($event: any) {
-    this.loadApprovalsExceptionCardEvent.emit($event);
-  }
-  loadApprovalsExceptionInvoice($event: any) {
-    this.loadApprovalsExceptionInvoiceEvent.emit($event);
-  }
-
+  
   ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
     let inValid = false;
 
@@ -384,38 +365,26 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     if (isValid.length > 0) {
       this.pageValidationMessage =
         totalCount +
-        ' validation error(s) found, please review each page for errors.';
+        ' Validation error(s) found, please review each page for errors.';
     } else if (
       this.approvalsPaymentsGridPagedResult.filter(
         (x: any) =>
           x.status == this.approveStatus || x.status == this.denyStatus
       ).length <= 0
     ) {
-      this.pageValidationMessage = 'No data for approval';
+      this.pageValidationMessage = 'No data for approval.';
     } else {
       this.pageValidationMessage = null;
       this.approvalsPaymentsGridUpdatedResult =
-        this.approvalsPaymentsGridPagedResult.filter(
-          (x: any) =>
+        this.approvalsPaymentsGridPagedResult.filter( (x: any) =>
             x.status == this.approveStatus || x.status == this.denyStatus
         );
-      this.caseReassignmentsCount =
-        this.approvalsPaymentsGridUpdatedResult.filter(
-          (x: any) =>
-            x.approvalTypeCode ===
-            this.pendingApprovalGeneralTypeCode.GeneralCaseReassignment
-        ).length;
-      this.listManagementItemsCount =
-        this.approvalsPaymentsGridUpdatedResult.filter(
-          (x: any) =>
-            x.approvalTypeCode ===
-            this.pendingApprovalGeneralTypeCode.GeneralAddToMasterList
-        ).length;
-      this.exceptionsCount = this.approvalsPaymentsGridUpdatedResult.filter(
-        (x: any) =>
-          x.approvalTypeCode ===
-          this.pendingApprovalGeneralTypeCode.GeneralException
-      ).length;
+      this.caseReassignmentsCount = this.approvalsPaymentsGridUpdatedResult.filter((x: any) =>
+            x.approvalTypeCode === this.pendingApprovalGeneralTypeCode.GeneralCaseReassignment).length;
+      this.listManagementItemsCount = this.approvalsPaymentsGridUpdatedResult.filter((x: any) =>
+            x.approvalTypeCode === this.pendingApprovalGeneralTypeCode.GeneralAddToMasterList).length;
+      this.exceptionsCount = this.approvalsPaymentsGridUpdatedResult.filter( (x: any) =>
+          x.approvalTypeCode === this.pendingApprovalGeneralTypeCode.GeneralException).length;
       this.onSubmitClicked(this.submitRequestModalDialog);
     }
   }
@@ -627,5 +596,9 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
   submit(data: any) {
     this.submitGeneralRequestsEvent.emit(data);
+  }
+
+  onProviderNameClick(paymentRequestId: any) {
+    this.onVendorClickedEvent.emit(paymentRequestId);
   }
 }

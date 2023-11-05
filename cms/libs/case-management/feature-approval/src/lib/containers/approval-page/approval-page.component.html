@@ -29,29 +29,14 @@
         <div class="nm-20 approval_container">
           <productivity-tools-approvals-general-list
             [approvalsGeneralLists$]="approvalsGeneralLists$"
-            [submitGenerealRequest$]="submitGenerealRequest$"
-            [approvalsExceptionCard$]="approvalsExceptionCard$"
-            [invoiceData$]="invoiceData$"
-            [pageSizes]="pageSizes"
-            [sortValue]="sortValue"
-            [sortType]="sortType"
-            [sort]="sort"
-            [gridSkipCount]="gridSkipCount"
-            [isInvoiceLoading$]="isInvoiceLoading$"
+            [submitGenerealRequest$]="submitGenerealRequest$"            
             (loadApprovalsGeneralGridEvent)="loadApprovalsGeneralGrid($event)"
-            (loadCasereassignmentExpanedInfoParentEvent)="
-              loadCasereassignmentExpanedInfoParentEvent($event)
-            "
-            (loadApprovalsExceptionCardEvent)="
-              loadApprovalsExceptionCard($event)
-            "
-            (loadApprovalsExceptionInvoiceEvent)="
-              loadApprovalsExceptionInvoice($event)
-            "
+            (loadCasereassignmentExpanedInfoParentEvent)="loadCasereassignmentExpanedInfoParentEvent($event)"
             (submitGeneralRequestsEvent)="submitGeneralRequests($event)"
             [usersByRole$]="usersByRole$"
             (getVendorDetailEvent)="getVendorDetail($event)"
             [selectedVendor$]="selectedVendor$"
+            (onVendorClickedEvent)="onProviderNameClick($event)"
           >
           </productivity-tools-approvals-general-list>
         </div>
@@ -114,4 +99,14 @@
       </ng-template>
     </kendo-tabstrip-tab>
   </kendo-tabstrip>
+
+  <ng-template #providerDetailsTemplate>
+    <cms-financial-claims-provider-info
+          [paymentRequestId]="paymentRequestId"
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
+</ng-template>
 </div>

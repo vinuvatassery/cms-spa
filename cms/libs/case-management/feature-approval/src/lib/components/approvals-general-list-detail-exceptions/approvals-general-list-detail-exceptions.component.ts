@@ -1,59 +1,91 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  PanelBarCollapseEvent,
-  PanelBarExpandEvent,
-} from '@progress/kendo-angular-layout';
-import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output,TemplateRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { PendingApprovalGeneralFacade, PendingApprovalPaymentTypeCode } from '@cms/case-management/domain';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
   selector: 'productivity-tools-approvals-general-list-detail-exceptions',
   templateUrl: './approvals-general-list-detail-exceptions.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApprovalsGeneralListDetailExceptionsComponent implements OnInit {
   @Input() onUserProfileDetailsHovered: any;
   @Input() approvalId: any;
   @Input() exceptionId: any;
-  @Input() approvalsExceptionCard$: any;
-  @Input() pageSizes: any;
-  @Input() sortValue: any;
-  @Input() sortType: any;
-  @Input() sort: any;
-  @Input() gridSkipCount: any;
-  @Input() invoiceData$: any;
-  @Input() isInvoiceLoading$: any;
-  @Output() loadApprovalsExceptionCardEvent = new EventEmitter<any>();
-  @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
+  approvalsExceptionCard$: any; 
   @Output() onVendorClickedEvent = new EventEmitter<any>();
+  private addClientRecentClaimsDialog: any;
+  vendorId: any;
+  clientId: any;
+  clientName: any;
+  claimsType: any="";
+  constructor(
+    private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade,
+    private dialogService: DialogService,
+    private readonly route: Router,
+  ) {}
 
-  ngOnInit(): void {
-    this.loadApprovalsExceptionCard();
+  ngOnInit(): any {
+    this.pendingApprovalGeneralFacade.loadExceptionCard(this.exceptionId).subscribe({
+      next: (response) => {
+        this.approvalsExceptionCard$ = response;
+        this.vendorId=this.approvalsExceptionCard$.vendorId
+        this.clientId=this.approvalsExceptionCard$.clientId;
+        this.clientName=this.approvalsExceptionCard$.clientName;        
+        this.claimsType=this.getClaimType(this.approvalsExceptionCard$.serviceSubTypeCode);
+      },
+      error: (err) => {
+        this.pendingApprovalGeneralFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+      },
+    });
   }
 
-  loadApprovalsExceptionCard() {
-    this.loadApprovalsExceptionCardEvent.emit(this.exceptionId);
-  }
-
-  ifApproveOrDeny: any;
-  isPanelExpanded = false;
-  public formUiStyle: UIFormStyle = new UIFormStyle();
-
-  approveOrDeny(result: any) {
-    this.ifApproveOrDeny = result;
-  }
-
-  public onPanelCollapse(event: PanelBarCollapseEvent): void {
-    this.isPanelExpanded = false;
-  }
-
-  public onPanelExpand(event: PanelBarExpandEvent): void {
-    this.isPanelExpanded = true;
-  }
-
-  loadApprovalsExceptionInvoice($event: any) {
-    this.loadApprovalsExceptionInvoiceEvent.emit($event);
-  }
-
-  onViewProviderDetailClicked(paymentRequestId: any) {
+  onProviderNameClick(paymentRequestId: any) {
     this.onVendorClickedEvent.emit(paymentRequestId);
+  }
+
+  clientRecentClaimsModalClicked(
+    template: TemplateRef<unknown>,
+    data: any
+  ): void {
+    this.addClientRecentClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+      animation: {
+        direction: 'up',
+        type: 'slide',
+        duration: 200,
+      },
+    });
+    this.vendorId = data.vendorId;
+    this.clientId = data.clientId;
+    this.clientName = data.clientName;
+  }
+
+  closeRecentClaimsModal(result: any) {
+    if (result) {
+      this.addClientRecentClaimsDialog.close();
+    }
+  }
+
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.closeRecentClaimsModal(true);
+  }
+
+  getClaimType(type: any) {
+    if(type==PendingApprovalPaymentTypeCode.MedicalClaim || type==PendingApprovalPaymentTypeCode.MedicalPremium)
+    {
+        return 'medical';
+    }
+    else if(type==PendingApprovalPaymentTypeCode.DentalClaim || type==PendingApprovalPaymentTypeCode.DentalPremium)
+    {
+      return 'dental';
+    }
+    else
+    {
+      return 'pharmacy';
+    }
   }
 }

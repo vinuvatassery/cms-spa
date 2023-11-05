@@ -12,6 +12,8 @@ import { State } from '@progress/kendo-data-query';
 /** Facades **/
 import {
   ApprovalFacade,
+  ContactFacade,
+  FinancialVendorFacade,
   PendingApprovalGeneralFacade,
   PendingApprovalPaymentFacade,
   UserRoleType,
@@ -28,6 +30,7 @@ import {
   UserManagementFacade,
   UserDataService,
   UserDefaultRoles,
+  LovFacade,
 } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
@@ -95,7 +98,11 @@ export class ApprovalPageComponent implements OnInit {
   paymentRequestId!: any;
   usersByRole$ = this.userManagementFacade.usersByRole$;
   selectedVendor$ = this.pendingApprovalGeneralFacade.selectedVendor$;
-
+  vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
+  updateProviderPanelSubject$ =
+    this.financialVendorFacade.updateProviderPanelSubject$;
+  ddlStates$ = this.contactFacade.ddlStates$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$;
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
@@ -108,7 +115,10 @@ export class ApprovalPageComponent implements OnInit {
     private readonly userDataService: UserDataService,
     private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade,
     private dialogService: DialogService,
-    private readonly cd: ChangeDetectorRef
+    private readonly cd: ChangeDetectorRef,
+    public contactFacade: ContactFacade,
+    public lovFacade: LovFacade,
+    private readonly financialVendorFacade: FinancialVendorFacade
   ) {}
   ngOnInit(): void {
     this.getUserRole();
@@ -249,5 +259,39 @@ export class ApprovalPageComponent implements OnInit {
       userObject.approvalEntityId,
       userObject.subTypeCode
     );
+  }
+
+  
+  
+  onProviderNameClick(event: any) {
+    this.paymentRequestId = event;
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation: {
+        direction: 'left',
+        type: 'slide',
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+  }
+
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
+      this.providerDetailsDialog.close();
+    }
+  }
+
+  getProviderPanel(event: any) {
+    this.financialVendorFacade.getProviderPanel(event);
+  }
+
+  updateProviderProfile(event: any) {
+    console.log(event);
+    this.financialVendorFacade.updateProviderPanel(event);
+  }
+
+  OnEditProviderProfileClick() {
+    this.contactFacade.loadDdlStates();
+    this.lovFacade.getPaymentMethodLov();
   }
 }
