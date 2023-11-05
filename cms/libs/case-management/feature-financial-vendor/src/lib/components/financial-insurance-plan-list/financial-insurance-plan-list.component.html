@@ -19,22 +19,22 @@
             {{ dataItem.canPayForMedicationFlag | yesOrNo }}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="dentalPlanFlag" title="Dental plan?" [width]="150">
+    <kendo-grid-column field="dentalPlanFlag" title="Dental plan?" [width]="140">
         <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.dentalPlanFlag | yesOrNo }}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="startDate" title="Start Date" [width]="150">
+    <kendo-grid-column field="startDate" title="Start Date" [width]="120">
         <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.startDate | date:'MM/dd/yyyy' }}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="termDate" title="Term Date" [width]="150">
+    <kendo-grid-column field="termDate" title="Term Date" [width]="120">
         <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.termDate | date:'MM/dd/yyyy' }}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="Option" title="Options" [columnMenu]="false" [sticky]="true"  [sortable]="false" [width]="70" class="text-center">
+    <kendo-grid-column field="Option" title="Option" [columnMenu]="false" [sticky]="true" [sortable]="false" [width]="75" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton [data]="actionsButtons" icon="more-vertical"
                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"

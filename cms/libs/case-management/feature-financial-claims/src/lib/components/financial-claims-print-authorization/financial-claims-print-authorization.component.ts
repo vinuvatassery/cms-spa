@@ -220,18 +220,17 @@ export class FinancialClaimsPrintAuthorizationComponent {
           if (data) {
             if(this.reconcileArray[0].printFlag === StatusFlag.Yes){
             this.generateAndPrintAdviceLetter(this.returnResultFinalPrintList[this.currentIndex]);
+            }else if(this.currentIndex == this.returnResultFinalPrintList.length - 1){
+              this.onClosePrintAdviceLetterClicked();
+              }else{
+                let event = {
+                  index:  this.returnResultFinalPrintList.indexOf(this.returnResultFinalPrintList[this.currentIndex + 1]),
+                };
+                this.onItemChange(event);
             }
             this.returnResultFinalPrintList[this.currentIndex].warrantNumberChange = false;
             this.onReconcileRecordEvent.emit(this.returnResultFinalPrintList[this.currentIndex]);
           }
-          if(this.currentIndex == this.returnResultFinalPrintList.length - 1){
-          this.onClosePrintAdviceLetterClicked();
-          }else{
-            let event = {
-              index:  this.returnResultFinalPrintList.indexOf(this.returnResultFinalPrintList[this.currentIndex + 1]),
-            };
-            this.onItemChange(event);
-        }
         this.ref.detectChanges();
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled!");
         },

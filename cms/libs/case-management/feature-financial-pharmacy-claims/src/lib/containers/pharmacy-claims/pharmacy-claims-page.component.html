@@ -11,11 +11,31 @@
                     <kendo-tabstrip-tab title="Process" [selected]="true">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-pharmacy-claims-process-list      
+                                <cms-pharmacy-claims-process-list 
                                 [pharmacyClaimsProcessGridLists$]="pharmacyClaimsProcessGridLists$"
                                 [pharmacyClaimsProcessGridLoader$]="pharmacyClaimsProcessLoader$"
+                                [deliveryMethodLov$]="deliveryMethodLov$"
+                                [paymentRequestType$]="paymentRequestType$"
+                                [addPharmacyClaim$] = "addPharmacyClaim$"
+                                [editPharmacyClaim$] = "editPharmacyClaim$"
+                                [getPharmacyClaim$] = "getPharmacyClaim$"
+                                [searchPharmacies$] = "searchPharmacies$"
+                                [searchClients$] = "searchClients$"
+                                [searchDrugs$] = "searchDrugs$"
+                                [searchPharmaciesLoader$]="searchPharmaciesLoader$"
+                                [searchClientLoader$]="searchClientLoader$"
+                                [searchDrugsLoader$]="searchDrugsLoader$"
+                                [pharmacyClaimsProcessGridLists$]="pharmacyClaimsProcessGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsProcess"
                                 [sortType]="sortType" [sort]="sortProcessList" 
+                                (addPharmacyClaimEvent)="addPharmacyClaim($event)"
+                                (updatePharmacyClaimEvent)="updatePharmacyClaim($event)"
+                                (getPharmacyClaimEvent)="getPharmacyClaim($event)"
+                                (searchPharmaciesEvent)="searchPharmacies($event)"
+                                (searchClientsEvent)="searchClients($event)"
+                                (searchDrugEvent)="searchDrug($event)"
+                                (getCoPaymentRequestTypeLovEvent)="getCoPaymentRequestTypeLov()"
+                                (getDrugUnitTypeLovEvent)="getDrugUnitTypeLov()"
                                 (loadPharmacyClaimsProcessListEvent)="loadPharmacyClaimsProcessListGrid($event)"
                                 (exportPharmacyClaimsProcessListEvent)="onExportClaimsInProcess($event)"
                                 (onbatchClaimsClickedEvent)="onbatchClaimsClicked($event)"
