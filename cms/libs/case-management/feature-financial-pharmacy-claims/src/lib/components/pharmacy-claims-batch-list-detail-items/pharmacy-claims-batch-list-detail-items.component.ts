@@ -173,19 +173,6 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
   backToBatchLog(event : any){  
     this.route.navigate(['/financial-management/pharmacy-claims/batch'] );
   }
-
-
-  // onViewProviderDetailClicked(  template: TemplateRef<unknown>): void {   
-  //   this.providerDetailsDialog = this.dialogService.open({
-  //     content: template,
-  //     animation:{
-  //       direction: 'left',
-  //       type: 'slide',  
-  //     }, 
-  //     cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
-  //   });
-  // }
-
   onCloseViewProviderDetailClicked(result: any){
     if(result){
       this.providerDetailsDialog.close();

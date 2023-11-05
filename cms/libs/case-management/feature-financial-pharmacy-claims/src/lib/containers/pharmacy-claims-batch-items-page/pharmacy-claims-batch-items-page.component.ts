@@ -60,7 +60,6 @@ export class PharmacyClaimsBatchItemsPageComponent {
     this.financialVendorFacade.getProviderPanel(event)
   }
   updateProviderProfile(event:any){
-    console.log(event)
     this.financialVendorFacade.updateProviderPanel(event)
   }
   OnEditProviderProfileClick(){
