@@ -30,6 +30,7 @@ import {
   UserManagementFacade,
   UserDataService,
   UserDefaultRoles,
+  UserLevel
   LovFacade,
 } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -133,8 +134,11 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalCount = response;
-        this.cd.detectChanges();
       }
+      else{
+        this.pendingApprovalCount = 0;
+      }
+      this.cd.detectChanges();
     });
   }
   loadApprovalsGeneralGrid(event: any): void {
@@ -145,9 +149,9 @@ export class ApprovalPageComponent implements OnInit {
     this.userDataService.getProfile$.subscribe((profile: any) => {
       if (profile?.length > 0) {
         if (this.userManagementFacade.hasRole(UserRoleType.Level2)) {
-          this.userLevel = 2;
+          this.userLevel = UserLevel.Level2Value;
         } else if (this.userManagementFacade.hasRole(UserRoleType.Level1)) {
-          this.userLevel = 1;
+          this.userLevel = UserLevel.Level1Value;
         }
         this.navigationMenuFacade.getAllPendingApprovalPaymentCount(
           this.userLevel

@@ -90,13 +90,15 @@
                     title="{{ item.sendBackNotes }}"
                     [ngClass]="ngDirtyInValid(item, 'sendBackNotes', i)"
                     id="sendBackNotes{{ i }}"
-                  ></kendo-textarea>
-
+                  >
                   <kendo-textarea-suffix class="justify-content-end">
                     <span class="counter">{{
                       item.tAreaCessationCounter
                     }}</span>
                   </kendo-textarea-suffix>
+                </kendo-textarea>
+
+           
                   <kendo-formerror *ngIf="item.sendBackNotesInValid">{{
                     item.sendBackNotesInValidMsg
                   }}</kendo-formerror>

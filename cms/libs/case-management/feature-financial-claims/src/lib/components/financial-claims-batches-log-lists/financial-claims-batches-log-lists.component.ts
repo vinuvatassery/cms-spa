@@ -134,6 +134,7 @@ export class FinancialClaimsBatchesLogListsComponent
   noOfRecordToPrint:any = 0;
   totalRecord:any;
   batchLogPrintAdviceLetterPagedList:any;
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
 
   gridColumns: { [key: string]: string } = {
     itemNbr: 'Item #',
@@ -151,7 +152,6 @@ export class FinancialClaimsBatchesLogListsComponent
     clientMaximum: 'Client Annual Total',
     balanceAmount: 'Client Balance',
   };
-
 
   paymentMethodFilter = '';
   paymentTypeFilter = '';
@@ -240,9 +240,8 @@ export class FinancialClaimsBatchesLogListsComponent
 
   //sorting
   sortColumn = 'itemNbr';
-  sortColumnDesc = 'Item #';
   sortDir = 'Descending';
-  sortColumnName = '';
+  sortColumnName = 'Item #';
 
   //filtering
   filteredBy = '';
@@ -257,15 +256,10 @@ export class FinancialClaimsBatchesLogListsComponent
   showExportLoader = false;
 
   //LovDropdowns
-  selectedpaymentMethod: string | null = null;
-  selectedPaymentType: string | null = null;
+  selectedPaymentMethod: string | null = null;
   selectedPaymentStatus: string | null = null;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
-  paymentTypes$ = this.lovFacade.paymentRequestType$;
   paymentStatus$ = this.lovFacade.paymentStatus$;
-  paymentMethods: any = [];
-  paymentTypes: any = [];
-  paymentStatusList: any = [];
 
   getBatchLogGridActions(dataItem: any) {
     return [
@@ -341,9 +335,7 @@ export class FinancialClaimsBatchesLogListsComponent
   ) {}
 
   ngOnInit(): void {
-    this.getPaymentMethodLov();
-    this.getPaymentStatusLov();
-    this.getCoPaymentRequestTypeLov();
+    this.loadLov();
     this.initializePage();
     this.sortColumnName = 'Item #';
     this.loadBatchLogListGrid();
@@ -366,46 +358,9 @@ export class FinancialClaimsBatchesLogListsComponent
     this.loadBatchLogListGrid();
   }
 
-  private getPaymentMethodLov() {
+  private loadLov() {
     this.lovFacade.getPaymentMethodLov();
-    this.paymentMethodType$.subscribe({
-      next: (data: any) => {
-        data.forEach((item: any) => {
-          item.lovDesc = item.lovDesc.toUpperCase();
-        });
-        this.paymentMethods = data.sort(
-          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
-        );
-      },
-    });
-  }
-
-  private getCoPaymentRequestTypeLov() {
-    this.lovFacade.getCoPaymentRequestTypeLov();
-    this.paymentTypes$.subscribe({
-      next: (data: any) => {
-        data.forEach((item: any) => {
-          item.lovDesc = item.lovDesc.toUpperCase();
-        });
-        this.paymentTypes = data.sort(
-          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
-        );
-      },
-    });
-  }
-
-  private getPaymentStatusLov() {
-    this.lovFacade.getPaymentStatusLov();
-    this.paymentStatus$.subscribe({
-      next: (data: any) => {
-        data.forEach((item: any) => {
-          item.lovDesc = item.lovDesc.toUpperCase();
-        });
-        this.paymentStatusList = data.sort(
-          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
-        );
-      },
-    });
+    this.lovFacade.getPaymentStatusLov();   
   }
 
   searchColumnChangeHandler(value: string) {
@@ -469,7 +424,7 @@ export class FinancialClaimsBatchesLogListsComponent
 
   restGrid() {
     this.sortValue = 'itemNbr';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.sortColumnName = this.gridColumns[this.sortValue];
     this.sortType = 'desc';
     this.initializeGrid();
     this.sortDir = 'Descending';
@@ -530,9 +485,7 @@ export class FinancialClaimsBatchesLogListsComponent
       this.filteredBy = '';
     }
     if (!this.filteredBy.includes('Payment Method'))
-      this.selectedpaymentMethod = null;
-    if (!this.filteredBy.includes('Payment Type'))
-      this.selectedPaymentType = '';
+      this.selectedPaymentMethod = null;
     if (!this.filteredBy.includes('Payment Status'))
       this.selectedPaymentStatus = '';
     this.loadBatchLogListGrid();
@@ -627,6 +580,7 @@ export class FinancialClaimsBatchesLogListsComponent
   }
 
   onBulkOptionCancelClicked() {
+    this.selectAll = false;
     this.isRequestPaymentClicked = false;
     this.isPrintAdviceLetterClicked = false;
     this.selectedDataRows = [];
@@ -961,31 +915,31 @@ export class FinancialClaimsBatchesLogListsComponent
   }
 
   markAsUnChecked(data:any){
-    data.forEach((element:any) => {     
-      element.selected = false;    
+    data.forEach((element:any) => {
+      element.selected = false;
   });
   }
   markAsChecked(data:any){
-    data.forEach((element:any) => { 
+    data.forEach((element:any) => {
       if(this.selectAll){
-        element.selected = true; 
-      } 
+        element.selected = true;
+      }
       else{
-        element.selected = false; 
+        element.selected = false;
       }
       if(this.unCheckedPaymentRequest.length>0 || this.selectedDataIfSelectAllUnchecked.length >0)   {
         let itemMarkedAsUnChecked=   this.unCheckedPaymentRequest.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
         if(itemMarkedAsUnChecked !== null && itemMarkedAsUnChecked !== undefined){
-          element.selected = false;    
+          element.selected = false;
         }
         let itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
         if(itemMarkedAsChecked !== null && itemMarkedAsChecked !== undefined){
-          element.selected = true;   
+          element.selected = true;
         }
       }
-     
+
     });
-  
+
   }
   selectionChange(dataItem:any,selected:boolean){
     if(!selected){
@@ -1002,13 +956,13 @@ export class FinancialClaimsBatchesLogListsComponent
       this.unCheckedPaymentRequest = this.unCheckedPaymentRequest.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
       if(!this.selectAll){
       this.selectedDataIfSelectAllUnchecked.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true,'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr});
-      }          
+      }
     }
     let returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
     'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
     'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
     this.disablePreviewButton(returnResult);
-   
+
   }
 
   //#endregion

@@ -67,6 +67,28 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   isProcessBatchClosed = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isProcessGridExpand = true;
+  isPharmacyClaimsProcessGridLoaderShow = false;
+
+  @Input() addPharmacyClaim$: any;
+  @Input() editPharmacyClaim$: any;
+  @Input() getPharmacyClaim$: any;
+  @Input() searchPharmacies$: any;
+  @Input() searchClients$: any;
+  @Input() searchDrugs$: any;
+  @Input() searchPharmaciesLoader$: any;
+  @Input() searchClientLoader$: any;
+  @Input() searchDrugsLoader$: any;
+  @Input() paymentRequestType$ : any
+  @Input() deliveryMethodLov$ :any
+
+  @Output() addPharmacyClaimEvent = new EventEmitter<any>();
+  @Output() updatePharmacyClaimEvent = new EventEmitter<any>();
+  @Output() getPharmacyClaimEvent = new EventEmitter<any>();
+  @Output() searchPharmaciesEvent = new EventEmitter<any>();
+  @Output() searchClientsEvent = new EventEmitter<any>();
+  @Output() searchDrugEvent = new EventEmitter<any>();
+  @Output() getCoPaymentRequestTypeLovEvent = new EventEmitter<any>();
+  @Output() getDrugUnitTypeLovEvent = new EventEmitter<any>();
 
   public state!: State;
   sortColumnDesc = 'Entry Date';
@@ -400,6 +422,40 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       this.providerDetailsDialog.close();
     }
   }
+
+  addPharmacyClaim(data: any) {
+    this.addPharmacyClaimEvent.emit(data);
+  }
+
+  updatePharmacyClaim(data: any) {
+    this.updatePharmacyClaimEvent.emit(data);
+  }
+
+  getPharmacyClaim(paymentRequestId: any) {
+    this.getPharmacyClaimEvent.emit(paymentRequestId);
+  }
+
+  searchPharmacies(searchText: any) {
+    this.searchPharmaciesEvent.emit(searchText);
+  }
+
+  searchClients(searchText: any) {
+    this.searchClientsEvent.emit(searchText);
+  }
+  searchDrug(searchText: string) {
+    this.searchDrugEvent.emit(searchText);
+  }
+
+  getCoPaymentRequestTypeLov()
+  {
+    this.getCoPaymentRequestTypeLovEvent.emit();
+  }
+
+  getDrugUnitTypeLov()
+  {
+    this.getDrugUnitTypeLovEvent.emit();
+  }
+
 
   onExportClaims() {
     const params = {

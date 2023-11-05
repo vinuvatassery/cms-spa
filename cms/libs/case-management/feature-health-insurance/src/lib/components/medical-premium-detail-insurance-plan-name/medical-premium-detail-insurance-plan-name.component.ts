@@ -21,6 +21,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   newhealthInsuranceForm: FormGroup;
   @Input() isViewContentEditable!: boolean;
   @Input() insurancePlans: any;
+  @Input() hasCreateUpdatePermission = false;
 
   @Output() insuranceCarrierNameChange = new EventEmitter<any>();
   @Output() insuranceCarrierNameData = new EventEmitter<any>();
@@ -44,7 +45,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   isValidateForm = false;
 
   dentalInsuranceSelectedItem = 'DENTAL_INSURANCE';
-  hasInsurancePlanCreateUpdatePermission = false;
 
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
   insuranceTypeListForPlan$ = this.lovFacade.insuranceTypelovForPlan$;
@@ -55,7 +55,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     private readonly vendorFacade: VendorFacade,
     private readonly insuranceFacade: InsurancePlanFacade,
     private readonly cdr: ChangeDetectorRef,
-    private userManagementFacade: UserManagementFacade,
     private readonly snackbarService: NotificationSnackbarService, private insurancePolicyFacade: HealthInsurancePolicyFacade) {
     this.healthInsuranceForm = this.formBuilder.group({ insuranceCarrierName: [''] });
 
@@ -112,7 +111,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   ngOnInit(): void {
     this.loadInsuranceCarrierName(InsuranceStatusType.healthInsurance);
     this.loadInsurancePlans();
-    this.hasInsurancePlanCreateUpdatePermission = this.userManagementFacade.hasPermission(['Insurance_Plan_Create_Update']);
   }
 
   private loadInsuranceCarrierName(type: string) {
@@ -134,9 +132,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   validateForm() {
     this.newhealthInsuranceForm.markAllAsTouched();
   }
-
-  //@Input()
-  hasCreateUpdatePermission: boolean = false;
 
   mapFormValues() {
     const formValues = this.newhealthInsuranceForm.value;

@@ -55,7 +55,11 @@
                               <kendo-floatinglabel>
                                     <kendo-dropdownlist aria-label="All Columns"
                                           [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc"
-                                          valueField="columnCode">
+                                          valueField="columnName" [data]="searchColumnList"
+                                          [valuePrimitive]="true"
+                                          [(ngModel)]="selectedSearchColumn"
+                                          (valueChange)="searchColumnChangeHandler($event)">
+                                    
                                     </kendo-dropdownlist>
                               </kendo-floatinglabel>
                         </span>
@@ -63,7 +67,8 @@
                               <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
                               <kendo-floatinglabel text="Search">
                                     <kendo-textbox aria-label="Search case" rounded="medium"
-                                          [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+                                          [fillMode]="formUiStyle.inputFillMode"
+                                          [(ngModel)]="searchText" (afterValueChanged)="onSearch($event)"> </kendo-textbox>
 
                               </kendo-floatinglabel>
                         </span>
@@ -74,14 +79,32 @@
                                 <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
                               </button>
                             </span>
+
                   </section>
                   <!-- Sorted Info -->
                   <div class="table-sorted-info">
+                        <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning || showNumberSearchWarning">       
+                              <span class="material-icons" aria-label="search-warning" aria-hidden="true">
+                                    warning
+                              </span>
+                              <span *ngIf="showDateSearchWarning">
+                                    The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
+                              </span>
+                              <span *ngIf="showNumberSearchWarning">
+                                   {{numberSearchColumnName}} allow only numbers.
+                              </span>
+                        </span>   
+                      </div>
+
+                  <div class="table-sorted-info">
                         Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
-                        <span class="sort-items">No Filters</span>
-                        <span class="sort-items">Filtered by Medical Provider</span>
-                        <span class="sort-items">Default Columns</span>
-                        <span class="sort-items">Columns Re-ordered</span>
+                        <span class="sort-items"  *ngIf="!filteredByColumnDesc">No Filters</span>
+                        <span class="sort-items"  *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
+                        <span class="sort-items">{{columnChangeDesc}}</span>
+                        <span class="sort-items" *ngIf="columnsReordered" >Columns Re-ordered</span>
+                        <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="resetGrid()">
+                              <a>Set to Default</a>
+                        </button>
                   </div>
 
 
