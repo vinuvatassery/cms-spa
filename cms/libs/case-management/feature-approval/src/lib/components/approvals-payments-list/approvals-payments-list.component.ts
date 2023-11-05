@@ -1091,7 +1091,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   resetApprovalPaymentListGrid(){
     this.sortValue = 'batchName';
     this.sortType = 'asc';
-    this.initializeApprovalPaymentGrid();
+    this.setGridValueAndData();
     this.sortColumn = 'batchName';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
@@ -1103,13 +1103,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.columnChangeDesc = 'Default Columns';
     this.loadApprovalPaymentsListGrid();
   }
-  private initializeApprovalPaymentGrid(){
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
-  }
+  
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter(x => x.hidden).length
     this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
