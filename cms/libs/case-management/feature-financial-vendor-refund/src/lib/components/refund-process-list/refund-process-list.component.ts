@@ -167,7 +167,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   onClickOpenAddEditRefundFromModal(template: TemplateRef<unknown>): void {
     this.addEditRefundFormDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-full add_refund_modal',
+      cssClass: 'app-c-modal app-c-modal-96full add_refund_modal',
     });
   }
   modalCloseAddEditRefundFormModal(result: any) {
