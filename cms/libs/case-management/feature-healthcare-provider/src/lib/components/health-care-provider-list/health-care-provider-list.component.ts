@@ -161,7 +161,6 @@ pageselectionchange(data: any) {
 
   onOpenProviderSearchClicked(clientProviderId : string,isEdit : boolean) {
     this.selectedCustomProviderName="";
-   
     this.isEditSearchHealthProvider = isEdit;
     this.clientProviderId = clientProviderId;
     if(isEdit === true)
