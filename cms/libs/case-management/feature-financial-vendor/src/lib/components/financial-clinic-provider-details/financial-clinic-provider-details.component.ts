@@ -56,6 +56,7 @@ export class FinancialClinicProviderDetailsComponent {
     });
     this.providerForm.controls["provider"].setValue(event.providerName)
     this.providerForm.controls["tin"].setValue(event.tin);
+    this.providerForm.controls['tin'].disable();
     this.proId=service.providerId;
     this.changeDetector.detectChanges();
   }
