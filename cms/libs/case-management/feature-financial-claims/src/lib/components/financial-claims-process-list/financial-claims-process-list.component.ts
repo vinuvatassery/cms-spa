@@ -99,6 +99,9 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   public mode: SelectableMode = 'multiple';
   public drag = false;
 
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+
+
   public selectedProcessClaims: any[] = [];
   columns: any = {
     invoiceNbr: 'Invoice ID',

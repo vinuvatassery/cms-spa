@@ -92,7 +92,6 @@ export class PendingApprovalPaymentFacade {
         },
       }
     );
-    this.hideLoader();
   }
 
   getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string, level: number) {
