@@ -111,6 +111,7 @@ export * from './lib/enums/eligibility-status.enum';
 export * from './lib/enums/module-code.enum';
 export * from './lib/enums/grid-state-key.enum';
 export * from './lib/enums/insurance-status-type.enum';
+export * from './lib/enums/insurance-type-code.enum';
 export * from './lib/enums/payment-request-type.enum';
 export * from './lib/enums/search-header-type.enum';
 export * from './lib/enums/financial-vendor-provider-tab-code';

@@ -18,13 +18,13 @@ import {
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'cms-vendor-refund-claims-list',
-  templateUrl: './vendor-refund-claims-list.component.html',
+  selector: 'cms-vendor-refund-client-claims-list',
+  templateUrl: './vendor-refund-client-claims-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
+export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  isClaimsLoaderShow = false;
+  isClientClaimsLoaderShow = false;
   /** Constructor **/
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -32,9 +32,9 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   @Input() sort: any;
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
   public state!: State;
-  @Input() claimsListData$: any;
-  @Output() loadClaimsListEvent = new EventEmitter<any>();
-  sortColumn = 'vendorName';
+  @Input() clientClaimsListData$: any;
+  @Output() loadClientClaimsListEvent = new EventEmitter<any>();
+  sortColumn = 'clientId';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -44,14 +44,19 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
-  gridClaimsDataSubject = new Subject<any>();
-  gridClaimsData$ = this.gridClaimsDataSubject.asObservable();
+  gridClientClaimsDataSubject = new Subject<any>();
+  gridClientClaimsData$ = this.gridClientClaimsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+   
   ngOnInit(): void {
-    this.loadClaimsListGrid();
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+    this.loadClientClaimsListGrid();
   }
   ngOnChanges(): void {
     this.state = {
@@ -59,68 +64,66 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
-    this.loadClaimsListGrid();
+    this.loadClientClaimsListGrid();
   }
 
-  private loadClaimsListGrid(): void {
-    this.loadClaimsList(
+  private loadClientClaimsListGrid(): void {
+    this.loadClientClaimsList(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType
     );
   }
-  loadClaimsList (   
-    skipCountValue: number,
+  loadClientClaimsList
+  (    skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
-    sortTypeValue: string
-    ) {
-      this.isClaimsLoaderShow = true;
+    sortTypeValue: string) {
+      this.isClientClaimsLoaderShow = true;
       const gridDataRefinerValue = {
         skipCount: skipCountValue,
         pagesize: maxResultCountValue,
         sortColumn: sortValue,
         sortType: sortTypeValue,
-      };
-    this.loadClaimsListEvent.emit(gridDataRefinerValue);
+      }; 
+    this.loadClientClaimsListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
- 
+  
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadClaimsListGrid();
+    this.loadClientClaimsListGrid();
   }
 
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
-    this.loadClaimsListGrid();
+    this.loadClientClaimsListGrid();
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
 
-  gridDataHandle() {
-    this.claimsListData$.subscribe((data: GridDataResult) => {
+  gridDataHandle() { 
+    this.clientClaimsListData$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
         this.filterData
       );
-      this.gridClaimsDataSubject.next(this.gridDataResult);
+      this.gridClientClaimsDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) { 
-        this.isClaimsLoaderShow = false;
+        this.isClientClaimsLoaderShow = false;
       }
     });
-    this.isClaimsLoaderShow = false;
+    this.isClientClaimsLoaderShow = false;
 
   }
 }
