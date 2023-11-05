@@ -55,8 +55,8 @@ export class PharmacyClaimsProviderInfoComponent {
 
   }
   ngOnInit(): void {
-   // this.paymentRequestId= this.paymentRequestId ? this.paymentRequestId : this.activeRoute.snapshot.queryParams['pid'];
-    this.paymentRequestId='58f3033e-09da-49e7-a6dd-93a319aaa7c5'
+    this.paymentRequestId= this.paymentRequestId ? this.paymentRequestId : this.activeRoute.snapshot.queryParams['pid'];
+    //this.paymentRequestId='58f3033e-09da-49e7-a6dd-93a319aaa7c5'
      this.loadVendorInfo()
    }
   public formUiStyle : UIFormStyle = new UIFormStyle();
