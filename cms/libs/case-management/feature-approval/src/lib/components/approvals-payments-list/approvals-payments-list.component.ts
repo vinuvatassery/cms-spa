@@ -172,6 +172,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): any {
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.lovFacade.getPandingApprovalPaymentTypeLov();
     this.defaultPaymentType();
     this.getLoggedInUserProfile();
@@ -315,7 +316,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.setGridValues(data);
   }
 
-  searchColumnChangeHandler(value: string) {
+  searchColumnChangeHandler(value: string) {    
     this.filter = [];
     this.showDateSearchWarning = value === 'DateApprovalRequested';
     if (this.searchValue) {
@@ -441,6 +442,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   onPaymentTypeCodeValueChange(paymentSubTypeCode: any) {
+    this.resetApprovalPaymentListGrid();
     this.pageValidationMessage = null;
     this.selectedPaymentType = paymentSubTypeCode;
     this.approveBatchCount = 0;
