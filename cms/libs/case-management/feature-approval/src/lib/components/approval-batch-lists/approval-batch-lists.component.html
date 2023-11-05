@@ -115,7 +115,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'TPA_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.TpaClaim"
                 field="invoiceNbr"
                 title="Invoice ID"
                 [width]="150"
@@ -144,7 +144,7 @@
               </kendo-grid-column>
 
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'TPA_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.TpaClaim"
                 field="vendorName"
                 title="Provider Name"
                 [width]="250"
@@ -170,7 +170,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'INSURANCE_PREMIUM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.InsurancePremium"
                 field="vendorName"
                 title="Insurance Vendor"
                 [width]="250"
@@ -196,7 +196,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
                 field="vendorName"
                 title="Pharmacy Name"
                 [width]="250"
@@ -222,7 +222,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'INSURANCE_PREMIUM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.InsurancePremium"
                 field="premiumCount"
                 title="Item Count"
                 [width]="150"
@@ -252,7 +252,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'TPA_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.TpaClaim"
                 field="amountDue"
                 title="Total Due"
                 [width]="130"
@@ -285,7 +285,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'INSURANCE_PREMIUM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.InsurancePremium"
                 field="premiumTotalAmount"
                 title="Total Amount"
                 [width]="130"
@@ -318,7 +318,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'TPA_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.TpaClaim"
                 field="serviceCount"
                 title="Service Count"
                 [width]="150"
@@ -348,7 +348,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType != 'INSURANCE_PREMIUM'"
+                *ngIf="selectedPaymentType != paymentTypeCode.InsurancePremium"
                 field="clientFullName"
                 title="Client Name"
                 [width]="250"
@@ -374,7 +374,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'TPA_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.TpaClaim"
                 field="nameOnInsuranceCard"
                 title="Name on Primary Insurance Card"
                 [width]="265"
@@ -400,7 +400,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType != 'INSURANCE_PREMIUM'"
+                *ngIf="selectedPaymentType != paymentTypeCode.InsurancePremium"
                 field="clientId"
                 title="Client ID"
                 [width]="130"
@@ -486,7 +486,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
                 field="drugName"
                 title="Drug Name"
                 [width]="200"
@@ -512,7 +512,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
                 field="ndcCode"
                 title="NDC Code"
                 [width]="130"
@@ -538,7 +538,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
                 field="rxQty"
                 title="RX Qty"
                 [width]="150"
@@ -568,7 +568,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
                 field="rxType"
                 title="Unit"
                 [width]="130"
@@ -594,7 +594,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
                 field="prescriptionTotalAmount"
                 title="Total Amount Paid"
                 [width]="130"
@@ -625,7 +625,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
                 field="daySupply"
                 title="Days Supply"
                 [width]="150"
@@ -655,14 +655,14 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
                 field="prescriptionFillDate"
                 title="Fill Date"
                 [width]="150"
               >
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
                 field="prescriptionNbr"
                 title="Prescription #"
                 [width]="170"

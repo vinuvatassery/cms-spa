@@ -13,10 +13,10 @@ import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
+import { PendingApprovalPaymentTypeCode } from '@cms/case-management/domain';
 @Component({
   selector: 'productivity-tools-approval-batch-lists',
   templateUrl: './approval-batch-lists.component.html',
@@ -36,6 +36,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   @Output() closeViewPaymentsBatchClickedEvent = new EventEmitter();
   @Output() loadBatchDetailPaymentsListEvent = new EventEmitter<any>();
   @Output() batchModalSaveClickedEvent = new EventEmitter<any>();
+  readonly paymentTypeCode = PendingApprovalPaymentTypeCode;
   public state!: State;
   isBatchDetailPaymentsGridLoaderShow = new BehaviorSubject<boolean>(true);
   sortColumn = 'paymentNbr';
@@ -95,16 +96,15 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
     this.loadBatchPaymentListGrid();
   }
 
-  private loadColumnsData()
-  {
+  private loadColumnsData(){
     switch(this.selectedPaymentType){
-      case "INSURANCE_PREMIUM":
+      case PendingApprovalPaymentTypeCode.InsurancePremium:
         this.vendorNameField = 'Insurance Vendor';
         break;
-      case "TPA_CLAIM" :
+      case PendingApprovalPaymentTypeCode.TpaClaim:
         this.vendorNameField = 'Provider Name';
         break;
-      case "PHARMACY_CLAIM" :
+      case PendingApprovalPaymentTypeCode.PharmacyClaim:
         this.vendorNameField = 'Pharmacy Name';
         break;
     }
