@@ -11,12 +11,10 @@ import { FinancialVendorRefundDataService } from '../../infrastructure/financial
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorRefundFacade {
  
-
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
-
-  public sortValueRefundProcess = 'vendorName';
+  public sortValueRefundProcess = 'creationTime';
   public sortProcessList: SortDescriptor[] = [{
     field: this.sortValueRefundProcess,
   }];
@@ -89,7 +87,7 @@ export class FinancialVendorRefundFacade {
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>(); 
-
+  public selectedClaimsTab = 1
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
 
@@ -220,5 +218,28 @@ export class FinancialVendorRefundFacade {
         this.hideLoader(); 
       },
     });  
+  }
+  loadFinancialRefundProcessListGrid(
+    skipcount: number,
+    maxResultCount: number,
+    sort: string,
+    sortType: string,
+    filter: string,
+  ) {
+    filter = JSON.stringify(filter);
+    this.financialVendorRefundDataService.loadFinancialRefundProcessListService(skipcount,  maxResultCount,  sort,  sortType, filter).subscribe({
+      next: (dataResponse) => {
+        const gridView = {
+          data: dataResponse["items"],
+          total: dataResponse["totalCount"]
+        };
+        this.vendorRefundProcessDataSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+      },
+    });
   }
 }

@@ -37,7 +37,6 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   isDeleteBatchClosed = false;
   isProcessBatchClosed = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-
   isVendorRefundProcessGridLoaderShow = false;
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -46,7 +45,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   @Input() vendorRefundProcessGridLists$: any;
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'vendorName';
+  sortColumn = 'vendorFullName';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -55,13 +54,11 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
   gridVendorsProcessDataSubject = new Subject<any>();
   gridVendorsProcessData$ = this.gridVendorsProcessDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
 
   public refundProcessMore = [
     {
@@ -124,12 +121,12 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isVendorRefundProcessGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter: this.state?.['filter']?.['filters'] ?? [],
     };
     this.loadVendorRefundProcessListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
@@ -185,7 +182,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
+              field: this.selectedColumn ?? 'vendorFullName',
               operator: 'startswith',
               value: data,
             },
@@ -218,6 +215,14 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    if (stateData.filter?.filters.length > 0) {
+      const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      this.isFiltered = true;}
+      else {
+        this.filter = '';
+        this.isFiltered = false;
+      }
     this.loadVendorRefundProcessListGrid();
   }
 
@@ -235,16 +240,10 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   gridDataHandle() {
     this.vendorRefundProcessGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
       this.gridVendorsProcessDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
+      if (data?.total >= 0 || data?.total === -1) {
         this.isVendorRefundProcessGridLoaderShow = false;
       }
     });
-    this.isVendorRefundProcessGridLoaderShow = false;
-
   }
 }

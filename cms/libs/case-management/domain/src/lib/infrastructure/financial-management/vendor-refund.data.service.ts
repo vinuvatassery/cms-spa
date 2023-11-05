@@ -536,4 +536,19 @@ export class FinancialVendorRefundDataService {
     ]);
   }
 
+  loadFinancialRefundProcessListService(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string) {
+    const RefundPageAndSortedRequestDto =
+    {
+      SortType : sortType,
+      Sorting : sort,
+      SkipCount : skipcount,
+      MaxResultCount : maxResultCount,
+      Filter : filter
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical`,
+      RefundPageAndSortedRequestDto
+    );
+  }
+
 }
