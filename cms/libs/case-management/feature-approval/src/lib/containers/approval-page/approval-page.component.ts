@@ -30,7 +30,7 @@ import {
   UserManagementFacade,
   UserDataService,
   UserDefaultRoles,
-  UserLevel
+  UserLevel,
   LovFacade,
 } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';

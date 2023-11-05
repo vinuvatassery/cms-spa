@@ -181,7 +181,7 @@ export class ApprovalInvoiceComponent implements OnInit {
       this.invoiceGridViewDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isInvoiceGridLoaderShow = false;
-      }
+      } 
       this.isInvoiceGridLoaderShow = false;
     });
   }
