@@ -159,8 +159,7 @@
         </button>
         <kendo-popover #userCard width="330" position="left">
           <ng-template kendoPopoverBodyTemplate>
-            <common-user-profile-card [userId]="dataItem.firstApprovalById"
-              [reassign]="true"></common-user-profile-card>
+            <common-user-profile-card [userId]="dataItem.firstApprovalById"></common-user-profile-card>
           </ng-template>
         </kendo-popover>
       </ng-template>
@@ -216,7 +215,7 @@
           <kendo-textarea
             #tareaCessation
             [fillMode]="formUiStyle.inputFillMode"
-            [maxlength]="tAreaCessationMaxLength"  
+            [maxlength]="tAreaCessationMaxLength"
             [(ngModel)]="dataItem.sendBackNotes"
             (valueChange)="sendBackNotesChange(dataItem)"
             class="table-text-area textarea"

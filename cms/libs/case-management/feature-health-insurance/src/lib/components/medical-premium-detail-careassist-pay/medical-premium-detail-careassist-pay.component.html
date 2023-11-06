@@ -71,6 +71,7 @@
    {{providerName}} Vendor is required
 </kendo-formerror>
     </kendo-floatinglabel>
+    <div class="mt-2">
     <span class="fontsize_twel">Don't see the vendor you're looking for?</span>
     <button
       kendoButton
@@ -81,6 +82,7 @@
     > 
       {{hasinsuranceVendorCreateUpdatePermission==true? 'ADD NEW':'REQUEST NEW'}}
     </button>
+    </div>
        </div>
         <div class="flex-row mt-3" *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'|| healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == null">
             <div class="flex-col flex-col-6">
@@ -162,7 +164,7 @@
 
 <kendo-dialog kendoRippleContainer *ngIf="isShowInsuranceProvider" (close)="closeVendorDetailModal()"
     class="app-c-modal app-c-modal-md app-c-modal-np"
-    title="{{hasinsuranceVendorCreateUpdatePermission==true? 'Add Health Insurance':'Request Health Insurance'}}"
+    title="{{hasinsuranceVendorCreateUpdatePermission==true? 'Add New Insurance Vendor':'Request New Insurance Vendor'}}"
     kendoTooltip>
     <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.InsuranceVendors"
         (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
