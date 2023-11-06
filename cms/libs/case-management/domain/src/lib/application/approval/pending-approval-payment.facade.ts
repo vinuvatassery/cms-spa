@@ -11,6 +11,7 @@ export class PendingApprovalPaymentFacade {
   public sortValueApprovalPaymentsApproval = 'batchName';
   public sortApprovalPaymentsList: SortDescriptor[] = [{
     field: this.sortValueApprovalPaymentsApproval,
+    dir: 'desc',
   }];
 
   /** Private properties **/
@@ -92,7 +93,6 @@ export class PendingApprovalPaymentFacade {
         },
       }
     );
-    this.hideLoader();
   }
 
   getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string, level: number) {

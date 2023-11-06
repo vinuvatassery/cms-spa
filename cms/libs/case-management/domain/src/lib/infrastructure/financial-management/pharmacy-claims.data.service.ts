@@ -242,5 +242,33 @@ export class FinancialPharmacyClaimsDataService {
      
     ]);
   }
- 
+  addPharmacyClaim(data: any) {
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies`,      data    );
+  }
+
+  updatePharmacyClaim(data: any) {
+    return this.http.patch<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies`,      data    );
+  }
+
+  getPharmacyClaim(paymentRequestId: string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/${paymentRequestId}`);
+  }
+
+  searchPharmacies(searchText: string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/searchText=${searchText}`);
+  }
+
+  searchClients(searchText: string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/clients=${searchText}`);
+  }
+
+  searchDrug(searchText: string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/drugs/ndcCode=${searchText}`);
+  }
 }
