@@ -45,7 +45,7 @@ export class FundingSourcePageComponent {
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
       maxResultCount: gridDataRefinerValue.pagesize,
-      sort: gridDataRefinerValue.sortColumn,
+      sort: gridDataRefinerValue.sorting,
       sortType: gridDataRefinerValue.sortType,
       filter:gridDataRefinerValue.filter
     };
