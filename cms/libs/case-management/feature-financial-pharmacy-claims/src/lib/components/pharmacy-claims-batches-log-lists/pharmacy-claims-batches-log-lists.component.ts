@@ -54,6 +54,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
 reverseClaimsDialog: any;
   addClientRecentClaimsDialog: any;
   addEditClaimsFormDialog: any;
+  isLogGridExpand = true;
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',

@@ -71,6 +71,7 @@
             </button>
           </ng-template>
         </kendo-grid-column>
+        
   
         <kendo-grid-column field="nameOnPrimaryInsuranceCard" title="Name on Primary Insurance Card" [width]="200"> </kendo-grid-column>
         <kendo-grid-column field="clientID" title="Client ID" [width]="140"> </kendo-grid-column>
@@ -93,7 +94,7 @@
         <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="160">   </kendo-grid-column>
         <kendo-grid-column field="warrantNumber" title="Warrant Number" [width]="160">   </kendo-grid-column>
         <kendo-grid-column field="entryDate" title="Entry Date" [width]="140">   </kendo-grid-column>
-         
+        
         <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
@@ -123,14 +124,15 @@
                     <label> {{ buttondataItem.text }} </label>
                   </button>
                 </ng-container>
-  
-  
-  
-  
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
         </kendo-grid-column>
+        <!-- <ng-container *ngIf="isLogGridExpand">
+          <div *kendoGridDetailTemplate="let dataItem">
+       <cms-pharmacy-claims-all-payments-list></cms-pharmacy-claims-all-payments-list>
+          </div>
+        </ng-container> -->
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
           let-currentPage="currentPage">
           <div class="grid-custom-paginationtemplates d-flex">
