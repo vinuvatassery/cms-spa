@@ -300,6 +300,10 @@ export class FinancialPremiumsFacade {
     });
   }
 
+  loadPremiumSubListServicesByPayment(premiumType : string ,paymentId : string, paginationParameters : any) {  
+    return this.financialPremiumsDataService.loadPremiumServicesByPayment(premiumType ,paymentId ,paginationParameters )   
+  }
+
   loadBatchItemsListGrid(batchId: any, paymentId: any, premiumType: string, params: GridFilterParam){
     this.batchItemsLoaderSubject.next(true);
     this.financialPremiumsDataService.loadBatchItemsListService(batchId, paymentId, premiumType, params).subscribe({

@@ -13,8 +13,6 @@ import { StatusFlag } from '../enums/status-flag.enum';
 export class ReAssignCaseComponent implements OnInit, OnChanges {
   @Input() hasReassignPermission: boolean = false;
   @Input() caseOwners !: any;
-  @Input() caseWorkerId: any;
-  @Input() clientId: any;
   @Input() clientName: any;
   @Input() clientCaseId: any;
   @Output() reassignClicked = new EventEmitter<any>();
@@ -91,8 +89,6 @@ export class ReAssignCaseComponent implements OnInit, OnChanges {
     let reassignData = {
       newCaseWorkerId: this.hasReassignPermission ? formValues.newCaseWorkerId : null,
       reasonForReassign: formValues.reasonForReassign,
-      caseWorkerId: this.caseWorkerId,
-      clientId: this.clientId,
       clientCaseId: this.clientCaseId,
       activeFlag: this.hasReassignPermission ? StatusFlag.Yes : StatusFlag.No,
     }

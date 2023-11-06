@@ -97,6 +97,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic);
         } else if (this.providerType === FinancialVendorTypeCode.DentalProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic);
+        } else {
+          this.clinicVendorListLocal = data;
         }
         this.clinicSearchSubscription?.unsubscribe();
       }
