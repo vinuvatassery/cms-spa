@@ -1,9 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  PanelBarCollapseEvent,
-  PanelBarExpandEvent,
-} from '@progress/kendo-angular-layout';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { PendingApprovalGeneralFacade, PendingApprovalPaymentTypeCode } from '@cms/case-management/domain';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Component({
   selector: 'productivity-tools-approvals-general-list-detail-exceptions',
@@ -14,23 +12,28 @@ export class ApprovalsGeneralListDetailExceptionsComponent implements OnInit {
   @Input() approvalId: any;
   @Input() exceptionId: any;
   @Input() approvalsExceptionCard$: any;
-  @Input() pageSizes: any;
-  @Input() sortValue: any;
-  @Input() sortType: any;
-  @Input() sort: any;
-  @Input() gridSkipCount: any;
-  @Input() invoiceData$: any;
-  @Input() isInvoiceLoading$: any;
-  @Output() loadApprovalsExceptionCardEvent = new EventEmitter<any>();
-  @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
   @Output() onVendorClickedEvent = new EventEmitter<any>();
-
-  ngOnInit(): void {
-    this.loadApprovalsExceptionCard();
-  }
-
-  loadApprovalsExceptionCard() {
-    this.loadApprovalsExceptionCardEvent.emit(this.exceptionId);
+  vendorId: any;
+  clientId: any;
+  clientName: any;
+  claimsType: any="";
+  constructor(
+    private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade
+  ) {}
+  
+  ngOnInit(): any {
+    this.pendingApprovalGeneralFacade.loadExceptionCard(this.exceptionId).subscribe({
+      next: (response) => {
+        this.approvalsExceptionCard$ = response;
+        this.vendorId=this.approvalsExceptionCard$.vendorId
+        this.clientId=this.approvalsExceptionCard$.clientId;
+        this.clientName=this.approvalsExceptionCard$.clientName;        
+        this.claimsType=this.getClaimType(this.approvalsExceptionCard$.serviceSubTypeCode);
+      },
+      error: (err) => {
+        this.pendingApprovalGeneralFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+      },
+    });
   }
 
   ifApproveOrDeny: any;
@@ -41,19 +44,22 @@ export class ApprovalsGeneralListDetailExceptionsComponent implements OnInit {
     this.ifApproveOrDeny = result;
   }
 
-  public onPanelCollapse(event: PanelBarCollapseEvent): void {
-    this.isPanelExpanded = false;
-  }
-
-  public onPanelExpand(event: PanelBarExpandEvent): void {
-    this.isPanelExpanded = true;
-  }
-
-  loadApprovalsExceptionInvoice($event: any) {
-    this.loadApprovalsExceptionInvoiceEvent.emit($event);
-  }
-
   onViewProviderDetailClicked(paymentRequestId: any) {
     this.onVendorClickedEvent.emit(paymentRequestId);
+  }
+
+  getClaimType(type: any) {
+    if(type==PendingApprovalPaymentTypeCode.MedicalClaim || type==PendingApprovalPaymentTypeCode.MedicalPremium)
+    {
+        return 'medical';
+    }
+    else if(type==PendingApprovalPaymentTypeCode.DentalClaim || type==PendingApprovalPaymentTypeCode.DentalPremium)
+    {
+      return 'dental';
+    }
+    else
+    {
+      return 'pharmacy';
+    }
   }
 }
