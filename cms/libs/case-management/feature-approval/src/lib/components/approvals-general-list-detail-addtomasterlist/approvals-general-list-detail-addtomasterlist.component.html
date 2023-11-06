@@ -27,7 +27,7 @@
       >
         <tr>
           <td>Clinic Name</td>
-          <td>{{ vendorData.clinicName }}</td>
+          <td>{{ vendorData.vendorName }}</td>
         </tr>
         <tr>
           <td>Provider First Name</td>
@@ -41,11 +41,11 @@
           <td>TIN</td>
           <td>{{ vendorData.tin }}</td>
         </tr>
-        <tr>
-          <td>Phone</td>
-          <td>{{ vendorData.phone }}</td>
-        </tr>
-        <ng-container *ngIf="vendorData.phone">
+        <ng-container *ngIf="vendorData.phoneNumber">
+          <tr>
+            <td>Phone</td>
+            <td>{{ vendorData.phoneNumber }}</td>
+          </tr>        
           <tr>
             <td>Email</td>
             <td>{{ vendorData.Email }}</td>
@@ -57,7 +57,7 @@
         </ng-container>
         <tr>
           <td>Address</td>
-          <td>{{ vendorData.address }}</td>
+          <td>{{ vendorData.address1 }}</td>
         </tr>
       </tbody>
       <tbody *ngIf="subTypeCode === subTypeConst.Drug">
