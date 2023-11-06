@@ -12,6 +12,9 @@ import { State, groupBy } from '@progress/kendo-data-query';
 import { FinancialPharmacyClaimsFacade } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Lov } from '@cms/system-config/domain';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { first } from 'rxjs';
 @Component({
   selector: 'cms-pharmacy-claims-detail-form',
   templateUrl: './pharmacy-claims-detail-form.component.html', 
@@ -50,23 +53,25 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
 
   @Output() addPharmacyClaimEvent = new EventEmitter<any>();
   @Output() updatePharmacyClaimEvent = new EventEmitter<any>();
-  @Output() getPharmacyClaimEvent = new EventEmitter<any>();
   @Output() searchPharmaciesEvent = new EventEmitter<any>();
   @Output() searchClientsEvent = new EventEmitter<any>();
   @Output() searchDrugEvent = new EventEmitter<any>();
   @Output() getCoPaymentRequestTypeLovEvent = new EventEmitter<any>();
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
   @Output() getDrugUnitTypeLovEvent = new EventEmitter<any>();
-
+  selectedVendor! : any   
+  selectedClient! : any   
   selectedPharmacy! : any
   showServicesListForm = false
   selectedNDCCode! :any
   isSubmitted = false
   groupedPaymentRequestTypes: any;
-  
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
     private formBuilder: FormBuilder,private cd: ChangeDetectorRef,
+    public readonly intl: IntlService,
+    private readonly configurationProvider: ConfigurationProvider,
   ) {}
   ngOnInit(): void {   
     this.cd.markForCheck();
@@ -105,27 +110,29 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
 
   initClaimForm() {
     this.pharmacyClaimForm = this.formBuilder.group({     
-      paymentRequestId :[''] ,
+      paymentRequestId :['00000000-0000-0000-0000-000000000000'] ,
       clientCaseEligibilityId: ['', Validators.required],
-      vendorAddressId: new FormControl('', Validators.required),     
-      clientId: new FormControl('', Validators.required),     
+      vendorId: new FormControl('', Validators.required),     
+      pharmacy: [this.selectedVendor, Validators.required],
+      client: [this.selectedClient, Validators.required],
       prescriptionFillDto: new FormArray([]),      
-      paymentMethodCode: ['', Validators.required]
+      paymentMethodCode: [false]
      
     });
+    this.onExistClaimFormLoad()
   }
 
   addClaimServiceGroup()
   {       
     const pharmacyClaimService = this.formBuilder.group({
-      prescriptionFillId : [''],
+      prescriptionFillId : ['00000000-0000-0000-0000-000000000000'],
       claimNbr  : ['', Validators.required],
       prescriptionFillDate  : ['', Validators.required],
-      copayAmountPaid  : [0, Validators.required],
+      copayAmountPaid  : ['', Validators.required],
       ndc  : ['', Validators.required],
       qntType  : ['', Validators.required],
-      dispensingQty  : [0, Validators.required],
-      daySupply  : [0, Validators.required],
+      dispensingQty  : ['', Validators.required],
+      daySupply  : ['', Validators.required],
       paymentTypeCode : ['' , Validators.required],
       brandName : [''],
       drugName : ['']
@@ -149,23 +156,25 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
     }
   
     let formValues = this.pharmacyClaimForm.value;
+    
     let pharmacyClaimData = 
     {
       paymentRequestId :this.pharmacyClaimForm.controls["paymentRequestId"].value ,
       clientCaseEligibilityId: this.pharmacyClaimForm.controls["clientCaseEligibilityId"].value ,
-      vendorAddressId: this.pharmacyClaimForm.controls["vendorAddressId"].value , 
-      clientId: this.pharmacyClaimForm.controls["clientId"].value , 
-      paymentMethodCode: this.pharmacyClaimForm.controls["paymentMethodCode"].value , 
+      vendorAddressId: this.pharmacyClaimForm.controls["pharmacy"].value.vendorAddressId , 
+      vendorId : this.pharmacyClaimForm.controls["vendorId"].value , 
+      clientId: this.pharmacyClaimForm.controls["client"].value.clientId , 
+      paymentMethodCode: this.pharmacyClaimForm.controls["paymentMethodCode"].value ===true ? 'SPOTS' : '' , 
       prescriptionFillDto: [{}]     
     };
-
+    
     for(let prescription  of formValues.prescriptionFillDto)
     {
        const service =
        {
         prescriptionFillId : prescription.prescriptionFillId,
         claimNbr  : prescription.claimNbr,
-        prescriptionFillDate  : prescription.prescriptionFillDate,
+        prescriptionFillDate  : this.intl.formatDate(prescription.prescriptionFillDate,this.dateFormat) ,
         copayAmountPaid  : prescription.copayAmountPaid,
         ndc  : prescription.ndc,
         qntType  : prescription.qntType,
@@ -175,14 +184,15 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
        }
        pharmacyClaimData.prescriptionFillDto.push(service)
     }
-    console.log(pharmacyClaimData)
-     if(pharmacyClaimData.paymentRequestId)
+    pharmacyClaimData.prescriptionFillDto.splice(0, 1);  
+   
+     if(pharmacyClaimData.paymentRequestId != '00000000-0000-0000-0000-000000000000')
      {
-        //this.updatePharmacyClaimEvent.emit(pharmacyClaimData)
+        this.updatePharmacyClaimEvent.emit(pharmacyClaimData)
      }
      else
      {
-        //this.addPharmacyClaimEvent.emit(pharmacyClaimData)
+        this.addPharmacyClaimEvent.emit(pharmacyClaimData)
      }
     
   }
@@ -229,29 +239,97 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   }
   pharmacySelectionChange(data : any)
   {
-    
-    this.pharmacyClaimForm.controls['vendorAddressId'].setValue(data?.vendorAddressId);
+    this.pharmacyClaimForm.controls['vendorId'].setValue(data?.vendorId);    
     this.cd.detectChanges();
-  this.showHideServiceList()    
+ 
   }
 
 
   clientSelectionChange(data : any)
-  {
-    this.pharmacyClaimForm.controls['clientId'].setValue(data?.clientId);
+  {  
     this.pharmacyClaimForm.controls['clientCaseEligibilityId'].setValue(data?.clientCaseEligibilityId);
     this.cd.detectChanges();
   this.clientTotalPayments = data?.TotalPayments ?? 0    
-  this.showHideServiceList()
+ 
   }
 
   showHideServiceList()
-  {  
-    if(this.pharmacyClaimForm.controls["vendorAddressId"].value && this.pharmacyClaimForm.controls["clientId"].value > 0)
+  {      
+    if(this.pharmacyClaimForm.controls["pharmacy"].value && this.pharmacyClaimForm.controls["client"].value?.clientId > 0)
     {
     this.addClaimServiceGroup()
     this.showServicesListForm = true
     }
+  }
+
+
+  onExistClaimFormLoad()
+  {    
+   this.getPharmacyClaim$?.pipe(first((existClaimData: any ) => existClaimData?.paymentRequestId != null))
+   .subscribe((existClaimData: any) =>
+   {  
+       if(existClaimData?.paymentRequestId)
+       {   
+
+      const fullVendorCustomName = existClaimData?.vendorName + ' '+ existClaimData?.tin + ' '+ existClaimData?.mailCode + ' '+ existClaimData?.address 
+      const fullClientCustomName = existClaimData?.clientFullName + ' '+ existClaimData?.clientId + ' '+ existClaimData?.ssn + ' '+ existClaimData?.dob   
+      
+        const client =[
+          {             
+            fullCustomName: fullClientCustomName,
+            clientId: existClaimData.clientId                 
+          },
+        ]; 
+        
+        const vendor =[
+            {             
+              fullCustomName : fullVendorCustomName,
+              vendorAddressId: existClaimData.vendorAddressId             
+            },
+        ];           
+        
+        this.financialPharmacyClaimsFacade.searchClientsDataSubject.next(client)
+         this.financialPharmacyClaimsFacade.searchPharmaciesDataSubject.next(vendor)        
+         this.selectedClient=client[0]      
+         this.selectedVendor=vendor[0]
+         this.pharmacyClaimForm.controls['pharmacy'].setValue(vendor[0]);
+         this.pharmacyClaimForm.controls['client'].setValue(client[0]);
+           this.pharmacyClaimForm.patchValue(
+             {     
+              paymentRequestId : existClaimData?.paymentRequestId ,
+              clientCaseEligibilityId: existClaimData?.clientCaseEligibilityId,                
+              vendorId : existClaimData?.vendorId,
+              paymentMethodCode : existClaimData?.paymentMethodCode === 'SPOTS'
+             }
+           )
+           
+           this.setFormValues(existClaimData?.prescriptionFillDto)
+       }
+   })
+  }
+
+  setFormValues(services: any) {    
+    this.showServicesListForm = true
+    for (let i = 0; i < services.length; i++) {
+      let service = services[i];
+      this.addClaimServiceGroup();
+      let serviceForm = this.addClaimServicesForm.at(i) as FormGroup;
+    
+      serviceForm.controls['prescriptionFillId'].setValue(service?.prescriptionFillId);
+      serviceForm.controls['claimNbr'].setValue(service?.claimNbr);
+       serviceForm.controls['prescriptionFillDate'].setValue(
+        new Date(service?.prescriptionFillDate)
+      );
+      serviceForm.controls['copayAmountPaid'].setValue(service?.copayAmountPaid);
+      serviceForm.controls['ndc'].setValue(service?.ndc);
+      serviceForm.controls['qntType'].setValue(service.qntType);
+      serviceForm.controls['dispensingQty'].setValue(service?.dispensingQty);
+      serviceForm.controls['daySupply'].setValue(service?.daySupply);
+      serviceForm.controls['paymentTypeCode'].setValue(service?.paymentTypeCode);
+      serviceForm.controls['brandName'].setValue(service?.brandName);
+      serviceForm.controls['drugName'].setValue(service?.drugName);
+    }
+   
   }
  
 }
