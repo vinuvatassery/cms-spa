@@ -234,14 +234,7 @@ export class ApprovalPageComponent implements OnInit {
       approvalId
     );
   }
-
-  loadApprovalsExceptionCard(data: any) {
-    this.pendingApprovalGeneralFacade.loadExceptionCard(data);
-  }
-
-  loadApprovalsExceptionInvoice(data: any) {
-    this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
-  }
+  
   submitGeneralRequests(requests: any) {
     this.pendingApprovalGeneralFacade.submitGeneralRequests(requests);
   }

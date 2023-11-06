@@ -89,15 +89,8 @@ export class PendingApprovalGeneralFacade {
     });
   }
 
-  loadExceptionCard(data:any): void {
-    this.pendingApprovalGeneralService.loadExceptionCard(data).subscribe({
-      next: (dataResponse) => {
-        this.approvalsGeneralExceptionCardSubject.next(dataResponse);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-      },
-    });
+  loadExceptionCard(data:any) {
+    return this.pendingApprovalGeneralService.loadExceptionCard(data);
   }
 
   /** Public methods **/
